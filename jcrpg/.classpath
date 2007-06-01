@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.1.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_fmod3.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util_applet.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="jme/jme.jar" sourcepath="/s0/Install/jme/jme/src"/>
+	<classpathentry kind="lib" path="jme/jme-audio.jar"/>
+	<classpathentry kind="lib" path="jme/jme-awt.jar"/>
+	<classpathentry kind="lib" path="jme/jme-collada.jar"/>
+	<classpathentry kind="lib" path="jme/jme-editors.jar"/>
+	<classpathentry kind="lib" path="jme/jme-effects.jar"/>
+	<classpathentry kind="lib" path="jme/jme-font.jar"/>
+	<classpathentry kind="lib" path="jme/jme-gamestates.jar"/>
+	<classpathentry kind="lib" path="jme/jme-model.jar" sourcepath="/s0/Install/jme/jme/src"/>
+	<classpathentry kind="lib" path="jme/jme-scene.jar"/>
+	<classpathentry kind="lib" path="jme/jme-sound.jar"/>
+	<classpathentry kind="lib" path="jme/jme-terrain.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
