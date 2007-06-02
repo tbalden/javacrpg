@@ -45,18 +45,59 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap hm3dTypeFile = new HashMap();
     
+	public static int RENDER_DISTANCE = 6;
+
+	public static final float CUBE_EDGE_SIZE = 2.0001f; 
+
     public static Integer EMPTY_SIDE = new Integer(0);
+
+    
+	/**
+	 * cube side rotation quaternion
+	 */
+	static Quaternion qN, qS, qW, qE, qT, qB, qTexture;	
+	static 
+	{
+		// creating rotation quaternions for all sides of a cube...
+		qT = new Quaternion();
+		qT.fromAngleAxis(FastMath.PI/2, new Vector3f(1,0,0));
+		qB = new Quaternion();
+		qB.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
+		qN = new Quaternion();
+		qS = new Quaternion();
+		qS.fromAngleAxis(FastMath.PI, new Vector3f(0,1,0));
+		qW = new Quaternion();
+		qW.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+		qE = new Quaternion();
+		qE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
+		qTexture = new Quaternion();
+		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
+		
+	}
 	
+	public static HashMap directionAnglesAndTranslations = new HashMap();
+	static 
+	{
+		directionAnglesAndTranslations.put(new Integer(Cube.NORTH), new Object[]{qN,new float[]{0,0,1}});
+		directionAnglesAndTranslations.put(new Integer(Cube.SOUTH), new Object[]{qS,new float[]{0,0,-1}});
+		directionAnglesAndTranslations.put(new Integer(Cube.WEST), new Object[]{qW,new float[]{-1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(Cube.EAST), new Object[]{qE,new float[]{1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(Cube.TOP), new Object[]{qT,new float[]{0,1,0}});
+		directionAnglesAndTranslations.put(new Integer(Cube.BOTTOM), new Object[]{qB,new float[]{0,-1,0}});
+	}
+    
 	public J3DCore()
 	{
 		// area type to 3d type mapping
 		hmAreaType3dType.put(new Integer(0), EMPTY_SIDE);
 		hmAreaType3dType.put(new Integer(1), new Integer(1));
 		hmAreaType3dType.put(new Integer(2), new Integer(2));
+		hmAreaType3dType.put(new Integer(3), new Integer(3));
 		
 		// 3d type to file mapping		
-		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/grass.3ds","sides/wall_mossy.jpg"));
-		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/grass.3ds","sides/grass_leaf.jpg"));
+		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/plane.3ds","sides/wall_stone.jpg"));
+		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		
 	}
 
@@ -84,46 +125,35 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
     
     
-    public Skybox  createSkybox(){
+    public Skybox createSkybox() {
 
-        
-        Skybox skybox = new Skybox("skybox", 100, 100, 100);
-        
-        Texture north = TextureManager.loadTexture(
-                    "./data/sky/north.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        Texture south = TextureManager.loadTexture(
-                    "./data/sky/south.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        Texture east = TextureManager.loadTexture(
-                    "./data/sky/east.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        Texture west = TextureManager.loadTexture(
-                    "./data/sky/west.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        Texture up = TextureManager.loadTexture(
-                    "./data/sky/top.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        Texture down = TextureManager.loadTexture(
-                    "./data/sky/bottom.jpg",
-                    Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-        
-        skybox.setTexture(Skybox.NORTH, north);
-        skybox.setTexture(Skybox.WEST, west);
-        skybox.setTexture(Skybox.SOUTH, south);
-        skybox.setTexture(Skybox.EAST, east);
-        skybox.setTexture(Skybox.UP, up);
-        skybox.setTexture(Skybox.DOWN, down);
-        return skybox;
-        
-   }
+		Skybox skybox = new Skybox("skybox", 100, 100, 100);
 
+		Texture north = TextureManager.loadTexture("./data/sky/north.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+		Texture south = TextureManager.loadTexture("./data/sky/south.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+		Texture east = TextureManager.loadTexture("./data/sky/east.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+		Texture west = TextureManager.loadTexture("./data/sky/west.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+		Texture up = TextureManager.loadTexture("./data/sky/top.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+		Texture down = TextureManager.loadTexture("./data/sky/bottom.jpg",
+				Texture.MM_LINEAR, Texture.FM_LINEAR);
+
+		skybox.setTexture(Skybox.NORTH, north);
+		skybox.setTexture(Skybox.WEST, west);
+		skybox.setTexture(Skybox.SOUTH, south);
+		skybox.setTexture(Skybox.EAST, east);
+		skybox.setTexture(Skybox.UP, up);
+		skybox.setTexture(Skybox.DOWN, down);
+		return skybox;
+
+	}
+
+    
+    HashMap textureCache = new HashMap();
 
 	protected Node loadNode(int areaType)
     {
@@ -133,8 +163,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		RenderedSide file = (RenderedSide)hm3dTypeFile.get(n3dType);
 		
 		MaxToJme maxtojme = new MaxToJme(); 
-		Node node = null; //Where to dump mesh.
-		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); //For loading the raw file
+		Node node = null; // Where to dump mesh.
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); // For
+																					// loading
+																					// the
+																					// raw
+																					// file
 				
 		try {
 			FileInputStream is = new FileInputStream(new File("./data/"+file.modelName));
@@ -153,17 +187,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 			if (file.textureName!=null)
 			{
-				System.out.println("./data/"+file.textureName);
-				Texture texture = TextureManager.loadTexture("./data/"+file.textureName,Texture.MM_LINEAR,
-	                    Texture.FM_LINEAR);
-//				Image img = new Image();
-//				texture.setImage(img);
-
-				texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-				texture.setApply(Texture.AM_ADD);
-				//texture.setCombineFuncRGB(Texture.ACF_ADD);
-				//texture.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-				//texture.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+				Texture texture = (Texture)textureCache.get(file.textureName);
+				
+				if (texture==null) {
+					texture = TextureManager.loadTexture("./data/"+file.textureName,Texture.MM_LINEAR,
+		                    Texture.FM_LINEAR);
+	
+					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+					texture.setApply(Texture.AM_REPLACE);
+					texture.setRotation(qTexture);
+					textureCache.put(file.textureName, texture);
+				}
 
 				TextureState ts = display.getRenderer().createTextureState();
 				ts.setTexture(texture, 0);
@@ -182,37 +216,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
     }
 	
 	
-	/**
-	 * cube side rotation quaternion
-	 */
-	static Quaternion qN, qS, qW, qE, qT, qB;	
-	static 
-	{
-		// creating rotation quaternions for all sides of a cube...
-		qT = new Quaternion();
-		qT.fromAngleAxis(FastMath.PI/2, new Vector3f(1,0,0));
-		qB = new Quaternion();
-		qB.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
-		qN = new Quaternion();
-		qS = new Quaternion();
-		qS.fromAngleAxis(FastMath.PI, new Vector3f(0,1,0));
-		qW = new Quaternion();
-		qW.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-		qE = new Quaternion();
-		qE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
-		
-	}
-	
-	public static HashMap directionAnglesAndTranslations = new HashMap();
-	static 
-	{
-		directionAnglesAndTranslations.put(new Integer(Cube.NORTH), new Object[]{qN,new float[]{0,0,1}});
-		directionAnglesAndTranslations.put(new Integer(Cube.SOUTH), new Object[]{qS,new float[]{0,0,-1}});
-		directionAnglesAndTranslations.put(new Integer(Cube.WEST), new Object[]{qW,new float[]{-1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.EAST), new Object[]{qE,new float[]{1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.TOP), new Object[]{qT,new float[]{0,1,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.BOTTOM), new Object[]{qB,new float[]{0,-1,0}});
-	}
     
 	public RenderedCube[] cubes = null;
 	
@@ -230,6 +233,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		{
 			System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
+			if (c!=null)System.out.println("CUBE Coords: "+ (c.cube.x)+" "+c.cube.y);
 			Side[] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
@@ -238,7 +242,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		}		
 	}
 	
-	public static final float CUBE_EDGE_SIZE = 2.004f; 
 	
 	public void renderSide(int x, int y, int z, int direction, Side side)
 	{
@@ -254,11 +257,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Quaternion q = (Quaternion)f[0];
 		n.setLocalRotation(q);
 		
-		//node.updateRenderState();
 		n.updateRenderState();
-		//rootNode.attachChild(node);
 		rootNode.attachChild(n);
-		
 		rootNode.updateRenderState();
 		
 	}
