@@ -36,7 +36,7 @@ public class Jcrpg {
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, 50, 50, 0, Cube.NORTH);
     	
     	    	
-        LoggingSystem.getLogger().setLevel(java.util.logging.Level.OFF);
+        LoggingSystem.getLogger().setLevel(java.util.logging.Level.ALL);
         J3DCore app = new J3DCore();
         app.cubes = cubes; // set rendered cubes
         app.initCore();
