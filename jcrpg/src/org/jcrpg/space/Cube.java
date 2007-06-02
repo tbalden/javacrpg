@@ -8,7 +8,7 @@ public class Cube {
 	public static final int BELOW_LEVEL = -1, MID_LEVEL = 0, ABOVE_LEVEL = 1;
 	public static final int DEFAULT_LEVEL = MID_LEVEL;
 
-	public static Side n, e, s, w, top, bottom;
+	public Side n, e, s, w, top, bottom;
 	
 	
 	
@@ -17,7 +17,7 @@ public class Cube {
 	 */
 	public int relativeHeight = DEFAULT_LEVEL;
 	
-	public static Side[] sides = {n,e,s,w,top,bottom};
+	public Side[] sides = {n,e,s,w,top,bottom};
 	
 	public int x,y,z;
 	
@@ -34,7 +34,7 @@ public class Cube {
 		}
 	}
 	
-	public static Side getSide(int sideId)
+	public Side getSide(int sideId)
 	{
 		return sides[sideId];
 	}
