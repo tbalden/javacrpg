@@ -1,0 +1,4 @@
+- InputHandler -> create classic keyboard movement/turning which calls J3DCore render area renewal too
+- Change flag for rendered thing!
+- Weather engine - uses change flag too of rendered things
+...
