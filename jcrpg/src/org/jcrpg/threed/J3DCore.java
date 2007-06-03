@@ -5,10 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 
-import org.jcrpg.space.Cube;
+import org.jcrpg.space.Area;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.input.ClassicInputHandler;
+import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.RenderedSide;
 
@@ -26,17 +28,38 @@ import com.jmex.model.XMLparser.Converters.MaxToJme;
 
 public class J3DCore extends com.jme.app.SimpleGame{
 
-    HashMap hmAreaType3dType = new HashMap();
+    HashMap<Integer,Integer> hmAreaType3dType = new HashMap<Integer,Integer>();
 
-    HashMap hm3dTypeFile = new HashMap();
+    HashMap<Integer,RenderedSide> hm3dTypeFile = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 2;
+	public static int RENDER_DISTANCE = 3;
 
 	public static final float CUBE_EDGE_SIZE = 2.0001f; 
 	
 	public static final int MOVE_STEPS = 200;
 
     public static Integer EMPTY_SIDE = new Integer(0);
+
+    
+	public int viewDirection = NORTH;
+	public int viewPositionX = 0;
+	public int viewPositionY = 0;
+	public int viewPositionZ = 0;
+	public int relativeX = 0, relativeY = 0, relativeZ = 0;
+	
+	public Area gameArea = null;
+	
+	public void setArea(Area area)
+	{
+		gameArea = area;
+	}
+	
+	public void setViewPosition(int x,int y,int z)
+	{
+		viewPositionX = x;
+		viewPositionY = y;
+		viewPositionZ = z;
+	}
 
     
 	/**
@@ -70,9 +93,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 	}
 	
-	public int viewDirection = NORTH;
 	
-	public static HashMap directionAnglesAndTranslations = new HashMap();
+	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
 	static 
 	{
 		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new float[]{0,0,1}});
@@ -152,7 +174,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 
     
-    HashMap textureCache = new HashMap();
+    HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
 
 	protected Node loadNode(int areaType)
     {
@@ -211,59 +233,124 @@ public class J3DCore extends com.jme.app.SimpleGame{
     }
 	
 	
-    
-	public RenderedCube[] cubes = null;
-	
 	@Override
 	protected void simpleInitGame() {
-		render(cubes);
+		cam.setLocation(new Vector3f(0,0,0));
+		render();
 	}
 	
-	public void render(RenderedCube[] cubes)
+	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
+	
+	public void render()
 	{
+		System.out.println("RENDER!");
+		int already = 0;
+		int newly = 0;
+		int removed = 0;
+    	// get a specific part of the area to render
+    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ);
+		
+		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
 		Skybox skybox = createSkybox();
 	    rootNode.attachChild(skybox);
 	    
 	    for (int i=0; i<cubes.length; i++)
 		{
-			System.out.println("CUBE "+i);
+			//System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
-			if (c!=null)System.out.println("CUBE Coords: "+ (c.cube.x)+" "+c.cube.y);
+			if (hmCurrentCubes.containsKey(""+c.cube.x+" "+c.cube.y+" "+c.cube.z)) 
+			{
+				already++;
+				// yes, we have it rendered...
+				// remove to let the unrendered ones in the hashmap for after removal from space of rootNode
+				RenderedCube cOrig = hmCurrentCubes.remove(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
+				// add to the new cubes, it is rendered already
+				hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,cOrig); // keep cOrig with jme nodes!!
+				continue;				
+			}
+			newly++;
+			// render the cube newly
+			//System.out.println("CUBE Coords: "+ (c.cube.x)+" "+c.cube.y);
 			Side[] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
-				renderSide(c.renderedX, c.renderedY, c.renderedZ, j, sides[j]);
+				renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j]);
 			}
-		}		
+			// store it to new cubes hashmap
+			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
+		}
+	    for (Iterator it = hmCurrentCubes.values().iterator();it.hasNext();)
+	    {
+			removed++;
+	    	RenderedCube cToDetach = (RenderedCube)it.next();
+	    	for (Iterator<Node> itNode = cToDetach.hsRenderedNodes.iterator(); itNode.hasNext();)
+	    	{
+	    		Node n = itNode.next();
+	    		n.removeFromParent();
+	    		//rootNode.detachChild(itNode.next());
+	    		
+	    	}
+	    }
+	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 		rootNode.updateRenderState();
+		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed);
 	}
 	
 	
-	public void renderSide(int x, int y, int z, int direction, Side side)
+	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
 		System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
 		Node n = loadNode(side.type);
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
-		float cX = (x*CUBE_EDGE_SIZE+1*((float[])f[1])[0]);
-		float cY = (y*CUBE_EDGE_SIZE+1*((float[])f[1])[1]);
-		float cZ = (z*CUBE_EDGE_SIZE+1*((float[])f[1])[2])+25.5f;
+		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((float[])f[1])[0]);//+0.5f;
+		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((float[])f[1])[1]);//+0.5f;
+		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((float[])f[1])[2]);//+25.5f;
 	
 		n.setLocalTranslation(new Vector3f(cX,cY,cZ));
 		Quaternion q = (Quaternion)f[0];
 		n.setLocalRotation(q);
-		
 		n.updateRenderState();
+
+		cube.hsRenderedNodes.add(n);
 		rootNode.attachChild(n);
 		
 	}
 	
-	public void update()
-	{
-		rootNode.updateWorldVectors();
-		rootNode.updateRenderState();
-		cam.apply();
+	public void moveForward(int direction) {
+		if (direction == NORTH) {
+			viewPositionZ++;relativeZ++;
+		} else if (direction == SOUTH) {
+			viewPositionZ--;relativeZ--;
+		} else if (direction == EAST) {
+			viewPositionX++;relativeX++;
+		} else if (direction == WEST) {
+			viewPositionX--;relativeX--;
+		} else if (direction == TOP) {
+			viewPositionY++;relativeY++;
+		} else if (direction == BOTTOM) {
+			viewPositionY--;relativeY--;
+		}
+		render();
 	}
+
+	public void moveBackward(int direction) {
+		if (direction == NORTH) {
+			viewPositionZ--;relativeZ--;
+		} else if (direction == SOUTH) {
+			viewPositionZ++;relativeZ++;
+		} else if (direction == EAST) {
+			viewPositionX--;relativeX--;
+		} else if (direction == WEST) {
+			viewPositionX++;relativeX++;
+		} else if (direction == TOP) {
+			viewPositionY--;relativeY--;
+		} else if (direction == BOTTOM) {
+			viewPositionY++;relativeY++;
+		}
+		render();
+	}
+
 	
 	public void turnRight()
 	{

@@ -43,6 +43,7 @@ public class CKeyForwardAction extends KeyInputAction {
         float oldZ = loc.getZ();
         if ( !camera.isParallelProjection() ) {
     		loc.addLocal(J3DCore.directions[handler.core.viewDirection]);//camera.getDirection().mult(10.0f * evt.getTime(), tempVa));//speed
+            handler.core.moveForward(handler.core.viewDirection);
 /*    		while (true)
         	{
         		loc.addLocal(camera.getDirection().mult(speed * evt.getTime(), tempVa));
