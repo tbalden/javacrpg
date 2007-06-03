@@ -42,7 +42,8 @@ public class CKeyBackwardAction extends KeyInputAction {
         float oldZ = loc.getZ();
         if ( !camera.isParallelProjection() ) {
     		loc.subtractLocal(J3DCore.directions[handler.core.viewDirection]);//camera.getDirection().mult(10.0f * evt.getTime(), tempVa));//speed
-/*        	while (true)
+            handler.core.moveBackward(handler.core.viewDirection);
+            /*        	while (true)
         	{
         		camera.update();
         		if (oldZ+0.1f <= loc.getZ())

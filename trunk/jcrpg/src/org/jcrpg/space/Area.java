@@ -25,7 +25,7 @@ public class Area {
 	
 	public static String getKeyString(int x, int y, int z)
 	{
-		return ""+x+"-"+y+"-"+z;
+		return ""+x+" "+y+" "+z;
 	}
 	
 }

@@ -1,15 +1,12 @@
 package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.jcrpg.space.Area;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 
 public class RenderedArea {
-	
-	
 	
 	public static RenderedCube[] getRenderedSpace(Area space, int x, int y, int z)
 	{
@@ -23,13 +20,13 @@ public class RenderedArea {
 				for (int x1=-1*distance; x1<=1*distance; x1++)
 				{
 					
-					Cube c = space.getCube(x+x1, y+y1, z+z1);
-					if (c!=null)System.out.println("CUBE Coords: "+ (c.x)+" "+c.y);
-					System.out.println("Coordinates: "+(x+x1)+ "-"+ (y+y1)+"-"+(z+z1) );
+					Cube c = space.getCube(x+x1, y+y1, z-z1);
+					//if (c!=null)System.out.println("CUBE Coords: "+ (c.x)+" "+c.y);
+					//System.out.println("Coordinates: "+(x+x1)+ "-"+ (y+y1)+"-"+(z+z1) );
 					if (c!=null) 
 					{	
 						System.out.println(c.toString());
-						elements.add(new RenderedCube(c,x1,z1,y1));
+						elements.add(new RenderedCube(c,x1,y1,z1));
 					}
 				}
 			}
