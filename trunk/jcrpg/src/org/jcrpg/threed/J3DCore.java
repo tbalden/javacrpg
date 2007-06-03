@@ -32,7 +32,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap<Integer,RenderedSide> hm3dTypeFile = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 3;
+	public static int RENDER_DISTANCE = 15;
 
 	public static final float CUBE_EDGE_SIZE = 2.0001f; 
 	
