@@ -1,6 +1,8 @@
 package org.jcrpg.space;
 
-public class Side {
+import org.jcrpg.abs.change.ChangingImpl;
+
+public class Side extends ChangingImpl {
 
 	public Side(int type)
 	{

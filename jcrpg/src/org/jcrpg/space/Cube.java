@@ -1,14 +1,17 @@
 package org.jcrpg.space;
 
+import org.jcrpg.abs.change.ChangingImpl;
 
-public class Cube {
 
-	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3, TOP = 4, BOTTOM = 5;
+public class Cube extends ChangingImpl {
+
 
 	public static final int BELOW_LEVEL = -1, MID_LEVEL = 0, ABOVE_LEVEL = 1;
 	public static final int DEFAULT_LEVEL = MID_LEVEL;
 
 	public Side n, e, s, w, top, bottom;
+	
+	public long lastChangeTimeStamp = System.currentTimeMillis();
 	
 	
 	

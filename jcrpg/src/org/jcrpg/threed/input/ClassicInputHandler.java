@@ -1,5 +1,7 @@
 package org.jcrpg.threed.input;
 
+import org.jcrpg.threed.J3DCore;
+
 import com.jme.input.InputHandler;
 import com.jme.renderer.Camera;
 
@@ -23,9 +25,9 @@ public class ClassicInputHandler  extends InputHandler {
     }
 
     
-    public ClassicInputHandler(Camera cam)
+    public ClassicInputHandler(J3DCore core, Camera cam)
     {
-    	keyboardLookHandler = new ClassicKeyboardLookHandler(cam);
+    	keyboardLookHandler = new ClassicKeyboardLookHandler(core,cam);
         addToAttachedHandlers( keyboardLookHandler );
     	mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );
