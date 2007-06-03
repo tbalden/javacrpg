@@ -4,39 +4,24 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.input.ClassicInputHandler;
-import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.RenderedSide;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Skybox;
-import com.jme.scene.shape.Torus;
-import com.jme.scene.state.MaterialState;
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
-import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
-import com.jme.util.BumpMapColorController;
-import com.jme.util.LoggingSystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.XMLparser.JmeBinaryReader;
 import com.jmex.model.XMLparser.Converters.MaxToJme;
 
 public class J3DCore extends com.jme.app.SimpleGame{
@@ -45,9 +30,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap hm3dTypeFile = new HashMap();
     
-	public static int RENDER_DISTANCE = 6;
+	public static int RENDER_DISTANCE = 2;
 
 	public static final float CUBE_EDGE_SIZE = 2.0001f; 
+	
+	public static final int MOVE_STEPS = 200;
 
     public static Integer EMPTY_SIDE = new Integer(0);
 
@@ -55,7 +42,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * cube side rotation quaternion
 	 */
-	static Quaternion qN, qS, qW, qE, qT, qB, qTexture;	
+	static Quaternion qN, qS, qW, qE, qT, qB, qTexture;
+
+	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3, TOP = 4, BOTTOM = 5;
+
+	public static Vector3f dNorth = new Vector3f(0, 0, -1 * CUBE_EDGE_SIZE),
+			dSouth = new Vector3f(0, 0, 1 * CUBE_EDGE_SIZE),
+			dEast = new Vector3f(1 * CUBE_EDGE_SIZE, 0, 0),
+			dWest = new Vector3f(-1 * CUBE_EDGE_SIZE, 0, 0);
+	public static Vector3f[] directions = new Vector3f[] {dNorth, dEast, dSouth, dWest};
 	static 
 	{
 		// creating rotation quaternions for all sides of a cube...
@@ -75,15 +70,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 	}
 	
+	public int viewDirection = NORTH;
+	
 	public static HashMap directionAnglesAndTranslations = new HashMap();
 	static 
 	{
-		directionAnglesAndTranslations.put(new Integer(Cube.NORTH), new Object[]{qN,new float[]{0,0,1}});
-		directionAnglesAndTranslations.put(new Integer(Cube.SOUTH), new Object[]{qS,new float[]{0,0,-1}});
-		directionAnglesAndTranslations.put(new Integer(Cube.WEST), new Object[]{qW,new float[]{-1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.EAST), new Object[]{qE,new float[]{1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.TOP), new Object[]{qT,new float[]{0,1,0}});
-		directionAnglesAndTranslations.put(new Integer(Cube.BOTTOM), new Object[]{qB,new float[]{0,-1,0}});
+		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new float[]{0,0,1}});
+		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new float[]{0,0,-1}});
+		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new float[]{-1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new float[]{1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(TOP), new Object[]{qT,new float[]{0,1,0}});
+		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new float[]{0,-1,0}});
 	}
     
 	public J3DCore()
@@ -93,11 +90,13 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaType3dType.put(new Integer(1), new Integer(1));
 		hmAreaType3dType.put(new Integer(2), new Integer(2));
 		hmAreaType3dType.put(new Integer(3), new Integer(3));
+		hmAreaType3dType.put(new Integer(4), new Integer(4));
 		
 		// 3d type to file mapping		
 		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/plane.3ds","sides/wall_stone.jpg"));
 		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
 		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
+		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/plane.3ds","sides/ceiling_pattern1.jpg"));
 		
 	}
 
@@ -110,7 +109,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	protected void initSystem() throws JmeException
 	{
 		super.initSystem();
-		input = new ClassicInputHandler(cam);
+		input = new ClassicInputHandler(this,cam);
 
 	}
 	
@@ -164,12 +163,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		MaxToJme maxtojme = new MaxToJme(); 
 		Node node = null; // Where to dump mesh.
-		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); // For
-																					// loading
-																					// the
-																					// raw
-																					// file
-				
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
+		
 		try {
 			FileInputStream is = new FileInputStream(new File("./data/"+file.modelName));
 			
@@ -240,6 +235,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				renderSide(c.renderedX, c.renderedY, c.renderedZ, j, sides[j]);
 			}
 		}		
+		rootNode.updateRenderState();
 	}
 	
 	
@@ -251,7 +247,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
 		float cX = (x*CUBE_EDGE_SIZE+1*((float[])f[1])[0]);
 		float cY = (y*CUBE_EDGE_SIZE+1*((float[])f[1])[1]);
-		float cZ = (z*CUBE_EDGE_SIZE+1*((float[])f[1])[2])+25;
+		float cZ = (z*CUBE_EDGE_SIZE+1*((float[])f[1])[2])+25.5f;
 	
 		n.setLocalTranslation(new Vector3f(cX,cY,cZ));
 		Quaternion q = (Quaternion)f[0];
@@ -259,9 +255,26 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		n.updateRenderState();
 		rootNode.attachChild(n);
-		rootNode.updateRenderState();
 		
 	}
-
+	
+	public void update()
+	{
+		rootNode.updateWorldVectors();
+		rootNode.updateRenderState();
+		cam.apply();
+	}
+	
+	public void turnRight()
+	{
+		viewDirection++;
+		if (viewDirection==directions.length) viewDirection = 0;
+	}
+	public void turnLeft()
+	{
+		viewDirection--;
+		if (viewDirection==-1) viewDirection = directions.length-1;
+	}
+	
 
 }
