@@ -39,8 +39,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         //keyboard.set( "lookDown", KeyInput.KEY_DOWN );
         //keyboard.set( "turnRight", KeyInput.KEY_RIGHT );
         //keyboard.set( "turnLeft", KeyInput.KEY_LEFT );
-        keyboard.set( "turnRight", KeyInput.KEY_A );
-        keyboard.set( "turnLeft", KeyInput.KEY_D );
+        keyboard.set( "turnRight", KeyInput.KEY_D );
+        keyboard.set( "turnLeft", KeyInput.KEY_A );
         
         float moveSpeed = 0.001f;
         float rotateSpeed = 0.05f;
