@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -32,7 +33,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap<Integer,RenderedSide> hm3dTypeFile = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 15;
+	public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 2.0001f; 
 	
@@ -115,7 +116,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaType3dType.put(new Integer(4), new Integer(4));
 		
 		// 3d type to file mapping		
-		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/plane.3ds","sides/wall_stone.jpg"));
+		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/wall_thick.3ds",null));//"sides/wall_stone.jpg"));
 		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
 		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/plane.3ds","sides/ceiling_pattern1.jpg"));
@@ -183,7 +184,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		RenderedSide file = (RenderedSide)hm3dTypeFile.get(n3dType);
 		
-		MaxToJme maxtojme = new MaxToJme(); 
+		MaxToJme maxtojme = new MaxToJme();
+		try {
+			// setting texture directory for 3ds models...
+			maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/").toURI().toURL());
+		}
+		 catch (IOException ioex)
+		 {
+			 
+		 }
 		Node node = null; // Where to dump mesh.
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 		
@@ -241,19 +250,29 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
+	Skybox skybox = null;
+	
 	public void render()
 	{
 		System.out.println("RENDER!");
 		int already = 0;
 		int newly = 0;
 		int removed = 0;
+		
+		if (skybox==null) {
+			skybox = createSkybox();
+		    rootNode.attachChild(skybox);
+		}
+
+		// moving skybox with view movement vector too.
+		skybox.setLocalTranslation(new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
+	    skybox.updateRenderState();
+
     	// get a specific part of the area to render
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ);
 		
 		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
-		Skybox skybox = createSkybox();
-	    rootNode.attachChild(skybox);
-	    
+
 	    for (int i=0; i<cubes.length; i++)
 		{
 			//System.out.println("CUBE "+i);
