@@ -29,7 +29,7 @@ public class Jcrpg {
         	{
             	for (int y=0; y<1; y++)
             	{
-            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(r.nextInt(18)>15?1:0),new Side(0),new Side(0),new Side(r.nextInt(18)>15?1:0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
+            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(r.nextInt(18)>15?1:0),new Side(r.nextInt(18)>16?5:0),new Side(0),new Side(r.nextInt(18)>15?1:0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
 //            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(r.nextInt(18)>10?1:0),new Side(0),new Side(0),new Side(r.nextInt(18)>10?1:0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
 //            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(0),new Side(0),new Side(0),new Side(0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
             		gameArea.addCube(x, y, z, c);
