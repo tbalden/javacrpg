@@ -114,12 +114,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaType3dType.put(new Integer(2), new Integer(2));
 		hmAreaType3dType.put(new Integer(3), new Integer(3));
 		hmAreaType3dType.put(new Integer(4), new Integer(4));
+		hmAreaType3dType.put(new Integer(5), new Integer(5));
 		
 		// 3d type to file mapping		
 		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/wall_thick.3ds",null));//"sides/wall_stone.jpg"));
 		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
 		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
-		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/plane.3ds","sides/ceiling_pattern1.jpg"));
+		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
+		hm3dTypeFile.put(new Integer(5), new RenderedSide("sides/wall_open.3ds",null));//"sides/wall_stone.jpg"));
 		
 	}
 
@@ -236,7 +238,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			}
 
 		} catch(Exception err)  {
-		    System.out.println("Error loading md3 model:"+err);
+		    System.out.println("Error loading model:"+err);
+		    err.printStackTrace();
 		}
 		return node;
     }
