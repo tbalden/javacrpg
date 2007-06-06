@@ -121,7 +121,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
 		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeFile.put(new Integer(5), new RenderedSide("sides/wall_open.3ds",null));//"sides/wall_stone.jpg"));
+		hm3dTypeFile.put(new Integer(5), new RenderedSide(new String[]{"sides/door.3ds","sides/wall_door.3ds"},new String[]{null,null}));//"sides/wall_stone.jpg"));
 		
 	}
 
@@ -143,7 +143,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	protected void updateInput() {
 		// TODO Auto-generated method stub
 	
-		fpsNode.detachAllChildren();   	
+		//fpsNode.detachAllChildren();   	
     	super.updateInput();
 	}
     
@@ -179,7 +179,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
     HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
 
-	protected Node loadNode(int areaType)
+	protected Node[] loadNode(int areaType)
     {
 		Integer n3dType = (Integer)hmAreaType3dType.get(new Integer(areaType));
 		if (n3dType.equals(EMPTY_SIDE)) return null;
@@ -195,53 +195,57 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		 {
 			 
 		 }
-		Node node = null; // Where to dump mesh.
-		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
-		
-		try {
-			FileInputStream is = new FileInputStream(new File("./data/"+file.modelName));
+		Node[] r = new Node[file.modelName.length];
+		for (int i=0; i<file.modelName.length; i++) {
+			Node node = null; // Where to dump mesh.
+			ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 			
-
-			// Converts the file into a jme usable file
-			maxtojme.convert(is, bytearrayoutputstream);
-		 
-		    // Used to convert the jme usable file to a TriMesh
-		    BinaryImporter binaryImporter = new BinaryImporter(); 
-		    ByteArrayInputStream in=new ByteArrayInputStream(bytearrayoutputstream.toByteArray());
-		 
-		    //importer returns a Loadable, cast to Node
-		    node = (Node)binaryImporter.load(in); 
-		    is.close();
-
-			if (file.textureName!=null)
-			{
-				Texture texture = (Texture)textureCache.get(file.textureName);
+			try {
+				FileInputStream is = new FileInputStream(new File("./data/"+file.modelName[i]));
 				
-				if (texture==null) {
-					texture = TextureManager.loadTexture("./data/"+file.textureName,Texture.MM_LINEAR,
-		                    Texture.FM_LINEAR);
 	
-					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-					texture.setApply(Texture.AM_REPLACE);
-					texture.setRotation(qTexture);
-					textureCache.put(file.textureName, texture);
+				// Converts the file into a jme usable file
+				maxtojme.convert(is, bytearrayoutputstream);
+			 
+			    // Used to convert the jme usable file to a TriMesh
+			    BinaryImporter binaryImporter = new BinaryImporter(); 
+			    ByteArrayInputStream in=new ByteArrayInputStream(bytearrayoutputstream.toByteArray());
+			 
+			    //importer returns a Loadable, cast to Node
+			    node = (Node)binaryImporter.load(in); 
+			    is.close();
+	
+				if (file.textureName[i]!=null)
+				{
+					Texture texture = (Texture)textureCache.get(file.textureName[i]);
+					
+					if (texture==null) {
+						texture = TextureManager.loadTexture("./data/"+file.textureName[i],Texture.MM_LINEAR,
+			                    Texture.FM_LINEAR);
+		
+						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						texture.setApply(Texture.AM_REPLACE);
+						texture.setRotation(qTexture);
+						textureCache.put(file.textureName[i], texture);
+					}
+	
+					TextureState ts = display.getRenderer().createTextureState();
+					ts.setTexture(texture, 0);
+					System.out.println("Texture!");
+					
+	                ts.setEnabled(true);
+	                
+					node.setRenderState(ts);
+					
 				}
-
-				TextureState ts = display.getRenderer().createTextureState();
-				ts.setTexture(texture, 0);
-				System.out.println("Texture!");
-				
-                ts.setEnabled(true);
-                
-				node.setRenderState(ts);
-				
+				r[i] = node;
+	
+			} catch(Exception err)  {
+			    System.out.println("Error loading model:"+err);
+			    err.printStackTrace();
 			}
-
-		} catch(Exception err)  {
-		    System.out.println("Error loading model:"+err);
-		    err.printStackTrace();
 		}
-		return node;
+		return r;
     }
 	
 	
@@ -322,20 +326,22 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
 		System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
-		Node n = loadNode(side.type);
+		Node[] n = loadNode(side.type);
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
 		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((float[])f[1])[0]);//+0.5f;
 		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((float[])f[1])[1]);//+0.5f;
 		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((float[])f[1])[2]);//+25.5f;
 	
-		n.setLocalTranslation(new Vector3f(cX,cY,cZ));
-		Quaternion q = (Quaternion)f[0];
-		n.setLocalRotation(q);
-		n.updateRenderState();
+		for (int i=0; i<n.length; i++) {
+			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
+			Quaternion q = (Quaternion)f[0];
+			n[i].setLocalRotation(q);
+			n[i].updateRenderState();
 
-		cube.hsRenderedNodes.add(n);
-		rootNode.attachChild(n);
+			cube.hsRenderedNodes.add(n[i]);
+			rootNode.attachChild(n[i]);
+		}
 		
 	}
 	
