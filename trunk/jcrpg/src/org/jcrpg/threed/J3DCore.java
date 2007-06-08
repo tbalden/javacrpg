@@ -12,8 +12,10 @@ import org.jcrpg.space.Area;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
+import org.jcrpg.threed.scene.RenderedContinuousSide;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.RenderedSide;
+import org.jcrpg.threed.scene.SimpleModel;
 
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
@@ -98,17 +100,38 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
 	static 
 	{
-		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new float[]{0,0,1}});
-		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new float[]{0,0,-1}});
-		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new float[]{-1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new float[]{1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(TOP), new Object[]{qT,new float[]{0,1,0}});
-		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new float[]{0,-1,0}});
+		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new int[]{0,0,1}});
+		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new int[]{0,0,-1}});
+		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new int[]{-1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new int[]{1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(TOP), new Object[]{qT,new int[]{0,1,0}});
+		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new int[]{0,-1,0}});
+	}
+	
+	public static HashMap<Integer,Integer> oppositeDirections = new HashMap<Integer, Integer>();
+	static
+	{
+		oppositeDirections.put(new Integer(NORTH), new Integer(SOUTH));
+		oppositeDirections.put(new Integer(SOUTH), new Integer(NORTH));
+		oppositeDirections.put(new Integer(WEST), new Integer(EAST));
+		oppositeDirections.put(new Integer(EAST), new Integer(WEST));
+		oppositeDirections.put(new Integer(TOP), new Integer(BOTTOM));
+		oppositeDirections.put(new Integer(BOTTOM), new Integer(TOP));
+	}
+	public static HashMap<Integer,Integer> nextDirections = new HashMap<Integer, Integer>();
+	static
+	{
+		nextDirections.put(new Integer(NORTH), new Integer(EAST));
+		nextDirections.put(new Integer(SOUTH), new Integer(WEST));
+		nextDirections.put(new Integer(WEST), new Integer(NORTH));
+		nextDirections.put(new Integer(EAST), new Integer(SOUTH));
+		nextDirections.put(new Integer(TOP), new Integer(BOTTOM));
+		nextDirections.put(new Integer(BOTTOM), new Integer(TOP));
 	}
     
 	public J3DCore()
 	{
-		// area type to 3d type mapping
+		// area subtype to 3d type mapping
 		hmAreaType3dType.put(new Integer(0), EMPTY_SIDE);
 		hmAreaType3dType.put(new Integer(1), new Integer(1));
 		hmAreaType3dType.put(new Integer(2), new Integer(2));
@@ -117,11 +140,26 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaType3dType.put(new Integer(5), new Integer(5));
 		
 		// 3d type to file mapping		
-		hm3dTypeFile.put(new Integer(1), new RenderedSide("sides/wall_thick.3ds",null));//"sides/wall_stone.jpg"));
+		hm3dTypeFile.put(new Integer(1), new RenderedContinuousSide(
+				new SimpleModel[]{new SimpleModel("sides/wall_thick.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				));
+		hm3dTypeFile.put(new Integer(5), new RenderedContinuousSide(
+				new SimpleModel[]{new SimpleModel("sides/door.3ds", null),new SimpleModel("sides/wall_door.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				));
+
 		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
 		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeFile.put(new Integer(5), new RenderedSide(new String[]{"sides/door.3ds","sides/wall_door.3ds"},new String[]{null,null}));//"sides/wall_stone.jpg"));
+				
+				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
 	}
 
@@ -179,13 +217,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
     HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
 
-	protected Node[] loadNode(int areaType)
+    private Node loadNode(SimpleModel o)
     {
-		Integer n3dType = (Integer)hmAreaType3dType.get(new Integer(areaType));
-		if (n3dType.equals(EMPTY_SIDE)) return null;
-		
-		RenderedSide file = (RenderedSide)hm3dTypeFile.get(n3dType);
-		
 		MaxToJme maxtojme = new MaxToJme();
 		try {
 			// setting texture directory for 3ds models...
@@ -195,55 +228,105 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		 {
 			 
 		 }
-		Node[] r = new Node[file.modelName.length];
-		for (int i=0; i<file.modelName.length; i++) {
-			Node node = null; // Where to dump mesh.
-			ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
-			
-			try {
-				FileInputStream is = new FileInputStream(new File("./data/"+file.modelName[i]));
-				
-	
-				// Converts the file into a jme usable file
-				maxtojme.convert(is, bytearrayoutputstream);
-			 
-			    // Used to convert the jme usable file to a TriMesh
-			    BinaryImporter binaryImporter = new BinaryImporter(); 
-			    ByteArrayInputStream in=new ByteArrayInputStream(bytearrayoutputstream.toByteArray());
-			 
-			    //importer returns a Loadable, cast to Node
-			    node = (Node)binaryImporter.load(in); 
-			    is.close();
-	
-				if (file.textureName[i]!=null)
-				{
-					Texture texture = (Texture)textureCache.get(file.textureName[i]);
-					
-					if (texture==null) {
-						texture = TextureManager.loadTexture("./data/"+file.textureName[i],Texture.MM_LINEAR,
-			                    Texture.FM_LINEAR);
+		Node node = null; // Where to dump mesh.
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 		
-						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-						texture.setApply(Texture.AM_REPLACE);
-						texture.setRotation(qTexture);
-						textureCache.put(file.textureName[i], texture);
-					}
+		try {
+			FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
+			
+
+			// Converts the file into a jme usable file
+			maxtojme.convert(is, bytearrayoutputstream);
+		 
+		    // Used to convert the jme usable file to a TriMesh
+		    BinaryImporter binaryImporter = new BinaryImporter(); 
+		    ByteArrayInputStream in=new ByteArrayInputStream(bytearrayoutputstream.toByteArray());
+		 
+		    //importer returns a Loadable, cast to Node
+		    node = (Node)binaryImporter.load(in); 
+		    is.close();
+
+			if (o.textureName!=null)
+			{
+				Texture texture = (Texture)textureCache.get(o.textureName);
+				
+				if (texture==null) {
+					texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MM_LINEAR,
+		                    Texture.FM_LINEAR);
 	
-					TextureState ts = display.getRenderer().createTextureState();
-					ts.setTexture(texture, 0);
-					System.out.println("Texture!");
-					
-	                ts.setEnabled(true);
-	                
-					node.setRenderState(ts);
-					
+					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+					texture.setApply(Texture.AM_REPLACE);
+					texture.setRotation(qTexture);
+					textureCache.put(o.textureName, texture);
 				}
-				r[i] = node;
-	
-			} catch(Exception err)  {
-			    System.out.println("Error loading model:"+err);
-			    err.printStackTrace();
+
+				TextureState ts = display.getRenderer().createTextureState();
+				ts.setTexture(texture, 0);
+				System.out.println("Texture!");
+				
+                ts.setEnabled(true);
+                
+				node.setRenderState(ts);
+				
 			}
+			return node;
+		} catch(Exception err)  {
+		    System.out.println("Error loading model:"+err);
+		    err.printStackTrace();
+		    return null;
+		}
+    	
+    }
+    
+    int SWITCH_SIDETYPE_NORMAL = 0;
+    int SWITCH_SIDETYPE_CONTINUOUS = 1;
+    int SWITCH_SIDETYPE_ONESIDECONTINUOUS_NORMAL = 2;
+    int SWITCH_SIDETYPE_ONESIDECONTINUOUS_OPPOSITE = 3;
+    int SWITCH_SIDETYPE_NONCONTINUOUS = 4;
+    
+	protected Node[] loadObjects(RenderedSide file, int switchSideType)
+    {
+		
+		Node[] r = null;
+		SimpleModel[] objects = null;
+		if (switchSideType == SWITCH_SIDETYPE_NORMAL)
+		{
+			objects = file.objects;
+		} else
+		if (switchSideType == SWITCH_SIDETYPE_CONTINUOUS)
+		{
+			if (file instanceof RenderedContinuousSide)
+			{
+				objects = ((RenderedContinuousSide)file).continuous;
+			}
+		} else
+		if (switchSideType == SWITCH_SIDETYPE_ONESIDECONTINUOUS_NORMAL)
+		{
+			if (file instanceof RenderedContinuousSide)
+			{
+				objects = ((RenderedContinuousSide)file).oneSideContinuousNormal;
+			}
+		} else
+		if (switchSideType == SWITCH_SIDETYPE_ONESIDECONTINUOUS_OPPOSITE)
+		{
+			if (file instanceof RenderedContinuousSide)
+			{
+				objects = ((RenderedContinuousSide)file).oneSideContinuousOpposite;
+			}
+		} else
+		if (switchSideType == SWITCH_SIDETYPE_NONCONTINUOUS)
+		{
+			if (file instanceof RenderedContinuousSide)
+			{
+				objects = ((RenderedContinuousSide)file).nonContinuous;
+			}
+		}
+		r = new Node[objects.length];
+		if (objects!=null)
+		for (int i=0; i<objects.length; i++) {
+			if (objects[i]==null) continue;
+			Node node = loadNode(objects[i]); // Where to dump mesh.
+			r[i] = node;
 		}
 		return r;
     }
@@ -322,26 +405,75 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed);
 	}
 	
-	
-	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
+
+	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
-		System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
-		Node[] n = loadNode(side.type);
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
-		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((float[])f[1])[0]);//+0.5f;
-		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((float[])f[1])[1]);//+0.5f;
-		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((float[])f[1])[2]);//+25.5f;
+		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((int[])f[1])[0]);//+0.5f;
+		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((int[])f[1])[1]);//+0.5f;
+		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((int[])f[1])[2]);//+25.5f;
 	
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
 			Quaternion q = (Quaternion)f[0];
 			n[i].setLocalRotation(q);
+			
 			n[i].updateRenderState();
 
 			cube.hsRenderedNodes.add(n[i]);
 			rootNode.attachChild(n[i]);
 		}
+		
+	}
+	
+	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
+	{
+		System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
+		Integer n3dType = (Integer)hmAreaType3dType.get(new Integer(side.subtype));
+		if (n3dType.equals(EMPTY_SIDE)) return;
+		RenderedSide renderedSide = hm3dTypeFile.get(n3dType);
+		
+		
+		Node[] n = loadObjects(renderedSide, SWITCH_SIDETYPE_NORMAL);
+		renderNodes(n, cube, x, y, z, direction);
+
+		if (direction!=TOP && direction!=BOTTOM && renderedSide instanceof RenderedContinuousSide)
+		{
+			int dir = nextDirections.get(new Integer(direction)).intValue();
+			if (cube.cube.getNeighbour(dir)!=null)
+			if (cube.cube.getNeighbour(dir).getSide(direction).type == side.type)
+			{
+				if (cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue()).getSide(direction).type == side.type)
+				{
+					n = loadObjects(renderedSide, SWITCH_SIDETYPE_CONTINUOUS);
+					renderNodes(n, cube, x, y, z, direction);
+				} else
+				{
+					// normal direction is continuous
+					n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_NORMAL);
+					renderNodes(n, cube, x, y, z, direction);
+				}
+				
+			} else 
+			{
+				if (cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue()).getSide(direction).type == side.type)
+				{
+					// opposite to normal direction is continuous 
+					// normal direction is continuous
+					n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_OPPOSITE);
+					renderNodes(n, cube, x, y, z, direction);
+				
+				}else
+				{
+					// no continuous side found
+					n = loadObjects(renderedSide, SWITCH_SIDETYPE_NONCONTINUOUS);
+					renderNodes(n, cube, x, y, z, direction);
+				}
+			} 
+			
+		}
+		
 		
 	}
 	

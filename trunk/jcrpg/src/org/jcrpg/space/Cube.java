@@ -1,6 +1,7 @@
 package org.jcrpg.space;
 
 import org.jcrpg.abs.change.ChangingImpl;
+import org.jcrpg.threed.J3DCore;
 
 
 public class Cube extends ChangingImpl {
@@ -45,6 +46,14 @@ public class Cube extends ChangingImpl {
 	public String toString()
 	{
 		return "Cube: "+ x+" "+y+" "+z;
+	}
+	
+	public Cube getNeighbour(int direction)
+	{
+		Object[] o = J3DCore.directionAnglesAndTranslations.get(new Integer(direction));
+		int[] f = (int[])o[1];
+		
+		return parent.getCube(x+f[0], y+f[1], z+f[2]);
 	}
 	
 }
