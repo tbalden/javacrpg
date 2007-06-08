@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.jcrpg.space.Area;
+import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -102,8 +103,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	{
 		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new int[]{0,0,1}});
 		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new int[]{0,0,-1}});
-		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new int[]{-1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new int[]{1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new int[]{1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new int[]{-1,0,0}});
 		directionAnglesAndTranslations.put(new Integer(TOP), new Object[]{qT,new int[]{0,1,0}});
 		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new int[]{0,-1,0}});
 	}
@@ -121,10 +122,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public static HashMap<Integer,Integer> nextDirections = new HashMap<Integer, Integer>();
 	static
 	{
-		nextDirections.put(new Integer(NORTH), new Integer(EAST));
-		nextDirections.put(new Integer(SOUTH), new Integer(WEST));
-		nextDirections.put(new Integer(WEST), new Integer(NORTH));
+		nextDirections.put(new Integer(NORTH), new Integer(WEST));
+		nextDirections.put(new Integer(SOUTH), new Integer(EAST));
 		nextDirections.put(new Integer(EAST), new Integer(SOUTH));
+		nextDirections.put(new Integer(WEST), new Integer(NORTH));
 		nextDirections.put(new Integer(TOP), new Integer(BOTTOM));
 		nextDirections.put(new Integer(BOTTOM), new Integer(TOP));
 	}
@@ -438,37 +439,45 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Node[] n = loadObjects(renderedSide, SWITCH_SIDETYPE_NORMAL);
 		renderNodes(n, cube, x, y, z, direction);
 
+		Cube checkCube = null;
 		if (direction!=TOP && direction!=BOTTOM && renderedSide instanceof RenderedContinuousSide)
 		{
 			int dir = nextDirections.get(new Integer(direction)).intValue();
 			if (cube.cube.getNeighbour(dir)!=null)
 			if (cube.cube.getNeighbour(dir).getSide(direction).type == side.type)
 			{
-				if (cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue()).getSide(direction).type == side.type)
-				{
-					n = loadObjects(renderedSide, SWITCH_SIDETYPE_CONTINUOUS);
-					renderNodes(n, cube, x, y, z, direction);
-				} else
-				{
-					// normal direction is continuous
-					n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_NORMAL);
-					renderNodes(n, cube, x, y, z, direction);
+				checkCube = cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue());
+				if (checkCube !=null) {
+					if (checkCube.getSide(direction).type == side.type)
+					{
+						n = loadObjects(renderedSide, SWITCH_SIDETYPE_CONTINUOUS);
+						renderNodes(n, cube, x, y, z, direction);
+					} else
+					{
+						// normal direction is continuous
+						n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_NORMAL);
+						renderNodes(n, cube, x, y, z, direction);
+					}
 				}
 				
 			} else 
 			{
-				if (cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue()).getSide(direction).type == side.type)
+				checkCube = cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue());
+				if (checkCube!=null)
 				{
-					// opposite to normal direction is continuous 
-					// normal direction is continuous
-					n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_OPPOSITE);
-					renderNodes(n, cube, x, y, z, direction);
-				
-				}else
-				{
-					// no continuous side found
-					n = loadObjects(renderedSide, SWITCH_SIDETYPE_NONCONTINUOUS);
-					renderNodes(n, cube, x, y, z, direction);
+					if (checkCube.getSide(direction).type == side.type)
+					{
+						// opposite to normal direction is continuous 
+						// normal direction is continuous
+						n = loadObjects(renderedSide, SWITCH_SIDETYPE_ONESIDECONTINUOUS_OPPOSITE);
+						renderNodes(n, cube, x, y, z, direction);
+					
+					}else
+					{
+						// no continuous side found
+						n = loadObjects(renderedSide, SWITCH_SIDETYPE_NONCONTINUOUS);
+						renderNodes(n, cube, x, y, z, direction);
+					}
 				}
 			} 
 			
