@@ -1,18 +1,32 @@
 package org.jcrpg.threed.scene;
 
+
 public class RenderedSide {
 
-	public String[] modelName, textureName;
 	
-	public RenderedSide(String[] modelName, String[] textureName)
+	public SimpleModel[] objects;
+	
+	public RenderedCube parent = null;
+	
+	public RenderedSide(SimpleModel[] objects)
 	{
-		this.modelName = modelName;
-		this.textureName = textureName;		
+		this.objects = objects;
 	}
 	public RenderedSide(String modelName, String textureName)
 	{
-		this.modelName = new String[]{modelName};
-		this.textureName = new String[]{textureName};		
+		objects = new SimpleModel[] {new SimpleModel(modelName,textureName)};
 	}
+	
+	
+	
+	
+	public RenderedCube getParent() {
+		return parent;
+	}
+	public void setParent(RenderedCube parent) {
+		this.parent = parent;
+	}
+	
+	
 	
 }
