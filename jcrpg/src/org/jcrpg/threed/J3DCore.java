@@ -32,11 +32,11 @@ import com.jmex.model.XMLparser.Converters.MaxToJme;
 
 public class J3DCore extends com.jme.app.SimpleGame{
 
-    HashMap<Integer,Integer> hmAreaType3dType = new HashMap<Integer,Integer>();
+    HashMap<Integer,Integer> hmAreaSubType3dType = new HashMap<Integer,Integer>();
 
-    HashMap<Integer,RenderedSide> hm3dTypeFile = new HashMap<Integer,RenderedSide>();
+    HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 10;
+	public static int RENDER_DISTANCE = 5;
 
 	public static final float CUBE_EDGE_SIZE = 2.0001f; 
 	
@@ -133,32 +133,40 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public J3DCore()
 	{
 		// area subtype to 3d type mapping
-		hmAreaType3dType.put(new Integer(0), EMPTY_SIDE);
-		hmAreaType3dType.put(new Integer(1), new Integer(1));
-		hmAreaType3dType.put(new Integer(2), new Integer(2));
-		hmAreaType3dType.put(new Integer(3), new Integer(3));
-		hmAreaType3dType.put(new Integer(4), new Integer(4));
-		hmAreaType3dType.put(new Integer(5), new Integer(5));
+		hmAreaSubType3dType.put(new Integer(0), EMPTY_SIDE);
+		hmAreaSubType3dType.put(new Integer(1), new Integer(1));
+		hmAreaSubType3dType.put(new Integer(2), new Integer(2));
+		hmAreaSubType3dType.put(new Integer(3), new Integer(3));
+		hmAreaSubType3dType.put(new Integer(4), new Integer(4));
+		hmAreaSubType3dType.put(new Integer(5), new Integer(5));
+		hmAreaSubType3dType.put(new Integer(6), new Integer(6));
 		
 		// 3d type to file mapping		
-		hm3dTypeFile.put(new Integer(1), new RenderedContinuousSide(
+		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{new SimpleModel("sides/wall_thick.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
 				));
-		hm3dTypeFile.put(new Integer(5), new RenderedContinuousSide(
+		hm3dTypeRenderedSide.put(new Integer(5), new RenderedContinuousSide(
 				new SimpleModel[]{new SimpleModel("sides/door.3ds", null),new SimpleModel("sides/wall_door.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
 				));
+		hm3dTypeRenderedSide.put(new Integer(6), new RenderedContinuousSide(
+				new SimpleModel[]{new SimpleModel("sides/wall_window.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				));
 
-		hm3dTypeFile.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
-		hm3dTypeFile.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
-		hm3dTypeFile.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
@@ -263,7 +271,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 				TextureState ts = display.getRenderer().createTextureState();
 				ts.setTexture(texture, 0);
-				System.out.println("Texture!");
+				//System.out.println("Texture!");
 				
                 ts.setEnabled(true);
                 
@@ -361,9 +369,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     	// get a specific part of the area to render
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ);
+    	System.out.println("getRenderedSpace size="+cubes.length);
 		
 		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
 
+		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
+		
 	    for (int i=0; i<cubes.length; i++)
 		{
 			//System.out.println("CUBE "+i);
@@ -380,7 +391,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			}
 			newly++;
 			// render the cube newly
-			//System.out.println("CUBE Coords: "+ (c.cube.x)+" "+c.cube.y);
+			System.out.println("CUBE Coords: "+ ""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
 			Side[] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
@@ -389,6 +400,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			// store it to new cubes hashmap
 			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
 		}
+		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 	    for (Iterator it = hmCurrentCubes.values().iterator();it.hasNext();)
 	    {
 			removed++;
@@ -430,10 +442,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
-		System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
-		Integer n3dType = (Integer)hmAreaType3dType.get(new Integer(side.subtype));
+		//System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
+		Integer n3dType = (Integer)hmAreaSubType3dType.get(new Integer(side.subtype));
 		if (n3dType.equals(EMPTY_SIDE)) return;
-		RenderedSide renderedSide = hm3dTypeFile.get(n3dType);
+		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
 		
 		Node[] n = loadObjects(renderedSide, SWITCH_SIDETYPE_NORMAL);
