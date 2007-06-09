@@ -36,9 +36,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 5;
+	public static int RENDER_DISTANCE = 10;
 
-	public static final float CUBE_EDGE_SIZE = 2.0001f; 
+	public static final float CUBE_EDGE_SIZE = 1.99999f; 
 	
 	public static final int MOVE_STEPS = 200;
 
@@ -157,7 +157,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
 				));
 		hm3dTypeRenderedSide.put(new Integer(6), new RenderedContinuousSide(
-				new SimpleModel[]{new SimpleModel("sides/wall_window.3ds", null)},
+				new SimpleModel[]{new SimpleModel("sides/wall_window.3ds", null),new SimpleModel("sides/window1.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
