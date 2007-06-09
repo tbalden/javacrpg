@@ -5,6 +5,8 @@ import org.jcrpg.threed.input.action.CKeyBackwardAction;
 import org.jcrpg.threed.input.action.CKeyForwardAction;
 import org.jcrpg.threed.input.action.CKeyRotateLeftAction;
 import org.jcrpg.threed.input.action.CKeyRotateRightAction;
+import org.jcrpg.threed.input.action.CKeyStrafeLeftAction;
+import org.jcrpg.threed.input.action.CKeyStrafeRightAction;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
@@ -33,8 +35,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
 
         keyboard.set( "forward", KeyInput.KEY_W );
         keyboard.set( "backward", KeyInput.KEY_S );
-        //keyboard.set( "strafeLeft", KeyInput.KEY_A );
-        //keyboard.set( "strafeRight", KeyInput.KEY_D );
+        keyboard.set( "strafeLeft", KeyInput.KEY_Q );
+        keyboard.set( "strafeRight", KeyInput.KEY_E );
         //keyboard.set( "lookUp", KeyInput.KEY_UP );
         //keyboard.set( "lookDown", KeyInput.KEY_DOWN );
         //keyboard.set( "turnRight", KeyInput.KEY_RIGHT );
@@ -43,12 +45,12 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
         float moveSpeed = 0.001f;
-        float rotateSpeed = 0.05f;
+        float rotateSpeed = 1.0f;
 
         addAction( new CKeyForwardAction( this, cam, moveSpeed ), "forward", true );
         addAction( new CKeyBackwardAction( this, cam, moveSpeed ), "backward", true );
-        //addAction( new KeyStrafeLeftAction( cam, moveSpeed ), "strafeLeft", true );
-        //addAction( new KeyStrafeRightAction( cam, moveSpeed ), "strafeRight", true );
+        addAction( new CKeyStrafeLeftAction( this, cam, moveSpeed ), "strafeLeft", true );
+        addAction( new CKeyStrafeRightAction( this, cam, moveSpeed ), "strafeRight", true );
         //addAction( new KeyLookUpAction( cam, rotateSpeed ), "lookUp", true );
         //addAction( new KeyLookDownAction( cam, rotateSpeed ), "lookDown", true );
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );
@@ -64,7 +66,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         left.setLockAxis(new Vector3f(lock));
     }
 	
-    boolean lock = false;
+    public boolean lock = false;
     
     public synchronized void lockHandling()
     {
@@ -74,7 +76,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     {
     	if (wait) try 
     	{
-    		Thread.sleep(500);
+    		Thread.sleep(10);
     	} catch (Exception ex)
     	{
     		

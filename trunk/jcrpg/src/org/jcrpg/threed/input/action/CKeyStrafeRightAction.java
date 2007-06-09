@@ -9,7 +9,7 @@ import com.jme.input.controls.controller.CameraController;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
-public class CKeyForwardAction extends KeyInputAction {
+public class CKeyStrafeRightAction extends KeyInputAction {
     //temp holder for the multiplication of the direction and time
     private static final Vector3f tempVa = new Vector3f();
     //the camera to manipulate
@@ -24,7 +24,7 @@ public class CKeyForwardAction extends KeyInputAction {
      * @param speed
      *            the speed at which the camera can move.
      */
-    public CKeyForwardAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
+    public CKeyStrafeRightAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
         this.camera = camera;
         this.speed = speed;
         this.handler = handler;
@@ -41,7 +41,7 @@ public class CKeyForwardAction extends KeyInputAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        handler.core.moveForward(handler.core.viewDirection);
+        handler.core.moveRight(handler.core.viewDirection);
         Vector3f toReach = handler.core.getCurrentLocation();
         
         float steps = 10;

@@ -37,11 +37,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
-	public static int RENDER_DISTANCE = 10;
+	/**
+	 * rendered cubes in each direction (N,S,E,W,T,B).
+	 */
+    public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 200;
+	//public static final int MOVE_STEPS = 200;
 
     public static Integer EMPTY_SIDE = new Integer(0);
 
@@ -79,6 +82,13 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			dEast = new Vector3f(1 * CUBE_EDGE_SIZE, 0, 0),
 			dWest = new Vector3f(-1 * CUBE_EDGE_SIZE, 0, 0);
 	public static Vector3f[] directions = new Vector3f[] {dNorth, dEast, dSouth, dWest};
+	
+	public static Vector3f tdNorth = new Vector3f(0, 0, -1),
+		tdSouth = new Vector3f(0, 0, 1),
+		tdEast = new Vector3f(1, 0, 0),
+		tdWest = new Vector3f(-1, 0, 0);
+	public static Vector3f[] tDirections = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest};
+	
 	static 
 	{
 		// creating rotation quaternions for all sides of a cube...
@@ -87,6 +97,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		qB = new Quaternion();
 		qB.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
 		qN = new Quaternion();
+		qN.fromAngleAxis(FastMath.PI * 2, new Vector3f(0,1,0));
 		qS = new Quaternion();
 		qS.fromAngleAxis(FastMath.PI, new Vector3f(0,1,0));
 		qW = new Quaternion();
@@ -194,15 +205,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 
-    @Override
-	protected void updateInput() {
-		// TODO Auto-generated method stub
-	
-		//fpsNode.detachAllChildren();   	
-    	super.updateInput();
-	}
-    
-    
     
     public Skybox createSkybox() {
 
@@ -360,7 +362,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			}
 			newly++;
 			// render the cube newly
-			System.out.println("CUBE Coords: "+ ""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
+			//System.out.println("CUBE Coords: "+ ""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
 			Side[] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
@@ -411,7 +413,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
-		//System.out.println("RENDER SIDE: "+x+" "+y+" "+z+" "+direction+" - "+side.type);
 		Integer n3dType = (Integer)hmAreaSubType3dType.get(new Integer(side.subtype));
 		if (n3dType.equals(EMPTY_SIDE)) return;
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
@@ -421,18 +422,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		renderNodes(n, cube, x, y, z, direction);
 
 		Cube checkCube = null;
-		if (direction==TOP && renderedSide instanceof RenderedTopSide)
+		if (direction==TOP && renderedSide instanceof RenderedTopSide) // Top Side
 		{
 			boolean render = true;
+			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...
 			for (int i=NORTH; i<=WEST; i++)
 			{
 				Cube n1 = cube.cube.getNeighbour(i);
 				if (n1!=null)
 				{
-					//Cube n2 = n1.getNeighbour(i);
-					//if (n2!=null)
 					if (n1.sides[i].type==side.type || n1.sides[oppositeDirections.get(new Integer(i)).intValue()].type==side.type)
-//					if (n1.sides[oppositeDirections.get(new Integer(i)).intValue()].type==side.type)
 					{
 						render = false; break;
 					}
@@ -444,7 +443,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				renderNodes(n, cube, x, y, z, direction);
 			}
 		}
-		if (direction!=TOP && direction!=BOTTOM && renderedSide instanceof RenderedContinuousSide)
+		if (direction!=TOP && direction!=BOTTOM && renderedSide instanceof RenderedContinuousSide) // Continuous side
 		{
 			int dir = nextDirections.get(new Integer(direction)).intValue();
 			if (cube.cube.getNeighbour(dir)!=null)
@@ -490,6 +489,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 	}
 	
+	public void setCalculatedCameraLocation()
+	{
+		cam.setLocation(getCurrentLocation());
+		cam.setDirection(tDirections[viewDirection]);
+	}
+	
+	public Vector3f getCurrentLocation()
+	{
+		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE);
+	}
+	
 	public void moveForward(int direction) {
 		if (direction == NORTH) {
 			viewPositionZ++;relativeZ++;
@@ -504,7 +514,37 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		} else if (direction == BOTTOM) {
 			viewPositionY--;relativeY--;
 		}
-		render();
+	}
+
+	/**
+	 * Move view Left (strafe)
+	 * @param direction
+	 */
+	public void moveLeft(int direction) {
+		if (direction == NORTH) {
+			viewPositionX--;relativeX--;
+		} else if (direction == SOUTH) {
+			viewPositionX++;relativeX++;
+		} else if (direction == EAST) {
+			viewPositionZ++;relativeZ++;
+		} else if (direction == WEST) {
+			viewPositionZ--;relativeZ--;
+		}
+	}
+	/**
+	 * Move view Right (strafe)
+	 * @param direction
+	 */
+	public void moveRight(int direction) {
+		if (direction == NORTH) {
+			viewPositionX++;relativeX++;
+		} else if (direction == SOUTH) {
+			viewPositionX--;relativeX--;
+		} else if (direction == EAST) {
+			viewPositionZ--;relativeZ--;
+		} else if (direction == WEST) {
+			viewPositionZ++;relativeZ++;
+		}
 	}
 
 	public void moveBackward(int direction) {
@@ -521,7 +561,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		} else if (direction == BOTTOM) {
 			viewPositionY++;relativeY++;
 		}
-		render();
 	}
 
 	
@@ -529,12 +568,38 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	{
 		viewDirection++;
 		if (viewDirection==directions.length) viewDirection = 0;
+        //cam.setDirection(J3DCore.directions[viewDirection]);
 	}
 	public void turnLeft()
 	{
 		viewDirection--;
 		if (viewDirection==-1) viewDirection = directions.length-1;
+        //cam.setDirection(J3DCore.directions[viewDirection]);
 	}
 	
+	boolean noInput = false;
+	public void updateCam()
+	{
+		rootNode.updateRenderState();
+
+		noInput = true;
+        // update game state, do not use interpolation parameter
+        update(-1.0f);
+
+        // render, do not use interpolation parameter
+        render(-1.0f);
+
+        // swap buffers
+        display.getRenderer().displayBackBuffer();
+		noInput = false;
+		
+	}
+	
+    @Override
+	protected void updateInput() {
+		//fpsNode.detachAllChildren();
+    	if (!noInput)
+    		super.updateInput();
+	}
 
 }
