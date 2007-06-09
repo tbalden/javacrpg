@@ -38,7 +38,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
 	public static int RENDER_DISTANCE = 10;
 
-	public static final float CUBE_EDGE_SIZE = 1.99999f; 
+	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
 	public static final int MOVE_STEPS = 200;
 
