@@ -28,20 +28,20 @@ public class Jcrpg {
 					{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
        			},
 				{
-       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,5},{1,1},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{1,1},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{1,1},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{1,1},{1,1},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
+       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,1},{1,1},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{1,1},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{1,6},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{1,1},{1,1},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
        			},
 				{
        				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,5},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{1,1},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
        			},
 				{
-       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,5},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{1,1},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
+       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,6},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{1,6},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
        			},
 				{
-       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,5},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{1,1},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
+       				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {1,1},{0,0},{0,0},{1,1},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{1,1},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{1,1},{1,2},{0,0} },  { {0,0},{0,0},{1,1},{1,1},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
        			},
 				{
        				{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },{ {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },  { {0,0},{0,0},{0,0},{0,0},{1,2},{0,0} },   
-       			}, // TODO rossz iranyba hajlik a fal!
+       			},
 }
  ;
     	
@@ -82,6 +82,86 @@ public class Jcrpg {
 //            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(r.nextInt(18)>10?1:0),new Side(0),new Side(0),new Side(r.nextInt(18)>10?1:0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
 //            		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{new Side(0),new Side(0),new Side(0),new Side(0),new Side(r.nextInt(18)>10?4:0),new Side(r.nextInt(18)>10?2:3)},x,y,z);
             		gameArea.addCube(x, y, z, c);
+            		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+            				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+            				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+            				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+            				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+            				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				},
+            				x+cubes.length,y,z+cubes[0].length);
+           		gameArea.addCube(x+cubes.length, y, z+cubes[0].length, c);
+        		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+        				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+        				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+        				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+        				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+        				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				},
+        				x-cubes.length,y,z-cubes[0].length);
+           		gameArea.addCube(x-cubes.length, y, z-cubes[0].length, c);
+        		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+        				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+        				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+        				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+        				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+        				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				},
+        				x+cubes.length,y,z);
+        			gameArea.addCube(x+cubes.length, y, z, c);
+            		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+            				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+            				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+            				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+            				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+            				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				},
+            				x-cubes.length,y,z);
+            		gameArea.addCube(x-cubes.length, y, z, c);
+            		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+            				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+            				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+            				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+            				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+            				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				},
+            				x,y, z+cubes[0].length);
+           		gameArea.addCube(x, y, z+cubes[0].length, c);
+        		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+        				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+        				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+        				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+        				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+        				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				},
+        				x,y, z-cubes[0].length);
+           		gameArea.addCube(x, y, z-cubes[0].length, c);
+        		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+        				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+        				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+        				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+        				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+        				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				},
+        				x+cubes.length,y, z-cubes[0].length);
+           		gameArea.addCube(x+cubes.length, y, z-cubes[0].length, c);
+        		c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
+        				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
+        				new Side(cubes[x][z][1][0],cubes[x][z][1][1]),
+        				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
+        				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
+        				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
+        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				},
+        				x-cubes.length,y, z+cubes[0].length);
+           		gameArea.addCube(x-cubes.length, y, z+cubes[0].length, c);
             	}
         	}
     	}
