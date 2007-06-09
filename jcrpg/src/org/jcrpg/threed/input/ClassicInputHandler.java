@@ -8,7 +8,7 @@ import com.jme.renderer.Camera;
 
 public class ClassicInputHandler  extends InputHandler {
 
-    private MouseLookHandler mouseLookHandler;
+    private ClassicMouseLookHandler mouseLookHandler;
     private ClassicKeyboardLookHandler keyboardLookHandler;
 
     /**
@@ -21,7 +21,7 @@ public class ClassicInputHandler  extends InputHandler {
     /**
      * @return handler for mouse controls
      */
-    public MouseLookHandler getMouseLookHandler() {
+    public ClassicMouseLookHandler getMouseLookHandler() {
         return mouseLookHandler;
     }
 
@@ -30,7 +30,8 @@ public class ClassicInputHandler  extends InputHandler {
     {
     	keyboardLookHandler = new ClassicKeyboardLookHandler(core,cam);
         addToAttachedHandlers( keyboardLookHandler );
-    	mouseLookHandler = new MouseLookHandler(cam,2.0f);//ClassicMouseLookHandler(cam);
+    	//mouseLookHandler = new MouseLookHandler(cam,2.0f);//ClassicMouseLookHandler(cam);
+    	mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );
     	
     }

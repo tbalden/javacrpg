@@ -38,26 +38,32 @@ public class CKeyBackwardAction extends KeyInputAction {
      */
     public void performAction(InputActionEvent evt) {
     	handler.lockHandling();
-        Vector3f loc = camera.getLocation();
-        float oldZ = loc.getZ();
-        if ( !camera.isParallelProjection() ) {
-    		loc.subtractLocal(J3DCore.directions[handler.core.viewDirection]);//camera.getDirection().mult(10.0f * evt.getTime(), tempVa));//speed
-            handler.core.moveBackward(handler.core.viewDirection);
-            /*        	while (true)
-        	{
-        		camera.update();
-        		if (oldZ+0.1f <= loc.getZ())
-        		{
-        			loc.setZ(oldZ+0.1f);
-        			camera.update();
-        			break;
-        		}
-        	}*/
-        } else {
-            // move up instead of forward if in parallel mode
-            loc.addLocal(camera.getUp().mult(speed * evt.getTime(), tempVa));
+        
+        Vector3f from = handler.core.getCurrentLocation();
+        handler.core.moveBackward(handler.core.viewDirection);
+        Vector3f toReach = handler.core.getCurrentLocation();
+        
+        float steps = 10;
+    	for (float i=0; i<steps; i++)
+        {
+    		float x, y, z;
+    		x = (1f/steps)* (i) * (toReach.x);
+    		y = (1f/steps)* (i) * (toReach.y);
+    		z = (1f/steps)* (i) * (toReach.z);
+    		
+    		x += (1f/steps) * (steps-i) * from.x;
+    		y += (1f/steps) * (steps-i) * from.y;
+    		z += (1f/steps) * (steps-i) * from.z;
+    		
+    		camera.setLocation(new Vector3f(x,y,z));
+    		
+            camera.update();
+            handler.core.updateCam();
+     
         }
+    	handler.core.setCalculatedCameraLocation();
         camera.update();
+        handler.core.render();
         handler.unlockHandling(true);
     }
 

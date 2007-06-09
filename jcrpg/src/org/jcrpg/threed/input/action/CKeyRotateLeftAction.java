@@ -6,6 +6,7 @@ import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
+import com.jme.input.controls.controller.CameraController;
 import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -61,23 +62,40 @@ public class CKeyRotateLeftAction extends KeyInputAction {
      * 
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
-    public void performAction(InputActionEvent evt) {
+    public synchronized void performAction(InputActionEvent evt) {
+    	System.out.println("performAction...");
+    	if (handler.lock){
+        	System.out.println("locked...");
+    		return;
+    	}
+    	
     	handler.lockHandling();
-        /*if (lockAxis == null) {
-            incr.fromAngleNormalAxis(speed * evt.getTime(), camera.getUp());
-        } else {
-            incr.fromAngleNormalAxis(speed * evt.getTime(), lockAxis);
-        }
-
-        incr.mult(camera.getUp(), camera.getUp());
-        incr.mult(camera.getLeft(), camera.getLeft());
-        incr.mult(camera.getDirection(), camera.getDirection());*/
-        
+    	Vector3f from = J3DCore.tDirections[handler.core.viewDirection];
         handler.core.turnLeft();
-        camera.setDirection(J3DCore.directions[handler.core.viewDirection]);
- 
-        //camera.normalize();
+    	Vector3f toReach = J3DCore.tDirections[handler.core.viewDirection];
+        float steps = 10;
+    	for (float i=0; i<steps; i++)
+        {
+    		float x, y, z;
+    		x = (1/steps)* i * toReach.x;
+    		y = (1/steps)* i * toReach.y;
+    		z = (1/steps)* i * toReach.z;
+    		
+    		x += (1/steps) * (steps-i) * from.x;
+    		y += (1/steps) * (steps-i) * from.y;
+    		z += (1/steps) * (steps-i) * from.z;
+    		
+        	System.out.println("ANGLING...");
+    		camera.setDirection(new Vector3f(x,y,z));
+    		
+            camera.update();
+            handler.core.updateCam();
+     
+        }
+        System.out.println("SET FINAL DIR "+handler.core.viewDirection);
+        camera.setDirection(J3DCore.tDirections[handler.core.viewDirection]);
         camera.update();
+        handler.core.updateCam();
     	handler.unlockHandling(true);
     }
 }
