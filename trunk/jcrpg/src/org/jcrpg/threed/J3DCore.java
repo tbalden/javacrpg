@@ -20,6 +20,7 @@ import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 
 import com.jme.image.Texture;
+import com.jme.input.action.NodeMouseLook;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -40,13 +41,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 7;
+    public static int RENDER_DISTANCE = 15;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
 	public static final int MOVE_STEPS = 20;
 
     public static Integer EMPTY_SIDE = new Integer(0);
+    
+    public static boolean OPTIMIZED_RENDERING = true;
 
     
 	public int viewDirection = NORTH;
@@ -241,6 +244,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
     
     HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
+    HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
 
     private Node loadNode(SimpleModel o)
     {
@@ -257,19 +261,23 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 		
 		try {
-			FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
-			
-
-			// Converts the file into a jme usable file
-			maxtojme.convert(is, bytearrayoutputstream);
+			byte[] bytes = null;
+			bytes = binaryCache.get(o.modelName);
+			if (bytes==null)
+			{
+				FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
+				// Converts the file into a jme usable file
+				maxtojme.convert(is, bytearrayoutputstream);
 		 
-		    // Used to convert the jme usable file to a TriMesh
-		    BinaryImporter binaryImporter = new BinaryImporter(); 
-		    ByteArrayInputStream in=new ByteArrayInputStream(bytearrayoutputstream.toByteArray());
-		 
+				// 	Used to convert the jme usable file to a TriMesh
+				bytes = (bytearrayoutputstream.toByteArray());
+				binaryCache.put(o.modelName,bytes);
+			    is.close();
+			}
+			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+			BinaryImporter binaryImporter = new BinaryImporter(); 
 		    //importer returns a Loadable, cast to Node
-		    node = (Node)binaryImporter.load(in); 
-		    is.close();
+		    node = (Node)binaryImporter.load(in);
 
 			if (o.textureName!=null)
 			{
@@ -330,6 +338,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void render()
 	{
+		long timeS = System.currentTimeMillis();
 		System.out.println("RENDER!");
 		int already = 0;
 		int newly = 0;
@@ -345,7 +354,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    skybox.updateRenderState();
 
     	// get a specific part of the area to render
-    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ);
+    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
     	System.out.println("getRenderedSpace size="+cubes.length);
 		
 		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
@@ -392,7 +401,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    }
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 		rootNode.updateRenderState();
-		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed);
+		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 	}
 	
 
