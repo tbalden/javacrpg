@@ -49,7 +49,7 @@ public class Jcrpg {
     	{	
         	for (int z=0; z<cubes[x].length; z++)
         	{
-            	for (int y=0; y<2; y++)
+            	for (int y=0; y<4; y++)
             	{
             		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
             				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
