@@ -8,16 +8,45 @@ import org.jcrpg.threed.J3DCore;
 
 public class RenderedArea {
 	
-	public static RenderedCube[] getRenderedSpace(Area space, int x, int y, int z)
+	public static RenderedCube[] getRenderedSpace(Area space, int x, int y, int z, int direction)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
+		
+		float xPlusMult = 1;
+		float xMinusMult = -1;
+		float zPlusMult = 1;
+		float zMinusMult = -1;
+		float viewPercent = 0.2f;
+		
+		if (J3DCore.OPTIMIZED_RENDERING) {
+			if (direction==J3DCore.NORTH)
+			{
+				zPlusMult = viewPercent;
+				
+			}
+			if (direction==J3DCore.SOUTH)
+			{
+				zMinusMult = -viewPercent;
+				
+			}
+			if (direction==J3DCore.WEST)
+			{
+				xPlusMult = viewPercent;
+				
+			}
+			if (direction==J3DCore.EAST)
+			{
+				xMinusMult = -viewPercent;
+				
+			}
+		}
 						
 		ArrayList elements = new ArrayList();
-		for (int z1=-1*distance; z1<=1*distance; z1++)
+		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
 			for (int y1=-1*distance; y1<=1*distance; y1++)
 			{
-				for (int x1=-1*distance; x1<=1*distance; x1++)
+				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
 					
 					Cube c = space.getCube(x+x1, y+y1, z-z1);
