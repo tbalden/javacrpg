@@ -86,8 +86,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public static Vector3f tdNorth = new Vector3f(0, 0, -1),
 		tdSouth = new Vector3f(0, 0, 1),
 		tdEast = new Vector3f(1, 0, 0),
-		tdWest = new Vector3f(-1, 0, 0);
-	public static Vector3f[] tDirections = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest};
+		tdWest = new Vector3f(-1, 0, 0),
+		tdTop = new Vector3f(0, 1, 0),
+		tdBottom = new Vector3f(0, -1, 0);
+	public static Vector3f[] turningDirectionsUnit = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest,tdTop,tdBottom};
 	
 	static 
 	{
@@ -314,7 +316,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	@Override
 	protected void simpleInitGame() {
-		cam.setLocation(new Vector3f(0,0,0));
+		setCalculatedCameraLocation();
 		render();
 	}
 	
@@ -492,12 +494,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public void setCalculatedCameraLocation()
 	{
 		cam.setLocation(getCurrentLocation());
-		cam.setDirection(tDirections[viewDirection]);
+		cam.setDirection(turningDirectionsUnit[viewDirection]);
 	}
 	
 	public Vector3f getCurrentLocation()
 	{
-		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE);
+		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f,-1*relativeZ*CUBE_EDGE_SIZE);
 	}
 	
 	public void moveForward(int direction) {
@@ -563,6 +565,18 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		}
 	}
 
+	
+	/**
+	 * Move view Up (strafe)
+	 * @param direction
+	 */
+	public void moveUp() {
+		viewPositionY++;relativeY++;		
+	}
+	public void moveDown() {
+		viewPositionY--;relativeY--;		
+	}
+	
 	
 	public void turnRight()
 	{

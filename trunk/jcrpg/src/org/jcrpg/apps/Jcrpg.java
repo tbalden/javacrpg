@@ -49,7 +49,7 @@ public class Jcrpg {
     	{	
         	for (int z=0; z<cubes[x].length; z++)
         	{
-            	for (int y=0; y<1; y++)
+            	for (int y=0; y<2; y++)
             	{
             		Cube c = new Cube(gameArea,Cube.DEFAULT_LEVEL,new Side[]{
             				new Side(cubes[x][z][0][0],cubes[x][z][0][1]),
@@ -57,7 +57,7 @@ public class Jcrpg {
             				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
             				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
             				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
             				},
             				x,y,z);
             		gameArea.addCube(x, y, z, c);
@@ -67,7 +67,7 @@ public class Jcrpg {
             				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
             				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
             				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
             				},
             				x+cubes.length,y,z+cubes[0].length);
            		gameArea.addCube(x+cubes.length, y, z+cubes[0].length, c);
@@ -77,7 +77,7 @@ public class Jcrpg {
         				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
         				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
         				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
         				},
         				x-cubes.length,y,z-cubes[0].length);
            		gameArea.addCube(x-cubes.length, y, z-cubes[0].length, c);
@@ -87,7 +87,7 @@ public class Jcrpg {
         				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
         				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
         				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
         				},
         				x+cubes.length,y,z);
         			gameArea.addCube(x+cubes.length, y, z, c);
@@ -97,7 +97,7 @@ public class Jcrpg {
             				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
             				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
             				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
             				},
             				x-cubes.length,y,z);
             		gameArea.addCube(x-cubes.length, y, z, c);
@@ -107,7 +107,7 @@ public class Jcrpg {
             				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
             				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
             				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-            				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+            				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
             				},
             				x,y, z+cubes[0].length);
            		gameArea.addCube(x, y, z+cubes[0].length, c);
@@ -117,7 +117,7 @@ public class Jcrpg {
         				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
         				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
         				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
         				},
         				x,y, z-cubes[0].length);
            		gameArea.addCube(x, y, z-cubes[0].length, c);
@@ -127,7 +127,7 @@ public class Jcrpg {
         				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
         				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
         				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
         				},
         				x+cubes.length,y, z-cubes[0].length);
            		gameArea.addCube(x+cubes.length, y, z-cubes[0].length, c);
@@ -137,7 +137,7 @@ public class Jcrpg {
         				new Side(cubes[x][z][2][0],cubes[x][z][2][1]),
         				new Side(cubes[x][z][3][0],cubes[x][z][3][1]),
         				new Side(cubes[x][z][5][0],cubes[x][z][5][1]),
-        				new Side(cubes[x][z][4][0],cubes[x][z][4][1])
+        				new Side(y==0?cubes[x][z][4][0]:0,y==0?cubes[x][z][4][1]:0)
         				},
         				x-cubes.length,y, z+cubes[0].length);
            		gameArea.addCube(x-cubes.length, y, z+cubes[0].length, c);
