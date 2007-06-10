@@ -38,8 +38,14 @@ public abstract class CKeyAction extends KeyInputAction{
 	}
 	protected void moveDirection(float steps, Vector3f from, Vector3f toReach)
 	{
+		moveDirection(steps, from, toReach,false);
+	}
+	protected void moveDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
+	{
     	for (float i=0; i<=steps; i++)
         {
+    		if (almost && i==0) continue;
+    		if (almost && i==steps) continue;
     		ensureTimeStart();
     		float x, y, z;
     		x = (1/steps)* i * toReach.x;

@@ -38,7 +38,6 @@ public class CKeyRotateLeftAction extends CKeyAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public synchronized void performAction(InputActionEvent evt) {
-    	System.out.println("performAction...");
     	if (handler.lock){
         	System.out.println("locked...");
     		return;
