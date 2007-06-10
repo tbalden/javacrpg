@@ -42,10 +42,11 @@ public class CKeyForwardAction extends KeyInputAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         handler.core.moveForward(handler.core.viewDirection);
+        handler.core.render();
         Vector3f toReach = handler.core.getCurrentLocation();
         
-        float steps = 10;
-    	for (float i=0; i<steps; i++)
+        float steps = J3DCore.MOVE_STEPS;
+    	for (float i=0; i<=steps; i++)
         {
     		float x, y, z;
     		x = (1f/steps)* (i) * (toReach.x);
@@ -64,7 +65,7 @@ public class CKeyForwardAction extends KeyInputAction {
         }
     	handler.core.setCalculatedCameraLocation();
         camera.update();
-        handler.core.render();
+        //handler.core.render();
         handler.unlockHandling(true);
     }
 

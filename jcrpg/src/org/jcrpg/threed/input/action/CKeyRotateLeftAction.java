@@ -73,8 +73,8 @@ public class CKeyRotateLeftAction extends KeyInputAction {
     	Vector3f from = J3DCore.tDirections[handler.core.viewDirection];
         handler.core.turnLeft();
     	Vector3f toReach = J3DCore.tDirections[handler.core.viewDirection];
-        float steps = 10;
-    	for (float i=0; i<steps; i++)
+        float steps = J3DCore.MOVE_STEPS;
+    	for (float i=0; i<=steps; i++)
         {
     		float x, y, z;
     		x = (1/steps)* i * toReach.x;
