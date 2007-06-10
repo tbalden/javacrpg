@@ -67,16 +67,20 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     }
 	
     public boolean lock = false;
+    private long timeLockStart = 0;
     
     public synchronized void lockHandling()
     {
     	lock = true;
+    	timeLockStart = System.currentTimeMillis();
     }
     public synchronized void unlockHandling(boolean wait)
     {
     	if (wait) try 
     	{
-    		Thread.sleep(10);
+    		long waitPlus = 200-(System.currentTimeMillis()-timeLockStart);
+    		if ( (waitPlus) < 0 ) waitPlus = 0;
+    		Thread.sleep(30+ waitPlus );
     	} catch (Exception ex)
     	{
     		

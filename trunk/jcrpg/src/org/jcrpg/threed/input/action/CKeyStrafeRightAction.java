@@ -44,8 +44,8 @@ public class CKeyStrafeRightAction extends KeyInputAction {
         handler.core.moveRight(handler.core.viewDirection);
         Vector3f toReach = handler.core.getCurrentLocation();
         
-        float steps = 10;
-    	for (float i=0; i<steps; i++)
+        float steps = J3DCore.MOVE_STEPS;
+    	for (float i=0; i<=steps; i++)
         {
     		float x, y, z;
     		x = (1f/steps)* (i) * (toReach.x);
