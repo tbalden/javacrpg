@@ -47,7 +47,6 @@ public class CKeyLookDownAction extends CKeyAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public synchronized void performAction(InputActionEvent evt) {
-    	System.out.println("performAction...");
     	if (handler.lock){
         	System.out.println("locked...");
     		return;
@@ -58,14 +57,14 @@ public class CKeyLookDownAction extends CKeyAction {
         //handler.core.turnLeft();
     	Vector3f toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];
         float steps = J3DCore.MOVE_STEPS*2;
-        moveDirection(steps, from, toReach);
+        moveDirection(steps, from, toReach, true);
         try {
-        	Thread.sleep(200);
+        	Thread.sleep(1000);
         }catch (Exception ex)
         {
         	
         }
-        moveDirection(steps, toReach, from);
+        moveDirection(steps, toReach, from, true);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
         handler.core.updateCam();

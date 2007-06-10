@@ -23,6 +23,10 @@ public class CKeyStrafeLeftAction extends CKeyAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public void performAction(InputActionEvent evt) {
+    	if (handler.lock){
+        	System.out.println("locked...");
+    		return;
+    	}
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
