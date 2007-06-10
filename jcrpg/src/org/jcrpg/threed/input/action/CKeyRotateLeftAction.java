@@ -70,9 +70,9 @@ public class CKeyRotateLeftAction extends KeyInputAction {
     	}
     	
     	handler.lockHandling();
-    	Vector3f from = J3DCore.tDirections[handler.core.viewDirection];
+    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         handler.core.turnLeft();
-    	Vector3f toReach = J3DCore.tDirections[handler.core.viewDirection];
+    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         float steps = J3DCore.MOVE_STEPS;
     	for (float i=0; i<=steps; i++)
         {
@@ -85,15 +85,13 @@ public class CKeyRotateLeftAction extends KeyInputAction {
     		y += (1/steps) * (steps-i) * from.y;
     		z += (1/steps) * (steps-i) * from.z;
     		
-        	System.out.println("ANGLING...");
     		camera.setDirection(new Vector3f(x,y,z));
     		
             camera.update();
             handler.core.updateCam();
      
         }
-        System.out.println("SET FINAL DIR "+handler.core.viewDirection);
-        camera.setDirection(J3DCore.tDirections[handler.core.viewDirection]);
+        camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
         handler.core.updateCam();
     	handler.unlockHandling(true);
