@@ -11,36 +11,13 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
-/**
- * <code>KeyRotateLeftAction</code> performs the action of rotating a camera a
- * certain angle. This angle is determined by the speed at which the camera can
- * turn and the time between frames.
- * 
- * @author Mark Powell
- * @version $Id: KeyRotateLeftAction.java,v 1.16 2006/09/29 22:30:17 nca Exp $
- */
-public class CKeyLookUpAction extends KeyInputAction {
-    //the camera to manipulate
-    private Camera camera;
+public class CKeyLookUpAction extends CKeyAction {
     //the axis to lock
     private Vector3f lockAxis;
-    //temporary matrix for rotation
-    private static final Matrix3f incr = new Matrix3f();
-    
-    ClassicKeyboardLookHandler handler;
 
-    /**
-     * Constructor instantiates a new <code>KeyRotateLeftAction</code> object.
-     * 
-     * @param camera
-     *            the camera to rotate.
-     * @param speed
-     *            the speed at which to rotate.
-     */
     public CKeyLookUpAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
-        this.camera = camera;
+    	super(handler,camera);
         this.speed = speed;
-        this.handler = handler;
     }
 
     /**
@@ -74,40 +51,14 @@ public class CKeyLookUpAction extends KeyInputAction {
         //handler.core.turnLeft();
     	Vector3f toReach = J3DCore.turningDirectionsUnit[J3DCore.TOP];
         float steps = J3DCore.MOVE_STEPS*2;
-    	for (float i=0; i<=steps; i++)
+        moveDirection(steps, from, toReach);
+        try {
+        	Thread.sleep(200);
+        }catch (Exception ex)
         {
-    		float x, y, z;
-    		x = (1/steps)* i * toReach.x;
-    		y = (1/steps)* i * toReach.y;
-    		z = (1/steps)* i * toReach.z;
-    		
-    		x += (1/steps) * (steps-i) * from.x;
-    		y += (1/steps) * (steps-i) * from.y;
-    		z += (1/steps) * (steps-i) * from.z;
-    		
-    		camera.setDirection(new Vector3f(x,y,z));
-    		
-            camera.update();
-            handler.core.updateCam();
-     
+        	
         }
-    	for (float i=steps; i>=0; i--)
-        {
-    		float x, y, z;
-    		x = (1/steps)* i * toReach.x;
-    		y = (1/steps)* i * toReach.y;
-    		z = (1/steps)* i * toReach.z;
-    		
-    		x += (1/steps) * (steps-i) * from.x;
-    		y += (1/steps) * (steps-i) * from.y;
-    		z += (1/steps) * (steps-i) * from.z;
-    		
-    		camera.setDirection(new Vector3f(x,y,z));
-    		
-            camera.update();
-            handler.core.updateCam();
-     
-        }
+        moveDirection(steps, toReach, from);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
         handler.core.updateCam();

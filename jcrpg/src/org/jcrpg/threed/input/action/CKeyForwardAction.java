@@ -9,25 +9,11 @@ import com.jme.input.controls.controller.CameraController;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
-public class CKeyForwardAction extends KeyInputAction {
-    //temp holder for the multiplication of the direction and time
-    private static final Vector3f tempVa = new Vector3f();
-    //the camera to manipulate
-    private Camera camera;
-    
-    ClassicKeyboardLookHandler handler;
-    /**
-     * Constructor instantiates a new <code>KeyForwardAction</code> object.
-     * 
-     * @param camera
-     *            the camera that will be affected by this action.
-     * @param speed
-     *            the speed at which the camera can move.
-     */
-    public CKeyForwardAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
-        this.camera = camera;
+public class CKeyForwardAction extends CKeyAction {
+
+	public CKeyForwardAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
+		super(handler,camera);
         this.speed = speed;
-        this.handler = handler;
     }
 
     /**
@@ -43,29 +29,11 @@ public class CKeyForwardAction extends KeyInputAction {
         Vector3f from = handler.core.getCurrentLocation();
         handler.core.moveForward(handler.core.viewDirection);
         handler.core.render();
-        Vector3f toReach = handler.core.getCurrentLocation();
-        
+        Vector3f toReach = handler.core.getCurrentLocation();        
         float steps = J3DCore.MOVE_STEPS;
-    	for (float i=0; i<=steps; i++)
-        {
-    		float x, y, z;
-    		x = (1f/steps)* (i) * (toReach.x);
-    		y = (1f/steps)* (i) * (toReach.y);
-    		z = (1f/steps)* (i) * (toReach.z);
-    		
-    		x += (1f/steps) * (steps-i) * from.x;
-    		y += (1f/steps) * (steps-i) * from.y;
-    		z += (1f/steps) * (steps-i) * from.z;
-    		
-    		camera.setLocation(new Vector3f(x,y,z));
-    		
-            camera.update();
-            handler.core.updateCam();
-     
-        }
-    	handler.core.setCalculatedCameraLocation();
+        movePosition(steps, from, toReach);
+        handler.core.setCalculatedCameraLocation();
         camera.update();
-        //handler.core.render();
         handler.unlockHandling(true);
     }
 
