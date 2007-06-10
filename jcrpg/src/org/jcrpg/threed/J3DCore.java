@@ -40,7 +40,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 5;
+    public static int RENDER_DISTANCE = 7;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -155,6 +155,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(new Integer(5), new Integer(5));
 		hmAreaSubType3dType.put(new Integer(6), new Integer(6));
 		hmAreaSubType3dType.put(new Integer(7), new Integer(7));
+		hmAreaSubType3dType.put(new Integer(8), new Integer(8));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -185,9 +186,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
 				));
 
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground2.3ds","sides/grass2.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/grass2.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
+		
+		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
@@ -426,6 +430,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Cube checkCube = null;
 		if (direction==TOP && renderedSide instanceof RenderedTopSide) // Top Side
 		{
+			if (cube.cube.getNeighbour(TOP)!=null)
+			{
+				// if there is a side of the same kind above the current side, 
+				//  we don't need continuous side rendering
+				if (cube.cube.getNeighbour(TOP).getSide(direction).type==side.type)
+				{
+					return;					
+				}
+				
+			}
 			boolean render = true;
 			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...
 			for (int i=NORTH; i<=WEST; i++)
