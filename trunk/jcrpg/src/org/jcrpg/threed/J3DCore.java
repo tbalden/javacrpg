@@ -448,6 +448,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		if (direction!=TOP && direction!=BOTTOM && renderedSide instanceof RenderedContinuousSide) // Continuous side
 		{
 			int dir = nextDirections.get(new Integer(direction)).intValue();
+			if (cube.cube.getNeighbour(TOP)!=null)
+			{
+				// if there is a side of the same kind above the current side, 
+				//  we don't need continuous side rendering
+				if (cube.cube.getNeighbour(TOP).getSide(direction).type==side.type)
+				{
+					return;					
+				}
+				
+			}
 			if (cube.cube.getNeighbour(dir)!=null)
 			if (cube.cube.getNeighbour(dir).getSide(direction).type == side.type)
 			{
