@@ -15,6 +15,7 @@ import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedContinuousSide;
 import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.RenderedSide;
 import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
@@ -25,6 +26,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
+import com.jme.scene.SharedNode;
 import com.jme.scene.Skybox;
 import com.jme.scene.state.TextureState;
 import com.jme.system.JmeException;
@@ -41,7 +44,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 15;
+    public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -159,6 +162,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(new Integer(6), new Integer(6));
 		hmAreaSubType3dType.put(new Integer(7), new Integer(7));
 		hmAreaSubType3dType.put(new Integer(8), new Integer(8));
+		hmAreaSubType3dType.put(new Integer(9), new Integer(9));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -195,6 +199,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
@@ -217,15 +222,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
     public Skybox createSkybox() {
 
-		Skybox skybox = new Skybox("skybox", 100, 100, 100);
+		Skybox skybox = new Skybox("skybox", 500, 500, 500);
 
-		Texture north = TextureManager.loadTexture("./data/sky/north.jpg",
+		Texture north = TextureManager.loadTexture("./data/sky/sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture south = TextureManager.loadTexture("./data/sky/south.jpg",
+		Texture south = TextureManager.loadTexture("./data/sky/sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture east = TextureManager.loadTexture("./data/sky/east.jpg",
+		Texture east = TextureManager.loadTexture("./data/sky/sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture west = TextureManager.loadTexture("./data/sky/west.jpg",
+		Texture west = TextureManager.loadTexture("./data/sky/sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
 		Texture up = TextureManager.loadTexture("./data/sky/top.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
@@ -245,9 +250,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
     
     HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
     HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
+    HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
 
     private Node loadNode(SimpleModel o)
     {
+    	// the big shared node cache -> mem size lowerer and performance boost
+    	if (sharedNodeCache.get(o.modelName+o.textureName)!=null)
+    	{
+    		Node n = sharedNodeCache.get(o.modelName+o.textureName);
+    		return new SharedNode("node",n);
+    	}
+    	
 		MaxToJme maxtojme = new MaxToJme();
 		try {
 			// setting texture directory for 3ds models...
@@ -302,6 +315,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				node.setRenderState(ts);
 				
 			}
+			sharedNodeCache.put(o.modelName+o.textureName, node);
 			return node;
 		} catch(Exception err)  {
 		    System.out.println("Error loading model:"+err);
@@ -434,6 +448,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		
 		Node[] n = loadObjects(renderedSide.objects);
+		if (renderedSide instanceof RenderedHashRotatedSide)
+		{
+			int rD = ((RenderedHashRotatedSide)renderedSide).rotation(cube.cube.x, cube.cube.y, cube.cube.z);
+			renderNodes(n, cube, x, y, z, rD);
+		}
 		renderNodes(n, cube, x, y, z, direction);
 
 		Cube checkCube = null;
