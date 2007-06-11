@@ -16,7 +16,7 @@ public class RenderedArea {
 		float xMinusMult = -1;
 		float zPlusMult = 1;
 		float zMinusMult = -1;
-		float viewPercent = 0.2f;
+		float viewPercent = 0.1f;
 		
 		if (J3DCore.OPTIMIZED_RENDERING) {
 			if (direction==J3DCore.NORTH)
