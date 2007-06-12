@@ -679,13 +679,13 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 	@Override
 	protected void cleanup() {
-		engine.exit();
+		//engine.exit();
 		super.cleanup();
 	}
 
 	@Override
 	public void finish() {
-		engine.exit();
+		//engine.exit();
 		super.finish();
 	}
 
