@@ -19,6 +19,7 @@ import org.jcrpg.threed.scene.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.RenderedSide;
 import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
+import org.jcrpg.world.Engine;
 
 import com.jme.image.Texture;
 import com.jme.input.action.NodeMouseLook;
@@ -60,6 +61,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public int viewPositionY = 0;
 	public int viewPositionZ = 0;
 	public int relativeX = 0, relativeY = 0, relativeZ = 0;
+	
+	
+	public Engine engine = null;
+	
+	public void setEngine(Engine engine)
+	{
+		this.engine = engine;
+	}
 	
 	public Area gameArea = null;
 	
@@ -666,6 +675,24 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		//fpsNode.detachAllChildren();
     	if (!noInput)
     		super.updateInput();
+	}
+
+	@Override
+	protected void cleanup() {
+		engine.exit();
+		super.cleanup();
+	}
+
+	@Override
+	public void finish() {
+		engine.exit();
+		super.finish();
+	}
+
+	@Override
+	protected void quit() {
+		engine.exit();
+		super.quit();
 	}
 
 }
