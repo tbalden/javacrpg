@@ -4,15 +4,22 @@ import org.jcrpg.abs.change.ChangingImpl;
 
 public class Side extends ChangingImpl {
 
-	int DEFAULT_SUBTYPE = 0;
-	
-	public Side(int type)
+	public static final String DEFAULT_SUBTYPE = "0";
+	public static final String DEFAULT_TYPE = "0";
+
+	public Side()
+	{
+		this.type = DEFAULT_TYPE;
+		this.subtype = DEFAULT_SUBTYPE;
+	}
+
+	public Side(String type)
 	{
 		this.type = type;
 		this.subtype = DEFAULT_SUBTYPE;
 	}
 
-	public Side(int type, int subType)
+	public Side(String type, String subType)
 	{
 		this.type = type;
 		this.subtype = subType;
@@ -21,12 +28,12 @@ public class Side extends ChangingImpl {
 	/**
 	 * id of the main side type for determining continousity
 	 */
-	public int type;
+	public String type;
 	
 	/**
 	 * side subtype for determining further precision
 	 */
-	public int subtype;
+	public String subtype;
 
 	
 	

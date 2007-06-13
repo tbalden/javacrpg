@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import org.jcrpg.space.Area;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.World;
 
 public class RenderedArea {
 	
-	public static RenderedCube[] getRenderedSpace(Area space, int x, int y, int z, int direction)
+	public static RenderedCube[] getRenderedSpace(World space, int x, int y, int z, int direction)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
 		

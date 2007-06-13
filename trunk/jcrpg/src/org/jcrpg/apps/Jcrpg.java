@@ -5,6 +5,8 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.World;
 
 import com.jme.util.LoggingSystem;
 
@@ -115,7 +117,7 @@ public class Jcrpg {
 },
 }
  ;
-    	
+    	/*
     	// generating a demo area
     	Area gameArea = new Area();
    	
@@ -223,14 +225,16 @@ public class Jcrpg {
             	}
         	}
     	}
-    	
+    	*/
     	    	
         LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
         Engine e = new Engine();
         Thread t = new Thread(e);
         t.start();
         J3DCore app = new J3DCore();
-        app.setArea(gameArea);
+        World w = new World("",null);
+        w.setBoundaries(BoundaryUtils.createCubicBoundaries(100, 5, 100, 0, 0, 0));
+        app.setWorld(w);
         app.setEngine(e);
         app.setViewPosition(2, 0, 2);
         app.initCore();

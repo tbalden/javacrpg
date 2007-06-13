@@ -2,6 +2,7 @@ package org.jcrpg.space;
 
 import org.jcrpg.abs.change.ChangingImpl;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Place;
 
 
 public class Cube extends ChangingImpl {
@@ -25,9 +26,9 @@ public class Cube extends ChangingImpl {
 	
 	public int x,y,z;
 	
-	public Area parent;
+	public Place parent;
 	
-	public Cube(Area parent, int relativeHeight, Side[] sides, int x, int y, int z) {
+	public Cube(Place parent, int relativeHeight, Side[] sides, int x, int y, int z) {
 		this.parent = parent;
 		this.x = x;
 		this.y = y;
