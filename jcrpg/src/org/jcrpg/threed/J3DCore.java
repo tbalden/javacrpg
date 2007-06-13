@@ -20,6 +20,9 @@ import org.jcrpg.threed.scene.RenderedSide;
 import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.geography.River;
 
 import com.jme.image.Texture;
 import com.jme.input.action.NodeMouseLook;
@@ -38,7 +41,7 @@ import com.jmex.model.XMLparser.Converters.MaxToJme;
 
 public class J3DCore extends com.jme.app.SimpleGame{
 
-    HashMap<Integer,Integer> hmAreaSubType3dType = new HashMap<Integer,Integer>();
+    HashMap<String,Integer> hmAreaSubType3dType = new HashMap<String,Integer>();
 
     HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
@@ -70,9 +73,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		this.engine = engine;
 	}
 	
-	public Area gameArea = null;
+	public World gameArea = null;
 	
-	public void setArea(Area area)
+	public void setWorld(World area)
 	{
 		gameArea = area;
 	}
@@ -162,16 +165,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public J3DCore()
 	{
 		// area subtype to 3d type mapping
-		hmAreaSubType3dType.put(new Integer(0), EMPTY_SIDE);
-		hmAreaSubType3dType.put(new Integer(1), new Integer(1));
-		hmAreaSubType3dType.put(new Integer(2), new Integer(2));
+		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE, EMPTY_SIDE);
+		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS, new Integer(2));
+		hmAreaSubType3dType.put(River.SUBTYPE_WATER, new Integer(10));
+		/*hmAreaSubType3dType.put(new Integer(2), new Integer(2));
 		hmAreaSubType3dType.put(new Integer(3), new Integer(3));
 		hmAreaSubType3dType.put(new Integer(4), new Integer(4));
 		hmAreaSubType3dType.put(new Integer(5), new Integer(5));
 		hmAreaSubType3dType.put(new Integer(6), new Integer(6));
 		hmAreaSubType3dType.put(new Integer(7), new Integer(7));
 		hmAreaSubType3dType.put(new Integer(8), new Integer(8));
-		hmAreaSubType3dType.put(new Integer(9), new Integer(9));
+		hmAreaSubType3dType.put(new Integer(9), new Integer(9));*/
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -209,6 +213,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
+
+		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
@@ -351,6 +357,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	@Override
 	protected void simpleInitGame() {
+		//cam.setFrustum(1.0f, 1000.0f, -0.55f, 0.55f, 0.4125f, -0.4125f);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		setCalculatedCameraLocation();
 		render();
 	}
@@ -451,7 +459,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
-		Integer n3dType = (Integer)hmAreaSubType3dType.get(new Integer(side.subtype));
+		Integer n3dType = hmAreaSubType3dType.get(side.subtype);
 		if (n3dType.equals(EMPTY_SIDE)) return;
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		

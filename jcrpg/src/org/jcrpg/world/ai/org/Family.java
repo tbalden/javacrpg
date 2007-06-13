@@ -3,7 +3,7 @@ package org.jcrpg.world.ai.org;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.fauna.Intelligent;
-import org.jcrpg.world.place.House;
+import org.jcrpg.world.place.economic.House;
 
 public class Family extends Group {
 

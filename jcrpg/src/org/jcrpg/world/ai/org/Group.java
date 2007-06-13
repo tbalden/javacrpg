@@ -9,7 +9,7 @@ public class Group {
 
 	public HashMap<String, Intelligent> directMembers;
 	public HashMap<String, GroupRelation> groupRelations;
-	public HashMap<String, Place> properties;	
+	public HashMap<String, Object> properties;	
 	/**
 	 * Gets leader for a certain aspect of the world.
 	 * @param filter
