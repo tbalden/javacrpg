@@ -8,6 +8,8 @@ public class Engine implements Runnable {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
 		{
+			try{Thread.sleep(100);}catch (Exception ex){}
+			
 		}
 		System.out.println("ENGINE TERMINTATED");
 	}

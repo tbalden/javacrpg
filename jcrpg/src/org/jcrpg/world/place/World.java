@@ -15,7 +15,9 @@ public class World extends Place {
 	
 	public World(String id, PlaceLocator loc) {
 		super(id, loc);
-		// TODO Auto-generated constructor stub
+		geographies = new HashMap<String, Geography>();
+		politicals = new HashMap<String, Political>();
+		economics = new HashMap<String, Economic>();
 	}
 	
 
@@ -38,15 +40,20 @@ public class World extends Place {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
 
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		// TODO Auto-generated method stub
 		if (boundaries.isInside(worldX, worldY, worldZ))
 			{
-			return new Cube(this, Cube.DEFAULT_LEVEL,new Side[]{new Side(),new Side(), new Side(),new Side(), new Side(), new Side("0",worldY==0?(worldX%10!=0?Plain.SUBTYPE_GRASS:River.SUBTYPE_WATER):"0")},worldX,worldY,worldZ);
+			for (Geography iterable_element : geographies.values()) {
+				if (iterable_element.getBoundaries().isInside(worldX, worldY, worldZ))
+					return iterable_element.getCube(worldX, worldY, worldZ);
 			}
+			return null;
+		}
 		else return null;
 	}
 
