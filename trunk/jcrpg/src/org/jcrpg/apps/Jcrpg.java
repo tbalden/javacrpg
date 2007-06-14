@@ -5,8 +5,11 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.geography.Forest;
+import org.jcrpg.world.place.geography.Plain;
 
 import com.jme.util.LoggingSystem;
 
@@ -226,19 +229,50 @@ public class Jcrpg {
         	}
     	}
     	*/
-    	    	
-        LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
-        Engine e = new Engine();
-        Thread t = new Thread(e);
-        t.start();
-        J3DCore app = new J3DCore();
-        World w = new World("",null);
-        w.setBoundaries(BoundaryUtils.createCubicBoundaries(100, 5, 100, 0, 0, 0));
-        app.setWorld(w);
-        app.setEngine(e);
-        app.setViewPosition(2, 0, 2);
-        app.initCore();
+    	    	try {
+    	    		start();
+    	    	} catch (Exception ex)
+    	    	{
+    	    		ex.printStackTrace();
+    	    	}
    }
 
+    public static void start() throws Exception {
+		LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
+		Engine e = new Engine();
+		Thread t = new Thread(e);
+		t.start();
+		J3DCore app = new J3DCore();
+		
+		World w = new World("world", null);
+		w.setBoundaries(BoundaryUtils.createCubicBoundaries(100, 1, 1, 1, 0, 0, 0));
+		
+		Plain p = new Plain("2",null);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 0));
+		w.geographies.put(p.id, p);
 
+		p = new Plain("21",null);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 1));
+		w.geographies.put(p.id, p);
+		p = new Plain("22",null);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 2));
+		w.geographies.put(p.id, p);
+
+		p = new Plain("3",null);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 2, 0, 0));
+		w.geographies.put(p.id, p);
+		
+		p = new Plain("5",null);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 3, 0, 0));
+		w.geographies.put(p.id, p);
+		
+		Forest f = new Forest("4",null);
+		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 1, 0, 0));
+		w.geographies.put(f.id, f);
+		
+		app.setWorld(w);
+		app.setEngine(e);
+		app.setViewPosition(2, 0, 2);
+		app.initCore();
+	}
 }

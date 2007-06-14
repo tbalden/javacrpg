@@ -21,6 +21,7 @@ import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
 
@@ -48,7 +49,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 10;
+    public static int RENDER_DISTANCE = 20;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -167,6 +168,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		// area subtype to 3d type mapping
 		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS, new Integer(2));
+		hmAreaSubType3dType.put(Plain.SUBTYPE_TREE, new Integer(9));
+		hmAreaSubType3dType.put(Forest.SUBTYPE_GRASS, new Integer(2));
+		hmAreaSubType3dType.put(Forest.SUBTYPE_TREE, new Integer(9));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER, new Integer(10));
 		/*hmAreaSubType3dType.put(new Integer(2), new Integer(2));
 		hmAreaSubType3dType.put(new Integer(3), new Integer(3));
@@ -206,8 +210,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
 				));
 
-		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground2.3ds","sides/grass2.jpg"));
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/grass2.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/grass2.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		
@@ -409,10 +413,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			newly++;
 			// render the cube newly
 			//System.out.println("CUBE Coords: "+ ""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
-			Side[] sides = c.cube.sides;
+			Side[][] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
-				renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j]);
+				for (int k=0; k<sides[j].length; k++)
+					renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k]);
 			}
 			// store it to new cubes hashmap
 			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
@@ -479,7 +484,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			{
 				// if there is a side of the same kind above the current side, 
 				//  we don't need continuous side rendering
-				if (cube.cube.getNeighbour(TOP).getSide(direction).type==side.type)
+				if (cube.cube.getNeighbour(TOP).hasSideOfType(direction,side.type))
 				{
 					return;					
 				}
@@ -492,7 +497,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				Cube n1 = cube.cube.getNeighbour(i);
 				if (n1!=null)
 				{
-					if (n1.sides[i].type==side.type || n1.sides[oppositeDirections.get(new Integer(i)).intValue()].type==side.type)
+					if (n1.hasSideOfType(i,side.type) || n1.hasSideOfType(oppositeDirections.get(new Integer(i)).intValue(),side.type))
 					{
 						render = false; break;
 					}
@@ -511,18 +516,18 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			{
 				// if there is a side of the same kind above the current side, 
 				//  we don't need continuous side rendering
-				if (cube.cube.getNeighbour(TOP).getSide(direction).type==side.type)
+				if (cube.cube.getNeighbour(TOP).hasSideOfType(direction,side.type))
 				{
 					return;					
 				}
 				
 			}
 			if (cube.cube.getNeighbour(dir)!=null)
-			if (cube.cube.getNeighbour(dir).getSide(direction).type == side.type)
+			if (cube.cube.getNeighbour(dir).hasSideOfType(direction,side.type))
 			{
 				checkCube = cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue());
 				if (checkCube !=null) {
-					if (checkCube.getSide(direction).type == side.type)
+					if (checkCube.hasSideOfType(direction,side.type))
 					{
 						n = loadObjects( ((RenderedContinuousSide)renderedSide).continuous );
 						renderNodes(n, cube, x, y, z, direction);
@@ -539,7 +544,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				checkCube = cube.cube.getNeighbour(oppositeDirections.get(new Integer(dir)).intValue());
 				if (checkCube!=null)
 				{
-					if (checkCube.getSide(direction).type == side.type)
+					if (checkCube.hasSideOfType(direction, side.type))
 					{
 						// opposite to normal direction is continuous 
 						// normal direction is continuous
