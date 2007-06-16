@@ -21,6 +21,7 @@ import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
@@ -49,7 +50,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 20;
+    public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -166,12 +167,19 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public J3DCore()
 	{
 		// area subtype to 3d type mapping
-		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE, EMPTY_SIDE);
-		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS, new Integer(2));
-		hmAreaSubType3dType.put(Plain.SUBTYPE_TREE, new Integer(9));
-		hmAreaSubType3dType.put(Forest.SUBTYPE_GRASS, new Integer(2));
-		hmAreaSubType3dType.put(Forest.SUBTYPE_TREE, new Integer(9));
-		hmAreaSubType3dType.put(River.SUBTYPE_WATER, new Integer(10));
+		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);
+		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS.id, new Integer(2));
+		hmAreaSubType3dType.put(Plain.SUBTYPE_TREE.id, new Integer(9));
+		hmAreaSubType3dType.put(Forest.SUBTYPE_GRASS.id, new Integer(2));
+		hmAreaSubType3dType.put(Forest.SUBTYPE_TREE.id, new Integer(9));
+		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
+		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
+		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(3));
+		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));
+		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
+		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
+		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
+		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
 		/*hmAreaSubType3dType.put(new Integer(2), new Integer(2));
 		hmAreaSubType3dType.put(new Integer(3), new Integer(3));
 		hmAreaSubType3dType.put(new Integer(4), new Integer(4));
@@ -416,6 +424,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			Side[][] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
+				if (sides[j]!=null)
 				for (int k=0; k<sides[j].length; k++)
 					renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k]);
 			}
@@ -464,7 +473,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
-		Integer n3dType = hmAreaSubType3dType.get(side.subtype);
+		Integer n3dType = hmAreaSubType3dType.get(side.subtype.id);
+		if (n3dType==null) return;
 		if (n3dType.equals(EMPTY_SIDE)) return;
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
@@ -489,6 +499,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 					return;					
 				}
 				
+			} else {
+				System.out.println("# TOP IS NULL!");
 			}
 			boolean render = true;
 			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...
@@ -537,6 +549,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 						n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousNormal);
 						renderNodes(n, cube, x, y, z, direction);
 					}
+				} else
+				{
+					// normal direction is continuous
+					n = loadObjects( ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal );
+					renderNodes(n, cube, x, y, z, direction);
 				}
 				
 			} else 
@@ -557,8 +574,18 @@ public class J3DCore extends com.jme.app.SimpleGame{
 						n = loadObjects(((RenderedContinuousSide)renderedSide).nonContinuous);
 						renderNodes(n, cube, x, y, z, direction);
 					}
+				} else {
+					// opposite to normal direction is continuous 
+					// normal direction is continuous
+					n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite);
+					renderNodes(n, cube, x, y, z, direction);
 				}
-			} 
+			} else {
+				// opposite to normal direction is continuous 
+				// normal direction is continuous
+				n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite);
+				renderNodes(n, cube, x, y, z, direction);
+			}
 			
 		}
 		

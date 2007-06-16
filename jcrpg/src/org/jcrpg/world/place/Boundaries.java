@@ -48,11 +48,20 @@ public class Boundaries {
 			area.remove(element);
 		};
 	}
-	
+
+	public boolean isOverlapping(Boundaries area2) throws Exception
+	{
+		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
+		for (String element : area2.getArea().values()) {
+			return area.containsKey(element);
+		}
+		return false;
+	}
+
 	public boolean isInside(int absouluteX, int absoluteY, int absoluteZ)
 	{
 		boolean ret = area.get(getKey(absouluteX/magnification, absoluteY/magnification, absoluteZ/magnification))!=null;
-		if (ret && magnification==1) System.out.println(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
+		//if (ret && magnification==1) System.out.println(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
 		return ret;
 	}
 	
