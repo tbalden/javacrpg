@@ -57,6 +57,7 @@ public class Cube extends ChangingImpl {
 	
 	public boolean hasSideOfType(int sideId, String sideType)
 	{
+		if (sides[sideId]!=null)
 		for (int i=0; i<sides[sideId].length; i++)
 		{
 			if (sides[sideId][i].type==sideType)
@@ -69,15 +70,27 @@ public class Cube extends ChangingImpl {
 	
 	public String toString()
 	{
-		return "Cube: "+ x+" "+y+" "+z;
+		String r = "";
+		for (int s=0; s<6; s++)
+		for (int i=0; i<(sides[s]==null?0:sides[s].length); i++)
+		{
+			r+=sides[s][i]==null?"-":sides[s][i].type;
+		}
+		return "Cube: "+ x+" "+y+" "+z+" "+r;
 	}
 	
 	public Cube getNeighbour(int direction)
 	{
 		Object[] o = J3DCore.directionAnglesAndTranslations.get(new Integer(direction));
 		int[] f = (int[])o[1];
-		
-		return parent.getCube(x+f[0], y+f[1], z+f[2]);
+		Cube n = parent.getCube(x+f[0], y+f[1], z+f[2]);
+		if (n==null) System.out.println(this+" : "+parent.id+" "+direction+" NEIGHBOUR = "+n);
+		return n;
+	}
+	
+	public Cube copy(Place newParent)
+	{
+		return new Cube(newParent,relativeHeight,sides,x,y,z);
 	}
 	
 }

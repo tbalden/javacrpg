@@ -1,4 +1,8 @@
-[ ] Magnification of Area implementation -> Place will define its magnification RATIO which is used to determine subplaces exact coordinates in a
+[ ] mountain -> steep display all around a new ground level - movement up ahead on it!! + unpassable rockside generation
+[ ] bug in Globe mode -> houses dont display going round ?
+[X] Rendered continuous side bug!
+
+[X] Magnification of Area implementation -> Place will define its magnification RATIO which is used to determine subplaces exact coordinates in a
 	far more bigger area to move in!
 
 [ ] world -> ai, place, object, faune, flora

@@ -2,14 +2,15 @@ package org.jcrpg.world.place.geography;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.PlaceLocator;
 
 public class Plain extends Geography{
 
 	public static final String TYPE_PLAIN = "PLAIN";
-	public static final String SUBTYPE_GRASS = TYPE_PLAIN+"_GRASS";
-	public static final String SUBTYPE_TREE = TYPE_PLAIN+"_TREE";
+	public static final SideSubType SUBTYPE_GRASS = new SideSubType(TYPE_PLAIN+"_GRASS");
+	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_PLAIN+"_TREE");
 	
 	
 	public Plain(String id, PlaceLocator loc) {
