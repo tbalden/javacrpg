@@ -43,9 +43,12 @@ public abstract class Place {
 	
 	public PlaceLocator loc;
 	
-	public Place(String id, PlaceLocator loc)
+	public Place parent;
+	
+	public Place(String id, Place parent, PlaceLocator loc)
 	{
 		this.id = id;
+		this.parent = parent;
 	}
 	
 	public Cube getCube(int worldX, int worldY, int worldZ)

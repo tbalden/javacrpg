@@ -60,6 +60,9 @@ public class Boundaries {
 
 	public boolean isInside(int absouluteX, int absoluteY, int absoluteZ)
 	{
+		//if (absoluteY<0 && magnification>1) {
+			//absoluteY=absoluteY-1*magnification;
+		//}
 		boolean ret = area.get(getKey(absouluteX/magnification, absoluteY/magnification, absoluteZ/magnification))!=null;
 		//if (ret && magnification==1) System.out.println(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
 		return ret;

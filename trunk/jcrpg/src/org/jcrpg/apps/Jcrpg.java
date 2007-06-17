@@ -39,42 +39,43 @@ public class Jcrpg {
 		int i =0;
 		House h = null; 
 		long time = System.currentTimeMillis(); 
-		h = new House("house",null,4,1,4,0,0,5);		
+		h = new House("house",w,null,4,1,4,0,w.getSeaLevel(1),5);		
 		w.economics.put(h.id, h);
 		System.out.println(System.currentTimeMillis()-time+" ms");
 
-		h = new House("house1",null,7,2,7,0,0,15);		
+		h = new House("house1",w,null,7,2,7,0,w.getSeaLevel(1),15);		
 		w.economics.put(h.id, h);
 		System.out.println(System.currentTimeMillis()-time+" ms");
 
-		Plain p = new Plain("p1",null);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 0));
+		Plain p = new Plain("p1",w,null,w.getSeaLevel(10),10);
+		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
-		Mountain m = new Mountain("m1",null,10,1,1,1,0,0,0);
+		Mountain m = new Mountain("m1",w,null,10,2,1,2,1,w.getSeaLevel(10),1);
 		//w.geographies.put(m.id, m);
 
-		p = new Plain("21",null);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 1));
+		p = new Plain("21",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 1));
 		w.geographies.put(p.id, p);
-		p = new Plain("22",null);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 2));
+		p = new Plain("22",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 2));
 		w.geographies.put(p.id, p);
 
-		p = new Plain("3",null);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 2, 0, 0));
+		p = new Plain("3",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 2, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 		
-		p = new Plain("5",null);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 3, 0, 0));
+		p = new Plain("5",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 3, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 		
-		Forest f = new Forest("4",null);
-		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 1, 0, 0));
+		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10);
+		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 1, w.getSeaLevel(10), 0));
 		w.geographies.put(f.id, f);
 		
 		app.setWorld(w);
 		app.setEngine(e);
-		app.setViewPosition(2, 0, 2);
+		app.setViewPosition(2, w.getSeaLevel(1), 2);
 		app.initCore();
 	}
 }

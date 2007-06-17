@@ -2,8 +2,8 @@ package org.jcrpg.world.place;
 
 public class Geography extends Place {
 
-	public Geography(String id, PlaceLocator loc) {
-		super(id, loc);
+	public Geography(String id, Place parent,PlaceLocator loc) {
+		super(id,parent, loc);
 		// TODO Auto-generated constructor stub
 	}
 
