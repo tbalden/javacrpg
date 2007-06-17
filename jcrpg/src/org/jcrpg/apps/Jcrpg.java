@@ -51,8 +51,8 @@ public class Jcrpg {
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
-		Mountain m = new Mountain("m1",w,null,10,2,1,2,1,w.getSeaLevel(10),1);
-		//w.geographies.put(m.id, m);
+		Mountain m = new Mountain("m1",w,null,10,5,1,1,1,w.getSeaLevel(10),1);
+		w.geographies.put(m.id, m);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 1));

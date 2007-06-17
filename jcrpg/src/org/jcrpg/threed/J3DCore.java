@@ -51,7 +51,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 12;
+    public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -198,7 +198,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND_STEEP.id, new Integer(11));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND_NORMAL.id, new Integer(2));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND_NORMAL.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_TREE.id, new Integer(9));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -238,7 +239,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
-		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/steep_hill.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_top.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
