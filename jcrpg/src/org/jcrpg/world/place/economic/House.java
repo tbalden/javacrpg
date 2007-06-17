@@ -6,6 +6,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 
 public class House extends Economic {
@@ -63,8 +64,8 @@ public class House extends Economic {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public House(String id, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
-		super(id, loc);
+	public House(String id, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+		super(id,parent, loc);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<1) throw new Exception("House below minimum size"+getParameteredKey());
 

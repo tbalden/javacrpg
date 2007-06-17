@@ -84,9 +84,9 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     {
     	if (wait) try 
     	{
-    		long waitPlus = 200-(System.currentTimeMillis()-timeLockStart);
+    		long waitPlus = 100-(System.currentTimeMillis()-timeLockStart);
     		if ( (waitPlus) < 0 ) waitPlus = 0;
-    		Thread.sleep(30+ waitPlus );
+    		Thread.sleep(10+ waitPlus );
     	} catch (Exception ex)
     	{
     		

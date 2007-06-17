@@ -5,8 +5,8 @@ import org.jcrpg.world.place.PlaceLocator;
 
 public class Lake extends Place{
 
-	public Lake(String id, PlaceLocator loc) {
-		super(id, loc);
+	public Lake(String id, Place parent, PlaceLocator loc) {
+		super(id, parent, loc);
 		// TODO Auto-generated constructor stub
 	}
 

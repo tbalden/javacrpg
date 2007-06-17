@@ -5,8 +5,8 @@ import org.jcrpg.world.place.PlaceLocator;
 
 public class Bushes extends Place {
 
-	public Bushes(String id, PlaceLocator loc) {
-		super(id, loc);
+	public Bushes(String id, Place parent, PlaceLocator loc) {
+		super(id, parent, loc);
 		// TODO Auto-generated constructor stub
 	}
 

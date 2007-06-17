@@ -7,8 +7,8 @@ package org.jcrpg.world.place;
  */
 public class Political extends Place {
 
-	public Political(String id, PlaceLocator loc) {
-		super(id, loc);
+	public Political(String id, Place parent, PlaceLocator loc) {
+		super(id, parent, loc);
 		// TODO Auto-generated constructor stub
 	}
 

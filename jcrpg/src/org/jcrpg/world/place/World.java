@@ -26,7 +26,7 @@ public class World extends Place {
 	public int sizeX, sizeY, sizeZ, magnification;
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
-		super(id, loc);
+		super(id, null, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
@@ -37,6 +37,11 @@ public class World extends Place {
 		economics = new HashMap<String, Economic>();
 	}
 	
+	
+	public int getSeaLevel(int magnification)
+	{
+		return ((sizeY*this.magnification)/2)/magnification;
+	}
 
 	@Override
 	public Object getModel() {
@@ -73,15 +78,15 @@ public class World extends Place {
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
 		{
-			for (Economic iterable_element : economics.values()) {
-				if (iterable_element.getBoundaries().isInside(worldX, worldY, worldZ))
-					return iterable_element.getCube(worldX, worldY, worldZ);
+			for (Economic eco : economics.values()) {
+				if (eco.getBoundaries().isInside(worldX, worldY, worldZ))
+					return eco.getCube(worldX, worldY, worldZ);
 			}
-			for (Geography iterable_element : geographies.values()) {
-				if (iterable_element.getBoundaries().isInside(worldX, worldY, worldZ))
-					return iterable_element.getCube(worldX, worldY, worldZ);
+			for (Geography geo : geographies.values()) {
+				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
+					return geo.getCube(worldX, worldY, worldZ);
 			}
-			return worldY==0?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
+			return worldY==(sizeY*magnification/2)?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;
 	}

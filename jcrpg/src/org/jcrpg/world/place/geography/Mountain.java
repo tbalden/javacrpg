@@ -4,6 +4,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Geography;
 
@@ -18,10 +19,11 @@ public class Mountain extends Geography {
 	static Side[][] GROUND_STEEP = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND_STEEP)} };
 
 
-	int sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
+	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	
-	public Mountain(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
-		super(id, loc);
+	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+		super(id, parent, loc);
+		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
@@ -31,17 +33,46 @@ public class Mountain extends Geography {
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 
+	
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		int iX = worldX-origoX;
-		int iY = worldY-origoY;
-		int iZ = worldZ-origoZ;
-		int lX = sizeX-iX;
-		int lY = sizeY-iY;
-		int lZ = sizeZ-iZ;
-		if (iZ%2==0&&iY==1) return new Cube(this,GROUND_NORMAL,worldX,worldY,worldZ);
-		if (iZ%2==1&&iY==0) return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+		float iX = worldX-origoX*magnification;
+		float iY = worldY-origoY*magnification;
+		float iZ = worldZ-origoZ*magnification;
+		float lX = sizeX*magnification-iX;
+		float lY = sizeY*magnification-iY;
+		float lZ = sizeZ*magnification-iZ;
+		
+		float proportionateXSizeOnLevelY = lX / (sizeY*1f*magnification/lY);
+		float proportionateZSizeOnLevelY = lY / (sizeY*1f*magnification/lY);
+		float gapX = ((sizeX*1f*magnification) - proportionateXSizeOnLevelY)/2f;
+		float gapZ = ((sizeZ*1f*magnification) - proportionateZSizeOnLevelY)/2f;
+		
+		if (iX>gapX && iZ>gapZ && iX<lX-gapX && iZ<lZ-gapZ)
+		{
+			return new Cube(this,GROUND_NORMAL,worldX,worldY,worldZ);
+		}
+
+		if (iZ==(int)gapZ && iX>gapX && iX<lX-gapX)
+		{
+			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+		}
+		if (iX==(int)gapX && iZ>gapZ && iZ<lZ-gapZ)
+		{
+			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+		}
+
+		if (iZ==(int)(lZ-gapZ)+1 && iX>gapX && iX<lX-gapX)
+		{
+			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+		}
+		if (iX==(int)(lX-gapX)+1 && iZ>gapZ && iZ<lZ-gapZ)
+		{
+			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+		}
+
+		//if (iZ%4==3 && iY==iZ/4) return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
 		return null;
 	}
 	
