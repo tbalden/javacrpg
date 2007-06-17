@@ -50,7 +50,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 10;
+    public static int RENDER_DISTANCE = 12;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -95,6 +95,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	 */
 	static Quaternion qN, qS, qW, qE, qT, qB, qTexture;
 
+	/**
+	 * Horizontal Rotations 
+	 */
+	static Quaternion horizontalN, horizontalS, horizontalW, horizontalE;
+
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3, TOP = 4, BOTTOM = 5;
 
 	public static Vector3f dNorth = new Vector3f(0, 0, -1 * CUBE_EDGE_SIZE),
@@ -128,6 +133,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		qE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
 		qTexture = new Quaternion();
 		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
+		
+		// horizontal rotations
+		horizontalN = new Quaternion();
+		horizontalN.fromAngleAxis(FastMath.PI * 2, new Vector3f(1,0,0));
+		horizontalS = new Quaternion();
+		horizontalS.fromAngleAxis(FastMath.PI, new Vector3f(1,0,0));
+		horizontalW = new Quaternion();
+		horizontalW.fromAngleAxis(FastMath.PI/2, new Vector3f(1,0,0));
+		horizontalE = new Quaternion();
+		horizontalE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
 		
 	}
 	
@@ -219,7 +234,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				));
 
 		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
-		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/grass2.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		
@@ -227,6 +241,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/steep_hill.3ds",null));
 				
 				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
