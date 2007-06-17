@@ -81,7 +81,7 @@ public class World extends Place {
 				if (iterable_element.getBoundaries().isInside(worldX, worldY, worldZ))
 					return iterable_element.getCube(worldX, worldY, worldZ);
 			}
-			return worldY==0?new Cube(this,Cube.DEFAULT_LEVEL,OCEAN,worldX,worldY,worldZ):null;
+			return worldY==0?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;
 	}

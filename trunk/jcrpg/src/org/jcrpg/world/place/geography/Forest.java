@@ -36,7 +36,7 @@ public class Forest extends Geography {
 		for (Place place : places) {
 			return place.getCube(worldX, worldY, worldZ);
 		}
-		return new Cube(this,Cube.DEFAULT_LEVEL,worldY==0?((worldX+worldZ)%3==0?GRASS:TREE):EMPTY,worldX,worldY,worldZ);
+		return new Cube(this,worldY==0?((worldX+worldZ)%3==0?GRASS:TREE):EMPTY,worldX,worldY,worldZ);
 	}
 	
 	

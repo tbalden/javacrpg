@@ -23,6 +23,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
 
@@ -50,7 +51,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 12;
+    public static int RENDER_DISTANCE = 7;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -195,14 +196,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
-		/*hmAreaSubType3dType.put(new Integer(2), new Integer(2));
-		hmAreaSubType3dType.put(new Integer(3), new Integer(3));
-		hmAreaSubType3dType.put(new Integer(4), new Integer(4));
-		hmAreaSubType3dType.put(new Integer(5), new Integer(5));
-		hmAreaSubType3dType.put(new Integer(6), new Integer(6));
-		hmAreaSubType3dType.put(new Integer(7), new Integer(7));
-		hmAreaSubType3dType.put(new Integer(8), new Integer(8));
-		hmAreaSubType3dType.put(new Integer(9), new Integer(9));*/
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND_STEEP.id, new Integer(11));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND_NORMAL.id, new Integer(2));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
