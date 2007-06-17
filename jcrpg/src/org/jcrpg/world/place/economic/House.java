@@ -80,7 +80,7 @@ public class House extends Economic {
 			{
 				for (int z= 1; z<sizeZ-1; z++)
 				{
-					addStoredCube(x, y, z, new Cube(this,Cube.DEFAULT_LEVEL,INTERNAL,x,y,z));
+					addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z));
 				}
 				
 			}
@@ -94,7 +94,7 @@ public class House extends Economic {
 				{
 					s = y==0?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
 				}
-				addStoredCube(x, y, z, new Cube(this,Cube.DEFAULT_LEVEL,s,x,y,z));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int x=1; x<sizeX-1; x++)
 			{
@@ -104,24 +104,24 @@ public class House extends Economic {
 				{
 					s = y==0?WINDOW_GROUND_NORTH:WINDOW_NORTH; 
 				}
-				addStoredCube(x, y, z, new Cube(this,Cube.DEFAULT_LEVEL,s,x,y,z));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = 0;
-				addStoredCube(x, y, z, new Cube(this,Cube.DEFAULT_LEVEL,y==0?WALL_GROUND_WEST:WALL_WEST,x,y,z));
+				addStoredCube(x, y, z, new Cube(this,y==0?WALL_GROUND_WEST:WALL_WEST,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = sizeX-1;
-				addStoredCube(x, y, z, new Cube(this,Cube.DEFAULT_LEVEL,y==0?WALL_GROUND_EAST:WALL_EAST,x,y,z));
+				addStoredCube(x, y, z, new Cube(this,y==0?WALL_GROUND_EAST:WALL_EAST,x,y,z));
 			}
 		}
-		addStoredCube(0, 0, 0, new Cube(this,Cube.DEFAULT_LEVEL,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1, 0, 0, new Cube(this,Cube.DEFAULT_LEVEL,EXTERNAL,0,0,0));
-		addStoredCube(0, 0, 0+sizeZ-1, new Cube(this,Cube.DEFAULT_LEVEL,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1, 0, 0+sizeZ-1, new Cube(this,Cube.DEFAULT_LEVEL,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1,0,1,new Cube(this,Cube.DEFAULT_LEVEL,DOOR_GROUND_EAST,0,0,0));
+		addStoredCube(0, 0, 0, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1, 0, 0, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(0, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1,0,1,new Cube(this,DOOR_GROUND_EAST,0,0,0));
 		storeParameteredArea();
 	}
 	

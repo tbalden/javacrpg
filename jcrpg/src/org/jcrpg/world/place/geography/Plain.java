@@ -19,12 +19,12 @@ public class Plain extends Geography{
 	}
 
 
-	static Side[][] GRASS = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_PLAIN,SUBTYPE_GRASS)} };
-	static Side[][] TREE = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_PLAIN,SUBTYPE_GRASS),new Side(TYPE_PLAIN,SUBTYPE_TREE)} };
+	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GRASS)} };
+	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GRASS),new Side(TYPE_PLAIN,SUBTYPE_TREE)} };
 	
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		return new Cube(this, Cube.DEFAULT_LEVEL,worldY==0?(worldX%10==0&&worldZ%10==0?TREE:GRASS):EMPTY,worldX,worldY,worldZ);
+		return new Cube(this, worldY==0?(worldX%10==0&&worldZ%10==0?TREE:GRASS):EMPTY,worldX,worldY,worldZ);
 	}
 
 	
