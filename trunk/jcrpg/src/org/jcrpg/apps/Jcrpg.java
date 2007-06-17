@@ -49,10 +49,9 @@ public class Jcrpg {
 
 		Plain p = new Plain("p1",null);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 0));
-		//w.geographies.put(p.id, p);
+		w.geographies.put(p.id, p);
 		Mountain m = new Mountain("m1",null,10,1,1,1,0,0,0);
-		//p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 0));
-		w.geographies.put(m.id, m);
+		//w.geographies.put(m.id, m);
 
 		p = new Plain("21",null);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, 0, 1));
