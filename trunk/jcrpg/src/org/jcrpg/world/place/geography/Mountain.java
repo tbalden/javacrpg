@@ -11,12 +11,17 @@ import org.jcrpg.world.place.Geography;
 
 public class Mountain extends Geography {
 
-	public static final String TYPE_PLAIN = "MOUNTAIN";
-	public static final SideSubType SUBTYPE_GROUND_STEEP = new SideSubType(TYPE_PLAIN+"_GROUND_STEEP");
-	public static final SideSubType SUBTYPE_GROUND_NORMAL = new SideSubType(TYPE_PLAIN+"_GROUND_NORMAL");
+	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
+	public static final SideSubType SUBTYPE_GROUND_STEEP = new SideSubType(TYPE_MOUNTAIN+"_GROUND_STEEP");
+	public static final SideSubType SUBTYPE_GROUND_NORMAL = new SideSubType(TYPE_MOUNTAIN+"_GROUND_NORMAL");
+	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_MOUNTAIN+"_TREE");
 
-	static Side[][] GROUND_NORMAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND_NORMAL)} };
-	static Side[][] GROUND_STEEP = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND_STEEP)} };
+	static Side[] NORMAL = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND_NORMAL)};
+	static Side[] NORMAL_TREE = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND_NORMAL),new Side(TYPE_MOUNTAIN,SUBTYPE_TREE)};
+	
+	static Side[][] GROUND_NORMAL = new Side[][] { null, null, null,null,null,NORMAL };
+	static Side[][] GROUND_NORMAL_TREE = new Side[][] { null, null, null,null,null,NORMAL_TREE };
+//	static Side[][] GROUND_STEEP = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND_STEEP)} };
 
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
@@ -37,43 +42,52 @@ public class Mountain extends Geography {
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		float iX = worldX-origoX*magnification;
-		float iY = worldY-origoY*magnification;
-		float iZ = worldZ-origoZ*magnification;
-		float lX = sizeX*magnification-iX;
-		float lY = sizeY*magnification-iY;
-		float lZ = sizeZ*magnification-iZ;
+		int relX = worldX-origoX*magnification;
+		int relY = worldY-origoY*magnification;
+		int relZ = worldZ-origoZ*magnification;
+		int remainingX = sizeX*magnification-relX;
+		int remainingY = sizeY*magnification-relY;
+		int remaningZ = sizeZ*magnification-relZ;
+		int realSizeX = sizeX*magnification-1;
+		int realSizeY = sizeY*magnification;
+		int realSizeZ = sizeZ*magnification-1;
 		
-		float proportionateXSizeOnLevelY = lX / (sizeY*1f*magnification/lY);
-		float proportionateZSizeOnLevelY = lY / (sizeY*1f*magnification/lY);
-		float gapX = ((sizeX*1f*magnification) - proportionateXSizeOnLevelY)/2f;
-		float gapZ = ((sizeZ*1f*magnification) - proportionateZSizeOnLevelY)/2f;
+		System.out.println("MOUNTAIN GETC: "+relX+" "+relY+" "+relZ+" L: "+remainingX+" "+remainingY+" "+remaningZ);
 		
-		if (iX>gapX && iZ>gapZ && iX<lX-gapX && iZ<lZ-gapZ)
+		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
+		int proportionateZSizeOnLevelY = realSizeZ - (int)(realSizeZ * ((relY*1d)/(realSizeY)));
+		int gapX = ((realSizeX) - proportionateXSizeOnLevelY)/2;
+		int gapZ = ((realSizeZ) - proportionateZSizeOnLevelY)/2;
+		int proportionateXSizeOnLevelYNext = realSizeX - (int)(realSizeX * (((relY+1)*1d)/(realSizeY)));
+		int proportionateZSizeOnLevelYNext = realSizeZ - (int)(realSizeZ * (((relY+1)*1d)/(realSizeY)));
+		int gapXNext = ((realSizeX) - proportionateXSizeOnLevelYNext)/2;
+		int gapZNext = ((realSizeZ) - proportionateZSizeOnLevelYNext)/2;
+		
+		
+		boolean returnCube = false;
+		// NORMAL
+		if (relX>=gapX && relX<=gapXNext && relZ>=gapZ && relZ<=realSizeZ-gapZ)
 		{
-			return new Cube(this,GROUND_NORMAL,worldX,worldY,worldZ);
+			returnCube = true;
 		}
-
-		if (iZ==(int)gapZ && iX>gapX && iX<lX-gapX)
+		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>=gapZ && relZ<=realSizeZ-gapZ)
 		{
-			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+			returnCube = true;
 		}
-		if (iX==(int)gapX && iZ>gapZ && iZ<lZ-gapZ)
+		if (relZ>=gapZ && relZ<=gapZNext && relX>=gapX &&  relX<=realSizeX-gapX)
 		{
-			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+			returnCube = true;
 		}
-
-		if (iZ==(int)(lZ-gapZ)+1 && iX>gapX && iX<lX-gapX)
+		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>=gapX && relX<=realSizeX-gapX)
 		{
-			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
+			returnCube = true;
 		}
-		if (iX==(int)(lX-gapX)+1 && iZ>gapZ && iZ<lZ-gapZ)
-		{
-			return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
-		}
-
-		//if (iZ%4==3 && iY==iZ/4) return new Cube(this,GROUND_STEEP,worldX,worldY,worldZ);
-		return null;
+		if (!returnCube) return null;
+		boolean cubeAbove = getCube( worldX,  worldY+1,  worldZ)!=null;
+		Side[][] s = (worldX+worldZ)%8==0&&!cubeAbove?GROUND_NORMAL_TREE:GROUND_NORMAL;
+		Cube c = null;
+		c = new Cube(this,s,worldX,worldY,worldZ);
+		return c;
 	}
 	
 	
