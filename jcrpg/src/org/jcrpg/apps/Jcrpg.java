@@ -36,7 +36,7 @@ public class Jcrpg {
 		
 		World w = new World("world", null,100,1,1,1);
 		
-		int i =0;
+		//int i =0;
 		House h = null; 
 		long time = System.currentTimeMillis(); 
 		h = new House("house",w,null,4,1,4,0,w.getSeaLevel(1),5);		

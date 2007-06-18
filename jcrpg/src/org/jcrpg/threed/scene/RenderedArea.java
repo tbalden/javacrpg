@@ -2,7 +2,6 @@ package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
 
-import org.jcrpg.space.Area;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.World;
@@ -42,7 +41,7 @@ public class RenderedArea {
 			}
 		}
 						
-		ArrayList elements = new ArrayList();
+		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
 			for (int y1=-1*distance; y1<=1*distance; y1++)

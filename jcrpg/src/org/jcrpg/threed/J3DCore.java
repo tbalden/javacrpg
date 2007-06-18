@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.jcrpg.space.Area;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.input.ClassicInputHandler;
@@ -28,12 +27,10 @@ import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
 
 import com.jme.image.Texture;
-import com.jme.input.action.NodeMouseLook;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Skybox;
 import com.jme.scene.state.TextureState;

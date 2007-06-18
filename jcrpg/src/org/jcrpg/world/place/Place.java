@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
-import org.jcrpg.world.place.geography.Plain;
 
 public abstract class Place {
 
