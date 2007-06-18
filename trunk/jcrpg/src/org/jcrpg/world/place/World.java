@@ -4,10 +4,7 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
-import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
-import org.jcrpg.world.place.geography.Plain;
-import org.jcrpg.world.place.geography.River;
 
 public class World extends Place {
 
