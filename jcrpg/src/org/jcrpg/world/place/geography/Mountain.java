@@ -2,6 +2,9 @@ package org.jcrpg.world.place.geography;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.ClimbingVertical;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
@@ -12,16 +15,23 @@ import org.jcrpg.world.place.Geography;
 public class Mountain extends Geography {
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
-	public static final SideSubType SUBTYPE_GROUND_STEEP = new SideSubType(TYPE_MOUNTAIN+"_GROUND_STEEP");
-	public static final SideSubType SUBTYPE_GROUND_NORMAL = new SideSubType(TYPE_MOUNTAIN+"_GROUND_NORMAL");
+	public static final SideSubType SUBTYPE_STEEP = new ClimbingVertical(TYPE_MOUNTAIN+"_GROUND_STEEP");
+	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK");
+	public static final SideSubType SUBTYPE_GROUND = new NotPassable(TYPE_MOUNTAIN+"_GROUND");
 	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_MOUNTAIN+"_TREE");
 
-	static Side[] NORMAL = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND_NORMAL)};
-	static Side[] NORMAL_TREE = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND_NORMAL),new Side(TYPE_MOUNTAIN,SUBTYPE_TREE)};
+	static Side[] ROCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK)};
+	static Side[] GROUND = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND)};
+	static Side[] NORMAL_TREE = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND),new Side(TYPE_MOUNTAIN,SUBTYPE_TREE)};
+	static Side[] STEEP = {new Side(TYPE_MOUNTAIN,SUBTYPE_STEEP)};
 	
-	static Side[][] GROUND_NORMAL = new Side[][] { null, null, null,null,null,NORMAL };
+	static Side[][] MOUNTAIN_ROCK = new Side[][] { null, null, null,null,null,ROCK };
+	static Side[][] MOUNTAIN_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] GROUND_NORMAL_TREE = new Side[][] { null, null, null,null,null,NORMAL_TREE };
-//	static Side[][] GROUND_STEEP = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND_STEEP)} };
+	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, null,null,null,null };
+	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,null,null,null };
+	static Side[][] STEEP_SOUTH = new Side[][] { null, null, STEEP,null,null,null };
+	static Side[][] STEEP_WEST = new Side[][] { null, null, null,STEEP,null,null };
 
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
@@ -52,6 +62,17 @@ public class Mountain extends Geography {
 		int realSizeY = sizeY*magnification;
 		int realSizeZ = sizeZ*magnification-1;
 		
+		
+		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
+		{
+			return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ);
+		}
+/*		if (relZ==0 && relY==0|| relZ==realSizeZ && relY==0)
+		{
+			return new Cube(this,MOUNTAIN_ROCK,worldX,worldY,worldZ);
+			
+		}*/
+		
 		System.out.println("MOUNTAIN GETC: "+relX+" "+relY+" "+relZ+" L: "+remainingX+" "+remainingY+" "+remaningZ);
 		
 		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
@@ -65,26 +86,35 @@ public class Mountain extends Geography {
 		
 		
 		boolean returnCube = false;
+		Side[][] returnSteep = null;
 		// NORMAL
-		if (relX>=gapX && relX<=gapXNext && relZ>=gapZ && relZ<=realSizeZ-gapZ)
+		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
+			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_NORTH;
 		}
-		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>=gapZ && relZ<=realSizeZ-gapZ)
+		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
+			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_SOUTH;
 		}
-		if (relZ>=gapZ && relZ<=gapZNext && relX>=gapX &&  relX<=realSizeX-gapX)
+		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
 		{
 			returnCube = true;
+			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_WEST;
 		}
-		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>=gapX && relX<=realSizeX-gapX)
+		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
 		{
 			returnCube = true;
+			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_EAST;
 		}
 		if (!returnCube) return null;
-		boolean cubeAbove = getCube( worldX,  worldY+1,  worldZ)!=null;
-		Side[][] s = (worldX+worldZ)%8==0&&!cubeAbove?GROUND_NORMAL_TREE:GROUND_NORMAL;
+		//boolean cubeAbove = getCube( worldX,  worldY+1,  worldZ)!=null;
+		Side[][] s = returnSteep!=null?returnSteep:MOUNTAIN_ROCK;
 		Cube c = null;
 		c = new Cube(this,s,worldX,worldY,worldZ);
 		return c;
