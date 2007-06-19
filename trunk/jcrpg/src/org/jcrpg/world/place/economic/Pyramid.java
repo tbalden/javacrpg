@@ -1,4 +1,4 @@
-package org.jcrpg.world.place.geography;
+package org.jcrpg.world.place.economic;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -13,7 +13,7 @@ import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Geography;
 
 
-public class Mountain extends Geography {
+public class Pyramid extends Economic {
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
 	public static final SideSubType SUBTYPE_STEEP = new ClimbingVertical(TYPE_MOUNTAIN+"_GROUND_STEEP");
@@ -37,7 +37,7 @@ public class Mountain extends Geography {
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	
-	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+	public Pyramid(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -56,6 +56,9 @@ public class Mountain extends Geography {
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
+		int remainingX = sizeX*magnification-relX;
+		int remainingY = sizeY*magnification-relY;
+		int remaningZ = sizeZ*magnification-relZ;
 		int realSizeX = sizeX*magnification-1;
 		int realSizeY = sizeY*magnification;
 		int realSizeZ = sizeZ*magnification-1;
@@ -65,7 +68,13 @@ public class Mountain extends Geography {
 		{
 			return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ);
 		}
+/*		if (relZ==0 && relY==0|| relZ==realSizeZ && relY==0)
+		{
+			return new Cube(this,MOUNTAIN_ROCK,worldX,worldY,worldZ);
+			
+		}*/
 		
+		System.out.println("MOUNTAIN GETC: "+relX+" "+relY+" "+relZ+" L: "+remainingX+" "+remainingY+" "+remaningZ);
 		
 		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
 		int proportionateZSizeOnLevelY = realSizeZ - (int)(realSizeZ * ((relY*1d)/(realSizeY)));
@@ -75,16 +84,11 @@ public class Mountain extends Geography {
 		int proportionateZSizeOnLevelYNext = realSizeZ - (int)(realSizeZ * (((relY+1)*1d)/(realSizeY)));
 		int gapXNext = ((realSizeX) - proportionateXSizeOnLevelYNext)/2;
 		int gapZNext = ((realSizeZ) - proportionateZSizeOnLevelYNext)/2;
-
-		int proportionateXSizeOnLevelYPrev = realSizeX - (int)(realSizeX * (((relY-1)*1d)/(realSizeY)));
-		int proportionateZSizeOnLevelYPrev = realSizeZ - (int)(realSizeZ * (((relY-1)*1d)/(realSizeY)));
-		int gapXPrevious = ((realSizeX) - proportionateXSizeOnLevelYPrev)/2;
-		int gapZPrevious = ((realSizeZ) - proportionateZSizeOnLevelYPrev)/2;
-
+		
 		
 		boolean returnCube = false;
 		Side[][] returnSteep = null;
-
+		// NORMAL
 		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
@@ -109,43 +113,7 @@ public class Mountain extends Geography {
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
 			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_EAST;
 		}
-		if (!returnCube) {
-
-			// no cube for this coordinates, so we can put something above it, if there is rock below!!
-			
-			if (relX>=gapXPrevious && relX<=gapX && relZ>gapZPrevious && relZ<realSizeZ-gapZPrevious)
-			{
-				returnCube = true;
-				// if on the edge of the mountain and above is not on the edge too, we cannot put something above
-				if (relX==gapXPrevious && gapX!=gapXPrevious) returnCube = false;
-			}
-			if (relX<=realSizeX-gapXPrevious && relX>=realSizeX-gapX && relZ>gapZPrevious && relZ<realSizeZ-gapZPrevious)
-			{
-				returnCube = true;
-//				 if on the edge of the mountain and above is not on the edge too, we cannot put something above
-				if (relX==realSizeX-gapXPrevious && gapX!=gapXPrevious) returnCube = false;
-			}
-			if (relZ>=gapZPrevious && relZ<=gapZ && relX>gapXPrevious &&  relX<realSizeX-gapXPrevious)
-			{
-				returnCube = true;
-				// if on the edge of the mountain and above is not on the edge too, we cannot put something above
-				if (relZ==gapZPrevious && gapZ!=gapZPrevious) returnCube = false;
-			}
-			if (relZ<=realSizeZ-gapZPrevious && relZ>=realSizeZ-gapZ && relX>gapXPrevious && relX<realSizeX-gapXPrevious)
-			{
-				returnCube = true;
-				// if on the edge of the mountain and above is not on the edge too, we cannot put something above
-				if (relZ==realSizeZ-gapZPrevious && gapZ!=gapZPrevious) returnCube = false;
-			}
-			if (returnCube)
-			{
-				// we can put on it!!
-				
-				if ( relZ%((relY+(relX*relX)%10)+3)==0 && relX%4==0 )
-					return new Cube(this,GROUND_NORMAL_TREE,worldX,worldY,worldZ);
-			}
-			return null;
-		}
+		if (!returnCube) return null;
 		//boolean cubeAbove = getCube( worldX,  worldY+1,  worldZ)!=null;
 		Side[][] s = returnSteep!=null?returnSteep:MOUNTAIN_ROCK;
 		Cube c = null;
