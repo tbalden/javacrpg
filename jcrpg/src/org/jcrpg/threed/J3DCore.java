@@ -22,7 +22,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.Mountain;
+import org.jcrpg.world.place.geography.Mountain2;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
 
@@ -194,10 +194,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, new Integer(11));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_TREE.id, new Integer(9));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, new Integer(14));
+		hmAreaSubType3dType.put(Mountain2.SUBTYPE_STEEP.id, new Integer(11));
+		hmAreaSubType3dType.put(Mountain2.SUBTYPE_ROCK.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain2.SUBTYPE_TREE.id, new Integer(9));
+		hmAreaSubType3dType.put(Mountain2.SUBTYPE_GROUND.id, new Integer(14));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
