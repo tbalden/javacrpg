@@ -11,9 +11,12 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.Surface;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 
 
-public class Mountain extends Geography {
+public class Mountain extends Geography implements Surface{
+
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
 	public static final SideSubType SUBTYPE_STEEP = new ClimbingVertical(TYPE_MOUNTAIN+"_GROUND_STEEP");
@@ -153,6 +156,12 @@ public class Mountain extends Geography {
 		return c;
 	}
 	
+	public SurfaceHeightAndType getPoint(int x, int z) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	
 
 }
