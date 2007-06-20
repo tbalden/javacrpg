@@ -1,12 +1,14 @@
-[ ] mountain -> steep display all around a new ground level - movement up ahead on it!! + unpassable rockside generation
-[ ] bug in Globe mode -> houses dont display going round ?
+[ ] Weather engine - implement Climate -> fauna - climate condition based forest/plain!
+	[ ] Change flag for rendered thing!? -> example: climate change callback for already generated parts?
+
+
+[X] mountain -> steep display all around a new ground level - movement up ahead on it!! + unpassable rockside generation
+[X] bug in Globe mode -> houses dont display going round ?
 [X] Rendered continuous side bug!
 
 [X] Magnification of Area implementation -> Place will define its magnification RATIO which is used to determine subplaces exact coordinates in a
 	far more bigger area to move in!
 
 [ ] world -> ai, place, object, faune, flora
-[ ] Change flag for rendered thing!
-[ ] Weather engine - uses change flag too of rendered things
 
 [X] InputHandler -> create classic keyboard movement/turning which calls J3DCore render area renewal too

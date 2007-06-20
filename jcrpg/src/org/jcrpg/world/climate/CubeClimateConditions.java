@@ -19,25 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jcrpg.world.climate;
 
 import java.util.HashMap;
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
+/**
+ * For carrying climate info of one Cube.
+ * @author pali
+ *
+ */
+public class CubeClimateConditions {
 
-public abstract class Climate extends ClimatePart {
-
-	public World world;
-	public Boundaries boundaries;
+	public HashMap<String, Condition> conditions;
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
-	
-	public Climate(String id, World w)
-	{
-		super(id,null);
-		boundaries = w.getBoundaries();
-	}
-
 }

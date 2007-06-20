@@ -19,25 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jcrpg.world.climate;
 
-import java.util.HashMap;
+/**
+ * 
+ * @author pali
+ *
+ */
+public abstract class Condition {
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
-
-public abstract class Climate extends ClimatePart {
-
-	public World world;
-	public Boundaries boundaries;
+	public static String ID;
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
-	
-	public Climate(String id, World w)
-	{
-		super(id,null);
-		boundaries = w.getBoundaries();
-	}
-
 }
