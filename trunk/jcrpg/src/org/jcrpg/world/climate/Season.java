@@ -21,23 +21,22 @@
  */
 package org.jcrpg.world.climate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
-public abstract class Climate extends ClimatePart {
+public class Season implements ConditionGiver {
 
-	public World world;
-	public Boundaries boundaries;
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
+	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
-	public Climate(String id, World w)
+	public DayTime getDayTime(Time time)
 	{
-		super(id,null);
-		boundaries = w.getBoundaries();
+		return new DayTime();
 	}
 
+	public ArrayList<Condition> getConditions(Time time, int worldX, int worldY, int worldZ) {
+		return conditions;
+	}
+	
 }

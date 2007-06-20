@@ -19,25 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jcrpg.world.climate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
-public abstract class Climate extends ClimatePart {
+public class DayTime implements ConditionGiver  {
 
-	public World world;
-	public Boundaries boundaries;
+	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
-	
-	public Climate(String id, World w)
-	{
-		super(id,null);
-		boundaries = w.getBoundaries();
+	public ArrayList<Condition> getConditions(Time time, int worldX, int worldY, int worldZ) {
+		return conditions;
 	}
 
 }

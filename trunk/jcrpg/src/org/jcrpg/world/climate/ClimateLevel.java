@@ -19,25 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jcrpg.world.climate;
 
-import java.util.HashMap;
+/**
+ * Horizontal splitting of Climate
+ * @author pali
+ *
+ */
+public class ClimateLevel extends ClimatePart{
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
-
-public abstract class Climate extends ClimatePart {
-
-	public World world;
-	public Boundaries boundaries;
+	int percentFrom, percentTo;
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
-	
-	public Climate(String id, World w)
-	{
-		super(id,null);
-		boundaries = w.getBoundaries();
+	public ClimateLevel(String id, Climate parent, int percentFrom, int percentTo) {
+		super(id,parent);
+		this.percentFrom = percentFrom;
+		this.percentTo = percentTo;
 	}
 
 }

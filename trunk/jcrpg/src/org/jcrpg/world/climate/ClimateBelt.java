@@ -19,25 +19,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.jcrpg.world.climate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import org.jcrpg.world.place.Boundaries;
-import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
-public abstract class Climate extends ClimatePart {
+/**
+ * Vertical split of the Climate
+ * @author pali
+ *
+ */
+public class ClimateBelt  extends ClimatePart {
 
-	public World world;
-	public Boundaries boundaries;
 	
-	public HashMap<String, ClimateBelt> belts;
-	public HashMap<String, ClimateLevel> levels;
+	public ClimateBelt(String id, Climate parent) {
+		super(id,parent);
+	}
 	
-	public Climate(String id, World w)
+	public Season getSeason(Time time)
 	{
-		super(id,null);
-		boundaries = w.getBoundaries();
+		return new Season();
 	}
 
+	public ArrayList<Condition> getConditions(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }
