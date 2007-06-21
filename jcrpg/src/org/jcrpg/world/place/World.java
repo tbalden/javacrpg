@@ -93,6 +93,14 @@ public class World extends Place {
 			worldX = worldX%(sizeX*magnification);
 			//worldY = worldX%(sizeY*magnification); // in dir Y no globe
 			worldZ = worldZ%(sizeZ*magnification); // TODO Houses dont display going round the glob??? Static fields in the way or what?
+			if (worldX<0)
+			{
+				worldX = sizeX*magnification+worldX;
+			}
+			if (worldZ<0)
+			{
+				worldZ = sizeZ*magnification+worldZ;
+			}
 		}
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))

@@ -57,7 +57,7 @@ public class Jcrpg {
 		t.start();
 		J3DCore app = new J3DCore();
 		
-		World w = new World("world", null,100,1,1,1);
+		World w = new World("world", null,100,2,1,2);
 		
 		//int i =0;
 		House h = null; 
