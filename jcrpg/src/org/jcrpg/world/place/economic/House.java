@@ -110,12 +110,22 @@ public class House extends Economic {
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = 0;
-				addStoredCube(x, y, z, new Cube(this,y==0?WALL_GROUND_WEST:WALL_WEST,x,y,z));
+				Side[][] s = y==0?WALL_GROUND_WEST:WALL_WEST; 
+				if (z%3==2) 
+				{
+					s = y==0?WINDOW_GROUND_WEST:WINDOW_WEST; 
+				}
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = sizeX-1;
-				addStoredCube(x, y, z, new Cube(this,y==0?WALL_GROUND_EAST:WALL_EAST,x,y,z));
+				Side[][] s = y==0?WALL_GROUND_EAST:WALL_EAST; 
+				if (z%3==2) 
+				{
+					s = y==0?WINDOW_GROUND_EAST:WINDOW_EAST; 
+				}
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 		}
 		addStoredCube(0, 0, 0, new Cube(this,EXTERNAL,0,0,0));
