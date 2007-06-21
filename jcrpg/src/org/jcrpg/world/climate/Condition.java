@@ -29,6 +29,23 @@ package org.jcrpg.world.climate;
  */
 public abstract class Condition {
 
+	/**
+	 * static Unique ID of the Condition
+	 */
 	public static String ID;
+	
+	/**
+	 * The weight of the Condition
+	 */
+	public int weightPercentage;
+	
+	public Condition(int weightPercentage) throws Exception
+	{
+		if (weightPercentage<0 || weightPercentage>100)
+			throw new Exception("Invalid weight percentage for climate Condition "+ID+" "+weightPercentage);
+		
+		this.weightPercentage = weightPercentage;
+		
+	}
 	
 }
