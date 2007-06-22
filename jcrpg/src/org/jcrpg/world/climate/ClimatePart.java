@@ -1,13 +1,11 @@
 package org.jcrpg.world.climate;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.time.Time;
 
 public class ClimatePart {
 
-	protected Boundaries boundaries;
+	public Boundaries boundaries;
 	public ClimatePart parent;
 
 	public String id;
@@ -19,10 +17,17 @@ public class ClimatePart {
 		
 	}
 	
-	
-	public ArrayList<Condition> getCubeClimate(Time time, int worldX, int worldY, int worldZ)
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ)
 	{
 		return null;
+	}
+
+	public Boundaries getBoundaries() {
+		return boundaries;
+	}
+
+	public void setBoundaries(Boundaries boundaries) {
+		this.boundaries = boundaries;
 	}
 
 }

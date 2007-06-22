@@ -20,13 +20,23 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora.tree.deciduous;
 
+import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.world.ai.flora.Flora;
+import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class Oak extends Flora {
 
-	public Day() throws Exception {
-		super();
+	public static final String TYPE_FOREST = "OAK";
+	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
+	
+	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
+	
+	public Oak()
+	{
+		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
-
 }

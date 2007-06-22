@@ -28,10 +28,14 @@ import org.jcrpg.world.time.Time;
 
 public class DayTime implements ConditionGiver  {
 
+	public String STATIC_ID = DayTime.class.getCanonicalName();
+	
+	
 	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
-	public ArrayList<Condition> getConditions(Time time, int worldX, int worldY, int worldZ) {
-		return conditions;
+	public void getConditions(CubeClimateConditions conditions, Time time, int worldX, int worldY, int worldZ) {
+		conditions.setDayTime(this);
+		conditions.mergeConditions(this.conditions);
 	}
 
 }

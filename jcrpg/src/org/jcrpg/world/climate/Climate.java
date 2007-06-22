@@ -25,8 +25,9 @@ import java.util.HashMap;
 
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
-public abstract class Climate extends ClimatePart {
+public class Climate extends ClimatePart {
 
 	public World world;
 	public Boundaries boundaries;
@@ -38,6 +39,26 @@ public abstract class Climate extends ClimatePart {
 	{
 		super(id,null);
 		boundaries = w.getBoundaries();
+		belts = new HashMap<String, ClimateBelt>();
+		levels = new HashMap<String, ClimateLevel>();
 	}
+
+	@Override
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ) {
+		for (ClimateBelt belt : belts.values()) {
+			if (belt.boundaries.isInside(worldX, worldY, worldZ))
+			{
+				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ);
+				c.setBelt(belt);
+				c.setLevel(new ClimateLevel("1",this,0,0));
+			
+				return c;
+			}
+			
+		}
+		return null;
+	}
+	
+	
 
 }

@@ -25,14 +25,11 @@ package org.jcrpg.world.climate.conditions.light;
 import org.jcrpg.world.climate.Condition;
 
 public class Dusk extends Condition {
+	public static String DUSK_ID = Dusk.class.getCanonicalName();
 	public Dusk(int weightPercentage) throws Exception {
 		super(weightPercentage);
-		// TODO Auto-generated constructor stub
+		ID = DUSK_ID;
 	}
 
-	static
-	{
-		ID = Dusk.class.getSimpleName();
-	}
 
 }

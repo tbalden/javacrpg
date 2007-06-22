@@ -27,7 +27,6 @@ public class Night extends org.jcrpg.world.climate.impl.generic.Night {
 
 	public Night() throws Exception {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

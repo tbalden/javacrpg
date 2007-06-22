@@ -33,6 +33,8 @@ public class BoundaryUtils {
 				for (int z=0; z<sizeZ;z++)
 				{
 					b.addCube(magnification,origoX+x, origoY+y, origoZ+z);
+					//if (x==0 || x==sizeX-1 && y==0 || y==sizeY-1 && z==0 || z==sizeZ-1)
+						//b.addLimiterCube(magnification,origoX+x, origoY+y, origoZ+z);
 				}
 		return b;
 			

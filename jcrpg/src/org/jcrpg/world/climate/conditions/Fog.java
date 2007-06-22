@@ -25,15 +25,12 @@ package org.jcrpg.world.climate.conditions;
 import org.jcrpg.world.climate.Condition;
 
 public class Fog extends Condition{
-	
+	public static String FOG_ID = Fog.class.getCanonicalName();
+
 	public Fog(int weightPercentage) throws Exception {
 		super(weightPercentage);
-		// TODO Auto-generated constructor stub
+		ID = FOG_ID;
 	}
 
-	static
-	{
-		ID = Fog.class.getSimpleName();
-	}
 
 }

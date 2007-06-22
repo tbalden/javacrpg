@@ -20,13 +20,31 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.climate.impl.tropical;
 
+import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.climate.impl.continental.Summer;
+import org.jcrpg.world.time.Time;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class Tropical extends ClimateBelt {
 
-	public Day() throws Exception {
-		super();
+	public static String TROPICAL_ID = Tropical.class.getCanonicalName();
+	
+	static Summer summer = new Summer();
+
+	public Tropical(String id, Climate parent) {
+		super(id, parent);
+		STATIC_ID = TROPICAL_ID;
 	}
 
+	
+	@Override
+	public Season getSeason(Time time) {
+		
+		return summer;
+		
+	}
+	
 }

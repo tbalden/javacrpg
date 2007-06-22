@@ -41,6 +41,8 @@ import org.jcrpg.threed.scene.RenderedSide;
 import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.flora.tree.deciduous.Cherry;
+import org.jcrpg.world.ai.flora.tree.deciduous.Oak;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -206,8 +208,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS.id, new Integer(2));
 		hmAreaSubType3dType.put(Plain.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(Forest.SUBTYPE_GRASS.id, new Integer(2));
-		hmAreaSubType3dType.put(Forest.SUBTYPE_TREE.id, new Integer(9));
-		hmAreaSubType3dType.put(Forest.SUBTYPE_TREE_2.id, new Integer(12));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(3));
@@ -220,6 +220,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(Mountain2.SUBTYPE_ROCK.id, new Integer(13));
 		hmAreaSubType3dType.put(Mountain2.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(Mountain2.SUBTYPE_GROUND.id, new Integer(14));
+		hmAreaSubType3dType.put(Oak.SUBTYPE_TREE.id, new Integer(9));
+		hmAreaSubType3dType.put(Cherry.SUBTYPE_TREE.id, new Integer(12));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -256,8 +258,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
+		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
 
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));

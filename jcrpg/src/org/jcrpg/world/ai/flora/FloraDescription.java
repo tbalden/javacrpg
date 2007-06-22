@@ -20,13 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora;
 
+import org.jcrpg.space.Cube;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class FloraDescription {
 
-	public Day() throws Exception {
+	public Cube cubicForm;
+	// TODO specify attribute classes later, this is just example
+	public int herbalType;
+	public boolean hasBlossom;
+	public boolean hasFruit;
+	// fruit...
+	public FloraDescription(Cube cubicForm, int herbalType, boolean hasBlossom, boolean hasFruit) {
 		super();
+		this.cubicForm = cubicForm;
+		this.herbalType = herbalType;
+		this.hasBlossom = hasBlossom;
+		this.hasFruit = hasFruit;
 	}
-
+	
 }

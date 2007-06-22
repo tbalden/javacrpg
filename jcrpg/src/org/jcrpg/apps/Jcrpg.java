@@ -24,6 +24,10 @@ package org.jcrpg.apps;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.flora.BaseFloraContainer;
+import org.jcrpg.world.ai.flora.FloraContainer;
+import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -58,6 +62,14 @@ public class Jcrpg {
 		J3DCore app = new J3DCore();
 		
 		World w = new World("world", null,100,2,1,2);
+		w.setFloraContainer(new BaseFloraContainer());
+		
+		Climate climate = new Climate("climate",w);
+		w.setClimate(climate);
+		
+		Continental continental = new Continental("cont1",climate);
+		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(100, 2, 1, 2, 0, 0, 0));
+		climate.belts.put(continental.id, continental);
 		
 		//int i =0;
 		House h = null; 

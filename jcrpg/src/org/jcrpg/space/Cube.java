@@ -54,6 +54,37 @@ public class Cube extends ChangingImpl {
 			this.sides[i] = new Side[] {sides[i]};
 		}
 	}
+
+	public Cube(Cube c1, Cube c2, int x, int y, int z) {
+		this.parent = c1.parent;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		for (int i=0; i<sides.length; i++)
+		{
+			Side[] sides1 = c1.sides[i];
+			Side[] sides2 = c2.sides[i];
+			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
+			if (sides1==null)
+			{
+				merged = sides2;
+			} else
+			if (sides2== null)
+			{
+				merged = sides1;
+			} else
+			for (int j=0; j<merged.length; j++)
+			{
+				if (j<sides1.length)
+					merged[j] =sides1[j];
+				else
+					merged[j] = sides2[j-sides1.length];
+			}
+			this.sides[i] = merged;
+		}
+		System.out.println(" MERGED CUBE == "+this);
+	}
+	
 	
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
 		this.parent = parent;

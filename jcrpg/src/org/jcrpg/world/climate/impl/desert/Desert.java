@@ -20,13 +20,40 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.climate.impl.desert;
+
+import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.climate.impl.continental.Spring;
+import org.jcrpg.world.climate.impl.continental.Summer;
+import org.jcrpg.world.time.Time;
+
+public class Desert extends ClimateBelt {
+
+	public static String DESERT_ID = Desert.class.getCanonicalName();
 
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+	static Spring spring = new Spring();
+	static Summer summer = new Summer();
 
-	public Day() throws Exception {
-		super();
+	public Desert(String id, Climate parent) {
+		super(id, parent);
+		STATIC_ID = DESERT_ID;
 	}
 
+	@Override
+	public Season getSeason(Time time) {
+		
+		int p = time.getCurrentYearPercent();
+		
+		// if on southern hemisphere, percent reversed
+		if (time.inverseSeasons) p = 100-p;
+		
+		if (p<5 && p>95) return spring;
+		return summer;
+		
+	}
+	
+	
 }

@@ -22,11 +22,41 @@
 
 package org.jcrpg.world.climate.impl.continental;
 
+import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.time.Time;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class Continental extends ClimateBelt {
 
-	public Day() throws Exception {
-		super();
+	public static String CONTINENTAL_ID = Continental.class.getCanonicalName();
+	
+	public Continental(String id, Climate parent) {
+		super(id, parent);
+		STATIC_ID = CONTINENTAL_ID;
+	}
+	
+	static Spring spring = new Spring();
+	static Summer summer = new Summer();
+	static Autumn autumn = new Autumn();
+	static Winter winter = new Winter();
+
+	@Override
+	public Season getSeason(Time time) {
+		
+		int p = time.getCurrentYearPercent();
+		
+		// if on southern hemisphere, percent reversed
+		if (time.inverseSeasons) p = 100-p;
+		
+		if (p<25) return spring;
+		if (p>25 && p<50) return spring;
+		if (p>50 && p<75) return autumn;
+		if (p>75) return winter;
+		
+		return super.getSeason(time);
 	}
 
+	
+	
 }

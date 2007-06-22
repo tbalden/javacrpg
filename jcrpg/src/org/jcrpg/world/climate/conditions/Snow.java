@@ -26,14 +26,12 @@ import org.jcrpg.world.climate.Condition;
 
 public class Snow extends Condition{
 
+	public static String SNOW_ID = Snow.class.getCanonicalName();
+
 	public Snow(int weightPercentage) throws Exception {
 		super(weightPercentage);
 		// TODO Auto-generated constructor stub
 	}
 
-	static
-	{
-		ID = Snow.class.getSimpleName();
-	}
 
 }

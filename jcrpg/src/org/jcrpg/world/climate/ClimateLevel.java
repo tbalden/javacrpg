@@ -29,6 +29,9 @@ package org.jcrpg.world.climate;
  */
 public class ClimateLevel extends ClimatePart{
 
+	public String STATIC_ID = ClimateLevel.class.getCanonicalName();
+	public static String CLIMATELEVEL_ID = ClimateLevel.class.getCanonicalName();
+
 	int percentFrom, percentTo;
 	
 	public ClimateLevel(String id, Climate parent, int percentFrom, int percentTo) {

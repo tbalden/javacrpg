@@ -20,38 +20,40 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate;
+package org.jcrpg.world.ai.flora;
+
+import java.util.HashMap;
+
+import org.jcrpg.world.climate.CubeClimateConditions;
 
 /**
- * 
+ * Base class for Flora generation for a type of place
  * @author pali
  *
  */
-public abstract class Condition {
+public class FloraGenerator {
 
 	/**
-	 * static Unique ID of the Condition
+	 * Key is <BELT STATIC ID + " " + LEVEL STATIC ID>
 	 */
-	public String ID;
+	public HashMap<String, Flora[]> floraBeltLevelMap = new HashMap<String, Flora[]>();
 	
-	/**
-	 * The weight of the Condition
-	 */
-	public int weightPercentage;
-	
-	public Condition(int weightPercentage) throws Exception
+	public FloraCube generate(int worldX, int worldY, int worldZ, CubeClimateConditions conditions)
 	{
-		if (weightPercentage<0 || weightPercentage>100)
-			throw new Exception("Invalid weight percentage for climate Condition "+ID+" "+weightPercentage);
-		
-		this.weightPercentage = weightPercentage;
-		
-	}
-	public void addPercentage(int perc)
-	{
-		weightPercentage+=perc;
-		if (weightPercentage>100) weightPercentage = 100;
-		if (weightPercentage<0) weightPercentage = 0;
+		if (conditions==null) return new FloraCube();
+		Flora[] possibleFlora = floraBeltLevelMap.get(conditions.getPartialBeltLevelKey());
+		if (possibleFlora==null) return new FloraCube();
+		FloraCube c = new FloraCube();
+		int id = 0;
+		if (possibleFlora.length>0)
+		{
+			id = (worldX+worldZ)%possibleFlora.length;
+			System.out.println(" ID = "+id);
+		}
+		FloraDescription d = possibleFlora[id].statesToFloraDescription.get(conditions.getPartialSeasonDaytimelKey());
+		if (d==null) d=possibleFlora[id].defaultDescription;
+		c.descriptions.add(d);
+		return c;
 	}
 	
 }
