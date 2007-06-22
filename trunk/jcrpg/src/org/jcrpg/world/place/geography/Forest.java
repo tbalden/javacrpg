@@ -27,17 +27,18 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
-import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.forest.Bushes;
 import org.jcrpg.world.place.geography.forest.Clearing;
+import org.jcrpg.world.time.Time;
 
 public class Forest extends Geography {
 
 	public static final String TYPE_FOREST = "FOREST";
-	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
-	public static final SideSubType SUBTYPE_TREE_2 = new SideSubType(TYPE_FOREST+"_TREE_2");
 	public static final SideSubType SUBTYPE_GRASS = new SideSubType(TYPE_FOREST+"_GRASS");
 
 	public HashMap<String, Clearing>clearings;
@@ -56,9 +57,7 @@ public class Forest extends Geography {
 		worldGroundLevel=groundLevel*magnification;
 	}
 
-	static Side[][] TREE = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_FOREST,SUBTYPE_GRASS),new Side(TYPE_FOREST,SUBTYPE_TREE)} };
-	static Side[][] TREE_2 = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_FOREST,SUBTYPE_GRASS),new Side(TYPE_FOREST,SUBTYPE_TREE_2)} };
-	static Side[][] GRASS = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_FOREST,SUBTYPE_GRASS)} };
+	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_GRASS)} };
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
@@ -66,7 +65,19 @@ public class Forest extends Geography {
 		for (Place place : places) {
 			return place.getCube(worldX, worldY, worldZ);
 		}
-		return new Cube(this,worldY==worldGroundLevel?((worldX+worldZ)%3==0?GRASS:((worldX+worldZ)%2==0?TREE:TREE_2)):EMPTY,worldX,worldY,worldZ);
+
+		CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
+		Cube floraCube = null;
+		if (worldY==worldGroundLevel) {
+			floraCube = getFloraCube(worldX, worldY, worldZ, conditions);
+		}
+		
+		Cube base = new Cube(this,worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
+		if (floraCube!=null)
+		{
+			return new Cube(base,floraCube,worldX,worldY,worldZ);
+		} else return base;
+		
 	}
 	
 	

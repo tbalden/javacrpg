@@ -10,11 +10,24 @@ public class Spring extends Season{
 	{
 		
 	}
+	
+	static Day day;
+	static Night night;
+	static
+	{
+		try {
+			day = new Day();
+			night = new Night();
+		}catch (Exception ex)
+		{			
+		}
+	}
 
 	@Override
 	public DayTime getDayTime(Time time) {
-		// TODO Auto-generated method stub
-		return super.getDayTime(time);
+		int p = time.getCurrentDayPercent();
+		if (p>30 && p<70) return day;
+		return night;
 	}
 
 	

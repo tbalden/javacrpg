@@ -20,13 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora;
 
+import java.util.HashMap;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class Flora {
 
-	public Day() throws Exception {
-		super();
-	}
-
+	public HashMap<String, FloraDescription> statesToFloraDescription = new HashMap<String, FloraDescription>();
+	public FloraDescription defaultDescription; 
+	
 }

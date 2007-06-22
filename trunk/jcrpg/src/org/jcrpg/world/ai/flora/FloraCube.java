@@ -20,13 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora;
 
+import java.util.ArrayList;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class FloraCube {
 
-	public Day() throws Exception {
+	public ArrayList<FloraDescription> descriptions;
+
+	public FloraCube() {
 		super();
+		descriptions = new ArrayList<FloraDescription>();
 	}
-
+	
+	
 }

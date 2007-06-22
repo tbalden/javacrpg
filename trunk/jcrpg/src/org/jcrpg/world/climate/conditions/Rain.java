@@ -26,16 +26,13 @@ import org.jcrpg.world.climate.Condition;
 
 public class Rain extends Condition{
 
+	public static String RAIN_ID = Rain.class.getCanonicalName();
 	
 	public Rain(int weightPercentage) throws Exception {
 		super(weightPercentage);
 		// TODO Auto-generated constructor stub
 	}
 
-	static
-	{
-		ID = Rain.class.getSimpleName();
-	}
 
 	
 }

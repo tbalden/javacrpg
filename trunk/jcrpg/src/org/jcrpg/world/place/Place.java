@@ -27,6 +27,8 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.time.Time;
 
 public abstract class Place {
 
@@ -151,5 +153,14 @@ public abstract class Place {
 		return ""+x+" "+y+" "+z;
 	}
 	
+	public Place getRoot()
+	{
+		return parent.getRoot();
+	}
+	
+	public CubeClimateConditions getCubeClimateConditions(int worldX, int worldY, int worldZ)
+	{
+		return ((World)getRoot()).getClimate().getCubeClimate(new Time(), worldX, worldY, worldZ);
+	}
 	
 }

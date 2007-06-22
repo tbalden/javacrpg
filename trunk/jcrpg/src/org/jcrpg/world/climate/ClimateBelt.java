@@ -22,8 +22,6 @@
 
 package org.jcrpg.world.climate;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.time.Time;
 
 /**
@@ -33,6 +31,9 @@ import org.jcrpg.world.time.Time;
  */
 public class ClimateBelt  extends ClimatePart {
 
+	public String STATIC_ID = ClimateBelt.class.getCanonicalName();
+	
+	public static Season genericSeason = new Season(); 
 	
 	public ClimateBelt(String id, Climate parent) {
 		super(id,parent);
@@ -40,12 +41,18 @@ public class ClimateBelt  extends ClimatePart {
 	
 	public Season getSeason(Time time)
 	{
-		return new Season();
+		return genericSeason;
 	}
 
-	public ArrayList<Condition> getConditions(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ) {
+
+		Season s = getSeason(time);
+		CubeClimateConditions c = new CubeClimateConditions();
+		System.out.println(" SEASON FOUND "+s.STATIC_ID);
+		s.getConditions(c, time, worldX, worldY, worldZ);
+		
+		return c;
 	}
 	
 }

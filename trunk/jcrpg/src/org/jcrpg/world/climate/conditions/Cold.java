@@ -26,14 +26,12 @@ import org.jcrpg.world.climate.Condition;
 
 public class Cold extends Condition{
 
+	public static String COLD_ID = Cold.class.getCanonicalName();
+
 	public Cold(int weightPercentage) throws Exception {
 		super(weightPercentage);
-		// TODO Auto-generated constructor stub
+		ID = COLD_ID;
 	}
 
-	static
-	{
-		ID = Cold.class.getSimpleName();
-	}
 
 }

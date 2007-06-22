@@ -1,7 +1,5 @@
 package org.jcrpg.world.climate;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.time.Time;
 
 public interface ConditionGiver {
@@ -14,6 +12,6 @@ public interface ConditionGiver {
 	 * @param worldZ
 	 * @return
 	 */
-	public ArrayList<Condition> getConditions(Time time, int worldX, int worldY, int worldZ);
+	public void getConditions(CubeClimateConditions conditions, Time time, int worldX, int worldY, int worldZ);
 	
 }

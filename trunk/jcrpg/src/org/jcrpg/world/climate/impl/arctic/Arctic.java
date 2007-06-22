@@ -20,13 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.climate.impl.arctic;
 
+import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.ClimateBelt;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class Arctic extends ClimateBelt {
 
-	public Day() throws Exception {
-		super();
+	
+	public String ARCTIC_ID = Arctic.class.getCanonicalName();
+	public Arctic(String id, Climate parent) {
+		super(id, parent);
+		STATIC_ID = ARCTIC_ID;
+		// TODO Auto-generated constructor stub
 	}
 
 }

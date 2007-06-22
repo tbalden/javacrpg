@@ -25,14 +25,11 @@ package org.jcrpg.world.climate.conditions.light;
 import org.jcrpg.world.climate.Condition;
 
 public class Light extends Condition {
+	public static String LIGHT_ID = Light.class.getCanonicalName();
 	public Light(int weightPercentage) throws Exception {
 		super(weightPercentage);
-		// TODO Auto-generated constructor stub
+		ID = LIGHT_ID;
 	}
 
-	static
-	{
-		ID = Light.class.getSimpleName();
-	}
 
 }

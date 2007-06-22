@@ -20,13 +20,26 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora.generator;
 
+import org.jcrpg.world.ai.flora.Flora;
+import org.jcrpg.world.ai.flora.FloraGenerator;
+import org.jcrpg.world.ai.flora.tree.deciduous.Cherry;
+import org.jcrpg.world.ai.flora.tree.deciduous.Oak;
+import org.jcrpg.world.climate.ClimateLevel;
+import org.jcrpg.world.climate.impl.continental.Continental;
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
+public class BaseFloraGenerator extends FloraGenerator{
 
-	public Day() throws Exception {
-		super();
+	
+	public BaseFloraGenerator()
+	{
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new Flora[]{new Oak(), new Cherry()});
 	}
-
+	
+	public void addFlora(String beltId, String levelId,Flora[] flora)
+	{
+		System.out.println(" ADD FLORA TO GENERATOR "+beltId+" "+levelId);
+		floraBeltLevelMap.put(beltId+" "+levelId, flora);
+	}
 }

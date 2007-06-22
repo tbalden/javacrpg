@@ -36,12 +36,34 @@ public class Boundaries {
 	 * One coordinate of this boundary is MAGNIFICATION times bigger than a normal Cube 
 	 */
 	public int magnification;
-	public HashMap<String,String> area;
+	/**
+	 * All coordinates
+	 */
+	public HashMap<String,int[]> area;
+
+	/**
+	 * The limiting coordinates
+	 */
+	public HashMap<String,int[]> limits;
 	
 	public Boundaries(int magnification)
 	{
 		this.magnification = magnification;
-		area = new HashMap<String, String>();
+		area = new HashMap<String, int[]>();
+		limits = new HashMap<String, int[]>();
+	}
+	
+
+	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
+	{
+		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
+		String key = getKey(x, y, z);
+		limits.put(key,new int[]{x,y,z});
+	}
+	public void removeLimiterCube(int magnification, int x, int y, int z) throws Exception
+	{
+		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
+		limits.remove(getKey(x, y, z));
 	}
 	
 	
@@ -49,7 +71,7 @@ public class Boundaries {
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
 		String key = getKey(x, y, z);
-		area.put(key,key);
+		area.put(key,new int[]{x,y,z});
 	}
 	public void removeCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -60,21 +82,49 @@ public class Boundaries {
 	public void mergeBoundaries(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
+		/*
+		 * The common limits can be removed, they are overlapping,
+		 * not common limits are new limits.
+		 */
+		for (String element : area2.getArea().keySet()) {
+			if (limits.containsKey(element))
+			{
+				limits.remove(element);
+			} else
+			{
+				// if not an internal element already, it is a new limiter
+				if (!area.containsKey(element)) 
+					limits.put(element, area2.getArea().get(element));
+			}
+		};
 		area.putAll(area2.getArea());
 	}
 	
 	public void subtractBoundaries(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (String element : area2.getArea().values()) {
+		for (String element : area2.getArea().keySet()) {
 			area.remove(element);
+		};
+		/*
+		 * The common limits can be removed, they are overlapping,
+		 * not common limits are new limits.
+		 */
+		for (String element : area2.getArea().keySet()) {
+			if (limits.containsKey(element))
+			{
+				limits.remove(element);
+			} else
+			{
+				limits.put(element, area2.getArea().get(element));
+			}
 		};
 	}
 
 	public boolean isOverlapping(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (String element : area2.getArea().values()) {
+		for (String element : area2.getArea().keySet()) {
 			return area.containsKey(element);
 		}
 		return false;
@@ -90,9 +140,13 @@ public class Boundaries {
 		return ret;
 	}
 	
-	public HashMap<String,String> getArea()
+	public HashMap<String,int[]> getArea()
 	{
 		return area;
+	}
+	public HashMap<String,int[]> getLimits()
+	{
+		return limits;
 	}
 	
 	public String getKey(int x,int y,int z){

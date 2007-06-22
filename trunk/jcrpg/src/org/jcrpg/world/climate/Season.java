@@ -23,20 +23,40 @@ package org.jcrpg.world.climate;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.climate.impl.generic.Day;
+import org.jcrpg.world.climate.impl.generic.Night;
 import org.jcrpg.world.time.Time;
 
 public class Season implements ConditionGiver {
 
+	public String STATIC_ID = Season.class.getCanonicalName();
 	
 	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
-	public DayTime getDayTime(Time time)
+	
+	static Day genericDay;
+	static Night genericNight;
+	static
 	{
-		return new DayTime();
+		try {
+			genericDay = new Day();
+			genericNight = new Night();
+		}catch (Exception ex)
+		{			
+		}
+	}
+	
+	public DayTime getDayTime(Time time) {
+		int p = time.getCurrentDayPercent();
+		if (p>30 && p<70) return genericDay;
+		return genericNight;
 	}
 
-	public ArrayList<Condition> getConditions(Time time, int worldX, int worldY, int worldZ) {
-		return conditions;
+	public void getConditions(CubeClimateConditions conditions, Time time, int worldX, int worldY, int worldZ) {
+		conditions.setSeason(this);
+		conditions.mergeConditions(this.conditions);
+		conditions.mergeConditions(getDayTime(time).conditions);
+		conditions.setDayTime(getDayTime(time));
 	}
 	
 }

@@ -20,13 +20,16 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.climate.impl.continental;
+package org.jcrpg.world.ai.flora;
+
+import org.jcrpg.world.ai.flora.generator.BaseFloraGenerator;
+
+public class BaseFloraContainer extends FloraContainer{
 
 
-public class Day extends org.jcrpg.world.climate.impl.generic.Day {
-
-	public Day() throws Exception {
+	public BaseFloraContainer() {
 		super();
+		defaultGenerator = new BaseFloraGenerator();
 	}
-
+	
 }

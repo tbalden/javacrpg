@@ -27,9 +27,14 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.world.ai.flora.FloraContainer;
+import org.jcrpg.world.climate.Climate;
 
 public class World extends Place {
 
+	public Climate climate;
+	public FloraContainer floraContainer;
+	
 	public HashMap<String, Geography> geographies;
 	public HashMap<String, Political> politicals;
 	public HashMap<String, Economic> economics;
@@ -117,5 +122,33 @@ public class World extends Place {
 		}
 		else return null;
 	}
+
+
+	public Climate getClimate() {
+		return climate;
+	}
+
+
+	public void setClimate(Climate climate) {
+		this.climate = climate;
+	}
+
+
+	@Override
+	public Place getRoot() {
+		return this;
+	}
+
+
+	public FloraContainer getFloraContainer() {
+		return floraContainer;
+	}
+
+
+	public void setFloraContainer(FloraContainer floraContainer) {
+		this.floraContainer = floraContainer;
+	}
+	
+	
 
 }
