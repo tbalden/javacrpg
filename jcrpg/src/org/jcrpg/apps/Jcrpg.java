@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.flora.BaseFloraContainer;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.continental.Continental;
+import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -68,8 +69,11 @@ public class Jcrpg {
 		w.setClimate(climate);
 		
 		Continental continental = new Continental("cont1",climate);
-		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(100, 2, 1, 2, 0, 0, 0));
+		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 0, 0, 0));
 		climate.belts.put(continental.id, continental);
+		Tropical tropical = new Tropical("trop1",climate);
+		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 8, 10, 20, 2, 0, 0));
+		climate.belts.put(tropical.id, tropical);
 		
 		//int i =0;
 		House h = null; 
@@ -96,17 +100,14 @@ public class Jcrpg {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 2));
 		w.geographies.put(p.id, p);
 
-		p = new Plain("3",w,null,w.getSeaLevel(10),10);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 2, w.getSeaLevel(10), 0));
-		w.geographies.put(p.id, p);
+		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10);
+		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 1, 1, 1, w.getSeaLevel(10), 0));
+		w.geographies.put(f.id, f);
 		
 		p = new Plain("5",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 3, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 		
-		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10);
-		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 1, w.getSeaLevel(10), 0));
-		w.geographies.put(f.id, f);
 		
 		app.setWorld(w);
 		app.setEngine(e);

@@ -45,14 +45,22 @@ public class FloraGenerator {
 		if (possibleFlora==null) return new FloraCube();
 		FloraCube c = new FloraCube();
 		int id = 0;
+
+		FloraDescription ground = possibleFlora[0].statesToFloraDescription.get(conditions.getPartialSeasonDaytimelKey());
+		if (ground==null)
+		{
+			ground = possibleFlora[0].defaultDescription;
+		}
+		c.descriptions.add(ground);
+		
 		if (possibleFlora.length>0)
 		{
-			id = (worldX+worldZ)%possibleFlora.length;
+			id = (worldX+worldZ*2)%(possibleFlora.length-1)+1;
 			System.out.println(" ID = "+id);
+			FloraDescription d = possibleFlora[id].statesToFloraDescription.get(conditions.getPartialSeasonDaytimelKey());
+			if (d==null) d=possibleFlora[id].defaultDescription;
+			if ((worldX+worldZ)%4==0) c.descriptions.add(d);
 		}
-		FloraDescription d = possibleFlora[id].statesToFloraDescription.get(conditions.getPartialSeasonDaytimelKey());
-		if (d==null) d=possibleFlora[id].defaultDescription;
-		c.descriptions.add(d);
 		return c;
 	}
 	
