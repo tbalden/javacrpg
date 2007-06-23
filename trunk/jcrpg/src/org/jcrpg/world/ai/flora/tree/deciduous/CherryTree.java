@@ -28,14 +28,14 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class Cherry extends Flora {
+public class CherryTree extends Flora {
 	
 	public static final String TYPE_FOREST = "CHERRY";
 	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
-	public Cherry()
+	public CherryTree()
 	{
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}

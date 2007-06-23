@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora.tree.deciduous;
+package org.jcrpg.world.ai.flora.tree.palm;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -28,15 +28,16 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class Oak extends Flora {
-
-	public static final String TYPE_FOREST = "OAK";
+public class CoconutTree extends Flora {
+	
+	public static final String TYPE_FOREST = "COCONUT";
 	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
-	public Oak()
+	public CoconutTree()
 	{
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
+
 }

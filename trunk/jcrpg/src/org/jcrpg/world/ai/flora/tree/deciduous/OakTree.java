@@ -20,32 +20,23 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora.generator;
+package org.jcrpg.world.ai.flora.tree.deciduous;
 
+import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
-import org.jcrpg.world.ai.flora.FloraGenerator;
-import org.jcrpg.world.ai.flora.ground.Grass;
-import org.jcrpg.world.ai.flora.ground.Sand;
-import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
-import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
-import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
-import org.jcrpg.world.climate.ClimateLevel;
-import org.jcrpg.world.climate.impl.continental.Continental;
-import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.ai.flora.FloraDescription;
 
-import com.sun.imageio.plugins.common.PaletteBuilder;
+public class OakTree extends Flora {
 
-public class BaseFloraGenerator extends FloraGenerator{
-
+	public static final String TYPE_FOREST = "OAK";
+	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
 	
-	public BaseFloraGenerator()
-	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new Flora[]{new Grass(),new OakTree(), new CherryTree()});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new Flora[]{new Sand(),new CoconutTree()});
-	}
+	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
-	public void addFlora(String beltId, String levelId,Flora[] flora)
+	public OakTree()
 	{
-		floraBeltLevelMap.put(beltId+" "+levelId, flora);
+		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 }

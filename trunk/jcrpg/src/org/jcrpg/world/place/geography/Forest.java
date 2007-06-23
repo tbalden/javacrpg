@@ -39,7 +39,7 @@ import org.jcrpg.world.time.Time;
 public class Forest extends Geography {
 
 	public static final String TYPE_FOREST = "FOREST";
-	public static final SideSubType SUBTYPE_GRASS = new SideSubType(TYPE_FOREST+"_GRASS");
+	public static final SideSubType SUBTYPE_FOREST = new SideSubType(TYPE_FOREST+"_FOREST");
 
 	public HashMap<String, Clearing>clearings;
 	public HashMap<String, Bushes>bushes;
@@ -57,7 +57,7 @@ public class Forest extends Geography {
 		worldGroundLevel=groundLevel*magnification;
 	}
 
-	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_GRASS)} };
+	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
