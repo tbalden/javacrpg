@@ -49,7 +49,6 @@ public class ClimateBelt  extends ClimatePart {
 
 		Season s = getSeason(time);
 		CubeClimateConditions c = new CubeClimateConditions();
-		System.out.println(" SEASON FOUND "+s.STATIC_ID);
 		s.getConditions(c, time, worldX, worldY, worldZ);
 		
 		return c;

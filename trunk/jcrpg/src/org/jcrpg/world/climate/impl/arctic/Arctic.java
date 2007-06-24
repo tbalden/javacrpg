@@ -28,7 +28,7 @@ import org.jcrpg.world.climate.ClimateBelt;
 public class Arctic extends ClimateBelt {
 
 	
-	public String ARCTIC_ID = Arctic.class.getCanonicalName();
+	public static String ARCTIC_ID = Arctic.class.getCanonicalName();
 	public Arctic(String id, Climate parent) {
 		super(id, parent);
 		STATIC_ID = ARCTIC_ID;

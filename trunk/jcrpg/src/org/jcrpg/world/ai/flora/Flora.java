@@ -30,6 +30,13 @@ public class Flora {
 	 * Maps flora descriptions to Season and DayTime type.
 	 */
 	public HashMap<String, FloraDescription> statesToFloraDescription = new HashMap<String, FloraDescription>();
+	
+	public static final String POSITION_GROUND = "__GROUND";
+	public static final String POSITION_MIDDLE = "__MIDDLE";
+	public static final String POSITION_TOP = "__TOP";
+	
+	public String floraPosition = POSITION_TOP;
+	
 	/**
 	 * Fallback description if not flora description found for a state.
 	 */

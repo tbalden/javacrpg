@@ -28,7 +28,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class Sand extends Flora {
+public class Sand extends Ground {
 
 	public static final String TYPE_SAND = "SAND";
 	public static final SideSubType SUBTYPE_SAND = new SideSubType(TYPE_SAND+"_SAND");
@@ -37,6 +37,7 @@ public class Sand extends Flora {
 	
 	public Sand()
 	{
+		super();
 		defaultDescription = new FloraDescription(new Cube(null,SAND,0,0,0),0,false,false);
 	}
 }

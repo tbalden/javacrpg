@@ -20,24 +20,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora;
+package org.jcrpg.world.ai.flora.ground;
 
-import java.util.HashMap;
+import org.jcrpg.world.ai.flora.Flora;
 
-import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.Place;
-import org.jcrpg.world.time.Time;
+public class Ground extends Flora {
 
-public class FloraContainer {
-
-	public HashMap<Place, FloraGenerator> hmPlaceToGenerator = new HashMap<Place, FloraGenerator>();
-	public FloraGenerator defaultGenerator; 
-	
-	public FloraCube getFlora(int worldX, int worldY, int worldZ, Place place, CubeClimateConditions conditions, Time time)
+	public Ground()
 	{
-		if (hmPlaceToGenerator.get(place)!=null) return hmPlaceToGenerator.get(place).generate(worldX, worldY, worldZ, conditions,time);
-		if (defaultGenerator!=null) return defaultGenerator.generate(worldX, worldY, worldZ, conditions,time);
-		return new FloraCube();
+		super();
+		floraPosition = POSITION_GROUND;
 	}
-	
 }
