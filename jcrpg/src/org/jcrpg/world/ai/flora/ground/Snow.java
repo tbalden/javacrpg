@@ -20,24 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora;
+package org.jcrpg.world.ai.flora.ground;
 
-import java.util.HashMap;
+import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.world.ai.flora.Flora;
+import org.jcrpg.world.ai.flora.FloraDescription;
 
-import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.Place;
-import org.jcrpg.world.time.Time;
+public class Snow extends Ground {
 
-public class FloraContainer {
-
-	public HashMap<Place, FloraGenerator> hmPlaceToGenerator = new HashMap<Place, FloraGenerator>();
-	public FloraGenerator defaultGenerator; 
+	public static final String TYPE_SNOW = "SNOW";
+	public static final SideSubType SUBTYPE_SNOW = new SideSubType(TYPE_SNOW+"_SNOW");
 	
-	public FloraCube getFlora(int worldX, int worldY, int worldZ, Place place, CubeClimateConditions conditions, Time time)
+	static Side[][] SNOW = new Side[][] { null, null, null,null,null,{new Side(TYPE_SNOW,SUBTYPE_SNOW)} };
+	
+	public Snow()
 	{
-		if (hmPlaceToGenerator.get(place)!=null) return hmPlaceToGenerator.get(place).generate(worldX, worldY, worldZ, conditions,time);
-		if (defaultGenerator!=null) return defaultGenerator.generate(worldX, worldY, worldZ, conditions,time);
-		return new FloraCube();
+		super();
+		defaultDescription = new FloraDescription(new Cube(null,SNOW,0,0,0),0,false,false);
 	}
-	
 }

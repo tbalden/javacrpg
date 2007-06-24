@@ -82,7 +82,7 @@ public class Cube extends ChangingImpl {
 			}
 			this.sides[i] = merged;
 		}
-		System.out.println(" MERGED CUBE == "+this);
+		//System.out.println(" MERGED CUBE == "+this);
 	}
 	
 	
@@ -131,7 +131,7 @@ public class Cube extends ChangingImpl {
 		Object[] o = J3DCore.directionAnglesAndTranslations.get(new Integer(direction));
 		int[] f = (int[])o[1];
 		Cube n = parent.getCube(x+f[0], y+f[1], z+f[2]);
-		if (n==null) System.out.println(this+" : "+parent.id+" "+direction+" NEIGHBOUR = "+n);
+		//if (n==null) System.out.println(this+" : "+parent.id+" "+direction+" NEIGHBOUR = "+n);
 		return n;
 	}
 	

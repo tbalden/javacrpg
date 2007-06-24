@@ -27,8 +27,9 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
+import org.jcrpg.world.ai.flora.tree.Tree;
 
-public class CoconutTree extends Flora {
+public class CoconutTree extends Tree {
 	
 	public static final String TYPE_FOREST = "COCONUT";
 	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
@@ -37,6 +38,7 @@ public class CoconutTree extends Flora {
 	
 	public CoconutTree()
 	{
+		super();
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 

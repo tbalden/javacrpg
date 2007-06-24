@@ -28,7 +28,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class Grass extends Flora {
+public class Grass extends Ground {
 
 	public static final String TYPE_GRASS = "GRASS";
 	public static final SideSubType SUBTYPE_GRASS = new SideSubType(TYPE_GRASS+"_GRASS");
@@ -37,6 +37,7 @@ public class Grass extends Flora {
 	
 	public Grass()
 	{
+		super();
 		defaultDescription = new FloraDescription(new Cube(null,GRASS,0,0,0),0,false,false);
 	}
 }
