@@ -24,6 +24,12 @@ package org.jcrpg.world.ai.flora;
 
 import org.jcrpg.space.Cube;
 
+/**
+ * Describes a flora element's one state depending on Season and 
+ * DayTime.
+ * @author pali
+ *
+ */
 public class FloraDescription {
 
 	public Cube cubicForm;

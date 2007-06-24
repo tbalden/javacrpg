@@ -26,7 +26,20 @@ import java.util.HashMap;
 
 public class Flora {
 
+	/**
+	 * Maps flora descriptions to Season and DayTime type.
+	 */
 	public HashMap<String, FloraDescription> statesToFloraDescription = new HashMap<String, FloraDescription>();
-	public FloraDescription defaultDescription; 
+	/**
+	 * Fallback description if not flora description found for a state.
+	 */
+	public FloraDescription defaultDescription;
+	
+	public FloraDescription getFloraDescription(String key)
+	{
+		FloraDescription d = statesToFloraDescription.get(key);
+		if (d==null) d = defaultDescription;
+		return d;
+	}
 	
 }

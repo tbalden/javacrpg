@@ -24,8 +24,8 @@ package org.jcrpg.apps;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
-import org.jcrpg.world.ai.flora.BaseFloraContainer;
 import org.jcrpg.world.ai.flora.FloraContainer;
+import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;

@@ -22,14 +22,30 @@
 
 package org.jcrpg.world.ai.flora;
 
-import org.jcrpg.world.ai.flora.generator.BaseFloraGenerator;
-
-public class BaseFloraContainer extends FloraContainer{
-
-
-	public BaseFloraContainer() {
+/**
+ * Used to add data to a flora in a Belt/Level map.
+ * @author pali
+ *
+ */
+public class FloraListElement {
+	
+	public Flora flora;
+	public boolean alwaysPresent = false;
+	public int likenessToGrow = 0;
+	
+	public FloraListElement(Flora flora, int likenessToGrow) {
 		super();
-		defaultGenerator = new BaseFloraGenerator();
+		this.flora = flora;
+		this.alwaysPresent = false;
+		this.likenessToGrow = likenessToGrow;
 	}
+
+	public FloraListElement(Flora flora, boolean alwaysPresent) {
+		super();
+		this.flora = flora;
+		this.alwaysPresent = alwaysPresent;
+		this.likenessToGrow = 100;
+	}
+	
 	
 }

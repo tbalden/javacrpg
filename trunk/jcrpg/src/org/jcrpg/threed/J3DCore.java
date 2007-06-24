@@ -259,9 +259,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				));
 
 		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/tgrass1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand2.jpg"));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
