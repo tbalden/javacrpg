@@ -26,6 +26,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.time.Time;
 
 public class Geography extends Place {
 
@@ -47,11 +48,11 @@ public class Geography extends Place {
 	}
 
 	
-	public Cube getFloraCube(int worldX, int worldY, int worldZ, CubeClimateConditions conditions)
+	public Cube getFloraCube(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time)
 	{
 		World w = (World)getRoot();
 		Cube floraCube = null;
-		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this, conditions);
+		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this, conditions, time);
 		for (FloraDescription fd : fC.descriptions)
 		{
 			if (floraCube==null)

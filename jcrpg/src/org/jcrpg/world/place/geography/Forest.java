@@ -69,7 +69,7 @@ public class Forest extends Geography {
 		CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
 		Cube floraCube = null;
 		if (worldY==worldGroundLevel) {
-			floraCube = getFloraCube(worldX, worldY, worldZ, conditions);
+			floraCube = getFloraCube(worldX, worldY, worldZ, conditions, new Time());
 		}
 		
 		Cube base = new Cube(this,worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
