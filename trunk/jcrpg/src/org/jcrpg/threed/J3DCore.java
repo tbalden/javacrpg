@@ -44,9 +44,11 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.ground.Grass;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
+import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
+import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -226,6 +228,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(Mountain2.SUBTYPE_GROUND.id, new Integer(14));
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
+		hmAreaSubType3dType.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
+		hmAreaSubType3dType.put(GreenBush.SUBTYPE_BUSH.id, new Integer(19));
 		hmAreaSubType3dType.put(CoconutTree.SUBTYPE_TREE.id, new Integer(15));
 		hmAreaSubType3dType.put(Grass.SUBTYPE_GRASS.id, new Integer(2));
 		hmAreaSubType3dType.put(Sand.SUBTYPE_SAND.id, new Integer(16));
@@ -271,6 +275,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/bush.3ds",null)}));
 		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
 
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));

@@ -44,7 +44,7 @@ public class HashUtil {
 	  a=a-b;  a=a-c;  a=a^(c >>> 3);
 	  b=b-c;  b=b-a;  b=b^(a << 10);
 	  c=c-a;  c=c-b;  c=c^(b >>> 15);
-	  return Math.abs(c);//+300000000);
+	  return Math.abs(c);
 	}
 	
 	public static int mixPercentage(int a, int b, int c)
