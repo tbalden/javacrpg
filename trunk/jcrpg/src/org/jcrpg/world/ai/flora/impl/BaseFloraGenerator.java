@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.flora.ground.Grass;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
@@ -42,8 +43,8 @@ public class BaseFloraGenerator extends FloraGenerator{
 	
 	public BaseFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),12), new FloraListElement(new CherryTree(),12),new FloraListElement(new GreenPineTree(),12),new FloraListElement(new GreenBush(),12)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand(),true),new FloraListElement(new CoconutTree(),5)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),12), new FloraListElement(new CherryTree(),12),new FloraListElement(new GreenPineTree(),12),new FloraListElement(new Acacia(),7),new FloraListElement(new GreenBush(),12)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand(),true),new FloraListElement(new CoconutTree(),5),new FloraListElement(new Acacia(),5)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow(),true)});
 	}
 	
