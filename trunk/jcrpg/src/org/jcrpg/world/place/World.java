@@ -67,12 +67,6 @@ public class World extends Place {
 		return ((sizeY*this.magnification)/2)/magnification;
 	}
 
-	@Override
-	public Object getModel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public boolean generateModel() {
@@ -124,6 +118,10 @@ public class World extends Place {
 	}
 
 
+	/**
+	 * 
+	 * @return world climate.
+	 */
 	public Climate getClimate() {
 		return climate;
 	}
@@ -140,6 +138,10 @@ public class World extends Place {
 	}
 
 
+	/**
+	 * 
+	 * @return The flora's foundation.
+	 */
 	public FloraContainer getFloraContainer() {
 		return floraContainer;
 	}

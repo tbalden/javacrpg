@@ -153,11 +153,6 @@ public class House extends Economic {
 		return false;
 	}
 
-	@Override
-	public Object getModel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
