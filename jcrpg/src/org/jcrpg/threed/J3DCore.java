@@ -45,6 +45,7 @@ import org.jcrpg.world.ai.flora.ground.Grass;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
@@ -231,6 +232,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
 		hmAreaSubType3dType.put(GreenBush.SUBTYPE_BUSH.id, new Integer(19));
 		hmAreaSubType3dType.put(CoconutTree.SUBTYPE_TREE.id, new Integer(15));
+		hmAreaSubType3dType.put(Acacia.SUBTYPE_TREE.id, new Integer(20));
 		hmAreaSubType3dType.put(Grass.SUBTYPE_GRASS.id, new Integer(2));
 		hmAreaSubType3dType.put(Sand.SUBTYPE_SAND.id, new Integer(16));
 		hmAreaSubType3dType.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
@@ -277,7 +279,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/bush.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_big2.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_big2.3ds",null)}));
 
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));

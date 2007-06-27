@@ -24,15 +24,43 @@ package org.jcrpg.world.climate.impl.arctic;
 
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.time.Time;
 
 public class Arctic extends ClimateBelt {
 
 	
 	public static String ARCTIC_ID = Arctic.class.getCanonicalName();
+
+	static Spring spring;
+	static Winter winter;
+	static {
+		try {
+			spring = new Spring();
+			winter = new Winter();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
 	public Arctic(String id, Climate parent) {
 		super(id, parent);
 		STATIC_ID = ARCTIC_ID;
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public Season getSeason(Time time) {
+		
+		int p = time.getCurrentYearPercent();
+		
+		// if on southern hemisphere, percent reversed
+		if (time.inverseSeasons) p = 100-p;
+		
+		if (p>45 && p<55) return spring;
+		return winter;
+		
+	}
+	
 }
