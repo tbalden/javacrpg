@@ -90,16 +90,6 @@ public class House extends Economic {
 			for (int x=1; x<sizeX-1; x++)
 			{
 				int z = 0;
-				Side[][] s = y==0?WALL_GROUND_SOUTH:WALL_SOUTH; 
-				if (x%3==2) 
-				{
-					s = y==0?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
-				}
-				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
-			}
-			for (int x=1; x<sizeX-1; x++)
-			{
-				int z = sizeZ-1;
 				Side[][] s = y==0?WALL_GROUND_NORTH:WALL_NORTH; 
 				if (x%3==2) 
 				{
@@ -107,23 +97,33 @@ public class House extends Economic {
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
+			for (int x=1; x<sizeX-1; x++)
+			{
+				int z = sizeZ-1;
+				Side[][] s = y==0?WALL_GROUND_SOUTH:WALL_SOUTH;
+				if (x%3==2) 
+				{
+					s = y==0?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
+				}
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
+			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = 0;
-				Side[][] s = y==0?WALL_GROUND_WEST:WALL_WEST; 
+				Side[][] s = y==0?WALL_GROUND_EAST:WALL_EAST; 
 				if (z%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_WEST:WINDOW_WEST; 
+					s = y==0?WINDOW_GROUND_EAST:WINDOW_EAST; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = sizeX-1;
-				Side[][] s = y==0?WALL_GROUND_EAST:WALL_EAST; 
+				Side[][] s = y==0?WALL_GROUND_WEST:WALL_WEST; 
 				if (z%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_EAST:WINDOW_EAST; 
+					s = y==0?WINDOW_GROUND_WEST:WINDOW_WEST; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
@@ -132,7 +132,7 @@ public class House extends Economic {
 		addStoredCube(sizeX-1, 0, 0, new Cube(this,EXTERNAL,0,0,0));
 		addStoredCube(0, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
 		addStoredCube(sizeX-1, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1,0,1,new Cube(this,DOOR_GROUND_EAST,0,0,0));
+		addStoredCube(sizeX-1,0,1,new Cube(this,DOOR_GROUND_WEST,0,0,0));
 		storeParameteredArea();
 	}
 	

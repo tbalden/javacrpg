@@ -114,25 +114,25 @@ public class Mountain extends Geography implements Surface{
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_NORTH;
+			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_SOUTH;
 		}
 		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_SOUTH;
+			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_NORTH;
 		}
 		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_WEST;
+			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_EAST;
 		}
 		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_EAST;
+			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_WEST;
 		}
 		if (!returnCube) {
 
