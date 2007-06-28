@@ -24,6 +24,7 @@ package org.jcrpg.world.ai.flora.tree.pine;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
@@ -32,7 +33,7 @@ import org.jcrpg.world.ai.flora.tree.Tree;
 public class GreenPineTree extends Tree {
 	
 	public static final String TYPE_PINE = "PINE";
-	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_PINE+"_TREE");
+	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_PINE+"_TREE");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_PINE,SUBTYPE_TREE)} };
 	
