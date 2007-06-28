@@ -745,6 +745,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			{
 				if (!isPassableSide(sides)) return;
 			}
+			sides = c2.getSide(BOTTOM);
+			if (sides!=null)
+			{
+				if (!isPassableSide(sides)) return;
+			}
 			
 		} else 
 		{

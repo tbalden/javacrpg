@@ -24,6 +24,7 @@ package org.jcrpg.world.ai.flora.tree.deciduous;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
@@ -32,7 +33,7 @@ import org.jcrpg.world.ai.flora.tree.Tree;
 public class OakTree extends Tree {
 
 	public static final String TYPE_FOREST = "OAK";
-	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_FOREST+"_TREE");
+	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_FOREST+"_TREE");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
