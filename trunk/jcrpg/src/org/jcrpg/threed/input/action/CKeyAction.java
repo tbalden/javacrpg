@@ -1,5 +1,6 @@
 package org.jcrpg.threed.input.action;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.KeyInputAction;
@@ -24,7 +25,7 @@ public abstract class CKeyAction extends KeyInputAction{
 	{
 		timeStart = System.currentTimeMillis();	
 	}
-	protected void ensureTimeStop()
+	protected long ensureTimeStop()
 	{
         if (timeStart+TIME_TO_ENSURE>System.currentTimeMillis())
         {
@@ -34,13 +35,15 @@ public abstract class CKeyAction extends KeyInputAction{
         	{
         		
         	}
+        	return 0;
         }
+        return (System.currentTimeMillis()-(timeStart+TIME_TO_ENSURE));
 	}
-	protected void moveDirection(float steps, Vector3f from, Vector3f toReach)
+	protected void turnDirection(float steps, Vector3f from, Vector3f toReach)
 	{
-		moveDirection(steps, from, toReach,false);
+		turnDirection(steps, from, toReach,false);
 	}
-	protected void moveDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
+	protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
 	{
     	for (float i=0; i<=steps; i++)
         {
@@ -60,7 +63,8 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             handler.core.updateCam();
-            ensureTimeStop();
+            i+= (ensureTimeStop()/J3DCore.MOVE_STEPS)*2;
+            if (i>steps) break;
     
         }
 		
@@ -84,7 +88,8 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             handler.core.updateCam();
-            ensureTimeStop();
+            i+= (ensureTimeStop()/J3DCore.MOVE_STEPS)*2;
+            if (i>steps) break;
     
         }
 		

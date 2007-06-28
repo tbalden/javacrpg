@@ -79,7 +79,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 15;
+    public static int RENDER_DISTANCE = 12;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
