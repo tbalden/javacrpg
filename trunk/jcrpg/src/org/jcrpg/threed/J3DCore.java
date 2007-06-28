@@ -32,6 +32,7 @@ import java.util.Iterator;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedContinuousSide;
@@ -104,11 +105,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		this.engine = engine;
 	}
 	
-	public World gameArea = null;
+	public World world = null;
 	
 	public void setWorld(World area)
 	{
-		gameArea = area;
+		world = area;
 	}
 	
 	public void setViewPosition(int x,int y,int z)
@@ -152,14 +153,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		qT.fromAngleAxis(FastMath.PI/2, new Vector3f(1,0,0));
 		qB = new Quaternion();
 		qB.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
-		qN = new Quaternion();
-		qN.fromAngleAxis(FastMath.PI * 2, new Vector3f(0,1,0));
 		qS = new Quaternion();
-		qS.fromAngleAxis(FastMath.PI, new Vector3f(0,1,0));
-		qW = new Quaternion();
-		qW.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+		qS.fromAngleAxis(FastMath.PI * 2, new Vector3f(0,1,0));
+		qN = new Quaternion();
+		qN.fromAngleAxis(FastMath.PI, new Vector3f(0,1,0));
 		qE = new Quaternion();
-		qE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
+		qE.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+		qW = new Quaternion();
+		qW.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
 		qTexture = new Quaternion();
 		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
 		
@@ -179,10 +180,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
 	static 
 	{
-		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new int[]{0,0,1}});
-		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new int[]{0,0,-1}});
-		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new int[]{1,0,0}});
-		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new int[]{-1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new int[]{0,0,-1}});
+		directionAnglesAndTranslations.put(new Integer(SOUTH), new Object[]{qS,new int[]{0,0,1}});
+		directionAnglesAndTranslations.put(new Integer(WEST), new Object[]{qW,new int[]{-1,0,0}});
+		directionAnglesAndTranslations.put(new Integer(EAST), new Object[]{qE,new int[]{1,0,0}});
 		directionAnglesAndTranslations.put(new Integer(TOP), new Object[]{qT,new int[]{0,1,0}});
 		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new int[]{0,-1,0}});
 	}
@@ -306,7 +307,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 	public void initCore()
 	{
-       this.setDialogBehaviour(J3DCore.FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
+       this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);//FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
         this.start();
 	}
 	
@@ -469,7 +470,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    skybox.updateRenderState();
 
     	// get a specific part of the area to render
-    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(gameArea, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
+    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
     	System.out.println("getRenderedSpace size="+cubes.length);
 		
 		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
@@ -694,20 +695,64 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f,-1*relativeZ*CUBE_EDGE_SIZE);
 	}
 	
-	public void moveForward(int direction) {
-		if (direction == NORTH) {
-			viewPositionZ++;relativeZ++;
-		} else if (direction == SOUTH) {
-			viewPositionZ--;relativeZ--;
-		} else if (direction == EAST) {
-			viewPositionX++;relativeX++;
-		} else if (direction == WEST) {
-			viewPositionX--;relativeX--;
-		} else if (direction == TOP) {
-			viewPositionY++;relativeY++;
-		} else if (direction == BOTTOM) {
-			viewPositionY--;relativeY--;
+	
+	public boolean isPassableSide(Side[] sides)
+	{
+		for (int i=0; i<sides.length; i++)
+		{
+			if (sides[i]!=null)
+			{
+				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+				if (sides[i].subtype instanceof NotPassable)
+				{
+					return false;
+				}
+			}
 		}
+		return true;
+		
+	}
+	
+	public void moveForward(int direction) {
+
+		int tVPX = viewPositionX, tRX = relativeX;
+		int tVPY = viewPositionY, tRY = relativeY;
+		int tVPZ = viewPositionZ, tRZ = relativeZ;
+		if (direction == NORTH) {
+			tVPZ++;tRZ++;
+		} else if (direction == SOUTH) {
+			tVPZ--;tRZ--;
+		} else if (direction == EAST) {
+			tVPX++;tRX++;
+		} else if (direction == WEST) {
+			tVPX--;tRX--;
+		} else if (direction == TOP) {
+			tVPY++;tRY++;
+		} else if (direction == BOTTOM) {
+			tVPY--;tRY--;
+		}
+		Cube c = world.getCube(viewPositionX, viewPositionY, viewPositionZ);
+		
+		if (c!=null) {
+			Side[] sides = c.getSide(direction);
+			if (sides!=null)
+			{
+				if (!isPassableSide(sides)) return;
+			}
+			Cube c2 = world.getCube(tVPX, tVPY, tVPZ);
+			sides = c2.getSide(oppositeDirections.get(new Integer(direction)).intValue());
+			if (sides!=null)
+			{
+				if (!isPassableSide(sides)) return;
+			}
+			
+		} else 
+		{
+			return;
+		}
+		viewPositionX = tVPX; relativeX = tRX;
+		viewPositionY = tVPY; relativeY = tRY;
+		viewPositionZ = tVPZ; relativeZ = tRZ;
 	}
 
 	/**
