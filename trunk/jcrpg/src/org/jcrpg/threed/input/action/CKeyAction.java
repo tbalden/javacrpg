@@ -25,7 +25,7 @@ public abstract class CKeyAction extends KeyInputAction{
 	{
 		timeStart = System.currentTimeMillis();	
 	}
-	protected long ensureTimeStop()
+	protected float ensureTimeStop()
 	{
         if (timeStart+TIME_TO_ENSURE>System.currentTimeMillis())
         {
@@ -37,7 +37,7 @@ public abstract class CKeyAction extends KeyInputAction{
         	}
         	return 0;
         }
-        return (System.currentTimeMillis()-(timeStart+TIME_TO_ENSURE));
+        return ((System.currentTimeMillis()-timeStart)/(TIME_TO_ENSURE*1f))-1f;
 	}
 	protected void turnDirection(float steps, Vector3f from, Vector3f toReach)
 	{
@@ -45,6 +45,7 @@ public abstract class CKeyAction extends KeyInputAction{
 	}
 	protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
 	{
+		float skipStep = 0f;
     	for (float i=0; i<=steps; i++)
         {
     		if (almost && i==0) continue;
@@ -63,7 +64,11 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             handler.core.updateCam();
-            i+= (ensureTimeStop()/J3DCore.MOVE_STEPS)*2;
+            skipStep+= ensureTimeStop();
+            if (skipStep>1f) {
+            	i+=(int)skipStep;
+            	skipStep=0f;
+            }
             if (i>steps) break;
     
         }
@@ -72,7 +77,8 @@ public abstract class CKeyAction extends KeyInputAction{
 	
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach)
 	{
-    	for (float i=0; i<=steps; i++)
+		float skipStep = 0f;
+		for (float i=0; i<=steps; i++)
         {
     		ensureTimeStart();
     		float x, y, z;
@@ -88,7 +94,11 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             handler.core.updateCam();
-            i+= (ensureTimeStop()/J3DCore.MOVE_STEPS)*2;
+            skipStep+= ensureTimeStop();
+            if (skipStep>1f) {
+            	i+=(int)skipStep;
+            	skipStep=0f;
+            }
             if (i>steps) break;
     
         }
