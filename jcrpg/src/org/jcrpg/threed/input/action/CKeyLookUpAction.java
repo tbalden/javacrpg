@@ -50,14 +50,14 @@ public class CKeyLookUpAction extends CKeyAction {
         //handler.core.turnLeft();
     	Vector3f toReach = J3DCore.turningDirectionsUnit[J3DCore.TOP];
         float steps = J3DCore.MOVE_STEPS*2;
-        moveDirection(steps, from, toReach, true);
+        turnDirection(steps, from, toReach, true);
         try {
         	Thread.sleep(1000);
         }catch (Exception ex)
         {
         	
         }
-        moveDirection(steps, toReach, from, true);
+        turnDirection(steps, toReach, from, true);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
         handler.core.updateCam();
