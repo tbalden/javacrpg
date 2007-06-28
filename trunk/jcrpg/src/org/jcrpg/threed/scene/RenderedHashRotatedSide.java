@@ -1,5 +1,7 @@
 package org.jcrpg.threed.scene;
 
+import org.jcrpg.util.HashUtil;
+
 
 /**
  * coordinate hash rotated objects -> use it as a bottom!
@@ -19,8 +21,11 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	
 	public int rotation(int x,int y,int z)
 	{
-		//return Math.abs(((int)Math.round(Math.sin(x%2*y*z)*10f))%4);
-		return Math.abs((x%2+y%2+z%2));
-		
+		return HashUtil.mix(x, y, z)%4;
+	}
+	
+	public float scale(int x,int y,int z)
+	{
+		return 1f+(HashUtil.mix(x, y, z)%100)*0.0001f;
 	}
 }

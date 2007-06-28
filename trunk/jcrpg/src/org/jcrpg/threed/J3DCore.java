@@ -79,7 +79,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 10;
+    public static int RENDER_DISTANCE = 15;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -165,14 +165,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		// horizontal rotations
 		horizontalN = new Quaternion();
-		horizontalN.fromAngleAxis(FastMath.PI * 2, new Vector3f(1,0,0));
+		horizontalN.fromAngles(new float[]{0,0,FastMath.PI * 2});
 		horizontalS = new Quaternion();
-		horizontalS.fromAngleAxis(FastMath.PI, new Vector3f(1,0,0));
+		horizontalS.fromAngles(new float[]{0,0,FastMath.PI});
 		horizontalW = new Quaternion();
-		horizontalW.fromAngleAxis(FastMath.PI/2, new Vector3f(1,0,0));
+		horizontalW.fromAngles(new float[]{0,0,FastMath.PI/2});
 		horizontalE = new Quaternion();
-		horizontalE.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1,0,0));
-		
+		horizontalE.fromAngles(new float[]{0,0,FastMath.PI*3/2});
+
 	}
 	
 	
@@ -206,6 +206,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		nextDirections.put(new Integer(WEST), new Integer(NORTH));
 		nextDirections.put(new Integer(TOP), new Integer(BOTTOM));
 		nextDirections.put(new Integer(BOTTOM), new Integer(TOP));
+	}
+	public static HashMap<Integer,Quaternion> horizontalRotations = new HashMap<Integer, Quaternion>();
+	static
+	{
+		horizontalRotations.put(new Integer(NORTH), horizontalN);
+		horizontalRotations.put(new Integer(SOUTH), horizontalS);
+		horizontalRotations.put(new Integer(WEST), horizontalW);
+		horizontalRotations.put(new Integer(EAST), horizontalE);
 	}
     
 	public J3DCore()
@@ -278,10 +286,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng1.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/bush.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_big2.3ds",null)}));
 
+		//hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
+		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
+		//hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
+		//hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
+
+		
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
@@ -509,25 +522,39 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 
-	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
+	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
+		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
 		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((int[])f[1])[0]);//+0.5f;
 		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((int[])f[1])[1]);//+0.5f;
 		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((int[])f[1])[2]);//+25.5f;
+		
+		Quaternion hQ = null;
+		if (horizontalRotation!=-1) hQ = horizontalRotations.get(new Integer(horizontalRotation));
 	
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
 			Quaternion q = (Quaternion)f[0];
-			n[i].setLocalRotation(q);
+			Quaternion qC = null;
+			qC = new Quaternion(q); // base rotation
+			if (hQ!=null)
+			{
+				// horizontal rotation
+				qC = qC.multLocal(hQ);
+			} 
+			n[i].setLocalRotation(qC);
 			
 			n[i].updateRenderState();
 
 			cube.hsRenderedNodes.add(n[i]);
 			rootNode.attachChild(n[i]);
 		}
-		
+	}
+	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
+	{
+		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
 	
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
@@ -542,9 +569,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		if (renderedSide instanceof RenderedHashRotatedSide)
 		{
 			int rD = ((RenderedHashRotatedSide)renderedSide).rotation(cube.cube.x, cube.cube.y, cube.cube.z);
-			renderNodes(n, cube, x, y, z, rD);
+			float scale = ((RenderedHashRotatedSide)renderedSide).scale(cube.cube.x, cube.cube.y, cube.cube.z);
+			System.out.println("!! ROTATED "+rD + " "+cube.cube.x+" "+cube.cube.z);
+			renderNodes(n, cube, x, y, z, direction, rD,scale);
+		} 
+		else
+		{
+			renderNodes(n, cube, x, y, z, direction);
 		}
-		renderNodes(n, cube, x, y, z, direction);
 
 		Cube checkCube = null;
 		if (direction==TOP && renderedSide instanceof RenderedTopSide) // Top Side

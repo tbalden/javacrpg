@@ -43,7 +43,7 @@ public class BaseFloraGenerator extends FloraGenerator{
 	
 	public BaseFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),12), new FloraListElement(new CherryTree(),12),new FloraListElement(new GreenPineTree(),12),new FloraListElement(new Acacia(),7),new FloraListElement(new GreenBush(),12)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),12), new FloraListElement(new CherryTree(),12),new FloraListElement(new GreenPineTree(),12),new FloraListElement(new Acacia(),27),new FloraListElement(new GreenBush(),32)});
 		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand(),true),new FloraListElement(new CoconutTree(),5),new FloraListElement(new Acacia(),5)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow(),true)});
 	}
