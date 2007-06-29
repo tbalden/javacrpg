@@ -2,6 +2,7 @@ package org.jcrpg.world.place.economic;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
@@ -13,9 +14,9 @@ public class House extends Economic {
 
 	public static final String TYPE_HOUSE = "HOUSE";
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_HOUSE+"_WALL");
-	public static final SideSubType SUBTYPE_INTERNAL_GROUND = new SideSubType(TYPE_HOUSE+"_INTERNAL_GROUND");
-	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new SideSubType(TYPE_HOUSE+"_EXTERNAL_GROUND");
-	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new SideSubType(TYPE_HOUSE+"_INTERNAL_CEILING");
+	public static final SideSubType SUBTYPE_INTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_INTERNAL_GROUND");
+	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND");
+	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new NotPassable(TYPE_HOUSE+"_INTERNAL_CEILING");
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_HOUSE+"_EXTERNAL_DOOR");
 	public static final SideSubType SUBTYPE_WINDOW = new NotPassable(TYPE_HOUSE+"_WINDOW");
 

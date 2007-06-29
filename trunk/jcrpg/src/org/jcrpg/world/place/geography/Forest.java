@@ -31,12 +31,14 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.Surface;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.forest.Bushes;
 import org.jcrpg.world.place.geography.forest.Clearing;
 import org.jcrpg.world.time.Time;
 
-public class Forest extends Geography {
+public class Forest extends Geography implements Surface {
 
 	public static final String TYPE_FOREST = "FOREST";
 	public static final SideSubType SUBTYPE_FOREST = new SideSubType(TYPE_FOREST+"_FOREST");
@@ -65,19 +67,13 @@ public class Forest extends Geography {
 		for (Place place : places) {
 			return place.getCube(worldX, worldY, worldZ);
 		}
-
-		CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
-		Cube floraCube = null;
-		if (worldY==worldGroundLevel) {
-			floraCube = getFloraCube(worldX, worldY, worldZ, conditions, new Time());
-		}
 		
 		Cube base = new Cube(this,worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
-		if (floraCube!=null)
-		{
-			return new Cube(base,floraCube,worldX,worldY,worldZ);
-		} else return base;
-		
+		return base;
+	}
+
+	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
+		return new SurfaceHeightAndType(worldGroundLevel,true);
 	}
 	
 	

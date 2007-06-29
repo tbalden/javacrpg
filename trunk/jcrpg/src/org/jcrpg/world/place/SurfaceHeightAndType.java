@@ -27,4 +27,10 @@ public class SurfaceHeightAndType {
 	public int surfaceY;
 	public boolean canContain;
 	
+	public SurfaceHeightAndType(int surfaceY, boolean canContain) {
+		super();
+		this.surfaceY = surfaceY;
+		this.canContain = canContain;
+	}
+	
 }

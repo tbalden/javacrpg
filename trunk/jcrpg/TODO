@@ -1,7 +1,9 @@
-[ ] Hill_steep.3ds is wrongly rotated! After that fix Mountain.java to user correct SIDES[] for steeps of diff. 
+[ ] Time in engine -> skybox..
+[ ] fall down where no GroundSubType! to steep for example!!
+
+[X] Hill_steep.3ds is wrongly rotated! After that fix Mountain.java to user correct SIDES[] for steeps of diff. 
 	directions. Then complete Movement Blocking in j3dcore for Climbing.
 	
-[ ] Time in engine -> skybox..
 [X] Weather engine - implement Climate -> fauna - climate condition based forest/plain!
 	[ ] Change flag for rendered thing!? -> example: climate change callback for already generated parts?
 

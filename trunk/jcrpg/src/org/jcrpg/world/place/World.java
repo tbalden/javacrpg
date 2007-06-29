@@ -29,6 +29,9 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.geography.Mountain;
+import org.jcrpg.world.time.Time;
 
 public class World extends Place {
 
@@ -110,7 +113,31 @@ public class World extends Place {
 			}
 			for (Geography geo : geographies.values()) {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
-					return geo.getCube(worldX, worldY, worldZ);
+				{
+					Cube r = geo.getCube(worldX, worldY, worldZ);
+					if (geo instanceof Surface)
+					{
+						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
+						if (geo instanceof Mountain)
+							System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
+						if (surf.canContain)
+						{
+							CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
+							Cube floraCube = null;
+							if (worldY==surf.surfaceY) {
+								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, new Time());
+							}
+							if (floraCube!=null)
+							{
+								return new Cube(r,floraCube,worldX,worldY,worldZ);
+							} else return r;
+						} else return r;
+					} else 
+					{
+						return r;
+					}
+				}
+					
 			}
 			return worldY==(sizeY*magnification/2)?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}

@@ -23,6 +23,8 @@
 package org.jcrpg.world.ai.flora.impl;
 
 import org.jcrpg.world.ai.flora.FloraContainer;
+import org.jcrpg.world.place.geography.Mountain;
+import org.jcrpg.world.place.geography.Plain;
 
 public class BaseFloraContainer extends FloraContainer{
 
@@ -30,6 +32,8 @@ public class BaseFloraContainer extends FloraContainer{
 	public BaseFloraContainer() {
 		super();
 		defaultGenerator = new BaseFloraGenerator();
+		hmPlaceToGenerator.put(Plain.class,new PlainFloraGenerator());
+		hmPlaceToGenerator.put(Mountain.class,new MountainFloraGenerator());
 	}
 	
 }

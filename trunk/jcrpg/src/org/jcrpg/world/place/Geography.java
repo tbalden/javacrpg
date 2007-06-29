@@ -52,7 +52,7 @@ public class Geography extends Place {
 	{
 		World w = (World)getRoot();
 		Cube floraCube = null;
-		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this, conditions, time);
+		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this.getClass(), conditions, time);
 		for (FloraDescription fd : fC.descriptions)
 		{
 			if (floraCube==null)

@@ -30,14 +30,16 @@ import org.jcrpg.world.time.Time;
 
 public class FloraContainer {
 
-	public HashMap<Place, FloraGenerator> hmPlaceToGenerator = new HashMap<Place, FloraGenerator>();
+	public HashMap<Class, FloraGenerator> hmPlaceToGenerator = new HashMap<Class, FloraGenerator>();
 	public FloraGenerator defaultGenerator; 
 	
-	public FloraCube getFlora(int worldX, int worldY, int worldZ, Place place, CubeClimateConditions conditions, Time time)
+	public FloraCube getFlora(int worldX, int worldY, int worldZ, Class place, CubeClimateConditions conditions, Time time)
 	{
 		if (hmPlaceToGenerator.get(place)!=null) return hmPlaceToGenerator.get(place).generate(worldX, worldY, worldZ, conditions,time);
 		if (defaultGenerator!=null) return defaultGenerator.generate(worldX, worldY, worldZ, conditions,time);
 		return new FloraCube();
 	}
+	
+	//public void addPlaceAndFloraGenerator()
 	
 }
