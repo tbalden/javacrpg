@@ -121,7 +121,7 @@ public class Cube extends ChangingImpl {
 		for (int s=0; s<6; s++)
 		for (int i=0; i<(sides[s]==null?0:sides[s].length); i++)
 		{
-			r+=sides[s][i]==null?"-":sides[s][i].type;
+			r+=sides[s][i]==null?"-":"S("+i+")"+sides[s][i].type+sides[s][i].subtype.getClass().getSimpleName();
 		}
 		return "Cube: "+ x+" "+y+" "+z+" "+r;
 	}
