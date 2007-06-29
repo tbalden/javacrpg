@@ -41,7 +41,7 @@ public class Mountain extends Geography implements Surface{
 
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
-	public static final SideSubType SUBTYPE_STEEP = new ClimbingVertical(TYPE_MOUNTAIN+"_GROUND_STEEP");
+	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_MOUNTAIN+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK");
 	public static final SideSubType SUBTYPE_GROUND = new NotPassable(TYPE_MOUNTAIN+"_GROUND");
 	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_MOUNTAIN+"_TREE");

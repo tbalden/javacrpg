@@ -32,6 +32,7 @@ import java.util.Iterator;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -582,7 +583,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		{
 			int rD = ((RenderedHashRotatedSide)renderedSide).rotation(cube.cube.x, cube.cube.y, cube.cube.z);
 			float scale = ((RenderedHashRotatedSide)renderedSide).scale(cube.cube.x, cube.cube.y, cube.cube.z);
-			System.out.println("!! ROTATED "+rD + " "+cube.cube.x+" "+cube.cube.z);
 			renderNodes(n, cube, x, y, z, direction, rD,scale);
 		} 
 		else
@@ -707,20 +707,20 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 	
-	public boolean isPassableSide(Side[] sides)
+	public boolean hasSideOfInstance(Side[] sides, Class className)
 	{
 		for (int i=0; i<sides.length; i++)
 		{
 			if (sides[i]!=null)
 			{
-				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
-				if (sides[i].subtype instanceof NotPassable)
+				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName()+" ? "+className.getCanonicalName());
+				if (sides[i].subtype.getClass().equals(className))
 				{
-					return false;
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 		
 	}
 	
@@ -751,31 +751,54 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		relativeZ = coords[2];
 	}
 	
-	public void move(int direction)
+	public void move(int[] from, int[] fromRel, int[] directions)
 	{
-		int[] newCoords = calcMovement(new int[]{viewPositionX,viewPositionY,viewPositionZ}, direction); 
-		int[] newRelCoords = calcMovement(new int[]{relativeX,relativeY,relativeZ}, direction); 
+		int[] newCoords = from;
+		int[] newRelCoords = fromRel;
+		for (int i=0; i<directions.length; i++) {
+			System.out.println("Moving dir: "+directions[i]);
+			newCoords = calcMovement(newCoords, directions[i]); 
+			newRelCoords = calcMovement(newRelCoords, directions[i]);
+		}
 
-		Cube c = world.getCube(viewPositionX, viewPositionY, viewPositionZ);
+		Cube c = world.getCube(from[0], from[1], from[2]);
 		
 		if (c!=null) {
-			Side[] sides = c.getSide(direction);
+			System.out.println("Current Cube = "+c.toString());
+			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)
 			{
-				if (!isPassableSide(sides)) return;
+				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
+				if (hasSideOfInstance(sides, NotPassable.class)) return;
+				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube c2 = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+			if (c2==null) System.out.println("NEXT CUBE = NULL");
 			if (c2!=null)
 			{
-				sides = c2.getSide(oppositeDirections.get(new Integer(direction)).intValue());
+				System.out.println("Next Cube = "+c2.toString());
+				sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
+				//sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
-					if (!isPassableSide(sides)) return;
+					System.out.println("NEXT CUBE CHECK: CLIMB");
+					if (hasSideOfInstance(sides, Climbing.class)) {
+						System.out.println("NEXT CUBE CHECK: CLIMB - CLIMB!!!");
+						move(newCoords,newRelCoords,new int[]{directions[0],TOP});
+					} else
+					{
+						System.out.println("NEXT CUBE CHECK: CLIMB - no climb");
+					}
+					System.out.println("NEXT CUBE CHECK: NOTPASSABLE");
+					if (hasSideOfInstance(sides, NotPassable.class)) return;
+					System.out.println("NEXT CUBE CHECK: NOTPASSABLE --! PASSED");
 				}
-				sides = c2.getSide(BOTTOM);
+				sides = c2!=null?c2.getSide(BOTTOM):null;
 				if (sides!=null)
 				{
-					if (!isPassableSide(sides)) return;
+					System.out.println("NEXT CUBE CHECK: NOTPASSABLE");
+					if (hasSideOfInstance(sides, NotPassable.class)) return;
+					System.out.println("NEXT CUBE CHECK: NOTPASSABLE --! PASSED");
 				}
 			} else 
 			{
@@ -791,7 +814,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 	public void moveForward(int direction) {
-		move(direction);
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		move(coords,relCoords,new int[]{direction});
 	}
 
 	/**
@@ -799,14 +824,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	 * @param direction
 	 */
 	public void moveLeft(int direction) {
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
 		if (direction == NORTH) {
-			move(WEST);
+			move(coords,relCoords,new int[]{WEST});
 		} else if (direction == SOUTH) {
-			move(EAST);
+			move(coords,relCoords,new int[]{EAST});
 		} else if (direction == EAST) {
-			move(NORTH);
+			move(coords,relCoords,new int[]{NORTH});
 		} else if (direction == WEST) {
-			move(SOUTH);
+			move(coords,relCoords,new int[]{SOUTH});
 		}
 	}
 	/**
@@ -814,19 +841,23 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	 * @param direction
 	 */
 	public void moveRight(int direction) {
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
 		if (direction == NORTH) {
-			move(EAST);
+			move(coords,relCoords,new int[]{EAST});
 		} else if (direction == SOUTH) {
-			move(WEST);
+			move(coords,relCoords,new int[]{WEST});
 		} else if (direction == EAST) {
-			move(SOUTH);
+			move(coords,relCoords,new int[]{SOUTH});
 		} else if (direction == WEST) {
-			move(NORTH);
+			move(coords,relCoords,new int[]{NORTH});
 		}
 	}
 
 	public void moveBackward(int direction) {
-		move(oppositeDirections.get(new Integer(direction)).intValue());
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		move(coords,relCoords,new int[]{oppositeDirections.get(new Integer(direction)).intValue()});
 	}
 
 	
@@ -835,12 +866,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	 * @param direction
 	 */
 	public void moveUp() {
-		move(TOP);//oppositeDirections.get(new Integer(direction)).intValue());
-		//viewPositionY++;relativeY++;		
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		move(coords,relCoords,new int[]{TOP});
 	}
 	public void moveDown() {
-		move(BOTTOM);
-		//viewPositionY--;relativeY--;		
+		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
+		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		move(coords,relCoords,new int[]{BOTTOM});
 	}
 	
 	
