@@ -1,6 +1,5 @@
 package org.jcrpg.threed.input.action;
 
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.KeyInputAction;
