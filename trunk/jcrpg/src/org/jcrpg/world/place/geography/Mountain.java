@@ -25,14 +25,12 @@ package org.jcrpg.world.place.geography;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
-import org.jcrpg.space.sidetype.ClimbingVertical;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
-import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
-import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -114,25 +112,25 @@ public class Mountain extends Geography implements Surface{
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_SOUTH;
+			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_WEST;
 		}
 		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_NORTH;
+			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_EAST;
 		}
 		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_EAST;
+			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_SOUTH;
 		}
 		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_WEST;
+			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_NORTH;
 		}
 		if (!returnCube) {
 

@@ -28,12 +28,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.NotPassable;
+import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedContinuousSide;
@@ -97,6 +99,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public int viewPositionY = 0;
 	public int viewPositionZ = 0;
 	public int relativeX = 0, relativeY = 0, relativeZ = 0;
+	public boolean onSteep = false;
 	
 	
 	public Engine engine = null;
@@ -703,24 +706,47 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public Vector3f getCurrentLocation()
 	{
-		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f,-1*relativeZ*CUBE_EDGE_SIZE);
+		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.3f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
 	}
 	
 	
-	public boolean hasSideOfInstance(Side[] sides, Class className)
+	public boolean hasSideOfInstance(Side[] sides, HashSet<Class> classNames)
 	{
 		for (int i=0; i<sides.length; i++)
 		{
 			if (sides[i]!=null)
 			{
-				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName()+" ? "+className.getCanonicalName());
-				if (sides[i].subtype.getClass().equals(className))
+				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+				
+				if (classNames.contains(sides[i].subtype.getClass()))
 				{
 					return true;
 				}
 			}
 		}
 		return false;
+		
+	}
+
+	public int hasSideOfInstanceInAnyDir(Cube c, HashSet<Class> classNames)
+	{
+		for (int j=0; j<c.sides.length; j++)
+		{
+			Side[] sides = c.sides[j];
+			if (sides!=null)
+			for (int i=0; i<sides.length; i++)
+			{
+				if (sides[i]!=null)
+				{
+					System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+					if (classNames.contains(sides[i].subtype.getClass()))
+					{
+						return j;
+					}
+				}
+			}
+		}
+		return -1;
 		
 	}
 	
@@ -740,6 +766,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public void setViewPosition(int[] coords)
 	{
+		System.out.println(" NEW VIEW POSITION = "+coords[0]+" - "+coords[1]+" - "+coords[2]);
 		viewPositionX = coords[0];
 		viewPositionY = coords[1];
 		viewPositionZ = coords[2];
@@ -749,6 +776,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		relativeX = coords[0];
 		relativeY = coords[1];
 		relativeZ = coords[2];
+	}
+	
+	public static HashSet<Class> notPassable = new HashSet<Class>();
+	public static HashSet<Class> climbers = new HashSet<Class>();
+	static
+	{
+		notPassable.add(NotPassable.class);
+		notPassable.add(Swimming.class);
+		climbers.add(Climbing.class);
 	}
 	
 	public void move(int[] from, int[] fromRel, int[] directions)
@@ -765,11 +801,19 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		if (c!=null) {
 			System.out.println("Current Cube = "+c.toString());
+			// get current steep dir for knowing if checking below or above Cube for moving on steep 
+			int currentCubeSteepDirection = hasSideOfInstanceInAnyDir(c, climbers);
+			System.out.println("STEEP DIRECTION"+currentCubeSteepDirection+" - "+directions[0]);
+			if (currentCubeSteepDirection==oppositeDirections.get(new Integer(directions[0])).intValue())
+			{
+				newCoords = calcMovement(newCoords, TOP); 
+				newRelCoords = calcMovement(newRelCoords, TOP);
+			}
 			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)
 			{
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, NotPassable.class)) return;
+				if (hasSideOfInstance(sides, notPassable)) return;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube c2 = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
@@ -781,33 +825,36 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				//sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
-					System.out.println("NEXT CUBE CHECK: CLIMB");
-					if (hasSideOfInstance(sides, Climbing.class)) {
-						System.out.println("NEXT CUBE CHECK: CLIMB - CLIMB!!!");
-						move(newCoords,newRelCoords,new int[]{directions[0],TOP});
-					} else
-					{
-						System.out.println("NEXT CUBE CHECK: CLIMB - no climb");
-					}
-					System.out.println("NEXT CUBE CHECK: NOTPASSABLE");
-					if (hasSideOfInstance(sides, NotPassable.class)) return;
-					System.out.println("NEXT CUBE CHECK: NOTPASSABLE --! PASSED");
+					if (hasSideOfInstance(sides, notPassable)) return;
 				}
+
 				sides = c2!=null?c2.getSide(BOTTOM):null;
 				if (sides!=null)
 				{
-					System.out.println("NEXT CUBE CHECK: NOTPASSABLE");
-					if (hasSideOfInstance(sides, NotPassable.class)) return;
-					System.out.println("NEXT CUBE CHECK: NOTPASSABLE --! PASSED");
+					if (hasSideOfInstance(sides, notPassable)) return;
+				}
+
+				// checking steep setting
+				int nextCubeSteepDirection = hasSideOfInstanceInAnyDir(c2, climbers);
+				if (nextCubeSteepDirection!=-1) {
+					onSteep = true;
+					//move(newCoords,newRelCoords,new int[]{directions[0],TOP});
+				} else
+				{
+					onSteep = false;
 				}
 			} else 
 			{
-				return;
+				// no next cube in same direction, trying lower part steep
+				
+				onSteep = false;
+				//return;
 			}
 			
 		} else 
 		{
-			return;
+			onSteep = false;
+			//return;
 		}
 		setViewPosition(newCoords);
 		setRelativePosition(newRelCoords);

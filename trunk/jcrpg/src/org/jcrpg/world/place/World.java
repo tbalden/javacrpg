@@ -44,7 +44,7 @@ public class World extends Place {
 	
 	public boolean WORLD_IS_GLOBE = true;
 
-	static Side[][] OCEAN = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side(TYPE_WORLD,SUBTYPE_OCEAN)} };
+	static Side[][] OCEAN = new Side[][] { null, null, null,null,null,{new Side(TYPE_WORLD,SUBTYPE_OCEAN)} };
 	
 	
 	public int sizeX, sizeY, sizeZ, magnification;
