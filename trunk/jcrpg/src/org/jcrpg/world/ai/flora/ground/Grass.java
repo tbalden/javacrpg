@@ -24,6 +24,7 @@ package org.jcrpg.world.ai.flora.ground;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
@@ -31,7 +32,7 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 public class Grass extends Ground {
 
 	public static final String TYPE_GRASS = "GRASS";
-	public static final SideSubType SUBTYPE_GRASS = new SideSubType(TYPE_GRASS+"_GRASS");
+	public static final SideSubType SUBTYPE_GRASS = new GroundSubType(TYPE_GRASS+"_GRASS");
 	
 	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_GRASS,SUBTYPE_GRASS)} };
 	

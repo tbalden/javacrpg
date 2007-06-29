@@ -24,6 +24,7 @@ package org.jcrpg.world.ai.flora.ground;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
@@ -31,7 +32,7 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 public class Snow extends Ground {
 
 	public static final String TYPE_SNOW = "SNOW";
-	public static final SideSubType SUBTYPE_SNOW = new SideSubType(TYPE_SNOW+"_SNOW");
+	public static final SideSubType SUBTYPE_SNOW = new GroundSubType(TYPE_SNOW+"_SNOW");
 	
 	static Side[][] SNOW = new Side[][] { null, null, null,null,null,{new Side(TYPE_SNOW,SUBTYPE_SNOW)} };
 	
