@@ -118,20 +118,26 @@ public class World extends Place {
 					if (geo instanceof Surface)
 					{
 						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
-						if (geo instanceof Mountain)
-							System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
-						if (surf.canContain)
+						//if (geo instanceof Mountain)
+							//System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
+						if (worldY==surf.surfaceY && surf.canContain)
 						{
+							// this can cotain things upon it, do the clima and flora... 
 							CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
 							Cube floraCube = null;
-							if (worldY==surf.surfaceY) {
-								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, new Time());
-							}
+							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, new Time());
 							if (floraCube!=null)
 							{
 								return new Cube(r,floraCube,worldX,worldY,worldZ);
-							} else return r;
-						} else return r;
+							} 
+							else 
+							{
+								return r;
+							}
+						} else 
+						{
+							return r;
+						}
 					} else 
 					{
 						return r;
