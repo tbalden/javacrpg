@@ -34,6 +34,7 @@ import java.util.Iterator;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
@@ -778,11 +779,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		relativeZ = coords[2];
 	}
 	
+	public static HashSet<Class> notWalkable = new HashSet<Class>();
 	public static HashSet<Class> notPassable = new HashSet<Class>();
 	public static HashSet<Class> climbers = new HashSet<Class>();
 	static
 	{
+		notWalkable.add(NotPassable.class);
+		notWalkable.add(Swimming.class);
 		notPassable.add(NotPassable.class);
+		notPassable.add(GroundSubType.class);
 		notPassable.add(Swimming.class);
 		climbers.add(Climbing.class);
 	}
@@ -831,7 +836,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				sides = c2!=null?c2.getSide(BOTTOM):null;
 				if (sides!=null)
 				{
-					if (hasSideOfInstance(sides, notPassable)) return;
+					if (hasSideOfInstance(sides, notWalkable)) return;
 				}
 
 				// checking steep setting

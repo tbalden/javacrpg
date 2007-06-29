@@ -33,7 +33,6 @@ public class River extends Place{
 	
 	public River(String id, Place parent, PlaceLocator loc) {
 		super(id, parent, loc);
-		// TODO Auto-generated constructor stub
 	}
 
 }
