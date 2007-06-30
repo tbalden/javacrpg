@@ -249,8 +249,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
+		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, new Integer(11));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
@@ -297,6 +298,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand2.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/plane.3ds","sides/snow1.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
@@ -707,7 +709,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	public Vector3f getCurrentLocation()
 	{
-		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.3f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
+		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.5f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
 	}
 	
 	
@@ -850,9 +852,42 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				}
 			} else 
 			{
-				// no next cube in same direction, trying lower part steep
+				// no next cube in same direction, trying lower part steep, until falling down deadly if nothing found... :)
+				int yMinus = 1; // value of delta downway
+				while (true)
+				{
+					// cube below
+					c2 = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2]);
+					if (yMinus>10) break; /// i am faaaalling.. :)
+					if (c2==null) continue;
+
+					sides = c2!=null?c2.getSide(directions[0]):null;
+					if (sides!=null)
+					{
+						// Try to get climber side
+						if (hasSideOfInstance(sides, climbers))
+						{
+							newCoords[1] = newCoords[1]-(yMinus-1);
+							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
+							onSteep = true; // found steep
+							break;
+						}
+					} else
+					{
+						// no luck, let's see notPassable bottom...
+						sides = c2!=null?c2.getSide(BOTTOM):null;
+						if (sides!=null)
+						if (hasSideOfInstance(sides, notPassable))
+						{
+							newCoords[1] = newCoords[1]-(yMinus-1);
+							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
+							onSteep = false; // yeah, found
+							break;
+						}
+					}
+				}
 				
-				onSteep = false;
+				
 				//return;
 			}
 			

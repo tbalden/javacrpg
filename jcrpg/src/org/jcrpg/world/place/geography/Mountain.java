@@ -78,7 +78,7 @@ public class Mountain extends Geography implements Surface{
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
 		int realSizeX = sizeX*magnification-1;
-		int realSizeY = sizeY*magnification;
+		int realSizeY = sizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
 		
@@ -181,7 +181,7 @@ public class Mountain extends Geography implements Surface{
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
 		int realSizeX = sizeX*magnification-1;
-		int realSizeY = sizeY*magnification;
+		int realSizeY = sizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
 		
@@ -282,8 +282,8 @@ public class Mountain extends Geography implements Surface{
 	
 	
 	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
-		int realSizeY = sizeY*magnification;
-		for (int i=0; i<realSizeY; i++)
+		int realSizeY = sizeY*magnification-1;
+		for (int i=0; i<=realSizeY; i++)
 		{
 			int ret = isGroundLevel(worldX, origoY*magnification+i, worldZ);
 			if (ret>-1)
