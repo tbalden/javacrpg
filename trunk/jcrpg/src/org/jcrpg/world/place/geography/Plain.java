@@ -35,8 +35,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 public class Plain extends Geography implements Surface {
 
 	public static final String TYPE_PLAIN = "PLAIN";
-	public static final SideSubType SUBTYPE_GRASS = new GroundSubType(TYPE_PLAIN+"_GRASS");
-	public static final SideSubType SUBTYPE_TREE = new SideSubType(TYPE_PLAIN+"_TREE");
+	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_PLAIN+"_GROUND");
 	
 	public int groundLevel;
 	public int magnification;
@@ -50,12 +49,11 @@ public class Plain extends Geography implements Surface {
 	}
 
 
-	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GRASS)} };
-	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GRASS),new Side(TYPE_PLAIN,SUBTYPE_TREE)} };
+	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND)} };
 	
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		return new Cube(this, worldY==worldGroundLevel?(worldX%10==0&&worldZ%10==0?TREE:GRASS):EMPTY,worldX,worldY,worldZ);
+		return new Cube(this, worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
 	}
 
 	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {

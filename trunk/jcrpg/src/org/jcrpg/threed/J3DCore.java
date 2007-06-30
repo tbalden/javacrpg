@@ -238,8 +238,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	{
 		// area subtype to 3d type mapping
 		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);
-		hmAreaSubType3dType.put(Plain.SUBTYPE_GRASS.id, new Integer(2));
-		hmAreaSubType3dType.put(Plain.SUBTYPE_TREE.id, new Integer(9));
+		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE);//new Integer(2));
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
