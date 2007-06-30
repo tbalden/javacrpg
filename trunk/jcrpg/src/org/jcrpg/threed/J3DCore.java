@@ -51,16 +51,17 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
+import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
-import org.jcrpg.world.place.geography.Mountain2;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
 
@@ -263,6 +264,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(Sand.SUBTYPE_SAND.id, new Integer(16));
 		hmAreaSubType3dType.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
 		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
+		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
+		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id, new Integer(24));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -300,7 +303,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand2.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/plane.3ds","sides/snow1.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide("sides/plane.3ds","textures/jungle.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/plane.3ds","textures/jungle.jpg"),new SimpleModel("sides/jungle_middle_small.3ds",null)}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
@@ -309,6 +312,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/bush.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_big2.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)}));
 
 		//hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
 		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
@@ -486,7 +491,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		}
 
 		// moving skybox with view movement vector too.
-		skybox.setLocalTranslation(new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
+		skybox.setLocalTranslation(cam.getLocation());//new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
 	    skybox.updateRenderState();
 
     	// get a specific part of the area to render

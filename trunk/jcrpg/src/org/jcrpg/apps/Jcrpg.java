@@ -76,12 +76,12 @@ public class Jcrpg {
 		Tropical tropical = new Tropical("trop1",climate);
 		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 2, 0, 0));
 		climate.belts.put(tropical.id, tropical);
-		Arctic arctic = new Arctic("arctic1",climate);
-		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 4, 0, 0));
-		climate.belts.put(arctic.id, arctic);
 		Desert desert = new Desert("desert1",climate);
-		desert.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 6, 0, 0));
+		desert.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 4, 0, 0));
 		climate.belts.put(desert.id, desert);
+		Arctic arctic = new Arctic("arctic1",climate);
+		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 6, 0, 0));
+		climate.belts.put(arctic.id, arctic);
 		
 		//int i =0;
 		House h = null; 

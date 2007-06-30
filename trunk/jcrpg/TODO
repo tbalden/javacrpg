@@ -1,7 +1,7 @@
 [ ] Time in engine -> skybox..
-[ ] jungle middle flora -> leaves, desert cactus model :)
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 
+[X] jungle middle flora -> leaves, desert cactus model :)
 [X] fall down where no GroundSubType! to steep for example!!
 [X] Hill_steep.3ds is wrongly rotated! After that fix Mountain.java to user correct SIDES[] for steeps of diff. 
 	directions. Then complete Movement Blocking in j3dcore for Climbing.
