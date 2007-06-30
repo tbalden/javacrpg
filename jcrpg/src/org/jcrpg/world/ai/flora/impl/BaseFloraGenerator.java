@@ -29,10 +29,12 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
+import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.ClimateLevel;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
@@ -46,9 +48,9 @@ public class BaseFloraGenerator extends FloraGenerator{
 	public BaseFloraGenerator()
 	{
 		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),120), new FloraListElement(new CherryTree(),120),new FloraListElement(new GreenPineTree(),120),new FloraListElement(new Acacia(),270),new FloraListElement(new GreenBush(),320)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),150),new FloraListElement(new Acacia(),50)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),150),new FloraListElement(new JunglePalmTrees(),500)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow())});
-		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5)});
+		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5),new FloraListElement(new BigCactus(),20)});
 	}
 	
 }

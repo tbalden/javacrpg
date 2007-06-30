@@ -24,8 +24,8 @@ package org.jcrpg.world.ai.flora.middle;
 
 import org.jcrpg.world.ai.flora.Flora;
 
-public class Bush extends Flora {
-	public Bush()
+public class MiddlePlant extends Flora {
+	public MiddlePlant()
 	{
 		super();
 		floraPosition = POSITION_MIDDLE;

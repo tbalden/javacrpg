@@ -20,27 +20,27 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora.middle.deciduous;
+package org.jcrpg.world.ai.flora.tree.palm;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.Flora;
 import org.jcrpg.world.ai.flora.FloraDescription;
-import org.jcrpg.world.ai.flora.middle.MiddlePlant;
 import org.jcrpg.world.ai.flora.tree.Tree;
 
-public class GreenBush extends MiddlePlant {
+public class JunglePalmTrees extends Tree {
 	
-	public static final String TYPE_BUSH = "GREEN";
-	public static final SideSubType SUBTYPE_BUSH = new SideSubType(TYPE_BUSH+"_BUSH");
+	public static final String TYPE_FOREST = "JUNGLE";
+	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_FOREST+"_PALMS");
 	
-	static Side[][] BUSH = new Side[][] { null, null, null,null,null,{new Side(TYPE_BUSH,SUBTYPE_BUSH)} };
+	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
-	public GreenBush()
+	public JunglePalmTrees()
 	{
 		super();
-		defaultDescription = new FloraDescription(new Cube(null,BUSH,0,0,0),0,false,false);
+		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 
 }
