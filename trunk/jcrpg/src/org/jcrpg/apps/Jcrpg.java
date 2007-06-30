@@ -29,6 +29,7 @@ import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
+import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
@@ -72,12 +73,15 @@ public class Jcrpg {
 		Continental continental = new Continental("cont1",climate);
 		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 0, 0, 0));
 		climate.belts.put(continental.id, continental);
-		Arctic arctic = new Arctic("arctic1",climate);
-		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 0, 0, 0));
-		//climate.belts.put(arctic.id, arctic);
 		Tropical tropical = new Tropical("trop1",climate);
-		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 8, 10, 20, 2, 0, 0));
+		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 2, 0, 0));
 		climate.belts.put(tropical.id, tropical);
+		Arctic arctic = new Arctic("arctic1",climate);
+		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 4, 0, 0));
+		climate.belts.put(arctic.id, arctic);
+		Desert desert = new Desert("desert1",climate);
+		desert.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 6, 0, 0));
+		climate.belts.put(desert.id, desert);
 		
 		//int i =0;
 		House h = null; 
@@ -102,6 +106,10 @@ public class Jcrpg {
 		w.geographies.put(p.id, p);
 		p = new Plain("22",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 2));
+		w.geographies.put(p.id, p);
+		
+		p = new Plain("24",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 4, 1, 1, 4, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 
 		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10);

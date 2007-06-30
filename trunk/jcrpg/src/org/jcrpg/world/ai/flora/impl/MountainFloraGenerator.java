@@ -22,10 +22,9 @@
 
 package org.jcrpg.world.ai.flora.impl;
 
-import org.jcrpg.world.ai.flora.FloraGenerator;
 import org.jcrpg.world.ai.flora.FloraListElement;
 import org.jcrpg.world.ai.flora.ground.Grass;
-import org.jcrpg.world.ai.flora.ground.Sand;
+import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
@@ -38,14 +37,14 @@ import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 
-public class MountainFloraGenerator extends FloraGenerator{
+public class MountainFloraGenerator extends BaseFloraGenerator{
 
 	
 	public MountainFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),0),new FloraListElement(new GreenPineTree(),25),new FloraListElement(new GreenBush(),10)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand(),true),new FloraListElement(new CoconutTree(),2),new FloraListElement(new Acacia(),1)});
-		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow(),true)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),1),new FloraListElement(new GreenPineTree(),250),new FloraListElement(new GreenBush(),100)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),20),new FloraListElement(new Acacia(),10)});
+		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow())});
 	}
 	
 }

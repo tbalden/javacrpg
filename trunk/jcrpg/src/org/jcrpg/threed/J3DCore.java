@@ -47,6 +47,7 @@ import org.jcrpg.threed.scene.RenderedTopSide;
 import org.jcrpg.threed.scene.SimpleModel;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.ground.Grass;
+import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
@@ -261,6 +262,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(Grass.SUBTYPE_GRASS.id, new Integer(2));
 		hmAreaSubType3dType.put(Sand.SUBTYPE_SAND.id, new Integer(16));
 		hmAreaSubType3dType.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
+		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
 		
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -298,6 +300,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand2.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/plane.3ds","sides/snow1.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide("sides/plane.3ds","textures/jungle.jpg"));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));

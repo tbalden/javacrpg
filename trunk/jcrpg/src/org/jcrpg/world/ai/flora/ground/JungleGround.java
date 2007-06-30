@@ -20,22 +20,25 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.world.ai.flora.impl;
+package org.jcrpg.world.ai.flora.ground;
 
-import org.jcrpg.world.ai.flora.FloraContainer;
-import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.Mountain;
-import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
+import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.world.ai.flora.Flora;
+import org.jcrpg.world.ai.flora.FloraDescription;
 
-public class BaseFloraContainer extends FloraContainer{
+public class JungleGround extends Ground {
 
-
-	public BaseFloraContainer() {
-		super();
-		defaultGenerator = new BaseFloraGenerator();
-		hmPlaceToGenerator.put(Forest.class,new ForestFloraGenerator());
-		hmPlaceToGenerator.put(Plain.class,new PlainFloraGenerator());
-		hmPlaceToGenerator.put(Mountain.class,new MountainFloraGenerator());
-	}
+	public static final String TYPE_JUNGLE = "JUNGLE";
+	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_JUNGLE+"_GROUND");
 	
+	static Side[][] JUNGLEGROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_JUNGLE,SUBTYPE_GROUND)} };
+	
+	public JungleGround()
+	{
+		super();
+		defaultDescription = new FloraDescription(new Cube(null,JUNGLEGROUND,0,0,0),0,false,false);
+	}
 }

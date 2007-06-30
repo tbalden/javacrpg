@@ -120,7 +120,7 @@ public class FloraGenerator {
 		int i = 0;
 		for (FloraListElement element : elements) {
 			int likeness=element.likenessToGrow;
-			int h = HashUtil.mixPercentage(worldX+i, worldY+i, worldZ+i);
+			int h = HashUtil.mixPer1000(worldX+i, worldY+i, worldZ+i);
 			i++;
 			if  ( h < likeness ) 
 			{
