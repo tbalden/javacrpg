@@ -25,6 +25,7 @@ package org.jcrpg.world.ai.flora.impl;
 import org.jcrpg.world.ai.flora.FloraGenerator;
 import org.jcrpg.world.ai.flora.FloraListElement;
 import org.jcrpg.world.ai.flora.ground.Grass;
+import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
@@ -36,6 +37,7 @@ import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.ClimateLevel;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
+import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 
 public class BaseFloraGenerator extends FloraGenerator{
@@ -43,9 +45,10 @@ public class BaseFloraGenerator extends FloraGenerator{
 	
 	public BaseFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass(),true),new FloraListElement(new OakTree(),12), new FloraListElement(new CherryTree(),12),new FloraListElement(new GreenPineTree(),12),new FloraListElement(new Acacia(),27),new FloraListElement(new GreenBush(),32)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand(),true),new FloraListElement(new CoconutTree(),5),new FloraListElement(new Acacia(),5)});
-		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow(),true)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),120), new FloraListElement(new CherryTree(),120),new FloraListElement(new GreenPineTree(),120),new FloraListElement(new Acacia(),270),new FloraListElement(new GreenBush(),320)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),150),new FloraListElement(new Acacia(),50)});
+		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow())});
+		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5)});
 	}
 	
 }

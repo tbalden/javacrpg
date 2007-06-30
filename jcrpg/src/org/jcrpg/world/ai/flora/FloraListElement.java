@@ -31,6 +31,9 @@ public class FloraListElement {
 	
 	public Flora flora;
 	public boolean alwaysPresent = false;
+	/**
+	 * 0-1000, likeness to grow, X:1000.
+	 */
 	public int likenessToGrow = 0;
 	
 	public FloraListElement(Flora flora, int likenessToGrow) {
@@ -40,11 +43,16 @@ public class FloraListElement {
 		this.likenessToGrow = likenessToGrow;
 	}
 
-	public FloraListElement(Flora flora, boolean alwaysPresent) {
+	/**
+	 * 
+	 * @param flora
+	 * @param alwaysPresent
+	 */
+	public FloraListElement(Flora flora) {
 		super();
 		this.flora = flora;
-		this.alwaysPresent = alwaysPresent;
-		this.likenessToGrow = 100;
+		this.alwaysPresent = true;
+		this.likenessToGrow = 1000;
 	}
 	
 	
