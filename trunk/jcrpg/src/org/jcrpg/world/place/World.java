@@ -26,6 +26,7 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -44,13 +45,15 @@ public class World extends Place {
 
 	public static final String TYPE_WORLD = "WORLD";
 	public static final Swimming SUBTYPE_OCEAN = new Swimming(TYPE_WORLD+"_OCEAN");
+	public static final GroundSubType SUBTYPE_GROUND = new GroundSubType(TYPE_WORLD+"_GROUND");
 	
 	public boolean WORLD_IS_GLOBE = true;
 
 	static Side[][] OCEAN = new Side[][] { null, null, null,null,null,{new Side(TYPE_WORLD,SUBTYPE_OCEAN)} };
+	static Side[][] GROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_WORLD,SUBTYPE_GROUND)} };
 	
 	
-	public int sizeX, sizeY, sizeZ, magnification;
+	public int sizeX, sizeY, sizeZ, magnification, worldGroundLevel;
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
 		super(id, null, loc);
@@ -58,6 +61,7 @@ public class World extends Place {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
+		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));
 		geographies = new HashMap<String, Geography>();
 		politicals = new HashMap<String, Political>();
@@ -132,7 +136,7 @@ public class World extends Place {
 							} 
 							else 
 							{
-								return r;
+								return new Cube(r,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ);
 							}
 						} else 
 						{
@@ -145,7 +149,7 @@ public class World extends Place {
 				}
 					
 			}
-			return worldY==(sizeY*magnification/2)?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
+			return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;
 	}
