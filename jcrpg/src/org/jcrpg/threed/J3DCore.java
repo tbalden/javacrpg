@@ -58,17 +58,25 @@ import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
 import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
+import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.climate.DayTime;
+import org.jcrpg.world.climate.impl.generic.Day;
+import org.jcrpg.world.climate.impl.generic.Night;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
+import org.jcrpg.world.time.Time;
 
 import com.jme.image.Texture;
+import com.jme.light.Light;
+import com.jme.light.LightNode;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Skybox;
@@ -343,31 +351,41 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 	}
 	
-
+	private static HashMap<String, Skybox> skyboxCache = new HashMap<String, Skybox>();
     
-    public Skybox createSkybox() {
+    public Skybox createSkybox(String prefix) {
+    	if (skyboxCache.containsKey(prefix)) return skyboxCache.get(prefix);
 
 		Skybox skybox = new Skybox("skybox", 500, 500, 500);
 
-		Texture north = TextureManager.loadTexture("./data/sky/sky.jpg",
+		String path = "./data/sky/"+prefix+"/";
+		
+		Texture north = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture south = TextureManager.loadTexture("./data/sky/sky.jpg",
+		Texture south = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture east = TextureManager.loadTexture("./data/sky/sky.jpg",
+		Texture east = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture west = TextureManager.loadTexture("./data/sky/sky.jpg",
+		Texture west = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture up = TextureManager.loadTexture("./data/sky/top.jpg",
+		Texture up = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture down = TextureManager.loadTexture("./data/sky/bottom.jpg",
+		Texture down = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-
+		//LightNode light = new LightNode();
+		//light.setLocalTranslation(new Vector3f(0,0,0));
+		//light.setTarget(skybox);
+		
+		
+		skybox.attachChild(new LightNode());
+		
 		skybox.setTexture(Skybox.NORTH, north);
 		skybox.setTexture(Skybox.WEST, west);
 		skybox.setTexture(Skybox.SOUTH, south);
 		skybox.setTexture(Skybox.EAST, east);
 		skybox.setTexture(Skybox.UP, up);
 		skybox.setTexture(Skybox.DOWN, down);
+		skyboxCache.put(prefix, skybox);
 		return skybox;
 
 	}
@@ -471,28 +489,48 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		setCalculatedCameraLocation();
 		render();
+		engine.setPause(false);
 	}
 	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
-	Skybox skybox = null;
+	Skybox currentSkyBox = null;
 	
 	public void render()
 	{
 		long timeS = System.currentTimeMillis();
-		System.out.println("RENDER!");
+		
+		System.out.println("**** RENDER ****");
+		
 		int already = 0;
 		int newly = 0;
 		int removed = 0;
-		
-		if (skybox==null) {
-			skybox = createSkybox();
-		    rootNode.attachChild(skybox);
+
+		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
+		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
+		DayTime dT = conditions.getDayTime();
+		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
+		Skybox newBox = null;
+		if (dT instanceof Day)
+		{
+			newBox = createSkybox("day");
+		} else if (dT instanceof Night)
+		{
+			newBox = createSkybox("night");
 		}
 
+		if (newBox!=currentSkyBox)
+		{
+			rootNode.detachChild(currentSkyBox);
+			currentSkyBox = newBox;
+			rootNode.attachChild(currentSkyBox);
+		}
+
+		System.out.println("MOVED TO LOCAL TIME: "+localTime);
+
 		// moving skybox with view movement vector too.
-		skybox.setLocalTranslation(cam.getLocation());//new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
-	    skybox.updateRenderState();
+		currentSkyBox.setLocalTranslation(cam.getLocation());//new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
+	    currentSkyBox.updateRenderState();
 
     	// get a specific part of the area to render
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
