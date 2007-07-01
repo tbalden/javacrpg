@@ -508,6 +508,24 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
+		int dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
+		
+		if ( dayNightPer>=0) {
+			dayNightPer = 100 - Math.abs( dayNightPer - 50 ) * 2; 
+		}
+		if ( dayNightPer<0) {
+			dayNightPer = -100 + Math.abs( dayNightPer + 50 ) * 2; 
+		}
+
+		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
+		// -100 is the middle of the night, 0 is between them.
+		
+		float v = ((dayNightPer+100)/200f)+0.2f;
+		// TODO light set to v value, which represent a good basis for sun light strength
+		System.out.println("GLOBAL AMBIENT --- "+v+ " -- "+dayNightPer);
+		lightState.setTwoSidedLighting(true);
+		lightState.setGlobalAmbient(new ColorRGBA(v,v,v,0));
+		
 		DayTime dT = conditions.getDayTime();
 		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
 		Skybox newBox = null;

@@ -33,6 +33,9 @@ public class Season implements ConditionGiver {
 	
 	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
+	public int dayPercentage = 60;
+	public DayTime setDay, setNight;
+	private int halfDayPercentage = -1;
 	
 	static Day genericDay;
 	static Night genericNight;
@@ -46,10 +49,37 @@ public class Season implements ConditionGiver {
 		}
 	}
 	
+	public Season()
+	{
+		setDay = genericDay;
+		setNight = genericNight;
+	}
+	
+	/**
+	 * Return percentage of night or day based on time in current season, values between -100 and 100, neg values = night, 0+ day.
+	 * @param time
+	 * @return -100 and 100, neg values = night, 0+ day.
+	 */
+	public int dayOrNightPeriodPercentage(Time time)	
+	{
+		if (halfDayPercentage==-1) halfDayPercentage = dayPercentage/2;
+		int p = time.getCurrentDayPercent();
+		if (p!=0)System.out.println("CURRENT DAY PERCENT = "+p);
+		if (p>50-(halfDayPercentage) && p<50+(halfDayPercentage))
+		{
+			int r = (int) (((p-(50-(halfDayPercentage))) / (dayPercentage*1f)) * 100);
+			if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
+			return r;
+		}
+		int nightPercentage = 100-dayPercentage;
+		int pNew = (p+ (nightPercentage/2))%100;
+		return (int)( (pNew / (nightPercentage*1f) ) * -100 );
+	}
+	
 	public DayTime getDayTime(Time time) {
 		int p = time.getCurrentDayPercent();
-		if (p>30 && p<70) return genericDay;
-		return genericNight;
+		if (dayOrNightPeriodPercentage(time)>=0) return setDay;
+		return setNight;
 	}
 
 	public void getConditions(CubeClimateConditions conditions, Time time, int worldX, int worldY, int worldZ) {
