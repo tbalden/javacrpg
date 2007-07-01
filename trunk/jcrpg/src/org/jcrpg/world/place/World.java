@@ -28,14 +28,25 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.time.Time;
 
 public class World extends Place {
 
+	public Engine engine;
+	
+	/**
+	 * Tells which direction sun goes around - E-W (true) or W-E (false)
+	 */
+	public boolean sunLikeOnEarth = true;
+	/**
+	 * Tells if in half Z year percentage should return reversed for Seasions. Earthlike equator - set true! 
+	 */
+	public boolean timeSwitchOnEquator = true;
+	
 	public Climate climate;
 	public FloraContainer floraContainer;
 	
@@ -93,7 +104,7 @@ public class World extends Place {
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		
+		Time localTime = engine.getWorldMeanTime().getLocalTime(this, worldX, worldY, worldZ);
 		if (WORLD_IS_GLOBE) {
 			
 			worldX = worldX%(sizeX*magnification);
@@ -129,7 +140,7 @@ public class World extends Place {
 							// this can cotain things upon it, do the clima and flora... 
 							CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
 							Cube floraCube = null;
-							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, new Time());
+							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime);
 							if (floraCube!=null)
 							{
 								return new Cube(r,floraCube,worldX,worldY,worldZ);

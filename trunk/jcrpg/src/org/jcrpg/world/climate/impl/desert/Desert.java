@@ -25,8 +25,6 @@ package org.jcrpg.world.climate.impl.desert;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
-import org.jcrpg.world.climate.impl.continental.Spring;
-import org.jcrpg.world.climate.impl.continental.Summer;
 import org.jcrpg.world.time.Time;
 
 public class Desert extends ClimateBelt {

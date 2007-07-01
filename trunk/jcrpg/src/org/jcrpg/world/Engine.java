@@ -21,16 +21,22 @@
  */
 package org.jcrpg.world;
 
+import org.jcrpg.world.time.Time;
+
 public class Engine implements Runnable {
 
 	boolean exit = false;
+	boolean pause = true;
+	Time worldMeanTime = null;
 
 	public void run() {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
 		{
-			try{Thread.sleep(100);}catch (Exception ex){}
-			
+			try{Thread.sleep(1000);}catch (Exception ex){}
+			if (!pause) {
+				worldMeanTime.tick(2000);
+			}
 		}
 		System.out.println("ENGINE TERMINTATED");
 	}
@@ -39,6 +45,22 @@ public class Engine implements Runnable {
 	{
 		System.out.println("ENGINE TERMINATING");
 		exit = true;
+	}
+
+	public boolean isPause() {
+		return pause;
+	}
+
+	public void setPause(boolean pause) {
+		this.pause = pause;
+	}
+
+	public Time getWorldMeanTime() {
+		return worldMeanTime;
+	}
+
+	public void setWorldMeanTime(Time worldMeanTime) {
+		this.worldMeanTime = worldMeanTime;
 	}
 
 	

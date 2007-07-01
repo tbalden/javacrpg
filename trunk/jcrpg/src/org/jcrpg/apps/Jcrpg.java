@@ -38,6 +38,7 @@ import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Mountain2;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.time.Time;
 
 import com.jme.util.LoggingSystem;
 
@@ -60,11 +61,15 @@ public class Jcrpg {
     public static void start() throws Exception {
 		LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
 		Engine e = new Engine();
+		Time wmt = new Time();
+		wmt.setHour(10);
+		e.setWorldMeanTime(wmt);
 		Thread t = new Thread(e);
 		t.start();
 		J3DCore app = new J3DCore();
 		
 		World w = new World("world", null,100,2,1,2);
+		w.engine = e;
 		w.setFloraContainer(new BaseFloraContainer());
 		
 		Climate climate = new Climate("climate",w);
