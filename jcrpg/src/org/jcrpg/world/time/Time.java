@@ -32,9 +32,9 @@ public class Time {
 		inverseSeasons = time.inverseSeasons;
 	}
 
-	public int getCurrentDayPercent()
+	public float getCurrentDayPercent()
 	{
-		return  (int)((hour/(maxHour*1f))*100);
+		return  ((hour/(maxHour*1f))*100);
 	}
 
 	public int getCurrentYearPercent()

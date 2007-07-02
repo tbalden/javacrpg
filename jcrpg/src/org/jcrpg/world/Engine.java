@@ -35,7 +35,7 @@ public class Engine implements Runnable {
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
-				worldMeanTime.tick(2000);
+				worldMeanTime.tick(1000);
 			}
 		}
 		System.out.println("ENGINE TERMINTATED");
