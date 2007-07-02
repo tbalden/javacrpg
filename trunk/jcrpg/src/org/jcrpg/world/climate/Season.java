@@ -60,10 +60,10 @@ public class Season implements ConditionGiver {
 	 * @param time
 	 * @return -100 and 100, neg values = night, 0+ day.
 	 */
-	public int dayOrNightPeriodPercentage(Time time)	
+	public float dayOrNightPeriodPercentage(Time time)	
 	{
 		if (halfDayPercentage==-1) halfDayPercentage = dayPercentage/2;
-		int p = time.getCurrentDayPercent();
+		float p = time.getCurrentDayPercent();
 		if (p!=0)System.out.println("CURRENT DAY PERCENT = "+p);
 		if (p>50-(halfDayPercentage) && p<50+(halfDayPercentage))
 		{
@@ -72,14 +72,14 @@ public class Season implements ConditionGiver {
 			return r;
 		}
 		int nightPercentage = 100-dayPercentage;
-		int pNew = (p+ (nightPercentage/2))%100;
+		float pNew = (p+ (nightPercentage/2))%100;
 		int r = (int)( (pNew / (nightPercentage*1f) ) * -100 );
 		if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
 		return r;
 	}
 	
 	public DayTime getDayTime(Time time) {
-		int p = time.getCurrentDayPercent();
+		float p = time.getCurrentDayPercent();
 		if (dayOrNightPeriodPercentage(time)>=0) return setDay;
 		return setNight;
 	}

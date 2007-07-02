@@ -28,6 +28,8 @@ import org.jcrpg.world.time.Time;
 public abstract class Orbiter {
 
 	public abstract float[] getCurrentCoordinates(Time localTime, CubeClimateConditions conditions);
+	public abstract float[] getLightDirection(Time localTime, CubeClimateConditions conditions);
+	public abstract float getLightPower(Time localTime, CubeClimateConditions conditions);
 	public String type;
 	public String id;
 	

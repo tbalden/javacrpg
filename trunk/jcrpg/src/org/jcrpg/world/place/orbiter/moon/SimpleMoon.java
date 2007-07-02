@@ -39,9 +39,9 @@ public class SimpleMoon extends Orbiter{
 	
 	@Override
 	public float[] getCurrentCoordinates(Time localTime, CubeClimateConditions conditions) {
-		int dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
+		float dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
 		
-		int dayOrNightPeriodPercentage = dayNightPer; 
+		float dayOrNightPeriodPercentage = dayNightPer; 
 		
 		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
 		// -100 is the middle of the night, 0 is between them.
@@ -59,4 +59,47 @@ public class SimpleMoon extends Orbiter{
 		
 	}
 
+	@Override
+	public float[] getLightDirection(Time localTime, CubeClimateConditions conditions) {
+		float dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
+		
+		float dayOrNightPeriodPercentage = dayNightPer; 
+		
+		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
+		// -100 is the middle of the night, 0 is between them.
+		if ( dayNightPer>=0) {
+			return null;
+			//dayNightPer = ( 100 - (Math.abs( dayNightPer - 50 ) * 2) ) /2; 
+		}
+		if ( dayNightPer<0) {
+			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
+		}
+		float x= 0.2f;
+		float y= -1;
+		float z = (Math.abs(dayOrNightPeriodPercentage)-50)/-20;
+		
+		return new float[] {x,y,z};
+		
+	}
+
+	@Override
+	public float getLightPower(Time localTime, CubeClimateConditions conditions) {
+		float dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
+		
+		float dayOrNightPeriodPercentage = dayNightPer; 
+		
+		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
+		// -100 is the middle of the night, 0 is between them.
+		if ( dayNightPer>=0) {
+			dayNightPer = ( 100 - (Math.abs( dayNightPer - 50 ) * 2) ) /2; 
+		}
+		if ( dayNightPer<0) {
+			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
+		}
+
+		
+		float v = ((dayNightPer+100)/200f)+0.1f;
+		return v;
+	}
+	
 }
