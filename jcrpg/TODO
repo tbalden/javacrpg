@@ -1,5 +1,11 @@
-[ ] Time in engine -> skybox..
+
+[ ] orbiter Suns/Moons each should have own Light direction (see j3dCore for more details on TODO)
+	[ ] lens flare?
+
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
+	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
+[X] Time in engine -> skybox..
 
 [X] jungle middle flora -> leaves, desert cactus model :)
 [X] fall down where no GroundSubType! to steep for example!!
