@@ -71,6 +71,7 @@ import org.jcrpg.world.place.geography.River;
 import org.jcrpg.world.time.Time;
 
 import com.jme.image.Texture;
+import com.jme.light.DirectionalLight;
 import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.math.FastMath;
@@ -80,7 +81,9 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Skybox;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
@@ -304,14 +307,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
 				));
 
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/plane.3ds","sides/grass2.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground_cont_grass.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/tgrass1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/plane.3ds","sides/road_stone.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/ground_road_stone_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/plane.3ds","sides/sand2.jpg"));
-		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/plane.3ds","sides/snow1.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/ground_desert_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/ground_arctic_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/plane.3ds","textures/jungle.jpg"),new SimpleModel("sides/jungle_middle_small.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/ground_jung_grass.3ds",null),new SimpleModel("sides/jungle_middle_small.3ds",null)}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
@@ -329,7 +332,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		//hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
 
 		
-		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/plane.3ds","sides/water1.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/ground_water1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","sides/wall_mossy.jpg"));
@@ -495,7 +498,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
 	Skybox currentSkyBox = null;
-	
+	Node sun = null;
+	DirectionalLight sl = null;
 	public void render()
 	{
 		long timeS = System.currentTimeMillis();
@@ -510,21 +514,46 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
 		int dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
 		
-		if ( dayNightPer>=0) {
-			dayNightPer = 100 - Math.abs( dayNightPer - 50 ) * 2; 
-		}
-		if ( dayNightPer<0) {
-			dayNightPer = -100 + Math.abs( dayNightPer + 50 ) * 2; 
-		}
-
+		int dayOrNightPeriodPercentage = dayNightPer; 
+		
 		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
 		// -100 is the middle of the night, 0 is between them.
+		if ( dayNightPer>=0) {
+			dayNightPer = ( 100 - (Math.abs( dayNightPer - 50 ) * 2) ) /2; 
+		}
+		if ( dayNightPer<0) {
+			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
+		}
+
 		
-		float v = ((dayNightPer+100)/200f)+0.2f;
+		float v = ((dayNightPer+100)/200f)+0.1f;
 		// TODO light set to v value, which represent a good basis for sun light strength
 		System.out.println("GLOBAL AMBIENT --- "+v+ " -- "+dayNightPer);
 		lightState.setTwoSidedLighting(true);
-		lightState.setGlobalAmbient(new ColorRGBA(v,v,v,0));
+		lightState.setGlobalAmbient(new ColorRGBA(v,v,v,1));
+		Light l = lightState.get(0);
+		l.setEnabled(false);
+
+		if (sun==null)
+		{ 
+			sun = new Node();
+			rootNode.attachChild(sun);
+			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+			LightNode ln = new LightNode("Sun light", ls);		
+			sl = new DirectionalLight();
+			sl.setDiffuse(new ColorRGBA(1,1,1,1));
+			sl.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			sl.setDirection(new Vector3f(0,0,1));
+			sl.setEnabled(true);
+			ln.setLight(sl);
+			ln.setTarget(rootNode);
+		}
+		
+		//sun.setLocalTranslation(cam.getLocation());
+		sl.setDirection(new Vector3f((Math.abs(dayOrNightPeriodPercentage)-50)/20,-1,0.2f));
+		sl.setDiffuse(new ColorRGBA(v, v, v, 1));
+		sl.setAmbient(new ColorRGBA(v, v, v, 1));
+		sl.setSpecular(new ColorRGBA(v, v, v, 1));
 		
 		DayTime dT = conditions.getDayTime();
 		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
@@ -544,12 +573,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			rootNode.attachChild(currentSkyBox);
 		}
 
+		
 		System.out.println("MOVED TO LOCAL TIME: "+localTime);
 
 		// moving skybox with view movement vector too.
 		currentSkyBox.setLocalTranslation(cam.getLocation());//new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,-1*relativeZ*CUBE_EDGE_SIZE));
 	    currentSkyBox.updateRenderState();
-
+		
+		
     	// get a specific part of the area to render
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
     	System.out.println("getRenderedSpace size="+cubes.length);
