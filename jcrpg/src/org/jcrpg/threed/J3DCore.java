@@ -68,11 +68,13 @@ import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
+import org.jcrpg.world.place.orbiter.Orbiter;
+import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
+import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
-import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -81,6 +83,9 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Skybox;
+import com.jme.scene.Spatial;
+import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -371,9 +376,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
 		Texture west = TextureManager.loadTexture(path+"sky.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture up = TextureManager.loadTexture(path+"sky.jpg",
+		Texture up = TextureManager.loadTexture(path+"top.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture down = TextureManager.loadTexture(path+"sky.jpg",
+		Texture down = TextureManager.loadTexture(path+"top.jpg",
 				Texture.MM_LINEAR, Texture.FM_LINEAR);
 		//LightNode light = new LightNode();
 		//light.setLocalTranslation(new Vector3f(0,0,0));
@@ -497,9 +502,34 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
+	
+	public Spatial getSpatialForOrbiter(Orbiter o)
+	{
+		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
+			TriMesh sun = new Sphere(o.id,10,10,30f);
+			rootNode.attachChild(sun);
+			sun.setSolidColor(ColorRGBA.yellow);
+			sun.setLightCombineMode(TextureState.OFF);
+			return sun;
+		} else
+		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
+			TriMesh sun = new Sphere(o.id,10,10,15f);
+			rootNode.attachChild(sun);
+			sun.setSolidColor(ColorRGBA.gray);
+			sun.setLightCombineMode(TextureState.OFF);
+			return sun;
+		} 
+		return null;
+			
+	}
+	
+	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
+	
+	
 	Skybox currentSkyBox = null;
-	Node sun = null;
-	DirectionalLight sl = null;
+	TriMesh sun = null;
+	DirectionalLight sunLight = null;
+	
 	public void render()
 	{
 		long timeS = System.currentTimeMillis();
@@ -527,33 +557,56 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 		
 		float v = ((dayNightPer+100)/200f)+0.1f;
-		// TODO light set to v value, which represent a good basis for sun light strength
-		System.out.println("GLOBAL AMBIENT --- "+v+ " -- "+dayNightPer);
-		lightState.setTwoSidedLighting(true);
-		lightState.setGlobalAmbient(new ColorRGBA(v,v,v,1));
-		Light l = lightState.get(0);
-		l.setEnabled(false);
 
-		if (sun==null)
+		System.out.println("GLOBAL AMBIENT --- "+v+ " -- "+dayNightPer);
+		lightState.detachAll();
+
+		// iterating through world's sky orbiter
+		for (Orbiter orb : world.getOrbiterHandler().orbiters.values()) {
+			if (orbiters3D.get(orb.id)==null)
+			{
+				Spatial s = getSpatialForOrbiter(orb);
+				orbiters3D.put(orb.id, s);
+			}
+			Spatial s = orbiters3D.get(orb.id); // get 3d Spatial for the orbiter
+			float[] f = orb.getCurrentCoordinates(localTime, conditions); // get coordinates of the orbiter
+			if (f!=null)
+			{
+				if (s.getParent()==null)
+				{
+					// newly appearing, attach to root
+					rootNode.attachChild(s);
+				}
+				s.setLocalTranslation(new Vector3f(f[0],f[1],f[2]));
+			}
+			else {
+				// if there is no coordinates, detach the orbiter
+				rootNode.detachChild(s);
+			}
+		}
+		
+		// TODO generic orbiter sunlight for each sun orbiter!!
+		if (sunLight==null)
 		{ 
-			sun = new Node();
-			rootNode.attachChild(sun);
+			
 			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
 			LightNode ln = new LightNode("Sun light", ls);		
-			sl = new DirectionalLight();
-			sl.setDiffuse(new ColorRGBA(1,1,1,1));
-			sl.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			sl.setDirection(new Vector3f(0,0,1));
-			sl.setEnabled(true);
-			ln.setLight(sl);
+			sunLight = new DirectionalLight();
+			sunLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			sunLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			sunLight.setDirection(new Vector3f(0,0,1));
+			sunLight.setEnabled(true);
+			ln.setLight(sunLight);
 			ln.setTarget(rootNode);
 		}
 		
-		//sun.setLocalTranslation(cam.getLocation());
-		sl.setDirection(new Vector3f((Math.abs(dayOrNightPeriodPercentage)-50)/20,-1,0.2f));
-		sl.setDiffuse(new ColorRGBA(v, v, v, 1));
-		sl.setAmbient(new ColorRGBA(v, v, v, 1));
-		sl.setSpecular(new ColorRGBA(v, v, v, 1));
+		// TODO this vector should be calculated based on orbiters. Sun like orbiters' should have one sunLight each! 
+		// orbiter coordinates should create this Direction vector! Orbiter should return sun strength value V!
+		sunLight.setDirection(new Vector3f( (Math.abs(dayOrNightPeriodPercentage)-50)/-20,-1,0.2f));
+		sunLight.setDiffuse(new ColorRGBA(v, v, v, 1));
+		sunLight.setAmbient(new ColorRGBA(v, v, v, 1));
+		sunLight.setSpecular(new ColorRGBA(v, v, v, 1));
+
 		
 		DayTime dT = conditions.getDayTime();
 		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());

@@ -32,6 +32,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.time.Time;
 
 public class World extends Place {
@@ -46,6 +47,8 @@ public class World extends Place {
 	 * Tells if in half Z year percentage should return reversed for Seasions. Earthlike equator - set true! 
 	 */
 	public boolean timeSwitchOnEquator = true;
+	
+	public WorldOrbiterHandler orbiterHandler;
 	
 	public Climate climate;
 	public FloraContainer floraContainer;
@@ -197,6 +200,16 @@ public class World extends Place {
 
 	public void setFloraContainer(FloraContainer floraContainer) {
 		this.floraContainer = floraContainer;
+	}
+
+
+	public WorldOrbiterHandler getOrbiterHandler() {
+		return orbiterHandler;
+	}
+
+
+	public void setOrbiterHandler(WorldOrbiterHandler orbiterHandler) {
+		this.orbiterHandler = orbiterHandler;
 	}
 	
 	

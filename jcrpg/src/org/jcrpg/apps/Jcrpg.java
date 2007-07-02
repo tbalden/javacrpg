@@ -38,6 +38,9 @@ import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Mountain2;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
+import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
+import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
 import com.jme.util.LoggingSystem;
@@ -71,6 +74,11 @@ public class Jcrpg {
 		World w = new World("world", null,100,2,1,2);
 		w.engine = e;
 		w.setFloraContainer(new BaseFloraContainer());
+		
+		WorldOrbiterHandler woh = new WorldOrbiterHandler();
+		woh.addOrbiter("sun", new SimpleSun("SUN"));
+		woh.addOrbiter("moon", new SimpleMoon("moon"));
+		w.setOrbiterHandler(woh);
 		
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);
