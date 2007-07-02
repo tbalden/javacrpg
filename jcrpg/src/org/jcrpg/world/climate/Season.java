@@ -73,7 +73,9 @@ public class Season implements ConditionGiver {
 		}
 		int nightPercentage = 100-dayPercentage;
 		int pNew = (p+ (nightPercentage/2))%100;
-		return (int)( (pNew / (nightPercentage*1f) ) * -100 );
+		int r = (int)( (pNew / (nightPercentage*1f) ) * -100 );
+		if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
+		return r;
 	}
 	
 	public DayTime getDayTime(Time time) {
