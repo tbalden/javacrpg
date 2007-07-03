@@ -576,6 +576,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 					cRootNode.attachChild(s);
 				}
 				s.setLocalTranslation(new Vector3f(f[0],f[1],f[2]));
+				s.updateRenderState();
 			}
 			else {
 				// if there is no coordinates, detach the orbiter

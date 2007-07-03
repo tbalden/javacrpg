@@ -121,10 +121,10 @@ public class TestLensFlare extends SimpleGame {
         flare = LensFlareFactory.createBasicLensFlare("flare", tex);
         flare.setRootNode(rootNode);
         //lightNode.attachChild(flare);
-        /*Box box = new Box("my box", new Vector3f(0, 0, 0), 10, 10, 10);
+        Box box = new Box("my box", new Vector3f(0, 0, 0), 10, 10, 10);
         box.setModelBound(new BoundingBox());
         box.updateModelBound();
-        rootNode.attachChild(box);*/
+        rootNode.attachChild(box);
         rootNode.attachChild(lightNode);
 
         // notice that it comes at the end
