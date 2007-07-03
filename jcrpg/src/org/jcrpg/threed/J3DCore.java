@@ -65,7 +65,6 @@ import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -79,7 +78,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -384,11 +382,61 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public Spatial createSpatialForOrbiter(Orbiter o)
 	{
 		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
+			// lens flare code...
+	        LightNode lightNode;
+	        LensFlare flare;
+
+	        PointLight dr = new PointLight();
+	        dr.setEnabled(true);
+	        dr.setDiffuse(ColorRGBA.white);
+	        dr.setAmbient(ColorRGBA.gray);
+	        dr.setLocation(new Vector3f(0f, 0f, 0f));
+
+	        lightNode = new LightNode("light", lightState);
+	        lightNode.setLight(dr);
+
+	        lightNode.setTarget(cRootNode);
+	        lightNode.setLocalTranslation(new Vector3f(0f, 14f, 0f));
+
+	        // Setup the lensflare textures.
+	        TextureState[] tex = new TextureState[4];
+	        tex[0] = display.getRenderer().createTextureState();
+	        tex[0].setTexture(TextureManager.loadTexture("./data/flare/flare1.png",
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.RGBA8888,
+	                1.0f, true));
+	        tex[0].setEnabled(true);
+
+	        tex[1] = display.getRenderer().createTextureState();
+	        tex[1].setTexture(TextureManager.loadTexture("./data/flare/flare2.png",
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[1].setEnabled(true);
+
+	        tex[2] = display.getRenderer().createTextureState();
+	        tex[2].setTexture(TextureManager.loadTexture(("./data/flare/flare3.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[2].setEnabled(true);
+
+	        tex[3] = display.getRenderer().createTextureState();
+	        tex[3].setTexture(TextureManager.loadTexture(("./data/flare/flare4.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[3].setEnabled(true);
+
+	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
+	        flare.setRootNode(cRootNode);
+	        cRootNode.attachChild(lightNode);
+
+	        // notice that it comes at the end
+	        lightNode.attachChild(flare);
+	        
+	        return lightNode;
+			
+	        /*
 			TriMesh sun = new Sphere(o.id,40,40,30f);
 			cRootNode.attachChild(sun);
 			sun.setSolidColor(ColorRGBA.yellow);
 			sun.setLightCombineMode(TextureState.OFF);
 			return sun;
+			*/
 		} else
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
 			TriMesh moon = new Sphere(o.id,40,40,15f);
@@ -449,84 +497,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			spotLightNode.setLight(spotLight);
 			spotLightNode.setTarget(sRootNode);
 			skydomeLightState.attach(spotLight);
-
-	
-			// lens flare code...
-	        LightNode lightNode;
-	        LensFlare flare;
-
-	        PointLight dr = new PointLight();
-	        dr.setEnabled(true);
-	        dr.setDiffuse(ColorRGBA.white);
-	        dr.setAmbient(ColorRGBA.gray);
-	        dr.setLocation(new Vector3f(0f, 0f, 0f));
-	        lightState.setTwoSidedLighting(true);
-
-	        lightNode = new LightNode("light", lightState);
-	        lightNode.setLight(dr);
-
-	        Vector3f min2 = new Vector3f(-0.5f, -0.5f, -0.5f);
-	        Vector3f max2 = new Vector3f(0.5f, 0.5f, 0.5f);
-	        Box lightBox = new Box("box", min2, max2);
-	        lightBox.setModelBound(new BoundingBox());
-	        lightBox.updateModelBound();
-	        lightNode.attachChild(lightBox);
-	        lightNode.setTarget(cRootNode);
-	        lightNode.setLocalTranslation(new Vector3f(-14f, 14f, -14f));
-
-	        Box box2 = new Box("blocker", new Vector3f(-5, -5, -5), new Vector3f(5,
-	                5, 5));
-	        box2.setModelBound(new BoundingBox());
-	        box2.updateModelBound();
-	        box2.setLocalTranslation(new Vector3f(100, 0, 0));
-	        cRootNode.attachChild(box2);
-
-	        // clear the lights from this lightbox so the lightbox itself doesn't
-	        // get affected by light:
-	        lightBox.setLightCombineMode(LightState.OFF);
-
-	        // Setup the lensflare textures.
-	        TextureState[] tex = new TextureState[4];
-	        tex[0] = display.getRenderer().createTextureState();
-	        tex[0].setTexture(TextureManager.loadTexture(LensFlare.class
-	                .getClassLoader()
-	                .getResource("./data/flare/flare1.png"),
-	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.RGBA8888,
-	                1.0f, true));
-	        tex[0].setEnabled(true);
-
-	        tex[1] = display.getRenderer().createTextureState();
-	        tex[1].setTexture(TextureManager.loadTexture(LensFlare.class
-	                .getClassLoader()
-	                .getResource("./data/flare/flare2.png"),
-	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-	        tex[1].setEnabled(true);
-
-	        tex[2] = display.getRenderer().createTextureState();
-	        tex[2].setTexture(TextureManager.loadTexture(LensFlare.class
-	                .getClassLoader()
-	                .getResource("./data/flare/flare3.png"),
-	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-	        tex[2].setEnabled(true);
-
-	        tex[3] = display.getRenderer().createTextureState();
-	        tex[3].setTexture(TextureManager.loadTexture(LensFlare.class
-	                .getClassLoader()
-	                .getResource("./data/flare/flare4.png"),
-	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-	        tex[3].setEnabled(true);
-
-	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
-	        flare.setRootNode(cRootNode);
-	        //lightNode.attachChild(flare);
-	        //Box box = new Box("my box", new Vector3f(0, 0, 0), 10, 10, 10);
-	        //box.setModelBound(new BoundingBox());
-	        //box.updateModelBound();
-	        //rootNode.attachChild(box);
-	        cRootNode.attachChild(lightNode);
-
-	        // notice that it comes at the end
-	        lightNode.attachChild(flare);
 	        
 			return new LightNode[]{dirLightNode,spotLightNode};
 		} else
