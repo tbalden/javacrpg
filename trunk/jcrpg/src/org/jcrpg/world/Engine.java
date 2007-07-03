@@ -22,7 +22,6 @@
 package org.jcrpg.world;
 
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
 public class Engine implements Runnable {
