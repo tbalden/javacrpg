@@ -34,12 +34,12 @@ public class Time {
 
 	public float getCurrentDayPercent()
 	{
-		return  ((hour/(maxHour*1f))*100);
+		return ( (hour*(maxMinute+1)*(maxSecond+1) + minute*(maxSecond+1) + second) / ((maxHour+1)*(maxMinute+1)*(maxSecond+1)*1f) ) * 100f;
 	}
 
 	public int getCurrentYearPercent()
 	{
-		return  (int)((day/(maxDay*1f))*100);
+		return  (int)((day/((maxDay+1)*1f))*100);
 	}
 
 	public int getDay() {
@@ -146,9 +146,11 @@ public class Time {
 	{
 		int realSize = world.sizeX*world.magnification;
 		if (!world.sunLikeOnEarth) {
+			// sun doesnt go east-west, but west-east, worldX will be reversed for calculation
 			worldX = worldX - realSize;
 		}
-		int hourPlus = (worldX/realSize) * maxHour;
+		// position in west-east direction gives a percentage which determines what hour it is there from 0 hour
+		int hourPlus = (worldX/realSize) * (maxHour+1); 
 		Time r = new Time(this);
 		r.hour+=hourPlus;
 		if (r.hour>r.maxHour)
@@ -163,8 +165,9 @@ public class Time {
 		}
 		if (world.timeSwitchOnEquator)
 		{
+			// we must check for which hemisphere we are on, north/south?
 			if (worldZ> world.sizeZ*world.magnification / 2) 
-				r.inverseSeasons = true;
+				r.inverseSeasons = true; // we ar on south, inverse seasons
 			else
 				r.inverseSeasons = false;
 		}
