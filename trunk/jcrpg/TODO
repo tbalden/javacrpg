@@ -1,9 +1,12 @@
 
-[ ] lens flare!
-[X] orbiter Suns/Moons each should have own Light direction (see j3dCore for more details on TODO)
+[ ] LODModel -> distanceSwitchedNode -> jungle
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
+[X] lens flare!
+[X] orbiter Suns/Moons each should have own Light direction (see j3dCore for more details on TODO)
+
 
 [X] Time in engine -> skybox..
 

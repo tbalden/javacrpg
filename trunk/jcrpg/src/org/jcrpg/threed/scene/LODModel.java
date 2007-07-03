@@ -19,59 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jcrpg.world;
 
-import org.jcrpg.world.time.Time;
+package org.jcrpg.threed.scene;
 
-public class Engine implements Runnable {
+/**
+ * A set of models with distance to be seen from.
+ * @author pali
+ */
+public class LODModel {
 
-	boolean exit = false;
-	boolean pause = true;
-	Time worldMeanTime = null;
+	public SimpleModel[] models;
+	public float[] distances;
 	
-	//Engine
-	
-	public boolean timeChanged = false;
-	
-	public void run() {
-		System.out.println("ENGINE STARTED");
-		while (!exit)
-		{
-			try{Thread.sleep(1000);}catch (Exception ex){}
-			if (!pause) {
-				worldMeanTime.tick(100);
-				setTimeChanged(true);
-			}
-		}
-		System.out.println("ENGINE TERMINTATED");
-	}
-	
-	public void exit()
+	public LODModel(SimpleModel[] models, float[] distances)
 	{
-		System.out.println("ENGINE TERMINATING");
-		exit = true;
+		this.models = models;
+		this.distances = distances;
+		
 	}
-
-	public boolean isPause() {
-		return pause;
-	}
-
-	public void setPause(boolean pause) {
-		this.pause = pause;
-	}
-
-	public Time getWorldMeanTime() {
-		return worldMeanTime;
-	}
-
-	public void setWorldMeanTime(Time worldMeanTime) {
-		this.worldMeanTime = worldMeanTime;
-	}
-	
-	public synchronized void setTimeChanged(boolean state) {
-		timeChanged = state;
-	}
-
-	
-
 }
