@@ -22,11 +22,6 @@
 
 package org.jcrpg.threed;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,9 +54,6 @@ import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
 import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.climate.DayTime;
-import org.jcrpg.world.climate.impl.generic.Day;
-import org.jcrpg.world.climate.impl.generic.Night;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -73,6 +65,8 @@ import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
 import com.jme.light.LightNode;
@@ -83,18 +77,17 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
-import com.jme.scene.SharedNode;
-import com.jme.scene.Skybox;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
-import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.XMLparser.Converters.MaxToJme;
+import com.jmex.effects.LensFlare;
+import com.jmex.effects.LensFlareFactory;
 
 public class J3DCore extends com.jme.app.SimpleGame{
 
@@ -123,6 +116,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public int relativeX = 0, relativeY = 0, relativeZ = 0;
 	public boolean onSteep = false;
 	
+	public ModelLoader modelLoader = new ModelLoader(this);
 	
 	public Engine engine = null;
 	
@@ -358,125 +352,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	{
 		super.initSystem();
 		input = new ClassicInputHandler(this,cam);
-
 	}
 	
-	private static HashMap<String, Skybox> skyboxCache = new HashMap<String, Skybox>();
-    
-    public Skybox createSkybox(String prefix) {
-    	if (skyboxCache.containsKey(prefix)) return skyboxCache.get(prefix);
-
-		Skybox skybox = new Skybox("skybox", 500, 500, 500);
-
-		String path = "./data/sky/"+prefix+"/";
-		
-		Texture north = TextureManager.loadTexture(path+"sky.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture south = TextureManager.loadTexture(path+"sky.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture east = TextureManager.loadTexture(path+"sky.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture west = TextureManager.loadTexture(path+"sky.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture up = TextureManager.loadTexture(path+"top.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		Texture down = TextureManager.loadTexture(path+"top.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
-		//LightNode light = new LightNode();
-		//light.setLocalTranslation(new Vector3f(0,0,0));
-		//light.setTarget(skybox);
-		
-		
-		skybox.attachChild(new LightNode());
-		
-		skybox.setTexture(Skybox.NORTH, north);
-		skybox.setTexture(Skybox.WEST, west);
-		skybox.setTexture(Skybox.SOUTH, south);
-		skybox.setTexture(Skybox.EAST, east);
-		skybox.setTexture(Skybox.UP, up);
-		skybox.setTexture(Skybox.DOWN, down);
-		skyboxCache.put(prefix, skybox);
-		return skybox;
-
+	protected DisplaySystem getDisplay()
+	{
+		return display;
 	}
-
-    
-    HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
-    HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
-    HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
-
-    private Node loadNode(SimpleModel o)
-    {
-    	// the big shared node cache -> mem size lowerer and performance boost
-    	if (sharedNodeCache.get(o.modelName+o.textureName)!=null)
-    	{
-    		Node n = sharedNodeCache.get(o.modelName+o.textureName);
-    		return new SharedNode("node",n);
-    	}
-    	
-		MaxToJme maxtojme = new MaxToJme();
-		try {
-			// setting texture directory for 3ds models...
-			maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/").toURI().toURL());
-		}
-		 catch (IOException ioex)
-		 {
-			 
-		 }
-		Node node = null; // Where to dump mesh.
-		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
-		
-		try {
-			byte[] bytes = null;
-			bytes = binaryCache.get(o.modelName);
-			if (bytes==null)
-			{
-				FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
-				// Converts the file into a jme usable file
-				maxtojme.convert(is, bytearrayoutputstream);
-		 
-				// 	Used to convert the jme usable file to a TriMesh
-				bytes = (bytearrayoutputstream.toByteArray());
-				binaryCache.put(o.modelName,bytes);
-			    is.close();
-			}
-			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-			BinaryImporter binaryImporter = new BinaryImporter(); 
-		    //importer returns a Loadable, cast to Node
-		    node = (Node)binaryImporter.load(in);
-
-			if (o.textureName!=null)
-			{
-				Texture texture = (Texture)textureCache.get(o.textureName);
-				
-				if (texture==null) {
-					texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MM_LINEAR,
-		                    Texture.FM_LINEAR);
-	
-					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-					texture.setApply(Texture.AM_REPLACE);
-					texture.setRotation(qTexture);
-					textureCache.put(o.textureName, texture);
-				}
-
-				TextureState ts = display.getRenderer().createTextureState();
-				ts.setTexture(texture, 0);
-				//System.out.println("Texture!");
-				
-                ts.setEnabled(true);
-                
-				node.setRenderState(ts);
-				
-			}
-			sharedNodeCache.put(o.modelName+o.textureName, node);
-			return node;
-		} catch(Exception err)  {
-		    System.out.println("Error loading model:"+err);
-		    err.printStackTrace();
-		    return null;
-		}
-    	
-    }
     
 	protected Node[] loadObjects(SimpleModel[] objects)
     {
@@ -486,25 +367,20 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		if (objects!=null)
 		for (int i=0; i<objects.length; i++) {
 			if (objects[i]==null) continue;
-			Node node = loadNode(objects[i]); // Where to dump mesh.
+			Node node = modelLoader.loadNode(objects[i]); // Where to dump mesh.
 			r[i] = node;
 		}
 		return r;
     }
 	
-	
-	@Override
-	protected void simpleInitGame() {
-		//cam.setFrustum(1.0f, 1000.0f, -0.55f, 0.55f, 0.4125f, -0.4125f);
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
-		setCalculatedCameraLocation();
-		render();
-		engine.setPause(false);
-	}
-	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
 	
+	/**
+	 * Creates the spatials (spheres) for a world orbiter
+	 * @param o
+	 * @return
+	 */
 	public Spatial createSpatialForOrbiter(Orbiter o)
 	{
 		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
@@ -515,105 +391,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			return sun;
 		} else
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
-			TriMesh sun = new Sphere(o.id,40,40,15f);
-			cRootNode.attachChild(sun);
-			sun.setSolidColor(ColorRGBA.gray);
-			sun.setLightCombineMode(TextureState.OFF);
-			return sun;
-		} 
-		return null;
+			TriMesh moon = new Sphere(o.id,40,40,15f);
 			
-	}
-	public LightNode[] createLightsForOrbiter(Orbiter o)
-	{
-		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
-			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-			LightNode ln = new LightNode("Sun light "+o.id, ls);		
-			DirectionalLight sunLight = new DirectionalLight();
-			sunLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			sunLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			sunLight.setDirection(new Vector3f(0,0,1));
-			sunLight.setEnabled(true);
-			ln.setLight(sunLight);
-			ln.setTarget(cRootNode);
-
-			LightState spotLightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-			LightNode spotLightNode = new LightNode("Sun spotlight "+o.id, spotLightState);		
-			PointLight spotLight = new PointLight();
-			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			//spotLight.setDirection(new Vector3f(0,0,1));
-			spotLight.setEnabled(true);
-			//spotLight.setAngle(90);
-			spotLightNode.setLight(spotLight);
-			spotLightNode.setTarget(cRootNode);
-			
-			return new LightNode[]{ln,spotLightNode};
-		} else
-		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
-			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-			LightNode ln = new LightNode("Moon light "+o.id, ls);		
-			DirectionalLight sunLight = new DirectionalLight();
-			sunLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			sunLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			sunLight.setDirection(new Vector3f(0,0,1));
-			sunLight.setEnabled(true);
-			ln.setLight(sunLight);
-			ln.setTarget(cRootNode);
-
-			LightState spotLightState = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-			LightNode spotLightNode = new LightNode("Sun spotlight "+o.id, spotLightState);		
-			SpotLight spotLight = new SpotLight();
-			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			spotLight.setDirection(new Vector3f(0,0,1));
-			spotLight.setEnabled(true);
-			spotLight.setAngle(180);
-			spotLightNode.setLight(spotLight);
-			spotLightNode.setTarget(cRootNode);
-			
-			return new LightNode[]{ln,spotLightNode};
-		}
-		return null;
-			
-	}
-	
-	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
-	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
-	
-	
-	//Skybox currentSkyBox = null;
-	Sphere skySphere = null;
-	LightNode sunNode = null;
-	
-	Node cRootNode = new Node(); 
-	
-	public void render()
-	{
-        
-		rootNode.attachChild(cRootNode);
-        cRootNode.setLocalTranslation(rootNode.getLocalTranslation());
-
-        long timeS = System.currentTimeMillis();
-		
-		System.out.println("**** RENDER ****");
-		
-		int already = 0;
-		int newly = 0;
-		int removed = 0;
-
-		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
-		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
-
-		lightState.detachAll();
-		
-		if (skySphere==null)
-		{
-			skySphere = new Sphere("SKY_SPHERE",40,40,1000f);
-			rootNode.attachChild(skySphere);
-			//skySphere.setSolidColor(ColorRGBA.blue);
-			skySphere.setTextureMode(TextureState.RS_ALPHA);
-			Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
+			Texture texture = TextureManager.loadTexture("./data/orbiters/moon.jpg",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
 			
 			if (texture!=null) {
@@ -627,16 +407,182 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				
 				state.setEnabled(true);
 	            
-				skySphere.setRenderState(state);
+				moon.setRenderState(state);
 			}
-			//skySphere.setLightCombineMode(TextureState.COMBINE_FIRST);
-			skySphere.updateRenderState();
-		}
-		
-		skySphere.setLocalTranslation(cam.getLocation());
-		
+			moon.updateRenderState();
 
-		// iterating through world's sky orbiter
+			cRootNode.attachChild(moon);
+			moon.setLightCombineMode(TextureState.OFF);
+			return moon;
+		} 
+		return null;
+			
+	}
+	
+	LightState skydomeLightState = null;
+	
+	/**
+	 * Creates the lights for a world orbiter
+	 * @param o
+	 * @return
+	 */
+	public LightNode[] createLightsForOrbiter(Orbiter o)
+	{
+		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
+			LightNode dirLightNode = new LightNode("Sun light "+o.id, lightState);		
+			DirectionalLight dirLight = new DirectionalLight();
+			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			dirLight.setDirection(new Vector3f(0,0,1));
+			dirLight.setEnabled(true);
+			dirLightNode.setLight(dirLight);
+			dirLightNode.setTarget(cRootNode);
+			lightState.attach(dirLight);
+
+			LightNode spotLightNode = new LightNode("Sun spotlight "+o.id, skydomeLightState);		
+			PointLight spotLight = new PointLight();
+			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			//spotLight.setDirection(new Vector3f(0,0,1));
+			spotLight.setEnabled(true);
+			//spotLight.setAngle(90);
+			spotLightNode.setLight(spotLight);
+			spotLightNode.setTarget(sRootNode);
+			skydomeLightState.attach(spotLight);
+
+	
+			// lens flare code...
+	        LightNode lightNode;
+	        LensFlare flare;
+
+	        PointLight dr = new PointLight();
+	        dr.setEnabled(true);
+	        dr.setDiffuse(ColorRGBA.white);
+	        dr.setAmbient(ColorRGBA.gray);
+	        dr.setLocation(new Vector3f(0f, 0f, 0f));
+	        lightState.setTwoSidedLighting(true);
+
+	        lightNode = new LightNode("light", lightState);
+	        lightNode.setLight(dr);
+
+	        Vector3f min2 = new Vector3f(-0.5f, -0.5f, -0.5f);
+	        Vector3f max2 = new Vector3f(0.5f, 0.5f, 0.5f);
+	        Box lightBox = new Box("box", min2, max2);
+	        lightBox.setModelBound(new BoundingBox());
+	        lightBox.updateModelBound();
+	        lightNode.attachChild(lightBox);
+	        lightNode.setTarget(cRootNode);
+	        lightNode.setLocalTranslation(new Vector3f(-14f, 14f, -14f));
+
+	        Box box2 = new Box("blocker", new Vector3f(-5, -5, -5), new Vector3f(5,
+	                5, 5));
+	        box2.setModelBound(new BoundingBox());
+	        box2.updateModelBound();
+	        box2.setLocalTranslation(new Vector3f(100, 0, 0));
+	        cRootNode.attachChild(box2);
+
+	        // clear the lights from this lightbox so the lightbox itself doesn't
+	        // get affected by light:
+	        lightBox.setLightCombineMode(LightState.OFF);
+
+	        // Setup the lensflare textures.
+	        TextureState[] tex = new TextureState[4];
+	        tex[0] = display.getRenderer().createTextureState();
+	        tex[0].setTexture(TextureManager.loadTexture(LensFlare.class
+	                .getClassLoader()
+	                .getResource("./data/flare/flare1.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.RGBA8888,
+	                1.0f, true));
+	        tex[0].setEnabled(true);
+
+	        tex[1] = display.getRenderer().createTextureState();
+	        tex[1].setTexture(TextureManager.loadTexture(LensFlare.class
+	                .getClassLoader()
+	                .getResource("./data/flare/flare2.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[1].setEnabled(true);
+
+	        tex[2] = display.getRenderer().createTextureState();
+	        tex[2].setTexture(TextureManager.loadTexture(LensFlare.class
+	                .getClassLoader()
+	                .getResource("./data/flare/flare3.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[2].setEnabled(true);
+
+	        tex[3] = display.getRenderer().createTextureState();
+	        tex[3].setTexture(TextureManager.loadTexture(LensFlare.class
+	                .getClassLoader()
+	                .getResource("./data/flare/flare4.png"),
+	                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
+	        tex[3].setEnabled(true);
+
+	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
+	        flare.setRootNode(cRootNode);
+	        //lightNode.attachChild(flare);
+	        //Box box = new Box("my box", new Vector3f(0, 0, 0), 10, 10, 10);
+	        //box.setModelBound(new BoundingBox());
+	        //box.updateModelBound();
+	        //rootNode.attachChild(box);
+	        cRootNode.attachChild(lightNode);
+
+	        // notice that it comes at the end
+	        lightNode.attachChild(flare);
+	        
+			return new LightNode[]{dirLightNode,spotLightNode};
+		} else
+		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
+			LightNode dirLightNode = new LightNode("Moon light "+o.id, lightState);		
+			DirectionalLight dirLight = new DirectionalLight();
+			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			dirLight.setDirection(new Vector3f(0,0,1));
+			dirLight.setEnabled(true);
+			dirLightNode.setLight(dirLight);
+			dirLightNode.setTarget(cRootNode);
+			lightState.attach(dirLight);
+
+			LightNode spotLightNode = new LightNode("Moon spotlight "+o.id, skydomeLightState);		
+			SpotLight spotLight = new SpotLight();
+			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			spotLight.setDirection(new Vector3f(0,0,1));
+			spotLight.setEnabled(true);
+			spotLight.setAngle(180);
+			spotLightNode.setLight(spotLight);
+			spotLightNode.setTarget(sRootNode);
+			skydomeLightState.attach(spotLight);
+			
+			return new LightNode[]{dirLightNode,spotLightNode};
+		}
+		return null;
+			
+	}
+	
+	@Override
+	protected void initGame() {
+		// TODO Auto-generated method stub
+		super.initGame();
+	}
+
+	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
+	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
+	
+	Node cRootNode = new Node(); 
+	/** skyroot */
+	Node sRootNode = new Node(); 
+	Sphere skySphere = null;
+	
+	/**
+	 * Updates all time related things in the 3d world
+	 */
+	public void updateTimeRelated()
+	{
+		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
+		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
+		/*
+		 * Orbiters
+		 */
+		// iterating through world's sky orbiters
 		for (Orbiter orb : world.getOrbiterHandler().orbiters.values()) {
 			if (orbiters3D.get(orb.id)==null)
 			{
@@ -667,47 +613,81 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			}
 			if (l!=null)
 			{
+				System.out.println("ORBITER LIGHT "+orb.id);
 				
 				float[] f2 = orb.getLightDirection(localTime, conditions);
 				if (f2!=null)
 				{
+					System.out.println("ORBITER LIGHT "+orb.id +" -- ON");
+					// 0. is directional light for the planet surface
 					l[0].getLight().setEnabled(true);
 					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(f2[0],f2[1],f2[2]));
 					l[0].setTarget(cRootNode);
+					lightState.attach(l[0].getLight());
 					float v = orb.getLightPower(localTime, conditions);
 					l[0].getLight().setDiffuse(new ColorRGBA(v, v, v, 1));
 					l[0].getLight().setAmbient(new ColorRGBA(v, v, v, 1));
 					l[0].getLight().setSpecular(new ColorRGBA(v, v, v, 1));
+					l[0].updateRenderState();
 
-				
+					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
-					//((SpotLight)l[1].getLight()).setDirection(new Vector3f(f2[0],f2[1],f2[2]));
-					l[1].setTarget(skySphere);
+					l[1].setTarget(sRootNode);
+					skydomeLightState.attach(l[1].getLight());
 					ColorRGBA c = new ColorRGBA(v,v,v,1);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
 					l[1].setLocalTranslation(new Vector3f(f[0],f[1],f[2]));
+					l[1].updateRenderState();
 				
 				} else {
-					//l.setTarget(null);
+					System.out.println("ORBITER LIGHT "+orb.id +" -- OFF");
+					// switching of the two lights
 					l[0].getLight().setEnabled(false);
 					l[1].getLight().setEnabled(false);
 				}
 			}
 		}
+
+		// SKYSPHERE
+		// moving skysphere with camera
+		Vector3f sV3f = new Vector3f(cam.getLocation());
+		sV3f.y-=600;
+		skySphere.setLocalTranslation(sV3f);
+		// Animating skySphere rotated...
+		Quaternion qSky = new Quaternion();
+		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
+		skySphere.setLocalRotation(qSky);
+	    
+	    cRootNode.updateRenderState();
+		rootNode.updateRenderState();
+		
+	}
+	
+	public void render()
+	{
+        
+        //cRootNode.setLocalTranslation(rootNode.getLocalTranslation());
+
+        long timeS = System.currentTimeMillis();
+		
+		System.out.println("**** RENDER ****");
+		
+		int already = 0;
+		int newly = 0;
+		int removed = 0;
+
+		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
+		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
 		
 		
-		
-		DayTime dT = conditions.getDayTime();
 		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
 
+		
 		/*
-		 * Animating skySphere rotated...
+		 * Render cubes
 		 */
-		Quaternion qSky = new Quaternion();
-		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(1,0,1));
-		skySphere.setLocalRotation(qSky);
 		
     	// get a specific part of the area to render
     	RenderedCube[] cubes = RenderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
@@ -758,11 +738,28 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    	}
 	    }
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
-		cRootNode.updateRenderState();
+
+	    cRootNode.updateRenderState();
+		rootNode.updateRenderState();
+	    
+		updateTimeRelated();
+
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+
 	}
 	
 
+	/**
+	 * Renders a set of node into 3d space, rotating, positioning them.
+	 * @param n Nodes
+	 * @param cube the r.cube parent of the nodes, needed for putting the rendered node as child into it.
+	 * @param x X cubesized distance from current relativeX
+	 * @param y Y cubesized distance from current relativeX
+	 * @param z Z cubesized distance from current relativeX
+	 * @param direction Direction
+	 * @param horizontalRotation Horizontal rotation
+	 * @param scale Scale
+	 */
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
 		
@@ -798,6 +795,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
 	
+	/**
+	 * Renders one side into 3d space.
+	 * @param cube
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param direction
+	 * @param side
+	 */
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side)
 	{
 		Integer n3dType = hmAreaSubType3dType.get(side.subtype.id);
@@ -923,6 +929,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 	}
 	
+	/**
+	 * Sets the camera to its proper current position
+	 */
 	public void setCalculatedCameraLocation()
 	{
 		cam.setLocation(getCurrentLocation());
@@ -935,13 +944,19 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 	
+	/**
+	 * Tells if any of a set of sides is of a set of sideSubTypes. 
+	 * @param sides
+	 * @param classNames
+	 * @return
+	 */
 	public boolean hasSideOfInstance(Side[] sides, HashSet<Class> classNames)
 	{
 		for (int i=0; i<sides.length; i++)
 		{
 			if (sides[i]!=null)
 			{
-				System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+				//System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
 				
 				if (classNames.contains(sides[i].subtype.getClass()))
 				{
@@ -953,6 +968,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 	}
 
+	/**
+	 * Tells if the cube has any side of a set of sideSubTypes.
+	 * @param c
+	 * @param classNames
+	 * @return
+	 */
 	public int hasSideOfInstanceInAnyDir(Cube c, HashSet<Class> classNames)
 	{
 		for (int j=0; j<c.sides.length; j++)
@@ -963,7 +984,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			{
 				if (sides[i]!=null)
 				{
-					System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+					//System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
 					if (classNames.contains(sides[i].subtype.getClass()))
 					{
 						return j;
@@ -1003,8 +1024,18 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		relativeZ = coords[2];
 	}
 	
+	// putting common sidetypes together
+	/**
+	 * You cannot walk (horizontal) through these.
+	 */
 	public static HashSet<Class> notWalkable = new HashSet<Class>();
+	/**
+	 * You cannot pass through this (any direction).
+	 */
 	public static HashSet<Class> notPassable = new HashSet<Class>();
+	/**
+	 * You get onto steep on these.
+	 */
 	public static HashSet<Class> climbers = new HashSet<Class>();
 	static
 	{
@@ -1016,6 +1047,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		climbers.add(Climbing.class);
 	}
 	
+	/**
+	 * Tries to move in directions, and sets coords if successfull
+	 * @param from From coordinates (world coords)
+	 * @param fromRel From coordinates relative (3d space coords)
+	 * @param directions A set of directions to move into
+	 */
 	public void move(int[] from, int[] fromRel, int[] directions)
 	{
 		int[] newCoords = from;
@@ -1240,6 +1277,72 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	protected void quit() {
 		engine.exit();
 		super.quit();
+	}
+
+	@Override
+	protected void simpleInitGame() {
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
+		rootNode.attachChild(cRootNode);
+		rootNode.attachChild(sRootNode);
+		
+		lightState.detachAll();
+		skydomeLightState = getDisplay().getRenderer().createLightState();
+
+		cRootNode.setRenderState(lightState);
+		sRootNode.setRenderState(skydomeLightState);
+		
+		/*
+		 * Skysphere
+		 */
+		skySphere = new Sphere("SKY_SPHERE",20,20,1000f);
+		sRootNode.attachChild(skySphere);
+		skySphere.setTextureMode(TextureState.RS_ALPHA);
+		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
+                Texture.FM_LINEAR);
+		
+		if (texture!=null) {
+
+			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.AM_MODULATE);
+			texture.setRotation(qTexture);
+			TextureState state = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+			state.setTexture(texture,0);
+			state.setEnabled(true);
+			skySphere.setRenderState(state);
+		}
+		skySphere.updateRenderState();
+		
+		//
+		
+		setCalculatedCameraLocation();
+        cam.update();
+		updateCam();
+	
+		render(); // couldn't find out why render have to be called twice...
+		render();
+		engine.setPause(false);
+	}
+	
+	
+
+	@Override
+	protected void simpleUpdate() {
+		super.simpleUpdate();
+		lightState.apply();
+		skydomeLightState.apply();
+		if (engine.timeChanged) 
+		{
+			engine.setTimeChanged(false);
+			updateTimeRelated();
+		}
+	}
+
+	@Override
+	protected void simpleRender() {
+		// TODO Auto-generated method stub
+		super.simpleRender();
+		lightState.apply();
+		skydomeLightState.apply();
 	}
 
 }

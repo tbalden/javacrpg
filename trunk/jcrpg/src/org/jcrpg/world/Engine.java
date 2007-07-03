@@ -21,6 +21,8 @@
  */
 package org.jcrpg.world;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
 public class Engine implements Runnable {
@@ -28,14 +30,20 @@ public class Engine implements Runnable {
 	boolean exit = false;
 	boolean pause = true;
 	Time worldMeanTime = null;
-
+	J3DCore core = null;
+	
+	//Engine
+	
+	public boolean timeChanged = false;
+	
 	public void run() {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
-				worldMeanTime.tick(1000);
+				worldMeanTime.tick(100);
+				setTimeChanged(true);
 			}
 		}
 		System.out.println("ENGINE TERMINTATED");
@@ -61,6 +69,10 @@ public class Engine implements Runnable {
 
 	public void setWorldMeanTime(Time worldMeanTime) {
 		this.worldMeanTime = worldMeanTime;
+	}
+	
+	public synchronized void setTimeChanged(boolean state) {
+		timeChanged = state;
 	}
 
 	
