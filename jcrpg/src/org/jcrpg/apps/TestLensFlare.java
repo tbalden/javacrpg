@@ -84,16 +84,17 @@ public class TestLensFlare extends SimpleGame {
 
         Vector3f min2 = new Vector3f(-0.5f, -0.5f, -0.5f);
         Vector3f max2 = new Vector3f(0.5f, 0.5f, 0.5f);
-        Box lightBox = new Box("box", min2, max2);
-        lightBox.setModelBound(new BoundingBox());
-        lightBox.updateModelBound();
-        lightNode.attachChild(lightBox);
+        //Box lightBox = new Box("box", min2, max2);
+        //lightBox.setModelBound(new BoundingBox());
+        //lightBox.updateModelBound();
+        //lightNode.attachChild(lightBox);
         lightNode.setTarget(rootNode);
         lightNode.setLocalTranslation(new Vector3f(-14f, 14f, -14f));
 
         // clear the lights from this lightbox so the lightbox itself doesn't
         // get affected by light:
-        lightBox.setLightCombineMode(LightState.OFF);
+        
+        //lightBox.setLightCombineMode(LightState.OFF);
 
         // Setup the lensflare textures.
         TextureState[] tex = new TextureState[4];
@@ -120,7 +121,7 @@ public class TestLensFlare extends SimpleGame {
 
         flare = LensFlareFactory.createBasicLensFlare("flare", tex);
         flare.setRootNode(rootNode);
-        //lightNode.attachChild(flare);
+        lightNode.attachChild(flare);
         Box box = new Box("my box", new Vector3f(0, 0, 0), 10, 10, 10);
         box.setModelBound(new BoundingBox());
         box.updateModelBound();
@@ -128,7 +129,7 @@ public class TestLensFlare extends SimpleGame {
         rootNode.attachChild(lightNode);
 
         // notice that it comes at the end
-        lightNode.attachChild(flare);
+        //lightNode.attachChild(flare);
 
     }
 

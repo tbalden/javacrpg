@@ -31,6 +31,7 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.SimpleModel;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
@@ -52,6 +53,8 @@ public class ModelLoader {
     HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
     HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
+    
+    int counter=0;
 
     public Node loadNode(SimpleModel o)
     {
@@ -59,7 +62,10 @@ public class ModelLoader {
     	if (sharedNodeCache.get(o.modelName+o.textureName)!=null)
     	{
     		Node n = sharedNodeCache.get(o.modelName+o.textureName);
-    		return new SharedNode("node",n);
+    		Node r =  new SharedNode("node"+counter++,n);
+    		r.setModelBound(new BoundingBox());
+            r.updateModelBound();
+            return r;
     	}
     	
 		MaxToJme maxtojme = new MaxToJme();
@@ -117,6 +123,8 @@ public class ModelLoader {
 				
 			}
 			sharedNodeCache.put(o.modelName+o.textureName, node);
+			node.setModelBound(new BoundingBox());
+			node.updateModelBound();
 			return node;
 		} catch(Exception err)  {
 		    System.out.println("Error loading model:"+err);

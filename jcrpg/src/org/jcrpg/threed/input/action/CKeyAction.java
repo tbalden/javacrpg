@@ -3,6 +3,7 @@ package org.jcrpg.threed.input.action;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.KeyInputAction;
+import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
@@ -42,7 +43,11 @@ public abstract class CKeyAction extends KeyInputAction{
 	{
 		turnDirection(steps, from, toReach,false);
 	}
-	protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
+	
+	//	temporary matrix to hold rotation
+    //private static final Matrix3f incr = new Matrix3f();
+    
+    protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
 	{
 		float skipStep = 0f;
     	for (float i=0; i<=steps; i++)
@@ -58,10 +63,19 @@ public abstract class CKeyAction extends KeyInputAction{
     		x += (1/steps) * (steps-i) * from.x;
     		y += (1/steps) * (steps-i) * from.y;
     		z += (1/steps) * (steps-i) * from.z;
+
+/*            incr.fromAngleNormalAxis(-90/steps, camera.getUp());
+            incr.mult(camera.getUp(), camera.getUp());
+            incr.mult(camera.getLeft(), camera.getLeft());
+            incr.mult(camera.getDirection(), camera.getDirection());*/
     		
     		camera.setDirection(new Vector3f(x,y,z));
+    		// TODO !!!
+    		camera.setLeft(new Vector3f(0,0,0));
+    		camera.setUp(new Vector3f(0,1,0));
     		
             camera.update();
+            camera.normalize();
             handler.core.updateCam();
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
@@ -92,6 +106,7 @@ public abstract class CKeyAction extends KeyInputAction{
     		camera.setLocation(new Vector3f(x,y,z));
     		
             camera.update();
+            camera.normalize();
             handler.core.updateCam();
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
