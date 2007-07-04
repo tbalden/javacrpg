@@ -1,8 +1,13 @@
 
-[ ] LODModel -> distanceSwitchedNode -> jungle
-
+[ ] LODModel -> distanceSwitchedNode -> jungle, increase FPS with less detailed models
+	[ ] ImposterNode http://www.jmonkeyengine.com/wiki/doku.php?id=imposternode - lowest detail - rendered
+	[ ] Billboard http://www.jmonkeyengine.com/wiki/doku.php?id=billboardnode&s=billboard
+	
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
+[ ] ? Strip green from trees, create new Model type, SimpleTreeModel. Would define texture spatial type, plane.
+	alpha state, texture etc.
 
 [X] lens flare!
 [X] orbiter Suns/Moons each should have own Light direction (see j3dCore for more details on TODO)
