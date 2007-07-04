@@ -22,7 +22,7 @@
 
 package org.jcrpg.threed.scene;
 
-public class SimpleModel {
+public class SimpleModel extends Model {
 
 	public String modelName, textureName;
 	

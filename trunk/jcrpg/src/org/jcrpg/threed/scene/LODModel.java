@@ -26,12 +26,17 @@ package org.jcrpg.threed.scene;
  * A set of models with distance to be seen from.
  * @author pali
  */
-public class LODModel {
+public class LODModel extends Model {
 
 	public SimpleModel[] models;
-	public float[] distances;
+	public float[][] distances;
 	
-	public LODModel(SimpleModel[] models, float[] distances)
+	/**
+	 * LODModel
+	 * @param models The models to be put together
+	 * @param distances The distance Min Max floats in an array
+	 */
+	public LODModel(SimpleModel[] models, float[][] distances)
 	{
 		this.models = models;
 		this.distances = distances;

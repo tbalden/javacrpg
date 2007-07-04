@@ -14,7 +14,7 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	/**
 	 * @param objects Objects always rendered.
 	 */
-	public RenderedHashRotatedSide(SimpleModel[] objects)
+	public RenderedHashRotatedSide(Model[] objects)
 	{
 		super(objects);
 	}
