@@ -187,11 +187,11 @@ public class ModelLoader {
 				AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 				as.setEnabled(true);
 				as.setBlendEnabled(true);
-				as.setSrcFunction(AlphaState.SB_DST_ALPHA);//SRC_ALPHA);
+				as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 				as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 				as.setReference(0.0f);
 				as.setTestEnabled(true);
-				as.setTestFunction(AlphaState.TF_GEQUAL);
+				//as.setTestFunction(AlphaState.TF_GEQUAL);
 				node.setRenderState(as);
 
 				sharedNodeCache.put(o.modelName+o.textureName, node);
