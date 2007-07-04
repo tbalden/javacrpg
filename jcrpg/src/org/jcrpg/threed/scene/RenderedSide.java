@@ -26,11 +26,11 @@ package org.jcrpg.threed.scene;
 public class RenderedSide {
 
 	
-	public SimpleModel[] objects;
+	public Model[] objects;
 	
 	public RenderedCube parent = null;
 	
-	public RenderedSide(SimpleModel[] objects)
+	public RenderedSide(Model[] objects)
 	{
 		this.objects = objects;
 	}

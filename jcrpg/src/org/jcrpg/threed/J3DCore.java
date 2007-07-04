@@ -33,6 +33,10 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
+import org.jcrpg.threed.scene.BillboardModel;
+import org.jcrpg.threed.scene.ImposterModel;
+import org.jcrpg.threed.scene.LODModel;
+import org.jcrpg.threed.scene.Model;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedContinuousSide;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -64,7 +68,11 @@ import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GLContext;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -75,9 +83,17 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.TextureRenderer;
+import com.jme.scene.BillboardNode;
+import com.jme.scene.DistanceSwitchModel;
+import com.jme.scene.ImposterNode;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
+import com.jme.scene.SwitchNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.lod.DiscreteLodNode;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -276,7 +292,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id, new Integer(24));
+
 		
+		LODModel lod_jungleMiddleSmall = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_middle_small.3ds",null)},new float[][]{{0f,6f}});
+
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{new SimpleModel("sides/wall_thick.3ds", null)},
@@ -307,13 +326,20 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				));
 
 		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground_cont_grass.3ds",null));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("sides/ground_cont_grass.3ds",null),jungleMiddleSmall}));
+		
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/tgrass1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/ground_road_stone_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/ground_desert_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/ground_arctic_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/ground_jung_grass.3ds",null),new SimpleModel("sides/jungle_middle_small.3ds",null)}));
+		
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new Model[]{new SimpleModel("sides/ground_jung_grass.3ds",null),
+				lod_jungleMiddleSmall
+				//new SimpleModel("sides/jungle_middle_small.3ds",null)
+		
+		}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
@@ -357,7 +383,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		return display;
 	}
     
-	protected Node[] loadObjects(SimpleModel[] objects)
+	protected Node[] loadObjects(Model[] objects)
     {
 		
 		Node[] r = null;
@@ -365,8 +391,54 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		if (objects!=null)
 		for (int i=0; i<objects.length; i++) {
 			if (objects[i]==null) continue;
-			Node node = modelLoader.loadNode(objects[i]); // Where to dump mesh.
-			r[i] = node;
+			if (objects[i] instanceof SimpleModel) 
+			{
+				Node node = modelLoader.loadNode((SimpleModel)objects[i]); // Where to dump mesh.
+				r[i] = node;
+			} else
+			// ** LODModel **
+			if (objects[i] instanceof LODModel)
+			{
+				LODModel lm = (LODModel)objects[i];
+				
+				int c=0; // counter
+				DistanceSwitchModel dsm = new DistanceSwitchModel(lm.models.length);
+				DiscreteLodNode lodNode = new DiscreteLodNode("dln",dsm);
+				for (Model m : lm.models) {
+					Node node = modelLoader.loadNode((SimpleModel)m);
+					if (m instanceof BillboardModel)
+					{
+
+						BillboardNode iNode = new BillboardNode("a");
+						iNode.attachChild(node);
+						iNode.setAlignment(BillboardNode.AXIAL_Z); 
+					    node = iNode;
+					}
+					if (m instanceof ImposterModel)
+					{
+						// TODO imposter node, if FBO present (?) TEST
+						/*						
+						 * boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;*/
+						/*TextureRenderer tRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(
+								1, 1, TextureRenderer.RENDER_TEXTURE_RECTANGLE);
+						tRenderer.getCamera().setLocation(new Vector3f(0, 0, 75f));
+						tRenderer.setBackgroundColor(new ColorRGBA(0, 0, 0, 0f));*/
+						boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;
+						if (FBOEnabled)
+						{
+							ImposterNode iNode = new ImposterNode("a",10,10,10);
+							iNode.attachChild(node);
+						    node = iNode;
+						}
+
+					}
+					lodNode.attachChildAt(node,c);
+					dsm.setModelDistance(c, lm.distances[c][0], lm.distances[c][1]);
+					c++;
+				}
+				
+				r[i] = lodNode;
+			}
 		}
 		return r;
     }
