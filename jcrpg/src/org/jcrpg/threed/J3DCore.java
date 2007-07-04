@@ -90,6 +90,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -315,14 +316,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
 				));
 
+
 		hm3dTypeRenderedSide.put(new Integer(7), new RenderedTopSide(
 				//new SimpleModel[]{},
 				new SimpleModel[]{new SimpleModel("sides/ceiling_pattern1.3ds",null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
 				));
 
+		//hm3dTypeRenderedSide.put(new Integer(7), new RenderedSide("mtl/trans3.3ds",null));
+
 		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground_cont_grass.3ds",null));
-		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("mtl/trans3.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("sides/ground_cont_grass.3ds",null),jungleMiddleSmall}));
 		
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/tgrass1.3ds",null));
@@ -1342,6 +1345,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
         //cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
+		AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+		as.setEnabled(true);
+		as.setBlendEnabled(true);
+		as.setSrcFunction(AlphaState.SB_DST_ALPHA);//SRC_ALPHA);
+		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		as.setReference(0.0f);
+		as.setTestEnabled(true);
+		as.setTestFunction(AlphaState.TF_GEQUAL);
+		rootNode.setRenderState(as);
 
 		/*fs = display.getRenderer().createFogState();
         fs.setDensity(0.5f);
