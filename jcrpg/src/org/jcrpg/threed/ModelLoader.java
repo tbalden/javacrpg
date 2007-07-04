@@ -35,10 +35,14 @@ import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
+import com.jme.scene.TriMesh;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.model.XMLparser.Converters.MaxToJme;
+import com.jmex.model.XMLparser.Converters.ObjToJme;
 
 public class ModelLoader {
 
@@ -68,69 +72,138 @@ public class ModelLoader {
             return r;
     	}
     	
-		MaxToJme maxtojme = new MaxToJme();
-		try {
-			// setting texture directory for 3ds models...
-			maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/").toURI().toURL());
-		}
-		 catch (IOException ioex)
-		 {
-			 
-		 }
-		Node node = null; // Where to dump mesh.
-		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
-		
-		try {
-			byte[] bytes = null;
-			bytes = binaryCache.get(o.modelName);
-			if (bytes==null)
-			{
-				FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
-				// Converts the file into a jme usable file
-				maxtojme.convert(is, bytearrayoutputstream);
-		 
-				// 	Used to convert the jme usable file to a TriMesh
-				bytes = (bytearrayoutputstream.toByteArray());
-				binaryCache.put(o.modelName,bytes);
-			    is.close();
+    	if (o.modelName.endsWith(".obj"))
+    	{
+    		ObjToJme objtojme = new ObjToJme();
+			try {
+				objtojme.setProperty("mtllib",new File("./data/mtl/").toURI().toURL());
+				objtojme.setProperty("texdir",new File("./data/mtl/").toURI().toURL());
 			}
-			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-			BinaryImporter binaryImporter = new BinaryImporter(); 
-		    //importer returns a Loadable, cast to Node
-		    node = (Node)binaryImporter.load(in);
-
-			if (o.textureName!=null)
-			{
-				Texture texture = (Texture)textureCache.get(o.textureName);
+			 catch (IOException ioex)
+			 {
+				 
+			 }
+				Node node = null; // Where to dump mesh.
+				ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 				
-				if (texture==null) {
-					texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MM_LINEAR,
-		                    Texture.FM_LINEAR);
-	
-					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-					texture.setApply(Texture.AM_REPLACE);
-					texture.setRotation(J3DCore.qTexture);
-					textureCache.put(o.textureName, texture);
+				try {
+					byte[] bytes = null;
+					bytes = binaryCache.get(o.modelName);
+					if (bytes==null)
+					{
+						FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
+						// Converts the file into a jme usable file
+						objtojme.convert(is, bytearrayoutputstream);
+				 
+						// 	Used to convert the jme usable file to a TriMesh
+						bytes = (bytearrayoutputstream.toByteArray());
+						binaryCache.put(o.modelName,bytes);
+					    is.close();
+					}
+					ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+					BinaryImporter binaryImporter = new BinaryImporter(); 
+				    //importer returns a Loadable, cast to Node
+					node = new Node();
+					TriMesh tri = (TriMesh)binaryImporter.load(in);
+					node.attachChild(tri);
+					
+					AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+					as.setEnabled(true);
+					as.setBlendEnabled(true);
+					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+					as.setReference(0.0f);
+					as.setTestEnabled(true);
+					as.setTestFunction(AlphaState.TF_GEQUAL);
+					tri.setRenderState(as);
+					
+					sharedNodeCache.put(o.modelName+o.textureName, node);
+					node.setModelBound(new BoundingBox());
+					node.updateModelBound();
+					return node;
+				} catch(Exception err)  {
+				    System.out.println("Error loading model:"+err);
+				    err.printStackTrace();
+				    return null;
 				}
-
-				TextureState ts = core.getDisplay().getRenderer().createTextureState();
-				ts.setTexture(texture, 0);
-				//System.out.println("Texture!");
-				
-                ts.setEnabled(true);
-                
-				node.setRenderState(ts);
-				
+   		
+    		
+    	} else {
+    	
+			MaxToJme maxtojme = new MaxToJme();
+			try {
+				// setting texture directory for 3ds models...
+				maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/").toURI().toURL());
 			}
-			sharedNodeCache.put(o.modelName+o.textureName, node);
-			node.setModelBound(new BoundingBox());
-			node.updateModelBound();
-			return node;
-		} catch(Exception err)  {
-		    System.out.println("Error loading model:"+err);
-		    err.printStackTrace();
-		    return null;
-		}
+			 catch (IOException ioex)
+			 {
+				 
+			 }
+			Node node = null; // Where to dump mesh.
+			ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
+			
+			try {
+				byte[] bytes = null;
+				bytes = binaryCache.get(o.modelName);
+				if (bytes==null)
+				{
+					FileInputStream is = new FileInputStream(new File("./data/"+o.modelName));
+					// Converts the file into a jme usable file
+					maxtojme.convert(is, bytearrayoutputstream);
+			 
+					// 	Used to convert the jme usable file to a TriMesh
+					bytes = (bytearrayoutputstream.toByteArray());
+					binaryCache.put(o.modelName,bytes);
+				    is.close();
+				}
+				ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+				BinaryImporter binaryImporter = new BinaryImporter(); 
+			    //importer returns a Loadable, cast to Node
+			    node = (Node)binaryImporter.load(in);
+	
+				if (o.textureName!=null)
+				{
+					Texture texture = (Texture)textureCache.get(o.textureName);
+					
+					if (texture==null) {
+						texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MM_LINEAR,
+			                    Texture.FM_LINEAR);
+		
+						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						texture.setApply(Texture.AM_REPLACE);
+						texture.setRotation(J3DCore.qTexture);
+						textureCache.put(o.textureName, texture);
+					}
+	
+					TextureState ts = core.getDisplay().getRenderer().createTextureState();
+					ts.setTexture(texture, 0);
+					//System.out.println("Texture!");
+					
+	                ts.setEnabled(true);
+	                
+					node.setRenderState(ts);
+					
+				}
+				AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+				as.setEnabled(true);
+				as.setBlendEnabled(true);
+				as.setSrcFunction(AlphaState.SB_DST_ALPHA);//SRC_ALPHA);
+				as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+				as.setReference(0.0f);
+				as.setTestEnabled(true);
+				as.setTestFunction(AlphaState.TF_GEQUAL);
+				node.setRenderState(as);
+
+				sharedNodeCache.put(o.modelName+o.textureName, node);
+				node.setModelBound(new BoundingBox());
+				node.updateModelBound();
+				return node;
+			} catch(Exception err)  {
+			    System.out.println("Error loading model:"+err);
+			    err.printStackTrace();
+			    return null;
+			}
+    	}
     	
     }
 	

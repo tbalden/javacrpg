@@ -76,7 +76,7 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             camera.normalize();
-            handler.core.updateCam();
+            handler.core.updateDisplay();
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
             	i+=(int)skipStep;
@@ -107,7 +107,7 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             camera.normalize();
-            handler.core.updateCam();
+            handler.core.updateDisplay();
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
             	i+=(int)skipStep;
