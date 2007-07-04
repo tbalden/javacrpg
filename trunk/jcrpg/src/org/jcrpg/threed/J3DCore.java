@@ -68,11 +68,8 @@ import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GLContext;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -83,18 +80,17 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.TextureRenderer;
+import com.jme.renderer.pass.BasicPassManager;
+import com.jme.renderer.pass.ShadowedRenderPass;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.ImposterNode;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.SwitchNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -112,7 +108,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 10;
+    public static int RENDER_DISTANCE = 15;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -326,6 +322,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				));
 
 		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/ground_cont_grass.3ds",null));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("mtl/trans3.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("sides/ground_cont_grass.3ds",null),jungleMiddleSmall}));
 		
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide("sides/tgrass1.3ds",null));
@@ -395,6 +392,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			{
 				Node node = modelLoader.loadNode((SimpleModel)objects[i]); // Where to dump mesh.
 				r[i] = node;
+				node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
@@ -558,6 +556,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
 			dirLightNode.setTarget(cRootNode);
+			dirLight.setShadowCaster(true);
 			cLightState.attach(dirLight);
 
 			LightNode spotLightNode = new LightNode("Sun spotlight "+o.id, skydomeLightState);		
@@ -603,7 +602,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	
 	@Override
 	protected void initGame() {
-		// TODO Auto-generated method stub
+        pManager = new BasicPassManager();
 		super.initGame();
 	}
 
@@ -672,6 +671,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 					l[0].getLight().setDiffuse(new ColorRGBA(v, v, v, 1));
 					l[0].getLight().setAmbient(new ColorRGBA(v, v, v, 1));
 					l[0].getLight().setSpecular(new ColorRGBA(v, v, v, 1));
+					l[0].getLight().setShadowCaster(true);
 					l[0].updateRenderState();
 
 					// 1. is point light for the skysphere
@@ -777,6 +777,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    	{
 	    		Node n = itNode.next();
 	    		n.removeFromParent();
+	    		//sPass.removeOccluder(n);
 	    		//cRootNode.detachChild(itNode.next());
 	    		
 	    	}
@@ -834,6 +835,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 			cube.hsRenderedNodes.add(n[i]);
 			cRootNode.attachChild(n[i]);
+			//if (n[i].getName().indexOf("tree")!=-1)
+			//sPass.addOccluder(n[i]);
 		}
 	}
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
@@ -1283,7 +1286,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
 	boolean noInput = false;
-	public void updateCam()
+	public void updateDisplay()
 	{
 		rootNode.updateModelBound();
 		rootNode.updateRenderState();
@@ -1328,13 +1331,33 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		engine.exit();
 		super.quit();
 	}
-
+ 
+	private FogState fs;
+    private static ShadowedRenderPass sPass = new ShadowedRenderPass();
+ 
 	@Override
 	protected void simpleInitGame() {
-		//cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
+        //rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+        
+        //cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
+
+		/*fs = display.getRenderer().createFogState();
+        fs.setDensity(0.5f);
+        fs.setEnabled(true);
+        fs.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+        fs.setEnd(1000);
+        fs.setStart(1);
+        fs.setDensityFunction(FogState.DF_LINEAR);
+        fs.setApplyFunction(FogState.AF_PER_VERTEX);
+        cRootNode.setRenderState(fs);*/
 		
+        /*sPass.add(rootNode);
+        sPass.setRenderShadows(true);
+        sPass.setLightingMethod(ShadowedRenderPass.ADDITIVE);
+        pManager.add(sPass);*/
+ 		
 		lightState.detachAll();
 		cLightState = getDisplay().getRenderer().createLightState();
 		skydomeLightState = getDisplay().getRenderer().createLightState();
@@ -1367,7 +1390,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		setCalculatedCameraLocation();
         cam.update();
-		updateCam();
+		updateDisplay();
 	
 		render(); // couldn't find out why render have to be called twice...
 		render();
@@ -1379,6 +1402,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
+		//pManager.updatePasses(tpf);
 		cLightState.apply();
 		skydomeLightState.apply();
 		if (engine.timeChanged) 
@@ -1390,10 +1414,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 	@Override
 	protected void simpleRender() {
-		// TODO Auto-generated method stub
+        //pManager.renderPasses(display.getRenderer());
 		super.simpleRender();
 		cLightState.apply();
 		skydomeLightState.apply();
 	}
+	
+    protected BasicPassManager pManager;
+
+
 
 }
