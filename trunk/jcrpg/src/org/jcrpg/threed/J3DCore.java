@@ -70,6 +70,7 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 import org.lwjgl.opengl.GLContext;
 
+import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -90,7 +91,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -343,6 +343,9 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
+		
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/s1.3ds",null)}));
+		
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
@@ -507,7 +510,6 @@ public class J3DCore extends com.jme.app.SimpleGame{
 			sun.setSolidColor(ColorRGBA.white);
 			sun.setLightCombineMode(TextureState.OFF);
 			lightNode.attachChild(sun);
-	        
 	        return lightNode;
 			
 	        
@@ -706,9 +708,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
+		skySphere.updateRenderState();
 	    
-	    cRootNode.updateRenderState();
-		//rootNode.updateRenderState();
+	    //cRootNode.updateRenderState();
+	    //sRootNode.updateRenderState();
+		rootNode.updateRenderState();
 		
 	}
 	
@@ -754,6 +758,14 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				// yes, we have it rendered...
 				// remove to let the unrendered ones in the hashmap for after removal from space of cRootNode
 				RenderedCube cOrig = hmCurrentCubes.remove(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
+		    	for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
+		    	{
+		    		Node n = itNode.next();
+		    		n.updateRenderState();
+		    		//sPass.removeOccluder(n);
+		    		//cRootNode.detachChild(itNode.next());
+		    		
+		    	}
 				// add to the new cubes, it is rendered already
 				hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,cOrig); // keep cOrig with jme nodes!!
 				continue;				
@@ -788,11 +800,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 
 	    
-		updateTimeRelated();
 
-	    cRootNode.updateRenderState();
+	    //cRootNode.updateRenderState();
 		rootNode.updateRenderState();
-		rootNode.updateModelBound();
+		//rootNode.updateModelBound();
+		updateTimeRelated();
 
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
@@ -1337,23 +1349,17 @@ public class J3DCore extends com.jme.app.SimpleGame{
  
 	private FogState fs;
     private static ShadowedRenderPass sPass = new ShadowedRenderPass();
- 
+
+    
+    
 	@Override
 	protected void simpleInitGame() {
-        //rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+
+		//rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
         
         //cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 1000);
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
-		AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-		as.setEnabled(true);
-		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_DST_ALPHA);//SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		as.setReference(0.0f);
-		as.setTestEnabled(true);
-		as.setTestFunction(AlphaState.TF_GEQUAL);
-		rootNode.setRenderState(as);
 
 		/*fs = display.getRenderer().createFogState();
         fs.setDensity(0.5f);
@@ -1382,9 +1388,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,1000f);
 		sRootNode.attachChild(skySphere);
+		//cRootNode.attachChild(skySphere);
+		skySphere.setModelBound(new BoundingSphere(1000f,new Vector3f(0,0,0)));
 		skySphere.setTextureMode(TextureState.RS_ALPHA);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
+
 		
 		if (texture!=null) {
 
