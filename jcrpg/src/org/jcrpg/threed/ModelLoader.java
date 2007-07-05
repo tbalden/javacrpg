@@ -33,9 +33,10 @@ import org.jcrpg.threed.scene.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
-import com.jme.scene.TriMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -59,6 +60,8 @@ public class ModelLoader {
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
     
     int counter=0;
+    
+    AlphaState as = null;
 
     public Node loadNode(SimpleModel o)
     {
@@ -104,18 +107,22 @@ public class ModelLoader {
 					BinaryImporter binaryImporter = new BinaryImporter(); 
 				    //importer returns a Loadable, cast to Node
 					node = new Node();
-					TriMesh tri = (TriMesh)binaryImporter.load(in);
-					node.attachChild(tri);
+					Spatial spatial = (Spatial)binaryImporter.load(in);
+					node.attachChild(spatial);
 					
-					AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-					as.setEnabled(true);
-					as.setBlendEnabled(true);
-					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-					as.setReference(0.0f);
-					as.setTestEnabled(true);
-					as.setTestFunction(AlphaState.TF_GEQUAL);
-					tri.setRenderState(as);
+					if (as==null) 
+					{
+						as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+						as.setEnabled(true);
+						as.setBlendEnabled(true);
+						as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+						as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+						as.setReference(0.0f);
+						as.setTestEnabled(true);
+						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
+					}
+					// TODO alphastate type of model
+					spatial.setRenderState(as);
 					
 					sharedNodeCache.put(o.modelName+o.textureName, node);
 					node.setModelBound(new BoundingBox());
@@ -184,18 +191,22 @@ public class ModelLoader {
 					node.setRenderState(ts);
 					
 				}
-				AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-				as.setEnabled(true);
-				as.setBlendEnabled(true);
-				as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-				as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-				as.setReference(0.0f);
-				as.setTestEnabled(true);
-				//as.setTestFunction(AlphaState.TF_GEQUAL);
+				if (as==null) 
+				{
+					as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+					as.setEnabled(true);
+					as.setBlendEnabled(true);
+					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+					as.setReference(0.0f);
+					as.setTestEnabled(true);
+					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
+				}
+				// TODO alphastate type of model
 				node.setRenderState(as);
 
 				sharedNodeCache.put(o.modelName+o.textureName, node);
-				node.setModelBound(new BoundingBox());
+				node.setModelBound(new BoundingBox(new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();
 				return node;
 			} catch(Exception err)  {
