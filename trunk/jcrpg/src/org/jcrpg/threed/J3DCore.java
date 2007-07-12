@@ -342,15 +342,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree4.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)})); // oak TODO
 		
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/s1.3ds",null)}));
+		//hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/cherry.3ds",null)}));
 		
-		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree1.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_pine.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/bush.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_big2.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{}));//new SimpleModel("sides/bush.3ds",null)})); //TODO 
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null)}));
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)}));
 
