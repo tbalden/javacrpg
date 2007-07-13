@@ -105,7 +105,7 @@ public class ModelLoader {
     	// the big shared node cache -> mem size lowerer and performance boost
     	if (sharedNodeCache.get(o.modelName+o.textureName)!=null)
     	{
-    		Node n = sharedNodeCache.get(o.modelName+o.textureName);
+    		Node n = sharedNodeCache.get(o.modelName+o.textureName+o.mipMap);
     		Node r =  new SharedNode("node"+counter++,n);
     		r.setModelBound(new BoundingBox());
             r.updateModelBound();
@@ -161,7 +161,7 @@ public class ModelLoader {
 					// TODO alphastate type of model
 					spatial.setRenderState(as);
 					
-					sharedNodeCache.put(o.modelName+o.textureName, node);
+					sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
 					return node;
@@ -246,7 +246,7 @@ public class ModelLoader {
 				// TODO alphastate type of model
 				node.setRenderState(as);
 
-				sharedNodeCache.put(o.modelName+o.textureName, node);
+				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 				node.setModelBound(new BoundingBox(new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();
 				return node;
