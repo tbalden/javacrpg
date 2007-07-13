@@ -25,11 +25,19 @@ package org.jcrpg.threed.scene;
 public class SimpleModel extends Model {
 
 	public String modelName, textureName;
+	public boolean mipMap = true;
 	
 	public SimpleModel(String modelName, String textureName)
 	{
 		this.modelName = modelName;
 		this.textureName = textureName;
+		
+	}
+	public SimpleModel(String modelName, String textureName, boolean mipMap)
+	{
+		this.modelName = modelName;
+		this.textureName = textureName;
+		this.mipMap = mipMap;
 		
 	}
 }
