@@ -346,7 +346,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)},new float[][]{{0f,15f}});
 		LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null)},new float[][]{{0f,15f}});
 		LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null)},new float[][]{{0f,15f}});
-		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/coconut.3ds",null)},new float[][]{{0f,15f}});
 		
 		//LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)},new float[][]{{0f,15f}});
 		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/palm.3ds",null)},new float[][]{{0f,15f}});
