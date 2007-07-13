@@ -1,13 +1,14 @@
-[ ] transparent texture finally working! Put some on the trees, collect some in your next journey to the wild ;)
-[ ] use LODModels!
+[ ] finalize trees, create low level flora
 [ ] Test ImposterModel on FBO system
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
-[ ] ? Strip green from trees, create new Model type, SimpleTreeModel. Would define texture spatial type, plane.
+[-] ? Strip green from trees, create new Model type, SimpleTreeModel. Would define texture spatial type, plane.
 	alpha state, texture etc.
 
+[X] transparent texture finally working! Put some on the trees, collect some in your next journey to the wild ;)
+[X] use LODModels!
 
 [X] LODModel -> distanceSwitchedNode -> jungle, increase FPS with less detailed models
 [X] ImposterNode http://www.jmonkeyengine.com/wiki/doku.php?id=imposternode - lowest detail - rendered

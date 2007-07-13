@@ -34,10 +34,13 @@ import org.jcrpg.threed.scene.SimpleModel;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
@@ -63,6 +66,42 @@ public class ModelLoader {
     
     AlphaState as = null;
 
+    
+    private void setMipmapToTextures(SceneElement sp) {
+        if (sp instanceof Node) {
+            Node n = (Node) sp;
+
+            TextureState ts1 = (TextureState)n.getRenderState(RenderState.RS_TEXTURE);
+            if (ts1!=null)
+		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
+		    {
+		    	System.out.println("!!!!!!!!! MIPMAP !!!!!!!!");
+		    	Texture t = ts1.getTexture(i);
+		    	//t.setFilter(Texture.FM_LINEAR);
+		    	t.setMipmapState(Texture.MM_NEAREST_LINEAR);
+		    }
+            
+            for (Spatial child : n.getChildren()) {
+            	setMipmapToTextures(child);
+            }
+        } else if (sp instanceof Geometry) {
+            Geometry g = (Geometry) sp;
+            TextureState ts1 = (TextureState)g.getRenderState(RenderState.RS_TEXTURE);
+            if (ts1!=null)
+		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
+		    {
+		    	System.out.println("!!!!!!!!! MIPMAP !!!!!!!!");
+		    	Texture t = ts1.getTexture(i);
+		    	t.setFilter(Texture.FM_NEAREST);
+		    	t.setMipmapState(Texture.MM_LINEAR_NEAREST);
+		    }
+            for (int x = 0; x < g.getBatchCount(); x++) {
+            	
+            	setMipmapToTextures(g.getBatch(x));
+            }
+        }
+    }
+     
     public Node loadNode(SimpleModel o)
     {
     	// the big shared node cache -> mem size lowerer and performance boost
@@ -167,6 +206,7 @@ public class ModelLoader {
 				BinaryImporter binaryImporter = new BinaryImporter(); 
 			    //importer returns a Loadable, cast to Node
 			    node = (Node)binaryImporter.load(in);
+			    
 	
 				if (o.textureName!=null)
 				{
@@ -190,6 +230,10 @@ public class ModelLoader {
 	                
 					node.setRenderState(ts);
 					
+				} else 
+				{
+					if (o.mipMap)
+						setMipmapToTextures(node);
 				}
 				if (as==null) 
 				{
