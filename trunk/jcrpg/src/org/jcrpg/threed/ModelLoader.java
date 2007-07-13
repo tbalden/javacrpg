@@ -34,7 +34,6 @@ import org.jcrpg.threed.scene.SimpleModel;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
-import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
@@ -72,35 +71,31 @@ public class ModelLoader {
      * Sets mipmap rendering state to a scenelement recoursively.
      * @param sp
      */
-    private void setMipmapToTextures(SceneElement sp) {
+    private void setTextures(SceneElement sp, boolean mipmap) {
         if (sp instanceof Node) {
             Node n = (Node) sp;
-
-            TextureState ts1 = (TextureState)n.getRenderState(RenderState.RS_TEXTURE);
-            if (ts1!=null)
-		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
-		    {
-		    	Texture t = ts1.getTexture(i);
-		    	t.setFilter(Texture.FM_LINEAR);
-		    	t.setMipmapState(Texture.MM_LINEAR_LINEAR);
-		    }
-            
+          
             for (Spatial child : n.getChildren()) {
-            	setMipmapToTextures(child);
+            	setTextures(child,mipmap);
             }
         } else if (sp instanceof Geometry) {
             Geometry g = (Geometry) sp;
             TextureState ts1 = (TextureState)g.getRenderState(RenderState.RS_TEXTURE);
-            if (ts1!=null)
-		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
-		    {
-		    	Texture t = ts1.getTexture(i);
-		    	t.setFilter(Texture.FM_NEAREST);
-		    	t.setMipmapState(Texture.MM_LINEAR_LINEAR);
-		    }
+            
+            if (ts1!=null) {
+                ts1.setCorrection(TextureState.CM_PERSPECTIVE);
+                for (int i=0; i<ts1.getNumberOfSetTextures();i++)
+    		    {
+    		    	Texture t = ts1.getTexture(i);
+    		    	if (mipmap) {
+    		    		t.setFilter(Texture.FM_LINEAR);
+    		    		t.setMipmapState(Texture.MM_LINEAR_LINEAR);
+    		    	}
+    		    }
+            }
             for (int x = 0; x < g.getBatchCount(); x++) {
             	
-            	setMipmapToTextures(g.getBatch(x));
+            	setTextures(g.getBatch(x),mipmap);
             }
         }
     }
@@ -235,8 +230,7 @@ public class ModelLoader {
 					
 				} else 
 				{
-					if (o.mipMap)
-						setMipmapToTextures(node);
+					setTextures(node,o.mipMap);
 				}
 				if (as==null) 
 				{
