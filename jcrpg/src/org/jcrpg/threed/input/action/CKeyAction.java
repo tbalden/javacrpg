@@ -11,7 +11,7 @@ public abstract class CKeyAction extends KeyInputAction{
 
 	long timeStart = 0;
 	
-	static long TIME_TO_ENSURE = 10; 
+	static long TIME_TO_ENSURE = 8; 
 	
 	Camera camera;
 	ClassicKeyboardLookHandler handler;
