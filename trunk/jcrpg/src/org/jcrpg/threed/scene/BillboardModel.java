@@ -25,7 +25,10 @@ package org.jcrpg.threed.scene;
 public class BillboardModel extends SimpleModel {
 
 	public BillboardModel(String modelName, String textureName) {
-		super(modelName, textureName);
+		super(modelName, textureName,false);
+	}
+	public BillboardModel(String modelName, String textureName,boolean mipMap) {
+		super(modelName, textureName,mipMap);
 	}
 
 }

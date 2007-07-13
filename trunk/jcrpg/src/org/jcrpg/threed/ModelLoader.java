@@ -247,7 +247,7 @@ public class ModelLoader {
 				node.setRenderState(as);
 
 				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
-				node.setModelBound(new BoundingBox(new Vector3f(0f,0f,0f),2f,2f,2f));
+				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();
 				return node;
 			} catch(Exception err)  {

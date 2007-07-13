@@ -21,8 +21,8 @@ AxisResolution 2
 ProfileScaleBase 2.010000
 ProfileScaleCurve CubicSpline
 CPCount 3
-Point 0.000000 0.428571
-Point 0.765625 0.285714
+Point 0.000000 0.250000
+Point 0.585938 0.142857
 Point 1.000000 0.000000
 ProfileResolution 10
 PhototropismCurve CubicSpline
@@ -48,39 +48,39 @@ VisRange 0.000000 1.000000
 BranchModelCount 1
 BranchingAlg Std
 Density 6.000000
-DensityV 0.000000
-Multiplicity 1
-RevAngle 1.919862
-RevAngleV 0.000000
+DensityV 0.100000
+Multiplicity 5
+RevAngle 2.670354
+RevAngleV 0.100000
 RotAngle 0.000000
-MinOffset 0.200000
+MinOffset 0.100000
 MaxOffset 1.000000
 DeclinationCurve CubicSpline
 CPCount 2
-Point 0.000000 0.714286
-Point 1.000000 0.750000
+Point 0.000000 0.642857
+Point 1.000000 0.571429
 DeclinationV 0.000000
 StemModel Tube
-Length 0.700000
+Length 1.000000
 LengthV 0.600000
 LengthOffsetDep CubicSpline
 CPCount 3
-Point 0.000000 0.214286
-Point 0.484375 0.500000
-Point 1.000000 0.107143
+Point 0.000000 0.285714
+Point 0.406250 0.214286
+Point 1.000000 0.000000
 AxisVariation 0.200000
 AxisResolution 1
 ProfileScaleBase 0.500000
 ProfileScaleCurve CubicSpline
 CPCount 2
-Point 0.000000 0.321429
+Point 0.000000 0.000000
 Point 1.000000 0.000000
 ProfileResolution 8
 PhototropismCurve CubicSpline
 CPCount 3
 Point 0.000000 0.714286
-Point 0.773438 0.607143
-Point 1.000000 0.500000
+Point 0.507813 0.500000
+Point 1.000000 0.464286
 BaseTexUMode 0
 BaseTexUScale 1.000000
 BaseTexVMode 0
@@ -101,13 +101,14 @@ BranchingAlg Wings
 RotAngle 1.570796
 StemModel Wings
 WingsAngle 0.000000
-Width 1.500000
-SectionCount 1
+Width 2.000000
+SectionCount 2
 Curvature CubicSpline
-CPCount 2
-Point 0.000000 0.500000
-Point 1.000000 0.500000
-Thickness 0.000000
+CPCount 3
+Point 0.000000 0.107143
+Point 0.445313 0.607143
+Point 1.000000 0.785714
+Thickness 1.000000
 Material Simple
 BaseColor 0.700000 0.700000 0.700000
 BaseTexture __None__
