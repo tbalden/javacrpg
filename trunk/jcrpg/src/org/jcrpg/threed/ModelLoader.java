@@ -34,6 +34,7 @@ import org.jcrpg.threed.scene.SimpleModel;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
+import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
@@ -67,6 +68,10 @@ public class ModelLoader {
     AlphaState as = null;
 
     
+    /**
+     * Sets mipmap rendering state to a scenelement recoursively.
+     * @param sp
+     */
     private void setMipmapToTextures(SceneElement sp) {
         if (sp instanceof Node) {
             Node n = (Node) sp;
@@ -75,10 +80,9 @@ public class ModelLoader {
             if (ts1!=null)
 		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
 		    {
-		    	System.out.println("!!!!!!!!! MIPMAP !!!!!!!!");
 		    	Texture t = ts1.getTexture(i);
-		    	//t.setFilter(Texture.FM_LINEAR);
-		    	t.setMipmapState(Texture.MM_NEAREST_LINEAR);
+		    	t.setFilter(Texture.FM_LINEAR);
+		    	t.setMipmapState(Texture.MM_LINEAR_LINEAR);
 		    }
             
             for (Spatial child : n.getChildren()) {
@@ -90,10 +94,9 @@ public class ModelLoader {
             if (ts1!=null)
 		    for (int i=0; i<ts1.getNumberOfSetTextures();i++)
 		    {
-		    	System.out.println("!!!!!!!!! MIPMAP !!!!!!!!");
 		    	Texture t = ts1.getTexture(i);
 		    	t.setFilter(Texture.FM_NEAREST);
-		    	t.setMipmapState(Texture.MM_LINEAR_NEAREST);
+		    	t.setMipmapState(Texture.MM_LINEAR_LINEAR);
 		    }
             for (int x = 0; x < g.getBatchCount(); x++) {
             	
