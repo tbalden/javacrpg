@@ -21,10 +21,10 @@ AxisResolution 2
 ProfileScaleBase 3.010000
 ProfileScaleCurve CubicSpline
 CPCount 3
-Point 0.000000 0.428571
+Point 0.000000 0.607143
 Point 0.750000 0.428571
 Point 1.000000 0.392857
-ProfileResolution 4
+ProfileResolution 8
 PhototropismCurve CubicSpline
 CPCount 3
 Point 0.000000 0.607143
@@ -47,18 +47,18 @@ VisRangeEnabled false
 VisRange 0.000000 1.000000
 BranchModelCount 1
 BranchingAlg Std
-Density 4.000000
+Density 2.000000
 DensityV 0.000000
 Multiplicity 1
 RevAngle 1.919862
 RevAngleV 0.000000
 RotAngle 0.000000
-MinOffset 0.800000
+MinOffset 0.600000
 MaxOffset 1.000000
 DeclinationCurve CubicSpline
 CPCount 2
 Point 0.000000 0.464286
-Point 1.000000 0.535714
+Point 1.000000 0.392857
 DeclinationV 0.000000
 StemModel Tube
 Length 1.300000
@@ -74,7 +74,7 @@ ProfileScaleBase 1.500000
 ProfileScaleCurve CubicSpline
 CPCount 2
 Point 0.000000 0.321429
-Point 1.000000 0.107143
+Point 1.000000 0.035714
 ProfileResolution 3
 PhototropismCurve CubicSpline
 CPCount 2
@@ -97,22 +97,22 @@ VisRangeEnabled false
 VisRange 0.000000 1.000000
 BranchModelCount 1
 BranchingAlg Std
-Density 1.000000
+Density 1.100000
 DensityV 0.100000
-Multiplicity 1
+Multiplicity 4
 RevAngle 2.094395
 RevAngleV 0.000000
 RotAngle 0.628319
-MinOffset 0.000000
+MinOffset 0.300000
 MaxOffset 1.000000
 DeclinationCurve CubicSpline
 CPCount 2
 Point 0.000000 0.500000
-Point 1.000000 0.500000
+Point 1.000000 0.142857
 DeclinationV 0.000000
 StemModel Quad
-Length 6.500000
-Width 4.500000
+Length 5.500000
+Width 12.500000
 Scaling CubicSpline
 CPCount 3
 Point 0.000000 1.000000
