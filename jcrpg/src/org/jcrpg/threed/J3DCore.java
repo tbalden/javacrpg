@@ -347,7 +347,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null)},new float[][]{{0f,15f}});
 		LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null)},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)},new float[][]{{0f,15f}});
-		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)},new float[][]{{0f,15f}});
+		
+		//LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/palm.3ds",null)},new float[][]{{0f,15f}});
+
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null)},new float[][]{{0f,15f}});
 		
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO
