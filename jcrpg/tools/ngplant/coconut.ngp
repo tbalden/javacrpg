@@ -23,12 +23,14 @@ ProfileScaleCurve CubicSpline
 CPCount 2
 Point 0.000000 0.285714
 Point 1.000000 0.178571
-ProfileResolution 5
+ProfileResolution 10
 PhototropismCurve CubicSpline
-CPCount 5
+CPCount 7
 Point 0.000000 0.500000
+Point 0.054688 0.500000
 Point 0.070313 0.500000
-Point 0.937500 0.571429
+Point 0.500000 0.535714
+Point 0.820313 0.642857
 Point 0.984375 0.464286
 Point 1.000000 0.464286
 BaseTexUMode 0
