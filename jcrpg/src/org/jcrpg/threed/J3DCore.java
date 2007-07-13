@@ -109,7 +109,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 15;
+    public static int RENDER_DISTANCE = 12;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -342,23 +342,25 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)})); // oak TODO
+		
+		LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)},new float[][]{{0f,15f}});
+		LODModel lod_cactus = new LODModel(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null)},new float[][]{{0f,15f}});
+		
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO
 		
 		//hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/cherry.3ds",null)}));
 		
-		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_palm.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null)}));
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{lod_cherry}));
+		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{lod_pine}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new SimpleModel[]{}));//new SimpleModel("sides/bush.3ds",null)})); //TODO 
-		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null)}));
-		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/jungle_trees_multiple.3ds",null)}));
-
-		//hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
-		//hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new SimpleModel[]{new SimpleModel("sides/tree_ng2.3ds",null)}));
-
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{lod_acacia}));
+		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/ground_water1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));
