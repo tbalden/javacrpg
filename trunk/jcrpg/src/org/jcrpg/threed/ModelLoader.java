@@ -27,13 +27,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import org.jcrpg.threed.scene.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
@@ -58,9 +57,9 @@ public class ModelLoader {
 	}
 	
     
-    HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
-    HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
-    HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
+    WeakHashMap<String,Texture> textureCache = new WeakHashMap<String,Texture>();
+    WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
+    WeakHashMap<String,Node> sharedNodeCache = new WeakHashMap<String, Node>();
     
     int counter=0;
     

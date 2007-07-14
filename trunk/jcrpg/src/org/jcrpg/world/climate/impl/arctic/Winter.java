@@ -7,6 +7,7 @@ public class Winter extends Season {
 
 	public Winter() throws Exception 
 	{
+		dayPercentage = 0;
 		conditions.add(new Cold(70));
 	}
 	

@@ -33,7 +33,11 @@ public class Season implements ConditionGiver {
 	
 	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
+	/**
+	 * Override this on different climates, tells how long is the daytime in one day.
+	 */
 	public int dayPercentage = 60;
+	
 	public DayTime setDay, setNight;
 	private int halfDayPercentage = -1;
 	
