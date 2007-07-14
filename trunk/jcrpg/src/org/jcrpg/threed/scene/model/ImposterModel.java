@@ -20,15 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.threed.scene;
+package org.jcrpg.threed.scene.model;
 
-public class BillboardModel extends SimpleModel {
 
-	public BillboardModel(String modelName, String textureName) {
-		super(modelName, textureName,false);
-	}
-	public BillboardModel(String modelName, String textureName,boolean mipMap) {
-		super(modelName, textureName,mipMap);
+public class ImposterModel extends SimpleModel {
+
+	public ImposterModel(String modelName, String textureName) {
+		super(modelName, textureName);
 	}
 
 }

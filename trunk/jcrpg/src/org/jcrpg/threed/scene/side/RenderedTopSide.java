@@ -1,4 +1,6 @@
-package org.jcrpg.threed.scene;
+package org.jcrpg.threed.scene.side;
+
+import org.jcrpg.threed.scene.model.SimpleModel;
 
 /**
  * Used with e.g. roofs bending over a Cube, 
