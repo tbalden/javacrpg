@@ -1,9 +1,17 @@
-[ ] finalize trees, create low level flora
-[ ] Test ImposterModel on FBO system
+[ ] clean up climate and implement all parts of it with conditions, continue the work on it
+[ ]	implement condition changine 3d models, how? (on RenderedSide level!)
+	plus rain/snow falling, fog?
+
+[ ] skySphere change: night sky based on calculated light value (v)
+[ ] cloud planes on sky
+
+[ ] clean up files in SVN
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
+[X] finalize trees, create low level flora
+[-] Test ImposterModel on FBO system
 [-] ? Strip green from trees, create new Model type, SimpleTreeModel. Would define texture spatial type, plane.
 	alpha state, texture etc.
 
