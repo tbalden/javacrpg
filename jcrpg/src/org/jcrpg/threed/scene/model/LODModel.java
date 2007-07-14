@@ -20,7 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.threed.scene;
+package org.jcrpg.threed.scene.model;
+
 
 /**
  * A set of models with distance to be seen from.

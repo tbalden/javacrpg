@@ -1,5 +1,6 @@
-package org.jcrpg.threed.scene;
+package org.jcrpg.threed.scene.side;
 
+import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.util.HashUtil;
 
 

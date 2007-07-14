@@ -29,7 +29,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.WeakHashMap;
 
-import org.jcrpg.threed.scene.SimpleModel;
+import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;

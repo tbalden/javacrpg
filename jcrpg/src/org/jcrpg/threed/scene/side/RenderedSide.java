@@ -20,7 +20,11 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jcrpg.threed.scene;
+package org.jcrpg.threed.scene.side;
+
+import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.SimpleModel;
 
 
 public class RenderedSide {
