@@ -25,6 +25,7 @@ package org.jcrpg.world.climate.impl.desert;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.climate.conditions.Warm;
 import org.jcrpg.world.time.Time;
 
 public class Desert extends ClimateBelt {
@@ -32,12 +33,22 @@ public class Desert extends ClimateBelt {
 	public static String DESERT_ID = Desert.class.getCanonicalName();
 
 
-	static Spring spring = new Spring();
+	static Spring spring;
 	static Summer summer = new Summer();
+	static {
+		try {
+			spring = new Spring();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-	public Desert(String id, Climate parent) {
+	public Desert(String id, Climate parent) throws Exception {
 		super(id, parent);
 		STATIC_ID = DESERT_ID;
+		
+		beltConditions.add(new Warm(40));
+		
 	}
 
 	@Override

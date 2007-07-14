@@ -25,6 +25,8 @@ package org.jcrpg.world.climate.impl.tropical;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
+import org.jcrpg.world.climate.conditions.Rain;
+import org.jcrpg.world.climate.conditions.Warm;
 import org.jcrpg.world.climate.impl.continental.Summer;
 import org.jcrpg.world.time.Time;
 
@@ -34,9 +36,11 @@ public class Tropical extends ClimateBelt {
 	
 	static Summer summer = new Summer();
 
-	public Tropical(String id, Climate parent) {
+	public Tropical(String id, Climate parent) throws Exception {
 		super(id, parent);
 		STATIC_ID = TROPICAL_ID;
+		beltConditions.add(new Warm(50));
+		beltConditions.add(new Rain(50));
 	}
 
 	
