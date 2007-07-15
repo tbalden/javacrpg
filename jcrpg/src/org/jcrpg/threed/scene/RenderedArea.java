@@ -23,6 +23,8 @@
 package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
@@ -30,7 +32,10 @@ import org.jcrpg.world.place.World;
 
 public class RenderedArea {
 	
-	public static RenderedCube[] getRenderedSpace(World space, int x, int y, int z, int direction)
+	public WeakHashMap<String, RenderedCube> worldCubeCache = new WeakHashMap<String, RenderedCube>(); 
+	public WeakHashMap<String, RenderedCube> worldCubeCacheNext = new WeakHashMap<String, RenderedCube>(); 
+	
+	public RenderedCube[] getRenderedSpace(World world, int x, int y, int z, int direction)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
 		
@@ -62,26 +67,38 @@ public class RenderedArea {
 				
 			}
 		}
-						
+		worldCubeCacheNext = new WeakHashMap<String, RenderedCube>();			
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
-			for (int y1=-1*distance; y1<=1*distance; y1++)
+			for (int y1=-1*(distance/2); y1<=1*(distance/2); y1++)
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
-					
-					Cube c = space.getCube(x+x1, y+y1, z-z1);
+					String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
+					RenderedCube c = worldCubeCache.get(key);
+					if (c==null) {
+						Cube cube = world.getCube(x+x1, y+y1, z-z1);
+						if (cube!=null)
+						{
+							c = new RenderedCube(cube,x1,y1,z1);
+						}
+					} else
+					{
+						//System.out.println("IN RCUBECACHE");
+					}
+					worldCubeCacheNext.put(key, c);
 					//if (c!=null)System.out.println("CUBE Coords: "+ (c.x)+" "+c.y);
 					//System.out.println("Coordinates: "+(x+x1)+ "-"+ (y+y1)+"-"+(z+z1) );
 					if (c!=null) 
 					{	
 						//System.out.println(c.toString());
-						elements.add(new RenderedCube(c,x1,y1,z1));
+						elements.add(c);
 					}
 				}
 			}
 		}
+		worldCubeCache = worldCubeCacheNext;
 		
 		return (RenderedCube[])elements.toArray(new RenderedCube[0]);
 		

@@ -98,7 +98,7 @@ public class SimpleSun extends Orbiter{
 		}
 
 		
-		float v = ((dayNightPer+100)/200f)+0.1f;
+		float v = ((dayNightPer+100)/200f)+0.3f;
 		return v;
 	}
 
