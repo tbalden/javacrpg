@@ -32,6 +32,7 @@ import java.util.WeakHashMap;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -86,7 +87,7 @@ public class ModelLoader {
                 for (int i=0; i<ts1.getNumberOfSetTextures();i++)
     		    {
     		    	Texture t = ts1.getTexture(i);
-    		    	if (mipmap) {
+    		    	if (mipmap && J3DCore.MIPMAP_GLOBAL) {
     		    		t.setFilter(Texture.FM_LINEAR);
     		    		t.setMipmapState(Texture.MM_LINEAR_LINEAR);
     		    	}
@@ -176,7 +177,7 @@ public class ModelLoader {
 			MaxToJme maxtojme = new MaxToJme();
 			try {
 				// setting texture directory for 3ds models...
-				maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/").toURI().toURL());
+				maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
 			}
 			 catch (IOException ioex)
 			 {
@@ -221,10 +222,8 @@ public class ModelLoader {
 	
 					TextureState ts = core.getDisplay().getRenderer().createTextureState();
 					ts.setTexture(texture, 0);
-					//System.out.println("Texture!");
 					
 	                ts.setEnabled(true);
-	                
 					node.setRenderState(ts);
 					
 				} else 

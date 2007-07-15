@@ -1,5 +1,6 @@
 package org.jcrpg.threed.input.action;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.KeyInputAction;
@@ -11,7 +12,7 @@ public abstract class CKeyAction extends KeyInputAction{
 
 	long timeStart = 0;
 	
-	static long TIME_TO_ENSURE = 8; 
+	static long TIME_TO_ENSURE = J3DCore.TIME_TO_ENSURE; 
 	
 	Camera camera;
 	ClassicKeyboardLookHandler handler;

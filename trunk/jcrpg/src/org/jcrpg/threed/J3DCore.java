@@ -91,6 +91,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -100,7 +101,7 @@ import com.jme.util.TextureManager;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 
-public class J3DCore extends com.jme.app.SimpleGame{
+public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
     HashMap<String,Integer> hmAreaSubType3dType = new HashMap<String,Integer>();
 
@@ -109,17 +110,22 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 15;
+    public static int RENDER_DISTANCE = 12;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 30;
+	public static final int MOVE_STEPS = 12;
+	public static long TIME_TO_ENSURE = 11; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
     public static boolean OPTIMIZED_RENDERING = true;
     
     public static boolean MIPMAP_TREES = false;
+    
+    public static boolean MIPMAP_GLOBAL = false;
+
+    public static boolean TEXTURE_QUAL_HIGH = true;
 
     
 	public int viewDirection = NORTH;
@@ -132,6 +138,8 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	public ModelLoader modelLoader = new ModelLoader(this);
 	
 	public Engine engine = null;
+	
+	public RenderedArea renderedArea = new RenderedArea();
 	
 	public void setEngine(Engine engine)
 	{
@@ -338,15 +346,15 @@ public class J3DCore extends com.jme.app.SimpleGame{
 				));
 
 
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("sides/ground_cont_grass.3ds",null),lod_grass1}));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_grass1}));
 		
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("sides/ground_road_stone_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("models/ground/road_stone_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("sides/ground_desert_1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("sides/ground_arctic_1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/hillside.png"));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("models/ground/desert_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("models/ground/arctic_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
 		
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new Model[]{new SimpleModel("sides/ground_jung_grass.3ds",null),
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new Model[]{new SimpleModel("models/ground/jung_grass.3ds",null),
 				lod_jungleMiddleSmall
 		}));
 		
@@ -364,12 +372,11 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		
-		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("sides/ground_water1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("sides/hill_side.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("models/ground/water1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","sides/wall_mossy.jpg"));
 				
-				//new String[]{"sides/door.3ds","sides/wall_door.3ds","sides/roof_side.3ds"},new String[]{null,null,null}));//"sides/wall_stone.jpg"));
 		
 	}
 
@@ -511,8 +518,24 @@ public class J3DCore extends com.jme.app.SimpleGame{
 
 	        TriMesh sun = new Sphere(o.id,40,40,20f);
 			cRootNode.attachChild(sun);
-			sun.setSolidColor(ColorRGBA.white);
-			sun.setLightCombineMode(TextureState.OFF);
+			//sun.setSolidColor(ColorRGBA.white);
+			//sun.setLightCombineMode(TextureState.OFF);
+			
+			
+			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"sun.png",Texture.MM_LINEAR,
+                    Texture.FM_LINEAR);
+
+			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.AM_REPLACE);
+			texture.setRotation(J3DCore.qTexture);
+
+			TextureState ts = getDisplay().getRenderer().createTextureState();
+			ts.setTexture(texture, 0);
+			
+            ts.setEnabled(true);
+			sun.setRenderState(ts);
+			
+			
 			lightNode.attachChild(sun);
 	        return lightNode;
 			
@@ -712,12 +735,16 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
-		skySphere.updateRenderState();
+		//skySphere.updateRenderState();
 	    
 	    //cRootNode.updateRenderState();
 	    //sRootNode.updateRenderState();
-		rootNode.updateRenderState();
 		
+	}
+
+	public void renderParallel()
+	{
+		new Thread(this).start();
 	}
 	
 	public void render()
@@ -737,7 +764,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
 		
 		
-		System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
+		if (conditions!=null) System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
 
 		
 		/*
@@ -745,7 +772,10 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		 */
 		
     	// get a specific part of the area to render
-    	RenderedCube[] cubes = RenderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
+		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+    	RenderedCube[] cubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
+		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+
     	System.out.println("getRenderedSpace size="+cubes.length);
 		
 		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
@@ -806,11 +836,12 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	    
 
 	    //cRootNode.updateRenderState();
-		rootNode.updateRenderState();
 		//rootNode.updateModelBound();
 		updateTimeRelated();
 
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+
+		rootNode.updateRenderState();
 
 	}
 	
@@ -1390,7 +1421,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",20,20,6000f);
+		skySphere = new Sphere("SKY_SPHERE",20,20,5700f);
 		sRootNode.attachChild(skySphere);
 		//cRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere(3000f,new Vector3f(0,0,0)));
@@ -1434,6 +1465,7 @@ public class J3DCore extends com.jme.app.SimpleGame{
 		{
 			engine.setTimeChanged(false);
 			updateTimeRelated();
+			rootNode.updateRenderState();
 		}
 	}
 
@@ -1446,6 +1478,18 @@ public class J3DCore extends com.jme.app.SimpleGame{
 	}
 	
     protected BasicPassManager pManager;
+
+    boolean rendering = false;
+    Object mutex = new Object();
+	public void run() {
+		
+		if (rendering) return;
+		synchronized (mutex) {
+			rendering = true;		
+			renderParallel();
+			rendering = false;
+		}
+	}
 
 
 

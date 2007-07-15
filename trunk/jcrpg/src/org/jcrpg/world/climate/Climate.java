@@ -56,7 +56,12 @@ public class Climate extends ClimatePart {
 			}
 			
 		}
-		return null;
+		CubeClimateConditions c = new CubeClimateConditions();
+		c.setSeason(new Season());
+		c.setDayTime(new Season().getDayTime(time));
+		c.setBelt(new ClimateBelt("nil",this));
+		c.setLevel(new ClimateLevel("nil",this,0,100));
+		return c;
 	}
 	
 	

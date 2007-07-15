@@ -8,6 +8,7 @@ import com.jme.renderer.Camera;
 
 public class ClassicInputHandler  extends InputHandler {
 
+    //private MouseLookHandler mouseLookHandler;
     private ClassicMouseLookHandler mouseLookHandler;
     private ClassicKeyboardLookHandler keyboardLookHandler;
 
@@ -37,3 +38,4 @@ public class ClassicInputHandler  extends InputHandler {
     }
     
 }
+
