@@ -87,6 +87,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.ShadowedRenderPass;
+import com.jme.scene.BatchMesh;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.ImposterNode;
@@ -94,14 +95,17 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.QuadBatch;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
+import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 
@@ -940,6 +944,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
+		
+		bmesh.setLocalTranslation(getCurrentLocation().add(0, 3, 0)); // TODO make grass out of this if you can :D
+		
 		System.gc();
 
 	}
@@ -1500,6 +1507,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     private static ShadowedRenderPass sPass = new ShadowedRenderPass();
 
     
+    BatchMesh bmesh;
     
 	@Override
 	protected void simpleInitGame() {
@@ -1510,6 +1518,35 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
 
+	    QuadBatch[] qbStrips = new QuadBatch[10*10*10];
+
+	    for (int i=0; i<10; i++) {
+	       	for (int x=0; x<10; x++) {
+	       	   	for (int y=0; y<10; y++) {
+		    	
+			    QuadBatch qbStrip = new QuadBatch();
+			    qbStrip.setDefaultColor(ColorRGBA.green);
+			    qbStrip.setMode(QuadBatch.QUADS);
+			    qbStrip.setVertexBuffer(BufferUtils.createFloatBuffer(getVerts(3+y, -5, i*10+x)));
+			    // A strip of 2 quads. Beware that QUAD_STRIP ordering is different from QUADS,
+			    // The third indice actually points to the start of *next* quad.
+			    qbStrip.setIndexBuffer(BufferUtils.createIntBuffer(new int[] {0, 1, 2, 3, 4, 5}));
+			    qbStrips[i*100+x*10+y] = qbStrip;
+	       	   	}
+	    	}
+	    }
+
+	    
+	    //CullState cull = display.getRenderer().createCullState();
+	    //cull.setCullMode(CullState.CS_BACK);
+	    bmesh = new BatchMesh("batches", qbStrips);
+	    // we set a cull state to hide the back of our batches, "proving" they are camera facing.
+	    //mesh.setRenderState(cull);
+	    bmesh.updateRenderState();
+	    //cRootNode.attachChild(bmesh); // TODO if grass is good, uncomment this
+	    bmesh.setLocalTranslation(getCurrentLocation().add(0f,2f,0));
+		
+		
 		fs = display.getRenderer().createFogState();
         fs.setDensity(0.5f);
         fs.setEnabled(true);
@@ -1605,6 +1642,19 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		}
 	}
 
+	  
+	  Vector3f[] getVerts(int x, int y, int disp) {
+		  Vector3f[] verts = new Vector3f[] { 
+		            new Vector3f(0+x+disp,1+y,-disp), // 0
+		            new Vector3f(0+x+disp,0+y,-disp), // 1
+		            new Vector3f(1+x+disp,1+y,-disp), // 2
+		            new Vector3f(1+x+disp,0+y,-disp), // 3
+		            new Vector3f(2+x+disp,1+y,-disp), // 4
+		            new Vector3f(2+x+disp,0+y,-disp)  // 5
+		    };
+		  return verts;
+	  }
+	  
 
 
 }
