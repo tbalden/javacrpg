@@ -457,6 +457,12 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		return display;
 	}
     
+	/**
+	 * Loading a set of models into JME nodes.
+	 * @param objects
+	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
+	 * @return
+	 */
 	protected Node[] loadObjects(Model[] objects, boolean fakeLoadForCacheMaint)
     {
 		
@@ -467,7 +473,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			if (objects[i]==null) continue;
 			if (objects[i] instanceof SimpleModel) 
 			{
-				Node node = modelLoader.loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint); // Where to dump mesh.
+				Node node = modelLoader.loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				
 				r[i] = node;
@@ -814,6 +820,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		new Thread(this).start();
 	}
 	
+	/**
+	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
+	 */
 	public void render()
 	{
 		// start to collect the nodes/binaries which this render will use now
@@ -862,17 +871,19 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				// remove to let the unrendered ones in the hashmap for after removal from space of cRootNode
 				RenderedCube cOrig = hmCurrentCubes.remove(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
 				
+				// Iterating all sides for fake rendering, cache maintenance in ModelLoader
 				Side[][] sides = cOrig.cube.sides;
 				for (int j=0; j<sides.length; j++)
 				{
 					if (sides[j]!=null)
 					for (int k=0; k<sides[j].length; k++)
-						renderSide(cOrig,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],true);
+						renderSide(cOrig,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],true); // fake = true!
 				}
 
-				for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
+				//for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
 		    	{
-		    		Node n = itNode.next();
+		    		//Node n = itNode.next();
+		    		
 		    		//n.updateRenderState();
 		    		//sPass.removeOccluder(n);
 		    		//cRootNode.detachChild(itNode.next());
@@ -884,13 +895,12 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			}
 			newly++;
 			// render the cube newly
-			//System.out.println("CUBE Coords: "+ ""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
 			Side[][] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
 				if (sides[j]!=null)
 				for (int k=0; k<sides[j].length; k++)
-					renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false);
+					renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
 			}
 			// store it to new cubes hashmap
 			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
@@ -978,13 +988,14 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	}
 	
 	/**
-	 * Renders one side into 3d space.
+	 * Renders one side into 3d space percepting what kind of RenderedSide it is.
 	 * @param cube
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @param direction
 	 * @param side
+	 * @param fakeLoadForCacheMaint No true rendering if this is true, only fake loading the objects through model loader.
 	 */
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side, boolean fakeLoadForCacheMaint)
 	{
