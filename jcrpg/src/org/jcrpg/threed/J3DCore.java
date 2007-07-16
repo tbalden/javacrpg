@@ -945,7 +945,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
 		
-		bmesh.setLocalTranslation(getCurrentLocation().add(0, 3, 0)); // TODO make grass out of this if you can :D
+		bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
 		
 		System.gc();
 
@@ -1518,24 +1518,39 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
 
-	    QuadBatch[] qbStrips = new QuadBatch[10*10*10];
+	    QuadBatch[] qbStrips = new QuadBatch[1];
 
-	    for (int i=0; i<10; i++) {
-	       	for (int x=0; x<10; x++) {
-	       	   	for (int y=0; y<10; y++) {
-		    	
-			    QuadBatch qbStrip = new QuadBatch();
-			    qbStrip.setDefaultColor(ColorRGBA.green);
-			    qbStrip.setMode(QuadBatch.QUADS);
-			    qbStrip.setVertexBuffer(BufferUtils.createFloatBuffer(getVerts(3+y, -5, i*10+x)));
-			    // A strip of 2 quads. Beware that QUAD_STRIP ordering is different from QUADS,
-			    // The third indice actually points to the start of *next* quad.
-			    qbStrip.setIndexBuffer(BufferUtils.createIntBuffer(new int[] {0, 1, 2, 3, 4, 5}));
-			    qbStrips[i*100+x*10+y] = qbStrip;
-	       	   	}
-	    	}
-	    }
+	    int c = 0;
+       	for (int x=0; x<1; x++) {
+       	   	for (int y=1; y<2; y++) {
+	    	
+		    QuadBatch qbStrip = new QuadBatch();
+		    //qbStrip.setDefaultColor(ColorRGBA.green);
+		    //qbStrip.setSolidColor(ColorRGBA.green);
+		    qbStrip.setMode(QuadBatch.QUADS);
+		    //qbStrip.setQuads(quads)
+			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"grass2.jpg",Texture.MM_LINEAR,
+                    Texture.FM_LINEAR);
 
+			//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			//texture.setApply(Texture.AM_REPLACE);
+			texture.setRotation(J3DCore.qTexture);
+
+			TextureState ts = getDisplay().getRenderer().createTextureState();
+			ts.setTexture(texture, 0);
+			
+            ts.setEnabled(true);
+            qbStrip.setRenderState(ts);
+		    
+		    qbStrip.setVertexBuffer(BufferUtils.createFloatBuffer(getVerts(x, 0, y)));
+		    // A strip of 2 quads. Beware that QUAD_STRIP ordering is different from QUADS,
+		    // The third indice actually points to the start of *next* quad.
+		    int[] buff = new int[10*10*4];
+		    for (int i=0; i<10*10*4; i++) buff[i] = i;
+		    qbStrip.setIndexBuffer(BufferUtils.createIntBuffer(buff));//new int[] {0, 1, 2, 3, 4, 5}));
+		    qbStrips[c++] = qbStrip;
+       	   	}
+    	}
 	    
 	    //CullState cull = display.getRenderer().createCullState();
 	    //cull.setCullMode(CullState.CS_BACK);
@@ -1544,7 +1559,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    //mesh.setRenderState(cull);
 	    bmesh.updateRenderState();
 	    //cRootNode.attachChild(bmesh); // TODO if grass is good, uncomment this
-	    bmesh.setLocalTranslation(getCurrentLocation().add(0f,2f,0));
+	    bmesh.setLocalTranslation(getCurrentLocation().add(0f,0.01f,0));
 		
 		
 		fs = display.getRenderer().createFogState();
@@ -1643,15 +1658,20 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	}
 
 	  
-	  Vector3f[] getVerts(int x, int y, int disp) {
-		  Vector3f[] verts = new Vector3f[] { 
-		            new Vector3f(0+x+disp,1+y,-disp), // 0
-		            new Vector3f(0+x+disp,0+y,-disp), // 1
-		            new Vector3f(1+x+disp,1+y,-disp), // 2
-		            new Vector3f(1+x+disp,0+y,-disp), // 3
-		            new Vector3f(2+x+disp,1+y,-disp), // 4
-		            new Vector3f(2+x+disp,0+y,-disp)  // 5
-		    };
+	  Vector3f[] getVerts(int x, int y, int z) {
+		  Vector3f[] verts = new Vector3f[10*10*4]; 
+		  for (int localX=0; localX<10; localX++)
+		  {
+			  
+			  for (int localZ=0; localZ<10; localZ++)
+			  {
+				  verts[localX*10+localZ*4] = new Vector3f(x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/10f),0.1f+y*CUBE_EDGE_SIZE,z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/10f));
+				  verts[localX*10+localZ*4+1] = new Vector3f(x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/10f),y*CUBE_EDGE_SIZE,z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/10f));
+				  verts[localX*10+localZ*4+2] = new Vector3f(0.1f+x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/10f),0.1f+y*CUBE_EDGE_SIZE,z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/10f));
+				  verts[localX*10+localZ*4+3] = new Vector3f(0.1f+x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/10f),y*CUBE_EDGE_SIZE,z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/10f));
+					  System.out.println("QUAD VECT "+verts[localX*10+localZ*4]);
+			  }
+		  }
 		  return verts;
 	  }
 	  
