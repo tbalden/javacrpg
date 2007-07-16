@@ -1,0 +1,7 @@
+Batching Geometry
+http://www.ogre3d.org/phpBB2/viewtopic.php?t=24918&postdays=0&postorder=asc&start=0
+http://www.ogre3d.org/wiki/index.php/SoC2006_Instancing
+
+http://www.jmonkeyengine.com/jmeforum/index.php?topic=1780.0
+
+http://www.jmonkeyengine.com/jmeforum/index.php?topic=4623.30
