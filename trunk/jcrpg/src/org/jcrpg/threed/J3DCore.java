@@ -611,6 +611,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			
             ts.setEnabled(true);
 			sun.setRenderState(ts);
+			sun.setRenderState(getDisplay().getRenderer().createFogState());
 			
 			
 			lightNode.attachChild(sun);
@@ -641,6 +642,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 			cRootNode.attachChild(moon);
 			moon.setLightCombineMode(TextureState.OFF);
+			moon.setRenderState(getDisplay().getRenderer().createFogState());
 			return moon;
 		} 
 		return null;
@@ -1508,15 +1510,15 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
 
-		/*fs = display.getRenderer().createFogState();
+		fs = display.getRenderer().createFogState();
         fs.setDensity(0.5f);
         fs.setEnabled(true);
         fs.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-        fs.setEnd(1000);
-        fs.setStart(1);
+        fs.setEnd(RENDER_DISTANCE*2.5f);
+        fs.setStart(RENDER_DISTANCE - (RENDER_DISTANCE/3));
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
-        cRootNode.setRenderState(fs);*/
+        cRootNode.setRenderState(fs);
 		
         /*sPass.add(rootNode);
         sPass.setRenderShadows(true);
