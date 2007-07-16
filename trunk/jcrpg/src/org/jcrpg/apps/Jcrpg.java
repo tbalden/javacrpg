@@ -48,8 +48,6 @@ import com.jme.util.LoggingSystem;
 public class Jcrpg {
 
 	/**
-     * Entry point for the test,
-     * 
      * @param args
      */
     public static void main(String[] args) {

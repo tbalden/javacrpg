@@ -154,7 +154,6 @@ public class ModelLoader {
     public Node loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
     {
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
-    	if (!tempNodeKeys.contains(o.modelName+o.textureName+o.mipMap)) System.out.println(" - - - "+ o.modelName+o.textureName+o.mipMap);
     	tempNodeKeys.add(o.modelName+o.textureName+o.mipMap);
 		tempBinaryKeys.add(o.modelName);
 		
