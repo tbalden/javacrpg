@@ -143,6 +143,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    		try {
 	    			RENDER_DISTANCE = Integer.parseInt(renderDistance);
 	    			if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
+	    			if (RENDER_DISTANCE<5) RENDER_DISTANCE = 5;
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("RENDER_DISTANCE", "10");
