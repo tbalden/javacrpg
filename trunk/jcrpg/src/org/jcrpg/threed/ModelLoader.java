@@ -27,12 +27,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.WeakHashMap;
 
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
@@ -60,7 +61,8 @@ public class ModelLoader {
     
     WeakHashMap<String,Texture> textureCache = new WeakHashMap<String,Texture>();
     WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
-    WeakHashMap<String,Node> sharedNodeCache = new WeakHashMap<String, Node>();
+    // this better be not weak hashmap
+    HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
     
     int counter=0;
     
@@ -99,17 +101,76 @@ public class ModelLoader {
             }
         }
     }
-     
-    public Node loadNode(SimpleModel o)
+    
+    /**
+     * The keys in these sets wont be removed from the cache after one rendering.
+     */
+    public HashSet<String> tempNodeKeys = new HashSet<String>();
+    public HashSet<String> tempBinaryKeys = new HashSet<String>();
+    
+    /**
+     * Call when starting rendering
+     */
+    public void startRender()
     {
-    	// the big shared node cache -> mem size lowerer and performance boost
-    	if (sharedNodeCache.get(o.modelName+o.textureName)!=null)
+    	tempNodeKeys.clear();
+    	tempBinaryKeys.clear();
+    }
+    /**
+     * Call when one render is complete, this will remove the nodes and binaries not needed any more. 
+     */
+    public void stopRenderAndClear()
+    {
+    	HashSet<String> removable = new HashSet<String>();
+    	for (String key : sharedNodeCache.keySet()) {
+			if (!tempNodeKeys.contains(key))
+			{
+				removable.add(key);
+			} else
+			{
+			}
+		}
+    	sharedNodeCache.keySet().removeAll(removable);
+    	
+    	removable.clear();
+    	for (String key : binaryCache.keySet()) {
+			if (!tempBinaryKeys.contains(key))
+			{
+				removable.add(key);
+			}
+		}
+		binaryCache.keySet().removeAll(removable);
+		
+    	tempNodeKeys.clear();
+    	tempBinaryKeys.clear();
+    }
+     
+    /**
+     * Load one simplemodel to node
+     * @param o SimpleModel descriptor
+     * @param fakeLoadForCacheMaint If this is true, only cache maintenance is needed, the model is already rendered and live
+     * @return
+     */
+    public Node loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
+    {
+		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
+    	if (!tempNodeKeys.contains(o.modelName+o.textureName+o.mipMap)) System.out.println(" - - - "+ o.modelName+o.textureName+o.mipMap);
+    	tempNodeKeys.add(o.modelName+o.textureName+o.mipMap);
+		tempBinaryKeys.add(o.modelName);
+		
+		// don't have to really load it, return with null
+		if (fakeLoadForCacheMaint) return null;
+
+		// the big shared node cache -> mem size lowerer and performance boost
+    	if (sharedNodeCache.get(o.modelName+o.textureName+o.mipMap)!=null)
     	{
     		Node n = sharedNodeCache.get(o.modelName+o.textureName+o.mipMap);
-    		Node r =  new SharedNode("node"+counter++,n);
-    		r.setModelBound(new BoundingBox());
-            r.updateModelBound();
-            return r;
+    		if (n!=null) {
+	    		Node r =  new SharedNode("node"+counter++,n);
+	    		r.setModelBound(new BoundingBox());
+	            r.updateModelBound();
+	            return r;
+    		}
     	}
     	
     	if (o.modelName.endsWith(".obj"))
