@@ -59,6 +59,7 @@ import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
 import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
+import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
@@ -350,6 +351,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
 		hmAreaSubType3dType.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
+		hmAreaSubType3dType.put(GreatPineTree.SUBTYPE_TREE.id, new Integer(25));
 		hmAreaSubType3dType.put(GreenBush.SUBTYPE_BUSH.id, new Integer(19));
 		hmAreaSubType3dType.put(CoconutTree.SUBTYPE_TREE.id, new Integer(15));
 		hmAreaSubType3dType.put(Acacia.SUBTYPE_TREE.id, new Integer(20));
@@ -368,6 +370,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		//LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/acacia.3ds",null,true)},new float[][]{{0f,7f},{7f,15f}});
 		LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
+		LODModel lod_great_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		//LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/pine.3ds",null,true)},new float[][]{{0f,7f},{7f,15f}});
 		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/coconut.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
@@ -431,6 +434,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{lod_acacia}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("models/ground/water1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));

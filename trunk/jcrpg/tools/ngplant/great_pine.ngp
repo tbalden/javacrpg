@@ -52,7 +52,7 @@ Multiplicity 1
 RevAngle 1.919862
 RevAngleV 0.000000
 RotAngle 0.000000
-MinOffset 0.500000
+MinOffset 0.400000
 MaxOffset 1.000000
 DeclinationCurve CubicSpline
 CPCount 2
