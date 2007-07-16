@@ -2,6 +2,8 @@
 [ ]	implement condition changine 3d models, how? (on RenderedSide level!)
 	plus rain/snow falling, fog?
 
+[ ] redraw Window model, it's too detailed on the lower part, unnecessarily
+
 [ ] skySphere change: night sky based on calculated light value (v)
 [ ] cloud planes on sky
 
