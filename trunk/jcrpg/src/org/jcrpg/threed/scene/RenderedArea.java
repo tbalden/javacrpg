@@ -43,7 +43,7 @@ public class RenderedArea {
 		float xMinusMult = -1;
 		float zPlusMult = 1;
 		float zMinusMult = -1;
-		float viewPercent = 0.1f;
+		float viewPercent = 0.3f;
 		
 		if (J3DCore.OPTIMIZED_RENDERING) {
 			if (direction==J3DCore.NORTH)
@@ -67,11 +67,12 @@ public class RenderedArea {
 				
 			}
 		}
+		worldCubeCacheNext.clear();
 		worldCubeCacheNext = new WeakHashMap<String, RenderedCube>();			
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
-			for (int y1=-1*(distance/2); y1<=1*(distance/2); y1++)
+			for (int y1=-1*(distance/3); y1<=1*(distance/3); y1++)
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
@@ -98,6 +99,7 @@ public class RenderedArea {
 				}
 			}
 		}
+		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
 		
 		return (RenderedCube[])elements.toArray(new RenderedCube[0]);

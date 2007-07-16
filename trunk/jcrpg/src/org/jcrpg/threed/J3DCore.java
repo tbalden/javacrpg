@@ -22,9 +22,12 @@
 
 package org.jcrpg.threed;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Properties;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -91,7 +94,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -110,7 +112,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
-    public static int RENDER_DISTANCE = 14;
+    public static int RENDER_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -123,9 +125,65 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     
     public static boolean MIPMAP_TREES = false;
     
-    public static boolean MIPMAP_GLOBAL = false;
+    public static boolean MIPMAP_GLOBAL = true;
 
-    public static boolean TEXTURE_QUAL_HIGH = true;
+    public static boolean TEXTURE_QUAL_HIGH = false;
+    
+    static Properties p = new Properties();
+    static {
+    	try {
+    		File f = new File("./config.properties");
+	    	FileInputStream fis = new FileInputStream(f);
+	    	p.load(fis);
+	    	
+	    	String renderDistance = p.getProperty("RENDER_DISTANCE");
+	    	if (renderDistance!=null)
+	    	{
+	    		try {
+	    			RENDER_DISTANCE = Integer.parseInt(renderDistance);
+	    			if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("RENDER_DISTANCE", "10");
+	    		}
+	    	}
+	    	String mipmapGlobal = p.getProperty("MIPMAP_GLOBAL");
+	    	if (renderDistance!=null)
+	    	{
+	    		try {
+	    			MIPMAP_GLOBAL = Boolean.parseBoolean(mipmapGlobal);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("MIPMAP_GLOBAL", "true");
+	    		}
+	    	}
+	    	String mipmapTrees = p.getProperty("MIPMAP_TREES");
+	    	if (renderDistance!=null)
+	    	{
+	    		try {
+	    			MIPMAP_TREES = Boolean.parseBoolean(mipmapTrees);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("MIPMAP_TREES", "false");
+	    		}
+	    	}
+	    	String textureQualityHigh = p.getProperty("TEXTURE_QUAL_HIGH");
+	    	if (renderDistance!=null)
+	    	{
+	    		try {
+	    			TEXTURE_QUAL_HIGH = Boolean.parseBoolean(textureQualityHigh);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("TEXTURE_QUAL_HIGH", "false");
+	    		}
+	    	}
+	    	
+    	} catch (Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    }
+
 
     
 	public int viewDirection = NORTH;
@@ -826,6 +884,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    	{
 	    		Node n = itNode.next();
 	    		n.removeFromParent();
+	    		n.detachAllChildren();
 	    		//sPass.removeOccluder(n);
 	    		//cRootNode.detachChild(itNode.next());
 	    		
@@ -842,7 +901,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
 		rootNode.updateRenderState();
-		
+
 		System.gc();
 
 	}

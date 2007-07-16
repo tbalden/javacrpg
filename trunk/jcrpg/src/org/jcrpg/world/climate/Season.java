@@ -68,7 +68,7 @@ public class Season implements ConditionGiver {
 	{
 		if (halfDayPercentage==-1) halfDayPercentage = dayPercentage/2;
 		float p = time.getCurrentDayPercent();
-		if (p!=0)System.out.println("CURRENT DAY PERCENT = "+p);
+		//if (p!=0)System.out.println("CURRENT DAY PERCENT = "+p);
 		if (p>50-(halfDayPercentage) && p<50+(halfDayPercentage))
 		{
 			int r = (int) (((p-(50-(halfDayPercentage))) / (dayPercentage*1f)) * 100);
@@ -78,7 +78,7 @@ public class Season implements ConditionGiver {
 		int nightPercentage = 100-dayPercentage;
 		float pNew = (p+ (nightPercentage/2))%100;
 		int r = (int)( (pNew / (nightPercentage*1f) ) * -100 );
-		if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
+		//if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
 		return r;
 	}
 	
