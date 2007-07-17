@@ -52,7 +52,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
         turnDirection(steps,from,toReach);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
-        handler.core.updateDisplay();
+        handler.core.updateDisplay(from);
     	handler.unlockHandling(true);
     }
 }

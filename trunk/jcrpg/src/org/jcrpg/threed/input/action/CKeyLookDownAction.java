@@ -67,7 +67,7 @@ public class CKeyLookDownAction extends CKeyAction {
         turnDirection(steps, toReach, from, true);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
         camera.update();
-        handler.core.updateDisplay();
+        handler.core.updateDisplay(from);
     	handler.unlockHandling(true);
     }
 }
