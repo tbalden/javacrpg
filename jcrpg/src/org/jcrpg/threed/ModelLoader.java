@@ -144,6 +144,20 @@ public class ModelLoader {
     	tempNodeKeys.clear();
     	tempBinaryKeys.clear();
     }
+    
+    public void setLockForSharedNodes(boolean lockState)
+    {
+    	for (Node n: sharedNodeCache.values())
+    	{
+    		if (lockState)
+    		{
+    			//n.lock();
+    		} else
+    		{
+    			//n.unlock();
+    		}
+    	}
+    }
      
     /**
      * Load one simplemodel to node
