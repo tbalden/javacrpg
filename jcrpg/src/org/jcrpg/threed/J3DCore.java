@@ -928,9 +928,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 							{
 								//if (c.renderedZ-relativeZ<3 && c.renderedZ-relativeZ>-3)
 								{
-									Node n = FloraSetup.createVegetation(cam,c.renderedX+relativeX,c.renderedY+relativeY,c.renderedZ-relativeZ,null);
-									cRootNode.attachChild(n);
-									c.hsRenderedNodes.add(n);
+									// TODO distance dependency and more sophisticated TextureState input
+									//Node n = FloraSetup.createVegetation(cam,c.renderedX+relativeX,c.renderedY+relativeY,c.renderedZ-relativeZ,null);
+									//cRootNode.attachChild(n);
+									//c.hsRenderedNodes.add(n);
 								}
 							}
 						}
