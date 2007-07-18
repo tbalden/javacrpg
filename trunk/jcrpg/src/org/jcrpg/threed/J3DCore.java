@@ -25,6 +25,7 @@ package org.jcrpg.threed;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -100,6 +101,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.QuadBatch;
 import com.jme.scene.batch.TriangleBatch;
@@ -918,9 +920,25 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			Side[][] sides = c.cube.sides;
 			for (int j=0; j<sides.length; j++)
 			{
-				if (sides[j]!=null)
-				for (int k=0; k<sides[j].length; k++)
-					renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
+				if (sides[j]!=null) {
+					if (j==BOTTOM)
+					{
+						if (c.renderedY+relativeY==0) {
+							//if (c.renderedX+relativeX<3 && c.renderedX+relativeX>-3)
+							{
+								//if (c.renderedZ-relativeZ<3 && c.renderedZ-relativeZ>-3)
+								{
+									Node n = FloraSetup.createVegetation(cam,c.renderedX+relativeX,c.renderedY+relativeY,c.renderedZ-relativeZ,null);
+									cRootNode.attachChild(n);
+									c.hsRenderedNodes.add(n);
+								}
+							}
+						}
+					}
+					for (int k=0; k<sides[j].length; k++) {
+						renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
+					}
+				}
 			}
 			// store it to new cubes hashmap
 			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
@@ -955,7 +973,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
 		
-		bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
+		//bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
 		modelLoader.setLockForSharedNodes(true);
 	
 		System.gc();
@@ -1485,7 +1503,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		bmesh.updateGeometricState(0.1f, false);*/
 		
 		
-		bmesh.updateRenderState();
+		//bmesh.updateRenderState();
 		
 
 		noInput = true;
@@ -1530,7 +1548,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     private static ShadowedRenderPass sPass = new ShadowedRenderPass();
 
     
-    BatchMesh bmesh;
+    //BatchMesh bmesh;
     
     private int QUAD_QUANTITY = 10;
     private float QUAD_SIZE_X = 0.8f;
@@ -1575,50 +1593,21 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    int c = 0;
        	for (int x=-5; x<5; x++) {
        	   	for (int y=-5; y<5; y++) {
-       	   	QuadBatch qbQuads = new QuadBatch();
-       	    qbQuads.setMode(QuadBatch.QUADS);
-       	    qbQuads.setModelBound(new BoundingBox());
-
-       	    qbQuads.setRenderState(as); // alpha state
-       	    
- 		    
-            qbQuads.setVertexBuffer(BufferUtils.createFloatBuffer(getVertsQuad(x, 0, y)));
-		    // A strip of 2 quads. Beware that QUAD_STRIP ordering is different from QUADS,
-		    // The third indice actually points to the start of *next* quad.
-		    int[] buff = new int[QUAD_QUANTITY*QUAD_QUANTITY*4];
-		    for (int i=0; i<QUAD_QUANTITY*QUAD_QUANTITY*4; i++) buff[i] = i;
-		    qbQuads.setIndexBuffer(BufferUtils.createIntBuffer(buff));//new int[] {0, 1, 2, 3, 4, 5}));
-      	    //tbuf.put(0.1f).put(0.1f);
-      	    //tbuf.put(0.1f).put(0.1f);
-      	    //tbuf.put(0.1f).put(0.1f);
-        	FloatBuffer tbuf = BufferUtils.createVector2Buffer(4);
-      	    tbuf.put(0.0f).put(0.3f);
-      	    tbuf.put(0.3f).put(0.0f);
-      	    tbuf.put(0.3f).put(0.3f);
-      	    tbuf.put(0.0f).put(0.0f);
-      	    //qbQuads.setTextureBuffer(tbuf,0);
-            qbQuads.setRenderState(ts);
-
-    	    int count = 0;
-            for (FloatBuffer fb:qbQuads.getTextureBuffers())
-       	    {
-       	    	System.out.println(count++ + " FLOAT BUFFER TEXTURE : "+fb);
-       	    }
-		    qbStrips[c++] = qbQuads;
        	   	}
-    	}
+       	}
        	
 	    //CullState cull = display.getRenderer().createCullState();
 	    //cull.setCullMode(CullState.CS_BACK);
-	    bmesh = new BatchMesh("batches", (GeomBatch[])qbStrips);
+	    //bmesh = new BatchMesh("batches", (GeomBatch[])qbStrips);
         /*for (int i=0; i<QUAD_QUANTITY*QUAD_QUANTITY*4; i++) {
       	    qbQuads.setTextureBuffer(tbuf, i);
         }*/
-	    bmesh.setRenderState(ts);
-	    bmesh.updateRenderState();
+	    //bmesh.setRenderState(ts);
+	    //bmesh.updateRenderState();
 	    //cRootNode.attachChild(bmesh); // TODO if grass is good, uncomment this
+	    
 
-	    bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
+	    //bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
 
 	    //bmesh.setLocalTranslation(getCurrentLocation().add(0f,0.01f,0));
 		
@@ -1632,7 +1621,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
         cRootNode.setRenderState(fs);
-        bmesh.setRenderState(fs);
+        //bmesh.setRenderState(fs);
 		
         /*sPass.add(rootNode);
         sPass.setRenderShadows(true);
