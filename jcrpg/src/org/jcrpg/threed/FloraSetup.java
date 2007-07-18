@@ -59,9 +59,12 @@ public class FloraSetup {
 	            Texture.FM_LINEAR);
 		//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 		qtexture.setApply(Texture.AM_REPLACE);
+		//qtexture.setFilter(Texture.FM_LINEAR);
+		//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
 		default_ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		default_ts.setTexture(qtexture);
 		default_ts.setEnabled(true);
+		
 
 	    as.setEnabled(true);
 		as.setBlendEnabled(true);
