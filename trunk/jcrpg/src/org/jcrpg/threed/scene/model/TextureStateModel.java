@@ -25,10 +25,10 @@ package org.jcrpg.threed.scene.model;
 public class TextureStateModel extends Model{
 
 	public String textureName;
-	public float quadSizeX = 0.5f;
+	public float quadSizeX = 0.64f;
 	public float quadSizeY = 0.4f;
-	public int quadQuantity = 4;
-	public float quadSeparation = 0.5f;
+	public int quadQuantity = 3;
+	public float quadSeparation = 0.64f;
 
 	public TextureStateModel(String textureName, float quadSizeX, float quadSizeY, int quadQuantity, float quadSeparation) {
 		super();

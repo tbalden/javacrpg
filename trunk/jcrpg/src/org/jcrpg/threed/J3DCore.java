@@ -1537,32 +1537,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		as.setEnabled(true);
 		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		as.setDstFunction(AlphaState.DB_ONE_MINUS_DST_ALPHA);
 		as.setReference(0.0f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
-
-	    int c = 0;
-       	for (int x=-5; x<5; x++) {
-       	   	for (int y=-5; y<5; y++) {
-       	   	}
-       	}
-       	
-	    //CullState cull = display.getRenderer().createCullState();
-	    //cull.setCullMode(CullState.CS_BACK);
-	    //bmesh = new BatchMesh("batches", (GeomBatch[])qbStrips);
-        /*for (int i=0; i<QUAD_QUANTITY*QUAD_QUANTITY*4; i++) {
-      	    qbQuads.setTextureBuffer(tbuf, i);
-        }*/
-	    //bmesh.setRenderState(ts);
-	    //bmesh.updateRenderState();
-	    //cRootNode.attachChild(bmesh); // TODO if grass is good, uncomment this
-	    
-
-	    //bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
-
-	    //bmesh.setLocalTranslation(getCurrentLocation().add(0f,0.01f,0));
-		
 		
 		fs = display.getRenderer().createFogState();
         fs.setDensity(0.5f);
@@ -1592,11 +1570,13 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,5700f);
 		sRootNode.attachChild(skySphere);
-		//cRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere(3000f,new Vector3f(0,0,0)));
 		skySphere.setTextureMode(TextureState.RS_ALPHA);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
+		
+		sRootNode.setRenderState(as);
+		skySphere.setRenderState(as);
 
 		
 		if (texture!=null) {
@@ -1660,49 +1640,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		}
 	}
 
-	  
-	  Vector3f[] getVertsTriangle(int x, int y, int z) {
-		  float ySize = 0.4f;
-		  float xSize = 0.1f;
-		  Vector3f[] verts = new Vector3f[100*100*3]; 
-		  for (float localX=0; localX<100; localX++)
-		  {
-			  
-			  for (float localZ=0; localZ<100; localZ++)
-			  {
-				  float cx = x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/100f);
-				  float cy = y*CUBE_EDGE_SIZE;
-				  float cz = z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/100f);
-				  verts[(int)(localX*100*3+localZ*3)] = new Vector3f(cx,cy,cz);
-				  verts[(int)(localX*100*3+localZ*3+1)] = new Vector3f(cx + xSize,cy,cz);
-				  verts[(int)(localX*100*3+localZ*3+2)] = new Vector3f(cx + xSize/2f,cy + ySize,cz);
-				  //verts[(int)(localX*10+localZ*4+3)] = new Vector3f(cx + xSize,cy,-cz);
-				  //System.out.println("QUAD VECT "+(int)(localX*100+localZ*3)+" "+localX+" "+localZ+" "+verts[(int)(localX*10+localZ*3)]);
-			  }
-		  }
-		  return verts;
-	  }
-	  Vector3f[] getVertsQuad(int x, int y, int z) {
-		  float ySize = QUAD_SIZE_Y;
-		  float xSize = QUAD_SIZE_X;
-		  Vector3f[] verts = new Vector3f[QUAD_QUANTITY*QUAD_QUANTITY*4]; 
-		  for (float localX=0; localX<QUAD_QUANTITY; localX++)
-		  {
-			  
-			  for (float localZ=0; localZ<QUAD_QUANTITY; localZ++)
-			  {
-				  float cx = x*CUBE_EDGE_SIZE*1f+localX*(CUBE_EDGE_SIZE/QUAD_QUANTITY)+HashUtil.mixPercentage((int)localX, 0, (int)localZ)/1000f;
-				  float cy = y*CUBE_EDGE_SIZE;
-				  float cz = z*1f*CUBE_EDGE_SIZE+localZ*(CUBE_EDGE_SIZE/QUAD_QUANTITY)+HashUtil.mixPercentage((int)localX+2, 0, (int)localZ)/1000f;;
-				  verts[(int)(localX*QUAD_QUANTITY*4+localZ*4)] = new Vector3f(cx,cy,cz);
-				  verts[(int)(localX*QUAD_QUANTITY*4+localZ*4+1)] = new Vector3f(cx + xSize, cy,cz);
-				  verts[(int)(localX*QUAD_QUANTITY*4+localZ*4+2)] = new Vector3f(cx + xSize, cy + ySize,cz);
-				  verts[(int)(localX*QUAD_QUANTITY*4+localZ*4+3)] = new Vector3f(cx + xSize/10f, cy + ySize + ySize/5f,cz);
-				  //System.out.println("QUAD VECT "+(int)(localX*10+localZ*4)+" "+localX+" "+localZ+" "+verts[(int)(localX*10+localZ*3)]);
-			  }
-		  }
-		  return verts;
-	  }
 	  
 
 
