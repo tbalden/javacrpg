@@ -170,10 +170,10 @@ public class FloraSetup {
 			for (int j = 0; j < tm.quadQuantity; j++) {
 				float x = i * tm.quadSeparation + (HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
 				float z = j * tm.quadSeparation + (HashUtil.mixPercentage((int)i+1, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
-				x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - tm.quadSizeX/2f);
-				z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - tm.quadSizeX/2f);
-				x = Math.max(x,  + tm.quadSizeX/2f);
-				z = Math.max(z,  + tm.quadSizeX/2f);
+				x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - tm.quadSeparation/4f);
+				z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - tm.quadSeparation/4f);
+				x = Math.max(x,  + tm.quadSeparation/4f);
+				z = Math.max(z,  + tm.quadSeparation/4f);
 
 				// find height
 				float height = -0.f;//tb.getHeight(x, z);
@@ -199,7 +199,7 @@ public class FloraSetup {
 				normalX = normalY.cross(normalZ);
 				Quaternion rotation = new Quaternion();
 				rotation.fromAxes(normalX, normalY, normalZ);
-				rotation.multLocal(new Quaternion(new float[]{0,HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j),0}));
+				rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
 
 				// add from two diff view same quad, to be nicely displayed
 				//vegetation.addVegetationObject(quad, translation, scale,
