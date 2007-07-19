@@ -31,15 +31,26 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.WeakHashMap;
 
+import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.model.BillboardModel;
+import org.jcrpg.threed.scene.model.ImposterModel;
+import org.jcrpg.threed.scene.model.LODModel;
+import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.SimpleModel;
+import org.jcrpg.threed.scene.model.TextureStateModel;
+import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.scene.BillboardNode;
+import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
+import com.jme.scene.ImposterNode;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -63,11 +74,104 @@ public class ModelLoader {
     WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
     // this better be not weak hashmap
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
+    WeakHashMap<String,TextureState> textureStateCache = new WeakHashMap<String,TextureState>();
     
     int counter=0;
     
-    AlphaState as = null;
+    AlphaState as;
 
+    
+	/**
+	 * Loading a set of models into JME nodes.
+	 * @param objects
+	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
+	 * @return
+	 */
+	protected Node[] loadObjects(RenderedCube rc, Model[] objects, boolean fakeLoadForCacheMaint)
+    {
+		
+		Node[] r = null;
+		r = new Node[objects.length];
+		if (objects!=null)
+		for (int i=0; i<objects.length; i++) {
+			if (objects[i]==null) continue;
+			if (objects[i] instanceof TextureStateModel) 
+			{
+				TextureStateModel m = (TextureStateModel)objects[i];
+				TextureState ts = loadTextureState(m);
+				Node node = FloraSetup.createVegetation(rc, core.getCamera(), ts, m);
+				r[i] = node;
+			
+			} else
+			if (objects[i] instanceof SimpleModel) 
+			{
+				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+				if (fakeLoadForCacheMaint) continue;
+				
+				r[i] = node;
+				node.setName(((SimpleModel)objects[i]).modelName+i);
+			} else
+			// ** LODModel **
+			if (objects[i] instanceof LODModel)
+			{
+				LODModel lm = (LODModel)objects[i];
+				
+				int c=0; // counter
+				DistanceSwitchModel dsm = new DistanceSwitchModel(lm.models.length);
+				DiscreteLodNode lodNode = new DiscreteLodNode("dln",dsm);
+				for (Model m : lm.models) {
+					Node node = null;
+					if (m instanceof TextureStateModel)
+					{
+						TextureStateModel tm = (TextureStateModel)m;
+						TextureState ts = loadTextureState(tm);
+						node = FloraSetup.createVegetation(rc, core.getCamera(), ts, tm);
+					} else 
+					{	
+						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
+						if (fakeLoadForCacheMaint) continue;
+					}
+					
+					
+					if (m instanceof BillboardModel)
+					{
+
+						BillboardNode iNode = new BillboardNode("a");
+						iNode.attachChild(node);
+						iNode.setAlignment(BillboardNode.SCREEN_ALIGNED);
+					    node = iNode;
+					}
+					if (m instanceof ImposterModel)
+					{
+						// TODO imposter node, if FBO present (?) TEST
+						/*						
+						 * boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;*/
+						/*TextureRenderer tRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(
+								1, 1, TextureRenderer.RENDER_TEXTURE_RECTANGLE);
+						tRenderer.getCamera().setLocation(new Vector3f(0, 0, 75f));
+						tRenderer.setBackgroundColor(new ColorRGBA(0, 0, 0, 0f));*/
+						boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;
+						if (FBOEnabled)
+						{
+							ImposterNode iNode = new ImposterNode("a",10,10,10);
+							iNode.attachChild(node);
+						    node = iNode;
+						}
+
+					}
+					lodNode.attachChildAt(node,c);
+					dsm.setModelDistance(c, lm.distances[c][0], lm.distances[c][1]);
+					c++;
+				}
+				
+				if (fakeLoadForCacheMaint) continue;
+				
+				r[i] = lodNode;
+			}
+		}
+		return r;
+    }
+    
     
     /**
      * Sets mipmap rendering state to a scenelement recoursively.
@@ -157,6 +261,25 @@ public class ModelLoader {
     			//n.unlock();
     		}
     	}
+    }
+    
+    public TextureState loadTextureState(TextureStateModel model)
+    {
+    	TextureState ts = textureStateCache.get(model.textureName);
+    	if (ts!=null) return ts;
+    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+		Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+model.textureName,Texture.MM_LINEAR,
+	            Texture.FM_LINEAR);
+		//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		qtexture.setApply(Texture.AM_REPLACE);
+		qtexture.setFilter(Texture.FM_LINEAR);
+		//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+		ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+		ts.setTexture(qtexture);
+		ts.setEnabled(true);
+		textureStateCache.put(model.textureName, ts);
+		return ts;
+    	
     }
      
     /**
