@@ -144,7 +144,7 @@ public class FloraSetup {
 	}
 	  
 	
-	public static Node createVegetation(RenderedCube c, Camera cam, TextureState ts, TextureStateModel tm) {
+	public static Node createVegetation(RenderedCube c, Camera cam, TextureState[] ts, TextureStateModel tm) {
 		
 		// Load the vegetation class of your choice
 		AbstractVegetation vegetation = new NaiveVegetation("vegetation",
@@ -154,15 +154,18 @@ public class FloraSetup {
 		vegetation.initialize();
 
 		// Load placeholder models for vegetation
-		
-		Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
-		quad.setModelBound(new BoundingBox());
-		quad.updateModelBound();
-		quad.setRenderState(ts==null?default_ts:ts);
-		quad.setRenderState(as);
-		//BillboardNode model3 = new BillboardNode();
-		//model3.attachChild(quad);
-		//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
+		Quad[] quads = new Quad[ts.length];
+		for (int i=0; i<ts.length; i++){ 
+			Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+			quad.setModelBound(new BoundingBox());
+			quad.updateModelBound();
+			quad.setRenderState(ts[i]==null?default_ts:ts[i]);
+			quad.setRenderState(as);
+			quads[i] = quad;
+			//BillboardNode model3 = new BillboardNode();
+			//model3.attachChild(quad);
+			//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
+		}
 		
 
 		// Place the darn models
@@ -204,7 +207,7 @@ public class FloraSetup {
 				// add from two diff view same quad, to be nicely displayed
 				//vegetation.addVegetationObject(quad, translation, scale,
 					//	rotation.add(J3DCore.qE));
-				vegetation.addVegetationObject(quad, translation, scale,
+				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x,c.cube.y,c.cube.z)%quads.length], translation, scale,
 						rotation);
 			}
 		}

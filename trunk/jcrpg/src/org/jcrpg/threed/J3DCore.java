@@ -52,6 +52,7 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
@@ -372,9 +373,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id, new Integer(24));
+		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, new Integer(26));
 
 		
-		LODModel lod_jungleMiddleSmall = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_middle_small.3ds",null)},new float[][]{{0f,6f}});
+		//LODModel lod_jungleMiddleSmall = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_middle_small.3ds",null)},new float[][]{{0f,6f}});
+		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
 
 		LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		//LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/cherry.3ds",null,true)},new float[][]{{0f,7f},{7.1f,15f}});
@@ -388,8 +391,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		
-		TextureStateModel tsm_cont_grass = new TextureStateModel("grass1.png");
-		LODModel lod_grass_tsm_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
+		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass1.png","grass1_flower.png","grass1_flower_2.png"});
+		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
+		
+		TextureStateModel tsm_jung_grass = new TextureStateModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png"},0.9f,0.6f,3,0.7f);
+		LODModel lod_jung_grass_1 = new LODModel(new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -423,7 +429,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_grass_tsm_1}));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_cont_grass_1}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("models/ground/road_stone_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
@@ -431,8 +437,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("models/ground/arctic_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
 		
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashRotatedSide(new Model[]{new SimpleModel("models/ground/jung_grass.3ds",null),
-				lod_jungleMiddleSmall
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{new SimpleModel("models/ground/jung_grass.3ds",null),
+				lod_jung_grass_1
 		}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
@@ -444,16 +450,16 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{lod_pine}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{lod_bush1})); 
-		//hm3dTypeRenderedSide.put(new Integer(19), new RenderedSide(new Model[]{lod_bush1,lod_grass1})); 
 		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{lod_acacia}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
+		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("models/ground/water1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","sides/wall_mossy.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
 				
 		
 	}
