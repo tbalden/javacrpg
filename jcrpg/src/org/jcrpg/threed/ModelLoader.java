@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.WeakHashMap;
@@ -98,7 +99,7 @@ public class ModelLoader {
 			if (objects[i] instanceof TextureStateModel) 
 			{
 				TextureStateModel m = (TextureStateModel)objects[i];
-				TextureState ts = loadTextureState(m);
+				TextureState[] ts = loadTextureStates(m);
 				Node node = FloraSetup.createVegetation(rc, core.getCamera(), ts, m);
 				r[i] = node;
 			
@@ -124,7 +125,7 @@ public class ModelLoader {
 					if (m instanceof TextureStateModel)
 					{
 						TextureStateModel tm = (TextureStateModel)m;
-						TextureState ts = loadTextureState(tm);
+						TextureState[] ts = loadTextureStates(tm);
 						node = FloraSetup.createVegetation(rc, core.getCamera(), ts, tm);
 					} else 
 					{	
@@ -263,22 +264,26 @@ public class ModelLoader {
     	}
     }
     
-    public TextureState loadTextureState(TextureStateModel model)
+    public TextureState[] loadTextureStates(TextureStateModel model)
     {
-    	TextureState ts = textureStateCache.get(model.textureName);
-    	if (ts!=null) return ts;
-    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-		Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+model.textureName,Texture.MM_LINEAR,
-	            Texture.FM_LINEAR);
-		//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		qtexture.setApply(Texture.AM_REPLACE);
-		//qtexture.setFilter(Texture.FM_LINEAR);
-		//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-		ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-		ts.setTexture(qtexture);
-		ts.setEnabled(true);
-		textureStateCache.put(model.textureName, ts);
-		return ts;
+    	ArrayList<TextureState> tss = new ArrayList<TextureState>();
+    	for (int i=0; i<model.textureName.length; i++) {
+	    	TextureState ts = textureStateCache.get(model.textureName[i]);
+	    	if (ts!=null) {tss.add(ts); continue;}
+	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+model.textureName[i],Texture.MM_LINEAR,
+		            Texture.FM_LINEAR);
+			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			qtexture.setApply(Texture.AM_REPLACE);
+			//qtexture.setFilter(Texture.FM_LINEAR);
+			//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+			ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+			ts.setTexture(qtexture);
+			ts.setEnabled(true);
+			textureStateCache.put(model.textureName[i], ts);
+			tss.add(ts);
+    	}
+    	return (TextureState[])tss.toArray(new TextureState[0]);
     	
     }
      
