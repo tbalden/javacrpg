@@ -45,6 +45,7 @@ import org.jcrpg.threed.scene.model.ImposterModel;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.SimpleModel;
+import org.jcrpg.threed.scene.model.TextureStateModel;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
 import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
@@ -90,6 +91,7 @@ import com.jme.light.SpotLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.ShadowedRenderPass;
@@ -129,6 +131,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
     public static int RENDER_DISTANCE = 10;
+    public static int RENDER_GRASS_DISTANCE = 10;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -162,6 +165,19 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("RENDER_DISTANCE", "10");
+	    		}
+	    	}
+	    	String renderGrassDistance = p.getProperty("RENDER_GRASS_DISTANCE");
+	    	if (renderDistance!=null)
+	    	{
+	    		try {
+	    			RENDER_GRASS_DISTANCE = Integer.parseInt(renderGrassDistance);
+	    			if (RENDER_GRASS_DISTANCE>15*CUBE_EDGE_SIZE) RENDER_GRASS_DISTANCE = (int)(15*CUBE_EDGE_SIZE);
+	    			if (RENDER_GRASS_DISTANCE>RENDER_DISTANCE*CUBE_EDGE_SIZE) RENDER_GRASS_DISTANCE = (int)(RENDER_DISTANCE*CUBE_EDGE_SIZE);
+	    			if (RENDER_GRASS_DISTANCE<0) RENDER_GRASS_DISTANCE = 0;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("RENDER_GRASS_DISTANCE", "10");
 	    		}
 	    	}
 	    	String mipmapGlobal = p.getProperty("MIPMAP_GLOBAL");
@@ -390,7 +406,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
-		LODModel lod_grass1 = new LODModel(new SimpleModel[]{new BillboardModel("models/grass/grass_plane1.3ds",null,false)},new float[][]{{0f,0f}});
+		
+		TextureStateModel tsm_cont_grass = new TextureStateModel("grass1.png");
+		LODModel lod_grass_tsm_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -423,7 +441,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				));
 
 
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_grass1}));
+		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_grass_tsm_1}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("models/ground/road_stone_1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
@@ -475,79 +494,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		return display;
 	}
     
-	/**
-	 * Loading a set of models into JME nodes.
-	 * @param objects
-	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
-	 * @return
-	 */
-	protected Node[] loadObjects(Model[] objects, boolean fakeLoadForCacheMaint)
-    {
-		
-		Node[] r = null;
-		r = new Node[objects.length];
-		if (objects!=null)
-		for (int i=0; i<objects.length; i++) {
-			if (objects[i]==null) continue;
-			if (objects[i] instanceof SimpleModel) 
-			{
-				Node node = modelLoader.loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
-				if (fakeLoadForCacheMaint) continue;
-				
-				r[i] = node;
-				node.setName(((SimpleModel)objects[i]).modelName+i);
-			} else
-			// ** LODModel **
-			if (objects[i] instanceof LODModel)
-			{
-				LODModel lm = (LODModel)objects[i];
-				
-				int c=0; // counter
-				DistanceSwitchModel dsm = new DistanceSwitchModel(lm.models.length);
-				DiscreteLodNode lodNode = new DiscreteLodNode("dln",dsm);
-				for (Model m : lm.models) {
-					
-					Node node = modelLoader.loadNode((SimpleModel)m,fakeLoadForCacheMaint);
-					if (fakeLoadForCacheMaint) continue;
-					
-					if (m instanceof BillboardModel)
-					{
-
-						BillboardNode iNode = new BillboardNode("a");
-						iNode.attachChild(node);
-						iNode.setAlignment(BillboardNode.SCREEN_ALIGNED);
-					    node = iNode;
-					}
-					if (m instanceof ImposterModel)
-					{
-						// TODO imposter node, if FBO present (?) TEST
-						/*						
-						 * boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;*/
-						/*TextureRenderer tRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(
-								1, 1, TextureRenderer.RENDER_TEXTURE_RECTANGLE);
-						tRenderer.getCamera().setLocation(new Vector3f(0, 0, 75f));
-						tRenderer.setBackgroundColor(new ColorRGBA(0, 0, 0, 0f));*/
-						boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;
-						if (FBOEnabled)
-						{
-							ImposterNode iNode = new ImposterNode("a",10,10,10);
-							iNode.attachChild(node);
-						    node = iNode;
-						}
-
-					}
-					lodNode.attachChildAt(node,c);
-					dsm.setModelDistance(c, lm.distances[c][0], lm.distances[c][1]);
-					c++;
-				}
-				
-				if (fakeLoadForCacheMaint) continue;
-				
-				r[i] = lodNode;
-			}
-		}
-		return r;
-    }
+	public Camera getCamera()
+	{
+		return cam;
+	}
 	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
 	
@@ -902,11 +852,12 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 						renderSide(cOrig,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],true); // fake = true!
 				}
 
-				//for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
+				for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
 		    	{
-		    		//Node n = itNode.next();
+		    		Node n = itNode.next();
 		    		
 		    		//n.updateRenderState();
+		    		//n.updateModelBound();
 		    		//sPass.removeOccluder(n);
 		    		//cRootNode.detachChild(itNode.next());
 		    		
@@ -1052,7 +1003,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
 		
-		Node[] n = loadObjects(renderedSide.objects,fakeLoadForCacheMaint);
+		Node[] n = modelLoader.loadObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
 		if (!fakeLoadForCacheMaint) {
 			if (renderedSide instanceof RenderedHashRotatedSide)
 			{
@@ -1096,7 +1047,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			}
 			if (render)
 			{
-				n= loadObjects(((RenderedTopSide)renderedSide).nonEdgeObjects,fakeLoadForCacheMaint);
+				n= modelLoader.loadObjects(cube,((RenderedTopSide)renderedSide).nonEdgeObjects,fakeLoadForCacheMaint);
 				if (!fakeLoadForCacheMaint)
 				{
 					renderNodes(n, cube, x, y, z, direction);
@@ -1123,7 +1074,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				if (checkCube !=null) {
 					if (checkCube.hasSideOfType(direction,side.type))
 					{
-						n = loadObjects( ((RenderedContinuousSide)renderedSide).continuous, fakeLoadForCacheMaint );
+						n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).continuous, fakeLoadForCacheMaint );
 						if (!fakeLoadForCacheMaint)
 						{
 							renderNodes(n, cube, x, y, z, direction);
@@ -1131,7 +1082,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					} else
 					{
 						// normal direction is continuous
-						n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint);
+						n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint)
 						{
 							renderNodes(n, cube, x, y, z, direction);
@@ -1140,7 +1091,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				} else
 				{
 					// normal direction is continuous
-					n = loadObjects( ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint );
+					n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint );
 					if (!fakeLoadForCacheMaint)
 					{
 						renderNodes(n, cube, x, y, z, direction);
@@ -1156,25 +1107,25 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					{
 						// opposite to normal direction is continuous 
 						// normal direction is continuous
-						n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+						n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 					
 					}else
 					{
 						// no continuous side found
-						n = loadObjects(((RenderedContinuousSide)renderedSide).nonContinuous, fakeLoadForCacheMaint);
+						n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).nonContinuous, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 					}
 				} else {
 					// opposite to normal direction is continuous 
 					// normal direction is continuous
-					n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+					n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 					if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 				}
 			} else {
 				// opposite to normal direction is continuous 
 				// normal direction is continuous
-				n = loadObjects(((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+				n = modelLoader.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 				if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 			}
 			

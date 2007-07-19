@@ -25,6 +25,8 @@ package org.jcrpg.threed;
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
 import org.jcrpg.threed.jme.vegetation.NaiveVegetation;
 import org.jcrpg.threed.jme.vegetation.QuadTreeVegetation;
+import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.model.TextureStateModel;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.bounding.BoundingBox;
@@ -32,6 +34,7 @@ import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
@@ -43,13 +46,6 @@ import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
 public class FloraSetup {
-	private static final float vegetationSeparation = 0.6f;
-
-	private static final int vegetationCountX = 3;
-
-	private static final int vegetationCountZ = 3;
-	
-	private static final float quadSizeX = 0.4f, quadSizeY = 0.8f;
 
 	static TextureState default_ts; 
 	static AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
@@ -76,7 +72,7 @@ public class FloraSetup {
 	}
 
 	
-	public static Node createVegetation(Camera cam, int sx, int sy, int sz, TextureState ts) {
+	public static Node createVegetation(RenderedCube c, Camera cam, TextureState ts, TextureStateModel tm) {
 		
 		// Load the vegetation class of your choice
 		AbstractVegetation vegetation = new NaiveVegetation("vegetation",
@@ -86,38 +82,35 @@ public class FloraSetup {
 		vegetation.initialize();
 
 		// Load placeholder models for vegetation
-		TriMesh model1 = new Box("box", new Vector3f(-0.1f, -0.1f, -0.1f), new Vector3f(
-				0.1f, 0.1f, 0.1f));
-		model1.setModelBound(new BoundingBox());
-		model1.updateModelBound();
-		TriMesh model2 = new Pyramid("pyramid", 0.1f, 0.1f);
-		model2.setModelBound(new BoundingBox());
-		model2.updateModelBound();
 		
-		Quad model3 = new Quad("grassQuad",quadSizeX,quadSizeY);
-		model3.setModelBound(new BoundingBox(new Vector3f(0,0,0),0,0,0));
-		model3.updateModelBound();
-		model3.setRenderState(ts==null?default_ts:ts);
-		model3.setRenderState(as);
+		Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+		quad.setModelBound(new BoundingBox());
+		quad.updateModelBound();
+		quad.setRenderState(ts==null?default_ts:ts);
+		quad.setRenderState(as);
+		//BillboardNode model3 = new BillboardNode();
+		//model3.attachChild(quad);
+		//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
+		
 
 		// Place the darn models
-		for (int i = 0; i < vegetationCountX; i++) {
-			for (int j = 0; j < vegetationCountZ; j++) {
-				float x = i * vegetationSeparation + HashUtil.mixPercentage((int)i, sx+sy+sz, (int)j)/300f;
-				float z = j * vegetationSeparation + HashUtil.mixPercentage((int)i+1, sx+sy+sz, (int)j)/300f;
+		for (int i = 0; i < tm.quadQuantity; i++) {
+			for (int j = 0; j < tm.quadQuantity; j++) {
+				float x = i * tm.quadSeparation + (HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+				float z = j * tm.quadSeparation + (HashUtil.mixPercentage((int)i+1, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+				x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - tm.quadSizeX/2f);
+				z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - tm.quadSizeX/2f);
+				x = Math.max(x,  + tm.quadSizeX/2f);
+				z = Math.max(z,  + tm.quadSizeX/2f);
 
 				// find height
-				float height = -0.9f;//tb.getHeight(x, z);
+				float height = -0.f;//tb.getHeight(x, z);
 				if (Float.isNaN(height)) {
-					height = -0.9f;
+					height = -0.f;
 				}
 				
-				x+=sx*J3DCore.CUBE_EDGE_SIZE;
-				z+=sz*J3DCore.CUBE_EDGE_SIZE;
-
-				height+=sy*J3DCore.CUBE_EDGE_SIZE;
-				
-				Vector3f translation = new Vector3f(x, height, z);
+				// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
+				Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, -z + J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2);
 
 				// find scale
 				float scaleValue = 1.0f;
@@ -125,7 +118,7 @@ public class FloraSetup {
 						scaleValue);
 
 				// find rotation
-				Vector3f normalY = new Vector3f(0,1f,0);//tb.getSurfaceNormal(x, z, null);
+				Vector3f normalY = new Vector3f(0,0,1f);//tb.getSurfaceNormal(x, z, null);
 				if (normalY == null) {
 					normalY = Vector3f.UNIT_Y;
 				}
@@ -135,14 +128,11 @@ public class FloraSetup {
 				Quaternion rotation = new Quaternion();
 				rotation.fromAxes(normalX, normalY, normalZ);
 
-				// just mix the models
-				if ((i + j) % 2 == 0) {
-					vegetation.addVegetationObject(model3, translation, scale,
-							rotation);
-				} else {
-					vegetation.addVegetationObject(model3, translation, scale,
-							rotation);
-				}
+				// add from two diff view same quad, to be nicely displayed
+				vegetation.addVegetationObject(quad, translation, scale,
+						rotation.add(J3DCore.qE));
+				vegetation.addVegetationObject(quad, translation, scale,
+						rotation);
 			}
 		}
 

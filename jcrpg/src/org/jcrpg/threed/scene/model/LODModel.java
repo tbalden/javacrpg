@@ -29,7 +29,7 @@ package org.jcrpg.threed.scene.model;
  */
 public class LODModel extends Model {
 
-	public SimpleModel[] models;
+	public Model[] models;
 	public float[][] distances;
 	
 	/**
@@ -37,7 +37,7 @@ public class LODModel extends Model {
 	 * @param models The models to be put together
 	 * @param distances The distance Min Max floats in an array
 	 */
-	public LODModel(SimpleModel[] models, float[][] distances)
+	public LODModel(Model[] models, float[][] distances)
 	{
 		this.models = models;
 		this.distances = distances;
