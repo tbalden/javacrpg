@@ -169,6 +169,12 @@ public class ModelLoader {
 				
 				r[i] = lodNode;
 			}
+			
+			// if model can be rotated on a steep, we set node user data for later use in renderNodes of J3DCore...
+			if (objects[i].rotateOnSteep) 
+			{
+				r[i].setUserData("rotateOnSteep", r[i]);
+			}
 		}
 		return r;
     }

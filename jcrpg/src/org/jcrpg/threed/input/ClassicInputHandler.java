@@ -3,7 +3,6 @@ package org.jcrpg.threed.input;
 import org.jcrpg.threed.J3DCore;
 
 import com.jme.input.InputHandler;
-import com.jme.input.MouseLookHandler;
 import com.jme.renderer.Camera;
 
 public class ClassicInputHandler  extends InputHandler {

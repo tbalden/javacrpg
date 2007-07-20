@@ -53,21 +53,14 @@ public class CKeyLookDownAction extends CKeyAction {
     	}
     	
     	handler.lockHandling();
-    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
-        //handler.core.turnLeft();
-    	Vector3f toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];
-        float steps = J3DCore.MOVE_STEPS*2;
-        turnDirection(steps, from, toReach, true);
-        try {
-        	Thread.sleep(1000);
-        }catch (Exception ex)
-        {
-        	
-        }
-        turnDirection(steps, toReach, from, true);
-        camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
+
+        handler.lookUpDownPercent--;
+        if (handler.lookUpDownPercent<-20) handler.lookUpDownPercent = -20;
+        
+        setLookUpDown();
+
         camera.update();
-        handler.core.updateDisplay(from);
-    	handler.unlockHandling(true);
+        handler.core.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
+    	handler.unlockHandling(false);
     }
 }

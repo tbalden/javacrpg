@@ -51,6 +51,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps,from,toReach);
         camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
+        setLookUpDown();
         camera.update();
         handler.core.updateDisplay(from);
     	handler.unlockHandling(true);
