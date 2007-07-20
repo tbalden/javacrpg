@@ -40,6 +40,7 @@ public class GreatPineTree extends Tree {
 	public GreatPineTree()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 

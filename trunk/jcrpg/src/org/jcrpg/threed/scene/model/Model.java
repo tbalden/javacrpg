@@ -24,4 +24,10 @@ package org.jcrpg.threed.scene.model;
 
 public abstract class Model {
 
+	/**
+	 * Tells if the model is rotable on steep. Default value should be false. 
+	 * Override it for quad grasses/ground plane.
+	 */
+	public boolean rotateOnSteep = false;
+	
 }

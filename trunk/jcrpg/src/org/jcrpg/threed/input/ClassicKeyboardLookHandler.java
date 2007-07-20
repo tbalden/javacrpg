@@ -30,6 +30,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     private CKeyRotateLeftAction left;
     
     public J3DCore core;
+    
+    public int lookUpDownPercent = 0;
 
     public ClassicKeyboardLookHandler( J3DCore core, Camera cam ) {
     	this.core = core;

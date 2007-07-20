@@ -40,6 +40,7 @@ public class JunglePalmTrees extends Tree {
 	public JunglePalmTrees()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 

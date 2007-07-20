@@ -92,7 +92,6 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.QuadBatch;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FogState;
@@ -384,7 +383,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
 		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE);//new Integer(11));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));//EMPTY_SIDE); // 13
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
@@ -421,9 +420,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		
 		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass1.png","grass1_flower.png","grass1_flower_2.png"});
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
+		lod_cont_grass_1.rotateOnSteep = true;
 		
 		TextureStateModel tsm_jung_grass = new TextureStateModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png"},0.9f,0.6f,3,0.7f);
 		LODModel lod_jung_grass_1 = new LODModel(new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
+		lod_jung_grass_1.rotateOnSteep = true;
 
 		// 3d type to file mapping		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
@@ -457,17 +458,20 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null),lod_cont_grass_1}));
+		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
+		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
+		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
+		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
+		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
+		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,lod_cont_grass_1}));
 		
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide("models/ground/road_stone_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{sm_road_stone}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide("models/ground/desert_1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide("models/ground/arctic_1.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
+		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
 		
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{new SimpleModel("models/ground/jung_grass.3ds",null),
-				lod_jung_grass_1
-		}));
+		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle, lod_jung_grass_1}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
@@ -926,7 +930,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
 		
-		//bmesh.setLocalTranslation(getCurrentLocation().add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f)), 0)); // TODO make grass out of this if you can :D
 		modelLoader.setLockForSharedNodes(true);
 	
 		System.gc();
@@ -968,19 +971,31 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				qC.multLocal(hQ);
 			} 
 			
-			if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
-			{
-				qC.multLocal(steepRotations.get(cube.cube.steepDirection));
-				Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
-				n[i].setLocalTranslation(newTrans);
-				//n[i].setLocalScale(1f);
-				if (cube.cube.steepDirection==NORTH||cube.cube.steepDirection==SOUTH)
+			// steep rotation part...
+			if (n[i].getUserData("rotateOnSteep")!=null) {
+				// model loader did set a rotateOnSteep object, which means, that node can be rotated on a steep,
+				// so let's do it if we are on a steep...
+				if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
-					n[i].setLocalScale(new Vector3f(1f,1.43f,1f));
-				}
-				else
-				{
-					n[i].setLocalScale(new Vector3f(1.43f,1,1f));
+					// yes, this is a steep:
+					
+					// mult with steep rotation quaternion for the steep direction...
+					qC.multLocal(steepRotations.get(cube.cube.steepDirection));
+					// the necessary local translation : half cube up
+					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
+					n[i].setLocalTranslation(newTrans);
+
+					// square root 2 is the scaling for that side, so we will set it depending on N-S or E-W steep direction
+					if (cube.cube.steepDirection==NORTH||cube.cube.steepDirection==SOUTH)
+					{
+						// NORTH-SOUTH steep...
+						n[i].setLocalScale(new Vector3f(1f,1.43f,1f));
+					}
+					else
+					{
+						// EAST-WEST steep...
+						n[i].setLocalScale(new Vector3f(1.43f,1,1f));
+					}
 				}
 			}
 			
@@ -1158,7 +1173,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	public void setCalculatedCameraLocation()
 	{
 		cam.setLocation(getCurrentLocation());
-		cam.setDirection(turningDirectionsUnit[viewDirection]);
 	}
 	
 	public Vector3f getCurrentLocation()
@@ -1467,14 +1481,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootNode.updateRenderState();
 		sRootNode.updateModelBound();
 		cRootNode.updateRenderState();
-		/*if (from!=null)
-		bmesh.setLocalTranslation(from.add(0, -CUBE_EDGE_SIZE/2+(0.11f-(onSteep?1.5f:0f))+cc%3, 0)); // TODO make grass out of this if you can :D
-		 //cc++;
-		bmesh.updateGeometricState(0.1f, false);*/
-		
-		
-		//bmesh.updateRenderState();
-		
 
 		noInput = true;
         // update game state, do not use interpolation parameter
@@ -1518,12 +1524,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     private static ShadowedRenderPass sPass = new ShadowedRenderPass();
 
     
-    //BatchMesh bmesh;
-    
-    private int QUAD_QUANTITY = 10;
-    private float QUAD_SIZE_X = 0.8f;
-    private float QUAD_SIZE_Y = 0.8f;
-    
 	@Override
 	protected void simpleInitGame() {
 
@@ -1534,22 +1534,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
        	
-		QuadBatch[] qbStrips = new QuadBatch[10*10];
-		Texture qtexture = TextureManager.loadTexture("./data/textures/low/"+"grass21.jpg",Texture.MM_LINEAR,
-                Texture.FM_LINEAR);
-		
-		
-		//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		qtexture.setApply(Texture.AM_REPLACE);
-		//float sc = -0.0001f;
-		//qtexture.setScale(new Vector3f(sc,sc,sc));
-		//qtexture.setTranslation(new Vector3f(1f,0,+1f));
-		//qtexture.setRotation(J3DCore.qT);
-
-		TextureState ts = getDisplay().getRenderer().createTextureState();
-		ts.setTexture(qtexture);
-		
-        ts.setEnabled(true);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
@@ -1569,7 +1553,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
         cRootNode.setRenderState(fs);
-        //bmesh.setRenderState(fs);
 		
         /*sPass.add(rootNode);
         sPass.setRenderShadows(true);

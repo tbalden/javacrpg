@@ -73,10 +73,10 @@ public abstract class CKeyAction extends KeyInputAction{
     		camera.setDirection(new Vector3f(x,y,z));
     		// TODO !!!
     		camera.setLeft(new Vector3f(0,0,0));
-    		camera.setUp(new Vector3f(0,1,0));
+    		//camera.setUp(new Vector3f(0,1,0));
     		
             camera.update();
-            camera.normalize();
+            //camera.normalize();
             handler.core.updateDisplay(from);
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
@@ -88,7 +88,57 @@ public abstract class CKeyAction extends KeyInputAction{
         }
 		
 	}
-	
+
+    
+    protected void turnDirection(Vector3f from, Vector3f toReach, int percent)
+	{
+   		//ensureTimeStart();
+		float x, y, z;
+		x = (1 / 100f) * percent * toReach.x;
+		y = (1 / 100f) * percent * toReach.y;
+		z = (1 / 100f) * percent * toReach.z;
+
+		x += (1 / 100f) * (100 - percent) * from.x;
+		y += (1 / 100f) * (100 - percent) * from.y;
+		z += (1 / 100f) * (100 - percent) * from.z;
+
+		/*
+		 * incr.fromAngleNormalAxis(-90/steps, camera.getUp());
+		 * incr.mult(camera.getUp(), camera.getUp());
+		 * incr.mult(camera.getLeft(), camera.getLeft());
+		 * incr.mult(camera.getDirection(), camera.getDirection());
+		 */
+
+		camera.setDirection(new Vector3f(x, y, z));
+		// TODO !!!
+		camera.setLeft(new Vector3f(0, y/10f, 0));
+		//camera.setUp(new Vector3f(x,0,0));
+
+		camera.update();
+		// camera.normalize();
+		handler.core.updateDisplay(from);
+		
+	}
+    
+    protected void setLookUpDown()
+    
+    {
+        Vector3f toReach = null;
+        
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+        if (handler.lookUpDownPercent<0)
+        	toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];
+        else
+        	toReach = J3DCore.turningDirectionsUnit[J3DCore.TOP];
+        //handler.core.turnLeft();
+    	
+        //float steps = J3DCore.MOVE_STEPS*2;
+        
+        turnDirection(from, toReach, Math.abs(handler.lookUpDownPercent));
+
+    }
+    
+    
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach)
 	{
 		float skipStep = 0f;
