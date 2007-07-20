@@ -366,7 +366,10 @@ public class ModelLoader {
 					sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
-					return node;
+					Node r =  new SharedNode("node"+counter++,node);
+		    		r.setModelBound(new BoundingBox());
+		            r.updateModelBound();
+		            return r;
 				} catch(Exception err)  {
 				    System.out.println("Error loading model:"+err);
 				    err.printStackTrace();
@@ -449,7 +452,10 @@ public class ModelLoader {
 				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();
-				return node;
+				Node r =  new SharedNode("node"+counter++,node);
+	    		r.setModelBound(new BoundingBox());
+	            r.updateModelBound();
+	            return r;
 			} catch(Exception err)  {
 			    System.out.println("Error loading model:"+err);
 			    err.printStackTrace();

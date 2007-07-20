@@ -39,6 +39,7 @@ public class Sand extends Ground {
 	public Sand()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,SAND,0,0,0),0,false,false);
 	}
 }

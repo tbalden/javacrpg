@@ -44,13 +44,21 @@ public class Mountain extends Geography implements Surface{
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_MOUNTAIN+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_MOUNTAIN+"_GROUND");
+	public static final SideSubType SUBTYPE_INTERSECT = new NotPassable(TYPE_MOUNTAIN+"_GROUND_INTERSECT");
+	public static final SideSubType SUBTYPE_INTERSECT_BLOCK = new NotPassable(TYPE_MOUNTAIN+"_GROUND_INTERSECT_BLOCK");
 
 	static Side[] ROCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK)};
 	static Side[] GROUND = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND)};
 	static Side[] STEEP = {new Side(TYPE_MOUNTAIN,SUBTYPE_STEEP)};
+	static Side[] INTERSECT = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT)};
+	static Side[] BLOCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_BLOCK)};
 	
 	static Side[][] MOUNTAIN_ROCK = new Side[][] { null, null, null,null,null,ROCK };
 	static Side[][] MOUNTAIN_GROUND = new Side[][] { null, null, null,null,null,GROUND };
+	static Side[][] MOUNTAIN_INTERSECT_NORTH = new Side[][] { INTERSECT, BLOCK, BLOCK,BLOCK,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_INTERSECT_EAST = new Side[][] { BLOCK, INTERSECT, BLOCK,BLOCK,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_INTERSECT_SOUTH = new Side[][] { BLOCK, BLOCK, INTERSECT,BLOCK,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_INTERSECT_WEST = new Side[][] { BLOCK, BLOCK, BLOCK,INTERSECT,BLOCK,BLOCK };
 	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, null,null,null,null };
 	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,null,null,null };
 	static Side[][] STEEP_SOUTH = new Side[][] { null, null, STEEP,null,null,null };
@@ -85,7 +93,21 @@ public class Mountain extends Geography implements Surface{
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
-			return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+			Side[][] side = null;
+			if (relX == 0 && relY == 0 && relZ == 0) {
+				side = MOUNTAIN_INTERSECT_WEST;
+			} 
+			if (relX == 0 && relY == 0 && relZ == realSizeZ) {
+				side = MOUNTAIN_INTERSECT_NORTH;
+			} 
+			if (relX == realSizeX && relY == 0 && relZ == 0) {
+				side = MOUNTAIN_INTERSECT_SOUTH;
+			} 
+			if (relX == realSizeX && relY == 0 && relZ == realSizeZ) {
+				side = MOUNTAIN_INTERSECT_EAST;
+			}
+				
+			return new Cube(this,side,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 		}
 		
 		
@@ -108,6 +130,25 @@ public class Mountain extends Geography implements Surface{
 		Side[][] returnSteep = null;
 		int steepDirection = SurfaceHeightAndType.NOT_STEEP; //W E S N
 
+		
+		if (relX == gapX && relZ == gapZ) {
+			returnCube = true;
+			returnSteep = MOUNTAIN_INTERSECT_WEST;
+		} 
+		if (relX == gapX && relZ == realSizeZ - gapZ) {
+
+			returnCube = true;
+			returnSteep = MOUNTAIN_INTERSECT_NORTH;
+		} 
+		if (relX == realSizeX - gapX && relZ == gapZ) {
+			returnCube = true;
+			returnSteep = MOUNTAIN_INTERSECT_SOUTH;
+		} 
+		if (relX == realSizeX - gapX && relZ == realSizeZ - gapZ) {
+			returnCube = true;
+			returnSteep = MOUNTAIN_INTERSECT_EAST;
+		}
+		
 		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
@@ -117,6 +158,7 @@ public class Mountain extends Geography implements Surface{
 				returnSteep = STEEP_WEST;
 			}
 		}
+		
 		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
@@ -201,7 +243,7 @@ public class Mountain extends Geography implements Surface{
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
-			return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
+			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
 		
 		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
