@@ -39,6 +39,7 @@ public class JungleGround extends Ground {
 	public JungleGround()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,JUNGLEGROUND,0,0,0),0,false,false);
 	}
 }

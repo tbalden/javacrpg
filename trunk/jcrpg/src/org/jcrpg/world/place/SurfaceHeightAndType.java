@@ -25,9 +25,18 @@ package org.jcrpg.world.place;
 public class SurfaceHeightAndType {
 
 	public int surfaceY;
+	public int steepDirection;
 	public boolean canContain;
 	
-	public SurfaceHeightAndType(int surfaceY, boolean canContain) {
+	public static final int NOT_STEEP = -1;
+	
+	/**
+	 * Constructor
+	 * @param surfaceY On which worldY is the surface.
+	 * @param canContain Can it contain things on it.
+	 * @param steepDirection Is it a steep surface, and which direction.
+	 */
+	public SurfaceHeightAndType(int surfaceY, boolean canContain,int steepDirection) {
 		super();
 		this.surfaceY = surfaceY;
 		this.canContain = canContain;

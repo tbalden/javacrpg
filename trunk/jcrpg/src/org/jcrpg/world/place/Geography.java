@@ -48,17 +48,17 @@ public class Geography extends Place {
 	}
 
 	
-	public Cube getFloraCube(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time)
+	public Cube getFloraCube(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, boolean onSteep)
 	{
 		World w = (World)getRoot();
 		Cube floraCube = null;
-		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this.getClass(), conditions, time);
+		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this.getClass(), conditions, time, onSteep);
 		for (FloraDescription fd : fC.descriptions)
 		{
 			if (floraCube==null)
 				floraCube = fd.cubicForm;
 			else {
-				floraCube = new Cube(floraCube,fd.cubicForm,worldX,worldY,worldZ);
+				floraCube = new Cube(floraCube,fd.cubicForm,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 			}
 		}
 		return floraCube;

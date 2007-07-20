@@ -62,6 +62,7 @@ import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -244,6 +245,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	 */
 	static Quaternion horizontalN, horizontalS, horizontalW, horizontalE;
 
+	/**
+	 * Steep Rotations 
+	 */
+	static Quaternion steepN, steepS, steepW, steepE;
+
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3, TOP = 4, BOTTOM = 5;
 
 	public static Vector3f dNorth = new Vector3f(0, 0, -1 * CUBE_EDGE_SIZE),
@@ -288,6 +294,16 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		horizontalE = new Quaternion();
 		horizontalE.fromAngles(new float[]{0,0,FastMath.PI*3/2});
 
+		// horizontal rotations
+		steepN = new Quaternion();
+		steepN.fromAngles(new float[]{0,FastMath.PI/4,0});
+		steepS = new Quaternion();
+		steepS.fromAngles(new float[]{0,-FastMath.PI/4,0});
+		steepW = new Quaternion();
+		steepW.fromAngles(new float[]{0,0,FastMath.PI/4});
+		steepE = new Quaternion();
+		steepE.fromAngles(new float[]{0,0,-FastMath.PI/4});
+
 	}
 	
 	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
@@ -329,6 +345,14 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		horizontalRotations.put(new Integer(WEST), horizontalW);
 		horizontalRotations.put(new Integer(EAST), horizontalE);
 	}
+	public static HashMap<Integer,Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
+	static
+	{
+		steepRotations.put(new Integer(NORTH), steepN);
+		steepRotations.put(new Integer(SOUTH), steepS);
+		steepRotations.put(new Integer(WEST), steepW);
+		steepRotations.put(new Integer(EAST), steepE);
+	}
 
 	public static HashMap<Integer,int[]> moveTranslations = new HashMap<Integer,int[]>();
 	static 
@@ -357,7 +381,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
 		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, new Integer(11));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE);//new Integer(11));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
@@ -376,8 +400,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, new Integer(26));
 
 		
-		//LODModel lod_jungleMiddleSmall = new LODModel(new SimpleModel[]{new SimpleModel("sides/jungle_middle_small.3ds",null)},new float[][]{{0f,6f}});
 		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
+		//LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/fauna/dragon.3ds",null)},new float[][]{{0f,15f}});
 
 		LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		//LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/cherry.3ds",null,true)},new float[][]{{0f,7f},{7.1f,15f}});
@@ -951,8 +975,16 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			if (hQ!=null)
 			{
 				// horizontal rotation
-				qC = qC.multLocal(hQ);
+				qC.multLocal(hQ);
 			} 
+			
+			if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+			{
+				//qC.multLocal(steepRotations.get(cube.cube.steepDirection)); 
+				
+				// TODO rotation and positioning!! rotation seems to be fine on w/e, n/s is bad
+			}
+			
 			n[i].setLocalRotation(qC);
 			
 			n[i].updateRenderState();

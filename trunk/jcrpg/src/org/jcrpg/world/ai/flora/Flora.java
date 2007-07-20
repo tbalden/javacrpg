@@ -35,6 +35,8 @@ public class Flora {
 	public static final String POSITION_MIDDLE = "__MIDDLE";
 	public static final String POSITION_TOP = "__TOP";
 	
+	public boolean growsOnSteep = false; 
+	
 	public String floraPosition = POSITION_TOP;
 	
 	/**

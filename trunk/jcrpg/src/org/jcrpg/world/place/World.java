@@ -132,7 +132,7 @@ public class World extends Place {
 			for (Geography geo : geographies.values()) {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
-					Cube r = geo.getCube(worldX, worldY, worldZ);
+					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					if (geo instanceof Surface)
 					{
 						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
@@ -143,22 +143,22 @@ public class World extends Place {
 							// this can cotain things upon it, do the clima and flora... 
 							CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
 							Cube floraCube = null;
-							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime);
+							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 							if (floraCube!=null)
 							{
-								return new Cube(r,floraCube,worldX,worldY,worldZ);
+								return new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
 							} 
 							else 
 							{
-								return new Cube(r,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ);
+								return new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
 							}
 						} else 
 						{
-							return r;
+							return geoCube;
 						}
 					} else 
 					{
-						return r;
+						return geoCube;
 					}
 				}
 					

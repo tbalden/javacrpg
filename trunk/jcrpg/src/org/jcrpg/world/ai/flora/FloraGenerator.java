@@ -43,7 +43,7 @@ public class FloraGenerator {
 	
 	public HashMap<String, ArrayList<FloraListElement>[]> cache = new HashMap<String, ArrayList<FloraListElement>[]>();
 	
-	public FloraCube generate(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time)
+	public FloraCube generate(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, boolean onSteep)
 	{
 		if (conditions==null) return new FloraCube();
 		String beltLevelKey = conditions.getPartialBeltLevelKey();
@@ -51,7 +51,7 @@ public class FloraGenerator {
 		if (possibleFlora==null) return new FloraCube();
 		FloraCube c = new FloraCube();
 		
-		ArrayList<FloraListElement>[] arrayLists = cache.get(beltLevelKey);
+		ArrayList<FloraListElement>[] arrayLists = cache.get(beltLevelKey+onSteep);
 		
 		ArrayList<FloraListElement> groundFlora;
 		ArrayList<FloraListElement> middleFlora;
@@ -66,30 +66,41 @@ public class FloraGenerator {
 			groundFlora = new ArrayList<FloraListElement>();
 			middleFlora = new ArrayList<FloraListElement>();
 			topFlora = new ArrayList<FloraListElement>();			
-		}
-		
-		
-		for (FloraListElement element : possibleFlora) {
-			if (element.alwaysPresent)
-			{
-				c.descriptions.add(element.flora.getFloraDescription(conditions.getPartialSeasonDaytimelKey()));
-			} else
-			{
-				if (arrayLists==null) {
-					if (element.flora.floraPosition==Flora.POSITION_GROUND)
-					{
-						groundFlora.add(element);
-					} else if (element.flora.floraPosition==Flora.POSITION_MIDDLE)
-					{
-						middleFlora.add(element);
-					} else
-					{
-						topFlora.add(element);
+
+			for (FloraListElement element : possibleFlora) {
+				
+				// if on steep true, and plant doesnt grow on steep, continue without adding possible flora
+				if (onSteep && !element.flora.growsOnSteep) continue;
+				
+				if (!element.alwaysPresent) // this can be cached to the choosed ones' cache, 
+					//always presents are always added not from cache!
+				{
+					if (arrayLists==null) {
+						if (element.flora.floraPosition==Flora.POSITION_GROUND)
+						{
+							groundFlora.add(element);
+						} else if (element.flora.floraPosition==Flora.POSITION_MIDDLE)
+						{
+							middleFlora.add(element);
+						} else
+						{
+							topFlora.add(element);
+						}
 					}
 				}
 			}
+
 		}
 		
+		for (FloraListElement element : possibleFlora) {
+			// if on steep true, and plant doesnt grow on steep, continue without adding possible flora
+			if (onSteep && !element.flora.growsOnSteep) continue;
+			if (element.alwaysPresent)
+			{
+				c.descriptions.add(element.flora.getFloraDescription(conditions.getPartialSeasonDaytimelKey()));
+			}
+		}
+
 		chooseFlora(worldX, worldY, worldZ, conditions, time, c, groundFlora);
 		chooseFlora(worldX, worldY, worldZ, conditions, time, c, middleFlora);
 		chooseFlora(worldX, worldY, worldZ, conditions, time, c, topFlora);
@@ -100,7 +111,7 @@ public class FloraGenerator {
 			arrayLists[0] = groundFlora;
 			arrayLists[1] = middleFlora;
 			arrayLists[2] = topFlora;
-			cache.put(beltLevelKey, arrayLists);
+			cache.put(beltLevelKey+onSteep, arrayLists);
 		}
 		
 		return c;

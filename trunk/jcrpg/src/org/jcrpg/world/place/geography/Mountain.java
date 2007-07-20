@@ -28,6 +28,7 @@ import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -84,7 +85,7 @@ public class Mountain extends Geography implements Surface{
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
-			return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ);
+			return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 		}
 		
 		
@@ -105,30 +106,43 @@ public class Mountain extends Geography implements Surface{
 		
 		boolean returnCube = false;
 		Side[][] returnSteep = null;
+		int steepDirection = SurfaceHeightAndType.NOT_STEEP; //W E S N
 
 		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==gapX && gapXNext!=gapX) returnSteep = STEEP_WEST;
+			if (relX==gapX && gapXNext!=gapX) {
+				steepDirection = J3DCore.WEST;
+				returnSteep = STEEP_WEST;
+			}
 		}
 		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = STEEP_EAST;
+			if (relX==realSizeX-gapX && gapXNext!=gapX) {
+				steepDirection = J3DCore.EAST;
+				returnSteep = STEEP_EAST;
+			}
 		}
 		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = STEEP_SOUTH;
+			if (relZ==gapZ && gapZNext!=gapZ) {
+				steepDirection = J3DCore.SOUTH;
+				returnSteep = STEEP_SOUTH;
+			}
 		}
 		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = STEEP_NORTH;
+			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) {
+				steepDirection = J3DCore.NORTH;
+				returnSteep = STEEP_NORTH;
+			}
 		}
 		
 		if (!returnCube) {
@@ -162,21 +176,21 @@ public class Mountain extends Geography implements Surface{
 			if (returnCube)
 			{
 				// we can put on it!!				
-				return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ);
+				return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,steepDirection);
 			}
 			return null;
 		}
 		//boolean cubeAbove = getCube( worldX,  worldY+1,  worldZ)!=null;
 		Side[][] s = returnSteep!=null?returnSteep:MOUNTAIN_ROCK;
 		Cube c = null;
-		c = new Cube(this,s,worldX,worldY,worldZ);
+		c = new Cube(this,s,worldX,worldY,worldZ,steepDirection);
 		return c;
 	}
 
 	int GROUND_LEVEL = 0;
 	int GROUND_LEVEL_CONTAINER = 1;
 	
-	public int isGroundLevel(int worldX, int worldY, int worldZ) {
+	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
@@ -187,7 +201,7 @@ public class Mountain extends Geography implements Surface{
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
-			return GROUND_LEVEL_CONTAINER;
+			return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
 		}
 		
 		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
@@ -207,39 +221,53 @@ public class Mountain extends Geography implements Surface{
 		
 		boolean returnCube = false;
 		boolean returnSteep = false;
+		
+		int steepDirection = 0; //W E S N
 
 		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==gapX && gapXNext!=gapX) returnSteep = true;
+			if (relX==gapX && gapXNext!=gapX) {
+				steepDirection = J3DCore.WEST;
+				returnSteep = true;
+			}
 		}
 		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==realSizeX-gapX && gapXNext!=gapX) returnSteep = true;
+			if (relX==realSizeX-gapX && gapXNext!=gapX) {
+				steepDirection = J3DCore.EAST;
+				returnSteep = true;
+			}
 		}
 		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==gapZ && gapZNext!=gapZ) returnSteep = true;
+			if (relZ==gapZ && gapZNext!=gapZ) {
+				steepDirection = J3DCore.SOUTH;
+				returnSteep = true;
+			}
 		}
 		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
 		{
 			returnCube = true;
 			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) returnSteep = true;
+			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) {
+				steepDirection = J3DCore.NORTH;
+				returnSteep = true;
+			}
 		}
 		
 		if (returnCube)
 		{
 			if (returnSteep)
 			{
-				return GROUND_LEVEL;
+				return new int[]{GROUND_LEVEL,steepDirection};
 			}
-			return -1;
+			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
 		
 		if (!returnCube) {
@@ -273,11 +301,11 @@ public class Mountain extends Geography implements Surface{
 			if (returnCube)
 			{
 				// we can put on it!!				
-				return GROUND_LEVEL_CONTAINER;
+				return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
 			}
-			return -1;
+			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
-		return -1;
+		return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 	}
 	
 	
@@ -285,13 +313,13 @@ public class Mountain extends Geography implements Surface{
 		int realSizeY = sizeY*magnification-1;
 		for (int i=0; i<=realSizeY; i++)
 		{
-			int ret = isGroundLevel(worldX, origoY*magnification+i, worldZ);
-			if (ret>-1)
+			int[] ret = isGroundLevel(worldX, origoY*magnification+i, worldZ);
+			if (ret[0]>-1)
 			{
-				return new SurfaceHeightAndType(origoY*magnification+i,ret==GROUND_LEVEL_CONTAINER);
+				return new SurfaceHeightAndType(origoY*magnification+i,true,ret[1]);
 			}
 		}
-		return new SurfaceHeightAndType(origoY+realSizeY,false);
+		return new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP);
 	}
 
 
