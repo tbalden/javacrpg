@@ -39,6 +39,7 @@ public class Snow extends Ground {
 	public Snow()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,SNOW,0,0,0),0,false,false);
 	}
 }

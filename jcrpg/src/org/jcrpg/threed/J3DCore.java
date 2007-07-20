@@ -284,25 +284,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		qTexture = new Quaternion();
 		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
 		
-		// horizontal rotations
-		horizontalN = new Quaternion();
-		horizontalN.fromAngles(new float[]{0,0,FastMath.PI * 2});
-		horizontalS = new Quaternion();
-		horizontalS.fromAngles(new float[]{0,0,FastMath.PI});
-		horizontalW = new Quaternion();
-		horizontalW.fromAngles(new float[]{0,0,FastMath.PI/2});
-		horizontalE = new Quaternion();
-		horizontalE.fromAngles(new float[]{0,0,FastMath.PI*3/2});
-
-		// horizontal rotations
-		steepN = new Quaternion();
-		steepN.fromAngles(new float[]{0,FastMath.PI/4,0});
-		steepS = new Quaternion();
-		steepS.fromAngles(new float[]{0,-FastMath.PI/4,0});
-		steepW = new Quaternion();
-		steepW.fromAngles(new float[]{0,0,FastMath.PI/4});
-		steepE = new Quaternion();
-		steepE.fromAngles(new float[]{0,0,-FastMath.PI/4});
 
 	}
 	
@@ -340,14 +321,35 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	public static HashMap<Integer,Quaternion> horizontalRotations = new HashMap<Integer, Quaternion>();
 	static
 	{
+		// horizontal rotations
+		horizontalN = new Quaternion();
+		horizontalN.fromAngles(new float[]{0,0,FastMath.PI * 2});
+		horizontalS = new Quaternion();
+		horizontalS.fromAngles(new float[]{0,0,FastMath.PI});
+		horizontalW = new Quaternion();
+		horizontalW.fromAngles(new float[]{0,0,FastMath.PI/2});
+		horizontalE = new Quaternion();
+		horizontalE.fromAngles(new float[]{0,0,FastMath.PI*3/2});
+
 		horizontalRotations.put(new Integer(NORTH), horizontalN);
 		horizontalRotations.put(new Integer(SOUTH), horizontalS);
 		horizontalRotations.put(new Integer(WEST), horizontalW);
 		horizontalRotations.put(new Integer(EAST), horizontalE);
 	}
+	
 	public static HashMap<Integer,Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
 	static
 	{
+		// steep rotations
+		steepE = new Quaternion();
+		steepE.fromAngles(new float[]{0,FastMath.PI/4,0});
+		steepW = new Quaternion();
+		steepW.fromAngles(new float[]{0,-FastMath.PI/4,0});
+		steepS = new Quaternion();
+		steepS.fromAngles(new float[]{FastMath.PI/4,0,0});
+		steepN = new Quaternion();
+		steepN.fromAngles(new float[]{-FastMath.PI/4,0,0});
+
 		steepRotations.put(new Integer(NORTH), steepN);
 		steepRotations.put(new Integer(SOUTH), steepS);
 		steepRotations.put(new Integer(WEST), steepW);
@@ -384,6 +386,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE);//new Integer(11));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
 		hmAreaSubType3dType.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
@@ -484,6 +488,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
+		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
 				
 		
 	}
@@ -863,9 +868,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 						renderSide(cOrig,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],true); // fake = true!
 				}
 
-				for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
+				//for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
 		    	{
-		    		Node n = itNode.next();
+		    		//Node n = itNode.next();
 		    		
 		    		//n.updateRenderState();
 		    		//n.updateModelBound();
@@ -883,21 +888,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			for (int j=0; j<sides.length; j++)
 			{
 				if (sides[j]!=null) {
-					if (j==BOTTOM)
-					{
-						if (c.renderedY+relativeY==0) {
-							//if (c.renderedX+relativeX<3 && c.renderedX+relativeX>-3)
-							{
-								//if (c.renderedZ-relativeZ<3 && c.renderedZ-relativeZ>-3)
-								{
-									// TODO distance dependency and more sophisticated TextureState input
-									//Node n = FloraSetup.createVegetation(cam,c.renderedX+relativeX,c.renderedY+relativeY,c.renderedZ-relativeZ,null);
-									//cRootNode.attachChild(n);
-									//c.hsRenderedNodes.add(n);
-								}
-							}
-						}
-					}
 					for (int k=0; k<sides[j].length; k++) {
 						renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
 					}
@@ -980,9 +970,18 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			
 			if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 			{
-				//qC.multLocal(steepRotations.get(cube.cube.steepDirection)); 
-				
-				// TODO rotation and positioning!! rotation seems to be fine on w/e, n/s is bad
+				qC.multLocal(steepRotations.get(cube.cube.steepDirection));
+				Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
+				n[i].setLocalTranslation(newTrans);
+				//n[i].setLocalScale(1f);
+				if (cube.cube.steepDirection==NORTH||cube.cube.steepDirection==SOUTH)
+				{
+					n[i].setLocalScale(new Vector3f(1f,1.43f,1f));
+				}
+				else
+				{
+					n[i].setLocalScale(new Vector3f(1.43f,1,1f));
+				}
 			}
 			
 			n[i].setLocalRotation(qC);
