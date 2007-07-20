@@ -30,6 +30,7 @@ import org.jcrpg.threed.jme.vegetation.QuadTreeVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.TextureStateModel;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -152,6 +153,8 @@ public class FloraSetup {
 
 		//vegetation.setCullMode(Spatial.CULL_DYNAMIC);
 		vegetation.initialize();
+		
+		int steepDirection = c.cube.steepDirection;
 
 		// Load placeholder models for vegetation
 		Quad[] quads = new Quad[ts.length];
@@ -183,6 +186,13 @@ public class FloraSetup {
 				if (Float.isNaN(height)) {
 					height = -0.f;
 				}
+				
+				/*if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+				{
+					int[] vector = J3DCore.moveTranslations.get(new Integer(steepDirection));
+					height+= 0.55f + ( (tm.quadQuantity-1-i) * (J3DCore.CUBE_EDGE_SIZE/(tm.quadQuantity))) * vector[0];
+					height+= 0.55f + ( (j-1) * (J3DCore.CUBE_EDGE_SIZE/(tm.quadQuantity))) * vector[2];
+				}*/
 				
 				// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
 				Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, -z + J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2);

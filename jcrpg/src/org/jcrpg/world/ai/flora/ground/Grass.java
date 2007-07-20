@@ -39,6 +39,7 @@ public class Grass extends Ground {
 	public Grass()
 	{
 		super();
+		growsOnSteep = true;
 		defaultDescription = new FloraDescription(new Cube(null,GRASS,0,0,0),0,false,false);
 	}
 }

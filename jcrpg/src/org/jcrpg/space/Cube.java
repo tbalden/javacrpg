@@ -25,6 +25,7 @@ package org.jcrpg.space;
 import org.jcrpg.abs.change.ChangingImpl;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Place;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 
 
 public class Cube extends ChangingImpl {
@@ -32,6 +33,8 @@ public class Cube extends ChangingImpl {
 
 
 	public Side[] n, e, s, w, top, bottom;
+	
+	public int steepDirection = SurfaceHeightAndType.NOT_STEEP;
 	
 	public long lastChangeTimeStamp = System.currentTimeMillis();
 	
@@ -44,7 +47,8 @@ public class Cube extends ChangingImpl {
 	
 	public Place parent;
 
-	public Cube(Place parent, Side[] sides, int x, int y, int z) {
+	public Cube(Place parent, Side[] sides, int x, int y, int z, int steepDir) {
+		steepDirection = steepDir;
 		this.parent = parent;
 		this.x = x;
 		this.y = y;
@@ -55,7 +59,8 @@ public class Cube extends ChangingImpl {
 		}
 	}
 
-	public Cube(Cube c1, Cube c2, int x, int y, int z) {
+	public Cube(Cube c1, Cube c2, int x, int y, int z, int steepDir) {
+		steepDirection = steepDir;
 		this.parent = c1.parent;
 		this.x = x;
 		this.y = y;
@@ -85,8 +90,12 @@ public class Cube extends ChangingImpl {
 		//System.out.println(" MERGED CUBE == "+this);
 	}
 	
-	
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
+		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+	}
+	
+	public Cube(Place parent, Side[][] sides, int x, int y, int z, int steepDir) {
+		steepDirection = steepDir;
 		this.parent = parent;
 		this.x = x;
 		this.y = y;
@@ -137,7 +146,7 @@ public class Cube extends ChangingImpl {
 	
 	public Cube copy(Place newParent)
 	{
-		return new Cube(newParent,sides,x,y,z);
+		return new Cube(newParent,sides,x,y,z,steepDirection);
 	}
 	
 }

@@ -57,7 +57,7 @@ public class Plain extends Geography implements Surface {
 	}
 
 	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
-		return new SurfaceHeightAndType(worldGroundLevel,true);
+		return new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP);
 	}
 	
 }
