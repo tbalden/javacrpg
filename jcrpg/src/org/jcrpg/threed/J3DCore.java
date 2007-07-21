@@ -418,7 +418,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		
-		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass1.png","grass1_flower.png","grass1_flower_2.png"});
+		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass1.png","grass1_flower.png","grass1_flower_2.png"},0.9f,0.3f,3,0.7f);
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
@@ -734,15 +734,15 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			}
 			Spatial s = orbiters3D.get(orb.id); // get 3d Spatial for the orbiter
 			LightNode l[] = orbitersLight3D.get(orb.id);
-			float[] f = orb.getCurrentCoordinates(localTime, conditions); // get coordinates of the orbiter
-			if (f!=null)
+			float[] orbiterCoords = orb.getCurrentCoordinates(localTime, conditions); // get coordinates of the orbiter
+			if (orbiterCoords!=null)
 			{
 				if (s.getParent()==null)
 				{
 					// newly appearing, attach to root
 					cRootNode.attachChild(s);
 				}
-				s.setLocalTranslation(new Vector3f(f[0],f[1],f[2]));
+				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				s.updateRenderState();
 			}
 			else {
@@ -753,13 +753,13 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			{
 				System.out.println("ORBITER LIGHT "+orb.id);
 				
-				float[] f2 = orb.getLightDirection(localTime, conditions);
-				if (f2!=null)
+				float[] lightDirectionCoords = orb.getLightDirection(localTime, conditions);
+				if (lightDirectionCoords!=null)
 				{
-					System.out.println("ORBITER LIGHT "+orb.id +" -- ON");
+					//System.out.println("ORBITER LIGHT "+orb.id +" -- ON");
 					// 0. is directional light for the planet surface
 					l[0].getLight().setEnabled(true);
-					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(f2[0],f2[1],f2[2]));
+					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]));
 					l[0].setTarget(cRootNode);
 					cLightState.attach(l[0].getLight());
 					float v = orb.getLightPower(localTime, conditions);
@@ -777,11 +777,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
-					l[1].setLocalTranslation(new Vector3f(f[0],f[1],f[2]));
+					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 					l[1].updateRenderState();
 				
 				} else {
-					System.out.println("ORBITER LIGHT "+orb.id +" -- OFF");
+					//System.out.println("ORBITER LIGHT "+orb.id +" -- OFF");
 					// switching of the two lights
 					l[0].getLight().setEnabled(false);
 					l[1].getLight().setEnabled(false);
@@ -1319,26 +1319,26 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				if (hasSideOfInstance(sides, notPassable)) return;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
-			Cube c2 = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
-			if (c2==null) System.out.println("NEXT CUBE = NULL");
-			if (c2!=null)
+			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
+			if (nextCube!=null)
 			{
-				System.out.println("Next Cube = "+c2.toString());
-				sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
+				System.out.println("Next Cube = "+nextCube.toString());
+				sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				//sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
 					if (hasSideOfInstance(sides, notPassable)) return;
 				}
 
-				sides = c2!=null?c2.getSide(BOTTOM):null;
+				sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 				if (sides!=null)
 				{
 					if (hasSideOfInstance(sides, notWalkable)) return;
 				}
 
 				// checking steep setting
-				int nextCubeSteepDirection = hasSideOfInstanceInAnyDir(c2, climbers);
+				int nextCubeSteepDirection = hasSideOfInstanceInAnyDir(nextCube, climbers);
 				if (nextCubeSteepDirection!=-1) {
 					onSteep = true;
 					//move(newCoords,newRelCoords,new int[]{directions[0],TOP});
@@ -1353,16 +1353,18 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				while (true)
 				{
 					// cube below
-					c2 = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2]);
+					nextCube = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2]);
 					if (yMinus>10) break; /// i am faaaalling.. :)
-					if (c2==null) continue;
+					if (nextCube==null) continue;
 
-					sides = c2!=null?c2.getSide(directions[0]):null;
+					sides = nextCube!=null?nextCube.getSide(directions[0]):null;
 					if (sides!=null)
 					{
 						// Try to get climber side
 						if (hasSideOfInstance(sides, climbers))
 						{
+							sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
+							if (hasSideOfInstance(sides, notWalkable)) return;
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 							onSteep = true; // found steep
@@ -1371,10 +1373,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					} else
 					{
 						// no luck, let's see notPassable bottom...
-						sides = c2!=null?c2.getSide(BOTTOM):null;
+						sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 						if (sides!=null)
 						if (hasSideOfInstance(sides, notPassable))
-						{
+						{							
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 							onSteep = false; // yeah, found

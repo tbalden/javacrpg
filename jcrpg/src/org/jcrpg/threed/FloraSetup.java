@@ -40,6 +40,7 @@ import com.jme.renderer.Camera;
 import com.jme.scene.BatchMesh;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.QuadBatch;
 import com.jme.scene.shape.Box;
@@ -79,70 +80,6 @@ public class FloraSetup {
 	}
 
 
-	public static Node createVegetation2(RenderedCube c, Camera cam,
-			TextureState ts, TextureStateModel tm) {
-		FloatBuffer texCoords = BufferUtils.createFloatBuffer(new float[] { 0,
-				1, 0, 0, 1, 1, 1, 0, 2, 1, 2, 0 });
-		QuadBatch qbQuads = new QuadBatch();
-		qbQuads.setMode(QuadBatch.QUADS);
-		qbQuads.setVertexBuffer(BufferUtils.createFloatBuffer(getVertsQuad(0,
-				0, 0, tm.quadSizeX, tm.quadSizeY, tm.quadQuantity)));
-		//qbQuads.setTextureBuffer(texCoords, 0);
-		// 1 quad, specified in counter clockwise order.
-		qbQuads.setIndexBuffer(BufferUtils.createIntBuffer(new int[] { 0, 1, 3,
-				2 }));
-
-		BatchMesh mesh = new BatchMesh("batches", qbQuads);
-
-		// we set a cull state to hide the back of our batches, "proving" they
-		// are camera facing.
-		// CullState cull = display.getRenderer().createCullState();
-		// cull.setCullMode(CullState.CS_BACK);
-		// mesh.setRenderState(cull);
-
-		mesh.setRenderState(ts);
-
-		mesh.updateRenderState();
-		Node r = new Node();
-		r.attachChild(mesh);
-		return r;
-	}
-
-	static Vector3f[] getVertsQuad(int x, int y, int z, float QUAD_SIZE_X,
-			float QUAD_SIZE_Y, int QUAD_QUANTITY) {
-		float ySize = QUAD_SIZE_Y;
-		float xSize = QUAD_SIZE_X;
-		Vector3f[] verts = new Vector3f[QUAD_QUANTITY * QUAD_QUANTITY * 4];
-		for (float localX = 0; localX < QUAD_QUANTITY; localX++) {
-
-			for (float localZ = 0; localZ < QUAD_QUANTITY; localZ++) {
-				float cx = x * J3DCore.CUBE_EDGE_SIZE * 1f + localX
-						* (J3DCore.CUBE_EDGE_SIZE / QUAD_QUANTITY)
-						+ HashUtil.mixPercentage((int) localX, 0, (int) localZ)
-						/ 1000f;
-				float cy = y * J3DCore.CUBE_EDGE_SIZE;
-				float cz = z
-						* 1f
-						* J3DCore.CUBE_EDGE_SIZE
-						+ localZ
-						* (J3DCore.CUBE_EDGE_SIZE / QUAD_QUANTITY)
-						+ HashUtil.mixPercentage((int) localX + 2, 0,
-								(int) localZ) / 1000f;
-				;
-				verts[(int) (localX * QUAD_QUANTITY * 4 + localZ * 4)] = new Vector3f(
-						cx, cy, cz);
-				verts[(int) (localX * QUAD_QUANTITY * 4 + localZ * 4 + 1)] = new Vector3f(
-						cx + xSize, cy, cz);
-				verts[(int) (localX * QUAD_QUANTITY * 4 + localZ * 4 + 2)] = new Vector3f(
-						cx + xSize, cy + ySize, cz);
-				verts[(int) (localX * QUAD_QUANTITY * 4 + localZ * 4 + 3)] = new Vector3f(
-						cx + xSize / 10f, cy + ySize + ySize / 5f, cz);
-				// System.out.println("QUAD VECT "+(int)(localX*10+localZ*4)+"
-				// "+localX+" "+localZ+" "+verts[(int)(localX*10+localZ*3)]);
-			}
-		}
-		return verts;
-	}
 	  
 	
 	public static Node createVegetation(RenderedCube c, Camera cam, TextureState[] ts, TextureStateModel tm) {
@@ -151,10 +88,15 @@ public class FloraSetup {
 		AbstractVegetation vegetation = new NaiveVegetation("vegetation",
 				cam, 500.0f);
 
-		//vegetation.setCullMode(Spatial.CULL_DYNAMIC);
+		vegetation.setCullMode(Spatial.CULL_DYNAMIC);
 		vegetation.initialize();
 		
 		int steepDirection = c.cube.steepDirection;
+		
+		if (steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
+			// till we have a better vegetation rotation, no grass vegetation on steep... :(
+			return vegetation;
+		}
 
 		// Load placeholder models for vegetation
 		Quad[] quads = new Quad[ts.length];
@@ -187,12 +129,6 @@ public class FloraSetup {
 					height = -0.f;
 				}
 				
-				/*if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
-				{
-					int[] vector = J3DCore.moveTranslations.get(new Integer(steepDirection));
-					height+= 0.55f + ( (tm.quadQuantity-1-i) * (J3DCore.CUBE_EDGE_SIZE/(tm.quadQuantity))) * vector[0];
-					height+= 0.55f + ( (j-1) * (J3DCore.CUBE_EDGE_SIZE/(tm.quadQuantity))) * vector[2];
-				}*/
 				
 				// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
 				Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, -z + J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2);
@@ -212,7 +148,15 @@ public class FloraSetup {
 				normalX = normalY.cross(normalZ);
 				Quaternion rotation = new Quaternion();
 				rotation.fromAxes(normalX, normalY, normalZ);
-				rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+				//if (steepDirection==SurfaceHeightAndType.NOT_STEEP)
+				{
+					rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+				}
+				/*if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+				{
+					rotation.multLocal(J3DCore.steepRotations.get(new Integer(J3DCore.NORTH)));
+					rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+				}*/
 
 				// add from two diff view same quad, to be nicely displayed
 				//vegetation.addVegetationObject(quad, translation, scale,

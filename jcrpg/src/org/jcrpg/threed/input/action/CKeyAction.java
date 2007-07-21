@@ -110,8 +110,8 @@ public abstract class CKeyAction extends KeyInputAction{
 		 */
 
 		camera.setDirection(new Vector3f(x, y, z));
-		// TODO !!!
-		camera.setLeft(new Vector3f(0, y/10f, 0));
+		// TODO !!! This is very bad, set it better!!
+		camera.setLeft(new Vector3f(0, y, 0));
 		//camera.setUp(new Vector3f(x,0,0));
 
 		camera.update();
