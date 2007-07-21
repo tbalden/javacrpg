@@ -463,7 +463,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
 		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
-		hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,lod_cont_grass_1}));
+		if (RENDER_GRASS_DISTANCE>0)
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,lod_cont_grass_1}));
+		else 
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{sm_road_stone}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
@@ -471,7 +474,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
 		
-		hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle, lod_jung_grass_1}));
+		if (RENDER_GRASS_DISTANCE>0)
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle, lod_jung_grass_1}));
+		else
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
