@@ -266,6 +266,21 @@ public class Mountain extends Geography implements Surface{
 		
 		int steepDirection = 0; //W E S N
 
+		
+		if (relX == gapX && relZ == gapZ) {
+			returnCube = true;
+		} 
+		if (relX == gapX && relZ == realSizeZ - gapZ) {
+
+			returnCube = true;
+		} 
+		if (relX == realSizeX - gapX && relZ == gapZ) {
+			returnCube = true;
+		} 
+		if (relX == realSizeX - gapX && relZ == realSizeZ - gapZ) {
+			returnCube = true;
+		}
+		
 		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 		{
 			returnCube = true;

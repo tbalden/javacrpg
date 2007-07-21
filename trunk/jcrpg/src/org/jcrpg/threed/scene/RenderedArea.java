@@ -72,7 +72,7 @@ public class RenderedArea {
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
-			for (int y1=-1*(distance/3); y1<=1*(distance/3); y1++)
+			for (int y1=-1*(distance); y1<=1*(distance); y1++)
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
