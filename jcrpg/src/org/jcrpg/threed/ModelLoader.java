@@ -447,7 +447,7 @@ public class ModelLoader {
 					as.setEnabled(true);
 					as.setBlendEnabled(true);
 					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+					as.setDstFunction(AlphaState.DB_ONE_MINUS_DST_ALPHA);
 					as.setReference(0.0f);
 					as.setTestEnabled(true);
 					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only

@@ -44,6 +44,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.QuadBatch;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Pyramid;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -92,25 +93,58 @@ public class FloraSetup {
 		vegetation.initialize();
 		
 		int steepDirection = c.cube.steepDirection;
-		
-		if (steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
-			// till we have a better vegetation rotation, no grass vegetation on steep... :(
-			return vegetation;
-		}
 
 		// Load placeholder models for vegetation
-		Quad[] quads = new Quad[ts.length];
-		for (int i=0; i<ts.length; i++){ 
-			Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
-			quad.setModelBound(new BoundingBox());
-			quad.updateModelBound();
-			quad.setRenderState(ts[i]==null?default_ts:ts[i]);
-			quad.setRenderState(as);
-			quads[i] = quad;
+		Node[] quads = new Node[ts.length];
+		for (int i=0; i<ts.length; i++){
+			Node n = new Node();
+			if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
+				Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+				quad.setModelBound(new BoundingBox());
+				quad.updateModelBound();
+				quad.setRenderState(ts[i]==null?default_ts:ts[i]);
+				quad.setRenderState(as);
+				quad.setLocalRotation(J3DCore.qN);
+				n.attachChild(quad);
+
+				quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+				quad.setModelBound(new BoundingBox());
+				quad.updateModelBound();
+				quad.setRenderState(ts[i]==null?default_ts:ts[(i+1)%ts.length]);
+				quad.setRenderState(as);
+				quad.setLocalRotation(J3DCore.qE);
+				n.attachChild(quad);
+			} else
+			{
+				// till we have a better vegetation rotation, no grass vegetation on steep... :(
+				return vegetation;
+
+				/*Box box = new Box("grassbox",new Vector3f(0,0,0),tm.quadSizeY,tm.quadSizeY,tm.quadSizeY);
+				box.
+				box.setModelBound(new BoundingBox());
+				box.updateModelBound();
+				box.setRenderState(ts[i]==null?default_ts:ts[i]);
+				box.setRenderState(as);
+				n.attachChild(box);*/				
+			}
+			quads[i] = n;
+		}
+
+		Pyramid[] boxes = new Pyramid[ts.length];
+		for (int i=0; i<ts.length; i++){
+			Pyramid box = new Pyramid("grassCone",tm.quadSizeX,tm.quadSizeX);
+			//Box box = new Box("grassbox",new Vector3f(0,0,0),tm.quadSizeX,tm.quadSizeY,tm.quadSizeX);
+			//Box quad = new Box("grassQuad",tm.quadSizeX,tm.quadSizeY);
+			box.setModelBound(new BoundingBox());
+			box.updateModelBound();
+			box.setRenderState(ts[i]==null?default_ts:ts[i]);
+			box.setRenderState(as);
+			boxes[i] = box;
 			//BillboardNode model3 = new BillboardNode();
 			//model3.attachChild(quad);
 			//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
 		}
+
 		
 
 		// Place the darn models
@@ -161,7 +195,7 @@ public class FloraSetup {
 				// add from two diff view same quad, to be nicely displayed
 				//vegetation.addVegetationObject(quad, translation, scale,
 					//	rotation.add(J3DCore.qE));
-				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x,c.cube.y,c.cube.z)%quads.length], translation, scale,
+				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x+i,c.cube.y,c.cube.z+j)%quads.length], translation, scale,
 						rotation);
 			}
 		}
