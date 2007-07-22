@@ -109,7 +109,7 @@ public class QuadTreeVegetation extends AbstractVegetation {
 	}
 
 	private QuadTreeTargetData addTarget(Spatial target, Spatial lodTarget) {
-		//target.setCullMode(Spatial.CULL_NEVER);
+		target.setCullMode(Spatial.CULL_NEVER);
 
 		QuadTreeTargetData quadTreeTargetData = new QuadTreeTargetData();
 		quadTreeTargetData.target = target;
@@ -117,8 +117,8 @@ public class QuadTreeVegetation extends AbstractVegetation {
 
 		if (target instanceof TriMesh) {
 			TriMesh mesh = (TriMesh) target;
-			//quadTreeTargetData.bounding.computeFromPoints(mesh
-					//.getVertexBuffer(0));
+			quadTreeTargetData.bounding.computeFromPoints(mesh
+					.getVertexBuffer(0));
 		}
 
 		if (lodTarget != null) {
@@ -161,7 +161,7 @@ public class QuadTreeVegetation extends AbstractVegetation {
 		updateRenderState();
 		updateGeometricState(0.0f, true);
 
-		//setRenderQueueMode(com.jme.renderer.Renderer.QUEUE_SKIP);
+		setRenderQueueMode(com.jme.renderer.Renderer.QUEUE_SKIP);
 		lockMeshes();
 		lockShadows();
 	}
@@ -348,7 +348,7 @@ public class QuadTreeVegetation extends AbstractVegetation {
 	}
 
 	private BoundingVolume tmpBounding = new BoundingBox(new Vector3f(0, 0, 0),
-			1.0f, 0.1f, 1.0f);
+			1.0f, 1.0f, 1.0f);
 
 	private void drawSubQuadTree(QuadTreeNode parentNode, Vector3f camLocation,
 			Spatial target, Renderer r) {
