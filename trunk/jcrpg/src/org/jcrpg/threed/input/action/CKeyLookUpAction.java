@@ -47,7 +47,7 @@ public class CKeyLookUpAction extends CKeyAction {
     	
        	handler.lockHandling();
 
-        handler.lookUpDownPercent++;
+        handler.lookUpDownPercent+=2;
         if (handler.lookUpDownPercent>40) handler.lookUpDownPercent = 40;
 
         setLookUpDown();
