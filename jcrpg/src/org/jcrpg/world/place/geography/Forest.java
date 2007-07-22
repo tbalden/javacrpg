@@ -59,7 +59,7 @@ public class Forest extends Geography implements Surface {
 		worldGroundLevel=groundLevel*magnification;
 	}
 
-	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };
+	static Side[][] FOREST = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
@@ -68,7 +68,8 @@ public class Forest extends Geography implements Surface {
 			return place.getCube(worldX, worldY, worldZ);
 		}
 		
-		Cube base = new Cube(this,worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
+		if (worldY!=worldGroundLevel) return null;
+		Cube base = new Cube(this,FOREST,worldX,worldY,worldZ);
 		return base;
 	}
 
