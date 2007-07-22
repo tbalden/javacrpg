@@ -1,7 +1,7 @@
 
 [ ] steeper mountain side is buggy with corners!!!
-[ ] CKeyAction camera settings, bad when looking up/down!
 
+[ ] Naive vegetation development? -> billboarding??
 [ ] if no grass, don't put it on node!
 
 [ ] grass kinds, sophisticated FloraSetup things!
@@ -19,6 +19,11 @@
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
+--
+
+
+[X] CKeyAction camera settings, bad when looking up/down!
 
 [X] finalize trees, create low level flora
 [-] Test ImposterModel on FBO system

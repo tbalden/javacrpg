@@ -25,6 +25,7 @@ package org.jcrpg.threed;
 import java.nio.FloatBuffer;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
+import org.jcrpg.threed.jme.vegetation.HashMapVegetation;
 import org.jcrpg.threed.jme.vegetation.NaiveVegetation;
 import org.jcrpg.threed.jme.vegetation.QuadTreeVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
