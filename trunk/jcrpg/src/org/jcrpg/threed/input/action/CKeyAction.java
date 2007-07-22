@@ -102,71 +102,62 @@ public abstract class CKeyAction extends KeyInputAction{
      * @param y
      * @param z
      */
-    private void setCameraDirection(Camera camera, Vector3f internalDirection, float x,float y,float z)
-    {
-    	Matrix3f rotMat = new Matrix3f();    	
-		Vector3f dirOrigo = new Vector3f(0.000f,0.000f,-1);
-    	Vector3f left = new Vector3f(-1,0,0);
-    	Vector3f up = new Vector3f(0,1,0);
-		
-		if (internalDirection!=null)
-		{
-	    	Vector3f dirNew = internalDirection;
-	    	dirNew.normalizeLocal();
-	    	rotMat.fromStartEndVectors(dirOrigo, dirNew);
-	    	
-	    	rotMat.mult(left, left);
-	    	rotMat.mult(up, up);
-	    	
-	    	if (dirNew.x==0 && dirNew.y == 0 && dirNew.z == 1) up.mult(-1f); 
-	    	up.normalize();
-	    	left.normalize();
-	    	dirOrigo = dirNew;
+    private void setCameraDirection(Camera camera, Vector3f internalDirection,
+			float x, float y, float z) {
+		Matrix3f rotMat = new Matrix3f();
+		Vector3f dirOrigo = new Vector3f(0.000f, 0.000f, -1);
+		Vector3f left = new Vector3f(-1, 0, 0);
+		Vector3f up = new Vector3f(0, 1, 0);
+
+		if (internalDirection != null) {
+			Vector3f dirNew = internalDirection;
+			dirNew.normalizeLocal();
+			rotMat.fromStartEndVectors(dirOrigo, dirNew);
+
+			rotMat.mult(left, left);
+			rotMat.mult(up, up);
+
+			up.normalize();
+			left.normalize();
+			dirOrigo = dirNew;
 		}
-		
-    	Vector3f dirNew = new Vector3f(x,y,z);
-    	dirNew.normalizeLocal();
-    	rotMat.fromStartEndVectors(dirOrigo, dirNew);
-    	
-    	rotMat.mult(left, left);
-    	rotMat.mult(up, up);
-    	
-    	// this code is needed for Y axis bottom-down problem...
-    	if (internalDirection!=null && internalDirection.x==0 && internalDirection.y == 0 && internalDirection.z == 1) {
-    		left.y *= -1;
-			left.z *= -1;
-			left.x *= -1;
-			up.y *= -1;
-			up.z *= -1;
-			up.x *= -1;
-    		
-    	} else
-    	if (dirNew.x==0 && dirNew.y == 0 && dirNew.z == 1) {
-    		left.y*=-1;
-    		left.z*=-1;
-    		left.x*=-1;
-    		up.y*=-1;
-    		up.z*=-1;
-    		up.x*=-1;
-    	}
-    	
-    	up.normalize();
-    	left.normalize();
-    	
-    	camera.setDirection(dirNew);
-    	camera.setUp(up);
-    	camera.setLeft(left);
-    	camera.normalize();
-    	
-    }
+
+		Vector3f dirNew = new Vector3f(x, y, z);
+		dirNew.normalizeLocal();
+		rotMat.fromStartEndVectors(dirOrigo, dirNew);
+
+		rotMat.mult(left, left);
+		rotMat.mult(up, up);
+
+		// this code is needed for Y axis bottom-down problem...
+		if (internalDirection != null && internalDirection.x == 0
+				&& internalDirection.y == 0 && internalDirection.z == 1) {
+			left.multLocal(-1);
+			up.multLocal(-1);
+
+		} else if (dirNew.x == 0 && dirNew.y == 0 && dirNew.z == 1) {
+			left.multLocal(-1);
+			up.multLocal(-1);
+		}
+
+		up.normalize();
+		left.normalize();
+
+		camera.setDirection(dirNew);
+		camera.setUp(up);
+		camera.setLeft(left);
+		camera.normalize();
+
+	}
 
     
     /**
-     * Turns between to direction to a certain percent (good for look up/down).
-     * @param from
-     * @param toReach
-     * @param percent
-     */
+	 * Turns between to direction to a certain percent (good for look up/down).
+	 * 
+	 * @param from
+	 * @param toReach
+	 * @param percent
+	 */
     protected void turnDirection(Vector3f from, Vector3f toReach, int percent)
 	{
    		//ensureTimeStart();
