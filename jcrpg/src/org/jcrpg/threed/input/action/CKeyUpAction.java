@@ -31,15 +31,16 @@ public class CKeyUpAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        handler.core.moveUp();
-        handler.core.render();
-        Vector3f toReach = handler.core.getCurrentLocation();
-        
-        float steps = J3DCore.MOVE_STEPS;
-        movePosition(steps, from, toReach);
-    	handler.core.setCalculatedCameraLocation();
-        camera.update();
-        //handler.core.render();
+        if (handler.core.moveUp()) {
+	        handler.core.render();
+	        Vector3f toReach = handler.core.getCurrentLocation();
+	        
+	        float steps = J3DCore.MOVE_STEPS;
+	        movePosition(steps, from, toReach);
+	    	handler.core.setCalculatedCameraLocation();
+	        camera.update();
+	        //handler.core.render();
+        }
         handler.unlockHandling(true);
     }
 

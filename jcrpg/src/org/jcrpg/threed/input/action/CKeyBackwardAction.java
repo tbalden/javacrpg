@@ -30,14 +30,15 @@ public class CKeyBackwardAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        handler.core.moveBackward(handler.core.viewDirection);
-        Vector3f toReach = handler.core.getCurrentLocation();
-        
-        float steps = J3DCore.MOVE_STEPS;
-        movePosition(steps, from, toReach);
-    	handler.core.setCalculatedCameraLocation();
-        camera.update();
-        handler.core.render();
+        if (handler.core.moveBackward(handler.core.viewDirection)) {
+	        Vector3f toReach = handler.core.getCurrentLocation();
+	        
+	        float steps = J3DCore.MOVE_STEPS;
+	        movePosition(steps, from, toReach);
+	    	handler.core.setCalculatedCameraLocation();
+	        camera.update();
+	        handler.core.render();
+        }
         handler.unlockHandling(true);
     }
 
