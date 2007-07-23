@@ -371,7 +371,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	{
 		// area subtype to 3d type mapping
 		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);
-		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE);//new Integer(2));
+		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
@@ -382,10 +382,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(World.SUBTYPE_OCEAN.id, new Integer(10));
 		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE);//new Integer(11));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));//EMPTY_SIDE); // 13
-		//hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered rotated!
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
@@ -496,7 +496,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("models/ground/water1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
+		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
