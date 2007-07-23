@@ -1543,7 +1543,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		//rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
         
         //rootNode.setCullMode(Node.CULL_NEVER); 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 6500);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 18000);
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
        	
