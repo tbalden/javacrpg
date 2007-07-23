@@ -114,7 +114,7 @@ public class FloraSetup {
 				quad.setRenderState(ts[i]==null?default_ts:ts[(i+1)%ts.length]);
 				quad.setRenderState(as);
 				quad.setLocalRotation(J3DCore.qE);
-				n.attachChild(quad);
+				//n.attachChild(quad);
 			} else
 			{
 				// till we have a better vegetation rotation, no grass vegetation on steep... :(

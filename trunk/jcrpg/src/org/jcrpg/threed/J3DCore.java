@@ -384,6 +384,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE);//new Integer(11));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));//EMPTY_SIDE); // 13
+		//hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE); // 13
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
@@ -1296,7 +1297,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	 * @param fromRel From coordinates relative (3d space coords)
 	 * @param directions A set of directions to move into
 	 */
-	public void move(int[] from, int[] fromRel, int[] directions)
+	public boolean move(int[] from, int[] fromRel, int[] directions)
 	{
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;
@@ -1322,7 +1323,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			if (sides!=null)
 			{
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable)) return;
+				if (hasSideOfInstance(sides, notPassable)) return false;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
@@ -1334,13 +1335,13 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 				//sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
-					if (hasSideOfInstance(sides, notPassable)) return;
+					if (hasSideOfInstance(sides, notPassable)) return false;
 				}
 
 				sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 				if (sides!=null)
 				{
-					if (hasSideOfInstance(sides, notWalkable)) return;
+					if (hasSideOfInstance(sides, notWalkable)) return false;
 				}
 
 				// checking steep setting
@@ -1370,7 +1371,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 						if (hasSideOfInstance(sides, climbers))
 						{
 							sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
-							if (hasSideOfInstance(sides, notWalkable)) return;
+							if (hasSideOfInstance(sides, notWalkable)) return false;
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 							onSteep = true; // found steep
@@ -1402,53 +1403,56 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		}
 		setViewPosition(newCoords);
 		setRelativePosition(newRelCoords);
+		return true;
 	}
 	
-	public void moveForward(int direction) {
+	public boolean moveForward(int direction) {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
-		move(coords,relCoords,new int[]{direction});
+		return move(coords,relCoords,new int[]{direction});
 	}
 
 	/**
 	 * Move view Left (strafe)
 	 * @param direction
 	 */
-	public void moveLeft(int direction) {
+	public boolean moveLeft(int direction) {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
 		if (direction == NORTH) {
-			move(coords,relCoords,new int[]{WEST});
+			return move(coords,relCoords,new int[]{WEST});
 		} else if (direction == SOUTH) {
-			move(coords,relCoords,new int[]{EAST});
+			return move(coords,relCoords,new int[]{EAST});
 		} else if (direction == EAST) {
-			move(coords,relCoords,new int[]{NORTH});
+			return move(coords,relCoords,new int[]{NORTH});
 		} else if (direction == WEST) {
-			move(coords,relCoords,new int[]{SOUTH});
+			return move(coords,relCoords,new int[]{SOUTH});
 		}
+		return false;
 	}
 	/**
 	 * Move view Right (strafe)
 	 * @param direction
 	 */
-	public void moveRight(int direction) {
+	public boolean moveRight(int direction) {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
 		if (direction == NORTH) {
-			move(coords,relCoords,new int[]{EAST});
+			return move(coords,relCoords,new int[]{EAST});
 		} else if (direction == SOUTH) {
-			move(coords,relCoords,new int[]{WEST});
+			return move(coords,relCoords,new int[]{WEST});
 		} else if (direction == EAST) {
-			move(coords,relCoords,new int[]{SOUTH});
+			return move(coords,relCoords,new int[]{SOUTH});
 		} else if (direction == WEST) {
-			move(coords,relCoords,new int[]{NORTH});
+			return move(coords,relCoords,new int[]{NORTH});
 		}
+		return false;
 	}
 
-	public void moveBackward(int direction) {
+	public boolean moveBackward(int direction) {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
-		move(coords,relCoords,new int[]{oppositeDirections.get(new Integer(direction)).intValue()});
+		return move(coords,relCoords,new int[]{oppositeDirections.get(new Integer(direction)).intValue()});
 	}
 
 	
@@ -1456,15 +1460,15 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	 * Move view Up (strafe)
 	 * @param direction
 	 */
-	public void moveUp() {
+	public boolean moveUp() {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
-		move(coords,relCoords,new int[]{TOP});
+		return move(coords,relCoords,new int[]{TOP});
 	}
-	public void moveDown() {
+	public boolean moveDown() {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
-		move(coords,relCoords,new int[]{BOTTOM});
+		return move(coords,relCoords,new int[]{BOTTOM});
 	}
 	
 	
