@@ -69,6 +69,7 @@ public class Mountain extends Geography implements Surface{
 	
 	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
 		super(id, parent, loc);
+		if (sizeX/2<sizeY || sizeZ/2<sizeY) throw new Exception ("Mountain too steep!");
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
