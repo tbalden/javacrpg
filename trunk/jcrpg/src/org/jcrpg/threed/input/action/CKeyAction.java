@@ -160,7 +160,6 @@ public abstract class CKeyAction extends KeyInputAction{
 	 */
     protected void turnDirection(Vector3f from, Vector3f toReach, int percent)
 	{
-   		//ensureTimeStart();
 		float x, y, z;
 		x = (1 / 100f) * percent * toReach.x;
 		y = (1 / 100f) * percent * toReach.y;
@@ -179,7 +178,10 @@ public abstract class CKeyAction extends KeyInputAction{
 		
 	}
     
-    protected void setLookUpDown()
+    /**
+     * Sets Upward or Downward look based on the precentage stored in handler.
+     */
+    protected void setLookVertical()
     
     {
         Vector3f toReach = null;
