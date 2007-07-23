@@ -12,28 +12,13 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
 public class CKeyLookUpAction extends CKeyAction {
-    //the axis to lock
-    private Vector3f lockAxis;
 
     public CKeyLookUpAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
     	super(handler,camera);
         this.speed = speed;
     }
 
-    /**
-     * 
-     * <code>setLockAxis</code> allows a certain axis to be locked, meaning
-     * the camera will always be within the plane of the locked axis. For
-     * example, if the camera is a first person camera, the user might lock the
-     * camera's up vector. This will keep the camera vertical of the ground.
-     * 
-     * @param lockAxis
-     *            the axis to lock - should be unit length (normalized).
-     */
-    public void setLockAxis(Vector3f lockAxis) {
-        this.lockAxis = lockAxis;
-    }
-
+ 
     /**
      * <code>performAction</code> rotates the camera a certain angle.
      * 
@@ -47,10 +32,10 @@ public class CKeyLookUpAction extends CKeyAction {
     	
        	handler.lockHandling();
 
-        handler.lookUpDownPercent+=2;
+        handler.lookUpDownPercent+=4;
         if (handler.lookUpDownPercent>40) handler.lookUpDownPercent = 40;
 
-        setLookUpDown();
+        setLookVertical();
 
         camera.update();
         handler.core.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);

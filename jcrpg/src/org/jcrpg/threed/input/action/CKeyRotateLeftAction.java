@@ -50,8 +50,8 @@ public class CKeyRotateLeftAction extends CKeyAction {
     	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps,from,toReach);
-        camera.setDirection(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
-        setLookUpDown();
+        handler.lookUpDownPercent = 0;
+        setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
         camera.update();
         handler.core.updateDisplay(from);
     	handler.unlockHandling(true);
