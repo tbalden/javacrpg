@@ -1,14 +1,11 @@
 
-[ ] steeper mountain side is buggy with corners!!!
-
 [ ] Naive vegetation development? -> billboarding??
+
 [ ] if no grass, don't put it on node!
 
-[ ] grass kinds, sophisticated FloraSetup things!
-
 [ ] clean up climate and implement all parts of it with conditions, continue the work on it
-[ ]	implement condition changine 3d models, how? (on RenderedSide level!)
-	plus rain/snow falling, fog?
+[ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
+[ ] rain, fog, snow?
 
 [ ] redraw Window model, it's too detailed on the lower part, unnecessarily
 
@@ -22,6 +19,8 @@
 
 --
 
+[X] grass kinds, sophisticated FloraSetup things!
+[X] steeper mountain side is buggy with corners!!!
 
 [X] CKeyAction camera settings, bad when looking up/down!
 
