@@ -770,9 +770,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					l[0].setTarget(cRootNode);
 					cLightState.attach(l[0].getLight());
 					float v = orb.getLightPower(localTime, conditions);
-					l[0].getLight().setDiffuse(new ColorRGBA(v, v, v, 1));
-					l[0].getLight().setAmbient(new ColorRGBA(v, v, v, 1));
-					l[0].getLight().setSpecular(new ColorRGBA(v, v, v, 1));
+					ColorRGBA c = new ColorRGBA(v,v,v,1);
+					l[0].getLight().setDiffuse(c);
+					l[0].getLight().setAmbient(c);
+					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
 					l[0].updateRenderState();
 
@@ -780,7 +781,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 					l[1].getLight().setEnabled(true);
 					l[1].setTarget(sRootNode);
 					skydomeLightState.attach(l[1].getLight());
-					ColorRGBA c = new ColorRGBA(v,v,v,1);
+					c = new ColorRGBA(v,v,v,1);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
