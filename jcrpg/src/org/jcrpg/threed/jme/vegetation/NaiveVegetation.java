@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.jme.vegetation;
 
+import org.jcrpg.util.HashUtil;
+
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -56,8 +58,33 @@ public class NaiveVegetation extends AbstractVegetation {
 			this.attachChild(node);
 		}
 	}
+	
+	boolean windSwitch = true;
+	Vector3f origTranslation = null;
+	long passedTime = System.currentTimeMillis();
+	long sysTimer = System.currentTimeMillis();
+	
+	public float windPower = 1f; 
 
 	public void draw(Renderer r) {
+		if (origTranslation == null) origTranslation = this.getLocalTranslation();
+		passedTime = System.currentTimeMillis()-sysTimer;
+		if (windSwitch)
+        {
+			if (passedTime>500/windPower) {
+				setLocalTranslation(origTranslation.add(new Vector3f(0.009f*(HashUtil.mixPercentage((int)sysTimer,0,0)/1000f)*windPower,0,0.009f*(HashUtil.mixPercentage((int)sysTimer+100,0,0)/1000f)*windPower)));
+				sysTimer = System.currentTimeMillis();
+				windSwitch = false;
+			}
+        }
+		else
+		{
+			if (passedTime>500/windPower) {
+				setLocalTranslation(origTranslation.subtract(new Vector3f(0,0,0)));
+				sysTimer = System.currentTimeMillis();
+				windSwitch = true;
+			}
+		}
 		if (children == null) {
 			return;
 		}
@@ -65,13 +92,26 @@ public class NaiveVegetation extends AbstractVegetation {
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			child = children.get(i);
 			if (child != null) {
+		        //worldRotation.fromRotationMatrix(orient);
+				//Matrix3f rot = new Matrix3f();
+				//rot.fromAxes(cam.getLeft(),cam.getUp(),cam.getDirection());
+				//child.setLocalRotation(rot);//BOTTOM);
 				float distSquared = tmpVec.set(cam.getLocation())
 						.subtractLocal(child.getLocalTranslation())
 						.lengthSquared();
 				if (distSquared <= viewDistance * viewDistance) {
+					r.setCamera(cam);
 					child.onDraw(r);
 				}
 			}
 		}
+	}
+
+	public float getWindPower() {
+		return windPower;
+	}
+
+	public void setWindPower(float windPower) {
+		this.windPower = windPower;
 	}
 }
