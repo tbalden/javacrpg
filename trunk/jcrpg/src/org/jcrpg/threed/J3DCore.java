@@ -134,6 +134,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     public static boolean MIPMAP_GLOBAL = true;
 
     public static boolean TEXTURE_QUAL_HIGH = false;
+
+    public static boolean BLOOM_EFFECT = false;
     
     static Properties p = new Properties();
     static {
@@ -195,6 +197,16 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("TEXTURE_QUAL_HIGH", "false");
+	    		}
+	    	}
+	    	String bloomEffect = p.getProperty("BLOOM_EFFECT");
+	    	if (bloomEffect!=null)
+	    	{
+	    		try {
+	    			BLOOM_EFFECT = Boolean.parseBoolean(bloomEffect);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("BLOOM_EFFECT", "false");
 	    		}
 	    	}
 	    	
@@ -593,13 +605,15 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 	        flare.setRootNode(cRootNode);
-	        cRootNode.attachChild(lightNode);
+	        sRootNode.attachChild(lightNode);
 
 	        // notice that it comes at the end
 	        lightNode.attachChild(flare);
 
 	        TriMesh sun = new Sphere(o.id,40,40,20f);
-			cRootNode.attachChild(sun);
+	        Node sunNode = new Node();
+	        sunNode.attachChild(sun);
+			sRootNode.attachChild(sunNode);
 			//sun.setSolidColor(ColorRGBA.white);
 			//sun.setLightCombineMode(TextureState.OFF);
 			
@@ -619,8 +633,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			sun.setRenderState(getDisplay().getRenderer().createFogState());
 			
 			
-			lightNode.attachChild(sun);
-	        return lightNode;
+			//lightNode.attachChild(sun);
+			sunNode.attachChild(lightNode);
+	        return sunNode;
 			
 	        
 		} else
@@ -940,7 +955,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    		Node n = itNode.next();
 	    		n.removeFromParent();
 	    		if (n instanceof SharedNode) n.detachAllChildren();
-	    		sPass.removeOccluder(n);
+	    		if (sPass!=null) sPass.removeOccluder(n);
 	    		//cRootNode.detachChild(itNode.next());
 	    		
 	    	}
@@ -1568,9 +1583,9 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		rootPass.add(rootNode);
 		pManager.add(rootPass);
 
-		//bloomRenderPass = new BloomRenderPass(cam, 4);
+		bloomRenderPass = new BloomRenderPass(cam, 4);
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE); 
-		if (true==true) {
+		if (true==false) {
 			sPass =  new ShadowedRenderPass();
 			sPass.setEnabled(true);
         	sPass.add(cRootNode);
@@ -1579,17 +1594,18 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
         	pManager.add(sPass);
 		}
         
-		if (true==false) {
+		if (BLOOM_EFFECT) {
 	      if(!bloomRenderPass.isSupported()) {
 	    	   System.out.println("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
-	           Text t = new Text("Text", "GLSL Not supported on this computer.");
+	           Text t = new Text("Text", "Bloom not supported (FBO needed).");
 	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	           t.setLightCombineMode(LightState.OFF);
 	           t.setLocalTranslation(new Vector3f(0,20,0));
 	           fpsNode.attachChild(t);
 	       } else {
-	           bloomRenderPass.add(rootNode);
+	           bloomRenderPass.add(cRootNode);
 	           bloomRenderPass.setUseCurrentScene(true);
+	           bloomRenderPass.setBlurIntensityMultiplier(1f);
 	           pManager.add(bloomRenderPass);
 	       }
 		}
