@@ -22,6 +22,7 @@
 
 package org.jcrpg.threed.jme.vegetation;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.math.Quaternion;
@@ -34,6 +35,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.state.LightState;
 
 public class NaiveVegetation extends AbstractVegetation {
 	private Vector3f tmpVec = new Vector3f();
@@ -49,13 +51,21 @@ public class NaiveVegetation extends AbstractVegetation {
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
 			node.setLocalRotation(rotation);
+			target.setLightCombineMode(LightState.INHERIT);
+			node.setLightCombineMode(LightState.INHERIT);
 			this.attachChild(node);
 		} else if ((target.getType() & SceneElement.TRIMESH) != 0) {
 			SharedMesh node = new SharedMesh("SharedMesh", (TriMesh) target);
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
 			node.setLocalRotation(rotation);
-			this.attachChild(node);
+			target.setLightCombineMode(LightState.INHERIT);
+			node.setLightCombineMode(LightState.INHERIT);
+			Node n = new Node();			
+			n.attachChild(node);
+			n.setLightCombineMode(LightState.INHERIT);
+			
+			this.attachChild(n);
 		}
 	}
 	
@@ -64,7 +74,7 @@ public class NaiveVegetation extends AbstractVegetation {
 	long passedTime = System.currentTimeMillis();
 	long sysTimer = System.currentTimeMillis();
 	
-	public float windPower = 1f; 
+	public float windPower = 6f; 
 
 	public void draw(Renderer r) {
 		if (origTranslation == null) origTranslation = this.getLocalTranslation();
@@ -92,6 +102,7 @@ public class NaiveVegetation extends AbstractVegetation {
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			child = children.get(i);
 			if (child != null) {
+				//child.updateRenderState();
 		        //worldRotation.fromRotationMatrix(orient);
 				//Matrix3f rot = new Matrix3f();
 				//rot.fromAxes(cam.getLeft(),cam.getUp(),cam.getDirection());

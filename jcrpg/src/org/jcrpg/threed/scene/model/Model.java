@@ -29,5 +29,9 @@ public abstract class Model {
 	 * Override it for quad grasses/ground plane.
 	 */
 	public boolean rotateOnSteep = false;
+	/**
+	 * Tells if the model casts shadow in shadow pass
+	 */
+	public boolean shadowCaster = false;
 	
 }
