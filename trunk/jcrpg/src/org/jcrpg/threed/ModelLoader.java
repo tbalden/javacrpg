@@ -43,6 +43,7 @@ import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
@@ -52,6 +53,7 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
+import com.jme.scene.shape.Box;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -100,7 +102,7 @@ public class ModelLoader {
 			{
 				TextureStateModel m = (TextureStateModel)objects[i];
 				TextureState[] ts = loadTextureStates(m);
-				Node node = FloraSetup.createVegetation(rc, core.getCamera(), ts, m);
+				Node node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, m);
 				r[i] = node;
 			
 			} else
@@ -126,10 +128,23 @@ public class ModelLoader {
 					{
 						TextureStateModel tm = (TextureStateModel)m;
 						TextureState[] ts = loadTextureStates(tm);
-						node = FloraSetup.createVegetation(rc, core.getCamera(), ts, tm);
+						node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+						
 					} else 
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
+						if (true==false && m.shadowCaster)
+						{
+				            Box b = new Box("box", new Vector3f(0,1,0), 0.5f, 0.5f, 2f);
+				            b.setModelBound(new BoundingBox());
+				            b.updateModelBound();
+
+							if (node!=null) {
+								//core.sPass.addOccluder(b);
+							}
+							node = new Node();
+							node.attachChild(b);
+						}
 						if (fakeLoadForCacheMaint) continue;
 					}
 					
@@ -174,6 +189,10 @@ public class ModelLoader {
 			if (objects[i].rotateOnSteep) 
 			{
 				r[i].setUserData("rotateOnSteep", r[i]);
+			}
+			if (objects[i].shadowCaster)
+			{
+				core.sPass.addOccluder(r[i]);
 			}
 		}
 		return r;
@@ -280,7 +299,8 @@ public class ModelLoader {
 			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+model.textureName[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
 			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			qtexture.setApply(Texture.AM_REPLACE);
+			qtexture.setApply(Texture.AM_COMBINE);
+			//qtexture.setEnvironmentalMapMode(Texture.EM_OBJECT_LINEAR);
 			//qtexture.setFilter(Texture.FM_LINEAR);
 			//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
 			ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
