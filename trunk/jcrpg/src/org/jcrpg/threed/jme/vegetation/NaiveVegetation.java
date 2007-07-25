@@ -22,7 +22,6 @@
 
 package org.jcrpg.threed.jme.vegetation;
 
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.math.Quaternion;
@@ -35,7 +34,6 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
 public class NaiveVegetation extends AbstractVegetation {
@@ -52,21 +50,21 @@ public class NaiveVegetation extends AbstractVegetation {
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
 			node.setLocalRotation(rotation);
-			target.setLightCombineMode(LightState.INHERIT);
-			node.setLightCombineMode(LightState.INHERIT);
+			//target.setLightCombineMode(LightState.INHERIT);
+			//node.setLightCombineMode(LightState.INHERIT);
 			this.attachChild(node);
 		} else if ((target.getType() & SceneElement.TRIMESH) != 0) {
 			SharedMesh node = new SharedMesh("SharedMesh", (TriMesh) target);
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
 			node.setLocalRotation(rotation);
-			target.setLightCombineMode(LightState.INHERIT);
-			node.setLightCombineMode(LightState.INHERIT);
-			Node n = new Node();			
-			n.attachChild(node);
-			n.setLightCombineMode(LightState.INHERIT);
+			//target.setLightCombineMode(LightState.INHERIT);
+			//node.setLightCombineMode(LightState.INHERIT);
+			//Node n = new Node();			
+			//n.attachChild(node);
+			//n.setLightCombineMode(LightState.INHERIT);
 			
-			this.attachChild(n);
+			this.attachChild(node);
 		}
 	}
 	
@@ -80,7 +78,7 @@ public class NaiveVegetation extends AbstractVegetation {
 	public void draw(Renderer r) {
 		if (origTranslation == null) origTranslation = this.getLocalTranslation();
 		passedTime = System.currentTimeMillis()-sysTimer;
-		/*if (windSwitch)
+		if (windSwitch)
         {
 			if (passedTime>500/windPower) {
 				setLocalTranslation(origTranslation.add(new Vector3f(0.009f*(HashUtil.mixPercentage((int)sysTimer,0,0)/1000f)*windPower,0,0.009f*(HashUtil.mixPercentage((int)sysTimer+100,0,0)/1000f)*windPower)));
@@ -95,7 +93,7 @@ public class NaiveVegetation extends AbstractVegetation {
 				sysTimer = System.currentTimeMillis();
 				windSwitch = true;
 			}
-		}*/
+		}
 		
 		if (children == null) {
 			return;

@@ -23,12 +23,10 @@
 package org.jcrpg.threed;
 
 import java.io.File;
-import java.nio.FloatBuffer;
+import java.util.HashSet;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
-import org.jcrpg.threed.jme.vegetation.HashMapVegetation;
 import org.jcrpg.threed.jme.vegetation.NaiveVegetation;
-import org.jcrpg.threed.jme.vegetation.QuadTreeVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.TextureStateModel;
 import org.jcrpg.util.HashUtil;
@@ -40,18 +38,12 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.BatchMesh;
-import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
-import com.jme.scene.batch.QuadBatch;
-import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Cone;
 import com.jme.scene.shape.Pyramid;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.CullState;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
@@ -59,7 +51,6 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
-import com.jme.util.geom.BufferUtils;
 
 public class FloraSetup {
 
@@ -76,7 +67,6 @@ public class FloraSetup {
 		default_ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 		default_ts.setTexture(qtexture);
 		default_ts.setEnabled(true);
-		
 
 	    as.setEnabled(true);
 		as.setBlendEnabled(true);
@@ -88,12 +78,14 @@ public class FloraSetup {
 	}
 
 
-	private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f }; 
+	private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f };
+	
+	public static HashSet<Quad> hsQuads = new HashSet<Quad>();
 	
 	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateModel tm) {
 		
         VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
-        //vp.setParameter(lightPosition, 8);
+        //vp.setParameter(lightPosition, 8); // TODO
         try {vp.load(new File(
                 "./data/shaders/grassMove.vp").toURL());} catch (Exception ex){}
         vp.setEnabled(true);
@@ -125,40 +117,38 @@ public class FloraSetup {
 		for (int i=0; i<ts.length; i++){
 			Node n = new Node();
 			if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
-				Box box = new Box("grassbox",new Vector3f(0,0,0),tm.quadSizeY,tm.quadSizeY,tm.quadSizeY);
-				box.setModelBound(new BoundingBox());
-				box.updateModelBound();
-				box.setRenderState(ts[i]==null?default_ts:ts[i]);
-				box.setDefaultColor(ColorRGBA.black);
-				box.setRenderState(as);
-				box.setRenderState(core.cLightState);
-				box.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
-				box.setLightCombineMode(LightState.INHERIT);
-				n.setRenderState(core.cLightState);
-				n.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
-				//n.attachChild(box);				
 
+				//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
 				Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
-				quad.setLightCombineMode(LightState.INHERIT);
+				//quad.setLightCombineMode(LightState.INHERIT);
 				quad.setModelBound(new BoundingBox());
-				quad.setDefaultColor(ColorRGBA.black);
+				quad.setDefaultColor(ColorRGBA.green);
 				quad.updateModelBound();
+				
+				Texture t1 = ts[i]==null?default_ts.getTexture():ts[i].getTexture();
+				t1.setApply(Texture.AM_MODULATE);
+				t1.setCombineFuncRGB(Texture.ACF_MODULATE);
+				t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+				t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+				t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+				t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
+				t1.setCombineScaleRGB(1.0f);				
 				quad.setRenderState(ts[i]==null?default_ts:ts[i]);
 				quad.setRenderState(as);
-				quad.setRenderState(core.cLightState);
-				quad.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
+				quad.setLightCombineMode(LightState.OFF);
+				quad.setSolidColor(new ColorRGBA(1,1,1,1));
+				
+				//quad.setRenderState(core.cLightState);
+				//quad.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
 				quad.setLocalRotation(J3DCore.qN);
-				//quad.setRenderState(vp); TODO  grassMove.vp programming! :-)
+				//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 				//quad.setRenderState(fp);
 				n.attachChild(quad);
+				hsQuads.add(quad);
 
-				quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
-				quad.setModelBound(new BoundingBox());
-				quad.updateModelBound();
-				quad.setRenderState(ts[i]==null?default_ts:ts[(i+1)%ts.length]);
-				quad.setRenderState(as);
-				quad.setLocalRotation(J3DCore.qE);
-				//n.attachChild(quad);
+				SharedMesh sQ = new SharedMesh("sharedQuad",quad);
+				sQ.setLocalRotation(J3DCore.qE);
+				n.attachChild(sQ);
 			} else
 			{
 				// till we have a better vegetation rotation, no grass vegetation on steep... :(
@@ -179,8 +169,7 @@ public class FloraSetup {
 			box.setRenderState(as);
 			boxes[i] = box;
 			//BillboardNode model3 = new BillboardNode();
-			//model3.attachChild(quad);
-			//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
+			//model3.attachChild(quad);			//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
 		}
 
 		
@@ -235,6 +224,8 @@ public class FloraSetup {
 					//	rotation.add(J3DCore.qE));
 				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x+i,c.cube.y,c.cube.z+j)%quads.length], translation, scale,
 						rotation);
+	//			vegetation.addVegetationObject(quads[(i+j)%quads.length], translation, scale,
+		//				rotation);
 			}
 		}
 
