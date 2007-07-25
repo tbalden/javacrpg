@@ -22,6 +22,7 @@
 
 package org.jcrpg.threed;
 
+import java.io.File;
 import java.nio.FloatBuffer;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
@@ -51,9 +52,11 @@ import com.jme.scene.shape.Pyramid;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
+import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
@@ -78,17 +81,34 @@ public class FloraSetup {
 	    as.setEnabled(true);
 		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_DST_ALPHA);
+		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 		as.setReference(0.0f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 	}
 
 
-	  
+	private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f }; 
 	
 	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateModel tm) {
 		
+        VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
+        //vp.setParameter(lightPosition, 8);
+        try {vp.load(new File(
+                "./data/shaders/grassMove.vp").toURL());} catch (Exception ex){}
+        vp.setEnabled(true);
+        if (!vp.isSupported())
+        {
+        	System.out.println("!!!!!!! NO VP !!!!!!!");
+        }
+        FragmentProgramState fp = core.getDisplay().getRenderer().createFragmentProgramState();
+        try {
+			fp.load(new File("./data/shaders/grassMove.fp").toURL());
+		} catch (Exception ex) {
+		}
+		fp.setEnabled(true);
+        
+ 
 		// Load the vegetation class of your choice
 		AbstractVegetation vegetation = new NaiveVegetation("vegetation",
 				cam, 500.0f);
@@ -128,6 +148,8 @@ public class FloraSetup {
 				quad.setRenderState(core.cLightState);
 				quad.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
 				quad.setLocalRotation(J3DCore.qN);
+				//quad.setRenderState(vp); TODO  grassMove.vp programming! :-)
+				//quad.setRenderState(fp);
 				n.attachChild(quad);
 
 				quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);

@@ -1,0 +1,19 @@
+!!ARBvp1.0
+ATTRIB pos = vertex.position;
+   ATTRIB alpha = vertex.attrib[1];
+   ATTRIB tex = vertex.texcoord;
+   ATTRIB incol = vertex.color;
+   PARAM mvp[4] = { state.matrix.mvp };
+   TEMP outcolor;
+   TEMP transform;
+   OUTPUT out = result.position;
+   OUTPUT col = result.color;
+   OUTPUT tc = result.texcoord[0];
+   MOV tc, tex;
+   MOV col, incol;
+   MOV col.w, alpha.x; 
+   MUL out.x, pos.x, 4;
+   DP4 out.y, pos, mvp[1];
+   DP4 out.z, pos, mvp[2];
+   DP4 out.w, pos, mvp[3];
+   END
