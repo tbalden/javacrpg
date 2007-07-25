@@ -1,8 +1,7 @@
+[ ] user manual update
+
 [ ] Write the wind vertex program?
 
-
-[ ] Naive vegetation development? -> billboarding??
-	[ ] darkening veg -> mesh? or what?
 
 [ ] add Harek's table to the house
 
@@ -22,6 +21,8 @@
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
 --
+[-] Naive vegetation development? -> billboarding?? - Quad in other apps too!
+[X] darkening veg -> mesh? or what?
 
 [X] redraw Window model, it's too detailed on the lower part, unnecessarily
 [X] grass kinds, sophisticated FloraSetup things!
