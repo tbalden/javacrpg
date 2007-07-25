@@ -392,7 +392,8 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
-		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(3));
+		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
+		hmAreaSubType3dType.put(House.SUBTYPE_BOOKCASE.id, new Integer(28));
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
@@ -486,6 +487,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
 		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
+		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_road_stone.rotateOnSteep = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
 		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
@@ -495,6 +497,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{sm_road_stone}));
+		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{sm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
@@ -525,6 +528,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide("models/inside/furniture/bookcase.3ds",null));
 				
 		
 	}

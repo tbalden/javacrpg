@@ -19,6 +19,7 @@ public class House extends Economic {
 	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new NotPassable(TYPE_HOUSE+"_INTERNAL_CEILING");
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_HOUSE+"_EXTERNAL_DOOR");
 	public static final SideSubType SUBTYPE_WINDOW = new NotPassable(TYPE_HOUSE+"_WINDOW");
+	public static final SideSubType SUBTYPE_BOOKCASE = new NotPassable(TYPE_HOUSE+"_BK");
 
 	
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
@@ -28,7 +29,7 @@ public class House extends Economic {
 	static Side[][] WALL_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,null };
 	static Side[][] WALL_SOUTH = new Side[][] { null, null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null };
 	static Side[][] WALL_WEST = new Side[][] { null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null };
-	static Side[][] WALL_GROUND_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	static Side[][] WALL_GROUND_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL),new Side(TYPE_HOUSE,SUBTYPE_BOOKCASE)}, null, null ,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] WALL_GROUND_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] WALL_GROUND_WEST = new Side[][] { null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
