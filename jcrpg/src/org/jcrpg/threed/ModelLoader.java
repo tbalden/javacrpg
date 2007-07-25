@@ -83,6 +83,7 @@ public class ModelLoader {
     
     AlphaState as;
 
+    HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
     
 	/**
 	 * Loading a set of models into JME nodes.
@@ -100,9 +101,17 @@ public class ModelLoader {
 			if (objects[i]==null) continue;
 			if (objects[i] instanceof TextureStateModel) 
 			{
-				TextureStateModel m = (TextureStateModel)objects[i];
-				TextureState[] ts = loadTextureStates(m);
-				Node node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, m);
+				Model m = objects[i]; 
+				Node node = vegetationTargetCache.get(((TextureStateModel)m).textureName[0]);
+				if (node==null) {
+					TextureStateModel tm = (TextureStateModel)m;
+					TextureState[] ts = loadTextureStates(tm);
+					node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+					vegetationTargetCache.put(((TextureStateModel)m).textureName[0], node);
+				} else 
+				{
+					node = new SharedNode("sveg"+((TextureStateModel)m).textureName,node);
+				}
 				r[i] = node;
 			
 			} else
@@ -126,9 +135,19 @@ public class ModelLoader {
 					Node node = null;
 					if (m instanceof TextureStateModel)
 					{
-						TextureStateModel tm = (TextureStateModel)m;
-						TextureState[] ts = loadTextureStates(tm);
-						node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+						node = vegetationTargetCache.get(((TextureStateModel)m).textureName[0]);
+						if (node==null) {
+							TextureStateModel tm = (TextureStateModel)m;
+							TextureState[] ts = loadTextureStates(tm);
+							node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+							//vegetationTargetCache.put(((TextureStateModel)m).textureName[0], node); // TODO need cache?
+						} else 
+						{
+							Node target = node;
+							node = new SharedNode("sveg"+((TextureStateModel)m).textureName,target);
+							//if (target.getUserData(key))
+							//node.setUserData("", data)
+						}
 						
 					} else 
 					{	
@@ -467,7 +486,7 @@ public class ModelLoader {
 					as.setEnabled(true);
 					as.setBlendEnabled(true);
 					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-					as.setDstFunction(AlphaState.DB_ONE_MINUS_DST_ALPHA);
+					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 					as.setReference(0.0f);
 					as.setTestEnabled(true);
 					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
