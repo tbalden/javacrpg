@@ -35,6 +35,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
 public class NaiveVegetation extends AbstractVegetation {
@@ -79,7 +80,7 @@ public class NaiveVegetation extends AbstractVegetation {
 	public void draw(Renderer r) {
 		if (origTranslation == null) origTranslation = this.getLocalTranslation();
 		passedTime = System.currentTimeMillis()-sysTimer;
-		if (windSwitch)
+		/*if (windSwitch)
         {
 			if (passedTime>500/windPower) {
 				setLocalTranslation(origTranslation.add(new Vector3f(0.009f*(HashUtil.mixPercentage((int)sysTimer,0,0)/1000f)*windPower,0,0.009f*(HashUtil.mixPercentage((int)sysTimer+100,0,0)/1000f)*windPower)));
@@ -94,7 +95,8 @@ public class NaiveVegetation extends AbstractVegetation {
 				sysTimer = System.currentTimeMillis();
 				windSwitch = true;
 			}
-		}
+		}*/
+		
 		if (children == null) {
 			return;
 		}

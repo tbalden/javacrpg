@@ -443,7 +443,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		
-		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass1.png","grass1_flower.png","grass1_flower_2.png"},0.9f,0.45f,3,0.7f);
+		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass/grass_aard.png","grass/grass_aard.png"/*grass1_flower.png"*/,"grass1_flower_2.png"},0.9f,0.45f,3,0.7f);
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
