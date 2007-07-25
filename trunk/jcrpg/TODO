@@ -1,3 +1,5 @@
+[ ] Write the wind vertex program?
+
 
 [ ] Naive vegetation development? -> billboarding??
 	[ ] darkening veg -> mesh? or what?
@@ -10,7 +12,6 @@
 [ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
 [ ] rain, fog, snow?
 
-[ ] redraw Window model, it's too detailed on the lower part, unnecessarily
 
 [ ] skySphere change: night sky based on calculated light value (v)
 [ ] cloud planes on sky
@@ -22,6 +23,7 @@
 
 --
 
+[X] redraw Window model, it's too detailed on the lower part, unnecessarily
 [X] grass kinds, sophisticated FloraSetup things!
 [X] steeper mountain side is buggy with corners!!!
 
