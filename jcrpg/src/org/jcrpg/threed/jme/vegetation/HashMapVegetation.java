@@ -72,7 +72,7 @@ public class HashMapVegetation extends AbstractVegetation {
 	private int zoffsets[] = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
 
 	public HashMapVegetation(String string, Camera cam, float viewDistance) {
-		super(string, cam, viewDistance);
+		super(string, null, cam, viewDistance);
 	}
 
 	private HashMapTargetData addTarget(Spatial target, Spatial lodTarget) {

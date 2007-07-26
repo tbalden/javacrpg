@@ -38,6 +38,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
@@ -91,8 +92,8 @@ public class VegetationSetup {
         
  
 		// Load the vegetation class of your choice
-		AbstractVegetation vegetation = new NaiveVegetation("vegetation",
-				cam, 500.0f);
+		AbstractVegetation vegetation = new NaiveVegetation("vegetation", core,
+				cam, J3DCore.RENDER_GRASS_DISTANCE);
 
 		vegetation.setCullMode(Spatial.CULL_DYNAMIC);
 		vegetation.initialize();
@@ -102,7 +103,7 @@ public class VegetationSetup {
 		// Load placeholder models for vegetation
 		Node[] quads = new Node[ts.length];
 		for (int i=0; i<ts.length; i++){
-			Node n = new Node();
+			BillboardNode n = new BillboardNode();
 			if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
 
 				//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
@@ -125,7 +126,7 @@ public class VegetationSetup {
 				quad.setLightCombineMode(LightState.OFF);
 				quad.setSolidColor(new ColorRGBA(1,1,1,1));
 				
-				quad.setLocalRotation(J3DCore.qN);
+				//quad.setLocalRotation(J3DCore.qN);
 
 				//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 				//quad.setRenderState(fp);

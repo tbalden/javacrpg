@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.jme.vegetation;
 
+import org.jcrpg.threed.J3DCore;
+
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -30,12 +32,14 @@ import com.jme.scene.Spatial;
 
 public abstract class AbstractVegetation extends Node {
 	protected Camera cam;
+	protected J3DCore core;	
 
 	protected float viewDistance;
 
-	public AbstractVegetation(String string, Camera cam, float viewDistance) {
+	public AbstractVegetation(String string, J3DCore core, Camera cam, float viewDistance) {
 		super(string);
 		this.cam = cam;
+		this.core = core;
 		this.viewDistance = viewDistance;
 	}
 

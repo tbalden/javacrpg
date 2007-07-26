@@ -105,7 +105,7 @@ public abstract class CKeyAction extends KeyInputAction{
     private void setCameraDirection(Camera camera, Vector3f internalDirection,
 			float x, float y, float z) {
 		Matrix3f rotMat = new Matrix3f();
-		Vector3f dirOrigo = new Vector3f(0.000f, 0.000f, -1);
+		Vector3f dirOrigo = new Vector3f(0f, 0f, -1);
 		Vector3f left = new Vector3f(-1, 0, 0);
 		Vector3f up = new Vector3f(0, 1, 0);
 
