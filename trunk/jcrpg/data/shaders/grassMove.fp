@@ -1,7 +1,8 @@
 !!ARBfp1.0
-    OPTION ARB_fog_linear;
-    TEMP diffuse;
-    TEX diffuse, fragment.texcoord[0], texture[0], 2D;
-    MUL diffuse.xyz, diffuse, 1;
-    MUL result.color, fragment.color, diffuse;
-    END
+ATTRIB tex = fragment.texcoord;
+ATTRIB col = fragment.color.primary;
+OUTPUT outColor = result.color;
+TEMP tmp;
+TXP tmp, tex, texture[0], 2D;
+MUL outColor, tmp, col;
+END
