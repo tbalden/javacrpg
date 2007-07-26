@@ -133,22 +133,24 @@ public class VegetationSetup {
 				t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
 				t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
 				t1.setCombineScaleRGB(1.0f);				
-				quad.setRenderState(ts[i]==null?default_ts:ts[i]);
+				quad.setRenderState(ts[i]);
 				quad.setRenderState(as);
 				quad.setLightCombineMode(LightState.OFF);
 				quad.setSolidColor(new ColorRGBA(1,1,1,1));
 				
-				//quad.setRenderState(core.cLightState);
-				//quad.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
 				quad.setLocalRotation(J3DCore.qN);
+
 				//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 				//quad.setRenderState(fp);
+				
 				n.attachChild(quad);
 				hsQuads.add(quad);
 
-				SharedMesh sQ = new SharedMesh("sharedQuad",quad);
-				sQ.setLocalRotation(J3DCore.qE);
-				n.attachChild(sQ);
+				if (J3DCore.DOUBLE_GRASS) {
+					SharedMesh sQ = new SharedMesh("sharedQuad",quad);
+					sQ.setLocalRotation(J3DCore.qE);
+					n.attachChild(sQ);
+				}
 			} else
 			{
 				// till we have a better vegetation rotation, no grass vegetation on steep... :(

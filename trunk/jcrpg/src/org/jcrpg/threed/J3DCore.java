@@ -40,7 +40,6 @@ import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
@@ -79,7 +78,6 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
-import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
@@ -138,6 +136,10 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
     public static boolean TEXTURE_QUAL_HIGH = false;
 
     public static boolean BLOOM_EFFECT = false;
+
+    public static boolean CPU_ANIMATED_GRASS = true;
+    
+    public static boolean DOUBLE_GRASS = true;
     
     static Properties p = new Properties();
     static {
@@ -211,7 +213,28 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	    			p.setProperty("BLOOM_EFFECT", "false");
 	    		}
 	    	}
-	    	
+
+	    	String cpuAnimatedGrass = p.getProperty("CPU_ANIMATED_GRASS");
+	    	if (bloomEffect!=null)
+	    	{
+	    		try {
+	    			CPU_ANIMATED_GRASS = Boolean.parseBoolean(cpuAnimatedGrass);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("CPU_ANIMATED_GRASS", "false");
+	    		}
+	    	}
+	    	String doubleGrass = p.getProperty("DOUBLE_GRASS");
+	    	if (bloomEffect!=null)
+	    	{
+	    		try {
+	    			DOUBLE_GRASS = Boolean.parseBoolean(doubleGrass);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("DOUBLE_GRASS", "false");
+	    		}
+	    	}
+
     	} catch (Exception ex)
     	{
     		ex.printStackTrace();
@@ -621,9 +644,6 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 	        Node sunNode = new Node();
 	        sunNode.attachChild(sun);
 			cRootNode.attachChild(sunNode);
-			//sun.setSolidColor(ColorRGBA.white);
-			//sun.setLightCombineMode(TextureState.OFF);
-			
 			
 			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"sun.png",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
@@ -1070,7 +1090,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 			cube.hsRenderedNodes.add(n[i]);
 			
 			if (n[i] instanceof SharedNode) {
-				n[i].lock();
+				if (n[i].getLocks()==0) n[i].lockMeshes();
 			}
 			cRootNode.attachChild(n[i]);
 		}
