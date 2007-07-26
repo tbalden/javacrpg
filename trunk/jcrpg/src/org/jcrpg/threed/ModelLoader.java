@@ -431,13 +431,13 @@ public class ModelLoader {
 						as.setEnabled(true);
 						as.setBlendEnabled(true);
 						as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-						as.setDstFunction(AlphaState.DB_ONE_MINUS_DST_ALPHA);
+						as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 						as.setReference(0.0f);
 						as.setTestEnabled(true);
 						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 					}
 					// TODO alphastate type of model
-					spatial.setRenderState(as);
+					//spatial.setRenderState(as);
 					
 					sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 					node.setModelBound(new BoundingBox());
@@ -523,7 +523,8 @@ public class ModelLoader {
 					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 				}
 				// TODO alphastate type of model
-				node.setRenderState(as);
+				//node.clearRenderState(RenderState.RS_ALPHA);
+				//node.setRenderState(as);
 
 				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
