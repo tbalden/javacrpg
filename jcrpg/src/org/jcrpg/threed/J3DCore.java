@@ -1676,6 +1676,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
         cRootNode.setRenderState(fs);
+        cRootNode.setRenderState(as);
 		
         /*sPass.add(rootNode);
         sPass.setRenderShadows(true);

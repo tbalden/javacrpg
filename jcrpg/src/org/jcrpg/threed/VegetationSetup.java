@@ -50,29 +50,18 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.TextureManager;
 
 public class VegetationSetup {
 
-	static TextureState default_ts; 
 	static AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 	
 	static {
-		Texture qtexture = TextureManager.loadTexture("./data/textures/low/"+"grass1.png",Texture.MM_LINEAR,
-	            Texture.FM_LINEAR);
-		//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		qtexture.setApply(Texture.AM_REPLACE);
-		//qtexture.setFilter(Texture.FM_LINEAR);
-		//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-		default_ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-		default_ts.setTexture(qtexture);
-		default_ts.setEnabled(true);
 
 	    as.setEnabled(true);
 		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		as.setReference(0.0f);
+		as.setReference(0.3f); // the grass needs a higher value for bugfixing blueness of grass blended!
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 	}
@@ -107,8 +96,6 @@ public class VegetationSetup {
 
 		vegetation.setCullMode(Spatial.CULL_DYNAMIC);
 		vegetation.initialize();
-		vegetation.setRenderState(core.cLightState);
-		vegetation.setRenderState(core.cRootNode.getRenderState(RenderState.RS_SHADE));
 		
 		int steepDirection = c.cube.steepDirection;
 
@@ -125,13 +112,13 @@ public class VegetationSetup {
 				quad.setDefaultColor(ColorRGBA.green);
 				quad.updateModelBound();
 				
-				Texture t1 = ts[i]==null?default_ts.getTexture():ts[i].getTexture();
+				Texture t1 = ts[i].getTexture();
 				t1.setApply(Texture.AM_MODULATE);
 				t1.setCombineFuncRGB(Texture.ACF_MODULATE);
 				t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-				t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-				t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
-				t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
+				t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+				t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
+				t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
 				t1.setCombineScaleRGB(1.0f);				
 				quad.setRenderState(ts[i]);
 				quad.setRenderState(as);
@@ -159,21 +146,6 @@ public class VegetationSetup {
 			}
 			quads[i] = n;
 		}
-
-		Pyramid[] boxes = new Pyramid[ts.length];
-		for (int i=0; i<ts.length; i++){
-			Pyramid box = new Pyramid("grassCone",tm.quadSizeX,tm.quadSizeX);
-			//Box box = new Box("grassbox",new Vector3f(0,0,0),tm.quadSizeX,tm.quadSizeY,tm.quadSizeX);
-			//Box quad = new Box("grassQuad",tm.quadSizeX,tm.quadSizeY);
-			box.setModelBound(new BoundingBox());
-			box.updateModelBound();
-			box.setRenderState(ts[i]==null?default_ts:ts[i]);
-			box.setRenderState(as);
-			boxes[i] = box;
-			//BillboardNode model3 = new BillboardNode();
-			//model3.attachChild(quad);			//model3.setAlignment(BillboardNode.SCREEN_ALIGNED);
-		}
-
 		
 
 		// Place the darn models
@@ -221,9 +193,7 @@ public class VegetationSetup {
 					rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
 				}*/
 
-				// add from two diff view same quad, to be nicely displayed
-				//vegetation.addVegetationObject(quad, translation, scale,
-					//	rotation.add(J3DCore.qE));
+				// add from diff views same quad, to be nicely displayed
 				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x+i,c.cube.y,c.cube.z+j)%quads.length], translation, scale,
 						rotation);
 	//			vegetation.addVegetationObject(quads[(i+j)%quads.length], translation, scale,
@@ -235,7 +205,6 @@ public class VegetationSetup {
 		vegetation.updateModelBound();
 		
 		vegetation.setup();
-		vegetation.setRenderState(as);
 
 		return vegetation;
 	}
