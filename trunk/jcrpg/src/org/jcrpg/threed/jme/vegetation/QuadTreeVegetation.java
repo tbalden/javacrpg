@@ -97,7 +97,7 @@ public class QuadTreeVegetation extends AbstractVegetation {
 	private Vector3f tmpVec = new Vector3f();
 
 	public QuadTreeVegetation(String string, Camera cam, float viewDistance) {
-		super(string, cam, viewDistance);
+		super(string, null, cam, viewDistance);
 
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 		frustumCamera = new CheckCam(display.getWidth(), display.getHeight());

@@ -29,10 +29,12 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.SharedMesh;
@@ -44,8 +46,8 @@ import com.jme.scene.batch.TriangleBatch;
 public class NaiveVegetation extends AbstractVegetation {
 	private Vector3f tmpVec = new Vector3f();
 
-	public NaiveVegetation(String string, Camera cam, float viewDistance) {
-		super(string, cam, viewDistance);
+	public NaiveVegetation(String string, J3DCore core, Camera cam, float viewDistance) {
+		super(string, core, cam, viewDistance);
 	}
 
 	public void addVegetationObject(Spatial target, Vector3f translation,
@@ -71,8 +73,11 @@ public class NaiveVegetation extends AbstractVegetation {
 	long passedTime = System.currentTimeMillis();
 	long sysTimer = System.currentTimeMillis();
 	
-	public float windPower = 0.4f; 
+	public float windPower = 1.0f; 
 
+	
+	
+	
 	public void draw(Renderer r) {
 		if (origTranslation == null) origTranslation = this.getLocalTranslation();
 		passedTime = System.currentTimeMillis()-sysTimer;
@@ -105,66 +110,92 @@ public class NaiveVegetation extends AbstractVegetation {
 			
 			child = children.get(i);
 			
-			if (child != null) {
 			
-				if (J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)				
-				if (child instanceof Node)
+			Vector3f dirOrigo = new Vector3f(0f, 0f, 1);
+			Vector3f left = new Vector3f(1, 0, 0);
+			Vector3f up = new Vector3f(0, -1, 0);
+		
+			Matrix3f q1 = new Matrix3f();
+			q1.fromStartEndVectors(dirOrigo, core.getCamera().getDirection().negate());
+			Matrix3f q2 = new Matrix3f();
+			q2.fromStartEndVectors(left, core.getCamera().getLeft().negate());
+			Matrix3f q3 = new Matrix3f();
+			q3.fromStartEndVectors(up, core.getCamera().getUp().negate());
+			
+			q1.multLocal(q2).multLocal(q3);
+			
+			//child.getWorldRotation().apply(m3);
+			//child.updateGeometricState(0f, false);
+			child.getWorldRotation().fromRotationMatrix(q1); // TODO why doesnt this billboarding work??
+			child.updateWorldVectors();
+			Matrix3f rotMat = new Matrix3f();
+			rotMat.fromStartEndVectors(new Vector3f(0,0,0).normalize(), new Vector3f(0,1,0).normalize());
+			
+			if (child != null) {
+				float distSquared = tmpVec.set(cam.getLocation())
+				.subtractLocal(child.getWorldTranslation())
+				.lengthSquared();
+				if (distSquared <= viewDistance * viewDistance) 
+				if (distSquared<3*3 || HashUtil.mixPercentage(i,0,0)+10>(distSquared/(viewDistance*viewDistance))*100) 
 				{
-					Node n = (Node)child;
-					ArrayList<Spatial> c2 = n.getChildren();
-					for (Spatial s:c2)
-					{
-						//if (s instanceof TriMesh) 
+					r.setCamera(cam);
+					child.updateGeometricState(0.0f, false);
+					child.onDraw(r);
+
+					if (J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)				
+						if (child instanceof Node)
 						{
-							TriMesh q = (TriMesh)s;
-							//System.out.println("BATCHES: "+q.getBatchCount());
-							TriangleBatch b = q.getBatch(0);
-							//System.out.println("VERTICES: " +b.getVertexCount());
-							FloatBuffer fb = b.getVertexBuffer();
-							for (int fIndex=0; fIndex<4*3; fIndex++)
+							Node n = (Node)child;
+							ArrayList<Spatial> c2 = n.getChildren();
+							for (Spatial s:c2)
 							{
-								boolean f2_1Read = false;
-								boolean f2_2Read = false;
-								float f2_1 = 0;
-								float f2_2 = 0;
-								if (FastMath.floor(fIndex/3)==0 || FastMath.floor(fIndex/3)==3)
+								//if (s instanceof TriMesh) 
 								{
-									int mul = 1;
-									if (FastMath.floor(fIndex/3)==3) mul = -1;
-									if (fIndex%3==0)
+									TriMesh q = (TriMesh)s;
+									//System.out.println("BATCHES: "+q.getBatchCount());
+									TriangleBatch b = q.getBatch(0);
+									//System.out.println("VERTICES: " +b.getVertexCount());
+									FloatBuffer fb = b.getVertexBuffer();
+									for (int fIndex=0; fIndex<4*3; fIndex++)
 									{
-										float f = fb.get(fIndex);
-										if (!f2_1Read)
+										boolean f2_1Read = false;
+										boolean f2_2Read = false;
+										float f2_1 = 0;
+										float f2_2 = 0;
+										if (FastMath.floor(fIndex/3)==0 || FastMath.floor(fIndex/3)==3)
 										{
-											f2_1 = fb.get(fIndex+3*mul);
-											f2_1Read = true;
+											int mul = 1;
+											if (FastMath.floor(fIndex/3)==3) mul = -1;
+											if (fIndex%3==0)
+											{
+												float f = fb.get(fIndex);
+												if (!f2_1Read)
+												{
+													f2_1 = fb.get(fIndex+3*mul);
+													f2_1Read = true;
+												}
+												fb.put(fIndex, f2_1+diffs[whichDiff]);
+											}	
+											if (fIndex%3==2)
+											{
+												float f = fb.get(fIndex);
+												if (!f2_2Read)
+												{
+													f2_2 = fb.get(fIndex+3*mul);
+													f2_2Read = true;
+												}
+												fb.put(fIndex, f2_2+diffs[whichDiff]);
+											}	
 										}
-										fb.put(fIndex, f2_1+diffs[whichDiff]);
-									}	
-									if (fIndex%3==2)
-									{
-										float f = fb.get(fIndex);
-										if (!f2_2Read)
-										{
-											f2_2 = fb.get(fIndex+3*mul);
-											f2_2Read = true;
-										}
-										fb.put(fIndex, f2_2+diffs[whichDiff]);
-									}	
+									}
+									
 								}
 							}
-							
 						}
-					}
+				
 				}
+			
 
-				float distSquared = tmpVec.set(cam.getLocation())
-						.subtractLocal(child.getLocalTranslation())
-						.lengthSquared();
-				if (distSquared <= viewDistance * viewDistance) {
-					r.setCamera(cam);
-					child.onDraw(r);
-				}
 			}
 		}
 	}
