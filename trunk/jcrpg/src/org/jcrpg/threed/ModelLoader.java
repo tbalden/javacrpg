@@ -37,13 +37,15 @@ import org.jcrpg.threed.scene.model.BillboardModel;
 import org.jcrpg.threed.scene.model.ImposterModel;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
-import org.jcrpg.threed.scene.model.TextureStateModel;
+import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
@@ -54,7 +56,9 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -99,21 +103,48 @@ public class ModelLoader {
 		if (objects!=null)
 		for (int i=0; i<objects.length; i++) {
 			if (objects[i]==null) continue;
-			if (objects[i] instanceof TextureStateModel) 
+			// texture state vegetation with flora setup
+			if (objects[i] instanceof TextureStateVegetationModel) 
 			{
 				Model m = objects[i]; 
-				Node node = vegetationTargetCache.get(((TextureStateModel)m).textureName[0]);
+				Node node = vegetationTargetCache.get(((TextureStateVegetationModel)m).textureNames[0]);
 				if (node==null) {
-					TextureStateModel tm = (TextureStateModel)m;
-					TextureState[] ts = loadTextureStates(tm);
-					node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
-					vegetationTargetCache.put(((TextureStateModel)m).textureName[0], node);
+					TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
+					TextureState[] ts = loadTextureStates(tm.textureNames);
+					node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+					//vegetationTargetCache.put(((TextureStateVegetationModel)m).textureNames[0], node);
 				} else 
 				{
-					node = new SharedNode("sveg"+((TextureStateModel)m).textureName,node);
+					node = new SharedNode("sveg"+((TextureStateVegetationModel)m).textureNames,node);
 				}
 				r[i] = node;
 			
+			} else
+			// Quad models
+			if (objects[i] instanceof QuadModel) {
+				QuadModel m = (QuadModel)objects[i];
+				Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+				quad.setModelBound(new BoundingBox());
+				quad.updateModelBound();
+				TextureState[] ts = loadTextureStates(new String[]{m.textureName});
+				for (int j=0; j<ts.length;j++) {
+					Texture t1 = ts[j].getTexture();
+					t1.setApply(Texture.AM_COMBINE);
+					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
+					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+					t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+					t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+					t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
+					t1.setCombineScaleRGB(1.0f);
+				}
+				quad.setRenderState(ts[0]);
+				//quad.setRenderState(as);
+				quad.setSolidColor(new ColorRGBA(1,1,1,1));
+				
+				Node node = new Node();
+				node.attachChild(quad);
+				r[i] = node;
+
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
@@ -133,18 +164,18 @@ public class ModelLoader {
 				DiscreteLodNode lodNode = new DiscreteLodNode("dln",dsm);
 				for (Model m : lm.models) {
 					Node node = null;
-					if (m instanceof TextureStateModel)
+					if (m instanceof TextureStateVegetationModel)
 					{
-						node = vegetationTargetCache.get(((TextureStateModel)m).textureName[0]);
+						node = vegetationTargetCache.get(((TextureStateVegetationModel)m).textureNames[0]);
 						if (node==null) {
-							TextureStateModel tm = (TextureStateModel)m;
-							TextureState[] ts = loadTextureStates(tm);
-							node = FloraSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+							TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
+							TextureState[] ts = loadTextureStates(tm.textureNames);
+							node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
 							//vegetationTargetCache.put(((TextureStateModel)m).textureName[0], node); // TODO need cache?
 						} else 
 						{
 							Node target = node;
-							node = new SharedNode("sveg"+((TextureStateModel)m).textureName,target);
+							node = new SharedNode("sveg"+((TextureStateVegetationModel)m).textureNames,target);
 							//if (target.getUserData(key))
 							//node.setUserData("", data)
 						}
@@ -308,14 +339,14 @@ public class ModelLoader {
     	}
     }
     
-    public TextureState[] loadTextureStates(TextureStateModel model)
+    public TextureState[] loadTextureStates(String[] textureNames)
     {
     	ArrayList<TextureState> tss = new ArrayList<TextureState>();
-    	for (int i=0; i<model.textureName.length; i++) {
-	    	TextureState ts = textureStateCache.get(model.textureName[i]);
+    	for (int i=0; i<textureNames.length; i++) {
+	    	TextureState ts = textureStateCache.get(textureNames[i]);
 	    	if (ts!=null) {tss.add(ts); continue;}
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+model.textureName[i],Texture.MM_LINEAR,
+			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+textureNames[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
 			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 			qtexture.setApply(Texture.AM_COMBINE);
@@ -325,7 +356,7 @@ public class ModelLoader {
 			ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 			ts.setTexture(qtexture);
 			ts.setEnabled(true);
-			textureStateCache.put(model.textureName[i], ts);
+			textureStateCache.put(textureNames[i], ts);
 			tss.add(ts);
     	}
     	return (TextureState[])tss.toArray(new TextureState[0]);

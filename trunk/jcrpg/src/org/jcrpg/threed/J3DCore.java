@@ -40,8 +40,9 @@ import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
-import org.jcrpg.threed.scene.model.TextureStateModel;
+import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
 import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
@@ -444,11 +445,11 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
 		
-		TextureStateModel tsm_cont_grass = new TextureStateModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.9f,0.45f,3,0.7f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.9f,0.45f,3,0.7f);
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateModel tsm_jung_grass = new TextureStateModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png"},0.7f,0.6f,3,0.7f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png"},0.7f,0.6f,3,0.7f);
 		LODModel lod_jung_grass_1 = new LODModel(new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 
@@ -487,6 +488,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
 		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
+		//QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_road_stone.rotateOnSteep = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
@@ -844,7 +846,7 @@ public class J3DCore extends com.jme.app.SimpleGame implements Runnable {
 		}
 
 		// this part sets the naive veg quads to a mixed color of the light's value with the quad texture!
-		for (Quad q:FloraSetup.hsQuads)
+		for (Quad q:VegetationSetup.hsQuads)
 		{
 			q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
 		}

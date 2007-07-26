@@ -28,7 +28,7 @@ import java.util.HashSet;
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
 import org.jcrpg.threed.jme.vegetation.NaiveVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
-import org.jcrpg.threed.scene.model.TextureStateModel;
+import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -52,7 +52,7 @@ import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
-public class FloraSetup {
+public class VegetationSetup {
 
 	static TextureState default_ts; 
 	static AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
@@ -82,7 +82,7 @@ public class FloraSetup {
 	
 	public static HashSet<Quad> hsQuads = new HashSet<Quad>();
 	
-	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateModel tm) {
+	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateVegetationModel tm) {
 		
         VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
         //vp.setParameter(lightPosition, 8); // TODO
