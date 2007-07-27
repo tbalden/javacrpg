@@ -90,7 +90,9 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
+import com.jme.renderer.pass.DefaultShadowGate;
 import com.jme.renderer.pass.RenderPass;
+import com.jme.renderer.pass.ShadowGate;
 import com.jme.renderer.pass.ShadowedRenderPass;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
@@ -469,23 +471,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cherry.shadowCaster = true;
 		SimpleModel acacia = new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES);
 		acacia.shadowCaster = true;
-		SimpleModel pine = new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES);
+		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true;
-		SimpleModel great_pine = new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES);
+		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
 		great_pine.shadowCaster = true;
-		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry},new float[][]{{0f,15f}});
-		//LODModel lod_cherry = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/cherry.3ds",null,true)},new float[][]{{0f,7f},{7.1f,15f}});
-		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia},new float[][]{{0f,15f}});
-		//LODModel lod_acacia = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/acacia.3ds",null,true)},new float[][]{{0f,7f},{7f,15f}});
-		LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
-		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
-		//LODModel lod_pine = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES),new SimpleModel("models/tree/pine.3ds",null,true)},new float[][]{{0f,7f},{7f,15f}});
-		LODModel lod_palm = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/coconut.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
-		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
+		SimpleModel palm = new SimpleModel("models/tree/coconut.3ds",null,MIPMAP_TREES);
+		palm.shadowCaster = true;
+		SimpleModel jungletrees_mult = new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES);
+		jungletrees_mult.shadowCaster = true;
 		SimpleModel cactus = new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES);
 		cactus.shadowCaster = true;
+		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
+		bush1.shadowCaster = true;
+
+		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry},new float[][]{{0f,15f}});
+		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia},new float[][]{{0f,15f}});
+		LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
+		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
+		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
+		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{jungletrees_mult},new float[][]{{0f,15f}});
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
-		LODModel lod_bush1 = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES)},new float[][]{{0f,15f}});
+		LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush1},new float[][]{{0f,15f}});
 		
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.9f,0.45f,3,0.7f);
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
@@ -533,7 +539,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
-		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true; sm_grass.shadowCaster = true;
+		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
 		//QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_road_stone.rotateOnSteep = true;
@@ -628,9 +634,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        cLightState.setTwoSidedLighting(false);
 	        
 	        lightNode = new LightNode("light", cLightState);
-	        //lightNode.setLight(dr);
+	        lightNode.setLight(dr);
 
-	        //lightNode.setTarget(cRootNode);
+	        lightNode.setTarget(cRootNode);
 	        lightNode.setLocalTranslation(new Vector3f(0f, 14f, 0f));
 
 	        // Setup the lensflare textures.
@@ -740,19 +746,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			dirLight.setShadowCaster(true);
 			cLightState.attach(dirLight);
 
-			LightNode spotLightNode = new LightNode("Sun spotlight "+o.id, skydomeLightState);		
-			PointLight spotLight = new PointLight();
-			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			//spotLight.setDirection(new Vector3f(0,0,1));
-			spotLight.setEnabled(true);
-			spotLight.setShadowCaster(false);
-			//spotLight.setAngle(90);
-			spotLightNode.setLight(spotLight);
-			spotLightNode.setTarget(sRootNode);
-			skydomeLightState.attach(spotLight);
+			LightNode pointLightNode = new LightNode("Sun spotlight "+o.id, skydomeLightState);		
+			PointLight pointLight = new PointLight();
+			pointLight.setDiffuse(new ColorRGBA(1,1,1,0));
+			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,0));
+			pointLight.setEnabled(true);
+			pointLight.setShadowCaster(false);
+			pointLightNode.setLight(pointLight);
+			pointLightNode.setTarget(sRootNode);
+			skydomeLightState.attach(pointLight);
 	        
-			return new LightNode[]{dirLightNode,spotLightNode};
+			return new LightNode[]{dirLightNode,pointLightNode};
 		} else
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
 			LightNode dirLightNode = new LightNode("Moon light "+o.id, cLightState);		
@@ -760,24 +764,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
 			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
 			dirLight.setDirection(new Vector3f(0,0,1));
+			dirLight.setShadowCaster(false);//moon shouldnt cast shadow (?)
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
 			dirLightNode.setTarget(cRootNode);
 			cLightState.attach(dirLight);
 
-			LightNode spotLightNode = new LightNode("Moon spotlight "+o.id, skydomeLightState);		
-			SpotLight spotLight = new SpotLight();
-			spotLight.setDiffuse(new ColorRGBA(1,1,1,1));
-			spotLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
-			spotLight.setDirection(new Vector3f(0,0,1));
-			spotLight.setEnabled(true);
-			spotLight.setAngle(180);
-			spotLight.setShadowCaster(false);
-			spotLightNode.setLight(spotLight);
-			spotLightNode.setTarget(sRootNode);
-			skydomeLightState.attach(spotLight);
+			LightNode pointLightNode = new LightNode("Moon spotlight "+o.id, skydomeLightState);		
+			SpotLight pointLight = new SpotLight();
+			pointLight.setDiffuse(new ColorRGBA(1,1,1,1));
+			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
+			pointLight.setDirection(new Vector3f(0,0,1));
+			pointLight.setEnabled(true);
+			pointLight.setAngle(180);
+			pointLight.setShadowCaster(false);
+			pointLightNode.setLight(pointLight);
+			pointLightNode.setTarget(sRootNode);
+			skydomeLightState.attach(pointLight);
 			
-			return new LightNode[]{dirLightNode,spotLightNode};
+			return new LightNode[]{dirLightNode,pointLightNode};
 		}
 		return null;
 			
@@ -861,19 +866,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
 					cRootNode.setRenderState(cLightState);
-					//cRootNode.updateRenderState();
 
 					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
 					l[1].setTarget(sRootNode);
 					skydomeLightState.attach(l[1].getLight());
-					c = new ColorRGBA(v,v,v,v);
+					c = new ColorRGBA(v,v,v,0.0f);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
 					sRootNode.setRenderState(skydomeLightState);
 					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
-					//l[1].updateRenderState();
 				
 				} else 
 				
@@ -891,10 +894,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 
 		// this part sets the naive veg quads to a mixed color of the light's value with the quad texture!
+		int counter = 0;
 		for (Quad q:VegetationSetup.hsQuads)
 		{
+			counter++;
 			q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
 		}
+		//System.out.println("__________ VEG QUADS: "+counter);
 		// set fog state color to the light power !
 		fs.setColor(new ColorRGBA(vTotal/2f,vTotal/2f,vTotal/2f,0.5f));
 
@@ -1013,11 +1019,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	{
 	    		Node n = itNode.next();
 	    		n.removeFromParent();
-	    		//if (n instanceof SharedNode) 
-	    		n.detachAllChildren();
+	    		if (n instanceof SharedNode) n.detachAllChildren();
 	    		if (sPass!=null) {
 	    			sPass.removeOccluder(n);
-	    			sPass.remove(n);
+	    			//sPass.remove(n);
 	    		}
 	    		//cRootNode.detachChild(itNode.next());
 	    		
@@ -1041,6 +1046,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		modelLoader.setLockForSharedNodes(true);
 
+    	//sPass.resetShadowQuad(display.getRenderer());
 		
 		System.gc();
 
@@ -1115,7 +1121,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			cube.hsRenderedNodes.add(n[i]);
 			
 			if (n[i] instanceof SharedNode) {
-				//if (n[i].getLocks()==0) n[i].lockMeshes();
+				if (n[i].getLocks()==0) n[i].lockMeshes();
 			}
 			cRootNode.attachChild(n[i]);
 		}
@@ -1667,10 +1673,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
-		as.setBlendEnabled(false);
+		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		as.setReference(0.0f);
+		as.setReference(0.5f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
@@ -1696,23 +1702,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//dr.setDiffuse(new ColorRGBA(1, 1, 1, 1.5f));
 			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
 			//dr.setSpecular(new ColorRGBA(1, 1, 1, 1.5f));*/
-			//dr.setAngle(60);
 			dr.setShadowCaster(true);
 			cLightState.attach(dr);
-			//cLightState.setGlobalAmbient(new ColorRGBA(0.6f, 0.6f, 0.6f, 0.6f));
-			// 
 		}
 
 		if (SHADOWS) {
 			System.out.println("SHADOWS!");
 			//pManager.remove(sPass);
-			//sPass.setShadowColor(new ColorRGBA(0,0,0,0f));
+			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
 	    	sPass.add(cRootNode);
-	    	//for (Spatial s:cRootNode.getChildren())
-	    		//sPass.addOccluder(s);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
+	    	J3DShadowGate dsg = new J3DShadowGate();
+	    	dsg.core = this;
+	    	sPass.setShadowGate(dsg);
+	    	//sPass.setZOffset(0f);
 	    	pManager.add(sPass);
 		}
 		
@@ -1776,23 +1781,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	protected void simpleUpdate() {
 		super.simpleUpdate();
 
-		//dr.setDirection(cam.getDirection());		
 		if (dr!=null) dr.setLocation(cam.getLocation().add(new Vector3f(2f, 1f, 2f)));
-		
-		
-		
 
 		if (engine.timeChanged) 
 		{
 			engine.setTimeChanged(false);
 			updateTimeRelated();
-			//rootNode.updateRenderState();
+			
 		}
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */
-			//rootNode.updateGeometricState(tpf, true);
+			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 
 			pManager.updatePasses(tpf);

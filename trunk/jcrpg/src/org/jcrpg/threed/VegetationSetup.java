@@ -22,7 +22,6 @@
 
 package org.jcrpg.threed;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -39,18 +38,13 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
-import com.jme.scene.shape.Pyramid;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 
 public class VegetationSetup {
@@ -94,6 +88,7 @@ public class VegetationSetup {
 		fp.setEnabled(true);*/
         
  
+		
 		// Load the vegetation class of your choice
 		AbstractVegetation vegetation = new NaiveVegetation("vegetation", core,
 				cam, J3DCore.RENDER_GRASS_DISTANCE);
@@ -103,13 +98,18 @@ public class VegetationSetup {
 		
 		int steepDirection = c.cube.steepDirection;
 
-		// Load placeholder models for vegetation
+		if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+		{
+			return vegetation;
+		}
+
+			// Load placeholder models for vegetation
 		Node[] quads = quadCache.get(tm.textureNames[0]);
 		if (quads==null) 
 		{
 			quads = new Node[ts.length];
 			for (int i=0; i<ts.length; i++){
-				BillboardNode n = new BillboardNode();
+				Node n = new Node();
 				if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
 	
 					//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);

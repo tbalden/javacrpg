@@ -19,59 +19,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jcrpg.world;
 
-import org.jcrpg.world.time.Time;
+package org.jcrpg.threed;
 
-public class Engine implements Runnable {
+import com.jme.renderer.pass.DefaultShadowGate;
+import com.jme.scene.batch.TriangleBatch;
 
-	boolean exit = false;
-	boolean pause = true;
-	Time worldMeanTime = null;
+public class J3DShadowGate extends DefaultShadowGate {
+
+	public J3DCore core;
 	
-	//Engine
-	
-	public boolean timeChanged = false;
-	
-	public void run() {
-		System.out.println("ENGINE STARTED");
-		while (!exit)
-		{
-			try{Thread.sleep(10000);}catch (Exception ex){}
-			if (!pause) {
-				worldMeanTime.tick(10);
-				setTimeChanged(true);
-			}
-		}
-		System.out.println("ENGINE TERMINTATED");
-	}
-	
-	public void exit()
-	{
-		System.out.println("ENGINE TERMINATING");
-		exit = true;
+	@Override
+	public boolean shouldDrawShadows(TriangleBatch batch) {
+		int l = batch.getParentGeom().getName().length();
+		if (batch.getParentGeom().getName().charAt(l-1)=='3') return false;
+		float dS =batch.getParentGeom().getWorldTranslation().distanceSquared(core.getCamera().getLocation());
+		if (dS/10>10) return false;
+		return true;
 	}
 
-	public boolean isPause() {
-		return pause;
+	@Override
+	public boolean shouldUpdateShadows(TriangleBatch batch) {
+		//if (System.currentTimeMillis()%30>27) return true;
+		// TODO Auto-generated method stub
+		return true;
 	}
-
-	public void setPause(boolean pause) {
-		this.pause = pause;
-	}
-
-	public Time getWorldMeanTime() {
-		return worldMeanTime;
-	}
-
-	public void setWorldMeanTime(Time worldMeanTime) {
-		this.worldMeanTime = worldMeanTime;
-	}
-	
-	public synchronized void setTimeChanged(boolean state) {
-		timeChanged = state;
-	}
-
-	
 
 }

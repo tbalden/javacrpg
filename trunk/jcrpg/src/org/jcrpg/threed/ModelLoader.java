@@ -145,7 +145,6 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
-		    	System.out.println(" !!!! --- LOADING MODEL !!!!! "+((SimpleModel)objects[i]).modelName);
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				
@@ -157,10 +156,10 @@ public class ModelLoader {
 						core.sPass.addOccluder(node);
 					}
 				}
-				if (node!=null)
+				/*if (node!=null)
 				{
 					core.sPass.add(node);
-				}
+				}*/
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
@@ -195,14 +194,13 @@ public class ModelLoader {
 						if (core.sPass!=null && m.shadowCaster)
 						{
 							if (node!=null) {
-								System.out.println("!!!! OCCLUDER! "+((SimpleModel)m).modelName);
 								core.sPass.addOccluder(node);
 							}
 						}
-						if (node!=null)
+						/*if (node!=null)
 						{
 							core.sPass.add(node);
-						}
+						}*/
 					}
 					
 					
@@ -396,7 +394,6 @@ public class ModelLoader {
 	            return r;
     		}
     	}
-    	System.out.println(" !!!! NEW LOADING MODEL !!!!! "+o.modelName+o.textureName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{
