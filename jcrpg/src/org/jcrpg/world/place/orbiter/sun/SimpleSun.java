@@ -76,7 +76,7 @@ public class SimpleSun extends Orbiter{
 		}
 		float x=(Math.abs(dayOrNightPeriodPercentage)-50)/-20;
 		float y= -1;
-		float z = 0.5f;
+		float z = 0.1f;
 		
 		return new float[] {-x,y,z};
 
