@@ -156,10 +156,6 @@ public class ModelLoader {
 						core.sPass.addOccluder(node);
 					}
 				}
-				/*if (node!=null)
-				{
-					core.sPass.add(node);
-				}*/
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
@@ -191,16 +187,13 @@ public class ModelLoader {
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
+						
 						if (core.sPass!=null && m.shadowCaster)
 						{
 							if (node!=null) {
 								core.sPass.addOccluder(node);
 							}
 						}
-						/*if (node!=null)
-						{
-							core.sPass.add(node);
-						}*/
 					}
 					
 					
@@ -245,10 +238,10 @@ public class ModelLoader {
 			{
 				r[i].setUserData("rotateOnSteep", r[i]);
 			}
-			if (objects[i].shadowCaster)
-			{
-				core.sPass.addOccluder(r[i]);
-			}
+			//if (objects[i].shadowCaster)
+			//{
+				//core.sPass.addOccluder(r[i]);
+			//}
 		}
 		return r;
     }

@@ -1,11 +1,10 @@
 [ ] user manual update
 
-[ ] Write the wind vertex program?
-
+[ ] billboarding the grass! (rotation didnt help! :/)
+[ ] Tree generation in java code? (billboard leaf quads!)
 
 [ ] add Harek's table to the house
 
-[ ] if no grass, don't put it on node!
 
 [ ] clean up climate and implement all parts of it with conditions, continue the work on it
 [ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
@@ -20,7 +19,11 @@
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
+[?] Write the wind vertex program? Now it's cpu based!
+[?] if no grass, don't put it on node!
+
 --
+[X] shadow render pass added! :-)
 [-] Naive vegetation development? -> billboarding?? - Quad in other apps too!
 [X] darkening veg -> mesh? or what?
 
