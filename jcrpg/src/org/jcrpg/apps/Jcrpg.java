@@ -24,7 +24,6 @@ package org.jcrpg.apps;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
-import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
@@ -36,7 +35,6 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
-import org.jcrpg.world.place.geography.Mountain2;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;

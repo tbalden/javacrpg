@@ -44,7 +44,6 @@ import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
@@ -55,10 +54,8 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -81,7 +78,7 @@ public class ModelLoader {
     WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
     // this better be not weak hashmap
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
-    WeakHashMap<String,TextureState> textureStateCache = new WeakHashMap<String,TextureState>();
+    HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
     
     int counter=0;
     
@@ -148,11 +145,22 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
+		    	System.out.println(" !!!! --- LOADING MODEL !!!!! "+((SimpleModel)objects[i]).modelName);
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				
 				r[i] = node;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
+				if (core.sPass!=null && objects[i].shadowCaster)
+				{
+					if (node!=null) {
+						core.sPass.addOccluder(node);
+					}
+				}
+				if (node!=null)
+				{
+					core.sPass.add(node);
+				}
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
@@ -171,7 +179,7 @@ public class ModelLoader {
 							TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
 							TextureState[] ts = loadTextureStates(tm.textureNames);
 							node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
-							//vegetationTargetCache.put(((TextureStateModel)m).textureName[0], node); // TODO need cache?
+							//vegetationTargetCache.put(((TextureStateVegetationModel)m).textureNames[0], node); // TODO need cache?
 						} else 
 						{
 							Node target = node;
@@ -183,19 +191,18 @@ public class ModelLoader {
 					} else 
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
-						if (true==false && m.shadowCaster)
-						{
-				            Box b = new Box("box", new Vector3f(0,1,0), 0.5f, 0.5f, 2f);
-				            b.setModelBound(new BoundingBox());
-				            b.updateModelBound();
-
-							if (node!=null) {
-								//core.sPass.addOccluder(b);
-							}
-							node = new Node();
-							node.attachChild(b);
-						}
 						if (fakeLoadForCacheMaint) continue;
+						if (core.sPass!=null && m.shadowCaster)
+						{
+							if (node!=null) {
+								System.out.println("!!!! OCCLUDER! "+((SimpleModel)m).modelName);
+								core.sPass.addOccluder(node);
+							}
+						}
+						if (node!=null)
+						{
+							core.sPass.add(node);
+						}
 					}
 					
 					
@@ -389,6 +396,7 @@ public class ModelLoader {
 	            return r;
     		}
     	}
+    	System.out.println(" !!!! NEW LOADING MODEL !!!!! "+o.modelName+o.textureName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{
@@ -429,14 +437,14 @@ public class ModelLoader {
 					{
 						as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 						as.setEnabled(true);
-						as.setBlendEnabled(true);
+						as.setBlendEnabled(false); // TODO 
 						as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 						as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 						as.setReference(0.0f);
 						as.setTestEnabled(true);
 						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 					}
-					// TODO alphastate type of model
+					
 					//spatial.setRenderState(as);
 					
 					sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
@@ -515,15 +523,14 @@ public class ModelLoader {
 				{
 					as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 					as.setEnabled(true);
-					as.setBlendEnabled(true);
+					as.setBlendEnabled(false); // true TODO
 					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 					as.setReference(0.0f);
 					as.setTestEnabled(true);
 					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 				}
-				// TODO alphastate type of model
-				//node.clearRenderState(RenderState.RS_ALPHA);
+				
 				//node.setRenderState(as);
 
 				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
