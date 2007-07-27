@@ -111,6 +111,7 @@ import com.jme.util.TextureManager;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
+import com.jmex.model.collada.schema.sphereType;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
@@ -123,6 +124,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
     public static int RENDER_DISTANCE = 10;
     public static int RENDER_GRASS_DISTANCE = 10;
+    public static int RENDER_SHADOW_DISTANCE = 10;
+    public static int RENDER_SHADOW_DISTANCE_SQR = 100;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -166,7 +169,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String renderGrassDistance = p.getProperty("RENDER_GRASS_DISTANCE");
-	    	if (renderDistance!=null)
+	    	if (renderGrassDistance!=null)
 	    	{
 	    		try {
 	    			RENDER_GRASS_DISTANCE = Integer.parseInt(renderGrassDistance);
@@ -176,6 +179,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("RENDER_GRASS_DISTANCE", "10");
+	    		}
+	    	}
+	    	String renderShadowDistance = p.getProperty("RENDER_SHADOW_DISTANCE");
+	    	if (renderShadowDistance!=null)
+	    	{
+	    		try {
+	    			RENDER_SHADOW_DISTANCE = Integer.parseInt(renderShadowDistance);
+	    			if (RENDER_SHADOW_DISTANCE>15*CUBE_EDGE_SIZE) RENDER_SHADOW_DISTANCE = (int)(15*CUBE_EDGE_SIZE);
+	    			if (RENDER_SHADOW_DISTANCE>RENDER_DISTANCE*CUBE_EDGE_SIZE) RENDER_SHADOW_DISTANCE = (int)(RENDER_DISTANCE*CUBE_EDGE_SIZE);
+	    			if (RENDER_SHADOW_DISTANCE<5) RENDER_SHADOW_DISTANCE = 5;
+	    			RENDER_SHADOW_DISTANCE_SQR=RENDER_SHADOW_DISTANCE*RENDER_SHADOW_DISTANCE;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("RENDER_SHADOW_DISTANCE", "10");
 	    		}
 	    	}
 	    	String mipmapGlobal = p.getProperty("MIPMAP_GLOBAL");
@@ -925,10 +942,29 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	/**
+	 * Removes node and all subnodes from shadowrenderpass. Use it when removing node from scenario!
+	 * @param s Node.
+	 */
+	public void removeOccludersRecoursive(Node s)
+	{
+		sPass.removeOccluder(s);
+		if (s.getChildren()!=null)
+		for (Spatial c:s.getChildren())
+		{
+			if (c instanceof Node)
+			{
+				removeOccludersRecoursive((Node)c);
+			}
+		}
+		
+	}
+	
+	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	public void render()
 	{
+		System.out.println("OCCS"+sPass.occludersSize());
 		modelLoader.setLockForSharedNodes(false);
 
 		// start to collect the nodes/binaries which this render will use now
@@ -1021,10 +1057,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		n.removeFromParent();
 	    		if (n instanceof SharedNode) n.detachAllChildren();
 	    		if (sPass!=null) {
-	    			sPass.removeOccluder(n);
-	    			//sPass.remove(n);
+	    			// remove from shadowrenderpass
+	    			removeOccludersRecoursive(n);
 	    		}
-	    		//cRootNode.detachChild(itNode.next());
 	    		
 	    	}
 	    }
@@ -1796,6 +1831,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 
+			
+			
 			pManager.updatePasses(tpf);
 		}
 	}
