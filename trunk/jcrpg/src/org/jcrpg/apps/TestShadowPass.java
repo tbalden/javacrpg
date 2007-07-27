@@ -78,6 +78,7 @@ import com.jme.scene.Node;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.PQTorus;
+import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.TextureState;
@@ -304,8 +305,14 @@ public class TestShadowPass extends SimplePassGame {
             "jmetest/data/texture/rust.png"),
             Texture.MM_LINEAR_LINEAR,
             Texture.FM_LINEAR));
+        
+        AlphaState as = display.getRenderer().createAlphaState();
+        as.setBlendEnabled(true);
+        as.setTestEnabled(true);
+        
 
         occluders = new Node("occs");
+        occluders.setRenderState(as);
         occluders.setRenderState(ts);
         rootNode.attachChild(occluders);
         for (int i = 0; i < 50; i++) {
@@ -320,6 +327,7 @@ public class TestShadowPass extends SimplePassGame {
                 b.rotateUpTo(normal);
             occluders.attachChild(b);
         }
+        
        occluders.lock();
     }
     

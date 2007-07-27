@@ -73,7 +73,7 @@ public class NaiveVegetation extends AbstractVegetation {
 	long passedTime = System.currentTimeMillis();
 	long sysTimer = System.currentTimeMillis();
 	
-	public float windPower = 1.0f; 
+	public float windPower = 0.3f; 
 
 	
 	

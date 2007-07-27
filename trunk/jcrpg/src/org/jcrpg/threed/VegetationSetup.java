@@ -23,6 +23,7 @@
 package org.jcrpg.threed;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
@@ -72,9 +73,11 @@ public class VegetationSetup {
 	
 	public static HashSet<Quad> hsQuads = new HashSet<Quad>();
 	
+	public static HashMap<String, Node[]> quadCache = new HashMap<String, Node[]>();
+	
 	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateVegetationModel tm) {
 		
-        VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
+        /*VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
         //vp.setParameter(lightPosition, 8); // TODO
         try {vp.load(new File(
                 "./data/shaders/grassMove.vp").toURL());} catch (Exception ex){}
@@ -88,7 +91,7 @@ public class VegetationSetup {
 			fp.load(new File("./data/shaders/grassMove.fp").toURL());
 		} catch (Exception ex) {
 		}
-		fp.setEnabled(true);
+		fp.setEnabled(true);*/
         
  
 		// Load the vegetation class of your choice
@@ -101,51 +104,56 @@ public class VegetationSetup {
 		int steepDirection = c.cube.steepDirection;
 
 		// Load placeholder models for vegetation
-		Node[] quads = new Node[ts.length];
-		for (int i=0; i<ts.length; i++){
-			BillboardNode n = new BillboardNode();
-			if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
-
-				//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
-				Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
-				//quad.setLightCombineMode(LightState.INHERIT);
-				quad.setModelBound(new BoundingBox());
-				quad.setDefaultColor(ColorRGBA.green);
-				quad.updateModelBound();
-				
-				Texture t1 = ts[i].getTexture();
-				t1.setApply(Texture.AM_MODULATE);
-				t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-				t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-				t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-				t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
-				t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-				t1.setCombineScaleRGB(1.0f);				
-				quad.setRenderState(ts[i]);
-				quad.setRenderState(as);
-				quad.setLightCombineMode(LightState.OFF);
-				quad.setSolidColor(new ColorRGBA(1,1,1,1));
-				
-				//quad.setLocalRotation(J3DCore.qN);
-
-				//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
-				//quad.setRenderState(fp);
-				
-				n.attachChild(quad);
-				hsQuads.add(quad);
-
-				if (J3DCore.DOUBLE_GRASS) {
-					SharedMesh sQ = new SharedMesh("sharedQuad",quad);
-					sQ.setLocalRotation(J3DCore.qE);
-					n.attachChild(sQ);
+		Node[] quads = quadCache.get(tm.textureNames[0]);
+		if (quads==null) 
+		{
+			quads = new Node[ts.length];
+			for (int i=0; i<ts.length; i++){
+				BillboardNode n = new BillboardNode();
+				if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
+	
+					//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
+					Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+					//quad.setLightCombineMode(LightState.INHERIT);
+					quad.setModelBound(new BoundingBox());
+					quad.setDefaultColor(ColorRGBA.green);
+					quad.updateModelBound();
+					
+					Texture t1 = ts[i].getTexture();
+					t1.setApply(Texture.AM_MODULATE);
+					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
+					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
+					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+					t1.setCombineScaleRGB(1.0f);				
+					quad.setRenderState(ts[i]);
+					quad.setRenderState(as);
+					quad.setLightCombineMode(LightState.OFF);
+					quad.setSolidColor(new ColorRGBA(1,1,1,1));
+					
+					//quad.setLocalRotation(J3DCore.qN);
+	
+					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
+					//quad.setRenderState(fp);
+					
+					n.attachChild(quad);
+					hsQuads.add(quad);
+	
+					if (J3DCore.DOUBLE_GRASS) {
+						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
+						sQ.setLocalRotation(J3DCore.qE);
+						n.attachChild(sQ);
+					}
+				} else
+				{
+					// till we have a better vegetation rotation, no grass vegetation on steep... :(
+					return vegetation;
+	
 				}
-			} else
-			{
-				// till we have a better vegetation rotation, no grass vegetation on steep... :(
-				return vegetation;
-
+				quads[i] = n;
 			}
-			quads[i] = n;
+			quadCache.put(tm.textureNames[0], quads);
 		}
 		
 
