@@ -61,7 +61,7 @@ public class Jcrpg {
 		LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
 		Engine e = new Engine();
 		Time wmt = new Time();
-		wmt.setHour(5);
+		wmt.setHour(17);
 		e.setWorldMeanTime(wmt);
 		Thread t = new Thread(e);
 		t.start();
