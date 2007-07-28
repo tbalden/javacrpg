@@ -1,7 +1,6 @@
 [ ] user manual update
 
-[ ] billboarding the grass! (rotation didnt help! :/)
-[ ] Tree generation in java code? (billboard leaf quads!)
+[ ] Lod modelling trees with billboard images captured in blender!
 
 [ ] add Harek's table to the house
 
@@ -19,10 +18,12 @@
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
+[?] Tree generation in java code? (billboard leaf quads!)
 [?] Write the wind vertex program? Now it's cpu based!
 [?] if no grass, don't put it on node!
 
 --
+[X] billboarding the grass! (rotation didnt help! :/)
 [X] shadow render pass added! :-)
 [-] Naive vegetation development? -> billboarding?? - Quad in other apps too!
 [X] darkening veg -> mesh? or what?
