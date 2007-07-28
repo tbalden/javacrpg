@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.flora.ground.Grass;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -68,44 +69,63 @@ public class NaiveVegetation extends AbstractVegetation {
 	
 	boolean windSwitch = true;
 	Vector3f origTranslation = null;
-	long passedTime = System.currentTimeMillis();
-	long sysTimer = System.currentTimeMillis();
+	long passedTime = 0;
+	float timeCounter = 0;
+	long startTime = System.currentTimeMillis();
+	long timeCountStart = System.currentTimeMillis();
 	
-	public float windPower = 0.3f; 
-
+	public float windPower = 0.5f; 
 	
+	public static final float TIME_DIVIDER = 400;
+	public static final long TIME_LIMIT = 0;
 	
+	float diffs[] = new float[5];
+	float newDiffs[] = new float[5];
 	
 	public void draw(Renderer r) {
 		if (origTranslation == null) origTranslation = this.getLocalTranslation();
-		passedTime = System.currentTimeMillis()-sysTimer;
+		passedTime = System.currentTimeMillis()-startTime;
 		
+		boolean doGrassMove = false;
+		if (System.currentTimeMillis()-timeCountStart>TIME_LIMIT && J3DCore.CPU_ANIMATED_GRASS)			
+		{
+			doGrassMove = true;
+			timeCountStart = System.currentTimeMillis();
+		}
+ 
 		if (children == null) {
 			return;
 		}
 		
 		float diff = 0;
 
-		float diffs[] = new float[5];
-		if (J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)	
+		
+		if (doGrassMove)	
 		{
 			// creating 5 diffs to look random 
-			diff = 0.029f*FastMath.sin(((passedTime/200f)*windPower)%FastMath.PI)*windPower;
-			diffs[0] = diff;
-			diff = 0.029f*FastMath.sin((((passedTime+500)/200f)*windPower*(0.2f))%FastMath.PI)*windPower;
-			diffs[1] = diff;
-			diff = 0.029f*FastMath.sin((((passedTime+500)/200f)*windPower*(0.4f))%FastMath.PI)*windPower;
-			diffs[2] = diff;
-			diff = 0.029f*FastMath.sin((((passedTime+1000)/200f)*windPower*(0.8f))%FastMath.PI)*windPower;
-			diffs[3] = diff;
-			diff = 0.029f*FastMath.sin((((passedTime+2000)/200f)*windPower*(0.6f))%FastMath.PI)*windPower;
-			diffs[4] = diff;
+			diff = 0.059f*FastMath.sin(((passedTime/TIME_DIVIDER)*windPower)%FastMath.PI)*windPower;
+			newDiffs[0] = diff;
+			diff = 0.059f*FastMath.sin((((passedTime+500)/TIME_DIVIDER)*windPower*(0.5f))%FastMath.PI)*windPower;
+			newDiffs[1] = diff;
+			diff = 0.059f*FastMath.sin((((passedTime+500)/TIME_DIVIDER)*windPower*(0.6f))%FastMath.PI)*windPower;
+			newDiffs[2] = diff;
+			diff = 0.059f*FastMath.sin((((passedTime+1000)/TIME_DIVIDER)*windPower*(0.8f))%FastMath.PI)*windPower;
+			newDiffs[3] = diff;
+			diff = 0.059f*FastMath.sin((((passedTime+2000)/TIME_DIVIDER)*windPower*(0.7f))%FastMath.PI)*windPower;
+			newDiffs[4] = diff;
+		}
+		if (newDiffs[0]==diffs[0]) {
+			doGrassMove = false;			
+		} else
+		{
+			diffs = newDiffs;
+			newDiffs = new float[5];
 		}
 		
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
-			if (J3DCore.CPU_ANIMATED_GRASS) whichDiff = (HashUtil.mixPercentage((int)(i*100), 0, 0))%5;
+			if (J3DCore.CPU_ANIMATED_GRASS) whichDiff = i%5;
 			
 			child = children.get(i);
 
@@ -143,7 +163,7 @@ public class NaiveVegetation extends AbstractVegetation {
 									TriMesh q = (TriMesh)s;
 									q.getWorldRotation().set(orient); // BILLBOARDING
 									
-									if (!(J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)) continue;
+									if (!(doGrassMove) ) continue;
 									// CPU computed grass moving
 									TriangleBatch b = q.getBatch(0);
 									FloatBuffer fb = b.getVertexBuffer();
@@ -186,8 +206,6 @@ public class NaiveVegetation extends AbstractVegetation {
 					}
 				
 				}
-			
-
 			}
 		}
 	}
