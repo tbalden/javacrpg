@@ -103,22 +103,24 @@ public class ModelLoader {
 			// texture state vegetation with flora setup
 			if (objects[i] instanceof TextureStateVegetationModel) 
 			{
+				if (fakeLoadForCacheMaint) continue;
 				Model m = objects[i]; 
-				Node node = vegetationTargetCache.get(((TextureStateVegetationModel)m).textureNames[0]);
+				Node node = vegetationTargetCache.get(((TextureStateVegetationModel)m).getKey());
 				if (node==null) {
 					TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
 					TextureState[] ts = loadTextureStates(tm.textureNames);
 					node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
-					//vegetationTargetCache.put(((TextureStateVegetationModel)m).textureNames[0], node);
+					//vegetationTargetCache.put(((TextureStateVegetationModel)m).getKey(), node);
 				} else 
 				{
-					node = new SharedNode("sveg"+((TextureStateVegetationModel)m).textureNames,node);
+					node = new SharedNode("sveg"+((TextureStateVegetationModel)m).getKey(),node);
 				}
 				r[i] = node;
 			
 			} else
 			// Quad models
 			if (objects[i] instanceof QuadModel) {
+				if (fakeLoadForCacheMaint) continue;
 				QuadModel m = (QuadModel)objects[i];
 				Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
 				quad.setModelBound(new BoundingBox());
@@ -169,16 +171,19 @@ public class ModelLoader {
 					Node node = null;
 					if (m instanceof TextureStateVegetationModel)
 					{
-						node = vegetationTargetCache.get(((TextureStateVegetationModel)m).textureNames[0]);
+						
+						if (fakeLoadForCacheMaint) continue;
+						node = vegetationTargetCache.get(((TextureStateVegetationModel)m).getKey());
+						
 						if (node==null) {
 							TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
 							TextureState[] ts = loadTextureStates(tm.textureNames);
 							node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
-							//vegetationTargetCache.put(((TextureStateVegetationModel)m).textureNames[0], node); // TODO need cache?
+							//vegetationTargetCache.put(((TextureStateVegetationModel)m).getKey(), node); // TODO need cache?
 						} else 
 						{
 							Node target = node;
-							node = new SharedNode("sveg"+((TextureStateVegetationModel)m).textureNames,target);
+							node = new SharedNode("sveg"+((TextureStateVegetationModel)m).getKey(),target);
 							//if (target.getUserData(key))
 							//node.setUserData("", data)
 						}

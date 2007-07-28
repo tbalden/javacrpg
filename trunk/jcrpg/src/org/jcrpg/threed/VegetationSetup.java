@@ -104,7 +104,7 @@ public class VegetationSetup {
 		}
 
 			// Load placeholder models for vegetation
-		Node[] quads = quadCache.get(tm.textureNames[0]);
+		Node[] quads = quadCache.get(tm.getKey());
 		if (quads==null) 
 		{
 			quads = new Node[ts.length];
@@ -153,19 +153,22 @@ public class VegetationSetup {
 				}
 				quads[i] = n;
 			}
-			quadCache.put(tm.textureNames[0], quads);
+			quadCache.put(tm.getKey(), quads);
 		}
 		
 
+		int quadQuantity = tm.quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
+		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
+		
 		// Place the darn models
-		for (int i = 0; i < tm.quadQuantity; i++) {
-			for (int j = 0; j < tm.quadQuantity; j++) {
-				float x = i * tm.quadSeparation + (HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
-				float z = j * tm.quadSeparation + (HashUtil.mixPercentage((int)i+1, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
-				x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - tm.quadSeparation/4f);
-				z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - tm.quadSeparation/4f);
-				x = Math.max(x,  + tm.quadSeparation/4f);
-				z = Math.max(z,  + tm.quadSeparation/4f);
+		for (int i = 0; i < quadQuantity; i++) {
+			for (int j = 0; j < quadQuantity; j++) {
+				float x = i * quadSeparation + (HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+				float z = j * quadSeparation + (HashUtil.mixPercentage((int)i+1, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+				x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
+				z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
+				x = Math.max(x,  + quadSeparation/4f);
+				z = Math.max(z,  + quadSeparation/4f);
 
 				// find height
 				float height = -0.f;//tb.getHeight(x, z);
