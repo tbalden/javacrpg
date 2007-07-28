@@ -29,12 +29,10 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
-import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.SharedMesh;
@@ -91,6 +89,7 @@ public class NaiveVegetation extends AbstractVegetation {
 		float diffs[] = new float[5];
 		if (J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)	
 		{
+			// creating 5 diffs to look random 
 			diff = 0.029f*FastMath.sin(((passedTime/200f)*windPower)%FastMath.PI)*windPower;
 			diffs[0] = diff;
 			diff = 0.029f*FastMath.sin((((passedTime+500)/200f)*windPower*(0.2f))%FastMath.PI)*windPower;
@@ -109,27 +108,13 @@ public class NaiveVegetation extends AbstractVegetation {
 			if (J3DCore.CPU_ANIMATED_GRASS) whichDiff = (HashUtil.mixPercentage((int)(i*100), 0, 0))%5;
 			
 			child = children.get(i);
-			
-			
-			Vector3f dirOrigo = new Vector3f(0f, 0f, 1);
-			Vector3f left = new Vector3f(1, 0, 0);
-			Vector3f up = new Vector3f(0, -1, 0);
-		
-			Matrix3f q1 = new Matrix3f();
-			q1.fromStartEndVectors(dirOrigo, core.getCamera().getDirection().negate());
-			Matrix3f q2 = new Matrix3f();
-			q2.fromStartEndVectors(left, core.getCamera().getLeft().negate());
-			Matrix3f q3 = new Matrix3f();
-			q3.fromStartEndVectors(up, core.getCamera().getUp().negate());
-			
-			q1.multLocal(q2).multLocal(q3);
-			
-			//child.getWorldRotation().apply(m3);
-			//child.updateGeometricState(0f, false);
-			child.getWorldRotation().fromRotationMatrix(q1); // TODO why doesnt this billboarding work??
-			child.updateWorldVectors();
-			Matrix3f rotMat = new Matrix3f();
-			rotMat.fromStartEndVectors(new Vector3f(0,0,0).normalize(), new Vector3f(0,1,0).normalize());
+
+			// billboard world rotation calc
+	        Vector3f look = cam.getDirection().negate();
+	        // coopt loc for our left direction:
+	        Vector3f left1 = cam.getLeft().negate();
+	        Quaternion orient = new Quaternion();
+	        orient.fromAxes(left1, cam.getUp(), look);
 			
 			if (child != null) {
 				float distSquared = tmpVec.set(cam.getLocation())
@@ -138,11 +123,15 @@ public class NaiveVegetation extends AbstractVegetation {
 				if (distSquared <= viewDistance * viewDistance) 
 				if (distSquared<3*3 || HashUtil.mixPercentage(i,0,0)+10>(distSquared/(viewDistance*viewDistance))*100) 
 				{
+					// original code
 					r.setCamera(cam);
 					child.updateGeometricState(0.0f, false);
 					child.onDraw(r);
-
-					if (J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)				
+					
+					
+					// animation
+					
+					{
 						if (child instanceof Node)
 						{
 							Node n = (Node)child;
@@ -152,9 +141,11 @@ public class NaiveVegetation extends AbstractVegetation {
 								//if (s instanceof TriMesh) 
 								{
 									TriMesh q = (TriMesh)s;
-									//System.out.println("BATCHES: "+q.getBatchCount());
+									q.getWorldRotation().set(orient); // BILLBOARDING
+									
+									if (!(J3DCore.CPU_ANIMATED_GRASS && passedTime%12>6)) continue;
+									// CPU computed grass moving
 									TriangleBatch b = q.getBatch(0);
-									//System.out.println("VERTICES: " +b.getVertexCount());
 									FloatBuffer fb = b.getVertexBuffer();
 									for (int fIndex=0; fIndex<4*3; fIndex++)
 									{
@@ -192,6 +183,7 @@ public class NaiveVegetation extends AbstractVegetation {
 								}
 							}
 						}
+					}
 				
 				}
 			

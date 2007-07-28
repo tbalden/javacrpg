@@ -44,4 +44,18 @@ public class TextureStateVegetationModel extends Model{
 		this.textureNames = textureName;
 	}
 	
+	String key = null;
+	
+	public String getKey()
+	{
+		if (key==null)
+		{
+			for (String tn:textureNames)
+			{
+				key+=tn;
+			}
+		}
+		return key;
+	}
+	
 }
