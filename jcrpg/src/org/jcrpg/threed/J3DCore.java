@@ -482,10 +482,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
 		//LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/fauna/dragon.3ds",null)},new float[][]{{0f,15f}});
 
-		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},MIPMAP_TREES);
+		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.shadowCaster = true;
-		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia.3ds",new String[]{"3"},new String[]{"acac_1.png"},MIPMAP_TREES);
+		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.shadowCaster = true;
+		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
+		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1_low.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
 		//PartlyBillboardModel pine = new PartlyBillboardModel("models/tree/pine.3ds",new String[]{"3"},new String[]{"pine_1.png"},MIPMAP_TREES);
 		//pine.shadowCaster = true;
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
@@ -501,8 +505,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
 		bush1.shadowCaster = true;
 
-		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry},new float[][]{{0f,15f}});
-		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia},new float[][]{{0f,15f}});
+		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest},new float[][]{{0f,5f},{5f,15f},{15f,30f}});
+		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia,acacia_low,acacia_lowest},new float[][]{{0f,5f},{5f,15f},{15f,30f}});
 		LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
 		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});

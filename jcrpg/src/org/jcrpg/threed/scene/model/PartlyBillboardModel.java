@@ -28,23 +28,25 @@ public class PartlyBillboardModel extends SimpleModel {
 
 	public String[] billboardPartNames = new String[0];
 	public String[] billboardPartTextures = new String[0];
+	public int LOD=0;
 	
 	public HashMap<String, Integer> partNameToTextureCount = new HashMap<String, Integer>();
 	
 	
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] billboardPartTextures, boolean mipMap) {
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
 		super(modelName, null, mipMap);
 		this.billboardPartNames = billboardPartNames;
 		this.billboardPartTextures = billboardPartTextures;
 		int c = 0;
+		this.LOD = Math.max(Math.min(LOD,2),0); // between 0 and 2
 		for (String n:billboardPartNames)
 		{
 			partNameToTextureCount.put(n,c++);
 		}
 	}
 
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames,String[] billboardPartTextures) {
-		this(modelName,billboardPartNames,billboardPartTextures,false);
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames,String[] billboardPartTextures, int LOD) {
+		this(modelName,billboardPartNames,billboardPartTextures,LOD,false);
 	}
 
 }
