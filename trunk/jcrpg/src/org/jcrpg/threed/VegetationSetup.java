@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
-import org.jcrpg.threed.jme.vegetation.NaiveVegetation;
+import org.jcrpg.threed.jme.vegetation.QuadBillboardVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.util.HashUtil;
@@ -90,7 +90,7 @@ public class VegetationSetup {
  
 		
 		// Load the vegetation class of your choice
-		AbstractVegetation vegetation = new NaiveVegetation("vegetation", core,
+		AbstractVegetation vegetation = new QuadBillboardVegetation("vegetation", core,
 				cam, J3DCore.RENDER_GRASS_DISTANCE);
 
 		vegetation.setCullMode(Spatial.CULL_DYNAMIC);

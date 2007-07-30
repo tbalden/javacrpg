@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
-import org.jcrpg.world.ai.flora.ground.Grass;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -42,10 +41,21 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
 
-public class NaiveVegetation extends AbstractVegetation {
+/**
+ * Fully billboarded quad vegetation.
+ * @author pali
+ *
+ */
+public class QuadBillboardVegetation extends AbstractVegetation {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3942670677329376647L;
+	
 	private Vector3f tmpVec = new Vector3f();
 
-	public NaiveVegetation(String string, J3DCore core, Camera cam, float viewDistance) {
+	public QuadBillboardVegetation(String string, J3DCore core, Camera cam, float viewDistance) {
 		super(string, core, cam, viewDistance);
 	}
 
@@ -179,7 +189,7 @@ public class NaiveVegetation extends AbstractVegetation {
 											if (FastMath.floor(fIndex/3)==3) mul = -1;
 											if (fIndex%3==0)
 											{
-												float f = fb.get(fIndex);
+												//float f = fb.get(fIndex);
 												if (!f2_1Read)
 												{
 													f2_1 = fb.get(fIndex+3*mul);
@@ -189,7 +199,7 @@ public class NaiveVegetation extends AbstractVegetation {
 											}	
 											if (fIndex%3==2)
 											{
-												float f = fb.get(fIndex);
+												//float f = fb.get(fIndex);
 												if (!f2_2Read)
 												{
 													f2_2 = fb.get(fIndex+3*mul);
