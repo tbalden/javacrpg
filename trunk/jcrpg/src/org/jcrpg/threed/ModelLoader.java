@@ -154,15 +154,15 @@ public class ModelLoader {
 				// adding to drawer
 				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),15f,(PartlyBillboardModel)objects[i]);
 				bbNode.attachChild(node);
-				node = bbNode;
-				r[i] = node;
-				node.setName(((SimpleModel)objects[i]).modelName+i);
 				if (core.sPass!=null && objects[i].shadowCaster)
 				{
 					if (node!=null) {
 						core.sPass.addOccluder(node);
 					}
 				}
+				node = bbNode;
+				r[i] = node;
+				node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
@@ -213,17 +213,17 @@ public class ModelLoader {
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
 						// adding to drawer
-						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),15f,(PartlyBillboardModel)m);
+						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)m);
 						bbNode.attachChild(node);
-						node = bbNode;
-						r[i] = node;
-						node.setName(((SimpleModel)m).modelName+i);
-						if (core.sPass!=null && objects[i].shadowCaster)
+						if (core.sPass!=null && m.shadowCaster)
 						{
 							if (node!=null) {
 								core.sPass.addOccluder(node);
 							}
 						}
+						node = bbNode;
+						r[i] = node;
+						node.setName(((SimpleModel)m).modelName+i);
 					} else
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);

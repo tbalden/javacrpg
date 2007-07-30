@@ -24,6 +24,7 @@ package org.jcrpg.threed.jme.vegetation;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
@@ -118,6 +119,7 @@ public class BillboardPartVegetation extends Node {
 										int maxFIndex = fb.capacity();
 										int maxDoubleTri = maxFIndex / 18;
 										int fIndex = 0;
+										float sumLodX = 0, sumLodY = 0, sumLodZ = 0;
 										for (int doubleTriIndex = 0; doubleTriIndex < maxDoubleTri; doubleTriIndex++) {
 											// one quad generation for each doubleTriIndex
 											float sumX =0, sumY =0, sumZ =0;
@@ -176,10 +178,30 @@ public class BillboardPartVegetation extends Node {
 													counter++;
 												}
 											}
-											if (doubleTriIndex%6<3) 
+											if (model.LOD>=2 && added.size()<2)
+											{
+												if (doubleTriIndex<maxDoubleTri-1)
+												{
+													sumLodX+=sumX/counter;
+													sumLodY+=sumY/counter;
+													sumLodZ+=sumZ/counter;
+												} else {
+													float x = sumLodX/(maxDoubleTri-1);
+													float y = sumLodY/(maxDoubleTri-1);
+													float z = sumLodZ/(maxDoubleTri-1);
+													if (targetQuad==null) {
+														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f)),((xDiff+yDiff+zDiff)/2f)*(4f));
+													}
+													SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
+													quad.setLocalTranslation(x, y, z);
+													quad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
+													added.add(quad);
+												}
+											} else
+											if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
 											{
 												if (targetQuad==null) {
-													targetQuad = new Quad(q.getName(),(xDiff+yDiff+zDiff)/3,(xDiff+yDiff+zDiff)/3);
+													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f)),((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f));
 												}
 												SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 												quad.setLocalTranslation(sumX/counter, sumY/counter, sumZ/counter);
