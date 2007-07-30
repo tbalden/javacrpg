@@ -1,3 +1,5 @@
+[ ] billboard ngplant trees, hashmap based, BillboardPartsModel
+
 [ ] user manual update
 
 [ ] Lod modelling trees with billboard images captured in blender!
@@ -21,8 +23,10 @@
 [?] Tree generation in java code? (billboard leaf quads!)
 [?] Write the wind vertex program? Now it's cpu based!
 [?] if no grass, don't put it on node!
+[?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+
 [X] billboarding the grass! (rotation didnt help! :/)
 [X] shadow render pass added! :-)
 [-] Naive vegetation development? -> billboarding?? - Quad in other apps too!

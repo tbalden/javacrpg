@@ -40,6 +40,7 @@ import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
@@ -90,9 +91,7 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
-import com.jme.renderer.pass.DefaultShadowGate;
 import com.jme.renderer.pass.RenderPass;
-import com.jme.renderer.pass.ShadowGate;
 import com.jme.renderer.pass.ShadowedRenderPass;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
@@ -111,7 +110,6 @@ import com.jme.util.TextureManager;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
-import com.jmex.model.collada.schema.sphereType;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
@@ -196,7 +194,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String mipmapGlobal = p.getProperty("MIPMAP_GLOBAL");
-	    	if (renderDistance!=null)
+	    	if (mipmapGlobal!=null)
 	    	{
 	    		try {
 	    			MIPMAP_GLOBAL = Boolean.parseBoolean(mipmapGlobal);
@@ -206,7 +204,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String mipmapTrees = p.getProperty("MIPMAP_TREES");
-	    	if (renderDistance!=null)
+	    	if (mipmapTrees!=null)
 	    	{
 	    		try {
 	    			MIPMAP_TREES = Boolean.parseBoolean(mipmapTrees);
@@ -216,7 +214,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String textureQualityHigh = p.getProperty("TEXTURE_QUAL_HIGH");
-	    	if (renderDistance!=null)
+	    	if (textureQualityHigh!=null)
 	    	{
 	    		try {
 	    			TEXTURE_QUAL_HIGH = Boolean.parseBoolean(textureQualityHigh);
@@ -237,7 +235,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	}
 
 	    	String cpuAnimatedGrass = p.getProperty("CPU_ANIMATED_GRASS");
-	    	if (bloomEffect!=null)
+	    	if (cpuAnimatedGrass!=null)
 	    	{
 	    		try {
 	    			CPU_ANIMATED_GRASS = Boolean.parseBoolean(cpuAnimatedGrass);
@@ -247,7 +245,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String doubleGrass = p.getProperty("DOUBLE_GRASS");
-	    	if (bloomEffect!=null)
+	    	if (doubleGrass!=null)
 	    	{
 	    		try {
 	    			DOUBLE_GRASS = Boolean.parseBoolean(doubleGrass);
@@ -258,7 +256,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	}
 
 	    	String shadows = p.getProperty("SHADOWS");
-	    	if (bloomEffect!=null)
+	    	if (shadows!=null)
 	    	{
 	    		try {
 	    			SHADOWS = Boolean.parseBoolean(shadows);
@@ -484,9 +482,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
 		//LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/fauna/dragon.3ds",null)},new float[][]{{0f,15f}});
 
-		SimpleModel cherry = new SimpleModel("models/tree/cherry.3ds",null,MIPMAP_TREES);
+		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},MIPMAP_TREES);
 		cherry.shadowCaster = true;
-		SimpleModel acacia = new SimpleModel("models/tree/acacia.3ds",null,MIPMAP_TREES);
+		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia.3ds",new String[]{"3"},MIPMAP_TREES);
 		acacia.shadowCaster = true;
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true;
@@ -680,6 +678,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        tex[3].setEnabled(true);
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
+	        flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
 	        flare.setRootNode(cRootNode);
 	        sRootNode.attachChild(lightNode);
 
@@ -814,6 +813,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
+	Node noBloomCParentRootNode = new Node(); 
 	Node cRootNode = new Node(); 
 	/** skyroot */
 	Node sRootNode = new Node(); 
@@ -1680,9 +1680,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
  
 	private FogState fs;
     public ShadowedRenderPass sPass = new ShadowedRenderPass();
-	private BloomRenderPass bloomRenderPass; 
-    
- 
+	private BloomRenderPass bloomRenderPass;
+	
      
 	@Override
 	protected void simpleInitGame() {
@@ -1692,6 +1691,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		pManager.add(rootPass);
 
 		bloomRenderPass = new BloomRenderPass(cam, 4);
+		
 
 		//DisplaySystem.getDisplaySystem().getRenderer().getQueue().setTwoPassTransparency(false);
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
@@ -1703,6 +1703,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 18000);
+		rootNode.attachChild(noBloomCParentRootNode);
+		noBloomCParentRootNode.attachChild(cRootNode);
 		rootNode.attachChild(cRootNode);
 		rootNode.attachChild(sRootNode);
 
@@ -1803,7 +1805,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		setCalculatedCameraLocation();
         cam.update();
 		updateDisplay(null);
-
+		
 		render(); // couldn't find out why render have to be called twice...
 		render();
 		engine.setPause(false);

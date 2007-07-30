@@ -32,11 +32,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.WeakHashMap;
 
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.BillboardModel;
 import org.jcrpg.threed.scene.model.ImposterModel;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
@@ -145,6 +147,23 @@ public class ModelLoader {
 				r[i] = node;
 
 			} else
+			if (objects[i] instanceof PartlyBillboardModel) 
+			{
+				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+				if (fakeLoadForCacheMaint) continue;
+				// adding to drawer
+				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),15f,(PartlyBillboardModel)objects[i]);
+				bbNode.attachChild(node);
+				node = bbNode;
+				r[i] = node;
+				node.setName(((SimpleModel)objects[i]).modelName+i);
+				if (core.sPass!=null && objects[i].shadowCaster)
+				{
+					if (node!=null) {
+						core.sPass.addOccluder(node);
+					}
+				}
+			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
@@ -189,6 +208,23 @@ public class ModelLoader {
 						}
 						
 					} else 
+					if (m instanceof PartlyBillboardModel) 
+					{
+						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
+						if (fakeLoadForCacheMaint) continue;
+						// adding to drawer
+						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),15f,(PartlyBillboardModel)m);
+						bbNode.attachChild(node);
+						node = bbNode;
+						r[i] = node;
+						node.setName(((SimpleModel)m).modelName+i);
+						if (core.sPass!=null && objects[i].shadowCaster)
+						{
+							if (node!=null) {
+								core.sPass.addOccluder(node);
+							}
+						}
+					} else
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
@@ -330,7 +366,7 @@ public class ModelLoader {
     
     public void setLockForSharedNodes(boolean lockState)
     {
-    	for (Node n: sharedNodeCache.values())
+    	//for (Node n: sharedNodeCache.values())
     	{
     		if (lockState)
     		{
