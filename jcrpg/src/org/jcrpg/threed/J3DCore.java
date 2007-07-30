@@ -482,10 +482,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
 		//LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/fauna/dragon.3ds",null)},new float[][]{{0f,15f}});
 
-		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},MIPMAP_TREES);
+		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},MIPMAP_TREES);
 		cherry.shadowCaster = true;
-		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia.3ds",new String[]{"3"},MIPMAP_TREES);
+		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia.3ds",new String[]{"3"},new String[]{"acac_1.png"},MIPMAP_TREES);
 		acacia.shadowCaster = true;
+		//PartlyBillboardModel pine = new PartlyBillboardModel("models/tree/pine.3ds",new String[]{"3"},new String[]{"pine_1.png"},MIPMAP_TREES);
+		//pine.shadowCaster = true;
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true;
 		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
