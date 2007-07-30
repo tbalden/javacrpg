@@ -22,18 +22,29 @@
 
 package org.jcrpg.threed.scene.model;
 
+import java.util.HashMap;
+
 public class PartlyBillboardModel extends SimpleModel {
 
 	public String[] billboardPartNames = new String[0];
+	public String[] billboardPartTextures = new String[0];
+	
+	public HashMap<String, Integer> partNameToTextureCount = new HashMap<String, Integer>();
 	
 	
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames, boolean mipMap) {
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] billboardPartTextures, boolean mipMap) {
 		super(modelName, null, mipMap);
 		this.billboardPartNames = billboardPartNames;
+		this.billboardPartTextures = billboardPartTextures;
+		int c = 0;
+		for (String n:billboardPartNames)
+		{
+			partNameToTextureCount.put(n,c++);
+		}
 	}
 
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames) {
-		this(modelName,billboardPartNames,false);
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames,String[] billboardPartTextures) {
+		this(modelName,billboardPartNames,billboardPartTextures,false);
 	}
 
 }
