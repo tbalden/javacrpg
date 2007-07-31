@@ -41,6 +41,7 @@ import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
+import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
@@ -144,9 +145,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean SHADOWS = true;
 
     public static boolean CPU_ANIMATED_GRASS = true;
-    
     public static boolean DOUBLE_GRASS = true;
-    
+
+    public static boolean CPU_ANIMATED_TREES = true;
+    public static boolean DETAILED_TREES = true;
+
     static Properties p = new Properties();
     static {
     	try {
@@ -266,6 +269,28 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 
+	    	String cpuAnimatedTrees = p.getProperty("CPU_ANIMATED_TREES");
+	    	if (cpuAnimatedTrees!=null)
+	    	{
+	    		try {
+	    			CPU_ANIMATED_TREES = Boolean.parseBoolean(cpuAnimatedTrees);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("CPU_ANIMATED_TREES", "false");
+	    		}
+	    	}
+	    	String detailedTrees = p.getProperty("DETAILED_TREES");
+	    	if (detailedTrees!=null)
+	    	{
+	    		try {
+	    			DETAILED_TREES = Boolean.parseBoolean(detailedTrees);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("DETAILED_TREES", "false");
+	    		}
+	    	}
+	    	
+	    	
     	} catch (Exception ex)
     	{
     		ex.printStackTrace();
@@ -286,6 +311,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Engine engine = null;
 	
 	public RenderedArea renderedArea = new RenderedArea();
+
+	/**
+	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
+	 */
+	public static HashSet<Quad> hsSolidColorQuads = new HashSet<Quad>();
+	
 	
 	public void setEngine(Engine engine)
 	{
@@ -440,6 +471,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,15f},{15f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{15f,30f}};
+	
 	public J3DCore()
 	{
 		stencilBits = 8;
@@ -487,11 +521,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.shadowCaster = true;
 		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
+		cherry_low.shadowCaster = true;
 		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		acacia_low.shadowCaster = true;
 		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1_low.png"},2,MIPMAP_TREES);
 		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
-		//PartlyBillboardModel pine = new PartlyBillboardModel("models/tree/pine.3ds",new String[]{"3"},new String[]{"pine_1.png"},MIPMAP_TREES);
-		//pine.shadowCaster = true;
+
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true;
 		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
@@ -504,9 +539,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cactus.shadowCaster = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
 		bush1.shadowCaster = true;
+		
+		float[][] treeLodDist = TREE_LOD_DIST_LOW;
+		if (DETAILED_TREES)
+		{
+			treeLodDist = TREE_LOD_DIST_HIGH;	
+		}
 
-		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest},new float[][]{{0f,5f},{5f,15f},{15f,30f}});
-		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia,acacia_low,acacia_lowest},new float[][]{{0f,5f},{5f,15f},{15f,30f}});
+		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest},treeLodDist);
+		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia,acacia_low,acacia_lowest},treeLodDist);
 		LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
 		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
@@ -561,18 +602,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
 		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
-		//QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
+		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
+		//QuadModel qm_road_stone = new QuadModel("Decal.png","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
+		QuadModel qm_road_stone = new QuadModel("Decal.png","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_road_stone.rotateOnSteep = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
 		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,lod_cont_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,lod_cont_grass_1}));
 		else 
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
 		
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{sm_road_stone}));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{sm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
@@ -918,7 +961,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// this part sets the naive veg quads to a mixed color of the light's value with the quad texture!
 		int counter = 0;
-		for (Quad q:VegetationSetup.hsQuads)
+		for (Quad q:hsSolidColorQuads)
 		{
 			counter++;
 			q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
@@ -936,6 +979,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
+
+		rootNode.updateRenderState();
 		
 		//cLightState.setGlobalAmbient(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
 		//skydomeLightState.setGlobalAmbient(new ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f));

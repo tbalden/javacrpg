@@ -45,6 +45,7 @@ import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
@@ -58,6 +59,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -123,27 +125,7 @@ public class ModelLoader {
 			// Quad models
 			if (objects[i] instanceof QuadModel) {
 				if (fakeLoadForCacheMaint) continue;
-				QuadModel m = (QuadModel)objects[i];
-				Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
-				quad.setModelBound(new BoundingBox());
-				quad.updateModelBound();
-				TextureState[] ts = loadTextureStates(new String[]{m.textureName});
-				for (int j=0; j<ts.length;j++) {
-					Texture t1 = ts[j].getTexture();
-					t1.setApply(Texture.AM_COMBINE);
-					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-					t1.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
-					t1.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
-					t1.setCombineScaleRGB(1.0f);
-				}
-				quad.setRenderState(ts[0]);
-				//quad.setRenderState(as);
-				quad.setSolidColor(new ColorRGBA(1,1,1,1));
-				
-				Node node = new Node();
-				node.attachChild(quad);
+				Node node = loadQuadModel((QuadModel)objects[i]);
 				r[i] = node;
 
 			} else
@@ -378,28 +360,105 @@ public class ModelLoader {
     	}
     }
     
+    /**
+     * Loads texture states.
+     * @param textureNames
+     * @return
+     */
     public TextureState[] loadTextureStates(String[] textureNames)
+    {
+    	return loadTextureStates(textureNames, null, false);
+    }
+    /**
+     * Loads an array of texturestates (with normal mapping if needed).
+     * @param textureNames Texture file names
+     * @param normalNames Normal file names
+     * @param transformNormal Normal images needs sobel transformation or not (must be true if image is grayscale bumpmap).
+     * @return Texturestates
+     */
+    public TextureState[] loadTextureStates(String[] textureNames,String[] normalNames, boolean transformNormal)
     {
     	ArrayList<TextureState> tss = new ArrayList<TextureState>();
     	for (int i=0; i<textureNames.length; i++) {
-	    	TextureState ts = textureStateCache.get(textureNames[i]);
+    		String key = textureNames[0]+(normalNames!=null?normalNames[i]:"null");
+	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
+	    	
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+	    	if (normalNames!=null && normalNames[i]!=null)
+	    	{
+	            try {
+		            Texture tex = null;
+	            	if (transformNormal) {
+	            		tex = new Texture();
+	            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+normalNames[i]).toURI().toURL(),true);
+	            		Image bumpImage = new SobelImageFilter().apply(heightImage);
+			            tex.setImage(bumpImage);
+	            	} else
+	            	{
+			            tex = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+normalNames[i],Texture.MM_LINEAR,
+					            Texture.FM_LINEAR);
+	            	}
+					tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+					tex.setApply(Texture.AM_COMBINE);
+					tex.setCombineFuncRGB(Texture.ACF_DOT3_RGB);
+					tex.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+					tex.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+					ts.setTexture(tex, 0);
+	            } catch (Exception ex)
+	            {
+	            	
+	            }
+	    	}
+	    	
 			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+textureNames[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
-			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 			qtexture.setApply(Texture.AM_COMBINE);
-			//qtexture.setEnvironmentalMapMode(Texture.EM_OBJECT_LINEAR);
 			//qtexture.setFilter(Texture.FM_LINEAR);
 			//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-			ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-			ts.setTexture(qtexture);
+			if (normalNames!=null && normalNames[i]!=null)
+			{
+				// TODO texture colors don't get in when using dot3 normal map! what settings here?
+				qtexture.setCombineFuncRGB(Texture.ACF_MODULATE);
+				qtexture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
+				qtexture.setCombineSrc1RGB(Texture.ACS_TEXTURE); 
+				ts.setTexture(qtexture,1);
+			} else
+			{
+				ts.setTexture(qtexture,0);
+			}
 			ts.setEnabled(true);
-			textureStateCache.put(textureNames[i], ts);
+			textureStateCache.put(key, ts);
 			tss.add(ts);
     	}
     	return (TextureState[])tss.toArray(new TextureState[0]);
     	
+    }
+    
+    public Node loadQuadModel(QuadModel m)
+    {
+    	
+		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+		quad.setModelBound(new BoundingBox());
+		quad.updateModelBound();
+		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
+		if (m.dot3TextureName!=null) {
+			MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+				.createMaterialState();
+			ms.setColorMaterial(MaterialState.CM_DIFFUSE);
+			//quad.setRenderState(ms);
+		}
+		
+		quad.setRenderState(ts[0]);
+		//quad.setRenderState(as);
+		//quad.setSolidColor(new ColorRGBA(1,1,1,1));
+		
+		Node node = new Node();
+		node.attachChild(quad);
+		return node;
+    	
+     	
     }
      
     /**

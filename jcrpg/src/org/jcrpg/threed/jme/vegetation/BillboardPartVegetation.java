@@ -24,18 +24,19 @@ package org.jcrpg.threed.jme.vegetation;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.util.HashUtil;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
@@ -43,6 +44,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
 /**
@@ -91,6 +93,16 @@ public class BillboardPartVegetation extends Node {
 		HashSet<TriMesh> added = new HashSet<TriMesh>();
 		HashSet<TriMesh> removed = new HashSet<TriMesh>();
 		TextureState[] states = core.modelLoader.loadTextureStates(model.billboardPartTextures);
+		for (int i=0; i<states.length; i++) {
+			Texture t1 = states[i].getTexture();
+			t1.setApply(Texture.AM_MODULATE);
+			t1.setCombineFuncRGB(Texture.ACF_MODULATE);
+			t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+			t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+			t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
+			t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+			t1.setCombineScaleRGB(1.0f);
+		}
 		
 
 		if (child != null) {
@@ -191,10 +203,13 @@ public class BillboardPartVegetation extends Node {
 													float z = sumLodZ/(maxDoubleTri-1);
 													if (targetQuad==null) {
 														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f)),((xDiff+yDiff+zDiff)/2f)*(4f));
+														targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
+														//targetQuad.setLightCombineMode(LightState.OFF);
+														targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
+														//J3DCore.hsSolidColorQuads.add(targetQuad);
 													}
 													SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 													quad.setLocalTranslation(x, y, z);
-													quad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 													added.add(quad);
 												}
 											} else
@@ -202,10 +217,13 @@ public class BillboardPartVegetation extends Node {
 											{
 												if (targetQuad==null) {
 													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f)),((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f));
+													targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
+													//targetQuad.setLightCombineMode(LightState.OFF);
+													targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
+													//J3DCore.hsSolidColorQuads.add(targetQuad);
 												}
 												SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 												quad.setLocalTranslation(sumX/counter, sumY/counter, sumZ/counter);
-												quad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 												added.add(quad);
 											}
 										}

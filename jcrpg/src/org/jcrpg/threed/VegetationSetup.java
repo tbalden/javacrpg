@@ -23,7 +23,6 @@
 package org.jcrpg.threed;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
 import org.jcrpg.threed.jme.vegetation.QuadBillboardVegetation;
@@ -65,7 +64,6 @@ public class VegetationSetup {
 
 	private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f };
 	
-	public static HashSet<Quad> hsQuads = new HashSet<Quad>();
 	
 	public static HashMap<String, Node[]> quadCache = new HashMap<String, Node[]>();
 	
@@ -138,7 +136,7 @@ public class VegetationSetup {
 					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
-					hsQuads.add(quad);
+					J3DCore.hsSolidColorQuads.add(quad);
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
