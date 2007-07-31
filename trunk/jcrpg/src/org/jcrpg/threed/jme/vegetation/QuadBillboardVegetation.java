@@ -87,13 +87,9 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 
 	long startTime = System.currentTimeMillis();
 
-	long timeCountStart = System.currentTimeMillis();
-
 	public float windPower = 0.5f;
 
 	public static final float TIME_DIVIDER = 400;
-
-	public static final long TIME_LIMIT = 0;
 
 	float diffs[] = new float[5];
 
@@ -102,12 +98,13 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 	public void draw(Renderer r) {
 		if (origTranslation == null)
 			origTranslation = this.getLocalTranslation();
-		passedTime = System.currentTimeMillis() - startTime;
+		long additionalTime = Math.min(System.currentTimeMillis() - startTime,15);
+		passedTime += additionalTime;
+		startTime= System.currentTimeMillis();
 
 		boolean doGrassMove = false;
-		if (System.currentTimeMillis() - timeCountStart > TIME_LIMIT && J3DCore.CPU_ANIMATED_GRASS) {
+		if (J3DCore.CPU_ANIMATED_GRASS) {
 			doGrassMove = true;
-			timeCountStart = System.currentTimeMillis();
 		}
 
 		if (children == null) {
@@ -118,27 +115,22 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 
 		if (doGrassMove) {
 			// creating 5 diffs to look random
-			diff = 0.059f * FastMath.sin(((passedTime / TIME_DIVIDER) * windPower) % FastMath.PI) * windPower;
+			diff = 0.059f * FastMath.sin(((passedTime / TIME_DIVIDER) * windPower)) * windPower;
 			newDiffs[0] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.5f)) % FastMath.PI)
+			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.5f)))
 					* windPower;
 			newDiffs[1] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.6f)) % FastMath.PI)
+			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.6f)))
 					* windPower;
 			newDiffs[2] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 1000) / TIME_DIVIDER) * windPower * (0.8f)) % FastMath.PI)
+			diff = 0.059f * FastMath.sin((((passedTime + 1000) / TIME_DIVIDER) * windPower * (0.8f)))
 					* windPower;
 			newDiffs[3] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 2000) / TIME_DIVIDER) * windPower * (0.7f)) % FastMath.PI)
+			diff = 0.059f * FastMath.sin((((passedTime + 2000) / TIME_DIVIDER) * windPower * (0.7f)))
 					* windPower;
 			newDiffs[4] = diff;
 		}
-		if (newDiffs[0] == diffs[0]) {
-			doGrassMove = false;
-		} else {
-			diffs = newDiffs;
-			newDiffs = new float[5];
-		}
+		diffs = newDiffs;
 
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {

@@ -37,7 +37,7 @@ public class Engine implements Runnable {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
 		{
-			try{Thread.sleep(10000);}catch (Exception ex){}
+			try{Thread.sleep(100);}catch (Exception ex){}
 			if (!pause) {
 				worldMeanTime.tick(10);
 				setTimeChanged(true);

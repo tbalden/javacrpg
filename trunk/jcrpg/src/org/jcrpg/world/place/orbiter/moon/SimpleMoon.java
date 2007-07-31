@@ -83,7 +83,7 @@ public class SimpleMoon extends Orbiter{
 	}
 
 	@Override
-	public float getLightPower(Time localTime, CubeClimateConditions conditions) {
+	public float[] getLightPower(Time localTime, CubeClimateConditions conditions) {
 		float dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
 		
 		float dayOrNightPeriodPercentage = dayNightPer; 
@@ -91,15 +91,16 @@ public class SimpleMoon extends Orbiter{
 		// dayNightPer now contain how deep in the period of day / night time is 100 is the middle of the day, 
 		// -100 is the middle of the night, 0 is between them.
 		if ( dayNightPer>=0) {
-			dayNightPer = ( 100 - (Math.abs( dayNightPer - 50 ) * 2) ) /2; 
+			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
 		}
 		if ( dayNightPer<0) {
-			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
+			dayNightPer = ( 100 - (Math.abs( Math.abs(dayNightPer) - 50 ) * 2) ) /2; 
 		}
 
 		
-		float v = ((dayNightPer+100)/200f)+0.1f;
-		return v;
+		float v = ((dayNightPer+100)/200f)-0.6f;
+		if (v<0.15f) v= 0.15f; 
+		return new float[]{v,v,v};
 	}
 	
 }
