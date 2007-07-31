@@ -46,6 +46,7 @@ import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
+import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
@@ -56,6 +57,10 @@ import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.TriMesh;
+import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.lod.ClodCreator;
+import com.jme.scene.lod.ClodMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -79,7 +84,7 @@ public class ModelLoader {
 	}
 	
     
-    WeakHashMap<String,Texture> textureCache = new WeakHashMap<String,Texture>();
+    HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
     WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
     // this better be not weak hashmap
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
@@ -120,13 +125,12 @@ public class ModelLoader {
 				{
 					node = new SharedNode("sveg"+((TextureStateVegetationModel)m).getKey(),node);
 				}
-				r[i] = node;
-			
+				
 			} else
 			// Quad models
 			if (objects[i] instanceof QuadModel) {
+				Node node = loadQuadModel((QuadModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
-				Node node = loadQuadModel((QuadModel)objects[i]);
 				r[i] = node;
 
 			} else
@@ -422,8 +426,6 @@ public class ModelLoader {
 				qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
 			}
 			
-			qtexture.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-			qtexture.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
 			
 			if (normalNames!=null && normalNames[i]!=null)
 			{
@@ -431,6 +433,8 @@ public class ModelLoader {
 				qtexture.setCombineFuncRGB(Texture.ACF_MODULATE);
 				qtexture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
 				qtexture.setCombineSrc1RGB(Texture.ACS_TEXTURE); 
+				qtexture.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+				qtexture.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
 				ts.setTexture(qtexture,1);
 			} else
 			{
@@ -444,8 +448,20 @@ public class ModelLoader {
     	
     }
     
-    public Node loadQuadModel(QuadModel m)
+    public Node loadQuadModel(QuadModel m, boolean fake)
     {
+		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
+    	tempNodeKeys.add(m.textureName+m.dot3TextureName);
+		tempBinaryKeys.add(m.textureName+m.dot3TextureName);
+		if (fake) return null;
+		
+		Node node = sharedNodeCache.get(m.textureName+m.dot3TextureName);
+		if (node!=null) {
+			Node r =  new SharedNode("node"+counter++,node);
+			r.setModelBound(new BoundingBox());
+	        r.updateModelBound();
+			return r;
+		}
     	
 		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
 		quad.setModelBound(new BoundingBox());
@@ -464,13 +480,55 @@ public class ModelLoader {
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
 		
 		
-		Node node = new Node();
+		node = new Node();
 		node.attachChild(quad);
-		return node;
+		node.setModelBound(new BoundingBox());
+		node.updateModelBound();
+		sharedNodeCache.put(m.textureName+m.dot3TextureName, node);
+		Node r =  new SharedNode("node"+counter++,node);
+		r.setModelBound(new BoundingBox());
+        r.updateModelBound();
+		return r;
     	
      	
     }
-     
+
+    
+    private Node getClodNodeFromParent(Node meshParent) {
+		// Create a node to hold my cLOD mesh objects
+		Node clodNode = new Node("Clod node");
+		// For each mesh in maggie
+		for (int i = 0; i < meshParent.getQuantity(); i++) {
+			// Create an AreaClodMesh for that mesh. Let it compute records
+			// automatically
+			if (meshParent.getChild(i) instanceof TriMesh) {
+				try {
+					AreaClodMesh acm = new AreaClodMesh("part" + i,
+							(TriMesh) meshParent.getChild(i), null);
+					acm.setModelBound(new BoundingSphere());
+					acm.updateModelBound();
+					// Allow 1/2 of a triangle in every pixel on the screen in the
+					// bounds.
+					acm.setTrisPerPixel(.5f);
+					// Force a move of 2 units before updating the mesh geometry
+					acm.setDistanceTolerance(2);
+					// Give the clodMesh node the material state that the original
+					// had.
+					acm.setRenderState(meshParent.getChild(i).getRenderState(
+							RenderState.RS_MATERIAL));
+					acm.setRenderState(meshParent.getChild(i).getRenderState(
+							RenderState.RS_TEXTURE));
+					// Attach clod node.
+					clodNode.attachChild(acm);
+				} catch (Exception ex)
+				{
+					
+				}
+			}
+		}
+		return clodNode;
+	}     
+    
     /**
      * Load one simplemodel to node
      * @param o SimpleModel descriptor
@@ -593,8 +651,17 @@ public class ModelLoader {
 				BinaryImporter binaryImporter = new BinaryImporter(); 
 			    //importer returns a Loadable, cast to Node
 			    node = (Node)binaryImporter.load(in);
-			    
-	
+			    /*Node node2 = getClodNodeFromParent(node);
+			    for (Spatial child:node.getChildren())
+			    {
+			    	System.out.println("child type = "+child.getType());
+			    	if (child instanceof Node)
+			    	{
+			    		node2.attachChild(getClodNodeFromParent((Node)child));
+			    	}
+			    }
+			    node = node2;*/
+
 				if (o.textureName!=null)
 				{
 					Texture texture = (Texture)textureCache.get(o.textureName);
@@ -617,6 +684,7 @@ public class ModelLoader {
 					
 				} else 
 				{
+					System.out.println(o.modelName);
 					setTextures(node,o.mipMap);
 				}
 				if (as==null) 

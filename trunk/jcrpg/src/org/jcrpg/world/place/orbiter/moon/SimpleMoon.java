@@ -26,6 +26,8 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.time.Time;
 
+import com.jme.renderer.ColorRGBA;
+
 public class SimpleMoon extends Orbiter{
 
 	public static String SIMPLE_MOON_ORBITER = "SIMPLE_MOON";
@@ -99,7 +101,8 @@ public class SimpleMoon extends Orbiter{
 
 		
 		float v = ((dayNightPer+100)/200f)-0.6f;
-		if (v<0.15f) v= 0.15f; 
+		if (v<0.1f) v= 0.07f;
+		if (v>1f) v=1f;
 		return new float[]{v,v,v};
 	}
 	
