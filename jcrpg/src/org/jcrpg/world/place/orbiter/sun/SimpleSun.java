@@ -103,7 +103,7 @@ public class SimpleSun extends Orbiter{
 		
 		if (dayNightPer<10)
 		{
-			r*= 0.9  + (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
+			r*= 0.9  + (0.1f * ((dayNightPer/10) * (10-dayNightPer)));
 			g*= 1f   - (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
 			b*= 0.8f - (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
 		} else
