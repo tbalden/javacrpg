@@ -204,7 +204,7 @@ public class BillboardPartVegetation extends Node {
 													if (targetQuad==null) {
 														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f)),((xDiff+yDiff+zDiff)/2f)*(4f));
 														targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-														//targetQuad.setLightCombineMode(LightState.OFF);
+														//targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
 														targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 														//J3DCore.hsSolidColorQuads.add(targetQuad);
 													}
@@ -218,9 +218,9 @@ public class BillboardPartVegetation extends Node {
 												if (targetQuad==null) {
 													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f)),((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f));
 													targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-													//targetQuad.setLightCombineMode(LightState.OFF);
+													//targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
 													targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
-													//J3DCore.hsSolidColorQuads.add(targetQuad);
+													//J3DCore.hsSolidColorQuads.add(targetQuad); // if lightstate set to off, uncomment this
 												}
 												SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 												quad.setLocalTranslation(sumX/counter, sumY/counter, sumZ/counter);
@@ -373,7 +373,7 @@ public class BillboardPartVegetation extends Node {
 										boolean f2_2Read = false;
 										float f2_1 = 0;
 										float f2_2 = 0;
-										if (FastMath.floor(fIndex / 3) == 0 || FastMath.floor(fIndex / 3) == 3) {
+										if (fIndex<3 || fIndex>=9 && fIndex<12) {
 											int mul = 1;
 											if (FastMath.floor(fIndex / 3) == 3)
 												mul = -1;
