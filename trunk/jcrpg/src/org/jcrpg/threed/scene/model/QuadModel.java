@@ -27,12 +27,24 @@ public class QuadModel extends Model {
 	public float sizeX;
 	public float sizeY;
 	public String textureName;
+	// bump/normal map texture
+	public String dot3TextureName;
+	// tells if bump map texture needs transformation with SobelImageFilter from grayscale.
+	public boolean transformToNormal = false;
 	
 	public QuadModel(String textureName,float sizeX, float sizeY) {
 		super();
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.textureName = textureName;
+	}
+	public QuadModel(String textureName,String dot3TextureName, float sizeX, float sizeY, boolean normalMap) {
+		super();
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.textureName = textureName;
+		this.dot3TextureName = dot3TextureName;
+		this.transformToNormal = normalMap;
 	}
 	
 }

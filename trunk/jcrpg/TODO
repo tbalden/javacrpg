@@ -1,4 +1,3 @@
-[ ] billboard ngplant trees, hashmap based, BillboardPartsModel
 
 [ ] user manual update
 
@@ -26,7 +25,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
-
+[X] billboard ngplant trees, hashmap based, BillboardPartsModel
 [X] billboarding the grass! (rotation didnt help! :/)
 [X] shadow render pass added! :-)
 [-] Naive vegetation development? -> billboarding?? - Quad in other apps too!
