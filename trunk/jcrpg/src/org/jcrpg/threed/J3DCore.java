@@ -569,34 +569,50 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel wall_window = new SimpleModel("sides/wall_window.3ds", null);
 		wall_window.shadowCaster = true;
 		SimpleModel wall_door = new SimpleModel("sides/door.3ds", null);
-		wall_window.shadowCaster = true;
+		wall_door.shadowCaster = true;
+		SimpleModel wall_door_wall = new SimpleModel("sides/wall_door.3ds", null);
+		wall_door_wall.shadowCaster = true;
+		SimpleModel roof_side = new SimpleModel("sides/roof_side.3ds", null);
+		roof_side.shadowCaster = true;
+		SimpleModel roof_corner = new SimpleModel("sides/roof_corner.3ds", null);
+		roof_corner.shadowCaster = true;
+		SimpleModel roof_opp = new SimpleModel("sides/roof_corner_opp.3ds", null);
+		roof_opp.shadowCaster = true;
+		SimpleModel roof_non = new SimpleModel("sides/roof_corner_non.3ds", null);
+		roof_non.shadowCaster = true;
+		SimpleModel ceiling = new SimpleModel("sides/ceiling_pattern1.3ds",null);
+		ceiling.shadowCaster = true;
+		SimpleModel roof_top = new SimpleModel("sides/roof_top.3ds",null);
+		roof_top.shadowCaster = true;
+		
+		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{wall_thick},
-				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				new SimpleModel[]{roof_side},
+				new SimpleModel[]{roof_corner},
+				new SimpleModel[]{roof_opp},
+				new SimpleModel[]{roof_non}
 				));
 		hm3dTypeRenderedSide.put(new Integer(5), new RenderedContinuousSide(
-				new SimpleModel[]{wall_door,new SimpleModel("sides/wall_door.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				new SimpleModel[]{wall_door,wall_door_wall},
+				new SimpleModel[]{roof_side},
+				new SimpleModel[]{roof_corner},
+				new SimpleModel[]{roof_opp},
+				new SimpleModel[]{roof_non}
 				));
 		hm3dTypeRenderedSide.put(new Integer(6), new RenderedContinuousSide(
 				new SimpleModel[]{wall_window,new SimpleModel("sides/window1.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_side.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_opp.3ds", null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_corner_non.3ds", null)}
+				new SimpleModel[]{roof_side},
+				new SimpleModel[]{roof_corner},
+				new SimpleModel[]{roof_opp},
+				new SimpleModel[]{roof_non}
 				));
 
 
 		hm3dTypeRenderedSide.put(new Integer(7), new RenderedTopSide(
 				//new SimpleModel[]{},
-				new SimpleModel[]{new SimpleModel("sides/ceiling_pattern1.3ds",null)},
-				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
+				new SimpleModel[]{ceiling},
+				new SimpleModel[]{roof_top}
 				));
 		
 		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
@@ -651,7 +667,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		
-		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide("models/ground/water1.3ds",null));
+		QuadModel qm_water = new QuadModel("water1.jpg"); qm_jungle.rotateOnSteep = true;
+		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
@@ -888,7 +905,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Orbiters
 		 */
-		float vTotal = 0;
+		float[] vTotal = new float[3];
 		// iterating through world's sky orbiters
 		for (Orbiter orb : world.getOrbiterHandler().orbiters.values()) {
 			if (orbiters3D.get(orb.id)==null)
@@ -933,7 +950,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					l[0].setTarget(cRootNode);
 					cLightState.attach(l[0].getLight());
 					float[] v = orb.getLightPower(localTime, conditions);
-					vTotal+=v[0];
+					vTotal[0]+=v[0];
+					vTotal[1]+=v[1];
+					vTotal[2]+=v[2];
 					ColorRGBA c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					
 					l[0].getLight().setDiffuse(c);//new ColorRGBA(1,1,1,1));
@@ -974,11 +993,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			counter++;
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-			q.setSolidColor(new ColorRGBA(vTotal-0.1f,vTotal-0.1f,vTotal-0.1f,1f));
+			q.setSolidColor(new ColorRGBA(vTotal[0]-0.1f,vTotal[1]-0.1f,vTotal[2]-0.1f,1f));
 		}
 		//System.out.println("__________ VEG QUADS: "+counter);
 		// set fog state color to the light power !
-		fs.setColor(new ColorRGBA(vTotal/2f,vTotal/2f,vTotal/2f,0.5f));
+		fs.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
 
 		// SKYSPHERE
 		// moving skysphere with camera
