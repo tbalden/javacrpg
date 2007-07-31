@@ -59,6 +59,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -380,7 +381,7 @@ public class ModelLoader {
     {
     	ArrayList<TextureState> tss = new ArrayList<TextureState>();
     	for (int i=0; i<textureNames.length; i++) {
-    		String key = textureNames[0]+(normalNames!=null?normalNames[i]:"null");
+    		String key = textureNames[i]+(normalNames!=null?normalNames[i]:"null");
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
 	    	
@@ -414,9 +415,16 @@ public class ModelLoader {
 			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+textureNames[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
 			qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			qtexture.setApply(Texture.AM_COMBINE);
-			//qtexture.setFilter(Texture.FM_LINEAR);
-			//qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+			qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
+			if (J3DCore.MIPMAP_GLOBAL)
+			{	
+				qtexture.setFilter(Texture.FM_LINEAR);
+				qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+			}
+			
+			qtexture.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+			qtexture.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+			
 			if (normalNames!=null && normalNames[i]!=null)
 			{
 				// TODO texture colors don't get in when using dot3 normal map! what settings here?
@@ -444,15 +452,17 @@ public class ModelLoader {
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
 		if (m.dot3TextureName!=null) {
-			MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
-				.createMaterialState();
-			ms.setColorMaterial(MaterialState.CM_DIFFUSE);
-			//quad.setRenderState(ms);
 		}
+		MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+		.createMaterialState();
+		ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+		quad.setRenderState(ms);
+		quad.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
 		quad.setRenderState(ts[0]);
 		//quad.setRenderState(as);
-		//quad.setSolidColor(new ColorRGBA(1,1,1,1));
+		quad.setSolidColor(new ColorRGBA(1,1,1,1));
+		
 		
 		Node node = new Node();
 		node.attachChild(quad);

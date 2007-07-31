@@ -83,7 +83,7 @@ public class SimpleSun extends Orbiter{
 	}
 
 	@Override
-	public float getLightPower(Time localTime, CubeClimateConditions conditions) {
+	public float[] getLightPower(Time localTime, CubeClimateConditions conditions) {
 		float dayNightPer = conditions.getSeason().dayOrNightPeriodPercentage(localTime);
 		
 		float dayOrNightPeriodPercentage = dayNightPer; 
@@ -96,10 +96,28 @@ public class SimpleSun extends Orbiter{
 		if ( dayNightPer<0) {
 			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
 		}
+		
+		float r = ((dayNightPer+100)/200f);
+		float g = ((dayNightPer+100)/200f);
+		float b = ((dayNightPer+100)/200f);
+		
+		if (dayNightPer<10)
+		{
+			r*= 0.9  + (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
+			g*= 1f   - (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
+			b*= 0.8f - (0.2f * ((dayNightPer/10) * (10-dayNightPer)));
+		} else
+		if (dayNightPer<20)
+		{
+			r*=0.9f;
+			b*=0.8f;
+		} else
+		{
+			
+		}
 
 		
-		float v = ((dayNightPer+100)/200f)+0.3f;
-		return v;
+		return new float[]{r+0.2f,g+0.2f,b+0.2f};
 	}
 
 }

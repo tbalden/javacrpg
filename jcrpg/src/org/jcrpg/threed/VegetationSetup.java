@@ -43,6 +43,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
@@ -129,9 +130,11 @@ public class VegetationSetup {
 					quad.setRenderState(as);
 					quad.setLightCombineMode(LightState.OFF);
 					quad.setSolidColor(new ColorRGBA(1,1,1,1));
-					
-					//quad.setLocalRotation(J3DCore.qN);
-	
+					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+					.createMaterialState();
+					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+					//quad.setRenderState(ms);
+
 					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 					//quad.setRenderState(fp);
 					
@@ -140,7 +143,6 @@ public class VegetationSetup {
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
-						sQ.setLocalRotation(J3DCore.qE);
 						n.attachChild(sQ);
 					}
 				} else

@@ -598,34 +598,43 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				new SimpleModel[]{new SimpleModel("sides/ceiling_pattern1.3ds",null)},
 				new SimpleModel[]{new SimpleModel("sides/roof_top.3ds", null)}
 				));
-
-
-		//hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{new SimpleModel("models/ground/cont_grass.3ds",null)}));//,lod_grass_tsm_1}));
+		
 		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
 		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
+		
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
-		//QuadModel qm_road_stone = new QuadModel("Decal.png","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
+		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
 		QuadModel qm_road_stone = new QuadModel("Decal.png","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
-		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_road_stone.rotateOnSteep = true;
+
+		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true;
+		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true;
+
 		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
+		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true;
+		
 		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
+		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true;
+		
 		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
+		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
+
+		
 		if (RENDER_GRASS_DISTANCE>0)
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,lod_cont_grass_1}));
 		else 
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
-		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{sm_house_wood}));
+		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
-		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
+		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle, lod_jung_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, lod_jung_grass_1}));
 		else
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
@@ -923,9 +932,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]).normalizeLocal());
 					l[0].setTarget(cRootNode);
 					cLightState.attach(l[0].getLight());
-					float v = orb.getLightPower(localTime, conditions);
-					vTotal+=v;
-					ColorRGBA c = new ColorRGBA(v,v,v,0.6f);
+					float[] v = orb.getLightPower(localTime, conditions);
+					vTotal+=v[0];
+					ColorRGBA c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					
 					l[0].getLight().setDiffuse(c);//new ColorRGBA(1,1,1,1));
 					l[0].getLight().setAmbient(c);
@@ -937,7 +946,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					l[1].getLight().setEnabled(true);
 					l[1].setTarget(sRootNode);
 					skydomeLightState.attach(l[1].getLight());
-					c = new ColorRGBA(v,v,v,0.0f);
+					c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
@@ -964,7 +973,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		for (Quad q:hsSolidColorQuads)
 		{
 			counter++;
-			q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
+			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
+			q.setSolidColor(new ColorRGBA(vTotal-0.1f,vTotal-0.1f,vTotal-0.1f,1f));
 		}
 		//System.out.println("__________ VEG QUADS: "+counter);
 		// set fog state color to the light power !
@@ -1853,6 +1863,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		//
 		
+		//setupSkyDome();
+		
 		setCalculatedCameraLocation();
         cam.update();
 		updateDisplay(null);
@@ -1868,7 +1880,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
-
+		
 		if (dr!=null) dr.setLocation(cam.getLocation().add(new Vector3f(2f, 1f, 2f)));
 
 		if (engine.timeChanged) 
@@ -1957,5 +1969,34 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         doDebug(r);
     }
 
-
+    SkyDome dome;
+    
+    /**
+     * Initialize SkyDome
+     */
+    private void setupSkyDome() {
+        dome = new SkyDome("skyDome", new Vector3f(0.0f,0.0f,0.0f), 11, 18, 850.0f);
+        dome.setModelBound(new BoundingSphere());
+        dome.updateModelBound();
+        dome.updateRenderState();
+        dome.setUpdateTime(5.0f);
+        dome.setTimeWarp(180.0f);
+        dome.setDay(267);
+        dome.setLatitude(-22.9f);
+        dome.setLongitude(-47.083f);
+        dome.setStandardMeridian(-45.0f);
+        dome.setSunPosition(12.75f);             // 5:45 am
+        dome.setTurbidity(2.0f);
+        dome.setSunEnabled(false);
+        dome.setExposure(true, 18.0f);
+        dome.setOvercastFactor(0.0f);
+        dome.setGammaCorrection(2.5f);
+        dome.setRootNode(rootNode);
+        dome.setIntensity(1.0f);
+        // setup a target to LightNode, if you dont want terrain with light's effect remove it.
+        dome.setTarget(rootNode);
+        rootNode.attachChild(dome);
+    }
+    
+     
 }

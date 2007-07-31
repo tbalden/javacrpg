@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.scene.model;
 
+import org.jcrpg.threed.J3DCore;
+
 public class QuadModel extends Model {
 
 	public float sizeX;
@@ -31,7 +33,14 @@ public class QuadModel extends Model {
 	public String dot3TextureName;
 	// tells if bump map texture needs transformation with SobelImageFilter from grayscale.
 	public boolean transformToNormal = false;
-	
+
+	public QuadModel(String textureName) {
+		super();
+		this.sizeX = J3DCore.CUBE_EDGE_SIZE;
+		this.sizeY = J3DCore.CUBE_EDGE_SIZE;
+		this.textureName = textureName;
+	}
+
 	public QuadModel(String textureName,float sizeX, float sizeY) {
 		super();
 		this.sizeX = sizeX;
