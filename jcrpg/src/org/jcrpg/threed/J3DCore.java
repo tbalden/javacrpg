@@ -1812,14 +1812,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cRootNode.setRenderState(cLightState);
 		sRootNode.setRenderState(skydomeLightState);
 		
-		if (true==false && dr == null) {
+		if (true==true && dr == null) {
 
-			dr = new PointLight();
+			dr = new SpotLight();
 			dr.setEnabled(true);
-			//dr.setDiffuse(new ColorRGBA(1, 1, 1, 1.5f));
-			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
-			//dr.setSpecular(new ColorRGBA(1, 1, 1, 1.5f));*/
-			dr.setShadowCaster(true);
+			dr.setDiffuse(new ColorRGBA(1, 1, 1, 1f));
+			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 1f));
+			dr.setSpecular(new ColorRGBA(1, 1, 1, 1f));
+			dr.setShadowCaster(false);
 			cLightState.attach(dr);
 		}
 
@@ -1894,13 +1894,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	LightNode drn;
-	PointLight dr;
+	SpotLight dr;
 
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
 		
-		if (dr!=null) dr.setLocation(cam.getLocation().add(new Vector3f(2f, 1f, 2f)));
+		if (dr!=null) {
+			dr.setLocation(cam.getLocation().add(new Vector3f(2f, 1f, 2f)));
+			dr.setDirection(cam.getDirection());
+		}
 
 		if (engine.timeChanged) 
 		{

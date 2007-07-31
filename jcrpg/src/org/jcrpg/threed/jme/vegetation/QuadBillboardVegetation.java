@@ -179,7 +179,7 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 										boolean f2_2Read = false;
 										float f2_1 = 0;
 										float f2_2 = 0;
-										if (FastMath.floor(fIndex / 3) == 0 || FastMath.floor(fIndex / 3) == 3) {
+										if (fIndex<3 || fIndex>=9 && fIndex<12) {
 											int mul = 1;
 											if (FastMath.floor(fIndex / 3) == 3)
 												mul = -1;
