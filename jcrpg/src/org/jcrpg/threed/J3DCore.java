@@ -620,7 +620,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
 		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
-		QuadModel qm_road_stone = new QuadModel("Decal.png","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
+		QuadModel qm_road_stone = new QuadModel("stone.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
 
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true;
 		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true;
@@ -993,7 +993,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			counter++;
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-			q.setSolidColor(new ColorRGBA(vTotal[0]-0.1f,vTotal[1]-0.1f,vTotal[2]-0.1f,1f));
+			q.setSolidColor(new ColorRGBA(vTotal[0],vTotal[1],vTotal[2],1f));
 		}
 		//System.out.println("__________ VEG QUADS: "+counter);
 		// set fog state color to the light power !
@@ -1812,7 +1812,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cRootNode.setRenderState(cLightState);
 		sRootNode.setRenderState(skydomeLightState);
 		
-		if (true==true && dr == null) {
+		if (true==false && dr == null) {
 
 			dr = new SpotLight();
 			dr.setEnabled(true);
