@@ -558,9 +558,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel pine_lowest = new PartlyBillboardModel("models/tree/pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},2,MIPMAP_TREES);
 		pine_lowest.quadXSizeMultiplier = 2f;
 		pine_lowest.quadYSizeMultiplier = 3f;
+		pine_lowest.windAnimation = false;
 		PartlyBillboardModel pine_lowest_2 = new PartlyBillboardModel("models/tree/pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},3,MIPMAP_TREES);
 		pine_lowest_2.quadXSizeMultiplier = 2f;
 		pine_lowest_2.quadYSizeMultiplier = 3f;
+		pine_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel great_pine_high = new PartlyBillboardModel("models/tree/great_pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},0,MIPMAP_TREES);
 		great_pine_high.quadXSizeMultiplier = 2f;
@@ -572,9 +574,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel great_pine_lowest = new PartlyBillboardModel("models/tree/great_pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},2,MIPMAP_TREES);
 		great_pine_lowest.quadXSizeMultiplier = 1.6f;
 		great_pine_lowest.quadYSizeMultiplier = 2.5f;
+		great_pine_lowest.windAnimation = false;
 		PartlyBillboardModel great_pine_lowest_2 = new PartlyBillboardModel("models/tree/great_pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},3,MIPMAP_TREES);
 		great_pine_lowest_2.quadXSizeMultiplier = 1.6f;
 		great_pine_lowest_2.quadYSizeMultiplier = 2.5f;
+		great_pine_lowest_2.windAnimation = false;
 
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true; pine.useClodMesh = true;

@@ -41,6 +41,9 @@ public class PartlyBillboardModel extends SimpleModel {
 	 */
 	public float quadXSizeMultiplier = 1;
 	public float quadYSizeMultiplier = 1;
+	
+	public boolean windAnimation = true;
+	
 	/**
 	 * Tells if light state should be off for the quads. If off, they will be handled by lightpower of J3dcore orbiters. (hsSolidColorQuads).
 	 */

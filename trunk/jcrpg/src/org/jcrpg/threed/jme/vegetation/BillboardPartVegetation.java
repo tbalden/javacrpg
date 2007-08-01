@@ -331,7 +331,7 @@ public class BillboardPartVegetation extends Node {
 		startTime= System.currentTimeMillis();
 
 		boolean doGrassMove = false;
-		if (J3DCore.CPU_ANIMATED_GRASS) {
+		if (J3DCore.CPU_ANIMATED_GRASS && model.windAnimation) {
 			doGrassMove = true;
 		}
 
