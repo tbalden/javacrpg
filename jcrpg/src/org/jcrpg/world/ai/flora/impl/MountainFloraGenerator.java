@@ -45,7 +45,7 @@ public class MountainFloraGenerator extends BaseFloraGenerator{
 	
 	public MountainFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),1),new FloraListElement(new GreenPineTree(),100),new FloraListElement(new GreatPineTree(),220),new FloraListElement(new GreenBush(),100)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),1),new FloraListElement(new GreenPineTree(),30),new FloraListElement(new GreatPineTree(),60),new FloraListElement(new GreenBush(),50)});
 	}
 	
 }
