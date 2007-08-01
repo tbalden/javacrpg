@@ -120,6 +120,11 @@ public class BillboardPartVegetation extends Node {
 								TriMesh q = (TriMesh) s;
 								int l = q.getName().length();
 								String key = ""+q.getName().charAt(l - 1);
+								if (model.removedParts.contains(key)) 
+								{
+									if (model.LOD>=1)
+										removed.add(q);
+								}
 								if (model.partNameToTextureCount.containsKey(key)) 
 								{
 
@@ -202,11 +207,14 @@ public class BillboardPartVegetation extends Node {
 													float y = sumLodY/(maxDoubleTri-1);
 													float z = sumLodZ/(maxDoubleTri-1);
 													if (targetQuad==null) {
-														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f)),((xDiff+yDiff+zDiff)/2f)*(4f));
+														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f))*model.quadSizeMultiplier,((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadSizeMultiplier);
 														targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-														//targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+														if (model.quadLightStateOff)
+														{
+															targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+															J3DCore.hsSolidColorQuads.add(targetQuad);
+														}
 														targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
-														//J3DCore.hsSolidColorQuads.add(targetQuad);
 													}
 													SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 													quad.setLocalTranslation(x, y, z);
@@ -216,11 +224,14 @@ public class BillboardPartVegetation extends Node {
 											if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
 											{
 												if (targetQuad==null) {
-													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f)),((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f));
+													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadSizeMultiplier,((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadSizeMultiplier);
 													targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-													//targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+													if (model.quadLightStateOff)
+													{
+														targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+														J3DCore.hsSolidColorQuads.add(targetQuad);
+													}
 													targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
-													//J3DCore.hsSolidColorQuads.add(targetQuad); // if lightstate set to off, uncomment this
 												}
 												SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
 												quad.setLocalTranslation(sumX/counter, sumY/counter, sumZ/counter);

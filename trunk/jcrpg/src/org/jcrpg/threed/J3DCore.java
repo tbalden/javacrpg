@@ -472,7 +472,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	
 	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,15f},{15f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{15f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,10f},{15f,30f}};
 	
 	public J3DCore()
 	{
@@ -493,7 +493,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(World.SUBTYPE_GROUND.id, new Integer(21));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE);//new Integer(13));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
@@ -513,37 +513,53 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, new Integer(26));
 
 		
-		LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/bush/fern.3ds",null)},new float[][]{{0f,15f}});
-		//LODModel lod_fern = new LODModel(new SimpleModel[]{new SimpleModel("models/fauna/dragon.3ds",null)},new float[][]{{0f,15f}});
 
-		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel cherry = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.shadowCaster = true;
-		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
-		acacia.shadowCaster = true;
-		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
+		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
-		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1_low.png"},2,MIPMAP_TREES);
+
+		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		acacia.shadowCaster = true;
+		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
-		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"cher_1_low.png"},2,MIPMAP_TREES);
-		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
+
+		PartlyBillboardModel bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		bush.quadSizeMultiplier = 3.5f;
+		bush.shadowCaster = true;
+		PartlyBillboardModel bush_low = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		bush_low.quadSizeMultiplier = 3.5f;
+		bush_low.shadowCaster = true;
+		PartlyBillboardModel bush_lowest = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
+		bush_lowest.quadSizeMultiplier = 3.5f;
+
+		PartlyBillboardModel fern = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},0,MIPMAP_TREES);
+		fern.shadowCaster = true;
+		PartlyBillboardModel fern_low = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},1,MIPMAP_TREES);
+		fern_low.shadowCaster = true;
+		PartlyBillboardModel fern_lowest = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},2,MIPMAP_TREES);
 
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
-		pine.shadowCaster = true;
+		pine.shadowCaster = true; pine.useClodMesh = true;
 		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
-		great_pine.shadowCaster = true;
+		great_pine.shadowCaster = true; great_pine.useClodMesh = true;
 		SimpleModel palm = new SimpleModel("models/tree/coconut.3ds",null,MIPMAP_TREES);
-		palm.shadowCaster = true;
+		palm.shadowCaster = true; palm.useClodMesh = true;
 		SimpleModel jungletrees_mult = new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES);
-		jungletrees_mult.shadowCaster = true;
+		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true;
 		SimpleModel cactus = new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES);
-		cactus.shadowCaster = true;
+		cactus.shadowCaster = true; cactus.useClodMesh = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
-		bush1.shadowCaster = true;
-		
+		bush1.shadowCaster = true; bush1.useClodMesh = true;
+		SimpleModel fern1 = new SimpleModel("models/bush/fern.3ds",null,MIPMAP_TREES);
+		fern1.shadowCaster = true; fern1.useClodMesh = true;
+
 		float[][] treeLodDist = TREE_LOD_DIST_LOW;
 		if (DETAILED_TREES)
 		{
-			treeLodDist = TREE_LOD_DIST_HIGH;	
+			treeLodDist = TREE_LOD_DIST_HIGH;
 		}
 
 		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest},treeLodDist);
@@ -553,9 +569,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
 		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{jungletrees_mult},new float[][]{{0f,15f}});
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
-		LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush1},new float[][]{{0f,15f}});
-		
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png","grass1_flower_3.png"},0.7f,0.45f,2,1f);
+		//LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush1},new float[][]{{0f,15f}});
+		LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush,bush_low,bush_lowest},treeLodDist);
+		LODModel lod_fern = new LODModel(new SimpleModel[]{fern1},new float[][]{{0f,15f}});
+
+		//TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png","grass1_flower_3.png"},0.7f,0.45f,2,1f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.7f,0.45f,2,1f);
 		LODModel lod_cont_grass_1 = new LODModel(new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
@@ -938,7 +957,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			if (l!=null)
 			{
-				System.out.println("ORBITER LIGHT "+orb.id);
+				//System.out.println("ORBITER LIGHT "+orb.id);
 				
 				float[] lightDirectionCoords = orb.getLightDirection(localTime, conditions);
 				if (lightDirectionCoords!=null)

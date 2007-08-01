@@ -30,8 +30,13 @@ public abstract class Model {
 	 */
 	public boolean rotateOnSteep = false;
 	/**
-	 * Tells if the model casts shadow in shadow pass
+	 * Tells if the model casts shadow in shadow pass.
 	 */
 	public boolean shadowCaster = false;
 	
+	
+	/**
+	 * Tells if loader should load it into a ClodMesh.
+	 */
+	public boolean useClodMesh = false;
 }

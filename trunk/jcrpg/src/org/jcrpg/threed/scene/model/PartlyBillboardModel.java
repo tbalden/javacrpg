@@ -23,30 +23,68 @@
 package org.jcrpg.threed.scene.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class PartlyBillboardModel extends SimpleModel {
 
 	public String[] billboardPartNames = new String[0];
 	public String[] billboardPartTextures = new String[0];
+	public String[] removedPartNames = new String[0];
+	
+	/**
+	 * Level of detail, use 0,1,2 values. (0 most detailed, 1 quads removed, 2 very low quad number)
+	 */
 	public int LOD=0;
 	
+	/**
+	 * Tells how much the quads are to be multiplied in size deviating from calculated size.
+	 */
+	public float quadSizeMultiplier = 1;
+	/**
+	 * Tells if light state should be off for the quads. If off, they will be handled by lightpower of J3dcore orbiters. (hsSolidColorQuads).
+	 */
+	public boolean quadLightStateOff = true;
+	
 	public HashMap<String, Integer> partNameToTextureCount = new HashMap<String, Integer>();
+	public HashSet<String> removedParts = new HashSet<String>();
 	
 	
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
+	/**
+	 * Constructor of model.
+	 * @param modelName The name (path) of the model file.
+	 * @param billboardPartNames Billboarded partnames define which part of the model is to be replaced with quads.
+	 * @param removedPartNames if LOD 1 or 2, removedParts will be not added to the new node of this model.
+	 * @param billboardPartTextures Texture names for the billboard quads.
+	 * @param LOD Level of detail, use 0,1,2 values. (0 most detailed, 1 quads removed, 2 very low quad number).
+	 * @param mipMap Tells if mipmapping is needed.
+	 */
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
 		super(modelName, null, mipMap);
 		this.billboardPartNames = billboardPartNames;
 		this.billboardPartTextures = billboardPartTextures;
+		this.removedPartNames = billboardPartNames;
 		int c = 0;
 		this.LOD = Math.max(Math.min(LOD,2),0); // between 0 and 2
 		for (String n:billboardPartNames)
 		{
 			partNameToTextureCount.put(n,c++);
 		}
+		for (String n:removedPartNames)
+		{
+			removedParts.add(n);
+		}
 	}
 
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames,String[] billboardPartTextures, int LOD) {
-		this(modelName,billboardPartNames,billboardPartTextures,LOD,false);
+	/**
+	 * Constructor of model with no mipmap specification possibility.
+	 * @param modelName The name (path) of the model file.
+	 * @param billboardPartNames Billboarded partnames define which part of the model is to be replaced with quads.
+	 * @param removedPartNames if LOD 1 or 2, removedParts will be not added to the new node of this model.
+	 * @param billboardPartTextures Texture names for the billboard quads.
+	 * @param LOD Level of detail, use 0,1,2 values. (0 most detailed, 1 quads removed, 2 very low quad number).
+	 */
+	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures,int LOD) {
+		this(modelName,billboardPartNames,billboardPartTextures,removedPartNames,LOD,false);
 	}
 
 }
