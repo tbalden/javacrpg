@@ -195,7 +195,7 @@ public class BillboardPartVegetation extends Node {
 													counter++;
 												}
 											}
-											if (model.LOD>=2 && added.size()<2)
+											if (model.LOD==3 && added.size()<1)
 											{
 												if (doubleTriIndex<maxDoubleTri-1)
 												{
@@ -210,6 +210,39 @@ public class BillboardPartVegetation extends Node {
 													float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadSizeMultiplier;
 													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
 													added.add(quad);
+												}
+											} else
+											if (model.LOD==2 && added.size()<1)
+											{
+												if (doubleTriIndex<maxDoubleTri-1)
+												{
+													sumLodX+=sumX/counter;
+													sumLodY+=sumY/counter;
+													sumLodZ+=sumZ/counter;
+												} else {
+													float x = sumLodX/(maxDoubleTri-1);
+													float y = sumLodY/(maxDoubleTri-1);
+													float z = sumLodZ/(maxDoubleTri-1);
+													float xSize = ((xDiff+yDiff+zDiff)/2f)*2f*model.quadSizeMultiplier;
+													float ySize = ((xDiff+yDiff+zDiff)/2f)*2f*model.quadSizeMultiplier;
+													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y-ySize/5,z-ySize/5);
+													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y+ySize/5,z-ySize/5);
+													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y-ySize/5,z-ySize/5);
+													SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y+ySize/5,z-ySize/5);
+													
+													SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y-ySize/5,z+ySize/5);
+													SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y+ySize/5,z+ySize/5);
+													SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y-ySize/5,z+ySize/5);
+													SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y+ySize/5,z+ySize/5);
+													
+													added.add(quad1_1);
+													added.add(quad2_1);
+													added.add(quad3_1);
+													added.add(quad4_1);
+													added.add(quad1_2);
+													added.add(quad2_2);
+													added.add(quad3_2);
+													added.add(quad4_2);
 												}
 											} else
 											if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 

@@ -472,8 +472,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,15f},{15f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,10f},{15f,30f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,30f}};
 	
 	public J3DCore()
 	{
@@ -519,13 +519,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cherry.shadowCaster = true;
 		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
-		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1_low.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},2,MIPMAP_TREES);
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.shadowCaster = true;
 		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
-		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},2,MIPMAP_TREES);
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.quadSizeMultiplier = 3.5f;
