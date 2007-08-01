@@ -223,17 +223,19 @@ public class BillboardPartVegetation extends Node {
 													float x = sumLodX/(maxDoubleTri-1);
 													float y = sumLodY/(maxDoubleTri-1);
 													float z = sumLodZ/(maxDoubleTri-1);
-													float xSize = ((xDiff+yDiff+zDiff)/2f)*2f*model.quadSizeMultiplier;
-													float ySize = ((xDiff+yDiff+zDiff)/2f)*2f*model.quadSizeMultiplier;
-													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y-ySize/5,z-ySize/5);
-													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y+ySize/5,z-ySize/5);
-													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y-ySize/5,z-ySize/5);
-													SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y+ySize/5,z-ySize/5);
+													float xSize = ((xDiff+yDiff+zDiff)/2f)*2f;
+													float ySize = ((xDiff+yDiff+zDiff)/2f)*2f;
+													float xSizeM = xSize*model.quadSizeMultiplier;
+													float ySizeM = ySize*model.quadSizeMultiplier;
+													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
+													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSize,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
+													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
+													SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
 													
-													SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y-ySize/5,z+ySize/5);
-													SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSize,ySize,x-xSize/5,y+ySize/5,z+ySize/5);
-													SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y-ySize/5,z+ySize/5);
-													SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSize,ySize,x+xSize/5,y+ySize/5,z+ySize/5);
+													SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z+ySize/5);
+													SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z+ySize/5);
+													SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
+													SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
 													
 													added.add(quad1_1);
 													added.add(quad2_1);
