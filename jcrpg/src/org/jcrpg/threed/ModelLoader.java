@@ -651,16 +651,19 @@ public class ModelLoader {
 				BinaryImporter binaryImporter = new BinaryImporter(); 
 			    //importer returns a Loadable, cast to Node
 			    node = (Node)binaryImporter.load(in);
-			    /*Node node2 = getClodNodeFromParent(node);
-			    for (Spatial child:node.getChildren())
-			    {
-			    	System.out.println("child type = "+child.getType());
-			    	if (child instanceof Node)
-			    	{
-			    		node2.attachChild(getClodNodeFromParent((Node)child));
-			    	}
+			    if (o.useClodMesh) {
+			    	// use clod mesh for the node, part it into clod meshes...
+			    	Node node2 = getClodNodeFromParent(node);
+				    for (Spatial child:node.getChildren())
+				    {
+				    	System.out.println("child type = "+child.getType());
+				    	if (child instanceof Node)
+				    	{
+				    		node2.attachChild(getClodNodeFromParent((Node)child));
+				    	}
+				    }
+				    node = node2;
 			    }
-			    node = node2;*/
 
 				if (o.textureName!=null)
 				{
