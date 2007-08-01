@@ -163,7 +163,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	{
 	    		try {
 	    			RENDER_DISTANCE = Integer.parseInt(renderDistance);
-	    			if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
+	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
 	    			if (RENDER_DISTANCE<5) RENDER_DISTANCE = 5;
 	    		} catch (Exception pex)
 	    		{
@@ -472,8 +472,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,30f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,20f},{20f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,20f},{20f,30f}};
 	
 	public J3DCore()
 	{
@@ -520,12 +520,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
 		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel cherry_lowest_2 = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},3,MIPMAP_TREES);
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.shadowCaster = true;
 		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
 		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.quadSizeMultiplier = 3.5f;
@@ -563,8 +565,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			treeLodDist = TREE_LOD_DIST_HIGH;
 		}
 
-		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest},treeLodDist);
-		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia,acacia_low,acacia_lowest},treeLodDist);
+		LODModel lod_cherry = new LODModel(new SimpleModel[]{cherry,cherry_low,cherry_lowest,cherry_lowest_2},treeLodDist);
+		LODModel lod_acacia = new LODModel(new SimpleModel[]{acacia,acacia_low,acacia_lowest,acacia_lowest_2},treeLodDist);
 		LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
 		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
