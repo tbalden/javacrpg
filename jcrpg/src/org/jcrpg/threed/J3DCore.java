@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.WeakHashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -315,7 +316,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
 	 */
-	public static HashSet<Quad> hsSolidColorQuads = new HashSet<Quad>();
+	public static WeakHashMap<Quad,Quad> hsSolidColorQuads = new WeakHashMap<Quad,Quad>();
 	
 	
 	public void setEngine(Engine engine)
@@ -1008,7 +1009,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// this part sets the naive veg quads to a mixed color of the light's value with the quad texture!
 		int counter = 0;
-		for (Quad q:hsSolidColorQuads)
+		for (Quad q:hsSolidColorQuads.values())
 		{
 			counter++;
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));

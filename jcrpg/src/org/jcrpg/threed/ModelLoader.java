@@ -84,8 +84,8 @@ public class ModelLoader {
 	}
 	
     
-    HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
-    WeakHashMap<String,byte[]> binaryCache = new WeakHashMap<String,byte[]>();
+	HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
+    HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
     // this better be not weak hashmap
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
     HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
@@ -336,7 +336,7 @@ public class ModelLoader {
 			{
 			}
 		}
-    	sharedNodeCache.keySet().removeAll(removable);
+    	//sharedNodeCache.keySet().removeAll(removable);
     	
     	removable.clear();
     	for (String key : binaryCache.keySet()) {
@@ -345,7 +345,7 @@ public class ModelLoader {
 				removable.add(key);
 			}
 		}
-		binaryCache.keySet().removeAll(removable);
+		//binaryCache.keySet().removeAll(removable);
 		
     	tempNodeKeys.clear();
     	tempBinaryKeys.clear();
