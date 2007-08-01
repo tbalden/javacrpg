@@ -472,8 +472,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,20f},{20f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,20f},{20f,30f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,18f},{18f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,15f},{15f,30f}};
 	
 	public J3DCore()
 	{
