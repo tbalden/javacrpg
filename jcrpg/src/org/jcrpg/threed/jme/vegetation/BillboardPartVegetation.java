@@ -206,8 +206,8 @@ public class BillboardPartVegetation extends Node {
 													float x = sumLodX/(maxDoubleTri-1);
 													float y = sumLodY/(maxDoubleTri-1);
 													float z = sumLodZ/(maxDoubleTri-1);
-													float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadSizeMultiplier;
-													float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadSizeMultiplier;
+													float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadXSizeMultiplier;
+													float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadYSizeMultiplier;
 													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
 													added.add(quad);
 												}
@@ -225,8 +225,8 @@ public class BillboardPartVegetation extends Node {
 													float z = sumLodZ/(maxDoubleTri-1);
 													float xSize = ((xDiff+yDiff+zDiff)/2f)*2f;
 													float ySize = ((xDiff+yDiff+zDiff)/2f)*2f;
-													float xSizeM = xSize*model.quadSizeMultiplier;
-													float ySizeM = ySize*model.quadSizeMultiplier;
+													float xSizeM = xSize*model.quadXSizeMultiplier;
+													float ySizeM = ySize*model.quadYSizeMultiplier;
 													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
 													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSize,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
 													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
@@ -252,8 +252,8 @@ public class BillboardPartVegetation extends Node {
 												float x = sumX/counter;
 												float y = sumY/counter;
 												float z = sumZ/counter;
-												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadSizeMultiplier;
-												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadSizeMultiplier;
+												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
+												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadXSizeMultiplier;
 												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
 												added.add(quad);
 											}

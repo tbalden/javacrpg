@@ -39,7 +39,8 @@ public class PartlyBillboardModel extends SimpleModel {
 	/**
 	 * Tells how much the quads are to be multiplied in size deviating from calculated size.
 	 */
-	public float quadSizeMultiplier = 1;
+	public float quadXSizeMultiplier = 1;
+	public float quadYSizeMultiplier = 1;
 	/**
 	 * Tells if light state should be off for the quads. If off, they will be handled by lightpower of J3dcore orbiters. (hsSolidColorQuads).
 	 */
