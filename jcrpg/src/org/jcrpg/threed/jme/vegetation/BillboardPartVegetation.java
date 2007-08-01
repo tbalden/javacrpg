@@ -206,35 +206,20 @@ public class BillboardPartVegetation extends Node {
 													float x = sumLodX/(maxDoubleTri-1);
 													float y = sumLodY/(maxDoubleTri-1);
 													float z = sumLodZ/(maxDoubleTri-1);
-													if (targetQuad==null) {
-														targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(4f))*model.quadSizeMultiplier,((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadSizeMultiplier);
-														targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-														if (model.quadLightStateOff)
-														{
-															targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
-															J3DCore.hsSolidColorQuads.put(targetQuad,targetQuad);
-														}
-														targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
-													}
-													SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
-													quad.setLocalTranslation(x, y, z);
+													float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadSizeMultiplier;
+													float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadSizeMultiplier;
+													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
 													added.add(quad);
 												}
 											} else
 											if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
 											{
-												if (targetQuad==null) {
-													targetQuad = new Quad(q.getName(),((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadSizeMultiplier,((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadSizeMultiplier);
-													targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-													if (model.quadLightStateOff)
-													{
-														targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
-														J3DCore.hsSolidColorQuads.put(targetQuad,targetQuad);
-													}
-													targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
-												}
-												SharedMesh quad = new SharedMesh(q.getName(),targetQuad);
-												quad.setLocalTranslation(sumX/counter, sumY/counter, sumZ/counter);
+												float x = sumX/counter;
+												float y = sumY/counter;
+												float z = sumZ/counter;
+												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadSizeMultiplier;
+												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadSizeMultiplier;
+												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
 												added.add(quad);
 											}
 										}
@@ -254,6 +239,23 @@ public class BillboardPartVegetation extends Node {
 				
 			}
 		}
+		
+	}
+	private SharedMesh createQuad(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
+	{
+		if (targetQuad==null) {
+			targetQuad = new Quad(name,xSize,ySize);
+			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
+			if (model.quadLightStateOff)
+			{
+				targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+				J3DCore.hsSolidColorQuads.put(targetQuad,targetQuad);
+			}
+			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
+		}
+		SharedMesh quad = new SharedMesh("s"+name,targetQuad);
+		quad.setLocalTranslation(x, y, z);
+		return quad;
 		
 	}
 	
