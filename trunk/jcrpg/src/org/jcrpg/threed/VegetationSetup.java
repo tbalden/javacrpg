@@ -63,7 +63,7 @@ public class VegetationSetup {
 	}
 
 
-	private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f };
+	//private static final float[] lightPosition = { -0.8f, 0.8f, 0.8f, 0.0f };
 	
 	
 	public static HashMap<String, Node[]> quadCache = new HashMap<String, Node[]>();
@@ -139,7 +139,7 @@ public class VegetationSetup {
 					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
-					J3DCore.hsSolidColorQuads.add(quad);
+					J3DCore.hsSolidColorQuads.put(quad,quad);
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);

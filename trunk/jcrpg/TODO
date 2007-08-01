@@ -1,9 +1,14 @@
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
 [ ] spot light to the user in the night, doesnt work!!
+[ ] Lod modelling trees with billboard images captured in blender!
+	[ ] nicer low detail textures for acacia png
+	[ ] BillboardPartModel with more quads for Lowest detail, math for more quads, 
+		add LOD level 3 for single quad
+		
+[ ] Mem leak problem! Mem is going up. QuadCache? Which cache eats it?
 
 [ ] user manual update
 
-[ ] Lod modelling trees with billboard images captured in blender!
 
 [ ] add Harek's table to the house
 
