@@ -103,6 +103,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -126,6 +127,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static int RENDER_GRASS_DISTANCE = 10;
     public static int RENDER_SHADOW_DISTANCE = 10;
     public static int RENDER_SHADOW_DISTANCE_SQR = 100;
+    public static int ANTIALIAS_SAMPLES = 0;
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
@@ -288,6 +290,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("DETAILED_TREES", "false");
+	    		}
+	    	}
+	    	String antialiasSamples = p.getProperty("ANTIALIAS_SAMPLES");
+	    	if (antialiasSamples!=null)
+	    	{
+	    		try {
+	    			ANTIALIAS_SAMPLES = Integer.parseInt(antialiasSamples);
+	    			if (ANTIALIAS_SAMPLES>8) ANTIALIAS_SAMPLES = 8;
+	    			if (ANTIALIAS_SAMPLES<0) ANTIALIAS_SAMPLES = 0;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("ANTIALIAS_SAMPLES", "0");
 	    		}
 	    	}
 	    	
@@ -477,7 +491,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public J3DCore()
 	{
-		stencilBits = 8;
+		if (J3DCore.SHADOWS) stencilBits = 8;
+		alphaBits = 0;
+		//depthBits = 4;
+		samples = ANTIALIAS_SAMPLES;
+		
 		// area subtype to 3d type mapping
 		hmAreaSubType3dType.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
@@ -1839,6 +1857,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		bloomRenderPass = new BloomRenderPass(cam, 4);
 		
+		CullState cs_back = display.getRenderer().createCullState();
+		cs_back.setCullMode(CullState.CS_BACK);
+		cs_back.setEnabled(true);
+		CullState cs_front = display.getRenderer().createCullState();
+		cs_front.setCullMode(CullState.CS_FRONT);
+
+		rootNode.setRenderState(cs_back);
+		
 
 		//DisplaySystem.getDisplaySystem().getRenderer().getQueue().setTwoPassTransparency(false);
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
@@ -1928,6 +1954,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere = new Sphere("SKY_SPHERE",10,10,500f);
 		sRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere());
+		skySphere.setRenderState(cs_front);
 		skySphere.updateModelBound();
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
