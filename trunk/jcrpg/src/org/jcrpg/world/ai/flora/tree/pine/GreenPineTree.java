@@ -40,7 +40,7 @@ public class GreenPineTree extends Tree {
 	public GreenPineTree()
 	{
 		super();
-		growsOnSteep = true;
+		growsOnSteep = false; // looks bad on steep, to low foliage
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 

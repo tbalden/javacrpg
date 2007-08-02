@@ -472,8 +472,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,5f},{5f,12f},{12f,18f},{18f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0.1f},{0.1f,8f},{8f,15f},{15f,30f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,3f},{3f,12f},{12f,18f},{18f,30f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,15f},{15f,30f}};
 	
 	public J3DCore()
 	{
@@ -485,7 +485,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
-		hmAreaSubType3dType.put(House.SUBTYPE_BOOKCASE.id, EMPTY_SIDE);//new Integer(28));
+		hmAreaSubType3dType.put(House.SUBTYPE_BOOKCASE.id, new Integer(28));
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
@@ -519,15 +519,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cherry.shadowCaster = true;
 		PartlyBillboardModel cherry_low = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
+		//cherry_low.windAnimation = false;
 		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},2,MIPMAP_TREES);
+		cherry_lowest.windAnimation = false;
 		PartlyBillboardModel cherry_lowest_2 = new PartlyBillboardModel("models/tree/cherry_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},3,MIPMAP_TREES);
+		cherry_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.shadowCaster = true;
 		PartlyBillboardModel acacia_low = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
+		//acacia_low.windAnimation = false;
 		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},2,MIPMAP_TREES);
+		acacia_lowest.windAnimation = false;
 		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("models/tree/acacia_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
+		acacia_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.quadXSizeMultiplier = 3.5f;
@@ -539,9 +545,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel bush_lowest_2 = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},3,MIPMAP_TREES);
 		bush_lowest.quadXSizeMultiplier = 3.5f;
 		bush_lowest.quadYSizeMultiplier = 3.5f;
+		bush_lowest.windAnimation = false;
 		bush_lowest_2.quadXSizeMultiplier = 3.5f;
 		bush_lowest_2.quadYSizeMultiplier = 3.5f;
-
+		bush_lowest_2.windAnimation = false;
+		
 /*		PartlyBillboardModel fern = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},0,MIPMAP_TREES);
 		fern.shadowCaster = true;
 		PartlyBillboardModel fern_low = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},1,MIPMAP_TREES);
@@ -1978,10 +1986,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			/** Update controllers/render states/transforms/bounds for rootNode. */
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
-
 			
-			
-			pManager.updatePasses(tpf);
+			if (BLOOM_EFFECT || SHADOWS) pManager.updatePasses(tpf);
 		}
 	}
 
