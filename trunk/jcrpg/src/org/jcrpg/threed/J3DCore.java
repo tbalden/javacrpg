@@ -105,8 +105,11 @@ import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
+import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
@@ -528,7 +531,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
 		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
-		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id, new Integer(24));
+		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(15));//new Integer(24)); TODO quad model
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
 
 		
@@ -606,6 +609,44 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		great_pine_lowest_2.quadYSizeMultiplier = 2.5f;
 		great_pine_lowest_2.windAnimation = false;
 
+		PartlyBillboardModel palm_high = new PartlyBillboardModel("models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},0,MIPMAP_TREES);
+		palm_high.quadXSizeMultiplier = 3f;
+		palm_high.shadowCaster = true;
+		PartlyBillboardModel palm_low = new PartlyBillboardModel("models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},1,MIPMAP_TREES);
+		palm_low.quadXSizeMultiplier = 2f;
+		palm_low.quadYSizeMultiplier = 2.5f;
+		palm_low.shadowCaster = true;
+		PartlyBillboardModel palm_lowest = new PartlyBillboardModel("models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},2,MIPMAP_TREES);
+		palm_lowest.quadXSizeMultiplier = 1.6f;
+		palm_lowest.quadYSizeMultiplier = 2.5f;
+		palm_lowest.windAnimation = false;
+		PartlyBillboardModel palm_lowest_2 = new PartlyBillboardModel("models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},3,MIPMAP_TREES);
+		palm_lowest_2.quadXSizeMultiplier = 1.6f;
+		palm_lowest_2.quadYSizeMultiplier = 2.5f;
+		palm_lowest_2.windAnimation = false;
+
+		
+		PartlyBillboardModel coconut_high = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},0,MIPMAP_TREES);
+		coconut_high.quadXSizeMultiplier = 3f;
+		coconut_high.quadYSizeMultiplier = 3f;
+		coconut_high.shadowCaster = true;
+		coconut_high.cullNone = true;
+		PartlyBillboardModel coconut_low = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},1,MIPMAP_TREES);
+		coconut_low.quadXSizeMultiplier = 2f;
+		coconut_low.quadYSizeMultiplier = 2.5f;
+		coconut_low.shadowCaster = true;
+		coconut_low.cullNone = true;
+		PartlyBillboardModel coconut_lowest = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},2,MIPMAP_TREES);
+		coconut_lowest.quadXSizeMultiplier = 1.6f;
+		coconut_lowest.quadYSizeMultiplier = 2.5f;
+		coconut_lowest.windAnimation = false;
+		coconut_lowest.cullNone = true;
+		PartlyBillboardModel coconut_lowest_2 = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},3,MIPMAP_TREES);
+		coconut_lowest_2.quadXSizeMultiplier = 1.6f;
+		coconut_lowest_2.quadYSizeMultiplier = 2.5f;
+		coconut_lowest_2.windAnimation = false;
+		coconut_lowest_2.cullNone = true;
+		
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true; pine.useClodMesh = true;
 		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
@@ -633,8 +674,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_pine = new LODModel(new SimpleModel[]{pine_high,pine_high,pine_lowest,pine_lowest_2},treeLodDist);
 		//LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
 		LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine_high,great_pine_high,great_pine_lowest,great_pine_lowest_2},treeLodDist);
-		LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
-		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{jungletrees_mult},new float[][]{{0f,15f}});
+		//LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
+		LODModel lod_palm = new LODModel(new SimpleModel[]{coconut_high,coconut_high,coconut_lowest,coconut_lowest_2},treeLodDist);
+		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{palm_high,palm_high,palm_lowest,palm_lowest_2},treeLodDist);
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush,bush_low,bush_lowest,bush_lowest_2},treeLodDist);
 		LODModel lod_fern = new LODModel(new SimpleModel[]{fern1},new float[][]{{0f,15f}});
@@ -1055,6 +1097,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
 					sRootNode.setRenderState(skydomeLightState);
+					
 					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				
 				} else 
@@ -1098,7 +1141,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		//cLightState.setGlobalAmbient(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
 		//skydomeLightState.setGlobalAmbient(new ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f));
-		
 	}
 
 	public void renderParallel()
@@ -1239,7 +1281,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
 
-		rootNode.updateRenderState();
+		//rootNode.updateRenderState();
 
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
@@ -1247,7 +1289,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		modelLoader.setLockForSharedNodes(true);
 
     	//sPass.resetShadowQuad(display.getRenderer());
-		
 		System.gc();
 
 	}
@@ -1850,6 +1891,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public CullState cs_back = null;
 	public CullState cs_none = null;
 	
+	public VertexProgramState vp = null;
+	public FragmentProgramState fp = null;
+	
 	@Override
 	protected void simpleInitGame() {
 		//Setup renderpasses
@@ -1857,6 +1901,24 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		rootPass.add(rootNode);
 		pManager.add(rootPass);
 
+		
+		
+        vp = getDisplay().getRenderer().createVertexProgramState();
+        //vp.setParameter(lightPosition, 8); // TODO
+        try {vp.load(new File(
+                "./data/shaders/grassMove.vp").toURI().toURL());} catch (Exception ex){}
+        vp.setEnabled(true);
+        if (!vp.isSupported())
+        {
+        	System.out.println("!!!!!!! NO VP !!!!!!!");
+        }
+        fp = getDisplay().getRenderer().createFragmentProgramState();
+        try {
+			fp.load(new File("./data/shaders/grassMove.fp").toURI().toURL());
+		} catch (Exception ex) {
+		}
+		fp.setEnabled(true);
+		
 		bloomRenderPass = new BloomRenderPass(cam, 4);
 		
 		cs_back = display.getRenderer().createCullState();
@@ -1866,9 +1928,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cs_none.setCullMode(CullState.CS_NONE);
 
 		rootNode.setRenderState(cs_back);
+		//rootNode.clearRenderState(RenderState.RS_DITHER);
+		//rootNode.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
+		//rootNode.clearRenderState(RenderState.RS_MATERIAL);
+		//rootNode.clearRenderState(RenderState.RS_TEXTURE);
+		
+		//rootNode.setRenderState(vp);
+		//rootNode.setRenderState(fp);
 		
 
-		//DisplaySystem.getDisplaySystem().getRenderer().getQueue().setTwoPassTransparency(false);
+		DisplaySystem.getDisplaySystem().getRenderer().getQueue().setTwoPassTransparency(false);
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 
 		lightState.detachAll();
