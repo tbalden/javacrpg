@@ -39,7 +39,10 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.geometryinstancing.GeometryBatchInstance;
+import com.jme.scene.geometryinstancing.instance.GeometryBatchCreator;
 
 /**
  * Fully billboarded quad vegetation.
@@ -62,6 +65,7 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 
 	public void addVegetationObject(Spatial target, Vector3f translation, Vector3f scale, Quaternion rotation) {
 		if ((target.getType() & SceneElement.NODE) != 0) {
+			
 			SharedNode node = new SharedNode("SharedNode", (Node) target);
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);

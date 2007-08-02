@@ -49,6 +49,7 @@ import com.jme.image.Image;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
@@ -617,6 +618,8 @@ public class ModelLoader {
 					Node r =  new SharedNode("node"+counter++,node);
 		    		r.setModelBound(new BoundingBox());
 		            r.updateModelBound();
+		            //r.setRenderState(core.vp);
+		            //r.setRenderState(core.fp);
 		            return r;
 				} catch(Exception err)  {
 				    System.out.println("Error loading model:"+err);
@@ -721,6 +724,10 @@ public class ModelLoader {
 				Node r =  new SharedNode("node"+counter++,node);
 	    		r.setModelBound(new BoundingBox());
 	            r.updateModelBound();
+	            //r.setRenderState(core.vp);
+	            //r.setRenderState(core.fp);
+	            //r.lock();
+	            //r.setRenderQueueMode(Renderer.QUEUE_SKIP);
 	            return r;
 			} catch(Exception err)  {
 			    System.out.println("Error loading model:"+err);

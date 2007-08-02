@@ -22,6 +22,7 @@
 
 package org.jcrpg.threed;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
@@ -42,9 +43,11 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 
 public class VegetationSetup {
@@ -70,10 +73,10 @@ public class VegetationSetup {
 	
 	public static Node createVegetation(RenderedCube c, J3DCore core, Camera cam, TextureState[] ts, TextureStateVegetationModel tm) {
 		
-        /*VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
+        VertexProgramState vp = core.getDisplay().getRenderer().createVertexProgramState();
         //vp.setParameter(lightPosition, 8); // TODO
         try {vp.load(new File(
-                "./data/shaders/grassMove.vp").toURL());} catch (Exception ex){}
+                "./data/shaders/grassMove.vp").toURI().toURL());} catch (Exception ex){}
         vp.setEnabled(true);
         if (!vp.isSupported())
         {
@@ -81,10 +84,10 @@ public class VegetationSetup {
         }
         FragmentProgramState fp = core.getDisplay().getRenderer().createFragmentProgramState();
         try {
-			fp.load(new File("./data/shaders/grassMove.fp").toURL());
+			fp.load(new File("./data/shaders/grassMove.fp").toURI().toURL());
 		} catch (Exception ex) {
 		}
-		fp.setEnabled(true);*/
+		fp.setEnabled(true);
         
  
 		
@@ -135,8 +138,8 @@ public class VegetationSetup {
 					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
 					quad.setRenderState(ms);
 
-					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
-					//quad.setRenderState(fp);
+					quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
+					quad.setRenderState(fp);
 					
 					n.attachChild(quad);
 					J3DCore.hsSolidColorQuads.put(quad,quad);
