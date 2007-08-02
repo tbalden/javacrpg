@@ -418,7 +418,7 @@ public class ModelLoader {
 	    	
 			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+textureNames[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
-			qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
 			qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
 			if (J3DCore.MIPMAP_GLOBAL)
 			{	
