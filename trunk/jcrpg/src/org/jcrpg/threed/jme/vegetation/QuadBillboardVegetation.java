@@ -132,6 +132,12 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 		}
 		diffs = newDiffs;
 
+		// billboard world rotation calc
+		Vector3f look = cam.getDirection().negate();
+		Vector3f left1 = cam.getLeft().negate();
+		Quaternion orient = new Quaternion();
+		orient.fromAxes(left1, cam.getUp(), look);
+
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
@@ -139,13 +145,6 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 				whichDiff = i % 5;
 
 			child = children.get(i);
-
-			// billboard world rotation calc
-			Vector3f look = cam.getDirection().negate();
-			// coopt loc for our left direction:
-			Vector3f left1 = cam.getLeft().negate();
-			Quaternion orient = new Quaternion();
-			orient.fromAxes(left1, cam.getUp(), look);
 
 			if (child != null) {
 				float distSquared = tmpVec.set(cam.getLocation()).subtractLocal(child.getWorldTranslation())
