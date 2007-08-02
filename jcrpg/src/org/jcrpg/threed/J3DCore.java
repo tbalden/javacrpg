@@ -1926,6 +1926,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		sRootNode.setRenderState(as);
 		skySphere.setRenderState(as);
+		
 
 		
 		if (texture!=null) {
