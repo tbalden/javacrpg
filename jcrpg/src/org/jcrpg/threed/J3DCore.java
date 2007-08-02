@@ -611,9 +611,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel great_pine = new SimpleModel("models/tree/great_pine.3ds",null,MIPMAP_TREES);
 		great_pine.shadowCaster = true; great_pine.useClodMesh = true;
 		SimpleModel palm = new SimpleModel("models/tree/coconut.3ds",null,MIPMAP_TREES);
-		palm.shadowCaster = true; palm.useClodMesh = true;
+		palm.shadowCaster = true; palm.useClodMesh = true; palm.cullNone = true;
 		SimpleModel jungletrees_mult = new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES);
-		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true;
+		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true; jungletrees_mult.cullNone = true;
 		SimpleModel cactus = new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES);
 		cactus.shadowCaster = true; cactus.useClodMesh = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
@@ -1847,7 +1847,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public ShadowedRenderPass sPass = new ShadowedRenderPass();
 	private BloomRenderPass bloomRenderPass;
 	
-     
+	public CullState cs_back = null;
+	public CullState cs_none = null;
+	
 	@Override
 	protected void simpleInitGame() {
 		//Setup renderpasses
@@ -1857,11 +1859,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		bloomRenderPass = new BloomRenderPass(cam, 4);
 		
-		CullState cs_back = display.getRenderer().createCullState();
+		cs_back = display.getRenderer().createCullState();
 		cs_back.setCullMode(CullState.CS_BACK);
 		cs_back.setEnabled(true);
-		CullState cs_front = display.getRenderer().createCullState();
-		cs_front.setCullMode(CullState.CS_FRONT);
+		cs_none = display.getRenderer().createCullState();
+		cs_none.setCullMode(CullState.CS_NONE);
 
 		rootNode.setRenderState(cs_back);
 		
@@ -1875,7 +1877,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		//cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 510);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 510);
 		rootNode.attachChild(noBloomCParentRootNode);
 		noBloomCParentRootNode.attachChild(cRootNode);
 		rootNode.attachChild(cRootNode);
@@ -1954,7 +1956,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere = new Sphere("SKY_SPHERE",10,10,500f);
 		sRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere());
-		skySphere.setRenderState(cs_front);
+		skySphere.setRenderState(cs_none);
 		skySphere.updateModelBound();
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
