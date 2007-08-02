@@ -603,6 +603,11 @@ public class ModelLoader {
 						as.setTestEnabled(true);
 						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 					}
+				    if (o.cullNone)
+				    {
+				    	node.setRenderState(core.cs_none);
+				    	
+				    }
 					
 					//spatial.setRenderState(as);
 					
@@ -664,6 +669,11 @@ public class ModelLoader {
 				    	}
 				    }
 				    node = node2;
+			    }
+			    if (o.cullNone)
+			    {
+			    	node.setRenderState(core.cs_none);
+			    	
 			    }
 
 				if (o.textureName!=null)

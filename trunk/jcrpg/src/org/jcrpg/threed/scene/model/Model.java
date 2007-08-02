@@ -39,4 +39,6 @@ public abstract class Model {
 	 * Tells if loader should load it into a ClodMesh.
 	 */
 	public boolean useClodMesh = false;
+	
+	public boolean cullNone = false;
 }
