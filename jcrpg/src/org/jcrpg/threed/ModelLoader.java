@@ -288,6 +288,7 @@ public class ModelLoader {
             }
         } else if (sp instanceof Geometry) {
             Geometry g = (Geometry) sp;
+            //g.clearRenderState(RenderState.RS_TEXTURE);
             TextureState ts1 = (TextureState)g.getRenderState(RenderState.RS_TEXTURE);
             
             if (ts1!=null) {
