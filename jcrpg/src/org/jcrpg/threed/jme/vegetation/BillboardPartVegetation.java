@@ -360,6 +360,11 @@ public class BillboardPartVegetation extends Node {
 		}
 		diffs = newDiffs;
 
+		Vector3f look = cam.getDirection().negate();
+		Vector3f left1 = cam.getLeft().negate();
+		Quaternion orient = new Quaternion();
+		orient.fromAxes(left1, cam.getUp(), look);
+
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
@@ -369,13 +374,6 @@ public class BillboardPartVegetation extends Node {
 			child = children.get(i);
 
 			// billboard world rotation calc
-			Vector3f look = cam.getDirection().negate();
-			// coopt loc for our left direction:
-			Vector3f left1 = cam.getLeft().negate();
-			Quaternion orient = new Quaternion();
-			orient.fromAxes(left1, cam.getUp(), look);
-			Matrix3f orient1 = new Matrix3f();
-			orient1.fromAxes(left1, cam.getUp(), look);
 
 			if (child != null) {
 				float distSquared = tmpVec.set(cam.getLocation()).subtractLocal(child.getWorldTranslation())

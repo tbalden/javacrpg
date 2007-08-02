@@ -1061,7 +1061,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// SKYSPHERE
 		// moving skysphere with camera
 		Vector3f sV3f = new Vector3f(cam.getLocation());
-		sV3f.y-=4000;
+		sV3f.y-=100;
 		skySphere.setLocalTranslation(sV3f);
 		// Animating skySphere rotated...
 		Quaternion qSky = new Quaternion();
@@ -1841,7 +1841,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 18000);
+		//cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 510);
 		rootNode.attachChild(noBloomCParentRootNode);
 		noBloomCParentRootNode.attachChild(cRootNode);
 		rootNode.attachChild(cRootNode);
@@ -1917,9 +1917,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",20,20,5700f);
+		skySphere = new Sphere("SKY_SPHERE",10,10,500f);
 		sRootNode.attachChild(skySphere);
-		skySphere.setModelBound(new BoundingSphere(3000f,new Vector3f(0,0,0)));
+		skySphere.setModelBound(new BoundingSphere());
+		skySphere.updateModelBound();
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
 		
