@@ -115,7 +115,7 @@ public class VegetationSetup {
 					Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
 					//quad.setLightCombineMode(LightState.INHERIT);
 					quad.setModelBound(new BoundingBox());
-					quad.setDefaultColor(ColorRGBA.green);
+					//quad.setDefaultColor(ColorRGBA.green);
 					quad.updateModelBound();
 					
 					Texture t1 = ts[i].getTexture();
@@ -125,7 +125,7 @@ public class VegetationSetup {
 					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
 					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
 					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineScaleRGB(1.0f);				
+					t1.setCombineScaleRGB(1.0f);
 					quad.setRenderState(ts[i]);
 					quad.setRenderState(as);
 					quad.setLightCombineMode(LightState.OFF);
@@ -133,7 +133,7 @@ public class VegetationSetup {
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
 					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
-					//quad.setRenderState(ms);
+					quad.setRenderState(ms);
 
 					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 					//quad.setRenderState(fp);
@@ -197,7 +197,7 @@ public class VegetationSetup {
 				rotation.fromAxes(normalX, normalY, normalZ);
 				//if (steepDirection==SurfaceHeightAndType.NOT_STEEP)
 				{
-					rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+				//	rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
 				}
 				/*if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
