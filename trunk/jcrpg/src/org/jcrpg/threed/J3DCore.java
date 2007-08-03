@@ -1156,6 +1156,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		new Thread(this).start();
 	}
 	
+	
+	public HashSet<Node> possibleOccluders = new HashSet<Node>();
+	
 	/**
 	 * Removes node and all subnodes from shadowrenderpass. Use it when removing node from scenario!
 	 * @param s Node.
@@ -1274,6 +1277,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		if (sPass!=null) {
 	    			// remove from shadowrenderpass
 	    			removeOccludersRecoursive(n);
+	    			possibleOccluders.remove(n);
 	    		}
 	    		
 	    	}
@@ -1283,6 +1287,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    
 
 		updateTimeRelated();
+		
+		for (Node psn:possibleOccluders)
+		{
+			float dist = psn.getWorldTranslation().distanceSquared(cam.getLocation());
+			if (dist<J3DCore.RENDER_SHADOW_DISTANCE_SQR)
+			{
+				sPass.addOccluder(psn);
+			} else
+			{
+				sPass.removeOccluder(psn);
+			}
+		}
 		
 		
 
