@@ -228,7 +228,7 @@ public class BillboardPartVegetation extends Node {
 													float xSizeM = xSize*model.quadXSizeMultiplier;
 													float ySizeM = ySize*model.quadYSizeMultiplier;
 													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
-													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSize,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
+													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
 													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
 													SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
 													
@@ -254,7 +254,7 @@ public class BillboardPartVegetation extends Node {
 												float z = sumZ/counter;
 												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
 												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadXSizeMultiplier;
-												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
+												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
 												added.add(quad);
 											}
 										}

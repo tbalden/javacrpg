@@ -103,7 +103,6 @@ public class SimpleSun extends Orbiter{
 		
 		if (dayNightPer<10)
 		{
-			System.out.println("DN PER: "+dayNightPer);
 			r*= 0.9  + (0.2f * ((1/10f) * (10-dayNightPer)));
 			g*= 0.9f - (0.4f * ((1/10f) * (10-dayNightPer)));
 			b*= 0.8f - (0.4f * ((1/10f) * (10-dayNightPer)));
