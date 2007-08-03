@@ -1,3 +1,5 @@
+[ ] reinvent renderArea, magnifications?? need distant view too
+
 [ ] optimize j3dcore render/renderside (based on profile.txt) to make 
 	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
 
@@ -33,6 +35,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] Shadow occluder number too much -> hashSet, get distance on every render/ remove add them
 [X] update LWJGL/JME from repository
 [X] BillboardPartModel with more quads for Lowest detail, math for more quads, 
 	add LOD level 3 for single quad
