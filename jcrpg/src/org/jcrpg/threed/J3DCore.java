@@ -1379,12 +1379,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				n[i].lockBranch();
 			}
 			cRootNode.attachChild(n[i]);
+			
 			//sideNode.attachChild(n[i]);
 		}
+		/*
 		//sideNode.setModelBound(new BoundingBox());
 		//sideNode.updateModelBound();
-		//cube.hsRenderedNodes.add(sideNode);
-		//cRootNode.attachChild(sideNode);
+		sideNode.lockTransforms();
+		sideNode.lockBounds();
+		sideNode.lockBranch();
+		cube.hsRenderedNodes.add(sideNode);
+		cRootNode.attachChild(sideNode);*/
 	}
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
