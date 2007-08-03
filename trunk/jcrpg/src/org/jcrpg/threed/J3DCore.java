@@ -934,6 +934,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				state.setEnabled(true);
 	            
 				moon.setRenderState(state);
+				moon.setRenderState(getDisplay().getRenderer().createFogState());
 			}
 			moon.updateRenderState();
 
