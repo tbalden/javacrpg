@@ -1970,7 +1970,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		as.setReference(0.5f);
+		if (!BLOOM_EFFECT) as.setReference(0.65f);
+			else as.setReference(0.5f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
