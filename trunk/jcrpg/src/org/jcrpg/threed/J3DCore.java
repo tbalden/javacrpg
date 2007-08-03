@@ -1064,7 +1064,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// newly appearing, attach to root
 					cRootNode.attachChild(s);
-					cRootNode.updateRenderState();
+					cRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				//s.updateRenderState();
@@ -1146,7 +1146,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
 
-		sRootNode.updateRenderState();
+		sRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
 		
 		
 	}
@@ -1282,13 +1282,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	    
 
-	    cRootNode.updateRenderState();
-		rootNode.updateModelBound();
 		updateTimeRelated();
 
+		cRootNode.updateRenderState();
+		//rootNode.updateModelBound();
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
-		//rootNode.updateRenderState();
 
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
@@ -1327,7 +1326,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Quaternion hQ = null;
 		if (horizontalRotation!=-1) hQ = horizontalRotations.get(new Integer(horizontalRotation));
 		
-		Node sideNode = new Node();
+		//Node sideNode = new Node();
 	
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
@@ -1369,8 +1368,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			
 			n[i].setLocalRotation(qC);
-			
-			//n[i].updateRenderState();
 
 			cube.hsRenderedNodes.add(n[i]);
 			
@@ -1855,10 +1852,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public void updateDisplay(Vector3f from)
 	{
-		//rootNode.updateModelBound();
-		//rootNode.updateRenderState();
-		//sRootNode.updateModelBound();
-		//cRootNode.updateRenderState();
 
 		noInput = true;
         // update game state, do not use interpolation parameter
