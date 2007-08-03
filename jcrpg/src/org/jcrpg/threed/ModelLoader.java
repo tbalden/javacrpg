@@ -140,7 +140,7 @@ public class ModelLoader {
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				// adding to drawer
-				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),15f,(PartlyBillboardModel)objects[i]);
+				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)objects[i]);
 				bbNode.attachChild(node);
 				if (core.sPass!=null && objects[i].shadowCaster)
 				{
@@ -360,16 +360,23 @@ public class ModelLoader {
     	tempBinaryKeys.clear();
     }
     
+    private boolean lockedShared = false;
     public void setLockForSharedNodes(boolean lockState)
     {
-    	//for (Node n: sharedNodeCache.values())
+    	for (Node n: sharedNodeCache.values())
     	{
-    		if (lockState)
+    		if (lockState && !lockedShared)
     		{
-    			//n.lock();
+    			n.lockMeshes();
+    			n.lockBounds();
+    			n.lockBranch();
+    			lockedShared = true;
     		} else
     		{
-    			//n.unlock();
+    			//lockedShared = false;
+    			//n.unlockMeshes();
+    			//n.lockBounds();
+    			//n.lockBranch();
     		}
     	}
     }
@@ -727,7 +734,7 @@ public class ModelLoader {
 
 				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
-				node.updateModelBound();
+				node.updateModelBound();				
 				Node r =  new SharedNode("node"+counter++,node);
 	    		r.setModelBound(new BoundingBox());
 	            r.updateModelBound();

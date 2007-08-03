@@ -1283,6 +1283,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    
 
 		updateTimeRelated();
+		
+		
 
 		cRootNode.updateRenderState();
 		//rootNode.updateModelBound();
@@ -1372,7 +1374,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			cube.hsRenderedNodes.add(n[i]);
 			
 			if (n[i] instanceof SharedNode) {
-				if (n[i].getLocks()==0) n[i].lockMeshes();
+				n[i].lockTransforms();
+				n[i].lockBounds();
+				n[i].lockBranch();
 			}
 			cRootNode.attachChild(n[i]);
 			//sideNode.attachChild(n[i]);
