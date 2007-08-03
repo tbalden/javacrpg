@@ -1288,7 +1288,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
-
 		//rootNode.updateRenderState();
 
 		// stop to collect and clean the nodes/binaries which this render will not use now
@@ -1296,11 +1295,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		modelLoader.setLockForSharedNodes(true);
 
-    	//sPass.resetShadowQuad(display.getRenderer());
-		
-		System.gc();
+		// every 15 steps do a garbage collection
+		garbCollCounter++;
+		if (garbCollCounter==15) {
+			System.gc();
+		}
 
 	}
+	int garbCollCounter = 0;
 
 	/**
 	 * Renders a set of node into 3d space, rotating, positioning them.

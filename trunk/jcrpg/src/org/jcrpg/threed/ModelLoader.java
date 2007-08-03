@@ -130,7 +130,7 @@ public class ModelLoader {
 			} else
 			// Quad models
 			if (objects[i] instanceof QuadModel) {
-				Node node = loadQuadModel((QuadModel)objects[i],fakeLoadForCacheMaint);
+				Node node = loadQuadModel((QuadModel)objects[i],fakeLoadForCacheMaint);				
 				if (fakeLoadForCacheMaint) continue;
 				r[i] = node;
 

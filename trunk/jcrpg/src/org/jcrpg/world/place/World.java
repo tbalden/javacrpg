@@ -108,6 +108,10 @@ public class World extends Place {
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
 		Time localTime = engine.getWorldMeanTime().getLocalTime(this, worldX, worldY, worldZ);
+		return getCube(localTime,worldX,worldY,worldZ);
+	}
+	
+	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
 		if (WORLD_IS_GLOBE) {
 			
 			worldX = worldX%(sizeX*magnification);

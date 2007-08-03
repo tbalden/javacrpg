@@ -70,16 +70,16 @@ public class RenderedArea {
 		worldCubeCacheNext.clear();
 		worldCubeCacheNext = new WeakHashMap<String, RenderedCube>();			
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
-		for (int z1=Math.round(zMinusMult*Math.min(distance,8)); z1<=zPlusMult*Math.min(distance,8); z1++)
+		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
-			for (int y1=-1*(distance); y1<=1*(distance); y1++)
+			for (int y1=-1*Math.min(distance,8); y1<=1*Math.min(distance,8); y1++)
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
 					String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
 					RenderedCube c = worldCubeCache.get(key);
 					if (c==null) {
-						Cube cube = world.getCube(x+x1, y+y1, z-z1);
+						Cube cube = world.getCube(world.engine.getWorldMeanTime(),x+x1, y+y1, z-z1);
 						if (cube!=null)
 						{
 							c = new RenderedCube(cube,x1,y1,z1);
