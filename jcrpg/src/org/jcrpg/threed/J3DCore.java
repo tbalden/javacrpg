@@ -499,7 +499,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		if (J3DCore.SHADOWS) stencilBits = 8;
 		alphaBits = 0;
-		//depthBits = 4;
+		//depthBits = 8;
 		samples = ANTIALIAS_SAMPLES;
 		
 		// area subtype to 3d type mapping
@@ -1975,7 +1975,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setBlendEnabled(true);
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		if (!BLOOM_EFFECT) as.setReference(0.65f);
+		if (!BLOOM_EFFECT) {
+			if (TEXTURE_QUAL_HIGH)
+				as.setReference(0.7f);
+			else
+				as.setReference(0.65f);
+		}
 			else as.setReference(0.5f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
