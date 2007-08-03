@@ -919,7 +919,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
 			TriMesh moon = new Sphere(o.id,40,40,15f);
 			
-			Texture texture = TextureManager.loadTexture("./data/orbiters/moon.jpg",Texture.MM_LINEAR,
+			Texture texture = TextureManager.loadTexture("./data/orbiters/moon2.jpg",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
 			
 			if (texture!=null) {
@@ -1063,6 +1063,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// newly appearing, attach to root
 					cRootNode.attachChild(s);
+					cRootNode.updateRenderState();
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				//s.updateRenderState();

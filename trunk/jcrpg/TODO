@@ -1,4 +1,5 @@
-[ ] update LWJGL/JME from repository
+[ ] optimize j3dcore render/renderside (based on profile.txt) to make 
+	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
 
 [ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
@@ -32,6 +33,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] update LWJGL/JME from repository
 [X] BillboardPartModel with more quads for Lowest detail, math for more quads, 
 	add LOD level 3 for single quad
 [-] nicer low detail textures for acacia png -> replaced with original texture
