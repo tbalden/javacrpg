@@ -1139,10 +1139,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
 
-		rootNode.updateRenderState();
+		sRootNode.updateRenderState();
 		
-		//cLightState.setGlobalAmbient(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
-		//skydomeLightState.setGlobalAmbient(new ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f));
 		
 	}
 
