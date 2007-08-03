@@ -145,7 +145,7 @@ public class ModelLoader {
 				if (core.sPass!=null && objects[i].shadowCaster)
 				{
 					if (node!=null) {
-						core.sPass.addOccluder(node);
+						core.possibleOccluders.add(node);
 					}
 				}
 				node = bbNode;
@@ -162,7 +162,7 @@ public class ModelLoader {
 				if (core.sPass!=null && objects[i].shadowCaster)
 				{
 					if (node!=null) {
-						core.sPass.addOccluder(node);
+						core.possibleOccluders.add(node);
 					}
 				}
 			} else
@@ -206,7 +206,7 @@ public class ModelLoader {
 						if (core.sPass!=null && m.shadowCaster)
 						{
 							if (node!=null) {
-								core.sPass.addOccluder(node);
+								core.possibleOccluders.add(node);
 							}
 						}
 						node = bbNode;
@@ -220,7 +220,7 @@ public class ModelLoader {
 						if (core.sPass!=null && m.shadowCaster)
 						{
 							if (node!=null) {
-								core.sPass.addOccluder(node);
+								core.possibleOccluders.add(node);
 							}
 						}
 					}
@@ -267,10 +267,6 @@ public class ModelLoader {
 			{
 				r[i].setUserData("rotateOnSteep", r[i]);
 			}
-			//if (objects[i].shadowCaster)
-			//{
-				//core.sPass.addOccluder(r[i]);
-			//}
 		}
 		return r;
     }
