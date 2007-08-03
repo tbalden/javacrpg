@@ -1029,7 +1029,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void updateTimeRelated()
 	{
-		//if (true==true) return;
+		if (true==false) {
+			cRootNode.clearRenderState(RenderState.RS_LIGHT);
+			skydomeLightState.detachAll();
+			cLightState.detachAll();
+			return;
+		}
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ);
 		/*
@@ -1939,10 +1944,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cs_none.setCullMode(CullState.CS_NONE);
 
 		rootNode.setRenderState(cs_back);
-		//rootNode.clearRenderState(RenderState.RS_DITHER);
-		//rootNode.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
-		//rootNode.clearRenderState(RenderState.RS_MATERIAL);
-		//rootNode.clearRenderState(RenderState.RS_TEXTURE);
+		rootNode.clearRenderState(RenderState.RS_DITHER);
+		rootNode.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
+		rootNode.clearRenderState(RenderState.RS_MATERIAL);
+		rootNode.clearRenderState(RenderState.RS_TEXTURE);
+		rootNode.clearRenderState(RenderState.RS_SHADE);
+		rootNode.clearRenderState(RenderState.RS_STENCIL);
 		
 		//rootNode.setRenderState(vp);
 		//rootNode.setRenderState(fp);

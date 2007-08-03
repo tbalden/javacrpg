@@ -291,6 +291,13 @@ public class ModelLoader {
             Geometry g = (Geometry) sp;
             //g.clearRenderState(RenderState.RS_TEXTURE);
             TextureState ts1 = (TextureState)g.getRenderState(RenderState.RS_TEXTURE);
+            //g.clearRenderState(RenderState.RS_MATERIAL);
+            g.clearRenderState(RenderState.RS_DITHER);
+            g.clearRenderState(RenderState.RS_SHADE);
+            g.clearRenderState(RenderState.RS_STENCIL);
+            g.clearRenderState(RenderState.RS_ATTRIBUTE);
+            g.clearRenderState(RenderState.RS_CLIP);
+            g.clearRenderState(RenderState.RS_ZBUFFER);
             
             if (ts1!=null) {
                 ts1.setCorrection(TextureState.CM_PERSPECTIVE);
