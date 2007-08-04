@@ -4,6 +4,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.KeyInputAction;
+import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -196,8 +197,11 @@ public abstract class CKeyAction extends KeyInputAction{
 
     }
     
-    
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach)
+	{
+		movePosition(steps, from, toReach,false);
+	}
+	protected void movePosition(float steps, Vector3f from, Vector3f toReach,boolean sinusoid)
 	{
 		float skipStep = 0f;
 		for (float i=0; i<=steps; i++)
@@ -211,6 +215,8 @@ public abstract class CKeyAction extends KeyInputAction{
     		x += (1/steps) * (steps-i) * from.x;
     		y += (1/steps) * (steps-i) * from.y;
     		z += (1/steps) * (steps-i) * from.z;
+    		
+    		y+=FastMath.sin((FastMath.PI/steps)*i)/10;
     		
     		camera.setLocation(new Vector3f(x,y,z));
     		

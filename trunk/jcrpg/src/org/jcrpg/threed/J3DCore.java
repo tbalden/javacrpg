@@ -80,9 +80,7 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
-import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
-import com.jme.bounding.BoundingVolume;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
@@ -110,7 +108,6 @@ import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
-import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
@@ -131,6 +128,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
     public static int RENDER_DISTANCE = 10;
+    public static int VIEW_DISTANCE = 10;
+    public static int VIEW_DISTANCE_SQR = 100;
     public static int RENDER_GRASS_DISTANCE = 10;
     public static int RENDER_SHADOW_DISTANCE = 10;
     public static int RENDER_SHADOW_DISTANCE_SQR = 100;
@@ -138,12 +137,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 12;
-	public static long TIME_TO_ENSURE = 11; 
+	public static final int MOVE_STEPS = 11;
+	public static long TIME_TO_ENSURE = 16; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
-    public static boolean OPTIMIZED_RENDERING = true;
+    public static boolean OPTIMIZED_RENDERING = false;
     
     public static boolean MIPMAP_TREES = false;
     
@@ -177,6 +176,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("RENDER_DISTANCE", "10");
+	    		}
+	    	}
+	    	String viewDistance = p.getProperty("VIEW_DISTANCE");
+	    	if (viewDistance!=null)
+	    	{
+	    		try {
+	    			VIEW_DISTANCE = Integer.parseInt(viewDistance);
+	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
+	    			if (VIEW_DISTANCE<5) VIEW_DISTANCE = 5;
+	    			VIEW_DISTANCE_SQR = VIEW_DISTANCE*VIEW_DISTANCE;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("VIEW_DISTANCE", "10");
 	    		}
 	    	}
 	    	String renderGrassDistance = p.getProperty("RENDER_GRASS_DISTANCE");
@@ -537,7 +549,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(15));//new Integer(24)); TODO quad model
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
-		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(29));
+		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 
 		
 
@@ -682,7 +694,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel jungletrees_mult = new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES);
 		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true; jungletrees_mult.cullNone = true;
 		SimpleModel cactus = new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES);
-		cactus.shadowCaster = true; cactus.useClodMesh = true;
+		cactus.shadowCaster = true; cactus.useClodMesh = false; cactus.cullNone = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
 		bush1.shadowCaster = true; bush1.useClodMesh = true;
 		SimpleModel fern1 = new SimpleModel("models/bush/fern.3ds",null,MIPMAP_TREES);
@@ -820,7 +832,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
-		hm3dTypeRenderedSide.put(new Integer(29), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
 		
 		
 		QuadModel qm_water = new QuadModel("water1.jpg"); qm_jungle.rotateOnSteep = true;
@@ -1046,7 +1058,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
 	Node noBloomCParentRootNode = new Node(); 
-	Node cRootNode = new Node(); 
+	Node cRootNode; 
 	/** skyroot */
 	Node sRootNode = new Node(); 
 	Sphere skySphere = null;
@@ -1184,6 +1196,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	
 	public HashSet<Node> possibleOccluders = new HashSet<Node>();
+	public HashMap<String, HashSet<Node>> loadedNodes = new HashMap<String,HashSet<Node>>();
 	
 	/**
 	 * Removes node and all subnodes from shadowrenderpass. Use it when removing node from scenario!
@@ -1203,11 +1216,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
+	public int lastRenderX,lastRenderY,lastRenderZ;
+	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	public void render()
 	{
+		lastRenderX = viewPositionX;
+		lastRenderY = viewPositionY;
+		lastRenderZ = viewPositionZ;
+		
 		System.out.println("OCCS"+sPass.occludersSize());
 		modelLoader.setLockForSharedNodes(false);
 
@@ -1360,6 +1379,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
+		int s = (x << 16) + (y << 8) + z;
+		String coordKey = ""+s;
 		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
@@ -1415,12 +1436,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 			cube.hsRenderedNodes.add(n[i]);
 			
-			if (n[i] instanceof SharedNode) {
-				n[i].lockTransforms();
-				n[i].lockBounds();
-				n[i].lockBranch();
+			
+			/*HashSet<Node> hsNode = loadedNodes.get(coordKey);
+			if (hsNode == null)
+			{
+				hsNode = new HashSet<Node>();
+				loadedNodes.put(coordKey, hsNode);
 			}
-			cRootNode.attachChild(n[i]);
+			hsNode.add(n[i]);*/
+			//cRootNode.attachChild(n[i]);
 			
 			//sideNode.attachChild(n[i]);
 		}
@@ -1433,6 +1457,80 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cube.hsRenderedNodes.add(sideNode);
 		cRootNode.attachChild(sideNode);*/
 	}
+	
+	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
+	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
+	
+	public void renderToViewPort()
+	{
+		//modelLoader.setLockForSharedNodes(false);
+		
+		Vector3f lastLoc = new Vector3f(lastRenderX,lastRenderY,lastRenderZ);
+		Vector3f currLoc = new Vector3f(viewPositionX,viewPositionY,viewPositionZ);
+		System.out.println("LASTLOC DISTSQR = "+lastLoc.distanceSquared(currLoc));
+		System.out.println(" DISTSQR = "+(RENDER_DISTANCE*RENDER_DISTANCE-VIEW_DISTANCE_SQR/(CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)));
+		System.out.println(" DISTSQR = "+(RENDER_DISTANCE*RENDER_DISTANCE)+"  - "+(VIEW_DISTANCE_SQR/(CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)));
+		if (lastLoc.distanceSquared(currLoc) > RENDER_DISTANCE*RENDER_DISTANCE-VIEW_DISTANCE_SQR/(CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)*2)
+		{
+			render();
+		}
+		
+		for (RenderedCube c:hmCurrentCubes.values())
+		{
+			if (c.hsRenderedNodes.size()>0)
+			{
+				boolean found = false;
+				for (Node n : c.hsRenderedNodes)
+				{
+					if (n.getLocalTranslation().distanceSquared(cam.getLocation())<VIEW_DISTANCE_SQR)
+					{
+						found = true;
+						break;
+					} else
+					{
+						break;
+					}
+				}
+				if (found )
+				{
+					if (!inViewPort.contains(c)) {
+						inViewPort.add(c);
+						outOfViewPort.remove(c);
+						for (Node n : c.hsRenderedNodes)
+						{
+							cRootNode.attachChild(n);
+							if (n instanceof SharedNode) {
+								n.lockTransforms();
+								n.lockBounds();
+								n.lockBranch();
+							}
+						}
+					}
+				} else
+				{
+					 if (!outOfViewPort.contains(c)) {
+						outOfViewPort.add(c);
+						inViewPort.remove(c);
+						for (Node n : c.hsRenderedNodes)
+						{
+							n.removeFromParent();
+							if (n instanceof SharedNode) {
+								n.unlockTransforms();
+								n.unlockBounds();
+								n.unlockBranch();
+							}
+							//if (n instanceof SharedNode) n.detachAllChildren();
+						}
+					 }
+				}
+			}
+		}
+		cRootNode.updateRenderState();
+		//hmCurrentCubes
+		//modelLoader.setLockForSharedNodes(true);
+		
+	}
+	
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
@@ -1958,6 +2056,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	@Override
 	protected void simpleInitGame() {
+		cRootNode = new Node();
+		//cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rootNode);
@@ -2037,8 +2137,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs.setDensity(0.5f);
         fs.setEnabled(true);
         fs.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-        fs.setEnd(RENDER_DISTANCE*2.3f);
-        fs.setStart(RENDER_DISTANCE - (RENDER_DISTANCE/3));
+        fs.setEnd((VIEW_DISTANCE)*2.3f);
+        fs.setStart((VIEW_DISTANCE) - ((VIEW_DISTANCE)/3));
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
         cRootNode.setRenderState(fs);
@@ -2129,6 +2229,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		render(); // couldn't find out why render have to be called twice...
 		render();
+		renderToViewPort();
 		engine.setPause(false);
 	}
 	

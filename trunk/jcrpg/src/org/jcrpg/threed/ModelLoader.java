@@ -470,8 +470,8 @@ public class ModelLoader {
 		Node node = sharedNodeCache.get(m.textureName+m.dot3TextureName);
 		if (node!=null) {
 			Node r =  new SharedNode("node"+counter++,node);
-			r.setModelBound(new BoundingBox());
-	        r.updateModelBound();
+			//r.setModelBound(new BoundingBox());
+	        //r.updateModelBound();
 			return r;
 		}
     	
@@ -494,12 +494,12 @@ public class ModelLoader {
 		
 		node = new Node();
 		node.attachChild(quad);
-		node.setModelBound(new BoundingBox());
-		node.updateModelBound();
+		//node.setModelBound(new BoundingBox());
+		//node.updateModelBound();
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, node);
 		Node r =  new SharedNode("node"+counter++,node);
-		r.setModelBound(new BoundingBox());
-        r.updateModelBound();
+		//r.setModelBound(new BoundingBox());
+        //r.updateModelBound();
 		return r;
     	
      	
@@ -626,8 +626,8 @@ public class ModelLoader {
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
 					Node r =  new SharedNode("node"+counter++,node);
-		    		r.setModelBound(new BoundingBox());
-		            r.updateModelBound();
+		    		//r.setModelBound(new BoundingBox());
+		            //r.updateModelBound();
 		            //r.setRenderState(core.vp);
 		            //r.setRenderState(core.fp);
 		            return r;
@@ -732,8 +732,8 @@ public class ModelLoader {
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();				
 				Node r =  new SharedNode("node"+counter++,node);
-	    		r.setModelBound(new BoundingBox());
-	            r.updateModelBound();
+	    		//r.setModelBound(new BoundingBox());
+	            //r.updateModelBound();
 	            //r.setRenderState(core.vp);
 	            //r.setRenderState(core.fp);
 	            //r.lock();

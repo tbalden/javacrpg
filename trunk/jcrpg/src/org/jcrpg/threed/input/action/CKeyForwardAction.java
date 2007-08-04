@@ -32,7 +32,7 @@ public class CKeyForwardAction extends CKeyAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveForward(handler.core.viewDirection)) {
-        	handler.core.render();
+        	handler.core.renderToViewPort();
             Vector3f toReach = handler.core.getCurrentLocation();        
             float steps = J3DCore.MOVE_STEPS;
             movePosition(steps, from, toReach);
