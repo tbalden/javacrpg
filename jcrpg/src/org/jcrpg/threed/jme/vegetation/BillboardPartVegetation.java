@@ -253,7 +253,7 @@ public class BillboardPartVegetation extends Node {
 												float y = sumY/counter;
 												float z = sumZ/counter;
 												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
-												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadXSizeMultiplier;
+												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadYSizeMultiplier;
 												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
 												added.add(quad);
 											}

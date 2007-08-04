@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
+import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
@@ -50,7 +51,7 @@ public class BaseFloraGenerator extends FloraGenerator{
 	{
 		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),20), new FloraListElement(new CherryTree(),50),new FloraListElement(new GreenPineTree(),50),new FloraListElement(new Acacia(),100),new FloraListElement(new GreenBush(),220)});
 		//addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),20), new FloraListElement(new CherryTree(),10),new FloraListElement(new GreenPineTree(),10),new FloraListElement(new Acacia(),50),new FloraListElement(new GreenBush(),220)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),110),new FloraListElement(new JunglePalmTrees(),130),new FloraListElement(new GreenFern(),420)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),110),new FloraListElement(new JunglePalmTrees(),130),new FloraListElement(new JungleBush(),420),new FloraListElement(new GreenFern(),420)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Snow())});
 		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5),new FloraListElement(new BigCactus(),20),new FloraListElement(new GreenBush(),10)});
 	}
