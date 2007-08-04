@@ -76,7 +76,9 @@ public class RenderedArea {
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
-					String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
+					int s = ((x+x1)<< 16) + ((y+y1) << 8) + (z-z1);
+					String key = ""+s;
+					//String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
 					RenderedCube c = worldCubeCache.get(key);
 					if (c==null) {
 						Cube cube = world.getCube(world.engine.getWorldMeanTime(),x+x1, y+y1, z-z1);
