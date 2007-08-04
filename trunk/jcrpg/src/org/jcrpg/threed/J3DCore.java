@@ -56,6 +56,7 @@ import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
+import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
@@ -536,6 +537,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(15));//new Integer(24)); TODO quad model
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
+		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(29));
 
 		
 
@@ -561,9 +563,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.quadXSizeMultiplier = 3.5f;
+		bush.quadYSizeMultiplier = 3.5f;
 		bush.shadowCaster = true;
 		PartlyBillboardModel bush_low = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		bush_low.quadXSizeMultiplier = 3.5f;
+		bush_low.quadYSizeMultiplier = 3.5f;
 		bush_low.shadowCaster = true;
 		PartlyBillboardModel bush_lowest = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
 		PartlyBillboardModel bush_lowest_2 = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},3,MIPMAP_TREES);
@@ -582,6 +586,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 */
 		PartlyBillboardModel pine_high = new PartlyBillboardModel("models/tree/pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},0,MIPMAP_TREES);
 		pine_high.quadXSizeMultiplier = 3.5f;
+		pine_high.quadYSizeMultiplier = 3.5f;
 		pine_high.shadowCaster = true;
 		PartlyBillboardModel pine_low = new PartlyBillboardModel("models/tree/pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
 		pine_low.quadXSizeMultiplier = 2f;
@@ -598,6 +603,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		PartlyBillboardModel great_pine_high = new PartlyBillboardModel("models/tree/great_pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},0,MIPMAP_TREES);
 		great_pine_high.quadXSizeMultiplier = 2f;
+		great_pine_high.quadYSizeMultiplier = 2f;
 		great_pine_high.shadowCaster = true;
 		PartlyBillboardModel great_pine_low = new PartlyBillboardModel("models/tree/great_pine_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},1,MIPMAP_TREES);
 		great_pine_low.quadXSizeMultiplier = 2f;
@@ -629,26 +635,43 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		palm_lowest_2.windAnimation = false;
 
 		
-		PartlyBillboardModel coconut_high = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel coconut_high = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
 		coconut_high.quadXSizeMultiplier = 3f;
-		coconut_high.quadYSizeMultiplier = 3f;
+		coconut_high.quadYSizeMultiplier = 5f;
 		coconut_high.shadowCaster = true;
 		coconut_high.cullNone = true;
-		PartlyBillboardModel coconut_low = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},1,MIPMAP_TREES);
+		PartlyBillboardModel coconut_low = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},1,MIPMAP_TREES);
 		coconut_low.quadXSizeMultiplier = 2f;
-		coconut_low.quadYSizeMultiplier = 2.5f;
+		coconut_low.quadYSizeMultiplier = 5f;
 		coconut_low.shadowCaster = true;
 		coconut_low.cullNone = true;
-		PartlyBillboardModel coconut_lowest = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel coconut_lowest = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},2,MIPMAP_TREES);
 		coconut_lowest.quadXSizeMultiplier = 1.6f;
-		coconut_lowest.quadYSizeMultiplier = 2.5f;
+		coconut_lowest.quadYSizeMultiplier = 1.5f;
 		coconut_lowest.windAnimation = false;
 		coconut_lowest.cullNone = true;
-		PartlyBillboardModel coconut_lowest_2 = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"fern.png"},3,MIPMAP_TREES);
+		PartlyBillboardModel coconut_lowest_2 = new PartlyBillboardModel("models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},3,MIPMAP_TREES);
 		coconut_lowest_2.quadXSizeMultiplier = 1.6f;
-		coconut_lowest_2.quadYSizeMultiplier = 2.5f;
+		coconut_lowest_2.quadYSizeMultiplier = 1.5f;
 		coconut_lowest_2.windAnimation = false;
 		coconut_lowest_2.cullNone = true;
+
+		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
+		jungle_bush.quadXSizeMultiplier = 3.5f;
+		jungle_bush.quadYSizeMultiplier = 3.5f;
+		jungle_bush.shadowCaster = true;
+		PartlyBillboardModel jungle_bush_low = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},1,MIPMAP_TREES);
+		jungle_bush_low.quadXSizeMultiplier = 3.5f;
+		jungle_bush_low.quadYSizeMultiplier = 3.5f;
+		jungle_bush_low.shadowCaster = true;
+		PartlyBillboardModel jungle_bush_lowest = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel jungle_bush_lowest_2 = new PartlyBillboardModel("models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},3,MIPMAP_TREES);
+		jungle_bush_lowest.quadXSizeMultiplier = 3.5f;
+		jungle_bush_lowest.quadYSizeMultiplier = 3.5f;
+		jungle_bush_lowest.windAnimation = false;
+		jungle_bush_lowest_2.quadXSizeMultiplier = 3.5f;
+		jungle_bush_lowest_2.quadYSizeMultiplier = 3.5f;
+		jungle_bush_lowest_2.windAnimation = false;
 		
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true; pine.useClodMesh = true;
@@ -682,6 +705,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_jungletrees_mult = new LODModel(new SimpleModel[]{palm_high,palm_high,palm_lowest,palm_lowest_2},treeLodDist);
 		LODModel lod_cactus = new LODModel(new SimpleModel[]{cactus},new float[][]{{0f,15f}});
 		LODModel lod_bush1 = new LODModel(new SimpleModel[]{bush,bush_low,bush_lowest,bush_lowest_2},treeLodDist);
+		LODModel lod_jungle_bush1 = new LODModel(new SimpleModel[]{jungle_bush,jungle_bush_low,jungle_bush_lowest,jungle_bush_lowest_2},treeLodDist);
 		LODModel lod_fern = new LODModel(new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 
 		//TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png","grass1_flower_3.png"},0.7f,0.45f,2,1f);
@@ -796,6 +820,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
+		hm3dTypeRenderedSide.put(new Integer(29), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
+		
 		
 		QuadModel qm_water = new QuadModel("water1.jpg"); qm_jungle.rotateOnSteep = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
@@ -1284,10 +1310,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    }
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 
-	    
-
-		updateTimeRelated();
-		
+	    // handling possible occluders
 		for (Node psn:possibleOccluders)
 		{
 			float dist = psn.getWorldTranslation().distanceSquared(cam.getLocation());
@@ -1296,9 +1319,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				sPass.addOccluder(psn);
 			} else
 			{
-				sPass.removeOccluder(psn);
+				removeOccludersRecoursive(psn);				
 			}
 		}
+
+		updateTimeRelated();
+		
 		
 		
 
