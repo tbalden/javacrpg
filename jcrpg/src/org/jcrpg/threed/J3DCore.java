@@ -84,6 +84,7 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
+import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
@@ -92,11 +93,14 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.RenderQueue;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.RenderPass;
 import com.jme.renderer.pass.ShadowedRenderPass;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
@@ -1070,9 +1074,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void updateTimeRelated()
 	{
 		if (true==false) {
-			cRootNode.clearRenderState(RenderState.RS_LIGHT);
-			skydomeLightState.detachAll();
-			cLightState.detachAll();
+			//cRootNode.clearRenderState(RenderState.RS_LIGHT);
+			//cRootNode.setLightCombineMode(LightState.OFF);
+			//skydomeLightState.detachAll();
+			//cLightState.detachAll();
 			return;
 		}
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
@@ -1221,20 +1226,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	
 	Text loadText;
+	Quad loadFloppy;
 	int cPercent = 0;
-	public void loadingText(int percent)
+	public void loadingText(int percent, boolean state)
 	{
-		if (cPercent==percent) return;
-		cPercent = percent;
-		if (loadText!=null) fpsNode.detachChild(loadText);
-		loadText = new Text("Text", "Loading: "+percent+" %");
-		loadText.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		loadText.setLightCombineMode(LightState.OFF);
-		loadText.setLocalTranslation(new Vector3f(0,20,0));
-        fpsNode.attachChild(loadText);
-        fpsNode.updateGeometricState(0.0f, false);
-        fpsNode.updateRenderState();
-        rootNode.updateGeometricState(0.0f, false);
+        if (state)
+        	hud1Node.attachChild(bbFloppy);
+        else
+        	hud1Node.detachChild(bbFloppy);
+        bbFloppy.setLocalTranslation(getCurrentLocation().add(2,2,2));
+        hud1Node.updateGeometricState(0.0f, true);
+        hud1Node.updateRenderState();
 	}
 	
 	
@@ -1243,6 +1245,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void render()
 	{
+    	loadingText(0,true);
+    	updateDisplay(null);
+
 		lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
 		lastRenderZ = viewPositionZ;
@@ -1288,7 +1293,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	    for (int i=0; i<cubes.length; i++)
 		{
-	    	loadingText((i/cubes.length)*100);
 			//System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
 			if (hmCurrentCubes.containsKey(""+c.cube.x+" "+c.cube.y+" "+c.cube.z)) 
@@ -1379,11 +1383,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		modelLoader.setLockForSharedNodes(true);
 
-		// every 15 steps do a garbage collection
-		garbCollCounter++;
-		if (garbCollCounter==15) {
-			System.gc();
-		}
+		loadingText(0,false);
+    	//updateDisplay(null);
 
 	}
 	int garbCollCounter = 0;
@@ -1533,7 +1534,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					}
 				} else
 				{
-					 if (!outOfViewPort.contains(c)) {
+					 if (!outOfViewPort.contains(c)) { // TODO memleak!
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
 						for (Node n : c.hsRenderedNodes)
@@ -1550,7 +1551,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
+		updateTimeRelated();
 		cRootNode.updateRenderState();
+
+		// every 15 steps do a garbage collection
+		garbCollCounter++;
+		if (garbCollCounter==15) {
+			System.gc();
+		}
+		
 		//hmCurrentCubes
 		//modelLoader.setLockForSharedNodes(true);
 		
@@ -2079,10 +2088,54 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public VertexProgramState vp = null;
 	public FragmentProgramState fp = null;
 	
+	Node hud1Node;
+    /**
+     * This is used to display print text.
+     */
+    protected StringBuffer hud1Buffer = new StringBuffer( 30 );
+    BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
 		cRootNode = new Node();
-		//cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
+
+		loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
+		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
+		loadText.setLightCombineMode(LightState.OFF);
+		loadText.setLocalTranslation(new Vector3f(0,20,0));
+		loadText.setCullMode( SceneElement.CULL_NEVER );
+		loadText.setTextureCombineMode( TextureState.REPLACE );
+
+		loadFloppy = new Quad("floppy",0.2f,0.2f);
+		loadFloppy.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		Texture textureFloppy = TextureManager.loadTexture("./data/"+"floppy.jpg",Texture.MM_LINEAR,
+                Texture.FM_LINEAR);
+
+		//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		textureFloppy.setApply(Texture.AM_REPLACE);
+		//textureFloppy.setRotation(J3DCore.qTexture);
+
+		TextureState ts = getDisplay().getRenderer().createTextureState();
+		ts.setTexture(textureFloppy, 0);		
+        ts.setEnabled(true);
+        loadFloppy.setRenderState(ts);
+        loadFloppy.setLightCombineMode(LightState.OFF);
+        loadFloppy.setCullMode(SceneElement.CULL_NEVER);
+        //loadFloppy.setLocalTranslation(new Vector3f(0,20,0));
+        bbFloppy = new BillboardNode("floppy");
+        bbFloppy.attachChild(loadFloppy);
+        bbFloppy.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+        bbFloppy.setCullMode(SceneElement.CULL_NEVER);
+        bbFloppy.setLocalTranslation(new Vector3f(0,20,0));
+
+
+		hud1Node = new Node( "HUD 1 node" );
+		hud1Node.setRenderState( loadText.getRenderState( RenderState.RS_ALPHA ) );
+		hud1Node.setRenderState( loadText.getRenderState( RenderState.RS_TEXTURE ) );
+		hud1Node.attachChild( loadText );
+		hud1Node.setCullMode( SceneElement.CULL_NEVER );
+		rootNode.attachChild(hud1Node);
+
+        //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rootNode);
