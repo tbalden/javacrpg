@@ -127,6 +127,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
+    public static int RENDER_DISTANCE_ORIG = 10;
     public static int RENDER_DISTANCE = 10;
     public static int VIEW_DISTANCE = 10;
     public static int VIEW_DISTANCE_SQR = 100;
@@ -170,7 +171,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	if (renderDistance!=null)
 	    	{
 	    		try {
-	    			RENDER_DISTANCE = Integer.parseInt(renderDistance);
+	    			RENDER_DISTANCE_ORIG = Integer.parseInt(renderDistance);
+	    			RENDER_DISTANCE = (int)(RENDER_DISTANCE_ORIG/CUBE_EDGE_SIZE);
 	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
 	    			if (RENDER_DISTANCE<5) RENDER_DISTANCE = 5;
 	    		} catch (Exception pex)
@@ -972,7 +974,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				state.setEnabled(true);
 	            
 				moon.setRenderState(state);
-				moon.setRenderState(getDisplay().getRenderer().createFogState());
 			}
 			moon.updateRenderState();
 
@@ -1218,6 +1219,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public int lastRenderX,lastRenderY,lastRenderZ;
 	
+	
+	Text loadText;
+	int cPercent = 0;
+	public void loadingText(int percent)
+	{
+		if (cPercent==percent) return;
+		cPercent = percent;
+		if (loadText!=null) fpsNode.detachChild(loadText);
+		loadText = new Text("Text", "Loading: "+percent+" %");
+		loadText.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		loadText.setLightCombineMode(LightState.OFF);
+		loadText.setLocalTranslation(new Vector3f(0,20,0));
+        fpsNode.attachChild(loadText);
+        fpsNode.updateGeometricState(0.0f, false);
+        fpsNode.updateRenderState();
+        rootNode.updateGeometricState(0.0f, false);
+	}
+	
+	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
@@ -1226,7 +1246,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
 		lastRenderZ = viewPositionZ;
-		
+
+
 		System.out.println("OCCS"+sPass.occludersSize());
 		modelLoader.setLockForSharedNodes(false);
 
@@ -1267,6 +1288,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	    for (int i=0; i<cubes.length; i++)
 		{
+	    	loadingText((i/cubes.length)*100);
 			//System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
 			if (hmCurrentCubes.containsKey(""+c.cube.x+" "+c.cube.y+" "+c.cube.z)) 
@@ -1345,7 +1367,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		updateTimeRelated();
 		
 		
-		
+		fpsNode.detachChild(loadText);
 
 		cRootNode.updateRenderState();
 		//rootNode.updateModelBound();
@@ -1430,6 +1452,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						n[i].setLocalScale(new Vector3f(1.43f,1,1f));
 					}
 				}
+			} else
+			{
+				n[i].setLocalScale(scale);
 			}
 			
 			n[i].setLocalRotation(qC);
@@ -2137,8 +2162,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs.setDensity(0.5f);
         fs.setEnabled(true);
         fs.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-        fs.setEnd((VIEW_DISTANCE)*2.3f);
-        fs.setStart((VIEW_DISTANCE) - ((VIEW_DISTANCE)/3));
+        fs.setEnd((VIEW_DISTANCE));
+        fs.setStart(3);
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
         cRootNode.setRenderState(fs);
@@ -2227,7 +2252,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         cam.update();
 		updateDisplay(null);
 		
-		render(); // couldn't find out why render have to be called twice...
 		render();
 		renderToViewPort();
 		engine.setPause(false);
