@@ -284,7 +284,7 @@ public class BillboardPartVegetation extends Node {
 			if (model.quadLightStateOff)
 			{
 				targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
-				J3DCore.hsSolidColorQuads.put(targetQuad,targetQuad);
+				J3DCore.hmSolidColorQuads.put(targetQuad,targetQuad);
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 		}

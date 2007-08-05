@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.WeakHashMap;
 
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -45,11 +44,10 @@ import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.image.Image;
 import com.jme.bounding.BoundingSphere;
+import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
@@ -60,8 +58,6 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.lod.ClodCreator;
-import com.jme.scene.lod.ClodMesh;
 import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -107,7 +103,7 @@ public class ModelLoader {
     {
 		
 		Node[] r = null;
-		r = new Node[objects.length];
+		if (!fakeLoadForCacheMaint) r = new Node[objects.length];
 		if (objects!=null)
 		for (int i=0; i<objects.length; i++) {
 			if (objects[i]==null) continue;
@@ -252,6 +248,7 @@ public class ModelLoader {
 						}
 
 					}
+					if (fakeLoadForCacheMaint) continue;
 					lodNode.attachChildAt(node,c);
 					dsm.setModelDistance(c, lm.distances[c][0], lm.distances[c][1]);
 					c++;
@@ -263,12 +260,15 @@ public class ModelLoader {
 			}
 			
 			// if model can be rotated on a steep, we set node user data for later use in renderNodes of J3DCore...
-			if (objects[i].rotateOnSteep) 
+			if (!fakeLoadForCacheMaint && objects[i].rotateOnSteep) 
 			{
-				r[i].setUserData("rotateOnSteep", r[i]);
+				r[i].setUserData("rotateOnSteep", new TriMesh(""));
 			}
 		}
-		return r;
+		if (!fakeLoadForCacheMaint)
+			return r;
+		else 
+			return null;
     }
     
     
@@ -341,7 +341,7 @@ public class ModelLoader {
 			{
 			}
 		}
-    	//sharedNodeCache.keySet().removeAll(removable);
+    	sharedNodeCache.keySet().removeAll(removable);
     	
     	removable.clear();
     	for (String key : binaryCache.keySet()) {
@@ -350,7 +350,7 @@ public class ModelLoader {
 				removable.add(key);
 			}
 		}
-		//binaryCache.keySet().removeAll(removable);
+		binaryCache.keySet().removeAll(removable);
 		
     	tempNodeKeys.clear();
     	tempBinaryKeys.clear();
@@ -549,6 +549,8 @@ public class ModelLoader {
      */
     public Node loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
     {
+    	
+    	//System.out.println("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
     	tempNodeKeys.add(o.modelName+o.textureName+o.mipMap);
 		tempBinaryKeys.add(o.modelName);
