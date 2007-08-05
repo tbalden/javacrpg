@@ -1437,8 +1437,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
-		int s = (x << 16) + (y << 8) + z;
-		String coordKey = ""+s;
+		//int s = (x << 16) + (y << 8) + z;
+		//String coordKey = ""+s;
 		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
@@ -1524,6 +1524,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		System.out.println("!!! DISTSQR = "+((RENDER_DISTANCE*RENDER_DISTANCE*CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)-VIEW_DISTANCE_SQR));
 		if (lastLoc.distanceSquared(currLoc) > (RENDER_DISTANCE*RENDER_DISTANCE*CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)-VIEW_DISTANCE_SQR)
 		{
+			inViewPort.clear();
+			outOfViewPort.clear();
 			render();
 		}
 		
