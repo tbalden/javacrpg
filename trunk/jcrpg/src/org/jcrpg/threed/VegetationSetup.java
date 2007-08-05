@@ -138,8 +138,8 @@ public class VegetationSetup {
 					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
 					quad.setRenderState(ms);
 
-					quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
-					quad.setRenderState(fp);
+					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
+					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
 					J3DCore.hsSolidColorQuads.put(quad,quad);

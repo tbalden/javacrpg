@@ -27,6 +27,6 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	
 	public float scale(int x,int y,int z)
 	{
-		return 1f+(HashUtil.mix(x, y, z)%100)*0.0001f;
+		return 1f+(HashUtil.mix(x, y, z)%100)*0.003f;
 	}
 }
