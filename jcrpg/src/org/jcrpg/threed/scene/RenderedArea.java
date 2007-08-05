@@ -91,11 +91,8 @@ public class RenderedArea {
 						//System.out.println("IN RCUBECACHE");
 					}
 					worldCubeCacheNext.put(key, c);
-					//if (c!=null)System.out.println("CUBE Coords: "+ (c.x)+" "+c.y);
-					//System.out.println("Coordinates: "+(x+x1)+ "-"+ (y+y1)+"-"+(z+z1) );
 					if (c!=null) 
 					{	
-						//System.out.println(c.toString());
 						elements.add(c);
 					}
 				}

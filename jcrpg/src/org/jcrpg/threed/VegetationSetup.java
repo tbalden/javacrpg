@@ -107,6 +107,7 @@ public class VegetationSetup {
 
 			// Load placeholder models for vegetation
 		Node[] quads = quadCache.get(tm.getKey());
+		System.out.println("QUAD CACHE SIZE "+quadCache.size());
 		if (quads==null) 
 		{
 			quads = new Node[ts.length];
@@ -142,7 +143,7 @@ public class VegetationSetup {
 					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
-					J3DCore.hsSolidColorQuads.put(quad,quad);
+					J3DCore.hmSolidColorQuads.put(quad,quad);
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
