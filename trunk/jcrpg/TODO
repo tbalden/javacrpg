@@ -1,8 +1,10 @@
-[ ] jungle bush
+[ ] memory eater new loading system??
 [ ] cherry foliage
-[ ] reinvent renderArea, magnifications?? need distant view too
+[ ] jungle big tree
 
-[ ] optimize j3dcore render/renderside (based on profile.txt) to make 
+[X] jungle bush
+[X] reinvent renderArea, magnifications?? need distant view too
+[X] optimize j3dcore render/renderside (based on profile.txt) to make 
 	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
 
 [ ] narrowing quad sized bb part models for pine?
