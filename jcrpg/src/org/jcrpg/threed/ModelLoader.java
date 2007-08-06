@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -569,6 +570,7 @@ public class ModelLoader {
 	            return r;
     		}
     	}
+    	System.out.println("!! LOADING MODEL!!");
     	
     	if (o.modelName.endsWith(".obj"))
     	{
@@ -749,5 +751,21 @@ public class ModelLoader {
     	}
     	
     }
-	
+    
+	public static void cleanTexture(Spatial s) {
+		TextureState ts = (TextureState) s.getRenderState(RenderState.RS_TEXTURE);
+		if (ts != null)
+			ts.deleteAll(true);
+		if (s instanceof Node) {
+			ArrayList<Spatial> children = ((Node) s).getChildren();
+			if (children != null) {
+				Iterator i = children.iterator();
+				while (i.hasNext()) {
+					cleanTexture((Spatial) i.next());
+				}
+			}
+		}
+		ts = null;
+	}
+
 }

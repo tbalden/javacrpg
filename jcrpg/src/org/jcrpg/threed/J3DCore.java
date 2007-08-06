@@ -24,6 +24,7 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
@@ -103,6 +105,7 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
 import com.jme.scene.TriMesh;
+import com.jme.scene.UserDataManager;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
@@ -367,7 +370,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
 	 */
-	public static WeakHashMap<Quad,Quad> hmSolidColorQuads = new WeakHashMap<Quad,Quad>();
+	public static HashMap<Quad,Quad> hmSolidColorQuads = new HashMap<Quad,Quad>();
 	
 	
 	public void setEngine(Engine engine)
@@ -985,7 +988,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				texture.setRotation(qTexture);
 				TextureState state = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 				state.setTexture(texture,0);
-				System.out.println("MOON !!!! Texture!");
 				
 				state.setEnabled(true);
 	            
@@ -1132,12 +1134,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			if (l!=null)
 			{
-				//System.out.println("ORBITER LIGHT "+orb.id);
 				
 				float[] lightDirectionCoords = orb.getLightDirection(localTime, conditions);
 				if (lightDirectionCoords!=null)
 				{
-					//System.out.println("ORBITER LIGHT "+orb.id +" -- ON");
 					// 0. is directional light for the planet surface
 					l[0].getLight().setEnabled(true);
 					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]).normalizeLocal());
@@ -1169,7 +1169,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				} else 
 				
 				{
-					//System.out.println("ORBITER LIGHT "+orb.id +" -- OFF");
 					// switching of the two lights
 					l[0].removeFromParent();
 					l[0].getLight().setEnabled(false);
@@ -1189,7 +1188,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
 			q.setSolidColor(new ColorRGBA(vTotal[0],vTotal[1],vTotal[2],1f));
 		}
-		//System.out.println("__________ VEG QUADS: "+counter);
 		// set fog state color to the light power !
 		fs.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
 
@@ -1242,6 +1240,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (s.getChildren()!=null)
 		for (Spatial c:s.getChildren())
 		{
+			if (c instanceof BillboardPartVegetation)
+			{
+				hmSolidColorQuads.remove(((BillboardPartVegetation)c).targetQuad);
+			}
 			if (c instanceof Node)
 			{
 				removeSolidColorQuadsRecoursive((Node)c);
@@ -1251,6 +1253,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				hmSolidColorQuads.remove(c);
 				c.removeFromParent();
 			}
+			for (int i = 0; i< RenderState.RS_MAX_STATE; i++)
+				c.clearRenderState(i);
 		}
 	}
 
@@ -1372,7 +1376,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			removed++;
 	    	for (Iterator<Node> itNode = cToDetach.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	{
+	    		liveNodes--;
 	    		Node n = itNode.next();
+    	    	n.unlock();
 	    		n.removeFromParent();
 	    		if (sPass!=null) {
 	    			// remove from shadowrenderpass
@@ -1381,13 +1387,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			possibleOccluders.remove(n);
 	    		}
     	    	removeSolidColorQuadsRecoursive(n);
-	    		if (n instanceof SharedNode) n.detachAllChildren();
+	    		//if (n instanceof SharedNode) 
+    	    	n.detachAllChildren();
 	    	}
     		outOfViewPort.remove(cToDetach);
     		inViewPort.remove(cToDetach);
-	    	cToDetach.hsRenderedNodes.clear();
+    		cToDetach.hsRenderedNodes.clear();
+    		//UserDataManager.getInstance().geremoveUserData(n, key)
+    		//for (Node sn :modelLoader.sharedNodeCache.values())
+    		//{
+    			//sn.removeUserData(key)
+    		//}
 	    }
-	    hmCurrentCubes.clear();
+    	getDisplay().getRenderer().clearVBOCache();
+    	hmCurrentCubes.clear();
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 
 	    // handling possible occluders
@@ -1420,10 +1433,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		loadingText(0,false);
     	//updateDisplay(null);
+		
+		TextureManager.clearCache();
+		System.gc();
+		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorQuads.size());
 
 	}
 	int garbCollCounter = 0;
-
 	/**
 	 * Renders a set of node into 3d space, rotating, positioning them.
 	 * @param n Nodes
@@ -1496,6 +1512,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			n[i].setLocalRotation(qC);
 
 			cube.hsRenderedNodes.add(n[i]);
+			liveNodes++;
 			
 			//cRootNode.attachChild(n[i]);
 			
@@ -1521,7 +1538,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
 		System.out.println("LASTLOC DISTSQR = "+lastLoc.distanceSquared(currLoc));
-		System.out.println("!!! DISTSQR = "+((RENDER_DISTANCE*RENDER_DISTANCE*CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)-VIEW_DISTANCE_SQR));
+//		System.out.println("!!! DISTSQR = "+((RENDER_DISTANCE*RENDER_DISTANCE*CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)-VIEW_DISTANCE_SQR));
 		if (lastLoc.distanceSquared(currLoc) > (RENDER_DISTANCE*RENDER_DISTANCE*CUBE_EDGE_SIZE*CUBE_EDGE_SIZE)-VIEW_DISTANCE_SQR)
 		{
 			inViewPort.clear();
@@ -1586,6 +1603,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		garbCollCounter++;
 		if (garbCollCounter==15) {
 			System.gc();
+			garbCollCounter = 0;
 		}
 		
 		//hmCurrentCubes
@@ -1597,6 +1615,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
+	
+	public int liveNodes = 0;
 	
 	/**
 	 * Renders one side into 3d space percepting what kind of RenderedSide it is.
@@ -1614,7 +1634,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (n3dType==null) return;
 		if (n3dType.equals(EMPTY_SIDE)) return;
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
-		
 		
 		Node[] n = modelLoader.loadObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
 		if (!fakeLoadForCacheMaint) {
@@ -1982,6 +2001,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean moveForward(int direction) {
 		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
 		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		//viewPositionX=viewPositionX+100;
+		//viewPositionZ=viewPositionZ+100;
+		//return true;
 		return move(coords,relCoords,new int[]{direction});
 	}
 
