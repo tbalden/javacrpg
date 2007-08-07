@@ -414,7 +414,8 @@ public class Mountain extends Geography implements Surface{
 			int[] ret = isGroundLevel(worldX, origoY*magnification+i, worldZ);
 			if (ret[0]>-1)
 			{
-				return new SurfaceHeightAndType(origoY*magnification+i,true,ret[1]);
+				int r = ret[1];
+				return new SurfaceHeightAndType(origoY*magnification+i,true,r);
 			}
 		}
 		return new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP);

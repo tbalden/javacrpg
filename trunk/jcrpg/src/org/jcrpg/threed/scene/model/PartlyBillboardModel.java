@@ -27,6 +27,7 @@ import java.util.HashSet;
 
 public class PartlyBillboardModel extends SimpleModel {
 
+	public String id;
 	public String[] billboardPartNames = new String[0];
 	public String[] billboardPartTextures = new String[0];
 	public String[] removedPartNames = new String[0];
@@ -62,7 +63,7 @@ public class PartlyBillboardModel extends SimpleModel {
 	 * @param LOD Level of detail, use 0,1,2 values. (0 most detailed, 1 quads removed, 2 very low quad number).
 	 * @param mipMap Tells if mipmapping is needed.
 	 */
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
+	public PartlyBillboardModel(String id,String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
 		super(modelName, null, mipMap);
 		this.billboardPartNames = billboardPartNames;
 		this.billboardPartTextures = billboardPartTextures;
@@ -77,6 +78,7 @@ public class PartlyBillboardModel extends SimpleModel {
 		{
 			removedParts.add(n);
 		}
+		this.id = id;
 	}
 
 	/**
@@ -87,8 +89,8 @@ public class PartlyBillboardModel extends SimpleModel {
 	 * @param billboardPartTextures Texture names for the billboard quads.
 	 * @param LOD Level of detail, use 0,1,2 values. (0 most detailed, 1 quads removed, 2 very low quad number).
 	 */
-	public PartlyBillboardModel(String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures,int LOD) {
-		this(modelName,billboardPartNames,billboardPartTextures,removedPartNames,LOD,false);
+	public PartlyBillboardModel(String id, String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures,int LOD) {
+		this(id,modelName,billboardPartNames,billboardPartTextures,removedPartNames,LOD,false);
 	}
 
 }
