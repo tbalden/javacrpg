@@ -145,7 +145,7 @@ public class ModelLoader {
 						core.possibleOccluders.add(node);
 					}
 				}
-				node = bbNode;
+		    	node = bbNode;
 				r[i] = node;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
@@ -206,7 +206,7 @@ public class ModelLoader {
 								core.possibleOccluders.add(node);
 							}
 						}
-						node = bbNode;
+				    	node = bbNode;
 						r[i] = node;
 						node.setName(((SimpleModel)m).modelName+i);
 					} else
@@ -550,19 +550,22 @@ public class ModelLoader {
      */
     public Node loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
     {
-    	
+		String key = o.modelName+o.textureName+o.mipMap;
+		
     	//System.out.println("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
-    	tempNodeKeys.add(o.modelName+o.textureName+o.mipMap);
+		
+		tempNodeKeys.add(key);
 		tempBinaryKeys.add(o.modelName);
 		
 		// don't have to really load it, return with null
 		if (fakeLoadForCacheMaint) return null;
+		
 
 		// the big shared node cache -> mem size lowerer and performance boost
-    	if (sharedNodeCache.get(o.modelName+o.textureName+o.mipMap)!=null)
+    	if (sharedNodeCache.get(key)!=null)
     	{
-    		Node n = sharedNodeCache.get(o.modelName+o.textureName+o.mipMap);
+    		Node n = sharedNodeCache.get(key);
     		if (n!=null) {
 	    		Node r =  new SharedNode("node"+counter++,n);
 	    		r.setModelBound(new BoundingBox());
@@ -626,7 +629,7 @@ public class ModelLoader {
 					
 					//spatial.setRenderState(as);
 					
-					sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
+					sharedNodeCache.put(key, node);
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
 					Node r =  new SharedNode("node"+counter++,node);
@@ -692,7 +695,7 @@ public class ModelLoader {
 			    	node.setRenderState(core.cs_none);
 			    	
 			    }
-
+			    
 				if (o.textureName!=null)
 				{
 					Texture texture = (Texture)textureCache.get(o.textureName);
@@ -732,7 +735,7 @@ public class ModelLoader {
 				
 				//node.setRenderState(as);
 
-				sharedNodeCache.put(o.modelName+o.textureName+o.mipMap, node);
+				sharedNodeCache.put(key, node);
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();				
 				Node r =  new SharedNode("node"+counter++,node);
