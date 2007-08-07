@@ -1247,6 +1247,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c instanceof Node)
 			{
 				removeSolidColorQuadsRecoursive((Node)c);
+				((Node)c).removeUserData("rotateOnSteep");
 			}
 			if (c instanceof Quad)
 			{
