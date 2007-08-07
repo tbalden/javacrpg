@@ -33,7 +33,7 @@ public class ClassicInputHandler  extends InputHandler {
     	//mouseLookHandler = new MouseLookHandler(cam,2.0f);//ClassicMouseLookHandler(cam);
     	mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );
-    	
+        org.lwjgl.input.Mouse.setGrabbed(false);    	
     }
     
 }
