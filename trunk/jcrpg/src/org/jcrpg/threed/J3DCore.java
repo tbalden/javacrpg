@@ -2361,7 +2361,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",10,10,500f);
+		skySphere = new Sphere("SKY_SPHERE",7,7,400f);
 		sRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere());
 		skySphere.setRenderState(cs_none);
