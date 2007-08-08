@@ -24,12 +24,10 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.WeakHashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -105,7 +103,6 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
 import com.jme.scene.TriMesh;
-import com.jme.scene.UserDataManager;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
@@ -832,7 +829,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
-		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide("sides/plane.3ds","textures/low/hillside.png"));
+		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{qm_grass}));
 		
 		if (RENDER_GRASS_DISTANCE>0)
 			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, lod_jung_grass_1}));
@@ -842,7 +839,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
 		
-		
+		// lod vegetations
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{lod_cherry}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
@@ -855,12 +852,35 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
 		
+		// no lod version
+/*		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{cherry}));
+		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_high}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{pine_high}));
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{bush})); 
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{acacia}));
+		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{cactus}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{coconut_high}));
+		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{great_pine_high}));
+		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
+	*/	
+		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{jungletrees_mult})); // oak TODO!
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{bush1})); 
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{cactus}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{bush1}));*/
 		
 		QuadModel qm_water = new QuadModel("water1.jpg"); qm_jungle.rotateOnSteep = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(14), new RenderedSide("sides/plane.3ds","textures/low/wall_mossy.jpg"));
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide("models/inside/furniture/bookcase.3ds",null));
 				
@@ -1237,12 +1257,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void removeSolidColorQuadsRecoursive(Node s)
 	{
+		if (s instanceof BillboardPartVegetation)
+		{
+			hmSolidColorQuads.remove(((BillboardPartVegetation)s).targetQuad);
+			((BillboardPartVegetation)s).targetQuad = null;
+		}
 		if (s.getChildren()!=null)
 		for (Spatial c:s.getChildren())
 		{
 			if (c instanceof BillboardPartVegetation)
 			{
 				hmSolidColorQuads.remove(((BillboardPartVegetation)c).targetQuad);
+				((BillboardPartVegetation)c).targetQuad = null;
+				
 			}
 			if (c instanceof Node)
 			{
@@ -1252,10 +1279,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c instanceof Quad)
 			{
 				hmSolidColorQuads.remove(c);
-				c.removeFromParent();
+				//c.removeFromParent();
 			}
 			for (int i=0; i<RenderState.RS_MAX_STATE; i++)
+			{
+				//c.getRenderState(i);
+				
 				c.clearRenderState(i);
+			}
 		}
 	}
 
@@ -1379,7 +1410,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	{
 	    		liveNodes--;
 	    		Node n = itNode.next();
-	    		System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
+	    		//System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
     	    	n.unlock();
 	    		n.removeFromParent();
 	    		if (sPass!=null) {
@@ -1388,6 +1419,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			// remove solid color quads
 	    			possibleOccluders.remove(n);
 	    		}
+    	    	//ModelLoader.cleanTexture(n);
     	    	removeSolidColorQuadsRecoursive(n);
 	    		//if (n instanceof SharedNode) 
     	    	n.detachAllChildren();
