@@ -1,11 +1,6 @@
-[ ] wall to thick
+[ ] wall too thick - restructure walling of houses to middle of cubes?
 [ ] cherry foliage
-[ ] jungle big tree
-
-[X] jungle bush
-[X] reinvent renderArea, magnifications?? need distant view too
-[X] optimize j3dcore render/renderside (based on profile.txt) to make 
-	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
+[ ] jungle big tree - covering all, greens on it?
 
 [ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
@@ -38,6 +33,10 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] jungle bush
+[X] reinvent renderArea, magnifications?? need distant view too
+[X] optimize j3dcore render/renderside (based on profile.txt) to make 
+	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
 [-] memory eater -> quadbillboard is not fine enough...eats memory, caching it solved!
 [X] Shadow occluder number too much -> hashSet, get distance on every render/ remove add them
 [X] update LWJGL/JME from repository
