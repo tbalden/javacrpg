@@ -401,6 +401,7 @@ public class ModelLoader {
     		String key = textureNames[i]+(normalNames!=null?normalNames[i]:"null");
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
+	    	System.out.println("--------- LOADING NEW TEXTURE!!!!"+textureNames[i]);
 	    	
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    	if (normalNames!=null && normalNames[i]!=null)
@@ -471,8 +472,6 @@ public class ModelLoader {
 		Node node = sharedNodeCache.get(m.textureName+m.dot3TextureName);
 		if (node!=null) {
 			Node r =  new SharedNode("node"+counter++,node);
-			//r.setModelBound(new BoundingBox());
-	        //r.updateModelBound();
 			return r;
 		}
     	
@@ -497,8 +496,9 @@ public class ModelLoader {
 		node.attachChild(quad);
 		//node.setModelBound(new BoundingBox());
 		//node.updateModelBound();
+		
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, node);
-		Node r =  new SharedNode("node"+counter++,node);
+		Node r = new SharedNode("node"+counter++,node);
 		//r.setModelBound(new BoundingBox());
         //r.updateModelBound();
 		return r;
@@ -562,14 +562,17 @@ public class ModelLoader {
 		if (fakeLoadForCacheMaint) return null;
 		
 
+		// debugging:
+		//sharedNodeCache.clear();
+		
 		// the big shared node cache -> mem size lowerer and performance boost
     	if (sharedNodeCache.get(key)!=null)
     	{
     		Node n = sharedNodeCache.get(key);
     		if (n!=null) {
 	    		Node r =  new SharedNode("node"+counter++,n);
-	    		r.setModelBound(new BoundingBox());
-	            r.updateModelBound();
+	    		//r.setModelBound(new BoundingBox());
+	            //r.updateModelBound();
 	            return r;
     		}
     	}
@@ -632,7 +635,7 @@ public class ModelLoader {
 					sharedNodeCache.put(key, node);
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
-					Node r =  new SharedNode("node"+counter++,node);
+					Node r = new SharedNode("node"+counter++,node);
 		    		//r.setModelBound(new BoundingBox());
 		            //r.updateModelBound();
 		            //r.setRenderState(core.vp);

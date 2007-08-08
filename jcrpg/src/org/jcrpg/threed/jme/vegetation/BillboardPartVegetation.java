@@ -24,6 +24,7 @@ package org.jcrpg.threed.jme.vegetation;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
@@ -56,6 +57,7 @@ public class BillboardPartVegetation extends Node {
 
 	
 	public PartlyBillboardModel model;
+	public static HashMap<String, Quad> quadCache = new HashMap<String, Quad>();
 	
 	/**
 	 * 
@@ -278,18 +280,21 @@ public class BillboardPartVegetation extends Node {
 	}
 	private SharedMesh createQuad(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
-		if (targetQuad==null) {
+		Quad targetQuad = quadCache.get(model.id);
+		if (targetQuad == null)
+		{
 			targetQuad = new Quad(name,xSize,ySize);
-			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 			if (model.quadLightStateOff)
 			{
 				targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
 				J3DCore.hmSolidColorQuads.put(targetQuad,targetQuad);
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
+			quadCache.put(model.id, targetQuad);
 		}
 		SharedMesh quad = new SharedMesh("s"+name,targetQuad);
 		quad.setLocalTranslation(x, y, z);
+		quad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 		return quad;
 		
 	}
