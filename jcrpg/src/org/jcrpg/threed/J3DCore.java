@@ -565,7 +565,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
 		hmAreaSubType3dType.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
 		hmAreaSubType3dType.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
-		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(15));//new Integer(24)); TODO quad model
+		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(24));//new Integer(24)); TODO quad model
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
 		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 
@@ -648,26 +648,30 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		great_pine_lowest_2.quadYSizeMultiplier = 2.5f;
 		great_pine_lowest_2.windAnimation = false;
 
-		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},0,MIPMAP_TREES);
-		palm_high.quadXSizeMultiplier = 3f;
+		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb.3ds",new String[]{"3"},new String[]{},new String[]{"jung_succ_1.png"},0,MIPMAP_TREES);
+		palm_high.quadXSizeMultiplier = 1.5f;
+		palm_high.quadYSizeMultiplier = 1.5f;
 		palm_high.shadowCaster = true;
-		PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},1,MIPMAP_TREES);
-		palm_low.quadXSizeMultiplier = 2f;
-		palm_low.quadYSizeMultiplier = 2.5f;
+		PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
+		//palm_low.quadXSizeMultiplier = 2f;
+		//palm_low.quadYSizeMultiplier = 2.5f;
 		palm_low.shadowCaster = true;
-		PartlyBillboardModel palm_lowest = new PartlyBillboardModel("pbm_palm_2","models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},2,MIPMAP_TREES);
-		palm_lowest.quadXSizeMultiplier = 1.6f;
-		palm_lowest.quadYSizeMultiplier = 2.5f;
+		PartlyBillboardModel palm_lowest = new PartlyBillboardModel("pbm_palm_2","models/tree/great_succ_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},2,MIPMAP_TREES);
+		//palm_lowest.quadXSizeMultiplier = 1.6f;
+		palm_lowest.quadXSizeMultiplier = 0.5f;
+		palm_lowest.quadYSizeMultiplier = 0.5f;
 		palm_lowest.windAnimation = false;
-		PartlyBillboardModel palm_lowest_2 = new PartlyBillboardModel("pbm_palm_3","models/tree/palm.3ds",new String[]{"6","3"},new String[]{},new String[]{"fern.png","fern.png"},3,MIPMAP_TREES);
-		palm_lowest_2.quadXSizeMultiplier = 1.6f;
-		palm_lowest_2.quadYSizeMultiplier = 2.5f;
+		PartlyBillboardModel palm_lowest_2 = new PartlyBillboardModel("pbm_palm_3","models/tree/great_succ_bb.3ds",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},3,MIPMAP_TREES);
+		palm_lowest_2.quadXSizeMultiplier = 0.5f;
+		palm_lowest_2.quadYSizeMultiplier = 0.5f;
+		//palm_lowest_2.quadXSizeMultiplier = 1.6f;
+		//palm_lowest_2.quadYSizeMultiplier = 2.5f;
 		palm_lowest_2.windAnimation = false;
 
 		
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
 		coconut_high.quadXSizeMultiplier = 3f;
-		coconut_high.quadYSizeMultiplier = 5f;
+		coconut_high.quadYSizeMultiplier = 3f;
 		coconut_high.shadowCaster = true;
 		coconut_high.cullNone = true;
 		PartlyBillboardModel coconut_low = new PartlyBillboardModel("pbm_coconut_1","models/tree/coconut_bb.3ds",new String[]{"3"},new String[]{},new String[]{"palm2.png"},1,MIPMAP_TREES);
@@ -1468,7 +1472,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		loadingText(0,false);
     	//updateDisplay(null);
 
-		TextureManager.clearCache();
+		//TextureManager.clearCache();
 		System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorQuads.size());
 
@@ -1576,8 +1580,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		System.out.println("!!! DISTSQR = "+(RENDER_DISTANCE_ORIG-VIEW_DISTANCE));
 		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
-			inViewPort.clear();
-			outOfViewPort.clear();
 			render();
 		}
 		
@@ -1636,10 +1638,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// every 15 steps do a garbage collection
 		garbCollCounter++;
-		if (garbCollCounter==15) {
-			System.gc();
-			garbCollCounter = 0;
-		}
+//		if (garbCollCounter==15) {
+	//		System.gc();
+		//	garbCollCounter = 0;
+		//}
 		
 		//hmCurrentCubes
 		//modelLoader.setLockForSharedNodes(true);

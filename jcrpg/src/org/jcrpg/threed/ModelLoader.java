@@ -494,8 +494,8 @@ public class ModelLoader {
 		
 		node = new Node();
 		node.attachChild(quad);
-		//node.setModelBound(new BoundingBox());
-		//node.updateModelBound();
+		node.setModelBound(new BoundingBox());
+		node.updateModelBound();
 		
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, node);
 		Node r = new SharedNode("node"+counter++,node);
