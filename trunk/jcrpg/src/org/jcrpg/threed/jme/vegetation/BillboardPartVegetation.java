@@ -290,11 +290,11 @@ public class BillboardPartVegetation extends Node {
 				J3DCore.hmSolidColorQuads.put(targetQuad,targetQuad);
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
+			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 			quadCache.put(model.id, targetQuad);
 		}
 		SharedMesh quad = new SharedMesh("s"+name,targetQuad);
 		quad.setLocalTranslation(x, y, z);
-		quad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 		return quad;
 		
 	}
