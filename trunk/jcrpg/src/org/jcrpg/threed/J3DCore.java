@@ -748,7 +748,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png"},0.7f,0.6f,2,1f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.5f,0.5f,2,1f);
 		LODModel lod_jung_grass_1 = new LODModel("jung_grass_1",new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 
@@ -1125,6 +1125,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Orbiters
 		 */
+		boolean updateRenderState = false;
 		float[] vTotal = new float[3];
 		// iterating through world's sky orbiters
 		for (Orbiter orb : world.getOrbiterHandler().orbiters.values()) {
@@ -1148,7 +1149,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// newly appearing, attach to root
 					cRootNode.attachChild(s);
-					cRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
+					updateRenderState = true;
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				//s.updateRenderState();
@@ -1225,6 +1226,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
+		
+		if (updateRenderState) cRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
 
 		sRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
 		

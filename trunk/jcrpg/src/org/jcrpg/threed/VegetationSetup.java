@@ -102,7 +102,7 @@ public class VegetationSetup {
 
 		if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 		{
-			return vegetation;
+			//return vegetation;
 		}
 
 			// Load placeholder models for vegetation
@@ -112,7 +112,8 @@ public class VegetationSetup {
 			quads = new Node[ts.length];
 			for (int i=0; i<ts.length; i++){
 				Node n = new Node();
-				if (steepDirection==SurfaceHeightAndType.NOT_STEEP) {
+				//if (steepDirection==SurfaceHeightAndType.NOT_STEEP) 
+				{
 	
 					//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
 					Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
@@ -148,10 +149,11 @@ public class VegetationSetup {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
 						n.attachChild(sQ);
 					}
-				} else
+				} 
+				//else
 				{
 					// till we have a better vegetation rotation, no grass vegetation on steep... :(
-					return vegetation;
+					//return vegetation;
 	
 				}
 				quads[i] = n;
