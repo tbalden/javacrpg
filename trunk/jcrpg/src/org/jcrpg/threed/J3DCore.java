@@ -1556,8 +1556,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			
 			n[i].setLocalRotation(qC);
-			n[i].updateRenderState();
+			/*n[i].updateRenderState();
 			n[i].updateGeometricState(0.0f, true);
+			n[i].updateModelBound();
+			n[i].updateWorldVectors();
+			n[i].updateWorldBound();*/
 
 			cube.hsRenderedNodes.add(n[i]);
 			liveNodes++;
@@ -1590,6 +1593,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
 			render();
+			
 		}
 		
 		for (RenderedCube c:hmCurrentCubes.values())
@@ -1625,7 +1629,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					}
 				} else
 				{
-					 if (!outOfViewPort.contains(c)) { // TODO memleak!
+					 if (!outOfViewPort.contains(c)) {
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
 						for (Node n : c.hsRenderedNodes)
@@ -1643,7 +1647,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		updateTimeRelated();
+		//cRootNode.updateGeometricState(0.0f, true);
+		cRootNode.setCullMode(Node.CULL_NEVER);
 		cRootNode.updateRenderState();
+		//cam.update();
+		updateDisplayNoBackBuffer();
+		cRootNode.setCullMode(Node.CULL_DYNAMIC);
+		cRootNode.updateRenderState();
+		//cam.apply();
+		
 
 		// every 15 steps do a garbage collection
 		garbCollCounter++;
@@ -2147,6 +2159,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 //        pManager.remove(sPass);
         display.getRenderer().displayBackBuffer();
   //      pManager.add(sPass);
+		noInput = false;
+		
+	}
+	public void updateDisplayNoBackBuffer()
+	{
+
+		noInput = true;
+        // update game state, do not use interpolation parameter
+        update(-1.0f);
+
+        // render, do not use interpolation parameter
+        render(-1.0f);
+
+        // swap buffers
 		noInput = false;
 		
 	}
