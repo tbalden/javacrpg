@@ -32,10 +32,10 @@ import org.jcrpg.world.place.World;
 
 public class RenderedArea {
 	
-	public WeakHashMap<String, RenderedCube> worldCubeCache = new WeakHashMap<String, RenderedCube>(); 
-	public WeakHashMap<String, RenderedCube> worldCubeCacheNext = new WeakHashMap<String, RenderedCube>(); 
+	public HashMap<String, RenderedCube> worldCubeCache = new HashMap<String, RenderedCube>(); 
+	public HashMap<String, RenderedCube> worldCubeCacheNext = new HashMap<String, RenderedCube>(); 
 	
-	public RenderedCube[] getRenderedSpace(World world, int x, int y, int z, int direction)
+	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
 		
@@ -67,8 +67,7 @@ public class RenderedArea {
 				
 			}
 		}
-		worldCubeCacheNext.clear();
-		worldCubeCacheNext = new WeakHashMap<String, RenderedCube>();			
+		worldCubeCacheNext = new HashMap<String, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
@@ -79,7 +78,7 @@ public class RenderedArea {
 					int s = ((x+x1)<< 16) + ((y+y1) << 8) + (z-z1);
 					String key = ""+s;
 					//String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
-					RenderedCube c = worldCubeCache.get(key);
+					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
 						Cube cube = world.getCube(world.engine.getWorldMeanTime(),x+x1, y+y1, z-z1);
 						if (cube!=null)
@@ -98,10 +97,16 @@ public class RenderedArea {
 				}
 			}
 		}
+		
+		/*for (String c:worldCubeCacheNext.keySet())
+		{
+			worldCubeCache.remove(c);
+		}*/
+		RenderedCube[] removable =  worldCubeCache.values().toArray(new RenderedCube[0]);
 		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
 		
-		return (RenderedCube[])elements.toArray(new RenderedCube[0]);
+		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable};
 		
 	}
 	

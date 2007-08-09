@@ -93,7 +93,12 @@ public class ModelLoader {
     AlphaState as;
 
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
+
     
+	protected Node loadObject(RenderedCube rc, Model object)
+    {
+		return loadObjects(rc, new Model[]{object}, false)[0];
+    }    
 	/**
 	 * Loading a set of models into JME nodes.
 	 * @param objects

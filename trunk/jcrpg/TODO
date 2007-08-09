@@ -1,6 +1,8 @@
+[ ] model pool perfection -> some nodes doesn't display after render!! quad vegetation displays on steeps!!
+	[ ] model pool ageing and clearing later
+	
 [ ] wall too thick - restructure walling of houses to middle of cubes?
 [ ] cherry foliage
-[ ] jungle big tree - covering all, greens on it?
 
 [ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
@@ -33,6 +35,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] jungle big tree - covering all, greens on it?
 [X] jungle bush
 [X] reinvent renderArea, magnifications?? need distant view too
 [X] optimize j3dcore render/renderside (based on profile.txt) to make 
