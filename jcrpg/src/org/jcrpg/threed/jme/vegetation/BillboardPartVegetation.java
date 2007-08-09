@@ -117,8 +117,8 @@ public class BillboardPartVegetation extends Node {
 						for (Spatial s : c2) {
 							// if (s instanceof TriMesh)
 							{
-								System.out.println("SPATIAL: " + s.getName()
-										+ " " + sCounter++);
+								//System.out.println("SPATIAL: " + s.getName()
+										//+ " " + sCounter++);
 								TriMesh q = (TriMesh) s;
 								int l = q.getName().length();
 								String key = ""+q.getName().charAt(l - 1);
@@ -133,8 +133,8 @@ public class BillboardPartVegetation extends Node {
 									for (int bc = 0; bc < q.getBatchCount(); bc++) {
 										TriangleBatch b = q.getBatch(bc);
 										FloatBuffer fb = b.getVertexBuffer();
-										System.out.println("BATCH!!"
-												+ fb.capacity() + " " + bc);
+										//System.out.println("BATCH!!"
+											//	+ fb.capacity() + " " + bc);
 										int maxFIndex = fb.capacity();
 										int maxDoubleTri = maxFIndex / 18;
 										int fIndex = 0;

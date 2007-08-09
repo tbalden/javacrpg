@@ -27,7 +27,6 @@ import java.util.HashSet;
 
 public class PartlyBillboardModel extends SimpleModel {
 
-	public String id;
 	public String[] billboardPartNames = new String[0];
 	public String[] billboardPartTextures = new String[0];
 	public String[] removedPartNames = new String[0];

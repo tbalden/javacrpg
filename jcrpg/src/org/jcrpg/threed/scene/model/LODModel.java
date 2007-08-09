@@ -29,7 +29,6 @@ package org.jcrpg.threed.scene.model;
  */
 public class LODModel extends Model {
 
-	public String id;
 	public Model[] models;
 	public float[][] distances;
 	

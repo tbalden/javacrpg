@@ -107,7 +107,6 @@ public class VegetationSetup {
 
 			// Load placeholder models for vegetation
 		Node[] quads = quadCache.get(tm.getKey());
-		System.out.println("QUAD CACHE SIZE "+quadCache.size());
 		if (quads==null) 
 		{
 			quads = new Node[ts.length];
