@@ -1327,8 +1327,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		lastRenderY = viewPositionY;
 		lastRenderZ = viewPositionZ;
 
-
-		System.out.println("OCCS"+sPass.occludersSize());
 		modelLoader.setLockForSharedNodes(false);
 
 		// start to collect the nodes/binaries which this render will use now
@@ -1366,12 +1364,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		if (c==null) continue;
     		c = hmCurrentCubes.get(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
     		if (c!=null)
-	    	for (Iterator<PooledNode> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+	    	for (Iterator<PlaceholderNode> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	{
 	    		liveNodes--;
-	    		PooledNode n2 = itNode.next();
-	    		Node n = (Node)n2;
-	    		System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
+	    		PlaceholderNode n = itNode.next();
+	    		//System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
     	    	//n.unlock();
 	    		n.removeFromParent();
 	    		if (sPass!=null) {
@@ -1380,7 +1377,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			// remove solid color quads
 	    			possibleOccluders.remove(n);
 	    		}
-	    		modelPool.releaseNode(n2);
+	    		//modelPool.releaseNode(n2);
 	    	}
     		
     	}
@@ -1498,15 +1495,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param horizontalRotation Horizontal rotation
 	 * @param scale Scale
 	 */
-	private void renderNodes(PooledNode[] n2, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
+	private void renderNodes(PlaceholderNode[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
 		//int s = (x << 16) + (y << 8) + z;
 		//String coordKey = ""+s;
-		Node[] n = new Node[n2.length];
-		for (int i=0; i<n2.length; i++)
-		{
-			n[i] = (Node)n2[i];
-		}
 		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
@@ -1571,7 +1563,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			n[i].updateWorldVectors();
 			n[i].updateWorldBound();*/
 
-			cube.hsRenderedNodes.add((PooledNode)n[i]);
+			cube.hsRenderedNodes.add((PlaceholderNode)n[i]);
 			liveNodes++;
 			
 			//cRootNode.attachChild(n[i]);
@@ -1610,9 +1602,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
-				for (PooledNode n2 : c.hsRenderedNodes)
+				for (PlaceholderNode n : c.hsRenderedNodes)
 				{
-					Node n = (Node)n2;
 					if (n.getLocalTranslation().distanceSquared(cam.getLocation())<VIEW_DISTANCE_SQR)
 					{
 						found = true;
@@ -1627,14 +1618,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					if (!inViewPort.contains(c)) {
 						inViewPort.add(c);
 						outOfViewPort.remove(c);
-						for (PooledNode n2 : c.hsRenderedNodes)
+						for (PlaceholderNode n : c.hsRenderedNodes)
 						{
-							Node n = (Node)n2;
-							cRootNode.attachChild(n);
-							if (n instanceof SharedNode) {
-								n.lockTransforms();
-								n.lockBounds();
-								n.lockBranch();
+							Node node = (Node)modelPool.getModel(n.cube, n.model);
+							n.realNode = (PooledNode)node;
+							node.setLocalRotation(n.getLocalRotation());
+							node.setLocalScale(n.getLocalScale());
+							node.setLocalTranslation(n.getLocalTranslation());
+							cRootNode.attachChild((Node)node);
+							if (node instanceof SharedNode) {
+								node.lockTransforms();
+								node.lockBounds();
+								node.lockBranch();
 							}
 						}
 					}
@@ -1643,23 +1638,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					 if (!outOfViewPort.contains(c)) {
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
-						for (PooledNode n2 : c.hsRenderedNodes)
+						for (PlaceholderNode n : c.hsRenderedNodes)
 						{
-							Node n = (Node)n2;
-							n.removeFromParent();
-							if (n instanceof SharedNode) {
-								n.unlockTransforms();
-								n.unlockBounds();
-								n.unlockBranch();
+							PooledNode pnode = n.realNode;
+							n.realNode = null;
+							if (pnode!=null) {
+								Node node = (Node)pnode;
+								node.removeFromParent();
+								if (node instanceof PlaceholderNode) {
+									node.unlockTransforms();
+									node.unlockBounds();
+									node.unlockBranch();
+								}
+								modelPool.releaseNode(pnode);
 							}
-							//if (n instanceof SharedNode) n.detachAllChildren();
 						}
 					 }
 				}
 			}
 		}
 		updateTimeRelated();
-		//cRootNode.updateGeometricState(0.0f, true);
 		cRootNode.setCullMode(Node.CULL_NEVER);
 		cRootNode.updateRenderState();
 		//cam.update();
@@ -1681,7 +1679,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
-	private void renderNodes(PooledNode[] n, RenderedCube cube, int x, int y, int z, int direction)
+	private void renderNodes(PlaceholderNode[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
@@ -1706,7 +1704,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
 		
-		PooledNode[] n = modelPool.loadObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
+		PlaceholderNode[] n = modelPool.loadPlaceHolderObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
 		if (!fakeLoadForCacheMaint) {
 			if (renderedSide instanceof RenderedHashRotatedSide)
 			{
@@ -1750,7 +1748,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			if (render)
 			{
-				n= modelPool.loadObjects(cube,((RenderedTopSide)renderedSide).nonEdgeObjects,fakeLoadForCacheMaint);
+				n= modelPool.loadPlaceHolderObjects(cube,((RenderedTopSide)renderedSide).nonEdgeObjects,fakeLoadForCacheMaint);
 				if (!fakeLoadForCacheMaint)
 				{
 					renderNodes(n, cube, x, y, z, direction);
@@ -1777,7 +1775,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (checkCube !=null) {
 					if (checkCube.hasSideOfType(direction,side.type))
 					{
-						n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).continuous, fakeLoadForCacheMaint );
+						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).continuous, fakeLoadForCacheMaint );
 						if (!fakeLoadForCacheMaint)
 						{
 							renderNodes(n, cube, x, y, z, direction);
@@ -1785,7 +1783,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					} else
 					{
 						// normal direction is continuous
-						n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint);
+						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint)
 						{
 							renderNodes(n, cube, x, y, z, direction);
@@ -1794,7 +1792,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				} else
 				{
 					// normal direction is continuous
-					n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint );
+					n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint );
 					if (!fakeLoadForCacheMaint)
 					{
 						renderNodes(n, cube, x, y, z, direction);
@@ -1810,25 +1808,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					{
 						// opposite to normal direction is continuous 
 						// normal direction is continuous
-						n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 					
 					}else
 					{
 						// no continuous side found
-						n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).nonContinuous, fakeLoadForCacheMaint);
+						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).nonContinuous, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 					}
 				} else {
 					// opposite to normal direction is continuous 
 					// normal direction is continuous
-					n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+					n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 					if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 				}
 			} else {
 				// opposite to normal direction is continuous 
 				// normal direction is continuous
-				n = modelPool.loadObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
+				n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
 				if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
 			}
 			

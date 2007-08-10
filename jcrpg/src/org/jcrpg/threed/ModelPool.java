@@ -28,6 +28,9 @@ import java.util.HashSet;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 
+import com.jme.scene.Node;
+import com.jme.scene.TriMesh;
+
 public class ModelPool {
 
 	public J3DCore core;
@@ -88,5 +91,23 @@ public class ModelPool {
 		return retNodes;
 		
 	}
-	
+
+	public PlaceholderNode[] loadPlaceHolderObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
+	{
+		if (fakeLoadForCacheMaint) return null; 
+		PlaceholderNode[] retNodes = new PlaceholderNode[objects.length];
+		int count = 0;
+		for (Model objModel : objects)
+		{
+			retNodes[count++] = new PlaceholderNode();
+			retNodes[count-1].model = objModel;
+			retNodes[count-1].cube = cube;
+			if (objModel.rotateOnSteep) {
+				((Node)retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
+			}
+		}
+		return retNodes;
+		
+	}
+
 }
