@@ -1,1 +1,0 @@
-java -Xmx200m -Xms200m -Djava.library.path=./lib -cp ./lib/lwjgl.jar:./lib/jogg-0.0.5.jar:./lib/jorbis-0.0.12.jar:./jme/jme.jar:./jme/jme-awt.jar:./jme/jme-effects.jar:./jme/jme-model.jar:./jme/jme-sound.jar:./jme/jme-terrain.jar:./bin org.jcrpg.apps.Jcrpg
