@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="jme/jme-awt.jar"/>
 	<classpathentry kind="lib" path="jme/jme-collada.jar"/>
 	<classpathentry kind="lib" path="jme/jme-editors.jar"/>
-	<classpathentry kind="lib" path="jme/jme-effects.jar"/>
+	<classpathentry kind="lib" path="jme/jme-effects.jar" sourcepath="/s0/Install/jme/jme/src"/>
 	<classpathentry kind="lib" path="jme/jme-font.jar"/>
 	<classpathentry kind="lib" path="jme/jme-gamestates.jar"/>
 	<classpathentry kind="lib" path="jme/jme-model.jar" sourcepath="/s0/Install/jme/jme/src"/>
