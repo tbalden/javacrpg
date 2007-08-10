@@ -121,6 +121,7 @@ public class ModelPool {
 	public void cleanPools()
 	{
 		ArrayList<PooledNode> removed = new ArrayList<PooledNode>();
+		ArrayList<PoolItemContainer> removedPoolCont = new ArrayList<PoolItemContainer>();
 		for (PoolItemContainer pic: pool.values())
 		{
 			int toDelete = pic.notUsed.size()-POOL_NUMBER_OF_UNUSED_TO_KEEP;
@@ -136,9 +137,13 @@ public class ModelPool {
 			}
 			if (pic.used.size()==0 && pic.notUsed.size()==0)
 			{
+				removedPoolCont.add(pic);
 				System.out.println("ModelPool.cleanPools: removing pool "+pic.id);
-				pool.remove(pic.id);
 			}
+		}
+		for (PoolItemContainer cont:removedPoolCont)
+		{
+			pool.remove(cont.id);
 		}
 	}
 }
