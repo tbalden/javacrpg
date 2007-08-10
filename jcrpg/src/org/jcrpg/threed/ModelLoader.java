@@ -143,12 +143,6 @@ public class ModelLoader {
 				// adding to drawer
 				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)objects[i]);
 				bbNode.attachChild(node);
-				if (core.sPass!=null && objects[i].shadowCaster)
-				{
-					if (node!=null) {
-						core.possibleOccluders.add(node);
-					}
-				}
 		    	node = bbNode;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
 				r[i] = bbNode;
@@ -161,12 +155,6 @@ public class ModelLoader {
 		    	PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
 				r[i] = psnode;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
-				if (core.sPass!=null && objects[i].shadowCaster)
-				{
-					if (node!=null) {
-						core.possibleOccluders.add(node);
-					}
-				}
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
@@ -193,8 +181,6 @@ public class ModelLoader {
 						{
 							Node target = node;
 							node = new SharedNode("sveg"+((TextureStateVegetationModel)m).getKey(),target);
-							//if (target.getUserData(key))
-							//node.setUserData("", data)
 						}
 						
 					} else 
@@ -205,12 +191,6 @@ public class ModelLoader {
 						// adding to drawer
 						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)m);
 						bbNode.attachChild(node);
-						if (core.sPass!=null && m.shadowCaster)
-						{
-							if (node!=null) {
-								core.possibleOccluders.add(node);
-							}
-						}
 				    	node = bbNode;
 				    	node.setName(((SimpleModel)m).modelName+i);
 						r[i] = bbNode;
@@ -219,13 +199,6 @@ public class ModelLoader {
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
-						
-						if (core.sPass!=null && m.shadowCaster)
-						{
-							if (node!=null) {
-								core.possibleOccluders.add(node);
-							}
-						}
 					}
 					
 					
@@ -266,10 +239,10 @@ public class ModelLoader {
 			}
 			
 			// if model can be rotated on a steep, we set node user data for later use in renderNodes of J3DCore...
-			if (!fakeLoadForCacheMaint && objects[i].rotateOnSteep) 
-			{
-				((Node)r[i]).setUserData("rotateOnSteep", new TriMesh(""));
-			}
+			//if (!fakeLoadForCacheMaint && objects[i].rotateOnSteep) 
+			//{
+				//((Node)r[i]).setUserData("rotateOnSteep", new TriMesh(""));
+			//}
 		}
 		if (!fakeLoadForCacheMaint)
 			return r;
