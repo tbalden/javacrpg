@@ -1,0 +1,108 @@
+[ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
+
+[ ] tree normal vectors, too blocky trees! try with exported obj models!
+
+[ ] cherry foliage
+
+[ ] narrowing quad sized bb part models for pine?
+[ ] bumpmapped texture disappear in the night! ?? checkout jme source?
+[ ] spot light to the user in the night, doesnt work!!
+		
+
+[ ] user manual update
+
+
+[ ] add Harek's table to the house
+
+
+[ ] clean up climate and implement all parts of it with conditions, continue the work on it
+[ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
+[ ] rain, fog, snow?
+
+
+[ ] skySphere change: night sky based on calculated light value (v)
+[ ] cloud planes on sky
+
+[ ] clean up files in SVN
+
+[ ] Wildlife should be generated based on Flora percentage given by flora generators??
+	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
+[?] Lod modelling trees with billboard images captured in blender!
+[?] Tree generation in java code? (billboard leaf quads!)
+[?] Write the wind vertex program? Now it's cpu based!
+[?] if no grass, don't put it on node!
+[?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
+
+--
+[X] new pooling -> update shadow occluder activation!!
+
+[X] model pool ageing and clearing later
+[X] model pool perfection -> some nodes doesn't display after render!! quad vegetation displays on steeps!!
+
+[X]  MODEL POOL BASED ON VIEW DISTANCE, NOT ON RENDER DISTANCE!! (less memory)
+	use with pseoudo nodes!! that are only placed on the scenario to be replaced with real PoolNodes from
+		Model pool! The pool will load a node if necessary! renderToViewPort will use the ModelPool, not the
+		render part!
+
+[X] jungle big tree - covering all, greens on it?
+[X] jungle bush
+[X] reinvent renderArea, magnifications?? need distant view too
+[X] optimize j3dcore render/renderside (based on profile.txt) to make 
+	usable on 15+ DISTANCE with moving too! (3d part is okay now with 6200go)
+[-] memory eater -> quadbillboard is not fine enough...eats memory, caching it solved!
+[X] Shadow occluder number too much -> hashSet, get distance on every render/ remove add them
+[X] update LWJGL/JME from repository
+[X] BillboardPartModel with more quads for Lowest detail, math for more quads, 
+	add LOD level 3 for single quad
+[-] nicer low detail textures for acacia png -> replaced with original texture
+[X] billboard ngplant trees, hashmap based, BillboardPartsModel
+[X] billboarding the grass! (rotation didnt help! :/)
+[X] shadow render pass added! :-)
+[-] Naive vegetation development? -> billboarding?? - Quad in other apps too!
+[X] darkening veg -> mesh? or what?
+
+[X] redraw Window model, it's too detailed on the lower part, unnecessarily
+[X] grass kinds, sophisticated FloraSetup things!
+[X] steeper mountain side is buggy with corners!!!
+
+[X] CKeyAction camera settings, bad when looking up/down!
+
+[X] finalize trees, create low level flora
+[-] Test ImposterModel on FBO system
+[-] ? Strip green from trees, create new Model type, SimpleTreeModel. Would define texture spatial type, plane.
+	alpha state, texture etc.
+
+[X] transparent texture finally working! Put some on the trees, collect some in your next journey to the wild ;)
+[X] use LODModels!
+
+[X] LODModel -> distanceSwitchedNode -> jungle, increase FPS with less detailed models
+[X] ImposterNode http://www.jmonkeyengine.com/wiki/doku.php?id=imposternode - lowest detail - rendered
+[X] Billboard http://www.jmonkeyengine.com/wiki/doku.php?id=billboardnode&s=billboard
+	
+
+[X] lens flare!
+[X] orbiter Suns/Moons each should have own Light direction (see j3dCore for more details on TODO)
+
+
+[X] Time in engine -> skybox..
+
+[X] jungle middle flora -> leaves, desert cactus model :)
+[X] fall down where no GroundSubType! to steep for example!!
+[X] Hill_steep.3ds is wrongly rotated! After that fix Mountain.java to user correct SIDES[] for steeps of diff. 
+	directions. Then complete Movement Blocking in j3dcore for Climbing.
+	
+[X] Weather engine - implement Climate -> fauna - climate condition based forest/plain!
+	[ ] Change flag for rendered thing!? -> example: climate change callback for already generated parts?
+
+
+[X] mountain -> steep display all around a new ground level - movement up ahead on it!! + unpassable rockside generation
+[X] bug in Globe mode -> houses dont display going round ?
+[X] Rendered continuous side bug!
+
+[X] Magnification of Area implementation -> Place will define its magnification RATIO which is used to determine subplaces exact coordinates in a
+	far more bigger area to move in!
+
+[ ] world -> ai, place, object, faune, flora
+
+[X] InputHandler -> create classic keyboard movement/turning which calls J3DCore render area renewal too
