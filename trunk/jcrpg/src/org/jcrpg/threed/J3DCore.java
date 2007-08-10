@@ -1615,42 +1615,47 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 				if (found )
 				{
-					if (!inViewPort.contains(c)) {
+					if (!inViewPort.contains(c)) 
+					{
 						inViewPort.add(c);
 						outOfViewPort.remove(c);
 						for (PlaceholderNode n : c.hsRenderedNodes)
 						{
-							Node node = (Node)modelPool.getModel(n.cube, n.model);
-							n.realNode = (PooledNode)node;
-							node.setLocalRotation(n.getLocalRotation());
-							node.setLocalScale(n.getLocalScale());
-							node.setLocalTranslation(n.getLocalTranslation());
-							cRootNode.attachChild((Node)node);
-							if (node instanceof SharedNode) {
-								node.lockTransforms();
-								node.lockBounds();
-								node.lockBranch();
+							Node realPooledNode = (Node)modelPool.getModel(n.cube, n.model);
+							n.realNode = (PooledNode)realPooledNode;
+							if (realPooledNode instanceof SharedNode) {
+								realPooledNode.unlockTransforms();
+								realPooledNode.unlockBounds();
+								realPooledNode.unlockBranch();
+							}
+
+							realPooledNode.setLocalRotation(n.getLocalRotation());
+							realPooledNode.setLocalScale(n.getLocalScale());
+							realPooledNode.setLocalTranslation(n.getLocalTranslation());
+							cRootNode.attachChild((Node)realPooledNode);
+							realPooledNode.updateRenderState();
+							realPooledNode.updateGeometricState(0.0f, true);
+							if (realPooledNode instanceof SharedNode) {
+								realPooledNode.lockTransforms();
+								realPooledNode.lockBounds();
+								realPooledNode.lockBranch();
 							}
 						}
 					}
 				} else
 				{
-					 if (!outOfViewPort.contains(c)) {
+					 if (!outOfViewPort.contains(c)) 
+					 {
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
 						for (PlaceholderNode n : c.hsRenderedNodes)
 						{
-							PooledNode pnode = n.realNode;
+							PooledNode pooledRealNode = n.realNode;
 							n.realNode = null;
-							if (pnode!=null) {
-								Node node = (Node)pnode;
-								node.removeFromParent();
-								if (node instanceof PlaceholderNode) {
-									node.unlockTransforms();
-									node.unlockBounds();
-									node.unlockBranch();
-								}
-								modelPool.releaseNode(pnode);
+							if (pooledRealNode!=null) {
+								Node realNode = (Node)pooledRealNode;
+								realNode.removeFromParent();
+								modelPool.releaseNode(pooledRealNode);
 							}
 						}
 					 }
@@ -1658,23 +1663,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		updateTimeRelated();
-		//cRootNode.setCullMode(Node.CULL_NEVER);
-		//cRootNode.updateRenderState();
-		//cam.update();
-		//updateDisplayNoBackBuffer();
-		//cRootNode.setCullMode(Node.CULL_DYNAMIC);
+		// newly displaced pooled lod nodes don't appear on screen if this culling thing's not done:
+		cRootNode.setCullMode(Node.CULL_NEVER);
 		cRootNode.updateRenderState();
-		//cam.apply();
+		updateDisplayNoBackBuffer();
 		
+		cRootNode.setCullMode(Node.CULL_DYNAMIC);
+		cRootNode.updateRenderState();
+		
+		modelPool.cleanPools();
 
-		// every 15 steps do a garbage collection
+		// every 20 steps do a garbage collection
 		garbCollCounter++;
-//		if (garbCollCounter==15) {
-	//		System.gc();
-		//	garbCollCounter = 0;
-		//}
+		if (garbCollCounter==20) {
+			System.gc();
+			garbCollCounter = 0;
+		}
 		
-		//hmCurrentCubes
 		//modelLoader.setLockForSharedNodes(true);
 		
 	}

@@ -22,8 +22,10 @@
 
 package org.jcrpg.threed;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
@@ -35,9 +37,16 @@ public class ModelPool {
 
 	public J3DCore core;
 	
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 0; 
+	
 	public class PoolItemContainer {
+		public String id;
 		public HashSet<PooledNode> used = new HashSet<PooledNode>();
 		public HashSet<PooledNode> notUsed = new HashSet<PooledNode>();
+		public PoolItemContainer(String id) {
+			super();
+			this.id = id;
+		}
 	}
 	
 	public ModelPool(J3DCore core)
@@ -47,36 +56,35 @@ public class ModelPool {
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
 	
-	public PooledNode getModel(RenderedCube rc, Model model)
-	{
+	public PooledNode getModel(RenderedCube rc, Model model) {
 		PoolItemContainer cont = pool.get(model.id);
-		if (cont==null)
-		{
-			cont = new PoolItemContainer(); 
-			pool.put(model.id, cont);
-		} else {
-			synchronized (cont.notUsed) {
-				if (cont.notUsed.iterator().hasNext())
-				{
-					//System.out.println("++ FROM POOL MODEL!"+model.id);
+		synchronized (pool) {
+			if (cont == null) {
+				cont = new PoolItemContainer(model.id);
+				pool.put(model.id, cont);
+			} else {
+				if (cont.notUsed.iterator().hasNext()) {
+					// System.out.println("++ FROM POOL MODEL!"+model.id);
 					PooledNode n = cont.notUsed.iterator().next();
 					cont.notUsed.remove(n);
 					cont.used.add(n);
 					return n;
 				}
 			}
+			PooledNode n = core.modelLoader.loadObject(rc, model);
+			// System.out.println("LOADING MODEL!"+model.id);
+			n.setPooledContainer(cont);
+			cont.used.add(n);
+			return n;
 		}
-		PooledNode n = core.modelLoader.loadObject(rc, model);
-		//System.out.println("LOADING MODEL!"+model.id);
-		n.setPooledContainer(cont);
-		cont.used.add(n);
-		return n;
 	}
 	
 	public void releaseNode(PooledNode n)
 	{
-		n.getPooledContainer().used.remove(n);
-		n.getPooledContainer().used.add(n);
+		synchronized (pool) {
+			n.getPooledContainer().used.remove(n);
+			n.getPooledContainer().notUsed.add(n);
+		}
 	}
 	
 	public PooledNode[] loadObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
@@ -110,4 +118,27 @@ public class ModelPool {
 		
 	}
 
+	public void cleanPools()
+	{
+		ArrayList<PooledNode> removed = new ArrayList<PooledNode>();
+		for (PoolItemContainer pic: pool.values())
+		{
+			int toDelete = pic.notUsed.size()-POOL_NUMBER_OF_UNUSED_TO_KEEP;
+			if (toDelete>0) {
+				removed.clear();
+				Iterator<PooledNode> it = pic.notUsed.iterator();
+				for (int i=0; i<toDelete; i++)
+				{
+					removed.add(it.next());
+				}
+				pic.notUsed.removeAll(removed);
+				System.out.println("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);
+			}
+			if (pic.used.size()==0 && pic.notUsed.size()==0)
+			{
+				System.out.println("ModelPool.cleanPools: removing pool "+pic.id);
+				pool.remove(pic.id);
+			}
+		}
+	}
 }

@@ -1,7 +1,4 @@
 [ ] new pooling -> update shadow occluder activation!!
-[ ] model pool ageing and clearing later
-
-[X] model pool perfection -> some nodes doesn't display after render!! quad vegetation displays on steeps!!
 	
 [ ] wall too thick - restructure walling of houses to middle of cubes?
 [ ] cherry foliage
@@ -37,6 +34,9 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] model pool ageing and clearing later
+[X] model pool perfection -> some nodes doesn't display after render!! quad vegetation displays on steeps!!
+
 [X]  MODEL POOL BASED ON VIEW DISTANCE, NOT ON RENDER DISTANCE!! (less memory)
 	use with pseoudo nodes!! that are only placed on the scenario to be replaced with real PoolNodes from
 		Model pool! The pool will load a node if necessary! renderToViewPort will use the ModelPool, not the
