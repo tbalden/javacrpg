@@ -141,7 +141,7 @@ public class ModelLoader {
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				// adding to drawer
-				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)objects[i]);
+				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i]);
 				bbNode.attachChild(node);
 		    	node = bbNode;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
@@ -189,7 +189,7 @@ public class ModelLoader {
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
 						// adding to drawer
-						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),30f,(PartlyBillboardModel)m);
+						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)m);
 						bbNode.attachChild(node);
 				    	node = bbNode;
 				    	node.setName(((SimpleModel)m).modelName+i);
