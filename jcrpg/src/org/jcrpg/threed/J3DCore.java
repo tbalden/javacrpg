@@ -524,8 +524,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,3f},{3f,12f},{12f,18f},{18f,30f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,15f},{15f,30f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,3f},{3f,12f},{12f,18f},{18f,60f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,15f},{15f,40f}};
+	public float[][] treeLodDist = TREE_LOD_DIST_LOW;
 	
 	public J3DCore()
 	{
@@ -723,7 +724,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel fern1 = new SimpleModel("models/bush/fern.3ds",null,MIPMAP_TREES);
 		fern1.shadowCaster = true; fern1.useClodMesh = true;
 
-		float[][] treeLodDist = TREE_LOD_DIST_LOW;
+		treeLodDist = TREE_LOD_DIST_LOW;
 		if (DETAILED_TREES)
 		{
 			treeLodDist = TREE_LOD_DIST_HIGH;
