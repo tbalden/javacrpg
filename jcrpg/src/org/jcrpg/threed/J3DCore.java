@@ -1658,11 +1658,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		updateTimeRelated();
-		cRootNode.setCullMode(Node.CULL_NEVER);
-		cRootNode.updateRenderState();
+		//cRootNode.setCullMode(Node.CULL_NEVER);
+		//cRootNode.updateRenderState();
 		//cam.update();
-		updateDisplayNoBackBuffer();
-		cRootNode.setCullMode(Node.CULL_DYNAMIC);
+		//updateDisplayNoBackBuffer();
+		//cRootNode.setCullMode(Node.CULL_DYNAMIC);
 		cRootNode.updateRenderState();
 		//cam.apply();
 		
