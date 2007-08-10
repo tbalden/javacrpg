@@ -3,8 +3,7 @@ package org.jcrpg.threed.scene;
 import java.util.ArrayList;
 
 import org.jcrpg.space.Cube;
-
-import com.jme.scene.Node;
+import org.jcrpg.threed.PooledNode;
 
 public class RenderedCube {
 
@@ -18,6 +17,6 @@ public class RenderedCube {
 	
 	public Cube cube;
 	public int renderedX, renderedY, renderedZ;
-	public ArrayList<Node> hsRenderedNodes = new ArrayList<Node>();
+	public ArrayList<PooledNode> hsRenderedNodes = new ArrayList<PooledNode>();
 	
 }

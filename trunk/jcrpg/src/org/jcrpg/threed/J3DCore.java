@@ -1366,10 +1366,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		if (c==null) continue;
     		c = hmCurrentCubes.get(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
     		if (c!=null)
-	    	for (Iterator<Node> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+	    	for (Iterator<PooledNode> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	{
 	    		liveNodes--;
-	    		Node n = itNode.next();
+	    		PooledNode n2 = itNode.next();
+	    		Node n = (Node)n2;
 	    		System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
     	    	//n.unlock();
 	    		n.removeFromParent();
@@ -1379,7 +1380,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			// remove solid color quads
 	    			possibleOccluders.remove(n);
 	    		}
-	    		modelPool.releaseNode(n);
+	    		modelPool.releaseNode(n2);
 	    	}
     		
     	}
@@ -1497,10 +1498,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param horizontalRotation Horizontal rotation
 	 * @param scale Scale
 	 */
-	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
+	private void renderNodes(PooledNode[] n2, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
 		//int s = (x << 16) + (y << 8) + z;
 		//String coordKey = ""+s;
+		Node[] n = new Node[n2.length];
+		for (int i=0; i<n2.length; i++)
+		{
+			n[i] = (Node)n2[i];
+		}
 		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
@@ -1565,7 +1571,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			n[i].updateWorldVectors();
 			n[i].updateWorldBound();*/
 
-			cube.hsRenderedNodes.add(n[i]);
+			cube.hsRenderedNodes.add((PooledNode)n[i]);
 			liveNodes++;
 			
 			//cRootNode.attachChild(n[i]);
@@ -1604,8 +1610,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
-				for (Node n : c.hsRenderedNodes)
+				for (PooledNode n2 : c.hsRenderedNodes)
 				{
+					Node n = (Node)n2;
 					if (n.getLocalTranslation().distanceSquared(cam.getLocation())<VIEW_DISTANCE_SQR)
 					{
 						found = true;
@@ -1620,8 +1627,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					if (!inViewPort.contains(c)) {
 						inViewPort.add(c);
 						outOfViewPort.remove(c);
-						for (Node n : c.hsRenderedNodes)
+						for (PooledNode n2 : c.hsRenderedNodes)
 						{
+							Node n = (Node)n2;
 							cRootNode.attachChild(n);
 							if (n instanceof SharedNode) {
 								n.lockTransforms();
@@ -1635,8 +1643,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					 if (!outOfViewPort.contains(c)) {
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
-						for (Node n : c.hsRenderedNodes)
+						for (PooledNode n2 : c.hsRenderedNodes)
 						{
+							Node n = (Node)n2;
 							n.removeFromParent();
 							if (n instanceof SharedNode) {
 								n.unlockTransforms();
@@ -1672,7 +1681,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
-	private void renderNodes(Node[] n, RenderedCube cube, int x, int y, int z, int direction)
+	private void renderNodes(PooledNode[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
@@ -1697,7 +1706,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
 		
-		Node[] n = modelPool.loadObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
+		PooledNode[] n = modelPool.loadObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
 		if (!fakeLoadForCacheMaint) {
 			if (renderedSide instanceof RenderedHashRotatedSide)
 			{

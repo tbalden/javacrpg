@@ -59,7 +59,6 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.lod.DiscreteLodNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -95,7 +94,7 @@ public class ModelLoader {
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
     
-	protected Node loadObject(RenderedCube rc, Model object)
+	protected PooledNode loadObject(RenderedCube rc, Model object)
     {
 		return loadObjects(rc, new Model[]{object}, false)[0];
     }    
@@ -105,11 +104,11 @@ public class ModelLoader {
 	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
 	 * @return
 	 */
-	protected Node[] loadObjects(RenderedCube rc, Model[] objects, boolean fakeLoadForCacheMaint)
+	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean fakeLoadForCacheMaint)
     {
 		
-		Node[] r = null;
-		if (!fakeLoadForCacheMaint) r = new Node[objects.length];
+		PooledNode[] r = null;
+		if (!fakeLoadForCacheMaint) r = new PooledNode[objects.length];
 		if (objects!=null)
 		for (int i=0; i<objects.length; i++) {
 			if (objects[i]==null) continue;
@@ -132,7 +131,7 @@ public class ModelLoader {
 			} else
 			// Quad models
 			if (objects[i] instanceof QuadModel) {
-				Node node = loadQuadModel((QuadModel)objects[i],fakeLoadForCacheMaint);				
+				PooledSharedNode node = loadQuadModel((QuadModel)objects[i],fakeLoadForCacheMaint);				
 				if (fakeLoadForCacheMaint) continue;
 				r[i] = node;
 
@@ -151,15 +150,16 @@ public class ModelLoader {
 					}
 				}
 		    	node = bbNode;
-				r[i] = node;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
+				r[i] = bbNode;
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				
-				r[i] = node;
+		    	PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+				r[i] = psnode;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
 				if (core.sPass!=null && objects[i].shadowCaster)
 				{
@@ -175,7 +175,7 @@ public class ModelLoader {
 				
 				int c=0; // counter
 				DistanceSwitchModel dsm = new DistanceSwitchModel(lm.models.length);
-				DiscreteLodNode lodNode = new DiscreteLodNode("dln",dsm);
+				PooledDiscreteLodNode lodNode = new PooledDiscreteLodNode("dln",dsm);
 				for (Model m : lm.models) {
 					Node node = null;
 					if (m instanceof TextureStateVegetationModel)
@@ -212,8 +212,9 @@ public class ModelLoader {
 							}
 						}
 				    	node = bbNode;
-						r[i] = node;
-						node.setName(((SimpleModel)m).modelName+i);
+				    	node.setName(((SimpleModel)m).modelName+i);
+						r[i] = bbNode;
+						
 					} else
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
@@ -261,14 +262,13 @@ public class ModelLoader {
 				}
 				
 				if (fakeLoadForCacheMaint) continue;
-				
 				r[i] = lodNode;
 			}
 			
 			// if model can be rotated on a steep, we set node user data for later use in renderNodes of J3DCore...
 			if (!fakeLoadForCacheMaint && objects[i].rotateOnSteep) 
 			{
-				r[i].setUserData("rotateOnSteep", new TriMesh(""));
+				((Node)r[i]).setUserData("rotateOnSteep", new TriMesh(""));
 			}
 		}
 		if (!fakeLoadForCacheMaint)
@@ -467,7 +467,7 @@ public class ModelLoader {
     	
     }
     
-    public Node loadQuadModel(QuadModel m, boolean fake)
+    public PooledSharedNode loadQuadModel(QuadModel m, boolean fake)
     {
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
     	tempNodeKeys.add(m.textureName+m.dot3TextureName);
@@ -476,7 +476,7 @@ public class ModelLoader {
 		
 		Node node = sharedNodeCache.get(m.textureName+m.dot3TextureName);
 		if (node!=null) {
-			Node r =  new SharedNode("node"+counter++,node);
+			PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
 			return r;
 		}
     	
@@ -497,13 +497,13 @@ public class ModelLoader {
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
 		
 		
-		node = new Node();
-		node.attachChild(quad);
-		node.setModelBound(new BoundingBox());
-		node.updateModelBound();
+		Node nnode = new Node();
+		nnode.attachChild(quad);
+		nnode.setModelBound(new BoundingBox());
+		nnode.updateModelBound();
 		
-		sharedNodeCache.put(m.textureName+m.dot3TextureName, node);
-		Node r = new SharedNode("node"+counter++,node);
+		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
+		PooledSharedNode r = new PooledSharedNode("node"+counter++,nnode);
 		//r.setModelBound(new BoundingBox());
         //r.updateModelBound();
 		return r;
@@ -553,7 +553,7 @@ public class ModelLoader {
      * @param fakeLoadForCacheMaint If this is true, only cache maintenance is needed, the model is already rendered and live
      * @return
      */
-    public Node loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
+    public PooledSharedNode loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
     {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
@@ -575,7 +575,7 @@ public class ModelLoader {
     	{
     		Node n = sharedNodeCache.get(key);
     		if (n!=null) {
-	    		Node r =  new SharedNode("node"+counter++,n);
+    			PooledSharedNode r =  new PooledSharedNode("node"+counter++,n);
 	    		//r.setModelBound(new BoundingBox());
 	            //r.updateModelBound();
 	            return r;
@@ -640,7 +640,7 @@ public class ModelLoader {
 					sharedNodeCache.put(key, node);
 					node.setModelBound(new BoundingBox());
 					node.updateModelBound();
-					Node r = new SharedNode("node"+counter++,node);
+					PooledSharedNode r = new PooledSharedNode("node"+counter++,node);
 		    		//r.setModelBound(new BoundingBox());
 		            //r.updateModelBound();
 		            //r.setRenderState(core.vp);
@@ -746,7 +746,7 @@ public class ModelLoader {
 				sharedNodeCache.put(key, node);
 				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
 				node.updateModelBound();				
-				Node r =  new SharedNode("node"+counter++,node);
+				PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
 	    		//r.setModelBound(new BoundingBox());
 	            //r.updateModelBound();
 	            //r.setRenderState(core.vp);
