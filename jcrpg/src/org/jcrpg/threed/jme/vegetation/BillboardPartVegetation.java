@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.util.HashUtil;
 
@@ -53,8 +55,17 @@ import com.jme.scene.state.TextureState;
  * Removes model specified trimesh batch and replaces it with billboarded quads.
  * @author pali
  */
-public class BillboardPartVegetation extends Node {
+public class BillboardPartVegetation extends Node implements PooledNode {
 
+	public org.jcrpg.threed.ModelPool.PoolItemContainer cont;
+
+	public PoolItemContainer getPooledContainer() {
+		return cont;
+	}
+
+	public void setPooledContainer(PoolItemContainer cont) {
+		this.cont = cont;
+	}
 	
 	public PartlyBillboardModel model;
 	public static HashMap<String, Quad> quadCache = new HashMap<String, Quad>();

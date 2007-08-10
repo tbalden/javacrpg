@@ -28,18 +28,14 @@ import java.util.HashSet;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 
-import com.jme.scene.Node;
-
 public class ModelPool {
 
 	public J3DCore core;
 	
 	public class PoolItemContainer {
-		public HashSet<Node> used = new HashSet<Node>();
-		public HashSet<Node> notUsed = new HashSet<Node>();
+		public HashSet<PooledNode> used = new HashSet<PooledNode>();
+		public HashSet<PooledNode> notUsed = new HashSet<PooledNode>();
 	}
-	
-	public HashMap<Node, PoolItemContainer> hmNodeToModelPool = new HashMap<Node, PoolItemContainer>();
 	
 	public ModelPool(J3DCore core)
 	{
@@ -48,7 +44,7 @@ public class ModelPool {
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
 	
-	public Node getModel(RenderedCube rc, Model model)
+	public PooledNode getModel(RenderedCube rc, Model model)
 	{
 		PoolItemContainer cont = pool.get(model.id);
 		if (cont==null)
@@ -60,33 +56,30 @@ public class ModelPool {
 				if (cont.notUsed.iterator().hasNext())
 				{
 					//System.out.println("++ FROM POOL MODEL!"+model.id);
-					Node n = cont.notUsed.iterator().next();
+					PooledNode n = cont.notUsed.iterator().next();
 					cont.notUsed.remove(n);
 					cont.used.add(n);
 					return n;
 				}
 			}
 		}
-		Node n = core.modelLoader.loadObject(rc, model);
+		PooledNode n = core.modelLoader.loadObject(rc, model);
 		//System.out.println("LOADING MODEL!"+model.id);
-		hmNodeToModelPool.put(n, cont);
+		n.setPooledContainer(cont);
 		cont.used.add(n);
 		return n;
 	}
 	
-	public void releaseNode(Node n)
+	public void releaseNode(PooledNode n)
 	{
-		synchronized (hmNodeToModelPool) {
-			PoolItemContainer cont = hmNodeToModelPool.get(n);
-			cont.used.remove(n);
-			cont.notUsed.add(n);
-		}
+		n.getPooledContainer().used.remove(n);
+		n.getPooledContainer().used.add(n);
 	}
 	
-	public Node[] loadObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
+	public PooledNode[] loadObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
 	{
 		if (fakeLoadForCacheMaint) return null; 
-		Node[] retNodes = new Node[objects.length];
+		PooledNode[] retNodes = new PooledNode[objects.length];
 		int count = 0;
 		for (Model objModel : objects)
 		{
