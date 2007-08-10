@@ -1,6 +1,7 @@
-[ ] new pooling -> update shadow occluder activation!!
-	
-[ ] wall too thick - restructure walling of houses to middle of cubes?
+[ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
+
+[ ] tree normal vectors, too blocky trees! try with exported obj models!
+
 [ ] cherry foliage
 
 [ ] narrowing quad sized bb part models for pine?
@@ -34,6 +35,8 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] new pooling -> update shadow occluder activation!!
+
 [X] model pool ageing and clearing later
 [X] model pool perfection -> some nodes doesn't display after render!! quad vegetation displays on steeps!!
 

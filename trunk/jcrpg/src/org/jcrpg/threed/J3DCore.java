@@ -730,39 +730,54 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 
 		LODModel lod_cherry = new LODModel("cherry",new SimpleModel[]{cherry,cherry_low,cherry_lowest,cherry_lowest_2},treeLodDist);
+		lod_cherry.shadowCaster = true;
 		LODModel lod_acacia = new LODModel("acacia",new SimpleModel[]{acacia,acacia_low,acacia_lowest,acacia_lowest_2},treeLodDist);
+		lod_acacia.shadowCaster = true;
 		//LODModel lod_pine = new LODModel(new SimpleModel[]{pine},new float[][]{{0f,15f}});
 		LODModel lod_pine = new LODModel("pine",new SimpleModel[]{pine_high,pine_high,pine_lowest,pine_lowest_2},treeLodDist);
+		lod_pine.shadowCaster = true;
 		//LODModel lod_great_pine = new LODModel(new SimpleModel[]{great_pine},new float[][]{{0f,15f}});
 		LODModel lod_great_pine = new LODModel("great_pine",new SimpleModel[]{great_pine_high,great_pine_high,great_pine_lowest,great_pine_lowest_2},treeLodDist);
+		lod_great_pine.shadowCaster = true;
 		//LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel("palm",new SimpleModel[]{coconut_high,coconut_high,coconut_lowest,coconut_lowest_2},treeLodDist);
+		lod_palm.shadowCaster = true;
 		LODModel lod_jungletrees_mult = new LODModel("jungletrees_mult",new SimpleModel[]{palm_high,palm_high,palm_lowest,palm_lowest_2},treeLodDist);
+		lod_jungletrees_mult.shadowCaster = true;
 		LODModel lod_cactus = new LODModel("cactus",new SimpleModel[]{cactus},new float[][]{{0f,15f}});
+		lod_cactus.shadowCaster = true;
 		LODModel lod_bush1 = new LODModel("bush1",new SimpleModel[]{bush,bush_low,bush_lowest,bush_lowest_2},treeLodDist);
+		lod_bush1.shadowCaster = true;
 		LODModel lod_jungle_bush1 = new LODModel("jungle_bush1",new SimpleModel[]{jungle_bush,jungle_bush_low,jungle_bush_lowest,jungle_bush_lowest_2},treeLodDist);
+		lod_jungle_bush1.shadowCaster = true;
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
+		lod_fern.shadowCaster = true;
 
 		//TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png","grass1_flower_3.png"},0.7f,0.45f,2,1f);
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.7f,0.45f,2,1f);
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.5f,0.5f,2,1f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.7f,0.45f,2,1f);
 		LODModel lod_jung_grass_1 = new LODModel("jung_grass_1",new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 
 		// 3d type to file mapping		
 		SimpleModel wall_thick = new SimpleModel("sides/wall_thick.3ds", null);
 		wall_thick.shadowCaster = true;
+		wall_thick.cullNone = true;
 		SimpleModel wall_window = new SimpleModel("sides/wall_window.3ds", null);
 		wall_window.shadowCaster = true;
+		wall_window.cullNone = true;
 		SimpleModel wall_door = new SimpleModel("sides/door.3ds", null);
 		wall_door.shadowCaster = true;
+		wall_door.cullNone = true;
 		SimpleModel wall_door_wall = new SimpleModel("sides/wall_door.3ds", null);
 		wall_door_wall.shadowCaster = true;
+		wall_door_wall.cullNone = true;
 		SimpleModel roof_side = new SimpleModel("sides/roof_side.3ds", null);
 		roof_side.shadowCaster = true;
+		roof_side.cullNone = true;
 		SimpleModel roof_corner = new SimpleModel("sides/roof_corner.3ds", null);
 		roof_corner.shadowCaster = true;
 		SimpleModel roof_opp = new SimpleModel("sides/roof_corner_opp.3ds", null);
@@ -1240,7 +1255,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public HashSet<Node> possibleOccluders = new HashSet<Node>();
+	public HashSet<NodePlaceholder> possibleOccluders = new HashSet<NodePlaceholder>();
 	
 	/**
 	 * Removes node and all subnodes from shadowrenderpass. Use it when removing node from scenario!
@@ -1248,6 +1263,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void removeOccludersRecoursive(Node s)
 	{
+		if (s==null) return;
 		sPass.removeOccluder(s);
 		if (s.getChildren()!=null)
 		for (Spatial c:s.getChildren())
@@ -1364,16 +1380,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		if (c==null) continue;
     		c = hmCurrentCubes.get(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
     		if (c!=null)
-	    	for (Iterator<PlaceholderNode> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	{
 	    		liveNodes--;
-	    		PlaceholderNode n = itNode.next();
+	    		NodePlaceholder n = itNode.next();
 	    		//System.out.println("REMOVING: "+n+" "+n.getChildren().size()+" "+n.getChild(0)+" !");
     	    	//n.unlock();
-	    		n.removeFromParent();
-	    		if (sPass!=null) {
+	    		//n.removeFromParent();
+	    		if (SHADOWS) {
 	    			// remove from shadowrenderpass
-	    			removeOccludersRecoursive(n);
+	    			if ((Node)n.realNode!=null)
+	    				removeOccludersRecoursive((Node)n.realNode);
 	    			// remove solid color quads
 	    			possibleOccluders.remove(n);
 	    		}
@@ -1394,7 +1411,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			//System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
-			if (hmCurrentCubes.containsKey(""+c.cube.x+" "+c.cube.y+" "+c.cube.z)) 
+			String cubeKey = ""+c.cube.x+" "+c.cube.y+" "+c.cube.z;
+			if (hmCurrentCubes.containsKey(cubeKey))
 			{
 				already++;
 				// yes, we have it rendered...
@@ -1410,14 +1428,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						renderSide(cOrig,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],true); // fake = true!
 				}
 
-				//for (Iterator<Node> itNode = cOrig.hsRenderedNodes.iterator(); itNode.hasNext();)
-		    	{
-		    		//Node n = itNode.next();
-		    		//n.updateRenderState();
-		    		//n.updateModelBound();
-		    	}
 				// add to the new cubes, it is rendered already
-				hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,cOrig); // keep cOrig with jme nodes!!
+				hmNewCubes.put(cubeKey,cOrig); // keep cOrig with jme nodes!!
 				continue;				
 			}
 			newly++;
@@ -1432,7 +1444,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 			// store it to new cubes hashmap
-			hmNewCubes.put(""+c.cube.x+" "+c.cube.y+" "+c.cube.z,c);
+			hmNewCubes.put(cubeKey,c);
 		}
 		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 	    for (RenderedCube cToDetach:hmCurrentCubes.values())
@@ -1446,20 +1458,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    hmCurrentCubes.clear();
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 
-	    // handling possible occluders
-		for (Node psn:possibleOccluders)
-		{
-			float dist = psn.getWorldTranslation().distanceSquared(cam.getLocation());
-			if (dist<J3DCore.RENDER_SHADOW_DISTANCE_SQR)
-			{
-				sPass.addOccluder(psn);
-			} else
-			{
-				removeOccludersRecoursive(psn);				
-			}
-		}
-
-		updateTimeRelated();
+	    updateTimeRelated();
 		
 		
 		fpsNode.detachChild(loadText);
@@ -1495,7 +1494,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param horizontalRotation Horizontal rotation
 	 * @param scale Scale
 	 */
-	private void renderNodes(PlaceholderNode[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
+	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
 		//int s = (x << 16) + (y << 8) + z;
 		//String coordKey = ""+s;
@@ -1563,7 +1562,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			n[i].updateWorldVectors();
 			n[i].updateWorldBound();*/
 
-			cube.hsRenderedNodes.add((PlaceholderNode)n[i]);
+			cube.hsRenderedNodes.add((NodePlaceholder)n[i]);
 			liveNodes++;
 			
 			//cRootNode.attachChild(n[i]);
@@ -1602,7 +1601,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
-				for (PlaceholderNode n : c.hsRenderedNodes)
+				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
 					if (n.getLocalTranslation().distanceSquared(cam.getLocation())<VIEW_DISTANCE_SQR)
 					{
@@ -1619,7 +1618,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					{
 						inViewPort.add(c);
 						outOfViewPort.remove(c);
-						for (PlaceholderNode n : c.hsRenderedNodes)
+						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							Node realPooledNode = (Node)modelPool.getModel(n.cube, n.model);
 							n.realNode = (PooledNode)realPooledNode;
@@ -1648,12 +1647,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					 {
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
-						for (PlaceholderNode n : c.hsRenderedNodes)
+						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							PooledNode pooledRealNode = n.realNode;
 							n.realNode = null;
 							if (pooledRealNode!=null) {
 								Node realNode = (Node)pooledRealNode;
+								if (SHADOWS) removeOccludersRecoursive(realNode);
 								realNode.removeFromParent();
 								modelPool.releaseNode(pooledRealNode);
 							}
@@ -1662,10 +1662,24 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
+	    // handling possible occluders
+	    if (SHADOWS)
+		for (NodePlaceholder psn : possibleOccluders) {
+				if (psn.realNode != null) {
+					Node n = (Node) psn.realNode;
+					float dist = n.getWorldTranslation().distanceSquared(
+							cam.getLocation());
+					if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
+						sPass.addOccluder(n);
+					} else {
+						removeOccludersRecoursive(n);
+					}
+				}
+			}
 		updateTimeRelated();
 		// newly displaced pooled lod nodes don't appear on screen if this culling thing's not done:
 		cRootNode.setCullMode(Node.CULL_NEVER);
-		cRootNode.updateRenderState();
+		//cRootNode.updateRenderState();
 		updateDisplayNoBackBuffer();
 		
 		cRootNode.setCullMode(Node.CULL_DYNAMIC);
@@ -1684,7 +1698,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
-	private void renderNodes(PlaceholderNode[] n, RenderedCube cube, int x, int y, int z, int direction)
+	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
 		renderNodes(n, cube, x, y, z, direction, -1, 1f);
 	}
@@ -1709,7 +1723,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		RenderedSide renderedSide = hm3dTypeRenderedSide.get(n3dType);
 		
 		
-		PlaceholderNode[] n = modelPool.loadPlaceHolderObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
+		NodePlaceholder[] n = modelPool.loadPlaceHolderObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
 		if (!fakeLoadForCacheMaint) {
 			if (renderedSide instanceof RenderedHashRotatedSide)
 			{
@@ -2220,7 +2234,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
  
 	private FogState fs;
-    public ShadowedRenderPass sPass = new ShadowedRenderPass();
+    public ShadowedRenderPass sPass = null;
 	private BloomRenderPass bloomRenderPass;
 	
 	public CullState cs_back = null;
@@ -2344,9 +2358,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 		if (!BLOOM_EFFECT) {
 			if (TEXTURE_QUAL_HIGH)
-				as.setReference(0.7f);
+				as.setReference(0.9f);
 			else
-				as.setReference(0.65f);
+				as.setReference(0.9f);
 		}
 			else as.setReference(0.5f);
 		as.setTestEnabled(true);
@@ -2379,6 +2393,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 
 		if (SHADOWS) {
+			sPass = new ShadowedRenderPass();
 			System.out.println("SHADOWS!");
 			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);

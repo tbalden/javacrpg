@@ -39,7 +39,7 @@ public class Engine implements Runnable {
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
-				worldMeanTime.tick(50);
+				worldMeanTime.tick(400);
 				setTimeChanged(true);
 			}
 		}

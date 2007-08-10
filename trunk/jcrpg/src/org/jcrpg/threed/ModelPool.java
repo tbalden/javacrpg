@@ -30,14 +30,14 @@ import java.util.Iterator;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 
-import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 
 public class ModelPool {
 
 	public J3DCore core;
 	
-	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 0; 
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 5; 
 	
 	public class PoolItemContainer {
 		public String id;
@@ -75,6 +75,16 @@ public class ModelPool {
 			// System.out.println("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
+			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			if ( toCreate>0)
+			{
+				for (int i=0; i<toCreate; i++)
+				{
+					PooledNode unused = core.modelLoader.loadObject(rc, model);
+					unused.setPooledContainer(cont);
+					cont.notUsed.add(unused);
+				}
+			}
 			return n;
 		}
 	}
@@ -100,19 +110,26 @@ public class ModelPool {
 		
 	}
 
-	public PlaceholderNode[] loadPlaceHolderObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
+	public NodePlaceholder[] loadPlaceHolderObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
 	{
 		if (fakeLoadForCacheMaint) return null; 
-		PlaceholderNode[] retNodes = new PlaceholderNode[objects.length];
+		NodePlaceholder[] retNodes = new NodePlaceholder[objects.length];
 		int count = 0;
 		for (Model objModel : objects)
 		{
-			retNodes[count++] = new PlaceholderNode();
+			retNodes[count++] = new NodePlaceholder();
 			retNodes[count-1].model = objModel;
 			retNodes[count-1].cube = cube;
 			if (objModel.rotateOnSteep) {
-				((Node)retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
+				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
 			}
+			if (core.sPass!=null && objModel.shadowCaster)
+			{
+				if (retNodes[count-1]!=null) {
+					core.possibleOccluders.add(retNodes[count-1]);
+				}
+			}
+			
 		}
 		return retNodes;
 		
