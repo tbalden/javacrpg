@@ -1,0 +1,399 @@
++----------------------------------------------------------------------
+|  File: profile.txt
+|  Date: 2007.08.04 18:26:58 PM
++----------------------------------------------------------------------
+
++------------------------------
+| Thread depth limit: Compact
++------------------------------
++------------------------------
+| Thread: 1
++------------------------------
+              Time            Percent    
+       ----------------- ---------------
+ Count    Total      Net   Total     Net  Location
+ =====    =====      ===   =====     ===  =========
+     1   3177.5      5.0   100.0     0.2  +--Jcrpg:main	(org.jcrpg.apps)
+     1   3172.6    251.3    99.8     7.9  | +--Jcrpg:start	(org.jcrpg.apps)
+     1     23.2      0.8     0.7          | | +--LoggingSystem:getLogger	(com.jme.util)
+     1     22.4     22.3     0.7     0.7  | | | +--LoggingSystem:<init>	(com.jme.util)
+     7      7.1      0.3     0.2          | | +--Quaternion:fromAngleAxis	(com.jme.math)
+     7      5.7      0.3     0.2          | | | +--Vector3f:normalize	(com.jme.math)
+     7      5.1      4.9     0.2     0.2  | | | | +--Vector3f:length	(com.jme.math)
+     7      1.1      0.3     0.0          | | | +--Quaternion:fromAngleNormalAxis	(com.jme.math)
+     8      3.5      0.2     0.1          | | +--Quaternion:fromAngles	(com.jme.math)
+     8      3.3      1.2     0.1          | | | +--Quaternion:fromAngles	(com.jme.math)
+    24      1.4      0.6     0.0          | | | | +--FastMath:cos	(com.jme.math)
+     1    150.9    107.6     4.7     3.4  | | +--J3DCore:<init>	(org.jcrpg.threed)
+     3      1.1      0.2     0.0          | | | +--Node:<init>	(com.jme.scene)
+     1     32.7      7.0     1.0     0.2  | | | +--ShadowedRenderPass:<init>	(com.jme.renderer.pass)
+     1     25.1      0.1     0.8          | | | | +--Quad:<init>	(com.jme.scene.shape)
+     1     11.0      0.1     0.3          | | | | | +--TriMesh:<init>	(com.jme.scene)
+     1     10.9      0.1     0.3          | | | | | | +--Geometry:<init>	(com.jme.scene)
+     1      8.6      2.9     0.3          | | | | | | | +--TriMesh:setupBatchList	(com.jme.scene)
+     1      5.6      0.1     0.2          | | | | | | | | +--TriangleBatch:<init>	(com.jme.scene.batch)
+     1      5.5      4.9     0.2     0.2  | | | | | | | | | +--GeomBatch:<init>	(com.jme.scene.batch)
+     1      2.0      0.0     0.1          | | | | | | | +--Geometry:reconstruct	(com.jme.scene)
+     1      1.9      0.3     0.1          | | | | | | | | +--Geometry:reconstruct	(com.jme.scene)
+     1      1.0      0.1     0.0          | | | | | | | | | +--GeomBatch:addTextureCoordinates	(com.jme.scene.batch)
+     1     14.0     10.2     0.4     0.3  | | | | | +--Quad:initialize	(com.jme.scene.shape)
+     2      1.8      0.1     0.1          | | | | | | +--BufferUtils:createVector3Buffer	(com.jme.util.geom)
+     2      1.7      1.7     0.1          | | | | | | | +--BufferUtils:createFloatBuffer	(com.jme.util.geom)
+    57      2.3      1.9     0.1          | | | +--Side:<init>	(org.jcrpg.space)
+    32      2.7      1.7     0.1          | | | +--PartlyBillboardModel:<init>	(org.jcrpg.threed.scene.model)
+    32      1.0      0.8     0.0          | | | | +--SimpleModel:<init>	(org.jcrpg.threed.scene.model)
+     1      3.8      1.0     0.1          | | +--World:<init>	(org.jcrpg.world.place)
+     1      2.7      2.4     0.1          | | | +--BoundaryUtils:createCubicBoundaries	(org.jcrpg.world.place)
+     1     81.8      3.7     2.6     0.1  | | +--BaseFloraContainer:<init>	(org.jcrpg.world.ai.flora.impl)
+     1     61.8     34.3     1.9     1.1  | | | +--BaseFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      3.0      2.7     0.1          | | | | +--Day:<init>	(org.jcrpg.world.climate.impl.generic)
+     1     15.0     14.8     0.5     0.5  | | | | +--Night:<init>	(org.jcrpg.world.climate.impl.generic)
+     1      3.5      3.2     0.1     0.1  | | | | +--Grass:<init>	(org.jcrpg.world.ai.flora.ground)
+     1      1.1      0.9     0.0          | | | | +--Spring:<init>	(org.jcrpg.world.climate.impl.desert)
+     1      4.1      0.1     0.1          | | | +--ForestFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      4.0      0.5     0.1          | | | | +--BaseFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      6.7      0.4     0.2          | | | +--PlainFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      4.3      0.5     0.1          | | | | +--BaseFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      5.6      0.2     0.2          | | | +--MountainFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+     1      4.0      0.5     0.1          | | | | +--BaseFloraGenerator:<init>	(org.jcrpg.world.ai.flora.impl)
+    10     84.7     30.3     2.7     1.0  | | +--BoundaryUtils:createCubicBoundaries	(org.jcrpg.world.place)
+  1610     54.3     41.3     1.7     1.3  | | | +--Boundaries:addCube	(org.jcrpg.world.place)
+  1610     13.0     13.0     0.4     0.4  | | | | +--Boundaries:getKey	(org.jcrpg.world.place)
+     2     27.1      4.6     0.9     0.1  | | +--House:<init>	(org.jcrpg.world.place.economic)
+     2      6.1      2.2     0.2          | | | +--BoundaryUtils:createCubicBoundaries	(org.jcrpg.world.place)
+   114      3.9      2.9     0.1          | | | | +--Boundaries:addCube	(org.jcrpg.world.place)
+   112      6.7      2.9     0.2          | | | +--Cube:<init>	(org.jcrpg.space)
+   112      3.9      3.2     0.1     0.1  | | | | +--Cube:<init>	(org.jcrpg.space)
+   112      9.3      8.1     0.3     0.3  | | | +--Place:addStoredCube	(org.jcrpg.world.place)
+   112      1.2      1.2     0.0          | | | | +--Place:getStoredCubeKeyString	(org.jcrpg.world.place)
+     1     26.0      0.1     0.8          | | +--Mountain:<init>	(org.jcrpg.world.place.geography)
+     1     25.9      5.7     0.8     0.2  | | | +--BoundaryUtils:createCubicBoundaries	(org.jcrpg.world.place)
+   300     20.1      8.3     0.6     0.3  | | | | +--Boundaries:addCube	(org.jcrpg.world.place)
+   300     11.9     11.9     0.4     0.4  | | | | | +--Boundaries:getKey	(org.jcrpg.world.place)
+     1   2510.6      0.0    79.0          | | +--J3DCore:initCore	(org.jcrpg.threed)
+     1      4.1      4.0     0.1     0.1  | | | +--AbstractGame:setDialogBehaviour	(com.jme.app)
+     1   2506.4      0.0    78.9          | | | +--BaseGame:start	(com.jme.app)
+     1   2438.2     33.7    76.7     1.1  | | | | +--AbstractGame:getAttributes	(com.jme.app)
+     1   1120.1    296.7    35.3     9.3  | | | | | +--LWJGLPropertiesDialog:<init>	(com.jme.system.lwjgl)
+     1     27.7     25.6     0.9     0.8  | | | | | | +--Sys:createImplementation	(org.lwjgl)
+     1      2.3      0.1     0.1          | | | | | | +--Sys:loadLibrary	(org.lwjgl)
+     2      2.2      1.0     0.1          | | | | | | | +--Sys:doLoadLibrary	(org.lwjgl)
+     2      1.2      1.2     0.0          | | | | | | | | +--Sys$1:run	(org.lwjgl)
+     1     32.5     30.3     1.0     1.0  | | | | | | +--Display:createDisplayImplementation	(org.lwjgl.opengl)
+     1      2.0      1.9     0.1          | | | | | | | +--LinuxDisplay:<init>	(org.lwjgl.opengl)
+     1     24.4      0.1     0.8          | | | | | | +--LinuxDisplay:init	(org.lwjgl.opengl)
+     1     14.9      0.2     0.5          | | | | | | | +--LinuxDisplay:internAtom	(org.lwjgl.opengl)
+     1     14.2      3.9     0.4     0.1  | | | | | | | | +--LinuxDisplay:incDisplay	(org.lwjgl.opengl)
+     1     10.1     10.1     0.3     0.3  | | | | | | | | | +--GLContext:loadOpenGLLibrary	(org.lwjgl.opengl)
+     1      2.4      0.1     0.1          | | | | | | | +--LinuxDisplay:getBestDisplayModeExtension	(org.lwjgl.opengl)
+     1      2.3      0.3     0.1          | | | | | | | | +--LinuxDisplay:isXrandrSupported	(org.lwjgl.opengl)
+     1      3.8      1.4     0.1          | | | | | | | +--LinuxDisplay:getAvailableDisplayModes	(org.lwjgl.opengl)
+    35      1.1      0.9     0.0          | | | | | | | | +--DisplayMode:<init>	(org.lwjgl.opengl)
+     1      1.4      0.3     0.0          | | | | | | | +--LinuxDisplay:getCurrentXRandrMode	(org.lwjgl.opengl)
+     1      1.7      0.3     0.1          | | | | | | | +--LinuxDisplay:getCurrentGammaRamp	(org.lwjgl.opengl)
+     1    374.9    100.9    11.8     3.2  | | | | | | +--Display:getAvailableDisplayModes	(org.lwjgl.opengl)
+     1    273.8      0.7     8.6          | | | | | | | +--LinuxDisplay:getAvailableDisplayModes	(org.lwjgl.opengl)
+     1    271.9    271.8     8.6     8.6  | | | | | | | | +--LinuxDisplay:incDisplay	(org.lwjgl.opengl)
+   140     14.2      2.1     0.4          | | | | | | +--LWJGLPropertiesDialog$DisplayModeSorter:compare	(com.jme.system.lwjgl)
+   140     12.1      9.2     0.4     0.3  | | | | | | | +--LWJGLPropertiesDialog$DisplayModeSorter:compare	(com.jme.system.lwjgl)
+   488      1.9      1.9     0.1          | | | | | | | | +--DisplayMode:getWidth	(org.lwjgl.opengl)
+     1    346.9    246.1    10.9     7.7  | | | | | | +--LWJGLPropertiesDialog:createUI	(com.jme.system.lwjgl)
+     1     79.6     78.2     2.5     2.5  | | | | | | | +--LWJGLPropertiesDialog:setUpResolutionChooser	(com.jme.system.lwjgl)
+     1      1.3      1.0     0.0          | | | | | | | | +--LWJGLPropertiesDialog:getResolutions	(com.jme.system.lwjgl)
+     1     13.0      6.5     0.4     0.2  | | | | | | | +--LWJGLPropertiesDialog:setUpRendererChooser	(com.jme.system.lwjgl)
+     1      6.4      0.1     0.2          | | | | | | | | +--DisplaySystem:getSystemProviderIdentifiers	(com.jme.system)
+     1      6.4      6.3     0.2     0.2  | | | | | | | | | +--DisplaySystem:getSystemProviderMap	(com.jme.system)
+     1      5.2      0.3     0.2          | | | | | | | +--LWJGLPropertiesDialog:updateDisplayChoices	(com.jme.system.lwjgl)
+     1      2.7      2.1     0.1          | | | | | | | | +--LWJGLPropertiesDialog:getDepths	(com.jme.system.lwjgl)
+     1      2.1      1.6     0.1          | | | | | | | | +--LWJGLPropertiesDialog:getFrequencies	(com.jme.system.lwjgl)
+     1      1.5      1.5     0.0          | | | | | | | +--LWJGLPropertiesDialog:showDialog	(com.jme.system.lwjgl)
+     1     65.1      0.0     2.0          | | | | +--J3DCore:cleanup	(org.jcrpg.threed)
+     1     65.1     39.8     2.0     1.3  | | | | | +--BaseSimpleGame:cleanup	(com.jme.app)
+     1     25.1      0.1     0.8          | | | | | | +--TextureManager:doTextureCleanup	(com.jme.util)
+     2     25.0      0.1     0.8          | | | | | | | +--DisplaySystem:getDisplaySystem	(com.jme.system)
+     2     24.9     22.6     0.8     0.7  | | | | | | | | +--LWJGLSystemProvider:getDisplaySystem	(com.jme.system.lwjgl)
+     1      2.3      1.5     0.1          | | | | | | | | | +--LWJGLDisplaySystem:<init>	(com.jme.system.lwjgl)
+     1      3.2      0.0     0.1          | | | | +--J3DCore:quit	(org.jcrpg.threed)
+     1      3.0      3.0     0.1          | | | | | +--BaseSimpleGame:quit	(com.jme.app)
+
++--------------------------------------
+| Most expensive methods (by net time)
+| Frame Count Limit: Compact
++--------------------------------------
+
+               Net
+          ------------
+ Count     Time    Pct  Location
+ =====     ====    ===  ========
+     1   1127.2   36.0  org.jcrpg.world.Engine:run
+     1    296.7    9.3  com.jme.system.lwjgl.LWJGLPropertiesDialog:<init>
+     1    271.8    8.6  org.lwjgl.opengl.LinuxDisplay:incDisplay
+     1    251.3    7.9  org.jcrpg.apps.Jcrpg:start
+     1    246.1    7.7  com.jme.system.lwjgl.LWJGLPropertiesDialog:createUI
+     1    107.6    3.4  org.jcrpg.threed.J3DCore:<init>
+     1    100.9    3.2  org.lwjgl.opengl.Display:getAvailableDisplayModes
+     1     78.2    2.5  com.jme.system.lwjgl.LWJGLPropertiesDialog:setUpResolutionChooser
+  1610     41.3    1.3  org.jcrpg.world.place.Boundaries:addCube
+     1     39.8    1.3  com.jme.app.BaseSimpleGame:cleanup
+     1     34.3    1.1  org.jcrpg.world.ai.flora.impl.BaseFloraGenerator:<init>
+     1     33.7    1.1  com.jme.app.AbstractGame:getAttributes
+    10     30.3    1.0  org.jcrpg.world.place.BoundaryUtils:createCubicBoundaries
+     1     30.3    1.0  org.lwjgl.opengl.Display:createDisplayImplementation
+     1     25.6    0.8  org.lwjgl.Sys:createImplementation
+     2     22.6    0.7  com.jme.system.lwjgl.LWJGLSystemProvider:getDisplaySystem
+     1     22.3    0.7  com.jme.util.LoggingSystem:<init>
+     1     14.8    0.5  org.jcrpg.world.climate.impl.generic.Night:<init>
+  1610     13.0    0.4  org.jcrpg.world.place.Boundaries:getKey
+   300     11.9    0.4  org.jcrpg.world.place.Boundaries:getKey
+     1     10.2    0.3  com.jme.scene.shape.Quad:initialize
+     1     10.1    0.3  org.lwjgl.opengl.GLContext:loadOpenGLLibrary
+   140      9.2    0.3  com.jme.system.lwjgl.LWJGLPropertiesDialog$DisplayModeSorter:compare
+   300      8.3    0.3  org.jcrpg.world.place.Boundaries:addCube
+   112      8.1    0.3  org.jcrpg.world.place.Place:addStoredCube
+     1      7.0    0.2  com.jme.renderer.pass.ShadowedRenderPass:<init>
+     1      6.5    0.2  com.jme.system.lwjgl.LWJGLPropertiesDialog:setUpRendererChooser
+     1      6.3    0.2  com.jme.system.DisplaySystem:getSystemProviderMap
+     1      5.7    0.2  org.jcrpg.world.place.BoundaryUtils:createCubicBoundaries
+     1      5.0    0.2  org.jcrpg.apps.Jcrpg:main
+     7      4.9    0.2  com.jme.math.Vector3f:length
+     1      4.9    0.2  com.jme.scene.batch.GeomBatch:<init>
+     2      4.6    0.1  org.jcrpg.world.place.economic.House:<init>
+     1      4.0    0.1  com.jme.app.AbstractGame:setDialogBehaviour
+     1      3.9    0.1  org.lwjgl.opengl.LinuxDisplay:incDisplay
+     1      3.7    0.1  org.jcrpg.world.ai.flora.impl.BaseFloraContainer:<init>
+   112      3.2    0.1  org.jcrpg.space.Cube:<init>
+     1      3.2    0.1  org.jcrpg.world.ai.flora.ground.Grass:<init>
+     1      3.0    0.1  com.jme.app.BaseSimpleGame:quit
+     1      3.0   99.1  com.jme.system.lwjgl.LWJGLPropertiesDialog$4:actionPerformed
+   114      2.9    0.1  org.jcrpg.world.place.Boundaries:addCube
+   112      2.9    0.1  org.jcrpg.space.Cube:<init>
+     1      2.9    0.1  com.jme.scene.TriMesh:setupBatchList
+     1      2.7    0.1  org.jcrpg.world.climate.impl.generic.Day:<init>
+     1      2.4    0.1  org.jcrpg.world.place.BoundaryUtils:createCubicBoundaries
+     2      2.2    0.1  org.jcrpg.world.place.BoundaryUtils:createCubicBoundaries
+     1      2.1    0.1  com.jme.system.lwjgl.LWJGLPropertiesDialog:getDepths
+   140      2.1    0.1  com.jme.system.lwjgl.LWJGLPropertiesDialog$DisplayModeSorter:compare
+    57      1.9    0.1  org.jcrpg.space.Side:<init>
+   488      1.9    0.1  org.lwjgl.opengl.DisplayMode:getWidth
+     1      1.9    0.1  org.lwjgl.opengl.LinuxDisplay:<init>
+     2      1.7    0.1  com.jme.util.geom.BufferUtils:createFloatBuffer
+    32      1.7    0.1  org.jcrpg.threed.scene.model.PartlyBillboardModel:<init>
+     1      1.6    0.1  com.jme.system.lwjgl.LWJGLPropertiesDialog:getFrequencies
+     1      1.5    0.0  com.jme.system.lwjgl.LWJGLPropertiesDialog:showDialog
+     1      1.5    0.0  com.jme.system.lwjgl.LWJGLDisplaySystem:<init>
+     1      1.4    0.0  org.lwjgl.opengl.LinuxDisplay:getAvailableDisplayModes
+   112      1.2    0.0  org.jcrpg.world.place.Place:getStoredCubeKeyString
+     2      1.2    0.0  org.lwjgl.Sys$1:run
+     8      1.2    0.0  com.jme.math.Quaternion:fromAngles
+
++--------------------------------------+
+| Most expensive methods summarized    |
++--------------------------------------+
+
+               Net
+          ------------
+ Count     Time    Pct  Location
+ =====     ====    ===  ========
+     1   1127.2   36.0  org.jcrpg.world.Engine:run
+     1    296.7    9.3  com.jme.system.lwjgl.LWJGLPropertiesDialog:<init>
+     7    278.2    8.8  org.lwjgl.opengl.LinuxDisplay:incDisplay
+     1    251.3    7.9  org.jcrpg.apps.Jcrpg:start
+     1    246.1    7.7  com.jme.system.lwjgl.LWJGLPropertiesDialog:createUI
+     1    107.6    3.4  org.jcrpg.threed.J3DCore:<init>
+     1    100.9    3.2  org.lwjgl.opengl.Display:getAvailableDisplayModes
+     1     78.2    2.5  com.jme.system.lwjgl.LWJGLPropertiesDialog:setUpResolutionChooser
+  2028     52.6    1.7  org.jcrpg.world.place.Boundaries:addCube
+    14     40.7    1.3  org.jcrpg.world.place.BoundaryUtils:createCubicBoundaries
+     1     39.8    1.3  com.jme.app.BaseSimpleGame:cleanup
+     4     35.9    1.1  org.jcrpg.world.ai.flora.impl.BaseFloraGenerator:<init>
+     1     33.7    1.1  com.jme.app.AbstractGame:getAttributes
+     1     30.3    1.0  org.lwjgl.opengl.Display:createDisplayImplementation
+  2028     25.9    0.8  org.jcrpg.world.place.Boundaries:getKey
+     1     25.6    0.8  org.lwjgl.Sys:createImplementation
+     2     22.6    0.7  com.jme.system.lwjgl.LWJGLSystemProvider:getDisplaySystem
+     1     22.3    0.7  com.jme.util.LoggingSystem:<init>
+     2     14.8    0.5  org.jcrpg.world.climate.impl.generic.Night:<init>
+   382     11.3    0.4  org.jcrpg.space.Cube:<init>
+   280     11.3    0.4  com.jme.system.lwjgl.LWJGLPropertiesDialog$DisplayModeSorter:compare
+     6     10.2    0.3  org.lwjgl.opengl.GLContext:loadOpenGLLibrary
+     1     10.2    0.3  com.jme.scene.shape.Quad:initialize
+   112      8.1    0.3  org.jcrpg.world.place.Place:addStoredCube
+     1      7.0    0.2  com.jme.renderer.pass.ShadowedRenderPass:<init>
+     1      6.5    0.2  com.jme.system.lwjgl.LWJGLPropertiesDialog:setUpRendererChooser
+     1      6.3    0.2  com.jme.system.DisplaySystem:getSystemProviderMap
+     1      5.0    0.2  org.jcrpg.apps.Jcrpg:main
+     7      4.9    0.2  com.jme.math.Vector3f:length
+     1      4.9    0.2  com.jme.scene.batch.GeomBatch:<init>
+     2      4.6    0.1  org.jcrpg.world.place.economic.House:<init>
+     2      4.1    0.1  com.jme.app.AbstractGame:setDialogBehaviour
+     1      3.7    0.1  org.jcrpg.world.ai.flora.impl.BaseFloraContainer:<init>
+     6      3.4    0.1  org.jcrpg.world.ai.flora.ground.Grass:<init>
+     1      3.0    0.1  com.jme.app.BaseSimpleGame:quit
+     1      3.0   99.1  com.jme.system.lwjgl.LWJGLPropertiesDialog$4:actionPerformed
+   248      2.9    0.1  org.jcrpg.abs.change.ChangingImpl:<init>
+     1      2.9    0.1  com.jme.scene.TriMesh:setupBatchList
+     2      2.8    0.1  org.jcrpg.world.climate.impl.generic.Day:<init>
+   593      2.4    0.1  org.lwjgl.opengl.DisplayMode:getWidth
+     1      2.1    0.1  com.jme.system.lwjgl.LWJGLPropertiesDialog:getDepths
+     2      2.1    0.1  org.lwjgl.opengl.LinuxDisplay:getAvailableDisplayModes
+    57      1.9    0.1  org.jcrpg.space.Side:<init>
+   142      1.9    0.1  org.lwjgl.opengl.DisplayMode:<init>
+    79      1.9    0.1  org.jcrpg.world.ai.flora.Flora:<init>
+     1      1.9    0.1  org.lwjgl.opengl.LinuxDisplay:<init>
+    79      1.9    0.1  org.jcrpg.world.ai.flora.FloraDescription:<init>
+     3      1.7    0.1  com.jme.util.geom.BufferUtils:createFloatBuffer
+    62      1.7    0.1  com.jme.math.FastMath:sin
+    32      1.7    0.1  org.jcrpg.threed.scene.model.PartlyBillboardModel:<init>
+    63      1.6    0.1  org.jcrpg.threed.scene.model.SimpleModel:<init>
+     1      1.6    0.1  com.jme.system.lwjgl.LWJGLPropertiesDialog:getFrequencies
+     1      1.5    0.0  com.jme.system.lwjgl.LWJGLPropertiesDialog:showDialog
+     1      1.5    0.0  com.jme.system.lwjgl.LWJGLDisplaySystem:<init>
+    16      1.4    0.0  com.jme.math.Quaternion:fromAngles
+   112      1.2    0.0  org.jcrpg.world.place.Place:getStoredCubeKeyString
+    41      1.2    0.0  org.jcrpg.world.ai.flora.tree.Tree:<init>
+     2      1.2    0.0  org.lwjgl.Sys$1:run
+     8      1.1    0.0  org.lwjgl.LWJGLUtil:getPrivilegedProperty
+     7      1.1    0.0  org.lwjgl.opengl.LinuxDisplay:decDisplay
+    11      1.0    0.0  com.jme.util.LoggingSystem:getLogger
+
++---------------------------------+
+| Object Allocation               |
++---------------------------------+
+
+     Count Class Name
+     ===== ==========
+       248  org.jcrpg.abs.change.ChangingImpl
+       191  org.jcrpg.space.Cube
+        84  org.jcrpg.threed.scene.model.Model
+        79  org.jcrpg.world.ai.flora.FloraListElement
+        79  org.jcrpg.world.ai.flora.FloraDescription
+        79  org.jcrpg.world.ai.flora.Flora
+        71  org.lwjgl.opengl.DisplayMode
+        63  org.jcrpg.threed.scene.model.SimpleModel
+        57  org.jcrpg.space.Side
+        55  com.jme.math.Vector3f
+        41  org.jcrpg.world.ai.flora.tree.Tree
+        34  org.jcrpg.space.sidetype.SideSubType
+        32  org.jcrpg.threed.scene.model.PartlyBillboardModel
+        29  org.jcrpg.threed.scene.side.RenderedSide
+        26  com.jme.math.Quaternion
+        20  org.jcrpg.world.ai.flora.ground.Ground
+        18  org.jcrpg.world.ai.flora.middle.MiddlePlant
+        17  com.jme.renderer.ColorRGBA
+        15  org.jcrpg.world.climate.Condition
+        14  org.jcrpg.world.place.Boundaries
+        12  org.jcrpg.space.sidetype.NotPassable
+        12  org.jcrpg.threed.scene.model.LODModel
+        11  org.jcrpg.threed.scene.side.RenderedHashRotatedSide
+        10  org.jcrpg.world.ai.flora.middle.deciduous.GreenBush
+        10  org.jcrpg.world.climate.Season
+        10  org.jcrpg.world.place.Place
+        10  org.jcrpg.space.sidetype.GroundSubType
+        10  org.jcrpg.world.ai.flora.tree.deciduous.Acacia
+         8  org.lwjgl.LWJGLUtil$1
+         7  org.jcrpg.threed.scene.model.QuadModel
+         7  org.jcrpg.world.place.Geography
+         6  org.jcrpg.world.ai.flora.ground.Grass
+         6  org.jcrpg.world.ai.flora.tree.deciduous.OakTree
+         6  org.jcrpg.world.ai.flora.tree.deciduous.CherryTree
+         6  com.jme.scene.SceneElement
+         5  org.jcrpg.world.place.geography.Plain
+         5  com.jme.scene.Spatial
+         5  org.jcrpg.world.climate.conditions.Cold
+         5  org.jcrpg.world.climate.ClimatePart
+         5  org.jcrpg.world.ai.flora.ground.JungleGround
+         5  org.jcrpg.world.ai.flora.tree.palm.CoconutTree
+         5  org.jcrpg.world.ai.flora.ground.Snow
+         5  org.jcrpg.world.ai.flora.tree.pine.GreenPineTree
+         4  org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees
+         4  org.jcrpg.world.ai.flora.tree.cactus.BigCactus
+         4  org.jcrpg.world.ai.flora.middle.succulent.GreenFern
+         4  org.jcrpg.world.ai.flora.FloraGenerator
+         4  org.jcrpg.world.ai.flora.ground.Sand
+         4  org.jcrpg.world.climate.ClimateBelt
+         4  org.jcrpg.world.ai.flora.impl.BaseFloraGenerator
+         4  org.jcrpg.world.climate.DayTime
+         4  org.jcrpg.world.climate.conditions.Warm
+         4  org.jcrpg.world.ai.flora.middle.succulent.JungleBush
+         4  com.jme.scene.Node
+         3  org.jcrpg.threed.scene.side.RenderedContinuousSide
+         3  org.jcrpg.space.sidetype.Climbing
+         2  org.jcrpg.world.climate.conditions.light.Dark
+         2  org.jcrpg.world.climate.impl.generic.Night
+         2  org.lwjgl.Sys$1
+         2  org.jcrpg.world.climate.impl.generic.Day
+         2  org.jcrpg.world.place.orbiter.Orbiter
+         2  org.jcrpg.space.sidetype.Swimming
+         2  org.jcrpg.world.place.Economic
+         2  org.jcrpg.threed.scene.model.TextureStateVegetationModel
+         2  org.jcrpg.world.climate.conditions.light.Light
+         2  org.jcrpg.world.climate.conditions.Rain
+         2  com.jme.system.lwjgl.LWJGLSystemProvider
+         2  org.jcrpg.world.place.economic.House
+         2  org.jcrpg.world.climate.impl.continental.Summer
+         1  com.jme.scene.batch.GeomBatch
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$3
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$4
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$1
+         1  org.jcrpg.world.ai.flora.impl.ForestFloraGenerator
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$2
+         1  org.jcrpg.world.climate.impl.arctic.Winter
+         1  org.lwjgl.opengl.Display$5
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog
+         1  org.jcrpg.world.climate.impl.continental.Night
+         1  org.lwjgl.opengl.Display$2
+         1  org.jcrpg.world.ai.flora.tree.pine.GreatPineTree
+         1  org.lwjgl.opengl.Display$1
+         1  org.jcrpg.world.place.orbiter.WorldOrbiterHandler
+         1  org.lwjgl.LinuxSysImplementation
+         1  org.lwjgl.J2SESysImplementation
+         1  org.jcrpg.world.climate.impl.arctic.Arctic
+         1  org.jcrpg.world.ai.flora.impl.BaseFloraContainer
+         1  com.jme.renderer.pass.Pass
+         1  org.jcrpg.world.climate.impl.desert.Desert
+         1  org.jcrpg.world.climate.impl.continental.Continental
+         1  com.jme.scene.TriMesh
+         1  org.jcrpg.world.time.Time
+         1  org.jcrpg.world.Engine
+         1  com.jme.system.PropertiesIO
+         1  org.jcrpg.threed.ModelLoader
+         1  com.jme.util.WeakIdentityCache
+         1  org.jcrpg.threed.scene.RenderedArea
+         1  org.lwjgl.DefaultSysImplementation
+         1  org.lwjgl.opengl.GLContext$CapabilitiesCacheEntry
+         1  org.jcrpg.world.place.orbiter.sun.SimpleSun
+         1  com.jme.system.DisplaySystem
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$5
+         1  org.jcrpg.world.climate.impl.continental.Spring
+         1  org.jcrpg.world.climate.impl.arctic.Spring
+         1  org.jcrpg.threed.J3DCore
+         1  com.jme.renderer.pass.ShadowedRenderPass
+         1  org.jcrpg.world.climate.Climate
+         1  com.jme.math.Vector2f
+         1  org.jcrpg.world.climate.impl.tropical.Tropical
+         1  com.jme.app.BaseGame
+         1  org.jcrpg.world.place.geography.Forest
+         1  com.jme.app.BaseSimpleGame
+         1  org.jcrpg.threed.scene.side.RenderedTopSide
+         1  org.jcrpg.world.place.orbiter.moon.SimpleMoon
+         1  com.jme.scene.batch.TriangleBatch
+         1  org.jcrpg.world.climate.impl.continental.Winter
+         1  com.jme.app.AbstractGame
+         1  com.jme.scene.shape.Quad
+         1  org.jcrpg.world.climate.impl.continental.Day
+         1  org.jcrpg.world.ai.flora.impl.MountainFloraGenerator
+         1  org.jcrpg.world.climate.impl.desert.Summer
+         1  com.jme.scene.Geometry
+         1  org.jcrpg.world.ai.flora.FloraContainer
+         1  org.lwjgl.LWJGLUtil$3
+         1  org.jcrpg.world.place.geography.Mountain
+         1  com.jme.util.LoggingSystem
+         1  com.jme.renderer.pass.DefaultShadowGate
+         1  org.jcrpg.world.climate.impl.desert.Spring
+         1  org.lwjgl.opengl.LinuxEvent
+         1  org.jcrpg.world.climate.impl.continental.Autumn
+         1  org.jcrpg.world.ai.flora.impl.PlainFloraGenerator
+         1  com.jme.system.lwjgl.LWJGLDisplaySystem
+         1  com.jme.system.lwjgl.LWJGLPropertiesDialog$DisplayModeSorter
+         1  org.jcrpg.world.place.World
+         1  org.lwjgl.opengl.LinuxDisplay
