@@ -1,6 +1,12 @@
 Java Classic Role Playing Game
 ------------------------------
 
+q. Requirements
+- Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
+- At least 300 megabyte free system memory
+- Opengl accelerated video card (nvidia geforce 6200 or better should be good)
+
+
 x. Movement/Keyboard
 
 W/S/A/D for turning, moving.
