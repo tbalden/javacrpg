@@ -275,7 +275,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														added.add(quad4_2);
 													}
 												} else
-												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
+												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1) 
 												{
 													float x = sumX/counter;
 													float y = sumY/counter;
