@@ -1338,6 +1338,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void render()
 	{
+		modelLoader.setLockForSharedNodes(false);
 		engine.setPause(true);
     	loadingText(0,true);
     	updateDisplay(null);
@@ -1345,8 +1346,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
 		lastRenderZ = viewPositionZ;
-
-		modelLoader.setLockForSharedNodes(false);
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
@@ -1453,11 +1452,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//rootNode.updateModelBound();
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
-
+		modelLoader.setLockForSharedNodes(true);
+		
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
-		
-		modelLoader.setLockForSharedNodes(true);
 
 		loadingText(0,false);
     	//updateDisplay(null);
@@ -1566,11 +1564,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
+	HashSet<RenderedCube> inViewPortCullNotSet = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
+	
+	int cullVariationCounter = 0; 
 	
 	public void renderToViewPort()
 	{
-		//modelLoader.setLockForSharedNodes(false);
+		boolean cullTrick = false;
+		
+		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
@@ -1579,6 +1582,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			render();
 			
 		}
+		
+		long sysTime = System.currentTimeMillis();
+		
 		
 		for (RenderedCube c:hmCurrentCubes.values())
 		{
@@ -1601,48 +1607,58 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					if (!inViewPort.contains(c)) 
 					{
 						inViewPort.add(c);
+						if (cullTrick) inViewPortCullNotSet.add(c); // adding to set of nodes with 'cull set to never'
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							Node realPooledNode = (Node)modelPool.getModel(n.cube, n.model);
 							n.realNode = (PooledNode)realPooledNode;
-							if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
+							
+							// unlock
+							if (realPooledNode instanceof SharedNode)
+							{	
 								realPooledNode.unlockTransforms();
 								realPooledNode.unlockBounds();
 								realPooledNode.unlockBranch();
 							}
-
+							
+							// set data from placeholder
 							realPooledNode.setLocalRotation(n.getLocalRotation());
 							realPooledNode.setLocalScale(n.getLocalScale());
 							realPooledNode.setLocalTranslation(n.getLocalTranslation());
 							cRootNode.attachChild((Node)realPooledNode);
-							realPooledNode.setCullMode(Node.CULL_NEVER);
-							realPooledNode.updateRenderState();
-							realPooledNode.updateGeometricState(0.0f, true);
-							/*if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
-								realPooledNode.lockTransforms();
-								realPooledNode.lockBounds();
-								realPooledNode.lockBranch();
-							}*/
+							if (cullTrick) {
+								realPooledNode.setCullMode(Node.CULL_NEVER);
+								realPooledNode.updateRenderState();
+								realPooledNode.updateGeometricState(0.0f, true);
+							} else
+							{
+								if (realPooledNode instanceof SharedNode)
+								{	
+									realPooledNode.lockTransforms();								
+									realPooledNode.lockBounds();
+									realPooledNode.lockBranch();
+								}
+							}
 						}
 					} else
+					if (inViewPortCullNotSet.contains(c)) // if node is in the set, cull is currently set to NEVER, must be set to dynamic, and node to be locked
 					{
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							Node realPooledNode = (Node)n.realNode;
-							/*if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
-								realPooledNode.unlockTransforms();
-								realPooledNode.unlockBounds();
-								realPooledNode.unlockBranch();
-							}*/
-							((Node)n.realNode).setCullMode(Node.CULL_DYNAMIC);
-							if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
-								realPooledNode.lockTransforms();
+							realPooledNode.setCullMode(Node.CULL_INHERIT);
+							realPooledNode.updateRenderState();
+							realPooledNode.updateGeometricState(0.0f, true);
+							// lock
+							if (realPooledNode instanceof SharedNode)
+							{	
+								realPooledNode.lockTransforms();								
 								realPooledNode.lockBounds();
 								realPooledNode.lockBranch();
 							}
 						}
-						
+						inViewPortCullNotSet.remove(c);
 					}
 				} else
 				{
@@ -1653,9 +1669,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							PooledNode pooledRealNode = n.realNode;
+							
 							n.realNode = null;
 							if (pooledRealNode!=null) {
 								Node realNode = (Node)pooledRealNode;
+								if (cullTrick) {
+									realNode.setCullMode(Node.CULL_NEVER);
+									realNode.updateRenderState();
+									realNode.updateGeometricState(0.0f, true);
+								}
 								if (SHADOWS) removeOccludersRecoursive(realNode);
 								realNode.removeFromParent();
 								modelPool.releaseNode(pooledRealNode);
@@ -1678,11 +1700,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						removeOccludersRecoursive(n);
 					}
 				}
-			}
+		}
+	    
+	    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+	    sysTime = System.currentTimeMillis();
+	    
+	    
 		updateTimeRelated();
 
-		cRootNode.updateRenderState();
+		if (!cullTrick && (cullVariationCounter++%2==0))
+		{
+			cRootNode.setCullMode(Node.CULL_NEVER);
+			//cRootNode.updateRenderState();
+			updateDisplayNoBackBuffer();
+			cRootNode.setCullMode(Node.CULL_DYNAMIC);
+		}
 		
+		cRootNode.updateRenderState();
+
+	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+
 		modelPool.cleanPools();
 
 		// every 20 steps do a garbage collection
@@ -1692,7 +1729,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			garbCollCounter = 0;
 		}
 		
-		//modelLoader.setLockForSharedNodes(true);
+		if (cullTrick) modelLoader.setLockForSharedNodes(true);
 		
 	}
 	

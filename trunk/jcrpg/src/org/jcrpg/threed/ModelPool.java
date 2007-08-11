@@ -30,14 +30,13 @@ import java.util.Iterator;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 
-import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 
 public class ModelPool {
 
 	public J3DCore core;
 	
-	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 5; 
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 20; 
 	
 	public class PoolItemContainer {
 		public String id;
@@ -52,6 +51,7 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = J3DCore.VIEW_DISTANCE;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();

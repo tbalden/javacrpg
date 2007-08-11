@@ -345,8 +345,8 @@ public class ModelLoader {
     		{
     			//lockedShared = false;
     			//n.unlockMeshes();
-    			//n.lockBounds();
-    			//n.lockBranch();
+    			//n.unlockBounds();
+    			//n.unlockBranch();
     		}
     	}
     }
