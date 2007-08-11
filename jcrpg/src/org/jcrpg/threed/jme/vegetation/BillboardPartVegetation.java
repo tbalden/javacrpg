@@ -121,7 +121,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		if (child != null) {
 			{
 				{
-					if (child instanceof Node) {
+					if ((child.getType() & child.NODE) != 0) {
 						Node n = (Node) child;
 						ArrayList<Spatial> c2 = n.getChildren();
 						int sCounter = 0;
@@ -141,7 +141,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							}
 							
 							for (Spatial s:spatials) {
-								 if (s instanceof TriMesh)
+								 //if ((s.getType() & s.TRIMESH) != 0)
 								{
 									System.out.println("SPATIAL: " + s.getName());
 											//+ " " + sCounter++);
