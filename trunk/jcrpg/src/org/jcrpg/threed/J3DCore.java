@@ -1606,7 +1606,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						{
 							Node realPooledNode = (Node)modelPool.getModel(n.cube, n.model);
 							n.realNode = (PooledNode)realPooledNode;
-							if (realPooledNode instanceof SharedNode) {
+							if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
 								realPooledNode.unlockTransforms();
 								realPooledNode.unlockBounds();
 								realPooledNode.unlockBranch();
@@ -1616,12 +1616,33 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							realPooledNode.setLocalScale(n.getLocalScale());
 							realPooledNode.setLocalTranslation(n.getLocalTranslation());
 							cRootNode.attachChild((Node)realPooledNode);
-							if (realPooledNode instanceof SharedNode) {
+							realPooledNode.setCullMode(Node.CULL_NEVER);
+							realPooledNode.updateRenderState();
+							realPooledNode.updateGeometricState(0.0f, true);
+							/*if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
+								realPooledNode.lockTransforms();
+								realPooledNode.lockBounds();
+								realPooledNode.lockBranch();
+							}*/
+						}
+					} else
+					{
+						for (NodePlaceholder n : c.hsRenderedNodes)
+						{
+							Node realPooledNode = (Node)n.realNode;
+							/*if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
+								realPooledNode.unlockTransforms();
+								realPooledNode.unlockBounds();
+								realPooledNode.unlockBranch();
+							}*/
+							((Node)n.realNode).setCullMode(Node.CULL_DYNAMIC);
+							if (realPooledNode instanceof SharedNode||realPooledNode instanceof BillboardPartVegetation) {
 								realPooledNode.lockTransforms();
 								realPooledNode.lockBounds();
 								realPooledNode.lockBranch();
 							}
 						}
+						
 					}
 				} else
 				{
@@ -1659,12 +1680,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		updateTimeRelated();
-		// newly displaced pooled lod nodes don't appear on screen if this culling thing's not done:
-		cRootNode.setCullMode(Node.CULL_NEVER);
-		//cRootNode.updateRenderState();
-		updateDisplayNoBackBuffer();
-		
-		cRootNode.setCullMode(Node.CULL_DYNAMIC);
+
 		cRootNode.updateRenderState();
 		
 		modelPool.cleanPools();
@@ -2445,6 +2461,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		render();
 		renderToViewPort();
+		renderToViewPort(); // for correct culling, call it twice ;-)
 		engine.setPause(false);
 	}
 	
