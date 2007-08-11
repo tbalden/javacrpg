@@ -1,9 +1,7 @@
 [ ] quicken loading of Cubes in Geography etc. 
 [ ] far view optimizatios for trees? display less tree in the far?
 [ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
-
-[X] tree normal vectors, too blocky trees! try with exported obj models!
-	[X] too dark trees now! -> mtl file firs 3 values "Ka" set to 0.500000 !
+[ ] mountain steep walk bug to one direction walk
 
 [ ] cherry foliage
 
@@ -38,6 +36,10 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] tree normal vectors, too blocky trees! try with exported obj models!
+	[X] too dark trees now! -> mtl file firs 3 values "Ka" set to 0.500000 !
+
+
 [X] new pooling -> update shadow occluder activation!!
 
 [X] model pool ageing and clearing later
