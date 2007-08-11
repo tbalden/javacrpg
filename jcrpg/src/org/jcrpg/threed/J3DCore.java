@@ -717,7 +717,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		palm.shadowCaster = true; palm.useClodMesh = true; palm.cullNone = true;
 		SimpleModel jungletrees_mult = new SimpleModel("models/tree/palm.3ds",null,MIPMAP_TREES);
 		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true; jungletrees_mult.cullNone = true;
-		SimpleModel cactus = new SimpleModel("sides/cactus.3ds",null,MIPMAP_TREES);
+		SimpleModel cactus = new SimpleModel("sides/cactus.obj",null,MIPMAP_TREES);
 		cactus.shadowCaster = true; cactus.useClodMesh = false; cactus.cullNone = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
 		bush1.shadowCaster = true; bush1.useClodMesh = true;
