@@ -238,11 +238,6 @@ public class ModelLoader {
 				r[i] = lodNode;
 			}
 			
-			// if model can be rotated on a steep, we set node user data for later use in renderNodes of J3DCore...
-			//if (!fakeLoadForCacheMaint && objects[i].rotateOnSteep) 
-			//{
-				//((Node)r[i]).setUserData("rotateOnSteep", new TriMesh(""));
-			//}
 		}
 		if (!fakeLoadForCacheMaint)
 			return r;
@@ -267,12 +262,12 @@ public class ModelLoader {
             //g.clearRenderState(RenderState.RS_TEXTURE);
             TextureState ts1 = (TextureState)g.getRenderState(RenderState.RS_TEXTURE);
             //g.clearRenderState(RenderState.RS_MATERIAL);
-            g.clearRenderState(RenderState.RS_DITHER);
-            g.clearRenderState(RenderState.RS_SHADE);
-            g.clearRenderState(RenderState.RS_STENCIL);
-            g.clearRenderState(RenderState.RS_ATTRIBUTE);
-            g.clearRenderState(RenderState.RS_CLIP);
-            g.clearRenderState(RenderState.RS_ZBUFFER);
+            //g.clearRenderState(RenderState.RS_DITHER);
+            //g.clearRenderState(RenderState.RS_SHADE);
+            //g.clearRenderState(RenderState.RS_STENCIL);
+            //g.clearRenderState(RenderState.RS_ATTRIBUTE);
+            //g.clearRenderState(RenderState.RS_CLIP);
+            //g.clearRenderState(RenderState.RS_ZBUFFER);
             
             if (ts1!=null) {
                 ts1.setCorrection(TextureState.CM_PERSPECTIVE);
@@ -558,10 +553,11 @@ public class ModelLoader {
     	
     	if (o.modelName.endsWith(".obj"))
     	{
+    		String path = o.modelName.substring(0,o.modelName.lastIndexOf('/'));
     		ObjToJme objtojme = new ObjToJme();
 			try {
-				objtojme.setProperty("mtllib",new File("./data/mtl/").toURI().toURL());
-				objtojme.setProperty("texdir",new File("./data/mtl/").toURI().toURL());
+				objtojme.setProperty("mtllib",new File("./data/"+path).toURI().toURL());
+				objtojme.setProperty("texdir",new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
 			}
 			 catch (IOException ioex)
 			 {
