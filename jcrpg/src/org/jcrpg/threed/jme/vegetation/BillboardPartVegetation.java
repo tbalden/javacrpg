@@ -125,156 +125,175 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 						Node n = (Node) child;
 						ArrayList<Spatial> c2 = n.getChildren();
 						int sCounter = 0;
-						for (Spatial s : c2) {
-							// if (s instanceof TriMesh)
+						for (Spatial s2 : c2) {
+							ArrayList<Spatial> spatials = new ArrayList<Spatial>();
+							Node removeFromNow = null;
+							if (s2 instanceof Node)
 							{
-								//System.out.println("SPATIAL: " + s.getName()
-										//+ " " + sCounter++);
-								TriMesh q = (TriMesh) s;
-								int l = q.getName().length();
-								String key = ""+q.getName().charAt(l - 1);
-								if (model.removedParts.contains(key)) 
+								for (Spatial s:((Node)s2).getChildren()) 
 								{
-									if (model.LOD>=1)
-										removed.add(q);
+									spatials.add(s);
 								}
-								if (model.partNameToTextureCount.containsKey(key)) 
+								removeFromNow = (Node)s2;
+							} else
+							{
+								spatials.add(s2);
+							}
+							
+							for (Spatial s:spatials) {
+								 if (s instanceof TriMesh)
 								{
-
-									for (int bc = 0; bc < q.getBatchCount(); bc++) {
-										TriangleBatch b = q.getBatch(bc);
-										FloatBuffer fb = b.getVertexBuffer();
-										//System.out.println("BATCH!!"
-											//	+ fb.capacity() + " " + bc);
-										int maxFIndex = fb.capacity();
-										int maxDoubleTri = maxFIndex / 18;
-										int fIndex = 0;
-										float sumLodX = 0, sumLodY = 0, sumLodZ = 0;
-										for (int doubleTriIndex = 0; doubleTriIndex < maxDoubleTri; doubleTriIndex++) {
-											// one quad generation for each doubleTriIndex
-											float sumX =0, sumY =0, sumZ =0;
-											float xDiff = 0;float yDiff = 0; float zDiff = 0;
-											int counter = 0;
-											for (int triIndex = 0; triIndex < 2; triIndex++) {
-												for (int vectorIndex = 0; vectorIndex < 3; vectorIndex++) {
-													for (int coord = 0; coord < 3; coord++) {
-														if (coord == 0) {
-															float x = fb.get(fIndex);
-															if (triIndex==0)
-															{
-																if (vectorIndex==0)
+									System.out.println("SPATIAL: " + s.getName());
+											//+ " " + sCounter++);
+									TriMesh q = (TriMesh) s;
+									int l = q.getName().length();
+									String key = ""+q.getName().charAt(l - 1);
+									if (model.removedParts.contains(key)) 
+									{
+										if (model.LOD>=1)
+											removed.add(q);
+									}
+									if (model.partNameToTextureCount.containsKey(key)) 
+									{
+	
+										for (int bc = 0; bc < q.getBatchCount(); bc++) {
+											TriangleBatch b = q.getBatch(bc);
+											FloatBuffer fb = b.getVertexBuffer();
+											//System.out.println("BATCH!!"
+												//	+ fb.capacity() + " " + bc);
+											int maxFIndex = fb.capacity();
+											int maxDoubleTri = maxFIndex / 18;
+											int fIndex = 0;
+											float sumLodX = 0, sumLodY = 0, sumLodZ = 0;
+											for (int doubleTriIndex = 0; doubleTriIndex < maxDoubleTri; doubleTriIndex++) {
+												// one quad generation for each doubleTriIndex
+												float sumX =0, sumY =0, sumZ =0;
+												float xDiff = 0;float yDiff = 0; float zDiff = 0;
+												int counter = 0;
+												for (int triIndex = 0; triIndex < 2; triIndex++) {
+													for (int vectorIndex = 0; vectorIndex < 3; vectorIndex++) {
+														for (int coord = 0; coord < 3; coord++) {
+															if (coord == 0) {
+																float x = fb.get(fIndex);
+																if (triIndex==0)
 																{
-																	xDiff = x;
+																	if (vectorIndex==0)
+																	{
+																		xDiff = x;
+																	}
+																	else if (vectorIndex==1)
+																	{
+																		xDiff = FastMath.abs(xDiff-x);
+																	}
 																}
-																else if (vectorIndex==1)
-																{
-																	xDiff = FastMath.abs(xDiff-x);
-																}
+																sumX+= x;
 															}
-															sumX+= x;
-														}
-														if (coord == 1) {
-															float y = fb.get(fIndex); 
-															if (triIndex==0)
-															{
-																if (vectorIndex==0)
+															if (coord == 1) {
+																float y = fb.get(fIndex); 
+																if (triIndex==0)
 																{
-																	yDiff = y;
+																	if (vectorIndex==0)
+																	{
+																		yDiff = y;
+																	}
+																	else if (vectorIndex==1)
+																	{
+																		yDiff = FastMath.abs(yDiff-y);
+																	}
 																}
-																else if (vectorIndex==1)
-																{
-																	yDiff = FastMath.abs(yDiff-y);
-																}
+																sumY+= y;
 															}
-															sumY+= y;
-														}
-														if (coord == 2) {
-															float z = fb.get(fIndex);
-															if (triIndex==0)
-															{
-																if (vectorIndex==0)
+															if (coord == 2) {
+																float z = fb.get(fIndex);
+																if (triIndex==0)
 																{
-																	zDiff = z;
+																	if (vectorIndex==0)
+																	{
+																		zDiff = z;
+																	}
+																	else if (vectorIndex==1)
+																	{
+																		zDiff = FastMath.abs(zDiff-z);
+																	}
 																}
-																else if (vectorIndex==1)
-																{
-																	zDiff = FastMath.abs(zDiff-z);
-																}
+																sumZ+= z;
 															}
-															sumZ+= z;
+															fIndex++;
 														}
-														fIndex++;
+														counter++;
 													}
-													counter++;
 												}
-											}
-											if (model.LOD==3 && added.size()<1)
-											{
-												if (doubleTriIndex<maxDoubleTri-1)
+												if (model.LOD==3 && added.size()<1)
 												{
-													sumLodX+=sumX/counter;
-													sumLodY+=sumY/counter;
-													sumLodZ+=sumZ/counter;
-												} else {
-													float x = sumLodX/(maxDoubleTri-1);
-													float y = sumLodY/(maxDoubleTri-1);
-													float z = sumLodZ/(maxDoubleTri-1);
-													float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadXSizeMultiplier;
-													float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadYSizeMultiplier;
-													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
+													if (doubleTriIndex<maxDoubleTri-1)
+													{
+														sumLodX+=sumX/counter;
+														sumLodY+=sumY/counter;
+														sumLodZ+=sumZ/counter;
+													} else {
+														float x = sumLodX/(maxDoubleTri-1);
+														float y = sumLodY/(maxDoubleTri-1);
+														float z = sumLodZ/(maxDoubleTri-1);
+														float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadXSizeMultiplier;
+														float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadYSizeMultiplier;
+														SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
+														added.add(quad);
+													}
+												} else
+												if (model.LOD==2 && added.size()<1)
+												{
+													if (doubleTriIndex<maxDoubleTri-1)
+													{
+														sumLodX+=sumX/counter;
+														sumLodY+=sumY/counter;
+														sumLodZ+=sumZ/counter;
+													} else {
+														float x = sumLodX/(maxDoubleTri-1);
+														float y = sumLodY/(maxDoubleTri-1);
+														float z = sumLodZ/(maxDoubleTri-1);
+														float xSize = ((xDiff+yDiff+zDiff)/2f)*2f;
+														float ySize = ((xDiff+yDiff+zDiff)/2f)*2f;
+														float xSizeM = xSize*model.quadXSizeMultiplier;
+														float ySizeM = ySize*model.quadYSizeMultiplier;
+														SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
+														SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
+														SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
+														SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
+														
+														SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z+ySize/5);
+														SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z+ySize/5);
+														SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
+														SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
+														
+														added.add(quad1_1);
+														added.add(quad2_1);
+														added.add(quad3_1);
+														added.add(quad4_1);
+														added.add(quad1_2);
+														added.add(quad2_2);
+														added.add(quad3_2);
+														added.add(quad4_2);
+													}
+												} else
+												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
+												{
+													float x = sumX/counter;
+													float y = sumY/counter;
+													float z = sumZ/counter;
+													float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
+													float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadYSizeMultiplier;
+													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
 													added.add(quad);
 												}
-											} else
-											if (model.LOD==2 && added.size()<1)
-											{
-												if (doubleTriIndex<maxDoubleTri-1)
-												{
-													sumLodX+=sumX/counter;
-													sumLodY+=sumY/counter;
-													sumLodZ+=sumZ/counter;
-												} else {
-													float x = sumLodX/(maxDoubleTri-1);
-													float y = sumLodY/(maxDoubleTri-1);
-													float z = sumLodZ/(maxDoubleTri-1);
-													float xSize = ((xDiff+yDiff+zDiff)/2f)*2f;
-													float ySize = ((xDiff+yDiff+zDiff)/2f)*2f;
-													float xSizeM = xSize*model.quadXSizeMultiplier;
-													float ySizeM = ySize*model.quadYSizeMultiplier;
-													SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
-													SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
-													SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
-													SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
-													
-													SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z+ySize/5);
-													SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z+ySize/5);
-													SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
-													SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
-													
-													added.add(quad1_1);
-													added.add(quad2_1);
-													added.add(quad3_1);
-													added.add(quad4_1);
-													added.add(quad1_2);
-													added.add(quad2_2);
-													added.add(quad3_2);
-													added.add(quad4_2);
-												}
-											} else
-											if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%6>model.LOD+1) 
-											{
-												float x = sumX/counter;
-												float y = sumY/counter;
-												float z = sumZ/counter;
-												float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
-												float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadYSizeMultiplier;
-												SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
-												added.add(quad);
 											}
 										}
+										removed.add(q);
 									}
-									removed.add(q);
 								}
-
+							}
+							if (removeFromNow!=null) {
+								for (TriMesh t:removed)
+									removeFromNow.detachChild(t);
 							}
 						}
 						for (TriMesh t:removed)
@@ -410,7 +429,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 						ArrayList<Spatial> c2 = n.getChildren();
 						int sCounter = 0;
 						for (Spatial s : c2) {
-							// if (s instanceof TriMesh)
+							if ( (s.getType() & s.TRIMESH)!=0)
 							{
 								// System.out.println("SPATIAL: "+s.getName()+"
 								// "+sCounter++);

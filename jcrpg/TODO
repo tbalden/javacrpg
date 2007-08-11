@@ -2,7 +2,8 @@
 [ ] far view optimizatios for trees? display less tree in the far?
 [ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
 
-[ ] tree normal vectors, too blocky trees! try with exported obj models!
+[X] tree normal vectors, too blocky trees! try with exported obj models!
+	[X] too dark trees now! -> mtl file firs 3 values "Ka" set to 0.500000 !
 
 [ ] cherry foliage
 

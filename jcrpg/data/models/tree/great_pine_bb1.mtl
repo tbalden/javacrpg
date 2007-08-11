@@ -1,0 +1,23 @@
+# Blender3D MTL File: great_pine_bb.blend
+# Material Count: 2
+newmtl pmat1_barkdk.jpg
+Ns 96.078431
+Ka 0.500000 0.500000 0.500000
+Kd 0.560000 0.560000 0.560000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd barkdk.jpg
+
+
+newmtl pmat3
+Ns 96.078431
+Ka 0.500000 0.500000 0.500000
+Kd 0.560000 0.560000 0.560000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
