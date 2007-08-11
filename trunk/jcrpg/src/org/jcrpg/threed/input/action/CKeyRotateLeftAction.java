@@ -5,9 +5,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-import com.jme.input.controls.controller.CameraController;
-import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
@@ -54,6 +51,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
         setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
         camera.update();
         handler.core.updateDisplay(from);
+        handler.core.renderToViewPort();
     	handler.unlockHandling(true);
     }
 }

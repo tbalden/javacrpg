@@ -44,6 +44,7 @@ public class CKeyRotateRightAction extends CKeyAction {
         setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
         camera.update();
         handler.core.updateDisplay(from);
+        handler.core.renderToViewPort();
     	handler.unlockHandling(true);
     }
 }

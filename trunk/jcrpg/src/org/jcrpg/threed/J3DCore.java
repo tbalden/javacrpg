@@ -1593,9 +1593,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				boolean found = false;
 				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
-					if (n.getLocalTranslation().distanceSquared(cam.getLocation())<VIEW_DISTANCE_SQR)
+					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
+					if (dist<VIEW_DISTANCE_SQR)
 					{
-						found = true;
+						if (dist<CUBE_EDGE_SIZE*3) {
+							found = true;
+							break;
+						}
+						Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
+						float angle = cam.getDirection().angleBetween(relative);
+						if (angle<2.4)
+							found = true;
 						break;
 					} else
 					{
