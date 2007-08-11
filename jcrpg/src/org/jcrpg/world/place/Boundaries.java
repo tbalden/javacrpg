@@ -70,7 +70,7 @@ public class Boundaries {
 	public void addCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		String key = getKey(x, y, z);
+		String key = getKey(x*magnification, y*magnification, z*magnification);
 		area.put(key,new int[]{x,y,z});
 	}
 	public void removeCube(int magnification, int x, int y, int z) throws Exception
@@ -135,7 +135,7 @@ public class Boundaries {
 		//if (absoluteY<0 && magnification>1) {
 			//absoluteY=absoluteY-1*magnification;
 		//}
-		boolean ret = area.get(getKey(absouluteX/magnification, absoluteY/magnification, absoluteZ/magnification))!=null;
+		boolean ret = area.containsKey(getKey(absouluteX-absouluteX%magnification, absoluteY-absoluteY%magnification, absoluteZ-absoluteZ%magnification));
 		//if (ret && magnification==1) System.out.println(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
 		return ret;
 	}
@@ -150,7 +150,8 @@ public class Boundaries {
 	}
 	
 	public String getKey(int x,int y,int z){
-		int s = (x << 16) + (y << 8) + z;
+		//System.out.println("GETKEY "+ x +" "+ y +" "+  z);
+		int s = ((x) << 16) + ((y) << 8) + (z);
 		return ""+s;
 	}
 	

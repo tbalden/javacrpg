@@ -212,9 +212,9 @@ public abstract class Place {
 	 * @param worldZ
 	 * @return conditions.
 	 */
-	public CubeClimateConditions getCubeClimateConditions(int worldX, int worldY, int worldZ)
+	public CubeClimateConditions getCubeClimateConditions(Time time, int worldX, int worldY, int worldZ)
 	{
-		return ((World)getRoot()).getClimate().getCubeClimate(new Time(), worldX, worldY, worldZ);
+		return ((World)getRoot()).getClimate().getCubeClimate(time, worldX, worldY, worldZ);
 	}
 	
 }
