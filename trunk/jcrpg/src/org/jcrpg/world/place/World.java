@@ -68,6 +68,8 @@ public class World extends Place {
 	
 	
 	public int sizeX, sizeY, sizeZ, magnification, worldGroundLevel;
+	
+	int sizeXMulMag, sizeYMulMag, sizeZMulMag;
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
 		super(id, null, loc);
@@ -75,6 +77,9 @@ public class World extends Place {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
+		sizeXMulMag = sizeX*magnification;
+		sizeYMulMag = sizeY*magnification;
+		sizeZMulMag = sizeZ*magnification;
 		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));
 		geographies = new HashMap<String, Geography>();
@@ -114,16 +119,16 @@ public class World extends Place {
 	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
 		if (WORLD_IS_GLOBE) {
 			
-			worldX = worldX%(sizeX*magnification);
+			worldX = worldX%(sizeXMulMag);
 			//worldY = worldX%(sizeY*magnification); // in dir Y no globe
-			worldZ = worldZ%(sizeZ*magnification); // TODO Houses dont display going round the glob??? Static fields in the way or what?
+			worldZ = worldZ%(sizeZMulMag); // TODO Houses dont display going round the glob??? Static fields in the way or what?
 			if (worldX<0)
 			{
-				worldX = sizeX*magnification+worldX;
+				worldX = sizeXMulMag+worldX;
 			}
 			if (worldZ<0)
 			{
-				worldZ = sizeZ*magnification+worldZ;
+				worldZ = sizeZMulMag+worldZ;
 			}
 		}
 		
@@ -145,7 +150,7 @@ public class World extends Place {
 						if (worldY==surf.surfaceY && surf.canContain)
 						{
 							// this can cotain things upon it, do the clima and flora... 
-							CubeClimateConditions conditions = getCubeClimateConditions(worldX, worldY, worldZ);
+							CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ);
 							Cube floraCube = null;
 							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 							if (floraCube!=null)

@@ -140,7 +140,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 11;
+	public static final int MOVE_STEPS = 16;
 	public static long TIME_TO_ENSURE = 16; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
@@ -1439,17 +1439,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		inViewPort.remove(cToDetach);
 	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
-    	getDisplay().getRenderer().clearVBOCache();
+    	//getDisplay().getRenderer().clearVBOCache();
 	    hmCurrentCubes.clear();
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
-
-	    updateTimeRelated();
-		
 		
 		fpsNode.detachChild(loadText);
 
-		cRootNode.updateRenderState();
-		//rootNode.updateModelBound();
+		//cRootNode.updateRenderState();
+
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
 		modelLoader.setLockForSharedNodes(true);
@@ -1461,7 +1458,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	//updateDisplay(null);
 
 		//TextureManager.clearCache();
-		System.gc();
+		//System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorQuads.size());
 		engine.setPause(false);
 	}
@@ -1719,7 +1716,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (!cullTrick && (cullVariationCounter++%2==0))
 		{
 			cRootNode.setCullMode(Node.CULL_NEVER);
-			//cRootNode.updateRenderState();
 			updateDisplayNoBackBuffer();
 			cRootNode.setCullMode(Node.CULL_DYNAMIC);
 		}
@@ -1728,12 +1724,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 
-		modelPool.cleanPools();
+		if (cullVariationCounter%40==0)
+			modelPool.cleanPools();
 
 		// every 20 steps do a garbage collection
 		garbCollCounter++;
 		if (garbCollCounter==20) {
-			System.gc();
+			//System.gc();
 			garbCollCounter = 0;
 		}
 		
@@ -2239,7 +2236,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		noInput = true;
         // update game state, do not use interpolation parameter
-        update(-1.0f);
+        //update(-1.0f);
 
         // render, do not use interpolation parameter
         render(-1.0f);

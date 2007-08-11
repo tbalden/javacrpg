@@ -85,9 +85,6 @@ public class RenderedArea {
 						{
 							c = new RenderedCube(cube,x1,y1,z1);
 						}
-					} else
-					{
-						//System.out.println("IN RCUBECACHE");
 					}
 					worldCubeCacheNext.put(key, c);
 					if (c!=null) 
@@ -98,10 +95,6 @@ public class RenderedArea {
 			}
 		}
 		
-		/*for (String c:worldCubeCacheNext.keySet())
-		{
-			worldCubeCache.remove(c);
-		}*/
 		RenderedCube[] removable =  worldCubeCache.values().toArray(new RenderedCube[0]);
 		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
