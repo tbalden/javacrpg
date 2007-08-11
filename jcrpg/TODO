@@ -1,3 +1,8 @@
+[X] push models back to pool and use Placeholder based on turn / view direction!!
+	[X] turning is not right yet
+[X] culling problem with reused nodes!!!
+
+
 [ ] quicken loading of Cubes in Geography etc. 
 [ ] far view optimizatios for trees? display less tree in the far?
 [ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
