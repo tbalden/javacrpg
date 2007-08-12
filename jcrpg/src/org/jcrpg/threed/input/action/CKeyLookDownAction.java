@@ -1,14 +1,9 @@
 package org.jcrpg.threed.input.action;
 
-
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-import com.jme.input.controls.controller.CameraController;
-import com.jme.math.Matrix3f;
-import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
 /**
@@ -21,33 +16,42 @@ import com.jme.renderer.Camera;
  */
 public class CKeyLookDownAction extends CKeyAction {
 
-    public CKeyLookDownAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
-    	super(handler,camera);
-        this.speed = speed;
-    }
+	public CKeyLookDownAction(ClassicKeyboardLookHandler handler,
+			Camera camera, float speed) {
+		super(handler, camera);
+		this.speed = speed;
+	}
 
+	static int renderToViewPort = 0;
 
-    /**
-     * <code>performAction</code> rotates the camera a certain angle.
-     * 
-     * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
-     */
-    public synchronized void performAction(InputActionEvent evt) {
-    	if (handler.lock){
-        	System.out.println("locked...");
-    		return;
-    	}
-    	
-    	handler.lockHandling();
+	/**
+	 * <code>performAction</code> rotates the camera a certain angle.
+	 * 
+	 * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
+	 */
+	public synchronized void performAction(InputActionEvent evt) {
+		if (handler.lock) {
+			System.out.println("locked...");
+			return;
+		}
 
-        handler.lookUpDownPercent-=4;
-        if (handler.lookUpDownPercent<-50) handler.lookUpDownPercent = -50;
-        
-        setLookVertical();
+		handler.lockHandling();
 
-        camera.update();
-        handler.core.renderToViewPort();
-        handler.core.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
-    	handler.unlockHandling(false);
-    }
+		handler.lookUpDownPercent -= 4;
+		if (handler.lookUpDownPercent < -50)
+			handler.lookUpDownPercent = -50;
+
+		setLookVertical();
+
+		camera.update();
+		if (renderToViewPort > 4) {
+			handler.core.renderToViewPort();
+			renderToViewPort = 0;
+		} else {
+			renderToViewPort++;
+		}
+		handler.core
+				.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
+		handler.unlockHandling(false);
+	}
 }
