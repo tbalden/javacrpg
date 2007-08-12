@@ -1,13 +1,7 @@
-[ ] separate thread for render
-[ ] differentiate angle of renderToViewPort for turning and for normal view mode (parameterized) -> less models
-[X] push models back to pool and use Placeholder based on turn / view direction!!
-	[X] turning is not right yet
-[X] culling problem with reused nodes!!!
-
 
 [ ] quicken loading of Cubes in Geography etc. 
 [ ] far view optimizatios for trees? display less tree in the far?
-[ ] wall can be seen inside because of camere point of view too close -> restructure walls to the middle of the node??
+[ ] wall can be seen inside because of camera point of view too close -> restructure walls to the middle of the node??
 [ ] mountain steep walk bug to one direction walk
 
 [ ] cherry foliage
@@ -43,6 +37,12 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[-] separate thread for render
+[X] differentiate angle of renderToViewPort for turning and for normal view mode (parameterized) -> less models
+[X] push models back to pool and use Placeholder based on turn / view direction!!
+	[X] turning is not right yet
+[X] culling problem with reused nodes!!!
+
 [X] tree normal vectors, too blocky trees! try with exported obj models!
 	[X] too dark trees now! -> mtl file firs 3 values "Ka" set to 0.500000 !
 
