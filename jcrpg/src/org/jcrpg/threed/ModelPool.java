@@ -28,7 +28,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.scene.TriMesh;
 
@@ -51,12 +54,22 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
-		POOL_NUMBER_OF_UNUSED_TO_KEEP = J3DCore.VIEW_DISTANCE;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = J3DCore.VIEW_DISTANCE*2;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
 	
 	public PooledNode getModel(RenderedCube rc, Model model) {
+		if (model instanceof LODModel)
+		{
+			if ( ((LODModel)model).models[0] instanceof TextureStateVegetationModel) {
+				if (rc.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+				{
+					return null;
+				}
+			}
+		}
+		
 		PoolItemContainer cont = pool.get(model.id);
 		synchronized (pool) {
 			if (cont == null) {

@@ -75,6 +75,7 @@ public class Jcrpg {
 		woh.addOrbiter("sun", new SimpleSun("SUN"));
 		woh.addOrbiter("moon", new SimpleMoon("moon"));
 		w.setOrbiterHandler(woh);
+		//if (true == true) return;
 		
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);

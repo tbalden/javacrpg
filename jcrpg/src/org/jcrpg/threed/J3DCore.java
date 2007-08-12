@@ -1341,7 +1341,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		modelLoader.setLockForSharedNodes(false);
 		engine.setPause(true);
     	loadingText(0,true);
-    	updateDisplay(null);
+    	//updateDisplay(null);
 
 		lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
@@ -1566,7 +1566,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	int cullVariationCounter = 0; 
 	
+
 	public void renderToViewPort()
+	{
+		renderToViewPort(1.1f);
+	}
+	public void renderToViewPort(float refAngle)
 	{
 		boolean cullTrick = false;
 		
@@ -1593,13 +1598,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
 					if (dist<VIEW_DISTANCE_SQR)
 					{
-						if (dist<CUBE_EDGE_SIZE*3) {
+						if (dist<CUBE_EDGE_SIZE*4) {
 							found = true;
 							break;
 						}
 						Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
 						float angle = cam.getDirection().angleBetween(relative);
-						if (angle<2.4)
+						if (angle<refAngle)
 							found = true;
 						break;
 					} else
@@ -1616,7 +1621,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							Node realPooledNode = (Node)modelPool.getModel(n.cube, n.model);
+							Node realPooledNode = (Node)modelPool.getModel(c, n.model);
+							if (realPooledNode==null) continue;
 							n.realNode = (PooledNode)realPooledNode;
 							
 							// unlock
@@ -1652,6 +1658,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							Node realPooledNode = (Node)n.realNode;
+							if (realPooledNode==null) continue;
 							realPooledNode.setCullMode(Node.CULL_INHERIT);
 							realPooledNode.updateRenderState();
 							realPooledNode.updateGeometricState(0.0f, true);
@@ -2554,7 +2561,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (rendering) return;
 		synchronized (mutex) {
 			rendering = true;		
-			renderParallel();
+			render();
 			rendering = false;
 		}
 	}

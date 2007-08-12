@@ -57,13 +57,13 @@ public class Boundaries {
 	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		String key = getKey(x, y, z);
+		String key = getKey(x*magnification, y*magnification, z*magnification);
 		limits.put(key,new int[]{x,y,z});
 	}
 	public void removeLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		limits.remove(getKey(x, y, z));
+		limits.remove(getKey(x*magnification, y*magnification, z*magnification));
 	}
 	
 	
@@ -76,7 +76,7 @@ public class Boundaries {
 	public void removeCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		area.remove(getKey(x, y, z));
+		area.remove(getKey(x*magnification, y*magnification, z*magnification));
 	}
 	
 	public void mergeBoundaries(Boundaries area2) throws Exception
