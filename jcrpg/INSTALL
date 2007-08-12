@@ -10,3 +10,5 @@ Requirements:
 - Around 200-300MB free RAM
 - Opengl accelerated videocard
 - X11 or Windows or MacOS
+
+Configure RENDER_DISTANCE and VIEW_DISTANCE if want to lower memory requirement or run out of memory. :-)
