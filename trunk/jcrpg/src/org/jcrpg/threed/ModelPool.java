@@ -60,11 +60,12 @@ public class ModelPool {
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
 	
 	public PooledNode getModel(RenderedCube rc, Model model) {
-		if (model instanceof LODModel)
+		if (model.type == Model.LODMODEL)
 		{
-			if ( ((LODModel)model).models[0] instanceof TextureStateVegetationModel) {
+			if ( ((LODModel)model).models[0].type == Model.TEXTURESTATEVEGETATION) {
 				if (rc.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
+					// do not put texturestate veg on steeps
 					return null;
 				}
 			}

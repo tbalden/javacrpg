@@ -39,6 +39,7 @@ public class LODModel extends Model {
 	 */
 	public LODModel(String id,Model[] models, float[][] distances)
 	{
+		this.type = LODMODEL;
 		this.id = id;
 		this.models = models;
 		this.distances = distances;

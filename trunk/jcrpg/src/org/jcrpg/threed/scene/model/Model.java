@@ -23,6 +23,12 @@
 package org.jcrpg.threed.scene.model;
 
 public abstract class Model {
+	
+	public static final byte MODEL = 0;
+	public static final byte LODMODEL = 1;
+	public static final byte TEXTURESTATEVEGETATION = 2;
+	
+	public byte type = MODEL;
 
 	public String id;
 	public boolean poolable = true;
