@@ -32,6 +32,7 @@ public class TextureStateVegetationModel extends Model{
 
 	public TextureStateVegetationModel(String[] textureName, float quadSizeX, float quadSizeY, int quadQuantity, float quadSeparation) {
 		super();
+		this.type = TEXTURESTATEVEGETATION;
 		this.textureNames = textureName;
 		this.quadSizeX = quadSizeX;
 		this.quadSizeY = quadSizeY;
@@ -42,6 +43,7 @@ public class TextureStateVegetationModel extends Model{
 
 	public TextureStateVegetationModel(String[] textureName) {
 		super();
+		this.type = TEXTURESTATEVEGETATION;
 		this.textureNames = textureName;
 		this.id = getKey();
 	}

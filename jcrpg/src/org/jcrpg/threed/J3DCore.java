@@ -661,7 +661,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel palm_lowest = new PartlyBillboardModel("pbm_palm_2","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},2,MIPMAP_TREES);
 		//palm_lowest.quadXSizeMultiplier = 1.6f;
 		palm_lowest.quadXSizeMultiplier = 0.5f;
-		palm_lowest.quadYSizeMultiplier = 0.5f;
+		palm_lowest.quadYSizeMultiplier = 0.7f;
 		palm_lowest.windAnimation = false;
 		PartlyBillboardModel palm_lowest_2 = new PartlyBillboardModel("pbm_palm_3","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},3,MIPMAP_TREES);
 		palm_lowest_2.quadXSizeMultiplier = 0.5f;
@@ -1598,7 +1598,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
 					if (dist<VIEW_DISTANCE_SQR)
 					{
-						if (dist<CUBE_EDGE_SIZE*4) {
+						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
 							found = true;
 							break;
 						}
