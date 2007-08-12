@@ -173,9 +173,9 @@ public abstract class CKeyAction extends KeyInputAction{
 
 		setCameraDirection(camera, from, x,y,z);
 
-    	camera.update();
-		
-		handler.core.updateDisplay(from);
+        camera.normalize();
+        camera.update();
+        handler.core.updateDisplay(from);
 		
 	}
     

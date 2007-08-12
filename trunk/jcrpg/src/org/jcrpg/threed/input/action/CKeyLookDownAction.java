@@ -46,6 +46,7 @@ public class CKeyLookDownAction extends CKeyAction {
         setLookVertical();
 
         camera.update();
+        handler.core.renderToViewPort();
         handler.core.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
     	handler.unlockHandling(false);
     }
