@@ -524,8 +524,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,3f},{3f,12f},{12f,18f},{18f,60f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,15f},{15f,40f}};
+	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,8f},{8f,16f},{16f,24f},{24f,60f}};
+	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,20f},{20f,40f}};
 	public float[][] treeLodDist = TREE_LOD_DIST_LOW;
 	
 	public J3DCore()
@@ -652,7 +652,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_1.png"},0,MIPMAP_TREES);
 		palm_high.quadXSizeMultiplier = 1.5f;
-		palm_high.quadYSizeMultiplier = 1.5f;
+		palm_high.quadYSizeMultiplier = 2f;
 		palm_high.shadowCaster = true;
 		PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
 		//palm_low.quadXSizeMultiplier = 2f;
@@ -672,23 +672,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
-		coconut_high.quadXSizeMultiplier = 3f;
-		coconut_high.quadYSizeMultiplier = 3f;
+		coconut_high.quadXSizeMultiplier = 4f;
+		coconut_high.quadYSizeMultiplier = 4f;
 		coconut_high.shadowCaster = true;
 		coconut_high.cullNone = true;
 		PartlyBillboardModel coconut_low = new PartlyBillboardModel("pbm_coconut_1","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},1,MIPMAP_TREES);
-		coconut_low.quadXSizeMultiplier = 2f;
-		coconut_low.quadYSizeMultiplier = 5f;
+		coconut_low.quadXSizeMultiplier = 3f;
+		coconut_low.quadYSizeMultiplier = 6f;
 		coconut_low.shadowCaster = true;
 		coconut_low.cullNone = true;
 		PartlyBillboardModel coconut_lowest = new PartlyBillboardModel("pbm_coconut_2","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},2,MIPMAP_TREES);
-		coconut_lowest.quadXSizeMultiplier = 1.6f;
-		coconut_lowest.quadYSizeMultiplier = 1.5f;
+		coconut_lowest.quadXSizeMultiplier = 1.8f;
+		coconut_lowest.quadYSizeMultiplier = 1.7f;
 		coconut_lowest.windAnimation = false;
 		coconut_lowest.cullNone = true;
 		PartlyBillboardModel coconut_lowest_2 = new PartlyBillboardModel("pbm_coconut_3","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},3,MIPMAP_TREES);
-		coconut_lowest_2.quadXSizeMultiplier = 1.6f;
-		coconut_lowest_2.quadYSizeMultiplier = 1.5f;
+		coconut_lowest_2.quadXSizeMultiplier = 1.8f;
+		coconut_lowest_2.quadYSizeMultiplier = 1.7f;
 		coconut_lowest_2.windAnimation = false;
 		coconut_lowest_2.cullNone = true;
 
@@ -743,7 +743,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//LODModel lod_palm = new LODModel(new SimpleModel[]{palm},new float[][]{{0f,15f}});
 		LODModel lod_palm = new LODModel("palm",new SimpleModel[]{coconut_high,coconut_high,coconut_lowest,coconut_lowest_2},treeLodDist);
 		lod_palm.shadowCaster = true;
-		LODModel lod_jungletrees_mult = new LODModel("jungletrees_mult",new SimpleModel[]{palm_high,palm_high,palm_lowest,palm_lowest_2},treeLodDist);
+		LODModel lod_jungletrees_mult = new LODModel("jungletrees_mult",new SimpleModel[]{palm_high,palm_high,palm_lowest_2,palm_lowest_2},treeLodDist);
 		lod_jungletrees_mult.shadowCaster = true;
 		LODModel lod_cactus = new LODModel("cactus",new SimpleModel[]{cactus},new float[][]{{0f,15f}});
 		lod_cactus.shadowCaster = true;
@@ -1537,35 +1537,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			
 			n[i].setLocalRotation(qC);
-			/*n[i].updateRenderState();
-			n[i].updateGeometricState(0.0f, true);
-			n[i].updateModelBound();
-			n[i].updateWorldVectors();
-			n[i].updateWorldBound();*/
 
 			cube.hsRenderedNodes.add((NodePlaceholder)n[i]);
 			liveNodes++;
 			
-			//cRootNode.attachChild(n[i]);
-			
-			//sideNode.attachChild(n[i]);
 		}
-		/*
-		//sideNode.setModelBound(new BoundingBox());
-		//sideNode.updateModelBound();
-		sideNode.lockTransforms();
-		sideNode.lockBounds();
-		sideNode.lockBranch();
-		cube.hsRenderedNodes.add(sideNode);
-		cRootNode.attachChild(sideNode);*/
 	}
 	
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> inViewPortCullNotSet = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
 	
-	int cullVariationCounter = 0; 
+	int cullVariationCounter = 0;
 	
+	public static final float ROTATE_VIEW_ANGLE = 2.4f;
 
 	public void renderToViewPort()
 	{

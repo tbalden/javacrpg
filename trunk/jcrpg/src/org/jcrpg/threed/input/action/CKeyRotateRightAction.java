@@ -34,7 +34,7 @@ public class CKeyRotateRightAction extends CKeyAction {
     		return;
     	}
     	handler.lockHandling();
-        handler.core.renderToViewPort(2.6f);
+        handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         handler.core.turnRight();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.render();
@@ -45,7 +45,6 @@ public class CKeyRotateRightAction extends CKeyAction {
         setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
         camera.update();
         handler.core.updateDisplay(from);
-        //handler.core.renderToViewPort();
     	handler.unlockHandling(true);
     }
 }
