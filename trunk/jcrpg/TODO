@@ -1,3 +1,5 @@
+[ ] separate thread for render
+[ ] differentiate angle of renderToViewPort for turning and for normal view mode (parameterized) -> less models
 [X] push models back to pool and use Placeholder based on turn / view direction!!
 	[X] turning is not right yet
 [X] culling problem with reused nodes!!!

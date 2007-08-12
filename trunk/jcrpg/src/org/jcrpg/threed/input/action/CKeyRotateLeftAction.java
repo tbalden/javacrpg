@@ -41,6 +41,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
     	}
     	
     	handler.lockHandling();
+        handler.core.renderToViewPort(2.6f);
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         handler.core.turnLeft();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.render();
