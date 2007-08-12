@@ -1,17 +1,30 @@
 Java Classic Role Playing Game
 ------------------------------
 
-q. Requirements
-- Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
-- At least 300 megabyte free system memory
-- Opengl accelerated video card (nvidia geforce 6200 or better should be good)
-
-
-x. Movement/Keyboard
+m. Movement/Keyboard
 
 W/S/A/D for turning, moving.
 Q/E for strafe.
 Up/Down for looking up and down.
 
 ESC to exit the demo.
+
+
+c. Configuration
+
+config.properties:
+The optimal VIEW_DISTANCE is around 30-40 and RENDER_DISTANCE can be set to the double of these values. 
+Take care of the -Xmx parameter in your jcrpg.sh/jcrpg.bat if you receive OutOfMemory or Heap is full.
+If you have less memory for testing set smaller VIEW_DISTANCE and RENDER_DISTANCE in 
+the config.properties file.
+Use BLOOM_EFFECT and SHADOWS set to true if you have a decent PC (CPU and GPU). 
+You can get additional FPS with turning Grass of (set RENDER_GRASS_DISTANCE=0) and turning 
+MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less mem use.
+
+r. Requirements
+- Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
+- At least 300 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
+	in config.properties
+- Opengl accelerated video card (nvidia geforce 6200 or better should be good)
+- Processor around 1.6GHz (Single core will do it)
 
