@@ -41,7 +41,13 @@ public class CKeyRotateLeftAction extends CKeyAction {
     	}
     	
     	handler.lockHandling();
-        handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+        if (handler.lookLeftRightPercent>0) {
+        	// if looked away to right, bigger view needed
+        	handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE+0.6f);
+        } else
+        {
+        	handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+        }
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         handler.core.turnLeft();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.render();
@@ -49,6 +55,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps,from,toReach);
         handler.lookUpDownPercent = 0;
+        handler.lookLeftRightPercent = 0;
         setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
         camera.update();
         handler.core.updateDisplay(from);

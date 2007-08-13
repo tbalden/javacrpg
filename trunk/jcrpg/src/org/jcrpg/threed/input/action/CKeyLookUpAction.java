@@ -29,6 +29,12 @@ public class CKeyLookUpAction extends CKeyAction {
 
 		handler.lockHandling();
 
+
+		if (handler.lookLeftRightPercent!=0)
+		{
+			handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+		}
+		handler.lookLeftRightPercent = 0;
 		handler.lookUpDownPercent += 4;
 		if (handler.lookUpDownPercent > 45)
 			handler.lookUpDownPercent = 45;
