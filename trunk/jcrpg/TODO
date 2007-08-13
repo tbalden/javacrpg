@@ -1,21 +1,22 @@
 
+[ ] lamp key, to switch on/off lamp in the dark!
+	[ ] spot light to the user in the night, doesnt work!!
+
+[ ] cave into the mountain!
+
+[ ] mountain steep walk bug to one direction walk
 [ ] quicken loading of Cubes in Geography etc. 
 [ ] far view optimizatios for trees? display less tree in the far?
+[ ] far view replacement of cubes with sg else to look better...a grey plane?
+ 
 [ ] wall can be seen inside because of camera point of view too close -> restructure walls to the middle of the node??
-[ ] mountain steep walk bug to one direction walk
 
 [ ] cherry foliage
 
 [ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
-[ ] spot light to the user in the night, doesnt work!!
 		
-
-[ ] user manual update
-
-
 [ ] add Harek's table to the house
-
 
 [ ] clean up climate and implement all parts of it with conditions, continue the work on it
 [ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
@@ -25,7 +26,6 @@
 [ ] skySphere change: night sky based on calculated light value (v)
 [ ] cloud planes on sky
 
-[ ] clean up files in SVN
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
@@ -33,10 +33,12 @@
 [?] Lod modelling trees with billboard images captured in blender!
 [?] Tree generation in java code? (billboard leaf quads!)
 [?] Write the wind vertex program? Now it's cpu based!
-[?] if no grass, don't put it on node!
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] clean up files in SVN
+[X] user manual update
+[-] if no grass, don't put it on node!
 [-] separate thread for render
 [X] differentiate angle of renderToViewPort for turning and for normal view mode (parameterized) -> less models
 [X] push models back to pool and use Placeholder based on turn / view direction!!
