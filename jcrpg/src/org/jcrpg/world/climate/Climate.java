@@ -23,6 +23,7 @@ package org.jcrpg.world.climate;
 
 import java.util.HashMap;
 
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
@@ -46,7 +47,9 @@ public class Climate extends ClimatePart {
 	@Override
 	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ) {
 		for (ClimateBelt belt : belts.values()) {
-			if (belt.boundaries.isInside(worldX, worldY, worldZ))
+			// smoothing together climates with quasi random coordinates:
+			int perVariation = HashUtil.mixPercentage(worldX, worldY, worldZ)/50-2; // +/- 1 cube
+			if (belt.boundaries.isInside(worldX + perVariation, worldY, worldZ + perVariation))
 			{
 				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ);
 				c.setBelt(belt);
