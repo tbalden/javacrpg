@@ -219,6 +219,59 @@ public abstract class CKeyAction extends KeyInputAction{
         turnDirection(from, toReach, Math.abs(handler.lookLeftRightPercent));
 
     }
+    protected void setLookVerHor()
+    {
+        Vector3f toReach = null;
+        
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+        if (handler.lookUpDownPercent<0)
+        	toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];//[handler.core.viewDirection];
+        else
+        	toReach = J3DCore.turningDirectionsUnit[J3DCore.TOP];//J3DCore.topRotationDirections[handler.core.viewDirection];
+        
+        Vector3f toReachHor = null;
+        
+        if (handler.lookLeftRightPercent<0) {
+        	int vdN = handler.core.viewDirection-1;
+        	if (vdN<0) vdN = 3;
+        	toReachHor = J3DCore.turningDirectionsUnit[vdN];
+        }
+        else {
+        	int vdN = handler.core.viewDirection+1;
+        	if (vdN>3) vdN = 0;
+        	toReachHor = J3DCore.turningDirectionsUnit[vdN];
+        }
+
+		float x1, y1, z1;
+		x1 = (1 / 100f) * Math.abs(handler.lookUpDownPercent) * toReach.x;
+		y1 = (1 / 100f) * Math.abs(handler.lookUpDownPercent) * toReach.y;
+		z1 = (1 / 100f) * Math.abs(handler.lookUpDownPercent) * toReach.z;
+
+		x1 += (1 / 100f) * (100 - Math.abs(handler.lookUpDownPercent)) * from.x;
+		y1 += (1 / 100f) * (100 - Math.abs(handler.lookUpDownPercent)) * from.y;
+		z1 += (1 / 100f) * (100 - Math.abs(handler.lookUpDownPercent)) * from.z;
+		toReach = new Vector3f(x1, y1, z1);
+		
+		float x2, y2, z2;
+		x2 = (1 / 100f) * Math.abs(handler.lookLeftRightPercent) * toReachHor.x;
+		y2 = (1 / 100f) * Math.abs(handler.lookLeftRightPercent) * toReachHor.y;
+		z2 = (1 / 100f) * Math.abs(handler.lookLeftRightPercent) * toReachHor.z;
+
+		x2 += (1 / 100f) * (100 - Math.abs(handler.lookLeftRightPercent)) * from.x;
+		y2 += (1 / 100f) * (100 - Math.abs(handler.lookLeftRightPercent)) * from.y;
+		z2 += (1 / 100f) * (100 - Math.abs(handler.lookLeftRightPercent)) * from.z;
+		toReachHor = new Vector3f(x2, y2, z2);
+		
+		toReachHor = toReach.normalize().add(toReachHor.normalize()).normalize();
+
+
+		setCameraDirection(camera, from, toReachHor.x,toReachHor.y,toReachHor.z);
+
+        camera.normalize();
+        camera.update();
+        handler.core.updateDisplay(from);
+    	
+    }
   
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach)
 	{
