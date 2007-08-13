@@ -43,13 +43,15 @@ public class CKeyLookRightAction extends CKeyAction {
 			handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
 		}
 		handler.lookUpDownPercent = 0;
-		handler.lookLeftRightPercent += 4;
+		handler.lookLeftRightPercent += 2;
 		if (handler.lookLeftRightPercent > +50)
 			handler.lookLeftRightPercent = +50;
-
+		setLookHorizontal();
+		handler.lookLeftRightPercent += 2;
+		if (handler.lookLeftRightPercent > +50)
+			handler.lookLeftRightPercent = +50;
 		setLookHorizontal();
 
-		camera.update();
 		if (renderToViewPort > 4) {
 			handler.core.renderToViewPort();
 			renderToViewPort = 0;
