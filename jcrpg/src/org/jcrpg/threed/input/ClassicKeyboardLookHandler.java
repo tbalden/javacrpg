@@ -5,6 +5,8 @@ import org.jcrpg.threed.input.action.CKeyBackwardAction;
 import org.jcrpg.threed.input.action.CKeyDownAction;
 import org.jcrpg.threed.input.action.CKeyForwardAction;
 import org.jcrpg.threed.input.action.CKeyLookDownAction;
+import org.jcrpg.threed.input.action.CKeyLookLeftAction;
+import org.jcrpg.threed.input.action.CKeyLookRightAction;
 import org.jcrpg.threed.input.action.CKeyLookUpAction;
 import org.jcrpg.threed.input.action.CKeyRotateLeftAction;
 import org.jcrpg.threed.input.action.CKeyRotateRightAction;
@@ -32,6 +34,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     public J3DCore core;
     
     public int lookUpDownPercent = 0;
+    public int lookLeftRightPercent = 0;
 
     public ClassicKeyboardLookHandler( J3DCore core, Camera cam ) {
     	this.core = core;
@@ -45,6 +48,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "strafeRight", KeyInput.KEY_E );
         keyboard.set( "lookUp", KeyInput.KEY_UP );
         keyboard.set( "lookDown", KeyInput.KEY_DOWN );
+        keyboard.set( "lookLeft", KeyInput.KEY_LEFT );
+        keyboard.set( "lookRight", KeyInput.KEY_RIGHT );
         keyboard.set( "climbUp", KeyInput.KEY_R );
         keyboard.set( "climbDown", KeyInput.KEY_F );
         keyboard.set( "turnRight", KeyInput.KEY_D );
@@ -59,6 +64,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyStrafeRightAction( this, cam, moveSpeed ), "strafeRight", true );
         addAction( new CKeyLookUpAction( this, cam, rotateSpeed ), "lookUp", true );
         addAction( new CKeyLookDownAction( this, cam, rotateSpeed ), "lookDown", true );
+        addAction( new CKeyLookLeftAction( this, cam, rotateSpeed ), "lookLeft", true );
+        addAction( new CKeyLookRightAction( this, cam, rotateSpeed ), "lookRight", true );
         addAction( new CKeyUpAction( this, cam, rotateSpeed ), "climbUp", true );
         addAction( new CKeyDownAction( this, cam, rotateSpeed ), "climbDown", true );
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );

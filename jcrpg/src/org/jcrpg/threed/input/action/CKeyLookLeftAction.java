@@ -14,9 +14,9 @@ import com.jme.renderer.Camera;
  * @author Mark Powell
  * @version $Id: KeyRotateLeftAction.java,v 1.16 2006/09/29 22:30:17 nca Exp $
  */
-public class CKeyLookDownAction extends CKeyAction {
+public class CKeyLookLeftAction extends CKeyAction {
 
-	public CKeyLookDownAction(ClassicKeyboardLookHandler handler,
+	public CKeyLookLeftAction(ClassicKeyboardLookHandler handler,
 			Camera camera, float speed) {
 		super(handler, camera);
 		this.speed = speed;
@@ -37,16 +37,16 @@ public class CKeyLookDownAction extends CKeyAction {
 
 		handler.lockHandling();
 
-		if (handler.lookLeftRightPercent!=0)
+		if (handler.lookUpDownPercent!=0)
 		{
 			handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
 		}
-		handler.lookLeftRightPercent = 0;
-		handler.lookUpDownPercent -= 4;
-		if (handler.lookUpDownPercent < -50)
-			handler.lookUpDownPercent = -50;
+		handler.lookUpDownPercent = 0;
+		handler.lookLeftRightPercent -= 4;
+		if (handler.lookLeftRightPercent < -50)
+			handler.lookLeftRightPercent = -50;
 
-		setLookVertical();
+		setLookHorizontal();
 
 		camera.update();
 		if (renderToViewPort > 4) {

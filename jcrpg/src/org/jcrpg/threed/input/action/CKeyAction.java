@@ -196,7 +196,30 @@ public abstract class CKeyAction extends KeyInputAction{
         turnDirection(from, toReach, Math.abs(handler.lookUpDownPercent));
 
     }
+    /**
+     * Sets Left or Right look based on the precentage stored in handler.
+     */
+    protected void setLookHorizontal()
     
+    {
+        Vector3f toReach = null;
+        
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+        if (handler.lookLeftRightPercent<0) {
+        	int vdN = handler.core.viewDirection-1;
+        	if (vdN<0) vdN = 3;
+        	toReach = J3DCore.turningDirectionsUnit[vdN];
+        }
+        else {
+        	int vdN = handler.core.viewDirection+1;
+        	if (vdN>3) vdN = 0;
+        	toReach = J3DCore.turningDirectionsUnit[vdN];
+        }
+        
+        turnDirection(from, toReach, Math.abs(handler.lookLeftRightPercent));
+
+    }
+  
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach)
 	{
 		movePosition(steps, from, toReach,false);

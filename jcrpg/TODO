@@ -1,4 +1,3 @@
-
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
 
@@ -36,6 +35,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] looking left / right like up / down
 [X] clean up files in SVN
 [X] user manual update
 [-] if no grass, don't put it on node!
