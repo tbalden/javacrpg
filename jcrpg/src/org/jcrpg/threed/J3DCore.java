@@ -1392,8 +1392,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    				removeOccludersRecoursive((Node)n.realNode);
 	    			possibleOccluders.remove(n);
 	    		}
-	    	}
-    		
+	    	}    		
     	}
     	
 		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
@@ -1688,19 +1687,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 	    // handling possible occluders
-	    if (SHADOWS)
-		for (NodePlaceholder psn : possibleOccluders) {
-				if (psn.realNode != null) {
-					Node n = (Node) psn.realNode;
-					float dist = n.getWorldTranslation().distanceSquared(
-							cam.getLocation());
-					if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-						sPass.addOccluder(n);
-					} else {
-						removeOccludersRecoursive(n);
+	    if (SHADOWS) {
+	    	System.out.println("OCCS: "+sPass.occludersSize());
+			for (NodePlaceholder psn : possibleOccluders) {
+					if (psn.realNode != null) {
+						Node n = (Node) psn.realNode;
+						float dist = n.getWorldTranslation().distanceSquared(
+								cam.getLocation());
+						if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
+							if (!sPass.containsOccluder(n))
+								sPass.addOccluder(n);
+						} else {
+							removeOccludersRecoursive(n);
+						}
 					}
-				}
-		}
+			}
+	    }
 	    
 	    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
 	    sysTime = System.currentTimeMillis();
@@ -2536,7 +2538,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//cLightState.apply();
 		//skydomeLightState.apply();
         /** Have the PassManager render. */
-        if (BLOOM_EFFECT||SHADOWS) pManager.renderPasses(display.getRenderer());
+        try {
+        	if (BLOOM_EFFECT||SHADOWS) pManager.renderPasses(display.getRenderer());
+        } catch (NullPointerException npe)
+        {
+        	
+        }
  		super.simpleRender();
 	}
 	
