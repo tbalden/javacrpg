@@ -1,9 +1,7 @@
-[ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
+[ ] cave into the mountain!
 
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
-
-[ ] cave into the mountain!
 
 [ ] mountain steep walk bug to one direction walk
 [ ] quicken loading of Cubes in Geography etc. 
@@ -14,6 +12,7 @@
 
 [ ] cherry foliage
 
+[ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
 [ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
 		
