@@ -840,15 +840,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
 
 		SimpleModel sm_female = new SimpleModel("models/fauna/fem.obj",null); sm_jungle.rotateOnSteep = true;
+		sm_female.cullNone = true;
 		SimpleModel sm_male = new SimpleModel("models/fauna/male.obj",null); sm_jungle.rotateOnSteep = true;
+		sm_male.cullNone = true;
+		SimpleModel sm_wolf = new SimpleModel("models/fauna/wolf.obj",null); sm_jungle.rotateOnSteep = true;
+		sm_wolf.cullNone = true;
 		
 		if (RENDER_GRASS_DISTANCE>0)
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,lod_cont_grass_1}));
 		else 
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
-		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone,sm_male}));
+		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone,sm_wolf}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
