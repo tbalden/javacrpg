@@ -765,6 +765,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// 3d type to file mapping		
 		SimpleModel wall_thick = new SimpleModel("sides/wall_thick.3ds", null);
+		//SimpleModel wall_thick = new SimpleModel("models/ground/wall_cave.obj", null);
 		wall_thick.shadowCaster = true;
 		wall_thick.cullNone = true;
 		SimpleModel wall_window = new SimpleModel("sides/wall_window.3ds", null);
