@@ -73,6 +73,7 @@ import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.River;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -570,7 +571,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(24));//new Integer(24)); TODO quad model
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
 		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
-
+		hmAreaSubType3dType.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
 		
 
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -791,6 +793,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel roof_top = new SimpleModel("sides/roof_top.3ds",null);
 		roof_top.shadowCaster = true;
 		
+		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
+		SimpleModel ground_cave = new SimpleModel("models/ground/wall_cave.obj", null);
 		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{wall_thick},
@@ -880,7 +884,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
-		
+
+		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
+
 		// no lod version
 /*		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{cherry}));

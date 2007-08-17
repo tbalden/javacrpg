@@ -22,6 +22,8 @@
 
 package org.jcrpg.world.place.geography;
 
+import java.util.HashMap;
+
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -39,6 +41,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 
 public class Mountain extends Geography implements Surface{
 
+	public HashMap<String, Geography> geographies = new HashMap<String, Geography>();
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_MOUNTAIN+"_GROUND_STEEP");
@@ -85,6 +88,13 @@ public class Mountain extends Geography implements Surface{
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
+		for (Geography geo : geographies.values()) {
+			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				Cube geoCube = geo.getCube(worldX, worldY, worldZ);
+				return geoCube;
+			}
+		}
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;

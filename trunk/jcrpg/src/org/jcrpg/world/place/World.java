@@ -142,7 +142,7 @@ public class World extends Place {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
-					if (geo instanceof Surface)
+					if (geoCube!=null && geo instanceof Surface)
 					{
 						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
 						//if (geo instanceof Mountain)

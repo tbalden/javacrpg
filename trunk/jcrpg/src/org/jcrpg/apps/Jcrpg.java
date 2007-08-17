@@ -36,6 +36,7 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -109,6 +110,8 @@ public class Jcrpg {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 		Mountain m = new Mountain("m1",w,null,10,10,3,10,1,w.getSeaLevel(10),1);
+		Cave cave = new Cave("cave",m,null,1,10,1,10,10,w.getSeaLevel(1),10,7,0,1,0);
+		m.geographies.put(cave.id, cave);
 		w.geographies.put(m.id, m);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
