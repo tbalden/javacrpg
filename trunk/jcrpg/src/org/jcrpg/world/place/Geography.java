@@ -63,5 +63,12 @@ public class Geography extends Place {
 		}
 		return floraCube;
 	}
+
+	
+	@Override
+	public Cube getCube(int worldX, int worldY, int worldZ) {
+		// TODO Auto-generated method stub
+		return super.getCube(worldX, worldY, worldZ);
+	}
 	
 }

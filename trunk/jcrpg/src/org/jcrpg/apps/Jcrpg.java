@@ -109,9 +109,12 @@ public class Jcrpg {
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
+
+		Cave cave = new Cave("cave",w,null,1,10,1,10,10,w.getSeaLevel(1)-1,10,7,0,1,0);
+		w.geographies.put(cave.id, cave);
+		
+		
 		Mountain m = new Mountain("m1",w,null,10,10,3,10,1,w.getSeaLevel(10),1);
-		Cave cave = new Cave("cave",m,null,1,10,1,10,10,w.getSeaLevel(1),10,7,0,1,0);
-		m.geographies.put(cave.id, cave);
 		w.geographies.put(m.id, m);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
