@@ -573,6 +573,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
 		
 
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -795,6 +796,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
 		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
+		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
 		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{wall_thick},
@@ -887,6 +889,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{ground_cave}));
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 
 		// no lod version
 /*		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
