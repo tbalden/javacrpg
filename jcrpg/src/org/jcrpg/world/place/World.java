@@ -138,9 +138,12 @@ public class World extends Place {
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ))
 					return eco.getCube(worldX, worldY, worldZ);
 			}
-			for (Geography geo : geographies.values()) {
+			Cube retCube = null;
+			boolean insideGeo = false;
+			for (Geography geo : geographies.values()) {				
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
+					insideGeo = true;
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					if (geoCube!=null && geo instanceof Surface)
 					{
@@ -155,28 +158,37 @@ public class World extends Place {
 							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 							if (floraCube!=null)
 							{
-								return new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
+								Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
+								retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
 							} 
 							else 
 							{
-								return new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
+								Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
+								retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
 							}
 						} else 
 						{
-							return geoCube;
+							retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
 						}
 					} else 
 					{
-						return geoCube;
+						retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
 					}
 				}
-					
 			}
+			if (insideGeo) return retCube;
+
 			return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;
 	}
 
+	public Cube appendCube(Cube orig, Cube newCube, int worldX, int worldY, int worldZ)
+	{
+		if (orig!=null)
+			return new Cube(orig,newCube,worldX,worldY,worldZ,orig.steepDirection);
+		return newCube;
+	}
 
 	/**
 	 * 

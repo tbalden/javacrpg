@@ -40,10 +40,12 @@ public class Cave extends Geography {
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_CAVE+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_CAVE+"_WALL");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_CAVE+"_GROUND");
+	public static final SideSubType SUBTYPE_ENTRANCE = new GroundSubType(TYPE_CAVE+"_ENTRANCE");
 
 	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
 	static Side[] GROUND = {new Side(TYPE_CAVE,SUBTYPE_GROUND)};
 	static Side[] WALL = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
+	static Side[] ENTRANCE = {new Side(TYPE_CAVE,SUBTYPE_ENTRANCE)};
 	
 	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,GROUND,null };
@@ -52,6 +54,11 @@ public class Cave extends Geography {
 	static Side[][] CAVE_EAST = new Side[][] { null, WALL, null,null,null,null };
 	static Side[][] CAVE_SOUTH = new Side[][] { null, null, WALL,null,null,null };
 	static Side[][] CAVE_WEST = new Side[][] { null, null, null,WALL,null,null };
+
+	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, null, null,null,null,null };
+	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { null, ENTRANCE, null,null,null,null };
+	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, null, ENTRANCE,null,null,null };
+	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { null, null, null,ENTRANCE,null,null };
 	
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
@@ -149,10 +156,11 @@ public class Cave extends Geography {
 		{
 			return new Cube(this,CAVE_WEST,worldX,worldY,worldZ);
 		}
-		if (insideX&&insideY&&insideZ)
+		if (insideX&&insideY&&!insideZ)
 		{
-			//return new Cube(this,)
-		}
+			if (spacePartX%2==0)
+				return new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
+		} 
 	
 		return null;
 	}
