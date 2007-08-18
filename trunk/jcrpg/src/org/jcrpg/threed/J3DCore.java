@@ -574,6 +574,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_ROCK.id, new Integer(34));
 		
 
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -768,7 +769,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// 3d type to file mapping		
 		SimpleModel wall_thick = new SimpleModel("sides/wall_thick.3ds", null);
-		//SimpleModel wall_thick = new SimpleModel("models/ground/wall_cave.obj", null);
 		wall_thick.shadowCaster = true;
 		wall_thick.cullNone = true;
 		SimpleModel wall_window = new SimpleModel("sides/wall_window.3ds", null);
@@ -794,6 +794,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel roof_top = new SimpleModel("sides/roof_top.3ds",null);
 		roof_top.shadowCaster = true;
 		
+		SimpleModel cave_rock = new SimpleModel("models/ground/cave_rock.obj", null);
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
 		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
@@ -890,6 +891,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{ground_cave}));
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
+		hm3dTypeRenderedSide.put(new Integer(34), new RenderedSide(new Model[]{cave_rock}));
 
 		// no lod version
 /*		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!

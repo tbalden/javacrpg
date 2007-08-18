@@ -28,6 +28,7 @@ import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -38,11 +39,12 @@ public class Cave extends Geography {
 	
 	public static final String TYPE_CAVE = "CAVE";
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_CAVE+"_GROUND_STEEP");
+	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_CAVE+"_ROCK");
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_CAVE+"_WALL");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_CAVE+"_GROUND");
 	public static final SideSubType SUBTYPE_ENTRANCE = new GroundSubType(TYPE_CAVE+"_ENTRANCE");
 
-	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
+	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_ROCK)};
 	static Side[] GROUND = {new Side(TYPE_CAVE,SUBTYPE_GROUND)};
 	static Side[] WALL = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
 	static Side[] ENTRANCE = {new Side(TYPE_CAVE,SUBTYPE_ENTRANCE)};
@@ -55,6 +57,8 @@ public class Cave extends Geography {
 	static Side[][] CAVE_SOUTH = new Side[][] { null, null, WALL,null,null,null };
 	static Side[][] CAVE_WEST = new Side[][] { null, null, null,WALL,null,null };
 
+	static Side[][] CAVE_ROCK = new Side[][] { null, null, null,null,ROCK,null };
+
 	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, null, null,null,null,null };
 	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { null, ENTRANCE, null,null,null,null };
 	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, null, ENTRANCE,null,null,null };
@@ -62,22 +66,9 @@ public class Cave extends Geography {
 	
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
-	/**
-	 * Size of cavities
-	 */
-	int spaceSizeRatioHorizontal,spaceSizeRatioVertical;
-	/**
-	 * how fast to go deeper
-	 */
-	int	steepness;
-	/**
-	 * Ratio of spaces vs. ducts 
-	 */
-	int	ductSpaceRatioHorizontal,ductSpaceRatioVertical;
-	
-	
+	int density;
 
-	public Cave(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int spaceSizeRatioHorizontal, int ductSpaceRatioHorizontal,int spaceSizeRatioVertical, int ductSpaceRatioVertical) throws Exception{
+	public Cave(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density) throws Exception{
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -86,10 +77,7 @@ public class Cave extends Geography {
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
-		this.spaceSizeRatioHorizontal = spaceSizeRatioHorizontal;
-		this.ductSpaceRatioHorizontal = ductSpaceRatioHorizontal;
-		this.spaceSizeRatioVertical = spaceSizeRatioVertical;
-		this.ductSpaceRatioVertical = ductSpaceRatioVertical;
+		this.density = density;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 	
@@ -103,66 +91,14 @@ public class Cave extends Geography {
 		int realSizeY = sizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
-		int spaceX = relX/spaceSizeRatioHorizontal;
-		int spaceY = relY/spaceSizeRatioVertical;
-		int spaceZ = relZ/spaceSizeRatioHorizontal;
-		int spacePartX = (relX%spaceSizeRatioHorizontal);
-		int spacePartY = (relY%spaceSizeRatioVertical);
-		int spacePartZ = (relZ%spaceSizeRatioHorizontal);
+		int per = HashUtil.mixPercentage(worldX, worldY, worldZ);
 		
-		boolean insideX = spacePartX>ductSpaceRatioHorizontal || spacePartX<spaceSizeRatioHorizontal-ductSpaceRatioHorizontal-1;
-		boolean rimXMin = (relX%spaceSizeRatioHorizontal)==ductSpaceRatioHorizontal;  
-		boolean rimXMax = (relX%spaceSizeRatioHorizontal)==spaceSizeRatioHorizontal-ductSpaceRatioHorizontal-1;
-		
-		boolean insideY = spacePartY>ductSpaceRatioVertical || spacePartY<spaceSizeRatioVertical-ductSpaceRatioVertical-1;
-		boolean rimYMin = (relY%spaceSizeRatioVertical)==ductSpaceRatioVertical;  
-		boolean rimYMax = (relY%spaceSizeRatioVertical)==spaceSizeRatioVertical-ductSpaceRatioVertical-1;
-		
-		boolean insideZ = spacePartZ>ductSpaceRatioHorizontal || spacePartZ<spaceSizeRatioHorizontal-ductSpaceRatioHorizontal-1;
-		boolean rimZMin = (relZ%spaceSizeRatioHorizontal)==ductSpaceRatioHorizontal;  
-		boolean rimZMax = (relZ%spaceSizeRatioHorizontal)==spaceSizeRatioHorizontal-ductSpaceRatioHorizontal-1;
-		
-		if (!(rimXMin || rimXMax || rimZMin || rimZMax)) {
-			if (rimYMin && rimYMax)
-			{
-				return new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-			}
-			else
-			if (rimYMin)
-			{
-				return new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
-			} else
-			if (rimYMax)
-			{
-				return new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
-			}
+		if (per<density)
+		{
+			return new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
 		}
-		if (!rimXMin && !rimXMax)
-		{
-			if (rimZMin)
-			{
-				return new Cube(this,CAVE_NORTH,worldX,worldY,worldZ);
-			} else
-			if (rimZMax)
-			{
-				return new Cube(this,CAVE_SOUTH,worldX,worldY,worldZ);
-			}
-		}
-		if (rimXMin)
-		{
-			return new Cube(this,CAVE_EAST,worldX,worldY,worldZ);
-		} else
-		if (rimXMax)
-		{
-			return new Cube(this,CAVE_WEST,worldX,worldY,worldZ);
-		}
-		if (insideX&&insideY&&!insideZ)
-		{
-			if (spacePartX%2==0)
-				return new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
-		} 
 	
-		return null;
+		return new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
 	}
 	
 
