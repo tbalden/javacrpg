@@ -794,7 +794,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		roof_top.shadowCaster = true;
 		
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
-		SimpleModel ground_cave = new SimpleModel("models/ground/wall_cave.obj", null);
+		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{wall_thick},
@@ -885,7 +885,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
 
-		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{ground_cave}));
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
 
 		// no lod version
