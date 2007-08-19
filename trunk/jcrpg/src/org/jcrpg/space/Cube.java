@@ -38,7 +38,7 @@ public class Cube extends ChangingImpl {
 	
 	public long lastChangeTimeStamp = System.currentTimeMillis();
 	
-	
+	public boolean overwrite = false;
 	
 	
 	public Side[][] sides = {n,e,s,w,top,bottom};
@@ -70,11 +70,11 @@ public class Cube extends ChangingImpl {
 			Side[] sides1 = c1.sides[i];
 			Side[] sides2 = c2.sides[i];
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
-			if (sides1==null)
+			if (sides1==null || c2.overwrite)
 			{
 				merged = sides2;
 			} else
-			if (sides2== null)
+			if (sides2== null || c1.overwrite)
 			{
 				merged = sides1;
 			} else

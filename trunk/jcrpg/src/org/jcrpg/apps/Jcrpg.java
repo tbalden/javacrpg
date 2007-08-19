@@ -110,7 +110,7 @@ public class Jcrpg {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
 		w.geographies.put(p.id, p);
 
-		Cave cave = new Cave("cave",w,null,1,10,1,10,10,w.getSeaLevel(1),10,60);
+		Cave cave = new Cave("cave",w,null,1,20,1,20,10,w.getSeaLevel(1),10,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH);
 		w.geographies.put(cave.id, cave);
 		
 		

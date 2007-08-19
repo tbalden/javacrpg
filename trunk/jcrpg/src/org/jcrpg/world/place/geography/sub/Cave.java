@@ -37,14 +37,21 @@ import org.jcrpg.world.place.PlaceLocator;
 public class Cave extends Geography {
 
 	
+	public static int LIMIT_NORTH = 1;
+	public static int LIMIT_EAST = 2;
+	public static int LIMIT_SOUTH = 4;
+	public static int LIMIT_WEST = 8;
+	
 	public static final String TYPE_CAVE = "CAVE";
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_CAVE+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_CAVE+"_ROCK");
+	public static final SideSubType SUBTYPE_BLOCK = new NotPassable(TYPE_CAVE+"_BLOCK");
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_CAVE+"_WALL");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_CAVE+"_GROUND");
-	public static final SideSubType SUBTYPE_ENTRANCE = new GroundSubType(TYPE_CAVE+"_ENTRANCE");
+	public static final SideSubType SUBTYPE_ENTRANCE = new SideSubType(TYPE_CAVE+"_ENTRANCE");
 
-	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_ROCK)};
+	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_ROCK),new Side(TYPE_CAVE,SUBTYPE_GROUND)};
+	static Side[] BLOCK = {new Side(TYPE_CAVE,SUBTYPE_BLOCK)};
 	static Side[] GROUND = {new Side(TYPE_CAVE,SUBTYPE_GROUND)};
 	static Side[] WALL = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
 	static Side[] ENTRANCE = {new Side(TYPE_CAVE,SUBTYPE_ENTRANCE)};
@@ -57,18 +64,18 @@ public class Cave extends Geography {
 	static Side[][] CAVE_SOUTH = new Side[][] { null, null, WALL,null,null,null };
 	static Side[][] CAVE_WEST = new Side[][] { null, null, null,WALL,null,null };
 
-	static Side[][] CAVE_ROCK = new Side[][] { null, null, null,null,ROCK,null };
+	static Side[][] CAVE_ROCK = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK,ROCK,GROUND };
 
-	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, null, null,null,null,null };
-	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { null, ENTRANCE, null,null,null,null };
-	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, null, ENTRANCE,null,null,null };
-	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { null, null, null,ENTRANCE,null,null };
+	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,null,GROUND };
+	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, null,null,null,GROUND };
+	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, BLOCK, ENTRANCE,BLOCK,null,GROUND };
+	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, null, BLOCK,ENTRANCE,null,GROUND };
 	
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
-	int density;
+	int density,entranceSide, walledSide;
 
-	public Cave(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density) throws Exception{
+	public Cave(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int walledSide) throws Exception{
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -78,6 +85,7 @@ public class Cave extends Geography {
 		this.origoY = origoY;
 		this.origoZ = origoZ;
 		this.density = density;
+		this.entranceSide = entranceSide;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 	
@@ -91,14 +99,95 @@ public class Cave extends Geography {
 		int realSizeY = sizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
-		int per = HashUtil.mixPercentage(worldX, worldY, worldZ);
-		
-		if (per<density)
+		if (relX==0 || relX==realSizeX)
 		{
-			return new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+			c.overwrite = true;
+			if (relZ%4==2)
+			{
+				
+				if (relX==0 && (entranceSide&LIMIT_SOUTH)>0)
+				{
+					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
+					c.overwrite = true;
+				} else
+				if (relX==realSizeX && (entranceSide&LIMIT_NORTH)>0)
+				{
+					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
+					c.overwrite = true;
+				} else
+				if (relX==0 && (walledSide&LIMIT_SOUTH)==0)
+				{
+					return null;
+				} else
+				if (relX==realSizeX && (walledSide&LIMIT_NORTH)==0)
+				{
+					return null;
+				}
+				return c;
+			} else
+			{
+				if (relX==0 && (walledSide&LIMIT_SOUTH)==0)
+				{
+					return null;
+				} else
+				if (relX==realSizeX && (walledSide&LIMIT_NORTH)==0)
+				{
+					return null;
+				}
+			}
+			return c;
+		} else
+		if (relZ==0 || relZ==realSizeZ)
+		{
+			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+			c.overwrite = true;
+			if (relX%4==2)
+			{
+				if (relZ==0 && (entranceSide&LIMIT_WEST)>0)
+				{
+					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
+					c.overwrite = true;
+				} else
+				if (relZ==realSizeZ && (entranceSide&LIMIT_EAST)>0)
+				{
+					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
+					c.overwrite = true;
+				} else
+				if (relZ==0 && (walledSide&LIMIT_WEST)==0)
+				{
+					return null;
+				} else
+				if (relZ==realSizeZ && (walledSide&LIMIT_EAST)==0)
+				{
+					return null;
+				}
+				return c;
+			} else
+			{
+				if (relZ==0 && (walledSide&LIMIT_WEST)==0)
+				{
+					return null;
+				} else
+				if (relZ==realSizeZ && (walledSide&LIMIT_EAST)==0)
+				{
+					return null;
+				}
+			}
+			return c;
+		} 
+		else {
+			int per = HashUtil.mixPercentage(worldX/2, worldY/2, worldZ/2);
+			
+			if (per<density)
+			{
+				return new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+			}
+		
+			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
+			c.overwrite = true;
+			return c;
 		}
-	
-		return new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
 	}
 	
 
