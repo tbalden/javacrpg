@@ -185,9 +185,9 @@ public class World extends Place {
 
 	public Cube appendCube(Cube orig, Cube newCube, int worldX, int worldY, int worldZ)
 	{
-		if (orig!=null)
+		if (orig!=null && newCube!=null)
 			return new Cube(orig,newCube,worldX,worldY,worldZ,orig.steepDirection);
-		return newCube;
+		return newCube==null?orig:newCube;
 	}
 
 	/**

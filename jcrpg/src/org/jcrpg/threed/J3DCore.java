@@ -440,8 +440,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qW.fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(0,1,0));
 		qTexture = new Quaternion();
 		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
+	}
+	
+	public static HashMap<Integer,Vector3f> viewDirectionTranslation = new HashMap<Integer, Vector3f>();
+	static {
+		viewDirectionTranslation.put(new Integer(NORTH),new Vector3f(0,0,1));
+		viewDirectionTranslation.put(new Integer(SOUTH),new Vector3f(0,0,-1));
+		viewDirectionTranslation.put(new Integer(WEST),new Vector3f(1,0,0));
+		viewDirectionTranslation.put(new Integer(EAST),new Vector3f(-1,0,0));
 		
-
 	}
 	
 	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
@@ -575,6 +582,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ROCK.id, new Integer(34));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_BLOCK.id, EMPTY_SIDE);
 		
 
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -1918,7 +1926,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public Vector3f getCurrentLocation()
 	{
-		return new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.5f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
+		Vector3f v = new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.5f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
+		//v.addLocal(viewDirectionTranslation.get(new Integer(viewDirection)));
+		return v;
 	}
 	
 	
@@ -2400,6 +2410,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 510);
+		cam.setFrustumNear(0.75f);
 		rootNode.attachChild(noBloomCParentRootNode);
 		noBloomCParentRootNode.attachChild(cRootNode);
 		rootNode.attachChild(cRootNode);

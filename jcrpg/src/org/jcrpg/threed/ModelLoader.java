@@ -466,6 +466,7 @@ public class ModelLoader {
 		
 		
 		Node nnode = new Node();
+		nnode.setRenderState(core.cs_none);
 		nnode.attachChild(quad);
 		nnode.setModelBound(new BoundingBox());
 		nnode.updateModelBound();
