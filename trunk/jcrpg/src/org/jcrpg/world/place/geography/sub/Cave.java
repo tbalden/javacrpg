@@ -86,6 +86,7 @@ public class Cave extends Geography {
 		this.origoZ = origoZ;
 		this.density = density;
 		this.entranceSide = entranceSide;
+		this.walledSide = walledSide;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 	
