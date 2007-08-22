@@ -22,8 +22,6 @@
 
 package org.jcrpg.world.place.geography;
 
-import java.util.HashMap;
-
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -45,28 +43,33 @@ public class Mountain extends Geography implements Surface{
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_MOUNTAIN+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK");
+	public static final SideSubType SUBTYPE_ROCK_VISIBLE = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK_VISIBLE");
+	public static final SideSubType SUBTYPE_ROCK_SIDE = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK_SIDE");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_MOUNTAIN+"_GROUND");
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_MOUNTAIN+"_GROUND_INTERSECT");
 	public static final SideSubType SUBTYPE_INTERSECT_EMPTY = new Climbing(TYPE_MOUNTAIN+"_GROUND_INTERSECT_EMPTY");
 	public static final SideSubType SUBTYPE_INTERSECT_BLOCK = new GroundSubType(TYPE_MOUNTAIN+"_GROUND_INTERSECT_BLOCK");
 
+	static Side[] ROCK_VISIBLE = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_VISIBLE)};
 	static Side[] ROCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK)};
 	static Side[] GROUND = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND)};
 	static Side[] STEEP = {new Side(TYPE_MOUNTAIN,SUBTYPE_STEEP)};
 	static Side[] INTERSECT = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT)};
 	static Side[] I_EMPTY = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_EMPTY)};
 	static Side[] BLOCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_BLOCK)};
+	static Side[] INTERNAL_ROCK_SIDE = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
 	
 	static Side[][] MOUNTAIN_ROCK = new Side[][] { null, null, null,null,null,ROCK };
+	static Side[][] MOUNTAIN_ROCK_VISIBLE = new Side[][] { null, null, null,null,null,ROCK_VISIBLE };
 	static Side[][] MOUNTAIN_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] MOUNTAIN_INTERSECT_NORTH = new Side[][] { INTERSECT, I_EMPTY, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, INTERSECT,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,INTERSECT,BLOCK,BLOCK };
-	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, null,null,null,null };
-	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,null,null,null };
-	static Side[][] STEEP_SOUTH = new Side[][] { null, null, STEEP,null,null,null };
-	static Side[][] STEEP_WEST = new Side[][] { null, null, null,STEEP,null,null };
+	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, INTERNAL_ROCK_SIDE,null,null,null };
+	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,INTERNAL_ROCK_SIDE,null,null };
+	static Side[][] STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, null, STEEP,null,null,null };
+	static Side[][] STEEP_WEST = new Side[][] { null, INTERNAL_ROCK_SIDE, null,STEEP,null,null };
 
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
@@ -134,12 +137,13 @@ public class Mountain extends Geography implements Surface{
 		Side[][] returnSteep = null;
 		int steepDirection = SurfaceHeightAndType.NOT_STEEP; //W E S N
 
+		int overwritePower = 1;
 		
 		// *** Intersections at the corner of the mountain ***
 		if (relX == gapX && relZ == gapZ) {
 			returnCube = true;
 			if (relX == gapXNext && relZ == gapZNext) {
-				returnSteep = MOUNTAIN_ROCK;
+				returnSteep = MOUNTAIN_ROCK_VISIBLE; // too steep mountain needs Rock
 			} else {
 				returnSteep = MOUNTAIN_INTERSECT_WEST;
 				steepDirection = J3DCore.BOTTOM;
@@ -149,7 +153,7 @@ public class Mountain extends Geography implements Surface{
 
 			returnCube = true;
 			if (relX == gapXNext && relZ == realSizeZ - gapZNext) {
-				returnSteep = MOUNTAIN_ROCK;
+				returnSteep = MOUNTAIN_ROCK_VISIBLE; // too steep mountain needs Rock
 			} else {
 				returnSteep = MOUNTAIN_INTERSECT_NORTH;
 				steepDirection = J3DCore.BOTTOM;
@@ -158,7 +162,7 @@ public class Mountain extends Geography implements Surface{
 		if (relX == realSizeX - gapX && relZ == gapZ) {
 			returnCube = true;
 			if (relX == realSizeX - gapXNext && relZ == gapZNext) {
-				returnSteep = MOUNTAIN_ROCK;
+				returnSteep = MOUNTAIN_ROCK_VISIBLE; // too steep mountain needs Rock
 			} else {
 				returnSteep = MOUNTAIN_INTERSECT_SOUTH;
 				steepDirection = J3DCore.BOTTOM;
@@ -167,7 +171,7 @@ public class Mountain extends Geography implements Surface{
 		if (relX == realSizeX - gapX && relZ == realSizeZ - gapZ) {
 			returnCube = true;
 			if (relX == realSizeX - gapXNext && relZ == realSizeZ - gapZNext) {
-				returnSteep = MOUNTAIN_ROCK;
+				returnSteep = MOUNTAIN_ROCK_VISIBLE; // too steep mountain needs Rock
 			} else {
 				returnSteep = MOUNTAIN_INTERSECT_EAST;
 				steepDirection = J3DCore.BOTTOM;
@@ -182,6 +186,9 @@ public class Mountain extends Geography implements Surface{
 			if (relX==gapX && gapXNext!=gapX) {
 				steepDirection = J3DCore.WEST;
 				returnSteep = STEEP_WEST;
+			} else
+			{
+				overwritePower = 0; // inside rock
 			}
 		}
 		
@@ -192,6 +199,9 @@ public class Mountain extends Geography implements Surface{
 			if (relX==realSizeX-gapX && gapXNext!=gapX) {
 				steepDirection = J3DCore.EAST;
 				returnSteep = STEEP_EAST;
+			} else
+			{
+				overwritePower = 0; // inside rock
 			}
 		}
 		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
@@ -201,6 +211,9 @@ public class Mountain extends Geography implements Surface{
 			if (relZ==gapZ && gapZNext!=gapZ) {
 				steepDirection = J3DCore.SOUTH;
 				returnSteep = STEEP_SOUTH;
+			} else
+			{
+				overwritePower = 0; // inside rock
 			}
 		}
 		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
@@ -210,6 +223,19 @@ public class Mountain extends Geography implements Surface{
 			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) {
 				steepDirection = J3DCore.NORTH;
 				returnSteep = STEEP_NORTH;
+			} else
+			{
+				overwritePower = 0; // inside rock
+			}
+		}
+		
+		if (!returnCube)
+		{
+			if ( (relZ<realSizeZ-gapZ && relZ>gapZ) && (relX>gapX && relX<realSizeX-gapX) )
+			{
+				// internal parts of the mountain
+				returnCube = true;
+				overwritePower = 0; // this can be overwritten default
 			}
 		}
 		
@@ -242,10 +268,12 @@ public class Mountain extends Geography implements Surface{
 				// if on the edge of the mountain and above is not on the edge too, we cannot put something above
 				if (relZ==realSizeZ-gapZPrevious && gapZ!=gapZPrevious) returnCube = false;
 			}
+			
 			if (returnCube)
 			{
 				// we can put on it!!				
-				return new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,steepDirection);
+				Cube c = new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,steepDirection);
+				return c;
 			}
 			return null;
 		}
@@ -253,6 +281,7 @@ public class Mountain extends Geography implements Surface{
 		Side[][] s = returnSteep!=null?returnSteep:MOUNTAIN_ROCK;
 		Cube c = null;
 		c = new Cube(this,s,worldX,worldY,worldZ,steepDirection);
+		c.overwritePower = overwritePower;
 		return c;
 	}
 
