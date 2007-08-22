@@ -559,8 +559,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK.id, EMPTY_SIDE);//new Integer(13));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_VISIBLE.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
@@ -2073,7 +2073,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (sides!=null)
 			{
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable)) return false;
+				if (hasSideOfInstance(sides, notPassable) && !onSteep) return false;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
@@ -2415,8 +2415,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 1, 510);
-		cam.setFrustumNear(0.75f);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.2f, 510);
+		//cam.setFrustumNear(0.75f);
 		rootNode.attachChild(noBloomCParentRootNode);
 		noBloomCParentRootNode.attachChild(cRootNode);
 		rootNode.attachChild(cRootNode);

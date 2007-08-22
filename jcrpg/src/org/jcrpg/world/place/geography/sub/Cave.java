@@ -68,7 +68,7 @@ public class Cave extends Geography {
 	static Side[][] CAVE_ROCK = new Side[][] { WALL, WALL, WALL,WALL,GROUND,WALL };
 
 	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,null,GROUND };
-	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, null,null,null,GROUND };
+	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,null,null,GROUND };
 	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, BLOCK, ENTRANCE,BLOCK,null,GROUND };
 	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, null, BLOCK,ENTRANCE,null,GROUND };
 	
