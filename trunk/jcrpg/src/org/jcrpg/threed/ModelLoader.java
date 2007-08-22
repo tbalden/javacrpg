@@ -90,6 +90,7 @@ public class ModelLoader {
     int counter=0;
     
     AlphaState as;
+    AlphaState as_off;
 
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
@@ -461,7 +462,6 @@ public class ModelLoader {
 		quad.setLightCombineMode(LightState.COMBINE_CLOSEST);
 		
 		quad.setRenderState(ts[0]);
-		//quad.setRenderState(as);
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
 		
 		
@@ -470,6 +470,7 @@ public class ModelLoader {
 		nnode.attachChild(quad);
 		nnode.setModelBound(new BoundingBox());
 		nnode.updateModelBound();
+		nnode.setRenderState(as_off);
 		
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
 		PooledSharedNode r = new PooledSharedNode("node"+counter++,nnode);
@@ -598,6 +599,8 @@ public class ModelLoader {
 						as.setReference(0.0f);
 						as.setTestEnabled(true);
 						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
+						as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+						as_off.setEnabled(false);
 					}
 				    if (o.cullNone)
 				    {
