@@ -93,6 +93,15 @@ public class Cave extends Geography {
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ)
 	{
+		Cube c = getCubeBase(worldX, worldY, worldZ);
+		if (c==null) return null;
+		c.onlyIfOverlaps = true;
+		c.overwrite = true;
+		return c;
+	}
+
+	private Cube getCubeBase(int worldX, int worldY, int worldZ)
+	{
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
@@ -103,19 +112,18 @@ public class Cave extends Geography {
 		if (relX==0 || relX==realSizeX)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			c.overwrite = true;
 			if (relZ%4==2)
 			{
 				
 				if (relX==0 && (entranceSide&LIMIT_SOUTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
-					c.overwrite = true;
+					c.overwritePower = 1;
 				} else
 				if (relX==realSizeX && (entranceSide&LIMIT_NORTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
-					c.overwrite = true;
+					c.overwritePower = 1;
 				} else
 				if (relX==0 && (walledSide&LIMIT_SOUTH)==0)
 				{
@@ -125,6 +133,7 @@ public class Cave extends Geography {
 				{
 					return null;
 				}
+				
 				return c;
 			} else
 			{
@@ -137,23 +146,24 @@ public class Cave extends Geography {
 					return null;
 				}
 			}
+			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+			// internal space to 0 too!
 			return c;
 		} else
 		if (relZ==0 || relZ==realSizeZ)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			c.overwrite = true;
 			if (relX%4==2)
 			{
 				if (relZ==0 && (entranceSide&LIMIT_WEST)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
-					c.overwrite = true;
+					c.overwritePower = 1;
 				} else
 				if (relZ==realSizeZ && (entranceSide&LIMIT_EAST)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
-					c.overwrite = true;
+					c.overwritePower = 1;
 				} else
 				if (relZ==0 && (walledSide&LIMIT_WEST)==0)
 				{
@@ -175,6 +185,8 @@ public class Cave extends Geography {
 					return null;
 				}
 			}
+			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+			// internal space to 0 too!
 			return c;
 		} 
 		else {
@@ -182,11 +194,15 @@ public class Cave extends Geography {
 			
 			if (per<density)
 			{
-				return new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+				Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+				c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+				// internal space to 0 too!
+				return c;
 			}
 		
 			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-			c.overwrite = true;
+			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+			// internal space to 0 too!
 			return c;
 		}
 	}

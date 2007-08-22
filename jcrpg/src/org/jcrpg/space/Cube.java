@@ -38,7 +38,19 @@ public class Cube extends ChangingImpl {
 	
 	public long lastChangeTimeStamp = System.currentTimeMillis();
 	
+	/**
+	 * Tells that this Cube should overwrite other cubes of same type (by Geo/Eco/Politics)
+	 */
 	public boolean overwrite = false;
+	/**
+	 * Tells the power of the Cube for overwrite. If one cube's overwrite power is higher, it will
+	 * be the one that is used.
+	 */
+	public int overwritePower = 1;
+	/**
+	 * Tells if Cube should be displayed only if there is another of same type
+	 */
+	public boolean onlyIfOverlaps = false;
 	
 	
 	public Side[][] sides = {n,e,s,w,top,bottom};
@@ -70,13 +82,19 @@ public class Cube extends ChangingImpl {
 			Side[] sides1 = c1.sides[i];
 			Side[] sides2 = c2.sides[i];
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
-			if (sides1==null || c2.overwrite)
+			if (sides1==null || c2.overwrite && c2.overwritePower>=c1.overwritePower)
 			{
-				merged = sides2;
+				if (c2.onlyIfOverlaps && !(c2.overwrite && c2.overwritePower>=c1.overwritePower)) 
+					merged = null; 
+				else
+					merged = sides2;
 			} else
-			if (sides2== null || c1.overwrite)
+			if (sides2==null || c1.overwrite && c1.overwritePower>=c2.overwritePower)
 			{
-				merged = sides1;
+				if (c1.onlyIfOverlaps && !(c1.overwrite && c1.overwritePower>=c2.overwritePower)) 
+					merged = null; 
+				else
+					merged = sides1;
 			} else
 			for (int j=0; j<merged.length; j++)
 			{
