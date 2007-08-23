@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -85,7 +87,6 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
-import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
@@ -539,6 +540,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public J3DCore()
 	{
+		Logger.global.setLevel(Level.WARNING);
 		if (J3DCore.SHADOWS) stencilBits = 8;
 		alphaBits = 0;
 		//depthBits = 8;
@@ -905,7 +907,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
-		hm3dTypeRenderedSide.put(new Integer(32), new RenderedHashRotatedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedSide(new Model[]{cave_rock}));
 
@@ -2336,6 +2338,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
+		Logger.global.setLevel(Level.WARNING);
 		// external cubes' rootnode
 		extRootNode = new Node();
 		// internal cubes' rootnode

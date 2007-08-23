@@ -82,7 +82,6 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.LoggingSystem;
 import com.jme.util.TextureManager;
 import com.jmex.terrain.TerrainPage;
 import com.jmex.terrain.util.FaultFractalHeightMap;
@@ -111,7 +110,6 @@ public class TestShadowPass extends SimplePassGame {
      * @param args
      */
     public static void main(String[] args) {
-        LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
         TestShadowPass app = new TestShadowPass();
         //if (debug) new ShadowTweaker(sPass).setVisible(true);
         

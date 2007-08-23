@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,8 +71,11 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
-import com.jmex.model.XMLparser.Converters.MaxToJme;
-import com.jmex.model.XMLparser.Converters.ObjToJme;
+import com.jme.util.resource.MultiFormatResourceLocator;
+import com.jme.util.resource.ResourceLocatorTool;
+import com.jme.util.resource.SimpleResourceLocator;
+import com.jmex.model.converters.MaxToJme;
+import com.jmex.model.converters.ObjToJme;
 
 public class ModelLoader {
 
@@ -80,6 +84,14 @@ public class ModelLoader {
 	public ModelLoader(J3DCore core)
 	{
 		this.core = core;
+		
+	    try {
+	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
+	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	 		
 	}
 	
     
@@ -631,11 +643,11 @@ public class ModelLoader {
    		
     		
     	} else {
-    	
+
 			MaxToJme maxtojme = new MaxToJme();
 			try {
 				// setting texture directory for 3ds models...
-				maxtojme.setProperty(MaxToJme.TEXURL_PROPERTY, new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
+				maxtojme.setProperty("texdir", new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
 			}
 			 catch (IOException ioex)
 			 {

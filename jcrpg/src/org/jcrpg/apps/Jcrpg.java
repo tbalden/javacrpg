@@ -42,7 +42,6 @@ import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
-import com.jme.util.LoggingSystem;
 
 public class Jcrpg {
 
@@ -59,7 +58,6 @@ public class Jcrpg {
    }
 
     public static void start() throws Exception {
-		LoggingSystem.getLogger().setLevel(java.util.logging.Level.WARNING);
 		Engine e = new Engine();
 		Time wmt = new Time();
 		wmt.setHour(12);
