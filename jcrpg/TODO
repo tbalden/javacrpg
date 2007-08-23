@@ -3,7 +3,9 @@
 	[ ] settable level highness, levels that belong together, share the same block/empty pattern
 	[ ] implement surface interface!
 	[ ] optimization -> if in cave, display only cave cubes, and some distance of other cubes?
-	[ ] cave lighting
+	[X] cave lighting
+	[ ] use hash rotated side
+	[ ] flare is visible through the caves! intRootNode to a common parent with extRootNode
 
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
