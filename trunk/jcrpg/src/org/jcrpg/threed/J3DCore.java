@@ -905,7 +905,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
-		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(32), new RenderedHashRotatedSide(new Model[]{wall_cave}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedSide(new Model[]{cave_rock}));
 
