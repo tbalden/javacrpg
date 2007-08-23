@@ -52,6 +52,7 @@ public class Cube extends ChangingImpl {
 	 */
 	public boolean onlyIfOverlaps = false;
 	
+	public boolean internalLight = false;
 	
 	public Side[][] sides = {n,e,s,w,top,bottom};
 	
@@ -84,6 +85,7 @@ public class Cube extends ChangingImpl {
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
 			if (sides1==null || c2.overwrite && c2.overwritePower>=c1.overwritePower)
 			{
+				internalLight = c2.internalLight;
 				if (c2.onlyIfOverlaps && !(c2.overwrite && c2.overwritePower>=c1.overwritePower)) 
 					merged = null; 
 				else
@@ -91,6 +93,7 @@ public class Cube extends ChangingImpl {
 			} else
 			if (sides2==null || c1.overwrite && c1.overwritePower>=c2.overwritePower)
 			{
+				internalLight = c1.internalLight;
 				if (c1.onlyIfOverlaps && !(c1.overwrite && c1.overwritePower>=c2.overwritePower)) 
 					merged = null; 
 				else
@@ -98,6 +101,7 @@ public class Cube extends ChangingImpl {
 			} else
 			for (int j=0; j<merged.length; j++)
 			{
+				internalLight = c1.internalLight&&c2.internalLight;
 				if (j<sides1.length)
 					merged[j] =sides1[j];
 				else
@@ -105,6 +109,7 @@ public class Cube extends ChangingImpl {
 			}
 			this.sides[i] = merged;
 		}
+		
 		//System.out.println(" MERGED CUBE == "+this);
 	}
 	

@@ -85,6 +85,7 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.light.DirectionalLight;
+import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
@@ -903,7 +904,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
-		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
+		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
+		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedSide(new Model[]{cave_rock}));
 
@@ -985,12 +987,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        dr.setAmbient(ColorRGBA.gray);
 	        dr.setLocation(new Vector3f(0f, 0f, 0f));
 	        dr.setShadowCaster(false);
-	        cLightState.setTwoSidedLighting(false);
+	        extLightState.setTwoSidedLighting(false);
 	        
-	        lightNode = new LightNode("light", cLightState);
+	        lightNode = new LightNode("light", extLightState);
 	        lightNode.setLight(dr);
 
-	        lightNode.setTarget(cRootNode);
+	        lightNode.setTarget(extRootNode);
 	        lightNode.setLocalTranslation(new Vector3f(0f, 14f, 0f));
 
 	        // Setup the lensflare textures.
@@ -1018,8 +1020,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 	        flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
-	        flare.setRootNode(cRootNode);
-	        sRootNode.attachChild(lightNode);
+	        flare.setRootNode(extRootNode);
+	        skyRootNode.attachChild(lightNode);
 
 	        // notice that it comes at the end
 	        lightNode.attachChild(flare);
@@ -1027,7 +1029,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        TriMesh sun = new Sphere(o.id,40,40,20f);
 	        Node sunNode = new Node();
 	        sunNode.attachChild(sun);
-			cRootNode.attachChild(sunNode);
+			extRootNode.attachChild(sunNode);
 			
 			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"sun.png",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
@@ -1070,7 +1072,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			moon.updateRenderState();
 
-			cRootNode.attachChild(moon);
+			extRootNode.attachChild(moon);
 			moon.setLightCombineMode(LightState.OFF);
 			moon.setRenderState(getDisplay().getRenderer().createFogState());
 			return moon;
@@ -1079,7 +1081,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 	}
 	
-	LightState cLightState, skydomeLightState = null;
+	LightState extLightState, skydomeLightState = null, internalLightState;
 	
 	/**
 	 * Creates the lights for a world orbiter
@@ -1089,16 +1091,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public LightNode[] createLightsForOrbiter(Orbiter o)
 	{
 		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
-			LightNode dirLightNode = new LightNode("Sun light "+o.id, cLightState);		
+			LightNode dirLightNode = new LightNode("Sun light "+o.id, extLightState);		
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
 			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,0.6f));
 			dirLight.setDirection(new Vector3f(0,0,1));
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
-			dirLightNode.setTarget(cRootNode);
+			dirLightNode.setTarget(extRootNode);
 			dirLight.setShadowCaster(true);
-			cLightState.attach(dirLight);
+			extLightState.attach(dirLight);
 
 			LightNode pointLightNode = new LightNode("Sun spotlight "+o.id, skydomeLightState);		
 			PointLight pointLight = new PointLight();
@@ -1107,13 +1109,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setEnabled(true);
 			pointLight.setShadowCaster(false);
 			pointLightNode.setLight(pointLight);
-			pointLightNode.setTarget(sRootNode);
+			pointLightNode.setTarget(skyRootNode);
 			skydomeLightState.attach(pointLight);
 	        
 			return new LightNode[]{dirLightNode,pointLightNode};
 		} else
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
-			LightNode dirLightNode = new LightNode("Moon light "+o.id, cLightState);		
+			LightNode dirLightNode = new LightNode("Moon light "+o.id, extLightState);		
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
 			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,1));
@@ -1121,8 +1123,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			dirLight.setShadowCaster(false);//moon shouldnt cast shadow (?)
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
-			dirLightNode.setTarget(cRootNode);
-			cLightState.attach(dirLight);
+			dirLightNode.setTarget(extRootNode);
+			extLightState.attach(dirLight);
 
 			LightNode pointLightNode = new LightNode("Moon spotlight "+o.id, skydomeLightState);		
 			SpotLight pointLight = new SpotLight();
@@ -1133,7 +1135,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setAngle(180);
 			pointLight.setShadowCaster(false);
 			pointLightNode.setLight(pointLight);
-			pointLightNode.setTarget(sRootNode);
+			pointLightNode.setTarget(skyRootNode);
 			skydomeLightState.attach(pointLight);
 			
 			return new LightNode[]{dirLightNode,pointLightNode};
@@ -1152,10 +1154,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
 	Node noBloomCParentRootNode = new Node(); 
-	/** all root */
-	Node cRootNode; 
+	/** external all root */
+	Node extRootNode;
+	/** internal all root */
+	Node intRootNode; 
 	/** skyroot */
-	Node sRootNode = new Node(); 
+	Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
 	
 	
@@ -1199,7 +1203,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (s.getParent()==null)
 				{
 					// newly appearing, attach to root
-					cRootNode.attachChild(s);
+					extRootNode.attachChild(s);
 					updateRenderState = true;
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation()));
@@ -1218,8 +1222,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					// 0. is directional light for the planet surface
 					l[0].getLight().setEnabled(true);
 					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]).normalizeLocal());
-					l[0].setTarget(cRootNode);
-					cLightState.attach(l[0].getLight());
+					l[0].setTarget(extRootNode);
+					extLightState.attach(l[0].getLight());
 					float[] v = orb.getLightPower(localTime, conditions);
 					vTotal[0]+=v[0];
 					vTotal[1]+=v[1];
@@ -1230,17 +1234,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					l[0].getLight().setAmbient(c);
 					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
-					cRootNode.setRenderState(cLightState);
+					extRootNode.setRenderState(extLightState);
 
 					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
-					l[1].setTarget(sRootNode);
+					l[1].setTarget(skyRootNode);
 					skydomeLightState.attach(l[1].getLight());
 					c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
 					l[1].getLight().setSpecular(c);
-					sRootNode.setRenderState(skydomeLightState);
+					skyRootNode.setRenderState(skydomeLightState);
 					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				
 				} else 
@@ -1249,7 +1253,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					// switching of the two lights
 					l[0].removeFromParent();
 					l[0].getLight().setEnabled(false);
-					cLightState.detach(l[0].getLight());
+					extLightState.detach(l[0].getLight());
 					l[1].removeFromParent();
 					l[1].getLight().setEnabled(false);
 					skydomeLightState.detach(l[1].getLight());
@@ -1278,9 +1282,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
 		
-		if (updateRenderState) cRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
+		if (updateRenderState) {
+			extRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
+			intRootNode.updateRenderState();
+		}
 
-		sRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
+		skyRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
 		
 		
 	}
@@ -1655,7 +1662,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							realPooledNode.setLocalRotation(n.getLocalRotation());
 							realPooledNode.setLocalScale(n.getLocalScale());
 							realPooledNode.setLocalTranslation(n.getLocalTranslation());
-							cRootNode.attachChild((Node)realPooledNode);
+							if (c.cube.internalLight) {
+								intRootNode.attachChild((Node)realPooledNode);
+							} else 
+							{
+								extRootNode.attachChild((Node)realPooledNode);
+							}
 							if (cullTrick) {
 								realPooledNode.setCullMode(Node.CULL_NEVER);
 								realPooledNode.updateRenderState();
@@ -1743,12 +1755,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		if (!cullTrick && (cullVariationCounter++%2==0))
 		{
-			cRootNode.setCullMode(Node.CULL_NEVER);
+			extRootNode.setCullMode(Node.CULL_NEVER);
+			intRootNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
-			cRootNode.setCullMode(Node.CULL_DYNAMIC);
+			extRootNode.setCullMode(Node.CULL_DYNAMIC);
+			intRootNode.setCullMode(Node.CULL_DYNAMIC);
 		}
 		
-		cRootNode.updateRenderState();
+		extRootNode.updateRenderState();
+		intRootNode.updateRenderState();
 
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 
@@ -2321,7 +2336,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
-		cRootNode = new Node();
+		// external cubes' rootnode
+		extRootNode = new Node();
+		// internal cubes' rootnode
+		intRootNode = new Node();
 
 		loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
 		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
@@ -2410,17 +2428,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		rootNode.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 
 		lightState.detachAll();
-		cLightState = getDisplay().getRenderer().createLightState();
+		extLightState = getDisplay().getRenderer().createLightState();
+		internalLightState = getDisplay().getRenderer().createLightState();
 		skydomeLightState = getDisplay().getRenderer().createLightState();
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.2f, 510);
 		//cam.setFrustumNear(0.75f);
-		rootNode.attachChild(noBloomCParentRootNode);
-		noBloomCParentRootNode.attachChild(cRootNode);
-		rootNode.attachChild(cRootNode);
-		rootNode.attachChild(sRootNode);
+		//rootNode.attachChild(noBloomCParentRootNode);
+		//noBloomCParentRootNode.attachChild(extRootNode);
+		rootNode.attachChild(extRootNode);
+		rootNode.attachChild(intRootNode);
+		rootNode.attachChild(skyRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
@@ -2445,22 +2465,30 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs.setStart(3);
         fs.setDensityFunction(FogState.DF_LINEAR);
         fs.setApplyFunction(FogState.AF_PER_VERTEX);
-        cRootNode.setRenderState(fs);
-        cRootNode.setRenderState(as);
+        extRootNode.setRenderState(fs);
+        extRootNode.setRenderState(as);
+
+        intRootNode.setRenderState(fs);
+        intRootNode.setRenderState(as);
  		
         // default light states
-		cRootNode.setRenderState(cLightState);
-		sRootNode.setRenderState(skydomeLightState);
+		extRootNode.setRenderState(extLightState);
+		intRootNode.clearRenderState(RenderState.RS_LIGHT);
+		intRootNode.setRenderState(internalLightState);
+		//intRootNode.setLightCombineMode(LightState.OFF);
+		//intRootNode.clearRenderState(RenderState.RS_MATERIAL);
+		skyRootNode.setRenderState(skydomeLightState);
 		
-		if (true==false && dr == null) {
+		if (true==true && dr == null) {
 
 			dr = new SpotLight();
 			dr.setEnabled(true);
-			dr.setDiffuse(new ColorRGBA(1, 1, 1, 1f));
-			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 1f));
-			dr.setSpecular(new ColorRGBA(1, 1, 1, 1f));
+			dr.setDiffuse(new ColorRGBA(1, 1, 1, 0.5f));
+			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
+			dr.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
+			dr.setAngle(45);
 			dr.setShadowCaster(false);
-			cLightState.attach(dr);
+			internalLightState.attach(dr);
 		}
 
 		if (SHADOWS) {
@@ -2468,7 +2496,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			System.out.println("SHADOWS!");
 			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
-	    	sPass.add(cRootNode);
+	    	sPass.add(extRootNode);
+	    	sPass.add(intRootNode);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
 	    	J3DShadowGate dsg = new J3DShadowGate();
@@ -2488,7 +2517,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
-	           bloomRenderPass.add(cRootNode);
+	           bloomRenderPass.add(extRootNode);
+	           bloomRenderPass.add(intRootNode);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setBlurIntensityMultiplier(1f);
 	           pManager.add(bloomRenderPass);
@@ -2500,14 +2530,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE",7,7,400f);
-		sRootNode.attachChild(skySphere);
+		skyRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere());
 		skySphere.setRenderState(cs_none);
 		skySphere.updateModelBound();
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
 		
-		sRootNode.setRenderState(as);
+		skyRootNode.setRenderState(as);
 		skySphere.setRenderState(as);
 		
 
@@ -2546,7 +2576,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		super.simpleUpdate();
 		
 		if (dr!=null) {
-			dr.setLocation(cam.getLocation().add(new Vector3f(2f, 1f, 2f)));
+			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
 			dr.setDirection(cam.getDirection());
 		}
 
