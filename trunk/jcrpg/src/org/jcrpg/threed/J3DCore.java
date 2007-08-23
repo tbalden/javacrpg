@@ -2481,12 +2481,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		if (true==true && dr == null) {
 
-			dr = new SpotLight();
+			dr = new PointLight();
 			dr.setEnabled(true);
 			dr.setDiffuse(new ColorRGBA(1, 1, 1, 0.5f));
 			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
 			dr.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
-			dr.setAngle(45);
+			dr.setQuadratic(1f);
+			dr.setLinear(1f);
+			//dr.setAngle(45);
 			dr.setShadowCaster(false);
 			internalLightState.attach(dr);
 		}
@@ -2569,7 +2571,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	LightNode drn;
-	SpotLight dr;
+	PointLight dr;
 
 	@Override
 	protected void simpleUpdate() {
@@ -2577,7 +2579,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		if (dr!=null) {
 			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
-			dr.setDirection(cam.getDirection());
+			//dr.setDirection(cam.getDirection());
 		}
 
 		if (engine.timeChanged) 
