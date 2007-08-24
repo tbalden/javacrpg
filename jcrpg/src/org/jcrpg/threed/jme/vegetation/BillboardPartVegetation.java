@@ -143,7 +143,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							for (Spatial s:spatials) {
 								 //if ((s.getType() & s.TRIMESH) != 0)
 								{
-									System.out.println("SPATIAL: " + s.getName());
+									//System.out.println("SPATIAL: " + s.getName());
 											//+ " " + sCounter++);
 									TriMesh q = (TriMesh) s;
 									int l = q.getName().length();

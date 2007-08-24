@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -540,7 +538,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public J3DCore()
 	{
-		Logger.global.setLevel(Level.WARNING);
 		if (J3DCore.SHADOWS) stencilBits = 8;
 		alphaBits = 0;
 		//depthBits = 8;
@@ -1022,16 +1019,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 	        flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
-	        flare.setRootNode(extRootNode);
+	        flare.setRootNode(groundParentNode);
 	        skyRootNode.attachChild(lightNode);
 
 	        // notice that it comes at the end
 	        lightNode.attachChild(flare);
 
-	        TriMesh sun = new Sphere(o.id,40,40,20f);
+	        TriMesh sun = new Sphere(o.id,20,20,5f);
 	        Node sunNode = new Node();
 	        sunNode.attachChild(sun);
-			extRootNode.attachChild(sunNode);
+			groundParentNode.attachChild(sunNode);
 			
 			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"sun.png",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
@@ -1055,7 +1052,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        
 		} else
 		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
-			TriMesh moon = new Sphere(o.id,40,40,15f);
+			TriMesh moon = new Sphere(o.id,20,20,5f);
 			
 			Texture texture = TextureManager.loadTexture("./data/orbiters/moon2.jpg",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
@@ -1074,7 +1071,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			moon.updateRenderState();
 
-			extRootNode.attachChild(moon);
+			groundParentNode.attachChild(moon);
 			moon.setLightCombineMode(LightState.OFF);
 			moon.setRenderState(getDisplay().getRenderer().createFogState());
 			return moon;
@@ -1155,7 +1152,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
-	Node noBloomCParentRootNode = new Node(); 
+	Node groundParentNode = new Node(); 
 	/** external all root */
 	Node extRootNode;
 	/** internal all root */
@@ -1205,7 +1202,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (s.getParent()==null)
 				{
 					// newly appearing, attach to root
-					extRootNode.attachChild(s);
+					groundParentNode.attachChild(s);
 					updateRenderState = true;
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation()));
@@ -1285,8 +1282,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere.setLocalRotation(qSky);
 		
 		if (updateRenderState) {
-			extRootNode.updateRenderState(); // this is a must, moon will see through the house if not!
-			intRootNode.updateRenderState();
+			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
 		}
 
 		skyRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
@@ -2338,7 +2334,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
-		Logger.global.setLevel(Level.WARNING);
 		// external cubes' rootnode
 		extRootNode = new Node();
 		// internal cubes' rootnode
@@ -2437,12 +2432,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.2f, 510);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.2f, 200);
 		//cam.setFrustumNear(0.75f);
-		//rootNode.attachChild(noBloomCParentRootNode);
+		rootNode.attachChild(groundParentNode);
 		//noBloomCParentRootNode.attachChild(extRootNode);
-		rootNode.attachChild(extRootNode);
-		rootNode.attachChild(intRootNode);
+		groundParentNode.attachChild(extRootNode);
+		groundParentNode.attachChild(intRootNode);
 		rootNode.attachChild(skyRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
@@ -2534,7 +2529,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",7,7,400f);
+		skySphere = new Sphere("SKY_SPHERE",7,7,180f);
 		skyRootNode.attachChild(skySphere);
 		skySphere.setModelBound(new BoundingSphere());
 		skySphere.setRenderState(cs_none);
