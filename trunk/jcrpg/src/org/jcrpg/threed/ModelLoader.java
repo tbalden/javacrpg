@@ -44,7 +44,6 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -469,7 +468,7 @@ public class ModelLoader {
 		//Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.01f);
 		
 		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
-		quad.setModelBound(new BoundingBox());
+		quad.setModelBound(new BoundingSphere());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
 		if (m.dot3TextureName!=null) {
@@ -493,8 +492,6 @@ public class ModelLoader {
 		
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
 		PooledSharedNode r = new PooledSharedNode("node"+counter++,nnode);
-		//r.setModelBound(new BoundingBox());
-        //r.updateModelBound();
 		return r;
     	
      	
@@ -565,8 +562,6 @@ public class ModelLoader {
     		Node n = sharedNodeCache.get(key);
     		if (n!=null) {
     			PooledSharedNode r =  new PooledSharedNode("node"+counter++,n);
-	    		//r.setModelBound(new BoundingBox());
-	            //r.updateModelBound();
 	            return r;
     		}
     	}
@@ -606,7 +601,7 @@ public class ModelLoader {
 				    //importer returns a Loadable, cast to Node
 					node = new Node();
 					Spatial spatial = (Spatial)binaryImporter.load(in);
-					spatial.setModelBound(new BoundingBox());
+					spatial.setModelBound(new BoundingSphere());
 					spatial.updateModelBound();
 					node.attachChild(spatial);
 					
@@ -634,8 +629,6 @@ public class ModelLoader {
 					
 					sharedNodeCache.put(key, node);
 					PooledSharedNode r = new PooledSharedNode("node"+counter++,node);
-		    		//r.setModelBound(new BoundingBox());
-		            //r.updateModelBound();
 		            //r.setRenderState(core.vp);
 		            //r.setRenderState(core.fp);
 		            return r;
@@ -737,11 +730,9 @@ public class ModelLoader {
 				//node.setRenderState(as);
 
 				sharedNodeCache.put(key, node);
-				node.setModelBound(new BoundingBox());//new Vector3f(0f,0f,0f),2f,2f,2f));
+				node.setModelBound(new BoundingSphere());
 				node.updateModelBound();				
 				PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
-	    		//r.setModelBound(new BoundingBox());
-	            //r.updateModelBound();
 	            //r.setRenderState(core.vp);
 	            //r.setRenderState(core.fp);
 	            //r.lock();
