@@ -385,7 +385,7 @@ public class ModelLoader {
     		String key = textureNames[i]+(normalNames!=null?normalNames[i]:"null");
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
-	    	System.out.println("--------- LOADING NEW TEXTURE!!!!"+textureNames[i]);
+	    	System.out.println("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
 	    	
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    	if (normalNames!=null && normalNames[i]!=null)
@@ -565,7 +565,7 @@ public class ModelLoader {
 	            return r;
     		}
     	}
-    	System.out.println("!! LOADING MODEL!!");
+    	System.out.println("ModelLoader.loadNode - New model: "+o.modelName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{

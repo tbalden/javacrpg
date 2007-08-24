@@ -178,55 +178,58 @@ public class Mountain extends Geography implements Surface{
 			}
 		}
 		
-		// *** steeps ***
-		if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
-		{
-			returnCube = true;
-			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==gapX && gapXNext!=gapX) {
-				steepDirection = J3DCore.WEST;
-				returnSteep = STEEP_WEST;
-			} else
+		if (!returnCube) {
+			// *** steeps ***
+			if (relX>=gapX && relX<=gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
 			{
-				overwritePower = 0; // inside rock
+				returnCube = true;
+				// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+				if (relX==gapX && gapXNext!=gapX) {
+					steepDirection = J3DCore.WEST;
+					returnSteep = STEEP_WEST;
+				} else
+				{
+					overwritePower = 0; // inside rock
+				}
 			}
-		}
+			
+			if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
+			{
+				returnCube = true;
+				// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+				if (relX==realSizeX-gapX && gapXNext!=gapX) {
+					steepDirection = J3DCore.EAST;
+					returnSteep = STEEP_EAST;
+				} else
+				{
+					overwritePower = 0; // inside rock
+				}
+			}
+			if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
+			{
+				returnCube = true;
+				// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+				if (relZ==gapZ && gapZNext!=gapZ) {
+					steepDirection = J3DCore.SOUTH;
+					returnSteep = STEEP_SOUTH;
+				} else
+				{
+					overwritePower = 0; // inside rock
+				}
+			}
+			if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
+			{
+				returnCube = true;
+				// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
+				if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) {
+					steepDirection = J3DCore.NORTH;
+					returnSteep = STEEP_NORTH;
+				} else
+				{
+					overwritePower = 0; // inside rock
+				}
+			}
 		
-		if (relX<=realSizeX-gapX && relX>=realSizeX-gapXNext && relZ>gapZ && relZ<realSizeZ-gapZ)
-		{
-			returnCube = true;
-			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relX==realSizeX-gapX && gapXNext!=gapX) {
-				steepDirection = J3DCore.EAST;
-				returnSteep = STEEP_EAST;
-			} else
-			{
-				overwritePower = 0; // inside rock
-			}
-		}
-		if (relZ>=gapZ && relZ<=gapZNext && relX>gapX &&  relX<realSizeX-gapX)
-		{
-			returnCube = true;
-			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==gapZ && gapZNext!=gapZ) {
-				steepDirection = J3DCore.SOUTH;
-				returnSteep = STEEP_SOUTH;
-			} else
-			{
-				overwritePower = 0; // inside rock
-			}
-		}
-		if (relZ<=realSizeZ-gapZ && relZ>=realSizeZ-gapZNext && relX>gapX && relX<realSizeX-gapX)
-		{
-			returnCube = true;
-			// if on the edge of the mountain and above is not on the edge too, we can use STEEP!
-			if (relZ==realSizeZ-gapZ && gapZNext!=gapZ) {
-				steepDirection = J3DCore.NORTH;
-				returnSteep = STEEP_NORTH;
-			} else
-			{
-				overwritePower = 0; // inside rock
-			}
 		}
 		
 		if (!returnCube)

@@ -1356,7 +1356,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	public int lastRenderX,lastRenderY,lastRenderZ;
-	
+
+	int garbCollCounter = 0;
+
 	Text loadText;
 	Quad loadFloppy;
 	int cPercent = 0;
@@ -1378,7 +1380,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void render()
 	{
 		modelLoader.setLockForSharedNodes(false);
-		engine.setPause(true);
     	loadingText(0,true);
     	//updateDisplay(null);
 
@@ -1483,8 +1484,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		fpsNode.detachChild(loadText);
 
-		//cRootNode.updateRenderState();
-
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
 		modelLoader.setLockForSharedNodes(true);
@@ -1498,9 +1497,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//TextureManager.clearCache();
 		//System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorQuads.size());
-		engine.setPause(false);
 	}
-	int garbCollCounter = 0;
 
 	/**
 	 * Renders a set of node into 3d space, rotating, positioning them.
@@ -1596,7 +1593,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	public void renderToViewPort(float refAngle)
 	{
-		boolean cullTrick = false;
+		engine.setPause(true);
+
+		boolean cullTrick = true;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -1776,7 +1775,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(true);
-		
+		engine.setPause(false);
 	}
 	
 	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction)
@@ -1831,7 +1830,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 				
 			} else {
-				System.out.println("# TOP IS NULL!");
+				//System.out.println("# TOP IS NULL!");
 			}
 			boolean render = true;
 			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...
