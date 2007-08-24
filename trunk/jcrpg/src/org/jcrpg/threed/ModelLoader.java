@@ -204,8 +204,14 @@ public class ModelLoader {
 						bbNode.attachChild(node);
 				    	node = bbNode;
 				    	node.setName(((SimpleModel)m).modelName+i);
-						r[i] = bbNode;
+						//r[i] = bbNode;
 						
+					} else
+					if (m instanceof QuadModel) {
+						node = loadQuadModel((QuadModel)m,fakeLoadForCacheMaint);				
+						if (fakeLoadForCacheMaint) continue;
+						//r[i] = node;
+
 					} else
 					{	
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
