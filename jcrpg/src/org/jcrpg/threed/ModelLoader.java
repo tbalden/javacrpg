@@ -27,7 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,7 +48,6 @@ import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
@@ -60,8 +58,8 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -71,7 +69,6 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
-import com.jme.util.resource.MultiFormatResourceLocator;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.jme.util.resource.SimpleResourceLocator;
 import com.jmex.model.converters.MaxToJme;
@@ -449,7 +446,13 @@ public class ModelLoader {
     	return (TextureState[])tss.toArray(new TextureState[0]);
     	
     }
-    
+	static VBOInfo info = new VBOInfo(true);
+	static {
+		info.setVBOIndexEnabled(true);
+		info.setVBOTextureEnabled(true);
+	}
+		
+   
     public PooledSharedNode loadQuadModel(QuadModel m, boolean fake)
     {
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
@@ -480,14 +483,13 @@ public class ModelLoader {
 		
 		quad.setRenderState(ts[0]);
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
+		quad.setRenderState(core.cs_none);
+		quad.setRenderState(as_off);
+		quad.setVBOInfo(info);
 		
 		
 		Node nnode = new Node();
-		nnode.setRenderState(core.cs_none);
 		nnode.attachChild(quad);
-		nnode.setModelBound(new BoundingBox());
-		nnode.updateModelBound();
-		nnode.setRenderState(as_off);
 		
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
 		PooledSharedNode r = new PooledSharedNode("node"+counter++,nnode);
@@ -604,7 +606,10 @@ public class ModelLoader {
 				    //importer returns a Loadable, cast to Node
 					node = new Node();
 					Spatial spatial = (Spatial)binaryImporter.load(in);
+					spatial.setModelBound(new BoundingBox());
+					spatial.updateModelBound();
 					node.attachChild(spatial);
+					
 					
 					if (as==null) 
 					{
@@ -628,8 +633,6 @@ public class ModelLoader {
 					//spatial.setRenderState(as);
 					
 					sharedNodeCache.put(key, node);
-					node.setModelBound(new BoundingBox());
-					node.updateModelBound();
 					PooledSharedNode r = new PooledSharedNode("node"+counter++,node);
 		    		//r.setModelBound(new BoundingBox());
 		            //r.updateModelBound();
