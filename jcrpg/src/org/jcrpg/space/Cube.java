@@ -78,6 +78,16 @@ public class Cube extends ChangingImpl {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		if (c1.overwrite || c2.overwrite) 
+		{
+			this.overwrite = true;
+			if (c1.onlyIfOverlaps || c2.onlyIfOverlaps) 
+			{
+				this.onlyIfOverlaps = true;
+			}
+		}
+		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
+
 		for (int i=0; i<sides.length; i++)
 		{
 			Side[] sides1 = c1.sides[i];

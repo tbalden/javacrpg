@@ -57,7 +57,7 @@ public class Cave extends Geography {
 	static Side[] ENTRANCE = {new Side(TYPE_CAVE,SUBTYPE_ENTRANCE)};
 	
 	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
-	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,GROUND,null };
+	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,WALL,null };
 	static Side[][] CAVE_GROUND_CEILING = new Side[][] { null, null, null,null,WALL,GROUND };
 	static Side[][] CAVE_NORTH = new Side[][] { WALL, null, null,null,null,null };
 	static Side[][] CAVE_EAST = new Side[][] { null, WALL, null,null,null,null };
@@ -117,9 +117,16 @@ public class Cave extends Geography {
 		if (relX<=entranceLength || relX>=realSizeX-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relZ%4==2)
+			if (relZ<=entranceLength || relZ>=realSizeZ-entranceLength)
 			{
-				
+				// on the corners, no cube
+				c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+				// internal space to 0 too!
+				//return c;
+				return null;
+			}
+			if (relZ%4==2 && relY==0) // TODO relY==ENTRANCELEVEL
+			{
 				if (relX<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
@@ -162,7 +169,7 @@ public class Cave extends Geography {
 		if (relZ<=entranceLength || relZ>=realSizeZ-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relX%4==2)
+			if (relX%4==2 && relY==0)
 			{
 				if (relZ<=entranceLength && (entranceSide&LIMIT_WEST)>0)
 				{
@@ -210,8 +217,15 @@ public class Cave extends Geography {
 				// internal space to 0 too!
 				return c;
 			}
-		
+			// TODO level based Ground OR Ceiling! not the two at once
 			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
+			if (sizeY>1) {
+				if (relY==0)
+					c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+				else if (relY==sizeY-1)
+					c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
+				else return null;
+			}
 			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
 			// internal space to 0 too!
 			return c;
