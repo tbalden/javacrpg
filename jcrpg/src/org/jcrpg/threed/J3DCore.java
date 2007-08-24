@@ -843,6 +843,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		QuadModel qm_rock_no_rot = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		QuadModel qm_cave_wall = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
+
+		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},treeLodDist);
+		lod_jungle_bush1.shadowCaster = false;
 		
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
 		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
@@ -904,12 +907,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
-		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));
+		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));//lod_cave_wall}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedSide(new Model[]{cave_rock}));
 
 		// no lod version
-/*		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
+		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{cherry}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_high}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{pine_high}));
@@ -919,8 +922,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{coconut_high}));
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{great_pine_high}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
-		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
-	*/	
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));*/
+		
 		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{jungletrees_mult})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{jungletrees_mult}));
