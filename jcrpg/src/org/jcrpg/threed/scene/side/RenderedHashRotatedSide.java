@@ -11,6 +11,7 @@ import org.jcrpg.util.HashUtil;
  */
 public class RenderedHashRotatedSide extends RenderedSide {
 
+	public boolean scaleFix = false;
 	
 	/**
 	 * @param objects Objects always rendered.
@@ -18,6 +19,11 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	public RenderedHashRotatedSide(Model[] objects)
 	{
 		super(objects);
+	}
+	public RenderedHashRotatedSide(Model[] objects, boolean scaleFix)
+	{
+		super(objects);
+		this.scaleFix = scaleFix;
 	}
 	
 	public int rotation(int x,int y,int z)
@@ -27,6 +33,7 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	
 	public float scale(int x,int y,int z)
 	{
+		if (scaleFix) return 1f;
 		return 1f+(HashUtil.mix(x, y, z)%100)*0.003f;
 	}
 }
