@@ -44,6 +44,7 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
+import com.jme.bounding.BoundingCapsule;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -474,7 +475,7 @@ public class ModelLoader {
 		//Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.01f);
 		
 		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
-		quad.setModelBound(new BoundingSphere());
+		quad.setModelBound(new BoundingCapsule());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
 		if (m.dot3TextureName!=null) {
@@ -515,7 +516,7 @@ public class ModelLoader {
 				try {
 					AreaClodMesh acm = new AreaClodMesh("part" + i,
 							(TriMesh) meshParent.getChild(i), null);
-					acm.setModelBound(new BoundingSphere());
+					acm.setModelBound(new BoundingCapsule());
 					acm.updateModelBound();
 					// Allow 1/2 of a triangle in every pixel on the screen in the
 					// bounds.
@@ -607,7 +608,7 @@ public class ModelLoader {
 				    //importer returns a Loadable, cast to Node
 					node = new Node();
 					Spatial spatial = (Spatial)binaryImporter.load(in);
-					spatial.setModelBound(new BoundingSphere());
+					spatial.setModelBound(new BoundingCapsule());
 					spatial.updateModelBound();
 					node.attachChild(spatial);
 					
@@ -736,7 +737,7 @@ public class ModelLoader {
 				//node.setRenderState(as);
 
 				sharedNodeCache.put(key, node);
-				node.setModelBound(new BoundingSphere());
+				node.setModelBound(new BoundingCapsule());
 				node.updateModelBound();				
 				PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
 	            //r.setRenderState(core.vp);

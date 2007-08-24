@@ -64,8 +64,9 @@ public class Cave extends Geography {
 	static Side[][] CAVE_SOUTH = new Side[][] { null, null, WALL,null,null,null };
 	static Side[][] CAVE_WEST = new Side[][] { null, null, null,WALL,null,null };
 
-	//static Side[][] CAVE_ROCK = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK,ROCK,GROUND };
-	static Side[][] CAVE_ROCK = new Side[][] { WALL, WALL, WALL,WALL,GROUND,WALL };
+	static Side[][] CAVE_ROCK = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK,ROCK,null };
+	static Side[][] CAVE_ROCK_NO_MODEL = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK, BLOCK,null };
+	//static Side[][] CAVE_ROCK = new Side[][] { WALL, WALL, WALL,WALL,GROUND,WALL };
 
 	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,null,GROUND };
 	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,null,null,GROUND };
@@ -125,7 +126,7 @@ public class Cave extends Geography {
 				//return c;
 				return null;
 			}
-			if (relZ%4==2 && relY==0) // TODO relY==ENTRANCELEVEL
+			if (relZ%8==2 && relY==0) // TODO relY==ENTRANCELEVEL
 			{
 				if (relX<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
 				{
@@ -169,7 +170,7 @@ public class Cave extends Geography {
 		if (relZ<=entranceLength || relZ>=realSizeZ-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relX%4==2 && relY==0)
+			if (relX%8==2 && relY==0)
 			{
 				if (relZ<=entranceLength && (entranceSide&LIMIT_WEST)>0)
 				{

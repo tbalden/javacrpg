@@ -808,6 +808,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
 		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
+		//SimpleModel entrance_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
 				new SimpleModel[]{wall_thick},
@@ -1598,7 +1599,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		engine.setPause(true);
 
-		boolean cullTrick = true;
+		boolean cullTrick = false;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -2475,8 +2476,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		extRootNode.setRenderState(extLightState);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
-		//intRootNode.setLightCombineMode(LightState.OFF);
-		//intRootNode.clearRenderState(RenderState.RS_MATERIAL);
 		skyRootNode.setRenderState(skydomeLightState);
 		
 		if (true==true && dr == null) {
