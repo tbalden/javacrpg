@@ -54,8 +54,8 @@ public class SimpleMoon extends Orbiter{
 		if ( dayNightPer<0) {
 			dayNightPer = -1 * ( 100 - Math.abs(( Math.abs( dayNightPer ) - 50 ) * 2) ); 
 		}
-		float z=(Math.abs(dayOrNightPeriodPercentage)-50) * 6;
-		float y= ( 50-(Math.abs((Math.abs(dayOrNightPeriodPercentage)-50))) ) * 6;
+		float z=(Math.abs(dayOrNightPeriodPercentage)-50) * 2;
+		float y= ( 50-(Math.abs((Math.abs(dayOrNightPeriodPercentage)-50))) ) * 2;
 		
 		return new float[] {0,y,z};
 		

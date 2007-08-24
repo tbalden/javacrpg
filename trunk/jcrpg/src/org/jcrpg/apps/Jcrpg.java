@@ -49,12 +49,13 @@ public class Jcrpg {
      * @param args
      */
     public static void main(String[] args) {
-    	    	try {
-    	    		start();
-    	    	} catch (Exception ex)
-    	    	{
-    	    		ex.printStackTrace();
-    	    	}
+    	System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
+    	try {
+    		start();
+    	} catch (Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
    }
 
     public static void start() throws Exception {

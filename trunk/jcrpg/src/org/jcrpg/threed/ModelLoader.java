@@ -474,6 +474,7 @@ public class ModelLoader {
 		MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 		.createMaterialState();
 		ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+		//ms.setAmbient(new ColorRGBA(0.0f,0.0f,0.0f,0.5f));
 		quad.setRenderState(ms);
 		quad.setLightCombineMode(LightState.COMBINE_FIRST);
 		
