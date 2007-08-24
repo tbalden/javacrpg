@@ -1681,7 +1681,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							}
 						}
 					} else
-					if (inViewPortCullNotSet.contains(c)) // if node is in the set, cull is currently set to NEVER, must be set to dynamic, and node to be locked
+					if (cullTrick && inViewPortCullNotSet.contains(c)) // if node is in the set, cull is currently set to NEVER, must be set to dynamic, and node to be locked
 					{
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
