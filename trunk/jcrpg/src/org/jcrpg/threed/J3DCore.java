@@ -2379,7 +2379,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
 		RenderPass rootPass = new RenderPass();
-		rootPass.add(rootNode);
+		//rootPass.add(rootNode);
 		pManager.add(rootPass);
 		
 		bloomRenderPass = new BloomRenderPass(cam, 4);
@@ -2451,7 +2451,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			else
 				as.setReference(0.9f);
 		}
-			else as.setReference(0.5f);
+			else as.setReference(0.9f);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
