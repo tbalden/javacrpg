@@ -45,9 +45,9 @@ import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingCapsule;
-import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
@@ -60,6 +60,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -472,9 +473,9 @@ public class ModelLoader {
 			return r;
 		}
     	
-		//Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.01f);
+		Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.04f);
 		
-		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+		//Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
 		quad.setModelBound(new BoundingCapsule());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);

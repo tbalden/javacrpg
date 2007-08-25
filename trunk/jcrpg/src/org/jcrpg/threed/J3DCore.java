@@ -582,6 +582,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL_REVERSE.id, new Integer(35));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ROCK.id, new Integer(34));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_BLOCK.id, EMPTY_SIDE);
@@ -806,6 +807,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		SimpleModel cave_rock = new SimpleModel("models/ground/cave_rock.obj", null);
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
+		SimpleModel wall_cave_rev = new SimpleModel("models/ground/wall_cave_rev.obj", null);
 		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
 		//SimpleModel entrance_cave = new SimpleModel("models/ground/ground_cave.obj", null);
@@ -911,6 +913,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));//lod_cave_wall}));
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedHashRotatedSide(new Model[]{cave_rock},true));
+		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{wall_cave_rev}));//lod_cave_wall}));
 
 		// no lod version
 		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
@@ -2482,7 +2485,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 			dr = new PointLight();
 			dr.setEnabled(true);
-			dr.setDiffuse(new ColorRGBA(1, 1, 1, 0.5f));
+			float lp = 0.6f;
+			dr.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
 			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
 			dr.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
 			dr.setQuadratic(1f);

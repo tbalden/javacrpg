@@ -57,7 +57,7 @@ public class Mountain extends Geography implements Surface{
 	static Side[] INTERSECT = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT)};
 	static Side[] I_EMPTY = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_EMPTY)};
 	static Side[] BLOCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_BLOCK)};
-	static Side[] INTERNAL_ROCK_SIDE = {new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
+	static Side[] INTERNAL_ROCK_SIDE = null;//{new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
 	
 	static Side[][] MOUNTAIN_ROCK = new Side[][] { null, null, null,null,null,ROCK };
 	static Side[][] MOUNTAIN_ROCK_VISIBLE = new Side[][] { null, null, null,null,null,ROCK_VISIBLE };
