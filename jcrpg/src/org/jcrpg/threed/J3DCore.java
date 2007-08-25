@@ -1624,11 +1624,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			{
 				boolean found = false;
 				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
-				boolean fragmentViewDist = c.cube.internalLight&&!insideArea || !c.cube.internalLight&&insideArea ; 
+				boolean fragmentViewDist = c.cube.internalLight&&!insideArea || !c.cube.internalLight&&insideArea ;
+				float checkDist = (fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR);
 				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
 					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
-					if (dist< (fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR))
+					if (dist< VIEW_DISTANCE_SQR) //(fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR)) // TODO bug with culling?? if fragmented checkdist, all is culled at certain places
+					//if (dist < checkDist)
 					{
 						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
 							found = true;
@@ -2180,9 +2182,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
 		if (c.internalLight)
 		{
+			System.out.println("Moved: INTERNAL");
 			insideArea = true;
 		} else
 		{
+			System.out.println("Moved: EXTERNAL");
 			insideArea = false;
 		}
 		return true;
