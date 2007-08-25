@@ -358,6 +358,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public int viewPositionZ = 0;
 	public int relativeX = 0, relativeY = 0, relativeZ = 0;
 	public boolean onSteep = false;
+	public boolean insideArea = false;
 	
 	public ModelLoader modelLoader = new ModelLoader(this);
 	public ModelPool modelPool = new ModelPool(this);
@@ -2172,6 +2173,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		setViewPosition(newCoords);
 		setRelativePosition(newRelCoords);
+		c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+		if (c.internalLight)
+		{
+			insideArea = true;
+		} else
+		{
+			insideArea = false;
+		}
 		return true;
 	}
 	
