@@ -1623,10 +1623,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
+				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
+				boolean fragmentViewDist = c.cube.internalLight&&!insideArea || !c.cube.internalLight&&insideArea ; 
 				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
 					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
-					if (dist<VIEW_DISTANCE_SQR)
+					if (dist< (fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR))
 					{
 						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
 							found = true;
