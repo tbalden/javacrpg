@@ -1618,19 +1618,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		long sysTime = System.currentTimeMillis();
 		
 		int visibleNodeCounter = 0;
+		int nonVisibleNodeCounter = 0;
+		int addedNodeCounter = 0;
+		int removedNodeCounter = 0;
 		for (RenderedCube c:hmCurrentCubes.values())
 		{
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
 				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
-				boolean fragmentViewDist = c.cube.internalLight&&!insideArea || !c.cube.internalLight&&insideArea ;
-				float checkDist = (fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR);
+				boolean fragmentViewDist = false;
+				if (c.cube!=null) {
+					fragmentViewDist = c.cube.internalLight&&(!insideArea) || (!c.cube.internalLight)&&insideArea;
+				}
+				float checkDist = (fragmentViewDist?VIEW_DISTANCE_SQR/4f : VIEW_DISTANCE_SQR);
 				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
 					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
-					if (dist< VIEW_DISTANCE_SQR) //(fragmentViewDist?VIEW_DISTANCE_SQR/4 : VIEW_DISTANCE_SQR)) // TODO bug with culling?? if fragmented checkdist, all is culled at certain places
-					//if (dist < checkDist)
+					//if (dist< VIEW_DISTANCE_SQR) 
+					if (dist < checkDist) // TODO bug with culling?? if fragmented checkdist, all is culled at certain places
 					{
 						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
 							found = true;
@@ -1639,8 +1645,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
 						float angle = cam.getDirection().normalize().angleBetween(relative);
 						//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
-						if (angle<refAngle)
+						if (angle<refAngle) {
 							found = true;
+						}
 						break;
 					} else
 					{
@@ -1652,6 +1659,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					visibleNodeCounter++;
 					if (!inViewPort.contains(c)) 
 					{
+						addedNodeCounter++;
 						inViewPort.add(c);
 						if (cullTrick) inViewPortCullNotSet.add(c); // adding to set of nodes with 'cull set to never'
 						outOfViewPort.remove(c);
@@ -1715,8 +1723,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					}
 				} else
 				{
+					 nonVisibleNodeCounter++;
 					 if (!outOfViewPort.contains(c)) 
 					 {
+						removedNodeCounter++;
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
@@ -1740,7 +1750,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
-		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter);
+		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 	    // handling possible occluders
 	    if (SHADOWS) {
 	    	System.out.println("OCCS: "+sPass.occludersSize());
@@ -1765,21 +1775,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    
 		updateTimeRelated();
 
+		
 		if (!cullTrick && (cullVariationCounter++%2==0))
 		{
-			extRootNode.setCullMode(Node.CULL_NEVER);
-			intRootNode.setCullMode(Node.CULL_NEVER);
+			groundParentNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
-			extRootNode.setCullMode(Node.CULL_DYNAMIC);
-			intRootNode.setCullMode(Node.CULL_DYNAMIC);
+			groundParentNode.setCullMode(Node.CULL_DYNAMIC);
 		}
 		
-		extRootNode.updateRenderState();
-		intRootNode.updateRenderState();
+		groundParentNode.updateRenderState();
 
+		System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 
-		//if (cullVariationCounter%40==0)
+		if (cullVariationCounter%40==0)
 			modelPool.cleanPools();
 
 		// every 20 steps do a garbage collection
@@ -2184,10 +2193,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			System.out.println("Moved: INTERNAL");
 			insideArea = true;
+			groundParentNode.detachAllChildren(); // workaround for culling
+			groundParentNode.attachChild(intRootNode);
+			groundParentNode.attachChild(extRootNode);
 		} else
 		{
 			System.out.println("Moved: EXTERNAL");
 			insideArea = false;
+			groundParentNode.detachAllChildren(); // workaround for culling
+			groundParentNode.attachChild(extRootNode);
+			groundParentNode.attachChild(intRootNode);
 		}
 		return true;
 	}
@@ -2350,17 +2365,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FragmentProgramState fp = null;
 	
 	Node hud1Node;
-    /**
+
+	BoundingSphere bigSphere = new BoundingSphere();
+
+	/**
      * This is used to display print text.
      */
     protected StringBuffer hud1Buffer = new StringBuffer( 30 );
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
+		bigSphere.setCenter(new Vector3f(0,0,0));
+		//bigSphere.s
+		bigSphere.setRadius(10000f);
 		// external cubes' rootnode
 		extRootNode = new Node();
+		extRootNode.setModelBound(bigSphere);
+		//extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
 		intRootNode = new Node();
+		intRootNode.setModelBound(bigSphere);
+		//intRootNode.attachChild(new Node());
 
 		loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
 		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
@@ -2433,13 +2458,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cs_none = display.getRenderer().createCullState();
 		cs_none.setCullMode(CullState.CS_NONE);
 
-		rootNode.setRenderState(cs_back);
-		rootNode.clearRenderState(RenderState.RS_DITHER);
+		rootNode.setRenderState(cs_none);
+		/*rootNode.clearRenderState(RenderState.RS_DITHER);
 		rootNode.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
 		rootNode.clearRenderState(RenderState.RS_MATERIAL);
 		rootNode.clearRenderState(RenderState.RS_TEXTURE);
 		rootNode.clearRenderState(RenderState.RS_SHADE);
-		rootNode.clearRenderState(RenderState.RS_STENCIL);
+		rootNode.clearRenderState(RenderState.RS_STENCIL);*/
 		
 		//rootNode.setRenderState(vp);
 		//rootNode.setRenderState(fp);
@@ -2455,12 +2480,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.2f, 200);
-		//cam.setFrustumNear(0.75f);
-		rootNode.attachChild(groundParentNode);
-		//noBloomCParentRootNode.attachChild(extRootNode);
-		groundParentNode.attachChild(extRootNode);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 200);
 		groundParentNode.attachChild(intRootNode);
+		groundParentNode.attachChild(extRootNode);
+		rootNode.attachChild(groundParentNode);
 		rootNode.attachChild(skyRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
@@ -2539,8 +2562,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
-	           bloomRenderPass.add(extRootNode);
-	           bloomRenderPass.add(intRootNode);
+	           bloomRenderPass.add(groundParentNode);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setBlurIntensityMultiplier(1f);
 	           pManager.add(bloomRenderPass);

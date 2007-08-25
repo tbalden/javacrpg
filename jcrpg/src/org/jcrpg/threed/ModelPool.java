@@ -30,7 +30,6 @@ import java.util.Iterator;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.scene.TriMesh;
