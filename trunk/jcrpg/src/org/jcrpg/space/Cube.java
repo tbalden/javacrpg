@@ -86,6 +86,10 @@ public class Cube extends ChangingImpl {
 				this.onlyIfOverlaps = true;
 			}
 		}
+		if (c1.internalLight || c2.internalLight)
+		{
+			internalLight = true;
+		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
 
 		for (int i=0; i<sides.length; i++)
@@ -94,16 +98,14 @@ public class Cube extends ChangingImpl {
 			Side[] sides2 = c2.sides[i];
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
 			if (sides1==null || c2.overwrite && c2.overwritePower>=c1.overwritePower)
-			{
-				internalLight = c2.internalLight;
+			{				
 				if (c2.onlyIfOverlaps && !(c2.overwrite && c2.overwritePower>=c1.overwritePower)) 
 					merged = null; 
 				else
 					merged = sides2;
 			} else
 			if (sides2==null || c1.overwrite && c1.overwritePower>=c2.overwritePower)
-			{
-				internalLight = c1.internalLight;
+			{				
 				if (c1.onlyIfOverlaps && !(c1.overwrite && c1.overwritePower>=c2.overwritePower)) 
 					merged = null; 
 				else
@@ -179,7 +181,12 @@ public class Cube extends ChangingImpl {
 	
 	public Cube copy(Place newParent)
 	{
-		return new Cube(newParent,sides,x,y,z,steepDirection);
+		Cube c = new Cube(newParent,sides,x,y,z,steepDirection);
+		c.internalLight = internalLight;
+		c.overwrite = overwrite;
+		c.overwritePower = overwritePower;
+		c.onlyIfOverlaps = onlyIfOverlaps;
+		return c;
 	}
 	
 }
