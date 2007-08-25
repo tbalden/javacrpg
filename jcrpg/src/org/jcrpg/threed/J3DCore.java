@@ -1617,7 +1617,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		long sysTime = System.currentTimeMillis();
 		
-		
+		int visibleNodeCounter = 0;
 		for (RenderedCube c:hmCurrentCubes.values())
 		{
 			if (c.hsRenderedNodes.size()>0)
@@ -1635,7 +1635,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							break;
 						}
 						Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
-						float angle = cam.getDirection().angleBetween(relative);
+						float angle = cam.getDirection().normalize().angleBetween(relative);
+						//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
 						if (angle<refAngle)
 							found = true;
 						break;
@@ -1646,6 +1647,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 				if (found)
 				{
+					visibleNodeCounter++;
 					if (!inViewPort.contains(c)) 
 					{
 						inViewPort.add(c);
@@ -1736,6 +1738,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
+		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter);
 	    // handling possible occluders
 	    if (SHADOWS) {
 	    	System.out.println("OCCS: "+sPass.occludersSize());
@@ -1774,7 +1777,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 
-		if (cullVariationCounter%40==0)
+		//if (cullVariationCounter%40==0)
 			modelPool.cleanPools();
 
 		// every 20 steps do a garbage collection
@@ -1955,7 +1958,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Vector3f getCurrentLocation()
 	{
 		Vector3f v = new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.5f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
-		//v.addLocal(viewDirectionTranslation.get(new Integer(viewDirection)));
 		return v;
 	}
 	

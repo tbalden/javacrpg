@@ -1,12 +1,7 @@
-[ ] cave into the mountain!
-	[X] settable empty space for entrance cave -> not only one cube at the edge!
-	[?] settable level highness, levels that belong together, share the same block/empty pattern
-	[ ] implement surface interface!
-	[ ] optimization -> if in cave, display only cave cubes, and some distance of other cubes?
-	[X] cave lighting
-	[ ] use hash rotated side
-	[X] flare is visible through the caves! intRootNode to a common parent with extRootNode
-	[ ] too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
+[ ] culling bug!
+
+[ ] Cave: implement surface interface!
+[?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
 
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
@@ -44,6 +39,14 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] cave into the mountain!
+	[X] settable empty space for entrance cave -> not only one cube at the edge!
+	[X] settable level highness, levels that belong together, share the same block/empty pattern
+	[X] optimization -> if in cave, display only cave cubes, and some distance of other cubes?
+	[X] cave lighting
+	[X] use hash rotated side
+	[X] flare is visible through the caves! intRootNode to a common parent with extRootNode
+
 [X] looking left / right like up / down
 [X] clean up files in SVN
 [X] user manual update
