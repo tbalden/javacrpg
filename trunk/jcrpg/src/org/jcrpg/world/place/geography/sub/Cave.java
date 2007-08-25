@@ -207,7 +207,7 @@ public class Cave extends Geography {
 			return c;
 		} 
 		else {
-			int per = HashUtil.mixPercentage(worldX/1, (worldY-origoY%levels)/levels, worldZ/1);
+			int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
 			
 			if (per<density)
 			{
@@ -217,7 +217,7 @@ public class Cave extends Geography {
 				return c;
 			}
 			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-			if (sizeY>1) {
+			if (realSizeY>=1) {
 				if (relY%levels==0)
 					c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
 				else if (relY%levels==levels-1)
