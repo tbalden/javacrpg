@@ -112,7 +112,7 @@ public abstract class CKeyAction extends KeyInputAction{
 
 		if (internalDirection != null) {
 			Vector3f dirNew = internalDirection;
-			dirNew.normalizeLocal();
+			dirNew = dirNew.normalize();
 			rotMat.fromStartEndVectors(dirOrigo, dirNew);
 
 			rotMat.mult(left, left);
