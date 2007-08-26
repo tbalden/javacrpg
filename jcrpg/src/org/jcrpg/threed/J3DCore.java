@@ -1281,7 +1281,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// SKYSPHERE
 		// moving skysphere with camera
 		Vector3f sV3f = new Vector3f(cam.getLocation());
-		sV3f.y-=100;
+		sV3f.y-=10;
 		skySphere.setLocalTranslation(sV3f);
 		// Animating skySphere rotated...
 		Quaternion qSky = new Quaternion();
