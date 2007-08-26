@@ -152,7 +152,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     
     public static boolean MIPMAP_GLOBAL = true;
 
-    public static boolean TEXTURE_QUAL_HIGH = false;
+    public static int TEXTURE_QUALITY = 0;
 
     public static boolean BLOOM_EFFECT = false;
     public static boolean SHADOWS = true;
@@ -249,15 +249,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			p.setProperty("MIPMAP_TREES", "false");
 	    		}
 	    	}
-	    	String textureQualityHigh = p.getProperty("TEXTURE_QUAL_HIGH");
-	    	if (textureQualityHigh!=null)
+	    	String textureQuality = p.getProperty("TEXTURE_QUALITY");
+	    	if (textureQuality!=null)
 	    	{
-	    		textureQualityHigh = textureQualityHigh.trim();
+	    		textureQuality = textureQuality.trim();
 	    		try {
-	    			TEXTURE_QUAL_HIGH = Boolean.parseBoolean(textureQualityHigh);
+	    			TEXTURE_QUALITY = Integer.parseInt(textureQuality);
 	    		} catch (Exception pex)
 	    		{
-	    			p.setProperty("TEXTURE_QUAL_HIGH", "false");
+	    			p.setProperty("TEXTURE_QUALITY", "false");
 	    		}
 	    	}
 	    	String bloomEffect = p.getProperty("BLOOM_EFFECT");
@@ -770,7 +770,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
-		//TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png","grass1_flower_3.png"},0.7f,0.45f,2,1f);
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass/grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.7f,0.45f,2,1f);
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
@@ -2492,7 +2491,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 		if (!BLOOM_EFFECT) {
-			if (TEXTURE_QUAL_HIGH)
+			if (TEXTURE_QUALITY==2)
 				as.setReference(0.9f);
 			else
 				as.setReference(0.9f);
