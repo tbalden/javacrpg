@@ -1,4 +1,5 @@
-[ ] culling bug!
+[ ] add lowest texture detail for low end cards usable FPS
+	[ ] test
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
@@ -39,6 +40,8 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] culling bug!
+
 [X] cave into the mountain!
 	[X] settable empty space for entrance cave -> not only one cube at the edge!
 	[X] settable level highness, levels that belong together, share the same block/empty pattern
