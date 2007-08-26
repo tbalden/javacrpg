@@ -79,12 +79,15 @@ public class ModelLoader {
 
 	J3DCore core = null;
 	
+	String TEXDIR = "low/"; 
+	
 	public ModelLoader(J3DCore core)
 	{
 		this.core = core;
 		
 	    try {
-	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
+    		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"middle/":"high/");
+	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI().toURL());
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -388,7 +391,7 @@ public class ModelLoader {
      */
     public TextureState[] loadTextureStates(String[] textureNames,String[] normalNames, boolean transformNormal)
     {
-    	ArrayList<TextureState> tss = new ArrayList<TextureState>();
+		ArrayList<TextureState> tss = new ArrayList<TextureState>();
     	for (int i=0; i<textureNames.length; i++) {
     		String key = textureNames[i]+(normalNames!=null?normalNames[i]:"null");
 	    	TextureState ts = textureStateCache.get(key);
@@ -402,12 +405,12 @@ public class ModelLoader {
 		            Texture tex = null;
 	            	if (transformNormal) {
 	            		tex = new Texture();
-	            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+normalNames[i]).toURI().toURL(),true);
+	            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+TEXDIR+normalNames[i]).toURI().toURL(),true);
 	            		Image bumpImage = new SobelImageFilter().apply(heightImage);
 			            tex.setImage(bumpImage);
 	            	} else
 	            	{
-			            tex = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+normalNames[i],Texture.MM_LINEAR,
+			            tex = TextureManager.loadTexture("./data/textures/"+TEXDIR+normalNames[i],Texture.MM_LINEAR,
 					            Texture.FM_LINEAR);
 	            	}
 					tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
@@ -422,7 +425,7 @@ public class ModelLoader {
 	            }
 	    	}
 	    	
-			Texture qtexture = TextureManager.loadTexture("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")+textureNames[i],Texture.MM_LINEAR,
+			Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MM_LINEAR,
 		            Texture.FM_LINEAR);
 			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
 			qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
@@ -581,7 +584,6 @@ public class ModelLoader {
     		ObjToJme objtojme = new ObjToJme();
 			try {
 				objtojme.setProperty("mtllib",new File("./data/"+path).toURI().toURL());
-				objtojme.setProperty("texdir",new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
 			}
 			 catch (IOException ioex)
 			 {
@@ -650,14 +652,6 @@ public class ModelLoader {
     	} else {
 
 			MaxToJme maxtojme = new MaxToJme();
-			try {
-				// setting texture directory for 3ds models...
-				maxtojme.setProperty("texdir", new File("./data/textures/"+(J3DCore.TEXTURE_QUAL_HIGH?"high/":"low/")).toURI().toURL());
-			}
-			 catch (IOException ioex)
-			 {
-				 
-			 }
 			Node node = null; // Where to dump mesh.
 			ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(); 
 			
