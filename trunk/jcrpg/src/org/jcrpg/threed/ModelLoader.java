@@ -44,6 +44,7 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingCapsule;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -86,7 +87,7 @@ public class ModelLoader {
 		this.core = core;
 		
 	    try {
-    		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"middle/":"high/");
+    		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"mid/":"high/");
 	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI().toURL());
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
 	    } catch (Exception e) {
@@ -479,7 +480,7 @@ public class ModelLoader {
 		Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.04f);
 		
 		//Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
-		quad.setModelBound(new BoundingCapsule());
+		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
 		if (m.dot3TextureName!=null) {
@@ -520,7 +521,7 @@ public class ModelLoader {
 				try {
 					AreaClodMesh acm = new AreaClodMesh("part" + i,
 							(TriMesh) meshParent.getChild(i), null);
-					acm.setModelBound(new BoundingCapsule());
+					acm.setModelBound(new BoundingBox());
 					acm.updateModelBound();
 					// Allow 1/2 of a triangle in every pixel on the screen in the
 					// bounds.
@@ -611,7 +612,7 @@ public class ModelLoader {
 				    //importer returns a Loadable, cast to Node
 					node = new Node();
 					Spatial spatial = (Spatial)binaryImporter.load(in);
-					spatial.setModelBound(new BoundingCapsule());
+					spatial.setModelBound(new BoundingBox());
 					spatial.updateModelBound();
 					node.attachChild(spatial);
 					
@@ -732,7 +733,7 @@ public class ModelLoader {
 				//node.setRenderState(as);
 
 				sharedNodeCache.put(key, node);
-				node.setModelBound(new BoundingCapsule());
+				node.setModelBound(new BoundingBox());
 				node.updateModelBound();				
 				PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
 	            //r.setRenderState(core.vp);
