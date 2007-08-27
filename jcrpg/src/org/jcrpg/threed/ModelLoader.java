@@ -45,7 +45,6 @@ import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingCapsule;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
@@ -62,7 +61,6 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
@@ -93,7 +91,6 @@ public class ModelLoader {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	 		
 	}
 	
     
@@ -123,6 +120,10 @@ public class ModelLoader {
 	 */
 	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean fakeLoadForCacheMaint)
     {
+		
+		//GeometryBatchCreator cr = new GeometryBatchCreator();
+		//cr.addInstance(new GeometryBatchInstance());
+		
 		
 		PooledNode[] r = null;
 		if (!fakeLoadForCacheMaint) r = new PooledNode[objects.length];
@@ -505,7 +506,47 @@ public class ModelLoader {
 		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
 		PooledSharedNode r = new PooledSharedNode("node"+counter++,nnode);
 		return r;
+     	
+    }
+
+    public Node loadQuadModelNode(QuadModel m, boolean fake)
+    {
+		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
+    	tempNodeKeys.add(m.textureName+m.dot3TextureName);
+		tempBinaryKeys.add(m.textureName+m.dot3TextureName);
+		if (fake) return null;
+		
+		Node node = sharedNodeCache.get(m.textureName+m.dot3TextureName);
+		if (node!=null) {
+			return node;
+		}
     	
+		Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.04f);
+		
+		//Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+		quad.setModelBound(new BoundingBox());
+		quad.updateModelBound();
+		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
+		if (m.dot3TextureName!=null) {
+		}
+		MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+		.createMaterialState();
+		ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+		//ms.setAmbient(new ColorRGBA(0.0f,0.0f,0.0f,0.5f));
+		quad.setRenderState(ms);
+		quad.setLightCombineMode(LightState.COMBINE_FIRST);
+		
+		quad.setRenderState(ts[0]);
+		quad.setSolidColor(new ColorRGBA(1,1,1,1));
+		quad.setRenderState(core.cs_none);
+		quad.setRenderState(as_off);
+		quad.setVBOInfo(info);
+		
+		
+		Node nnode = new Node();
+		nnode.attachChild(quad);
+		sharedNodeCache.put(m.textureName+m.dot3TextureName, nnode);
+		return nnode;
      	
     }
 

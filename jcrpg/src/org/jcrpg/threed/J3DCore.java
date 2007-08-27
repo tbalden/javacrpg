@@ -36,6 +36,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
+import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -361,6 +362,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean insideArea = false;
 	
 	public ModelLoader modelLoader = new ModelLoader(this);
+	public GeometryBatchHelper batchHelper = new GeometryBatchHelper(this);
 	public ModelPool modelPool = new ModelPool(this);
 	
 	public Engine engine = null;
@@ -1159,11 +1161,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
-	Node groundParentNode = new Node(); 
+	public Node groundParentNode = new Node(); 
 	/** external all root */
-	Node extRootNode;
+	public Node extRootNode;
 	/** internal all root */
-	Node intRootNode; 
+	public Node intRootNode; 
 	/** skyroot */
 	Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
@@ -1603,6 +1605,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		engine.setPause(true);
 
 		boolean cullTrick = false;
+		boolean geometryBatch = false;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -1664,39 +1667,45 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							Node realPooledNode = (Node)modelPool.getModel(c, n.model);
-							if (realPooledNode==null) continue;
-							n.realNode = (PooledNode)realPooledNode;
-							
-							// unlock
-							if (realPooledNode instanceof SharedNode)
-							{	
-								realPooledNode.unlockTransforms();
-								realPooledNode.unlockBounds();
-								realPooledNode.unlockBranch();
-							}
-							
-							// set data from placeholder
-							realPooledNode.setLocalRotation(n.getLocalRotation());
-							realPooledNode.setLocalScale(n.getLocalScale());
-							realPooledNode.setLocalTranslation(n.getLocalTranslation());
-							if (c.cube.internalLight) {
-								intRootNode.attachChild((Node)realPooledNode);
+							if (geometryBatch && n.model instanceof QuadModel) {
+								if (n.batchInstance==null)
+									batchHelper.addItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
 							{
-								extRootNode.attachChild((Node)realPooledNode);
-							}
-							if (cullTrick) {
-								realPooledNode.setCullMode(Node.CULL_NEVER);
-								realPooledNode.updateRenderState();
-								realPooledNode.updateGeometricState(0.0f, true);
-							} else
-							{
+								Node realPooledNode = (Node)modelPool.getModel(c, n.model);
+								if (realPooledNode==null) continue;
+								n.realNode = (PooledNode)realPooledNode;
+							
+								// unlock
 								if (realPooledNode instanceof SharedNode)
 								{	
-									realPooledNode.lockTransforms();								
-									realPooledNode.lockBounds();
-									realPooledNode.lockBranch();
+									realPooledNode.unlockTransforms();
+									realPooledNode.unlockBounds();
+									realPooledNode.unlockBranch();
+								}
+							
+								// set data from placeholder
+								realPooledNode.setLocalRotation(n.getLocalRotation());
+								realPooledNode.setLocalScale(n.getLocalScale());
+								realPooledNode.setLocalTranslation(n.getLocalTranslation());
+								if (c.cube.internalLight) {
+									intRootNode.attachChild((Node)realPooledNode);
+								} else 
+								{
+									extRootNode.attachChild((Node)realPooledNode);
+								}
+								if (cullTrick) {
+									realPooledNode.setCullMode(Node.CULL_NEVER);
+									realPooledNode.updateRenderState();
+									realPooledNode.updateGeometricState(0.0f, true);
+								} else
+								{
+									if (realPooledNode instanceof SharedNode)
+									{	
+										realPooledNode.lockTransforms();								
+										realPooledNode.lockBounds();
+										realPooledNode.lockBranch();
+									}
 								}
 							}
 						}
@@ -1730,19 +1739,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							PooledNode pooledRealNode = n.realNode;
-							
-							n.realNode = null;
-							if (pooledRealNode!=null) {
-								Node realNode = (Node)pooledRealNode;
-								if (cullTrick) {
-									realNode.setCullMode(Node.CULL_NEVER);
-									realNode.updateRenderState();
-									realNode.updateGeometricState(0.0f, true);
+							if (geometryBatch && n.model instanceof QuadModel) {
+								if (n.batchInstance!=null)
+								batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
+								n.batchInstance = null;
+							} else 
+							{
+								PooledNode pooledRealNode = n.realNode;
+								
+								n.realNode = null;
+								if (pooledRealNode!=null) {
+									Node realNode = (Node)pooledRealNode;
+									if (cullTrick) {
+										realNode.setCullMode(Node.CULL_NEVER);
+										realNode.updateRenderState();
+										realNode.updateGeometricState(0.0f, true);
+									}
+									if (SHADOWS) removeOccludersRecoursive(realNode);
+									realNode.removeFromParent();
+									modelPool.releaseNode(pooledRealNode);
 								}
-								if (SHADOWS) removeOccludersRecoursive(realNode);
-								realNode.removeFromParent();
-								modelPool.releaseNode(pooledRealNode);
 							}
 						}
 					 }

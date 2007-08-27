@@ -36,6 +36,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.geometryinstancing.GeometryBatchInstance;
 import com.jme.util.export.Savable;
 
 public class NodePlaceholder {
@@ -43,6 +44,7 @@ public class NodePlaceholder {
 	public Model model;
 	public RenderedCube cube;
 	public PooledNode realNode;
+	public GeometryBatchInstance batchInstance;
 	
 	public Quaternion localRotation;
 	public Vector3f localScale, localTranslation;
