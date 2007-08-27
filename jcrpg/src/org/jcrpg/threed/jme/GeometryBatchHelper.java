@@ -26,10 +26,12 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.scene.model.QuadModel;
+import org.jcrpg.world.place.PlaceLocator;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
@@ -47,7 +49,7 @@ import com.jme.util.geom.BufferUtils;
 
 public class GeometryBatchHelper {
 
-	static HashMap<String, GeometryBatchCreator> creatorMap = new HashMap<String, GeometryBatchCreator>();
+	static HashMap<String, HashSet<NodePlaceholder>> typePlaceholderMap = new HashMap<String, HashSet<NodePlaceholder>>();
 	static J3DCore core;
 	static HashMap<String, TriMesh> parentMeshMap = new HashMap<String, TriMesh>();
 	
@@ -62,18 +64,32 @@ public class GeometryBatchHelper {
      */
     public void addItem(boolean internal, QuadModel m, NodePlaceholder place) {
         // A box that will be instantiated
-    	TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode(m, false).getChild(0);
-
-    	GeometryBatchCreator geometryBatchCreator = creatorMap.get(m.id);
-        // The batch geometry creator
-    	if (geometryBatchCreator==null) {
-    		geometryBatchCreator = new GeometryBatchCreator();
-    		creatorMap.put(m.id, geometryBatchCreator);
-    	}
-    	TriMesh mesh = parentMeshMap.get(m.id+internal);
-    	if (mesh==null)
+    	HashSet<NodePlaceholder> set = typePlaceholderMap.get(m.id+internal);
+    	if (set==null)
     	{
-    		mesh = new TriMesh();
+    		set = new HashSet<NodePlaceholder>();
+    		typePlaceholderMap.put(m.id+internal, set);
+    	}
+    	set.add(place);
+
+        place.batchInstance = true;
+    }
+    
+    public void updateAll()
+    {
+    	for (String id : typePlaceholderMap.keySet()) {
+    		HashSet<NodePlaceholder> set = typePlaceholderMap.get(id);
+    		if (set.size()==0) continue;
+    		
+        	TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)set.iterator().next().model, false).getChild(0);
+        	
+        	GeometryBatchCreator geometryBatchCreator = new GeometryBatchCreator();
+        	TriMesh oldMesh = parentMeshMap.remove(id);
+        	if (oldMesh!=null)
+        		oldMesh.getParent().removeFromParent();
+        	
+        	TriMesh mesh = new TriMesh();
+        	parentMeshMap.put(id, mesh);
     		Node parentNode = new Node();
     		parentNode.attachChild(mesh);
     		
@@ -82,7 +98,7 @@ public class GeometryBatchHelper {
             ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
             parentNode.setRenderState(ms);
             
-            if (internal)
+            if (set.iterator().next().cube.cube.internalLight)
     		{
     			core.intRootNode.attachChild(parentNode);
     			core.intRootNode.updateRenderState();
@@ -91,46 +107,49 @@ public class GeometryBatchHelper {
     			core.extRootNode.attachChild(parentNode);
     			core.extRootNode.updateRenderState();
     		}
-    		parentMeshMap.put(m.id+internal, mesh);
-    	}
-
-        GeometryBatchInstanceAttributes attributes =
-            new GeometryBatchInstanceAttributes(
-            		place.getLocalTranslation(),
-                    // Translation
-                    place.getLocalScale(),
-                    // Scale
-                    place.getLocalRotation().mult(new Vector3f(1,1,1),new Vector3f(1,1,1)),
-                    // Rotation
-                    new ColorRGBA(1.0f,
-                                  1.0f, 1.0f,
-                                  1.0f));    // Color
-
-	    // Box instance (batch and attributes)
-	    GeometryBatchInstance instance =
-	            new GeometryBatchInstance(quad.getBatch(0), attributes);
-    	
-        geometryBatchCreator.addInstance(instance);
-
-        TriangleBatch batch = mesh.getBatch(0);
-        batch.setModelBound(new BoundingBox());
-
-        // Create the batch's buffers
-        batch.setIndexBuffer(BufferUtils.createIntBuffer(
-                geometryBatchCreator.getNumIndices()));
-        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
-                geometryBatchCreator.getNumVertices()));
-        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
-                geometryBatchCreator.getNumVertices()));
-        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
-                geometryBatchCreator.getNumVertices()), 0);
-        batch.setColorBuffer(BufferUtils.createFloatBuffer(
-                geometryBatchCreator.getNumVertices() * 4));
-
-        // Commit the instances to the mesh batch
-        geometryBatchCreator.commit(batch);
-        batch.updateModelBound();
-        place.batchInstance = instance;
+            
+    		for (NodePlaceholder placeholder:set) {
+	            GeometryBatchInstanceAttributes attributes =
+	                new GeometryBatchInstanceAttributes(
+	                		placeholder.getLocalTranslation(),
+	                        // Translation
+	                		placeholder.getLocalScale(),
+	                        // Scale
+	                		placeholder.getLocalRotation().mult(new Vector3f(1.6f,0,-1.6f)),//mult(new Vector3f(3,3,3)),
+	                        // Rotation
+	                        new ColorRGBA(1.0f,
+	                                      1.0f, 1.0f,
+	                                      1.0f));    // Color
+	
+	    	    // Box instance (batch and attributes)
+	    	    GeometryBatchInstance instance =
+	    	            new GeometryBatchInstance(quad.getBatch(0), attributes);
+	        	
+	    	    geometryBatchCreator.addInstance(instance);
+	
+    		}
+    		
+	        TriangleBatch batch = mesh.getBatch(0);
+	        batch.setModelBound(new BoundingBox());
+	
+	        // Create the batch's buffers
+	        batch.setIndexBuffer(BufferUtils.createIntBuffer(
+	                geometryBatchCreator.getNumIndices()));
+	        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
+	                geometryBatchCreator.getNumVertices()));
+	        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
+	                geometryBatchCreator.getNumVertices()));
+	        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
+	                geometryBatchCreator.getNumVertices()), 0);
+	        batch.setColorBuffer(BufferUtils.createFloatBuffer(
+	                geometryBatchCreator.getNumVertices() * 4));
+	
+	        // Commit the instances to the mesh batch
+	        geometryBatchCreator.commit(batch);
+	        batch.updateModelBound();
+	        mesh.getParent().updateRenderState();
+	        System.out.println("MESH UPDATE: "+mesh);
+    	}    	
     }
     
     private TriangleBatch updateBuffers = new TriangleBatch();
@@ -140,32 +159,14 @@ public class GeometryBatchHelper {
      */
     public void removeItem(boolean internal, QuadModel m, NodePlaceholder place) {
 
-    	if (place.batchInstance==null) return;
-    	GeometryBatchCreator geometryBatchCreator = creatorMap.get(m.id);
-    	TriMesh mesh = parentMeshMap.get(m.id+internal);
-    	geometryBatchCreator.removeInstance(place.batchInstance);
-        TriangleBatch batch = mesh.getBatch(0);
-    	rewindBatchBuffers(batch);
-        // Create the batch's buffers
-        batch.setIndexBuffer(BufferUtils.createIntBuffer(
-                geometryBatchCreator.getNumIndices()));
-        batch.setVertexBuffer(BufferUtils.createVector3Buffer(
-                geometryBatchCreator.getNumVertices()));
-        batch.setNormalBuffer(BufferUtils.createVector3Buffer(
-                geometryBatchCreator.getNumVertices()));
-        batch.setTextureBuffer(BufferUtils.createVector2Buffer(
-                geometryBatchCreator.getNumVertices()), 0);
-        batch.setColorBuffer(BufferUtils.createFloatBuffer(
-                geometryBatchCreator.getNumVertices() * 4));
-        // Commit the instances to the mesh batch
-        updateBuffers.setVertexBuffer(batch.getVertexBuffer());
-        updateBuffers.setColorBuffer(batch.getColorBuffer());
-        updateBuffers.setNormalBuffer(batch.getNormalBuffer());
-        updateBuffers.setTextureBuffer(batch.getTextureBuffer(0), 0);
-        geometryBatchCreator.commit(updateBuffers);
-        
-        batch.updateModelBound();
-    }
+    	if (!place.batchInstance) return;
+        // A box that will be instantiated
+    	HashSet<NodePlaceholder> set = typePlaceholderMap.get(m.id+internal);
+    	if (set==null) return;
+    	set.remove(place);
+
+        place.batchInstance = false;
+   }
     
     /**
      * Rewind a Buffer if it exists Could a function like this be a part of the

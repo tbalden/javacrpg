@@ -1623,6 +1623,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		int nonVisibleNodeCounter = 0;
 		int addedNodeCounter = 0;
 		int removedNodeCounter = 0;
+		
+		
 		for (RenderedCube c:hmCurrentCubes.values())
 		{
 			if (c.hsRenderedNodes.size()>0)
@@ -1668,7 +1670,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (geometryBatch && n.model instanceof QuadModel) {
-								if (n.batchInstance==null)
+								if (!n.batchInstance)
 									batchHelper.addItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
 							{
@@ -1740,9 +1742,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (geometryBatch && n.model instanceof QuadModel) {
-								if (n.batchInstance!=null)
+								if (n.batchInstance)
 								batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
-								n.batchInstance = null;
+								n.batchInstance = false;
 							} else 
 							{
 								PooledNode pooledRealNode = n.realNode;
@@ -1765,6 +1767,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
+		
+		if (geometryBatch) batchHelper.updateAll();
+		
 		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 	    // handling possible occluders
 	    if (SHADOWS) {

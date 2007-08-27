@@ -44,7 +44,7 @@ public class NodePlaceholder {
 	public Model model;
 	public RenderedCube cube;
 	public PooledNode realNode;
-	public GeometryBatchInstance batchInstance;
+	public boolean batchInstance;
 	
 	public Quaternion localRotation;
 	public Vector3f localScale, localTranslation;
