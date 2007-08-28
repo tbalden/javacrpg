@@ -36,15 +36,16 @@ public class QuadModel extends Model {
 
 	public QuadModel(String textureName) {
 		super();
+		type = QUADMODEL;
 		this.sizeX = J3DCore.CUBE_EDGE_SIZE;
 		this.sizeY = J3DCore.CUBE_EDGE_SIZE;
 		this.textureName = textureName;
-		type = QUADMODEL;
 		setId();
 	}
 
 	public QuadModel(String textureName,float sizeX, float sizeY) {
 		super();
+		type = QUADMODEL;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.textureName = textureName;
@@ -52,6 +53,7 @@ public class QuadModel extends Model {
 	}
 	public QuadModel(String textureName,String dot3TextureName, float sizeX, float sizeY, boolean normalMap) {
 		super();
+		type = QUADMODEL;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.textureName = textureName;

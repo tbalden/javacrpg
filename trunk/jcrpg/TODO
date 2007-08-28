@@ -1,5 +1,5 @@
-[ ] add lowest texture detail for low end cards usable FPS
-	[ ] test
+[ ] lens flare effect lost with new invisible bounding spheres and new geombatch thing
+	[ ] remove skyrootnode, add the sun directly to ground?
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
@@ -40,6 +40,9 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] add lowest texture detail for low end cards usable FPS
+	[X] test
+
 [X] culling bug!
 
 [X] cave into the mountain!
