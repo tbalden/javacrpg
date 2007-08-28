@@ -1605,7 +1605,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		engine.setPause(true);
 
 		boolean cullTrick = false;
-		boolean geometryBatch = false;
+		boolean geometryBatch = true;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -1670,7 +1670,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (geometryBatch && n.model instanceof QuadModel) {
-								if (!n.batchInstance)
+								if (n.batchInstance==null)
 									batchHelper.addItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
 							{
@@ -1742,9 +1742,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (geometryBatch && n.model instanceof QuadModel) {
-								if (n.batchInstance)
-								batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
-								n.batchInstance = false;
+								if (n!=null)
+									batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
 							{
 								PooledNode pooledRealNode = n.realNode;
@@ -1768,7 +1767,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		
-		if (geometryBatch) batchHelper.updateAll();
 		
 		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 	    // handling possible occluders
