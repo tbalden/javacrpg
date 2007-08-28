@@ -45,7 +45,7 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 		this.core = core;
 		TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
 		parent.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
-		parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+		//parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}

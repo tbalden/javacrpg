@@ -6,10 +6,8 @@ import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import com.jme.input.action.KeyInputAction;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
-import com.jme.scene.Node;
 
 public abstract class CKeyAction extends KeyInputAction{
 
