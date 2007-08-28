@@ -82,6 +82,7 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -997,11 +998,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        dr.setShadowCaster(false);
 	        extLightState.setTwoSidedLighting(false);
 	        
-	        lightNode = new LightNode("light", extLightState);
+	        lightNode = new LightNode("light", skydomeLightState);
 	        lightNode.setLight(dr);
 
-	        lightNode.setTarget(extRootNode);
-	        lightNode.setLocalTranslation(new Vector3f(0f, 14f, 0f));
+	        lightNode.setTarget(skyRootNode);
+	        lightNode.setLocalTranslation(new Vector3f(-4f, -4f, -4f));
 
 	        // Setup the lensflare textures.
 	        TextureState[] tex = new TextureState[4];
@@ -1027,7 +1028,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        tex[3].setEnabled(true);
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
-	        flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
+	        //flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
 	        flare.setRootNode(groundParentNode);
 	        skyRootNode.attachChild(lightNode);
 
@@ -1294,7 +1295,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
 		}
 
-		skyRootNode.updateRenderState(); // do not update root or cRoot, no need for that here
+		skyRootNode.updateRenderState(); // do not update root or groundParentNode, no need for that here
 		
 		
 	}
@@ -1766,7 +1767,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
-		
+		if (geometryBatch) batchHelper.updateAll();
 		
 		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 	    // handling possible occluders
@@ -1798,7 +1799,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			groundParentNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
-			groundParentNode.setCullMode(Node.CULL_DYNAMIC);
+			groundParentNode.setCullMode(Node.CULL_INHERIT);
 		}
 		
 		groundParentNode.updateRenderState();
