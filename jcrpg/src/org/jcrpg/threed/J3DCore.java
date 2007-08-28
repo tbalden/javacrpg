@@ -1029,7 +1029,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 	        //flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
-	        flare.setRootNode(groundParentNode);
+	        flare.setRootNode(rootNode);
 	        skyRootNode.attachChild(lightNode);
 
 	        // notice that it comes at the end
@@ -1170,6 +1170,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/** skyroot */
 	Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
+	Sphere skySphereInvisibleExt = null;
+	Sphere skySphereInvisibleInt = null;
 	
 	
 	/**
@@ -1286,6 +1288,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Vector3f sV3f = new Vector3f(cam.getLocation());
 		sV3f.y-=10;
 		skySphere.setLocalTranslation(sV3f);
+		skySphereInvisibleExt.setLocalTranslation(sV3f);
+		skySphereInvisibleInt.setLocalTranslation(sV3f);
 		// Animating skySphere rotated...
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
@@ -1606,7 +1610,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		engine.setPause(true);
 
 		boolean cullTrick = false;
-		boolean geometryBatch = false;
+		boolean geometryBatch = true;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -1675,6 +1679,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								if (n.batchInstance==null)
 									batchHelper.addItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
+							
+							/*{
+								
+							} if (true==false)*/ 
+							
 							{
 								Node realPooledNode = (Node)modelPool.getModel(c, n.model);
 								if (realPooledNode==null) continue;
@@ -1747,6 +1756,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								if (n!=null)
 									batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
+							/*{
+								
+							} if (true==false)*/ 
 							{
 								PooledNode pooledRealNode = n.realNode;
 								
@@ -1803,7 +1815,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			groundParentNode.setCullMode(Node.CULL_INHERIT);
 		}
 		
-		groundParentNode.updateRenderState();
+		//groundParentNode.updateRenderState();
+		rootNode.updateRenderState();
 
 		System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
@@ -2095,7 +2108,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		notPassable.add(Swimming.class);
 		climbers.add(Climbing.class);
 	}
-	
+	boolean freeMove = true;
 	/**
 	 * Tries to move in directions, and sets coords if successfull
 	 * @param from From coordinates (world coords)
@@ -2110,6 +2123,31 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			System.out.println("Moving dir: "+directions[i]);
 			newCoords = calcMovement(newCoords, directions[i]); 
 			newRelCoords = calcMovement(newRelCoords, directions[i]);
+		}
+		if (freeMove)
+		{
+			setViewPosition(newCoords);
+			setRelativePosition(newRelCoords);
+			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+			if (c!=null) {
+				if (c.internalLight)
+				{
+					System.out.println("Moved: INTERNAL");
+					insideArea = true;
+					groundParentNode.detachAllChildren(); // workaround for culling
+					groundParentNode.attachChild(intRootNode);
+					groundParentNode.attachChild(extRootNode);
+				} else
+				{
+					System.out.println("Moved: EXTERNAL");
+					insideArea = false;
+					groundParentNode.detachAllChildren(); // workaround for culling
+					groundParentNode.attachChild(extRootNode);
+					groundParentNode.attachChild(intRootNode);
+				}
+			}
+			return true;
+			
 		}
 
 		Cube c = world.getCube(from[0], from[1], from[2]);
@@ -2209,20 +2247,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		setViewPosition(newCoords);
 		setRelativePosition(newRelCoords);
 		c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
-		if (c.internalLight)
-		{
-			System.out.println("Moved: INTERNAL");
-			insideArea = true;
-			groundParentNode.detachAllChildren(); // workaround for culling
-			groundParentNode.attachChild(intRootNode);
-			groundParentNode.attachChild(extRootNode);
-		} else
-		{
-			System.out.println("Moved: EXTERNAL");
-			insideArea = false;
-			groundParentNode.detachAllChildren(); // workaround for culling
-			groundParentNode.attachChild(extRootNode);
-			groundParentNode.attachChild(intRootNode);
+		if (c!=null) {
+			if (c.internalLight)
+			{
+				System.out.println("Moved: INTERNAL");
+				insideArea = true;
+				groundParentNode.detachAllChildren(); // workaround for culling
+				groundParentNode.attachChild(intRootNode);
+				groundParentNode.attachChild(extRootNode);
+			} else
+			{
+				System.out.println("Moved: EXTERNAL");
+				insideArea = false;
+				groundParentNode.detachAllChildren(); // workaround for culling
+				groundParentNode.attachChild(extRootNode);
+				groundParentNode.attachChild(intRootNode);
+			}
 		}
 		return true;
 	}
@@ -2401,12 +2441,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		bigSphere.setRadius(10000f);
 		// external cubes' rootnode
 		extRootNode = new Node();
-		extRootNode.setModelBound(bigSphere);
+		//extRootNode.setModelBound(bigSphere);
 		//extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
 		intRootNode = new Node();
-		intRootNode.setModelBound(bigSphere);
+		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
+		groundParentNode.setModelBound(null);
+		intRootNode.setModelBound(null);
+		extRootNode.setModelBound(null);
 
 		loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
 		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
@@ -2604,9 +2647,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
 		skyRootNode.attachChild(skySphere);
-		skySphere.setModelBound(new BoundingBox());
+		skySphere.setModelBound(new BoundingSphere());
 		skySphere.setRenderState(cs_none);
 		skySphere.updateModelBound();
+
+		skySphereInvisibleExt = new Sphere("SKY_SPHERE_EXT",20,20,320f);
+		skySphereInvisibleExt.setModelBound(new BoundingSphere());
+		skySphereInvisibleExt.updateModelBound();
+		extRootNode.attachChild(skySphereInvisibleExt);
+		skySphereInvisibleInt = new Sphere("SKY_SPHERE_INT",20,20,320f);
+		skySphereInvisibleInt.setModelBound(new BoundingSphere());
+		skySphereInvisibleInt.updateModelBound();
+		intRootNode.attachChild(skySphereInvisibleInt);
+
+		
+		//intRootNode.attachChild(skySphereInvisibleGround);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
 		

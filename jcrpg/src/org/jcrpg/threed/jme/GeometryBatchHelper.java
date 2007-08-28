@@ -23,9 +23,12 @@
 package org.jcrpg.threed.jme;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -77,8 +80,21 @@ public class GeometryBatchHelper {
     }
     public void updateAll()
     {
+    	HashSet<QuadModelGeometryBatch> removables = new HashSet<QuadModelGeometryBatch>();
     	for (QuadModelGeometryBatch batch: batchMap.values())
     	{
+    		boolean removableFlag = true;
+			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : batch.getInstances()) {
+				if (instanceEn.getAttributes().isVisible())
+				{
+					removableFlag = false;
+					break;
+				}
+			}
+			if (removableFlag) {
+				batch.parent.removeFromParent();
+				removables.add(batch);
+			}
     		//batch.setModelBound(new BoundingBox(new Vector3f(core.getCamera().getLocation().subtract(0, 1.0f, 0)),100,2f,100));
     		//batch.updateModelBound();
     		//batch.parent.updateModelBound();
@@ -89,6 +105,7 @@ public class GeometryBatchHelper {
     		//batch.setCullMode(Node.CULL_NEVER);
     		//batch.parent.setCullMode(Node.CULL_NEVER);
     	}
+		batchMap.values().removeAll(removables);
     }
     
 
