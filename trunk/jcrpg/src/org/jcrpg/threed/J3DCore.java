@@ -1606,7 +1606,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		engine.setPause(true);
 
 		boolean cullTrick = false;
-		boolean geometryBatch = true;
+		boolean geometryBatch = false;
 		
 		if (cullTrick) modelLoader.setLockForSharedNodes(false);
 		
@@ -1670,7 +1670,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (geometryBatch && n.model instanceof QuadModel) {
+							if (geometryBatch && n.model.type == Model.QUADMODEL) {
+								
 								if (n.batchInstance==null)
 									batchHelper.addItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
@@ -1742,7 +1743,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (geometryBatch && n.model instanceof QuadModel) {
+							if (geometryBatch && n.model.type == Model.QUADMODEL) {
 								if (n!=null)
 									batchHelper.removeItem(c.cube.internalLight, (QuadModel)n.model, n);
 							} else 
@@ -2500,7 +2501,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
-		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 200);
+		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 350);
 		groundParentNode.attachChild(intRootNode);
 		groundParentNode.attachChild(extRootNode);
 		rootNode.attachChild(groundParentNode);
@@ -2601,9 +2602,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",7,7,180f);
+		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
 		skyRootNode.attachChild(skySphere);
-		skySphere.setModelBound(new BoundingSphere());
+		skySphere.setModelBound(new BoundingBox());
 		skySphere.setRenderState(cs_none);
 		skySphere.updateModelBound();
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,

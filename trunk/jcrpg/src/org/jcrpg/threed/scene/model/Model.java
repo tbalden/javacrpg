@@ -27,6 +27,7 @@ public abstract class Model {
 	public static final byte MODEL = 0;
 	public static final byte LODMODEL = 1;
 	public static final byte TEXTURESTATEVEGETATION = 2;
+	public static final byte QUADMODEL = 4;
 	
 	public byte type = MODEL;
 
