@@ -298,6 +298,7 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             camera.normalize();
+            handler.core.updateTimeRelated();
             handler.core.updateDisplay(from);
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {

@@ -31,12 +31,12 @@ public class CKeyStrafeLeftAction extends CKeyAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveLeft(handler.core.viewDirection)) {
+	        handler.core.renderToViewPort();
 	        Vector3f toReach = handler.core.getCurrentLocation();        
 	        float steps = J3DCore.MOVE_STEPS;
 	        movePosition(steps, from, toReach);
 	    	handler.core.setCalculatedCameraLocation();
 	        camera.update();
-	        handler.core.renderToViewPort();
         }
 	    handler.unlockHandling(true);
     }

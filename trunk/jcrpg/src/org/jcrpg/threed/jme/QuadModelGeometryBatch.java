@@ -29,7 +29,6 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.QuadModel;
 
-import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.RenderState;
@@ -46,6 +45,7 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 		this.core = core;
 		TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
 		parent.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
+		parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
@@ -53,7 +53,7 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 	{
 		TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);		
 		quad.setLocalTranslation(placeholder.getLocalTranslation());
-		quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+		//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 		quad.setLocalRotation(placeholder.getLocalRotation());
 		quad.setLocalScale(placeholder.getLocalScale());
 		
