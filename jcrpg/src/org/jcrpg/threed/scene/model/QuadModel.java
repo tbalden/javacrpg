@@ -39,6 +39,7 @@ public class QuadModel extends Model {
 		this.sizeX = J3DCore.CUBE_EDGE_SIZE;
 		this.sizeY = J3DCore.CUBE_EDGE_SIZE;
 		this.textureName = textureName;
+		type = QUADMODEL;
 		setId();
 	}
 

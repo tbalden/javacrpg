@@ -27,6 +27,10 @@ import java.util.HashMap;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.scene.model.QuadModel;
+import org.jcrpg.world.place.SurfaceHeightAndType;
+
+import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
 
 public class GeometryBatchHelper {
 
@@ -44,7 +48,8 @@ public class GeometryBatchHelper {
      */
     public void addItem(boolean internal, QuadModel m, NodePlaceholder place) {
         // A box that will be instantiated
-    	QuadModelGeometryBatch batch = batchMap.get(m.id+internal);
+    	String key = m.id+internal+place.cube.cube.y+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    	QuadModelGeometryBatch batch = batchMap.get(key);
     	if (batch==null)
     	{
     		batch = new QuadModelGeometryBatch(core,m);
@@ -57,13 +62,14 @@ public class GeometryBatchHelper {
     			core.extRootNode.attachChild(batch.parent);
     			core.extRootNode.updateRenderState();
     		}
-    		batchMap.put(m.id+internal, batch);
+    		batchMap.put(key, batch);
     	}
     	batch.addItem(place);
     }
     public void removeItem(boolean internal, QuadModel m, NodePlaceholder place)
     {
-    	QuadModelGeometryBatch batch = batchMap.get(m.id+internal);
+    	String key = m.id+internal+place.cube.cube.y+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    	QuadModelGeometryBatch batch = batchMap.get(key);
     	if (batch!=null)
     	{
     		batch.removeItem(place);
@@ -73,7 +79,9 @@ public class GeometryBatchHelper {
     {
     	for (QuadModelGeometryBatch batch: batchMap.values())
     	{
-    		batch.preCommit();
+    		//batch.setModelBound(new BoundingBox(new Vector3f(core.getCamera().getLocation().subtract(0, 1.0f, 0)),100,2f,100));
+    		//batch.updateModelBound();
+    		//batch.parent.updateModelBound();
     		//batch.setModelBound(new BoundingBox(new Vector3f(core.getCamera().getLocation()),100,0.2f,100));
     		//batch.preCommit();
     		//batch.setLightCombineMode(LightState.COMBINE_FIRST);
