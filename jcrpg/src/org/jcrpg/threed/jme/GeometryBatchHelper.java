@@ -32,9 +32,6 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
-import com.jme.bounding.BoundingBox;
-import com.jme.math.Vector3f;
-
 public class GeometryBatchHelper {
 
 	static HashMap<String, QuadModelGeometryBatch> batchMap = new HashMap<String, QuadModelGeometryBatch>();
