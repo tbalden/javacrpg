@@ -80,42 +80,17 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
+			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : getInstances()) {
+				if (instanceEn.getAttributes().isVisible())
+				{
+					instance.getAttributes().setTranslation(instanceEn.getAttributes().getTranslation());
+				}
+			}
+			
 			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
 			placeholder.batchInstance = null;
 		}
 	}
 	
 	
-	private void updateInstance(GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance, float time) {
-		GeometryBatchInstanceAttributes attributes = instance.getAttributes();
-		
-		// Update scale and rotation
-		float f = attributes.getTranslation().y + attributes.getTranslation().x + time;
-		attributes.getRotation().fromAngles(f * 5f, f * 1f, f * 2f);
-		f = (f - (float)((int)f)) * 2.0f;
-		if( f > 1.0f ) {
-			f = 2.0f - f;
-		}
-		attributes.getScale().set(1.0f + f * 0.2f, 0.2f + f * 0.05f, 0.2f + f * 0.05f);
-		
-		if( f > 0.1f ) {
-        	attributes.setVisible(true);
-        	attributes.buildMatrices();
-        } else {
-        	attributes.setVisible(false);
-        }
-		
-		// Update color
-		attributes.getColor().r = f;
-		attributes.getColor().g = 1.0f - f;
-		attributes.setColorChanged(true);
-    }
-	
-	/*private void update(float time) {
-		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
-			{
-				updateInstance(instance, time);
-			}
-		}
-	}*/
 }

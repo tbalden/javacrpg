@@ -69,6 +69,19 @@ public class GeometryBatchHelper {
     		batch.removeItem(place);
     	}
     }
+    public void updateAll()
+    {
+    	for (QuadModelGeometryBatch batch: batchMap.values())
+    	{
+    		batch.preCommit();
+    		//batch.setModelBound(new BoundingBox(new Vector3f(core.getCamera().getLocation()),100,0.2f,100));
+    		//batch.preCommit();
+    		//batch.setLightCombineMode(LightState.COMBINE_FIRST);
+    		//batch.setModelBound(null);//new BoundingBox());
+    		//batch.setCullMode(Node.CULL_NEVER);
+    		//batch.parent.setCullMode(Node.CULL_NEVER);
+    	}
+    }
     
 
 }
