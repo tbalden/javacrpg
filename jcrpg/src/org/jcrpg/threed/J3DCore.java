@@ -1279,7 +1279,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			q.setSolidColor(new ColorRGBA(vTotal[0],vTotal[1],vTotal[2],1f));
 		}
 		// set fog state color to the light power !
-		fs.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
+		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
 
 		// SKYSPHERE
 		// moving skysphere with camera
@@ -2373,7 +2373,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		super.quit();
 	}
  
-	private FogState fs;
+	private FogState fs_external;
+	private FogState fs_internal;
     public ShadowedRenderPass sPass = null;
 	private BloomRenderPass bloomRenderPass;
 	
@@ -2520,18 +2521,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
-		fs = display.getRenderer().createFogState();
-        fs.setDensity(0.5f);
-        fs.setEnabled(true);
-        fs.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-        fs.setEnd((VIEW_DISTANCE/1.15f));
-        fs.setStart(3);
-        fs.setDensityFunction(FogState.DF_LINEAR);
-        fs.setApplyFunction(FogState.AF_PER_VERTEX);
-        extRootNode.setRenderState(fs);
+		fs_external = display.getRenderer().createFogState();
+        fs_external.setDensity(0.5f);
+        fs_external.setEnabled(true);
+        fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+        fs_external.setEnd((VIEW_DISTANCE/1.15f));
+        fs_external.setStart(3);
+        fs_external.setDensityFunction(FogState.DF_LINEAR);
+        fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
+        extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
-        intRootNode.setRenderState(fs);
+		fs_internal = display.getRenderer().createFogState();
+		fs_internal.setDensity(0.5f);
+		fs_internal.setEnabled(true);
+		fs_internal.setColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
+		fs_internal.setEnd((VIEW_DISTANCE/1.15f));
+		fs_internal.setStart(3);
+		fs_internal.setDensityFunction(FogState.DF_LINEAR);
+		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
+        intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		
         // default light states
@@ -2544,7 +2553,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 			dr = new PointLight();
 			dr.setEnabled(true);
-			float lp = 0.6f;
+			float lp = 0.8f;
 			dr.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
 			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
 			dr.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
