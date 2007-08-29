@@ -30,6 +30,7 @@ public class SimpleModel extends Model {
 	
 	public SimpleModel(String modelName, String textureName)
 	{
+		type = SIMPLEMODEL;
 		this.id = modelName+textureName+mipMap;;
 		this.modelName = modelName;
 		this.textureName = textureName;
@@ -37,6 +38,7 @@ public class SimpleModel extends Model {
 	}
 	public SimpleModel(String modelName, String textureName, boolean mipMap)
 	{
+		type = SIMPLEMODEL;
 		this.id = modelName+textureName+mipMap;
 		this.modelName = modelName;
 		this.textureName = textureName;
