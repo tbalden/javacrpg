@@ -50,6 +50,7 @@ public class GeometryBatchHelper {
 	
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 8;
+	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 8;
 	
 	/**
 	 * Returns Grouping key for batch objects
@@ -66,7 +67,7 @@ public class GeometryBatchHelper {
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION)
     	{
-    		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
+    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
     	} else
     	{   // other models only by Y
     		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
@@ -103,7 +104,7 @@ public class GeometryBatchHelper {
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
 	    	if (batch==null)
 	    	{
-	    		TriMesh tri = VegetationSetup.getVegTrimesh(place.cube, core, (TextureStateVegetationModel)m, 0, 0);
+	    		TriMesh tri = VegetationSetup.getVegTrimesh(place, place.cube, core, (TextureStateVegetationModel)m, 0, 0);
 	    		batch = new TrimeshGeometryBatch(core,tri);
 	    		if (internal)
 	    		{
@@ -121,7 +122,7 @@ public class GeometryBatchHelper {
     		for (int k=0; k<quadQuantity; k++)
     		{
     			for (int j=0; j<quadQuantity; j++) {
-    	    		TriMesh tri = VegetationSetup.getVegTrimesh(place.cube, core, (TextureStateVegetationModel)m, k, j);
+    	    		TriMesh tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j);
     	    		batch.addItem(place,tri);
     	    		
     			}
@@ -187,7 +188,7 @@ public class GeometryBatchHelper {
 					removables.add(batch);
 				}
 	    	}
-	    	modelBatchMap.values().removeAll(removables);
+	    	trimeshBatchMap.values().removeAll(removables);
     	}
     }
     
