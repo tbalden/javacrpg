@@ -44,6 +44,7 @@ public class GeometryBatchHelper {
 	}
 	
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
+	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 5;
 	
 	/**
 	 * Returns Grouping key for batch objects
@@ -59,7 +60,7 @@ public class GeometryBatchHelper {
     		key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
     	} else
     	{   // other models only by Y
-    		key+=place.cube.cube.y;
+    		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
     	}
     	return key;
 	}
