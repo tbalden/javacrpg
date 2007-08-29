@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.jme;
 
+import java.util.HashSet;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
@@ -37,6 +39,11 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 
+/**
+ * Trimesh GeomBatch mesh, especially for grass and such things.
+ * @author illes
+ *
+ */
 public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
 	private static final long serialVersionUID = 0L;
 	
@@ -55,7 +62,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
-	public void addItem(TriMesh trimesh)
+	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
 		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
 			if (!instance.getAttributes().isVisible())
@@ -65,6 +72,15 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				instance.getAttributes().setScale(trimesh.getLocalScale());
 				instance.getAttributes().setVisible(true);
 				instance.getAttributes().buildMatrices();
+
+				HashSet instances = (HashSet)placeholder.batchInstance;
+				if (instances==null)
+				{
+					instances = new HashSet();
+					placeholder.batchInstance = instances;
+				}
+				instances.add(instance);
+				
 				return;
 			}
 		}
@@ -73,23 +89,39 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(trimesh, 
 				 new GeometryBatchInstanceAttributes(trimesh));
 		addInstance(instance);
+		
+		HashSet instances = (HashSet)placeholder.batchInstance;
+		if (instances==null)
+		{
+			instances = new HashSet();
+			placeholder.batchInstance = instances;
+		}
+		instances.add(instance);
+		
+		return;
 	}
-	/*public void removeItem(NodePlaceholder placeholder)
+	public void removeItem(NodePlaceholder placeholder)
 	{
-		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
-		if (instance!=null) {
-			instance.getAttributes().setVisible(false);
-			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : getInstances()) {
-				if (instanceEn.getAttributes().isVisible())
-				{
-					instance.getAttributes().setTranslation(instanceEn.getAttributes().getTranslation());
+		HashSet instances = (HashSet)placeholder.batchInstance;
+		if (instances!=null)
+		{
+			for (Object instance:instances)
+			{
+				GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)instance;
+				
+				if (geoInstance!=null) {
+					geoInstance.getAttributes().setVisible(false); // switching off visibility
+					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : getInstances()) {
+						if (instanceEn.getAttributes().isVisible())
+						{
+							geoInstance.getAttributes().setTranslation(instanceEn.getAttributes().getTranslation());
+						}
+					}
 				}
 			}
-			
-			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
-			placeholder.batchInstance = null;
 		}
-	}*/
+		placeholder.batchInstance = null;
+	}
 	
 	
 }

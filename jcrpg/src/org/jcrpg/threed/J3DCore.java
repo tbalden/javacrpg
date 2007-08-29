@@ -1679,7 +1679,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (GEOMETRY_BATCH && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
+							if (GEOMETRY_BATCH && 
+									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+											|| n.model.type == Model.TEXTURESTATEVEGETATION) 
+								) 
+							{
 								
 								if (n.batchInstance==null)
 									batchHelper.addItem(c.cube.internalLight, n.model, n);
@@ -1757,7 +1761,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (GEOMETRY_BATCH && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
+							if (GEOMETRY_BATCH && 
+									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+											|| n.model.type == Model.TEXTURESTATEVEGETATION) 
+								 )
+							{
 								if (n!=null)
 									batchHelper.removeItem(c.cube.internalLight, n.model, n);
 							} else 
