@@ -25,7 +25,6 @@ package org.jcrpg.threed;
 import java.io.File;
 import java.util.HashMap;
 
-import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.vegetation.AbstractVegetation;
 import org.jcrpg.threed.jme.vegetation.QuadBillboardVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -42,7 +41,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
-import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.FragmentProgramState;
@@ -52,7 +50,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 
-public class VegetationSetup {
+public class VegetationSetupOld {
 
 	static AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 	
@@ -94,11 +92,11 @@ public class VegetationSetup {
  
 		
 		// Load the vegetation class of your choice
-		/*AbstractVegetation vegetation = new QuadBillboardVegetation("vegetation", core,
-				cam, J3DCore.RENDER_GRASS_DISTANCE);*
+		AbstractVegetation vegetation = new QuadBillboardVegetation("vegetation", core,
+				cam, J3DCore.RENDER_GRASS_DISTANCE);
 
 		vegetation.setCullMode(Spatial.CULL_DYNAMIC);
-		vegetation.initialize();*/
+		vegetation.initialize();
 		
 		int steepDirection = c.cube.steepDirection;
 
@@ -162,7 +160,6 @@ public class VegetationSetup {
 			}
 			quadCache.put(tm.getKey(), quads);
 		}
-		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(core,(TriMesh)quads[0].getChild(0));
 		
 
 		int quadQuantity = tm.quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
@@ -203,13 +200,9 @@ public class VegetationSetup {
 				normalX = normalY.cross(normalZ);
 				Quaternion rotation = new Quaternion();
 				rotation.fromAxes(normalX, normalY, normalZ);
-				TriMesh tri = (TriMesh)quads[0].getChild(0);
-				tri.setLocalRotation(rotation);
-				tri.setLocalTranslation(translation);
-				tri.setLocalScale(scale);
 				//if (steepDirection==SurfaceHeightAndType.NOT_STEEP)
 				{
-					rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+				//	rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)i, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
 				}
 				/*if (steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
@@ -218,19 +211,19 @@ public class VegetationSetup {
 				}*/
 
 				// add from diff views same quad, to be nicely displayed
-				vegetation.addItem(tri);/*VegetationObject(quads[HashUtil.mix(c.cube.x+i,c.cube.y,c.cube.z+j)%quads.length], translation, scale,
-						rotation);*/
+				vegetation.addVegetationObject(quads[HashUtil.mix(c.cube.x+i,c.cube.y,c.cube.z+j)%quads.length], translation, scale,
+						rotation);
 	//			vegetation.addVegetationObject(quads[(i+j)%quads.length], translation, scale,
 		//				rotation);
 			}
 		}
 
-		//vegetation.setModelBound(new BoundingBox());
-		//vegetation.updateModelBound();
+		vegetation.setModelBound(new BoundingBox());
+		vegetation.updateModelBound();
 		
-		//vegetation.setup();
+		vegetation.setup();
 
-		return vegetation.parent;
+		return vegetation;
 	}
 
 }

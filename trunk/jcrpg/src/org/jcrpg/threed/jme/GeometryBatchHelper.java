@@ -35,7 +35,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 
 public class GeometryBatchHelper {
 
-	static HashMap<String, QuadModelGeometryBatch> batchMap = new HashMap<String, QuadModelGeometryBatch>();
+	static HashMap<String, ModelGeometryBatch> batchMap = new HashMap<String, ModelGeometryBatch>();
 	static J3DCore core;
 	
 	public GeometryBatchHelper(J3DCore core)
@@ -71,10 +71,10 @@ public class GeometryBatchHelper {
     public void addItem(boolean internal, Model m, NodePlaceholder place) {
     	String key = getKey(internal, m, place);
 
-    	QuadModelGeometryBatch batch = batchMap.get(key);
+    	ModelGeometryBatch batch = batchMap.get(key);
     	if (batch==null)
     	{
-    		batch = new QuadModelGeometryBatch(core,m);
+    		batch = new ModelGeometryBatch(core,m);
     		if (internal)
     		{
     			core.intRootNode.attachChild(batch.parent);
@@ -91,7 +91,7 @@ public class GeometryBatchHelper {
     public void removeItem(boolean internal, Model m, NodePlaceholder place)
     {
     	String key = getKey(internal, m, place);
-     	QuadModelGeometryBatch batch = batchMap.get(key);
+     	ModelGeometryBatch batch = batchMap.get(key);
     	if (batch!=null)
     	{
     		batch.removeItem(place);
@@ -99,8 +99,8 @@ public class GeometryBatchHelper {
     }
     public void updateAll()
     {
-    	HashSet<QuadModelGeometryBatch> removables = new HashSet<QuadModelGeometryBatch>();
-    	for (QuadModelGeometryBatch batch: batchMap.values())
+    	HashSet<ModelGeometryBatch> removables = new HashSet<ModelGeometryBatch>();
+    	for (ModelGeometryBatch batch: batchMap.values())
     	{
     		boolean removableFlag = true;
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : batch.getInstances()) {

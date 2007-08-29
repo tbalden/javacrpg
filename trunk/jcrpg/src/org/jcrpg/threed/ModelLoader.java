@@ -140,6 +140,7 @@ public class ModelLoader {
 					TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
 					TextureState[] ts = loadTextureStates(tm.textureNames);
 					node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
+					//node = VegetationSetupOld.createVegetation(rc, core, core.getCamera(), ts, tm);
 					//vegetationTargetCache.put(((TextureStateVegetationModel)m).getKey(), node);
 				} else 
 				{
@@ -193,6 +194,7 @@ public class ModelLoader {
 						if (node==null) {
 							TextureStateVegetationModel tm = (TextureStateVegetationModel)m;
 							TextureState[] ts = loadTextureStates(tm.textureNames);
+							//node = VegetationSetupOld.createVegetation(rc, core, core.getCamera(), ts, tm);
 							node = VegetationSetup.createVegetation(rc, core, core.getCamera(), ts, tm);
 							//vegetationTargetCache.put(((TextureStateVegetationModel)m).getKey(), node); // TODO need cache?
 						} else 

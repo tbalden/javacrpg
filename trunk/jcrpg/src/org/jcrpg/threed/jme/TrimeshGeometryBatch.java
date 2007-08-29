@@ -31,11 +31,13 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
+import com.jme.light.Light;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 
-public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
+public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
 	private static final long serialVersionUID = 0L;
 	
 	public Model model;
@@ -43,59 +45,36 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 	public Node parent = new Node();
 	
 	public TriMesh nullmesh = new TriMesh();
-	private TriMesh getModelMesh(Model m)
-	{
-		if (m.type == Model.QUADMODEL) {
-			return (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
-		} else
-		if (m.type == Model.SIMPLEMODEL)
-		{
-			return (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)model, false).getChild(0);			
-		} else
-		{
-			return nullmesh;
-		}
-	}
 	
-	public QuadModelGeometryBatch(J3DCore core, Model m) {
-		model = m;
+	public TrimeshGeometryBatch(J3DCore core, TriMesh trimesh) {
 		this.core = core;
-		TriMesh quad = getModelMesh(m);
-		parent.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
-		if (m.type == Model.SIMPLEMODEL) {
-			parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
-		}
+		parent.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
+		parent.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
+		parent.setLightCombineMode(LightState.OFF);
+		core.hmSolidColorSpatials.put(parent, parent);
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
-	public void addItem(NodePlaceholder placeholder)
+	public void addItem(TriMesh trimesh)
 	{
-		TriMesh quad = getModelMesh(placeholder.model);
-		quad.setLocalTranslation(placeholder.getLocalTranslation());
-		//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-		quad.setLocalRotation(placeholder.getLocalRotation());
-		quad.setLocalScale(placeholder.getLocalScale());
-		
 		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
 			if (!instance.getAttributes().isVisible())
 			{
-				instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
-				instance.getAttributes().setRotation(placeholder.getLocalRotation());
-				instance.getAttributes().setScale(placeholder.getLocalScale());
+				instance.getAttributes().setTranslation(trimesh.getLocalTranslation());
+				instance.getAttributes().setRotation(trimesh.getLocalRotation());
+				instance.getAttributes().setScale(trimesh.getLocalScale());
 				instance.getAttributes().setVisible(true);
 				instance.getAttributes().buildMatrices();
-				placeholder.batchInstance = instance;
 				return;
 			}
 		}
 			
 				// Add a Box instance (batch and attributes)
-		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
-				 new GeometryBatchInstanceAttributes(quad));
-		placeholder.batchInstance = instance;
+		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(trimesh, 
+				 new GeometryBatchInstanceAttributes(trimesh));
 		addInstance(instance);
 	}
-	public void removeItem(NodePlaceholder placeholder)
+	/*public void removeItem(NodePlaceholder placeholder)
 	{
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
 		if (instance!=null) {
@@ -110,7 +89,7 @@ public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpati
 			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
 			placeholder.batchInstance = null;
 		}
-	}
+	}*/
 	
 	
 }
