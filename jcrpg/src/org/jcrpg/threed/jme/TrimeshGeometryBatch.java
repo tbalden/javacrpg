@@ -34,6 +34,7 @@ import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.light.Light;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
@@ -50,6 +51,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public Model model;
 	public J3DCore core;
 	public Node parent = new Node();
+	public Vector3f avarageTranslation = null;
+	
 	
 	public TriMesh nullmesh = new TriMesh();
 	
@@ -62,6 +65,27 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
+	
+	/**
+	 * Refreshes avarage translation with added node's translation.
+	 * @param trans Vector3f.
+	 */
+	private void calcAvarageTranslation(Vector3f trans)
+	{
+		if (avarageTranslation==null)
+		{
+			avarageTranslation = trans;
+		}
+		else
+		{
+			int num = getInstances().size();
+			float x = avarageTranslation.x*num;
+			float y = avarageTranslation.y*num;
+			float z = avarageTranslation.z*num;
+			avarageTranslation.set((x+trans.x)/(num+1), (y+trans.y)/(num+1), (z+trans.z)/(num+1));
+		}
+	}
+	
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
 		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
@@ -80,7 +104,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					placeholder.batchInstance = instances;
 				}
 				instances.add(instance);
-				
+
+				calcAvarageTranslation(trimesh.getLocalTranslation());				
 				return;
 			}
 		}
@@ -98,6 +123,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 		instances.add(instance);
 		
+		calcAvarageTranslation(trimesh.getLocalTranslation());				
 		return;
 	}
 	public void removeItem(NodePlaceholder placeholder)

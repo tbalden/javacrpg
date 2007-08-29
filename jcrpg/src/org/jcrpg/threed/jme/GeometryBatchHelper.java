@@ -31,7 +31,6 @@ import org.jcrpg.threed.VegetationSetup;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -41,7 +40,7 @@ public class GeometryBatchHelper {
 
 	static HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
 	static HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
-	static J3DCore core;
+	J3DCore core;
 	
 	public GeometryBatchHelper(J3DCore core)
 	{
@@ -81,7 +80,7 @@ public class GeometryBatchHelper {
     public void addItem(boolean internal, Model m, NodePlaceholder place) {
     	String key = getKey(internal, m, place);
 
-    	if (m.type!=m.TEXTURESTATEVEGETATION) {
+    	if (m.type!=Model.TEXTURESTATEVEGETATION) {
 	    	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch==null)
 	    	{
@@ -134,7 +133,7 @@ public class GeometryBatchHelper {
     public void removeItem(boolean internal, Model m, NodePlaceholder place)
     {
     	String key = getKey(internal, m, place);
-    	if (m.type!=m.TEXTURESTATEVEGETATION) {
+    	if (m.type!=Model.TEXTURESTATEVEGETATION) {
 	     	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch!=null)
 	    	{
@@ -186,6 +185,17 @@ public class GeometryBatchHelper {
 				if (removableFlag) {
 					batch.parent.removeFromParent();
 					removables.add(batch);
+				} else
+				{
+					if (batch.avarageTranslation.distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+					{
+						batch.setCullMode(TriMesh.CULL_ALWAYS);
+						batch.updateRenderState();
+					} else
+					{
+						batch.setCullMode(TriMesh.CULL_DYNAMIC);
+						batch.updateRenderState();
+					}
 				}
 	    	}
 	    	trimeshBatchMap.values().removeAll(removables);

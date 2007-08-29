@@ -772,11 +772,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.5f,0.4f,4,0.5f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.5f,0.3f,3,0.7f);
+		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower.png"},0.5f,0.4f,2,1.0f);
+		//,"grass1_flower.png","grass1_flower_2.png"
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.5f,0.45f,4,0.5f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png"},0.5f,0.45f,3,0.7f);
+		TextureStateVegetationModel tsm_jung_grass_flower = new TextureStateVegetationModel(new String[]{"jungle_foliage1_flower.png"},0.5f,0.45f,2,1.0f);
 		LODModel lod_jung_grass_1 = new LODModel("jung_grass_1",new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 
@@ -876,7 +879,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		sm_wolf.cullNone = true;
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass}));//lod_cont_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
 		else 
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		
@@ -890,7 +893,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, tsm_jung_grass}));//lod_jung_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, tsm_jung_grass, tsm_jung_grass_flower}));//lod_jung_grass_1}));
 		else
 			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
 		

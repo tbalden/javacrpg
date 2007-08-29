@@ -137,14 +137,14 @@ public class VegetationSetup {
 		z = Math.max(z,  + quadSeparation/4f);
 
 		// find height
-		float height = -0.f;//tb.getHeight(x, z);
+		float height = 0.f;//tb.getHeight(x, z);
 		if (Float.isNaN(height)) {
 			height = 0.f;
 		}
 		
 		
 		// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
-		Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY,-z + J3DCore.CUBE_EDGE_SIZE/2);
+		Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2,-z + J3DCore.CUBE_EDGE_SIZE/2);
 		translation.addLocal(place.getLocalTranslation());
 
 		// find scale
