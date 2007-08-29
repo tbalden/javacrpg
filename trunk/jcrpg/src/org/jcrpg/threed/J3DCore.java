@@ -1278,7 +1278,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			counter++;
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-			q.setSolidColor(new ColorRGBA(vTotal[0],vTotal[1],vTotal[2],1f));
+			q.setSolidColor(new ColorRGBA(vTotal[0]/1.3f,vTotal[1]/1.3f,vTotal[2]/1.3f,1f));
 		}
 		// set fog state color to the light power !
 		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
@@ -1602,6 +1602,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public static final float ROTATE_VIEW_ANGLE = 2.4f;
 
+	public static boolean CULL_TRICK = false;
+	public static boolean GEOMETRY_BATCH = true;
+
 	public void renderToViewPort()
 	{
 		renderToViewPort(1.1f);
@@ -1609,11 +1612,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void renderToViewPort(float refAngle)
 	{
 		engine.setPause(true);
-
-		boolean cullTrick = false;
-		boolean geometryBatch = true;
 		
-		if (cullTrick) modelLoader.setLockForSharedNodes(false);
+		if (CULL_TRICK) modelLoader.setLockForSharedNodes(false);
 		
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
@@ -1671,11 +1671,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					{
 						addedNodeCounter++;
 						inViewPort.add(c);
-						if (cullTrick) inViewPortCullNotSet.add(c); // adding to set of nodes with 'cull set to never'
+						if (CULL_TRICK) inViewPortCullNotSet.add(c); // adding to set of nodes with 'cull set to never'
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (geometryBatch && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
+							if (GEOMETRY_BATCH && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
 								
 								if (n.batchInstance==null)
 									batchHelper.addItem(c.cube.internalLight, n.model, n);
@@ -1708,7 +1708,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								{
 									extRootNode.attachChild((Node)realPooledNode);
 								}
-								if (cullTrick) {
+								if (CULL_TRICK) {
 									realPooledNode.setCullMode(Node.CULL_NEVER);
 									realPooledNode.updateRenderState();
 									realPooledNode.updateGeometricState(0.0f, true);
@@ -1724,7 +1724,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							}
 						}
 					} else
-					if (cullTrick && inViewPortCullNotSet.contains(c)) // if node is in the set, cull is currently set to NEVER, must be set to dynamic, and node to be locked
+					if (CULL_TRICK && inViewPortCullNotSet.contains(c)) // if node is in the set, cull is currently set to NEVER, must be set to dynamic, and node to be locked
 					{
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
@@ -1753,7 +1753,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (geometryBatch && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
+							if (GEOMETRY_BATCH && (n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL)) {
 								if (n!=null)
 									batchHelper.removeItem(c.cube.internalLight, n.model, n);
 							} else 
@@ -1766,7 +1766,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								n.realNode = null;
 								if (pooledRealNode!=null) {
 									Node realNode = (Node)pooledRealNode;
-									if (cullTrick) {
+									if (CULL_TRICK) {
 										realNode.setCullMode(Node.CULL_NEVER);
 										realNode.updateRenderState();
 										realNode.updateGeometricState(0.0f, true);
@@ -1781,7 +1781,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
-		if (geometryBatch) batchHelper.updateAll();
+		if (GEOMETRY_BATCH) batchHelper.updateAll();
 		
 		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 	    // handling possible occluders
@@ -1809,7 +1809,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		updateTimeRelated();
 
 		
-		if (!cullTrick && (cullVariationCounter++%1==0))
+		if (!CULL_TRICK && (cullVariationCounter++%1==0))
 		{
 			groundParentNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
@@ -1832,7 +1832,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			garbCollCounter = 0;
 		}
 		
-		if (cullTrick) modelLoader.setLockForSharedNodes(true);
+		if (CULL_TRICK) modelLoader.setLockForSharedNodes(true);
 		engine.setPause(false);
 	}
 	
