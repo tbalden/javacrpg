@@ -43,6 +43,8 @@ public class GeometryBatchHelper {
 		this.core = core;		
 	}
 	
+	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
+	
 	/**
 	 * Returns Grouping key for batch objects
 	 * @param internal
@@ -54,7 +56,7 @@ public class GeometryBatchHelper {
 	{
     	String key = m.type+m.id+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
-    		key+=(place.cube.cube.x/2)+""+(place.cube.cube.z/2)+""+(place.cube.cube.y/2);
+    		key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
     	} else
     	{   // other models only by Y
     		key+=place.cube.cube.y;
