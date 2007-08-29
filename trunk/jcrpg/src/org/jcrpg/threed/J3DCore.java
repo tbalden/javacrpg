@@ -1607,7 +1607,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	int cullVariationCounter = 0;
 	
-	public static final float ROTATE_VIEW_ANGLE = 2.4f;
+	public static boolean OPTIMIZE_ANGLES = true;
+	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.4f:3.14f;
 
 	public static boolean CULL_TRICK = false;
 	public static boolean GEOMETRY_BATCH = true;
@@ -1615,7 +1616,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public void renderToViewPort()
 	{
-		renderToViewPort(1.1f);
+		renderToViewPort(OPTIMIZE_ANGLES?1.1f:3.14f);
 	}
 	public void renderToViewPort(float refAngle)
 	{
