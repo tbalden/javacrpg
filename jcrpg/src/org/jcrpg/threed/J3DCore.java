@@ -991,8 +991,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	        PointLight dr = new PointLight();
 	        dr.setEnabled(true);
-	        dr.setDiffuse(ColorRGBA.white);
-	        dr.setAmbient(ColorRGBA.gray);
+	        dr.setDiffuse(ColorRGBA.black);
+	        dr.setAmbient(ColorRGBA.black);
+	        dr.setEnabled(false);
 	        dr.setLocation(new Vector3f(0f, 0f, 0f));
 	        dr.setShadowCaster(false);
 	        extLightState.setTwoSidedLighting(false);
@@ -1117,8 +1118,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setEnabled(true);
 			pointLight.setShadowCaster(false);
 			pointLightNode.setLight(pointLight);
-			//pointLightNode.setTarget(skyRootNode);
-			skydomeLightState.attach(pointLight);
 	        
 			return new LightNode[]{dirLightNode,pointLightNode};
 		} else
@@ -1143,8 +1142,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setAngle(180);
 			pointLight.setShadowCaster(false);
 			pointLightNode.setLight(pointLight);
-			//pointLightNode.setTarget(skyRootNode);
-			skydomeLightState.attach(pointLight);
 			
 			return new LightNode[]{dirLightNode,pointLightNode};
 		}
@@ -1194,6 +1191,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (orbiters3D.get(orb.id)==null)
 			{
 				Spatial s = createSpatialForOrbiter(orb);
+				s.removeFromParent(); // workaround some internal mess
 				orbiters3D.put(orb.id, s);
 			}
 			if (orbitersLight3D.get(orb.id)==null)
@@ -1245,13 +1243,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
-					//l[1].setTarget(skyRootNode);
+					l[1].setTarget(skySphere); // TODO make this only light for the skySphere, doesnt work yet!
 					skydomeLightState.attach(l[1].getLight());
 					c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
-					l[1].getLight().setSpecular(c);
-					//skyRootNode.setRenderState(skydomeLightState);
+					l[1].getLight().setSpecular(c);					
+					if (updateRenderState) {
+						// this is a workaround, lightstate seems to move to the parent, don't know why. \
+						// Clearing it helps:
+						skySphere.setRenderState(skydomeLightState);
+						groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+						groundParentNode.updateRenderState();
+					}
 					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
 				
 				} else 
@@ -1289,15 +1293,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qSky.fromAngleAxis(FastMath.PI*localTime.getCurrentDayPercent()/100, new Vector3f(0,0,-1));
 		skySphere.setLocalRotation(qSky);
 		
-		if (updateRenderState) {
-			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
-		}
 
 		if (skySphere.getParent()==null)
 			groundParentNode.attachChild(skySphere);;
 		skySphere.setCullMode(Node.CULL_NEVER);
 		skySphere.updateRenderState(); // do not update root or groundParentNode, no need for that here
-		
+
+		if (updateRenderState) {
+			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
+		}
 		
 	}
 
@@ -2539,13 +2543,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		internalLightState = getDisplay().getRenderer().createLightState();
 		skydomeLightState = getDisplay().getRenderer().createLightState();
 		
+		
 		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 350);
 		groundParentNode.attachChild(intRootNode);
 		groundParentNode.attachChild(extRootNode);
 		rootNode.attachChild(groundParentNode);
-		//rootNode.attachChild(skyRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
@@ -2646,6 +2650,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere.setModelBound(null); // this must be set to null for lens flare
 		skySphere.setRenderState(cs_none);
 		skySphere.setCullMode(Node.CULL_NEVER);
+
+		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+		rootNode.clearRenderState(RenderState.RS_LIGHT);
+		skySphere.setRenderState(skydomeLightState);
 		
 		//intRootNode.attachChild(skySphereInvisibleGround);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
