@@ -1243,7 +1243,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
-					l[1].setTarget(skySphere); // TODO make this only light for the skySphere, doesnt work yet!
+					l[1].setTarget(skySphere);
 					skydomeLightState.attach(l[1].getLight());
 					c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					l[1].getLight().setDiffuse(c);
