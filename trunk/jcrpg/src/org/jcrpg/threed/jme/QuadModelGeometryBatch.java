@@ -27,7 +27,9 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
+import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
+import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
@@ -36,22 +38,39 @@ import com.jme.scene.state.RenderState;
 public class QuadModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
 	private static final long serialVersionUID = 0L;
 	
-	public QuadModel model;
+	public Model model;
 	public J3DCore core;
 	public Node parent = new Node();
 	
-	public QuadModelGeometryBatch(J3DCore core, QuadModel m) {
+	public TriMesh nullmesh = new TriMesh();
+	private TriMesh getModelMesh(Model m)
+	{
+		if (m.type == Model.QUADMODEL) {
+			return (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
+		} else
+		if (m.type == Model.SIMPLEMODEL)
+		{
+			return (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)model, false).getChild(0);			
+		} else
+		{
+			return nullmesh;
+		}
+	}
+	
+	public QuadModelGeometryBatch(J3DCore core, Model m) {
 		model = m;
 		this.core = core;
-		TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
+		TriMesh quad = getModelMesh(m);
 		parent.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
-		//parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+		if (m.type == Model.SIMPLEMODEL) {
+			parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+		}
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
 	public void addItem(NodePlaceholder placeholder)
 	{
-		TriMesh quad = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);		
+		TriMesh quad = getModelMesh(placeholder.model);
 		quad.setLocalTranslation(placeholder.getLocalTranslation());
 		//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 		quad.setLocalRotation(placeholder.getLocalRotation());

@@ -585,14 +585,20 @@ public class ModelLoader {
 		}
 		return clodNode;
 	}     
-    
+
+    public PooledSharedNode loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
+    {
+    	Node n = loadNodeOriginal(o, fakeLoadForCacheMaint);
+		PooledSharedNode r =  new PooledSharedNode("node"+counter++,n);
+        return r;
+    }
     /**
      * Load one simplemodel to node
      * @param o SimpleModel descriptor
      * @param fakeLoadForCacheMaint If this is true, only cache maintenance is needed, the model is already rendered and live
      * @return
      */
-    public PooledSharedNode loadNode(SimpleModel o, boolean fakeLoadForCacheMaint)
+    public Node loadNodeOriginal(SimpleModel o, boolean fakeLoadForCacheMaint)
     {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
@@ -614,8 +620,7 @@ public class ModelLoader {
     	{
     		Node n = sharedNodeCache.get(key);
     		if (n!=null) {
-    			PooledSharedNode r =  new PooledSharedNode("node"+counter++,n);
-	            return r;
+    			return n;
     		}
     	}
     	System.out.println("ModelLoader.loadNode - New model: "+o.modelName);
@@ -680,10 +685,9 @@ public class ModelLoader {
 					//spatial.setRenderState(as);
 					
 					sharedNodeCache.put(key, node);
-					PooledSharedNode r = new PooledSharedNode("node"+counter++,node);
 		            //r.setRenderState(core.vp);
 		            //r.setRenderState(core.fp);
-		            return r;
+		            return node;
 				} catch(Exception err)  {
 				    System.out.println("Error loading model:"+err);
 				    err.printStackTrace();
@@ -775,13 +779,12 @@ public class ModelLoader {
 
 				sharedNodeCache.put(key, node);
 				node.setModelBound(new BoundingBox());
-				node.updateModelBound();				
-				PooledSharedNode r =  new PooledSharedNode("node"+counter++,node);
+				node.updateModelBound();		
 	            //r.setRenderState(core.vp);
 	            //r.setRenderState(core.fp);
 	            //r.lock();
 	            //r.setRenderQueueMode(Renderer.QUEUE_SKIP);
-	            return r;
+	            return node;
 			} catch(Exception err)  {
 			    System.out.println("Error loading model:"+err);
 			    err.printStackTrace();
