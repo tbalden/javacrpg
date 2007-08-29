@@ -876,7 +876,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		sm_wolf.cullNone = true;
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,lod_cont_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass}));//lod_cont_grass_1}));
 		else 
 			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		
@@ -890,7 +890,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, lod_jung_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, tsm_jung_grass}));//lod_jung_grass_1}));
 		else
 			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
 		
@@ -1608,6 +1608,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static boolean CULL_TRICK = false;
 	public static boolean GEOMETRY_BATCH = true;
+	public static boolean GRASS_BIG_BATCH = true;
 
 	public void renderToViewPort()
 	{
@@ -1681,7 +1682,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						{
 							if (GEOMETRY_BATCH && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-											|| n.model.type == Model.TEXTURESTATEVEGETATION) 
+											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 								) 
 							{
 								
@@ -1763,7 +1764,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						{
 							if (GEOMETRY_BATCH && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-											|| n.model.type == Model.TEXTURESTATEVEGETATION) 
+											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 								 )
 							{
 								if (n!=null)
@@ -2122,7 +2123,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = false;
+	public static boolean FREE_MOVEMENT = true;
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull

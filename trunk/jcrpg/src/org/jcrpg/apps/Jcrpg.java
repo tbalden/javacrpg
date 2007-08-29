@@ -61,7 +61,7 @@ public class Jcrpg {
     public static void start() throws Exception {
 		Engine e = new Engine();
 		Time wmt = new Time();
-		wmt.setHour(17);
+		wmt.setHour(12);
 		e.setWorldMeanTime(wmt);
 		Thread t = new Thread(e);
 		t.start();
