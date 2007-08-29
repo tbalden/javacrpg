@@ -44,7 +44,7 @@ public class GeometryBatchHelper {
 	}
 	
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
-	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 5;
+	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 8;
 	
 	/**
 	 * Returns Grouping key for batch objects
