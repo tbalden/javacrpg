@@ -1,3 +1,5 @@
+[X] grass to GeometryBatch
+	[ ] common GeometryBatch for grass -> less object creation?
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
