@@ -372,7 +372,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
 	 */
-	public static HashMap<Quad,Quad> hmSolidColorQuads = new HashMap<Quad,Quad>();
+	public static HashMap<Spatial,Spatial> hmSolidColorSpatials = new HashMap<Spatial,Spatial>();
 	
 	
 	public void setEngine(Engine engine)
@@ -772,11 +772,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.7f,0.45f,2,1f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png","grass1_flower.png","grass1_flower_2.png"},0.5f,0.4f,4,0.5f);
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.7f,0.45f,2,1f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png","jungle_foliage1_flower.png","jungle_foliage1_other.png"},0.5f,0.45f,4,0.5f);
 		LODModel lod_jung_grass_1 = new LODModel("jung_grass_1",new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 
@@ -1274,11 +1274,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// this part sets the naive veg quads to a mixed color of the light's value with the quad texture!
 		int counter = 0;
-		for (Quad q:hmSolidColorQuads.values())
+		for (Spatial q:hmSolidColorSpatials.values())
 		{
 			counter++;
 			//q.setSolidColor(new ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-			q.setSolidColor(new ColorRGBA(vTotal[0]/1.3f,vTotal[1]/1.3f,vTotal[2]/1.3f,1f));
+			if ( (q.getType() & Node.TRIMESH)>0) {
+				((TriMesh)q).setSolidColor(new ColorRGBA(vTotal[0]/1.3f,vTotal[1]/1.3f,vTotal[2]/1.3f,1f));
+			} else {
+				((TriMesh)((Node)q).getChild(0)).setSolidColor(new ColorRGBA(vTotal[0]/1.3f,vTotal[1]/1.3f,vTotal[2]/1.3f,1f));
+			}
 		}
 		// set fog state color to the light power !
 		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
@@ -1339,7 +1343,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		if (s instanceof BillboardPartVegetation)
 		{
-			hmSolidColorQuads.remove(((BillboardPartVegetation)s).targetQuad);
+			hmSolidColorSpatials.remove(((BillboardPartVegetation)s).targetQuad);
 			((BillboardPartVegetation)s).targetQuad = null;
 		}
 		if (s.getChildren()!=null)
@@ -1347,7 +1351,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			if (c instanceof BillboardPartVegetation)
 			{
-				hmSolidColorQuads.remove(((BillboardPartVegetation)c).targetQuad);
+				hmSolidColorSpatials.remove(((BillboardPartVegetation)c).targetQuad);
 				((BillboardPartVegetation)c).targetQuad = null;
 				
 			}
@@ -1358,7 +1362,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			if (c instanceof Quad)
 			{
-				hmSolidColorQuads.remove(c);
+				hmSolidColorSpatials.remove(c);
 				//c.removeFromParent();
 			}
 			for (int i=0; i<RenderState.RS_MAX_STATE; i++)
@@ -1511,7 +1515,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		//TextureManager.clearCache();
 		//System.gc();
-		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorQuads.size());
+		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
 	}
 
 	/**
@@ -2109,7 +2113,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		notPassable.add(Swimming.class);
 		climbers.add(Climbing.class);
 	}
-	boolean freeMove = true;
+
+	public static boolean FREE_MOVEMENT = false;
+	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
 	 * @param from From coordinates (world coords)
@@ -2125,8 +2131,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			newCoords = calcMovement(newCoords, directions[i]); 
 			newRelCoords = calcMovement(newRelCoords, directions[i]);
 		}
-		if (freeMove)
-		{
+		if (FREE_MOVEMENT)
+		{ // test free movement
 			setViewPosition(newCoords);
 			setRelativePosition(newRelCoords);
 			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
