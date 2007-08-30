@@ -34,6 +34,7 @@ import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.light.Light;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -99,14 +100,17 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			instance.getAttributes().setScale(trimesh.getLocalScale());
 			instance.getAttributes().setVisible(true);
 			instance.getAttributes().buildMatrices();
+			
+			if (placeholder!=null) {
 
-			HashSet instances = (HashSet)placeholder.batchInstance;
-			if (instances==null)
-			{
-				instances = new HashSet();
-				placeholder.batchInstance = instances;
+				HashSet instances = (HashSet)placeholder.batchInstance;
+				if (instances==null)
+				{
+					instances = new HashSet();
+					placeholder.batchInstance = instances;
+				}
+				instances.add(instance);
 			}
-			instances.add(instance);
 
 			calcAvarageTranslation(trimesh.getLocalTranslation());				
 			notVisible.remove(instance);
@@ -119,13 +123,15 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				 new GeometryBatchInstanceAttributes(trimesh));
 		addInstance(instance);
 		
-		HashSet instances = (HashSet)placeholder.batchInstance;
-		if (instances==null)
-		{
-			instances = new HashSet();
-			placeholder.batchInstance = instances;
+		if (placeholder!=null) {
+			HashSet instances = (HashSet)placeholder.batchInstance;
+			if (instances==null)
+			{
+				instances = new HashSet();
+				placeholder.batchInstance = instances;
+			}
+			instances.add(instance);
 		}
-		instances.add(instance);
 		
 		calcAvarageTranslation(trimesh.getLocalTranslation());				
 		visible.add(instance);
@@ -153,10 +159,38 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 		placeholder.batchInstance = null;
 	}
-
+	
+	Vector3f lastLook, lastLeft;
+	
 	@Override
 	public void onDraw(Renderer r) {
-		//GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)instance;
+		Vector3f look = core.getCamera().getDirection().negate();
+		Vector3f left1 = core.getCamera().getLeft().negate();
+		
+		boolean needsUpdate = true;
+		if (lastLeft!=null)
+		{
+			if (look.distanceSquared(lastLook)==0 && left1.distanceSquared(lastLeft)==0)
+			{
+				needsUpdate = false;
+			}
+		} else
+		{
+			lastLook = new Vector3f();
+			lastLeft = new Vector3f();
+		}
+		lastLook.set(look);
+		lastLeft.set(left1);
+		
+		if (needsUpdate) {
+			Quaternion orient = new Quaternion();
+			orient.fromAxes(left1, core.getCamera().getUp(), look);
+			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+			{
+				geoInstance.getAttributes().setRotation(orient);
+				geoInstance.getAttributes().buildMatrices();
+			}
+		}
 		super.onDraw(r);
 	}
 	

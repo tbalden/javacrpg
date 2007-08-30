@@ -30,7 +30,6 @@ import java.util.HashSet;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
-import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.util.HashUtil;
 
@@ -56,9 +55,7 @@ import com.jme.scene.state.TextureState;
  * Removes model specified trimesh batch and replaces it with billboarded quads.
  * @author pali
  */
-public class BillboardPartVegetation extends Node implements PooledNode {
-
-	boolean NO_BATCH_GEOMETRY = true;
+public class BillboardPartVegetationOld extends Node implements PooledNode {
 
 	public org.jcrpg.threed.ModelPool.PoolItemContainer cont;
 
@@ -82,10 +79,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	public Camera cam;
 	public float viewDistance;
 	private Vector3f tmpVec = new Vector3f();
-	
-	TrimeshGeometryBatch batch;
-	
-	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model) {
+
+	public BillboardPartVegetationOld(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model) {
 		this.core = core;
 		this.cam = cam;
 		this.viewDistance = viewDistance;
@@ -303,22 +298,16 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 						}
 						for (TriMesh t:removed)
 							n.detachChild(t);
-						if (NO_BATCH_GEOMETRY) 
-						{
-							for (TriMesh q:added) 
-							{
-								n.attachChild(q);
-							}
-						}
+						for (TriMesh q:added)
+							n.attachChild(q);
 					}
 					
 				}
 				
 			}
 		}
-		if (!NO_BATCH_GEOMETRY) this.attachChild(batch.parent);
+		
 	}
-
 	private SharedMesh createQuad(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
 		Quad targetQuad = quadCache.get(model.id);
@@ -332,26 +321,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
-			targetQuad.setLocalRotation(new Quaternion());
 			quadCache.put(model.id, targetQuad);
 		}
-		if (!NO_BATCH_GEOMETRY) {
-			if (batch==null)
-			{
-				batch = new TrimeshGeometryBatch(core,targetQuad);
-				batch.setName("---");
-				batch.parent.setName("---");
-			}
-			targetQuad.setLocalTranslation(x, y, z);
-			Vector3f look = core.getCamera().getDirection().negate();
-			Vector3f left1 = core.getCamera().getLeft().negate();
-			Quaternion orient = new Quaternion();
-			orient.fromAxes(left1, core.getCamera().getUp(), look);
-			targetQuad.setLocalRotation(orient);
-			targetQuad.getWorldRotation().set(new Quaternion());
-			batch.addItem(null, targetQuad);
-		}
-		
 		SharedMesh quad = new SharedMesh("s"+name,targetQuad);
 		quad.setLocalTranslation(x, y, z);
 		return quad;
@@ -360,8 +331,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	
 	@Override
 	public int attachChild(Spatial child) {
-		if (!"---".equals(child.getName())) {
-		transformTrimeshesToQuads(child);}
+		transformTrimeshesToQuads(child);
 		return super.attachChild(child);
 	}
 

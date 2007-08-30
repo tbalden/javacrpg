@@ -160,15 +160,19 @@ public class VegetationSetup {
 		Vector3f normalX = normalY.cross(Vector3f.UNIT_X);
 		Vector3f normalZ = normalY.cross(normalX);
 		normalX = normalY.cross(normalZ);
-		Quaternion rotation = new Quaternion();
+		Vector3f look = core.getCamera().getDirection().negate();
+		Vector3f left1 = core.getCamera().getLeft().negate();
+		Quaternion orient = new Quaternion();
+		orient.fromAxes(left1, core.getCamera().getUp(), look);
+		//Quaternion rotation = new Quaternion();
 		//rotation.fromAxes(normalX, normalY, normalZ);
 		TriMesh tri = (TriMesh)quads[0].getChild(0);
-		tri.setLocalRotation(rotation);
+		tri.setLocalRotation(orient);
 		tri.setLocalTranslation(translation);
 		tri.setLocalScale(scale);
 		//if (steepDirection==SurfaceHeightAndType.NOT_STEEP)
 		{
-			rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+			//rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
 		}
 		return tri;
 		 
