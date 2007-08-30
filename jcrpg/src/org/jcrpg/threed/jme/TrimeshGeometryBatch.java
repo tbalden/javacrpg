@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.jme;
 
+import java.io.File;
+import java.nio.FloatBuffer;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
@@ -31,14 +33,21 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
 
+import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
+import com.jme.math.Matrix4f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.VertexProgramState;
+import com.jme.system.DisplaySystem;
 
 /**
  * Trimesh GeomBatch mesh, especially for grass and such things.
@@ -55,7 +64,32 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	
 	public TriMesh nullmesh = new TriMesh();
+	String shaderDirectory = "./data/shaders/";
+	String shaderName = "bbGrass";
+
+	private GLSLShaderObjectsState createShader(String shaderDirectory, String shaderName) {
+
+		DisplaySystem display = DisplaySystem.getDisplaySystem();
+		
+		GLSLShaderObjectsState shader;		
+		shader = display.getRenderer().createGLSLShaderObjectsState();
+		try {
+			/*shader.load(getClass().getClassLoader().getResource(shaderDirectory + shaderName + ".vert"),
+				 		getClass().getClassLoader().getResource(shaderDirectory + shaderName + ".frag"));*/
+			shader.load(new File(shaderDirectory + shaderName + ".vert").toURI().toURL(),
+						new File(shaderDirectory + shaderName + ".frag").toURI().toURL());
+			
+		} catch (Exception e) {
+		}
+		shader.setEnabled(true);
+		return shader;
+	}
+	static GLSLShaderObjectsState gl = null;
+	static VertexProgramState vp = null;
+	Matrix4f m4f = new Matrix4f();
+	Matrix3f m3f = new Matrix3f();
 	
+	static boolean vertexShader = false;
 	public TrimeshGeometryBatch(J3DCore core, TriMesh trimesh) {
 		this.core = core;
 		parent.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
@@ -64,6 +98,51 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		core.hmSolidColorSpatials.put(parent, parent);
 		parent.attachChild(this);
 		parent.updateModelBound();
+
+        if (vertexShader && vp==null)
+        { 
+        	vp = DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
+            //vp.setParameter(lightPosition, 8); // TODO
+            try {vp.load(new File(
+                    "./data/shaders/bbGrass3.vp").toURI().toURL());} catch (Exception ex){}
+            vp.setEnabled(true);
+            if (!vp.isSupported())
+            {
+            	System.out.println("!!!!!!! NO VP !!!!!!!");
+            }
+            
+            
+            //m4f.s
+            
+            Matrix3f m3f = new Matrix3f();
+            
+    		Vector3f look = core.getCamera().getDirection().negate();
+    		Vector3f left1 = core.getCamera().getLeft().negate();
+    		Vector3f loc = core.getCamera().getLocation();
+    		Quaternion orient = new Quaternion();
+    		orient.fromAxes(left1, core.getCamera().getUp(), look);
+    		
+    		m4f.setRotationQuaternion(orient);
+    		vp.setParameter(new float[]{1f,0,0,0}, 5);
+    		/*vp.setParameter(new float[]{40,0,0,0}, 11);
+    		vp.setParameter(new float[]{0,0,0,0}, 12);
+    		vp.setParameter(new float[]{0,0,0,0}, 13);*/
+        }
+        if (vertexShader) parent.setRenderState(vp);
+        
+		/*if (gl==null) {
+			gl = createShader(shaderDirectory, shaderName);
+			if (gl.isSupported())
+			{
+				System.out.println("!!!!!!! NO GL !!!!!!!");
+			}
+			gl.setUniform("FadeOutStart", 30f);
+			gl.setUniform("FadeOutDist", 50f);
+			gl.setUniform("Time", 0f);
+			gl.setUniform("camPos", core.getCamera().getLocation());
+			this.setRenderState(gl);
+		}*/
+	
 	}
 	
 	/**
@@ -159,6 +238,18 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	}
 	
 	Vector3f lastLook, lastLeft, lastLoc;
+
+	float diffs[] = new float[5];
+	float newDiffs[] = new float[5];
+	boolean windSwitch = true;
+	Vector3f origTranslation = null;
+	long passedTime = 0;
+	float timeCounter = 0;
+	long startTime = System.currentTimeMillis();
+	public float windPower = 0.5f; 
+	
+	public static final float TIME_DIVIDER = 400;
+	public static final long TIME_LIMIT = 0;
 	
 	@Override
 	public void onDraw(Renderer r) {
@@ -182,25 +273,109 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		lastLoc.set(loc);
 		lastLook.set(look);
 		lastLeft.set(left1);
+
 		
 		if (needsUpdate) {
+			// reseting orientation of the foliage
+			Quaternion q = new Quaternion();
+			parent.getWorldRotation().set(q); 
+			parent.setLocalRotation(q);
+			getWorldRotation().set(q);
+			setLocalRotation(q);
+			
 			Quaternion orient = new Quaternion();
 			orient.fromAxes(left1, core.getCamera().getUp(), look);
-			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+			
+			if (vertexShader) {
+			m4f.setRotationQuaternion(orient);
+			m4f.setTranslation(new Vector3f(0,0,0));
+    		/*vp.setParameter(m4f.getColumn(0), 0);
+    		vp.setParameter(m4f.getColumn(1), 1);
+    		vp.setParameter(m4f.getColumn(2), 2);
+    		vp.setParameter(m4f.getColumn(3), 3);*/
+    		vp.setParameter(new float[]{core.getCamera().getLocation().x,
+    				core.getCamera().getLocation().y,
+    				core.getCamera().getLocation().z,
+    				0}, 6);
+			}
+    		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
 			{
 				//geoInstance.getAttributes().getWorldMatrix().setRotationQuaternion(orient);
 				//geoInstance.getAttributes().getWorldMatrix().setTranslation(new Vector3f());
 				//geoInstance.getAttributes().getWorldMatrix().setScale(1f);
 				
-				Spatial p = this.parent.getParent();
-				orient = orient.mult(p.getWorldRotation());
+				//Spatial p = this.parent.getParent();
+				//orient = orient.mult(p.getWorldRotation());
 				//Quaternion q = p.getWorldRotation().subtract(p.getLocalRotation()).add(orient);
 				geoInstance.getAttributes().setRotation(orient);
+				//geoInstance.getAttributes().getWorldMatrix().setRotationQuaternion(orient);
 				geoInstance.getAttributes().buildMatrices();
 			}
 		}
-
+		this.updateGeometricState(0, true);
 		super.onDraw(r);
+		if (true==true) return;
+		
+		long additionalTime = Math.min(System.currentTimeMillis() - startTime,32);
+		passedTime += additionalTime;
+		startTime= System.currentTimeMillis();
+
+		boolean doGrassMove = false;
+		if (J3DCore.CPU_ANIMATED_GRASS ) {
+			doGrassMove = true;
+		}
+		float diff = 0;
+		if (doGrassMove) {
+			// creating 5 diffs to look random
+			diff = 0.059f * FastMath.sin(((passedTime / TIME_DIVIDER) * windPower)) * windPower;
+			newDiffs[0] = diff;
+			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.5f)))
+					* windPower;
+			newDiffs[1] = diff;
+			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.6f)))
+					* windPower;
+			newDiffs[2] = diff;
+			diff = 0.059f * FastMath.sin((((passedTime + 1000) / TIME_DIVIDER) * windPower * (0.8f)))
+					* windPower;
+			newDiffs[3] = diff;
+			diff = 0.059f * FastMath.sin((((passedTime + 2000) / TIME_DIVIDER) * windPower * (0.7f)))
+					* windPower;
+			newDiffs[4] = diff;
+		}
+		diffs = newDiffs;
+		int whichDiff = 0;
+		
+		TriangleBatch b = this.getBatch(0);
+		FloatBuffer fb = b.getVertexBuffer();
+		if (fb!=null)
+		for (int fIndex = 0; fIndex < fb.capacity(); fIndex++) {
+			boolean f2_1Read = false;
+			boolean f2_2Read = false;
+			float f2_1 = 0;
+			float f2_2 = 0;
+			if (fIndex%12<3 || fIndex%12>=9 && fIndex%12<12) {
+				int mul = 1;
+				if (FastMath.floor(fIndex%12 / 3) == 3)
+					mul = -1;
+				if (fIndex % 3 == 0) {
+					//float f = fb.get(fIndex);
+					if (!f2_1Read) {
+						f2_1 = fb.get(fIndex + 3 * mul);
+						f2_1Read = true;
+					}
+					fb.put(fIndex, f2_1 + diffs[whichDiff]);
+				}
+				if (fIndex % 3 == 2) {
+					//float f = fb.get(fIndex);
+					if (!f2_2Read) {
+						f2_2 = fb.get(fIndex + 3 * mul);
+						f2_2Read = true;
+					}
+					fb.put(fIndex, f2_2 + diffs[whichDiff]);
+				}
+			}
+		}
+		
 	}
 	
 	

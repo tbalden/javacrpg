@@ -1,0 +1,24 @@
+!!ARBvp1.0
+PARAM camPos[4] = {program.local[0],program.local[1],program.local[2],program.local[3]};
+PARAM mv[4] = { state.matrix.mvp };
+TEMP pos,projpos;
+################################
+# Apply modelview transformation
+DP4 pos.x, mv[0], vertex.position;
+DP4 pos.y, mv[1], vertex.position;
+DP4 pos.z, mv[2], vertex.position;
+DP4 pos.w, mv[3], vertex.position;
+################################
+# Add offset
+ADD pos.xy, pos, vertex.texcoord[0];
+################################
+# Apply projection matrix
+DP4 projpos.x, camPos[0], pos;
+DP4 projpos.y, camPos[1], pos;
+DP4 projpos.z, camPos[2], pos;
+DP4 projpos.w, camPos[3], pos;
+MOV result.position, projpos;
+MOV result.texcoord[0], vertex.texcoord[0];
+MOV result.color, vertex.color;
+
+END

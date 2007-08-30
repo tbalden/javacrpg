@@ -3,7 +3,9 @@
 	[X] billboarding
 	[ ] animation to grass! shader??
 	
-[ ] quad_bb_tree to GeomBatch with TrimeshGeomBatch, BillboardPartVegetation
+[X] quad_bb_tree to GeomBatch with TrimeshGeomBatch, BillboardPartVegetation
+	[ ] remove batch from treenode's rotation/translation to a pool or something, to make it billboardable?
+	!!! [ ] do not rotate the parent node of tree, but rotate subnodes, except for trimeshBatchGeom!!!!
 	[ ] animation??  
 
 [ ] Cave: implement surface interface!

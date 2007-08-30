@@ -37,6 +37,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
+import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -901,17 +902,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		
 		// lod vegetations
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
-		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{lod_cherry}));
-		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
-		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{lod_pine}));
-		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{lod_bush1})); 
-		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{lod_acacia}));
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedSide(new Model[]{lod_cherry})); // oak TODO!
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedSide(new Model[]{lod_cherry}));
+		hm3dTypeRenderedSide.put(new Integer(15), new RenderedSide(new Model[]{lod_palm}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedSide(new Model[]{lod_pine}));
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedSide(new Model[]{lod_bush1})); 
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedSide(new Model[]{lod_acacia}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
-		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
-		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
-		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
-		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedSide(new Model[]{lod_jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(25), new RenderedSide(new Model[]{lod_great_pine}));
+		hm3dTypeRenderedSide.put(new Integer(26), new RenderedSide(new Model[]{lod_fern}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedSide(new Model[]{lod_jungle_bush1}));
 
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
@@ -1712,9 +1713,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								}
 							
 								// set data from placeholder
-								realPooledNode.setLocalRotation(n.getLocalRotation());
-								realPooledNode.setLocalScale(n.getLocalScale());
-								realPooledNode.setLocalTranslation(n.getLocalTranslation());
+								for (Spatial s:realPooledNode.getChildren()) {
+									if ( (s.getType()&s.NODE)>0 )
+									{
+										for (Spatial s2:((Node)s).getChildren())
+										{	
+											s2.setLocalScale(n.getLocalScale());
+											s2.setLocalTranslation(n.getLocalTranslation());
+											if (s2 instanceof TrimeshGeometryBatch) continue;
+											s2.setLocalRotation(n.getLocalRotation());
+											
+										}
+									} else {
+										s.setLocalRotation(n.getLocalRotation());
+										s.setLocalScale(n.getLocalScale());
+										s.setLocalTranslation(n.getLocalTranslation());
+									}
+								}
 								if (c.cube.internalLight) {
 									intRootNode.attachChild((Node)realPooledNode);
 								} else 

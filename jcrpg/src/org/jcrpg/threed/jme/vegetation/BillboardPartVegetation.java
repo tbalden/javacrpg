@@ -316,7 +316,13 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				
 			}
 		}
-		if (!NO_BATCH_GEOMETRY) this.attachChild(batch.parent);
+		if (!NO_BATCH_GEOMETRY) {
+			this.attachChild(batch.parent);
+			batch.parent.getWorldRotation().set(new Quaternion());
+			batch.parent.setLocalRotation(new Quaternion());
+			batch.getWorldRotation().set(new Quaternion());
+			batch.setLocalRotation(new Quaternion());
+		}
 	}
 
 	private SharedMesh createQuad(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
@@ -342,7 +348,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
-			targetQuad.setLocalTranslation(x, y, z);
+			targetQuad.setLocalTranslation(x, z, -y);
 			Vector3f look = core.getCamera().getDirection().negate();
 			Vector3f left1 = core.getCamera().getLeft().negate();
 			Quaternion orient = new Quaternion();
