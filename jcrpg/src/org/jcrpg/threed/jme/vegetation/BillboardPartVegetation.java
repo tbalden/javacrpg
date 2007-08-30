@@ -58,7 +58,7 @@ import com.jme.scene.state.TextureState;
  */
 public class BillboardPartVegetation extends Node implements PooledNode {
 
-	boolean NO_BATCH_GEOMETRY = true;
+	boolean NO_BATCH_GEOMETRY = false;
 
 	public org.jcrpg.threed.ModelPool.PoolItemContainer cont;
 
