@@ -22,6 +22,8 @@
 
 package org.jcrpg.threed.jme;
 
+import java.util.HashSet;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
@@ -76,17 +78,18 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		quad.setLocalRotation(placeholder.getLocalRotation());
 		quad.setLocalScale(placeholder.getLocalScale());
 		
-		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
-			if (!instance.getAttributes().isVisible())
-			{
-				instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
-				instance.getAttributes().setRotation(placeholder.getLocalRotation());
-				instance.getAttributes().setScale(placeholder.getLocalScale());
-				instance.getAttributes().setVisible(true);
-				instance.getAttributes().buildMatrices();
-				placeholder.batchInstance = instance;
-				return;
-			}
+		if (notVisible.size()>0)
+		{
+			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = notVisible.iterator().next();
+			instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
+			instance.getAttributes().setRotation(placeholder.getLocalRotation());
+			instance.getAttributes().setScale(placeholder.getLocalScale());
+			instance.getAttributes().setVisible(true);
+			instance.getAttributes().buildMatrices();
+			placeholder.batchInstance = instance;
+			notVisible.remove(instance);
+			visible.add(instance);
+			return;
 		}
 			
 				// Add a Box instance (batch and attributes)
@@ -94,17 +97,21 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				 new GeometryBatchInstanceAttributes(quad));
 		placeholder.batchInstance = instance;
 		addInstance(instance);
+		visible.add(instance);
 	}
+	
+	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	public void removeItem(NodePlaceholder placeholder)
 	{
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
-			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : getInstances()) {
-				if (instanceEn.getAttributes().isVisible())
-				{
-					instance.getAttributes().setTranslation(instanceEn.getAttributes().getTranslation());
-				}
+			visible.remove(instance);
+			notVisible.add(instance);
+			if (visible.size()>0)
+			{
+				instance.getAttributes().setTranslation(visible.iterator().next().getAttributes().getTranslation());
 			}
 			
 			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);

@@ -35,6 +35,7 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.light.Light;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
@@ -85,29 +86,32 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			avarageTranslation.set((x+trans.x)/(num+1), (y+trans.y)/(num+1), (z+trans.z)/(num+1));
 		}
 	}
+	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
-		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance : getInstances()) {
-			if (!instance.getAttributes().isVisible())
+		if (notVisible.size()>0)
+		{
+			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = notVisible.iterator().next();
+			instance.getAttributes().setTranslation(trimesh.getLocalTranslation());
+			instance.getAttributes().setRotation(trimesh.getLocalRotation());
+			instance.getAttributes().setScale(trimesh.getLocalScale());
+			instance.getAttributes().setVisible(true);
+			instance.getAttributes().buildMatrices();
+
+			HashSet instances = (HashSet)placeholder.batchInstance;
+			if (instances==null)
 			{
-				instance.getAttributes().setTranslation(trimesh.getLocalTranslation());
-				instance.getAttributes().setRotation(trimesh.getLocalRotation());
-				instance.getAttributes().setScale(trimesh.getLocalScale());
-				instance.getAttributes().setVisible(true);
-				instance.getAttributes().buildMatrices();
-
-				HashSet instances = (HashSet)placeholder.batchInstance;
-				if (instances==null)
-				{
-					instances = new HashSet();
-					placeholder.batchInstance = instances;
-				}
-				instances.add(instance);
-
-				calcAvarageTranslation(trimesh.getLocalTranslation());				
-				return;
+				instances = new HashSet();
+				placeholder.batchInstance = instances;
 			}
+			instances.add(instance);
+
+			calcAvarageTranslation(trimesh.getLocalTranslation());				
+			notVisible.remove(instance);
+			visible.add(instance);
+			return;
 		}
 			
 				// Add a Box instance (batch and attributes)
@@ -124,6 +128,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		instances.add(instance);
 		
 		calcAvarageTranslation(trimesh.getLocalTranslation());				
+		visible.add(instance);
 		return;
 	}
 	public void removeItem(NodePlaceholder placeholder)
@@ -137,17 +142,25 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				
 				if (geoInstance!=null) {
 					geoInstance.getAttributes().setVisible(false); // switching off visibility
-					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : getInstances()) {
-						if (instanceEn.getAttributes().isVisible())
-						{
-							geoInstance.getAttributes().setTranslation(instanceEn.getAttributes().getTranslation());
-						}
+					visible.remove(geoInstance);
+					notVisible.add(geoInstance);
+					if (visible.size()>0)
+					{
+						geoInstance.getAttributes().setTranslation(visible.iterator().next().getAttributes().getTranslation());
 					}
 				}
 			}
 		}
 		placeholder.batchInstance = null;
 	}
+
+	@Override
+	public void onDraw(Renderer r) {
+		//GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)instance;
+		super.onDraw(r);
+	}
+	
+	
 	
 	
 }
