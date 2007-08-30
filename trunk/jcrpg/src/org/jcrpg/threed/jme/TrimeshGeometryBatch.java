@@ -30,14 +30,12 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.QuadModel;
-import org.jcrpg.threed.scene.model.SimpleModel;
 
-import com.jme.light.Light;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
@@ -160,25 +158,28 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		placeholder.batchInstance = null;
 	}
 	
-	Vector3f lastLook, lastLeft;
+	Vector3f lastLook, lastLeft, lastLoc;
 	
 	@Override
 	public void onDraw(Renderer r) {
 		Vector3f look = core.getCamera().getDirection().negate();
 		Vector3f left1 = core.getCamera().getLeft().negate();
+		Vector3f loc = core.getCamera().getLocation();
 		
 		boolean needsUpdate = true;
 		if (lastLeft!=null)
 		{
-			if (look.distanceSquared(lastLook)==0 && left1.distanceSquared(lastLeft)==0)
+			if (look.distanceSquared(lastLook)==0 && left1.distanceSquared(lastLeft)==0 && loc.distanceSquared(lastLoc)==0)
 			{
 				needsUpdate = false;
 			}
 		} else
 		{
+			lastLoc = new Vector3f();
 			lastLook = new Vector3f();
 			lastLeft = new Vector3f();
 		}
+		lastLoc.set(loc);
 		lastLook.set(look);
 		lastLeft.set(left1);
 		
@@ -187,10 +188,18 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			orient.fromAxes(left1, core.getCamera().getUp(), look);
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
 			{
+				//geoInstance.getAttributes().getWorldMatrix().setRotationQuaternion(orient);
+				//geoInstance.getAttributes().getWorldMatrix().setTranslation(new Vector3f());
+				//geoInstance.getAttributes().getWorldMatrix().setScale(1f);
+				
+				Spatial p = this.parent.getParent();
+				orient = orient.mult(p.getWorldRotation());
+				//Quaternion q = p.getWorldRotation().subtract(p.getLocalRotation()).add(orient);
 				geoInstance.getAttributes().setRotation(orient);
 				geoInstance.getAttributes().buildMatrices();
 			}
 		}
+
 		super.onDraw(r);
 	}
 	
