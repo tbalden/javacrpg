@@ -1,6 +1,10 @@
 [X] grass to GeometryBatch
 	[X] common GeometryBatch for grass -> less object creation?
+	[X] billboarding
 	[ ] animation to grass! shader??
+	
+[ ] quad_bb_tree to GeomBatch with TrimeshGeomBatch, BillboardPartVegetation
+	[ ] animation??  
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?

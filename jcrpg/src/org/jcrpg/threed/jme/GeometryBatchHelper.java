@@ -99,6 +99,7 @@ public class GeometryBatchHelper {
 	    	batch.addItem(place);
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
+    		if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
     		// texture state vegetation, trimesh
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
 	    	if (batch==null)
@@ -141,6 +142,7 @@ public class GeometryBatchHelper {
 	    	}
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
+    		if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
     		// texture state vegetation, trimesh
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
     		if (batch!=null)
