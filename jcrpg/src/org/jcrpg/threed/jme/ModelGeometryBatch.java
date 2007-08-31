@@ -22,6 +22,7 @@
 
 package org.jcrpg.threed.jme;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
@@ -34,7 +35,9 @@ import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.scene.Node;
+import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 
 public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
@@ -58,15 +61,28 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			return nullmesh;
 		}
 	}
+
+	static HashMap<TriMesh,Node> sharedParentCache = new HashMap<TriMesh, Node>();
 	
 	public ModelGeometryBatch(J3DCore core, Model m) {
 		model = m;
 		this.core = core;
 		TriMesh quad = getModelMesh(m);
-		parent.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
-		if (m.type == Model.SIMPLEMODEL) {
-			parent.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+
+		Node parentOrig = sharedParentCache.get(quad);
+		if (parentOrig==null)
+		{
+			parentOrig = new Node();
+			parentOrig.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
+			if (m.type == Model.SIMPLEMODEL) {
+				parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+			}
+			sharedParentCache.put(quad,parentOrig);
 		}
+		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+		parent.attachChild(this);
+		parent.updateModelBound();
+		
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}

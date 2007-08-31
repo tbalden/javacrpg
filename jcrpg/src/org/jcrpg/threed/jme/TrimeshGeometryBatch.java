@@ -24,6 +24,7 @@ package org.jcrpg.threed.jme;
 
 import java.io.File;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
@@ -41,6 +42,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
@@ -100,15 +102,23 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Matrix3f m3f = new Matrix3f();
 	
 	static boolean vertexShader = false;
+	static HashMap<TriMesh,Node> sharedParentCache = new HashMap<TriMesh, Node>();
 	
 	public TrimeshGeometryBatch(J3DCore core, TriMesh trimesh) {
 		this.core = core;
-		parent.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
-		parent.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
-		parent.setLightCombineMode(LightState.OFF);
-		core.hmSolidColorSpatials.put(parent, parent);
+		Node parentOrig = sharedParentCache.get(trimesh);
+		if (parentOrig==null)
+		{
+			parentOrig = new Node();
+			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
+			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
+			parentOrig.setLightCombineMode(LightState.OFF);
+			sharedParentCache.put(trimesh,parentOrig);
+		}
+		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.attachChild(this);
 		parent.updateModelBound();
+		core.hmSolidColorSpatials.put(parent, parent);
 
         if (vertexShader && vp==null)
         { 
