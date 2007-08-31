@@ -348,6 +348,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
+			//targetQuad.setLocalTranslation(x, y, z);
 			targetQuad.setLocalTranslation(x, z, -y);
 			Vector3f look = core.getCamera().getDirection().negate();
 			Vector3f left1 = core.getCamera().getLeft().negate();

@@ -47,6 +47,8 @@ public class NodePlaceholder {
 	public Object batchInstance;
 	
 	public Quaternion localRotation;
+	/** helper separate horizontalRotation from RenderedHashRotatedSide, use it with trimeshGeomBatch only: */
+	public Quaternion horizontalRotation;
 	public Vector3f localScale, localTranslation;
 	public HashMap<String, Savable> userData = new HashMap<String, Savable>();
 	
