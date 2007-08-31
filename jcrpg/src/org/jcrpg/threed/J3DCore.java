@@ -405,6 +405,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * Horizontal Rotations 
 	 */
 	static Quaternion horizontalN, horizontalS, horizontalW, horizontalE;
+	static Quaternion horizontalNReal, horizontalSReal, horizontalWReal, horizontalEReal;
 
 	/**
 	 * Steep Rotations 
@@ -503,6 +504,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		horizontalRotations.put(new Integer(SOUTH), horizontalS);
 		horizontalRotations.put(new Integer(WEST), horizontalW);
 		horizontalRotations.put(new Integer(EAST), horizontalE);
+	}
+
+	public static HashMap<Integer,Quaternion> horizontalRotationsReal = new HashMap<Integer, Quaternion>();
+	static
+	{
+		// horizontal rotations
+		horizontalNReal = new Quaternion();
+		horizontalNReal.fromAngles(new float[]{0,FastMath.PI * 2,0});
+		horizontalSReal = new Quaternion();
+		horizontalSReal.fromAngles(new float[]{0,FastMath.PI,0});
+		horizontalWReal = new Quaternion();
+		horizontalWReal.fromAngles(new float[]{0,FastMath.PI/2,0});
+		horizontalEReal = new Quaternion();
+		horizontalEReal.fromAngles(new float[]{0,FastMath.PI*3/2,0});
+
+		horizontalRotationsReal.put(new Integer(NORTH), horizontalNReal);
+		horizontalRotationsReal.put(new Integer(SOUTH), horizontalSReal);
+		horizontalRotationsReal.put(new Integer(WEST), horizontalWReal);
+		horizontalRotationsReal.put(new Integer(EAST), horizontalEReal);
 	}
 	
 	public static HashMap<Integer,Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
@@ -902,11 +922,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		
 		// lod vegetations
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedSide(new Model[]{lod_cherry})); // oak TODO!
+		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedSide(new Model[]{lod_cherry}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedSide(new Model[]{lod_palm}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedSide(new Model[]{lod_pine}));
-		hm3dTypeRenderedSide.put(new Integer(19), new RenderedSide(new Model[]{lod_bush1})); 
+		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{lod_bush1})); 
 		hm3dTypeRenderedSide.put(new Integer(20), new RenderedSide(new Model[]{lod_acacia}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedSide(new Model[]{lod_jungletrees_mult}));
@@ -1545,7 +1565,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((int[])f[1])[2]);//+25.5f;
 		
 		Quaternion hQ = null;
-		if (horizontalRotation!=-1) hQ = horizontalRotations.get(new Integer(horizontalRotation));
+		Quaternion hQReal = null;
+		if (horizontalRotation!=-1) {
+			hQ = horizontalRotations.get(new Integer(horizontalRotation));
+			hQReal = horizontalRotationsReal.get(new Integer(horizontalRotation));
+		}
 		
 		//Node sideNode = new Node();
 	
@@ -1556,6 +1580,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			qC = new Quaternion(q); // base rotation
 			if (hQ!=null)
 			{
+				n[i].horizontalRotation = hQReal;
 				// horizontal rotation
 				qC.multLocal(hQ);
 			} 
@@ -1713,21 +1738,35 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								}
 							
 								// set data from placeholder
+								realPooledNode.setLocalTranslation(n.getLocalTranslation());
+								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 								for (Spatial s:realPooledNode.getChildren()) {
 									if ( (s.getType()&s.NODE)>0 )
 									{
 										for (Spatial s2:((Node)s).getChildren())
 										{	
+											if ( (s2.getType()&s2.NODE)>0 )
+											{
+												for (Spatial s3:((Node)s2).getChildren())
+												{
+													if (s3 instanceof TrimeshGeometryBatch) {
+														// setting separate horizontalRotation for trimeshGeomBatch
+														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+													}												
+												}												
+											}
 											s2.setLocalScale(n.getLocalScale());
-											s2.setLocalTranslation(n.getLocalTranslation());
-											if (s2 instanceof TrimeshGeometryBatch) continue;
-											s2.setLocalRotation(n.getLocalRotation());
-											
+											if (s2 instanceof TrimeshGeometryBatch) {
+												// setting separate horizontalRotation for trimeshGeomBatch
+												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+											} else {
+												s2.setLocalRotation(n.getLocalRotation());
+											}
 										}
 									} else {
 										s.setLocalRotation(n.getLocalRotation());
 										s.setLocalScale(n.getLocalScale());
-										s.setLocalTranslation(n.getLocalTranslation());
 									}
 								}
 								if (c.cube.internalLight) {
