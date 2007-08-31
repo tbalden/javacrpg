@@ -1,12 +1,4 @@
-[X] grass to GeometryBatch
-	[X] common GeometryBatch for grass -> less object creation?
-	[X] billboarding
-	[ ] animation to grass! shader??
-	
-[X] quad_bb_tree to GeomBatch with TrimeshGeomBatch, BillboardPartVegetation
-	[ ] remove batch from treenode's rotation/translation to a pool or something, to make it billboardable?
-	!!! [ ] do not rotate the parent node of tree, but rotate subnodes, except for trimeshBatchGeom!!!!
-	[ ] animation??  
+[ ] wind animation shader!
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
@@ -47,6 +39,16 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] grass to GeometryBatch
+	[X] common GeometryBatch for grass -> less object creation?
+	[X] billboarding
+	[X] animation to grass! shader??
+	
+[X] quad_bb_tree to GeomBatch with TrimeshGeomBatch, BillboardPartVegetation
+	[-] remove batch from treenode's rotation/translation to a pool or something, to make it billboardable?
+	[X] do not rotate the parent node of tree, but rotate subnodes, except for trimeshBatchGeom!!!!
+	[X] animation??  
+
 [X] lens flare effect lost with new invisible bounding spheres and new geombatch thing
 	[X] remove skyrootnode, add the sun directly to ground?
 
