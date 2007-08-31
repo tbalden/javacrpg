@@ -108,10 +108,12 @@ public class GeometryBatchHelper {
 	    		batch = new TrimeshGeometryBatch(core,tri);
 	    		if (internal)
 	    		{
+		    		batch.animated = false;
 	    			core.intRootNode.attachChild(batch.parent);
 	    			core.intRootNode.updateRenderState();
 	    		} else
 	    		{
+		    		batch.animated = true && J3DCore.CPU_ANIMATED_GRASS; // animate wind only outside
 	    			core.extRootNode.attachChild(batch.parent);
 	    			core.extRootNode.updateRenderState();
 	    		}

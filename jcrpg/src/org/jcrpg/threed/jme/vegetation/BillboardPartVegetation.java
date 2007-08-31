@@ -345,6 +345,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (batch==null)
 			{
 				batch = new TrimeshGeometryBatch(core,targetQuad);
+				batch.animated = J3DCore.CPU_ANIMATED_TREES;
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
