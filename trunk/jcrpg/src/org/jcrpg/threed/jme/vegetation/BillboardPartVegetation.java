@@ -242,7 +242,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadXSizeMultiplier;
 														float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadYSizeMultiplier;
 														SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
-														added.add(quad);
+														if (NO_BATCH_GEOMETRY) added.add(quad);
 													}
 												} else
 												if (model.LOD==2 && added.size()<1)
@@ -270,14 +270,17 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
 														SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
 														
-														added.add(quad1_1);
-														added.add(quad2_1);
-														added.add(quad3_1);
-														added.add(quad4_1);
-														added.add(quad1_2);
-														added.add(quad2_2);
-														added.add(quad3_2);
-														added.add(quad4_2);
+														if (NO_BATCH_GEOMETRY) 
+														{
+															added.add(quad1_1);
+															added.add(quad2_1);
+															added.add(quad3_1);
+															added.add(quad4_1);
+															added.add(quad1_2);
+															added.add(quad2_2);
+															added.add(quad3_2);
+															added.add(quad4_2);
+														}
 													}
 												} else
 												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1) 
@@ -288,7 +291,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 													float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
 													float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadYSizeMultiplier;
 													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
-													added.add(quad);
+													if (NO_BATCH_GEOMETRY) added.add(quad);
 												}
 											}
 										}
@@ -344,7 +347,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		if (!NO_BATCH_GEOMETRY) {
 			if (batch==null)
 			{
-				batch = new TrimeshGeometryBatch(core,targetQuad);
+				batch = new TrimeshGeometryBatch(model.id,core,targetQuad);
 				batch.animated = J3DCore.CPU_ANIMATED_TREES && model.windAnimation;
 				batch.setName("---");
 				batch.parent.setName("---");
@@ -359,10 +362,14 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.getWorldRotation().set(new Quaternion());
 			batch.addItem(null, targetQuad);
 		}
-		
-		SharedMesh quad = new SharedMesh("s"+name,targetQuad);
-		quad.setLocalTranslation(x, y, z);
-		return quad;
+		if (NO_BATCH_GEOMETRY) {
+			SharedMesh quad = new SharedMesh("s"+name,targetQuad);
+			quad.setLocalTranslation(x, y, z);
+			return quad;
+		} else
+		{
+			return null;
+		}
 		
 	}
 	
@@ -396,48 +403,53 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	float newDiffs[] = new float[5];
 	
 	public void draw(Renderer r) {
-		if (origTranslation == null)
-			origTranslation = this.getLocalTranslation();
-		
-		long additionalTime = Math.min(System.currentTimeMillis() - startTime,32);
-		passedTime += additionalTime;
-		startTime= System.currentTimeMillis();
-
 		boolean doGrassMove = false;
-		if (J3DCore.CPU_ANIMATED_GRASS && model.windAnimation) {
-			doGrassMove = true;
+		Quaternion orient = null;
+		if (NO_BATCH_GEOMETRY) {
+			if (origTranslation == null)
+				origTranslation = this.getLocalTranslation();
+			
+			long additionalTime = Math.min(System.currentTimeMillis() - startTime,32);
+			passedTime += additionalTime;
+			startTime= System.currentTimeMillis();
+	
+			
+			if (J3DCore.CPU_ANIMATED_GRASS && model.windAnimation) {
+				doGrassMove = true;
+			}
+	
+			if (children == null) {
+				return;
+			}
+	
+			float diff = 0;
+	
+			if (doGrassMove) {
+				// creating 5 diffs to look random
+				diff = 0.059f * FastMath.sin(((passedTime / TIME_DIVIDER) * windPower)) * windPower;
+				newDiffs[0] = diff;
+				diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.5f)))
+						* windPower;
+				newDiffs[1] = diff;
+				diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.6f)))
+						* windPower;
+				newDiffs[2] = diff;
+				diff = 0.059f * FastMath.sin((((passedTime + 1000) / TIME_DIVIDER) * windPower * (0.8f)))
+						* windPower;
+				newDiffs[3] = diff;
+				diff = 0.059f * FastMath.sin((((passedTime + 2000) / TIME_DIVIDER) * windPower * (0.7f)))
+						* windPower;
+				newDiffs[4] = diff;
+			}
+			diffs = newDiffs;
+	
+			Vector3f look = cam.getDirection().negate();
+			Vector3f left1 = cam.getLeft().negate();
+			orient = new Quaternion();
+			orient.fromAxes(left1, cam.getUp(), look);
+	
+			
 		}
-
-		if (children == null) {
-			return;
-		}
-
-		float diff = 0;
-
-		if (doGrassMove) {
-			// creating 5 diffs to look random
-			diff = 0.059f * FastMath.sin(((passedTime / TIME_DIVIDER) * windPower)) * windPower;
-			newDiffs[0] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.5f)))
-					* windPower;
-			newDiffs[1] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 500) / TIME_DIVIDER) * windPower * (0.6f)))
-					* windPower;
-			newDiffs[2] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 1000) / TIME_DIVIDER) * windPower * (0.8f)))
-					* windPower;
-			newDiffs[3] = diff;
-			diff = 0.059f * FastMath.sin((((passedTime + 2000) / TIME_DIVIDER) * windPower * (0.7f)))
-					* windPower;
-			newDiffs[4] = diff;
-		}
-		diffs = newDiffs;
-
-		Vector3f look = cam.getDirection().negate();
-		Vector3f left1 = cam.getLeft().negate();
-		Quaternion orient = new Quaternion();
-		orient.fromAxes(left1, cam.getUp(), look);
-
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
@@ -455,72 +467,75 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				// 
 				{
 
+					
 					// original code
 					r.setCamera(cam);
 					child.updateGeometricState(0.0f, false);
 					child.onDraw(r);
 
-					// animation
-
-					if (child.getType() == Node.NODE) {
-						Node n = (Node) child;
-						ArrayList<Spatial> c2 = n.getChildren();
-						int sCounter = 0;
-						for (Spatial s : c2) {
-							if ( (s.getType() & s.TRIMESH)!=0)
-							{
-								// System.out.println("SPATIAL: "+s.getName()+"
-								// "+sCounter++);
-								sCounter++;
-								TriMesh q = (TriMesh) s;
-								// if (q.getType() == Quad.Qinstanceof Quad)
-
-								String qname = q.getName();
-								int l = 0;
-								if (qname != null)
-									l = qname.length();
-								if (l != 0 && q.getName().charAt(l - 1) == model.billboardPartNames[0].charAt(0)) {
-									q.getWorldRotation().set(orient);
-
-									if (!(doGrassMove))
-										continue;
-									// CPU computed grass moving
-									TriangleBatch b = q.getBatch(0);
-									FloatBuffer fb = b.getVertexBuffer();
-									for (int fIndex = 0; fIndex < 4 * 3; fIndex++) {
-										boolean f2_1Read = false;
-										boolean f2_2Read = false;
-										float f2_1 = 0;
-										float f2_2 = 0;
-										if (fIndex<3 || fIndex>=9 && fIndex<12) {
-											int mul = 1;
-											if (FastMath.floor(fIndex / 3) == 3)
-												mul = -1;
-											if (fIndex % 3 == 0) {
-												//float f = fb.get(fIndex);
-												if (!f2_1Read) {
-													f2_1 = fb.get(fIndex + 3 * mul);
-													f2_1Read = true;
+					if (NO_BATCH_GEOMETRY) {
+					
+						// animation
+	
+						if (child.getType() == Node.NODE) {
+							Node n = (Node) child;
+							ArrayList<Spatial> c2 = n.getChildren();
+							int sCounter = 0;
+							for (Spatial s : c2) {
+								if ( (s.getType() & s.TRIMESH)!=0)
+								{
+									// System.out.println("SPATIAL: "+s.getName()+"
+									// "+sCounter++);
+									sCounter++;
+									TriMesh q = (TriMesh) s;
+									// if (q.getType() == Quad.Qinstanceof Quad)
+	
+									String qname = q.getName();
+									int l = 0;
+									if (qname != null)
+										l = qname.length();
+									if (l != 0 && q.getName().charAt(l - 1) == model.billboardPartNames[0].charAt(0)) {
+										q.getWorldRotation().set(orient);
+	
+										if (!(doGrassMove))
+											continue;
+										// CPU computed grass moving
+										TriangleBatch b = q.getBatch(0);
+										FloatBuffer fb = b.getVertexBuffer();
+										for (int fIndex = 0; fIndex < 4 * 3; fIndex++) {
+											boolean f2_1Read = false;
+											boolean f2_2Read = false;
+											float f2_1 = 0;
+											float f2_2 = 0;
+											if (fIndex<3 || fIndex>=9 && fIndex<12) {
+												int mul = 1;
+												if (FastMath.floor(fIndex / 3) == 3)
+													mul = -1;
+												if (fIndex % 3 == 0) {
+													//float f = fb.get(fIndex);
+													if (!f2_1Read) {
+														f2_1 = fb.get(fIndex + 3 * mul);
+														f2_1Read = true;
+													}
+													fb.put(fIndex, f2_1 + diffs[whichDiff]);
 												}
-												fb.put(fIndex, f2_1 + diffs[whichDiff]);
-											}
-											if (fIndex % 3 == 2) {
-												//float f = fb.get(fIndex);
-												if (!f2_2Read) {
-													f2_2 = fb.get(fIndex + 3 * mul);
-													f2_2Read = true;
+												if (fIndex % 3 == 2) {
+													//float f = fb.get(fIndex);
+													if (!f2_2Read) {
+														f2_2 = fb.get(fIndex + 3 * mul);
+														f2_2Read = true;
+													}
+													fb.put(fIndex, f2_2 + diffs[whichDiff]);
 												}
-												fb.put(fIndex, f2_2 + diffs[whichDiff]);
 											}
 										}
+	
 									}
-
+	
 								}
-
 							}
 						}
 					}
-
 				}
 			}
 		}
