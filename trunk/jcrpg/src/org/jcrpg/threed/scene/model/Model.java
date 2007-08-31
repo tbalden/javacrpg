@@ -29,6 +29,7 @@ public abstract class Model {
 	public static final byte TEXTURESTATEVEGETATION = 2;
 	public static final byte QUADMODEL = 4;
 	public static final byte SIMPLEMODEL = 8;
+	public static final byte PARTLYBILLBOARDMODEL = 16;
 	
 	public byte type = MODEL;
 

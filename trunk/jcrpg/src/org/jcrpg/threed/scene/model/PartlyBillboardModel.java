@@ -64,6 +64,7 @@ public class PartlyBillboardModel extends SimpleModel {
 	 */
 	public PartlyBillboardModel(String id,String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures, int LOD, boolean mipMap) {
 		super(modelName, null, mipMap);
+		type = PARTLYBILLBOARDMODEL;
 		this.billboardPartNames = billboardPartNames;
 		this.billboardPartTextures = billboardPartTextures;
 		this.removedPartNames = billboardPartNames;
