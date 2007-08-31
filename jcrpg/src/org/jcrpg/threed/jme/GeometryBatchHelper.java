@@ -105,10 +105,10 @@ public class GeometryBatchHelper {
 	    	if (batch==null)
 	    	{
 	    		TriMesh tri = VegetationSetup.getVegTrimesh(place, place.cube, core, (TextureStateVegetationModel)m, 0, 0);
-	    		batch = new TrimeshGeometryBatch(core,tri);
+	    		batch = new TrimeshGeometryBatch(m.id,core,tri);
 	    		if (internal)
 	    		{
-		    		batch.animated = false;
+		    		batch.animated = false; // inside no wind
 	    			core.intRootNode.attachChild(batch.parent);
 	    			core.intRootNode.updateRenderState();
 	    		} else
@@ -169,6 +169,7 @@ public class GeometryBatchHelper {
 				}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
+					core.removeSolidColorQuadsRecoursive(batch.parent);
 					removables.add(batch);
 				}
 	    	}
@@ -188,6 +189,7 @@ public class GeometryBatchHelper {
 				}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
+					core.removeSolidColorQuadsRecoursive(batch.parent);
 					removables.add(batch);
 				} else
 				{

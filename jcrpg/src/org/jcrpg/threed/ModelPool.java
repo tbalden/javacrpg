@@ -32,6 +32,7 @@ import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
+import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 
 public class ModelPool {
@@ -53,7 +54,7 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
-		POOL_NUMBER_OF_UNUSED_TO_KEEP = J3DCore.VIEW_DISTANCE*2;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = 10;//J3DCore.VIEW_DISTANCE*2;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
@@ -160,7 +161,9 @@ public class ModelPool {
 				Iterator<PooledNode> it = pic.notUsed.iterator();
 				for (int i=0; i<toDelete; i++)
 				{
-					removed.add(it.next());
+					PooledNode node = it.next();
+					core.removeSolidColorQuadsRecoursive((Node)node);
+					removed.add(node);
 				}
 				pic.notUsed.removeAll(removed);
 				System.out.println("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);

@@ -102,18 +102,21 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Matrix3f m3f = new Matrix3f();
 	
 	static boolean vertexShader = false;
-	static HashMap<TriMesh,Node> sharedParentCache = new HashMap<TriMesh, Node>();
+	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
-	public TrimeshGeometryBatch(J3DCore core, TriMesh trimesh) {
+	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
 		this.core = core;
-		Node parentOrig = sharedParentCache.get(trimesh);
+		Node parentOrig = sharedParentCache.get(id);
 		if (parentOrig==null)
 		{
 			parentOrig = new Node();
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
 			parentOrig.setLightCombineMode(LightState.OFF);
-			sharedParentCache.put(trimesh,parentOrig);
+			sharedParentCache.put(id,parentOrig);
+		} else
+		{
+			System.out.println("TRIMESH #### FOUND IN PARENTCACHE!");
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.attachChild(this);

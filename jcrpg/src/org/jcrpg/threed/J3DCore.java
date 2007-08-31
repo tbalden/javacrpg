@@ -1374,6 +1374,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			hmSolidColorSpatials.remove(((BillboardPartVegetation)s).targetQuad);
 			((BillboardPartVegetation)s).targetQuad = null;
 		}
+		if (s instanceof Node)
+		{
+			hmSolidColorSpatials.remove(s);
+			((Node)s).removeUserData("rotateOnSteep");
+		}
 		if (s.getChildren()!=null)
 		for (Spatial c:s.getChildren())
 		{
@@ -1385,6 +1390,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			if (c instanceof Node)
 			{
+				hmSolidColorSpatials.remove(c);
 				removeSolidColorQuadsRecoursive((Node)c);
 				((Node)c).removeUserData("rotateOnSteep");
 			}
@@ -1896,14 +1902,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
 	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-
-		if (cullVariationCounter%40==0)
+	    System.out.println("hmSolidColorSpatials:"+hmSolidColorSpatials.size());
+	    for (Spatial sp: hmSolidColorSpatials.values())
+	    {
+	    	//System.out.println("SPATIAL : "+sp);
+	    }
+		//if (cullVariationCounter%20==0)
 			modelPool.cleanPools();
 
 		// every 20 steps do a garbage collection
 		garbCollCounter++;
-		if (garbCollCounter==20) {
-			//System.gc();
+		if (garbCollCounter==10) {
+			System.gc();
 			garbCollCounter = 0;
 		}
 		
@@ -2185,7 +2195,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true;
+	public static boolean FREE_MOVEMENT = false;
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
@@ -2711,7 +2721,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
-	           bloomRenderPass.add(groundParentNode);
+	           bloomRenderPass.add(rootNode);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setBlurIntensityMultiplier(1f);
 	           pManager.add(bloomRenderPass);

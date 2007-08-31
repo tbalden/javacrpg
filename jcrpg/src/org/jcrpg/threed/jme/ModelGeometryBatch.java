@@ -62,14 +62,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 	}
 
-	static HashMap<TriMesh,Node> sharedParentCache = new HashMap<TriMesh, Node>();
+	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public ModelGeometryBatch(J3DCore core, Model m) {
 		model = m;
 		this.core = core;
 		TriMesh quad = getModelMesh(m);
 
-		Node parentOrig = sharedParentCache.get(quad);
+		Node parentOrig = sharedParentCache.get(m.id);
 		if (parentOrig==null)
 		{
 			parentOrig = new Node();
@@ -77,7 +77,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (m.type == Model.SIMPLEMODEL) {
 				parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 			}
-			sharedParentCache.put(quad,parentOrig);
+			sharedParentCache.put(m.id,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.attachChild(this);
