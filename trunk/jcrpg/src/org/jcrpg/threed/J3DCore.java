@@ -1313,7 +1313,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		// set fog state color to the light power !
-		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,0.5f));
+		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,1f));
 
 		// SKYSPHERE
 		// moving skysphere with camera
@@ -2504,8 +2504,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		super.quit();
 	}
  
-	private FogState fs_external;
-	private FogState fs_internal;
+	public FogState fs_external;
+	public FogState fs_internal;
     public ShadowedRenderPass sPass = null;
 	private BloomRenderPass bloomRenderPass;
 	
@@ -2658,12 +2658,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_external = display.getRenderer().createFogState();
         fs_external.setDensity(0.5f);
         fs_external.setEnabled(true);
-        fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+        fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         fs_external.setEnd((VIEW_DISTANCE/1.15f));
         fs_external.setStart(3);
         fs_external.setDensityFunction(FogState.DF_LINEAR);
-        fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
-        extRootNode.setRenderState(fs_external);
+        fs_external.setApplyFunction(FogState.AF_PER_PIXEL);
+        //extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
 		fs_internal = display.getRenderer().createFogState();
@@ -2673,8 +2673,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setEnd((VIEW_DISTANCE/1.15f));
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DF_LINEAR);
-		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
-        intRootNode.setRenderState(fs_internal);
+		fs_internal.setApplyFunction(FogState.AF_PER_PIXEL);
+        //intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		
         // default light states
