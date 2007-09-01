@@ -10,14 +10,14 @@ DP4 pos.z, mv[2], vertex.position;
 DP4 pos.w, mv[3], vertex.position;
 ################################
 # Add offset
-ADD pos.xy, pos, vertex.texcoord[0];
+ADD pos.xz, pos, program.local[0];
 ################################
 # Apply projection matrix
-DP4 projpos.x, camPos[0], pos;
-DP4 projpos.y, camPos[1], pos;
-DP4 projpos.z, camPos[2], pos;
-DP4 projpos.w, camPos[3], pos;
-MOV result.position, projpos;
+#DP4 projpos.x, camPos[0], pos;
+#DP4 projpos.y, camPos[1], pos;
+#DP4 projpos.z, camPos[2], pos;
+#DP4 projpos.w, camPos[3], pos;
+MOV result.position, pos;
 MOV result.texcoord[0], vertex.texcoord[0];
 MOV result.color, vertex.color;
 
