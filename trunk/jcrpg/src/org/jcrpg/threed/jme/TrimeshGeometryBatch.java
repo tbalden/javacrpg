@@ -96,7 +96,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		return shader;
 	}
 	static GLSLShaderObjectsState gl = null;
-	static VertexProgramState vp = null;
+	VertexProgramState vp = null;
 	Matrix4f m4f = new Matrix4f();
 	Matrix3f m3f = new Matrix3f();
 	
