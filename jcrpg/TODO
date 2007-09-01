@@ -1,4 +1,5 @@
-[ ] wind animation shader!
+[ ] shadow error, killin render pass
+[X] wind animation shader!
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
