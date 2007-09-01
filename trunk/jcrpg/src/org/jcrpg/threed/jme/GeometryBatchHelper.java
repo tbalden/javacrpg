@@ -52,7 +52,7 @@ public class GeometryBatchHelper {
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 8;
 	
 	/**
-	 * Returns Grouping key for batch objects
+	 * Returns Grouping key for batch objects. The key unifies a group of nodes into a batch.
 	 * @param internal
 	 * @param m
 	 * @param place

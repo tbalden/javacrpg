@@ -1907,13 +1907,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    {
 	    	//System.out.println("SPATIAL : "+sp);
 	    }
-		//if (cullVariationCounter%20==0)
+		if (cullVariationCounter%30==0) {
 			modelPool.cleanPools();
+			System.gc();
+		}
 
 		// every 20 steps do a garbage collection
 		garbCollCounter++;
-		if (garbCollCounter==10) {
-			System.gc();
+		if (garbCollCounter==20) {
+			//
 			garbCollCounter = 0;
 		}
 		
