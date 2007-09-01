@@ -43,7 +43,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
-import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.state.GLSLShaderObjectsState;
@@ -101,7 +100,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Matrix4f m4f = new Matrix4f();
 	Matrix3f m3f = new Matrix3f();
 	
-	static boolean vertexShader = false;
+	static boolean vertexShader = true;
 	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
@@ -114,21 +113,18 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
 			parentOrig.setLightCombineMode(LightState.OFF);
 			sharedParentCache.put(id,parentOrig);
-		} else
-		{
-			System.out.println("TRIMESH #### FOUND IN PARENTCACHE!");
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.attachChild(this);
 		parent.updateModelBound();
-		core.hmSolidColorSpatials.put(parent, parent);
+		J3DCore.hmSolidColorSpatials.put(parent, parent);
 
         if (vertexShader && vp==null)
         { 
         	vp = DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
             //vp.setParameter(lightPosition, 8); // TODO
             try {vp.load(new File(
-                    "./data/shaders/bbGrass3.vp").toURI().toURL());} catch (Exception ex){}
+                    "./data/shaders/bbGrass2.vp").toURI().toURL());} catch (Exception ex){}
             vp.setEnabled(true);
             if (!vp.isSupported())
             {
@@ -147,7 +143,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
     		orient.fromAxes(left1, core.getCamera().getUp(), look);
     		
     		m4f.setRotationQuaternion(orient);
-    		vp.setParameter(new float[]{1f,0,0,0}, 5);
+    		//vp.setParameter(new float[]{1f,0,0,0}, 5);
     		/*vp.setParameter(new float[]{40,0,0,0}, 11);
     		vp.setParameter(new float[]{0,0,0,0}, 12);
     		vp.setParameter(new float[]{0,0,0,0}, 13);*/
@@ -324,18 +320,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				setLocalRotation(q);
 			}
 			
-			if (vertexShader) {
-				m4f.setRotationQuaternion(orient);
-				m4f.setTranslation(new Vector3f(0,0,0));
-	    		/*vp.setParameter(m4f.getColumn(0), 0);
-	    		vp.setParameter(m4f.getColumn(1), 1);
-	    		vp.setParameter(m4f.getColumn(2), 2);
-	    		vp.setParameter(m4f.getColumn(3), 3);*/
-	    		vp.setParameter(new float[]{core.getCamera().getLocation().x,
-	    				core.getCamera().getLocation().y,
-	    				core.getCamera().getLocation().z,
-	    				0}, 6);
-			}
 			
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
 			{
@@ -373,49 +357,56 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			if (whichDiff==-1) {
 				whichDiff = HashUtil.mixPercentage((int)this.getWorldTranslation().x,(int)this.getWorldTranslation().y,(int)this.getWorldTranslation().z)%5;
 			}
-	
-			FloatBuffer fb = null;
-			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+			
+			if (vertexShader) {
+	    		vp.setParameter(new float[]{diffs[whichDiff],diffs[whichDiff],0,0}, 0);
+			}
+			else
 			{
-				TriangleBatch b = geoInstance.mesh.getBatch(0);
-				if (fb==null) {
-					fb = b.getVertexBuffer();
-					if (fb!=null)
-					for (int fIndex = 0; fIndex < fb.capacity(); fIndex++) {
-						boolean f2_1Read = false;
-						boolean f2_2Read = false;
-						float f2_1 = 0;
-						float f2_2 = 0;
-						if (fIndex%12<3 || fIndex%12>=9 && fIndex%12<12) {
-							int mul = 1;
-							if (FastMath.floor(fIndex%12 / 3) == 3)
-								mul = -1;
-							if (fIndex % 3 == 0) {
-								//float f = fb.get(fIndex);
-								if (!f2_1Read) {
-									f2_1 = fb.get(fIndex + 3 * mul);
-									f2_1Read = true;
+	
+				FloatBuffer fb = null;
+				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+				{
+					TriangleBatch b = geoInstance.mesh.getBatch(0);
+					//TriangleBatch b = this.getBatch(0);
+					if (fb==null) {
+						fb = b.getVertexBuffer();
+						if (fb!=null)
+						for (int fIndex = 0; fIndex < fb.capacity(); fIndex++) {
+							boolean f2_1Read = false;
+							boolean f2_2Read = false;
+							float f2_1 = 0;
+							float f2_2 = 0;
+							if (fIndex%12<3 || fIndex%12>=9 && fIndex%12<12) {
+								int mul = 1;
+								if (FastMath.floor(fIndex%12 / 3) == 3)
+									mul = -1;
+								if (fIndex % 3 == 0) {
+									//float f = fb.get(fIndex);
+									if (!f2_1Read) {
+										f2_1 = fb.get(fIndex + 3 * mul);
+										f2_1Read = true;
+									}
+									fb.put(fIndex, f2_1 + diffs[whichDiff]);
 								}
-								fb.put(fIndex, f2_1 + diffs[whichDiff]);
-							}
-							if (fIndex % 3 == 2) {
-								//float f = fb.get(fIndex);
-								if (!f2_2Read) {
-									f2_2 = fb.get(fIndex + 3 * mul);
-									f2_2Read = true;
+								if (fIndex % 3 == 2) {
+									//float f = fb.get(fIndex);
+									if (!f2_2Read) {
+										f2_2 = fb.get(fIndex + 3 * mul);
+										f2_2Read = true;
+									}
+									fb.put(fIndex, f2_2 + diffs[whichDiff]);
 								}
-								fb.put(fIndex, f2_2 + diffs[whichDiff]);
 							}
 						}
+					} else
+					{
+						b.setVertexBuffer(fb);
 					}
-				} else
-				{
-					b.setVertexBuffer(fb);
+					geoInstance.preCommit(true); // update vertices
 				}
-				geoInstance.preCommit(true); // update vertices
 			}
 		}
-
 		super.onDraw(r);
 	}
 	

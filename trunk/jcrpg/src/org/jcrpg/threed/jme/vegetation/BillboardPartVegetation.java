@@ -358,7 +358,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			Vector3f left1 = core.getCamera().getLeft().negate();
 			Quaternion orient = new Quaternion();
 			orient.fromAxes(left1, core.getCamera().getUp(), look);
-			targetQuad.setLocalRotation(orient);
+			targetQuad.setLocalRotation(new Quaternion());
 			targetQuad.getWorldRotation().set(new Quaternion());
 			batch.addItem(null, targetQuad);
 		}
