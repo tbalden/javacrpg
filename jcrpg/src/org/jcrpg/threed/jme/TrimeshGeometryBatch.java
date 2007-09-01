@@ -45,6 +45,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
@@ -97,6 +98,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	}
 	static GLSLShaderObjectsState gl = null;
 	VertexProgramState vp = null;
+	FragmentProgramState fp = null;
 	Matrix4f m4f = new Matrix4f();
 	Matrix3f m3f = new Matrix3f();
 	
@@ -111,6 +113,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			parentOrig = new Node();
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
+			//parentOrig.setRenderState(core.f)
 			parentOrig.setLightCombineMode(LightState.OFF);
 			sharedParentCache.put(id,parentOrig);
 		}
@@ -122,13 +125,21 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
         if (vertexShader && vp==null)
         { 
         	vp = DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
-            //vp.setParameter(lightPosition, 8); // TODO
             try {vp.load(new File(
                     "./data/shaders/bbGrass2.vp").toURI().toURL());} catch (Exception ex){}
             vp.setEnabled(true);
             if (!vp.isSupported())
             {
             	System.out.println("!!!!!!! NO VP !!!!!!!");
+            }
+            
+        	fp = DisplaySystem.getDisplaySystem().getRenderer().createFragmentProgramState();
+            try {fp.load(new File(
+                    "./data/shaders/bbGrass2.fp").toURI().toURL());} catch (Exception ex){}
+            vp.setEnabled(true);
+            if (!fp.isSupported())
+            {
+            	System.out.println("!!!!!!! NO FP !!!!!!!");
             }
             
             
@@ -148,7 +159,11 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
     		vp.setParameter(new float[]{0,0,0,0}, 12);
     		vp.setParameter(new float[]{0,0,0,0}, 13);*/
         }
-        if (vertexShader) parent.setRenderState(vp);
+        if (vertexShader) {
+        	parent.setRenderState(vp);
+        	//parent.setRenderState(fp);
+        	//parent.setRenderState(core.fs_external);
+        }
         
 		/*if (gl==null) {
 			gl = createShader(shaderDirectory, shaderName);
@@ -360,6 +375,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			
 			if (vertexShader) {
 	    		vp.setParameter(new float[]{diffs[whichDiff],diffs[whichDiff],0,0}, 0);
+	    		fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 			}
 			else
 			{
