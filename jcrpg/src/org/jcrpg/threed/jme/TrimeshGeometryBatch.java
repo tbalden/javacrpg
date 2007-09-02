@@ -189,6 +189,14 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
+		
+		/*TriMesh emptyTrimesh = new TriMesh();
+		emptyTrimesh.setLocalTranslation(trimesh.getLocalTranslation());
+		emptyTrimesh.setLocalScale(trimesh.getLocalScale());
+		emptyTrimesh.setLocalRotation(trimesh.getLocalRotation());
+		FloatBuffer f = trimesh.getVertexBuffer(0).duplicate();
+		emptyTrimesh.setVertexBuffer(0, f); TODO */
+		//trimesh = emptyTrimesh;
 		if (notVisible.size()>0)
 		{
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = notVisible.iterator().next();
@@ -276,6 +284,74 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public static final long TIME_LIMIT = 0;
 	Quaternion orient = null;
 	
+	boolean updatedForHorRot = false;
+	public boolean updateVertexForHorRot()
+	{
+		if (updatedForHorRot) return false;
+		updatedForHorRot = true;
+		FloatBuffer fb = null;
+		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+		{
+			TriangleBatch b = geoInstance.mesh.getBatch(0);
+			//TriangleBatch b = this.getBatch(0);
+			if (fb==null) {
+				FloatBuffer buff = b.getVertexBuffer();
+				for (int i=0; i<4; i++)
+				{
+					float cX = -1;
+					float cZ = -1;
+					for (int j=0; j<3; j++) {
+						if (j==0) {
+							cX = buff.get(i*3+j);
+						} else
+						if (j==2)
+						{
+							cZ = buff.get(i*3+j);
+						}
+					}
+					buff.put(i*3 , -cZ);
+					buff.put(i*3 + 2 , -cX);
+				}
+				fb = buff;
+			} else
+			{
+				b.setVertexBuffer(fb);
+			}
+			geoInstance.preCommit(true); // update vertices
+			geoInstance.updateMesh();
+		}					
+		for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:notVisible)
+		{
+			TriangleBatch b = geoInstance.mesh.getBatch(0);
+			//TriangleBatch b = this.getBatch(0);
+			if (fb==null) {
+				FloatBuffer buff = b.getVertexBuffer();
+				for (int i=0; i<4; i++)
+				{
+					float cX = -1;
+					float cZ = -1;
+					for (int j=0; j<3; j++) {
+						if (j==0) {
+							cX = buff.get(i*3+j);
+						} else
+						if (j==2)
+						{
+							cZ = buff.get(i*3+j);
+						}
+					}
+					buff.put(i*3 , -cZ);
+					buff.put(i*3 + 2 , -cX);
+				}
+				fb = buff;
+			} else
+			{
+				b.setVertexBuffer(fb);
+			}
+			geoInstance.preCommit(true); // update vertices
+		}
+		return true;
+	}
+	
 	@Override
 	public void onDraw(Renderer r) {
 		Vector3f look = core.getCamera().getDirection().negate();
@@ -300,6 +376,11 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		lastLook.set(look);
 		lastLeft.set(left1);
 
+		if (horizontalRotation!=null)
+		{
+			
+			needsUpdate = updateVertexForHorRot();
+		}
 		
 		if (needsUpdate) {
 			orient = new Quaternion();
@@ -321,7 +402,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	    		vp.setParameter(horRot.getColumn(3), 4);*/
 
 				// mult orient, it's a must, this way separate instances will be rotated too to camera and position in cube:				
-				orient = horizontalRotation.mult(orient);
+				//
 				
 				// biggest hack of billboard rotation in the world comes here...by experimentation, and still not flawless :-)
 				
@@ -334,37 +415,112 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 						direction = qH.getKey();
 					}
 				}
+				
 				// TODO looking left/right totally makes it wrong! camera direction fixing??
 				// if west or east the trick must be done to correct (not totally) the rotation quaternion
 				if (direction.intValue() == J3DCore.WEST) {
-					if (core.viewDirection == J3DCore.NORTH) {
-						orient.w = -orient.w;
-						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.SOUTH) {
-						orient.z = -orient.z;
-						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.WEST) {
-						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.EAST) {
-						orient.x = -orient.x;
-					}
-				} else if (direction.intValue() == J3DCore.EAST) {
+					
+
 					if (core.viewDirection == J3DCore.SOUTH) {
-						orient.w = -orient.w;
+						float temp = orient.y;
+						orient.y = orient.w;
+						orient.w = temp;
 						orient.y = -orient.y;
 					} else if (core.viewDirection == J3DCore.NORTH) {
-						orient.z = -orient.z;
-						orient.y = -orient.y;
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
 					} else if (core.viewDirection == J3DCore.EAST) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+
+						temp = orient.y;
+						orient.y = -orient.w;
+						orient.w = temp;
+					}else if (core.viewDirection == J3DCore.WEST) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+
+						temp = orient.y;
+						orient.y = orient.w;
+						orient.w = -temp;
+					} 
+				} else if (direction.intValue() == J3DCore.EAST) {
+					if (core.viewDirection == J3DCore.SOUTH) {
+						float temp = orient.y;
+						orient.y = orient.w;
+						orient.w = -temp;
 						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.NORTH) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = -temp;
+					} else if (core.viewDirection == J3DCore.EAST) {
+						float temp = orient.y;
+						orient.y = orient.w;
+						orient.w = temp;
+						orient.w = -orient.w;
 					} else if (core.viewDirection == J3DCore.WEST) {
-						orient.x = -orient.x;
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+						orient.z = -orient.z;
 					}
 				} else if (direction.intValue() == J3DCore.NORTH) {
 					// nothing to do, it's correct
 				} else if (direction.intValue() == J3DCore.SOUTH) {
 					// nothing to do, it's correct
-				}				
+				}
+				
+				//orient = horizontalRotation.mult(orient);
+				/*
+				if (direction.intValue() == J3DCore.WEST) {
+					if (core.viewDirection == J3DCore.NORTH) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+					} else if (core.viewDirection == J3DCore.SOUTH) {
+						float temp = orient.y;
+						orient.y = orient.w;
+						orient.w = temp;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.WEST) {
+						orient.y = -orient.y;
+						orient.w = -orient.w;
+					} else if (core.viewDirection == J3DCore.EAST) {
+						orient.x = -orient.x;
+						orient.z = -orient.z;
+					}
+				} else if (direction.intValue() == J3DCore.EAST) {
+					if (core.viewDirection == J3DCore.SOUTH) {
+						float temp = orient.z;
+						orient.z = orient.y;
+						orient.y = temp;
+					} else if (core.viewDirection == J3DCore.NORTH) {
+						float temp = orient.z;
+						orient.z = -orient.y;
+						orient.y = -temp;
+						temp = orient.w;
+						orient.w = -orient.x;
+						orient.x = -temp;
+						
+					} else if (core.viewDirection == J3DCore.EAST) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+					} else if (core.viewDirection == J3DCore.WEST) {
+						float temp = orient.x;
+						orient.x = orient.z;
+						orient.z = temp;
+					}
+				} else if (direction.intValue() == J3DCore.NORTH) {
+					// nothing to do, it's correct
+				} else if (direction.intValue() == J3DCore.SOUTH) {
+					// nothing to do, it's correct
+				}*/
+				
 				
 				// rotation the whole trimesh to position in the cube:
 				setLocalRotation(horizontalRotation);

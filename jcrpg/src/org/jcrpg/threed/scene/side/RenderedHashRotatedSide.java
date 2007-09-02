@@ -1,5 +1,6 @@
 package org.jcrpg.threed.scene.side;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.util.HashUtil;
 
@@ -28,7 +29,7 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	
 	public int rotation(int x,int y,int z)
 	{
-		return HashUtil.mix(x, y, z)%4;
+		return J3DCore.WEST;//(HashUtil.mix(x, y, z)%2)*2 + 1;
 	}
 	
 	public float scale(int x,int y,int z)
