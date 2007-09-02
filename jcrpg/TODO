@@ -1,5 +1,6 @@
 [ ] shadow error, killin render pass
-[X] wind animation shader!
+[ ] billboard rotated of foliage upon looking left right very ugly! maybe adding more negation in TrimeshGeomBatch, test it?
+
 
 [ ] Cave: implement surface interface!
 [?] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
@@ -40,6 +41,9 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] fog shader
+[X] wind animation shader!
+
 [X] grass to GeometryBatch
 	[X] common GeometryBatch for grass -> less object creation?
 	[X] billboarding
