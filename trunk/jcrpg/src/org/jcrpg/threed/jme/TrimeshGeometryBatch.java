@@ -327,13 +327,14 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				
 				// fetching horizontal rotation direction:
 				Integer direction = new Integer(0);
-				for (Entry<Integer, Quaternion> qH : core.horizontalRotationsReal.entrySet())
+				for (Entry<Integer, Quaternion> qH : J3DCore.horizontalRotationsReal.entrySet())
 				{
 					if (qH.getValue().equals(horizontalRotation))
 					{
 						direction = qH.getKey();
 					}
 				}
+				// TODO looking left/right totally makes it wrong! camera direction fixing??
 				// if west or east the trick must be done to correct (not totally) the rotation quaternion
 				if (direction.intValue() == J3DCore.WEST) {
 					if (core.viewDirection == J3DCore.NORTH) {
@@ -368,7 +369,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				// rotation the whole trimesh to position in the cube:
 				setLocalRotation(horizontalRotation);
 			} else {
-				Matrix4f horRot = new Matrix4f();
+				//Matrix4f horRot = new Matrix4f();
 				// horizontalRotation.toRotationMatrix(horRot);
 	    		/*
 				 * vp.setParameter(horRot.getColumn(0), 1);
@@ -378,6 +379,15 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				 */
 				setLocalRotation(q);
 			}
+			if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
+				fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+			} else
+			{
+				//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+				fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+			}
+			float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
+			fp.setParameter(new float[]{1.15f-dist/(J3DCore.VIEW_DISTANCE*1.14f),0,0,0}, 1);
 			
 			
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
