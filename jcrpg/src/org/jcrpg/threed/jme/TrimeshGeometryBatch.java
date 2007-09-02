@@ -26,6 +26,7 @@ import java.io.File;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -306,7 +307,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 
 			// reseting orientation of parent, and self
 			Quaternion q = new Quaternion();
-			//parent.getWorldRotation().set(q); 
 			parent.setLocalRotation(q);
 			getWorldRotation().set(q);
 			
@@ -319,16 +319,63 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	    		vp.setParameter(horRot.getColumn(1), 2);
 	    		vp.setParameter(horRot.getColumn(2), 3);
 	    		vp.setParameter(horRot.getColumn(3), 4);*/
-				// mult orient, it's a must:
-				orient.multLocal(horizontalRotation);//.multLocal(horizontalRotation);
-				setLocalRotation(horizontalRotation);//.mult(horizontalRotation));
+
+				// mult orient, it's a must, this way separate instances will be rotated too to camera and position in cube:				
+				orient = horizontalRotation.mult(orient);
+				
+				// biggest hack of billboard rotation in the world comes here...by experimentation, and still not flawless :-)
+				
+				// fetching horizontal rotation direction:
+				Integer direction = new Integer(0);
+				for (Entry<Integer, Quaternion> qH : core.horizontalRotationsReal.entrySet())
+				{
+					if (qH.getValue().equals(horizontalRotation))
+					{
+						direction = qH.getKey();
+					}
+				}
+				// if west or east the trick must be done to correct (not totally) the rotation quaternion
+				if (direction.intValue() == J3DCore.WEST) {
+					if (core.viewDirection == J3DCore.NORTH) {
+						orient.w = -orient.w;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.SOUTH) {
+						orient.z = -orient.z;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.WEST) {
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.EAST) {
+						orient.x = -orient.x;
+					}
+				} else if (direction.intValue() == J3DCore.EAST) {
+					if (core.viewDirection == J3DCore.SOUTH) {
+						orient.w = -orient.w;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.NORTH) {
+						orient.z = -orient.z;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.EAST) {
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.WEST) {
+						orient.x = -orient.x;
+					}
+				} else if (direction.intValue() == J3DCore.NORTH) {
+					// nothing to do, it's correct
+				} else if (direction.intValue() == J3DCore.SOUTH) {
+					// nothing to do, it's correct
+				}				
+				
+				// rotation the whole trimesh to position in the cube:
+				setLocalRotation(horizontalRotation);
 			} else {
 				Matrix4f horRot = new Matrix4f();
-				//horizontalRotation.toRotationMatrix(horRot);
-	    		/*vp.setParameter(horRot.getColumn(0), 1);
-	    		vp.setParameter(horRot.getColumn(1), 2);
-	    		vp.setParameter(horRot.getColumn(2), 3);
-	    		vp.setParameter(horRot.getColumn(3), 4);*/
+				// horizontalRotation.toRotationMatrix(horRot);
+	    		/*
+				 * vp.setParameter(horRot.getColumn(0), 1);
+				 * vp.setParameter(horRot.getColumn(1), 2);
+				 * vp.setParameter(horRot.getColumn(2), 3);
+				 * vp.setParameter(horRot.getColumn(3), 4);
+				 */
 				setLocalRotation(q);
 			}
 			
@@ -336,8 +383,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
 			{
 				geoInstance.getAttributes().setRotation(orient);
-				geoInstance.getAttributes().getWorldMatrix().set(new Matrix4f());
-				geoInstance.getAttributes().getNormalMatrix().set(new Matrix4f());
 				geoInstance.getAttributes().buildMatrices();
 			}
 		}
