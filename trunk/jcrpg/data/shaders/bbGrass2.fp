@@ -7,8 +7,9 @@ TEMP final2;
 TEMP diffuse;
 TEX diffuse, fragment.texcoord[0], texture[0], 2D;
 #MUL diffuse.xyz, diffuse, 1;
-MUL finalColor, fragment.color, diffuse;
-MUL result.color, finalColor, fragment.color.primary;
+MUL result.color, fragment.color, diffuse;
+#MUL finalColor, fragment.color, diffuse;
+#MUL result.color, finalColor, fragment.color.primary;
 
 #TEX finalColor, fragment.texcoord[0], texture[0], 2D;
 
