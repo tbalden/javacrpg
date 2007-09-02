@@ -342,6 +342,26 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 			targetQuad.setLocalRotation(new Quaternion());
+			TriangleBatch tBatch = targetQuad.getBatch(0);
+			// swapping X,Z
+			/*FloatBuffer buff = tBatch.getVertexBuffer();
+			for (int i=0; i<4; i++)
+			{
+				float cX = -1;
+				float cZ = -1;
+				for (int j=0; j<3; j++) {
+					if (j==0) {
+						cX = buff.get(i*3+j);
+					} else
+					if (j==2)
+					{
+						cZ = buff.get(i*3+j);
+					}
+				}
+				buff.put(i*3 , -cZ);
+				buff.put(i*3 + 2 , -cX);
+			}*/
+			
 			quadCache.put(model.id, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
@@ -354,10 +374,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			}
 			//targetQuad.setLocalTranslation(x, y, z);
 			targetQuad.setLocalTranslation(x, z, -y);
-			Vector3f look = core.getCamera().getDirection().negate();
+/*			Vector3f look = core.getCamera().getDirection().negate();
 			Vector3f left1 = core.getCamera().getLeft().negate();
 			Quaternion orient = new Quaternion();
-			orient.fromAxes(left1, core.getCamera().getUp(), look);
+			orient.fromAxes(left1, core.getCamera().getUp(), look);*/
 			targetQuad.setLocalRotation(new Quaternion());
 			targetQuad.getWorldRotation().set(new Quaternion());
 			batch.addItem(null, targetQuad);
