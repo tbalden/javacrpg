@@ -142,27 +142,11 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
             	System.out.println("!!!!!!! NO FP !!!!!!!");
             }
             
-            
-            //m4f.s
-            
-            Matrix3f m3f = new Matrix3f();
-            
-    		Vector3f look = core.getCamera().getDirection().negate();
-    		Vector3f left1 = core.getCamera().getLeft().negate();
-    		Vector3f loc = core.getCamera().getLocation();
-    		Quaternion orient = new Quaternion();
-    		orient.fromAxes(left1, core.getCamera().getUp(), look);
-    		
-    		m4f.setRotationQuaternion(orient);
-    		//vp.setParameter(new float[]{1f,0,0,0}, 5);
-    		/*vp.setParameter(new float[]{40,0,0,0}, 11);
-    		vp.setParameter(new float[]{0,0,0,0}, 12);
-    		vp.setParameter(new float[]{0,0,0,0}, 13);*/
         }
         if (vertexShader) {
-        	parent.setRenderState(vp);
-        	//parent.setRenderState(fp);
-        	//parent.setRenderState(core.fs_external);
+        	this.setRenderState(core.fs_external);
+        	this.setRenderState(vp);
+        	this.setRenderState(fp);
         }
         
 		/*if (gl==null) {
@@ -322,16 +306,29 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 
 			// reseting orientation of parent, and self
 			Quaternion q = new Quaternion();
-			parent.getWorldRotation().set(q); 
+			//parent.getWorldRotation().set(q); 
 			parent.setLocalRotation(q);
 			getWorldRotation().set(q);
 			
 			if (horizontalRotation!=null) {
 				// needs horizontal rotation
-				setLocalRotation(horizontalRotation);
+				
+				/*Matrix4f horRot = new Matrix4f();
+				horizontalRotation.toRotationMatrix(horRot);
+	    		vp.setParameter(horRot.getColumn(0), 1);
+	    		vp.setParameter(horRot.getColumn(1), 2);
+	    		vp.setParameter(horRot.getColumn(2), 3);
+	    		vp.setParameter(horRot.getColumn(3), 4);*/
 				// mult orient, it's a must:
-				orient.multLocal(horizontalRotation);
+				orient.multLocal(horizontalRotation);//.multLocal(horizontalRotation);
+				setLocalRotation(horizontalRotation);//.mult(horizontalRotation));
 			} else {
+				Matrix4f horRot = new Matrix4f();
+				//horizontalRotation.toRotationMatrix(horRot);
+	    		/*vp.setParameter(horRot.getColumn(0), 1);
+	    		vp.setParameter(horRot.getColumn(1), 2);
+	    		vp.setParameter(horRot.getColumn(2), 3);
+	    		vp.setParameter(horRot.getColumn(3), 4);*/
 				setLocalRotation(q);
 			}
 			
@@ -339,6 +336,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
 			{
 				geoInstance.getAttributes().setRotation(orient);
+				geoInstance.getAttributes().getWorldMatrix().set(new Matrix4f());
+				geoInstance.getAttributes().getNormalMatrix().set(new Matrix4f());
 				geoInstance.getAttributes().buildMatrices();
 			}
 		}

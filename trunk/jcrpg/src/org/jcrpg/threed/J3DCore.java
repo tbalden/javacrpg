@@ -2656,13 +2656,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
 		fs_external = display.getRenderer().createFogState();
-        fs_external.setDensity(0.5f);
-        fs_external.setEnabled(true);
+        fs_external.setDensity(1.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         fs_external.setEnd((VIEW_DISTANCE/1.15f));
         fs_external.setStart(3);
         fs_external.setDensityFunction(FogState.DF_LINEAR);
-        fs_external.setApplyFunction(FogState.AF_PER_PIXEL);
+        fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
+        fs_external.setNeedsRefresh(true);
+        fs_external.setEnabled(true);
         //extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
@@ -2673,7 +2674,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setEnd((VIEW_DISTANCE/1.15f));
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DF_LINEAR);
-		fs_internal.setApplyFunction(FogState.AF_PER_PIXEL);
+		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
         //intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		

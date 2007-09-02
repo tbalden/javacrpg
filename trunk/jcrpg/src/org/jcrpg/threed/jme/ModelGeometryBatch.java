@@ -37,7 +37,6 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 
 public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
