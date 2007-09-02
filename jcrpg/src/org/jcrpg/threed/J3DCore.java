@@ -793,8 +793,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.5f,0.4f,3,0.7f);
-		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower.png"},0.8f,0.55f,2,1.0f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.7f,0.3f,3,0.7f);
+		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower.png"},0.6f,0.40f,2,1.0f);
 		//,"grass1_flower.png","grass1_flower_2.png"
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
@@ -924,16 +924,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		// lod vegetations
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
-		hm3dTypeRenderedSide.put(new Integer(12), new RenderedSide(new Model[]{lod_cherry}));
-		hm3dTypeRenderedSide.put(new Integer(15), new RenderedSide(new Model[]{lod_palm}));
-		hm3dTypeRenderedSide.put(new Integer(18), new RenderedSide(new Model[]{lod_pine}));
+		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{lod_cherry}));
+		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
+		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{lod_pine}));
 		hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{lod_bush1})); 
-		hm3dTypeRenderedSide.put(new Integer(20), new RenderedSide(new Model[]{lod_acacia}));
+		hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{lod_acacia}));
 		hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{lod_cactus}));
-		hm3dTypeRenderedSide.put(new Integer(24), new RenderedSide(new Model[]{lod_jungletrees_mult}));
-		hm3dTypeRenderedSide.put(new Integer(25), new RenderedSide(new Model[]{lod_great_pine}));
-		hm3dTypeRenderedSide.put(new Integer(26), new RenderedSide(new Model[]{lod_fern}));
-		hm3dTypeRenderedSide.put(new Integer(30), new RenderedSide(new Model[]{lod_jungle_bush1}));
+		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
+		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
+		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
 
 
 		if (!LOD_VEG)
@@ -2656,7 +2656,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
 		fs_external = display.getRenderer().createFogState();
-        fs_external.setDensity(1.5f);
+        fs_external.setDensity(0.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         fs_external.setEnd((VIEW_DISTANCE/1.15f));
         fs_external.setStart(3);
@@ -2664,7 +2664,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
         fs_external.setNeedsRefresh(true);
         fs_external.setEnabled(true);
-        //extRootNode.setRenderState(fs_external);
+        extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
 		fs_internal = display.getRenderer().createFogState();
@@ -2675,7 +2675,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DF_LINEAR);
 		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
-        //intRootNode.setRenderState(fs_internal);
+        intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		
         // default light states
