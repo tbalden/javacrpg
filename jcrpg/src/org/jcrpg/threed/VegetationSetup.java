@@ -129,8 +129,8 @@ public class VegetationSetup {
 			quadCache.put(tm.getKey(), quads);
 		}
 		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
-		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
-		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/50f) - (100/50f/2f);
+		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/50f) - (100/50f/2f);
 		x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
 		z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
 		x = Math.max(x,  + quadSeparation/4f);

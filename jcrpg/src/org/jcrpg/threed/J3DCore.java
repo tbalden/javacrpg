@@ -633,12 +633,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		acacia_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
-		bush.quadXSizeMultiplier = 3.5f;
-		bush.quadYSizeMultiplier = 3.5f;
+		bush.quadXSizeMultiplier = 2.6f;
+		bush.quadYSizeMultiplier = 2.6f;
 		bush.shadowCaster = true;
 		PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
-		bush_low.quadXSizeMultiplier = 3.5f;
-		bush_low.quadYSizeMultiplier = 3.5f;
+		bush_low.quadXSizeMultiplier = 2.0f;
+		bush_low.quadYSizeMultiplier = 2.0f;
 		bush_low.shadowCaster = true;
 		PartlyBillboardModel bush_lowest = new PartlyBillboardModel("pbm_bush_2","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
 		PartlyBillboardModel bush_lowest_2 = new PartlyBillboardModel("pbm_bush_3","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},3,MIPMAP_TREES);
@@ -656,7 +656,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel fern_lowest = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},2,MIPMAP_TREES);
 */
 		PartlyBillboardModel pine_high = new PartlyBillboardModel("pbm_pine_0","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},0,MIPMAP_TREES);
-		pine_high.quadXSizeMultiplier = 3.5f;
+		pine_high.quadXSizeMultiplier = 3.0f;
 		pine_high.quadYSizeMultiplier = 3.5f;
 		pine_high.shadowCaster = true;
 		PartlyBillboardModel pine_low = new PartlyBillboardModel("pbm_pine_1","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
@@ -664,11 +664,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		pine_low.quadYSizeMultiplier = 3f;
 		pine_low.shadowCaster = true;
 		PartlyBillboardModel pine_lowest = new PartlyBillboardModel("pbm_pine_2","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},2,MIPMAP_TREES);
-		pine_lowest.quadXSizeMultiplier = 2f;
+		pine_lowest.quadXSizeMultiplier = 1.6f;
 		pine_lowest.quadYSizeMultiplier = 3f;
 		pine_lowest.windAnimation = false;
 		PartlyBillboardModel pine_lowest_2 = new PartlyBillboardModel("pbm_pine_3","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},3,MIPMAP_TREES);
-		pine_lowest_2.quadXSizeMultiplier = 2f;
+		pine_lowest_2.quadXSizeMultiplier = 1.6f;
 		pine_lowest_2.quadYSizeMultiplier = 3f;
 		pine_lowest_2.windAnimation = false;
 
@@ -681,12 +681,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		great_pine_low.quadYSizeMultiplier = 2.5f;
 		great_pine_low.shadowCaster = true;
 		PartlyBillboardModel great_pine_lowest = new PartlyBillboardModel("pbm_great_pine_2","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},2,MIPMAP_TREES);
-		great_pine_lowest.quadXSizeMultiplier = 1.6f;
-		great_pine_lowest.quadYSizeMultiplier = 2.5f;
+		great_pine_lowest.quadXSizeMultiplier = 1.3f;
+		great_pine_lowest.quadYSizeMultiplier = 2.0f;
 		great_pine_lowest.windAnimation = false;
 		PartlyBillboardModel great_pine_lowest_2 = new PartlyBillboardModel("pbm_great_pine_3","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},3,MIPMAP_TREES);
-		great_pine_lowest_2.quadXSizeMultiplier = 1.6f;
-		great_pine_lowest_2.quadYSizeMultiplier = 2.5f;
+		great_pine_lowest_2.quadXSizeMultiplier = 1.3f;
+		great_pine_lowest_2.quadYSizeMultiplier = 2.0f;
 		great_pine_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_1.png"},0,MIPMAP_TREES);
@@ -732,12 +732,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		coconut_lowest_2.cullNone = true;
 
 		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("pbm_jungle_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
-		jungle_bush.quadXSizeMultiplier = 3.5f;
-		jungle_bush.quadYSizeMultiplier = 3.5f;
+		jungle_bush.quadXSizeMultiplier = 2f;
+		jungle_bush.quadYSizeMultiplier = 2f;
 		jungle_bush.shadowCaster = true;
 		PartlyBillboardModel jungle_bush_low = new PartlyBillboardModel("pbm_jungle_bush_1","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},1,MIPMAP_TREES);
-		jungle_bush_low.quadXSizeMultiplier = 3.5f;
-		jungle_bush_low.quadYSizeMultiplier = 3.5f;
+		jungle_bush_low.quadXSizeMultiplier = 1.6f;
+		jungle_bush_low.quadYSizeMultiplier = 1.6f;
 		jungle_bush_low.shadowCaster = true;
 		PartlyBillboardModel jungle_bush_lowest = new PartlyBillboardModel("pbm_jungle_bush_2","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},2,MIPMAP_TREES);
 		PartlyBillboardModel jungle_bush_lowest_2 = new PartlyBillboardModel("pbm_jungle_bush_3","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},3,MIPMAP_TREES);
@@ -1735,7 +1735,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							} if (true==false)*/ 
 							
 							{
-								Node realPooledNode = (Node)modelPool.getModel(c, n.model);
+								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
 								if (realPooledNode==null) continue;
 								n.realNode = (PooledNode)realPooledNode;
 							
@@ -1779,6 +1779,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 										s.setLocalScale(n.getLocalScale());
 									}
 								}
+								
 								if (c.cube.internalLight) {
 									intRootNode.attachChild((Node)realPooledNode);
 								} else 

@@ -85,19 +85,78 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	
 	TrimeshGeometryBatch batch;
 	
-	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model) {
+	boolean horRotated = false;
+	
+	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model, boolean horRotated) {
 		this.core = core;
 		this.cam = cam;
 		this.viewDistance = viewDistance;
 		this.model = model;
+		this.horRotated = horRotated;
+	}
+	
+	public class QuadParams
+	{
+		public String name;
+		public TextureState[] states;
+		public String key; 
+		public float xSize, ySize, x, y, z;
+		public QuadParams(String name, TextureState[] states, String key, float xSize, float ySize, float x, float y,
+				float z) {
+			super();
+			this.name = name;
+			this.states = states;
+			this.key = key;
+			this.xSize = xSize;
+			this.ySize = ySize;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+		
+	}
+	
+	public HashSet<QuadParams> quads = new HashSet<QuadParams>();
+	public HashSet<SharedMesh> quadMeshes = new HashSet<SharedMesh>();
+	
+	public void fillBillboardQuadsRotated(boolean rotated)
+	{
+		if (NO_BATCH_GEOMETRY)
+		{
+			for (SharedMesh mesh:quadMeshes)
+			{
+				mesh.removeFromParent();
+			}
+		} else
+		{
+			if (this.parent!=null) {
+				this.parent.removeFromParent();
+				batch = null;
+			}
+		}
+		for (QuadParams quadParams: quads)
+		{
+			SharedMesh mesh = createQuad(rotated, quadParams.name, quadParams.states, quadParams.key, quadParams.xSize, quadParams.ySize, quadParams.x, quadParams.y, quadParams.z);
+			if (NO_BATCH_GEOMETRY) 
+			{
+				this.attachChild(mesh);
+			}
+		}
+		if (!NO_BATCH_GEOMETRY) {
+			this.attachChild(batch.parent);
+			batch.parent.getWorldRotation().set(new Quaternion());
+			batch.parent.setLocalRotation(new Quaternion());
+			batch.getWorldRotation().set(new Quaternion());
+			batch.setLocalRotation(new Quaternion());
+		}
+		
 	}
 	
 	public Quad targetQuad = null; 
-	
 	public void transformTrimeshesToQuads(Spatial child) {
-		// TODO get down to the batchtri children, remove them and replace
+		// get down to the batchtri children, remove them and replace
 		// double tris with new quads, based on the average x/y/z coords of the
-		// 6 vertices of the two triangle of one original leaf! (use draw code!)
+		// 4 vertices of the two triangle of one original leaf!
 
 		// billboard world rotation calc
 		Vector3f look = cam.getDirection().negate();
@@ -108,7 +167,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		Matrix3f orient1 = new Matrix3f();
 		orient1.fromAxes(left1, cam.getUp(), look);
 		
-		HashSet<TriMesh> added = new HashSet<TriMesh>();
+		int added = 0;
 		HashSet<TriMesh> removed = new HashSet<TriMesh>();
 		TextureState[] states = core.modelLoader.loadTextureStates(model.billboardPartTextures);
 		for (int i=0; i<states.length; i++) {
@@ -228,7 +287,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														counter++;
 													}
 												}
-												if (model.LOD==3 && added.size()<1)
+												if (model.LOD==3 && added<1)
 												{
 													if (doubleTriIndex<maxDoubleTri-1)
 													{
@@ -241,11 +300,11 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														float z = sumLodZ/(maxDoubleTri-1);
 														float xSize = ((xDiff+yDiff+zDiff)/2f*(4f))*model.quadXSizeMultiplier;
 														float ySize = ((xDiff+yDiff+zDiff)/2f)*(4f)*model.quadYSizeMultiplier;
-														SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x,y,z);
-														if (NO_BATCH_GEOMETRY) added.add(quad);
+														storeQuadParams(q.getName(),states,key,xSize,ySize,x,y,z);
+														added++;
 													}
 												} else
-												if (model.LOD==2 && added.size()<1)
+												if (model.LOD==2 && added<1)
 												{
 													if (doubleTriIndex<maxDoubleTri-1)
 													{
@@ -260,27 +319,16 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														float ySize = ((xDiff+yDiff+zDiff)/2f)*2f;
 														float xSizeM = xSize*model.quadXSizeMultiplier;
 														float ySizeM = ySize*model.quadYSizeMultiplier;
-														SharedMesh quad1_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
-														SharedMesh quad2_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
-														SharedMesh quad3_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
-														SharedMesh quad4_1 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z-ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z-ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z-ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z-ySize/5);
 														
-														SharedMesh quad1_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z+ySize/5);
-														SharedMesh quad2_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z+ySize/5);
-														SharedMesh quad3_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
-														SharedMesh quad4_2 = createQuad(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
-														
-														if (NO_BATCH_GEOMETRY) 
-														{
-															added.add(quad1_1);
-															added.add(quad2_1);
-															added.add(quad3_1);
-															added.add(quad4_1);
-															added.add(quad1_2);
-															added.add(quad2_2);
-															added.add(quad3_2);
-															added.add(quad4_2);
-														}
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y-ySize/5,z+ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x-xSize/5,y+ySize/5,z+ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y-ySize/5,z+ySize/5);
+														storeQuadParams(q.getName(),states,key,xSizeM,ySizeM,x+xSize/5,y+ySize/5,z+ySize/5);
+														added+=8;
 													}
 												} else
 												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1) 
@@ -290,8 +338,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 													float z = sumZ/counter;
 													float xSize = ((xDiff+yDiff+zDiff)/2f*(1+model.LOD/2f))*model.quadXSizeMultiplier;
 													float ySize = ((xDiff+yDiff+zDiff)/2f)*(1+model.LOD/2f)*model.quadYSizeMultiplier;
-													SharedMesh quad = createQuad(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
-													if (NO_BATCH_GEOMETRY) added.add(quad);
+													storeQuadParams(q.getName(),states,key,xSize,ySize,x+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,y-HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f,z+HashUtil.mixPercentage(doubleTriIndex, 0, 0)/5000f);
+													added++;
 												}
 											}
 										}
@@ -306,31 +354,25 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 						}
 						for (TriMesh t:removed)
 							n.detachChild(t);
-						if (NO_BATCH_GEOMETRY) 
-						{
-							for (TriMesh q:added) 
-							{
-								n.attachChild(q);
-							}
-						}
 					}
 					
 				}
 				
 			}
 		}
-		if (!NO_BATCH_GEOMETRY) {
+		fillBillboardQuadsRotated(horRotated);
+		/*if (!NO_BATCH_GEOMETRY) {
+			createQuad(false, "1", states, model.billboardPartNames[0], 0, 0, 0, 0, 0);
 			this.attachChild(batch.parent);
 			batch.parent.getWorldRotation().set(new Quaternion());
 			batch.parent.setLocalRotation(new Quaternion());
 			batch.getWorldRotation().set(new Quaternion());
 			batch.setLocalRotation(new Quaternion());
-		}
+		}*/
 	}
-
-	private SharedMesh createQuad(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
+	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
-		Quad targetQuad = quadCache.get(model.id);
+		Quad targetQuad = quadCache.get(model.id+rotated+xSize+ySize);
 		if (targetQuad == null)
 		{
 			targetQuad = new Quad(name,xSize,ySize);
@@ -344,25 +386,27 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.setLocalRotation(new Quaternion());
 			TriangleBatch tBatch = targetQuad.getBatch(0);
 			// swapping X,Z
-			/*FloatBuffer buff = tBatch.getVertexBuffer();
-			for (int i=0; i<4; i++)
-			{
-				float cX = -1;
-				float cZ = -1;
-				for (int j=0; j<3; j++) {
-					if (j==0) {
-						cX = buff.get(i*3+j);
-					} else
-					if (j==2)
-					{
-						cZ = buff.get(i*3+j);
+			if (rotated) {
+				FloatBuffer buff = tBatch.getVertexBuffer();
+				for (int i=0; i<4; i++)
+				{
+					float cX = -1;
+					float cZ = -1;
+					for (int j=0; j<3; j++) {
+						if (j==0) {
+							cX = buff.get(i*3+j);
+						} else
+						if (j==2)
+						{
+							cZ = buff.get(i*3+j);
+						}
 					}
+					buff.put(i*3 , -cZ);
+					buff.put(i*3 + 2 , -cX);
 				}
-				buff.put(i*3 , -cZ);
-				buff.put(i*3 + 2 , -cX);
-			}*/
+			}
 			
-			quadCache.put(model.id, targetQuad);
+			quadCache.put(model.id+rotated+xSize+ySize, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
 			if (batch==null)
@@ -374,10 +418,6 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			}
 			//targetQuad.setLocalTranslation(x, y, z);
 			targetQuad.setLocalTranslation(x, z, -y);
-/*			Vector3f look = core.getCamera().getDirection().negate();
-			Vector3f left1 = core.getCamera().getLeft().negate();
-			Quaternion orient = new Quaternion();
-			orient.fromAxes(left1, core.getCamera().getUp(), look);*/
 			targetQuad.setLocalRotation(new Quaternion());
 			targetQuad.getWorldRotation().set(new Quaternion());
 			batch.addItem(null, targetQuad);
@@ -391,6 +431,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			return null;
 		}
 		
+	}
+	private void storeQuadParams(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
+	{
+		quads.add(new QuadParams(name,states,key,xSize,ySize,x,y,z));
 	}
 	
 	@Override
