@@ -93,6 +93,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		this.viewDistance = viewDistance;
 		this.model = model;
 		this.horRotated = horRotated;
+		
 	}
 	
 	public class QuadParams

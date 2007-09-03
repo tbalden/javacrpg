@@ -49,7 +49,7 @@ public class CKeyLookDownAction extends CKeyAction {
 
 		camera.update();
 		if (renderToViewPort > 4) {
-			handler.core.renderToViewPort();
+			if (J3DCore.OPTIMIZE_ANGLES) handler.core.renderToViewPort();
 			renderToViewPort = 0;
 		} else {
 			renderToViewPort++;

@@ -920,7 +920,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
-		boolean LOD_VEG = true;
+		boolean LOD_VEG = false;
 		
 		// lod vegetations
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
@@ -1356,7 +1356,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (s.getChildren()!=null)
 		for (Spatial c:s.getChildren())
 		{
-			if (c instanceof Node)
+			if ((c.getType()&Node.NODE)>0)
 			{
 				removeOccludersRecoursive((Node)c);
 			}
@@ -1369,12 +1369,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void removeSolidColorQuadsRecoursive(Node s)
 	{
-		if (s instanceof BillboardPartVegetation)
+		/*if (s instanceof BillboardPartVegetation)
 		{
 			hmSolidColorSpatials.remove(((BillboardPartVegetation)s).targetQuad);
 			((BillboardPartVegetation)s).targetQuad = null;
-		}
-		if (s instanceof Node)
+		}*/
 		{
 			hmSolidColorSpatials.remove(s);
 			((Node)s).removeUserData("rotateOnSteep");
@@ -1388,23 +1387,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				((BillboardPartVegetation)c).targetQuad = null;
 				
 			}
-			if (c instanceof Node)
+			if ((c.getType()&Node.NODE)>0)
 			{
 				hmSolidColorSpatials.remove(c);
 				removeSolidColorQuadsRecoursive((Node)c);
 				((Node)c).removeUserData("rotateOnSteep");
 			}
-			if (c instanceof Quad)
+			if ((c.getType()&Spatial.TRIMESH)>0)
 			{
 				hmSolidColorSpatials.remove(c);
 				//c.removeFromParent();
 			}
-			for (int i=0; i<RenderState.RS_MAX_STATE; i++)
+			/*for (int i=0; i<RenderState.RS_MAX_STATE; i++)
 			{
 				//c.getRenderState(i);
 				
 				c.clearRenderState(i);
-			}
+			}*/
 		}
 	}
 
@@ -1643,7 +1642,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	int cullVariationCounter = 0;
 	
-	public static boolean OPTIMIZE_ANGLES = true;
+	public static boolean OPTIMIZE_ANGLES = false;
 	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.4f:3.14f;
 
 	public static boolean CULL_TRICK = false;
@@ -1740,8 +1739,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								n.realNode = (PooledNode)realPooledNode;
 							
 								// unlock
+								boolean sharedNode = false;
 								if (realPooledNode instanceof SharedNode)
 								{	
+									sharedNode = true;
 									realPooledNode.unlockTransforms();
 									realPooledNode.unlockBounds();
 									realPooledNode.unlockBranch();
@@ -1792,7 +1793,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 									realPooledNode.updateGeometricState(0.0f, true);
 								} else
 								{
-									if (realPooledNode instanceof SharedNode)
+									if (sharedNode)
 									{	
 										realPooledNode.lockTransforms();								
 										realPooledNode.lockBounds();

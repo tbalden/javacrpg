@@ -1,3 +1,4 @@
+[ ] no lod tree -> wrong billboarding , fix it...on long view distance it is too slow LODding on moving
 
 [ ] shadow error, killin render pass
 
