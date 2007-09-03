@@ -43,10 +43,10 @@ public class CKeyRotateLeftAction extends CKeyAction {
     	handler.lockHandling();
         if (handler.lookLeftRightPercent>0) {
         	// if looked away to right, bigger view needed
-        	handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE+0.6f);
+        	if (J3DCore.OPTIMIZE_ANGLES) handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE+0.6f);
         } else
         {
-        	handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+        	if (J3DCore.OPTIMIZE_ANGLES) handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
         }
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
         handler.core.turnLeft();

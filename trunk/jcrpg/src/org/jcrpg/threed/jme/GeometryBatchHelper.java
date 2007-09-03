@@ -155,18 +155,16 @@ public class GeometryBatchHelper {
     }
     public void updateAll()
     {
+    	System.out.println(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
     	{
 	    	HashSet<ModelGeometryBatch> removables = new HashSet<ModelGeometryBatch>();
 	    	for (ModelGeometryBatch batch: modelBatchMap.values())
 	    	{
 	    		boolean removableFlag = true;
-				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : batch.getInstances()) {
-					if (instanceEn.getAttributes().isVisible())
-					{
-						removableFlag = false;
-						break;
-					}
-				}
+	    		if (batch.visible.size()!=0)
+	    		{
+	    			removableFlag = false;
+	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
 					core.removeSolidColorQuadsRecoursive(batch.parent);
@@ -180,13 +178,10 @@ public class GeometryBatchHelper {
 	    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values())
 	    	{
 	    		boolean removableFlag = true;
-				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instanceEn : batch.getInstances()) {
-					if (instanceEn.getAttributes().isVisible())
-					{
-						removableFlag = false;
-						break;
-					}
-				}
+	    		if (batch.visible.size()!=0)
+	    		{
+	    			removableFlag = false;
+	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
 					core.removeSolidColorQuadsRecoursive(batch.parent);
