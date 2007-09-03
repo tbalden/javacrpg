@@ -23,7 +23,7 @@ MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less me
 
 r. Requirements
 - Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
-- At least 300 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
+- At least ~300-400 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
 - Processor around 1.6GHz (Single core will do it)

@@ -7,7 +7,7 @@ Configure config.properties if you experience low FPS. (Set low RENDER_DISTANCE,
 
 Requirements:
 
-- Around 200-300MB free RAM
+- Around 350MB free RAM with default config
 - Opengl accelerated videocard
 - X11 or Windows or MacOS
 
