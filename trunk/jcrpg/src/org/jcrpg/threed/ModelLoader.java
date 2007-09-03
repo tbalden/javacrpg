@@ -108,9 +108,9 @@ public class ModelLoader {
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
     
-	protected PooledNode loadObject(RenderedCube rc, Model object)
+	protected PooledNode loadObject(RenderedCube rc, Model object, boolean horRotated)
     {
-		return loadObjects(rc, new Model[]{object}, false)[0];
+		return loadObjects(rc, new Model[]{object}, horRotated, false)[0];
     }    
 	/**
 	 * Loading a set of models into JME nodes.
@@ -118,7 +118,7 @@ public class ModelLoader {
 	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
 	 * @return
 	 */
-	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean fakeLoadForCacheMaint)
+	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
     {
 		
 		//GeometryBatchCreator cr = new GeometryBatchCreator();
@@ -160,7 +160,7 @@ public class ModelLoader {
 				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				// adding to drawer
-				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i]);
+				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
 				bbNode.attachChild(node);
 		    	node = bbNode;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
@@ -209,7 +209,7 @@ public class ModelLoader {
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
 						// adding to drawer
-						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)m);
+						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)m,horRotated);
 						bbNode.attachChild(node);
 				    	node = bbNode;
 				    	node.setName(((SimpleModel)m).modelName+i);

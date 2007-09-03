@@ -59,7 +59,7 @@ public class ModelPool {
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
 	
-	public PooledNode getModel(RenderedCube rc, Model model) {
+	public PooledNode getModel(RenderedCube rc, Model model, NodePlaceholder place) {
 		if (model.type == Model.LODMODEL)
 		{
 			if ( ((LODModel)model).models[0].type == Model.TEXTURESTATEVEGETATION) {
@@ -71,11 +71,20 @@ public class ModelPool {
 			}
 		}
 		
-		PoolItemContainer cont = pool.get(model.id);
+		boolean rotated = false;
+		if (place.horizontalRotation==J3DCore.horizontalEReal || place.horizontalRotation==J3DCore.horizontalWReal )
+		{
+			// these directions may need rotation when billboarding
+			rotated = true;
+		}
+		
+		String key = model.id+(rotated);
+		
+		PoolItemContainer cont = pool.get(key);
 		synchronized (pool) {
 			if (cont == null) {
-				cont = new PoolItemContainer(model.id);
-				pool.put(model.id, cont);
+				cont = new PoolItemContainer(key);
+				pool.put(key, cont);
 			} else {
 				if (cont.notUsed.iterator().hasNext()) {
 					// System.out.println("++ FROM POOL MODEL!"+model.id);
@@ -85,7 +94,7 @@ public class ModelPool {
 					return n;
 				}
 			}
-			PooledNode n = core.modelLoader.loadObject(rc, model);
+			PooledNode n = core.modelLoader.loadObject(rc, model, rotated);
 			// System.out.println("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
@@ -94,7 +103,7 @@ public class ModelPool {
 			{
 				for (int i=0; i<toCreate; i++)
 				{
-					PooledNode unused = core.modelLoader.loadObject(rc, model);
+					PooledNode unused = core.modelLoader.loadObject(rc, model, rotated);
 					unused.setPooledContainer(cont);
 					cont.notUsed.add(unused);
 				}
@@ -111,14 +120,14 @@ public class ModelPool {
 		}
 	}
 	
-	public PooledNode[] loadObjects(RenderedCube cube,Model[] objects,boolean fakeLoadForCacheMaint)
+	public PooledNode[] loadObjects(RenderedCube cube,Model[] objects, NodePlaceholder place, boolean fakeLoadForCacheMaint)
 	{
 		if (fakeLoadForCacheMaint) return null; 
 		PooledNode[] retNodes = new PooledNode[objects.length];
 		int count = 0;
 		for (Model objModel : objects)
 		{
-			retNodes[count++]=getModel(cube, objModel);
+			retNodes[count++]=getModel(cube, objModel, place);
 		}
 		return retNodes;
 		
