@@ -1,5 +1,5 @@
+
 [ ] shadow error, killin render pass
-[ ] billboard rotated of foliage upon looking left right very ugly! maybe adding more negation in TrimeshGeomBatch, test it?
 
 
 [ ] Cave: implement surface interface!
@@ -41,6 +41,7 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] billboard rotated of foliage upon looking left right very ugly! maybe adding more negation in TrimeshGeomBatch, test it?
 [X] fog shader
 [X] wind animation shader!
 
