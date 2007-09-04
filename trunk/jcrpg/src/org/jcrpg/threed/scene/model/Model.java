@@ -35,6 +35,10 @@ public abstract class Model {
 
 	public String id;
 	public boolean poolable = true;
+	/**
+	 * Tells if this should be merged part of a GeometryBatcher. (Multitextured models cannot be used with geom batching!)
+	 */
+	public boolean batchEnabled = true;
 	
 	/**
 	 * Tells if the model is rotable on steep. Default value should be false. 
