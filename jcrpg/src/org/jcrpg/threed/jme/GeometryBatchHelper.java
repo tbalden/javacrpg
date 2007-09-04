@@ -188,7 +188,7 @@ public class GeometryBatchHelper {
 					removables.add(batch);
 				} else
 				{
-					/*if (batch.avarageTranslation.distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+					if (batch.avarageTranslation.distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
 					{
 						batch.setCullMode(TriMesh.CULL_ALWAYS);
 						batch.updateRenderState();
@@ -196,7 +196,7 @@ public class GeometryBatchHelper {
 					{
 						batch.setCullMode(TriMesh.CULL_DYNAMIC);
 						batch.updateRenderState();
-					}*/
+					}
 				}
 	    	}
 	    	trimeshBatchMap.values().removeAll(removables);
