@@ -103,7 +103,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Matrix4f m4f = new Matrix4f();
 	Matrix3f m3f = new Matrix3f();
 	
-	static boolean vertexShader = false;
+	static boolean vertexShader = true;
 	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
