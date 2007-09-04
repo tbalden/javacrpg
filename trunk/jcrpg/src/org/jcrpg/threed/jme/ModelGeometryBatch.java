@@ -124,10 +124,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			instance.getAttributes().setVisible(false);
 			visible.remove(instance);
 			notVisible.add(instance);
-			if (visible.size()>0)
+			/*if (visible.size()>0)
 			{
 				instance.getAttributes().setTranslation(visible.iterator().next().getAttributes().getTranslation());
-			}
+			}*/
 			
 			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
 			placeholder.batchInstance = null;
