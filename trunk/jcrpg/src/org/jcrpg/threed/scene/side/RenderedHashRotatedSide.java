@@ -29,7 +29,7 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	
 	public int rotation(int x,int y,int z)
 	{
-		return J3DCore.SOUTH;//(HashUtil.mix(x, y, z)%4);
+		return (HashUtil.mix(x, y, z)%4);
 	}
 	
 	public float scale(int x,int y,int z)

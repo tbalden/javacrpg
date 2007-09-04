@@ -100,8 +100,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	static GLSLShaderObjectsState gl = null;
 	VertexProgramState vp = null;
 	FragmentProgramState fp = null;
-	Matrix4f m4f = new Matrix4f();
-	Matrix3f m3f = new Matrix3f();
 	
 	static boolean vertexShader = true;
 	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
@@ -409,13 +407,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				setLocalRotation(q);
 			}
 			if (vertexShader) {
-				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
-					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
-				} else
-				{
-					//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
-					fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
-				}
 				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
 				fp.setParameter(new float[]{1.15f-dist/(J3DCore.VIEW_DISTANCE*1.14f),0,0,0}, 1);
 			}
@@ -428,6 +419,17 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 
+		
+		if (vertexShader) {
+			if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
+				fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+			} else
+			{
+				//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+				fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+			}
+		}
+		
 		long additionalTime = Math.min(System.currentTimeMillis() - startTime,32);
 		passedTime += additionalTime;
 		startTime= System.currentTimeMillis();
@@ -460,7 +462,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			
 			if (vertexShader) {
 	    		vp.setParameter(new float[]{diffs[whichDiff],diffs[whichDiff],0,0}, 0);
-	    		fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 			}
 			else
 			if (true==false)
