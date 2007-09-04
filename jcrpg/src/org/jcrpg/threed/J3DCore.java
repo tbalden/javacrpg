@@ -166,6 +166,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     public static boolean CPU_ANIMATED_TREES = true;
     public static boolean DETAILED_TREES = true;
+    public static boolean LOD_VEGETATION = false;
 
     static Properties p = new Properties();
     static {
@@ -197,7 +198,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
 	    			if (VIEW_DISTANCE<5) VIEW_DISTANCE = 5;
 	    			VIEW_DISTANCE_SQR = VIEW_DISTANCE*VIEW_DISTANCE;
-	    			VIEW_DISTANCE_FRAG_SQR /=4;
+	    			VIEW_DISTANCE_FRAG_SQR =VIEW_DISTANCE_SQR/4;
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("VIEW_DISTANCE", "10");
@@ -923,7 +924,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
-		boolean LOD_VEG = false;
+		boolean LOD_VEG = LOD_VEGETATION;
 		
 		// lod vegetations
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
@@ -1489,6 +1490,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    				removeOccludersRecoursive((Node)n.realNode);
 	    			possibleOccluders.remove(n);
 	    		}
+	    		inViewPort.remove(c);
+	    		outOfViewPort.remove(c);
+				if (GEOMETRY_BATCH && 
+						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+					 )
+				{
+					if (n!=null && n.batchInstance!=null)
+						batchHelper.removeItem(c.cube.internalLight, n.model, n);
+				} else 
+				{ 
+					if (n.realNode!=null)
+						modelPool.releaseNode(n.realNode);
+				}
 	    	}    		
     	}
     	
@@ -1677,7 +1692,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
 			render();
-			
 		}
 		
 		long sysTime = System.currentTimeMillis();
@@ -1690,6 +1704,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		if (segmented && segmentCount==0 || !segmented)
 		{
+			alCurrentCubes.clear();
 			alCurrentCubes.addAll(hmCurrentCubes.values());
 		}
 		int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
@@ -1778,11 +1793,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
 								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 								for (Spatial s:realPooledNode.getChildren()) {
-									if ( (s.getType()&s.NODE)>0 )
+									if ( (s.getType()&Node.NODE)>0 )
 									{
 										for (Spatial s2:((Node)s).getChildren())
 										{	
-											if ( (s2.getType()&s2.NODE)>0 )
+											if ( (s2.getType()&Node.NODE)>0 )
 											{
 												for (Spatial s3:((Node)s2).getChildren())
 												{
@@ -1859,7 +1874,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
-		if (segmentCount==segments || !segmented) {
+		if (segmentCount==segments-1 || !segmented) {
+			
 			if (GEOMETRY_BATCH) batchHelper.updateAll();
 			
 			System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
@@ -1887,17 +1903,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		    
 			updateTimeRelated();
 	
-			
-			/*if ((cullVariationCounter++%1==0))
+			cullVariationCounter++;
+			/*if ((cullVariationCounter%1==0))
 			{
-				groundParentNode.setCullMode(Node.CULL_NEVER);
-				updateDisplayNoBackBuffer();
-				groundParentNode.setCullMode(Node.CULL_INHERIT);
 			}*/
-			//groundParentNode.setCullMode(Node.CULL_INHERIT);
+			groundParentNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
-			groundParentNode.updateRenderState();
-			//rootNode.updateRenderState();
+			groundParentNode.setCullMode(Node.CULL_INHERIT);
+			if (cullVariationCounter%2==0) 
+			{
+				groundParentNode.updateRenderState();
+			} else
+			{
+				updateDisplayNoBackBuffer();
+			}
 	
 			System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
 		    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
