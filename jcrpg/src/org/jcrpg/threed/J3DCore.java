@@ -973,7 +973,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide("models/inside/furniture/bookcase.3ds",null));
+		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
+		sm_bookcase.batchEnabled = false;
+		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
 				
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedSide(new Model[]{qm_cave_ground}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
@@ -1678,7 +1680,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	    	{
 	    	    		NodePlaceholder n = itNode.next();
-	    				if (GEOMETRY_BATCH && 
+	    				if (GEOMETRY_BATCH && n.model.batchEnabled && 
 	    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 	    								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 	    					 )
@@ -1773,7 +1775,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (GEOMETRY_BATCH && 
+							if (GEOMETRY_BATCH && n.model.batchEnabled && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 								) 
@@ -1858,7 +1860,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (GEOMETRY_BATCH && 
+							if (GEOMETRY_BATCH && n.model.batchEnabled && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 								 )
