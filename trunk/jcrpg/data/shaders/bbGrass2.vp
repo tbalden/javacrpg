@@ -13,13 +13,10 @@ DP4 pos.w, mv[3], vertex.position;
 ################################
 # Add offset
 MUL c, program.local[0], vertex.texcoord[0].yyyy;
-MUL div1, vertex.position, 3;
-ADD div2, 0.5, vertex.position;
-MUL div2, div2, 3;
-SUB div2, div1, div2;
-#MUL div2, div2, 2;
-SUB div2, div2, 1;
+FRC div2, vertex.position;
+SUB div2, div2, 0.5;
 MUL a, c, div2;
+MUL a, a, 3;
 ADD pos.xz, pos, a;
 ################################
 # Apply projection matrix
