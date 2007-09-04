@@ -61,6 +61,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Box;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
@@ -102,7 +103,7 @@ public class ModelLoader {
     
     int counter=0;
     
-    AlphaState as;
+    //AlphaState as;
     AlphaState as_off;
 
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
@@ -480,9 +481,9 @@ public class ModelLoader {
 			return r;
 		}
     	
-		Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.04f);
+		//Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2f,m.sizeY/2f,0.02f);
 		
-		//Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
@@ -498,6 +499,11 @@ public class ModelLoader {
 		quad.setRenderState(ts[0]);
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
 		quad.setRenderState(core.cs_none);
+		if (as_off==null) 
+		{
+			as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+			as_off.setEnabled(false);
+		}
 		quad.setRenderState(as_off);
 		quad.setVBOInfo(info);
 		
@@ -523,9 +529,9 @@ public class ModelLoader {
 			return node;
 		}
     	
-		Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2,m.sizeY/2,0.04f);
+		//Box quad = new Box("quadModel"+m.textureName,new Vector3f(0,0,0),m.sizeX/2f,m.sizeY/2f,0.02f);
 		
-		//Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
+		Quad quad = new Quad("quadModel"+m.textureName,m.sizeX,m.sizeY);
 		quad.setModelBound(new BoundingBox());
 		quad.updateModelBound();
 		TextureState[] ts = loadTextureStates(new String[]{m.textureName}, new String[]{m.dot3TextureName},m.transformToNormal);
@@ -541,6 +547,11 @@ public class ModelLoader {
 		quad.setRenderState(ts[0]);
 		quad.setSolidColor(new ColorRGBA(1,1,1,1));
 		quad.setRenderState(core.cs_none);
+		if (as_off==null) 
+		{
+			as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+			as_off.setEnabled(false);
+		}
 		quad.setRenderState(as_off);
 		quad.setVBOInfo(info);
 		
@@ -665,19 +676,6 @@ public class ModelLoader {
 					node.attachChild(spatial);
 					
 					
-					if (as==null) 
-					{
-						as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-						as.setEnabled(true);
-						as.setBlendEnabled(false); // TODO 
-						as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-						as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-						as.setReference(0.0f);
-						as.setTestEnabled(true);
-						as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
-						as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-						as_off.setEnabled(false);
-					}
 				    if (o.cullNone)
 				    {
 				    	node.setRenderState(core.cs_none);
@@ -764,17 +762,6 @@ public class ModelLoader {
 				{
 					System.out.println(o.modelName);
 					setTextures(node,o.mipMap);
-				}
-				if (as==null) 
-				{
-					as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-					as.setEnabled(true);
-					as.setBlendEnabled(false); // true TODO
-					as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-					as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-					as.setReference(0.0f);
-					as.setTestEnabled(true);
-					as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 				}
 				
 				//node.setRenderState(as);
