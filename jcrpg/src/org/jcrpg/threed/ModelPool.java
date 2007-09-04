@@ -54,7 +54,7 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
-		POOL_NUMBER_OF_UNUSED_TO_KEEP = 5;//J3DCore.VIEW_DISTANCE;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = 30;//J3DCore.VIEW_DISTANCE;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
