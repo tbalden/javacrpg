@@ -3,7 +3,7 @@ PARAM camPos[4] = {program.local[0],program.local[2],program.local[3],program.lo
 PARAM mv[4] = { state.matrix.modelview };
 PARAM mv2[4] = { state.matrix.projection };
 TEMP pos,projpos;
-TEMP a;
+TEMP a,b,c,div1,div2;
 ################################
 # Apply modelview transformation
 DP4 pos.x, mv[0], vertex.position;
@@ -12,7 +12,14 @@ DP4 pos.z, mv[2], vertex.position;
 DP4 pos.w, mv[3], vertex.position;
 ################################
 # Add offset
-MUL a, program.local[0], vertex.texcoord[0].yyyy;
+MUL c, program.local[0], vertex.texcoord[0].yyyy;
+MUL div1, vertex.position, 3;
+ADD div2, 0.5, vertex.position;
+MUL div2, div2, 3;
+SUB div2, div1, div2;
+#MUL div2, div2, 2;
+SUB div2, div2, 1;
+MUL a, c, div2;
 ADD pos.xz, pos, a;
 ################################
 # Apply projection matrix
