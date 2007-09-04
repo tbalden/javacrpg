@@ -1438,8 +1438,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
-	public void render()
+	public HashSet<RenderedCube> render()
 	{
+		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
+		
 		modelLoader.setLockForSharedNodes(false);
     	loadingText(0,true);
     	//updateDisplay(null);
@@ -1479,32 +1481,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	{
     		if (c==null) continue;
     		c = hmCurrentCubes.get(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
-    		if (c!=null)
-	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
-	    	{
-	    		liveNodes--;
-	    		NodePlaceholder n = itNode.next();
-	    		if (SHADOWS) {
-	    			// remove from shadowrenderpass
-	    			if ((Node)n.realNode!=null)
-	    				removeOccludersRecoursive((Node)n.realNode);
-	    			possibleOccluders.remove(n);
-	    		}
-	    		inViewPort.remove(c);
-	    		outOfViewPort.remove(c);
-				if (GEOMETRY_BATCH && 
-						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-					 )
-				{
-					if (n!=null && n.batchInstance!=null)
-						batchHelper.removeItem(c.cube.internalLight, n.model, n);
-				} else 
-				{ 
-					if (n.realNode!=null)
-						modelPool.releaseNode(n.realNode);
-				}
-	    	}    		
+    		detacheable.add(c);
+    		liveNodes-= c.hsRenderedNodes.size();
     	}
     	
 		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
@@ -1572,6 +1550,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//TextureManager.clearCache();
 		//System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
+		return detacheable;
 	}
 
 	/**
@@ -1691,7 +1670,37 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
 		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
-			render();
+			HashSet<RenderedCube> detacheable = render();
+			for (RenderedCube c:detacheable) { 
+	    		if (c!=null) {
+    	    		inViewPort.remove(c);
+    	    		outOfViewPort.remove(c);
+	    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+	    	    	{
+	    	    		NodePlaceholder n = itNode.next();
+	    				if (GEOMETRY_BATCH && 
+	    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+	    								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+	    					 )
+	    				{
+	    					if (n!=null && n.batchInstance!=null)
+	    						batchHelper.removeItem(c.cube.internalLight, n.model, n);
+	    				} else 
+	    				{ 
+							PooledNode pooledRealNode = n.realNode;
+							
+							n.realNode = null;
+							if (pooledRealNode!=null) {
+								Node realNode = (Node)pooledRealNode;
+								if (SHADOWS) removeOccludersRecoursive(realNode);
+								realNode.removeFromParent();
+								modelPool.releaseNode(pooledRealNode);
+							}
+	    				}
+	    	    	}
+	    		}
+			}
+
 		}
 		
 		long sysTime = System.currentTimeMillis();
