@@ -345,7 +345,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
-
 						temp = orient.y;
 						orient.y = -orient.w;
 						orient.w = temp;
@@ -353,7 +352,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
-
 						temp = orient.y;
 						orient.y = orient.w;
 						orient.w = -temp;
@@ -382,7 +380,19 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				} else if (direction.intValue() == J3DCore.NORTH) {
 					// nothing to do, it's correct
 				} else if (direction.intValue() == J3DCore.SOUTH) {
-					// nothing to do, it's correct
+					if (core.viewDirection == J3DCore.SOUTH) {
+						orient.y = -orient.y;
+						orient.w = -orient.w;
+					} else if (core.viewDirection == J3DCore.NORTH) {
+						orient.w = -orient.w;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.EAST) {
+						orient.w = -orient.w;
+						orient.y = -orient.y;
+					} else if (core.viewDirection == J3DCore.WEST) {
+						orient.w = -orient.w;
+						orient.y = -orient.y;
+					}
 				}
 
 				// rotation the whole trimesh to position in the cube:
