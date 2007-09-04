@@ -103,7 +103,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Matrix4f m4f = new Matrix4f();
 	Matrix3f m3f = new Matrix3f();
 	
-	static boolean vertexShader = true;
+	static boolean vertexShader = false;
 	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
@@ -248,10 +248,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					geoInstance.getAttributes().setVisible(false); // switching off visibility
 					visible.remove(geoInstance);
 					notVisible.add(geoInstance);
-					if (visible.size()>0)
+					/*if (visible.size()>0)
 					{
 						geoInstance.getAttributes().setTranslation(visible.iterator().next().getAttributes().getTranslation());
-					}
+					}*/
 				}
 			}
 		}
@@ -408,15 +408,17 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				 */
 				setLocalRotation(q);
 			}
-			if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
-				fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
-			} else
-			{
-				//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
-				fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+			if (vertexShader) {
+				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
+					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+				} else
+				{
+					//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+					fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+				}
+				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
+				fp.setParameter(new float[]{1.15f-dist/(J3DCore.VIEW_DISTANCE*1.14f),0,0,0}, 1);
 			}
-			float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
-			fp.setParameter(new float[]{1.15f-dist/(J3DCore.VIEW_DISTANCE*1.14f),0,0,0}, 1);
 			
 			
 			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
@@ -461,6 +463,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	    		fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 			}
 			else
+			if (true==false)
 			{
 	
 				FloatBuffer fb = null;

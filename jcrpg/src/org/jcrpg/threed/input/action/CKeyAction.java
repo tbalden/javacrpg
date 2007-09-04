@@ -296,10 +296,15 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             camera.update();
             camera.normalize();
+            //handler.core.renderToViewPort((int)i,(int)steps);
             handler.core.updateTimeRelated();
             handler.core.updateDisplay(from);
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
+            	for (int k=0; k<(int)skipStep; k++)
+            	{
+            		//handler.core.renderToViewPort((int)i+k,(int)steps);
+            	}
             	i+=(int)skipStep;
             	skipStep=0f;
             }

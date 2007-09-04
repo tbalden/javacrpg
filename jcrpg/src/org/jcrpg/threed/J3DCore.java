@@ -24,6 +24,7 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1005,6 +1006,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
+	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
 	
 	/**
@@ -1657,7 +1659,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		renderToViewPort(OPTIMIZE_ANGLES?1.1f:3.14f);
 	}
+	public void renderToViewPort(int segmentCount, int segments)
+	{
+		renderToViewPort(OPTIMIZE_ANGLES?1.1f:3.14f, true, segmentCount, segments);
+	}
 	public void renderToViewPort(float refAngle)
+	{
+		renderToViewPort(refAngle, false, 0,0);
+	}
+	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
 		engine.setPause(true);
 		
@@ -1677,8 +1687,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		int addedNodeCounter = 0;
 		int removedNodeCounter = 0;
 		
-		for (RenderedCube c:hmCurrentCubes.values())
+		
+		if (segmented && segmentCount==0 || !segmented)
 		{
+			alCurrentCubes.addAll(hmCurrentCubes.values());
+		}
+		int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
+		if (segmented)
+		{
+			int sSize = alCurrentCubes.size()/segments;
+			fromCubeCount = sSize*segmentCount;
+			toCubeCount = sSize*(segmentCount+1);
+			if (toCubeCount>alCurrentCubes.size())
+			{
+				toCubeCount = alCurrentCubes.size();
+			}
+		}
+		
+		for (int cc = fromCubeCount; cc<toCubeCount; cc++)
+		{
+			RenderedCube c = alCurrentCubes.get(cc);
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
@@ -1796,8 +1824,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						}
 					} 
 				}
-					else
-					{
+				else
+				{
 					 nonVisibleNodeCounter++;
 					 if (!outOfViewPort.contains(c)) 
 					 {
@@ -1831,59 +1859,61 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
-		if (GEOMETRY_BATCH) batchHelper.updateAll();
-		
-		System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
-	    // handling possible occluders
-	    if (SHADOWS) {
-	    	System.out.println("OCCS: "+sPass.occludersSize());
-			for (NodePlaceholder psn : possibleOccluders) {
-				if (psn.realNode != null) {
-					Node n = (Node) psn.realNode;
-					float dist = n.getWorldTranslation().distanceSquared(
-							cam.getLocation());
-					if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-						if (!sPass.containsOccluder(n))
-							sPass.addOccluder(n);
-					} else {
-						removeOccludersRecoursive(n);
+		if (segmentCount==segments || !segmented) {
+			if (GEOMETRY_BATCH) batchHelper.updateAll();
+			
+			System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
+		    // handling possible occluders
+		    if (SHADOWS) {
+		    	System.out.println("OCCS: "+sPass.occludersSize());
+				for (NodePlaceholder psn : possibleOccluders) {
+					if (psn.realNode != null) {
+						Node n = (Node) psn.realNode;
+						float dist = n.getWorldTranslation().distanceSquared(
+								cam.getLocation());
+						if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
+							if (!sPass.containsOccluder(n))
+								sPass.addOccluder(n);
+						} else {
+							removeOccludersRecoursive(n);
+						}
 					}
 				}
-			}
-	    }
-	    
-	    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
-	    sysTime = System.currentTimeMillis();
-	    
-	    
-		updateTimeRelated();
-
-		
-		/*if ((cullVariationCounter++%1==0))
-		{
-			groundParentNode.setCullMode(Node.CULL_NEVER);
+		    }
+		    
+		    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+		    sysTime = System.currentTimeMillis();
+		    
+		    
+			updateTimeRelated();
+	
+			
+			/*if ((cullVariationCounter++%1==0))
+			{
+				groundParentNode.setCullMode(Node.CULL_NEVER);
+				updateDisplayNoBackBuffer();
+				groundParentNode.setCullMode(Node.CULL_INHERIT);
+			}*/
+			//groundParentNode.setCullMode(Node.CULL_INHERIT);
 			updateDisplayNoBackBuffer();
-			groundParentNode.setCullMode(Node.CULL_INHERIT);
-		}*/
-		//groundParentNode.setCullMode(Node.CULL_INHERIT);
-		updateDisplayNoBackBuffer();
-		groundParentNode.updateRenderState();
-		//rootNode.updateRenderState();
-
-		System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
-	    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-	    System.out.println("hmSolidColorSpatials:"+hmSolidColorSpatials.size());
-
-	    if (cullVariationCounter%30==0) {
-			modelPool.cleanPools();
-			System.gc();
-		}
-
-		// every 20 steps do a garbage collection
-		garbCollCounter++;
-		if (garbCollCounter==20) {
-			//
-			garbCollCounter = 0;
+			groundParentNode.updateRenderState();
+			//rootNode.updateRenderState();
+	
+			System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
+		    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+		    System.out.println("hmSolidColorSpatials:"+hmSolidColorSpatials.size());
+	
+		    if (cullVariationCounter%30==0) {
+				modelPool.cleanPools();
+				System.gc();
+			}
+	
+			// every 20 steps do a garbage collection
+			garbCollCounter++;
+			if (garbCollCounter==20) {
+				//
+				garbCollCounter = 0;
+			}
 		}
 		
 		engine.setPause(false);
@@ -2792,7 +2822,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (rendering) return;
 		synchronized (mutex) {
 			rendering = true;		
-			render();
+			renderToViewPort();
 			rendering = false;
 		}
 	}
