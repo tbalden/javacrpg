@@ -1910,7 +1910,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			groundParentNode.setCullMode(Node.CULL_NEVER);
 			updateDisplayNoBackBuffer();
 			groundParentNode.setCullMode(Node.CULL_INHERIT);
-			if (cullVariationCounter%2==0) 
+			if (cullVariationCounter%1==0) 
 			{
 				groundParentNode.updateRenderState();
 			} else
