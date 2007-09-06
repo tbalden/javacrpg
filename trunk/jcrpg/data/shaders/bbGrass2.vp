@@ -16,7 +16,7 @@ MUL c, program.local[0], vertex.texcoord[0].yyyy;
 FRC div2, vertex.position;
 SUB div2, div2, 0.5;
 MUL a, c, div2;
-MUL a, a, 3;
+MUL a, a, 4;
 ADD pos.xz, pos, a;
 ################################
 # Apply projection matrix

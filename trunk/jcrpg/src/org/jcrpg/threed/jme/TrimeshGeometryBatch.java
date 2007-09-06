@@ -408,7 +408,13 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 			if (vertexShader) {
 				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
-				fp.setParameter(new float[]{1.15f-dist/(J3DCore.VIEW_DISTANCE*1.14f),0,0,0}, 1);
+				float start = J3DCore.VIEW_DISTANCE/2;
+				//if (dist<J3DCore.VIEW_DISTANCE/2) {
+					fp.setParameter(new float[]{1.1f-Math.max(0, dist-start)/(start),0,0,0}, 1);
+				//} else
+				//{
+					//fp.setParameter(new float[]{1.0f-dist/(J3DCore.VIEW_DISTANCE*1.1f),0,0,0}, 1);
+				//}
 			}
 			
 			
