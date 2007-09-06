@@ -1,3 +1,8 @@
+[ ] Charlie's report:
+	[ ]	- if view distance is low, caves are very blue inside
+	[ ]	- if I run into a tree, I often can't turn left until I first turn right
+	[X]	- view distance needs combining with fog so things don't "appear" out of nowhere
+	
 [ ] add two phase render to all CKeyAction
 [X] no lod tree -> wrong billboarding , fix it...on long view distance it is too slow LODding on moving
 

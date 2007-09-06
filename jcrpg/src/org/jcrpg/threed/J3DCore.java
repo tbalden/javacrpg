@@ -1324,7 +1324,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 		}
 		// set fog state color to the light power !
-		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/2f,vTotal[2]/2f,1f));
+		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/1.5f,vTotal[2]/1.1f,1f));
 
 		// SKYSPHERE
 		// moving skysphere with camera
@@ -2685,7 +2685,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs_external.setDensity(0.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         fs_external.setEnd((VIEW_DISTANCE/1.15f));
-        fs_external.setStart(3);
+        fs_external.setStart(VIEW_DISTANCE/2);
         fs_external.setDensityFunction(FogState.DF_LINEAR);
         fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
         fs_external.setNeedsRefresh(true);
