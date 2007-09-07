@@ -98,7 +98,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		return shader;
 	}
 	static GLSLShaderObjectsState gl = null;
-	VertexProgramState vp = null;
+	static VertexProgramState vp = null;
 	FragmentProgramState fp = null;
 	
 	static boolean vertexShader = true;
@@ -131,11 +131,13 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
             {
             	System.out.println("!!!!!!! NO VP !!!!!!!");
             }
-            
+        }
+        if (vertexShader && fp==null)
+        {
         	fp = DisplaySystem.getDisplaySystem().getRenderer().createFragmentProgramState();
             try {fp.load(new File(
                     "./data/shaders/bbGrass2.fp").toURI().toURL());} catch (Exception ex){}
-            vp.setEnabled(true);
+            fp.setEnabled(true);
             if (!fp.isSupported())
             {
             	System.out.println("!!!!!!! NO FP !!!!!!!");
@@ -409,12 +411,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			if (vertexShader) {
 				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
 				float start = J3DCore.VIEW_DISTANCE/2;
-				//if (dist<J3DCore.VIEW_DISTANCE/2) {
-					fp.setParameter(new float[]{1.1f-Math.max(0, dist-start)/(start),0,0,0}, 1);
-				//} else
-				//{
-					//fp.setParameter(new float[]{1.0f-dist/(J3DCore.VIEW_DISTANCE*1.1f),0,0,0}, 1);
-				//}
+				fp.setParameter(new float[]{1.15f-Math.max(0, dist-start)/(start),0,0,0}, 1);
 			}
 			
 			
@@ -431,7 +428,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 			} else
 			{
-				//fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 				fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
 			}
 		}
