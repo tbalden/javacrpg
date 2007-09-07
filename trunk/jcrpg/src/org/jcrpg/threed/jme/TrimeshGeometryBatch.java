@@ -37,8 +37,6 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.util.HashUtil;
 
 import com.jme.math.FastMath;
-import com.jme.math.Matrix3f;
-import com.jme.math.Matrix4f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
@@ -410,8 +408,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 			if (vertexShader) {
 				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
-				float start = J3DCore.VIEW_DISTANCE/2;
-				fp.setParameter(new float[]{1.15f-Math.max(0, dist-start)/(start),0,0,0}, 1);
+				float start = 2*J3DCore.VIEW_DISTANCE/3;
+				fp.setParameter(new float[]{1.0f-( Math.max(0, dist-start)/(start) * 1.4f),0,0,0}, 1);
 			}
 			
 			

@@ -2688,7 +2688,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs_external.setDensity(0.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         fs_external.setEnd((VIEW_DISTANCE/1.15f));
-        fs_external.setStart(VIEW_DISTANCE/2);
+        fs_external.setStart(2*VIEW_DISTANCE/3);
         fs_external.setDensityFunction(FogState.DF_LINEAR);
         fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
         fs_external.setNeedsRefresh(true);
