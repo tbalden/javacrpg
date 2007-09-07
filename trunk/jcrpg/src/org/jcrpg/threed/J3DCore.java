@@ -1339,7 +1339,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		if (skySphere.getParent()==null)
 			groundParentNode.attachChild(skySphere);;
-		skySphere.setCullMode(Node.CULL_NEVER);
+		if (insideArea)
+		{
+			skySphere.setCullMode(Node.CULL_ALWAYS);
+		} else
+		{
+			skySphere.setCullMode(Node.CULL_NEVER);
+		}
 		skySphere.updateRenderState(); // do not update root or groundParentNode, no need for that here
 
 		if (updateRenderState) {
@@ -2656,7 +2662,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skydomeLightState = getDisplay().getRenderer().createLightState();
 		
 		
-		display.getRenderer().setBackgroundColor(ColorRGBA.gray);
+		display.getRenderer().setBackgroundColor(ColorRGBA.black);
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 350);
 		groundParentNode.attachChild(intRootNode);
