@@ -31,7 +31,6 @@ public class CKeyBackwardAction extends CKeyAction {
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveBackward(handler.core.viewDirection)) {
 	        Vector3f toReach = handler.core.getCurrentLocation();
-	        handler.core.renderToViewPort();
 	        float steps = J3DCore.MOVE_STEPS;
 	        movePosition(steps, from, toReach);
 	    	handler.core.setCalculatedCameraLocation();
