@@ -430,7 +430,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 		
-		long additionalTime = Math.min(System.currentTimeMillis() - startTime,32);
+		long additionalTime = Math.min(System.currentTimeMillis() - startTime,12);
 		passedTime += additionalTime;
 		startTime= System.currentTimeMillis();
 
@@ -457,7 +457,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			newDiffs[4] = diff;
 			diffs = newDiffs;
 			if (whichDiff==-1) {
-				whichDiff = HashUtil.mixPercentage((int)this.getWorldTranslation().x,(int)this.getWorldTranslation().y,(int)this.getWorldTranslation().z)%5;
+				whichDiff = 0;//HashUtil.mixPercentage((int)this.getWorldTranslation().x,(int)this.getWorldTranslation().y,(int)this.getWorldTranslation().z)%5;
 			}
 			
 			if (vertexShader) {
