@@ -34,7 +34,6 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.util.HashUtil;
 
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -430,7 +429,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 		
-		long additionalTime = Math.min(System.currentTimeMillis() - startTime,12);
+		long additionalTime = Math.min(System.currentTimeMillis() - startTime,10);
 		passedTime += additionalTime;
 		startTime= System.currentTimeMillis();
 
@@ -461,7 +460,11 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 			
 			if (vertexShader) {
-	    		vp.setParameter(new float[]{diffs[whichDiff],diffs[whichDiff],0,0}, 0);
+	    		vp.setParameter(new float[]{diffs[0],diffs[0],0,0}, 0);
+	    		vp.setParameter(new float[]{diffs[1],diffs[1],0,0}, 1);
+	    		vp.setParameter(new float[]{diffs[2],diffs[2],0,0}, 2);
+	    		vp.setParameter(new float[]{diffs[3],diffs[3],0,0}, 3);
+	    		vp.setParameter(new float[]{diffs[4],diffs[4],0,0}, 4);
 			}
 			else
 			if (true==false)
