@@ -161,10 +161,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean BLOOM_EFFECT = false;
     public static boolean SHADOWS = true;
 
-    public static boolean CPU_ANIMATED_GRASS = true;
+    public static boolean ANIMATED_GRASS = true;
     public static boolean DOUBLE_GRASS = true;
 
-    public static boolean CPU_ANIMATED_TREES = true;
+    public static boolean ANIMATED_TREES = true;
     public static boolean DETAILED_TREES = true;
     public static boolean LOD_VEGETATION = false;
 
@@ -278,15 +278,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 
-	    	String cpuAnimatedGrass = p.getProperty("CPU_ANIMATED_GRASS");
+	    	String cpuAnimatedGrass = p.getProperty("ANIMATED_GRASS");
 	    	if (cpuAnimatedGrass!=null)
 	    	{
 	    		cpuAnimatedGrass = cpuAnimatedGrass.trim();
 	    		try {
-	    			CPU_ANIMATED_GRASS = Boolean.parseBoolean(cpuAnimatedGrass);
+	    			ANIMATED_GRASS = Boolean.parseBoolean(cpuAnimatedGrass);
 	    		} catch (Exception pex)
 	    		{
-	    			p.setProperty("CPU_ANIMATED_GRASS", "false");
+	    			p.setProperty("ANIMATED_GRASS", "false");
 	    		}
 	    	}
 	    	String doubleGrass = p.getProperty("DOUBLE_GRASS");
@@ -313,15 +313,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 
-	    	String cpuAnimatedTrees = p.getProperty("CPU_ANIMATED_TREES");
+	    	String cpuAnimatedTrees = p.getProperty("ANIMATED_TREES");
 	    	if (cpuAnimatedTrees!=null)
 	    	{
 	    		cpuAnimatedGrass = cpuAnimatedGrass.trim();
 	    		try {
-	    			CPU_ANIMATED_TREES = Boolean.parseBoolean(cpuAnimatedTrees);
+	    			ANIMATED_TREES = Boolean.parseBoolean(cpuAnimatedTrees);
 	    		} catch (Exception pex)
 	    		{
-	    			p.setProperty("CPU_ANIMATED_TREES", "false");
+	    			p.setProperty("ANIMATED_TREES", "false");
 	    		}
 	    	}
 	    	String detailedTrees = p.getProperty("DETAILED_TREES");

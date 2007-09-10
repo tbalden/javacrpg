@@ -413,7 +413,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (batch==null)
 			{
 				batch = new TrimeshGeometryBatch(model.id,core,targetQuad);
-				batch.animated = J3DCore.CPU_ANIMATED_TREES && model.windAnimation;
+				batch.animated = J3DCore.ANIMATED_TREES && model.windAnimation;
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
@@ -479,7 +479,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			startTime= System.currentTimeMillis();
 	
 			
-			if (J3DCore.CPU_ANIMATED_GRASS && model.windAnimation) {
+			if (J3DCore.ANIMATED_GRASS && model.windAnimation) {
 				doGrassMove = true;
 			}
 	
@@ -518,7 +518,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
-			if (J3DCore.CPU_ANIMATED_GRASS)
+			if (J3DCore.ANIMATED_GRASS)
 				whichDiff = i % 5;
 
 			child = children.get(i);
