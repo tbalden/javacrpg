@@ -21,5 +21,6 @@ public class RenderedTopSide extends RenderedSide {
 	{
 		super(objects);
 		this.nonEdgeObjects = nonEdgeObjects;
+		type = RS_TOPSIDE;
 	}
 }

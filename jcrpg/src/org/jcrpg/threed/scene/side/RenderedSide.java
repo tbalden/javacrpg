@@ -29,6 +29,15 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 
 public class RenderedSide {
 
+	public static final int RS_SIDE = 0;
+	public static final int RS_HASHROTATED = 1;
+	public static final int RS_HASHALTERED = 2;
+	public static final int RS_TOPSIDE = 3;
+	public static final int RS_CONTINUOUS = 4;
+	
+	
+	public int type = RS_SIDE;
+	
 	
 	public Model[] objects;
 	
