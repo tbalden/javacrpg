@@ -16,6 +16,7 @@ public class RenderedContinuousSide extends RenderedSide{
 		this.nonContinuous = nonContinuous;
 		this.oneSideContinuousNormal = oneSideContinuousNormal;
 		this.oneSideContinuousOpposite = oneSideContinuousOpposite;
+		type = RS_CONTINUOUS;
 	}
 	
 }
