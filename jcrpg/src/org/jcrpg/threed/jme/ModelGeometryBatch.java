@@ -34,10 +34,14 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
+import com.jme.light.Light;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
+import com.jme.system.DisplaySystem;
 
 public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
 	private static final long serialVersionUID = 0L;
@@ -74,7 +78,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			parentOrig = new Node();
 			parentOrig.setRenderState(quad.getRenderState(RenderState.RS_TEXTURE));
 			if (m.type == Model.SIMPLEMODEL) {
-				parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+				//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+				parentOrig.setRenderState(quad.getRenderState(RenderState.RS_LIGHT));
 			}
 			sharedParentCache.put(m.id,parentOrig);
 		}

@@ -1,6 +1,9 @@
-[ ] Charlie's report:
-	[ ]	- if view distance is low, caves are very blue inside
-	[ ]	- if I run into a tree, I often can't turn left until I first turn right
+[ ] when ground from obj model, create new randomly changing RenderedSide with several models 
+[ ] normal or parallax map to ground !
+
+[X] Charlie's report:
+	[X]	- if view distance is low, caves are very blue inside
+	[?]	- if I run into a tree, I often can't turn left until I first turn right
 	[X]	- view distance needs combining with fog so things don't "appear" out of nowhere
 	
 [ ] add two phase render to all CKeyAction
