@@ -871,30 +871,35 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				new SimpleModel[]{roof_top}
 				));
 		
-		SimpleModel sm_grass = new SimpleModel("models/ground/cont_grass.3ds",null); sm_grass.rotateOnSteep = true;
-		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
+		SimpleModel sm_grass = new SimpleModel("models/ground/ground_cave.obj","grass2.jpg"); sm_grass.rotateOnSteep = true;
+		//SimpleModel sm_grass = new SimpleModel("models/ground/wall_cave.obj","grass2.jpg"); sm_grass.rotateOnSteep = true;
+		//QuadModel qm_grass = new QuadModel("grass2.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
+		//QuadModel sm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); sm_grass.rotateOnSteep = true;
 		QuadModel qm_rock_no_rot = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		QuadModel qm_cave_wall = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
-		QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
+		//QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
+		SimpleModel qm_cave_ground = new SimpleModel("models/ground/ground_cave.obj","cave_ground.jpg"); 
 
 		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},treeLodDist);
 		lod_jungle_bush1.shadowCaster = false;
 		
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true;
 		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
-		QuadModel qm_road_stone = new QuadModel("stone.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_grass.rotateOnSteep = true;
+		QuadModel qm_road_stone = new QuadModel("stone.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_road_stone.rotateOnSteep = true;
 
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true;
 		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true;
 
-		SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
-		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true;
+		//SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
+		//QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true;
+		SimpleModel sm_desert = new SimpleModel("models/ground/ground_cave.obj","sand2.jpg"); sm_desert.rotateOnSteep = true;
 		
 		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
 		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true;
 		
-		SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
-		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
+		//SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
+		//QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
+		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_cave.obj","jungle.jpg"); sm_jungle.rotateOnSteep = true;
 
 		SimpleModel sm_female = new SimpleModel("models/fauna/fem.obj",null); sm_jungle.rotateOnSteep = true;
 		sm_female.cullNone = true;
@@ -904,23 +909,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		sm_wolf.cullNone = true;
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
 		else 
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
 		
 		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone,sm_wolf}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
-		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{qm_grass}));
+		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{sm_grass}));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
 		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle, tsm_jung_grass, tsm_jung_grass_flower}));//lod_jung_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle, tsm_jung_grass, tsm_jung_grass_flower}));//lod_jung_grass_1}));
 		else
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
@@ -968,7 +973,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{bush1}));*/
 		
-		QuadModel qm_water = new QuadModel("water1.jpg"); qm_jungle.rotateOnSteep = true;
+		QuadModel qm_water = new QuadModel("water1.jpg"); qm_water.rotateOnSteep = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));

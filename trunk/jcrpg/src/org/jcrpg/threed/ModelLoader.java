@@ -675,6 +675,38 @@ public class ModelLoader {
 					spatial.updateModelBound();
 					node.attachChild(spatial);
 					
+					if (o.textureName!=null)
+					{
+						Texture texture = (Texture)textureCache.get(o.textureName);
+						
+						if (texture==null) {
+							texture = TextureManager.loadTexture("./data/textures/"+TEXDIR+o.textureName,Texture.MM_LINEAR,
+				                    Texture.FM_LINEAR);
+			
+							texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+							texture.setApply(Texture.AM_MODULATE);
+							texture.setRotation(J3DCore.qTexture);
+							textureCache.put(o.textureName, texture);
+						}
+						/*MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+						.createMaterialState();
+						ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+						//ms.setAmbient(new ColorRGBA(0.0f,0.0f,0.0f,0.5f));
+						spatial.setRenderState(ms);
+						spatial.setLightCombineMode(LightState.COMBINE_FIRST);*/
+						
+		
+						TextureState ts = core.getDisplay().getRenderer().createTextureState();
+						ts.setTexture(texture, 0);
+						
+		                ts.setEnabled(true);
+		                spatial.setRenderState(ts);
+						
+					} else 
+					{
+						System.out.println(o.modelName);
+						setTextures(node,o.mipMap);
+					}
 					
 				    if (o.cullNone)
 				    {
