@@ -113,7 +113,7 @@ public class GeometryBatchHelper {
 	    			core.intRootNode.updateRenderState();
 	    		} else
 	    		{
-		    		batch.animated = true && J3DCore.CPU_ANIMATED_GRASS; // animate wind only outside
+		    		batch.animated = true && J3DCore.ANIMATED_GRASS; // animate wind only outside
 	    			core.extRootNode.attachChild(batch.parent);
 	    			core.extRootNode.updateRenderState();
 	    		}
