@@ -987,7 +987,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.obj",null));
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
 		sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
