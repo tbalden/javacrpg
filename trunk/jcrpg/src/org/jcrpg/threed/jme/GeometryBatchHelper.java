@@ -121,12 +121,12 @@ public class GeometryBatchHelper {
 	    	batch.addItem(place);
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
-    		if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
+    		//if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
     		// texture state vegetation, trimesh
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
 	    	if (batch==null)
 	    	{
-	    		TriMesh tri = VegetationSetup.getVegTrimesh(place, place.cube, core, (TextureStateVegetationModel)m, 0, 0);
+	    		TriMesh tri = VegetationSetup.getVegTrimesh(place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
 	    		batch = new TrimeshGeometryBatch(m.id,core,tri);
 	    		if (internal)
 	    		{
@@ -146,7 +146,34 @@ public class GeometryBatchHelper {
     		for (int k=0; k<quadQuantity; k++)
     		{
     			for (int j=0; j<quadQuantity; j++) {
-    	    		TriMesh tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j);
+    				TriMesh tri;
+    				if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
+    				{
+    					tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j,0f, 100f);
+    				} else
+    				{
+    					float heightPercent = 0;
+    					float variationCutter = 160f;
+    					if (place.cube.cube.steepDirection==J3DCore.SOUTH)
+    					{
+    						heightPercent = (j*1f)/quadQuantity;
+    						
+    					}
+    					if (place.cube.cube.steepDirection==J3DCore.NORTH)
+    					{
+    						heightPercent = ((quadQuantity-j)*1f)/quadQuantity;
+    					}
+    					if (place.cube.cube.steepDirection==J3DCore.WEST)
+    					{
+    						heightPercent = (k*1f)/quadQuantity;
+    					}
+    					if (place.cube.cube.steepDirection==J3DCore.EAST)
+    					{
+    						heightPercent = ((quadQuantity-k)*1f)/quadQuantity;
+    					}
+    					heightPercent*=0.9;
+    					tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
+    				}
     	    		batch.addItem(place,tri);
     	    		
     			}

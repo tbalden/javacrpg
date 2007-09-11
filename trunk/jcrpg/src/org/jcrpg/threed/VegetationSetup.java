@@ -75,9 +75,11 @@ public class VegetationSetup {
 	 * @param tm model
 	 * @param k relative coordinate X inside the cube
 	 * @param j relative coordinate Y inside the cube
+	 * @param heightDiff percentage of height in a Cube for the given trimesh. (0f-1f)
+	 * @param variationCutter the bigger this value the lass random deviation in position. (100f default)
 	 * @return
 	 */
-	public static TriMesh getVegTrimesh(NodePlaceholder place, RenderedCube c, J3DCore core,TextureStateVegetationModel tm, int k, int j)
+	public static TriMesh getVegTrimesh(NodePlaceholder place, RenderedCube c, J3DCore core,TextureStateVegetationModel tm, int k, int j, float heightDiff, float variationCutter)
 	{
 		TextureState[] ts = core.modelLoader.loadTextureStates(tm.textureNames);
 		Node[] quads = quadCache.get(tm.getKey());
@@ -129,8 +131,8 @@ public class VegetationSetup {
 			quadCache.put(tm.getKey(), quads);
 		}
 		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
-		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/100f) - (100/100f/2f);
-		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/100f) - (100/100f/2f);
+		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
+		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
 		x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
 		z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
 		x = Math.max(x,  + quadSeparation/4f);
@@ -141,7 +143,7 @@ public class VegetationSetup {
 		if (Float.isNaN(height)) {
 			height = 0.f;
 		}
-		
+		height+=heightDiff;
 		
 		// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
 		Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2,-z + J3DCore.CUBE_EDGE_SIZE/2);
