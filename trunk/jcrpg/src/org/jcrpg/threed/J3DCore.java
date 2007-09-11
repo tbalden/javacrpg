@@ -2908,6 +2908,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	@Override
 	protected void simpleRender() {
+		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
         try {
         	if (BLOOM_EFFECT||SHADOWS) pManager.renderPasses(display.getRenderer());

@@ -274,6 +274,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public static final long TIME_LIMIT = 0;
 	Quaternion orient = null;
 	
+	public static boolean passedTimeCalculated = false;
 	
 	@Override
 	public void onDraw(Renderer r) {
@@ -430,7 +431,12 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 		
 		long additionalTime = Math.min(System.currentTimeMillis() - startTime,10);
-		passedTime += additionalTime;
+		if (!passedTimeCalculated) {
+			passedTime += additionalTime;
+		} else
+		{
+			passedTimeCalculated = true;
+		}
 		startTime= System.currentTimeMillis();
 
 		boolean doGrassMove = false;
