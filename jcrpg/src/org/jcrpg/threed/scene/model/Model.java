@@ -50,6 +50,7 @@ public abstract class Model {
 	 */
 	public boolean shadowCaster = false;
 	
+	public boolean noSpecialSteepRotation = true;
 	
 	/**
 	 * Tells if loader should load it into a ClodMesh.

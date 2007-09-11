@@ -16,19 +16,28 @@ public class RenderedHashAlteredSide extends RenderedSide {
 	public boolean scaleFix = false;
 	
 	Model[][] alteredObjectLists;
+	Model[][] alteredSteepObjectLists;
 	
 	Model[] returnModels = null;
 	
 	/**
 	 * @param objects Objects always rendered.
 	 */
+	public RenderedHashAlteredSide(Model[] objects, Model[][] alteredObjectLists, Model[][] alteredSteepObjectLists)
+	{
+		super(objects);
+		this.alteredObjectLists = alteredObjectLists;
+		this.alteredSteepObjectLists = alteredSteepObjectLists;
+		type = RS_HASHALTERED;
+	}
 	public RenderedHashAlteredSide(Model[] objects, Model[][] alteredObjectLists)
 	{
 		super(objects);
 		this.alteredObjectLists = alteredObjectLists;
+		this.alteredSteepObjectLists = alteredObjectLists;
 		type = RS_HASHALTERED;
 	}
-	public RenderedHashAlteredSide(Model[] objects, Model[][] alteredObjectLists, boolean scaleFix)
+	public RenderedHashAlteredSide(Model[] objects, Model[][] alteredObjectLists, Model[][] alteredSteepObjectLists, boolean scaleFix)
 	{
 		super(objects);
 		this.alteredObjectLists = alteredObjectLists;
@@ -36,13 +45,14 @@ public class RenderedHashAlteredSide extends RenderedSide {
 		type = RS_HASHALTERED;
 	}
 	
-	public Model[] getRenderedModels(int x,int y,int z)
+	public Model[] getRenderedModels(int x,int y,int z, boolean steep)
 	{
 		//if (returnModels==null) {
 			ArrayList<Model> models = new ArrayList<Model>();
-			for (int i=0; i<alteredObjectLists.length; i++)
+			Model[][] lists = steep?alteredSteepObjectLists:alteredObjectLists;
+			for (int i=0; i<lists.length; i++)
 			{
-				Model[] objectList = alteredObjectLists[i];
+				Model[] objectList = lists[i];
 				int p = HashUtil.mix(x+i, y, z)%objectList.length;
 				models.add(objectList[p]);
 				
