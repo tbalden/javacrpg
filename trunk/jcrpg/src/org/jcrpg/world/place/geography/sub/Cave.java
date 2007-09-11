@@ -47,6 +47,7 @@ public class Cave extends Geography {
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_CAVE+"_GROUND_STEEP");
 	public static final SideSubType SUBTYPE_ROCK = new NotPassable(TYPE_CAVE+"_ROCK");
 	public static final SideSubType SUBTYPE_BLOCK = new NotPassable(TYPE_CAVE+"_BLOCK");
+	public static final SideSubType SUBTYPE_BLOCK_GROUND = new GroundSubType(TYPE_CAVE+"_BLOCK_GROUND");
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_CAVE+"_WALL");
 	public static final SideSubType SUBTYPE_WALL_REVERSE = new NotPassable(TYPE_CAVE+"_WALL_REVERSE");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_CAVE+"_GROUND");
@@ -54,6 +55,7 @@ public class Cave extends Geography {
 
 	static Side[] ROCK = {new Side(TYPE_CAVE,SUBTYPE_ROCK)};
 	static Side[] BLOCK = {new Side(TYPE_CAVE,SUBTYPE_BLOCK)};
+	static Side[] BLOCK_GROUND = {new Side(TYPE_CAVE,SUBTYPE_BLOCK_GROUND)};
 	static Side[] GROUND = {new Side(TYPE_CAVE,SUBTYPE_GROUND)};
 	static Side[] WALL = {new Side(TYPE_CAVE,SUBTYPE_WALL)};
 	static Side[] WALL_REVERSE = {new Side(TYPE_CAVE,SUBTYPE_WALL_REVERSE)};
@@ -68,13 +70,13 @@ public class Cave extends Geography {
 	static Side[][] CAVE_WEST = new Side[][] { null, null, null,WALL_REVERSE,null,null };
 
 	static Side[][] CAVE_ROCK = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK,ROCK,null };
-	static Side[][] CAVE_ROCK_NO_MODEL = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK, BLOCK,null };
+	static Side[][] CAVE_ROCK_NO_MODEL = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK, BLOCK_GROUND,null };
 	//static Side[][] CAVE_ROCK = new Side[][] { WALL, WALL, WALL,WALL,GROUND,WALL };
 
-	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,null,GROUND };
-	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,null,null,GROUND };
-	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, BLOCK, ENTRANCE,BLOCK,null,GROUND };
-	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, null, BLOCK,ENTRANCE,null,GROUND };
+	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,null,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, BLOCK, ENTRANCE,BLOCK,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, null, BLOCK,ENTRANCE,BLOCK_GROUND,GROUND };
 	
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
