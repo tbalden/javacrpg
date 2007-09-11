@@ -550,10 +550,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepRotations.put(new Integer(EAST), steepE);
 	}
 	
-	public static HashMap<Integer,Quaternion> steepRotations_noRot = new HashMap<Integer, Quaternion>();
+	public static HashMap<Integer,Quaternion> steepRotations_special = new HashMap<Integer, Quaternion>();
 	static
 	{
-		// steep rotations
+		// steep rotations with special in-one-step rotation
 		steepE_noRot = new Quaternion();
 		steepE_noRot.fromAngles(new float[]{FastMath.PI/2,0,3*FastMath.PI/4});
 		steepW_noRot = new Quaternion();
@@ -561,12 +561,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepS_noRot = new Quaternion();
 		steepS_noRot.fromAngles(new float[]{0,FastMath.PI/4,FastMath.PI/2});
 		steepN_noRot = new Quaternion();
-		steepN_noRot.fromAngles(new float[]{0,3*FastMath.PI/4,FastMath.PI/2});
+		steepN_noRot.fromAngles(new float[]{0,-3*FastMath.PI/4,-FastMath.PI/2});
 
-		steepRotations_noRot.put(new Integer(NORTH), steepN_noRot);
-		steepRotations_noRot.put(new Integer(SOUTH), steepS_noRot);
-		steepRotations_noRot.put(new Integer(WEST), steepW_noRot);
-		steepRotations_noRot.put(new Integer(EAST), steepE_noRot);
+		steepRotations_special.put(new Integer(NORTH), steepN_noRot);
+		steepRotations_special.put(new Integer(SOUTH), steepS_noRot);
+		steepRotations_special.put(new Integer(WEST), steepW_noRot);
+		steepRotations_special.put(new Integer(EAST), steepE_noRot);
 	}
 
 	public static HashMap<Integer,int[]> moveTranslations = new HashMap<Integer,int[]>();
@@ -630,6 +630,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
 		hmAreaSubType3dType.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
+		hmAreaSubType3dType.put(Cave.SUBTYPE_BLOCK_GROUND.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL.id, new Integer(32));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_WALL_REVERSE.id, new Integer(35));
 		hmAreaSubType3dType.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
@@ -1668,7 +1669,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						qC.multLocal(steepRotations.get(cube.cube.steepDirection));
 					} else 
 					{
-						qC = steepRotations_noRot.get(cube.cube.steepDirection);
+						qC = steepRotations_special.get(cube.cube.steepDirection);
 					}
 					// the necessary local translation : half cube up
 					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));

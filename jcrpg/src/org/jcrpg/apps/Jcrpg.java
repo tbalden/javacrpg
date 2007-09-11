@@ -113,7 +113,7 @@ public class Jcrpg {
 		w.geographies.put(cave.id, cave);
 		
 		
-		Mountain m = new Mountain("m1",w,null,10,10,3,10,1,w.getSeaLevel(10),1);
+		Mountain m = new Mountain("m1",w,null,10,10,2,10,1,w.getSeaLevel(10),1);
 		w.geographies.put(m.id, m);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
