@@ -66,7 +66,7 @@ public class ModelPool {
 				if (rc.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
 					// do not put texturestate veg on steeps
-					return null;
+					//return null;
 				}
 			}
 		}
