@@ -27,6 +27,8 @@ public class SimpleModel extends Model {
 
 	public String modelName, textureName;
 	public boolean mipMap = true;
+	public int xGeomBatchSize = -1;
+	public int yGeomBatchSize = -1;
 	
 	public SimpleModel(String modelName, String textureName)
 	{

@@ -31,6 +31,7 @@ import org.jcrpg.threed.VegetationSetup;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -62,7 +63,28 @@ public class GeometryBatchHelper {
 	{
     	String key = m.type+m.id+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
-    		key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    		SimpleModel sm = (SimpleModel)m;
+    		if (sm.xGeomBatchSize==-1) 
+    		{
+    			if (sm.yGeomBatchSize==-1) 
+    			{
+    				key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    			}
+    			else
+    			{
+    				key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    			}
+    		} else
+    		{
+    			if (sm.yGeomBatchSize==-1) 
+    			{
+    				key+=(place.cube.cube.x/sm.xGeomBatchSize)+""+(place.cube.cube.z/sm.xGeomBatchSize)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    			}
+    			else
+    			{
+    				key+=(place.cube.cube.x/sm.xGeomBatchSize)+""+(place.cube.cube.z/sm.xGeomBatchSize)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    			}
+    		}
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION)
     	{
