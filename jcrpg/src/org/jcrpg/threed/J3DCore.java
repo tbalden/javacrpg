@@ -555,13 +555,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		// steep rotations
 		steepE_noRot = new Quaternion();
-		steepE_noRot.fromAngles(new float[]{FastMath.PI/2,0,-FastMath.PI/4});
+		steepE_noRot.fromAngles(new float[]{FastMath.PI/2,0,3*FastMath.PI/4});
 		steepW_noRot = new Quaternion();
 		steepW_noRot.fromAngles(new float[]{-FastMath.PI/2,0,FastMath.PI/4});
 		steepS_noRot = new Quaternion();
 		steepS_noRot.fromAngles(new float[]{0,FastMath.PI/4,FastMath.PI/2});
 		steepN_noRot = new Quaternion();
-		steepN_noRot.fromAngles(new float[]{0,-FastMath.PI/4,FastMath.PI/2});
+		steepN_noRot.fromAngles(new float[]{0,3*FastMath.PI/4,FastMath.PI/2});
 
 		steepRotations_noRot.put(new Integer(NORTH), steepN_noRot);
 		steepRotations_noRot.put(new Integer(SOUTH), steepS_noRot);
