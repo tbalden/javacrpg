@@ -471,6 +471,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	    		vp.setParameter(new float[]{diffs[2],diffs[2],0,0}, 2);
 	    		vp.setParameter(new float[]{diffs[3],diffs[3],0,0}, 3);
 	    		vp.setParameter(new float[]{diffs[4],diffs[4],0,0}, 4);
+
+	    		Vector3f camLoc = core.getCamera().getLocation();
+	    		vp.setParameter(new float[]{camLoc.x,camLoc.y,camLoc.z,0}, 5);
 			}
 			else
 			if (true==false)
