@@ -1,6 +1,7 @@
 !!ARBvp1.0
 PARAM mv[4] = { state.matrix.modelview };
 PARAM mv2[4] = { state.matrix.projection };
+PARAM camPos =  program.local[5];
 TEMP offsetPos, pos,projpos;
 ################################
 # Apply modelview transformation
@@ -19,6 +20,11 @@ ADD f1, vertex.position, 0.1;
 ADD f2, vertex.position, 0.2;
 ADD f3, vertex.position, 0.3;
 ADD f4, vertex.position, 0.4;
+ADD f0, f0, camPos;
+ADD f1, f1, camPos;
+ADD f2, f2, camPos;
+ADD f3, f3, camPos;
+ADD f4, f4, camPos;
 
 # get fraction and substract 0.5 to have negative values too
 FRC f0, f0;
