@@ -1,4 +1,5 @@
 [ ] vertex program jumps -> add camPost to local param and add it to vertex.position before calc
+	[X] moving all around when passing
 [ ] Cave: implement surface interface! multilevel cave??
 [ ] waters rivers, lakes
 
