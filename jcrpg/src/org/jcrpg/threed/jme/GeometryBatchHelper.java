@@ -117,6 +117,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.updateRenderState();
 	    		}
 	    		modelBatchMap.put(key, batch);
+	    		batch.lockTransforms();
+	    		batch.lockShadows();
 	    	}
 	    	batch.addItem(place);
     	} else
@@ -140,6 +142,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.updateRenderState();
 	    		}
 	    		trimeshBatchMap.put(key, batch);
+	    		batch.lockTransforms();
+	    		batch.lockShadows();
 	    	}
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
 
