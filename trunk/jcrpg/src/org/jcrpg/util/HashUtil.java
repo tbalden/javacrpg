@@ -28,6 +28,8 @@ package org.jcrpg.util;
  */
 public class HashUtil {
 	
+	public static int WORLD_RANDOM_SEED = 0;
+	
 	/**
 	 * Robert Jenkins' 96 bit Mix Function
 	 * Robert Jenkins has developed a hash function based on a sequence of subtraction, exclusive-or, and bit shift. 
@@ -35,15 +37,18 @@ public class HashUtil {
 	 */
 	public static int mix(int a, int b, int c)
 	{
-	  a=a-b;  a=a-c;  a=a^(c >>> 13);
-	  b=b-c;  b=b-a;  b=b^(a << 8); 
-	  c=c-a;  c=c-b;  c=c^(b >>> 13);
-	  a=a-b;  a=a-c;  a=a^(c >>> 12);
-	  b=b-c;  b=b-a;  b=b^(a << 16);
-	  c=c-a;  c=c-b;  c=c^(b >>> 5);
-	  a=a-b;  a=a-c;  a=a^(c >>> 3);
-	  b=b-c;  b=b-a;  b=b^(a << 10);
-	  c=c-a;  c=c-b;  c=c^(b >>> 15);
+		a+=WORLD_RANDOM_SEED;
+		b-=WORLD_RANDOM_SEED;
+		c+=WORLD_RANDOM_SEED;
+	    a=a-b;  a=a-c;  a=a^(c >>> 13);
+	    b=b-c;  b=b-a;  b=b^(a << 8); 
+	    c=c-a;  c=c-b;  c=c^(b >>> 13);
+	    a=a-b;  a=a-c;  a=a^(c >>> 12);
+	    b=b-c;  b=b-a;  b=b^(a << 16);
+	    c=c-a;  c=c-b;  c=c^(b >>> 5);
+	    a=a-b;  a=a-c;  a=a^(c >>> 3);
+	    b=b-c;  b=b-a;  b=b^(a << 10);
+	    c=c-a;  c=c-b;  c=c^(b >>> 15);
 	  return Math.abs(c);
 	}
 	
