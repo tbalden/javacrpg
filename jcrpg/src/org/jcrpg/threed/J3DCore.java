@@ -168,6 +168,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean ANIMATED_TREES = true;
     public static boolean DETAILED_TREES = true;
     public static boolean LOD_VEGETATION = false;
+    public static boolean BUMPED_GROUND = false;
 
     static Properties p = new Properties();
     static {
@@ -347,6 +348,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("ANTIALIAS_SAMPLES", "0");
+	    		}
+	    	}
+	    	String bumpedGround = p.getProperty("BUMPED_GROUND");
+	    	if (bloomEffect!=null)
+	    	{
+	    		bumpedGround = bumpedGround.trim();
+	    		try {
+	    			BUMPED_GROUND = Boolean.parseBoolean(bumpedGround);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("BUMPED_GROUND", "false");
 	    		}
 	    	}
 	    	
@@ -893,6 +905,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				new SimpleModel[]{roof_top}
 				));
 		
+		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
 		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.rotateOnSteep = true; sm_grass.yGeomBatchSize = 1; sm_grass.xGeomBatchSize = 8;
 		SimpleModel sm_grass_2 = new SimpleModel("models/ground/ground_2.obj","grass2.jpg"); sm_grass_2.rotateOnSteep = true; sm_grass_2.yGeomBatchSize = 1; sm_grass_2.xGeomBatchSize = 8;
 		SimpleModel sm_grass_3 = new SimpleModel("models/ground/ground_3.obj","grass2.jpg"); sm_grass_3.rotateOnSteep = true; sm_grass_3.yGeomBatchSize = 1; sm_grass_3.xGeomBatchSize = 8;
@@ -900,12 +913,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_grass_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","grass2.jpg"); sm_grass_steep_2.rotateOnSteep = true; sm_grass_steep_2.yGeomBatchSize = 1; sm_grass_steep_2.xGeomBatchSize = 8; sm_grass_steep_2.noSpecialSteepRotation = false;
 		SimpleModel sm_grass_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","grass2.jpg"); sm_grass_steep_3.rotateOnSteep = true; sm_grass_steep_3.yGeomBatchSize = 1; sm_grass_steep_3.xGeomBatchSize = 8; sm_grass_steep_3.noSpecialSteepRotation = false;
 
-		//SimpleModel sm_grass = new SimpleModel("models/ground/wall_cave.obj","grass2.jpg"); sm_grass.rotateOnSteep = true;
-		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true;
-		//QuadModel sm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); sm_grass.rotateOnSteep = true;
 		QuadModel qm_rock_no_rot = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		QuadModel qm_cave_wall = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
-		//QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
+		
+		QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		SimpleModel sm_cave_ground = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_cave_ground.yGeomBatchSize = 1; sm_cave_ground.xGeomBatchSize = 8;
 		SimpleModel sm_cave_ground_2 = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_cave_ground_2.yGeomBatchSize = 1; sm_cave_ground_2.xGeomBatchSize = 8;
 		SimpleModel sm_cave_ground_3 = new SimpleModel("models/ground/ground_3.obj","cave_ground.jpg"); sm_cave_ground_3.yGeomBatchSize = 1; sm_cave_ground_3.xGeomBatchSize = 8;
@@ -920,8 +931,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true;
 		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true;
 
-		//SimpleModel sm_desert = new SimpleModel("models/ground/desert_1.3ds",null); sm_desert.rotateOnSteep = true;
-		//QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true;
+		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = true; sm_desert.yGeomBatchSize = 1; sm_desert.xGeomBatchSize = 8;
 		SimpleModel sm_desert_2 = new SimpleModel("models/ground/ground_2.obj","sand2.jpg"); sm_desert_2.rotateOnSteep = true; sm_desert_2.yGeomBatchSize = 1; sm_desert_2.xGeomBatchSize = 8;
 		SimpleModel sm_desert_3 = new SimpleModel("models/ground/ground_3.obj","sand2.jpg"); sm_desert_3.rotateOnSteep = true; sm_desert_3.yGeomBatchSize = 1; sm_desert_3.xGeomBatchSize = 8;
@@ -929,11 +939,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_desert_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","sand2.jpg"); sm_desert_steep_2.rotateOnSteep = true; sm_desert_steep_2.yGeomBatchSize = 1; sm_desert_steep_2.xGeomBatchSize = 8; sm_desert_steep_2.noSpecialSteepRotation = false;
 		SimpleModel sm_desert_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","sand2.jpg"); sm_desert_steep_3.rotateOnSteep = true; sm_desert_steep_3.yGeomBatchSize = 1; sm_desert_steep_3.xGeomBatchSize = 8; sm_desert_steep_3.noSpecialSteepRotation = false;
 		
-		SimpleModel sm_arctic = new SimpleModel("models/ground/arctic_1.3ds",null); sm_arctic.rotateOnSteep = true;
 		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true;
 		
-		//SimpleModel sm_jungle = new SimpleModel("models/ground/jung_grass.3ds",null); sm_jungle.rotateOnSteep = true;
-		//QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
+		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = true; sm_jungle.yGeomBatchSize = 1; sm_jungle.xGeomBatchSize = 8;
 		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = true; sm_jungle_2.yGeomBatchSize = 1; sm_jungle_2.xGeomBatchSize = 8;
 		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = true; sm_jungle_3.yGeomBatchSize = 1; sm_jungle_3.xGeomBatchSize = 8;
@@ -948,25 +956,50 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_wolf = new SimpleModel("models/fauna/wolf.obj",null); sm_jungle.rotateOnSteep = true;
 		sm_wolf.cullNone = true;
 		
-		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{tsm_cont_grass,tsm_cont_grass_flower}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
-		else 
-			hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+		if (RENDER_GRASS_DISTANCE>0) 
+		{
+			if (BUMPED_GROUND)
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{tsm_cont_grass,tsm_cont_grass_flower}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+			else
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
+		} else
+		{
+			if (BUMPED_GROUND)
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+			else
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
+		}
 		
 		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone,sm_wolf}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
-		hm3dTypeRenderedSide.put(new Integer(16), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_desert,sm_desert_2,sm_desert_3,sm_desert_3,sm_desert_3}},new Model[][]{{sm_desert_steep,sm_desert_steep_2,sm_desert_steep_3,sm_desert_steep_3}}));
+		if (BUMPED_GROUND) 
+		{
+			hm3dTypeRenderedSide.put(new Integer(16), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_desert,sm_desert_2,sm_desert_3,sm_desert_3,sm_desert_3}},new Model[][]{{sm_desert_steep,sm_desert_steep_2,sm_desert_steep_3,sm_desert_steep_3}}));
+		} else
+		{
+			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
+		}
 		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{sm_grass}));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
-		if (RENDER_GRASS_DISTANCE>0)
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{tsm_jung_grass, tsm_jung_grass_flower}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
-		else
-			hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
+		if (RENDER_GRASS_DISTANCE>0) 
+		{
+			if (BUMPED_GROUND)
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{tsm_jung_grass, tsm_jung_grass_flower}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
+			else
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
+		}
+		else 
+		{
+			if (BUMPED_GROUND)
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
+			else
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
+		}
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
