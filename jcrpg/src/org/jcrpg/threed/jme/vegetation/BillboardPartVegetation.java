@@ -440,8 +440,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	
 	@Override
 	public int attachChild(Spatial child) {
-		if (!"---".equals(child.getName())) {
-		transformTrimeshesToQuads(child);}
+		if (!"---".equals(child.getName())) 
+		{
+			transformTrimeshesToQuads(child);
+		}
 		return super.attachChild(child);
 	}
 

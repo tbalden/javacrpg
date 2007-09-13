@@ -100,6 +100,7 @@ public class ModelLoader {
     // this better be not weak hashmap
     HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
     HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
+    HashMap<String,BillboardPartVegetation> sharedBBNodeCache = new HashMap<String, BillboardPartVegetation>();
     
     int counter=0;
     
@@ -158,14 +159,22 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof PartlyBillboardModel) 
 			{
-				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+				SimpleModel o = (SimpleModel)objects[i];
+				String key = o.modelName+o.textureName+o.mipMap;
+				BillboardPartVegetation bbOrig = sharedBBNodeCache.get(key);
+				if (bbOrig==null) {
+					Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					if (fakeLoadForCacheMaint) continue;
+					bbOrig = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
+					//sharedBBNodeCache.put(key, bbOrig);
+					bbOrig.attachChild(node);
+				}
 				if (fakeLoadForCacheMaint) continue;
 				// adding to drawer
-				BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
-				bbNode.attachChild(node);
-		    	node = bbNode;
-				node.setName(((SimpleModel)objects[i]).modelName+i);
-				r[i] = bbNode;
+				//PooledSharedNode sn = new PooledSharedNode("!-",bbOrig);
+		    	//Node node = sn;
+				bbOrig.setName(((SimpleModel)objects[i]).modelName+i);
+				r[i] = bbOrig;
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
