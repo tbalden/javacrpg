@@ -601,7 +601,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		if (J3DCore.SHADOWS) stencilBits = 8;
 		alphaBits = 0;
-		//depthBits = 8;
+		depthBits = 4;
 		samples = ANTIALIAS_SAMPLES;
 		
 		// area subtype to 3d type mapping
