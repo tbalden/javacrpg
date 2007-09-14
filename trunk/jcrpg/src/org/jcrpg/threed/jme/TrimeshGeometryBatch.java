@@ -475,52 +475,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	    		Vector3f camLoc = core.getCamera().getLocation();
 	    		vp.setParameter(new float[]{camLoc.x,camLoc.y,camLoc.z,0}, 5);
 			}
-			else
-			if (true==false)
-			{
-	
-				FloatBuffer fb = null;
-				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
-				{
-					TriangleBatch b = geoInstance.mesh.getBatch(0);
-					//TriangleBatch b = this.getBatch(0);
-					if (fb==null) {
-						fb = b.getVertexBuffer();
-						if (fb!=null)
-						for (int fIndex = 0; fIndex < fb.capacity(); fIndex++) {
-							boolean f2_1Read = false;
-							boolean f2_2Read = false;
-							float f2_1 = 0;
-							float f2_2 = 0;
-							if (fIndex%12<3 || fIndex%12>=9 && fIndex%12<12) {
-								int mul = 1;
-								if (FastMath.floor(fIndex%12 / 3) == 3)
-									mul = -1;
-								if (fIndex % 3 == 0) {
-									//float f = fb.get(fIndex);
-									if (!f2_1Read) {
-										f2_1 = fb.get(fIndex + 3 * mul);
-										f2_1Read = true;
-									}
-									fb.put(fIndex, f2_1 + diffs[whichDiff]);
-								}
-								if (fIndex % 3 == 2) {
-									//float f = fb.get(fIndex);
-									if (!f2_2Read) {
-										f2_2 = fb.get(fIndex + 3 * mul);
-										f2_2Read = true;
-									}
-									fb.put(fIndex, f2_2 + diffs[whichDiff]);
-								}
-							}
-						}
-					} else
-					{
-						b.setVertexBuffer(fb);
-					}
-					geoInstance.preCommit(true); // update vertices
-				}
-			}
 		}
 		super.onDraw(r);
 	}
