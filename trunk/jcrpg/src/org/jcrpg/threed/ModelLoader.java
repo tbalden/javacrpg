@@ -726,6 +726,8 @@ public class ModelLoader {
 					//spatial.setRenderState(as);
 					
 					sharedNodeCache.put(key, node);
+					node.setModelBound(new BoundingBox());
+					node.updateModelBound();		
 		            //r.setRenderState(core.vp);
 		            //r.setRenderState(core.fp);
 		            return node;

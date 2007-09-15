@@ -49,7 +49,7 @@ public class GeometryBatchHelper {
 	}
 	
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
-	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 20;
+	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 40;
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 8;
 	
 	/**
@@ -64,6 +64,10 @@ public class GeometryBatchHelper {
     	String key = m.type+m.id+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
     		SimpleModel sm = (SimpleModel)m;
+    		if (sm.textureName!=null)
+    		{
+    			key = m.type+sm.textureName+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    		}
     		if (sm.xGeomBatchSize==-1) 
     		{
     			if (sm.yGeomBatchSize==-1) 
