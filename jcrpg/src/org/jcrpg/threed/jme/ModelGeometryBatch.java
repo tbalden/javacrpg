@@ -91,7 +91,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			if (((SimpleModel)model).textureName!=null) 
 			{
-				key = ((SimpleModel)model).textureName;
+				System.out.println("TEXTURE NAME!= null"+ model.id);
+				key = ((SimpleModel)model).id;
 			}
 		} else
 		{
@@ -125,6 +126,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			TriMesh quad = getModelMesh(placeholder.model);
+			System.out.println("ADDING"+placeholder.model.id);
 			quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			quad.setLocalRotation(placeholder.getLocalRotation());
