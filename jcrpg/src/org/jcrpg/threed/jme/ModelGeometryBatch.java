@@ -50,11 +50,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	private TriMesh getModelMesh(Model m)
 	{
 		if (m.type == Model.QUADMODEL) {
-			return (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)model, false).getChild(0);
+			return (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)m, false).getChild(0);
 		} else
 		if (m.type == Model.SIMPLEMODEL)
 		{
-			return (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)model, false).getChild(0);			
+			return (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)m, false).getChild(0);			
 		} else
 		{
 			return nullmesh;
@@ -126,7 +126,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			TriMesh quad = getModelMesh(placeholder.model);
-			System.out.println("ADDING"+placeholder.model.id);
+			System.out.println("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			quad.setLocalRotation(placeholder.getLocalRotation());
