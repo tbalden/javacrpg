@@ -49,8 +49,8 @@ public class GeometryBatchHelper {
 	}
 	
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 2;
-	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 40;
-	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 8;
+	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 10;
+	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 10;
 	
 	/**
 	 * Returns Grouping key for batch objects. The key unifies a group of nodes into a batch.
