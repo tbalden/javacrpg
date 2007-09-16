@@ -200,7 +200,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
 	    			if (VIEW_DISTANCE<5) VIEW_DISTANCE = 5;
 	    			VIEW_DISTANCE_SQR = VIEW_DISTANCE*VIEW_DISTANCE;
-	    			VIEW_DISTANCE_FRAG_SQR = 0;//VIEW_DISTANCE_SQR/4;
+	    			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR/4;
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("VIEW_DISTANCE", "10");
