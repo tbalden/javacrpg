@@ -116,6 +116,7 @@ import com.jme.scene.state.FogState;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
@@ -2028,7 +2029,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				groundParentNode.updateRenderState();
 			} else
 			{
-				updateDisplayNoBackBuffer();
+				//updateDisplayNoBackBuffer();
 			}
 	
 			System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
@@ -2722,26 +2723,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		pManager.add(rootPass);
 		
 		bloomRenderPass = new BloomRenderPass(cam, 4);
-		//ShadeState ss = display.getDisplaySystem().getRenderer().createShadeState();
-		//ss.setShade(ShadeState.SM_FLAT);
+		ShadeState ss = display.getDisplaySystem().getRenderer().createShadeState();
+		ss.setShade(ShadeState.SM_FLAT);
+		ss.setEnabled(false);
 		//rootNode.setRenderState(ss);
-		
-		
-        vp = getDisplay().getRenderer().createVertexProgramState();
-        //vp.setParameter(lightPosition, 8); // TODO
-        try {vp.load(new File(
-                "./data/shaders/grassMove.vp").toURI().toURL());} catch (Exception ex){}
-        vp.setEnabled(true);
-        if (!vp.isSupported())
-        {
-        	System.out.println("!!!!!!! NO VP !!!!!!!");
-        }
-        fp = getDisplay().getRenderer().createFragmentProgramState();
-        try {
-			fp.load(new File("./data/shaders/grassMove.fp").toURI().toURL());
-		} catch (Exception ex) {
-		}
-		fp.setEnabled(true);
+		//rootNode.clearRenderState(RenderState.RS_SHADE);
 		
 		cs_back = display.getRenderer().createCullState();
 		cs_back.setCullMode(CullState.CS_BACK);
@@ -2757,8 +2743,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		rootNode.clearRenderState(RenderState.RS_SHADE);
 		rootNode.clearRenderState(RenderState.RS_STENCIL);*/
 		
-		//rootNode.setRenderState(vp);
-		//rootNode.setRenderState(fp);
 
 
 		DisplaySystem.getDisplaySystem().getRenderer().getQueue().setTwoPassTransparency(false);

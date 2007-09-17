@@ -215,7 +215,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 									String key = ""+q.getName().charAt(l - 1);
 									if (model.removedParts.contains(key)) 
 									{
-										if (model.LOD>=1)
+										if (model.LOD>=1 || !J3DCore.DETAILED_TREES)
 											removed.add(q);
 									}
 									if (model.partNameToTextureCount.containsKey(key)) 
@@ -332,7 +332,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														added+=8;
 													}
 												} else
-												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1) 
+												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1 || !J3DCore.DETAILED_TREES && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>2) 
 												{
 													float x = sumX/counter;
 													float y = sumY/counter;
