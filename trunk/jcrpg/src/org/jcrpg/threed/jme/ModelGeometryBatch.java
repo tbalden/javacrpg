@@ -126,7 +126,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			TriMesh quad = getModelMesh(placeholder.model);
-			System.out.println("ADDING"+placeholder.model.id+quad.getName());
+			//System.out.println("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			quad.setLocalRotation(placeholder.getLocalRotation());
