@@ -40,7 +40,7 @@ public class CoconutTree extends Tree {
 	public CoconutTree()
 	{
 		super();
-		growsOnSteep = true;
+		growsOnSteep = false;
 		defaultDescription = new FloraDescription(new Cube(null,TREE,0,0,0),0,false,false);
 	}
 
