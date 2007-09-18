@@ -22,11 +22,11 @@ TEMP t0,t1,t2,t3,t4;
 TEMP tmpCamPosFloor;
 
 # create different fraction parts
-ADD f0, projpos, 0.0;
-ADD f1, projpos, 0.1;
-ADD f2, projpos, 0.2;
-ADD f3, projpos, 0.3;
-ADD f4, projpos, 0.4;
+ADD f0, vertex.position, 0.0;
+ADD f1, vertex.position, 0.1;
+ADD f2, vertex.position, 0.2;
+ADD f3, vertex.position, 0.3;
+ADD f4, vertex.position, 0.4;
 MOV tmpCamPosFloor, camPos;
 #FLR tmpCamPosFloor, camPos;
 #ADD f0, f0, tmpCamPosFloor;

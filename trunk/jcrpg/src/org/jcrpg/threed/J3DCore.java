@@ -1702,8 +1702,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					
 					// mult with steep rotation quaternion for the steep direction...
 					if (n[i].model.noSpecialSteepRotation) 
-					{
-						qC.multLocal(steepRotations.get(cube.cube.steepDirection));
+					{	try {
+							qC.multLocal(steepRotations.get(cube.cube.steepDirection));
+						}catch (Exception ex)
+						{
+							System.out.println(cube.cube + " --- "+cube.cube.steepDirection);
+						}
 					} else 
 					{
 						qC = steepRotations_special.get(cube.cube.steepDirection);

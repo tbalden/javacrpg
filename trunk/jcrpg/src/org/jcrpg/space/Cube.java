@@ -73,7 +73,17 @@ public class Cube extends ChangingImpl {
 	}
 
 	public Cube(Cube c1, Cube c2, int x, int y, int z, int steepDir) {
-		steepDirection = steepDir;
+		int steep = c1.steepDirection;
+		if (c1.steepDirection==SurfaceHeightAndType.NOT_STEEP || c1.steepDirection == J3DCore.BOTTOM || c1.steepDirection == J3DCore.TOP)
+		{
+			if (c2.steepDirection == J3DCore.BOTTOM || c2.steepDirection == J3DCore.TOP)
+			{
+				c2.steepDirection = SurfaceHeightAndType.NOT_STEEP;
+			} else {
+				steep = c2.steepDirection;
+			}
+		}
+		steepDirection = steep;
 		this.parent = c1.parent;
 		this.x = x;
 		this.y = y;
@@ -101,15 +111,17 @@ public class Cube extends ChangingImpl {
 			{				
 				if (c2.onlyIfOverlaps && !(c2.overwrite && c2.overwritePower>=c1.overwritePower)) 
 					merged = null; 
-				else
+				else {
 					merged = sides2;
+				}
 			} else
 			if (sides2==null || c1.overwrite && c1.overwritePower>=c2.overwritePower)
 			{				
 				if (c1.onlyIfOverlaps && !(c1.overwrite && c1.overwritePower>=c2.overwritePower)) 
 					merged = null; 
-				else
+				else {
 					merged = sides1;
+				}
 			} else
 			for (int j=0; j<merged.length; j++)
 			{
