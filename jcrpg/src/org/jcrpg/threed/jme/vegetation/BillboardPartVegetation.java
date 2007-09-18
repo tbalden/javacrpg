@@ -530,7 +530,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (child != null) {
 				float distSquared = tmpVec.set(cam.getLocation()).subtractLocal(child.getWorldTranslation())
 						.lengthSquared();
-				if (distSquared <= viewDistance * viewDistance)
+				if (!J3DCore.LOD_VEGETATION || distSquared <= viewDistance * viewDistance)
 				// 
 				{
 
