@@ -90,8 +90,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		if (model.type == Model.SIMPLEMODEL) 
 		{
 			if (((SimpleModel)model).textureName!=null) 
-			{
-				System.out.println("TEXTURE NAME!= null"+ model.id);
+			{				
 				key = ((SimpleModel)model).id;
 			}
 		} else
