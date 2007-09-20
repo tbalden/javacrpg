@@ -173,6 +173,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean LOD_VEGETATION = false;
     public static boolean BUMPED_GROUND = false;
     public static boolean WATER_SHADER = false;
+    public static boolean WATER_DETAILED = false;
 
     static Properties p = new Properties();
     static {
@@ -366,7 +367,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		}
 	    	}
 	    	String waterShader = p.getProperty("WATER_SHADER");
-	    	if (bloomEffect!=null)
+	    	if (waterShader!=null)
 	    	{
 	    		waterShader = waterShader.trim();
 	    		try {
@@ -374,6 +375,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("WATER_SHADER", "false");
+	    		}
+	    	}
+	    	String waterDetailed = p.getProperty("WATER_DETAILED");
+	    	if (waterDetailed!=null)
+	    	{
+	    		waterDetailed = waterDetailed.trim();
+	    		try {
+	    			WATER_DETAILED = Boolean.parseBoolean(waterDetailed);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("WATER_DETAILED", "false");
 	    		}
 	    	}
 	    	
@@ -2243,7 +2255,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void setCalculatedCameraLocation()
 	{
 		cam.setLocation(getCurrentLocation());
-		waterEffectRenderPass.setWaterHeight(cam.getLocation().y);
+		if (J3DCore.WATER_SHADER)
+		{
+			waterEffectRenderPass.setWaterHeight(cam.getLocation().y);
+		}
 	}
 	
 	public Vector3f getCurrentLocation()
@@ -2871,7 +2886,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           pManager.add(bloomRenderPass);
 	       }
 		}
-		waterEffectRenderPass = new WaterRenderPass( cam, 4, false, false );
+		waterEffectRenderPass = new WaterRenderPass( cam, 4, false, true);
 		//set equations to use z axis as up
 		waterEffectRenderPass.setWaterPlane( new Plane( new Vector3f( 0.0f, 1.0f, 0.0f ), 0.0f ) );
 		waterEffectRenderPass.setTangent( new Vector3f( 1.0f, 0.0f, 0.0f ) );
@@ -2887,7 +2902,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
-		waterEffectRenderPass.setReflectedScene( rootNode);
+		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?rootNode:skySphere);
 		groundParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens flare
 		skySphere.setRenderState(cs_none);
