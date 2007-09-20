@@ -33,6 +33,7 @@ public class QuadModel extends Model {
 	public String dot3TextureName;
 	// tells if bump map texture needs transformation with SobelImageFilter from grayscale.
 	public boolean transformToNormal = false;
+	public boolean waterQuad = false;
 
 	public QuadModel(String textureName) {
 		super();

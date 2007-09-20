@@ -29,6 +29,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -92,7 +93,7 @@ public class GeometryBatchHelper {
     	{
     		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
     	} else
-    	{   // other models only by Y
+    	{   // other models only by Y // quad
     		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
     	}
     	return key;
@@ -109,6 +110,10 @@ public class GeometryBatchHelper {
 	    	if (batch==null)
 	    	{
 	    		batch = new ModelGeometryBatch(core,m);
+	    		if (m.type == Model.QUADMODEL && ((QuadModel)m).waterQuad)
+	    		{
+	    			J3DCore.waterEffectRenderPass.setWaterEffectOnSpatial(batch.parent);
+	    		}
 	    		if (internal)
 	    		{
 	    			core.intRootNode.attachChild(batch.parent);

@@ -39,6 +39,7 @@ import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
+import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -93,6 +94,7 @@ import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
 import com.jme.math.FastMath;
+import com.jme.math.Plane;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -170,6 +172,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean DETAILED_TREES = true;
     public static boolean LOD_VEGETATION = false;
     public static boolean BUMPED_GROUND = false;
+    public static boolean WATER_SHADER = false;
 
     static Properties p = new Properties();
     static {
@@ -360,6 +363,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    		} catch (Exception pex)
 	    		{
 	    			p.setProperty("BUMPED_GROUND", "false");
+	    		}
+	    	}
+	    	String waterShader = p.getProperty("WATER_SHADER");
+	    	if (bloomEffect!=null)
+	    	{
+	    		waterShader = waterShader.trim();
+	    		try {
+	    			WATER_SHADER = Boolean.parseBoolean(waterShader);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("WATER_SHADER", "false");
 	    		}
 	    	}
 	    	
@@ -1050,7 +1064,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{bush1}));*/
 		
-		QuadModel qm_water = new QuadModel("water1.jpg"); qm_water.rotateOnSteep = true;
+		QuadModel qm_water = new QuadModel("water1.jpg"); qm_water.rotateOnSteep = true; qm_water.waterQuad = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
@@ -1792,6 +1806,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	    		NodePlaceholder n = itNode.next();
 	    				if (GEOMETRY_BATCH && n.model.batchEnabled && 
 	    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+   	    						//(n.model.type == Model.SIMPLEMODEL
 	    								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 	    					 )
 	    				{
@@ -1887,6 +1902,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						{
 							if (GEOMETRY_BATCH && n.model.batchEnabled && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+									//(n.model.type == Model.SIMPLEMODEL
 											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 								) 
 							{
@@ -2227,6 +2243,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void setCalculatedCameraLocation()
 	{
 		cam.setLocation(getCurrentLocation());
+		waterEffectRenderPass.setWaterHeight(cam.getLocation().y);
 	}
 	
 	public Vector3f getCurrentLocation()
@@ -2650,6 +2667,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FogState fs_internal;
     public ShadowedRenderPass sPass = null;
 	private BloomRenderPass bloomRenderPass;
+	public static WaterRenderPass waterEffectRenderPass;
 	
 	public CullState cs_back = null;
 	public CullState cs_none = null;
@@ -2722,11 +2740,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
         //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
-		RenderPass rootPass = new RenderPass();
-		//rootPass.add(rootNode);
-		pManager.add(rootPass);
 		
 		bloomRenderPass = new BloomRenderPass(cam, 4);
+		
 		ShadeState ss = display.getDisplaySystem().getRenderer().createShadeState();
 		ss.setShade(ShadeState.SM_FLAT);
 		ss.setEnabled(false);
@@ -2855,17 +2871,28 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           pManager.add(bloomRenderPass);
 	       }
 		}
-	 
+		waterEffectRenderPass = new WaterRenderPass( cam, 4, false, false );
+		//set equations to use z axis as up
+		waterEffectRenderPass.setWaterPlane( new Plane( new Vector3f( 0.0f, 1.0f, 0.0f ), 0.0f ) );
+		waterEffectRenderPass.setTangent( new Vector3f( 1.0f, 0.0f, 0.0f ) );
+		waterEffectRenderPass.setBinormal( new Vector3f( 0.0f, 1.0f, 0.0f ));
+		//waterEffectRenderPass.setWaterMaxAmplitude(2f);
+		pManager.add( waterEffectRenderPass );
         
+		RenderPass rootPass = new RenderPass();
+		//rootPass.add(rootNode);
+		//pManager.add(rootPass);
+		
 		/*
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
+		waterEffectRenderPass.setReflectedScene( rootNode);
 		groundParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens flare
 		skySphere.setRenderState(cs_none);
 		skySphere.setCullMode(Node.CULL_NEVER);
-
+		
 		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 		rootNode.clearRenderState(RenderState.RS_LIGHT);
 		skySphere.setRenderState(skydomeLightState);
@@ -2926,7 +2953,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 			
-			if (BLOOM_EFFECT|| SHADOWS) pManager.updatePasses(tpf);
+			//if (BLOOM_EFFECT|| SHADOWS) 
+			pManager.updatePasses(tpf);
 		}
 	}
 
@@ -2935,7 +2963,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
         //try {
-        	if (BLOOM_EFFECT||SHADOWS) pManager.renderPasses(display.getRenderer());
+        	//if (BLOOM_EFFECT||SHADOWS) 
+        		pManager.renderPasses(display.getRenderer());
         //} catch (NullPointerException npe)
         //{
         	
