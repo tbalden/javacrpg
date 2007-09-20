@@ -50,7 +50,7 @@ public class Jcrpg {
      * @param args
      */
     public static void main(String[] args) {
-    	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
+    	System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
     	try {
     		start();
     	} catch (Exception ex)
