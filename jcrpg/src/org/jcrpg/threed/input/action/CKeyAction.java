@@ -293,6 +293,10 @@ public abstract class CKeyAction extends KeyInputAction{
     		y+=FastMath.sin((FastMath.PI/steps)*i)/10;
     		
     		camera.setLocation(new Vector3f(x,y,z));
+    		if (J3DCore.WATER_SHADER)
+    		{
+    			J3DCore.waterEffectRenderPass.setWaterHeight(camera.getLocation().y);
+    		}
     		
             camera.update();
             camera.normalize();

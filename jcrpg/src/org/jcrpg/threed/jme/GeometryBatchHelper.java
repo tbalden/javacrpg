@@ -112,7 +112,7 @@ public class GeometryBatchHelper {
 	    		batch = new ModelGeometryBatch(core,m);
 	    		if (m.type == Model.QUADMODEL && ((QuadModel)m).waterQuad)
 	    		{
-	    			J3DCore.waterEffectRenderPass.setWaterEffectOnSpatial(batch.parent);
+	    			J3DCore.waterEffectRenderPass.setWaterEffectOnSpatial(batch);
 	    		}
 	    		if (internal)
 	    		{

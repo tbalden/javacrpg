@@ -1,3 +1,5 @@
+[ ] water reflection -> undetailed SUN and MOON too not just skySphere!
+
 [ ] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
 		if non culled out of render distance -> new render- ---- less loading and such, more memory! think about it
 [ ] pool the geom batches, do not use add/remove instance
