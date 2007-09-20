@@ -23,6 +23,8 @@
 package org.jcrpg.apps;
 
 
+import org.jcrpg.threed.jme.effects.WaterRenderPass;
+
 import com.jme.app.SimplePassGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -47,7 +49,6 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.util.TextureManager;
-import com.jmex.effects.water.WaterRenderPass;
 
 /**
  * <code>TestSimpleQuadWater</code>
@@ -125,13 +126,13 @@ public class TestSimpleQuadWater extends SimplePassGame {
 
 		rootNode.attachChild( reflectedNode );
 
-		waterEffectRenderPass = new WaterRenderPass( cam, 4, false, true );
+		waterEffectRenderPass = new WaterRenderPass( cam, 4, true, true );
 		//set equations to use z axis as up
 		waterEffectRenderPass.setWaterPlane( new Plane( new Vector3f( 0.0f, 0.0f, 1.0f ), 0.0f ) );
 		waterEffectRenderPass.setTangent( new Vector3f( 1.0f, 0.0f, 0.0f ) );
 		waterEffectRenderPass.setBinormal( new Vector3f( 0.0f, 1.0f, 0.0f ) );
 
-		waterQuad = new Quad( "waterQuad", 100, 100 );
+		waterQuad = new Quad( "waterQuad", 10, 10 );
 
 		waterEffectRenderPass.setWaterEffectOnSpatial( waterQuad );
 		rootNode.attachChild( waterQuad );
@@ -140,7 +141,7 @@ public class TestSimpleQuadWater extends SimplePassGame {
 		rootNode.attachChild( debugQuadsNode );
 
 		waterEffectRenderPass.setReflectedScene( reflectedNode );
-		waterEffectRenderPass.setSkybox( skybox );
+		//waterEffectRenderPass.setSkybox( skybox );
 		pManager.add( waterEffectRenderPass );
 
 		RenderPass rootPass = new RenderPass();
@@ -236,7 +237,7 @@ public class TestSimpleQuadWater extends SimplePassGame {
 	private Node createObjects() {
 		Node objects = new Node( "objects" );
 
-		/*Torus torus = new Torus( "Torus", 50, 50, 10, 20 );
+		Torus torus = new Torus( "Torus", 50, 50, 10, 20 );
 		torus.setLocalTranslation( new Vector3f( 50, -5, 20 ) );
 		TextureState ts = display.getRenderer().createTextureState();
 		Texture t0 = TextureManager.loadTexture(
@@ -299,7 +300,7 @@ public class TestSimpleQuadWater extends SimplePassGame {
 		box.setRenderState( ts );
 		box.setModelBound( new BoundingBox() );
 		box.updateModelBound();
-*/
+
 		return objects;
 	}
 
