@@ -149,7 +149,8 @@ public class ModelPool {
 			if (core.sPass!=null && objModel.shadowCaster)
 			{
 				if (retNodes[count-1]!=null) {
-					core.possibleOccluders.add(retNodes[count-1]);
+					if (!J3DCore.GEOMETRY_BATCH || retNodes[count-1].model.type != Model.SIMPLEMODEL)
+						core.possibleOccluders.add(retNodes[count-1]);
 				}
 			}
 			

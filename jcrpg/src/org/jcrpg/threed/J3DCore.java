@@ -1489,7 +1489,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	/**
-	 * Removes node and all subnodes from shadowrenderpass. Use it when removing node from scenario!
+	 * Removes node and all subnodes from solid color quads. Use it when removing node from scenario!
 	 * @param s Node.
 	 */
 	public void removeSolidColorQuadsRecoursive(Node s)
@@ -2037,8 +2037,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						float dist = n.getWorldTranslation().distanceSquared(
 								cam.getLocation());
 						if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-							if (!sPass.containsOccluder(n))
+							if (!sPass.containsOccluder(n)) 
+							{
+								System.out.println("ADDING OCCLUDER: "+n.getName());
 								sPass.addOccluder(n);
+								
+							}
 						} else {
 							removeOccludersRecoursive(n);
 						}
@@ -2853,6 +2857,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			dr.setShadowCaster(false);
 			internalLightState.attach(dr);
 		}
+        
+		RenderPass rootPass = new RenderPass();
+		rootPass.add(rootNode);
+		pManager.add(rootPass);
 
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
@@ -2880,6 +2888,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
+	    	   System.out.println("!!!!!!!!!!!!!! BLOOM!");
 	           bloomRenderPass.add(rootNode);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setBlurIntensityMultiplier(1f);
@@ -2893,15 +2902,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		waterEffectRenderPass.setBinormal( new Vector3f( 0.0f, 1.0f, 0.0f ));
 		//waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add( waterEffectRenderPass );
-        
-		RenderPass rootPass = new RenderPass();
-		//rootPass.add(rootNode);
-		//pManager.add(rootPass);
 		
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
+		skySphere = new Sphere("SKY_SPHERE",20,20,300f);		
 		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?rootNode:skySphere);
 		groundParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens flare
@@ -2968,8 +2973,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 			
-			//if (BLOOM_EFFECT|| SHADOWS) 
-			pManager.updatePasses(tpf);
+			if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER) 
+				pManager.updatePasses(tpf);
 		}
 	}
 
@@ -2977,13 +2982,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	protected void simpleRender() {
 		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
-        //try {
-        	//if (BLOOM_EFFECT||SHADOWS) 
+        try {
+        	if (BLOOM_EFFECT||SHADOWS||WATER_SHADER) 
         		pManager.renderPasses(display.getRenderer());
-        //} catch (NullPointerException npe)
-        //{
-        	
-        //}
+        } catch (NullPointerException npe)
+        {
+        }
  		super.simpleRender();
 	}
 	
