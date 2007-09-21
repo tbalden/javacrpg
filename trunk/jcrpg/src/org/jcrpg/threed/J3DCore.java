@@ -981,7 +981,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_female = new SimpleModel("models/fauna/fem.obj",null); sm_jungle.rotateOnSteep = true;
 		sm_female.cullNone = true;
 		SimpleModel sm_male = new SimpleModel("models/fauna/male.obj",null); sm_jungle.rotateOnSteep = true;
-		sm_male.cullNone = true;
+		sm_male.cullNone = true; sm_male.batchEnabled = false;
 		SimpleModel sm_wolf = new SimpleModel("models/fauna/wolf.obj",null); sm_jungle.rotateOnSteep = true;
 		sm_wolf.cullNone = true;
 		
@@ -1144,7 +1144,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        lightNode = new LightNode("light", skydomeLightState);
 	        lightNode.setLight(dr);
 
-	        lightNode.setTarget(groundParentNode);
+	        lightNode.setTarget(skyParentNode);
 	        lightNode.setLocalTranslation(new Vector3f(-4f, -4f, -4f));
 
 	        // Setup the lensflare textures.
@@ -1181,7 +1181,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        TriMesh sun = new Sphere(o.id,20,20,5f);
 	        Node sunNode = new Node();
 	        sunNode.attachChild(sun);
-			groundParentNode.attachChild(sunNode);
+			skyParentNode.attachChild(sunNode);
 			
 			Texture texture = TextureManager.loadTexture("./data/textures/low/"+"sun.png",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
@@ -1224,7 +1224,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			moon.updateRenderState();
 
-			groundParentNode.attachChild(moon);
+			skyParentNode.attachChild(moon);
 			moon.setLightCombineMode(LightState.OFF);
 			moon.setRenderState(getDisplay().getRenderer().createFogState());
 			return moon;
@@ -1302,6 +1302,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 	
 	public Node groundParentNode = new Node(); 
+	/** skyparent for skysphere/sun/moon -> simple water reflection needs this node */
+	public Node skyParentNode = new Node(); 
 	/** external all root */
 	public Node extRootNode;
 	/** internal all root */
@@ -1355,7 +1357,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (s.getParent()==null)
 				{
 					// newly appearing, attach to root
-					groundParentNode.attachChild(s);
+					skyParentNode.attachChild(s);
 					updateRenderState = true;
 				}
 				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation()));
@@ -1399,7 +1401,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					if (updateRenderState) {
 						// this is a workaround, lightstate seems to move to the parent, don't know why. \
 						// Clearing it helps:
-						skySphere.setRenderState(skydomeLightState);
+						skyParentNode.setRenderState(skydomeLightState);
 						groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 						groundParentNode.updateRenderState();
 					}
@@ -1445,13 +1447,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere.setLocalRotation(qSky);
 		
 
-		if (skySphere.getParent()==null)
-			groundParentNode.attachChild(skySphere);;
+		//if (skyParentNode.getParent()==null)
+		{
+			groundParentNode.attachChild(skyParentNode);
+		}
+		if (skySphere.getParent()==null) 
+		{
+			skyParentNode.attachChild(skySphere);
+		}
 		if (insideArea)
 		{
+			skyParentNode.setCullMode(Node.CULL_ALWAYS);
 			skySphere.setCullMode(Node.CULL_ALWAYS);
 		} else
 		{
+			skyParentNode.setCullMode(Node.CULL_NEVER);
 			skySphere.setCullMode(Node.CULL_NEVER);
 		}
 		skySphere.updateRenderState(); // do not update root or groundParentNode, no need for that here
@@ -2037,7 +2047,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						float dist = n.getWorldTranslation().distanceSquared(
 								cam.getLocation());
 						if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-							if (!sPass.containsOccluder(n)) 
+							if (!sPass.containsOccluder(n))
 							{
 								System.out.println("ADDING OCCLUDER: "+n.getName());
 								sPass.addOccluder(n);
@@ -2798,6 +2808,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 350);
 		groundParentNode.attachChild(intRootNode);
 		groundParentNode.attachChild(extRootNode);
+		groundParentNode.attachChild(skyParentNode);
 		rootNode.attachChild(groundParentNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
@@ -2859,7 +2870,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
         
 		RenderPass rootPass = new RenderPass();
-		rootPass.add(rootNode);
+		//rootPass.add(rootNode);
 		pManager.add(rootPass);
 
 		if (SHADOWS) {
@@ -2906,9 +2917,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		/*
 		 * Skysphere
 		 */
-		skySphere = new Sphere("SKY_SPHERE",20,20,300f);		
-		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?rootNode:skySphere);
-		groundParentNode.attachChild(skySphere);
+		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
+		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?rootNode:skyParentNode);
+		skyParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens flare
 		skySphere.setRenderState(cs_none);
 		skySphere.setCullMode(Node.CULL_NEVER);
@@ -2974,7 +2985,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			fpsNode.updateGeometricState(tpf, true);
 			
 			if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER) 
-				pManager.updatePasses(tpf);
+			pManager.updatePasses(tpf);
 		}
 	}
 
