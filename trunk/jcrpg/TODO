@@ -1,12 +1,10 @@
-[ ] water reflection -> undetailed SUN and MOON too not just skySphere!
+[ ] Cave: implement surface interface! multilevel cave??
+[ ] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
+
 
 [ ] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
 		if non culled out of render distance -> new render- ---- less loading and such, more memory! think about it
 [ ] pool the geom batches, do not use add/remove instance
-[ ] vertex program jumps -> add camPost to local param and add it to vertex.position before calc
-	[X] moving all around when passing
-[ ] Cave: implement surface interface! multilevel cave??
-[ ] waters rivers, lakes
 
 
 [ ] lamp key, to switch on/off lamp in the dark!
@@ -45,6 +43,10 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[-] vertex program jumps -> add camPost to local param and add it to vertex.position before calc
+	[X] moving all around when passing
+[X] water reflection -> undetailed SUN and MOON too not just skySphere!
+
 [X] Cave: too much side meshes!? how to join them? geomBatch?? 2500 meshes -> 20fps?? smaller view dist for them (model level for rendertoview)?
 
 [-] shadow error, killin render pass
