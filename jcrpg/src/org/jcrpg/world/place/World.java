@@ -54,6 +54,7 @@ public class World extends Place {
 	public FloraContainer floraContainer;
 	
 	public HashMap<String, Geography> geographies;
+	public HashMap<String, Water> waters;
 	public HashMap<String, Political> politicals;
 	public HashMap<String, Economic> economics;
 
@@ -83,6 +84,7 @@ public class World extends Place {
 		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));
 		geographies = new HashMap<String, Geography>();
+		waters = new HashMap<String, Water>();
 		politicals = new HashMap<String, Political>();
 		economics = new HashMap<String, Economic>();
 	}
@@ -116,12 +118,14 @@ public class World extends Place {
 		return getCube(localTime,worldX,worldY,worldZ);
 	}
 	
+	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
+	
 	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
 		if (WORLD_IS_GLOBE) {
 			
 			worldX = worldX%(sizeXMulMag);
 			//worldY = worldX%(sizeY*magnification); // in dir Y no globe
-			worldZ = worldZ%(sizeZMulMag); // TODO Houses dont display going round the glob??? Static fields in the way or what?
+			worldZ = worldZ%(sizeZMulMag); // TODO Houses dont display going round the globe?? Static fields in the way or what?
 			if (worldX<0)
 			{
 				worldX = sizeXMulMag+worldX;
@@ -139,15 +143,20 @@ public class World extends Place {
 					return eco.getCube(worldX, worldY, worldZ);
 			}
 			Cube retCube = null;
-			boolean insideGeo = false;
-			for (Geography geo : geographies.values()) {				
+			boolean insideGeography = false;
+			tempGeosForSurface.clear();
+			for (Geography geo : geographies.values()) {	
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
-					insideGeo = true;
+					insideGeography = true;
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					if (geoCube!=null && geo instanceof Surface)
 					{
 						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
+						if (surf!=null && surf.canContain) {
+							// collecting surfaces that can contain, e.g. waters
+							tempGeosForSurface.put(geo,surf);
+						}
 						//if (geo instanceof Mountain)
 							//System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
 						if (worldY==surf.surfaceY && surf.canContain)
@@ -176,8 +185,32 @@ public class World extends Place {
 					}
 				}
 			}
-			if (insideGeo) return retCube;
+			if (insideGeography) 
+			{
+				// waters
+				
+				for (Water w : waters.values()) {
+					if (w.boundaries.isInside(worldX, worldY, worldZ)) {
+						if (w.isWaterPoint(worldX, worldY, worldZ))
+						{
+							for (SurfaceHeightAndType s:tempGeosForSurface.values())
+							{
+								int y = s.surfaceY;
+								int depth = w.getDepth(worldX, worldY, worldZ);
+								int bottom = worldY - depth;
+								if (y>=bottom&&y<=worldY)
+								{
+									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube);
+									return c;
+								}
+							}
+						}
+					}
+				}
+				return retCube;
+			}
 
+			// not in geography, return ocean
 			return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;

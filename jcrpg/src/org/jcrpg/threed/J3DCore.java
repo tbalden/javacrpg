@@ -77,11 +77,11 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
-import org.jcrpg.world.place.geography.River;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
+import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
@@ -638,6 +638,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
+		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(10));
+		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
 		hmAreaSubType3dType.put(House.SUBTYPE_BOOKCASE.id, new Integer(28));
