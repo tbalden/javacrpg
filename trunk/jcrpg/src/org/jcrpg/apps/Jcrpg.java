@@ -36,11 +36,11 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
-import org.jcrpg.world.place.geography.River;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
+import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 
@@ -118,7 +118,7 @@ public class Jcrpg {
 		w.geographies.put(m.id, m);
 		
 		River r = new River("r1",w,null,10,5,1,5,1,w.getSeaLevel(10),1);
-		w.geographies.put(r.id, r);
+		w.waters.put(r.id, r);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 1));
