@@ -48,10 +48,10 @@ public class River extends Water{
 	static Side[] INTERSECT = {new Side(TYPE_RIVER,SUBTYPE_INTERSECT)};
 
 	static Side[][] RIVER_WATER = new Side[][] { null, null, null,null,null,WATER };
-	static Side[][] RIVER_WATERFALL_NORTH = new Side[][] { WATER, null, null,null,null,WATER };
-	static Side[][] RIVER_WATERFALL_SOUTH = new Side[][] { null, null, WATER,null,null,WATER };
-	static Side[][] RIVER_WATERFALL_WEST = new Side[][] { null, null, null,WATER,null,WATER };
-	static Side[][] RIVER_WATERFALL_EAST = new Side[][] { null, WATER, null,null,null,WATER };
+	static Side[][] RIVER_WATERFALL_NORTH = new Side[][] { WATERFALL, null, null,null,null,WATER };
+	static Side[][] RIVER_WATERFALL_SOUTH = new Side[][] { null, null, WATERFALL,null,null,WATER };
+	static Side[][] RIVER_WATERFALL_WEST = new Side[][] { null, null, null,WATERFALL,null,WATER };
+	static Side[][] RIVER_WATERFALL_EAST = new Side[][] { null, WATERFALL, null,null,null,WATER };
 	static Side[][] RIVER_WATERFALL_NORTH_EDGE_WEST = new Side[][] { WATERFALL, null, INTERSECT,null,null,WATER };
 	static Side[][] RIVER_WATERFALL_NORTH_EDGE_EAST = new Side[][] { WATERFALL, null, null,INTERSECT,null,WATER };
 	

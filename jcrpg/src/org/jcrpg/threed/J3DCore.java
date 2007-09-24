@@ -638,7 +638,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
-		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(10));
+		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
@@ -1079,6 +1079,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{bush1}));*/
 		
 		QuadModel qm_water = new QuadModel("water1.jpg"); qm_water.rotateOnSteep = true; qm_water.waterQuad = true;
+		QuadModel qm_waterfall = new QuadModel("water_fall1.jpg"); qm_waterfall.rotateOnSteep = true; qm_waterfall.waterQuad = false;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
@@ -1093,6 +1094,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedHashRotatedSide(new Model[]{cave_rock},true));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{wall_cave_rev}));//lod_cave_wall}));*/
+		hm3dTypeRenderedSide.put(new Integer(36), new RenderedSide(new Model[]{qm_waterfall}));
 		
 	}
 

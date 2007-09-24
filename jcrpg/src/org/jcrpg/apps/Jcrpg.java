@@ -117,7 +117,7 @@ public class Jcrpg {
 		Mountain m = new Mountain("m1",w,null,10,5,1,5,1,w.getSeaLevel(10),1);
 		w.geographies.put(m.id, m);
 		
-		River r = new River("r1",w,null,10,5,1,5,1,w.getSeaLevel(10),1);
+		River r = new River("r1",w,null,10,4,1,10,1,w.getSeaLevel(10),0);
 		w.waters.put(r.id, r);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
