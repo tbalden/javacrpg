@@ -197,8 +197,8 @@ public class World extends Place {
 							{
 								int y = s.surfaceY;
 								int depth = w.getDepth(worldX, worldY, worldZ);
-								int bottom = worldY - depth;
-								if (y>=bottom&&y<=worldY)
+								int bottom = y - depth;
+								if (worldY>=bottom&&worldY<=y)
 								{
 									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube);
 									return c;
