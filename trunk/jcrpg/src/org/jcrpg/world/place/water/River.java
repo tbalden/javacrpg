@@ -94,7 +94,7 @@ public class River extends Water{
 	
 	
 	@Override
-	public Cube getWaterCube(int x, int y, int z, Cube geoCube) {
+	public Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface) {
 		// TODO Auto-generated method stub
 		if (geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
 		{

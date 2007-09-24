@@ -36,8 +36,31 @@ public abstract class Water extends Geography {
 		super(id, parent, loc);
 	}
 
+	/**
+	 * Tells if one cube coordinate is a waterpoint.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
 	public abstract boolean isWaterPoint(int x,int y, int z);
+	/**
+	 * Returns the depth of the water at a given point.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
 	public abstract int getDepth(int x,int y, int z);
-	public abstract Cube getWaterCube(int x, int y, int z, Cube geoCube);
+	/**
+	 * Returns the water cube e.g. water surface, water block and the bottom/bed based on coordinates a cube and surface info.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param geoCube the cube which may be overwritten.
+	 * @param surface the surface information at the give x/z point (do depth and such calculation based on this).
+	 * @return
+	 */
+	public abstract Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface);
 
 }
