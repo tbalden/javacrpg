@@ -200,7 +200,7 @@ public class World extends Place {
 								int bottom = y - depth;
 								if (worldY>=bottom&&worldY<=y)
 								{
-									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube);
+									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube, s);
 									return c;
 								}
 							}
