@@ -2,14 +2,12 @@ package org.jcrpg.threed.jme.geometryinstancing;
 
 import java.nio.FloatBuffer;
 
-import com.jme.scene.TriMesh;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.Geometry;
+import com.jme.scene.batch.GeomBatch;
 
 /**
- * <code>GeometryBatchTangentSpatialInstance</code> uses a <code>GeometryBatchInstanceAttributes</code>
- * to define an instance of object in world space. Uses TriangleBatch as source
- * data for the instance, instead of GeomBatch which does not have an index
- * buffer.
+ * <code>GeometryBatchTangentSpatialInstance</code> extends <code>GeometryBatchSpatialInstance</code>
+ * and adds tangent buffers to an instance.
  *
  * @author Patrik Lindegrén
  */
@@ -17,7 +15,7 @@ public class GeometryBatchTangentSpatialInstance<A extends GeometryBatchInstance
 	private FloatBuffer tangentBufDst;
 	private FloatBuffer tangentBufSrc;
 	
-    public GeometryBatchTangentSpatialInstance(TriMesh mesh, FloatBuffer tangentBufSrc, A attributes) {
+    public GeometryBatchTangentSpatialInstance(Geometry mesh, FloatBuffer tangentBufSrc, A attributes) {
         super(mesh, attributes);
         this.tangentBufSrc = tangentBufSrc;
     }    
@@ -44,8 +42,8 @@ public class GeometryBatchTangentSpatialInstance<A extends GeometryBatchInstance
         }
     }
     
-    protected void commitNormals(TriangleBatch batch) {
+    protected void commitNormals(GeomBatch batch) {
     	super.commitNormals(batch);
-    	commitTangents();
+    	commitTangents();    	
     }
 }
