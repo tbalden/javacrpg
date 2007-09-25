@@ -432,8 +432,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		world = area;
 	}
 	
-	public void setViewPosition(int x,int y,int z)
+	public void setViewPosition(int x,int y,int z)	
 	{
+		System.out.println("!!!!!!!!!! VIEW POS: "+y);
 		viewPositionX = x;
 		viewPositionY = y;
 		viewPositionZ = z;
@@ -640,6 +641,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKSIDE.id, new Integer(31));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM.id, new Integer(31));
+		hmAreaSubType3dType.put(River.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
 		hmAreaSubType3dType.put(House.SUBTYPE_BOOKCASE.id, new Integer(28));

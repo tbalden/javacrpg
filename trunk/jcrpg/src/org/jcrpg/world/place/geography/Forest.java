@@ -68,7 +68,7 @@ public class Forest extends Geography implements Surface {
 			return place.getCube(worldX, worldY, worldZ);
 		}
 		
-		if (worldY!=worldGroundLevel) return null;
+		if (worldY!=worldGroundLevel) return new Cube(this,EMPTY,worldX,worldY,worldZ);
 		Cube base = new Cube(this,FOREST,worldX,worldY,worldZ);
 		return base;
 	}

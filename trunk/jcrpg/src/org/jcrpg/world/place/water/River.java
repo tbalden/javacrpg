@@ -25,6 +25,8 @@ package org.jcrpg.world.place.water;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.GroundSubType;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
@@ -40,12 +42,18 @@ public class River extends Water{
 
 	public static final String TYPE_RIVER = "RIVER";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER");
-	public static final Swimming SUBTYPE_WATERFALL = new Swimming(TYPE_RIVER+"_WATERFALL");
+	public static final Climbing SUBTYPE_WATERFALL = new Climbing(TYPE_RIVER+"_WATERFALL");
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_RIVER+"_WATERFALL_INTERSECT");
+	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_RIVER+"_ROCKSIDE");
+	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_RIVER+"_ROCKSIDE");
+	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_RIVER+"_WATER_EMPTY");
 
 	static Side[] WATER = {new Side(TYPE_RIVER,SUBTYPE_WATER)};
 	static Side[] WATERFALL = {new Side(TYPE_RIVER,SUBTYPE_WATERFALL)};
 	static Side[] INTERSECT = {new Side(TYPE_RIVER,SUBTYPE_INTERSECT)};
+	static Side[] ROCKSIDE = {new Side(TYPE_RIVER,SUBTYPE_ROCKSIDE)};
+	static Side[] ROCKBOTTOM = {new Side(TYPE_RIVER,SUBTYPE_ROCKBOTTOM)};
+	static Side[] WATER_EMPTY = {new Side(TYPE_RIVER,SUBTYPE_WATER_EMPTY)};
 
 	static Side[][] RIVER_WATER = new Side[][] { null, null, null,null,null,WATER };
 	static Side[][] RIVER_WATERFALL_NORTH = new Side[][] { WATERFALL, null, null,null,null,WATER };
@@ -59,16 +67,23 @@ public class River extends Water{
 	static Side[][] RIVER_WATERFALL_SOUTH_EDGE_EAST = new Side[][] { INTERSECT, null, WATERFALL,null,null,WATER };
 	
 	static Side[][] RIVER_WATERFALL_WEST_EDGE_NORTH = new Side[][] { INTERSECT, null, null,WATERFALL,null,WATER };
-	static Side[][] rIVER_WATERFALL_WEST_EDGE_SOUTH = new Side[][] { null, null, INTERSECT,WATERFALL,null,WATER };
+	static Side[][] RIVER_WATERFALL_WEST_EDGE_SOUTH = new Side[][] { null, null, INTERSECT,WATERFALL,null,WATER };
 	
 	static Side[][] RIVER_WATERFALL_EAST_EDGE_NORTH = new Side[][] { INTERSECT, WATERFALL, null,null,null,WATER };
 	static Side[][] RIVER_WATERFALL_EAST_EDGE_SOUTH = new Side[][] { null, WATERFALL, INTERSECT,null,null,WATER };
+	
+	static Side[][] RIVER_ROCKSIDE_NORTH = new Side[][] { ROCKSIDE, null, null,null,null,WATER_EMPTY };
+	static Side[][] RIVER_ROCKSIDE_SOUTH = new Side[][] { null, null, ROCKSIDE,null,null,WATER_EMPTY };
+	static Side[][] RIVER_ROCKSIDE_EAST = new Side[][] { null, ROCKSIDE, null,null,null,WATER_EMPTY };
+	static Side[][] RIVER_ROCKSIDE_WEST = new Side[][] { null, null, null,ROCKSIDE,null,WATER_EMPTY };
+	static Side[][] RIVER_ROCKSIDE_BOTTOM = new Side[][] { null, null, null, null, null,ROCKBOTTOM };
+	
 	//
 	public int curvedness = 1;
 	//
 	public int width = 2;
 	//
-	public int depth = 2;
+	public int depth = 1;
 	// where the river begins
 	public int startSide = 0;
 	public int endSide = 2;
@@ -95,20 +110,62 @@ public class River extends Water{
 	
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface) {
-		// TODO Auto-generated method stub
-		if (geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
+		if (y != surface.surfaceY || geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
 		{
 			if ( FastMath.abs(startSide-endSide) == 2 ) 
 			{
 				
 				int checkX = realMiddleX + origoX*magnification;
+				boolean edge1 = false, edge2 = false, bottom = false, onSurface = (surface.surfaceY==y);
+				if (x==checkX-width)
+				{
+					edge1 = true;
+				}
+				if (x==checkX+width)
+				{
+					edge2 = true;
+				}
+				if (surface.surfaceY-y == depth)
+				{
+					bottom = true;
+				}
+				
 				if (x>=checkX-width && x<=checkX+width)
 				{
-					Cube c = new Cube (this,RIVER_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
-					c.onlyIfOverlaps = true;
-					c.overwrite = true;
-					c.overwritePower = 1;
-					return c;
+					if (onSurface) 
+					{
+						Cube c = new Cube (this,RIVER_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+						c.onlyIfOverlaps = true;
+						c.overwrite = true;
+						c.overwritePower = 1;
+						return c;
+					} else
+					{
+						Cube c = null;
+						if (edge1)
+						{
+							System.out.println("!!!!!ROCKSIDE WEST!!!!!");
+							c = new Cube (this,RIVER_ROCKSIDE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							
+						} else
+						if (edge2)
+						{
+							System.out.println("!!!!!ROCKSIDE EAST!!!!!");
+							c = new Cube (this,RIVER_ROCKSIDE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);							
+						} 
+						if (bottom)
+						{
+							Cube c2 = new Cube (this,RIVER_ROCKSIDE_BOTTOM,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (c!=null)
+								c = new Cube(c,c2,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							else
+								c = c2;
+						}
+						c.waterCube = true;
+						return c;
+						
+					}
+					
 				}
 			}
 		}

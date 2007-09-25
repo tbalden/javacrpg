@@ -185,12 +185,13 @@ public class World extends Place {
 					}
 				}
 			}
-			if (insideGeography) 
+			//if (insideGeography) 
 			{
 				// waters
 				
 				for (Water w : waters.values()) {
-					if (w.boundaries.isInside(worldX, worldY, worldZ)) {
+					if (w.boundaries.isInside(worldX, worldY, worldZ)) 
+					{
 						if (w.isWaterPoint(worldX, worldY, worldZ))
 						{
 							for (SurfaceHeightAndType s:tempGeosForSurface.values())
@@ -207,8 +208,8 @@ public class World extends Place {
 						}
 					}
 				}
-				return retCube;
 			}
+			if (insideGeography) return retCube;
 
 			// not in geography, return ocean
 			return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
