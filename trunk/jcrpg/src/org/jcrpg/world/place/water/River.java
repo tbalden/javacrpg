@@ -30,6 +30,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -94,7 +95,8 @@ public class River extends Water{
 	static Side[][] RIVER_ROCKSIDE_BOTTOM_STEEP = new Side[][] { null, null, null, null, null,ROCKBOTTOM_STEEP };
 	
 	//
-	public int curvedness = 1;
+	public float curvedness = 1;
+	public int curveLength = 10;
 	//
 	public int width = 2;
 	//
@@ -107,7 +109,7 @@ public class River extends Water{
 	int realMiddleX, realMiddleZ;
 	private int worldGroundLevel;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -116,6 +118,10 @@ public class River extends Water{
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
+		this.width = width;
+		this.depth = depth;
+		this.curvedness = curvedness;
+		this.curveLength = curveLength;
 		realMiddleX = sizeX*magnification/2;
 		realMiddleZ = sizeZ*magnification/2;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
@@ -125,6 +131,9 @@ public class River extends Water{
 	
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface) {
+		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
+		int width1 = width+widthMod1;
+		int width2 = width-widthMod1;
 		if (y != surface.surfaceY || geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
 		{
 			if ( FastMath.abs(startSide-endSide) == 2 ) 
@@ -132,11 +141,11 @@ public class River extends Water{
 				
 				int checkX = realMiddleX + origoX*magnification;
 				boolean edge1 = false, edge2 = false, bottom = false, onSurface = (surface.surfaceY==y);
-				if (x==checkX-width)
+				if (x==checkX-width1)
 				{
 					edge1 = true;
 				}
-				if (x==checkX+width)
+				if (x==checkX+width2)
 				{
 					edge2 = true;
 				}
@@ -145,7 +154,7 @@ public class River extends Water{
 					bottom = true;
 				}
 				
-				if (x>=checkX-width && x<=checkX+width)
+				if (x>=checkX-width1 && x<=checkX+width2)
 				{
 					if (onSurface) 
 					{
@@ -190,14 +199,14 @@ public class River extends Water{
 			if ( FastMath.abs(startSide-endSide) == 2 ) {
 				
 				int checkX = realMiddleX + origoX*magnification;
-				if (x>=checkX-width && x<=checkX+width)
+				if (x>=checkX-width1 && x<=checkX+width2)
 				{
 					boolean edge1 = false, edge2 = false;
-					if (x==checkX-width)
+					if (x==checkX-width1)
 					{
 						edge1 = true;
 					}
-					if (x==checkX+width)
+					if (x==checkX+width2)
 					{
 						edge2 = true;
 					}
@@ -287,10 +296,13 @@ public class River extends Water{
 	public boolean isWaterPoint(int x, int y, int z) {
 		// replace coordinates based on startSide
 		// TODO
+		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
+		int width1 = width+widthMod1;
+		int width2 = width-widthMod1;
 		if ( FastMath.abs(startSide-endSide) == 2 ) {
 			
 			int checkX = realMiddleX + origoX*magnification;
-			if (x>=checkX-width && x<=checkX+width)
+			if (x>=checkX-width1 && x<=checkX+width2)
 			{
 				return true;
 			}
