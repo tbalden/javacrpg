@@ -32,6 +32,9 @@ import org.jcrpg.space.Cube;
  */
 public abstract class Water extends Geography {
 
+	/**
+	 * If noWater is true, the bed of the water should be empty of water.
+	 */
 	public boolean noWaterInTheBed = false;
 	
 	public Water(String id, Place parent, PlaceLocator loc) {
