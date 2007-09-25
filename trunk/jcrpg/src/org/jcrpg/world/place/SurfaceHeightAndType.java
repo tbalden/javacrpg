@@ -24,8 +24,9 @@ package org.jcrpg.world.place;
 
 public class SurfaceHeightAndType {
 
+	
 	public int surfaceY;
-	public int steepDirection;
+	public int steepDirection = NOT_STEEP;
 	public boolean canContain;
 	
 	public static final int NOT_STEEP = -1;
@@ -40,6 +41,7 @@ public class SurfaceHeightAndType {
 		super();
 		this.surfaceY = surfaceY;
 		this.canContain = canContain;
+		this.steepDirection = steepDirection;
 	}
 	
 }

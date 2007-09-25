@@ -641,8 +641,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
-		hmAreaSubType3dType.put(River.SUBTYPE_ROCKSIDE.id, new Integer(31));
-		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM.id, new Integer(31));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKSIDE.id, new Integer(37));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM_STEEP.id, new Integer(38));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmAreaSubType3dType.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
@@ -951,10 +952,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		QuadModel qm_rock_no_rot = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		QuadModel qm_cave_wall = new QuadModel("cave_wall.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
 		
-		QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE);
+		QuadModel qm_cave_ground = new QuadModel("cave_ground.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_cave_ground.rotateOnSteep = true;
 		SimpleModel sm_cave_ground = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_cave_ground.yGeomBatchSize = yCommon; sm_cave_ground.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE;
 		SimpleModel sm_cave_ground_2 = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_cave_ground_2.yGeomBatchSize = yCommon; sm_cave_ground_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE;
 		SimpleModel sm_cave_ground_3 = new SimpleModel("models/ground/ground_3.obj","cave_ground.jpg"); sm_cave_ground_3.yGeomBatchSize = yCommon; sm_cave_ground_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE;
+		
+		SimpleModel sm_river_bottom = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true;
+		SimpleModel sm_river_side_norot = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_river_side_norot.yGeomBatchSize = yCommon; sm_river_side_norot.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_side_norot.rotateOnSteep = false;
 
 		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},treeLodDist);
 		lod_jungle_bush1.shadowCaster = false;
@@ -1099,6 +1103,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedHashRotatedSide(new Model[]{cave_rock},true));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{wall_cave_rev}));//lod_cave_wall}));*/
 		hm3dTypeRenderedSide.put(new Integer(36), new RenderedSide(new Model[]{qm_waterfall}));
+		hm3dTypeRenderedSide.put(new Integer(37), new RenderedSide(new Model[]{sm_river_side_norot}));
+		hm3dTypeRenderedSide.put(new Integer(38), new RenderedSide(new Model[]{sm_river_bottom}));
 		
 	}
 

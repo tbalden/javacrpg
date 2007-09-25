@@ -73,16 +73,23 @@ public class Mountain extends Geography implements Surface{
 
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
+	public int groundLevel;
+	private int worldGroundLevel;
+	private int mountainSizeY;
 	
-	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
+		this.mountainSizeY = sizeY-(groundLevel-origoY);
+		System.out.println("MOUNTAIN SIZE = "+mountainSizeY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
+		this.groundLevel = groundLevel;
+		worldGroundLevel=groundLevel*magnification;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 
@@ -91,10 +98,10 @@ public class Mountain extends Geography implements Surface{
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
 		int relX = worldX-origoX*magnification;
-		int relY = worldY-origoY*magnification;
+		int relY = worldY-worldGroundLevel;
 		int relZ = worldZ-origoZ*magnification;
 		int realSizeX = sizeX*magnification-1;
-		int realSizeY = sizeY*magnification-1;
+		int realSizeY = mountainSizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
 		
@@ -293,10 +300,10 @@ public class Mountain extends Geography implements Surface{
 	
 	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
 		int relX = worldX-origoX*magnification;
-		int relY = worldY-origoY*magnification;
+		int relY = worldY-worldGroundLevel;
 		int relZ = worldZ-origoZ*magnification;
 		int realSizeX = sizeX*magnification-1;
-		int realSizeY = sizeY*magnification-1;
+		int realSizeY = mountainSizeY*magnification-1;
 		int realSizeZ = sizeZ*magnification-1;
 		
 		

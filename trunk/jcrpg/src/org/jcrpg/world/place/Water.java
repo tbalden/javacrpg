@@ -32,6 +32,8 @@ import org.jcrpg.space.Cube;
  */
 public abstract class Water extends Geography {
 
+	public boolean noWaterInTheBed = false;
+	
 	public Water(String id, Place parent, PlaceLocator loc) {
 		super(id, parent, loc);
 	}
