@@ -107,7 +107,7 @@ public class Cave extends Geography {
 		c.onlyIfOverlaps = true;
 		c.overwrite = true;
 		if (c.overwritePower!=1)
-			c.internalLight = true; // except entrance all is inside
+			c.internalCube = true; // except entrance all is inside
 		return c;
 	}
 	

@@ -1837,7 +1837,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    					 )
 	    				{
 	    					if (n!=null && n.batchInstance!=null)
-	    						batchHelper.removeItem(c.cube.internalLight, n.model, n);
+	    						batchHelper.removeItem(c.cube.internalCube, n.model, n);
 	    				} else 
 	    				{ 
 							PooledNode pooledRealNode = n.realNode;
@@ -1890,7 +1890,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
 				boolean fragmentViewDist = false;
 				if (c.cube!=null) {
-					fragmentViewDist = c.cube.internalLight&&(!insideArea) || (!c.cube.internalLight)&&insideArea;
+					fragmentViewDist = c.cube.internalCube&&(!insideArea) || (!c.cube.internalCube)&&insideArea;
 				}
 				float checkDist = (fragmentViewDist?VIEW_DISTANCE_FRAG_SQR : VIEW_DISTANCE_SQR);
 				for (NodePlaceholder n : c.hsRenderedNodes)
@@ -1934,7 +1934,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							{
 								
 								if (n.batchInstance==null)
-									batchHelper.addItem(c.cube.internalLight, n.model, n);
+									batchHelper.addItem(c.cube.internalCube, n.model, n);
 							} else 
 							{
 								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
@@ -1984,7 +1984,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 									}
 								}
 							
-								if (c.cube.internalLight) {
+								if (c.cube.internalCube) {
 									intRootNode.attachChild((Node)realPooledNode);
 								} else 
 								{
@@ -2018,7 +2018,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								 )
 							{
 								if (n!=null)
-									batchHelper.removeItem(c.cube.internalLight, n.model, n);
+									batchHelper.removeItem(c.cube.internalCube, n.model, n);
 							} else 
 							{
 								PooledNode pooledRealNode = n.realNode;
@@ -2412,7 +2412,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			setRelativePosition(newRelCoords);
 			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
 			if (c!=null) {
-				if (c.internalLight)
+				if (c.internalCube)
 				{
 					System.out.println("Moved: INTERNAL");
 					insideArea = true;
@@ -2530,7 +2530,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		setRelativePosition(newRelCoords);
 		c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
 		if (c!=null) {
-			if (c.internalLight)
+			if (c.internalCube)
 			{
 				System.out.println("Moved: INTERNAL");
 				insideArea = true;
