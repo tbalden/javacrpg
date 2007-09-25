@@ -107,7 +107,7 @@ public class Jcrpg {
 
 		Plain p = new Plain("p1",w,null,w.getSeaLevel(10),10);
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 0));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(p.id, p);
 
 		Cave cave = new Cave("cave",w,null,2,20,1,20,5,w.getSeaLevel(2),5,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,2,2);
@@ -117,26 +117,29 @@ public class Jcrpg {
 		Mountain m = new Mountain("m1",w,null,10,5,1,5,1,w.getSeaLevel(10),1);
 		w.geographies.put(m.id, m);
 		
-		River r = new River("r1",w,null,10,4,1,10,1,w.getSeaLevel(10),0);
+		River r = new River("r1",w,null,10,4,10,1,1,w.getSeaLevel(10)-5,0);
 		w.waters.put(r.id, r);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 1));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 1));
 		w.geographies.put(p.id, p);
 		p = new Plain("22",w,null,w.getSeaLevel(10),10);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 0, w.getSeaLevel(10), 2));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 2));
 		w.geographies.put(p.id, p);
 		
 		p = new Plain("24",w,null,w.getSeaLevel(10),10);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 4, 1, 1, 4, w.getSeaLevel(10), 0));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 4, 2, 1, 4, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(p.id, p);
 
 		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10);
-		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 1, 1, 1, w.getSeaLevel(10), 0));
+		f.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 2, 1, 1, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(f.id, f);
+		/*p = new Plain("4",w,null,w.getSeaLevel(10),10);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 2, 1, 1, w.getSeaLevel(10)-1, 0));
+		w.geographies.put(p.id, p);*/
 		
 		p = new Plain("5",w,null,w.getSeaLevel(10),10);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 1, 1, 3, w.getSeaLevel(10), 0));
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 3, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(p.id, p);
 		
 		
