@@ -45,7 +45,8 @@ public class River extends Water{
 	public static final Climbing SUBTYPE_WATERFALL = new Climbing(TYPE_RIVER+"_WATERFALL");
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_RIVER+"_WATERFALL_INTERSECT");
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_RIVER+"_ROCKSIDE");
-	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_RIVER+"_ROCKSIDE");
+	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_RIVER+"_ROCKBOTTOM");
+	public static final Climbing SUBTYPE_ROCKBOTTOM_STEEP = new Climbing(TYPE_RIVER+"_ROCKBOTTOM_STEEP");
 	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_RIVER+"_WATER_EMPTY");
 
 	static Side[] WATER = {new Side(TYPE_RIVER,SUBTYPE_WATER)};
@@ -53,6 +54,7 @@ public class River extends Water{
 	static Side[] INTERSECT = {new Side(TYPE_RIVER,SUBTYPE_INTERSECT)};
 	static Side[] ROCKSIDE = {new Side(TYPE_RIVER,SUBTYPE_ROCKSIDE)};
 	static Side[] ROCKBOTTOM = {new Side(TYPE_RIVER,SUBTYPE_ROCKBOTTOM)};
+	static Side[] ROCKBOTTOM_STEEP = {new Side(TYPE_RIVER,SUBTYPE_ROCKBOTTOM_STEEP)};
 	static Side[] WATER_EMPTY = {new Side(TYPE_RIVER,SUBTYPE_WATER_EMPTY)};
 
 	static Side[][] RIVER_WATER = new Side[][] { null, null, null,null,null,WATER };
@@ -71,12 +73,25 @@ public class River extends Water{
 	
 	static Side[][] RIVER_WATERFALL_EAST_EDGE_NORTH = new Side[][] { INTERSECT, WATERFALL, null,null,null,WATER };
 	static Side[][] RIVER_WATERFALL_EAST_EDGE_SOUTH = new Side[][] { null, WATERFALL, INTERSECT,null,null,WATER };
+
+	static Side[][] RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED = new Side[][] { null, null, INTERSECT,null,null,null };
+	static Side[][] RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED = new Side[][] { null, null, null,INTERSECT,null,null };
 	
+	static Side[][] RIVER_WATERFALL_SOUTH_EDGE_WEST_DRIED = new Side[][] { null, INTERSECT, null,null,null,null };
+	static Side[][] RIVER_WATERFALL_SOUTH_EDGE_EAST_DRIED = new Side[][] { INTERSECT, null, null,null,null,null };
+	
+	static Side[][] RIVER_WATERFALL_WEST_EDGE_NORTH_DRIED = new Side[][] { INTERSECT, null, null,null,null,null };
+	static Side[][] RIVER_WATERFALL_WEST_EDGE_SOUTH_DRIED = new Side[][] { null, null, INTERSECT,null,null,null };
+	
+	static Side[][] RIVER_WATERFALL_EAST_EDGE_NORTH_DRIED = new Side[][] { INTERSECT, null, null,null,null,null };
+	static Side[][] RIVER_WATERFALL_EAST_EDGE_SOUTH_DRIED = new Side[][] { null, null, INTERSECT,null,null,null };
+
 	static Side[][] RIVER_ROCKSIDE_NORTH = new Side[][] { ROCKSIDE, null, null,null,null,WATER_EMPTY };
 	static Side[][] RIVER_ROCKSIDE_SOUTH = new Side[][] { null, null, ROCKSIDE,null,null,WATER_EMPTY };
 	static Side[][] RIVER_ROCKSIDE_EAST = new Side[][] { null, ROCKSIDE, null,null,null,WATER_EMPTY };
 	static Side[][] RIVER_ROCKSIDE_WEST = new Side[][] { null, null, null,ROCKSIDE,null,WATER_EMPTY };
 	static Side[][] RIVER_ROCKSIDE_BOTTOM = new Side[][] { null, null, null, null, null,ROCKBOTTOM };
+	static Side[][] RIVER_ROCKSIDE_BOTTOM_STEEP = new Side[][] { null, null, null, null, null,ROCKBOTTOM_STEEP };
 	
 	//
 	public int curvedness = 1;
@@ -138,6 +153,7 @@ public class River extends Water{
 						c.onlyIfOverlaps = true;
 						c.overwrite = true;
 						c.overwritePower = 1;
+						if (noWaterInTheBed) return null;
 						return c;
 					} else
 					{
@@ -145,19 +161,19 @@ public class River extends Water{
 						if (edge1)
 						{
 							System.out.println("!!!!!ROCKSIDE WEST!!!!!");
-							c = new Cube (this,RIVER_ROCKSIDE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							c = new Cube (this,RIVER_ROCKSIDE_WEST,x,y,z,surface.steepDirection);
 							
 						} else
 						if (edge2)
 						{
 							System.out.println("!!!!!ROCKSIDE EAST!!!!!");
-							c = new Cube (this,RIVER_ROCKSIDE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);							
+							c = new Cube (this,RIVER_ROCKSIDE_EAST,x,y,z,surface.steepDirection);							
 						} 
 						if (bottom)
 						{
-							Cube c2 = new Cube (this,RIVER_ROCKSIDE_BOTTOM,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							Cube c2 = new Cube (this,surface.steepDirection==SurfaceHeightAndType.NOT_STEEP?RIVER_ROCKSIDE_BOTTOM:RIVER_ROCKSIDE_BOTTOM_STEEP,x,y,z,surface.steepDirection);
 							if (c!=null)
-								c = new Cube(c,c2,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube(c,c2,x,y,z,surface.steepDirection);
 							else
 								c = c2;
 						}
@@ -188,14 +204,32 @@ public class River extends Water{
 					Cube c = null;
 					if (geoCube.steepDirection==J3DCore.NORTH) {
 						if (!edge1 && !edge2) {
-							c = new Cube (this,RIVER_WATERFALL_SOUTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed)
+							{
+								c = new Cube (this,RIVER_WATERFALL_SOUTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else
+							{
+								c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						} else
 						if (edge1)
 						{
-							c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed)
+							{
+								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else
+							{
+								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_WEST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						} else
 						{
-							c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed)
+							{
+								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else
+							{
+								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_EAST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						}
 					}
 					if (geoCube.steepDirection==J3DCore.EAST) {
@@ -203,14 +237,31 @@ public class River extends Water{
 					}
 					if (geoCube.steepDirection==J3DCore.SOUTH) {
 						if (!edge1 && !edge2) {
-							c = new Cube (this,RIVER_WATERFALL_NORTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed) {
+								c = new Cube (this,RIVER_WATERFALL_NORTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else
+							{
+								c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						} else
 						if (edge1)
 						{
-							c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed)
+							{
+								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else
+							{
+								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						} else
 						{
-							c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							if (!noWaterInTheBed)
+							{
+								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							} else 
+							{
+								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+							}
 						}
 					}
 					if (geoCube.steepDirection==J3DCore.WEST) {
@@ -221,7 +272,7 @@ public class River extends Water{
 				}
 			}
 		}
-		return null;
+		return new Cube(this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}
 
 
