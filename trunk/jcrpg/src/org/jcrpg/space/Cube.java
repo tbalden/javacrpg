@@ -34,6 +34,9 @@ public class Cube extends ChangingImpl {
 
 	public Side[] n, e, s, w, top, bottom;
 	
+	/**
+	 * Which steep direction the cube has.
+	 */
 	public int steepDirection = SurfaceHeightAndType.NOT_STEEP;
 	
 	public long lastChangeTimeStamp = System.currentTimeMillis();
@@ -52,7 +55,15 @@ public class Cube extends ChangingImpl {
 	 */
 	public boolean onlyIfOverlaps = false;
 	
-	public boolean internalLight = false;
+	/**
+	 * If true it is a cube of an internal part.
+	 */
+	public boolean internalCube = false;
+	
+	/**
+	 * If true it is underwater.
+	 */
+	public boolean waterCube = false;
 	
 	public Side[][] sides = {n,e,s,w,top,bottom};
 	
@@ -96,9 +107,9 @@ public class Cube extends ChangingImpl {
 				this.onlyIfOverlaps = true;
 			}
 		}
-		if (c1.internalLight || c2.internalLight)
+		if (c1.internalCube || c2.internalCube)
 		{
-			internalLight = true;
+			internalCube = true;
 		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
 
@@ -125,7 +136,7 @@ public class Cube extends ChangingImpl {
 			} else
 			for (int j=0; j<merged.length; j++)
 			{
-				internalLight = c1.internalLight&&c2.internalLight;
+				internalCube = c1.internalCube&&c2.internalCube;
 				if (j<sides1.length)
 					merged[j] =sides1[j];
 				else
@@ -194,7 +205,7 @@ public class Cube extends ChangingImpl {
 	public Cube copy(Place newParent)
 	{
 		Cube c = new Cube(newParent,sides,x,y,z,steepDirection);
-		c.internalLight = internalLight;
+		c.internalCube = internalCube;
 		c.overwrite = overwrite;
 		c.overwritePower = overwritePower;
 		c.onlyIfOverlaps = onlyIfOverlaps;
