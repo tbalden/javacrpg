@@ -14,17 +14,39 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jcrpg.world.place.economic;
 
-import org.jcrpg.world.place.Economic;
+package org.jcrpg.world.place.water;
+
+import org.jcrpg.space.Cube;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.Water;
 
-public class Population extends Economic{
+public class Lake extends Water{
 
-	public Population(String id,Place parent, PlaceLocator loc) {
+	public Lake(String id, Place parent, PlaceLocator loc) {
 		super(id, parent, loc);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public int getDepth(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
+			SurfaceHeightAndType surface) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isWaterPoint(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

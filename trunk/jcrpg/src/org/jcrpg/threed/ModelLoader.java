@@ -1,23 +1,18 @@
 /*
- * Java Classic RPG
- * Copyright 2007, JCRPG Team, and individual contributors as indicated
- * by the @authors tag. See the copyright.txt in the distribution for a
- * full listing of individual contributors.
+ *  This file is part of JavaCRPG.
  *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
+ *  JavaCRPG is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ *  JavaCRPG is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.jcrpg.threed;
@@ -47,7 +42,6 @@ import org.lwjgl.opengl.GLContext;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
@@ -60,7 +54,6 @@ import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
@@ -110,7 +103,14 @@ public class ModelLoader {
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
     
-	protected PooledNode loadObject(RenderedCube rc, Model object, boolean horRotated)
+	/**
+	 * Loads a pooled node for a model (rotated or not if needed or not special rotation for billboarding).
+	 * @param rc
+	 * @param object
+	 * @param horRotated
+	 * @return
+	 */
+    protected PooledNode loadObject(RenderedCube rc, Model object, boolean horRotated)
     {
 		return loadObjects(rc, new Model[]{object}, horRotated, false)[0];
     }    
