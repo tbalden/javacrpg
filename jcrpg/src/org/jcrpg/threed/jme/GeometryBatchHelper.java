@@ -53,8 +53,10 @@ public class GeometryBatchHelper {
 	 * @param place
 	 * @return Key.
 	 */
-	private String getKey(boolean internal, Model m, NodePlaceholder place)
+	private String getKey(boolean internal, Model m, NodePlaceholder place, boolean farView)
 	{
+		int viewMul = 1;
+		if (farView) viewMul = J3DCore.FARVIEW_GAP;
     	String key = m.type+m.id+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
     		SimpleModel sm = (SimpleModel)m;
@@ -66,21 +68,21 @@ public class GeometryBatchHelper {
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
     			}
     			else
     			{
-    				key+=(place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/sm.yGeomBatchSize);
     			}
     		} else
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=(place.cube.cube.x/sm.xGeomBatchSize)+""+(place.cube.cube.z/sm.xGeomBatchSize)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
     			}
     			else
     			{
-    				key+=(place.cube.cube.x/sm.xGeomBatchSize)+""+(place.cube.cube.z/sm.xGeomBatchSize)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/sm.yGeomBatchSize);
     			}
     		}
     	} else
@@ -97,8 +99,8 @@ public class GeometryBatchHelper {
      * Use geometry instancing to create a mesh containing a number of box
      * instances
      */
-    public void addItem(boolean internal, Model m, NodePlaceholder place) {
-    	String key = getKey(internal, m, place);
+    public void addItem(boolean internal, Model m, NodePlaceholder place, boolean farView) {
+    	String key = getKey(internal, m, place, farView);
 
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
 	    	ModelGeometryBatch batch = modelBatchMap.get(key);
@@ -188,9 +190,9 @@ public class GeometryBatchHelper {
     		
     	}
     }
-    public void removeItem(boolean internal, Model m, NodePlaceholder place)
+    public void removeItem(boolean internal, Model m, NodePlaceholder place, boolean farView)
     {
-    	String key = getKey(internal, m, place);
+    	String key = getKey(internal, m, place, farView);
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
 	     	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch!=null)
