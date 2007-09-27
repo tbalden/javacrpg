@@ -1,5 +1,10 @@
+[ ] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)! 
+
 [ ] Cave: implement surface interface! multilevel cave??
-[ ] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
+[X] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
+	[ ] rivers
+	[ ] lakes
+	[ ] sea
 
 
 [ ] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
