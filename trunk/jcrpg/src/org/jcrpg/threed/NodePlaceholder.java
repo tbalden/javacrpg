@@ -40,6 +40,7 @@ public class NodePlaceholder {
 	public RenderedCube cube;
 	public PooledNode realNode;
 	public Object batchInstance;
+	public boolean farView = false;
 	
 	public Quaternion localRotation;
 	/** helper separate horizontalRotation from RenderedHashRotatedSide, use it with trimeshGeomBatch only: */

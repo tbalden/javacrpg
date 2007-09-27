@@ -1796,6 +1796,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
+	HashSet<RenderedCube> inFarViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
 	
 	int cullVariationCounter = 0;
@@ -1827,10 +1828,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
 		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
+			// doing the render, getting the unneeded renderedCubes too.
 			HashSet<RenderedCube> detacheable = render();
+			// removing the unneeded.
 			for (RenderedCube c:detacheable) { 
 	    		if (c!=null) {
     	    		inViewPort.remove(c);
+    	    		inFarViewPort.remove(c);
     	    		outOfViewPort.remove(c);
 	    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 	    	    	{
@@ -1889,9 +1893,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		for (int cc = fromCubeCount; cc<toCubeCount; cc++)
 		{
 			RenderedCube c = alCurrentCubes.get(cc);
+			// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
 			if (c.hsRenderedNodes.size()>0)
 			{
 				boolean found = false;
+				boolean foundFar = false;
 				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
 				boolean fragmentViewDist = false;
 				if (c.cube!=null) {
@@ -1917,10 +1923,105 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						break;
 					} else
 					{
+						if (c.cube.x%5==0 && c.cube.z%5==0)
+						{
+							found = false;
+							foundFar = true;
+						}
 						break;
 					}
 				}
-				
+				if (foundFar)
+				{
+					visibleNodeCounter++;
+					if (!inFarViewPort.contains(c)) 
+					{
+						addedNodeCounter++;
+						inFarViewPort.add(c);
+						inViewPort.remove(c);
+						outOfViewPort.remove(c);
+						for (NodePlaceholder n : c.hsRenderedNodes)
+						{
+							n.farView = true;
+							if (GEOMETRY_BATCH && n.model.batchEnabled && 
+									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+									//(n.model.type == Model.SIMPLEMODEL
+											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+								) 
+							{
+								
+								if (n.batchInstance==null)
+									batchHelper.addItem(c.cube.internalCube, n.model, n);
+							} else 
+							{
+								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
+								if (realPooledNode==null) continue;
+								n.realNode = (PooledNode)realPooledNode;
+							
+								// unlock
+								boolean sharedNode = false;
+								if (realPooledNode instanceof SharedNode)
+								{	
+									sharedNode = true;
+									realPooledNode.unlockTransforms();
+									realPooledNode.unlockBounds();
+									realPooledNode.unlockBranch();
+								}
+							
+								// set data from placeholder
+								realPooledNode.setLocalTranslation(n.getLocalTranslation());
+								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+								for (Spatial s:realPooledNode.getChildren()) {
+									if ( (s.getType()&Node.NODE)>0 )
+									{
+										for (Spatial s2:((Node)s).getChildren())
+										{	
+											if ( (s2.getType()&Node.NODE)>0 )
+											{
+												for (Spatial s3:((Node)s2).getChildren())
+												{
+													if (s3 instanceof TrimeshGeometryBatch) {
+														// setting separate horizontalRotation for trimeshGeomBatch
+														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+													}												
+												}												
+											}
+											s2.setLocalScale(n.getLocalScale());
+											if (s2 instanceof TrimeshGeometryBatch) {
+												// setting separate horizontalRotation for trimeshGeomBatch
+												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+											} else {
+												s2.setLocalRotation(n.getLocalRotation());
+											}
+										}
+									} else {
+										s.setLocalRotation(n.getLocalRotation());
+										Vector3f scale = new Vector3f(n.getLocalScale());
+										scale.x*=5;
+										scale.z*=5;
+										s.setLocalScale(scale);
+									}
+								}
+							
+								if (c.cube.internalCube) {
+									intRootNode.attachChild((Node)realPooledNode);
+								} else 
+								{
+									extRootNode.attachChild((Node)realPooledNode);
+								}
+								{
+									if (sharedNode)
+									{	
+										realPooledNode.lockTransforms();								
+										realPooledNode.lockBounds();
+										realPooledNode.lockBranch();
+									}
+								}
+							}
+						}
+					} 
+				} else
 				if (found)
 				{
 					visibleNodeCounter++;
@@ -1928,9 +2029,38 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					{
 						addedNodeCounter++;
 						inViewPort.add(c);
+						inFarViewPort.remove(c);
+						if (inFarViewPort.contains(c))
+						{
+							removedNodeCounter++;							
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{
+								if (GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+												|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									 )
+								{
+									if (n!=null)
+										batchHelper.removeItem(c.cube.internalCube, n.model, n);
+								} else 
+								{
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (SHADOWS) removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+								}
+							}
+						}
+						
 						outOfViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
+							n.farView = false;
 							if (GEOMETRY_BATCH && n.model.batchEnabled && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 									//(n.model.type == Model.SIMPLEMODEL
@@ -2015,6 +2145,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						removedNodeCounter++;
 						outOfViewPort.add(c);
 						inViewPort.remove(c);
+						inFarViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (GEOMETRY_BATCH && n.model.batchEnabled && 
@@ -2844,7 +2975,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
         fs_external.setNeedsRefresh(true);
         fs_external.setEnabled(true);
-        extRootNode.setRenderState(fs_external);
+        //extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
 		fs_internal = display.getRenderer().createFogState();
@@ -2855,7 +2986,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DF_LINEAR);
 		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
-        intRootNode.setRenderState(fs_internal);
+        //intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		
         // default light states
