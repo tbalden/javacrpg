@@ -29,6 +29,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
@@ -110,7 +111,16 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = nVSet.iterator().next();
 			instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
 			instance.getAttributes().setRotation(placeholder.getLocalRotation());
-			instance.getAttributes().setScale(placeholder.getLocalScale());
+			if (placeholder.farView)
+			{
+				Vector3f scale = new Vector3f(placeholder.getLocalScale());
+				scale.x*=5;
+				scale.y*=5;				
+				instance.getAttributes().setScale(scale);
+			} else
+			{
+				instance.getAttributes().setScale(placeholder.getLocalScale());
+			}
 			instance.getAttributes().setVisible(true);
 			instance.getAttributes().buildMatrices();
 			placeholder.batchInstance = instance;
@@ -124,7 +134,17 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			quad.setLocalRotation(placeholder.getLocalRotation());
-			quad.setLocalScale(placeholder.getLocalScale());
+			if (placeholder.farView)
+			{
+				Vector3f scale = new Vector3f(placeholder.getLocalScale());
+				scale.x*=5;
+				scale.y*=5;				
+				quad.setLocalScale(scale);
+			} else
+			{
+				quad.setLocalScale(placeholder.getLocalScale());
+			}
+			
 			// Add a Box instance (batch and attributes)
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
 					 new GeometryBatchInstanceAttributes(quad));
