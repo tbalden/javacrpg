@@ -65,7 +65,7 @@ public class World extends Place {
 	
 	public int sizeX, sizeY, sizeZ, magnification, worldGroundLevel;
 	
-	int sizeXMulMag, sizeYMulMag, sizeZMulMag;
+	public int realSizeX, sizeYMulMag, realSizeZ;
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
 		super(id, null, loc);
@@ -73,9 +73,9 @@ public class World extends Place {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
-		sizeXMulMag = sizeX*magnification;
+		realSizeX = sizeX*magnification;
 		sizeYMulMag = sizeY*magnification;
-		sizeZMulMag = sizeZ*magnification;
+		realSizeZ = sizeZ*magnification;
 		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));
 		geographies = new HashMap<String, Geography>();
@@ -118,17 +118,17 @@ public class World extends Place {
 	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
 		if (WORLD_IS_GLOBE) {
 			
-			worldX = worldX%(sizeXMulMag);
-			//worldY = worldX%(sizeY*magnification); // in dir Y no globe
-			worldZ = worldZ%(sizeZMulMag); // TODO Houses dont display going round the globe?? Static fields in the way or what?
 			if (worldX<0)
 			{
-				worldX = sizeXMulMag+worldX;
+				//System.out.println("WORLDX - "+worldX);
+				worldX = realSizeX+worldX;
 			}
 			if (worldZ<0)
 			{
-				worldZ = sizeZMulMag+worldZ;
+				worldZ = realSizeZ+worldZ;
 			}
+			worldX = worldX%(realSizeX);
+			worldZ = worldZ%(realSizeZ); // TODO Houses dont display going round the globe?? Static fields in the way or what?
 		}
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
