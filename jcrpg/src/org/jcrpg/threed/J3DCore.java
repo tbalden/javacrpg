@@ -1841,7 +1841,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
 		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
-		if (lastLoc.distance(currLoc) > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
+		int mulWalkDist = 1;
+		if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more ofter render is added by this multiplier
+		if (lastLoc.distance(currLoc)*mulWalkDist > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
 			// doing the render, getting the unneeded renderedCubes too.
 			HashSet<RenderedCube> detacheable = render();
