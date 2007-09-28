@@ -170,7 +170,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
-    public static int FARVIEW_GAP = 4;
+    public static int FARVIEW_GAP = 2;
     public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
@@ -1920,13 +1920,63 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (c.cube!=null) {
 					fragmentViewDist = c.cube.internalCube&&(!insideArea) || (!c.cube.internalCube)&&insideArea;
 				}
-				float checkDist = (fragmentViewDist?VIEW_DISTANCE_FRAG_SQR : VIEW_DISTANCE_SQR);
+
+				int checkDistCube = (fragmentViewDist?VIEW_DISTANCE/8 : VIEW_DISTANCE/2);
+				boolean checked = false;
+				int distX = Math.abs(viewPositionX-c.cube.x);
+				int distY = Math.abs(viewPositionY-c.cube.y);
+				int distZ = Math.abs(viewPositionZ-c.cube.z);
+				
+				// handling the globe world border cube distances...
+				if (distX>world.realSizeX/2)
+				{
+					distX = Math.abs(viewPositionX- (c.cube.x - world.realSizeX) );
+				}
+				if (distZ>world.realSizeZ/2)
+				{
+					distZ = Math.abs(viewPositionZ- (c.cube.z - world.realSizeZ) );
+				}
+				
+				// checking the view distance of the cube from viewpoint
+				if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
+				{
+					// inside view dist...
+					checked = true;
+				}
+				
+				// this tells if a not in farview cube can be a farview cube
+				// regardless its position, to cover the gap between farview part and normal view part:
+				boolean farviewGapFiller = false; 
+				
+				if (checked && J3DCore.FARVIEW_ENABLED)
+				{
+					int viewDistFarViewModuloX = viewPositionX%FARVIEW_GAP;
+					int viewDistFarViewModuloZ = viewPositionZ%FARVIEW_GAP;
+					
+					if (checkDistCube-distX<=viewDistFarViewModuloX)
+					{
+						farviewGapFiller = true;
+					}
+					if (checkDistCube-distZ<=viewDistFarViewModuloZ)
+					{
+						farviewGapFiller = true;
+					}
+					if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)
+					{
+						// this can bi a gapfiller magnified farview cube.
+					} else
+					{
+						//this cannot be
+						farviewGapFiller = false;
+					}
+				} 
+				
 				for (NodePlaceholder n : c.hsRenderedNodes)
 				{
-					float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
-					//if (dist< VIEW_DISTANCE_SQR) 
-					if (dist < checkDist) // TODO bug with culling?? if fragmented checkdist, all is culled at certain places
+					if (checked && !farviewGapFiller)
 					{
+						float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
+
 						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
 							found = true;
 							break;
