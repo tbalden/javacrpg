@@ -93,11 +93,12 @@ public class GeometryBatchHelper {
     	{   // other models only by Y // quad
     		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
     	}
-    	return key;
+    	return key+farView;
 	}
     /**
      * Use geometry instancing to create a mesh containing a number of box
      * instances
+     * @param farView tells if this item must be magnified for farview.
      */
     public void addItem(boolean internal, Model m, NodePlaceholder place, boolean farView) {
     	String key = getKey(internal, m, place, farView);

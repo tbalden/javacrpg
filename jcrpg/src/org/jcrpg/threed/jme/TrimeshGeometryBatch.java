@@ -94,6 +94,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	static boolean vertexShader = true;
 	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
+	float startFog;
+	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
 		this.core = core;
 		Node parentOrig = sharedParentCache.get(id);
@@ -139,6 +141,14 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
         	this.setRenderState(vp);
         	this.setRenderState(fp);
         }
+        
+        if (J3DCore.FARVIEW_ENABLED)
+    	{
+    		startFog = 2*J3DCore.RENDER_DISTANCE_ORIG/3;
+    	} else
+    	{
+    		startFog = 2*J3DCore.VIEW_DISTANCE/3;
+    	}
         
 		/*if (gl==null) {
 			gl = createShader(shaderDirectory, shaderName);
@@ -400,9 +410,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				setLocalRotation(q);
 			}
 			if (vertexShader) {
-				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
-				float start = 2*J3DCore.VIEW_DISTANCE/3;
-				fp.setParameter(new float[]{1.0f-( Math.max(0, dist-start)/(start) * 1.4f),0,0,0}, 1);
+				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());				
+				fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 1.4f),0,0,0}, 1);
 			}
 			
 			

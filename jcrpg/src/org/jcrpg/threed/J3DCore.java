@@ -171,6 +171,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_DETAILED = false;
     
     public static int FARVIEW_GAP = 4;
+    public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
     static {
@@ -178,6 +179,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		File f = new File("./config.properties");
 	    	FileInputStream fis = new FileInputStream(f);
 	    	p.load(fis);
+	    	
+	    	String farViewEnabled = p.getProperty("FARVIEW_ENABLED");
+	    	if (farViewEnabled!=null)
+	    	{
+	    		farViewEnabled = farViewEnabled.trim();
+	    		try {
+	    			FARVIEW_ENABLED = Boolean.parseBoolean(farViewEnabled);
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("FARVIEW_ENABLED", "false");
+	    		}
+	    	}
 	    	
 	    	String renderDistance = p.getProperty("RENDER_DISTANCE");
 	    	if (renderDistance!=null)
@@ -1927,25 +1940,36 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						break;
 					} else
 					{
+						// check if farview enabled
+						if (!J3DCore.FARVIEW_ENABLED) break;
+						
+						// enabled, we can check for the cube coordinates in between the gaps...
 						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)
 						{
+							// looking for farview enabled model on the cube...
 							if (n.model.farViewEnabled)
 							{								
+								// found one... checking for angle:								
 								Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
 								float angle = cam.getDirection().normalize().angleBetween(relative);
 								//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
 								if (angle<refAngle) {
+									// angle is good, we can enable foundFar for this cube
 									foundFar = true;
 								}
 								break;
 							} else
 							{
+								// continue to check all the other nodes of the cube in this farview place.
 								continue;
 							}
 						}
 						break;
 					}
 				}
+				
+				
+				// farview
 				if (foundFar)
 				{
 					visibleNodeCounter++;
@@ -1953,8 +1977,39 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					{
 						addedNodeCounter++;
 						inFarViewPort.add(c);
+						
+						// checking if its in normal view port, if so removing it
+						if (inViewPort.contains(c))
+						{
+							removedNodeCounter++;			
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{								
+								if (GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+												|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									 )
+								{
+									if (n!=null)
+										batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+								} else 
+								{
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (SHADOWS) removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+								}
+								n.farView = false;
+							}
+						}
 						inViewPort.remove(c);
 						outOfViewPort.remove(c);
+						
+						// add all far view enabled model nodes to the scenario
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
 							if (!n.model.farViewEnabled) continue;
@@ -2050,6 +2105,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							removedNodeCounter++;							
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{
+								if (!n.model.farViewEnabled) continue;
 								if (GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
@@ -2069,6 +2125,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 										modelPool.releaseNode(pooledRealNode);
 									}
 								}
+								n.farView = false;
 							}
 						}
 
@@ -2164,8 +2221,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						inFarViewPort.remove(c);
 						for (NodePlaceholder n : c.hsRenderedNodes)
 						{
-							if (!n.model.farViewEnabled) continue;
-							
 							if (GEOMETRY_BATCH && n.model.batchEnabled && 
 									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
@@ -2988,13 +3043,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_external = display.getRenderer().createFogState();
         fs_external.setDensity(0.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
-        fs_external.setEnd((VIEW_DISTANCE/1.15f));
-        fs_external.setStart(2*VIEW_DISTANCE/3);
+        if (J3DCore.FARVIEW_ENABLED) 
+        {
+            fs_external.setEnd((RENDER_DISTANCE_ORIG/1.15f));
+            fs_external.setStart(2*RENDER_DISTANCE_ORIG/3);
+        } else
+        {
+            fs_external.setEnd((VIEW_DISTANCE/1.15f));
+        	fs_external.setStart(2*VIEW_DISTANCE/3);
+        }
         fs_external.setDensityFunction(FogState.DF_LINEAR);
         fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
         fs_external.setNeedsRefresh(true);
         fs_external.setEnabled(true);
-        //extRootNode.setRenderState(fs_external);
+        extRootNode.setRenderState(fs_external);
         extRootNode.setRenderState(as);
 
 		fs_internal = display.getRenderer().createFogState();
@@ -3005,7 +3067,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DF_LINEAR);
 		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
-        //intRootNode.setRenderState(fs_internal);
+        intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
  		
         // default light states

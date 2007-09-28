@@ -17,6 +17,8 @@
 
 package org.jcrpg.apps;
 
+import java.util.logging.Level;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
@@ -45,7 +47,8 @@ public class Jcrpg {
      * @param args
      */
     public static void main(String[] args) {
-    	System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
+    	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
+    	java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
     	try {
     		start();
     	} catch (Exception ex)
