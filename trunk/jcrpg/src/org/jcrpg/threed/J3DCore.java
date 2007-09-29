@@ -170,7 +170,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
-    public static int FARVIEW_GAP = 2;
+    public static int FARVIEW_GAP = 4;
     public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
@@ -1965,7 +1965,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					}
 					if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)
 					{
-						// this can bi a gapfiller magnified farview cube.
+						// this can be a gapfiller magnified farview cube.
 					} else
 					{
 						//this cannot be
@@ -1996,11 +1996,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						if (!J3DCore.FARVIEW_ENABLED) break;
 						
 						// enabled, we can check for the cube coordinates in between the gaps...
-						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)
+						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0 || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 						{
 							// looking for farview enabled model on the cube...
 							if (n.model.farViewEnabled)
 							{								
+								if (c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
+									foundFar = false;
+									found = true;
+									break;
+								}
 								// found one... checking for angle:								
 								Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
 								float angle = cam.getDirection().normalize().angleBetween(relative);
