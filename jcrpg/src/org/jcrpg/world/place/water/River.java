@@ -68,7 +68,7 @@ public class River extends Water{
 	static Side[][] RIVER_WATERFALL_WEST_EDGE_SOUTH = new Side[][] { null, null, INTERSECT,WATERFALL,null,WATER };
 	
 	static Side[][] RIVER_WATERFALL_EAST_EDGE_NORTH = new Side[][] { INTERSECT, WATERFALL, null,null,null,WATER };
-	static Side[][] RIVER_WATERFALL_EAST_EDGE_SOUTH = new Side[][] { null, WATERFALL, INTERSECT,null,null,WATER };
+	static Side[][] RIVER_WATERFALL_EAST_EDGE_SOUTH = new Side[][] { null, WATERFALL, null,INTERSECT,null,WATER };
 
 	static Side[][] RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED = new Side[][] { null, null, INTERSECT,null,null,null };
 	static Side[][] RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED = new Side[][] { null, null, null,INTERSECT,null,null };
@@ -97,8 +97,7 @@ public class River extends Water{
 	//
 	public int depth = 1;
 	// where the river begins
-	public int startSide = 0;
-	public int endSide = 2;
+	public int startSide = 1;
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
@@ -125,16 +124,93 @@ public class River extends Water{
 	
 	
 	@Override
-	public Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface) {
+	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) {
+		
+		int x = 0,y = 0,z = 0, checkX = 0;
+		int steepAhead = 0, steepBack = 0, steepLeft = 0, steepRight = 0;
+		
+		Side[][] edgeRockSide1 = null;
+		Side[][] edgeRockSide2 = null;
+		Side[][] waterfallAhead = null;
+		Side[][] waterfallBack = null;
+		Side[][] waterfallLeft = null;
+		Side[][] waterfallRight = null;
+		Side[][] waterfallAheadEdge1 = null;
+		Side[][] waterfallAheadEdge2 = null;
+		Side[][] waterfallBackEdge1 = null;
+		Side[][] waterfallBackEdge2 = null;		
+		Side[][] waterfallAheadEdge1Dry = null;
+		Side[][] waterfallAheadEdge2Dry = null;
+		Side[][] waterfallBackEdge1Dry = null;
+		Side[][] waterfallBackEdge2Dry = null;
+		if (startSide==0) {
+			edgeRockSide1 = RIVER_ROCKSIDE_WEST;
+			edgeRockSide2 = RIVER_ROCKSIDE_EAST;
+
+			waterfallAhead = RIVER_WATERFALL_SOUTH;
+			waterfallBack = RIVER_WATERFALL_NORTH;
+			waterfallLeft = RIVER_WATERFALL_EAST;
+			waterfallRight = RIVER_WATERFALL_WEST;
+
+			waterfallAheadEdge1 = RIVER_WATERFALL_SOUTH_EDGE_WEST;
+			waterfallAheadEdge2 = RIVER_WATERFALL_SOUTH_EDGE_EAST;
+			waterfallBackEdge1 = RIVER_WATERFALL_NORTH_EDGE_WEST;
+			waterfallBackEdge2 = RIVER_WATERFALL_NORTH_EDGE_EAST;
+
+			waterfallAheadEdge1Dry = RIVER_WATERFALL_SOUTH_EDGE_WEST_DRIED;
+			waterfallAheadEdge2Dry = RIVER_WATERFALL_SOUTH_EDGE_EAST_DRIED;
+			waterfallBackEdge1Dry = RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED;
+			waterfallBackEdge2Dry = RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED;
+			
+			x=worldX;
+			y=worldY;
+			z=worldZ;
+			checkX = realMiddleX + origoX*magnification;
+			// water surface
+			steepAhead = J3DCore.NORTH;
+			steepBack = J3DCore.SOUTH;
+			steepLeft = J3DCore.WEST;
+			steepRight = J3DCore.EAST;
+			
+		}
+		if (startSide==1) {
+			edgeRockSide1 = RIVER_ROCKSIDE_NORTH;
+			edgeRockSide2 = RIVER_ROCKSIDE_SOUTH;
+
+			waterfallAhead = RIVER_WATERFALL_WEST;
+			waterfallBack = RIVER_WATERFALL_EAST;
+			waterfallLeft = RIVER_WATERFALL_SOUTH;
+			waterfallRight = RIVER_WATERFALL_NORTH;
+
+			waterfallAheadEdge1 = RIVER_WATERFALL_WEST_EDGE_NORTH;
+			waterfallAheadEdge2 = RIVER_WATERFALL_WEST_EDGE_SOUTH;
+			waterfallBackEdge1 = RIVER_WATERFALL_EAST_EDGE_NORTH;
+			waterfallBackEdge2 = RIVER_WATERFALL_EAST_EDGE_SOUTH;
+
+			waterfallAheadEdge1Dry = RIVER_WATERFALL_WEST_EDGE_NORTH_DRIED;
+			waterfallAheadEdge2Dry = RIVER_WATERFALL_WEST_EDGE_SOUTH_DRIED;
+			waterfallBackEdge1Dry = RIVER_WATERFALL_EAST_EDGE_NORTH_DRIED;
+			waterfallBackEdge2Dry = RIVER_WATERFALL_EAST_EDGE_SOUTH_DRIED;
+			
+			x=worldZ;
+			y=worldY;
+			z=worldX;
+			checkX = realMiddleZ + origoZ*magnification;
+			// water surface
+			steepAhead = J3DCore.EAST;
+			steepBack = J3DCore.WEST;
+			steepLeft = J3DCore.NORTH;
+			steepRight = J3DCore.SOUTH;
+		}
+		  
 		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
 		int width1 = width+widthMod1;
 		int width2 = width-widthMod1;
+		
+		
 		if (y != surface.surfaceY || geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
 		{
-			if ( FastMath.abs(startSide-endSide) == 2 ) 
-			{
 				
-				int checkX = realMiddleX + origoX*magnification;
 				boolean edge1 = false, edge2 = false, bottom = false, onSurface = (surface.surfaceY==y);
 				if (x==checkX-width1)
 				{
@@ -153,7 +229,7 @@ public class River extends Water{
 				{
 					if (onSurface) 
 					{
-						Cube c = new Cube (this,RIVER_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+						Cube c = new Cube (this,RIVER_WATER,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 						c.onlyIfOverlaps = true;
 						c.overwrite = true;
 						c.overwritePower = 1;
@@ -164,20 +240,18 @@ public class River extends Water{
 						Cube c = null;
 						if (edge1)
 						{
-							System.out.println("!!!!!ROCKSIDE WEST!!!!!");
-							c = new Cube (this,RIVER_ROCKSIDE_WEST,x,y,z,surface.steepDirection);
+							c = new Cube (this,edgeRockSide1,worldX,worldY,worldZ,surface.steepDirection);
 							
 						} else
 						if (edge2)
 						{
-							System.out.println("!!!!!ROCKSIDE EAST!!!!!");
-							c = new Cube (this,RIVER_ROCKSIDE_EAST,x,y,z,surface.steepDirection);							
+							c = new Cube (this,edgeRockSide2,worldX,worldY,worldZ,surface.steepDirection);							
 						} 
 						if (bottom)
 						{
-							Cube c2 = new Cube (this,surface.steepDirection==SurfaceHeightAndType.NOT_STEEP?RIVER_ROCKSIDE_BOTTOM:RIVER_ROCKSIDE_BOTTOM_STEEP,x,y,z,surface.steepDirection);
+							Cube c2 = new Cube (this,surface.steepDirection==SurfaceHeightAndType.NOT_STEEP?RIVER_ROCKSIDE_BOTTOM:RIVER_ROCKSIDE_BOTTOM_STEEP,worldX,worldY,worldZ,surface.steepDirection);
 							if (c!=null)
-								c = new Cube(c,c2,x,y,z,surface.steepDirection);
+								c = new Cube(c,c2,worldX,worldY,worldZ,surface.steepDirection);
 							else
 								c = c2;
 						}
@@ -187,13 +261,9 @@ public class River extends Water{
 					}
 					
 				}
-			}
 		}
 		else
 		{
-			if ( FastMath.abs(startSide-endSide) == 2 ) {
-				
-				int checkX = realMiddleX + origoX*magnification;
 				if (x>=checkX-width1 && x<=checkX+width2)
 				{
 					boolean edge1 = false, edge2 = false;
@@ -206,77 +276,76 @@ public class River extends Water{
 						edge2 = true;
 					}
 					Cube c = null;
-					if (geoCube.steepDirection==J3DCore.NORTH) {
+					if (geoCube.steepDirection==steepAhead) {
 						if (!edge1 && !edge2) {
 							if (!noWaterInTheBed)
 							{
-								c = new Cube (this,RIVER_WATERFALL_SOUTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallAhead,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else
 							{
-								c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,EMPTY,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						} else
 						if (edge1)
 						{
 							if (!noWaterInTheBed)
 							{
-								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallAheadEdge1,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else
 							{
-								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_WEST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallAheadEdge1Dry,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						} else
 						{
 							if (!noWaterInTheBed)
 							{
-								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallAheadEdge2,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else
 							{
-								c = new Cube (this,RIVER_WATERFALL_SOUTH_EDGE_EAST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallAheadEdge2Dry,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						}
 					}
-					if (geoCube.steepDirection==J3DCore.EAST) {
-						c = new Cube (this,RIVER_WATERFALL_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+					if (geoCube.steepDirection==steepRight) {
+						c = new Cube (this,waterfallRight,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
-					if (geoCube.steepDirection==J3DCore.SOUTH) {
+					if (geoCube.steepDirection==steepBack) {
 						if (!edge1 && !edge2) {
 							if (!noWaterInTheBed) {
-								c = new Cube (this,RIVER_WATERFALL_NORTH,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallBack,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else
 							{
-								c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,EMPTY,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						} else
 						if (edge1)
 						{
 							if (!noWaterInTheBed)
 							{
-								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_WEST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallBackEdge1,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else
 							{
-								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallBackEdge1Dry,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						} else
 						{
 							if (!noWaterInTheBed)
 							{
-								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallBackEdge2,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							} else 
 							{
-								c = new Cube (this,RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+								c = new Cube (this,waterfallBackEdge2Dry,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 							}
 						}
 					}
-					if (geoCube.steepDirection==J3DCore.WEST) {
-						c = new Cube (this,RIVER_WATERFALL_EAST,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+					if (geoCube.steepDirection==steepLeft) {
+						c = new Cube (this,waterfallLeft,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
 					System.out.println("STEEP WATER!!!");
 					return c;
 				}
-			}
 		}
-		return new Cube(this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		return new Cube(this,EMPTY,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 	}
 
 
@@ -288,19 +357,26 @@ public class River extends Water{
 	}
 
 	@Override
-	public boolean isWaterPoint(int x, int y, int z) {
-		// replace coordinates based on startSide
-		// TODO
+	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
+		int x = 0,y = 0,z = 0, checkX = 0;
+		if (startSide==0) {
+			x=worldX;
+			y=worldY;
+			z=worldZ;
+			checkX = realMiddleX + origoX*magnification;
+		}
+		if (startSide==1) {
+			x=worldZ;
+			y=worldY;
+			z=worldX;
+			checkX = realMiddleZ + origoZ*magnification;
+		}
 		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
 		int width1 = width+widthMod1;
 		int width2 = width-widthMod1;
-		if ( FastMath.abs(startSide-endSide) == 2 ) {
-			
-			int checkX = realMiddleX + origoX*magnification;
-			if (x>=checkX-width1 && x<=checkX+width2)
-			{
-				return true;
-			}
+		if (x>=checkX-width1 && x<=checkX+width2)
+		{
+			return true;
 		}
 		return false;
 	}

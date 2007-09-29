@@ -29,6 +29,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
@@ -115,7 +116,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
 				scale.x*=J3DCore.FARVIEW_GAP;
-				//scale.z*=J3DCore.FARVIEW_GAP;				
+				scale.z*=J3DCore.FARVIEW_GAP;				
 				scale.y*=J3DCore.FARVIEW_GAP;
 				instance.getAttributes().setScale(scale);
 			} else
@@ -139,7 +140,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
 				scale.x*=J3DCore.FARVIEW_GAP;
-				//scale.z*=J3DCore.FARVIEW_GAP;				
+				scale.z*=J3DCore.FARVIEW_GAP;				
 				scale.y*=J3DCore.FARVIEW_GAP;
 				quad.setLocalScale(scale);
 			} else
