@@ -977,8 +977,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
 		QuadModel qm_road_stone = new QuadModel("stone.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_road_stone.rotateOnSteep = true; qm_road_stone.farViewEnabled = true;
 
-		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true;
-		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true;
+		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true; sm_house_wood.farViewEnabled = true;
+		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true; qm_house_wood.rotateOnSteep = true;
 
 		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true; qm_desert.farViewEnabled = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = true; sm_desert.yGeomBatchSize = yCommon; sm_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert.farViewEnabled = true;
@@ -988,7 +988,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_desert_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","sand2.jpg"); sm_desert_steep_2.rotateOnSteep = true; sm_desert_steep_2.yGeomBatchSize = yCommon; sm_desert_steep_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep_2.noSpecialSteepRotation = false; sm_desert_steep_2.farViewEnabled = true;
 		SimpleModel sm_desert_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","sand2.jpg"); sm_desert_steep_3.rotateOnSteep = true; sm_desert_steep_3.yGeomBatchSize = yCommon; sm_desert_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep_3.noSpecialSteepRotation = false; sm_desert_steep_3.farViewEnabled = true;
 		
-		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true;
+		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true; qm_arctic.farViewEnabled = true;
 		
 		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true; qm_jungle.farViewEnabled = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = true; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
@@ -1955,11 +1955,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					int viewDistFarViewModuloX = viewPositionX%FARVIEW_GAP;
 					int viewDistFarViewModuloZ = viewPositionZ%FARVIEW_GAP;
 					
-					if (checkDistCube-distX<=viewDistFarViewModuloX)
+					if (Math.abs(checkDistCube-distX)<=viewDistFarViewModuloX)
 					{
 						farviewGapFiller = true;
 					}
-					if (checkDistCube-distZ<=viewDistFarViewModuloZ)
+					if (Math.abs(checkDistCube-distZ)<=viewDistFarViewModuloZ)
 					{
 						farviewGapFiller = true;
 					}
@@ -1996,16 +1996,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						if (!J3DCore.FARVIEW_ENABLED) break;
 						
 						// enabled, we can check for the cube coordinates in between the gaps...
-						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0 || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 						{
 							// looking for farview enabled model on the cube...
 							if (n.model.farViewEnabled)
 							{								
-								if (c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
-									foundFar = false;
-									found = true;
-									break;
-								}
+								//if (c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
+									//foundFar = false;
+									//found = true;
+									//break;
+								//}
 								// found one... checking for angle:								
 								Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
 								float angle = cam.getDirection().normalize().angleBetween(relative);

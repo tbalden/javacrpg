@@ -25,16 +25,13 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
 
-import com.jme.math.FastMath;
-
-public class River extends Water{
+public class River extends Water {
 
 	public static final String TYPE_RIVER = "RIVER";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER");
@@ -98,12 +95,15 @@ public class River extends Water{
 	public int depth = 1;
 	// where the river begins
 	public int startSide = 0;
+	
+	public static int STARTSIDE_SOUTH=0;
+	public static int STARTSIDE_WEST=1;
+	
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
-	private int worldGroundLevel;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength) throws Exception {
+	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -114,6 +114,7 @@ public class River extends Water{
 		this.origoZ = origoZ;
 		this.width = width;
 		this.depth = depth;
+		this.startSide = startSide;
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
 		realMiddleX = sizeX*magnification/2;

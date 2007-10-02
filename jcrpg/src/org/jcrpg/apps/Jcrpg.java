@@ -37,6 +37,7 @@ import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
+import org.jcrpg.world.place.water.Lake;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
@@ -60,7 +61,7 @@ public class Jcrpg {
     public static void start() throws Exception {
 		Engine e = new Engine();
 		Time wmt = new Time();
-		wmt.setHour(12);
+		wmt.setHour(6);
 		e.setWorldMeanTime(wmt);
 		Thread t = new Thread(e);
 		t.start();
@@ -115,8 +116,13 @@ public class Jcrpg {
 		Mountain m = new Mountain("m1",w,null,10,5,2,5,1,w.getSeaLevel(10)-1,1,w.getSeaLevel(10));
 		w.geographies.put(m.id, m);
 		
-		River r = new River("r1",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,2,1,0.2f,12);
+		River r = new River("r1",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,River.STARTSIDE_WEST,2,1,0.2f,12);
 		w.waters.put(r.id, r);
+		River r2 = new River("r2",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,River.STARTSIDE_SOUTH,2,1,0.2f,12);
+		w.waters.put(r2.id, r2);
+		
+		Lake l = new Lake("l1",w,null,w.getSeaLevel(3),4,1,1,1,0,w.getSeaLevel(3)-1,0,1,10);
+		w.waters.put(l.id, l);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 1));

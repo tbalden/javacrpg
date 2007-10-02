@@ -80,9 +80,9 @@ public class ModelLoader {
 		
 	    try {
     		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"mid/":"high/");
-	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI().toURL());
-	    	SimpleResourceLocator loc2 = new SimpleResourceLocator( new File("./data/orbiters/").toURI().toURL());
-	    	SimpleResourceLocator loc3 = new SimpleResourceLocator( new File("./data/flare/").toURI().toURL());
+	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI());
+	    	SimpleResourceLocator loc2 = new SimpleResourceLocator( new File("./data/orbiters/").toURI());
+	    	SimpleResourceLocator loc3 = new SimpleResourceLocator( new File("./data/flare/").toURI());
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc2);
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc3);
