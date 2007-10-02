@@ -18,34 +18,76 @@
 package org.jcrpg.world.place.water;
 
 import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
 
-public class Lake extends Water{
+public class Lake extends Water {
 
-	public Lake(String id, Place parent, PlaceLocator loc) {
+	public static final String TYPE_LAKE = "LAKE";
+	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_LAKE+"_WATER");
+
+	static Side[] WATER = {new Side(TYPE_LAKE,SUBTYPE_WATER)};
+
+	static Side[][] LAKE_WATER = new Side[][] { null, null, null,null,null,WATER };
+
+	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
+
+	public int depth = 1;
+	int noWaterPercentage = 0;
+	private int worldGroundLevel;
+	int groundLevel;
+	
+	int centerX, centerZ, realSizeX, realSizeZ;
+
+	public Lake(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
 		super(id, parent, loc);
-		// TODO Auto-generated constructor stub
+		this.magnification = magnification;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.sizeZ = sizeZ;
+		this.origoX = origoX;
+		this.origoY = origoY;
+		this.origoZ = origoZ;
+		this.depth = depth;
+		centerX = sizeX*magnification/2;
+		centerZ = sizeZ*magnification/2;
+		realSizeX = sizeX*magnification;
+		realSizeZ = sizeZ*magnification;
+		
+		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		this.groundLevel = groundLevel;
+		worldGroundLevel=groundLevel*magnification;
 	}
 
 	@Override
 	public int getDepth(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return 0;
+		return depth;
 	}
 
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
 			SurfaceHeightAndType surface) {
-		// TODO Auto-generated method stub
-		return null;
+		if (y==worldGroundLevel) 
+		{
+			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		}
+		return new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}
 
 	@Override
 	public boolean isWaterPoint(int x, int y, int z) {
-		// TODO Auto-generated method stub
+		int localX = x-realSizeX;
+		int localY = y-worldGroundLevel;
+		int localZ = z-realSizeZ;
+		if (y==worldGroundLevel) 
+		{
+			return true;
+		}
 		return false;
 	}
 
