@@ -118,10 +118,11 @@ public class Jcrpg {
 		
 		River r = new River("r1",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,River.STARTSIDE_WEST,2,1,0.2f,12);
 		w.waters.put(r.id, r);
+		//r.noWaterInTheBed = true;
 		River r2 = new River("r2",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,River.STARTSIDE_SOUTH,2,1,0.2f,12);
 		w.waters.put(r2.id, r2);
 		
-		Lake l = new Lake("l1",w,null,w.getSeaLevel(3),4,1,1,1,0,w.getSeaLevel(3)-1,0,1,10);
+		Lake l = new Lake("l1",w,null,w.getSeaLevel(1),1,3,2,3,3,w.getSeaLevel(1),2,1,10);
 		w.waters.put(l.id, l);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
