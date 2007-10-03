@@ -197,8 +197,8 @@ public class River extends Water {
 		}
 		if (startSide==1) {
 			addWX = 1; addWZ = 0;
-			edgeRockSide1 = RIVER_ROCKSIDE_NORTH;
-			edgeRockSide2 = RIVER_ROCKSIDE_SOUTH;
+			edgeRockSide1 = RIVER_ROCKSIDE_SOUTH;
+			edgeRockSide2 = RIVER_ROCKSIDE_NORTH;
 
 			waterfallAhead = RIVER_WATERFALL_WEST;
 			waterfallBack = RIVER_WATERFALL_EAST;
@@ -270,6 +270,9 @@ public class River extends Water {
 						return c;
 					} else
 					{
+						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
+						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						// TODO based on next/prev no water add more rockside!
 						Cube c = null;
 						if (edge1)
 						{
