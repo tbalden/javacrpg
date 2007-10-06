@@ -165,7 +165,7 @@ public class GeometryBatchHelper {
     					float variationCutter = 160f;
     					if (place.cube.cube.steepDirection==J3DCore.SOUTH)
     					{
-    						heightPercent = (j*1f)/(quadQuantity-1);
+    						heightPercent = (j*1f)/quadQuantity;
     						
     					}
     					if (place.cube.cube.steepDirection==J3DCore.NORTH)
