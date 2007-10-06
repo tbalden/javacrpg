@@ -142,7 +142,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
         	this.setRenderState(fp);
         }
         
-        if (J3DCore.FARVIEW_ENABLED)
+        if (J3DCore.FARVIEW_ENABLED && model!=null && model.type==Model.PARTLYBILLBOARDMODEL)
     	{
     		startFog = 2*J3DCore.RENDER_DISTANCE_ORIG/3;
     	} else

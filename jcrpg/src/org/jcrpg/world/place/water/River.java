@@ -132,6 +132,8 @@ public class River extends Water {
 		int addWX = 0, addWZ = 0;
 		
 		Side[][] edgeRockSide1 = null;
+		Side[][] edgeRockSideAheadRock = null;
+		Side[][] edgeRockSideBackRock = null;
 		Side[][] edgeRockSide2 = null;
 		Side[][] waterfallAhead = null;
 		Side[][] waterfallBack = null;
@@ -158,6 +160,8 @@ public class River extends Water {
 			addWX = 0; addWZ = 1;
 			edgeRockSide1 = RIVER_ROCKSIDE_WEST;
 			edgeRockSide2 = RIVER_ROCKSIDE_EAST;
+			edgeRockSideAheadRock = RIVER_ROCKSIDE_NORTH;
+			edgeRockSideBackRock = RIVER_ROCKSIDE_SOUTH;
 
 			waterfallAhead = RIVER_WATERFALL_SOUTH;
 			waterfallBack = RIVER_WATERFALL_NORTH;
@@ -199,6 +203,8 @@ public class River extends Water {
 			addWX = 1; addWZ = 0;
 			edgeRockSide1 = RIVER_ROCKSIDE_SOUTH;
 			edgeRockSide2 = RIVER_ROCKSIDE_NORTH;
+			edgeRockSideAheadRock = RIVER_ROCKSIDE_EAST;
+			edgeRockSideBackRock = RIVER_ROCKSIDE_WEST;
 
 			waterfallAhead = RIVER_WATERFALL_WEST;
 			waterfallBack = RIVER_WATERFALL_EAST;
@@ -286,6 +292,22 @@ public class River extends Water {
 						if (bottom)
 						{
 							Cube c2 = new Cube (this,surface.steepDirection==SurfaceHeightAndType.NOT_STEEP?RIVER_ROCKSIDE_BOTTOM:RIVER_ROCKSIDE_BOTTOM_STEEP,worldX,worldY,worldZ,surface.steepDirection);
+							if (c!=null)
+								c = new Cube(c,c2,worldX,worldY,worldZ,surface.steepDirection);
+							else
+								c = c2;
+						}
+						if (nextNotWater)
+						{
+							Cube c2 = new Cube (this,edgeRockSideAheadRock,worldX,worldY,worldZ,surface.steepDirection);
+							if (c!=null)
+								c = new Cube(c,c2,worldX,worldY,worldZ,surface.steepDirection);
+							else
+								c = c2;
+						}
+						if (prevNotWater)
+						{
+							Cube c2 = new Cube (this,edgeRockSideBackRock,worldX,worldY,worldZ,surface.steepDirection);
 							if (c!=null)
 								c = new Cube(c,c2,worldX,worldY,worldZ,surface.steepDirection);
 							else

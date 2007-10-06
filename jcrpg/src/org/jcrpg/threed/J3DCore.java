@@ -171,7 +171,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
-    public static int FARVIEW_GAP = 4;
+    public static int FARVIEW_GAP = 1;
     public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
@@ -951,7 +951,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				new SimpleModel[]{roof_top}
 				));
 		
-		int yCommon = 2;
+		int yCommon = 1;
 		
 		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true; qm_grass.farViewEnabled = true;
 		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.rotateOnSteep = true; sm_grass.yGeomBatchSize = yCommon; sm_grass.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass.farViewEnabled = true;
@@ -969,8 +969,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_cave_ground_2 = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_cave_ground_2.yGeomBatchSize = yCommon; sm_cave_ground_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_cave_ground_2.farViewEnabled = true;
 		SimpleModel sm_cave_ground_3 = new SimpleModel("models/ground/ground_3.obj","cave_ground.jpg"); sm_cave_ground_3.yGeomBatchSize = yCommon; sm_cave_ground_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_cave_ground_3.farViewEnabled = true;
 		
-		SimpleModel sm_river_bottom = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true;
-		SimpleModel sm_river_side_norot = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_river_side_norot.yGeomBatchSize = yCommon; sm_river_side_norot.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_side_norot.rotateOnSteep = false;
+		SimpleModel sm_river_bottom = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true; sm_river_bottom.farViewEnabled = true;
+		SimpleModel sm_river_side_norot = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_river_side_norot.yGeomBatchSize = yCommon; sm_river_side_norot.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_side_norot.rotateOnSteep = false; sm_river_side_norot.farViewEnabled = true;
 
 		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},treeLodDist);
 		lod_jungle_bush1.shadowCaster = false;
@@ -1099,11 +1099,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{bush1}));*/
 		
 		QuadModel qm_water = new QuadModel("water1.jpg"); qm_water.rotateOnSteep = true; qm_water.waterQuad = true; qm_water.farViewEnabled = true;
-		QuadModel qm_waterfall = new QuadModel("water_fall1.jpg"); qm_waterfall.rotateOnSteep = true; qm_waterfall.waterQuad = false;
+		QuadModel qm_waterfall = new QuadModel("water_fall1.jpg"); qm_waterfall.rotateOnSteep = true; qm_waterfall.waterQuad = false; qm_waterfall.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide("models/ground/hillintersect.obj",null));
+		SimpleModel sm_intersect = new SimpleModel("models/ground/hillintersect.obj",null); sm_intersect.farViewEnabled = true;
+		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide(new Model[]{sm_intersect}));
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
 		sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
@@ -1461,6 +1462,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		// set fog state color to the light power !
 		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/1.5f,vTotal[2]/1.1f,1f));
+		fs_external_special.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/1.5f,vTotal[2]/1.1f,1f));
 
 		// SKYSPHERE
 		// moving skysphere with camera
@@ -2966,6 +2968,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
  
 	public FogState fs_external;
+	public FogState fs_external_special;
 	public FogState fs_internal;
     public ShadowedRenderPass sPass = null;
 	private BloomRenderPass bloomRenderPass;
@@ -3100,12 +3103,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
 		
 		fs_external = display.getRenderer().createFogState();
+		fs_external_special = display.getRenderer().createFogState();
         fs_external.setDensity(0.5f);
         fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
         if (J3DCore.FARVIEW_ENABLED) 
         {
             fs_external.setEnd((RENDER_DISTANCE_ORIG/1.15f));
-            fs_external.setStart(2*RENDER_DISTANCE_ORIG/3);
+            fs_external.setStart(1.5f*RENDER_DISTANCE_ORIG/3);
+            fs_external_special.setEnd((VIEW_DISTANCE/1.15f));
+            fs_external_special.setStart(2*VIEW_DISTANCE/3);
+            fs_external_special.setDensityFunction(FogState.DF_LINEAR);
+            fs_external_special.setApplyFunction(FogState.AF_PER_VERTEX);
+            fs_external_special.setNeedsRefresh(true);
+            fs_external_special.setEnabled(true);        
         } else
         {
             fs_external.setEnd((VIEW_DISTANCE/1.15f));

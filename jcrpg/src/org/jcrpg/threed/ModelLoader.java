@@ -172,6 +172,8 @@ public class ModelLoader {
 					bbOrig = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
 					//sharedBBNodeCache.put(key, bbOrig);
 					bbOrig.attachChild(node);
+					if (J3DCore.FARVIEW_ENABLED)
+						bbOrig.setRenderState(core.fs_external_special);
 				}
 				if (fakeLoadForCacheMaint) continue;
 				// adding to drawer
