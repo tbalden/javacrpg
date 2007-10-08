@@ -892,28 +892,37 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel wall_thick = new SimpleModel("sides/wall_thick.3ds", null);
 		wall_thick.shadowCaster = true;
 		wall_thick.cullNone = true;
+		wall_thick.farViewEnabled = true;
 		SimpleModel wall_window = new SimpleModel("sides/wall_window.3ds", null);
 		wall_window.shadowCaster = true;
 		wall_window.cullNone = true;
+		wall_window.farViewEnabled = true;
 		SimpleModel wall_door = new SimpleModel("sides/door.3ds", null);
 		wall_door.shadowCaster = true;
 		wall_door.cullNone = true;
+		wall_door.farViewEnabled = true;
 		SimpleModel wall_door_wall = new SimpleModel("sides/wall_door.3ds", null);
 		wall_door_wall.shadowCaster = true;
 		wall_door_wall.cullNone = true;
+		wall_door_wall.farViewEnabled = true;
 		SimpleModel roof_side = new SimpleModel("sides/roof_side.3ds", null);
 		roof_side.shadowCaster = true;
 		roof_side.cullNone = true;
+		roof_side.farViewEnabled = true;
 		SimpleModel roof_corner = new SimpleModel("sides/roof_corner.3ds", null);
 		roof_corner.shadowCaster = true;
+		roof_corner.farViewEnabled = true;
 		SimpleModel roof_opp = new SimpleModel("sides/roof_corner_opp.3ds", null);
 		roof_opp.shadowCaster = true;
+		roof_opp.farViewEnabled = true;
 		SimpleModel roof_non = new SimpleModel("sides/roof_corner_non.3ds", null);
 		roof_non.shadowCaster = true;
+		roof_non.farViewEnabled = true;
 		SimpleModel ceiling = new SimpleModel("sides/ceiling_pattern1.3ds",null);
 		ceiling.shadowCaster = true;
 		SimpleModel roof_top = new SimpleModel("sides/roof_top.3ds",null);
 		roof_top.shadowCaster = true;
+		roof_top.farViewEnabled = true;
 		
 		SimpleModel cave_rock = new SimpleModel("models/ground/cave_rock.obj", null);
 		SimpleModel wall_cave = new SimpleModel("models/ground/wall_cave.obj", null);
@@ -980,7 +989,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		QuadModel qm_road_stone = new QuadModel("stone.jpg","NormalMap.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,false); qm_road_stone.rotateOnSteep = true; qm_road_stone.farViewEnabled = true;
 
 		SimpleModel sm_house_wood = new SimpleModel("models/ground/house_wood.3ds",null); sm_house_wood.rotateOnSteep = true; sm_house_wood.farViewEnabled = true;
-		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true; qm_house_wood.rotateOnSteep = true;
+		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true; qm_house_wood.rotateOnSteep = true; qm_house_wood.farViewEnabled = true;
 
 		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true; qm_desert.farViewEnabled = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = true; sm_desert.yGeomBatchSize = yCommon; sm_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert.farViewEnabled = true;
