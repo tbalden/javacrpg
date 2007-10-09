@@ -20,11 +20,14 @@ package org.jcrpg.world.place.water;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
+
+import com.jme.math.Vector3f;
 
 public class Lake extends Water {
 
@@ -43,6 +46,7 @@ public class Lake extends Water {
 	int groundLevel;
 	
 	int centerX, centerZ, realSizeX, realSizeZ;
+	Vector3f center = new Vector3f();
 
 	public Lake(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
 		super(id, parent, loc);
@@ -59,9 +63,12 @@ public class Lake extends Water {
 		realSizeX = sizeX*magnification;
 		realSizeZ = sizeZ*magnification;
 		
+		center.set(centerX, centerZ, 0);
+		
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		this.groundLevel = groundLevel;
 		worldGroundLevel=groundLevel*magnification;
+		this.noWaterPercentage = noWaterPercentage;
 	}
 
 	@Override
@@ -79,14 +86,24 @@ public class Lake extends Water {
 		return new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}
 
+	Vector3f temp = new Vector3f();
+	
 	@Override
 	public boolean isWaterPoint(int x, int y, int z) {
-		int localX = x-realSizeX;
+		int localX = x-origoX;
 		int localY = y-worldGroundLevel;
-		int localZ = z-realSizeZ;
+		int localZ = z-origoZ;
+		temp.set(localX, localZ, 0);
 		if (y==worldGroundLevel) 
 		{
-			return true;
+			if (temp.distance(center)<realSizeX/2)
+			{
+				if (HashUtil.mixPercentage(x, 0, z)<noWaterPercentage)
+				{
+					return false;
+				}
+				return true;
+			}
 		}
 		return false;
 	}

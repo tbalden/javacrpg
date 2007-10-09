@@ -156,6 +156,7 @@ public class River extends Water {
 		Side[][] waterfallRightEdgePrevDry = null;
 		Side[][] waterfallLeftEdgeNextDry = null;
 		Side[][] waterfallLeftEdgePrevDry = null;
+		// depending on start side, set the different vairables
 		if (startSide==0) {
 			addWX = 0; addWZ = 1;
 			edgeRockSide1 = RIVER_ROCKSIDE_WEST;
@@ -297,7 +298,7 @@ public class River extends Water {
 							else
 								c = c2;
 						}
-						if (nextNotWater)
+						if (nextNotWater) // no water next, we need rock wall ahead
 						{
 							Cube c2 = new Cube (this,edgeRockSideAheadRock,worldX,worldY,worldZ,surface.steepDirection);
 							if (c!=null)
@@ -305,7 +306,7 @@ public class River extends Water {
 							else
 								c = c2;
 						}
-						if (prevNotWater)
+						if (prevNotWater) // no water prev, we need rock wall back
 						{
 							Cube c2 = new Cube (this,edgeRockSideBackRock,worldX,worldY,worldZ,surface.steepDirection);
 							if (c!=null)
