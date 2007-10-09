@@ -1,4 +1,7 @@
-[ ] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)! 
+[X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
+	[ ] make it better with big gaps (non 1)
+	[ ] no inside farview from outside! and vica versa?
+	[ ] don't load twice as much when farview...more terrain loaded, farview distance param? 
 
 [ ] Cave: implement surface interface! multilevel cave??
 [X] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
