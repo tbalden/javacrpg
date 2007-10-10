@@ -166,8 +166,9 @@ public class ModelLoader {
 				SimpleModel o = (SimpleModel)objects[i];
 				String key = o.modelName+o.textureName+o.mipMap;
 				BillboardPartVegetation bbOrig = sharedBBNodeCache.get(key);
+				Node node = null;
 				if (bbOrig==null) {
-					Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 					if (fakeLoadForCacheMaint) continue;
 					bbOrig = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
 					//sharedBBNodeCache.put(key, bbOrig);
@@ -180,7 +181,7 @@ public class ModelLoader {
 				//PooledSharedNode sn = new PooledSharedNode("!-",bbOrig);
 		    	//Node node = sn;
 				bbOrig.setName(((SimpleModel)objects[i]).modelName+i);
-				r[i] = bbOrig;
+				r[i] = bbOrig;// new PooledSharedNode("1",node);// bbOrig;
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
