@@ -55,43 +55,47 @@ public class GeometryBatchHelper {
 	 */
 	private String getKey(boolean internal, Model m, NodePlaceholder place, boolean farView)
 	{
-		int viewMul = 1;
-		if (farView) viewMul = J3DCore.FARVIEW_GAP;
-    	String key = m.type+m.id+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+		float viewMul = 1;
+		float yLevelMul = 1;
+		if (farView) {
+			viewMul = J3DCore.FARVIEW_GAP * 4f;
+			yLevelMul = 4;
+		}
+    	String key = m.type+m.id+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
     		SimpleModel sm = (SimpleModel)m;
     		if (sm.textureName!=null)
     		{
-    			key = m.type+sm.textureName+internal+(place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    			key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     		}
     		if (sm.xGeomBatchSize==-1) 
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
     			}
     			else
     			{
-    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
     			}
     		} else
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/SIMPLE_MODEL_BATCHED_SPACE_SIZE);
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
     			}
     			else
     			{
-    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/sm.yGeomBatchSize);
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
     			}
     		}
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION)
     	{
-    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
+    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
     	} else
     	{   // other models only by Y // quad
-    		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y;
+    		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
     	}
     	return key+farView;
 	}
