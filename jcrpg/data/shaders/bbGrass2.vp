@@ -2,7 +2,7 @@
 PARAM mv[4] = { state.matrix.modelview };
 PARAM mv2[4] = { state.matrix.projection };
 PARAM camPos =  program.local[5];
-TEMP offsetPos, pos,projpos;
+TEMP pos,projpos;
 ################################
 # Apply modelview transformation
 DP4 pos.x, mv[0], vertex.position;
@@ -19,7 +19,6 @@ DP4 projpos.w, mv2[3], pos;
 # Add offset
 TEMP f0,f1,f2,f3,f4;
 TEMP t0,t1,t2,t3,t4;
-TEMP tmpCamPosFloor;
 
 # create different fraction parts
 ADD f0, vertex.position, 0.0;
@@ -27,13 +26,6 @@ ADD f1, vertex.position, 0.1;
 ADD f2, vertex.position, 0.2;
 ADD f3, vertex.position, 0.3;
 ADD f4, vertex.position, 0.4;
-MOV tmpCamPosFloor, camPos;
-#FLR tmpCamPosFloor, camPos;
-#ADD f0, f0, tmpCamPosFloor;
-#ADD f1, f1, tmpCamPosFloor;
-#ADD f2, f2, tmpCamPosFloor;
-#ADD f3, f3, tmpCamPosFloor;
-#ADD f4, f4, tmpCamPosFloor;
 
 # get fraction and substract 0.5 to have negative values too
 FRC f0, f0;
@@ -70,16 +62,16 @@ MUL f3, f3, 2;
 MUL f4, f4, 2;
 
 # add all the f[] offsets to position
-MOV offsetPos, projpos;
-ADD offsetPos.xz, offsetPos, f0;
-ADD offsetPos.xz, offsetPos, f1;
-ADD offsetPos.xz, offsetPos, f2;
-ADD offsetPos.xz, offsetPos, f3;
-ADD offsetPos.xz, offsetPos, f4;
+MOV pos, projpos;
+ADD pos.xz, pos, f0;
+ADD pos.xz, pos, f1;
+ADD pos.xz, pos, f2;
+ADD pos.xz, pos, f3;
+ADD pos.xz, pos, f4;
 
 
 
-MOV result.position, offsetPos;
+MOV result.position, pos;
 MOV result.texcoord[0], vertex.texcoord[0];
 MOV result.color, vertex.color;
 MOV result.fogcoord, vertex.fogcoord;

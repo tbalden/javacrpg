@@ -169,6 +169,7 @@ public class ModelLoader {
 				Node node = null;
 				if (bbOrig==null) {
 					node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					//node = loadNodeOriginal((SimpleModel)objects[i],fakeLoadForCacheMaint,true);
 					if (fakeLoadForCacheMaint) continue;
 					bbOrig = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated);
 					//sharedBBNodeCache.put(key, bbOrig);
@@ -181,15 +182,16 @@ public class ModelLoader {
 				//PooledSharedNode sn = new PooledSharedNode("!-",bbOrig);
 		    	//Node node = sn;
 				bbOrig.setName(((SimpleModel)objects[i]).modelName+i);
-				r[i] = bbOrig;// new PooledSharedNode("1",node);// bbOrig;
+				//r[i] = sn;//bbOrig;// new PooledSharedNode("1",node);// bbOrig;
+				r[i] = bbOrig;
 			} else
 			if (objects[i] instanceof SimpleModel) 
 			{
-				Node node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+				PooledSharedNode node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 				if (fakeLoadForCacheMaint) continue;
 				
-		    	PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
-				r[i] = psnode;
+		    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+				r[i] = node;
 				node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
 			// ** LODModel **
@@ -632,13 +634,18 @@ public class ModelLoader {
 		PooledSharedNode r =  new PooledSharedNode("node"+counter++,n);
         return r;
     }
+
+    public Node loadNodeOriginal(SimpleModel o, boolean fakeLoadForCacheMaint)
+    {
+    	return loadNodeOriginal(o, fakeLoadForCacheMaint,false);
+    }    
     /**
      * Load one simplemodel to node
      * @param o SimpleModel descriptor
      * @param fakeLoadForCacheMaint If this is true, only cache maintenance is needed, the model is already rendered and live
      * @return
      */
-    public Node loadNodeOriginal(SimpleModel o, boolean fakeLoadForCacheMaint)
+    public Node loadNodeOriginal(SimpleModel o, boolean fakeLoadForCacheMaint, boolean reload)
     {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
@@ -659,7 +666,7 @@ public class ModelLoader {
     	if (sharedNodeCache.get(key)!=null)
     	{
     		Node n = sharedNodeCache.get(key);
-    		if (n!=null) {
+    		if (n!=null&&!reload) {
     			return n;
     		}
     	}
@@ -830,10 +837,6 @@ public class ModelLoader {
 				sharedNodeCache.put(key, node);
 				node.setModelBound(new BoundingBox());
 				node.updateModelBound();		
-	            //r.setRenderState(core.vp);
-	            //r.setRenderState(core.fp);
-	            //r.lock();
-	            //r.setRenderQueueMode(Renderer.QUEUE_SKIP);
 	            return node;
 			} catch(Exception err)  {
 			    System.out.println("Error loading model:"+err);
