@@ -112,6 +112,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		parent.attachChild(this);
 		parent.updateModelBound();
 		J3DCore.hmSolidColorSpatials.put(parent, parent);
+		
+		vertexShader = J3DCore.ANIMATED_GRASS||J3DCore.ANIMATED_TREES;
 
         if (vertexShader && vp==null)
         { 
@@ -149,19 +151,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
     	{
     		startFog = 2*J3DCore.VIEW_DISTANCE/3;
     	}
-        
-		/*if (gl==null) {
-			gl = createShader(shaderDirectory, shaderName);
-			if (gl.isSupported())
-			{
-				System.out.println("!!!!!!! NO GL !!!!!!!");
-			}
-			gl.setUniform("FadeOutStart", 30f);
-			gl.setUniform("FadeOutDist", 50f);
-			gl.setUniform("Time", 0f);
-			gl.setUniform("camPos", core.getCamera().getLocation());
-			this.setRenderState(gl);
-		}*/
 	
 	}
 	
@@ -399,14 +388,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				// rotation the whole trimesh to position in the cube:
 				setLocalRotation(horizontalRotation);
 			} else {
-				//Matrix4f horRot = new Matrix4f();
-				// horizontalRotation.toRotationMatrix(horRot);
-	    		/*
-				 * vp.setParameter(horRot.getColumn(0), 1);
-				 * vp.setParameter(horRot.getColumn(1), 2);
-				 * vp.setParameter(horRot.getColumn(2), 3);
-				 * vp.setParameter(horRot.getColumn(3), 4);
-				 */
 				setLocalRotation(q);
 			}
 			if (vertexShader) {
