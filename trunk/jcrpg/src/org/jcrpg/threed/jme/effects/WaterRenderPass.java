@@ -145,7 +145,10 @@ public class WaterRenderPass extends Pass {
 
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
-		waterShader = display.getRenderer().createGLSLShaderObjectsState();
+		if( J3DCore.WATER_SHADER ) 
+		{
+			waterShader = display.getRenderer().createGLSLShaderObjectsState();
+		}
 
 		if( !J3DCore.WATER_SHADER || !waterShader.isSupported() ) {
 			supported = false;
@@ -324,6 +327,7 @@ public class WaterRenderPass extends Pass {
 	}
 
 	public void reloadShader() {
+		if (!J3DCore.WATER_SHADER) return;
 		if( useProjectedShader ) {
 			if( useRefraction ) {
 				currentShaderStr = projectedShaderRefractionStr;

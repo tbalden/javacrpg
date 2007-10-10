@@ -128,6 +128,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (this.parent!=null) {
 				this.parent.removeFromParent();
 				batch = null;
+				this.detachAllChildren();
 			}
 		}
 		for (QuadParams quadParams: quads)
@@ -135,6 +136,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			SharedMesh mesh = createQuad(rotated, quadParams.name, quadParams.states, quadParams.key, quadParams.xSize, quadParams.ySize, quadParams.x, quadParams.y, quadParams.z);
 			if (NO_BATCH_GEOMETRY) 
 			{
+				mesh.setName("---");
 				this.attachChild(mesh);
 			}
 		}
@@ -145,7 +147,6 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			batch.getWorldRotation().set(new Quaternion());
 			batch.setLocalRotation(new Quaternion());
 		}
-		
 	}
 	
 	public Quad targetQuad = null; 
@@ -357,14 +358,6 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			}
 		}
 		fillBillboardQuadsRotated(horRotated);
-		/*if (!NO_BATCH_GEOMETRY) {
-			createQuad(false, "1", states, model.billboardPartNames[0], 0, 0, 0, 0, 0);
-			this.attachChild(batch.parent);
-			batch.parent.getWorldRotation().set(new Quaternion());
-			batch.parent.setLocalRotation(new Quaternion());
-			batch.getWorldRotation().set(new Quaternion());
-			batch.setLocalRotation(new Quaternion());
-		}*/
 	}
 	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
@@ -412,7 +405,6 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
-			//targetQuad.setLocalTranslation(x, y, z);
 			targetQuad.setLocalTranslation(x, z, -y);
 			targetQuad.setLocalRotation(new Quaternion());
 			targetQuad.getWorldRotation().set(new Quaternion());

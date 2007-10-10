@@ -2105,7 +2105,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								boolean sharedNode = false;
 								if (realPooledNode instanceof SharedNode)
 								{	
+									realPooledNode.unlockMeshes();
 									sharedNode = true;
+								}
+								{
+									realPooledNode.unlockShadows();
 									realPooledNode.unlockTransforms();
 									realPooledNode.unlockBounds();
 									realPooledNode.unlockBranch();
@@ -2153,13 +2157,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								{
 									extRootNode.attachChild((Node)realPooledNode);
 								}
+								if (sharedNode)
+								{	
+									realPooledNode.lockMeshes();
+								}
 								{
-									if (sharedNode)
-									{	
-										realPooledNode.lockTransforms();								
-										realPooledNode.lockBounds();
-										realPooledNode.lockBranch();
-									}
+									realPooledNode.lockShadows();
+									realPooledNode.lockBranch();
+									realPooledNode.lockBounds();
+									realPooledNode.lockTransforms();								
 								}
 							}
 						}
@@ -2225,7 +2231,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								boolean sharedNode = false;
 								if (realPooledNode instanceof SharedNode)
 								{	
+									realPooledNode.unlockMeshes();
 									sharedNode = true;
+								}
+								{
+									realPooledNode.unlockShadows();
 									realPooledNode.unlockTransforms();
 									realPooledNode.unlockBounds();
 									realPooledNode.unlockBranch();
@@ -2270,13 +2280,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								{
 									extRootNode.attachChild((Node)realPooledNode);
 								}
+								if (sharedNode)
+								{	
+									realPooledNode.lockMeshes();
+									
+								}
 								{
-									if (sharedNode)
-									{	
-										realPooledNode.lockTransforms();								
-										realPooledNode.lockBounds();
-										realPooledNode.lockBranch();
+									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+									{
+										for (Spatial s:realPooledNode.getChildren())
+										{
+											//s.lockBounds();
+										}
 									}
+									realPooledNode.lockShadows();
+									realPooledNode.lockTransforms();								
+									realPooledNode.lockBranch();
+									realPooledNode.lockBounds();
 								}
 							}
 						}
