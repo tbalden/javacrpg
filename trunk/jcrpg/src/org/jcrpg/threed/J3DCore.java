@@ -1010,13 +1010,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_jungle_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","jungle.jpg"); sm_jungle_steep_3.rotateOnSteep = true; sm_jungle_steep_3.yGeomBatchSize = yCommon; sm_jungle_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep_3.noSpecialSteepRotation = false; sm_jungle_steep_3.farViewEnabled = true;
 
 		SimpleModel sm_female = new SimpleModel("models/fauna/fem.obj",null); sm_female.rotateOnSteep = true;
-		sm_female.cullNone = true;
+		sm_female.cullNone = true; sm_female.batchEnabled = false;
 		SimpleModel sm_male = new SimpleModel("models/fauna/male.obj",null); sm_male.rotateOnSteep = true;
 		sm_male.cullNone = true; sm_male.batchEnabled = false;
 		SimpleModel sm_wolf = new SimpleModel("models/fauna/wolf.obj",null); sm_wolf.rotateOnSteep = true;
-		sm_wolf.cullNone = true;
+		sm_wolf.cullNone = true; sm_wolf.batchEnabled = false;
 		SimpleModel sm_warthog = new SimpleModel("models/fauna/warthog_model.obj",null); sm_warthog.rotateOnSteep = true;
-		sm_warthog.cullNone = true;
+		sm_warthog.cullNone = true; sm_warthog.batchEnabled = false;
+		SimpleModel sm_fox = new SimpleModel("models/fauna/redfox.obj",null); sm_fox.rotateOnSteep = true;
+		sm_fox.cullNone = true; sm_fox.batchEnabled = false;
+		SimpleModel sm_gorilla = new SimpleModel("models/fauna/gorilla_texture.obj",null); sm_gorilla.rotateOnSteep = true;
+		sm_gorilla.cullNone = true; sm_gorilla.batchEnabled = false;
 		
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
@@ -1033,7 +1037,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		
 		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog}}));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog,sm_gorilla,sm_fox}}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
