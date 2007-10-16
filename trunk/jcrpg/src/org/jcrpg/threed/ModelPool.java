@@ -1,5 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
+ *	Copyright (C) 2007 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -144,7 +145,7 @@ public class ModelPool {
 			if (core.sPass!=null && objModel.shadowCaster)
 			{
 				if (retNodes[count-1]!=null) {
-					if (!J3DCore.GEOMETRY_BATCH || retNodes[count-1].model.type != Model.SIMPLEMODEL)
+					//if (!J3DCore.GEOMETRY_BATCH)// || retNodes[count-1].model.type != Model.SIMPLEMODEL)
 						core.possibleOccluders.add(retNodes[count-1]);
 				}
 			}
