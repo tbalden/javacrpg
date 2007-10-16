@@ -1,5 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
+ *	Copyright (C) 2007 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,6 +83,19 @@ public class Lake extends Water {
 		if (y==worldGroundLevel) 
 		{
 			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		} else
+		{
+			if (surface.surfaceY-y > depth)
+			{
+				// below bottom, return empty
+			} else 
+			{
+				boolean bottom = false;
+				if (surface.surfaceY-y == depth)
+				{
+					bottom = true;
+				}
+			}
 		}
 		return new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}

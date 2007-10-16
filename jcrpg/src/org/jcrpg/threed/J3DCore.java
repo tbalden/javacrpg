@@ -1,5 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
+ *	Copyright (C) 2007 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1020,7 +1021,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_fox = new SimpleModel("models/fauna/redfox.obj",null); sm_fox.rotateOnSteep = true;
 		sm_fox.cullNone = true; sm_fox.batchEnabled = false;
 		SimpleModel sm_gorilla = new SimpleModel("models/fauna/gorilla_texture.obj",null); sm_gorilla.rotateOnSteep = true;
-		sm_gorilla.cullNone = true; sm_gorilla.batchEnabled = false;
+		sm_gorilla.cullNone = true; sm_gorilla.batchEnabled = false; sm_gorilla.shadowCaster = true;
 		
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
