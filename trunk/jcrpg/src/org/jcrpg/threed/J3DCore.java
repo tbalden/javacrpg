@@ -651,13 +651,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Lake.SUBTYPE_WATER.id, new Integer(10));
-		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKSIDE.id, new Integer(37));
+		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKSIDE.id, new Integer(39));
 		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
 		hmAreaSubType3dType.put(Lake.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
-		hmAreaSubType3dType.put(River.SUBTYPE_ROCKSIDE.id, new Integer(37));
+		hmAreaSubType3dType.put(River.SUBTYPE_ROCKSIDE.id, new Integer(39));
 		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
 		hmAreaSubType3dType.put(River.SUBTYPE_ROCKBOTTOM_STEEP.id, new Integer(38));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
@@ -984,6 +984,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		SimpleModel sm_river_bottom = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true; sm_river_bottom.farViewEnabled = true;
 		SimpleModel sm_river_side_norot = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_river_side_norot.yGeomBatchSize = yCommon; sm_river_side_norot.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_side_norot.rotateOnSteep = false; sm_river_side_norot.farViewEnabled = true;
+		SimpleModel sm_water_rock_side = new SimpleModel("models/ground/water_rock_side.obj","grass2.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true; sm_river_bottom.farViewEnabled = true;
 
 		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},treeLodDist);
 		lod_jungle_bush1.shadowCaster = false;
@@ -1137,6 +1138,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(36), new RenderedSide(new Model[]{qm_waterfall}));
 		hm3dTypeRenderedSide.put(new Integer(37), new RenderedSide(new Model[]{sm_river_side_norot}));
 		hm3dTypeRenderedSide.put(new Integer(38), new RenderedSide(new Model[]{sm_river_bottom}));
+		hm3dTypeRenderedSide.put(new Integer(39), new RenderedSide(new Model[]{sm_water_rock_side}));
 		
 	}
 
