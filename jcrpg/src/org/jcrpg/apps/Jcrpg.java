@@ -124,7 +124,7 @@ public class Jcrpg {
 		w.waters.put(r2.id, r2);
 		
 		Lake l = new Lake("l1",w,null,w.getSeaLevel(1),1,8,6,8,3,w.getSeaLevel(1)-3,2,1,25);
-		//l.noWaterInTheBed = true;
+		l.noWaterInTheBed = false;
 		w.waters.put(l.id, l);
 
 		p = new Plain("21",w,null,w.getSeaLevel(10),10);
