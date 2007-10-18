@@ -651,6 +651,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Plain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Forest.SUBTYPE_FOREST.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(Lake.SUBTYPE_WATER.id, new Integer(10));
+		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKSIDE.id, new Integer(37));
+		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
+		hmAreaSubType3dType.put(Lake.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
