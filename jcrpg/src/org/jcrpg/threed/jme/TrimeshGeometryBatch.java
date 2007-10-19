@@ -351,7 +351,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 						float temp = orient.y;
 						orient.y = orient.w;
 						orient.w = -temp;
-						orient.y = -orient.y;
 					} else if (core.viewDirection == J3DCore.NORTH) {
 						float temp = orient.x;
 						orient.x = orient.z;
