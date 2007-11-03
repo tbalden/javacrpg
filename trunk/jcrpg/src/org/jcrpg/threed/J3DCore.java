@@ -1619,7 +1619,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		
 		modelLoader.setLockForSharedNodes(false);
-    	loadingText(0,true);
+    	//loadingText(0,true);
     	//updateDisplay(null);
 
 		lastRenderX = viewPositionX;
@@ -1720,7 +1720,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
 
-		loadingText(0,false);
+		//loadingText(0,false);
     	//updateDisplay(null);
 
 		//TextureManager.clearCache();
@@ -2175,7 +2175,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 									realPooledNode.lockShadows();
 									realPooledNode.lockBranch();
 									realPooledNode.lockBounds();
-									realPooledNode.lockTransforms();								
+									realPooledNode.lockTransforms();																	
 								}
 							}
 						}
@@ -3047,7 +3047,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		intRootNode.setModelBound(null);
 		extRootNode.setModelBound(null);
 
-		loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
+		/*loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
 		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 		loadText.setLightCombineMode(LightState.OFF);
 		loadText.setLocalTranslation(new Vector3f(0,20,0));
@@ -3057,10 +3057,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		loadFloppy = new Quad("floppy",0.2f,0.2f);
 		loadFloppy.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		Texture textureFloppy = TextureManager.loadTexture("./data/"+"floppy.jpg",Texture.MM_LINEAR,
-                Texture.FM_LINEAR);
+                Texture.FM_LINEAR);*/
 
 		//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		textureFloppy.setApply(Texture.AM_REPLACE);
+		//textureFloppy.setApply(Texture.AM_REPLACE);
 		//textureFloppy.setRotation(J3DCore.qTexture);
 
 		/*TextureState ts = getDisplay().getRenderer().createTextureState();

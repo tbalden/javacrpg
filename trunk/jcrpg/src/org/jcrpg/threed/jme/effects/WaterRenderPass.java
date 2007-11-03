@@ -1,14 +1,42 @@
 /*
- *  This file is part of JMonkeyEngine.
+ * Copyright (c) 2003-2007 jMonkeyEngine
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
+ *   without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package org.jcrpg.threed.jme.effects;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jcrpg.threed.J3DCore;
-import org.lwjgl.opengl.OpenGLException;
-import org.lwjgl.opengl.Util;
 
 import com.jme.image.Texture;
 import com.jme.math.Plane;
@@ -24,9 +52,13 @@ import com.jme.scene.Spatial;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.ClipState;
 import com.jme.scene.state.CullState;
+import com.jme.scene.state.FogState;
 import com.jme.scene.state.GLSLShaderObjectsState;
+import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
+import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
 
 /**
@@ -34,9 +66,12 @@ import com.jme.util.TextureManager;
  * Water effect pass.
  *
  * @author Rikard Herlitz (MrCoder)
- * @version $Id: WaterRenderPass.java,v 1.11 2007/04/17 20:41:44 rherlitz Exp $
+ * @version $Id: WaterRenderPass.java,v 1.18 2007/09/11 15:48:54 nca Exp $
  */
 public class WaterRenderPass extends Pass {
+    private static final Logger logger = Logger.getLogger(WaterRenderPass.class
+            .getName());
+    
     private static final long serialVersionUID = 1L;
 
     private Camera cam;
@@ -59,6 +94,7 @@ public class WaterRenderPass extends Pass {
 	private TextureState textureState;
 	private AlphaState as1;
 	private ClipState clipState;
+    private FogState noFog;
 
 	private Plane waterPlane;
 	private Vector3f tangent;
@@ -93,6 +129,10 @@ public class WaterRenderPass extends Pass {
     public static String foamMapTexture = "com/jmex/effects/water/data/oceanfoam.png";
     public static String fallbackMapTexture = "com/jmex/effects/water/data/water2.png";
 
+    /**
+     * Resets water parameters to default values
+     *
+     */
     public void resetParameters() {
 		waterPlane = new Plane( new Vector3f( 0.0f, 1.0f, 0.0f ), 0.0f );
 		tangent = new Vector3f( 1.0f, 0.0f, 0.0f );
@@ -131,7 +171,7 @@ public class WaterRenderPass extends Pass {
 	public WaterRenderPass( Camera cam, int renderScale, boolean useProjectedShader, boolean useRefraction ) {
 		this.cam = cam;
 		this.useProjectedShader = useProjectedShader;
-		this.useRefraction = useRefraction;
+        this.useRefraction = useRefraction;
 		this.renderScale = renderScale;
 		resetParameters();
 		initialize();
@@ -141,6 +181,7 @@ public class WaterRenderPass extends Pass {
 		if( useRefraction && useProjectedShader && TextureState.getNumberOfFragmentUnits() < 6 ||
 			useRefraction && TextureState.getNumberOfFragmentUnits() < 5 ) {
 			useRefraction = false;
+			logger.info("Not enough textureunits, falling back to non refraction water");
 		}
 
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
@@ -165,7 +206,9 @@ public class WaterRenderPass extends Pass {
 					    display.getWidth() / renderScale,
                         display.getHeight() / renderScale,
                         TextureRenderer.RENDER_TEXTURE_2D);
+
 			if( tRenderer.isSupported() ) {
+                tRenderer.setMultipleTargets(true);
 				tRenderer.setBackgroundColor( new ColorRGBA( 0.0f, 0.0f, 0.0f, 1.0f ) );
 				tRenderer.getCamera().setFrustum( cam.getFrustumNear(), cam.getFrustumFar(), cam.getFrustumLeft(), cam.getFrustumRight(), cam.getFrustumTop(), cam.getFrustumBottom() );
 
@@ -183,7 +226,7 @@ public class WaterRenderPass extends Pass {
 
 				textureDepth = new Texture();
 				textureDepth.setWrap( Texture.WM_ECLAMP_S_ECLAMP_T );
-				textureDepth.setFilter( Texture.FM_LINEAR );
+				textureDepth.setFilter( Texture.FM_NEAREST );
 				textureDepth.setRTTSource( Texture.RTT_SOURCE_DEPTH );
 				tRenderer.setupTexture( textureDepth );
 
@@ -253,7 +296,10 @@ public class WaterRenderPass extends Pass {
 			as1.setSrcFunction( AlphaState.SB_SRC_ALPHA );
 			as1.setDstFunction( AlphaState.DB_ONE_MINUS_SRC_ALPHA );
 			as1.setEnabled( true );
-		}
+		} else {
+            noFog = display.getRenderer().createFogState();
+            noFog.setEnabled(false);      
+        }
 	}
 
 	@Override
@@ -271,38 +317,21 @@ public class WaterRenderPass extends Pass {
 		aboveWater = camWaterDist >= 0;
 
 		if( isSupported() ) {
-			waterShader.clearUniforms();
 			waterShader.setUniform( "tangent", tangent.x, tangent.y, tangent.z );
 			waterShader.setUniform( "binormal", binormal.x, binormal.y, binormal.z );
-			waterShader.setUniform( "useFadeToFogColor", useFadeToFogColor ? 1 : 0);
-
-			waterShader.setUniform( "normalMap", 0 );
-			waterShader.setUniform( "reflection", 1 );
-			waterShader.setUniform( "dudvMap", 2 );
-			if( useRefraction ) {
-				waterShader.setUniform( "refraction", 3 );
-				waterShader.setUniform( "depthMap", 4 );
-			}
-
+			waterShader.setUniform( "useFadeToFogColor", useFadeToFogColor );
 			waterShader.setUniform( "waterColor", waterColorStart.r, waterColorStart.g, waterColorStart.b, waterColorStart.a );
 			waterShader.setUniform( "waterColorEnd", waterColorEnd.r, waterColorEnd.g, waterColorEnd.b, waterColorEnd.a );
 			waterShader.setUniform( "normalTranslation", normalTranslation );
 			waterShader.setUniform( "refractionTranslation", refractionTranslation );
-			waterShader.setUniform( "abovewater", aboveWater ? 1 : 0 );
+			waterShader.setUniform( "abovewater", aboveWater );
 			if( useProjectedShader ) {
 				waterShader.setUniform( "cameraPos", cam.getLocation().x, cam.getLocation().y, cam.getLocation().z );
-				if( useRefraction ) {
-					waterShader.setUniform( "foamMap", 5 );
-				}
-				else {
-					waterShader.setUniform( "foamMap", 3 );
-				}
 				waterShader.setUniform( "waterHeight", waterPlane.getConstant() );
 				waterShader.setUniform( "amplitude", waterMaxAmplitude );
 				waterShader.setUniform( "heightFalloffStart", heightFalloffStart );
 				waterShader.setUniform( "heightFalloffSpeed", heightFalloffSpeed );
 			}
-			waterShader.apply();
 
 			float heightTotal = clipBias + waterMaxAmplitude - waterPlane.getConstant();
 			Vector3f normal = waterPlane.getNormal();
@@ -327,7 +356,6 @@ public class WaterRenderPass extends Pass {
 	}
 
 	public void reloadShader() {
-		if (!J3DCore.WATER_SHADER) return;
 		if( useProjectedShader ) {
 			if( useRefraction ) {
 				currentShaderStr = projectedShaderRefractionStr;
@@ -349,17 +377,38 @@ public class WaterRenderPass extends Pass {
 			testShader.load( WaterRenderPass.class.getClassLoader().getResource( currentShaderStr + ".vert" ),
 							 WaterRenderPass.class.getClassLoader().getResource( currentShaderStr + ".frag" ) );
 			testShader.apply();
-			Util.checkGLError();
-		} catch( OpenGLException e ) {
-			e.printStackTrace();
+            DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+		} catch( JmeException e ) {
+            logger.log(Level.WARNING, "Error loading shader", e);
 			return;
 		}
 
 		waterShader.load( WaterRenderPass.class.getClassLoader().getResource( currentShaderStr + ".vert" ),
 						  WaterRenderPass.class.getClassLoader().getResource( currentShaderStr + ".frag" ) );
 
+        waterShader.setUniform( "normalMap", 0 );
+        waterShader.setUniform( "reflection", 1 );
+        waterShader.setUniform( "dudvMap", 2 );
+        if( useRefraction ) {
+            waterShader.setUniform( "refraction", 3 );
+            waterShader.setUniform( "depthMap", 4 );
+        }
+        if( useProjectedShader ) {
+            if( useRefraction ) {
+                waterShader.setUniform( "foamMap", 5 );
+            }
+            else {
+                waterShader.setUniform( "foamMap", 3 );
+            }
+        }
+
+        logger.info("Shader reloaded...");
 	}
 
+    /**
+     * Sets a spatial up for being rendered with the watereffect
+     * @param spatial Spatial to use as base for the watereffect
+     */
 	public void setWaterEffectOnSpatial( Spatial spatial ) {
 		spatial.setRenderState( cullBackFace );
 		if( isSupported() ) {
@@ -428,7 +477,14 @@ public class WaterRenderPass extends Pass {
 
         texArray.clear();
         texArray.add(textureReflect);
-		tRenderer.render( renderList, texArray );
+        
+        if (isUseFadeToFogColor()) {
+            context.enforceState(noFog);
+            tRenderer.render( renderList, texArray );
+            context.clearEnforcedState(RenderState.RS_FOG);
+        } else {
+            tRenderer.render( renderList, texArray );
+        }
 
 		if ( skyBox != null ) {
 			skyBox.getLocalTranslation().set( tmpLocation );
@@ -455,7 +511,14 @@ public class WaterRenderPass extends Pass {
         texArray.clear();
         texArray.add(textureRefract);
         texArray.add(textureDepth);
-		tRenderer.render( renderList, texArray );
+        
+        if (isUseFadeToFogColor()) {
+            context.enforceState(noFog);
+            tRenderer.render( renderList, texArray );
+            context.clearEnforcedState(RenderState.RS_FOG);
+        } else {
+            tRenderer.render( renderList, texArray );
+        }
 
 		if ( skyBox != null ) {
 			skyBox.setCullMode( cullMode );
@@ -464,7 +527,7 @@ public class WaterRenderPass extends Pass {
 
 	public void removeReflectedScene( Spatial renderNode ) {
 		if(renderList != null) {
-			System.out.println(renderList.remove(renderNode));
+			logger.info("Removed reflected scene: " + renderList.remove(renderNode));
 		}
 	}
 	
@@ -474,6 +537,10 @@ public class WaterRenderPass extends Pass {
 		}
 	}
 	
+    /**
+     * Sets spatial to be used as reflection in the water(clears previously set)
+     * @param renderNode Spatial to use as reflection in the water
+     */
 	public void setReflectedScene( Spatial renderNode ) {
 		if(renderList == null) {
 			renderList = new ArrayList<Spatial>();
@@ -483,7 +550,11 @@ public class WaterRenderPass extends Pass {
 		renderNode.setRenderState( clipState );
 		renderNode.updateRenderState();
 	}
-	
+    
+	/**
+     * Adds a spatial to the list of spatials used as reflection in the water
+     * @param renderNode Spatial to add to the list of objects used as reflection in the water
+	 */
 	public void addReflectedScene( Spatial renderNode ) {
 		if(renderList == null) {
 			renderList = new ArrayList<Spatial>();
@@ -495,6 +566,10 @@ public class WaterRenderPass extends Pass {
 		}
 	}
 
+    /**
+     * Sets up a node to be transformed and clipped for skybox usage
+     * @param skyBox Handle to a node to use as skybox
+     */
 	public void setSkybox( Node skyBox ) {
 		ClipState skyboxClipState = DisplaySystem.getDisplaySystem().getRenderer().createClipState();
 		skyboxClipState.setEnabled( false );
@@ -516,6 +591,9 @@ public class WaterRenderPass extends Pass {
 		return waterColorStart;
 	}
 
+    /** 
+     * Color to use when the incident angle to the surface is low 
+     */ 
 	public void setWaterColorStart( ColorRGBA waterColorStart ) {
 		this.waterColorStart = waterColorStart;
 	}
@@ -524,6 +602,9 @@ public class WaterRenderPass extends Pass {
 		return waterColorEnd;
 	}
 
+    /**
+     * Color to use when the incident angle to the surface is high
+     */
 	public void setWaterColorEnd( ColorRGBA waterColorEnd ) {
 		this.waterColorEnd = waterColorEnd;
 	}
@@ -532,6 +613,10 @@ public class WaterRenderPass extends Pass {
 		return heightFalloffStart;
 	}
 
+    /**
+     * Set at what distance the waveheights should start to fade out(for projected water only)
+     * @param heightFalloffStart
+     */
 	public void setHeightFalloffStart( float heightFalloffStart ) {
 		this.heightFalloffStart = heightFalloffStart;
 	}
@@ -540,6 +625,10 @@ public class WaterRenderPass extends Pass {
 		return heightFalloffSpeed;
 	}
 
+    /**
+     * Set the fadeout length of the waveheights, when over falloff start(for projected water only)
+     * @param heightFalloffStart
+     */
 	public void setHeightFalloffSpeed( float heightFalloffSpeed ) {
 		this.heightFalloffSpeed = heightFalloffSpeed;
 	}
@@ -548,6 +637,10 @@ public class WaterRenderPass extends Pass {
 		return waterPlane.getConstant();
 	}
 
+    /**
+     * Set base height of the waterplane(Used for reflecting the camera for rendering reflection)
+     * @param waterHeight Waterplane height
+     */
 	public void setWaterHeight( float waterHeight ) {
 		this.waterPlane.setConstant( waterHeight );
 	}
@@ -556,6 +649,10 @@ public class WaterRenderPass extends Pass {
 		return waterPlane.getNormal();
 	}
 
+    /**
+     * Set the normal of the waterplane(Used for reflecting the camera for rendering reflection)
+     * @param normal Waterplane normal
+     */
 	public void setNormal( Vector3f normal ) {
 		waterPlane.setNormal( normal );
 	}
@@ -564,6 +661,10 @@ public class WaterRenderPass extends Pass {
 		return speedReflection;
 	}
 
+    /**
+     * Set the movement speed of the reflectiontexture
+     * @param speedReflection Speed of reflectiontexture
+     */
 	public void setSpeedReflection( float speedReflection ) {
 		this.speedReflection = speedReflection;
 	}
@@ -572,6 +673,10 @@ public class WaterRenderPass extends Pass {
 		return speedRefraction;
 	}
 
+    /**
+     * Set the movement speed of the refractiontexture
+     * @param speedRefraction Speed of refractiontexture
+     */
 	public void setSpeedRefraction( float speedRefraction ) {
 		this.speedRefraction = speedRefraction;
 	}
@@ -580,6 +685,10 @@ public class WaterRenderPass extends Pass {
 		return waterMaxAmplitude;
 	}
 
+    /**
+     * Maximum amplitude of the water, used for clipping correctly(projected water only)
+     * @param waterMaxAmplitude Maximum amplitude
+     */
 	public void setWaterMaxAmplitude( float waterMaxAmplitude ) {
 		this.waterMaxAmplitude = waterMaxAmplitude;
 	}
@@ -628,6 +737,10 @@ public class WaterRenderPass extends Pass {
 		return textureDepth;
 	}
 
+    /**
+     * If true, fade to fogcolor. If false, fade to 100% reflective surface
+     * @param value
+     */
     public void useFadeToFogColor(boolean value) {
         useFadeToFogColor = value;
     }
@@ -640,6 +753,10 @@ public class WaterRenderPass extends Pass {
 		return useReflection;
 	}
 
+    /**
+     * Turn reflection on and off
+     * @param useReflection
+     */
 	public void setUseReflection(boolean useReflection) {
         if (useReflection == this.useReflection) return;
 		this.useReflection = useReflection;
@@ -650,6 +767,10 @@ public class WaterRenderPass extends Pass {
 		return useRefraction;
 	}
 
+    /**
+     * Turn refraction on and off
+     * @param useRefraction
+     */
 	public void setUseRefraction(boolean useRefraction) {
         if (useRefraction == this.useRefraction) return;
 		this.useRefraction = useRefraction;
@@ -697,4 +818,4 @@ public class WaterRenderPass extends Pass {
     public void setTextureState(TextureState textureState) {
         this.textureState = textureState;
     }
-} 
+}

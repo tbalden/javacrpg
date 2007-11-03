@@ -148,14 +148,14 @@ public class World extends Place {
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					if (geoCube!=null && geo instanceof Surface)
 					{
-						SurfaceHeightAndType surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
-						if (surf!=null && surf.canContain) {
+						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
+						if (surf!=null && surf[0].canContain) { // TODO multilevel surface data processing!!
 							// collecting surfaces that can contain, e.g. waters
-							tempGeosForSurface.put(geo,surf);
+							tempGeosForSurface.put(geo,surf[0]);
 						}
 						//if (geo instanceof Mountain)
 							//System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
-						if (worldY==surf.surfaceY && surf.canContain)
+						if (worldY==surf[0].surfaceY && surf[0].canContain)
 						{
 							// this can cotain things upon it, do the clima and flora... 
 							CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ);

@@ -51,10 +51,10 @@ public class Plain extends Geography implements Surface {
 		return new Cube(this, worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
 	}
 
-	SurfaceHeightAndType cachedType = null;
+	SurfaceHeightAndType[] cachedType = null;
 	
-	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
-		if (cachedType==null) cachedType = new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP); 
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
+		if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)}; 
 		return cachedType; 
 	}
 	

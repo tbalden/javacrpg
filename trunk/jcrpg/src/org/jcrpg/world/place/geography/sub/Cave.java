@@ -29,9 +29,10 @@ import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
-public class Cave extends Geography {
+public class Cave extends Geography implements Surface {
 
 	
 	public static int LIMIT_NORTH = 1;
@@ -77,6 +78,7 @@ public class Cave extends Geography {
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int density,entranceSide, walledSide, levels, entranceLength;
+	int worldGroundLevel;
 
 	public Cave(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int walledSide, int levels, int entranceLength) throws Exception{
 		super(id, parent, loc);
@@ -93,6 +95,7 @@ public class Cave extends Geography {
 		this.entranceLength = entranceLength;
 		this.levels = levels;
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		worldGroundLevel = origoY*magnification;
 	}
 	
 	@Override
@@ -242,6 +245,23 @@ public class Cave extends Geography {
 			// internal space to 0 too!
 			return c;
 		}
+	}
+
+	SurfaceHeightAndType[] cachedType = null;
+	SurfaceHeightAndType[] cachedNonType = null;
+	
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
+		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levels)/levels, worldZ);
+		if (per>=density)
+		{
+			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP)};
+			return cachedType;
+		}
+		if (cachedNonType==null)
+		{
+			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+		}
+		return cachedNonType;
 	}
 	
 

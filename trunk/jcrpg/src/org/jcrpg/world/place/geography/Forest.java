@@ -23,16 +23,13 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
-import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.forest.Bushes;
 import org.jcrpg.world.place.geography.forest.Clearing;
-import org.jcrpg.world.time.Time;
 
 public class Forest extends Geography implements Surface {
 
@@ -69,12 +66,13 @@ public class Forest extends Geography implements Surface {
 		return base;
 	}
 
-	SurfaceHeightAndType cachedType = null;
-
-	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
-		if (cachedType==null) cachedType = new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP); 
+	SurfaceHeightAndType[] cachedType = null;
+	
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
+		if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)}; 
 		return cachedType; 
 	}
+	
 	
 	
 
