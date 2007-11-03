@@ -444,7 +444,7 @@ public class Mountain extends Geography implements Surface{
 	}
 	
 	
-	public SurfaceHeightAndType getPointSurfaceData(int worldX, int worldZ) {
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
 		int realSizeY = sizeY*magnification-1;
 		for (int i=0; i<=realSizeY; i++)
 		{
@@ -452,10 +452,10 @@ public class Mountain extends Geography implements Surface{
 			if (ret[0]>-1)
 			{
 				int r = ret[1];
-				return new SurfaceHeightAndType(origoY*magnification+i,true,r);
+				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY*magnification+i,true,r)};
 			}
 		}
-		return new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP);
+		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
 
