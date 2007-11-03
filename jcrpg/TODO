@@ -1,3 +1,5 @@
+[ ] jme 1.0 Buffer - Render problem
+
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
 	[ ] no inside farview from outside! and vica versa?
