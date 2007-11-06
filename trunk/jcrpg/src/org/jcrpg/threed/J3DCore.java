@@ -1707,7 +1707,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     		inViewPort.remove(cToDetach);
 	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
-    	//getDisplay().getRenderer().clearVBOCache();
 	    hmCurrentCubes.clear();
 	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
 		

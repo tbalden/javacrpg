@@ -479,11 +479,6 @@ public class ModelLoader {
     	return (TextureState[])tss.toArray(new TextureState[0]);
     	
     }
-	static VBOInfo info = new VBOInfo(true);
-	static {
-		info.setVBOIndexEnabled(true);
-		info.setVBOTextureEnabled(true);
-	}
 		
    
     public PooledSharedNode loadQuadModel(QuadModel m, boolean fake)
@@ -527,7 +522,6 @@ public class ModelLoader {
 				as_off.setEnabled(false);
 			}
 			quad.setRenderState(as_off);
-			quad.setVBOInfo(info);
 		}
 		if (m.waterQuad)
 		{
@@ -583,7 +577,6 @@ public class ModelLoader {
 				as_off.setEnabled(false);
 			}
 			quad.setRenderState(as_off);
-			quad.setVBOInfo(info);
 		}
 		Node nnode = new Node();
 		nnode.attachChild(quad);
