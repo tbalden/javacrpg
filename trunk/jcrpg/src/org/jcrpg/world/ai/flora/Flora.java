@@ -20,7 +20,8 @@ package org.jcrpg.world.ai.flora;
 import java.util.HashMap;
 
 /**
- * Base class for plants.
+ * Base class for plants, can define multiple states -> flora description in statesToFloraDescription,
+ * so cubic form can change based on Season/Daytime etc.
  * @author pali
  *
  */
