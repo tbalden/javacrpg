@@ -1,17 +1,10 @@
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
-
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
 	[ ] no inside farview from outside! and vica versa?
 	[ ] don't load twice as much when farview...more terrain loaded, farview distance param? 
-
-[X] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
-	[ ] rivers
-	[ ] lakes
-	[ ] sea
-
 
 [ ] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
 		if non culled out of render distance -> new render- ---- less loading and such, more memory! think about it
@@ -23,18 +16,13 @@
 
 [ ] mountain steep walk bug to one direction walk
 [ ] quicken loading of Cubes in Geography etc. 
-[ ] far view optimizatios for trees? display less tree in the far?
-[ ] far view replacement of cubes with sg else to look better...a grey plane?
  
 [ ] wall can be seen inside because of camera point of view too close -> restructure walls to the middle of the node??
 
-[ ] cherry foliage
 
 [ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
-[ ] narrowing quad sized bb part models for pine?
 [ ] bumpmapped texture disappear in the night! ?? checkout jme source?
 		
-[ ] add Harek's table to the house
 
 [ ] clean up climate and implement all parts of it with conditions, continue the work on it
 [ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
@@ -44,7 +32,9 @@
 [ ] skySphere change: night sky based on calculated light value (v)
 [ ] cloud planes on sky
 
+[ ] add Harek's table to the house
 
+[?] sea
 
 [?] Lod modelling trees with billboard images captured in blender!
 [?] Tree generation in java code? (billboard leaf quads!)
@@ -52,6 +42,16 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+
+[X] far view optimizatios for trees? display less tree in the far?
+[-] far view replacement of cubes with sg else to look better...a grey plane?
+
+[X] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
+	[X] rivers
+	[X] lakes
+
+[-] narrowing quad sized bb part models for pine?
+
 [X] multilevel surface -> use all the surfaces!
 
 [X] Cave: implement surface interface! multilevel cave??
@@ -69,6 +69,8 @@
 [-] add two phase render to all CKeyAction
 
 [X] wrong billboarding , fix it...on long view distance it is too slow LODding on moving
+
+[X] cherry foliage
 
 [X] when ground from obj model, create new randomly changing RenderedSide with several models 
 [-] normal or parallax map to ground !

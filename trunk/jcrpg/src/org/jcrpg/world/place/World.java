@@ -164,6 +164,7 @@ public class World extends Place {
 								{
 									Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
 									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+									retCube.internalCube = geoCube.internalCube;
 								} 
 								else 
 								{
