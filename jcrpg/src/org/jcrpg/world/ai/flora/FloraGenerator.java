@@ -30,6 +30,9 @@ import org.jcrpg.world.time.Time;
  *
  */
 public class FloraGenerator {
+	
+	protected static boolean INSIDE = true;
+	protected  static boolean OUTDOOR = false;
 
 	/**
 	 * Key is <BELT STATIC ID + " " + LEVEL STATIC ID>
@@ -138,9 +141,9 @@ public class FloraGenerator {
 	}
 	
 
-	public void addFlora(String beltId, String levelId,FloraListElement[] flora)
+	public void addFlora(String beltId, String levelId, boolean internal, FloraListElement[] flora)
 	{
-		floraBeltLevelMap.put(beltId+" "+levelId, flora);
+		floraBeltLevelMap.put(beltId+" "+levelId+" "+internal, flora);
 	}
 
 }

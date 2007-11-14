@@ -158,7 +158,7 @@ public class World extends Place {
 						if (worldY==surf[0].surfaceY && surf[0].canContain)
 						{
 							// this can cotain things upon it, do the clima and flora... 
-							CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ);
+							CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
 							Cube floraCube = null;
 							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 							if (floraCube!=null)
@@ -168,8 +168,17 @@ public class World extends Place {
 							} 
 							else 
 							{
-								Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
-								retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+								if (geoCube.internalCube) {
+									retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
+									retCube.internalCube = geoCube.internalCube;
+								} else 
+								{
+									// outside green ground appended
+									Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
+									newCube.internalCube = geoCube.internalCube;
+									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+								}
+								
 							}
 						} else 
 						{
