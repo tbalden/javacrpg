@@ -1,6 +1,7 @@
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
+
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
 	[ ] no inside farview from outside! and vica versa?
@@ -51,6 +52,8 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] multilevel surface -> use all the surfaces!
+
 [X] Cave: implement surface interface! multilevel cave??
 	[X] climate -> inside and outside flora!
 

@@ -149,40 +149,40 @@ public class World extends Place {
 					if (geoCube!=null && geo instanceof Surface)
 					{
 						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
-						if (surf!=null && surf[0].canContain) { // TODO multilevel surface data processing!!
-							// collecting surfaces that can contain, e.g. waters
-							tempGeosForSurface.put(geo,surf[0]);
-						}
-						//if (geo instanceof Mountain)
-							//System.out.println("CUBE = "+r+" SURF = "+surf.surfaceY);
-						if (worldY==surf[0].surfaceY && surf[0].canContain)
-						{
-							// this can cotain things upon it, do the clima and flora... 
-							CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
-							Cube floraCube = null;
-							floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
-							if (floraCube!=null)
-							{
-								Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
-								retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
-							} 
-							else 
-							{
-								if (geoCube.internalCube) {
-									retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
-									retCube.internalCube = geoCube.internalCube;
-								} else 
-								{
-									// outside green ground appended
-									Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
-									newCube.internalCube = geoCube.internalCube;
-									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
-								}
-								
+						for (int surfCount = 0; surfCount<surf.length; surfCount++) {
+							if (surf!=null && surf[surfCount].canContain) {
+								// collecting surfaces that can contain, e.g. waters
+								tempGeosForSurface.put(geo,surf[surfCount]);
 							}
-						} else 
-						{
-							retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
+							if (worldY==surf[surfCount].surfaceY && surf[surfCount].canContain)
+							{
+								// this can cotain things upon it, do the clima and flora... 
+								CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+								Cube floraCube = null;
+								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
+								if (floraCube!=null)
+								{
+									Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
+									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+								} 
+								else 
+								{
+									if (geoCube.internalCube) {
+										retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
+										retCube.internalCube = geoCube.internalCube;
+									} else 
+									{
+										// outside green ground appended
+										Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
+										newCube.internalCube = geoCube.internalCube;
+										retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+									}
+									
+								}
+							} else 
+							{
+								retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
+							}
 						}
 					} else 
 					{
