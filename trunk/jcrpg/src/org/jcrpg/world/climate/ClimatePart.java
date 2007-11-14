@@ -34,7 +34,7 @@ public class ClimatePart {
 		
 	}
 	
-	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ)
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ, boolean internal)
 	{
 		return null;
 	}

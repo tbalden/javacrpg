@@ -41,15 +41,16 @@ public class Climate extends ClimatePart {
 	}
 
 	@Override
-	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ) {
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ, boolean internal) {
 		for (ClimateBelt belt : belts.values()) {
 			// smoothing together climates with quasi random coordinates:
 			int perVariation = HashUtil.mixPercentage(worldX, worldY, worldZ)/50-2; // +/- 1 cube
 			if (belt.boundaries.isInside(worldX + perVariation, worldY, worldZ + perVariation))
 			{
-				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ);
+				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ, internal);
 				c.setBelt(belt);
 				c.setLevel(new ClimateLevel("1",this,0,0));
+				c.setInternal(internal);
 			
 				return c;
 			}
@@ -60,6 +61,7 @@ public class Climate extends ClimatePart {
 		c.setDayTime(new Season().getDayTime(time));
 		c.setBelt(new ClimateBelt("nil",this));
 		c.setLevel(new ClimateLevel("nil",this,0,100));
+		c.setInternal(internal);
 		return c;
 	}
 	

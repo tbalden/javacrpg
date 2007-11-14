@@ -42,7 +42,7 @@ public class Desert extends ClimateBelt {
 		super(id, parent);
 		STATIC_ID = DESERT_ID;
 		
-		beltConditions.add(new Warm(40));
+		beltConditionsExternal.add(new Warm(40));
 		
 	}
 

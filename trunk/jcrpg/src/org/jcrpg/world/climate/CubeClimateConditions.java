@@ -34,6 +34,7 @@ public class CubeClimateConditions {
 	public ClimateLevel level;
 	public DayTime dayTime;
 	public Season season;
+	public boolean internal = false;
 	
 
 	public CubeClimateConditions()
@@ -101,7 +102,7 @@ public class CubeClimateConditions {
 	 */
 	public String getPartialBeltLevelKey()
 	{
-		return belt.STATIC_ID+" "+level.STATIC_ID;
+		return belt.STATIC_ID+" "+level.STATIC_ID+" "+internal;
 	}
 
 	/**
@@ -111,6 +112,14 @@ public class CubeClimateConditions {
 	public String getPartialSeasonDaytimelKey()
 	{
 		return season.STATIC_ID+" "+dayTime.STATIC_ID;
+	}
+
+	public boolean isInternal() {
+		return internal;
+	}
+
+	public void setInternal(boolean internal) {
+		this.internal = internal;
 	}
 
 }

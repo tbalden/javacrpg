@@ -34,8 +34,8 @@ public class Tropical extends ClimateBelt {
 	public Tropical(String id, Climate parent) throws Exception {
 		super(id, parent);
 		STATIC_ID = TROPICAL_ID;
-		beltConditions.add(new Warm(50));
-		beltConditions.add(new Rain(50));
+		beltConditionsExternal.add(new Warm(50));
+		beltConditionsExternal.add(new Rain(50));
 	}
 
 	

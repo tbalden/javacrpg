@@ -33,7 +33,15 @@ public class ClimateBelt  extends ClimatePart {
 	
 	public static Season genericSeason = new Season();
 
-	public ArrayList<Condition> beltConditions = new ArrayList<Condition>();
+	/**
+	 * External area base conditions
+	 */
+	public ArrayList<Condition> beltConditionsExternal = new ArrayList<Condition>();
+	
+	/**
+	 * Internal area base conditions.
+	 */
+	public ArrayList<Condition> beltConditionsInternal = new ArrayList<Condition>();
 	
 	public ClimateBelt(String id, Climate parent) {
 		super(id,parent);
@@ -45,12 +53,13 @@ public class ClimateBelt  extends ClimatePart {
 	}
 
 	@Override
-	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ) {
+	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ, boolean internal) {
 
 		Season s = getSeason(time);
 		CubeClimateConditions c = new CubeClimateConditions();
 		s.getConditions(c, time, worldX, worldY, worldZ);
-		c.mergeConditions(beltConditions);
+		// based upon internal flag merge with appropriate base conditions
+		c.mergeConditions(!internal?beltConditionsExternal:beltConditionsInternal);
 		
 		return c;
 	}

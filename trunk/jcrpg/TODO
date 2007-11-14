@@ -1,11 +1,11 @@
-[ ] jme 1.0 Buffer - Render problem
+[ ] Wildlife should be generated based on Flora percentage given by flora generators??
+	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
 	[ ] no inside farview from outside! and vica versa?
 	[ ] don't load twice as much when farview...more terrain loaded, farview distance param? 
 
-[ ] Cave: implement surface interface! multilevel cave??
 [X] waters rivers, lakes -> add Water superclass, semi inteligent, looking for surface adding river bad if surface, sides, waterfalls
 	[ ] rivers
 	[ ] lakes
@@ -44,8 +44,6 @@
 [ ] cloud planes on sky
 
 
-[ ] Wildlife should be generated based on Flora percentage given by flora generators??
-	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
 [?] Lod modelling trees with billboard images captured in blender!
 [?] Tree generation in java code? (billboard leaf quads!)
@@ -53,6 +51,11 @@
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] Cave: implement surface interface! multilevel cave??
+	[X] climate -> inside and outside flora!
+
+[X] jme 1.0 Buffer - Render problem
+
 [-] vertex program jumps -> add camPost to local param and add it to vertex.position before calc
 	[X] moving all around when passing
 [X] water reflection -> undetailed SUN and MOON too not just skySphere!
