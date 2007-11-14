@@ -17,7 +17,6 @@
 [ ] mountain steep walk bug to one direction walk
 [ ] quicken loading of Cubes in Geography etc. 
  
-[ ] wall can be seen inside because of camera point of view too close -> restructure walls to the middle of the node??
 
 
 [ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
@@ -71,6 +70,7 @@
 [X] wrong billboarding , fix it...on long view distance it is too slow LODding on moving
 
 [X] cherry foliage
+[X] wall can be seen inside because of camera point of view too close -> restructure walls to the middle of the node??
 
 [X] when ground from obj model, create new randomly changing RenderedSide with several models 
 [-] normal or parallax map to ground !
