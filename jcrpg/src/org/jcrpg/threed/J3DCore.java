@@ -1041,8 +1041,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		}
 		
-		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog,sm_gorilla,sm_fox}}));
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
+		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog,sm_gorilla,sm_fox}}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
@@ -3031,6 +3031,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
+		//cam.resize(100, 100);
+		//cam.setViewPort(30, 90, 30, 90);
 		bigSphere.setCenter(new Vector3f(0,0,0));
 		//bigSphere.s
 		bigSphere.setRadius(10000f);
@@ -3120,6 +3122,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		
 		display.getRenderer().setBackgroundColor(ColorRGBA.black);
+		
 
 		cam.setFrustumPerspective(45.0f,(float) display.getWidth() / (float) display.getHeight(), 0.002f, 350);
 		groundParentNode.attachChild(intRootNode);
