@@ -1,5 +1,27 @@
+
+
+This TODO file is licensed under GPL v3 license
+
+(C) 2007 author is Illes Pal, all ideas here are part of the copyrighted property
+
+
+------------------------------------------
+
+
+[ ] World generator
+	parameterized cool world generation!
+	
+[ ] living things foundations -
+	[ ] Boundary based -> for turns they can interoperate in their intersecting boundaries! quasi random seed based events / turn
+	[ ] a common entity engine will process the happenings turn based
+	[ ] Generator needed for start out - later reproduction system for animals/humans? 
+	[ ] hierarchy -> dynamic, boundaries added together, processed to the top of the hierarchy -> events possible on every level of living example: country <-> city population <-> guards etc.
+	[ ] entering domain in a given turn will trigger possibilities for you to start skill based processes -> trying to hunt down animals in the domain, or avoiding a group of bandits there
+
+
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
+
 
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
