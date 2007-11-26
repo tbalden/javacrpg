@@ -70,6 +70,7 @@ public class World extends Place {
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
 		super(id, null, loc);
+		if (magnification%10!=0) throw new Exception("Magnification should be divisible by 10");
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
