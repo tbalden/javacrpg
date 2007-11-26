@@ -22,12 +22,14 @@ import java.util.logging.Level;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -68,8 +70,14 @@ public class Jcrpg {
 		t.start();
 		J3DCore app = new J3DCore();
 		
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,2,1,2,5,5,0));
+		w2.engine = e;
+		
+		// ----
+		
 		World w = new World("world", null,100,2,1,2);
 		w.engine = e;
+		
 		w.setFloraContainer(new BaseFloraContainer());
 		
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();
@@ -150,8 +158,9 @@ public class Jcrpg {
 		w.geographies.put(p.id, p);
 		
 		
-		app.setWorld(w);
+		app.setWorld(w2);
 		app.setEngine(e);
+		//app.setViewPosition(2, w.getSeaLevel(1), 2);
 		app.setViewPosition(2, w.getSeaLevel(1), 2);
 		app.initCore();
 	}
