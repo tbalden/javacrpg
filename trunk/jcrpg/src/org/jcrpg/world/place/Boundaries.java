@@ -146,6 +146,7 @@ public class Boundaries {
 	
 	public String getKey(int x,int y,int z){
 		//System.out.println("GETKEY "+ x +" "+ y +" "+  z);
+		//return "GETKEY "+ x +" "+ y +" "+  z;
 		int s = ((x) << 16) + ((y) << 8) + (z);
 		return ""+s;
 	}

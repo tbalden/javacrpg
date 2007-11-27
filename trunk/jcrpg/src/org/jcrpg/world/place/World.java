@@ -66,7 +66,7 @@ public class World extends Place {
 	
 	public int sizeX, sizeY, sizeZ, magnification, worldGroundLevel;
 	
-	public int realSizeX, sizeYMulMag, realSizeZ;
+	public int realSizeX, realSizeY, realSizeZ;
 
 	public World(String id, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ) throws Exception {
 		super(id, null, loc);
@@ -76,7 +76,7 @@ public class World extends Place {
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
 		realSizeX = sizeX*magnification;
-		sizeYMulMag = sizeY*magnification;
+		realSizeY = sizeY*magnification;
 		realSizeZ = sizeZ*magnification;
 		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));

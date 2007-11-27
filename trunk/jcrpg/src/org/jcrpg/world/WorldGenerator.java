@@ -28,6 +28,7 @@ import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -35,9 +36,18 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 public class WorldGenerator {
 
 	
+	
+	//public static final int 
+	
+	
 	public World generateWorld(WorldParams params) throws Exception
 	{
 		World w = new World("world", null,params.magnification,params.sizeX,params.sizeY,params.sizeZ);
+		
+		int wMag = params.magnification;
+		int wX = params.sizeX;
+		int wY = params.sizeY;
+		int wZ = params.sizeZ;
 		
 		// FLORA
 		w.setFloraContainer(new BaseFloraContainer());
@@ -55,9 +65,9 @@ public class WorldGenerator {
 		
 		// TODO size based!
 		Continental continental = new Continental("cont1",climate);
-		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 0, 0, 0));
+		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, 0, 0));
 		climate.belts.put(continental.id, continental);
-		Tropical tropical = new Tropical("trop1",climate);
+		/*Tropical tropical = new Tropical("trop1",climate);
 		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 2, 0, 0));
 		climate.belts.put(tropical.id, tropical);
 		Desert desert = new Desert("desert1",climate);
@@ -65,7 +75,11 @@ public class WorldGenerator {
 		climate.belts.put(desert.id, desert);
 		Arctic arctic = new Arctic("arctic1",climate);
 		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 6, 0, 0));
-		climate.belts.put(arctic.id, arctic);
+		climate.belts.put(arctic.id, arctic);*/
+
+		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(wMag),wMag);
+		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
+		w.geographies.put(p.id, p);
 
 		//int i =0;
 		House h = null; 
