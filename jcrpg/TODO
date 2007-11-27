@@ -7,8 +7,9 @@ This TODO file is licensed under GPL v3 license
 
 ------------------------------------------
 
-[ ] redesign Coordinate system -> totally bad when moving around...shouldn't have all increasing X/Y/Z -> cut down
+[X] redesign Coordinate system -> totally bad when moving around...shouldn't have all increasing X/Y/Z -> cut down
 		but this makes rendering totally bad!
+[ ] when viewing onto border of globe not showing cubes -> J3DCore TODO fix!	
 
 [ ] World generator
 	parameterized cool world generation!
