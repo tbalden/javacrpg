@@ -111,7 +111,23 @@ public class World extends Place {
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		Time localTime = engine.getWorldMeanTime().getLocalTime(this, worldX, worldY, worldZ);
+		int _worldX = worldX;
+		int _worldY = worldY;
+		int _worldZ = worldZ;
+		if (WORLD_IS_GLOBE) {
+			
+			if (worldX<0)
+			{
+				_worldX = realSizeX+_worldX;
+			}
+			if (worldZ<0)
+			{
+				_worldZ = realSizeZ+_worldZ;
+			}
+			_worldX = _worldX%(realSizeX);
+			_worldZ = _worldZ%(realSizeZ);
+		}
+		Time localTime = engine.getWorldMeanTime().getLocalTime(this, _worldX, _worldY, _worldZ);
 		return getCube(localTime,worldX,worldY,worldZ);
 	}
 	
@@ -122,7 +138,6 @@ public class World extends Place {
 			
 			if (worldX<0)
 			{
-				//System.out.println("WORLDX - "+worldX);
 				worldX = realSizeX+worldX;
 			}
 			if (worldZ<0)
@@ -130,7 +145,7 @@ public class World extends Place {
 				worldZ = realSizeZ+worldZ;
 			}
 			worldX = worldX%(realSizeX);
-			worldZ = worldZ%(realSizeZ); // TODO Houses dont display going round the globe?? Static fields in the way or what?
+			worldZ = worldZ%(realSizeZ);
 		}
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
