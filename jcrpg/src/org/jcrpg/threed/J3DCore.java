@@ -2393,7 +2393,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				//updateDisplayNoBackBuffer();
 			}
 	
-			System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+extRootNode.getChildren().size());
+			System.out.println("CAMERA: "+cam.getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
 		    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 		    System.out.println("hmSolidColorSpatials:"+hmSolidColorSpatials.size());
 	
@@ -2653,13 +2653,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * The base movement method.
 	 * @param direction The direction to move.
 	 */
-	public int[] calcMovement(int[] orig, int direction)
+	public int[] calcMovement(int[] orig, int direction, boolean limitsCut)
 	{
 		int[] r = new int[3];
 		int[] vector = moveTranslations.get(new Integer(direction));
 		r[0] = orig[0]+vector[0];
 		r[1] = orig[1]+vector[1];
 		r[2] = orig[2]+vector[2];
+		if (limitsCut) {
+			if (r[0]<0) r[0]=world.realSizeX;
+			if (r[0]>world.realSizeX) r[0] = 0; 
+			if (r[1]<0) r[1]=world.realSizeY;
+			if (r[1]>world.realSizeY) r[1] = 0; 
+			if (r[2]<0) r[2]=world.realSizeZ;
+			if (r[2]>world.realSizeZ) r[2] = 0;
+		}
+		
 		return r;
 	}
 	
@@ -2714,8 +2723,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		int[] newRelCoords = fromRel;
 		for (int i=0; i<directions.length; i++) {
 			System.out.println("Moving dir: "+directions[i]);
-			newCoords = calcMovement(newCoords, directions[i]); 
-			newRelCoords = calcMovement(newRelCoords, directions[i]);
+			newCoords = calcMovement(newCoords, directions[i],true); 
+			newRelCoords = calcMovement(newRelCoords, directions[i],false);
 		}
 		if (FREE_MOVEMENT)
 		{ // test free movement
@@ -2752,8 +2761,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			System.out.println("STEEP DIRECTION"+currentCubeSteepDirection+" - "+directions[0]);
 			if (currentCubeSteepDirection==oppositeDirections.get(new Integer(directions[0])).intValue())
 			{
-				newCoords = calcMovement(newCoords, TOP); 
-				newRelCoords = calcMovement(newRelCoords, TOP);
+				newCoords = calcMovement(newCoords, TOP, true); 
+				newRelCoords = calcMovement(newRelCoords, TOP, false);
 			}
 			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)

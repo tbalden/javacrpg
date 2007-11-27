@@ -70,10 +70,16 @@ public class Jcrpg {
 		t.start();
 		J3DCore app = new J3DCore();
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,2,1,2,5,5,0));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(10,2,2,2,5,5,0));
 		w2.engine = e;
-		
+
+		app.setWorld(w2);
+		app.setEngine(e);
+		app.setViewPosition(0, w2.getSeaLevel(1), 0);
+		app.initCore();
+
 		// ----
+		// old code
 		
 		World w = new World("world", null,100,2,1,2);
 		w.engine = e;
@@ -158,10 +164,5 @@ public class Jcrpg {
 		w.geographies.put(p.id, p);
 		
 		
-		app.setWorld(w2);
-		app.setEngine(e);
-		//app.setViewPosition(2, w.getSeaLevel(1), 2);
-		app.setViewPosition(2, w.getSeaLevel(1), 2);
-		app.initCore();
 	}
 }
