@@ -1628,9 +1628,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	//loadingText(0,true);
     	//updateDisplay(null);
 
-		lastRenderX = viewPositionX;
+		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
-		lastRenderZ = viewPositionZ;
+		lastRenderZ = viewPositionZ;*/
+		lastRenderX = relativeX;
+		lastRenderY = relativeY;
+		lastRenderZ = relativeZ;
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
@@ -1870,7 +1873,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
-		Vector3f currLoc = new Vector3f(viewPositionX*CUBE_EDGE_SIZE,viewPositionY*CUBE_EDGE_SIZE,viewPositionZ*CUBE_EDGE_SIZE);
+		Vector3f currLoc = new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,relativeZ*CUBE_EDGE_SIZE);
 		int mulWalkDist = 1;
 		//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more ofter render is added by this multiplier
 		if (lastLoc.distance(currLoc)*mulWalkDist > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
@@ -2730,7 +2733,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = false;
+	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull

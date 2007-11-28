@@ -18,6 +18,7 @@
 
 package org.jcrpg.world;
 
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
@@ -32,6 +33,8 @@ import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
+import org.jcrpg.world.place.water.Lake;
+import org.jcrpg.world.place.water.Ocean;
 
 public class WorldGenerator {
 
@@ -80,6 +83,9 @@ public class WorldGenerator {
 		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(wMag),wMag);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
 		w.geographies.put(p.id, p);
+
+		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,70);
+		w.waters.put(l.id, l);
 
 		//int i =0;
 		House h = null; 
