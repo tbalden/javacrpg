@@ -44,7 +44,7 @@ public class Climate extends ClimatePart {
 	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ, boolean internal) {
 		for (ClimateBelt belt : belts.values()) {
 			// smoothing together climates with quasi random coordinates:
-			int perVariation = HashUtil.mixPercentage(worldX, worldY, worldZ)/50-2; // +/- 1 cube
+			int perVariation = (int)(HashUtil.mixPercentage(worldX, worldY, worldZ)/50d)-2; // +/- 1 cube
 			if (belt.boundaries.isInside(worldX + perVariation, worldY, worldZ + perVariation))
 			{
 				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ, internal);
