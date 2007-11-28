@@ -131,6 +131,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
+    /**
+     * This is the maximum view distance with far enabled * 2,
+     * so that you cannot see the world's cubes twice from one viewpoint. :)
+     */
+    public static final int MINIMUM_WORLD_REALSIZE = 100;
+    
 	/**
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
@@ -1949,20 +1955,28 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 				int checkDistCube = (fragmentViewDist?VIEW_DISTANCE/8 : VIEW_DISTANCE/2);
 				boolean checked = false;
-				int distX = Math.abs(viewPositionX%world.realSizeX-c.cube.x);
-				int distY = Math.abs(viewPositionY%world.realSizeY-c.cube.y);
-				int distZ = Math.abs(viewPositionZ%world.realSizeZ-c.cube.z);
+				int distX = Math.abs(viewPositionX-c.cube.x);
+				int distY = Math.abs(viewPositionY-c.cube.y);
+				int distZ = Math.abs(viewPositionZ-c.cube.z);
 				
-				
-				// TODO this not working!
 				// handling the globe world border cube distances...
 				if (distX>world.realSizeX/2)
 				{
-					distX = Math.abs(viewPositionX%world.realSizeX- (c.cube.x - world.realSizeX) );
+					if (viewPositionX<world.realSizeX/2) {
+						distX = Math.abs(viewPositionX - (c.cube.x - world.realSizeX) );
+					} else
+					{
+						distX = Math.abs(viewPositionX - (c.cube.x + world.realSizeX) );
+					}
 				}
 				if (distZ>world.realSizeZ/2)
 				{
-					distZ = Math.abs(viewPositionZ%world.realSizeZ- (c.cube.z - world.realSizeZ) );
+					if (viewPositionZ<world.realSizeZ/2) {
+						distZ = Math.abs(viewPositionZ - (c.cube.z - world.realSizeZ) );
+					} else
+					{
+						distZ = Math.abs(viewPositionZ - (c.cube.z + world.realSizeZ) );	
+					}
 				}
 				
 				
@@ -1973,7 +1987,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					checked = true;
 				} else
 				{
-					System.out.println("DIST X,Z: "+distX+" "+distZ);
+					//System.out.println("DIST X,Z: "+distX+" "+distZ);
 				}
 				//checked = true;
 				
@@ -2669,11 +2683,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		r[2] = orig[2]+vector[2];
 		if (limitsCut) {
 			if (r[0]<0) r[0]=world.realSizeX+r[0];
-			if (r[0]>world.realSizeX) r[0] = r[0]%world.realSizeX; 
+			if (r[0]>=world.realSizeX) r[0] = r[0]%world.realSizeX; 
 			if (r[1]<0) r[1]=world.realSizeY+r[1];
-			if (r[1]>world.realSizeY) r[1] = r[1]%world.realSizeX; 
+			if (r[1]>=world.realSizeY) r[1] = r[1]%world.realSizeX; 
 			if (r[2]<0) r[2]=world.realSizeZ+r[2];
-			if (r[2]>world.realSizeZ) r[2] = r[2]%world.realSizeX; 
+			if (r[2]>=world.realSizeZ) r[2] = r[2]%world.realSizeX; 
 		}
 		
 		return r;

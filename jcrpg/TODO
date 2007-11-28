@@ -1,19 +1,19 @@
 
 
-This TODO file is licensed under GPL v3 license
+This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 (C) 2007 author is Illes Pal, all ideas here are part of the copyrighted property
 
 
 ------------------------------------------
 
-[X] redesign Coordinate system -> totally bad when moving around...shouldn't have all increasing X/Y/Z -> cut down
-		but this makes rendering totally bad!
-[ ] when viewing onto border of globe not showing cubes -> J3DCore TODO fix!	
 
 [ ] World generator
 	parameterized cool world generation!
-	
+
+[ ] swamp , savana climate belt
+	[ ] climate levels: SNOW limit to the mountains 
+
 [ ] living things foundations -
 	[ ] Boundary based -> for turns they can interoperate in their intersecting boundaries! quasi random seed based events / turn
 	[ ] a common entity engine will process the happenings turn based
@@ -66,6 +66,9 @@ This TODO file is licensed under GPL v3 license
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] redesign Coordinate system -> totally bad when moving around...shouldn't have all increasing X/Y/Z -> cut down
+		but this makes rendering totally bad!
+[X] when viewing onto border of globe not showing cubes -> J3DCore TODO fix!	
 
 [X] far view optimizatios for trees? display less tree in the far?
 [-] far view replacement of cubes with sg else to look better...a grey plane?
