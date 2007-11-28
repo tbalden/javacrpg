@@ -645,6 +645,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public J3DCore()
 	{
+		self = this;
 		if (J3DCore.SHADOWS) stencilBits = 8;
 		alphaBits = 0;
 		depthBits = 4;
@@ -2673,6 +2674,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
+	public int shrinkToWorld(int x)
+	{
+		if (x<0) x=world.realSizeX+x;
+		if (x>=world.realSizeX) x = x%world.realSizeX;
+		return x;
+	}
+	
+	public static J3DCore self;
+	
+	public static J3DCore getInstance()
+	{
+		return self;
+	}
+	
 	/**
 	 * The base movement method.
 	 * @param direction The direction to move.
@@ -2685,12 +2700,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		r[1] = orig[1]+vector[1];
 		r[2] = orig[2]+vector[2];
 		if (limitsCut) {
-			if (r[0]<0) r[0]=world.realSizeX+r[0];
-			if (r[0]>=world.realSizeX) r[0] = r[0]%world.realSizeX; 
-			if (r[1]<0) r[1]=world.realSizeY+r[1];
-			if (r[1]>=world.realSizeY) r[1] = r[1]%world.realSizeX; 
-			if (r[2]<0) r[2]=world.realSizeZ+r[2];
-			if (r[2]>=world.realSizeZ) r[2] = r[2]%world.realSizeX; 
+			r[0] = shrinkToWorld(r[0]);
+			r[1] = shrinkToWorld(r[1]);
+			r[2] = shrinkToWorld(r[2]);
 		}
 		
 		return r;

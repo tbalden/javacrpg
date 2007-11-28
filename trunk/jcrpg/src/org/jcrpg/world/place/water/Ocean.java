@@ -23,12 +23,14 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
+import org.jcrpg.world.place.World;
 
 import com.jme.math.Vector3f;
 
@@ -155,6 +157,12 @@ public class Ocean extends Water {
 	
 	@Override
 	public boolean isWaterPoint(int x, int y, int z) {
+		x = J3DCore.getInstance().shrinkToWorld(x);
+		z = J3DCore.getInstance().shrinkToWorld(z);
+		int xMinusMag = J3DCore.getInstance().shrinkToWorld(x-magnification);
+		int zMinusMag = J3DCore.getInstance().shrinkToWorld(z-magnification);
+		int xPlusMag = J3DCore.getInstance().shrinkToWorld(x+magnification);
+		int zPlusMag = J3DCore.getInstance().shrinkToWorld(z+magnification);
 		int localX = x-origoX;
 		int localY = y-worldGroundLevel;
 		int localZ = z-origoZ;
@@ -163,11 +171,58 @@ public class Ocean extends Water {
 		{
 			//if (temp.distance(center)<realSizeX/2)
 			{
-				if (HashUtil.mixPercentage(x/magnification, 0, z/magnification)<noWaterPercentage)
+				if (HashUtil.mixPercentage((x/magnification), 0, (z)/magnification)<noWaterPercentage)
 				{
 					return false;
 				}
-				return true;
+				boolean coastIt = false;
+				int coastPartSize = Math.max(1, magnification/5);
+				if (localX%magnification<coastPartSize)
+				{
+					if (HashUtil.mixPercentage(((xMinusMag)/magnification), 0, (z)/magnification)<noWaterPercentage)
+					{
+						// no water in next part
+						coastIt = true;
+					}
+				} else
+				if (localX%magnification>=magnification-coastPartSize)
+				{
+					if (HashUtil.mixPercentage(((xPlusMag)/magnification), 0, (z)/magnification)<noWaterPercentage)
+					{
+						// no water in next part
+						coastIt = true;
+					}
+				}
+
+				if (localZ%magnification<coastPartSize)
+				{
+					if (HashUtil.mixPercentage(((x)/magnification), 0, (zMinusMag)/magnification)<noWaterPercentage)
+					{
+						// no water in next part
+						coastIt = true;
+					}
+				} else
+				if (localZ%magnification>=magnification-coastPartSize)
+				{
+					if (HashUtil.mixPercentage(((x)/magnification), 0, (zPlusMag)/magnification)<noWaterPercentage)
+					{
+						// no water in next part
+						coastIt = true;
+					}
+				}
+				
+				if (coastIt) 
+				{
+					int perVariation = (int)((HashUtil.mixPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					if (perVariation!=0)
+					{
+						return false;
+					}
+					return true;
+				} else
+				{
+					return true;
+				}
 			}
 		}
 		return false;
