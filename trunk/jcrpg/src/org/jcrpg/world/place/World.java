@@ -24,6 +24,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -78,6 +79,14 @@ public class World extends Place {
 		realSizeX = sizeX*magnification;
 		realSizeY = sizeY*magnification;
 		realSizeZ = sizeZ*magnification;
+		if (realSizeX<J3DCore.MINIMUM_WORLD_REALSIZE)
+		{
+			throw new Exception("World X size is smaller than J3DCore.MINIMUM_WORLD_REALSIZE ("+J3DCore.MINIMUM_WORLD_REALSIZE+")");
+		}
+		if (realSizeZ<J3DCore.MINIMUM_WORLD_REALSIZE)
+		{
+			throw new Exception("World Z size is smaller than J3DCore.MINIMUM_WORLD_REALSIZE ("+J3DCore.MINIMUM_WORLD_REALSIZE+")");
+		}
 		worldGroundLevel = (sizeY*magnification/2);
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, 0, 0, 0));
 		geographies = new HashMap<String, Geography>();
