@@ -281,7 +281,7 @@ public class Ocean extends Water {
 						} else
 						if (coastNorth)
 						{
-							if (localZ%magnification>=magnification - coastPartSizeSmall)
+							if (localZ%magnification>magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -297,7 +297,7 @@ public class Ocean extends Water {
 						} else
 						if (coastEast)
 						{
-							if (localX%magnification>=magnification - coastPartSizeSmall)
+							if (localX%magnification>magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
