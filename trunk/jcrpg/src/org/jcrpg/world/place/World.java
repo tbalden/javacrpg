@@ -25,6 +25,7 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -35,6 +36,8 @@ import org.jcrpg.world.time.Time;
 public class World extends Place {
 
 	public Engine engine;
+	
+	public int GEOGRAPHY_RANDOM_SEED = 0;
 	
 	/**
 	 * Tells which direction sun goes around - E-W (true) or W-E (false)
@@ -124,17 +127,8 @@ public class World extends Place {
 		int _worldY = worldY;
 		int _worldZ = worldZ;
 		if (WORLD_IS_GLOBE) {
-			
-			if (worldX<0)
-			{
-				_worldX = realSizeX+_worldX;
-			}
-			if (worldZ<0)
-			{
-				_worldZ = realSizeZ+_worldZ;
-			}
-			_worldX = _worldX%(realSizeX);
-			_worldZ = _worldZ%(realSizeZ);
+			_worldX = J3DCore.getInstance().shrinkToWorld(_worldX);
+			_worldZ = J3DCore.getInstance().shrinkToWorld(_worldZ);
 		}
 		Time localTime = engine.getWorldMeanTime().getLocalTime(this, _worldX, _worldY, _worldZ);
 		return getCube(localTime,worldX,worldY,worldZ);
@@ -143,18 +137,10 @@ public class World extends Place {
 	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
 	
 	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
+
 		if (WORLD_IS_GLOBE) {
-			
-			if (worldX<0)
-			{
-				worldX = realSizeX+worldX;
-			}
-			if (worldZ<0)
-			{
-				worldZ = realSizeZ+worldZ;
-			}
-			worldX = worldX%(realSizeX);
-			worldZ = worldZ%(realSizeZ);
+			worldX = J3DCore.getInstance().shrinkToWorld(worldX);
+			worldZ = J3DCore.getInstance().shrinkToWorld(worldZ);
 		}
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
@@ -311,6 +297,9 @@ public class World extends Place {
 		this.orbiterHandler = orbiterHandler;
 	}
 	
-	
+	public int getGeographyHashPercentage(int x,int y, int z)
+	{
+		return HashUtil.mixPercentage(GEOGRAPHY_RANDOM_SEED,x,y,z);
+	}
 
 }

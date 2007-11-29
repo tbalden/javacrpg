@@ -47,6 +47,8 @@ public class WorldGenerator {
 	{
 		World w = new World("world", null,params.magnification,params.sizeX,params.sizeY,params.sizeZ);
 		
+		w.GEOGRAPHY_RANDOM_SEED = params.randomSeed;
+		
 		int wMag = params.magnification;
 		int wX = params.sizeX;
 		int wY = params.sizeY;

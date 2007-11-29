@@ -201,6 +201,9 @@ public abstract class Place {
 		return parent.getRoot();
 	}
 	
+
+	public World thisWorld = null;
+	
 	/**
 	 * Return the climatic conditions of a given cube at coordinates.
 	 * @param worldX
@@ -210,7 +213,21 @@ public abstract class Place {
 	 */
 	public CubeClimateConditions getCubeClimateConditions(Time time, int worldX, int worldY, int worldZ, boolean internal)
 	{
-		return ((World)getRoot()).getClimate().getCubeClimate(time, worldX, worldY, worldZ, internal);
+		if (thisWorld==null)
+		{
+			thisWorld = ((World)getRoot());
+		}
+		return thisWorld.getClimate().getCubeClimate(time, worldX, worldY, worldZ, internal);
+	}
+	
+	
+	public int getGeographyHashPercentage(int x, int y, int z)
+	{
+		if (thisWorld==null)
+		{
+			thisWorld = ((World)getRoot());
+		}
+		return thisWorld.getGeographyHashPercentage(x, y, z);
 	}
 	
 }

@@ -70,30 +70,16 @@ public class RenderedArea {
 			{
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
-					/*int worldX = x+x1;
+					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
-					if (world.WORLD_IS_GLOBE) {
-						
-						if (worldX<0)
-						{
-							worldX = world.realSizeX+worldX;
-						}
-						if (worldZ<0)
-						{
-							worldZ = world.realSizeZ+worldZ;
-						}
-						worldX = worldX%(world.realSizeX);
-						worldZ = worldZ%(world.realSizeZ);
-					}
-					int s = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));*/
-					//String key = ""+s;
-					int s = ((x+x1)<< 16) + ((y+y1) << 8) + (z-z1);
+					worldX = J3DCore.getInstance().shrinkToWorld(worldX);
+					worldZ = J3DCore.getInstance().shrinkToWorld(worldZ);
+					int s = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
 					String key = ""+s;
-					//String key =  (x+x1)+" "+(y+y1)+" "+(z-z1);
 					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
-						Cube cube = world.getCube(world.engine.getWorldMeanTime(),x+x1, y+y1, z-z1);
+						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ);
 						if (cube!=null)
 						{
 							c = new RenderedCube(cube,x1,y1,z1);
