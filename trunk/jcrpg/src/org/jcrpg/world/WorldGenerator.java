@@ -86,7 +86,7 @@ public class WorldGenerator {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
 		w.geographies.put(p.id, p);
 
-		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,30);
+		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass);
 		w.waters.put(l.id, l);
 
 		//int i =0;
