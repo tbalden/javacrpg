@@ -222,6 +222,9 @@ public class World extends Place {
 									return c;
 								}
 							}
+						} else
+						{
+							continue; // yes, we must look for the next water if there's one!
 						}
 					}
 				}
