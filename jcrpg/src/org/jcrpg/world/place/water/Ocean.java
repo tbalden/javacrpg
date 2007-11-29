@@ -224,21 +224,16 @@ public class Ocean extends Water {
 				
 				if (coastIt) 
 				{
+					// figure out small coasting needed for the coordinates...
+					
 					boolean smallCoastIt = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
 					if (perVariation!=0)
 					{
-						// no land here...deciding small coasting
-						//if (true) return false;
-						
-						
-						//   --------
-						//   |  |_| |
-						//   |      |
-						//   --------
+						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
-						{ //TODO
+						{
 							if (localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
@@ -274,7 +269,7 @@ public class Ocean extends Water {
 						}
 					} else
 					{
-						//if (true) return true;
+						// water here...deciding small coasting near the water block's limit
 						
 						if (coastSouth)
 						{
@@ -313,6 +308,7 @@ public class Ocean extends Water {
 						}
 						
 					}
+					
 					if (coastWest|| coastEast)
 						perVariation = (int)((getGeographyHashPercentage((z)/coastPartSizeSmall, 0, 0)/50d))-1; // +/- 1 cube
 					else
@@ -323,12 +319,14 @@ public class Ocean extends Water {
 						return false;
 					}
 					return true;
-				} else
+				} else 
 				{
+					// not coastal part, return true for water
 					return true;
 				}
 			}
 		}
+		// absolutely not in the water
 		return false;
 	}
 
