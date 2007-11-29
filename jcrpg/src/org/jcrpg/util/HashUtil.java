@@ -56,7 +56,17 @@ public class HashUtil {
 	{
 		return (mix(a,b,c)%1000);//+50;
 	}
-	
+
+	public static int mixPercentage(int seed, int a, int b, int c)
+	{
+		return (mix(a+seed,b,c)%100);//+50;
+	}
+
+	public static int mixPer1000(int seed, int a, int b, int c)
+	{
+		return (mix(a+seed,b,c)%1000);//+50;
+	}
+
 	/**
 	 * Based on an original suggestion on Robert Jenkin's part in 1997, I have done some research for a version of the integer hash function. This is my latest version as of January 2007. The specific value of the bit shifts are obtained from running the accompanied search program.
 	 */

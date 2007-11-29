@@ -7,7 +7,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 ------------------------------------------
 
-
 [ ] World generator
 	parameterized cool world generation!
 
@@ -66,6 +65,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+
+[X] Bug: moving from world limit -> displays contents behind back
+
 [X] redesign Coordinate system -> totally bad when moving around...shouldn't have all increasing X/Y/Z -> cut down
 		but this makes rendering totally bad!
 [X] when viewing onto border of globe not showing cubes -> J3DCore TODO fix!	
