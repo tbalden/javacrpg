@@ -161,6 +161,13 @@ public class Ocean extends Water {
 		int zMinusMag = J3DCore.getInstance().shrinkToWorld(z-magnification);
 		int xPlusMag = J3DCore.getInstance().shrinkToWorld(x+magnification);
 		int zPlusMag = J3DCore.getInstance().shrinkToWorld(z+magnification);
+
+		int smallCoastSize = 5;
+		int xMinusMagSmall = J3DCore.getInstance().shrinkToWorld(x-smallCoastSize);
+		int zMinusMagSmall = J3DCore.getInstance().shrinkToWorld(z-smallCoastSize);
+		int xPlusMagSmall = J3DCore.getInstance().shrinkToWorld(x+smallCoastSize);
+		int zPlusMagSmall = J3DCore.getInstance().shrinkToWorld(z+smallCoastSize);
+		
 		int localX = x-origoX;
 		int localY = y-worldGroundLevel;
 		int localZ = z-origoZ;
@@ -174,13 +181,20 @@ public class Ocean extends Water {
 					return false;
 				}
 				boolean coastIt = false;
-				int coastPartSize = Math.max(1, magnification/5);
+				int coastPartSize = Math.max(1, magnification/10);
+				int coastPartSizeSmall = smallCoastSize;
+				
+				boolean coastWest = false;
+				boolean coastEast = false;
+				boolean coastNorth = false;
+				boolean coastSouth = false;
 				if (localX%magnification<coastPartSize)
 				{
 					if (getGeographyHashPercentage(((xMinusMag)/magnification), 0, (z)/magnification)<noWaterPercentage)
 					{
 						// no water in next part
 						coastIt = true;
+						coastWest = true;
 					}
 				} else
 				if (localX%magnification>=magnification-coastPartSize)
@@ -189,6 +203,7 @@ public class Ocean extends Water {
 					{
 						// no water in next part
 						coastIt = true;
+						coastEast = true;
 					}
 				}
 
@@ -198,6 +213,7 @@ public class Ocean extends Water {
 					{
 						// no water in next part
 						coastIt = true;
+						coastSouth = true;
 					}
 				} else
 				if (localZ%magnification>=magnification-coastPartSize)
@@ -206,12 +222,95 @@ public class Ocean extends Water {
 					{
 						// no water in next part
 						coastIt = true;
-					}
+						coastNorth = true;
+				}
 				}
 				
 				if (coastIt) 
 				{
+					boolean smallCoastIt = false;
+
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					if (perVariation!=0)
+					{
+						//if (true) return false;
+						if (coastNorth)
+						{
+							if (localZ%magnification<=magnification-coastPartSize+coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return false;
+						} else
+						if (coastSouth)
+						{
+							if (localZ%magnification>=coastPartSize-coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return false;
+						} else
+						if (coastEast)
+						{
+							if (localX%magnification<=magnification-coastPartSize+coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return false;
+						} else
+						if (coastWest)
+						{
+							if (localX%magnification>=coastPartSize-coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return false;
+						} else
+						{
+							return false;
+						}
+					} else
+					{
+						//if (true) return true;
+						
+						if (coastSouth)
+						{
+							if (localZ%magnification<=magnification-coastPartSize+coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return true;
+						} else
+						if (coastNorth)
+						{
+							if (localZ%magnification>=coastPartSize-coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return true;
+						} else
+						if (coastWest)
+						{
+							if (localX%magnification<=magnification-coastPartSize+coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return true;
+						} else
+						if (coastEast)
+						{
+							if (localX%magnification>=coastPartSize-coastPartSizeSmall)
+							{
+								smallCoastIt = true;
+							} else
+								return true;
+						} else
+						{
+							return true;
+						}
+						
+					}
+					perVariation = (int)((getGeographyHashPercentage(x/coastPartSizeSmall, 0, z/coastPartSizeSmall)/50d))-1; // +/- 1 cube
 					if (perVariation!=0)
 					{
 						return false;
