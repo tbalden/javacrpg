@@ -70,7 +70,7 @@ public class Jcrpg {
 		t.start();
 		J3DCore app = new J3DCore();
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,2,100,5,50,1));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,2,100,10,30,1));
 		w2.engine = e;
 
 		app.setWorld(w2);

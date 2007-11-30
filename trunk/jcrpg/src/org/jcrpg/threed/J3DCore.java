@@ -1161,7 +1161,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		input = new ClassicInputHandler(this,cam);
 	}
 	
-	protected DisplaySystem getDisplay()
+	public DisplaySystem getDisplay()
 	{
 		return display;
 	}
@@ -1383,6 +1383,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//cLightState.detachAll();
 			return;
 		}
+		
+		Spatial map = world.worldMap.getMapQuad();
+		if (map.getParent()==null)
+		{
+			rootNode.attachChild(map);
+		}
+		//map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		map.setLocalTranslation((relativeX)*CUBE_EDGE_SIZE, relativeY*CUBE_EDGE_SIZE, (-1.5f+(-1*relativeZ))*CUBE_EDGE_SIZE);
+		
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
 		/*
@@ -1743,8 +1752,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param n Nodes
 	 * @param cube the r.cube parent of the nodes, needed for putting the rendered node as child into it.
 	 * @param x X cubesized distance from current relativeX
-	 * @param y Y cubesized distance from current relativeX
-	 * @param z Z cubesized distance from current relativeX
+	 * @param y Y cubesized distance from current relativeY
+	 * @param z Z cubesized distance from current relativeZ
 	 * @param direction Direction
 	 * @param horizontalRotation Horizontal rotation
 	 * @param scale Scale
@@ -2674,12 +2683,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
-	public int shrinkToWorld(int x)
-	{
-		if (x<0) x=world.realSizeX+x;
-		if (x>=world.realSizeX) x = x%world.realSizeX;
-		return x;
-	}
 	
 	public static J3DCore self;
 	
@@ -2700,9 +2703,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		r[1] = orig[1]+vector[1];
 		r[2] = orig[2]+vector[2];
 		if (limitsCut) {
-			r[0] = shrinkToWorld(r[0]);
-			r[1] = shrinkToWorld(r[1]);
-			r[2] = shrinkToWorld(r[2]);
+			r[0] = world.shrinkToWorld(r[0]);
+			r[1] = world.shrinkToWorld(r[1]);
+			r[2] = world.shrinkToWorld(r[2]);
 		}
 		
 		return r;

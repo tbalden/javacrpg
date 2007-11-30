@@ -229,5 +229,14 @@ public abstract class Place {
 		}
 		return thisWorld.getGeographyHashPercentage(x, y, z);
 	}
-	
+
+	public int shrinkToWorld(int x)
+	{
+		if (thisWorld==null)
+		{
+			thisWorld = ((World)getRoot());
+		}
+		return thisWorld.shrinkToWorld(x);
+	}
+
 }

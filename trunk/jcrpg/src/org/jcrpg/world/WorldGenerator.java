@@ -18,6 +18,9 @@
 
 package org.jcrpg.world;
 
+import java.util.Iterator;
+
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -27,6 +30,7 @@ import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Plain;
@@ -86,7 +90,7 @@ public class WorldGenerator {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
 		w.geographies.put(p.id, p);
 
-		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass);
+		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
 		w.waters.put(l.id, l);
 
 		//int i =0;
@@ -94,8 +98,11 @@ public class WorldGenerator {
 		long time = System.currentTimeMillis(); 
 		h = new House("house",w,null,4,1,4,0,w.getSeaLevel(1),5);		
 		w.economics.put(h.id, h);
+		
+		w.worldMap = new WorldMap(w);
 
 		return w;
 	}
+	
 	
 }
