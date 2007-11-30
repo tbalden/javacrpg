@@ -168,7 +168,7 @@ public class Ocean extends Water {
 		int zPlusMag = shrinkToWorld(z+magnification);
 
 		// large coast variation size
-		int coastPartSize = Math.max(1, magnification/10);
+		int coastPartSize = Math.max(1, 20);//magnification/10);
 		// small coast variation size
 		int coastPartSizeSmall = 2;
 		
@@ -242,12 +242,13 @@ public class Ocean extends Water {
 					boolean smallCoastIt = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					if (perVariation!=0)
+					if (perVariation!=0 || true)
 					{
+						// TODO this part is still not good
 						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
 						{
-							if (localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if (true || localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -255,7 +256,7 @@ public class Ocean extends Water {
 						} else
 						if (coastSouth)
 						{
-							if (localZ%magnification>=coastPartSize + coastPartSizeSmall)
+							if (true || localZ%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -263,7 +264,7 @@ public class Ocean extends Water {
 						} else
 						if (coastWest)
 						{
-							if (localX%magnification>=coastPartSize + coastPartSizeSmall)
+							if (true || localX%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -271,7 +272,7 @@ public class Ocean extends Water {
 						} else
 						if (coastEast)
 						{
-							if (localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if (true || localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else

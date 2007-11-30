@@ -1384,13 +1384,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			return;
 		}
 		
-		Spatial map = world.worldMap.getMapQuad();
-		if (map.getParent()==null)
-		{
-			rootNode.attachChild(map);
-		}
 		//map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		map.setLocalTranslation((relativeX)*CUBE_EDGE_SIZE, relativeY*CUBE_EDGE_SIZE, (-1.5f+(-1*relativeZ))*CUBE_EDGE_SIZE);
 		
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
@@ -3096,6 +3090,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		intRootNode.setModelBound(null);
 		extRootNode.setModelBound(null);
 
+
 		/*loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
 		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
 		loadText.setLightCombineMode(LightState.OFF);
@@ -3276,7 +3271,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           Text t = new Text("Text", "Bloom not supported (FBO needed).");
 	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	           t.setLightCombineMode(LightState.OFF);
-	           t.setLocalTranslation(new Vector3f(0,20,0));
+	           t.setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
@@ -3331,8 +3326,48 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//setupSkyDome();
 		
 		setCalculatedCameraLocation();
-        cam.update();
-		updateDisplay(null);
+        
+		cam.update();
+
+		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+        //t.setLocalTranslation();
+
+		// initial hud part for world map
+
+        Node hudNode = new Node("hudNode");
+        Quad hudQuad = new Quad("hud", display.getWidth()/5, (display.getHeight()/4));
+        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+
+        hudQuad.setLocalTranslation(new Vector3f(display.getWidth()/10,display.getHeight()/8,0));
+
+        hudQuad.setLightCombineMode(LightState.OFF);
+        TextureState state = display.getRenderer().createTextureState();
+        state.setTexture(world.worldMap.getMapTexture());
+        hudQuad.setRenderState(state);
+        hudQuad.updateRenderState();
+
+        AlphaState hudAS = display.getRenderer().createAlphaState();
+        hudAS.setBlendEnabled(true);
+  
+        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        hudAS.setTestEnabled(false);
+        hudAS.setEnabled(true);
+        hudQuad.setRenderState(hudAS);
+        hudNode.attachChild(hudQuad);
+        rootNode.attachChild(hudNode);
+        
+        
+        updateDisplay(null);
+
+		/*Spatial map = world.worldMap.getMapQuad();
+		if (map.getParent()==null)
+		{
+			extRootNode.attachChild(map);
+			//map.setLocalTranslation((relativeX)*CUBE_EDGE_SIZE, relativeY*CUBE_EDGE_SIZE, (-1.5f+(-1*relativeZ))*CUBE_EDGE_SIZE);
+			//map.updateRenderState();
+			extRootNode.updateRenderState();
+		}*/
 		
 		render();
 		renderToViewPort();
