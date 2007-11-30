@@ -52,17 +52,21 @@ public class Ocean extends Water {
 	static Side[][] LAKE_ROCKSIDE_WEST = new Side[][] { null, null, null,ROCKSIDE,null,WATER_EMPTY };
 	static Side[][] LAKE_ROCKSIDE_BOTTOM = new Side[][] { null, null, null, null, null,ROCKBOTTOM };
 
-	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
+	public int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 
 	public int depth = 1;
-	int noWaterPercentage = 0;
-	private int worldGroundLevel;
-	int groundLevel;
+	public int noWaterPercentage = 0;
+	public int worldGroundLevel;
+	public int groundLevel;
+	/**
+	 * How dense the water parts should stick together
+	 */
+	public int density;
 	
 	int centerX, centerZ, realSizeX, realSizeZ;
 	Vector3f center = new Vector3f();
 
-	public Ocean(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
+	public Ocean(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -83,6 +87,7 @@ public class Ocean extends Water {
 		this.groundLevel = groundLevel;
 		worldGroundLevel=groundLevel*magnification;
 		this.noWaterPercentage = noWaterPercentage;
+		this.density = density;
 	}
 
 	@Override
@@ -153,14 +158,14 @@ public class Ocean extends Water {
 
 	Vector3f temp = new Vector3f();
 	
-	@Override
-	public boolean isWaterPoint(int x, int y, int z) {
-		x = J3DCore.getInstance().shrinkToWorld(x);
-		z = J3DCore.getInstance().shrinkToWorld(z);
-		int xMinusMag = J3DCore.getInstance().shrinkToWorld(x-magnification);
-		int zMinusMag = J3DCore.getInstance().shrinkToWorld(z-magnification);
-		int xPlusMag = J3DCore.getInstance().shrinkToWorld(x+magnification);
-		int zPlusMag = J3DCore.getInstance().shrinkToWorld(z+magnification);
+	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
+	{
+		x = shrinkToWorld(x);
+		z = shrinkToWorld(z);
+		int xMinusMag = shrinkToWorld(x-magnification);
+		int zMinusMag = shrinkToWorld(z-magnification);
+		int xPlusMag = shrinkToWorld(x+magnification);
+		int zPlusMag = shrinkToWorld(z+magnification);
 
 		// large coast variation size
 		int coastPartSize = Math.max(1, magnification/10);
@@ -173,12 +178,20 @@ public class Ocean extends Water {
 		temp.set(localX, localZ, 0);
 		if (worldGroundLevel-y <= depth && worldGroundLevel-y>=0) 
 		{
-			//if (temp.distance(center)<realSizeX/2)
 			{
-				if (getGeographyHashPercentage((x/magnification), 0, (z)/magnification)<noWaterPercentage)
+				int densModifier = getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierXPlus = getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZPlus = getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
+				int densModifierXMinus = getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZMinus = getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
+				
+				if ((getGeographyHashPercentage((x/magnification), 0, (z)/magnification)+densModifier)<noWaterPercentage)
 				{
 					return false;
 				}
+				
+				if (!coasting) return true; // just a magnified bigmap view detail is required, return now!
+				
 				boolean coastIt = false;
 				
 				boolean coastWest = false;
@@ -187,7 +200,7 @@ public class Ocean extends Water {
 				boolean coastSouth = false;
 				if (localX%magnification<coastPartSize)
 				{
-					if (getGeographyHashPercentage(((xMinusMag)/magnification), 0, (z)/magnification)<noWaterPercentage)
+					if ((getGeographyHashPercentage(((xMinusMag)/magnification), 0, (z)/magnification)+densModifierXMinus)<noWaterPercentage)
 					{
 						// no water in next part
 						coastIt = true;
@@ -196,7 +209,7 @@ public class Ocean extends Water {
 				} else
 				if (localX%magnification>=magnification-coastPartSize)
 				{
-					if (getGeographyHashPercentage(((xPlusMag)/magnification), 0, (z)/magnification)<noWaterPercentage)
+					if ((getGeographyHashPercentage(((xPlusMag)/magnification), 0, (z)/magnification)+densModifierXPlus)<noWaterPercentage)
 					{
 						// no water in next part
 						coastIt = true;
@@ -205,7 +218,7 @@ public class Ocean extends Water {
 				} else
 				if (localZ%magnification<coastPartSize)
 				{
-					if (getGeographyHashPercentage(((x)/magnification), 0, (zMinusMag)/magnification)<noWaterPercentage)
+					if ((getGeographyHashPercentage(((x)/magnification), 0, (zMinusMag)/magnification)+densModifierZMinus)<noWaterPercentage)
 					{
 						// no water in next part
 						coastIt = true;
@@ -214,7 +227,7 @@ public class Ocean extends Water {
 				} else
 				if (localZ%magnification>=magnification-coastPartSize)
 				{
-					if (getGeographyHashPercentage(((x)/magnification), 0, (zPlusMag)/magnification)<noWaterPercentage)
+					if ((getGeographyHashPercentage(((x)/magnification), 0, (zPlusMag)/magnification)+densModifierZPlus)<noWaterPercentage)
 					{
 						// no water in next part
 						coastIt = true;
@@ -328,6 +341,12 @@ public class Ocean extends Water {
 		}
 		// absolutely not in the water
 		return false;
+		
+	}
+	
+	@Override
+	public boolean isWaterPoint(int x, int y, int z) {
+		return isWaterPointSpecial(x, y, z, true);
 	}
 
 }

@@ -73,8 +73,8 @@ public class RenderedArea {
 					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
-					worldX = J3DCore.getInstance().shrinkToWorld(worldX);
-					worldZ = J3DCore.getInstance().shrinkToWorld(worldZ);
+					worldX = world.shrinkToWorld(worldX);
+					worldZ = world.shrinkToWorld(worldZ);
 					int s = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
 					String key = ""+s;
 					RenderedCube c = worldCubeCache.remove(key);

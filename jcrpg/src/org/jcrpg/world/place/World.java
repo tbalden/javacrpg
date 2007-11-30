@@ -25,6 +25,7 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
@@ -36,6 +37,7 @@ import org.jcrpg.world.time.Time;
 public class World extends Place {
 
 	public Engine engine;
+	public WorldMap worldMap;
 	
 	public int GEOGRAPHY_RANDOM_SEED = 0;
 	
@@ -127,8 +129,8 @@ public class World extends Place {
 		int _worldY = worldY;
 		int _worldZ = worldZ;
 		if (WORLD_IS_GLOBE) {
-			_worldX = J3DCore.getInstance().shrinkToWorld(_worldX);
-			_worldZ = J3DCore.getInstance().shrinkToWorld(_worldZ);
+			_worldX = shrinkToWorld(_worldX);
+			_worldZ = shrinkToWorld(_worldZ);
 		}
 		Time localTime = engine.getWorldMeanTime().getLocalTime(this, _worldX, _worldY, _worldZ);
 		return getCube(localTime,worldX,worldY,worldZ);
@@ -139,8 +141,8 @@ public class World extends Place {
 	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ) {
 
 		if (WORLD_IS_GLOBE) {
-			worldX = J3DCore.getInstance().shrinkToWorld(worldX);
-			worldZ = J3DCore.getInstance().shrinkToWorld(worldZ);
+			worldX = shrinkToWorld(worldX);
+			worldZ = shrinkToWorld(worldZ);
 		}
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
@@ -303,6 +305,13 @@ public class World extends Place {
 	public int getGeographyHashPercentage(int x,int y, int z)
 	{
 		return HashUtil.mixPercentage(GEOGRAPHY_RANDOM_SEED,x,y,z);
+	}
+
+	public int shrinkToWorld(int x)
+	{
+		if (x<0) x=realSizeX+x;
+		if (x>=realSizeX) x = x%realSizeX;
+		return x;
 	}
 
 }
