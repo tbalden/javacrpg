@@ -80,7 +80,7 @@ public class WorldMap {
 					}
 					
 				}
-				mapImage[((z*w.sizeX)+x)*4+3] = (byte)100;
+				mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
 				if (x==0 && z==0)
 				{
 					mapImage[((z*w.sizeX)+x)*4+0] = (byte)255;

@@ -50,6 +50,7 @@ import org.jcrpg.threed.scene.side.RenderedHashAlteredSide;
 import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.scene.side.RenderedTopSide;
+import org.jcrpg.ui.UIBase;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.ground.Grass;
 import org.jcrpg.world.ai.flora.ground.JungleGround;
@@ -3333,8 +3334,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         //t.setLocalTranslation();
 
 		// initial hud part for world map
+		
+		try 
+		{
+			UIBase base = new UIBase(this);
+			rootNode.attachChild(base.hud.hudNode);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			System.exit(-1);
+			
+		}
 
-        Node hudNode = new Node("hudNode");
+        /*Node hudNode = new Node("hudNode");
         Quad hudQuad = new Quad("hud", display.getWidth()/5, (display.getHeight()/4));
         hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 
@@ -3355,7 +3367,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         hudAS.setEnabled(true);
         hudQuad.setRenderState(hudAS);
         hudNode.attachChild(hudQuad);
-        rootNode.attachChild(hudNode);
+        rootNode.attachChild(hudNode);*/
         
         
         updateDisplay(null);
