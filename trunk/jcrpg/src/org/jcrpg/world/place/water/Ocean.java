@@ -248,7 +248,7 @@ public class Ocean extends Water {
 						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
 						{
-							if (true || localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if ( localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -256,7 +256,7 @@ public class Ocean extends Water {
 						} else
 						if (coastSouth)
 						{
-							if (true || localZ%magnification>=coastPartSize + coastPartSizeSmall)
+							if ( localZ%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -264,7 +264,7 @@ public class Ocean extends Water {
 						} else
 						if (coastWest)
 						{
-							if (true || localX%magnification>=coastPartSize + coastPartSizeSmall)
+							if ( localX%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else
@@ -272,7 +272,7 @@ public class Ocean extends Water {
 						} else
 						if (coastEast)
 						{
-							if (true || localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if ( localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 							} else

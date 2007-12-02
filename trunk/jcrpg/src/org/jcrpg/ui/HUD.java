@@ -44,6 +44,7 @@ public class HUD {
 	
 	public AlphaState hudAS;
 	public DirectionTimeMeter meter;
+	public SystemRelated sr;
 	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
@@ -58,12 +59,15 @@ public class HUD {
 	public void initNodes() throws Exception
 	{
         hudNode = new Node("hudNode");
+
+        // main hud image area
+        
         Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()));
         hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 
         hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
  
-		Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
+        Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
 		
         TextureState state = core.getDisplay().getRenderer().createTextureState();
         Texture texture = new Texture();
@@ -81,6 +85,7 @@ public class HUD {
         hudQuad.setRenderState(hudAS);
         hudNode.attachChild(hudQuad);
                 
+        // world map area
         
         Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
@@ -95,24 +100,15 @@ public class HUD {
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
         
+        // meter area
+        
         meter = new DirectionTimeMeter(this);
-        meter.quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        meter.quad.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
-        meter.quad.setLightCombineMode(LightState.OFF);
-        meter.quad.updateRenderState();
         hudNode.attachChild(meter.quad);
-        
-        meter.quad_sign_dir.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        meter.quad_sign_dir.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
-        meter.quad_sign_dir.setLightCombineMode(LightState.OFF);
-        meter.quad_sign_dir.updateRenderState();
         hudNode.attachChild(meter.quad_sign_dir);
+        hudNode.attachChild(meter.quad_sign_sun);
         
-        meter.quad_sign_sun.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        meter.quad_sign_sun.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
-        meter.quad_sign_sun.setLightCombineMode(LightState.OFF);
-        meter.quad_sign_sun.updateRenderState();
-        hudNode.attachChild(meter.quad_sign_sun);        
+        // system
+        sr = new SystemRelated(this,new String[]{"LOAD"},new String[]{"./data/ui/floppy.png"});
 		
 	}
 	

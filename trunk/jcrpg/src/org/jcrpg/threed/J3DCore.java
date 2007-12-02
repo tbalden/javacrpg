@@ -1634,7 +1634,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
-    	//updateDisplay(null);
+		
+		uiBase.hud.sr.setVisibility(true, "LOAD");
+    	updateDisplay(null);
 
 		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
@@ -1742,6 +1744,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//TextureManager.clearCache();
 		//System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
+		uiBase.hud.sr.setVisibility(false, "LOAD");
 		return detacheable;
 	}
 

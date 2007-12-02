@@ -27,10 +27,17 @@ import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
+/**
+ * Direction and time-o-meter HUD element.
+ * @author pali
+ *
+ */
 public class DirectionTimeMeter {
 
 	
@@ -69,27 +76,41 @@ public class DirectionTimeMeter {
 		quad = new Quad("METER",hud.core.getDisplay().getWidth()/13, (hud.core.getDisplay().getHeight()/9));
 		quad.setRenderState(state);
 		quad.setRenderState(hud.hudAS);
+        quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        quad.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad.setLightCombineMode(LightState.OFF);
+        quad.updateRenderState();
 
 		quad_sign_dir = new Quad("SIGN_DIR",hud.core.getDisplay().getWidth()/13, (hud.core.getDisplay().getHeight()/9));
 		quad_sign_dir.setRenderState(state1);
 		quad_sign_dir.setRenderState(hud.hudAS);
+        quad_sign_dir.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        quad_sign_dir.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad_sign_dir.setLightCombineMode(LightState.OFF);
+        quad_sign_dir.updateRenderState();
 
 		quad_sign_sun = new Quad("SIGN_SUN",hud.core.getDisplay().getWidth()/13, (hud.core.getDisplay().getHeight()/9));
 		quad_sign_sun.setRenderState(state2);
 		quad_sign_sun.setRenderState(hud.hudAS);
+        quad_sign_sun.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        quad_sign_sun.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad_sign_sun.setLightCombineMode(LightState.OFF);
+        quad_sign_sun.updateRenderState();
 		
 	}
-	float f = 0;
+
 	public void updateQuad(int direction, Time time)
 	{
 		
 		Quaternion q = new Quaternion();
-		q.fromAngleAxis(FastMath.PI/f, new Vector3f(0,0,1));
-		//sign_sun.setRotation(q);
-		f+=0.011f;
+		q.fromAngleAxis(FastMath.PI*(-2*(time.hour*1f)/time.maxHour), new Vector3f(0,0,1));
 		quad_sign_sun.setLocalRotation(q);
-		//if (f>10) f = 0;
 		quad_sign_sun.updateRenderState();
+		
+		Quaternion q_d = new Quaternion();
+		q_d.fromAngleAxis(FastMath.PI*(-2*(direction*6*1f)/24), new Vector3f(0,0,1));
+		quad_sign_dir.setLocalRotation(q_d);
+		quad_sign_dir.updateRenderState();
 	}
 	
 }
