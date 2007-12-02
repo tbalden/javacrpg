@@ -1385,10 +1385,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			return;
 		}
 		
+		
 		//map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
+		uiBase.hud.meter.updateQuad(viewDirection, localTime);
+
 		/*
 		 * Orbiters
 		 */
@@ -3067,6 +3070,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	BoundingSphere bigSphere = new BoundingSphere();
 
+	UIBase uiBase;
+	
 	/**
      * This is used to display print text.
      */
@@ -3337,38 +3342,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		try 
 		{
-			UIBase base = new UIBase(this);
-			rootNode.attachChild(base.hud.hudNode);
+			uiBase = new UIBase(this);
+			rootNode.attachChild(uiBase.hud.hudNode);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 			System.exit(-1);
 			
 		}
-
-        /*Node hudNode = new Node("hudNode");
-        Quad hudQuad = new Quad("hud", display.getWidth()/5, (display.getHeight()/4));
-        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-
-        hudQuad.setLocalTranslation(new Vector3f(display.getWidth()/10,display.getHeight()/8,0));
-
-        hudQuad.setLightCombineMode(LightState.OFF);
-        TextureState state = display.getRenderer().createTextureState();
-        state.setTexture(world.worldMap.getMapTexture());
-        hudQuad.setRenderState(state);
-        hudQuad.updateRenderState();
-
-        AlphaState hudAS = display.getRenderer().createAlphaState();
-        hudAS.setBlendEnabled(true);
-  
-        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-        hudAS.setTestEnabled(false);
-        hudAS.setEnabled(true);
-        hudQuad.setRenderState(hudAS);
-        hudNode.attachChild(hudQuad);
-        rootNode.attachChild(hudNode);*/
-        
         
         updateDisplay(null);
 
