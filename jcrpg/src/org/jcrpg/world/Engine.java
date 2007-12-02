@@ -33,7 +33,7 @@ public class Engine implements Runnable {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
 		{
-			try{Thread.sleep(1000);}catch (Exception ex){}
+			try{Thread.sleep(10);}catch (Exception ex){}
 			if (!pause) {
 				worldMeanTime.tick(10);
 				setTimeChanged(true);

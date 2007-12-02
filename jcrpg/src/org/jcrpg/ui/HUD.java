@@ -20,6 +20,7 @@ package org.jcrpg.ui;
 import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.meter.DirectionTimeMeter;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -41,6 +42,9 @@ public class HUD {
 	
 	public HUDParams params;
 	
+	public AlphaState hudAS;
+	public DirectionTimeMeter meter;
+	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
 		this.params = params;
@@ -59,15 +63,15 @@ public class HUD {
 
         hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
  
-		Image heightImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
+		Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
 		
         TextureState state = core.getDisplay().getRenderer().createTextureState();
         Texture texture = new Texture();
-        texture.setImage(heightImage);
+        texture.setImage(hudImage);
         state.setTexture(texture);
         hudQuad.setRenderState(state);
 
-        AlphaState hudAS = core.getDisplay().getRenderer().createAlphaState();
+        hudAS = core.getDisplay().getRenderer().createAlphaState();
         hudAS.setBlendEnabled(true);
   
         hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
@@ -78,10 +82,10 @@ public class HUD {
         hudNode.attachChild(hudQuad);
                 
         
-        Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/13, (core.getDisplay().getHeight()/9));
+        Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 
-        mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/26,core.getDisplay().getHeight()/18,0));
+        mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
 
         mapQuad.setLightCombineMode(LightState.OFF);
         TextureState state2 = core.getDisplay().getRenderer().createTextureState();
@@ -91,7 +95,24 @@ public class HUD {
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
         
+        meter = new DirectionTimeMeter(this);
+        meter.quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        meter.quad.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
+        meter.quad.setLightCombineMode(LightState.OFF);
+        meter.quad.updateRenderState();
+        hudNode.attachChild(meter.quad);
         
+        meter.quad_sign_dir.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        meter.quad_sign_dir.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
+        meter.quad_sign_dir.setLightCombineMode(LightState.OFF);
+        meter.quad_sign_dir.updateRenderState();
+        hudNode.attachChild(meter.quad_sign_dir);
+        
+        meter.quad_sign_sun.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        meter.quad_sign_sun.setLocalTranslation(new Vector3f((core.getDisplay().getWidth()/26),(core.getDisplay().getHeight()/18),0));
+        meter.quad_sign_sun.setLightCombineMode(LightState.OFF);
+        meter.quad_sign_sun.updateRenderState();
+        hudNode.attachChild(meter.quad_sign_sun);        
 		
 	}
 	
