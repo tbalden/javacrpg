@@ -163,6 +163,11 @@ public class Jcrpg {
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 1, 2, 1, 3, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(p.id, p);
 		
+		w.worldMap = w2.worldMap; // dirty hack here for the release only
+		/*app.setWorld(w);
+		app.setEngine(e);
+		app.setViewPosition(0, w.getSeaLevel(1), 0);
+		app.initCore();*/
 		
 	}
 }
