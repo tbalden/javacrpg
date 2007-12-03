@@ -28,6 +28,7 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
+import org.jcrpg.world.place.World;
 
 import com.jme.math.Vector3f;
 
@@ -157,6 +158,14 @@ public class Ocean extends Water {
 
 	Vector3f temp = new Vector3f();
 	
+	public int calcDensModifier(int x, int z, int density, int magnification)
+	{		
+		int dm = getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+		int perc = getGeographyHashPercentage(((World)getRoot()).realSizeX, ((World)getRoot()).realSizeX, ((World)getRoot()).realSizeZ);
+		dm -= (getGeographyHashPercentage(perc-(x/((World)getRoot()).realSizeX) + (z/((World)getRoot()).realSizeZ),0,0) - 50)/3;
+		return dm;
+	}
+	
 	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
 	{
 		x = shrinkToWorld(x);
@@ -178,7 +187,7 @@ public class Ocean extends Water {
 		if (worldGroundLevel-y <= depth && worldGroundLevel-y>=0) 
 		{
 			{
-				int densModifier = getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifier = calcDensModifier(x, z, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
 				
 				if ((getGeographyHashPercentage((x/magnification), 0, (z)/magnification)+densModifier)<noWaterPercentage)
 				{
@@ -187,10 +196,10 @@ public class Ocean extends Water {
 				
 				if (!coasting) return true; // just a magnified bigmap view detail is required, return now!
 
-				int densModifierXPlus = getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
-				int densModifierZPlus = getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
-				int densModifierXMinus = getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
-				int densModifierZMinus = getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
+				int densModifierXPlus = calcDensModifier(xPlusMag, z, density, magnification);//getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZPlus = calcDensModifier(x, zPlusMag, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
+				int densModifierXMinus = calcDensModifier(xMinusMag, z, density, magnification);//getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZMinus = calcDensModifier(x, zMinusMag, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
 
 				boolean coastIt = false;
 				
