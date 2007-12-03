@@ -249,33 +249,93 @@ public class Ocean extends Water {
 					boolean smallCoastEast = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					if (perVariation!=0)
+					int perVariationPrevX = (int)((getGeographyHashPercentage((x/coastPartSize)-1, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					int perVariationNextX = (int)((getGeographyHashPercentage((x/coastPartSize)-1, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					int perVariationPrevZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (z/coastPartSize)-1)/50d))-1; // +/- 1 cube
+					int perVariationNextZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (z/coastPartSize)+1)/50d))-1; // +/- 1 cube
+					if (perVariation!=0 || true)
 					{
-						// TODO this part is still not good
+						// TODO in internal parts (not on the coast -> it doesnt do smallcoasting naturally,
+						// redesign this to do it!
+						
 						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
 						{
-							if (localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if (localZ%magnification<=(magnification-coastPartSize) + coastPartSizeSmall)
 							{
-								//System.out.println("###### Yes SMALL NORTH "+x+ " "+z);
+								
 								smallCoastIt = true;
 								smallCoastNorth  = true;
+							}
+							if (perVariationNextX==0)
+							{
+								if (localX%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastEast  = true;
+								}
+							}
+							if (perVariationPrevX==0)
+							{
+								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastWest = true;
+								}
 							}
 						}
 						if (coastSouth)
 						{
-							if (localZ%magnification>=coastPartSize + coastPartSizeSmall)
+							if (localZ%magnification>=coastPartSize - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 								smallCoastSouth  = true;
 							}
+							if (perVariationNextX==0)
+							{
+								if (localX%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastEast  = true;
+								}
+							}
+							if (perVariationPrevX==0)
+							{
+								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastWest = true;
+								}
+							}
 						}
 						if (coastWest)
 						{
-							if (localX%magnification>=coastPartSize + coastPartSizeSmall)
+							if (localX%magnification>=coastPartSize - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 								smallCoastWest = true;
+							}
+							if (perVariationNextZ==0)
+							{
+								if (localZ%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastSouth  = true;
+								}
+							}
+							if (perVariationPrevZ==0)
+							{
+								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastNorth = true;
+								}
 							}
 						}
 						if (coastEast)
@@ -284,6 +344,24 @@ public class Ocean extends Water {
 							{
 								smallCoastIt = true;
 								smallCoastEast = true;
+							}
+							if (perVariationNextZ==0)
+							{
+								if (localZ%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastSouth  = true;
+								}
+							}
+							if (perVariationPrevZ==0)
+							{
+								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastNorth = true;
+								}
 							}
 						}
 						if (!smallCoastIt) return false;
@@ -324,18 +402,28 @@ public class Ocean extends Water {
 							}
 						}
 						if (!smallCoastIt) return true;
-						
 					}
-					
-					if (smallCoastEast|| smallCoastWest)
-						perVariation = (int)((getGeographyHashPercentage((z)/coastPartSizeSmall, 0, 0)/50d))-1; // +/- 1 cube
-					if (smallCoastNorth|| smallCoastSouth)
-						perVariation = (int)((getGeographyHashPercentage(0, 0, (x)/coastPartSizeSmall)/50d))-1; // +/- 1 cube
-						
-					if (perVariation!=0)
-					{
-						return false;
+					int pV1 = 0, pV2 = 0;
+					if (smallCoastEast || smallCoastWest) {
+						pV1 = (int)((getGeographyHashPercentage((z)/coastPartSizeSmall, 0, 0)/50d))-1; // +/- 1 cube
+						if (pV1!=0)
+						{
+							return false;
+						}
 					}
+					if (smallCoastNorth || smallCoastSouth) {
+						pV2 = (int)((getGeographyHashPercentage(0, 0, (x)/coastPartSizeSmall)/50d))-1; // +/- 1 cube
+						if (pV2!=0)
+						{
+							System.out.println("###### Yes SMALL NORTH/SOUTH "+x+ " "+z);
+							return false;
+						} else
+						{
+							System.out.println("###### No SMALL NORTH/SOUTH "+x+ " "+z);
+							return true;
+						}
+					}
+						
 					return true;
 				} else 
 				{
