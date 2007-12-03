@@ -23,7 +23,6 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -249,11 +248,11 @@ public class Ocean extends Water {
 					boolean smallCoastEast = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					int perVariationPrevX = (int)((getGeographyHashPercentage((x/coastPartSize)-1, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					int perVariationNextX = (int)((getGeographyHashPercentage((x/coastPartSize)-1, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					int perVariationPrevZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (z/coastPartSize)-1)/50d))-1; // +/- 1 cube
-					int perVariationNextZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (z/coastPartSize)+1)/50d))-1; // +/- 1 cube
-					if (perVariation!=0 || true)
+					int perVariationPrevX = (int)((getGeographyHashPercentage((shrinkToWorld(x-coastPartSize)/coastPartSize), 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					int perVariationNextX = (int)((getGeographyHashPercentage((shrinkToWorld(x+coastPartSize)/coastPartSize), 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					int perVariationPrevZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (shrinkToWorld(z-coastPartSize)/coastPartSize))/50d))-1; // +/- 1 cube
+					int perVariationNextZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (shrinkToWorld(z+coastPartSize)/coastPartSize))/50d))-1; // +/- 1 cube
+					if (perVariation!=0)
 					{
 						// TODO in internal parts (not on the coast -> it doesnt do smallcoasting naturally,
 						// redesign this to do it!
@@ -267,22 +266,22 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastNorth  = true;
 							}
-							if (perVariationNextX==0)
+							if (perVariationPrevX==0)
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
 								{
 									
 									smallCoastIt = true;
-									smallCoastEast  = true;
+									smallCoastWest  = true;
 								}
 							}
-							if (perVariationPrevX==0)
+							if (perVariationNextX==0)
 							{
 								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
 									
 									smallCoastIt = true;
-									smallCoastWest = true;
+									smallCoastEast = true;
 								}
 							}
 						}
@@ -293,22 +292,22 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastSouth  = true;
 							}
-							if (perVariationNextX==0)
+							if (perVariationPrevX==0)
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
 								{
 									
 									smallCoastIt = true;
-									smallCoastEast  = true;
+									smallCoastWest  = true;
 								}
 							}
-							if (perVariationPrevX==0)
+							if (perVariationNextX==0)
 							{
 								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
 									
 									smallCoastIt = true;
-									smallCoastWest = true;
+									smallCoastEast = true;
 								}
 							}
 						}
@@ -319,7 +318,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastWest = true;
 							}
-							if (perVariationNextZ==0)
+							if (perVariationPrevZ==0)
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
 								{
@@ -328,7 +327,7 @@ public class Ocean extends Water {
 									smallCoastSouth  = true;
 								}
 							}
-							if (perVariationPrevZ==0)
+							if (perVariationNextZ==0)
 							{
 								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -345,7 +344,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastEast = true;
 							}
-							if (perVariationNextZ==0)
+							if (perVariationPrevZ==0)
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
 								{
@@ -354,7 +353,7 @@ public class Ocean extends Water {
 									smallCoastSouth  = true;
 								}
 							}
-							if (perVariationPrevZ==0)
+							if (perVariationNextZ==0)
 							{
 								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -376,6 +375,24 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastSouth = true;
 							}
+							if (perVariationPrevX==0)
+							{
+								if (localX%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastWest  = true;
+								}
+							}
+							if (perVariationNextX==0)
+							{
+								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastEast = true;
+								}
+							}
 						}
 						if (coastNorth)
 						{
@@ -383,6 +400,24 @@ public class Ocean extends Water {
 							{
 								smallCoastIt = true;
 								smallCoastNorth = true;
+							}
+							if (perVariationPrevX==0)
+							{
+								if (localX%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastWest  = true;
+								}
+							}
+							if (perVariationNextX==0)
+							{
+								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastEast = true;
+								}
 							}
 						}
 						if (coastWest)
@@ -392,6 +427,24 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastWest = true;
 							}
+							if (perVariationPrevZ==0)
+							{
+								if (localZ%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastSouth  = true;
+								}
+							}
+							if (perVariationNextZ==0)
+							{
+								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastNorth = true;
+								}
+							}
 						}
 						if (coastEast)
 						{
@@ -399,6 +452,24 @@ public class Ocean extends Water {
 							{
 								smallCoastIt = true;
 								smallCoastEast = true;
+							}
+							if (perVariationPrevZ==0)
+							{
+								if (localZ%coastPartSize<=coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastSouth  = true;
+								}
+							}
+							if (perVariationNextZ==0)
+							{
+								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
+								{
+									
+									smallCoastIt = true;
+									smallCoastNorth = true;
+								}
 							}
 						}
 						if (!smallCoastIt) return true;
