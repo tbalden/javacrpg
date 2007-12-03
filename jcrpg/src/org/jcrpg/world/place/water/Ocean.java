@@ -180,10 +180,6 @@ public class Ocean extends Water {
 		{
 			{
 				int densModifier = getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
-				int densModifierXPlus = getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
-				int densModifierZPlus = getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
-				int densModifierXMinus = getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
-				int densModifierZMinus = getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
 				
 				if ((getGeographyHashPercentage((x/magnification), 0, (z)/magnification)+densModifier)<noWaterPercentage)
 				{
@@ -191,7 +187,12 @@ public class Ocean extends Water {
 				}
 				
 				if (!coasting) return true; // just a magnified bigmap view detail is required, return now!
-				
+
+				int densModifierXPlus = getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZPlus = getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
+				int densModifierXMinus = getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
+				int densModifierZMinus = getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
+
 				boolean coastIt = false;
 				
 				boolean coastWest = false;
@@ -206,7 +207,7 @@ public class Ocean extends Water {
 						coastIt = true;
 						coastWest = true;
 					}
-				} else
+				}
 				if (localX%magnification>=magnification-coastPartSize)
 				{
 					if ((getGeographyHashPercentage(((xPlusMag)/magnification), 0, (z)/magnification)+densModifierXPlus)<noWaterPercentage)
@@ -215,7 +216,7 @@ public class Ocean extends Water {
 						coastIt = true;
 						coastEast = true;
 					}
-				} else
+				}
 				if (localZ%magnification<coastPartSize)
 				{
 					if ((getGeographyHashPercentage(((x)/magnification), 0, (zMinusMag)/magnification)+densModifierZMinus)<noWaterPercentage)
@@ -223,8 +224,9 @@ public class Ocean extends Water {
 						// no water in next part
 						coastIt = true;
 						coastSouth = true;
+						System.out.println("#----# Yes SOUTH "+x/magnification+ " "+z/magnification);
 					}
-				} else
+				}
 				if (localZ%magnification>=magnification-coastPartSize)
 				{
 					if ((getGeographyHashPercentage(((x)/magnification), 0, (zPlusMag)/magnification)+densModifierZPlus)<noWaterPercentage)
@@ -232,6 +234,7 @@ public class Ocean extends Water {
 						// no water in next part
 						coastIt = true;
 						coastNorth = true;
+						System.out.println("###### Yes NORTH "+x/magnification+ " "+z/magnification);
 					}
 				}
 				
@@ -240,47 +243,50 @@ public class Ocean extends Water {
 					// figure out small coasting needed for the coordinates...
 					
 					boolean smallCoastIt = false;
+					boolean smallCoastNorth = false;
+					boolean smallCoastSouth = false;
+					boolean smallCoastWest = false;
+					boolean smallCoastEast = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
-					if (perVariation!=0 || true)
+					if (perVariation!=0)
 					{
 						// TODO this part is still not good
 						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
 						{
-							if ( localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if (localZ%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
+								//System.out.println("###### Yes SMALL NORTH "+x+ " "+z);
 								smallCoastIt = true;
-							} else
-								return false;
-						} else
+								smallCoastNorth  = true;
+							}
+						}
 						if (coastSouth)
 						{
-							if ( localZ%magnification>=coastPartSize + coastPartSizeSmall)
+							if (localZ%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return false;
-						} else
+								smallCoastSouth  = true;
+							}
+						}
 						if (coastWest)
 						{
-							if ( localX%magnification>=coastPartSize + coastPartSizeSmall)
+							if (localX%magnification>=coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return false;
-						} else
+								smallCoastWest = true;
+							}
+						}
 						if (coastEast)
 						{
-							if ( localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
+							if (localX%magnification<magnification-coastPartSize + coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return false;
-						} else
-						{
-							return false;
+								smallCoastEast = true;
+							}
 						}
+						if (!smallCoastIt) return false;
 					} else
 					{
 						// water here...deciding small coasting near the water block's limit
@@ -290,42 +296,40 @@ public class Ocean extends Water {
 							if (localZ%magnification<=coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return true;
-						} else
+								smallCoastSouth = true;
+							}
+						}
 						if (coastNorth)
 						{
 							if (localZ%magnification>magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return true;
-						} else
+								smallCoastNorth = true;
+							}
+						}
 						if (coastWest)
 						{
 							if (localX%magnification<=coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return true;
-						} else
+								smallCoastWest = true;
+							}
+						}
 						if (coastEast)
 						{
 							if (localX%magnification>magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
-							} else
-								return true;
-						} else
-						{
-							return true;
+								smallCoastEast = true;
+							}
 						}
+						if (!smallCoastIt) return true;
 						
 					}
 					
-					if (coastWest|| coastEast)
+					if (smallCoastEast|| smallCoastWest)
 						perVariation = (int)((getGeographyHashPercentage((z)/coastPartSizeSmall, 0, 0)/50d))-1; // +/- 1 cube
-					else
+					if (smallCoastNorth|| smallCoastSouth)
 						perVariation = (int)((getGeographyHashPercentage(0, 0, (x)/coastPartSizeSmall)/50d))-1; // +/- 1 cube
 						
 					if (perVariation!=0)
