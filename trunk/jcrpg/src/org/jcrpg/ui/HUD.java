@@ -55,6 +55,7 @@ public class HUD {
 		
 		
 	}
+	Quad mapQuad_pos;
 	
 	public void initNodes() throws Exception
 	{
@@ -89,16 +90,22 @@ public class HUD {
         
         Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-
         mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
-
         mapQuad.setLightCombineMode(LightState.OFF);
-        TextureState state2 = core.getDisplay().getRenderer().createTextureState();
-        state2.setTexture(core.world.worldMap.getMapTexture());
-        mapQuad.setRenderState(state2);
+        TextureState[] textures = core.world.worldMap.getMapTextures();
+        mapQuad.setRenderState(textures[0]);
         mapQuad.updateRenderState();
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
+
+        mapQuad_pos = new Quad("hud_pos", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
+        mapQuad_pos.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        mapQuad_pos.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
+        mapQuad_pos.setLightCombineMode(LightState.OFF);
+        mapQuad_pos.setRenderState(textures[1]);
+        mapQuad_pos.updateRenderState();
+        mapQuad_pos.setRenderState(hudAS);
+        hudNode.attachChild(mapQuad_pos);
         
         // meter area
         
@@ -110,6 +117,11 @@ public class HUD {
         // system
         sr = new SystemRelated(this,new String[]{"LOAD"},new String[]{"./data/ui/floppy.png"});
 		
+	}
+	
+	public void update()
+	{
+	
 	}
 	
 }

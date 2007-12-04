@@ -1391,6 +1391,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
 		uiBase.hud.meter.updateQuad(viewDirection, localTime);
+		world.worldMap.update(viewPositionX/world.magnification, viewPositionY/world.magnification, viewPositionZ/world.magnification);
+		uiBase.hud.update();
 
 		/*
 		 * Orbiters
