@@ -176,9 +176,9 @@ public class Ocean extends Water {
 		int zPlusMag = shrinkToWorld(z+magnification);
 
 		// large coast variation size
-		int coastPartSize = Math.max(1, 20);//magnification/10);
+		int coastPartSize = Math.max(1, 10);
 		// small coast variation size
-		int coastPartSizeSmall = 2;
+		int coastPartSizeSmall = 1;
 		
 		int localX = x-origoX;
 		int localY = y-worldGroundLevel;
@@ -201,8 +201,9 @@ public class Ocean extends Water {
 				int densModifierXMinus = calcDensModifier(xMinusMag, z, density, magnification);//getGeographyHashPercentage((xMinusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
 				int densModifierZMinus = calcDensModifier(x, zMinusMag, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (zMinusMag)/(magnification*density)) - 50;
 
+				// tells if the big block has coastal are
 				boolean coastIt = false;
-				
+				// these will tell which side has coastal area
 				boolean coastWest = false;
 				boolean coastEast = false;
 				boolean coastNorth = false;
@@ -232,7 +233,6 @@ public class Ocean extends Water {
 						// no water in next part
 						coastIt = true;
 						coastSouth = true;
-						System.out.println("#----# Yes SOUTH "+x/magnification+ " "+z/magnification);
 					}
 				}
 				if (localZ%magnification>=magnification-coastPartSize)
@@ -242,7 +242,6 @@ public class Ocean extends Water {
 						// no water in next part
 						coastIt = true;
 						coastNorth = true;
-						System.out.println("###### Yes NORTH "+x/magnification+ " "+z/magnification);
 					}
 				}
 				
@@ -251,21 +250,23 @@ public class Ocean extends Water {
 					// figure out small coasting needed for the coordinates...
 					
 					boolean smallCoastIt = false;
+					// which side to small coast in this coastal block :-D
 					boolean smallCoastNorth = false;
 					boolean smallCoastSouth = false;
 					boolean smallCoastWest = false;
 					boolean smallCoastEast = false;
 
 					int perVariation = (int)((getGeographyHashPercentage(x/coastPartSize, 0, z/coastPartSize)/50d))-1; // +/- 1 cube
+					// calculating neigboring coastal region's perVariations, to tell if internal small coast is needed
 					int perVariationPrevX = (int)((getGeographyHashPercentage((shrinkToWorld(x-coastPartSize)/coastPartSize), 0, z/coastPartSize)/50d))-1; // +/- 1 cube
 					int perVariationNextX = (int)((getGeographyHashPercentage((shrinkToWorld(x+coastPartSize)/coastPartSize), 0, z/coastPartSize)/50d))-1; // +/- 1 cube
 					int perVariationPrevZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (shrinkToWorld(z-coastPartSize)/coastPartSize))/50d))-1; // +/- 1 cube
 					int perVariationNextZ = (int)((getGeographyHashPercentage((x/coastPartSize), 0, (shrinkToWorld(z+coastPartSize)/coastPartSize))/50d))-1; // +/- 1 cube
+					
+					// a big lot of ugly coding here for coastal region's water-nowater calculation...
+					
 					if (perVariation!=0)
 					{
-						// TODO in internal parts (not on the coast -> it doesnt do smallcoasting naturally,
-						// redesign this to do it!
-						
 						// no water here...deciding small coasting near the no water block's limit
 						if (coastNorth)
 						{
@@ -275,6 +276,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastNorth  = true;
 							}
+							// checking neigbour coast part both sides
 							if (perVariationPrevX==0)
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
@@ -301,6 +303,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastSouth  = true;
 							}
+							// checking neigbour coast part both sides
 							if (perVariationPrevX==0)
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
@@ -327,6 +330,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastWest = true;
 							}
+							// checking neigbour coast part both sides
 							if (perVariationPrevZ==0)
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
@@ -353,6 +357,7 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastEast = true;
 							}
+							// checking neigbour coast part both sides
 							if (perVariationPrevZ==0)
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
@@ -373,18 +378,22 @@ public class Ocean extends Water {
 							}
 						}
 						if (!smallCoastIt) return false;
+						
 					} else
 					{
 						// water here...deciding small coasting near the water block's limit
 						
 						if (coastSouth)
 						{
+							if (coastWest || coastEast) System.out.println("BONG BONG BONG SOUTH ERROR"); 
 							if (localZ%magnification<=coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 								smallCoastSouth = true;
 							}
-							if (perVariationPrevX==0)
+							// checking neigbour coast part both sides
+							// second boolean is to check if this is the end of a big block and is there a coast to this direction, if so, don't coast!
+							if (perVariationPrevX!=0 && !(localX%magnification<=coastPartSize)) 
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
 								{
@@ -393,7 +402,7 @@ public class Ocean extends Water {
 									smallCoastWest  = true;
 								}
 							}
-							if (perVariationNextX==0)
+							if (perVariationNextX!=0 && !(localX%magnification>=magnification-coastPartSize))
 							{
 								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -405,12 +414,15 @@ public class Ocean extends Water {
 						}
 						if (coastNorth)
 						{
-							if (localZ%magnification>magnification - coastPartSizeSmall)
+							if (coastWest || coastEast) System.out.println("BONG BONG BONG NORTH ERROR"); 
+							if (localZ%magnification>=magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 								smallCoastNorth = true;
 							}
-							if (perVariationPrevX==0)
+							// checking neigbour coast part both sides
+							// second boolean is to check if this is the end of a big block and is there a coast to this direction, if so, don't coast!
+							if (perVariationPrevX!=0 && !(localX%magnification<=coastPartSize))
 							{
 								if (localX%coastPartSize<=coastPartSizeSmall)
 								{
@@ -419,7 +431,7 @@ public class Ocean extends Water {
 									smallCoastWest  = true;
 								}
 							}
-							if (perVariationNextX==0)
+							if (perVariationNextX!=0 && !(localX%magnification>=magnification-coastPartSize))
 							{
 								if (localX%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -436,16 +448,17 @@ public class Ocean extends Water {
 								smallCoastIt = true;
 								smallCoastWest = true;
 							}
-							if (perVariationPrevZ==0)
+							// checking neigbour coast part both sides
+							// second boolean is to check if this is the end of a big block and is there a coast to this direction, if so, don't coast!
+							if (perVariationPrevZ!=0 && !(localZ%magnification<=coastPartSize))
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
 								{
-									
 									smallCoastIt = true;
 									smallCoastSouth  = true;
 								}
 							}
-							if (perVariationNextZ==0)
+							if (perVariationNextZ!=0 && !(localZ%magnification>=magnification-coastPartSize))
 							{
 								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -457,12 +470,14 @@ public class Ocean extends Water {
 						}
 						if (coastEast)
 						{
-							if (localX%magnification>magnification - coastPartSizeSmall)
+							if (localX%magnification>=magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
 								smallCoastEast = true;
 							}
-							if (perVariationPrevZ==0)
+							// checking neigbour coast part both sides
+							// second boolean is to check if this is the end of a big block and is there a coast to this direction, if so, don't coast!
+							if (perVariationPrevZ!=0 && !(localZ%magnification<=coastPartSize))
 							{
 								if (localZ%coastPartSize<=coastPartSizeSmall)
 								{
@@ -471,7 +486,7 @@ public class Ocean extends Water {
 									smallCoastSouth  = true;
 								}
 							}
-							if (perVariationNextZ==0)
+							if (perVariationNextZ!=0 && !(localZ%magnification>=magnification-coastPartSize))
 							{
 								if (localZ%coastPartSize>=coastPartSize-coastPartSizeSmall)
 								{
@@ -483,6 +498,7 @@ public class Ocean extends Water {
 						}
 						if (!smallCoastIt) return true;
 					}
+					
 					int pV1 = 0, pV2 = 0;
 					if (smallCoastEast || smallCoastWest) {
 						pV1 = (int)((getGeographyHashPercentage((z)/coastPartSizeSmall, 0, 0)/50d))-1; // +/- 1 cube
@@ -495,12 +511,7 @@ public class Ocean extends Water {
 						pV2 = (int)((getGeographyHashPercentage(0, 0, (x)/coastPartSizeSmall)/50d))-1; // +/- 1 cube
 						if (pV2!=0)
 						{
-							System.out.println("###### Yes SMALL NORTH/SOUTH "+x+ " "+z);
 							return false;
-						} else
-						{
-							System.out.println("###### No SMALL NORTH/SOUTH "+x+ " "+z);
-							return true;
 						}
 					}
 						
