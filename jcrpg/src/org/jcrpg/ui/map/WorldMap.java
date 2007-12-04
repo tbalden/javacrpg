@@ -29,18 +29,24 @@ import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 
 public class WorldMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
 	public BillboardNode bbMap;
 	public Sphere mapSphere = new Sphere("WORLD_MAP_SPHERE",new Vector3f(0,0,0),10,10,0.5f);
-	public Image image;
+	public Image imageBase;
+	public Image positionImage; 
+	public byte[] positionImageSet;
+	
 	public int[][] map;
+	
+	public Texture baseTex, posTex;
+	public TextureState baseTexState, posTexState;
+
+	public World world;
 	
 	public int NOTHING = 0;
 	public int WATER = 1;
@@ -53,8 +59,11 @@ public class WorldMap {
 	// 128
 	
 	public WorldMap(World w) {
+		world = w;
+	
 		map = new int[w.sizeZ][w.sizeX];
 		byte[] mapImage = new byte[w.sizeZ*w.sizeX*4];
+		positionImageSet = new byte[w.sizeZ*w.sizeX*4];
 		for (int z = 0; z<w.sizeZ;z++)
 		{
 			for (int x=0; x<w.sizeX; x++)
@@ -83,49 +92,86 @@ public class WorldMap {
 				mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
 				if (x==0 && z==0)
 				{
-					mapImage[((z*w.sizeX)+x)*4+0] = (byte)255;
+					positionImageSet[((z*w.sizeX)+x)*4+0] = (byte)255;
 				}
+				positionImageSet[((z*w.sizeX)+x)*4+3] = (byte)150;
+				
 			}
 			System.out.println("");
 		}
-		image = new Image();
-		image.setType(Image.RGBA8888);
-		image.setHeight(w.sizeZ);
-		image.setWidth(w.sizeX);
+		imageBase = new Image();
+		imageBase.setType(Image.RGBA8888);
+		imageBase.setHeight(w.sizeZ);
+		imageBase.setWidth(w.sizeX);
 		ByteBuffer buffer = ByteBuffer.wrap(mapImage);
-		image.setData(buffer);
+		imageBase.setData(buffer);
+		
+		positionImage = new Image();
+		positionImage.setType(Image.RGBA8888);
+		positionImage.setHeight(w.sizeZ);
+		positionImage.setWidth(w.sizeX);
+		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
+		positionImage.setData(buffer2);
 	}
 	
-	public Spatial getMapQuad()
+	int lastCx = -1 , lastCy = -1 , lastCz = -1;
+	
+	public void update(int cx, int cy, int cz)
 	{
-		if (bbMap!=null) return bbMap;
-		TextureState state = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		Texture t = new Texture();
-		t.setImage(image);
-		state.setTexture(t);
-		mapQuad.setRenderState(state);
-		mapQuad.updateRenderState();
-		bbMap = new BillboardNode();
-		bbMap.attachChild(mapQuad);
-		bbMap.setAlignment(BillboardNode.SCREEN_ALIGNED);
-		bbMap.updateRenderState();
-		return bbMap;
+		if (cx==lastCx && cy==lastCy && cz==lastCz) return;
+		
+		lastCx = cx;
+		lastCy = cy;
+		lastCz = cz;			
+		
+		System.out.println("UPDATE: "+cx+" "+cz);
+		for (int z = 0; z<world.sizeZ;z++)
+		{
+			for (int x=0; x<world.sizeX; x++)
+			{
+				positionImageSet[((z*world.sizeX)+x)*4+0] = (byte)0;
+				positionImageSet[((z*world.sizeX)+x)*4+1] = (byte)0;
+				positionImageSet[((z*world.sizeX)+x)*4+2] = (byte)0;
+			}
+		}
+		if (world.sizeX>99)
+		{
+			for (int i=-4; i<=4; i++)
+			{
+				for (int j=-4; j<=4; j++)
+				{
+					try {
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)255;
+					} catch (ArrayIndexOutOfBoundsException aiex)
+					{				
+					}
+				}
+			}
+		}
+		positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
+		positionImageSet[((cz*world.sizeX)+cx)*4+1] = (byte)255;
+		positionImageSet[((cz*world.sizeX)+cx)*4+2] = (byte)255;
+
+		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
+		positionImage.setData(buffer2);
+		posTex = new Texture();
+		posTex.setImage(positionImage);
+		posTexState.setTexture(posTex);
+		posTexState.setNeedsRefresh(true);
 	}
-	public Texture getMapTexture()
+
+	public TextureState[] getMapTextures()
 	{
-		Texture t = new Texture();
-		t.setImage(image);
-		return t;
+		baseTex = new Texture();
+		baseTex.setImage(imageBase);
+		posTex = new Texture();
+		posTex.setImage(positionImage);
+		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+		baseTexState.setTexture(baseTex);
+		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+		posTexState.setTexture(posTex);
+		return new TextureState[]{baseTexState,posTexState};
 	}
-	public Sphere getMapSphere()
-	{
-		if (mapSphere!=null) return mapSphere;
-		TextureState state = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		Texture t = new Texture();
-		t.setImage(image);
-		state.setTexture(t);
-		mapSphere.setRenderState(state);
-		return mapSphere;
-	}
+
 	
 }
