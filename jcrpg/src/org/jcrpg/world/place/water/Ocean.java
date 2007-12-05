@@ -385,7 +385,7 @@ public class Ocean extends Water {
 						
 						if (coastSouth)
 						{
-							if (coastWest || coastEast) System.out.println("BONG BONG BONG SOUTH ERROR"); 
+							//if (coastWest || coastEast) System.out.println("BONG BONG BONG SOUTH ERROR"); 
 							if (localZ%magnification<=coastPartSizeSmall)
 							{
 								smallCoastIt = true;
@@ -414,7 +414,7 @@ public class Ocean extends Water {
 						}
 						if (coastNorth)
 						{
-							if (coastWest || coastEast) System.out.println("BONG BONG BONG NORTH ERROR"); 
+							//if (coastWest || coastEast) System.out.println("BONG BONG BONG NORTH ERROR"); 
 							if (localZ%magnification>=magnification - coastPartSizeSmall)
 							{
 								smallCoastIt = true;
