@@ -89,26 +89,36 @@ public class WorldGenerator {
 		w.setClimate(climate);
 		
 		int climateSize = wZ/(params.climates.length*4);
-		for (int i=0; i<params.climates.length; i++)
-		{
-			String climateName = params.climates[i];
-			System.out.println("CLIMATE: "+climateName);
-			String className = climateBeltMap.get(climateName);
-			Class c = Class.forName(className);
-			Constructor<ClimateBelt> constructor = c.getConstructors()[0];
-			ClimateBelt belt1 = constructor.newInstance(climateName+"1",climate);
-			belt1.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, climateSize*i));
-			ClimateBelt belt2 = constructor.newInstance(climateName+"2",climate);
-			belt2.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ/2)-climateSize*i));
-			ClimateBelt belt3 = constructor.newInstance(climateName+"3",climate);
-			belt3.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ/2)+climateSize*i));
-			ClimateBelt belt4 = constructor.newInstance(climateName+"4",climate);
-			belt4.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ)-climateSize*i));
-			climate.belts.put(belt1.id, belt1);
-			climate.belts.put(belt2.id, belt2);
-			climate.belts.put(belt3.id, belt3);
-			climate.belts.put(belt4.id, belt4);
+		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(params.climates.length*4));
+		int[] correctedClimateSizes = new int[params.climates.length];
+		// calc the remaining size in the world
+		int diffAvailable = wZ-climateSize*(params.climates.length*4);
+		System.out.println("DIFF = "+diffAvailable);
+		int mod = params.climates.length*4/diffAvailable;
+		int currentWorldZ = 0;
+		for (int j=0; j<4; j++) {
+			boolean orderAsc = j%2==0?true:false;
+			for (int i=0; i<params.climates.length; i++)
+			{
+				int count = orderAsc? i:3-i;
+				String climateName = params.climates[count];
+				System.out.println("CLIMATE: "+climateName);
+				String className = climateBeltMap.get(climateName);
+				Class c = Class.forName(className);
+				Constructor<ClimateBelt> constructor = c.getConstructors()[0];
+				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
+				int climateSizeCorrected = climateSize;
+				if (diffAvailable>0 && (i+j*params.climates.length)%mod == 0)
+				{
+					climateSizeCorrected+=1;
+					diffAvailable--;
+				}
+				belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSizeCorrected, 0, 0, currentWorldZ));
+				currentWorldZ+=climateSizeCorrected;
+				climate.belts.put(belt.id, belt);
+			}
 		}
+
 		
 		//--------
 		//|XXXXXX|
@@ -118,20 +128,6 @@ public class WorldGenerator {
 		//|ZZZZZZ|
 		//|YYYYYY|
 		// XXXXXX_
-		
-		// TODO size based!
-		Continental continental = new Continental("cont1",climate);
-		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, 0, 0));
-		//climate.belts.put(continental.id, continental);
-		/*Tropical tropical = new Tropical("trop1",climate);
-		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 2, 0, 0));
-		climate.belts.put(tropical.id, tropical);
-		Desert desert = new Desert("desert1",climate);
-		desert.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 4, 0, 0));
-		climate.belts.put(desert.id, desert);
-		Arctic arctic = new Arctic("arctic1",climate);
-		arctic.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 6, 0, 0));
-		climate.belts.put(arctic.id, arctic);*/
 
 		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(wMag),wMag);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
