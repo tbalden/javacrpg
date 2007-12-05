@@ -18,12 +18,15 @@
 
 package org.jcrpg.world;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
+import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
@@ -33,6 +36,8 @@ import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.geography.Forest;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
@@ -42,10 +47,21 @@ import org.jcrpg.world.place.water.Ocean;
 
 public class WorldGenerator {
 
-	
-	
-	//public static final int 
-	
+	public HashMap<String, String> climateBeltMap = new HashMap<String, String>();
+	public HashMap<String, String> geographyMap = new HashMap<String, String>();
+
+	public WorldGenerator()
+	{
+		climateBeltMap.put("Continental", Continental.class.getName());
+		climateBeltMap.put("Tropical", Tropical.class.getName());
+		climateBeltMap.put("Arctic", Arctic.class.getName());
+		climateBeltMap.put("Desert", Desert.class.getName());
+		
+		geographyMap.put("Plain", Plain.class.getName());
+		geographyMap.put("Forest", Forest.class.getName());
+		geographyMap.put("Mountain", Mountain.class.getName());
+		
+	}
 	
 	public World generateWorld(WorldParams params) throws Exception
 	{
@@ -72,10 +88,41 @@ public class WorldGenerator {
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);
 		
+		int climateSize = wZ/(params.climates.length*4);
+		for (int i=0; i<params.climates.length; i++)
+		{
+			String climateName = params.climates[i];
+			System.out.println("CLIMATE: "+climateName);
+			String className = climateBeltMap.get(climateName);
+			Class c = Class.forName(className);
+			Constructor<ClimateBelt> constructor = c.getConstructors()[0];
+			ClimateBelt belt1 = constructor.newInstance(climateName+"1",climate);
+			belt1.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, climateSize*i));
+			ClimateBelt belt2 = constructor.newInstance(climateName+"2",climate);
+			belt2.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ/2)-climateSize*i));
+			ClimateBelt belt3 = constructor.newInstance(climateName+"3",climate);
+			belt3.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ/2)+climateSize*i));
+			ClimateBelt belt4 = constructor.newInstance(climateName+"4",climate);
+			belt4.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSize, 0, 0, (wZ)-climateSize*i));
+			climate.belts.put(belt1.id, belt1);
+			climate.belts.put(belt2.id, belt2);
+			climate.belts.put(belt3.id, belt3);
+			climate.belts.put(belt4.id, belt4);
+		}
+		
+		//--------
+		//|XXXXXX|
+		//|YYYYYY|
+		//|ZZZZZZ|
+		//|XXXXXX|
+		//|ZZZZZZ|
+		//|YYYYYY|
+		// XXXXXX_
+		
 		// TODO size based!
 		Continental continental = new Continental("cont1",climate);
 		continental.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, 0, 0));
-		climate.belts.put(continental.id, continental);
+		//climate.belts.put(continental.id, continental);
 		/*Tropical tropical = new Tropical("trop1",climate);
 		tropical.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 10, 20, 2, 0, 0));
 		climate.belts.put(tropical.id, tropical);

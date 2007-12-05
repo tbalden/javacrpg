@@ -18,6 +18,11 @@
 
 package org.jcrpg.world.generator;
 
+/**
+ * World generation parameters.
+ * @author illes
+ *
+ */
 public class WorldParams {
 
 	public int magnification = 100; 
@@ -26,17 +31,32 @@ public class WorldParams {
 	public int sizeZ = 1;
 	
 	/**
-	 * 0-10 - bigger denser
+	 * 0-100 - bigger denser
 	 */
 	public int landDensity = 1;
 	/**
-	 * 0-10 - bigger bigger parts
+	 * 0-100 - bigger bigger parts
 	 */
 	public int landMass = 1;
 	
 	public int randomSeed = 0;
+	
+	public String[] climates;
+	public String[] geos;
 
-	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed) {
+	/**
+	 * World generation parameter constructor.
+	 * @param magnification world magnification.
+	 * @param sizeX world size. realSize is multiplied by magnification!
+	 * @param sizeY world size. realSize is multiplied by magnification!
+	 * @param sizeZ world size. realSize is multiplied by magnification!
+	 * @param landDensity How dense the land mass should be.
+	 * @param landMass Land mass relative to sea mass in percent.
+	 * @param randomSeed Random seed - changes the whole world if differs.
+	 * @param climates Every climate one time and in North-South order please! 
+	 * @param geos Geography keys to use for generation.
+	 */
+	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, String[] geos) {
 		super();
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -45,6 +65,8 @@ public class WorldParams {
 		this.landDensity = landDensity;
 		this.landMass = landMass;
 		this.randomSeed = randomSeed;
+		this.climates = climates;
+		this.geos = geos;
 	}
 
 	

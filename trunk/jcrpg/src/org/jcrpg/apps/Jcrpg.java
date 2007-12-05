@@ -70,7 +70,11 @@ public class Jcrpg {
 		t.start();
 		J3DCore app = new J3DCore();
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(1000,100,2,100,10,30,2));
+		
+		String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
+		String[] geos = new String[] {"Plain","Forest","Mountain"};
+		
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(10,20,2,20,5,40,2,climates,geos));
 		w2.engine = e;
 
 		app.setWorld(w2);
