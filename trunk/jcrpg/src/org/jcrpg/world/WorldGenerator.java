@@ -74,6 +74,8 @@ public class WorldGenerator {
 		int wY = params.sizeY;
 		int wZ = params.sizeZ;
 		
+		
+		
 		// FLORA
 		w.setFloraContainer(new BaseFloraContainer());
 		
@@ -84,7 +86,7 @@ public class WorldGenerator {
 		w.setOrbiterHandler(woh);		
 		
 		// CLIMATE
-		
+		// TODO -> do not duplicate climate belts! shrinkToWorld must be reconsidered!! turn direction when crossing the world limit
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);
 		
