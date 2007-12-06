@@ -67,6 +67,8 @@ public class WorldGenerator {
 	{
 		World w = new World("world", null,params.magnification,params.sizeX,params.sizeY,params.sizeZ);
 		
+		w.lossFactor = params.geoNormalSize;
+		
 		w.GEOGRAPHY_RANDOM_SEED = params.randomSeed;
 		
 		int wMag = params.magnification;
@@ -156,7 +158,7 @@ public class WorldGenerator {
 		
 		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
 		w.waters.put(l.id, l);
-
+		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		for (int x=0; x<gWX; x++)
 		{
 			for (int z=0; z<gWZ;z++)
