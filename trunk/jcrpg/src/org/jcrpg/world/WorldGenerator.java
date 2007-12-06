@@ -154,6 +154,9 @@ public class WorldGenerator {
 		int gWY = (wY*wMag)/gMag;
 		int gWZ = (wZ*wMag)/gMag;
 		
+		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
+		w.waters.put(l.id, l);
+
 		for (int x=0; x<gWX; x++)
 		{
 			for (int z=0; z<gWZ;z++)
@@ -162,13 +165,6 @@ public class WorldGenerator {
 				w.addGeography(p);
 			}
 		}
-		
-		//for (int i=0; i<w.g)
-		
-		//w.geographies.put(p.id, p);
-
-		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
-		w.waters.put(l.id, l);
 
 		//int i =0;
 		House h = null; 
