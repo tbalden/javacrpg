@@ -1,5 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
+ *	Copyright (C) 2007 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,33 +16,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.ui;
-
-import java.util.HashMap;
-import java.util.HashSet;
+package org.jcrpg.threed.input.menu;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
-public class UIBase {
+import com.jme.input.action.InputActionEvent;
+import com.jme.input.action.KeyInputAction;
+import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
+import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 
-	public J3DCore core;
-	
-	public HUD hud;
-	public HashMap<String,Window> windows = new HashMap<String, Window>();
-	
-	public UIBase(J3DCore core) throws Exception
+public class CKeyMenu extends KeyInputAction{
+
+
+	ClassicKeyboardLookHandler handler;
+	J3DCore core;
+	public CKeyMenu(ClassicKeyboardLookHandler handler)
 	{
-		this.core = core;
-		hud = new HUD(new HUDParams(),this, core);
+		this.handler = handler;
+		core = handler.core;
 	}
-	public void addWindow(String trigger, Window window)
-	{
-		windows.put(trigger, window);
-	}
-	public void handleWindowEvent(String trigger)
-	{
-		windows.get(trigger).toggle();
-		
+	public void performAction(InputActionEvent evt) {
+		String event = evt.getTriggerName();
+		core.uiBase.handleWindowEvent(event);
 	}
 	
+
 }
