@@ -29,6 +29,7 @@ public class Continental extends ClimateBelt {
 	public Continental(String id, Climate parent) {
 		super(id, parent);
 		STATIC_ID = CONTINENTAL_ID;
+		colorBytes = new byte[] { (byte)40,(byte)200,(byte)100 };
 	}
 	
 	static Spring spring = new Spring();

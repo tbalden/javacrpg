@@ -36,6 +36,7 @@ public class Tropical extends ClimateBelt {
 		STATIC_ID = TROPICAL_ID;
 		beltConditionsExternal.add(new Warm(50));
 		beltConditionsExternal.add(new Rain(50));
+		colorBytes = new byte[] { (byte)40,(byte)140,(byte)40 };
 	}
 
 	

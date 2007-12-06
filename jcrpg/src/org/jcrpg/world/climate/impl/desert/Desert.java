@@ -44,6 +44,7 @@ public class Desert extends ClimateBelt {
 		
 		beltConditionsExternal.add(new Warm(40));
 		
+		colorBytes = new byte[] { (byte)240,(byte)240,(byte)100 };
 	}
 
 	@Override
