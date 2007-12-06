@@ -31,6 +31,7 @@ import org.jcrpg.threed.input.action.CKeyRotateRightAction;
 import org.jcrpg.threed.input.action.CKeyStrafeLeftAction;
 import org.jcrpg.threed.input.action.CKeyStrafeRightAction;
 import org.jcrpg.threed.input.action.CKeyUpAction;
+import org.jcrpg.threed.input.menu.CKeyMenu;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
@@ -73,6 +74,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnRight", KeyInput.KEY_D );
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
+        keyboard.set( "worldMap", KeyInput.KEY_F1 );
+        
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
 
@@ -86,6 +89,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyLookRightAction( this, cam, rotateSpeed ), "lookRight", true );
         addAction( new CKeyUpAction( this, cam, rotateSpeed ), "climbUp", true );
         addAction( new CKeyDownAction( this, cam, rotateSpeed ), "climbDown", true );
+        addAction( new CKeyMenu(this), "worldMap", false);
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );
         right.setLockAxis(new Vector3f(cam.getUp()));
         addAction(right, "turnRight", true );

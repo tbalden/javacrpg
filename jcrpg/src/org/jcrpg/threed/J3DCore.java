@@ -51,6 +51,7 @@ import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.scene.side.RenderedTopSide;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.window.Map;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.ground.Grass;
 import org.jcrpg.world.ai.flora.ground.JungleGround;
@@ -87,6 +88,7 @@ import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.input.InputHandler;
 import com.jme.light.DirectionalLight;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
@@ -3075,7 +3077,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	BoundingSphere bigSphere = new BoundingSphere();
 
-	UIBase uiBase;
+	public UIBase uiBase;
 	
 	/**
      * This is used to display print text.
@@ -3348,6 +3350,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		try 
 		{
 			uiBase = new UIBase(this);
+			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
 			rootNode.attachChild(uiBase.hud.hudNode);
 		} catch (Exception ex)
 		{
@@ -3503,5 +3506,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         rootNode.attachChild(dome);
     }
     
-     
+    public Node getRootNode()
+    {
+    	return rootNode;
+    }
+    public InputHandler getInputHandler()
+    {
+    	return input;
+    }
 }
