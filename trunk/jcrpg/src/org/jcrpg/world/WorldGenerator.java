@@ -147,9 +147,25 @@ public class WorldGenerator {
 		//|YYYYYY|
 		// XXXXXX_
 
-		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(wMag),wMag);
-		p.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, wZ, 0, w.getSeaLevel(wMag)-1, 0));
-		w.geographies.put(p.id, p);
+		// GEOGRAPHIES
+		
+		int gMag = params.geoNormalSize;
+		int gWX = (wX*wMag)/gMag;
+		int gWY = (wY*wMag)/gMag;
+		int gWZ = (wZ*wMag)/gMag;
+		
+		for (int x=0; x<gWX; x++)
+		{
+			for (int z=0; z<gWZ;z++)
+			{
+				Plain p = new Plain("BIGPLAIN"+x+"-"+z,w,null,w.getSeaLevel(gMag),gMag, 1, 2, 1, x, w.getSeaLevel(gMag)-1, z);
+				w.addGeography(p);
+			}
+		}
+		
+		//for (int i=0; i<w.g)
+		
+		//w.geographies.put(p.id, p);
 
 		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
 		w.waters.put(l.id, l);

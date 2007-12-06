@@ -21,6 +21,8 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.world.place.Boundaries;
+import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -33,14 +35,20 @@ public class Plain extends Geography implements Surface {
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_PLAIN+"_GROUND");
 	
 	public int groundLevel;
-	public int magnification;
 	private int worldGroundLevel;
 	
-	public Plain(String id, Place parent,PlaceLocator loc, int groundLevel, int magnification) {
+	public Plain(String id, Place parent,PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
 		super(id, parent, loc);
 		this.groundLevel = groundLevel;
 		this.magnification = magnification;
 		worldGroundLevel=groundLevel*magnification;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.sizeZ = sizeZ;
+		this.origoX = origoX;
+		this.origoY = origoY;
+		this.origoZ = origoZ;
+		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 
 
