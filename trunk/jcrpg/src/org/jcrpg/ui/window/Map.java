@@ -46,7 +46,7 @@ public class Map extends Window {
         hudAS.setEnabled(true);
         TextureState[] textureStates = wmap.getMapTextures();
         {
-        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*6, ((core.getDisplay().getHeight()/10)*8));
+        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
