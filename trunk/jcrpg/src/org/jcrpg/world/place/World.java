@@ -327,7 +327,7 @@ public class World extends Place {
 		return x;
 	}
 	
-	int lossFactor = 10;
+	public int lossFactor = 1000;
 	
 	public void addGeography(Geography g)
 	{

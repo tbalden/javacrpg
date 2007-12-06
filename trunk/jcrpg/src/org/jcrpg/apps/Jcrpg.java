@@ -75,7 +75,7 @@ public class Jcrpg {
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(10,100,2,100,10,50,2,climates,climateSizeMuls,geos,10));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(1000,100,2,100,10,50,2,climates,climateSizeMuls,geos,1000));
 		w2.engine = e;
 
 		app.setWorld(w2);
