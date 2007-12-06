@@ -42,6 +42,7 @@ public class WorldParams {
 	public int randomSeed = 0;
 	
 	public String[] climates;
+	public int[] climateSizeMuls;
 	public String[] geos;
 
 	/**
@@ -54,9 +55,10 @@ public class WorldParams {
 	 * @param landMass Land mass relative to sea mass in percent.
 	 * @param randomSeed Random seed - changes the whole world if differs.
 	 * @param climates Every climate one time and in North-South order please! 
+	 * @param climateSizeMuls Climate size multiplier
 	 * @param geos Geography keys to use for generation.
 	 */
-	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, String[] geos) {
+	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, int[] climateSizeMuls,String[] geos) {
 		super();
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -66,6 +68,7 @@ public class WorldParams {
 		this.landMass = landMass;
 		this.randomSeed = randomSeed;
 		this.climates = climates;
+		this.climateSizeMuls = climateSizeMuls;
 		this.geos = geos;
 	}
 
