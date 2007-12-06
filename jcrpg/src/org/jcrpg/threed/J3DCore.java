@@ -3477,34 +3477,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         doDebug(r);
     }
 
-    SkyDome dome;
-    
-    /**
-     * Initialize SkyDome
-     */
-    private void setupSkyDome() {
-        dome = new SkyDome("skyDome", new Vector3f(0.0f,0.0f,0.0f), 11, 18, 850.0f);
-        dome.setModelBound(new BoundingSphere());
-        dome.updateModelBound();
-        dome.updateRenderState();
-        dome.setUpdateTime(5.0f);
-        dome.setTimeWarp(180.0f);
-        dome.setDay(267);
-        dome.setLatitude(-22.9f);
-        dome.setLongitude(-47.083f);
-        dome.setStandardMeridian(-45.0f);
-        dome.setSunPosition(12.75f);             // 5:45 am
-        dome.setTurbidity(2.0f);
-        dome.setSunEnabled(false);
-        dome.setExposure(true, 18.0f);
-        dome.setOvercastFactor(0.0f);
-        dome.setGammaCorrection(2.5f);
-        dome.setRootNode(rootNode);
-        dome.setIntensity(1.0f);
-        // setup a target to LightNode, if you dont want terrain with light's effect remove it.
-        dome.setTarget(rootNode);
-        rootNode.attachChild(dome);
-    }
     
     public Node getRootNode()
     {

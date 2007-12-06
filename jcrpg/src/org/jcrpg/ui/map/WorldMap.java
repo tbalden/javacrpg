@@ -140,15 +140,14 @@ public class WorldMap {
 				positionImageSet[((z*world.sizeX)+x)*4+3] = (byte)0;
 			}
 		}
-		//if (world.sizeX>99)
-		int dotSize = world.sizeX/20;
+		int dotSize = world.sizeX/40;
 		{
 			for (int i=-1*dotSize; i<=1*dotSize; i++)
 			{
 				for (int j=-1*dotSize; j<=1*dotSize; j++)
 				{
 					try {
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)0;
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)((Math.abs(dotSize-j)*1d/dotSize)*(Math.abs(dotSize-i)*1d/dotSize)*355);
 						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+1] = (byte)0;
 						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+2] = (byte)0;
 						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+3] = (byte)255;
@@ -159,8 +158,6 @@ public class WorldMap {
 			}
 		}
 		positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
-		//positionImageSet[((cz*world.sizeX)+cx)*4+1] = (byte)255;
-		//positionImageSet[((cz*world.sizeX)+cx)*4+2] = (byte)255;
 		positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
 
 		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);

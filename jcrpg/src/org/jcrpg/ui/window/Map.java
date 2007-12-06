@@ -36,14 +36,6 @@ public class Map extends Window {
 		super(base);
 		this.wmap = wmap;
         // main hud image area
-        
-        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()));
-        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
-        
-        TextureState[] textureStates = wmap.getMapTextures();
-		
-        hudQuad.setRenderState(textureStates[0]);
 
         AlphaState hudAS = core.getDisplay().getRenderer().createAlphaState();
         hudAS.setBlendEnabled(true);
@@ -52,8 +44,27 @@ public class Map extends Window {
         hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
         hudAS.setTestEnabled(false);
         hudAS.setEnabled(true);
-        hudQuad.setRenderState(hudAS);
-        windowNode.attachChild(hudQuad);
+        TextureState[] textureStates = wmap.getMapTextures();
+        {
+        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*6, ((core.getDisplay().getHeight()/10)*8));
+	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+			
+	        hudQuad.setRenderState(textureStates[0]);
+	        windowNode.attachChild(hudQuad);
+        }
+        
+        {
+        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*6, ((core.getDisplay().getHeight()/10)*8));
+	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+			
+	        hudQuad.setRenderState(textureStates[1]);
+	        windowNode.attachChild(hudQuad);
+	        hudQuad.setRenderState(hudAS);
+        }
+        
+        
 	}
 
 	@Override
