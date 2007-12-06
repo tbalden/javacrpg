@@ -21,9 +21,11 @@ package org.jcrpg.ui.map;
 import java.nio.ByteBuffer;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.water.Ocean;
+import org.jcrpg.world.time.Time;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -37,14 +39,15 @@ public class WorldMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
 	public BillboardNode bbMap;
 	public Sphere mapSphere = new Sphere("WORLD_MAP_SPHERE",new Vector3f(0,0,0),10,10,0.5f);
-	public Image imageBase;
+	public Image oceanImage;
 	public Image positionImage; 
+	public Image climateImage;
 	public byte[] positionImageSet;
 	
 	public int[][] map;
 	
-	public Texture baseTex, posTex;
-	public TextureState baseTexState, posTexState;
+	public Texture oceanTex, posTex, climateTex;
+	public TextureState baseTexState, posTexState, climateTexState;
 
 	public World world;
 	
@@ -63,6 +66,7 @@ public class WorldMap {
 	
 		map = new int[w.sizeZ][w.sizeX];
 		byte[] mapImage = new byte[w.sizeZ*w.sizeX*4];
+		byte[] climateImage = new byte[w.sizeZ*w.sizeX*4];
 		positionImageSet = new byte[w.sizeZ*w.sizeX*4];
 		for (int z = 0; z<w.sizeZ;z++)
 		{
@@ -80,31 +84,33 @@ public class WorldMap {
 						{
 							map[z][x] = (map[z][x]^WATER);
 							System.out.print("W");
-							mapImage[((z*w.sizeX)+x)*4+2] = (byte)100;
+							mapImage[((z*w.sizeX)+x)*4+2] = (byte)200;
 							mapImage[((z*w.sizeX)+x)*4+1] = (byte)0;
 						} else {
 							System.out.print(".");
-							
+							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification, 0, z*w.magnification, false).getBelt();
+							climateImage[((z*w.sizeX)+x)*4+0] = belt.colorBytes[0];
+							climateImage[((z*w.sizeX)+x)*4+1] = belt.colorBytes[1];
+							climateImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
+							mapImage[((z*w.sizeX)+x)*4+0] = belt.colorBytes[0];
+							mapImage[((z*w.sizeX)+x)*4+1] = belt.colorBytes[1];
+							mapImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
+							//mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
 						}
 					}
 					
 				}
 				mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
-				if (x==0 && z==0)
-				{
-					positionImageSet[((z*w.sizeX)+x)*4+0] = (byte)255;
-				}
-				positionImageSet[((z*w.sizeX)+x)*4+3] = (byte)150;
 				
 			}
 			System.out.println("");
 		}
-		imageBase = new Image();
-		imageBase.setType(Image.RGBA8888);
-		imageBase.setHeight(w.sizeZ);
-		imageBase.setWidth(w.sizeX);
+		oceanImage = new Image();
+		oceanImage.setType(Image.RGBA8888);
+		oceanImage.setHeight(w.sizeZ);
+		oceanImage.setWidth(w.sizeX);
 		ByteBuffer buffer = ByteBuffer.wrap(mapImage);
-		imageBase.setData(buffer);
+		oceanImage.setData(buffer);
 		
 		positionImage = new Image();
 		positionImage.setType(Image.RGBA8888);
@@ -132,16 +138,21 @@ public class WorldMap {
 				positionImageSet[((z*world.sizeX)+x)*4+0] = (byte)0;
 				positionImageSet[((z*world.sizeX)+x)*4+1] = (byte)0;
 				positionImageSet[((z*world.sizeX)+x)*4+2] = (byte)0;
+				positionImageSet[((z*world.sizeX)+x)*4+3] = (byte)0;
 			}
 		}
-		if (world.sizeX>99)
+		//if (world.sizeX>99)
+		int dotSize = world.sizeX/20;
 		{
-			for (int i=-4; i<=4; i++)
+			for (int i=-1*dotSize; i<=1*dotSize; i++)
 			{
-				for (int j=-4; j<=4; j++)
+				for (int j=-1*dotSize; j<=1*dotSize; j++)
 				{
 					try {
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)255;
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)0;
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+1] = (byte)0;
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+2] = (byte)0;
+						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+3] = (byte)255;
 					} catch (ArrayIndexOutOfBoundsException aiex)
 					{				
 					}
@@ -149,8 +160,9 @@ public class WorldMap {
 			}
 		}
 		positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
-		positionImageSet[((cz*world.sizeX)+cx)*4+1] = (byte)255;
-		positionImageSet[((cz*world.sizeX)+cx)*4+2] = (byte)255;
+		//positionImageSet[((cz*world.sizeX)+cx)*4+1] = (byte)255;
+		//positionImageSet[((cz*world.sizeX)+cx)*4+2] = (byte)255;
+		positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
 
 		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(buffer2);
@@ -162,12 +174,12 @@ public class WorldMap {
 
 	public TextureState[] getMapTextures()
 	{
-		baseTex = new Texture();
-		baseTex.setImage(imageBase);
+		oceanTex = new Texture();
+		oceanTex.setImage(oceanImage);
 		posTex = new Texture();
 		posTex.setImage(positionImage);
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		baseTexState.setTexture(baseTex);
+		baseTexState.setTexture(oceanTex);
 		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		posTexState.setTexture(posTex);
 		return new TextureState[]{baseTexState,posTexState};

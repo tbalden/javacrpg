@@ -31,6 +31,8 @@ public class ClimateBelt  extends ClimatePart {
 
 	public String STATIC_ID = ClimateBelt.class.getCanonicalName();
 	
+	public byte[] colorBytes = new byte[] {0,0,(byte)150}; 
+	
 	public static Season genericSeason = new Season();
 
 	/**
