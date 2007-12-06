@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.place;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
@@ -56,6 +57,7 @@ public class World extends Place {
 	public FloraContainer floraContainer;
 	
 	public HashMap<String, Geography> geographies;
+	public HashMap<String, ArrayList<Geography>> geographyCache = new HashMap<String, ArrayList<Geography>>();
 	public HashMap<String, Water> waters;
 	public HashMap<String, Political> politicals;
 	public HashMap<String, Economic> economics;
@@ -154,9 +156,20 @@ public class World extends Place {
 			Cube retCube = null;
 			boolean insideGeography = false;
 			tempGeosForSurface.clear();
-			for (Geography geo : geographies.values()) {	
+			//System.out.println(geographies.values().size());
+			ArrayList<Geography> cachedOnes = geographyCache.get(generatePositionCacheKey(worldX, worldY, worldZ, lossFactor));
+			//if (cachedOnes!=null) System.out.println(cachedOnes.size());
+			if (cachedOnes!=null)
+			for (Geography geo : cachedOnes) {
+				//System.out.print("-!");
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
+					/*try {
+						throw new Exception("--");
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}*/
 					insideGeography = true;
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					if (geoCube!=null && geo instanceof Surface)
@@ -312,6 +325,24 @@ public class World extends Place {
 		if (x<0) x=realSizeX+x;
 		if (x>=realSizeX) x = x%realSizeX;
 		return x;
+	}
+	
+	int lossFactor = 10;
+	
+	public void addGeography(Geography g)
+	{
+		geographies.put(g.id, g);
+		String[] keys = g.generatePositionCacheKeys(lossFactor);
+		for (String key : keys)
+		{
+			ArrayList<Geography> geos = geographyCache.get(key);
+			if (geos==null)
+			{
+				geos = new ArrayList<Geography>();
+				geographyCache.put(key, geos);
+			}
+			geos.add(g);
+		}
 	}
 
 }

@@ -27,6 +27,39 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.time.Time;
 
 public abstract class Place {
+	
+	public int origoX, origoY, origoZ, sizeX, sizeY, sizeZ, magnification;
+
+	public static String generatePositionCacheKey(int worldX, int worldY, int worldZ, int lossFactor)
+	{
+		int k = ((worldX/lossFactor)<< 16) + ((worldY/lossFactor) << 8) + ((worldZ/lossFactor));
+		
+		return ""+k;
+	}
+
+	public String[] generatePositionCacheKeys(int lossFactor)
+	{
+		int realXOrigo = ((origoX)*magnification)/(lossFactor);
+		int realYOrigo = ((origoY)*magnification)/(lossFactor);
+		int realZOrigo = ((origoZ)*magnification)/(lossFactor);
+		int realXEnd = ((origoX+sizeX)*magnification)/(lossFactor);
+		int realYEnd = ((origoY+sizeY)*magnification)/(lossFactor);
+		int realZEnd = ((origoZ+sizeZ)*magnification)/(lossFactor);
+		ArrayList<String> keys = new ArrayList<String>();
+		for (int x= realXOrigo; x<realXEnd; x++)
+		{
+			for (int y= realYOrigo; y<realYEnd; y++)
+			{
+				for (int z= realZOrigo; z<realZEnd; z++)
+				{
+					int k = ((x)<< 16) + ((y) << 8) + ((z));
+					//System.out.println("ADDING "+id+" "+k);
+					keys.add(""+k);
+				}				
+			}
+		}
+		return (String[])keys.toArray(new String[0]);
+	}
 
 	protected static Side[][] EMPTY = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side()} };
 

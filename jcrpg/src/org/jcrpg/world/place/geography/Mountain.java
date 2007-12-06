@@ -68,7 +68,6 @@ public class Mountain extends Geography implements Surface{
 	static Side[][] STEEP_WEST = new Side[][] { null, INTERNAL_ROCK_SIDE, null,STEEP,null,null };
 
 
-	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	public int groundLevel;
 	private int worldGroundLevel;
 	private int mountainSizeY;

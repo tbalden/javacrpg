@@ -44,6 +44,7 @@ public class WorldParams {
 	public String[] climates;
 	public int[] climateSizeMuls;
 	public String[] geos;
+	public int geoNormalSize;
 
 	/**
 	 * World generation parameter constructor.
@@ -58,7 +59,7 @@ public class WorldParams {
 	 * @param climateSizeMuls Climate size multiplier
 	 * @param geos Geography keys to use for generation.
 	 */
-	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, int[] climateSizeMuls,String[] geos) {
+	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, int[] climateSizeMuls,String[] geos, int geoNormalSize) {
 		super();
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -70,6 +71,7 @@ public class WorldParams {
 		this.climates = climates;
 		this.climateSizeMuls = climateSizeMuls;
 		this.geos = geos;
+		this.geoNormalSize = geoNormalSize;
 	}
 
 	
