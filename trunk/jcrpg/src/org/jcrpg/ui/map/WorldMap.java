@@ -84,7 +84,7 @@ public class WorldMap {
 						{
 							map[z][x] = (map[z][x]^WATER);
 							System.out.print("W");
-							mapImage[((z*w.sizeX)+x)*4+2] = (byte)200;
+							mapImage[((z*w.sizeX)+x)*4+2] = (byte)100;
 							mapImage[((z*w.sizeX)+x)*4+1] = (byte)0;
 						} else {
 							System.out.print(".");
@@ -95,7 +95,6 @@ public class WorldMap {
 							mapImage[((z*w.sizeX)+x)*4+0] = belt.colorBytes[0];
 							mapImage[((z*w.sizeX)+x)*4+1] = belt.colorBytes[1];
 							mapImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
-							//mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
 						}
 					}
 					

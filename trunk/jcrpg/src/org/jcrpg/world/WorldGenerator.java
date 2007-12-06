@@ -90,13 +90,20 @@ public class WorldGenerator {
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);
 		
-		int climateSize = wZ/(params.climates.length*2);
-		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(params.climates.length*2));
+		int climateSizeDivider = 0;
+		for (int i=0; i<params.climateSizeMuls.length; i++)
+		{
+			climateSizeDivider+=params.climateSizeMuls[i];
+		}
+		int climateSize = wZ/(climateSizeDivider*2);
+		
+		
+		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(climateSizeDivider*2));
 		int[] correctedClimateSizes = new int[params.climates.length];
 		// calc the remaining size in the world
-		int diffAvailable = wZ-climateSize*(params.climates.length*2);
+		int diffAvailable = wZ-climateSize*(climateSizeDivider*2);
 		System.out.println("DIFF = "+diffAvailable);
-		int mod = params.climates.length*2/diffAvailable;
+		int mod = climateSizeDivider*2/diffAvailable;
 		int currentWorldZ = 0;
 		for (int j=0; j<2; j++) {
 			boolean orderAsc = j%2==0?true:false;
@@ -109,11 +116,11 @@ public class WorldGenerator {
 				Class c = Class.forName(className);
 				Constructor<ClimateBelt> constructor = c.getConstructors()[0];
 				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
-				int climateSizeCorrected = climateSize;
+				int climateSizeCorrected = climateSize*params.climateSizeMuls[count];
 				if (diffAvailable>0 && (i+j*params.climates.length)%mod == 0)
 				{
 					climateSizeCorrected+=1;
-					diffAvailable--;
+					diffAvailable-=1;
 				}
 				belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSizeCorrected, 0, 0, currentWorldZ));
 				currentWorldZ+=climateSizeCorrected;
