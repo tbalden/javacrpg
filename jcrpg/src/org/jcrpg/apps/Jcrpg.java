@@ -75,7 +75,7 @@ public class Jcrpg {
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(1000,100,2,100,10,50,2,climates,climateSizeMuls,geos,1000));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,2,100,10,50,2,climates,climateSizeMuls,geos,100));
 		w2.engine = e;
 
 		app.setWorld(w2);
@@ -124,7 +124,7 @@ public class Jcrpg {
 		w.economics.put(h.id, h);
 		System.out.println(System.currentTimeMillis()-time+" ms");
 
-		Plain p = new Plain("p1",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 0);
+		Plain p = new Plain("p1",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 0, true);
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
 		w.geographies.put(p.id, p);
 
@@ -132,7 +132,7 @@ public class Jcrpg {
 		w.geographies.put(cave.id, cave);
 		
 		
-		Mountain m = new Mountain("m1",w,null,10,5,2,5,1,w.getSeaLevel(10)-1,1,w.getSeaLevel(10));
+		Mountain m = new Mountain("m1",w,null,10,5,2,5,1,w.getSeaLevel(10)-1,1,w.getSeaLevel(10),true);
 		w.geographies.put(m.id, m);
 		
 		River r = new River("r1",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,River.STARTSIDE_WEST,2,1,0.2f,12);
@@ -145,21 +145,21 @@ public class Jcrpg {
 		l.noWaterInTheBed = false;
 		w.waters.put(l.id, l);
 
-		p = new Plain("21",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 1);
+		p = new Plain("21",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 1, true);
 		w.geographies.put(p.id, p);
-		p = new Plain("22",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 2);
+		p = new Plain("22",w,null,w.getSeaLevel(10),10, 1, 2, 1, 0, w.getSeaLevel(10)-1, 2, true);
 		w.geographies.put(p.id, p);
 		
-		p = new Plain("24",w,null,w.getSeaLevel(10),10, 4, 2, 1, 4, w.getSeaLevel(10)-1, 0);
+		p = new Plain("24",w,null,w.getSeaLevel(10),10, 4, 2, 1, 4, w.getSeaLevel(10)-1, 0, true);
 		w.geographies.put(p.id, p);
 
-		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10, 2, 2, 1, 1, w.getSeaLevel(10)-1, 0);
+		Forest f = new Forest("4",w,null,w.getSeaLevel(10),10, 2, 2, 1, 1, w.getSeaLevel(10)-1, 0,true);
 		w.geographies.put(f.id, f);
 		/*p = new Plain("4",w,null,w.getSeaLevel(10),10);
 		p.setBoundaries(BoundaryUtils.createCubicBoundaries(10, 2, 2, 1, 1, w.getSeaLevel(10)-1, 0));
 		w.geographies.put(p.id, p);*/
 		
-		p = new Plain("5",w,null,w.getSeaLevel(10),10, 1, 2, 1, 3, w.getSeaLevel(10)-1, 0);
+		p = new Plain("5",w,null,w.getSeaLevel(10),10, 1, 2, 1, 3, w.getSeaLevel(10)-1, 0, true);
 		w.geographies.put(p.id, p);
 		
 		w.worldMap = w2.worldMap; // dirty hack here for the release only

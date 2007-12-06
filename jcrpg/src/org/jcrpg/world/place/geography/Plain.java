@@ -37,7 +37,8 @@ public class Plain extends Geography implements Surface {
 	public int groundLevel;
 	private int worldGroundLevel;
 	
-	public Plain(String id, Place parent,PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+
+	public Plain(String id, Place parent,PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.groundLevel = groundLevel;
 		this.magnification = magnification;
@@ -48,7 +49,10 @@ public class Plain extends Geography implements Surface {
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
-		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		if (fillBoundaries)
+			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		else
+			setBoundaries(new Boundaries(magnification));
 	}
 
 

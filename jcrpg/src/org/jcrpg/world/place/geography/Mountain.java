@@ -25,6 +25,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -72,7 +73,7 @@ public class Mountain extends Geography implements Surface{
 	private int worldGroundLevel;
 	private int mountainSizeY;
 	
-	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel) throws Exception {
+	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -85,7 +86,11 @@ public class Mountain extends Geography implements Surface{
 		this.origoZ = origoZ;
 		this.groundLevel = groundLevel;
 		worldGroundLevel=groundLevel*magnification;
-		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		if (fillBoundaries)
+			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		else
+			setBoundaries(new Boundaries(magnification));
+
 	}
 
 	
