@@ -117,10 +117,19 @@ public class WorldGenerator {
 				Constructor<ClimateBelt> constructor = c.getConstructors()[0];
 				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
 				int climateSizeCorrected = climateSize*params.climateSizeMuls[count];
-				if (diffAvailable>0 && (i+j*params.climates.length)%mod == 0)
+				if (diffAvailable>0 && ((i+j*params.climates.length)%mod == 0))
 				{
 					climateSizeCorrected+=1;
 					diffAvailable-=1;
+				}
+				if ((j==1 && i==params.climates.length-1))
+				{
+					while (diffAvailable>0)
+					{
+						climateSizeCorrected++;
+						diffAvailable--;
+					}
+					
 				}
 				belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, climateSizeCorrected, 0, 0, currentWorldZ));
 				currentWorldZ+=climateSizeCorrected;
