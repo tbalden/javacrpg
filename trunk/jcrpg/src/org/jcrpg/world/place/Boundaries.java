@@ -18,6 +18,7 @@
 package org.jcrpg.world.place;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Cube Coordinate based area bounding
@@ -34,26 +35,26 @@ public class Boundaries {
 	/**
 	 * All coordinates
 	 */
-	public HashMap<String,int[]> area;
+	public HashSet<Integer> area;
 
 	/**
 	 * The limiting coordinates
 	 */
-	public HashMap<String,int[]> limits;
+	public HashSet<Integer> limits;
 	
 	public Boundaries(int magnification)
 	{
 		this.magnification = magnification;
-		area = new HashMap<String, int[]>();
-		limits = new HashMap<String, int[]>();
+		area = new HashSet<Integer>();
+		limits = new HashSet<Integer>();
 	}
 	
 
 	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		String key = getKey(x*magnification, y*magnification, z*magnification);
-		limits.put(key,new int[]{x,y,z});
+		Integer key = getKey(x*magnification, y*magnification, z*magnification);
+		limits.add(key);
 	}
 	public void removeLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -65,8 +66,8 @@ public class Boundaries {
 	public void addCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		String key = getKey(x*magnification, y*magnification, z*magnification);
-		area.put(key,new int[]{x,y,z});
+		Integer key = getKey(x*magnification, y*magnification, z*magnification);
+		area.add(key);
 	}
 	public void removeCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -81,37 +82,37 @@ public class Boundaries {
 		 * The common limits can be removed, they are overlapping,
 		 * not common limits are new limits.
 		 */
-		for (String element : area2.getArea().keySet()) {
-			if (limits.containsKey(element))
+		for (Integer element : area2.getArea()) {
+			if (limits.contains(element))
 			{
 				limits.remove(element);
 			} else
 			{
 				// if not an internal element already, it is a new limiter
-				if (!area.containsKey(element)) 
-					limits.put(element, area2.getArea().get(element));
+				if (!area.contains(element)) 
+					limits.add(element);
 			}
 		};
-		area.putAll(area2.getArea());
+		area.addAll(area2.getArea());
 	}
 	
 	public void subtractBoundaries(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (String element : area2.getArea().keySet()) {
+		for (Integer element : area2.getArea()) {
 			area.remove(element);
 		};
 		/*
 		 * The common limits can be removed, they are overlapping,
 		 * not common limits are new limits.
 		 */
-		for (String element : area2.getArea().keySet()) {
-			if (limits.containsKey(element))
+		for (Integer element : area2.getArea()) {
+			if (limits.contains(element))
 			{
 				limits.remove(element);
 			} else
 			{
-				limits.put(element, area2.getArea().get(element));
+				limits.add(element);
 			}
 		};
 	}
@@ -119,8 +120,8 @@ public class Boundaries {
 	public boolean isOverlapping(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (String element : area2.getArea().keySet()) {
-			return area.containsKey(element);
+		for (Integer element : area2.getArea()) {
+			return area.contains(element);
 		}
 		return false;
 	}
@@ -130,25 +131,23 @@ public class Boundaries {
 		//if (absoluteY<0 && magnification>1) {
 			//absoluteY=absoluteY-1*magnification;
 		//}
-		boolean ret = area.containsKey(getKey(absouluteX-absouluteX%magnification, absoluteY-absoluteY%magnification, absoluteZ-absoluteZ%magnification));
+		boolean ret = area.contains(getKey(absouluteX-absouluteX%magnification, absoluteY-absoluteY%magnification, absoluteZ-absoluteZ%magnification));
 		//if (ret && magnification==1) System.out.println(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
 		return ret;
 	}
 	
-	public HashMap<String,int[]> getArea()
+	public HashSet<Integer> getArea()
 	{
 		return area;
 	}
-	public HashMap<String,int[]> getLimits()
+	public HashSet<Integer> getLimits()
 	{
 		return limits;
 	}
 	
-	public String getKey(int x,int y,int z){
-		//System.out.println("GETKEY "+ x +" "+ y +" "+  z);
-		//return "GETKEY "+ x +" "+ y +" "+  z;
+	public Integer getKey(int x,int y,int z){
 		int s = ((x) << 16) + ((y) << 8) + (z);
-		return ""+s;
+		return s;
 	}
 	
 }

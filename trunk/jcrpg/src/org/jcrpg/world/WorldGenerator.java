@@ -20,10 +20,8 @@ package org.jcrpg.world;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.jcrpg.ui.map.WorldMap;
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
@@ -33,7 +31,6 @@ import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.BoundaryUtils;
-import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -42,7 +39,6 @@ import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
-import org.jcrpg.world.place.water.Lake;
 import org.jcrpg.world.place.water.Ocean;
 
 public class WorldGenerator {
@@ -159,12 +155,25 @@ public class WorldGenerator {
 		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
 		w.waters.put(l.id, l);
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
+		
+		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(gMag),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		w.addGeography(p);
+		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(gMag),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		w.addGeography(f);
+		
 		for (int x=0; x<gWX; x++)
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				Plain p = new Plain("BIGPLAIN"+x+"-"+z,w,null,w.getSeaLevel(gMag),gMag, 1, 2, 1, x, w.getSeaLevel(gMag)-1, z);
-				w.addGeography(p);
+				if ((x+z)%2==0)
+				{
+					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+				} else
+				{
+					f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+					f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+				}					
 			}
 		}
 

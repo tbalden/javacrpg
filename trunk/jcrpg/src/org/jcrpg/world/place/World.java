@@ -159,8 +159,9 @@ public class World extends Place {
 			//System.out.println(geographies.values().size());
 			ArrayList<Geography> cachedOnes = geographyCache.get(generatePositionCacheKey(worldX, worldY, worldZ, lossFactor));
 			//if (cachedOnes!=null) System.out.println(cachedOnes.size());
-			if (cachedOnes!=null)
-			for (Geography geo : cachedOnes) {
+			//if (cachedOnes!=null)
+			//for (Geography geo : cachedOnes) {
+			for (Geography geo : geographies.values()) {
 				//System.out.print("-!");
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
@@ -332,7 +333,7 @@ public class World extends Place {
 	public void addGeography(Geography g)
 	{
 		geographies.put(g.id, g);
-		String[] keys = g.generatePositionCacheKeys(lossFactor);
+		/*String[] keys = g.generatePositionCacheKeys(lossFactor);
 		for (String key : keys)
 		{
 			ArrayList<Geography> geos = geographyCache.get(key);
@@ -342,7 +343,7 @@ public class World extends Place {
 				geographyCache.put(key, geos);
 			}
 			geos.add(g);
-		}
+		}*/
 	}
 
 }
