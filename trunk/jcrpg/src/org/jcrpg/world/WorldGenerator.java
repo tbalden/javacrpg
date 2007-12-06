@@ -90,19 +90,19 @@ public class WorldGenerator {
 		Climate climate = new Climate("climate",w);
 		w.setClimate(climate);
 		
-		int climateSize = wZ/(params.climates.length*4);
-		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(params.climates.length*4));
+		int climateSize = wZ/(params.climates.length*2);
+		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(params.climates.length*2));
 		int[] correctedClimateSizes = new int[params.climates.length];
 		// calc the remaining size in the world
-		int diffAvailable = wZ-climateSize*(params.climates.length*4);
+		int diffAvailable = wZ-climateSize*(params.climates.length*2);
 		System.out.println("DIFF = "+diffAvailable);
-		int mod = params.climates.length*4/diffAvailable;
+		int mod = params.climates.length*2/diffAvailable;
 		int currentWorldZ = 0;
-		for (int j=0; j<4; j++) {
+		for (int j=0; j<2; j++) {
 			boolean orderAsc = j%2==0?true:false;
 			for (int i=0; i<params.climates.length; i++)
 			{
-				int count = orderAsc? i:3-i;
+				int count = orderAsc? i:params.climates.length-i-1;
 				String climateName = params.climates[count];
 				System.out.println("CLIMATE: "+climateName);
 				String className = climateBeltMap.get(climateName);
