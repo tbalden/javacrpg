@@ -19,7 +19,6 @@ package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.WeakHashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
@@ -27,8 +26,8 @@ import org.jcrpg.world.place.World;
 
 public class RenderedArea {
 	
-	public HashMap<String, RenderedCube> worldCubeCache = new HashMap<String, RenderedCube>(); 
-	public HashMap<String, RenderedCube> worldCubeCacheNext = new HashMap<String, RenderedCube>(); 
+	public HashMap<Integer, RenderedCube> worldCubeCache = new HashMap<Integer, RenderedCube>(); 
+	public HashMap<Integer, RenderedCube> worldCubeCacheNext = new HashMap<Integer, RenderedCube>(); 
 	
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction)
 	{
@@ -62,7 +61,7 @@ public class RenderedArea {
 				
 			}
 		}
-		worldCubeCacheNext = new HashMap<String, RenderedCube>();
+		worldCubeCacheNext = new HashMap<Integer, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
@@ -75,8 +74,7 @@ public class RenderedArea {
 					int worldZ = z-z1;
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
-					int s = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
-					String key = ""+s;
+					int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
 					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
 						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ);
