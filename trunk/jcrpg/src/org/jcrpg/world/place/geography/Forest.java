@@ -30,6 +30,8 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.WorldSizeBitBoundaries;
 import org.jcrpg.world.place.geography.forest.Bushes;
 import org.jcrpg.world.place.geography.forest.Clearing;
 
@@ -60,7 +62,7 @@ public class Forest extends Geography implements Surface {
 		if (fillBoundaries)
 			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		else
-			setBoundaries(new Boundaries(magnification));
+			setBoundaries( new WorldSizeBitBoundaries(magnification,(World)parent));
 	}
 
 	static Side[][] FOREST = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };

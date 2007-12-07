@@ -28,6 +28,8 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
 public class Plain extends Geography implements Surface {
 
@@ -52,7 +54,7 @@ public class Plain extends Geography implements Surface {
 		if (fillBoundaries)
 			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		else
-			setBoundaries(new Boundaries(magnification));
+			setBoundaries( new WorldSizeBitBoundaries(magnification,(World)parent));
 	}
 
 

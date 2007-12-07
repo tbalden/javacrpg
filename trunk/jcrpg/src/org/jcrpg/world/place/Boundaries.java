@@ -17,7 +17,6 @@
 
 package org.jcrpg.world.place;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
