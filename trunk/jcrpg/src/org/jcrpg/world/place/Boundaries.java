@@ -144,7 +144,7 @@ public class Boundaries {
 		return limits;
 	}
 	
-	public Integer getKey(int x,int y,int z){
+	public static Integer getKey(int x,int y,int z){
 		int s = ((x) << 16) + ((y) << 8) + (z);
 		return s;
 	}

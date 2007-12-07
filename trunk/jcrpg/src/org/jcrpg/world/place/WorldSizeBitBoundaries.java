@@ -18,10 +18,16 @@
 
 package org.jcrpg.world.place;
 
+/**
+ * Bit based boundary - positions are recorded as bits in a series of byte arrays.
+ * @author pali
+ *
+ */
 public class WorldSizeBitBoundaries extends Boundaries {
 
 	byte[] bytes;
 	int gWX, gWY, gWZ;
+	
 	
 	public WorldSizeBitBoundaries(int magnification, World w) {
 		super(magnification);
@@ -36,20 +42,16 @@ public class WorldSizeBitBoundaries extends Boundaries {
 		
 		//System.out.println(""+gWX+" "+gWY+" "+gWZ+" "+(int)((gWX*gWY*gWZ)/8));
 		// negative int on too big world size!! add more byte arrays!
+		System.out.println("(gWX*gWY*gWZ)/8="+(gWX*gWY*gWZ)/8); // TODO mem calculation exception if too high: 1000 magnification / 10 geo magnification in a 100x100 world would eat 200MB!
 		bytes = new byte[(gWX*gWY*gWZ)/8];
 	}
 
+	byte[] placeBitMap = new byte[] {1,2,4,8,16,32,64,(byte)128};
+	
 	@Override
 	public void addCube(int magnification, int x, int y, int z) throws Exception {
 		int place = (x + y*gWY + z*(gWY*gWX))%8;
-		if (place==0) place = 1; else
-		if (place==1) place = 2; else
-		if (place==3) place = 4; else
-		if (place==4) place = 8; else
-		if (place==5) place = 16; else
-		if (place==6) place = 32; else
-		if (place==7) place = 64;
-		
+		place = placeBitMap[place];
 		int byteCount = (x + y*gWY + z*(gWY*gWX))/8;
 		byte b = bytes[byteCount];
 		
@@ -63,13 +65,7 @@ public class WorldSizeBitBoundaries extends Boundaries {
 		int y = absoluteY / magnification;
 		int z = absoluteZ / magnification;
 		int place = (x + y*gWY + z*(gWY*gWX))%8;
-		if (place==0) place = 1; else
-		if (place==1) place = 2; else
-		if (place==3) place = 4; else
-		if (place==4) place = 8; else
-		if (place==5) place = 16; else
-		if (place==6) place = 32; else
-		if (place==7) place = 64;
+		place = placeBitMap[place];
 		
 		int byteCount = (x + y*gWY + z*(gWY*gWX))/8;
 		byte b = bytes[byteCount];

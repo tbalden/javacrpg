@@ -69,6 +69,7 @@ import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -1174,7 +1175,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		return cam;
 	}
 	
-	HashMap<String, RenderedCube> hmCurrentCubes = new HashMap<String, RenderedCube>();
+	HashMap<Integer, RenderedCube> hmCurrentCubes = new HashMap<Integer, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
 	
@@ -1679,7 +1680,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	for (RenderedCube c:removableCubes)
     	{
     		if (c==null) continue;
-    		c = hmCurrentCubes.get(""+c.cube.x+" "+c.cube.y+" "+c.cube.z);
+    		Integer cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
+    		c = hmCurrentCubes.get(cubeKey);
     		detacheable.add(c);
     		liveNodes-= c.hsRenderedNodes.size();
     	}
@@ -1688,7 +1690,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     	System.out.println("getRenderedSpace size="+cubes.length);
 		
-		HashMap<String, RenderedCube> hmNewCubes = new HashMap<String, RenderedCube>();
+		HashMap<Integer, RenderedCube> hmNewCubes = new HashMap<Integer, RenderedCube>();
 
 		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 		
@@ -1696,7 +1698,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			//System.out.println("CUBE "+i);
 			RenderedCube c = cubes[i];
-			String cubeKey = ""+c.cube.x+" "+c.cube.y+" "+c.cube.z;
+			Integer cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
 			if (hmCurrentCubes.containsKey(cubeKey))
 			{
 				already++;
