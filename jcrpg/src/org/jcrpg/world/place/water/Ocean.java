@@ -52,12 +52,11 @@ public class Ocean extends Water {
 	static Side[][] LAKE_ROCKSIDE_WEST = new Side[][] { null, null, null,ROCKSIDE,null,WATER_EMPTY };
 	static Side[][] LAKE_ROCKSIDE_BOTTOM = new Side[][] { null, null, null, null, null,null };//ROCKBOTTOM };
 
-	public int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 
 	public int depth = 1;
 	public int noWaterPercentage = 0;
 	public int worldGroundLevel;
-	public int groundLevel;
+
 	/**
 	 * How dense the water parts should stick together
 	 */
@@ -66,7 +65,7 @@ public class Ocean extends Water {
 	int centerX, centerZ, realSizeX, realSizeZ;
 	Vector3f center = new Vector3f();
 
-	public Ocean(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
+	public Ocean(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -84,8 +83,7 @@ public class Ocean extends Water {
 		center.set(centerX, centerZ, 0);
 		
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		this.groundLevel = groundLevel;
-		worldGroundLevel=groundLevel*magnification;
+		this.worldGroundLevel=worldGroundLevel;
 		this.noWaterPercentage = noWaterPercentage;
 		this.density = density;
 	}
@@ -184,6 +182,7 @@ public class Ocean extends Water {
 		int localY = y-worldGroundLevel;
 		int localZ = z-origoZ;
 		temp.set(localX, localZ, 0);
+		//System.out.println("worldGroundLevel"+worldGroundLevel);
 		if (worldGroundLevel-y <= depth && worldGroundLevel-y>=0) 
 		{
 			{

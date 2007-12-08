@@ -152,13 +152,13 @@ public class WorldGenerator {
 		int gWY = (wY*wMag)/gMag;
 		int gWZ = (wZ*wMag)/gMag;
 		
-		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(wMag),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
+		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(1),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
 		w.waters.put(l.id, l);
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
-		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(gMag),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(p);
-		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(gMag),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(f);
 		
 		for (int x=0; x<gWX; x++)

@@ -105,7 +105,7 @@ public class World extends Place {
 	
 	public int getSeaLevel(int magnification)
 	{
-		return ((sizeY*this.magnification)/2)/magnification;
+		return (int)(((sizeY*this.magnification)/2)/magnification);
 	}
 
 
@@ -190,7 +190,7 @@ public class World extends Place {
 								if (floraCube!=null)
 								{
 									Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
-									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+									retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);									
 									retCube.internalCube = geoCube.internalCube;
 								} 
 								else 
@@ -225,6 +225,7 @@ public class World extends Place {
 				for (Water w : waters.values()) {
 					if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 					{
+						//System.out.println("WATER INSIDE: "+w.id);
 						if (w.isWaterPoint(worldX, worldY, worldZ))
 						{
 							for (SurfaceHeightAndType s:tempGeosForSurface.values())

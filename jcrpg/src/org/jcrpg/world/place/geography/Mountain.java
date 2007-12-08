@@ -69,23 +69,23 @@ public class Mountain extends Geography implements Surface{
 	static Side[][] STEEP_WEST = new Side[][] { null, INTERNAL_ROCK_SIDE, null,STEEP,null,null };
 
 
-	public int groundLevel;
+	//public int groundLevel;
 	private int worldGroundLevel;
 	private int mountainSizeY;
 	
-	public Mountain(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, boolean fillBoundaries) throws Exception {
+	public Mountain(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.mountainSizeY = sizeY-(groundLevel-origoY);
-		System.out.println("MOUNTAIN SIZE = "+mountainSizeY);
+		this.mountainSizeY = sizeY-((worldGroundLevel/magnification)-origoY);
+		System.out.println("MOUNTAIN SIZE = "+mountainSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
-		this.groundLevel = groundLevel;
-		worldGroundLevel=groundLevel*magnification;
+		//this.groundLevel = groundLevel;
+		this.worldGroundLevel=worldGroundLevel;
 		if (fillBoundaries)
 			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		else
