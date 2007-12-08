@@ -2755,7 +2755,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
@@ -3105,44 +3105,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		intRootNode.setModelBound(null);
 		extRootNode.setModelBound(null);
 
-
-		/*loadText = Text.createDefaultTextLabel( "HUD Node 1 Text" );
-		loadText.setRenderQueueMode(Renderer.QUEUE_OPAQUE);
-		loadText.setLightCombineMode(LightState.OFF);
-		loadText.setLocalTranslation(new Vector3f(0,20,0));
-		loadText.setCullMode( SceneElement.CULL_NEVER );
-		loadText.setTextureCombineMode( TextureState.REPLACE );
-
-		loadFloppy = new Quad("floppy",0.2f,0.2f);
-		loadFloppy.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		Texture textureFloppy = TextureManager.loadTexture("./data/"+"floppy.jpg",Texture.MM_LINEAR,
-                Texture.FM_LINEAR);*/
-
-		//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		//textureFloppy.setApply(Texture.AM_REPLACE);
-		//textureFloppy.setRotation(J3DCore.qTexture);
-
-		/*TextureState ts = getDisplay().getRenderer().createTextureState();
-		ts.setTexture(textureFloppy, 0);		
-        ts.setEnabled(true);
-        loadFloppy.setRenderState(ts);
-        loadFloppy.setLightCombineMode(LightState.OFF);
-        loadFloppy.setCullMode(SceneElement.CULL_NEVER);
-        //loadFloppy.setLocalTranslation(new Vector3f(0,20,0));
-        bbFloppy = new BillboardNode("floppy");
-        bbFloppy.attachChild(loadFloppy);
-        bbFloppy.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-        bbFloppy.setCullMode(SceneElement.CULL_NEVER);
-        bbFloppy.setLocalTranslation(new Vector3f(0,20,0));
-
-
-		hud1Node = new Node( "HUD 1 node" );
-		hud1Node.setRenderState( loadText.getRenderState( RenderState.RS_ALPHA ) );
-		hud1Node.setRenderState( loadText.getRenderState( RenderState.RS_TEXTURE ) );
-		hud1Node.attachChild( loadText );
-		hud1Node.setCullMode( SceneElement.CULL_NEVER );
-		rootNode.attachChild(hud1Node);*/
-
         //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
 		
@@ -3309,7 +3271,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
-		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?rootNode:skyParentNode);
+		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?groundParentNode:skyParentNode);
 		skyParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens flare
 		skySphere.setRenderState(cs_none);
@@ -3403,7 +3365,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 			
-			if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER) 
+			//if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER) 
 			pManager.updatePasses(tpf);
 		}
 	}
@@ -3413,7 +3375,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
         try {
-        	if (BLOOM_EFFECT||SHADOWS||WATER_SHADER) 
+        	//if (BLOOM_EFFECT||SHADOWS||WATER_SHADER) 
         		pManager.renderPasses(display.getRenderer());
         } catch (NullPointerException npe)
         {

@@ -23,7 +23,6 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
-import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -43,16 +42,14 @@ public class Forest extends Geography implements Surface {
 	public HashMap<String, Clearing>clearings;
 	public HashMap<String, Bushes>bushes;
 	
-	public int groundLevel;
 	private int worldGroundLevel;
 	
-	public Forest(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
+	public Forest(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		clearings = new HashMap<String, Clearing>();
 		bushes = new HashMap<String, Bushes>();
-		this.groundLevel = groundLevel;
 		this.magnification = magnification;
-		worldGroundLevel=groundLevel*magnification;
+		this.worldGroundLevel=worldGroundLevel;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;

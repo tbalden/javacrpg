@@ -57,12 +57,11 @@ public class Lake extends Water {
 	public int depth = 1;
 	int noWaterPercentage = 0;
 	private int worldGroundLevel;
-	int groundLevel;
 	
 	int centerX, centerZ, realSizeX, realSizeZ;
 	Vector3f center = new Vector3f();
 
-	public Lake(String id, Place parent, PlaceLocator loc, int groundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
+	public Lake(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -80,8 +79,7 @@ public class Lake extends Water {
 		center.set(centerX, centerZ, 0);
 		
 		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		this.groundLevel = groundLevel;
-		worldGroundLevel=groundLevel*magnification;
+		this.worldGroundLevel=worldGroundLevel;
 		this.noWaterPercentage = noWaterPercentage;
 	}
 
