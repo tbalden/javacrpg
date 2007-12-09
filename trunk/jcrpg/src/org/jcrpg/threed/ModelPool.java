@@ -74,7 +74,7 @@ public class ModelPool {
 			rotated = true;
 		}
 		
-		String key = model.id+(rotated);
+		String key = model.id+(rotated)+rc.cube.internalCube;
 		
 		PoolItemContainer cont = pool.get(key);
 		synchronized (pool) {

@@ -96,24 +96,24 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	float startFog;
 	
-	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh) {
+	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal) {
 		this.core = core;
-		Node parentOrig = sharedParentCache.get(id);
+		Node parentOrig = sharedParentCache.get(id+internal);
 		if (parentOrig==null)
 		{
 			parentOrig = new Node();
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
 			//parentOrig.setRenderState(core.f)
-			parentOrig.setLightCombineMode(LightState.OFF);
-			sharedParentCache.put(id,parentOrig);
+			if (!internal) parentOrig.setLightCombineMode(LightState.OFF);
+			sharedParentCache.put(id+internal,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.attachChild(this);
 		parent.updateModelBound();
-		J3DCore.hmSolidColorSpatials.put(parent, parent);
+		if (!internal) J3DCore.hmSolidColorSpatials.put(parent, parent);
 		
-		vertexShader = J3DCore.ANIMATED_GRASS||J3DCore.ANIMATED_TREES;
+		vertexShader = (J3DCore.ANIMATED_GRASS||J3DCore.ANIMATED_TREES) && !internal;
 
         if (vertexShader && vp==null)
         { 
@@ -259,7 +259,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	long passedTime = 0;
 	float timeCounter = 0;
 	long startTime = System.currentTimeMillis();
-	public float windPower = 0.5f; 
+	public float windPower = 1.0f; 
 	int whichDiff = -1;
 	
 	public static final float TIME_DIVIDER = 400;

@@ -225,24 +225,29 @@ public class Cave extends Geography implements Surface {
 					c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
 				else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
 			}
+			c.overwritePower = 0;			 // this should overwrite only empty spaces, other geos should set their empty
+			// internal space to 0 too!
+
 			if (relX==entranceLength+1 && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_WEST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+				c.overwritePower = 1;
 			}
 			if (relX==entranceLength-realSizeX-1 && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_EAST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+				c.overwritePower = 1;
 			}
 			if (relZ==entranceLength+1 && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_SOUTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+				c.overwritePower = 1;
 			}
 			if (relZ==entranceLength-realSizeZ-1 && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_NORTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+				c.overwritePower = 1;
 			}
-			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
-			// internal space to 0 too!
 			return c;
 		}
 	}

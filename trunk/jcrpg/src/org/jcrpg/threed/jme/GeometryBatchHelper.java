@@ -137,8 +137,8 @@ public class GeometryBatchHelper {
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
 	    	if (batch==null)
 	    	{
-	    		TriMesh tri = VegetationSetup.getVegTrimesh(place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
-	    		batch = new TrimeshGeometryBatch(m.id,core,tri);
+	    		TriMesh tri = VegetationSetup.getVegTrimesh(internal,place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
+	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal);
 	    		if (internal)
 	    		{
 		    		batch.animated = false; // inside no wind
@@ -162,7 +162,7 @@ public class GeometryBatchHelper {
     				TriMesh tri;
     				if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
     				{
-    					tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j,0f, 100f);
+    					tri = VegetationSetup.getVegTrimesh(internal,place,place.cube, core, (TextureStateVegetationModel)m, k, j,0f, 100f);
     				} else
     				{
     					float heightPercent = 0;
@@ -185,7 +185,7 @@ public class GeometryBatchHelper {
     						heightPercent = ((quadQuantity-k)*1f)/quadQuantity;
     					}
     					heightPercent*=0.9;
-    					tri = VegetationSetup.getVegTrimesh(place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
+    					tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
     				}
     	    		batch.addItem(place,tri);
     	    		

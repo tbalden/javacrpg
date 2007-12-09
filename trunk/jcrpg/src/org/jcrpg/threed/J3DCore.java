@@ -731,20 +731,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("pbm_acacia_3","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
 		acacia_lowest_2.windAnimation = false;
 
-		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
-		bush.quadXSizeMultiplier = 2.6f;
-		bush.quadYSizeMultiplier = 2.6f;
+		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		bush.quadXSizeMultiplier = 3.8f;
+		bush.quadYSizeMultiplier = 3.2f;
 		bush.shadowCaster = true;
-		PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
-		bush_low.quadXSizeMultiplier = 2.0f;
-		bush_low.quadYSizeMultiplier = 2.0f;
+		PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		bush_low.quadXSizeMultiplier = 3.3f;
+		bush_low.quadYSizeMultiplier = 3.0f;
 		bush_low.shadowCaster = true;
-		PartlyBillboardModel bush_lowest = new PartlyBillboardModel("pbm_bush_2","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
-		PartlyBillboardModel bush_lowest_2 = new PartlyBillboardModel("pbm_bush_3","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},3,MIPMAP_TREES);
-		bush_lowest.quadXSizeMultiplier = 3.5f;
+		PartlyBillboardModel bush_lowest = new PartlyBillboardModel("pbm_bush_2","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},2,MIPMAP_TREES);
+		PartlyBillboardModel bush_lowest_2 = new PartlyBillboardModel("pbm_bush_3","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1_low.png"},3,MIPMAP_TREES);
+		bush_lowest.quadXSizeMultiplier = 3.8f;
 		bush_lowest.quadYSizeMultiplier = 3.5f;
 		bush_lowest.windAnimation = false;
-		bush_lowest_2.quadXSizeMultiplier = 3.5f;
+		bush_lowest_2.quadXSizeMultiplier = 3.8f;
 		bush_lowest_2.quadYSizeMultiplier = 3.5f;
 		bush_lowest_2.windAnimation = false;
 		

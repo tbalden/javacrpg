@@ -81,13 +81,15 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	TrimeshGeometryBatch batch;
 	
 	boolean horRotated = false;
+	boolean internal = false;
 	
-	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model, boolean horRotated) {
+	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model, boolean horRotated, boolean internal) {
 		this.core = core;
 		this.cam = cam;
 		this.viewDistance = viewDistance;
 		this.model = model;
 		this.horRotated = horRotated;
+		this.internal = internal;
 		
 	}
 	
@@ -361,14 +363,16 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	}
 	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
-		Quad targetQuad = quadCache.get(model.id+rotated+xSize+ySize);
+		Quad targetQuad = quadCache.get(model.id+rotated+xSize+ySize+internal);
 		if (targetQuad == null)
 		{
 			targetQuad = new Quad(name,xSize,ySize);
 			if (model.quadLightStateOff)
 			{
-				targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
-				J3DCore.hmSolidColorSpatials.put(targetQuad,targetQuad);
+				if (!internal) {
+					targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+					J3DCore.hmSolidColorSpatials.put(targetQuad,targetQuad);
+				}
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
@@ -395,13 +399,13 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				}
 			}
 			
-			quadCache.put(model.id+rotated+xSize+ySize, targetQuad);
+			quadCache.put(model.id+rotated+xSize+ySize+internal, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
 			if (batch==null)
 			{
-				batch = new TrimeshGeometryBatch(model.id,core,targetQuad);
-				batch.animated = J3DCore.ANIMATED_TREES && model.windAnimation;
+				batch = new TrimeshGeometryBatch(model.id,core,targetQuad,internal);
+				batch.animated = !internal && J3DCore.ANIMATED_TREES && model.windAnimation;
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
