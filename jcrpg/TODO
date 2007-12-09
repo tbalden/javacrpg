@@ -18,6 +18,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[-] use filesystem to store world instead of memory?
 	[X] bit based Boundaries
 
+[ ] plants inside -> color is wrongly set to outside quad color
+	[ ] with inside flora cave limiter walls is not working (maybe OUTSIDE cube is detected because of the flora cube??)
+
 [ ] moving N-S should be limited on map edge!  
 
 [ ] UI worldmap	

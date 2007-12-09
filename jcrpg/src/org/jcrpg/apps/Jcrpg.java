@@ -78,7 +78,7 @@ public class Jcrpg {
 		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,1,100,10,50,2,climates,climateSizeMuls,geos,10));
 		w2.engine = e;
 
-		/** /app.setWorld(w2);
+		/**/app.setWorld(w2);
 		app.setEngine(e);
 		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1), w2.realSizeZ/2);
 		app.initCore();/**/
@@ -163,7 +163,7 @@ public class Jcrpg {
 		w.geographies.put(p.id, p);
 		
 		w.worldMap = w2.worldMap; // dirty hack here for the release only
-		/**/app.setWorld(w);
+		/** /app.setWorld(w);
 		app.setEngine(e);
 		app.setViewPosition(0, w.getSeaLevel(1), 0);
 		app.initCore();/**/

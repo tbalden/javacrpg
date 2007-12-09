@@ -18,21 +18,26 @@
 
 package org.jcrpg.ui.window;
 
+import java.io.File;
+
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.map.WorldMap;
 
+import com.jme.image.Image;
+import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 public class Map extends Window {
 
 	WorldMap wmap;
 	
-	public Map(UIBase base, WorldMap wmap) {
+	public Map(UIBase base, WorldMap wmap) throws Exception {
 		super(base);
 		this.wmap = wmap;
         // main hud image area
@@ -44,6 +49,23 @@ public class Map extends Window {
         hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
         hudAS.setTestEnabled(false);
         hudAS.setEnabled(true);
+        
+        TextureState frameState= core.getDisplay().getRenderer().createTextureState();
+        Texture frameTex = new Texture();
+        Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.png").toURI().toURL(),true);
+        frameTex.setImage(frameImg);
+        frameState.setTexture(frameTex);
+        {
+        	Quad hudQuad = new Quad("hud", (int)((core.getDisplay().getWidth()/10)*3.2d), (int)(((core.getDisplay().getHeight()/10)*4.2d)));
+	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+			
+	        hudQuad.setRenderState(frameState);
+	        hudQuad.setRenderState(hudAS);
+	        windowNode.attachChild(hudQuad);
+	        
+        }
+        
         TextureState[] textureStates = wmap.getMapTextures();
         {
         	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
@@ -55,7 +77,7 @@ public class Map extends Window {
         }
         
         {
-        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*6, ((core.getDisplay().getHeight()/10)*8));
+        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			

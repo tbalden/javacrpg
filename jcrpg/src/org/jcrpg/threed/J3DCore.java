@@ -1973,7 +1973,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					fragmentViewDist = c.cube.internalCube&&(!insideArea) || (!c.cube.internalCube)&&insideArea;
 				}
 
-				int checkDistCube = (fragmentViewDist?VIEW_DISTANCE/8 : VIEW_DISTANCE/2);
+				int checkDistCube = (fragmentViewDist?VIEW_DISTANCE/4 : VIEW_DISTANCE/2);
 				boolean checked = false;
 				int distX = Math.abs(viewPositionX-c.cube.x);
 				int distY = Math.abs(viewPositionY-c.cube.y);
