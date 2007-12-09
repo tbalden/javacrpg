@@ -74,10 +74,10 @@ public class VegetationSetup {
 	 * @param variationCutter the bigger this value the lass random deviation in position. (100f default)
 	 * @return
 	 */
-	public static TriMesh getVegTrimesh(NodePlaceholder place, RenderedCube c, J3DCore core,TextureStateVegetationModel tm, int k, int j, float heightDiff, float variationCutter)
+	public static TriMesh getVegTrimesh(boolean internal, NodePlaceholder place, RenderedCube c, J3DCore core,TextureStateVegetationModel tm, int k, int j, float heightDiff, float variationCutter)
 	{
 		TextureState[] ts = core.modelLoader.loadTextureStates(tm.textureNames);
-		Node[] quads = quadCache.get(tm.getKey());
+		Node[] quads = quadCache.get(tm.getKey()+internal);
 		if (quads==null) 
 		{
 			quads = new Node[ts.length];
@@ -103,18 +103,17 @@ public class VegetationSetup {
 					t1.setCombineScaleRGB(1.0f);
 					quad.setRenderState(ts[i]);
 					quad.setRenderState(as);
-					quad.setLightCombineMode(LightState.OFF);
-					quad.setSolidColor(new ColorRGBA(1,1,1,1));
+					if (!internal) {
+						quad.setLightCombineMode(LightState.OFF);
+						quad.setSolidColor(new ColorRGBA(1,1,1,1));
+						J3DCore.hmSolidColorSpatials.put(quad,quad);
+					}
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
 					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
 					quad.setRenderState(ms);
-
-					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
-					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
-					J3DCore.hmSolidColorSpatials.put(quad,quad);
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
@@ -123,7 +122,7 @@ public class VegetationSetup {
 				} 
 				quads[i] = n;
 			}
-			quadCache.put(tm.getKey(), quads);
+			quadCache.put(tm.getKey()+internal, quads);
 		}
 		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
 		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
@@ -239,7 +238,7 @@ public class VegetationSetup {
 			}
 			quadCache.put(tm.getKey(), quads);
 		}
-		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(tm.getKey(),core,(TriMesh)quads[0].getChild(0));
+		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(tm.getKey(),core,(TriMesh)quads[0].getChild(0),false);
 		
 
 		int quadQuantity = tm.quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
