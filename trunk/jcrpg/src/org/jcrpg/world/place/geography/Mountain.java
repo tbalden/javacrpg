@@ -448,10 +448,10 @@ public class Mountain extends Geography implements Surface{
 			}
 			if (returnCube)
 			{
-				if (worldY!=worldGroundLevel) {
+				//if (worldY!=worldGroundLevel) {
 					// we can put on it!!				
 					return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
-				}
+				//}
 			}
 			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
