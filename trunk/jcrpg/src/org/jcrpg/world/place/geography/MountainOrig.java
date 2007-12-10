@@ -32,11 +32,9 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
 
-public class Mountain extends Geography implements Surface{
+public class MountainOrig extends Geography implements Surface{
 
 
 	public static final String TYPE_MOUNTAIN = "MOUNTAIN";
@@ -72,30 +70,26 @@ public class Mountain extends Geography implements Surface{
 
 
 	//public int groundLevel;
-	public int worldGroundLevel;
-	public int worldHeight;
-	private int mountainRealSizeY;
-	public int blockSize; 
+	private int worldGroundLevel;
+	private int mountainSizeY;
 	
-	public Mountain(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
+	public MountainOrig(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.mountainRealSizeY = worldHeight - worldGroundLevel;
-		System.out.println("MOUNTAIN SIZE = "+mountainRealSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		this.mountainSizeY = sizeY-((worldGroundLevel/magnification)-origoY);
+		System.out.println("MOUNTAIN SIZE = "+mountainSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
 		this.origoZ = origoZ;
 		//this.groundLevel = groundLevel;
 		this.worldGroundLevel=worldGroundLevel;
-		this.worldHeight = worldHeight;
-		this.blockSize = magnification;
 		if (fillBoundaries)
 			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		else
-			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
+			setBoundaries(new Boundaries(magnification));
 
 	}
 
@@ -103,14 +97,13 @@ public class Mountain extends Geography implements Surface{
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		int relX = worldX%blockSize;//-origoX*magnification;
+		int relX = worldX-origoX*magnification;
 		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1;
-		int realSizeY = mountainRealSizeY-1;
-		int realSizeZ = blockSize-1;
+		int relZ = worldZ-origoZ*magnification;
+		int realSizeX = sizeX*magnification-1;
+		int realSizeY = mountainSizeY*magnification-1;
+		int realSizeZ = sizeZ*magnification-1;
 		
-		if (relY>mountainRealSizeY-1) return null;
 		
 		/*if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
@@ -299,7 +292,6 @@ public class Mountain extends Geography implements Surface{
 		Cube c = null;
 		c = new Cube(this,s,worldX,worldY,worldZ,steepDirection);
 		c.overwritePower = overwritePower;
-		if (overwritePower>0) c.overwrite = true;
 		return c;
 	}
 
@@ -307,14 +299,13 @@ public class Mountain extends Geography implements Surface{
 	int GROUND_LEVEL_CONTAINER = 1;
 	
 	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
-		int relX = worldX%blockSize;//-origoX*magnification;
+		int relX = worldX-origoX*magnification;
 		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1; //sizeX*magnification-1;
-		int realSizeY = mountainRealSizeY-1;
-		int realSizeZ = blockSize-1; // sizeZ*magnification-1;
+		int relZ = worldZ-origoZ*magnification;
+		int realSizeX = sizeX*magnification-1;
+		int realSizeY = mountainSizeY*magnification-1;
+		int realSizeZ = sizeZ*magnification-1;
 		
-		if (relY>mountainRealSizeY-1) return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
@@ -448,10 +439,8 @@ public class Mountain extends Geography implements Surface{
 			}
 			if (returnCube)
 			{
-				if (worldY!=worldGroundLevel) {
-					// we can put on it!!				
-					return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
-				}
+				// we can put on it!!				
+				return new int[]{GROUND_LEVEL_CONTAINER,SurfaceHeightAndType.NOT_STEEP};
 			}
 			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
@@ -460,17 +449,17 @@ public class Mountain extends Geography implements Surface{
 	
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
-		int realSizeY = mountainRealSizeY-1;
+		int realSizeY = sizeY*magnification-1;
 		for (int i=0; i<=realSizeY; i++)
 		{
-			int[] ret = isGroundLevel(worldX, worldGroundLevel+i, worldZ);
+			int[] ret = isGroundLevel(worldX, origoY*magnification+i, worldZ);
 			if (ret[0]>-1)
 			{
 				int r = ret[1];
-				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+i,true,r)};
+				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY*magnification+i,true,r)};
 			}
 		}
-		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldHeight,false,SurfaceHeightAndType.NOT_STEEP)};
+		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
 

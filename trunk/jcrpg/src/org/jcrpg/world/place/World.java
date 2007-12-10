@@ -236,6 +236,9 @@ public class World extends Place {
 								if (worldY>=bottom&&worldY<=y)
 								{
 									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube, s);
+									if (retCube.overwrite) {
+										c = appendCube(retCube, c, worldX, worldY, worldZ);
+									}
 									return c;
 								}
 							}

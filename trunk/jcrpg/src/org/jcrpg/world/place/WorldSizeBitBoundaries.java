@@ -50,9 +50,9 @@ public class WorldSizeBitBoundaries extends Boundaries {
 	
 	@Override
 	public void addCube(int magnification, int x, int y, int z) throws Exception {
-		int place = (x + y*gWY + z*(gWY*gWX))%8;
+		int place = (x + y*gWX + z*(gWY*gWX))%8;
 		place = placeBitMap[place];
-		int byteCount = (x + y*gWY + z*(gWY*gWX))/8;
+		int byteCount = (x + y*gWX + z*(gWY*gWX))/8;
 		byte b = bytes[byteCount];
 		
 		b = (byte)((byte)b|(byte)place);
@@ -64,10 +64,10 @@ public class WorldSizeBitBoundaries extends Boundaries {
 		int x = absoluteX / magnification;
 		int y = absoluteY / magnification;
 		int z = absoluteZ / magnification;
-		int place = (x + y*gWY + z*(gWY*gWX))%8;
+		int place = (x + y*gWX + z*(gWY*gWX))%8;
 		place = placeBitMap[place];
 		
-		int byteCount = (x + y*gWY + z*(gWY*gWX))/8;
+		int byteCount = (x + y*gWX + z*(gWY*gWX))/8;
 		byte b = bytes[byteCount];
 		return (b&place)==place;
 	}
