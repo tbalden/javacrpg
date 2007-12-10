@@ -153,13 +153,13 @@ public class World extends Place {
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ))
 					return eco.getCube(worldX, worldY, worldZ);
 			}
-			Cube retCube = null;
+			//Cube retCube = null;
 			currentMerged = null;
 			overLappers.clear();
 			boolean insideGeography = false;
 			tempGeosForSurface.clear();
 			//System.out.println(geographies.values().size());
-			ArrayList<Geography> cachedOnes = geographyCache.get(generatePositionCacheKey(worldX, worldY, worldZ, lossFactor));
+			//ArrayList<Geography> cachedOnes = geographyCache.get(generatePositionCacheKey(worldX, worldY, worldZ, lossFactor));
 			//if (cachedOnes!=null) System.out.println(cachedOnes.size());
 			//if (cachedOnes!=null)
 			//for (Geography geo : cachedOnes) {
@@ -192,8 +192,9 @@ public class World extends Place {
 								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 								if (floraCube!=null)
 								{
-									Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
-									collectCubes(newCube);
+									//Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
+									collectCubes(floraCube);
+									//collectCubes(newCube);
 									//retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);									
 									/*try {
 										retCube.internalCube = geoCube.internalCube;
@@ -217,10 +218,10 @@ public class World extends Place {
 									} else 
 									{
 										// outside green ground appended
-										Cube newCube = new Cube(geoCube,new Cube(this,GROUND,worldX,worldY,worldZ),worldX,worldY,worldZ,geoCube.steepDirection);
-										newCube.internalCube = geoCube.internalCube;
-										retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
-										collectCubes(newCube);
+										//Cube newCube = new Cube(geoCube,),worldX,worldY,worldZ,geoCube.steepDirection);
+										//newCube.internalCube = geoCube.internalCube;
+										//retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
+										collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ));
 									}
 									
 								}
@@ -253,7 +254,7 @@ public class World extends Place {
 								int bottom = y - depth;
 								if (worldY>=bottom&&worldY<=y)
 								{
-									Cube c = w.getWaterCube(worldX, worldY, worldZ, retCube, s);
+									Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
 									if (currentMerged.overwrite) {
 										collectCubes(c);
 										//c = appendCube(retCube, c, worldX, worldY, worldZ);
@@ -278,7 +279,6 @@ public class World extends Place {
 		else return null;
 	}
 
-	//public ArrayList<Cube> normal = new ArrayList<Cube>();
 	public ArrayList<Cube> overLappers = new ArrayList<Cube>();
 	
 	public Cube currentMerged;
@@ -288,10 +288,9 @@ public class World extends Place {
 		if (cube!=null && !cube.onlyIfOverlaps && currentMerged==null) {
 			currentMerged=cube;
 		} else
-		if (cube!=null && !cube.onlyIfOverlaps)
+		if (cube!=null && !cube.onlyIfOverlaps && currentMerged!=null)
 		{
-			if (cube!=null)
-				currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
 		}
 		if (cube!=null && cube.onlyIfOverlaps) overLappers.add(cube);
 	}
@@ -300,8 +299,8 @@ public class World extends Place {
 		if (currentMerged==null) return currentMerged;
 		for (Cube cube:overLappers)
 		{
-			System.out.println(currentMerged.toString());
-			System.out.println(cube.toString());
+			//System.out.println(currentMerged.toString());
+			//System.out.println(cube.toString());
 			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
 		}
 		return currentMerged;
