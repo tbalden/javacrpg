@@ -18,6 +18,7 @@
 package org.jcrpg.world.ai.flora;
 
 import org.jcrpg.space.Cube;
+import org.jcrpg.world.place.Place;
 
 /**
  * Describes a flora element's one state depending on Season and 
@@ -43,6 +44,14 @@ public class FloraDescription {
 		this.herbalType = herbalType;
 		this.hasBlossom = hasBlossom;
 		this.hasFruit = hasFruit;
+	}
+	
+	public Cube instanciateCube(Place newParent, int x, int y, int z)
+	{
+		Cube r = cubicForm.copy(newParent);
+		r.x = x; r.y = y; r.z = z;
+		return r;
+		
 	}
 	
 }

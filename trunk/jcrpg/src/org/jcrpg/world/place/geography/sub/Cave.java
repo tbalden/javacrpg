@@ -111,12 +111,11 @@ public class Cave extends Geography implements Surface {
 	{
 		Cube c = getCubeBase(worldX, worldY, worldZ);
 		if (c==null) {
-			//System.out.println("RETURNING NULL");
 			return null;
 		}
 		c.onlyIfOverlaps = true;
 		c.overwrite = true;
-		if (c.overwritePower!=1)
+		if (c.overwritePower!=2)
 			c.internalCube = true; // except entrance all is inside
 		return c;
 	}
@@ -128,33 +127,32 @@ public class Cave extends Geography implements Surface {
 	{
 		if (worldY>=worldHeight) return null;
 
-		int relX = worldX%blockSize;//-origoX*magnification;
+		int relX = worldX%blockSize;
 		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1;
+		int relZ = worldZ%blockSize;
+		int realSizeX = blockSize - 1;
 		int realSizeY = worldHeight-worldGroundLevel;
-		int realSizeZ = blockSize-1;
+		int realSizeZ = blockSize - 1;
 
-		if (relX<=entranceLength || relX>=realSizeX-entranceLength)
+		if (relX<entranceLength || relX>realSizeX-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relZ<=entranceLength || relZ>=realSizeZ-entranceLength)
+			if (relZ<entranceLength || relZ>realSizeZ-entranceLength)
 			{
 				// on the corners, no cube
 				return null;
 			}
 			if (relZ%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
 			{
-				System.out.println("ENTRANCE !!");
 				if (relX<=entranceLength && (entranceSide&LIMIT_WEST)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
-					c.overwritePower = 1;
+					c.overwritePower = 2;
 				} else
 				if (relX>=realSizeX-entranceLength && (entranceSide&LIMIT_EAST)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_WEST,worldX,worldY,worldZ);
-					c.overwritePower = 1;
+					c.overwritePower = 2;
 				} else
 				if (relX<=entranceLength && (walledSide&LIMIT_SOUTH)==0)
 				{
@@ -181,21 +179,20 @@ public class Cave extends Geography implements Surface {
 			// internal space to 0 too!
 			return c;
 		} else
-		if (relZ<=entranceLength || relZ>=realSizeZ-entranceLength)
+		if (relZ<entranceLength || relZ>realSizeZ-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
 			if (relX%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
 			{
-				System.out.println("ENTRANCE !!");
 				if (relZ<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
-					c.overwritePower = 1;
+					c.overwritePower = 2;
 				} else
 				if (relZ>=realSizeZ-entranceLength && (entranceSide&LIMIT_NORTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_SOUTH,worldX,worldY,worldZ);
-					c.overwritePower = 1;
+					c.overwritePower = 2;
 						
 				} else
 				if (relZ<=entranceLength && (walledSide&LIMIT_WEST)==0)
@@ -224,11 +221,10 @@ public class Cave extends Geography implements Surface {
 		} 
 		else {
 			int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
-			System.out.println("CAVE CUBE"+ worldX+" - "+worldY+" - "+worldZ);
 			if (per<density)
 			{
 				Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-				c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+				c.overwritePower = 1; // this should overwrite only empty spaces, other geos should set their empty
 				// internal space to 0 too!
 				return c;
 			}
@@ -243,22 +239,22 @@ public class Cave extends Geography implements Surface {
 			c.overwritePower = 0;			 // this should overwrite only empty spaces, other geos should set their empty
 			// internal space to 0 too!
 
-			if (relX==entranceLength+1 && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
+			if (relX==entranceLength && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_WEST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 				c.overwritePower = 1;
 			}
-			if (relX==entranceLength-realSizeX-1 && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
+			if (relX==realSizeX - entranceLength && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_EAST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 				c.overwritePower = 1;
 			}
-			if (relZ==entranceLength+1 && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
+			if (relZ==entranceLength && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_SOUTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 				c.overwritePower = 1;
 			}
-			if (relZ==entranceLength-realSizeZ-1 && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
+			if (relZ==realSizeZ - entranceLength && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
 			{
 				c = new Cube(c,new Cube(this,CAVE_NORTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 				c.overwritePower = 1;

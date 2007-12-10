@@ -156,6 +156,7 @@ public class World extends Place {
 			//Cube retCube = null;
 			currentMerged = null;
 			overLappers.clear();
+			finalRounders.clear();
 			boolean insideGeography = false;
 			tempGeosForSurface.clear();
 			//System.out.println(geographies.values().size());
@@ -175,7 +176,7 @@ public class World extends Place {
 					}*/
 					insideGeography = true;
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
-					collectCubes(geoCube);
+					collectCubes(geoCube,false);
 					if (geoCube!=null && geo instanceof Surface)
 					{
 						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
@@ -192,36 +193,16 @@ public class World extends Place {
 								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 								if (floraCube!=null)
 								{
-									//Cube newCube = new Cube(geoCube,floraCube,worldX,worldY,worldZ,geoCube.steepDirection);
-									collectCubes(floraCube);
-									//collectCubes(newCube);
-									//retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);									
-									/*try {
-										retCube.internalCube = geoCube.internalCube;
-									} catch (Exception ex)
-									{
-										System.out.println("!! --"+geo.id);
-									}*/
+									collectCubes(floraCube,true);
 								} 
 								else 
 								{
-									if (geoCube.internalCube) {
-										//collectCubes(geoCube);
-										//retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
-										/*try {
-											retCube.internalCube = geoCube.internalCube;
-										} catch (Exception ex)
-										{
-											System.out.println("!! --"+geo.id);
-											//ex.printStackTrace();
-										}*/
+									if (geoCube.internalCube) 
+									{
 									} else 
 									{
 										// outside green ground appended
-										//Cube newCube = new Cube(geoCube,),worldX,worldY,worldZ,geoCube.steepDirection);
-										//newCube.internalCube = geoCube.internalCube;
-										//retCube = appendCube(retCube, newCube, worldX, worldY, worldZ);
-										collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ));
+										collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ),false);
 									}
 									
 								}
@@ -237,37 +218,35 @@ public class World extends Place {
 					}
 				}
 			}
-			//if (insideGeography) 
-			{
+			mergeCubes();
 				// waters
 				
-				for (Water w : waters.values()) {
-					if (w.boundaries.isInside(worldX, worldY, worldZ)) 
+			for (Water w : waters.values()) {
+				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
+				{
+					//System.out.println("WATER INSIDE: "+w.id);
+					if (w.isWaterPoint(worldX, worldY, worldZ))
 					{
-						//System.out.println("WATER INSIDE: "+w.id);
-						if (w.isWaterPoint(worldX, worldY, worldZ))
+						for (SurfaceHeightAndType s:tempGeosForSurface.values())
 						{
-							for (SurfaceHeightAndType s:tempGeosForSurface.values())
+							int y = s.surfaceY;
+							int depth = w.getDepth(worldX, worldY, worldZ);
+							int bottom = y - depth;
+							if (worldY>=bottom&&worldY<=y)
 							{
-								int y = s.surfaceY;
-								int depth = w.getDepth(worldX, worldY, worldZ);
-								int bottom = y - depth;
-								if (worldY>=bottom&&worldY<=y)
-								{
-									Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
-									if (currentMerged.overwrite) {
-										collectCubes(c);
-										//c = appendCube(retCube, c, worldX, worldY, worldZ);
-										c = mergeCubes();
-									}
-									
-									return c;
+								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
+								if (currentMerged.overwrite) {
+									collectCubes(c,false);
+									//c = appendCube(retCube, c, worldX, worldY, worldZ);
+									c = mergeCubes();
 								}
+								
+								return c;
 							}
-						} else
-						{
-							continue; // yes, we must look for the next water if there's one!
 						}
+					} else
+					{
+						continue; // yes, we must look for the next water if there's one!
 					}
 				}
 			}
@@ -280,11 +259,20 @@ public class World extends Place {
 	}
 
 	public ArrayList<Cube> overLappers = new ArrayList<Cube>();
+	public ArrayList<Cube> finalRounders = new ArrayList<Cube>();
 	
 	public Cube currentMerged;
 	
-	public void collectCubes(Cube cube)
+	public void collectCubes(Cube cube,boolean finalRound)
 	{
+		if (cube!=null && cube.onlyIfOverlaps) {
+			overLappers.add(cube);
+			return;
+		}
+		if (cube!=null && finalRound) {
+			finalRounders.add(cube);
+			return;
+		}
 		if (cube!=null && !cube.onlyIfOverlaps && currentMerged==null) {
 			currentMerged=cube;
 		} else
@@ -292,15 +280,17 @@ public class World extends Place {
 		{
 			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
 		}
-		if (cube!=null && cube.onlyIfOverlaps) overLappers.add(cube);
+		
 	}
 	public Cube mergeCubes()
 	{
 		if (currentMerged==null) return currentMerged;
 		for (Cube cube:overLappers)
 		{
-			//System.out.println(currentMerged.toString());
-			//System.out.println(cube.toString());
+			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+		}
+		for (Cube cube:finalRounders)
+		{
 			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
 		}
 		return currentMerged;
