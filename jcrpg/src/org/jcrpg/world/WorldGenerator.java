@@ -160,6 +160,8 @@ public class WorldGenerator {
 		w.addGeography(p);
 		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(f);
+		Mountain m = new Mountain("MOUNTAIN",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		w.addGeography(m);
 		
 		for (int x=0; x<gWX; x++)
 		{
@@ -171,8 +173,18 @@ public class WorldGenerator {
 					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
 				} else
 				{
-					f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
-					f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+					if (!l.isWaterPoint(x*gMag, l.worldGroundLevel, z*gMag)) 
+					{
+						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+					} else
+					{
+						//if (!m.getBoundaries().isInside(x*gMag, m.worldGroundLevel, z*gMag))
+						{
+							f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+							f.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+						}
+					}
 				}					
 			}
 		}
