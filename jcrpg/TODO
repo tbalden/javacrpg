@@ -7,14 +7,19 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 ------------------------------------------
 
+	[ ] Cave -> 1 sized wrong at some places
+		[ ] no internal flora is appearing!!
+	[ ] rivers
+
 [ ] World generator
 	parameterized cool world generation!
 	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
 	[X] ocean gen -> add likeness to stick landmass together that modifies the likeness at maginfication*3 zones for example (it will comb together some parts as a landmass - modifier)
 		[X] too levels of stickiness? it is too squarelike right now (use two intersecting magnification zones!)
 	[X] add climate
-	[ ] add Geography areas TO ONE GEO'S BOUNDARY instead of many new items!
-		[ ] Mountain!!
+	[X] add Geography areas TO ONE GEO'S BOUNDARY instead of many new items!
+		[X] Mountain!!
+		
 	[-] use filesystem to store world instead of memory?
 	[X] bit based Boundaries
 

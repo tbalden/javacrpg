@@ -161,7 +161,7 @@ public class WorldGenerator {
 		w.addGeography(p);
 		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(f);
-		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+1,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,1,1,false);
+		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+1,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,0,1,1,false);
 		w.addGeography(c);
 		Mountain m = new Mountain("MOUNTAIN",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);

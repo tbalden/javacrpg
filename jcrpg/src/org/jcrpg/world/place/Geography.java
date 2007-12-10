@@ -27,18 +27,15 @@ public class Geography extends Place {
 
 	public Geography(String id, Place parent,PlaceLocator loc) {
 		super(id,parent, loc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean generateModel() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean loadModelFromFile() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -50,8 +47,9 @@ public class Geography extends Place {
 		FloraCube fC = w.getFloraContainer().getFlora(worldX,worldY,worldZ,this.getClass(), conditions, time, onSteep);
 		for (FloraDescription fd : fC.descriptions)
 		{
-			if (floraCube==null)
-				floraCube = fd.cubicForm;
+			if (floraCube==null) {
+				floraCube = fd.instanciateCube(w, worldX,worldY,worldZ);				
+			}
 			else {
 				floraCube = new Cube(floraCube,fd.cubicForm,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 			}
@@ -62,7 +60,6 @@ public class Geography extends Place {
 	
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		// TODO Auto-generated method stub
 		return super.getCube(worldX, worldY, worldZ);
 	}
 	

@@ -130,14 +130,17 @@ public class Cube extends ChangingImpl {
 					merged = sides1;
 				}
 			} else
-			for (int j=0; j<merged.length; j++)
 			{
-				internalCube = c1.internalCube&&c2.internalCube;
-				if (j<sides1.length)
-					merged[j] =sides1[j];
-				else
-					merged[j] = sides2[j-sides1.length];
+				for (int j=0; j<merged.length; j++)
+				{
+					
+					if (j<sides1.length)
+						merged[j] =sides1[j];
+					else
+						merged[j] = sides2[j-sides1.length];
+				}
 			}
+			internalCube = c1.internalCube||c2.internalCube;
 			this.sides[i] = merged;
 		}
 		

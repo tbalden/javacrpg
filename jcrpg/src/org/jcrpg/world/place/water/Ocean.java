@@ -148,6 +148,7 @@ public class Ocean extends Water {
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_SOUTH,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
+				if (geoCube.overwrite) c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 				return c;
 			}
 		}
