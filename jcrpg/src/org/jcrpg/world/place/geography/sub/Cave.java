@@ -132,7 +132,7 @@ public class Cave extends Geography implements Surface {
 		int relY = worldY-worldGroundLevel;
 		int relZ = worldZ%blockSize;//-origoZ*magnification;
 		int realSizeX = blockSize-1;
-		int realSizeY = sizeY*magnification-1;
+		int realSizeY = worldHeight-worldGroundLevel;
 		int realSizeZ = blockSize-1;
 
 		if (relX<=entranceLength || relX>=realSizeX-entranceLength)
@@ -145,6 +145,7 @@ public class Cave extends Geography implements Surface {
 			}
 			if (relZ%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
 			{
+				System.out.println("ENTRANCE !!");
 				if (relX<=entranceLength && (entranceSide&LIMIT_WEST)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
@@ -185,6 +186,7 @@ public class Cave extends Geography implements Surface {
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
 			if (relX%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
 			{
+				System.out.println("ENTRANCE !!");
 				if (relZ<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
 				{
 					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
@@ -231,7 +233,7 @@ public class Cave extends Geography implements Surface {
 				return c;
 			}
 			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-			if (realSizeY>=1) {
+			if (realSizeY>1) {
 				if (relY%levels==0)
 					c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
 				else if (relY%levels==levels-1)
