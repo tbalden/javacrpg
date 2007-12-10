@@ -36,6 +36,7 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -160,6 +161,8 @@ public class WorldGenerator {
 		w.addGeography(p);
 		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(f);
+		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+2,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,2,2,false);
+		w.addGeography(c);
 		Mountain m = new Mountain("MOUNTAIN",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
 		
@@ -177,6 +180,8 @@ public class WorldGenerator {
 					{
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+						c.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+						
 					} else
 					{
 						//if (!m.getBoundaries().isInside(x*gMag, m.worldGroundLevel, z*gMag))

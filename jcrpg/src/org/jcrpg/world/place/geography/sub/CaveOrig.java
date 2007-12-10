@@ -31,10 +31,8 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
-public class Cave extends Geography implements Surface {
+public class CaveOrig extends Geography implements Surface {
 
 	
 	public static int LIMIT_NORTH = 1;
@@ -80,10 +78,9 @@ public class Cave extends Geography implements Surface {
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int density,entranceSide, walledSide, levels, entranceLength;
-	public int worldGroundLevel, worldHeight;
-	public int blockSize; 
+	int worldGroundLevel;
 
-	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int walledSide, int levels, int entranceLength, boolean fillBoundaries ) throws Exception{
+	public CaveOrig(String id, Place parent, PlaceLocator loc,int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int walledSide, int levels, int entranceLength) throws Exception{
 		super(id, parent, loc);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
@@ -97,23 +94,15 @@ public class Cave extends Geography implements Surface {
 		this.walledSide = walledSide;
 		this.entranceLength = entranceLength;
 		this.levels = levels;
-		this.worldGroundLevel = worldGroundLevel;
-		this.worldHeight = worldHeight;
-		blockSize = magnification;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
-			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
+		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		worldGroundLevel = origoY*magnification;
 	}
 	
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ)
 	{
 		Cube c = getCubeBase(worldX, worldY, worldZ);
-		if (c==null) {
-			//System.out.println("RETURNING NULL");
-			return null;
-		}
+		if (c==null) return null;
 		c.onlyIfOverlaps = true;
 		c.overwrite = true;
 		if (c.overwritePower!=1)
@@ -126,15 +115,13 @@ public class Cave extends Geography implements Surface {
 
 	private Cube getCubeBase(int worldX, int worldY, int worldZ)
 	{
-		if (worldY>=worldHeight) return null;
-
-		int relX = worldX%blockSize;//-origoX*magnification;
-		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1;
+		int relX = worldX-origoX*magnification;
+		int relY = worldY-origoY*magnification;
+		int relZ = worldZ-origoZ*magnification;
+		int realSizeX = sizeX*magnification-1;
 		int realSizeY = sizeY*magnification-1;
-		int realSizeZ = blockSize-1;
-
+		int realSizeZ = sizeZ*magnification-1;
+		
 		if (relX<=entranceLength || relX>=realSizeX-entranceLength)
 		{
 			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
@@ -222,7 +209,7 @@ public class Cave extends Geography implements Surface {
 		} 
 		else {
 			int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
-			System.out.println("CAVE CUBE"+ worldX+" - "+worldY+" - "+worldZ);
+			
 			if (per<density)
 			{
 				Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);

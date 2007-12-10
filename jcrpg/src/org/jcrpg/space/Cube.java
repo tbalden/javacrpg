@@ -186,7 +186,7 @@ public class Cube extends ChangingImpl {
 		{
 			r+=sides[s][i]==null?"-":"S("+s+")"+sides[s][i].type+sides[s][i].subtype.getClass().getSimpleName()+" "+sides[s][i].subtype.id+" - ";
 		}
-		return "Cube: "+ x+" "+y+" "+z+" "+r;
+		return "Cube: "+ x+" "+y+" "+z+" "+r+" -- "+overwritePower+" - "+onlyIfOverlaps;
 	}
 	
 	public Cube getNeighbour(int direction)

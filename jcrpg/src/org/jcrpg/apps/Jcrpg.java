@@ -75,7 +75,7 @@ public class Jcrpg {
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,1,100,10,50,2,climates,climateSizeMuls,geos,10));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,100,2,100,10,50,2,climates,climateSizeMuls,geos,10));
 		w2.engine = e;
 
 		/**/app.setWorld(w2);
@@ -128,7 +128,7 @@ public class Jcrpg {
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
 		w.geographies.put(p.id, p);
 
-		Cave cave = new Cave("cave",w,null,2,20,1,20,5,w.getSeaLevel(2),5,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,2,2);
+		Cave cave = new Cave("cave",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+2,2,20,1,20,5,w.getSeaLevel(2),5,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,2,2,true);
 		w.geographies.put(cave.id, cave);
 		
 		
