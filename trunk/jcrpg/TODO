@@ -78,6 +78,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
 [ ] rain, fog, snow?
 
+[ ] mineral system too to the caves etc.
 
 [ ] skySphere change: night sky based on calculated light value (v)
 [ ] cloud planes on sky
