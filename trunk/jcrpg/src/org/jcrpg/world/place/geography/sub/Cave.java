@@ -146,11 +146,23 @@ public class Cave extends Geography implements Surface {
 			{
 				if (relX<=entranceLength && (entranceSide&LIMIT_WEST)>0)
 				{
+					// checking if entrance would be blocked...
+					int per = HashUtil.mixPercentage(worldX+entranceLength, (worldY-(origoY*magnification)%levels)/levels, worldZ);
+					if (per<density)
+					{
+						return null; // rock would block the entrance
+					}
 					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
 					c.overwritePower = 2;
 				} else
 				if (relX>=realSizeX-entranceLength && (entranceSide&LIMIT_EAST)>0)
 				{
+					// checking if entrance would be blocked...
+					int per = HashUtil.mixPercentage(worldX-entranceLength, (worldY-(origoY*magnification)%levels)/levels, worldZ);
+					if (per<density)
+					{
+						return null; // rock would block the entrance
+					}
 					c = new Cube(this,CAVE_ENTRANCE_WEST,worldX,worldY,worldZ);
 					c.overwritePower = 2;
 				} else
@@ -186,11 +198,23 @@ public class Cave extends Geography implements Surface {
 			{
 				if (relZ<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
 				{
+					// checking if entrance would be blocked...
+					int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ+entranceLength);
+					if (per<density)
+					{
+						return null; // rock would block the entrance
+					}
 					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
 					c.overwritePower = 2;
 				} else
 				if (relZ>=realSizeZ-entranceLength && (entranceSide&LIMIT_NORTH)>0)
 				{
+					// checking if entrance would be blocked...
+					int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ-entranceLength);
+					if (per<density)
+					{
+						return null; // rock would block the entrance
+					}
 					c = new Cube(this,CAVE_ENTRANCE_SOUTH,worldX,worldY,worldZ);
 					c.overwritePower = 2;
 						
