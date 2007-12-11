@@ -2821,8 +2821,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
 			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
-			if (nextCube!=null)
+			if (nextCube!=null && hasSideOfInstance(nextCube.getSide(BOTTOM), notPassable))
 			{
+				// we have next cube in walk dir, and it has bottom too
 				System.out.println("Next Cube = "+nextCube.toString());
 				sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
@@ -2840,7 +2841,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				int nextCubeSteepDirection = hasSideOfInstanceInAnyDir(nextCube, climbers);
 				if (nextCubeSteepDirection!=-1) {
 					onSteep = true;
-					//move(newCoords,newRelCoords,new int[]{directions[0],TOP});
 				} else
 				{
 					onSteep = false;
@@ -2871,11 +2871,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							break;
 						} else
 						{
-							// no luck, let's see notPassable bottom...
+							sides = nextCube!=null?nextCube.getSide(TOP):null;
+							if (sides!=null) // checking if cube's top is not passable
+								if (hasSideOfInstance(sides, notPassable))
+									return false; // not passable, do not make this step
+							// no luck with climbers , let's see notPassable bottom...
 							sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 							if (sides!=null)
 							if (hasSideOfInstance(sides, notPassable))
-							{							
+							{	
+								// yeah, a place to stand...
 								newCoords[1] = newCoords[1]-(yMinus-1);
 								newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 								onSteep = false; // yeah, found
@@ -2884,14 +2889,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						}
 					} else
 					{
-						// no luck, let's see notPassable bottom...
+						// no luck with climbers on walk direction, let's see notPassable bottom...
 						sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 						if (sides!=null)
 						if (hasSideOfInstance(sides, notPassable))
 						{							
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-							onSteep = false; // yeah, found
+							if (hasSideOfInstanceInAnyDir(nextCube, climbers)!=-1) // check for climbers
+							{
+								onSteep = true;
+							} else
+							{
+								onSteep = false; // yeah, found
+							}
 							break;
 						}
 					}
