@@ -2756,7 +2756,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull

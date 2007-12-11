@@ -72,10 +72,10 @@ public class Cave extends Geography implements Surface {
 	static Side[][] CAVE_ROCK_NO_MODEL = new Side[][] { BLOCK, BLOCK, BLOCK,BLOCK, BLOCK_GROUND,null };
 	//static Side[][] CAVE_ROCK = new Side[][] { WALL, WALL, WALL,WALL,GROUND,WALL };
 
-	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, null,BLOCK,BLOCK_GROUND,GROUND };
-	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,null,BLOCK_GROUND,GROUND };
-	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { null, BLOCK, ENTRANCE,BLOCK,BLOCK_GROUND,GROUND };
-	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, null, BLOCK,ENTRANCE,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_NORTH = new Side[][] { ENTRANCE, BLOCK, EMPTY_SIDE,BLOCK,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_EAST = new Side[][] { BLOCK, ENTRANCE, BLOCK,EMPTY_SIDE,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_SOUTH = new Side[][] { EMPTY_SIDE, BLOCK, ENTRANCE,BLOCK,BLOCK_GROUND,GROUND };
+	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, EMPTY_SIDE, BLOCK,ENTRANCE,BLOCK_GROUND,GROUND };
 	
 	
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
