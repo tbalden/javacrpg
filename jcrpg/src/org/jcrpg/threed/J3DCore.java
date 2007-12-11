@@ -2647,6 +2647,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public boolean hasSideOfInstance(Side[] sides, HashSet<Class> classNames)
 	{
+		if (sides!=null)
 		for (int i=0; i<sides.length; i++)
 		{
 			if (sides[i]!=null)
@@ -2824,7 +2825,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			{
 				System.out.println("Next Cube = "+nextCube.toString());
 				sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
-				//sides = c2.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
 					if (hasSideOfInstance(sides, notPassable)) return false;
@@ -2853,6 +2853,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// cube below
 					nextCube = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2]);
+					System.out.println("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
 
@@ -2868,6 +2869,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 							onSteep = true; // found steep
 							break;
+						} else
+						{
+							// no luck, let's see notPassable bottom...
+							sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
+							if (sides!=null)
+							if (hasSideOfInstance(sides, notPassable))
+							{							
+								newCoords[1] = newCoords[1]-(yMinus-1);
+								newRelCoords[1] = newRelCoords[1]-(yMinus-1);
+								onSteep = false; // yeah, found
+								break;
+							}
 						}
 					} else
 					{

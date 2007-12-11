@@ -72,6 +72,7 @@ public class WorldParams {
 		this.climateSizeMuls = climateSizeMuls;
 		this.geos = geos;
 		this.geoNormalSize = geoNormalSize;
+		if (this.geoNormalSize<10) this.geoNormalSize = 10;
 	}
 
 	
