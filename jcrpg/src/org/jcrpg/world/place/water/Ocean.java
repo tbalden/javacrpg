@@ -167,6 +167,7 @@ public class Ocean extends Water {
 	
 	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
 	{
+		
 		x = shrinkToWorld(x);
 		z = shrinkToWorld(z);
 		int xMinusMag = shrinkToWorld(x-magnification);

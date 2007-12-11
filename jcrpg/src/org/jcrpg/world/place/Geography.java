@@ -54,6 +54,7 @@ public class Geography extends Place {
 				floraCube = new Cube(floraCube,fd.cubicForm,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 			}
 		}
+		//if (floraCube!=null) floraCube
 		return floraCube;
 	}
 

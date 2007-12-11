@@ -50,6 +50,7 @@ public class BaseFloraGenerator extends FloraGenerator{
 		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),0),new FloraListElement(new GreenPineTree(),70),new FloraListElement(new GreatPineTree(),0),new FloraListElement(new GreenBush(),70)});
 
 		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),170),new FloraListElement(new JunglePalmTrees(),170),new FloraListElement(new JungleBush(),120),new FloraListElement(new GreenFern(),120)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),170),new FloraListElement(new JunglePalmTrees(),170),new FloraListElement(new JungleBush(),120),new FloraListElement(new GreenFern(),120)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Snow())});
 		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5),new FloraListElement(new BigCactus(),20),new FloraListElement(new GreenBush(),10)});
 	}
