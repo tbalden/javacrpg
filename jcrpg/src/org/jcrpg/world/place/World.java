@@ -285,14 +285,16 @@ public class World extends Place {
 	public Cube mergeCubes()
 	{
 		if (currentMerged==null) return currentMerged;
-		for (Cube cube:finalRounders)
-		{
-			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
-		}
 		for (Cube cube:overLappers)
 		{
 			currentMerged = appendCube(cube,currentMerged, cube.x, cube.y, cube.z);
 		}
+		for (Cube cube:finalRounders)
+		{
+			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+		}
+		overLappers.clear();
+		finalRounders.clear();
 		return currentMerged;
 	}
 	

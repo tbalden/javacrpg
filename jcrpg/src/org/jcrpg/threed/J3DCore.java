@@ -2473,6 +2473,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side, boolean fakeLoadForCacheMaint)
 	{
+		if (side==null||side.subtype==null) return;
 		Integer n3dType = hmAreaSubType3dType.get(side.subtype.id);
 		if (n3dType==null) return;
 		if (n3dType.equals(EMPTY_SIDE)) return;
