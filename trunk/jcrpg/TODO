@@ -6,17 +6,16 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 ------------------------------------------
+[ ] mountain steep walk bug to one direction walk
 
-	[ ] merging two cubes doesnt seem to work! (when no overwrite)
 
-	[ ] Cave -> 1 sized wrong at some places
-		[ ] no internal flora is appearing!!
-		[ ] no entrance where you can't enter -> isCaveEmpty() hash
-	[ ] rivers
-	
 
 [ ] World generator
 	parameterized cool world generation!
+	
+	[ ] rivers
+	[ ] mountain bigger than blocks, trickier mountain algorithm.
+	
 	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
 	[X] ocean gen -> add likeness to stick landmass together that modifies the likeness at maginfication*3 zones for example (it will comb together some parts as a landmass - modifier)
 		[X] too levels of stickiness? it is too squarelike right now (use two intersecting magnification zones!)
@@ -67,7 +66,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
 
-[ ] mountain steep walk bug to one direction walk
 [ ] quicken loading of Cubes in Geography etc. 
  
 
@@ -94,6 +92,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+	[X] merging two cubes doesnt seem to work! (when no overwrite)
+
+	[X] Cave -> 1 sized wrong at some places
+		[X] no internal flora is appearing!!
+		[X] no entrance where you can't enter -> isCaveEmpty() hash
+
 [X] plants inside -> color is wrongly set to outside quad color
 	-> this will need some further work as models are pooled and also batched
 
