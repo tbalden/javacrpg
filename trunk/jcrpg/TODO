@@ -1,3 +1,4 @@
+--------------------------------------------------------------------------------------
 
 
 This TODO file is licensed under GPL v3 license as part of the jcrpg project.
@@ -5,27 +6,16 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 (C) 2007 author is Illes Pal, all ideas here are part of the copyrighted property
 
 
-------------------------------------------
-[ ] mountain steep walk bug to one direction walk
-
+--------------------------------------------------------------------------------------
 
 
 [ ] World generator
 	parameterized cool world generation!
 	
-	[ ] rivers
+	[ ] rivers depending on oceans! ;-)
 	[ ] mountain bigger than blocks, trickier mountain algorithm.
 	
 	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
-	[X] ocean gen -> add likeness to stick landmass together that modifies the likeness at maginfication*3 zones for example (it will comb together some parts as a landmass - modifier)
-		[X] too levels of stickiness? it is too squarelike right now (use two intersecting magnification zones!)
-	[X] add climate
-	[X] add Geography areas TO ONE GEO'S BOUNDARY instead of many new items!
-		[X] Mountain!!
-		
-	[-] use filesystem to store world instead of memory?
-	[X] bit based Boundaries
-
 	
 
 [ ] moving N-S should be limited on map edge!  
@@ -39,7 +29,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] swamp , savana climate belt
 	[ ] climate levels: SNOW limit to the mountains
 	[ ] climate related events -> snowing, rain, UI messages
-	[ ] seasonal models for plants 
+	[ ] seasonal models for plants
+	[ ] detailed fruit object structure later and such!
 
 [ ] living things foundations -
 	[ ] !! Boundary based, not really moving, only when you enter the boundary !! -> for turns they can interoperate in their intersecting boundaries! quasi random seed based events / turn
@@ -93,11 +84,23 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
-	[X] merging two cubes doesnt seem to work! (when no overwrite)
+[X] mountain steep walk bug to one direction walk
 
-	[X] Cave -> 1 sized wrong at some places
-		[X] no internal flora is appearing!!
-		[X] no entrance where you can't enter -> isCaveEmpty() hash
+[X] merging two cubes doesnt seem to work! (when no overwrite)
+
+
+	[X] ocean gen -> add likeness to stick landmass together that modifies the likeness at maginfication*3 zones for example (it will comb together some parts as a landmass - modifier)
+		[X] too levels of stickiness? it is too squarelike right now (use two intersecting magnification zones!)
+	[X] add climate
+	[X] add Geography areas TO ONE GEO'S BOUNDARY instead of many new items!
+		[X] Mountain!!
+		
+	[-] use filesystem to store world instead of memory?
+	[X] bit based Boundaries
+
+[X] Cave -> 1 sized wrong at some places
+	[X] no internal flora is appearing!!
+	[X] no entrance where you can't enter -> isCaveEmpty() hash
 
 [X] plants inside -> color is wrongly set to outside quad color
 	-> this will need some further work as models are pooled and also batched
