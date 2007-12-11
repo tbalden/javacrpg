@@ -108,6 +108,8 @@ public class Cube extends ChangingImpl {
 			internalCube = true;
 		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
+		
+		
 
 		for (int i=0; i<sides.length; i++)
 		{
@@ -116,16 +118,24 @@ public class Cube extends ChangingImpl {
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
 			if (sides1==null || c2.overwrite && c2.overwritePower>=c1.overwritePower)
 			{				
-				if (c2.onlyIfOverlaps && !(c2.overwrite && c2.overwritePower>=c1.overwritePower)) 
-					merged = null; 
+				if (c2.onlyIfOverlaps) {
+					if (!(c2.overwrite && c2.overwritePower>=c1.overwritePower))
+						merged = sides1==null?sides2:null;
+					else
+						merged = sides2;
+				}
 				else {
 					merged = sides2;
 				}
 			} else
 			if (sides2==null || c1.overwrite && c1.overwritePower>=c2.overwritePower)
 			{				
-				if (c1.onlyIfOverlaps && !(c1.overwrite && c1.overwritePower>=c2.overwritePower)) 
-					merged = null; 
+				if (c1.onlyIfOverlaps) {
+					if (!(c1.overwrite && c1.overwritePower>=c2.overwritePower))
+						merged = sides2==null?sides1:null;
+					else
+						merged = sides1;
+				}
 				else {
 					merged = sides1;
 				}
@@ -144,6 +154,24 @@ public class Cube extends ChangingImpl {
 			this.sides[i] = merged;
 		}
 		
+		/*if (!overwrite)
+		{
+			if (c1.toString().indexOf("CAVE")!=-1 && c2.toString().indexOf("JUNGLE")!=-1 || c2.toString().indexOf("CAVE")!=-1 && c1.toString().indexOf("JUNGLE")!=-1)
+			{System.out.println("MERGED "+c1.toString());
+			System.out.println(c2.toString());
+			System.out.println(this.toString());
+			}
+		} else
+		{
+			if (c1.toString().indexOf("CAVE")!=-1 && c2.toString().indexOf("JUNGLE")!=-1 || c2.toString().indexOf("CAVE")!=-1 && c1.toString().indexOf("JUNGLE")!=-1)
+			//if (c1.toString().indexOf("CAVE")!=-1 || c2.toString().indexOf("CAVE")!=-1 )
+			{System.out.println("OVERWROTE "+c1.toString());
+			System.out.println(c2.toString());
+			System.out.println(this.toString());
+			}
+			//System.out.println("OVERWRITE "+c1.toString());
+			//System.out.println(c2.toString());
+		}*/
 		//System.out.println(" MERGED CUBE == "+this);
 	}
 	
