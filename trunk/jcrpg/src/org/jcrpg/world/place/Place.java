@@ -61,7 +61,14 @@ public abstract class Place {
 		return (String[])keys.toArray(new String[0]);
 	}
 
+	/**
+	 * Totally empty Cube sides.
+	 */
 	protected static Side[][] EMPTY = new Side[][] { {new Side()}, {new Side()}, {new Side()},{new Side()},{new Side()},{new Side()} };
+	/**
+	 * Use it for overwriter cubes to clear one side surely.
+	 */
+	protected static Side[] EMPTY_SIDE = new Side[] { new Side() };
 
 	protected Boundaries boundaries;
 	

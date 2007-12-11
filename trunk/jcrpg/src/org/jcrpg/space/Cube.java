@@ -91,6 +91,14 @@ public class Cube extends ChangingImpl {
 			}
 		}
 		steepDirection = steep;
+		if (c2.overwrite && c2.overwritePower>=c1.overwritePower)
+		{
+			steepDirection = c2.steepDirection;
+		}
+		if (c1.overwrite && c1.overwritePower>=c2.overwritePower)
+		{
+			steepDirection = c1.steepDirection;
+		}
 		this.parent = c1.parent;
 		this.x = x;
 		this.y = y;
@@ -108,8 +116,6 @@ public class Cube extends ChangingImpl {
 			internalCube = true;
 		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
-		
-		
 
 		for (int i=0; i<sides.length; i++)
 		{
