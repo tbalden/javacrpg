@@ -219,8 +219,8 @@ public class World extends Place {
 				}
 			}
 			mergeCubes();
-				// waters
-				
+			
+			// waters				
 			for (Water w : waters.values()) {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{
@@ -285,13 +285,13 @@ public class World extends Place {
 	public Cube mergeCubes()
 	{
 		if (currentMerged==null) return currentMerged;
-		for (Cube cube:overLappers)
-		{
-			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
-		}
 		for (Cube cube:finalRounders)
 		{
 			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+		}
+		for (Cube cube:overLappers)
+		{
+			currentMerged = appendCube(cube,currentMerged, cube.x, cube.y, cube.z);
 		}
 		return currentMerged;
 	}

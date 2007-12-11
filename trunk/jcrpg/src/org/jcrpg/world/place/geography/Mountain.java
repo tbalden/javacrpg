@@ -25,7 +25,6 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
