@@ -166,7 +166,7 @@ public class WorldGenerator {
 		w.addGeography(c);
 		Mountain m = new Mountain("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
-		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, River.STARTSIDE_WEST,1,1,0.2f,12, false);
+		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, River.SIDE_WEST,River.SIDE_NORTH,1,1,0.2f,4, false);
 		w.waters.put(r.id, r); //r.noWaterInTheBed = true;
 		
 		for (int x=0; x<gWX; x++)
