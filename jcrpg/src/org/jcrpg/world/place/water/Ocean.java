@@ -534,4 +534,9 @@ public class Ocean extends Water {
 		return isWaterPointSpecial(x, y, z, true);
 	}
 
+	@Override
+	public boolean isWaterBlock(int worldX, int worldY, int worldZ) {
+		return isWaterPointSpecial(worldX, worldY, worldZ, false);
+	}
+
 }
