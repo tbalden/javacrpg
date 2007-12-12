@@ -41,6 +41,7 @@ import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.place.water.Ocean;
+import org.jcrpg.world.place.water.River;
 
 public class WorldGenerator {
 
@@ -163,13 +164,20 @@ public class WorldGenerator {
 		w.addGeography(f);
 		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+1,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,0,1,1,false);
 		w.addGeography(c);
-		Mountain m = new Mountain("MOUNTAIN",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		Mountain m = new Mountain("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
+		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, River.STARTSIDE_WEST,1,1,0.2f,12, false);
+		w.waters.put(r.id, r);
 		
 		for (int x=0; x<gWX; x++)
 		{
 			for (int z=0; z<gWZ;z++)
 			{
+				if (!l.isWaterPointSpecial(x*gMag, l.worldGroundLevel, z*gMag,false)) 
+				{
+					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+				}
 				if ((x+z)%2==0)
 				{
 					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
