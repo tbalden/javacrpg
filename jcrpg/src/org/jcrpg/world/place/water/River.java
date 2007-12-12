@@ -100,18 +100,21 @@ public class River extends Water {
 	public int startSide = 0;
 	// where it turns in the end :-)
 	public int endSide = 2;
+	public int joinSide = 3;
 	
 	public static int SIDE_SOUTH=0;
 	public static int SIDE_WEST=1;
 	public static int SIDE_NORTH=2;
 	public static int SIDE_EAST=3;
+	public static int SIDE_NONE=4;
+	public static int SIDE_JOIN_BOTH=5;
 	
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
 	public int blockSize;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int endSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
+	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int endSide, int joinSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		blockSize = magnification;
@@ -125,6 +128,7 @@ public class River extends Water {
 		this.depth = depth;
 		this.startSide = startSide;
 		this.endSide = endSide;
+		this.joinSide = joinSide;
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
 		realMiddleX = blockSize/2;
@@ -173,9 +177,9 @@ public class River extends Water {
 		Side[][] waterfallLeftEdgeNextDry = null;
 		Side[][] waterfallLeftEdgePrevDry = null;
 		
-		int startSide = this.startSide;
+		int startSide; //= this.startSide;
 		
-		startSide = bendStartSide(startSide, endSide, worldX, worldY, worldZ);
+		startSide = bendStartSide(worldX, worldY, worldZ);
 		if (startSide==-1) return null;
 			
 		
@@ -281,6 +285,7 @@ public class River extends Water {
 				boolean edge1 = false, edge2 = false, bottom = false, onSurface = (surface.surfaceY==y);
 				if (x==checkX-width1)
 				{
+					// edge : checking for water in river bend
 					if (startSide%2==0) {
 						edge1 = !isWaterPoint(worldX-1, worldY, worldZ);	
 					} else
@@ -290,6 +295,7 @@ public class River extends Water {
 				}
 				if (x==checkX+width2)
 				{
+					// edge : checking for water in river bend
 					if (startSide%2==0) {
 						edge2 = !isWaterPoint(worldX+1, worldY, worldZ);	
 					} else
@@ -542,113 +548,274 @@ public class River extends Water {
 		return null;
 	}
 
-	public int bendStartSide(int startSide, int endSide, int worldX, int worldY, int worldZ)
+	public int bendStartSide(int worldX, int worldY, int worldZ)
 	{
+		boolean riverBlockWest = boundaries.isInside((worldX/blockSize)-1, (worldY/blockSize), (worldZ/blockSize));
+		boolean riverBlockEast = boundaries.isInside((worldX/blockSize)+1, (worldY/blockSize), (worldZ/blockSize));
+		boolean riverBlockNorth = boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize)+1);
+		boolean riverBlockSouth = boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize)-1);
+		joinSide = SIDE_NONE;
+		if (riverBlockNorth)
+		{
+			startSide = SIDE_NORTH;
+			if (riverBlockSouth)
+			{
+				endSide = SIDE_SOUTH;
+				if (riverBlockWest) {
+					joinSide = SIDE_WEST;
+					if (riverBlockEast)
+					{
+						joinSide = SIDE_JOIN_BOTH;
+					}
+				} else
+				if (riverBlockEast) joinSide = SIDE_EAST;
+			} else
+			if (riverBlockWest)
+			{
+				endSide = SIDE_WEST;
+				if (riverBlockEast) joinSide = SIDE_EAST;
+			} else
+			if (riverBlockEast)
+			{
+				endSide = SIDE_EAST;
+			}
+		} else
+		if (riverBlockSouth)
+		{
+			startSide = SIDE_SOUTH;
+			if (riverBlockWest)
+			{
+				endSide = SIDE_WEST;
+				if (riverBlockEast) joinSide = SIDE_EAST;
+			} else
+			if (riverBlockEast)
+			{
+				endSide = SIDE_EAST;
+			}
+		} else
+		if (riverBlockWest)
+		{
+			startSide = SIDE_WEST;
+			if (riverBlockEast)
+			{
+				endSide = SIDE_EAST;
+			} else
+			{
+				endSide = SIDE_EAST;
+			}
+		} else
+		if (riverBlockEast)
+		{
+			startSide = SIDE_EAST;
+			endSide = SIDE_WEST;
+		} else
+		{
+			return -1;
+		}
+		System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
+		// 2 - 0 - 1 N S W
+		
 		// north-south
 		if (startSide==SIDE_NORTH)
 		{
-			if (worldZ%blockSize<=realMiddleZ+width+1)
+			if ((worldZ%blockSize<=realMiddleZ+width || joinSide == SIDE_JOIN_BOTH) && (worldZ%blockSize>=realMiddleZ-width || joinSide == SIDE_JOIN_BOTH) || worldX%blockSize<realMiddleX-width || worldX%blockSize>realMiddleX+width)
 			{
 				if (endSide==SIDE_EAST)
 				{
-					if (worldX%blockSize>realMiddleX-width)
+					if (worldX%blockSize>realMiddleX-width && worldZ%blockSize>=realMiddleZ-width)
 					{
 						startSide=SIDE_WEST;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
 				} else
 				if (endSide==SIDE_WEST)
 				{
-					if (worldX%blockSize<=realMiddleX+width)
+					if (worldX%blockSize<=realMiddleX+width && worldZ%blockSize>=realMiddleZ-width)
 					{
 						startSide=SIDE_EAST;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
 				}
+				else
+				if (endSide==SIDE_SOUTH)
+				{
+					if (joinSide==SIDE_EAST)
+					{
+						if (worldX%blockSize>realMiddleX-width && worldZ%blockSize>=realMiddleZ-width)
+						{
+							startSide=SIDE_WEST;
+						}
+					} else
+					if (joinSide==SIDE_WEST)
+					{
+						if (worldX%blockSize<=realMiddleX+width && worldZ%blockSize>=realMiddleZ-width)
+						{
+							startSide=SIDE_EAST;
+						}
+					} else
+					if (joinSide==SIDE_JOIN_BOTH)
+					{
+						if (worldX%blockSize>=realMiddleX-width && worldX%blockSize<=realMiddleX+width)
+						{
+							startSide = SIDE_NORTH;
+						} else
+						{
+							startSide=SIDE_WEST;	
+						}
+						
+					}
+				}				
 			}
 		} else
 		if (startSide==SIDE_SOUTH)
 		{
-			if (worldZ%blockSize>=realMiddleZ-width-1)
+			if (worldZ%blockSize>=realMiddleZ-width || worldX%blockSize<realMiddleX-width || worldX%blockSize>realMiddleX+width)
 			{
 				if (endSide==SIDE_EAST)
 				{
-					if (worldX%blockSize>realMiddleX-width)
+					if (worldX%blockSize>realMiddleX-width && worldZ%blockSize<=realMiddleZ+width)
 					{
 						startSide=SIDE_WEST;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
 				} else
 				if (endSide==SIDE_WEST)
 				{
-					if (worldX%blockSize<=realMiddleX+width)
+					if (worldX%blockSize<=realMiddleX+width && worldZ%blockSize<=realMiddleZ+width)
 					{
 						startSide=SIDE_EAST;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
-				}
+				} else
+				if (endSide==SIDE_NORTH)
+				{
+					if (joinSide==SIDE_EAST)
+					{
+						if (worldX%blockSize>realMiddleX-width && worldZ%blockSize>=realMiddleZ-width)
+						{
+							startSide=SIDE_WEST;
+						}
+					} else
+					if (joinSide==SIDE_WEST)
+					{
+						if (worldX%blockSize<=realMiddleX+width && worldZ%blockSize>=realMiddleZ-width)
+						{
+							startSide=SIDE_EAST;
+						}
+					}
+				}				
 			}
 		} else
 			
 		// east-west
 		if (startSide==SIDE_EAST)
 		{
-			if (worldX%blockSize<=realMiddleX+width+1 || worldZ%blockSize<realMiddleZ-width-1 || worldZ%blockSize>realMiddleZ+width+1)
+			if (worldX%blockSize<=realMiddleX+width || worldZ%blockSize<realMiddleZ-width || worldZ%blockSize>realMiddleZ+width)
 			{
 				if (endSide==SIDE_NORTH)
 				{
-					if (worldZ%blockSize>realMiddleZ-width)
+					if (worldZ%blockSize>realMiddleZ-width && worldX%blockSize>=realMiddleX-width)
 					{
 						startSide=SIDE_SOUTH;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
 				} else
 				if (endSide==SIDE_SOUTH)
 				{
-					if (worldZ%blockSize<=realMiddleZ+width)
+					if (worldZ%blockSize<=realMiddleZ+width && worldX%blockSize>=realMiddleX-width)
 					{
 						startSide=SIDE_NORTH;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
-				}
+				} else
+				if (endSide==SIDE_WEST)
+				{
+					if (joinSide==SIDE_NORTH)
+					{
+						if (worldZ%blockSize>realMiddleZ-width && worldX%blockSize>=realMiddleX-width)
+						{
+							startSide=SIDE_SOUTH;
+						}
+					} else
+					if (joinSide==SIDE_SOUTH)
+					{
+						if (worldZ%blockSize<=realMiddleZ+width && worldX%blockSize>=realMiddleX-width)
+						{
+							startSide=SIDE_NORTH;
+						}
+					}
+				}				
 			}
 		} else
 		if (startSide==SIDE_WEST)
 		{
-			if (worldX%blockSize>=realMiddleX-width || worldZ%blockSize<realMiddleZ-width || worldZ%blockSize>realMiddleZ+width )
+			if (worldX%blockSize>=realMiddleX-width || worldZ%blockSize<realMiddleZ-width || worldZ%blockSize>realMiddleZ+width)
 			{
 				if (endSide==SIDE_NORTH)
 				{
-					if (worldZ%blockSize>realMiddleZ-width)
+					if (worldZ%blockSize>realMiddleZ-width && worldX%blockSize<=realMiddleX+width)
 					{
 						startSide=SIDE_SOUTH;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
 				} else
 				if (endSide==SIDE_SOUTH)
 				{
-					if (worldZ%blockSize<=realMiddleZ+width)
+					if (worldZ%blockSize<=realMiddleZ+width && worldX%blockSize<=realMiddleX+width)
 					{
 						startSide=SIDE_NORTH;
 					} else
 					{
-						return -1;
+						if (joinSide!=SIDE_NONE)
+							return joinSide; else
+							return -1;
 					}
-				}
+				} else
+				if (endSide==SIDE_EAST)
+				{
+					if (joinSide==SIDE_NORTH)
+					{
+						if (worldZ%blockSize>realMiddleZ-width && worldX%blockSize>=realMiddleX-width)
+						{
+							startSide=SIDE_SOUTH;
+						}
+					} else
+					if (joinSide==SIDE_SOUTH)
+					{
+						if (worldZ%blockSize<=realMiddleZ+width && worldX%blockSize>=realMiddleX-width)
+						{
+							startSide=SIDE_NORTH;
+						}
+					}
+				}				
 			}
 		}
 		return startSide;
@@ -660,9 +827,9 @@ public class River extends Water {
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
 		
 		
-		int startSide = this.startSide;
+		int startSidel;// = this.startSide;
 		
-		startSide = bendStartSide(startSide, endSide, worldX, worldY, worldZ);
+		startSide = bendStartSide(worldX, worldY, worldZ);
 		if (startSide==-1) return false;
 			
 		
