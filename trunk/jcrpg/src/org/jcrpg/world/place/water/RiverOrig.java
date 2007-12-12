@@ -31,10 +31,8 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
-import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
-public class River extends Water {
+public class RiverOrig extends Water {
 
 	public static final String TYPE_RIVER = "RIVER";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER");
@@ -105,12 +103,10 @@ public class River extends Water {
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
-	public int blockSize;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
+	public RiverOrig(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
-		blockSize = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
@@ -122,12 +118,9 @@ public class River extends Water {
 		this.startSide = startSide;
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
-		realMiddleX = blockSize/2;
-		realMiddleZ = blockSize/2;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
-			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
+		realMiddleX = sizeX*magnification/2;
+		realMiddleZ = sizeZ*magnification/2;
+		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 	}
 	
 	
@@ -135,7 +128,7 @@ public class River extends Water {
 	@Override
 	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) {
 		
-		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
+		int x = 0,y = 0,z = 0, checkX = 0;
 		int steepAhead = 0, steepBack = 0, steepLeft = 0, steepRight = 0;
 		int addWX = 0, addWZ = 0;
 		
@@ -197,11 +190,10 @@ public class River extends Water {
 			waterfallLeftEdgeNextDry = RIVER_WATERFALL_EAST_EDGE_SOUTH_DRIED;
 			waterfallLeftEdgePrevDry = RIVER_WATERFALL_EAST_EDGE_NORTH_DRIED;
 
-			x=worldX%blockSize;
+			x=worldX;
 			y=worldY;
-			z=worldZ%blockSize;
-			curveZ = worldZ;
-			checkX = realMiddleX;
+			z=worldZ;
+			checkX = realMiddleX + origoX*magnification;
 			// water surface
 			steepAhead = J3DCore.NORTH;
 			steepBack = J3DCore.SOUTH;
@@ -241,11 +233,10 @@ public class River extends Water {
 			waterfallRightEdgeNextDry = RIVER_WATERFALL_NORTH_EDGE_EAST_DRIED;
 			waterfallRightEdgePrevDry = RIVER_WATERFALL_NORTH_EDGE_WEST_DRIED;
 			
-			x=worldZ%blockSize;
+			x=worldZ;
 			y=worldY;
-			z=worldX%blockSize;
-			checkX = realMiddleZ;
-			curveZ = worldX;
+			z=worldX;
+			checkX = realMiddleZ + origoZ*magnification;
 			// water surface
 			steepAhead = J3DCore.EAST;
 			steepBack = J3DCore.WEST;
@@ -253,7 +244,7 @@ public class River extends Water {
 			steepRight = J3DCore.SOUTH;
 		}
 		  
-		int widthMod1 = (int) ( ((curveZ%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((curveZ%curveLength)-(curvedness/2)) );
+		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
 		int width1 = width+widthMod1;
 		int width2 = width-widthMod1;
 		
@@ -332,7 +323,7 @@ public class River extends Water {
 				}
 		}
 		else
-		{	// steepy part...
+		{
 				if (x>=checkX-width1 && x<=checkX+width2)
 				{
 					boolean edge1 = false, edge2 = false;
@@ -499,8 +490,7 @@ public class River extends Water {
 							}
 						}
 					}
-					c.overwrite = true;
-					c.overwritePower = 2;
+					
 					return c;
 				}
 		}
@@ -517,31 +507,26 @@ public class River extends Water {
 
 	@Override
 	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
-		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
+		int x = 0,y = 0,z = 0, checkX = 0;
 		if (startSide==0) {
-			x=worldX%blockSize;
+			x=worldX;
 			y=worldY;
-			z=worldZ%blockSize;
-			curveZ = worldZ;
-			checkX = realMiddleX;
+			z=worldZ;
+			checkX = realMiddleX + origoX*magnification;
 		}
 		if (startSide==1) {
-			x=worldZ%blockSize;
+			x=worldZ;
 			y=worldY;
-			z=worldX%blockSize;
-			curveZ = worldX;
-			checkX = realMiddleZ;
+			z=worldX;
+			checkX = realMiddleZ + origoZ*magnification;
 		}
-		int widthMod1 = (int) ( ((curveZ%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((curveZ%curveLength)-(curvedness/2)) );
+		int widthMod1 = (int) ( ((z%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((z%curveLength)-(curvedness/2)) );
 		int width1 = width+widthMod1;
 		int width2 = width-widthMod1;
 		if (x>=checkX-width1 && x<=checkX+width2)
 		{
-			System.out.println("RIVER WATER");
 			return true;
 		}
-		
-		System.out.println("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
 		return false;
 	}
 
