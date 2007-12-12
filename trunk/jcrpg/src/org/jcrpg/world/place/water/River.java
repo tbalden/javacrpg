@@ -96,18 +96,22 @@ public class River extends Water {
 	public int width = 2;
 	//
 	public int depth = 1;
-	// where the river begins
+	// where the river begins...
 	public int startSide = 0;
+	// where it turns in the end :-)
+	public int endSide = 2;
 	
-	public static int STARTSIDE_SOUTH=0;
-	public static int STARTSIDE_WEST=1;
+	public static int SIDE_SOUTH=0;
+	public static int SIDE_WEST=1;
+	public static int SIDE_NORTH=2;
+	public static int SIDE_EAST=3;
 	
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
 	public int blockSize;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
+	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int endSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		blockSize = magnification;
@@ -120,6 +124,7 @@ public class River extends Water {
 		this.width = width;
 		this.depth = depth;
 		this.startSide = startSide;
+		this.endSide = endSide;
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
 		realMiddleX = blockSize/2;
@@ -133,11 +138,14 @@ public class River extends Water {
 	
 	
 	@Override
-	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) {
+	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) 
+	{
 		
-		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
+		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0, edgeWX = 0, edgeWZ = 0;
 		int steepAhead = 0, steepBack = 0, steepLeft = 0, steepRight = 0;
 		int addWX = 0, addWZ = 0;
+		
+		
 		
 		Side[][] edgeRockSide1 = null;
 		Side[][] edgeRockSideAheadRock = null;
@@ -164,8 +172,15 @@ public class River extends Water {
 		Side[][] waterfallRightEdgePrevDry = null;
 		Side[][] waterfallLeftEdgeNextDry = null;
 		Side[][] waterfallLeftEdgePrevDry = null;
-		// depending on start side, set the different vairables
-		if (startSide==0) {
+		
+		int startSide = this.startSide;
+		
+		startSide = bendStartSide(startSide, endSide, worldX, worldY, worldZ);
+		if (startSide==-1) return null;
+			
+		
+		// depending on start side, set the different variables
+		if (startSide%2==0) {
 			addWX = 0; addWZ = 1;
 			edgeRockSide1 = RIVER_ROCKSIDE_WEST;
 			edgeRockSide2 = RIVER_ROCKSIDE_EAST;
@@ -197,9 +212,10 @@ public class River extends Water {
 			waterfallLeftEdgeNextDry = RIVER_WATERFALL_EAST_EDGE_SOUTH_DRIED;
 			waterfallLeftEdgePrevDry = RIVER_WATERFALL_EAST_EDGE_NORTH_DRIED;
 
-			x=worldX%blockSize;
+			x=worldX%blockSize; 
 			y=worldY;
 			z=worldZ%blockSize;
+			edgeWX = worldX; edgeWZ = worldZ;
 			curveZ = worldZ;
 			checkX = realMiddleX;
 			// water surface
@@ -209,7 +225,7 @@ public class River extends Water {
 			steepRight = J3DCore.EAST;
 			
 		}
-		if (startSide==1) {
+		if (startSide%2==1) {
 			addWX = 1; addWZ = 0;
 			edgeRockSide1 = RIVER_ROCKSIDE_SOUTH;
 			edgeRockSide2 = RIVER_ROCKSIDE_NORTH;
@@ -244,6 +260,7 @@ public class River extends Water {
 			x=worldZ%blockSize;
 			y=worldY;
 			z=worldX%blockSize;
+			edgeWX = worldZ; edgeWZ = worldX;
 			checkX = realMiddleZ;
 			curveZ = worldX;
 			// water surface
@@ -264,11 +281,21 @@ public class River extends Water {
 				boolean edge1 = false, edge2 = false, bottom = false, onSurface = (surface.surfaceY==y);
 				if (x==checkX-width1)
 				{
-					edge1 = true;
+					if (startSide%2==0) {
+						edge1 = !isWaterPoint(worldX-1, worldY, worldZ);	
+					} else
+					{
+						edge1 = !isWaterPoint(worldX, worldY, worldZ-1);
+					}
 				}
 				if (x==checkX+width2)
 				{
-					edge2 = true;
+					if (startSide%2==0) {
+						edge2 = !isWaterPoint(worldX+1, worldY, worldZ);	
+					} else
+					{
+						edge2 = !isWaterPoint(worldX, worldY, worldZ+1);
+					}
 				}
 				if (surface.surfaceY-y == depth)
 				{
@@ -515,17 +542,138 @@ public class River extends Water {
 		return null;
 	}
 
+	public int bendStartSide(int startSide, int endSide, int worldX, int worldY, int worldZ)
+	{
+		// north-south
+		if (startSide==SIDE_NORTH)
+		{
+			if (worldZ%blockSize<=realMiddleZ+width+1)
+			{
+				if (endSide==SIDE_EAST)
+				{
+					if (worldX%blockSize>realMiddleX-width)
+					{
+						startSide=SIDE_WEST;
+					} else
+					{
+						return -1;
+					}
+				} else
+				if (endSide==SIDE_WEST)
+				{
+					if (worldX%blockSize<=realMiddleX+width)
+					{
+						startSide=SIDE_EAST;
+					} else
+					{
+						return -1;
+					}
+				}
+			}
+		} else
+		if (startSide==SIDE_SOUTH)
+		{
+			if (worldZ%blockSize>=realMiddleZ-width-1)
+			{
+				if (endSide==SIDE_EAST)
+				{
+					if (worldX%blockSize>realMiddleX-width)
+					{
+						startSide=SIDE_WEST;
+					} else
+					{
+						return -1;
+					}
+				} else
+				if (endSide==SIDE_WEST)
+				{
+					if (worldX%blockSize<=realMiddleX+width)
+					{
+						startSide=SIDE_EAST;
+					} else
+					{
+						return -1;
+					}
+				}
+			}
+		} else
+			
+		// east-west
+		if (startSide==SIDE_EAST)
+		{
+			if (worldX%blockSize<=realMiddleX+width+1 || worldZ%blockSize<realMiddleZ-width-1 || worldZ%blockSize>realMiddleZ+width+1)
+			{
+				if (endSide==SIDE_NORTH)
+				{
+					if (worldZ%blockSize>realMiddleZ-width)
+					{
+						startSide=SIDE_SOUTH;
+					} else
+					{
+						return -1;
+					}
+				} else
+				if (endSide==SIDE_SOUTH)
+				{
+					if (worldZ%blockSize<=realMiddleZ+width)
+					{
+						startSide=SIDE_NORTH;
+					} else
+					{
+						return -1;
+					}
+				}
+			}
+		} else
+		if (startSide==SIDE_WEST)
+		{
+			if (worldX%blockSize>=realMiddleX-width || worldZ%blockSize<realMiddleZ-width || worldZ%blockSize>realMiddleZ+width )
+			{
+				if (endSide==SIDE_NORTH)
+				{
+					if (worldZ%blockSize>realMiddleZ-width)
+					{
+						startSide=SIDE_SOUTH;
+					} else
+					{
+						return -1;
+					}
+				} else
+				if (endSide==SIDE_SOUTH)
+				{
+					if (worldZ%blockSize<=realMiddleZ+width)
+					{
+						startSide=SIDE_NORTH;
+					} else
+					{
+						return -1;
+					}
+				}
+			}
+		}
+		return startSide;
+		
+	}
+	
 	@Override
 	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
-		if (startSide==0) {
+		
+		
+		int startSide = this.startSide;
+		
+		startSide = bendStartSide(startSide, endSide, worldX, worldY, worldZ);
+		if (startSide==-1) return false;
+			
+		
+		if (startSide%2==0) {
 			x=worldX%blockSize;
 			y=worldY;
 			z=worldZ%blockSize;
 			curveZ = worldZ;
 			checkX = realMiddleX;
 		}
-		if (startSide==1) {
+		if (startSide%2==1) {
 			x=worldZ%blockSize;
 			y=worldY;
 			z=worldX%blockSize;
@@ -537,11 +685,11 @@ public class River extends Water {
 		int width2 = width-widthMod1;
 		if (x>=checkX-width1 && x<=checkX+width2)
 		{
-			System.out.println("RIVER WATER");
+			//System.out.println("RIVER WATER");
 			return true;
 		}
 		
-		System.out.println("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
+		//System.out.println("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
 		return false;
 	}
 
