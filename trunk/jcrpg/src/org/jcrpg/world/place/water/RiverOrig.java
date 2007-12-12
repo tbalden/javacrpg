@@ -534,6 +534,14 @@ public class RiverOrig extends Water {
 	public int getDepth(int x, int y, int z) {
 		return depth;
 	}
+
+
+
+	@Override
+	public boolean isWaterBlock(int worldX, int worldY, int worldZ) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 

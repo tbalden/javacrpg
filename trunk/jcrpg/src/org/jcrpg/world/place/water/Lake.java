@@ -171,4 +171,9 @@ public class Lake extends Water {
 		return false;
 	}
 
+	@Override
+	public boolean isWaterBlock(int worldX, int worldY, int worldZ) {
+		return isWaterPoint(worldX, worldY, worldZ);
+	}
+
 }

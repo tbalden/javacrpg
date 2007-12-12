@@ -37,6 +37,15 @@ public abstract class Water extends Geography {
 	}
 
 	/**
+	 * Tells if the given area is within a block with crossing river. 
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return True if river passes.
+	 */
+	public abstract boolean isWaterBlock(int worldX, int worldY,int worldZ);
+
+	/**
 	 * Tells if one cube coordinate is a waterpoint.
 	 * @param x
 	 * @param y

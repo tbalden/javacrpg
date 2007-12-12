@@ -822,6 +822,19 @@ public class River extends Water {
 		
 	}
 	
+	/**
+	 * Tells if the given area is within a block with crossing river. 
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return True if river passes.
+	 */
+	@Override
+	public boolean isWaterBlock(int worldX, int worldY,int worldZ)
+	{
+		return boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize));
+	}
+	
 	@Override
 	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
