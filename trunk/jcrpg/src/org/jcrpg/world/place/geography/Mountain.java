@@ -114,29 +114,14 @@ public class Mountain extends Geography implements Surface{
 		
 		if (relX<0 || relZ<0 || relX>realSizeX || relZ>realSizeZ)
 		{
-			Cube c = new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-			return c;
-		}
-		
-		/*if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
-		{
-			Side[][] side = null;
-			if (relX == 0 && relY == 0 && relZ == 0) {
-				side = MOUNTAIN_INTERSECT_WEST;
-			} 
-			if (relX == 0 && relY == 0 && relZ == realSizeZ) {
-				side = MOUNTAIN_INTERSECT_NORTH;
-			} 
-			if (relX == realSizeX && relY == 0 && relZ == 0) {
-				side = MOUNTAIN_INTERSECT_SOUTH;
-			} 
-			if (relX == realSizeX && relY == 0 && relZ == realSizeZ) {
-				side = MOUNTAIN_INTERSECT_EAST;
+			if (relY==0) 
+			{
+				Cube c = new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+				return c;
 			}
-				
-			return new Cube(this,side,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-		}*/
-		
+			return null;
+			
+		}
 		
 		int proportionateXSizeOnLevelY = realSizeX - (int)(realSizeX * ((relY*1d)/(realSizeY)));
 		int proportionateZSizeOnLevelY = realSizeZ - (int)(realSizeZ * ((relY*1d)/(realSizeY)));
@@ -209,6 +194,7 @@ public class Mountain extends Geography implements Surface{
 					returnSteep = STEEP_WEST;
 				} else
 				{
+					returnSteep = MOUNTAIN_ROCK_VISIBLE; 
 					overwritePower = 0; // inside rock
 				}
 			}
@@ -222,6 +208,7 @@ public class Mountain extends Geography implements Surface{
 					returnSteep = STEEP_EAST;
 				} else
 				{
+					returnSteep = MOUNTAIN_ROCK_VISIBLE; 
 					overwritePower = 0; // inside rock
 				}
 			}
@@ -234,6 +221,7 @@ public class Mountain extends Geography implements Surface{
 					returnSteep = STEEP_SOUTH;
 				} else
 				{
+					returnSteep = MOUNTAIN_ROCK_VISIBLE; 
 					overwritePower = 0; // inside rock
 				}
 			}
@@ -246,6 +234,7 @@ public class Mountain extends Geography implements Surface{
 					returnSteep = STEEP_NORTH;
 				} else
 				{
+					returnSteep = MOUNTAIN_ROCK_VISIBLE; 
 					overwritePower = 0; // inside rock
 				}
 			}
@@ -328,7 +317,10 @@ public class Mountain extends Geography implements Surface{
 
 		if (relX<0 || relZ<0 || relX>realSizeX || relZ>realSizeZ)
 		{
-			return new int[]{GROUND_LEVEL,SurfaceHeightAndType.NOT_STEEP};
+			if (relY==0) { 
+				return new int[]{GROUND_LEVEL,SurfaceHeightAndType.NOT_STEEP};
+			}
+			return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 		}
 		
 		
@@ -361,6 +353,7 @@ public class Mountain extends Geography implements Surface{
 		if (relX == gapX && relZ == gapZ) {
 			returnCube = true;
 			if (relX == gapXNext && relZ == gapZNext) {
+				
 			} else {
 				steepDirection = J3DCore.BOTTOM;
 			}
