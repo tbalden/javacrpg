@@ -75,6 +75,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
+import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -686,6 +687,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_CORNER.id, new Integer(40));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
@@ -1139,7 +1141,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
 		sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
-				
+		SimpleModel sm_rockcorner = new SimpleModel("models/ground/rockcorner.obj",null); sm_rockcorner.farViewEnabled = true;
+		hm3dTypeRenderedSide.put(new Integer(40), new RenderedSide(new Model[]{sm_rockcorner}));
+		
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground,sm_cave_ground_2,sm_cave_ground_3,sm_cave_ground_3,sm_cave_ground_3}}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));//lod_cave_wall}));
@@ -1150,6 +1154,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(37), new RenderedSide(new Model[]{sm_river_side_norot}));
 		hm3dTypeRenderedSide.put(new Integer(38), new RenderedSide(new Model[]{sm_river_bottom}));
 		hm3dTypeRenderedSide.put(new Integer(39), new RenderedSide(new Model[]{sm_water_rock_side}));
+
+		// NEXT ID = 41
 		
 	}
 
@@ -2757,7 +2763,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull

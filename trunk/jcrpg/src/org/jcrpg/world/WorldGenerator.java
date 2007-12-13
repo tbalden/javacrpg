@@ -36,6 +36,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
+import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -165,7 +166,7 @@ public class WorldGenerator {
 		w.addGeography(f);
 		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+1,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,0,1,1,false);
 		w.addGeography(c);
-		Mountain m = new Mountain("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+6*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		MountainNew m = new MountainNew("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+6*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
 		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
 		w.waters.put(r.id, r); //r.noWaterInTheBed = true;
@@ -193,7 +194,7 @@ public class WorldGenerator {
 					{
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
-						c.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+						//c.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						
 					} else
 					{

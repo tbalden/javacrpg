@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.place.geography;
 
+import java.util.HashMap;
+
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -45,6 +47,7 @@ public class MountainNew extends Geography implements Surface{
 	public static final SideSubType SUBTYPE_ROCK_SIDE = new NotPassable(TYPE_MOUNTAIN+"_GROUND_ROCK_SIDE");
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_MOUNTAIN+"_GROUND");
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_MOUNTAIN+"_GROUND_INTERSECT");
+	public static final SideSubType SUBTYPE_CORNER = new Climbing(TYPE_MOUNTAIN+"_GROUND_CORNER");
 	public static final SideSubType SUBTYPE_INTERSECT_EMPTY = new Climbing(TYPE_MOUNTAIN+"_GROUND_INTERSECT_EMPTY");
 	public static final SideSubType SUBTYPE_INTERSECT_BLOCK = new GroundSubType(TYPE_MOUNTAIN+"_GROUND_INTERSECT_BLOCK");
 
@@ -53,6 +56,7 @@ public class MountainNew extends Geography implements Surface{
 	static Side[] GROUND = {new Side(TYPE_MOUNTAIN,SUBTYPE_GROUND)};
 	static Side[] STEEP = {new Side(TYPE_MOUNTAIN,SUBTYPE_STEEP)};
 	static Side[] INTERSECT = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT)};
+	static Side[] CORNER = {new Side(TYPE_MOUNTAIN,SUBTYPE_CORNER)};
 	static Side[] I_EMPTY = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_EMPTY)};
 	static Side[] BLOCK = {new Side(TYPE_MOUNTAIN,SUBTYPE_INTERSECT_BLOCK)};
 	static Side[] INTERNAL_ROCK_SIDE = null;//{new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
@@ -64,6 +68,10 @@ public class MountainNew extends Geography implements Surface{
 	static Side[][] MOUNTAIN_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, INTERSECT,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,INTERSECT,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_CORNER_NORTH = new Side[][] { CORNER, I_EMPTY, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_CORNER_EAST = new Side[][] { I_EMPTY, CORNER, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_CORNER_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, CORNER,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_CORNER_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,CORNER,BLOCK,BLOCK };
 	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, INTERNAL_ROCK_SIDE,null,null,null };
 	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,INTERNAL_ROCK_SIDE,null,null };
 	static Side[][] STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, null, STEEP,null,null,null };
@@ -106,16 +114,36 @@ public class MountainNew extends Geography implements Surface{
 		int x2 = x;
 		int z2 = z;
 		
-		int r = sizeX / 2 + sizeX / 8;
+		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		return Y;
+		return (Y/70)+4;
 
 	}
 	
-	public static final int K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
+	public static final int K_EMPTY = -1, K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
 	public static final int K_ROCK_BLOCK = 4, K_NORMAL_GROUND = 5;
-	public static final int K_INTERSECT_NORTH_EAST = 6, K_INTERSECT_EAST_SOUTH = 7, K_INTERSECT_SOUTH_WEST = 8, K_INTERSECT_WEST_NORTH = 9;
+	public static final int K_INTERSECT_NORTH = 6, K_INTERSECT_EAST = 7, K_INTERSECT_SOUTH = 8, K_INTERSECT_WEST = 9;
+	public static final int K_CORNER_SOUTH = 10, K_CORNER_NORTH = 11, K_CORNER_WEST = 12, K_CORNER_EAST = 13;
+	
+	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();
+	static {
+		hmKindCube.put(K_EMPTY, null);
+		hmKindCube.put(K_NORMAL_GROUND, new Cube(null,MOUNTAIN_GROUND,0,0,0));
+		hmKindCube.put(K_ROCK_BLOCK, new Cube(null,MOUNTAIN_ROCK_VISIBLE,0,0,0));
+		hmKindCube.put(K_STEEP_NORTH, new Cube(null,STEEP_NORTH,0,0,0,0));
+		hmKindCube.put(K_STEEP_EAST, new Cube(null,STEEP_EAST,0,0,0,1));
+		hmKindCube.put(K_STEEP_SOUTH, new Cube(null,STEEP_SOUTH,0,0,0,2));
+		hmKindCube.put(K_STEEP_WEST, new Cube(null,STEEP_WEST,0,0,0,3));
+		hmKindCube.put(K_INTERSECT_SOUTH, new Cube(null,MOUNTAIN_INTERSECT_SOUTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_INTERSECT_NORTH, new Cube(null,MOUNTAIN_INTERSECT_NORTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_INTERSECT_WEST, new Cube(null,MOUNTAIN_INTERSECT_WEST,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_INTERSECT_EAST, new Cube(null,MOUNTAIN_INTERSECT_EAST,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_CORNER_SOUTH, new Cube(null,MOUNTAIN_CORNER_SOUTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_CORNER_NORTH, new Cube(null,MOUNTAIN_CORNER_NORTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_CORNER_WEST, new Cube(null,MOUNTAIN_CORNER_WEST,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_CORNER_EAST, new Cube(null,MOUNTAIN_CORNER_EAST,0,0,0,J3DCore.BOTTOM));
+	}
 	
 	
 	public int getCubeKind(int worldX, int worldY, int worldZ)
@@ -130,17 +158,88 @@ public class MountainNew extends Geography implements Surface{
 		
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
 		int YNorth = getPointHeight(relX, relZ+1, realSizeX, realSizeZ);
+		int YNorthEast = getPointHeight(relX+1, relZ+1, realSizeX, realSizeZ);
+		int YNorthWest = getPointHeight(relX-1, relZ+1, realSizeX, realSizeZ);
 		int YSouth = getPointHeight(relX, relZ-1, realSizeX, realSizeZ);
+		int YSouthEast = getPointHeight(relX+1, relZ-1, realSizeX, realSizeZ);
+		int YSouthWest = getPointHeight(relX-1, relZ-1, realSizeX, realSizeZ);
 		int YWest = getPointHeight(relX-1, relZ, realSizeX, realSizeZ);
 		int YEast = getPointHeight(relX+1, relZ, realSizeX, realSizeZ);
-		return K_NORMAL_GROUND;
-		
+		if (Y==relY) 
+		{
+			if (YNorth == YSouth && YSouth == YEast && YEast == YWest)
+			{
+				if (YWest == Y)
+				{
+					// all is equal
+					if (YNorthEast-Y == 1)
+					{
+						return K_INTERSECT_NORTH;
+					}
+					if (YNorthWest-Y == 1)
+					{
+						return K_INTERSECT_SOUTH;
+					}
+					if (YSouthEast-Y == 1)
+					{
+						return K_INTERSECT_WEST;
+					}
+					if (YSouthWest-Y == 1)
+					{
+						return K_INTERSECT_EAST;
+					}
+				}
+				
+			}
+			
+			if (YNorth-Y==1)
+			{
+				if (YWest-Y==1)
+				{
+					return K_CORNER_EAST;
+				}
+				if (YEast-Y==1)
+				{
+					return K_CORNER_WEST;
+				}
+				return K_STEEP_SOUTH;
+			}
+			if (YSouth-Y==1)
+			{
+				if (YWest-Y==1)
+				{
+					return K_CORNER_EAST;
+				}
+				if (YEast-Y==1)
+				{
+					return K_CORNER_WEST;
+				}
+				return K_STEEP_NORTH;
+			}
+			if (YWest-Y==1)
+			{
+				return K_STEEP_EAST;
+			}
+			if (YEast-Y==1)
+			{
+				return K_STEEP_WEST;
+			}
+			return K_NORMAL_GROUND;
+		}
+		if (worldY>=worldGroundLevel && Y>relY && (relY>=YNorth || relY>=YSouth|| relY>=YWest || relY>=YEast)) return K_ROCK_BLOCK;
+		return K_EMPTY;
 	}
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
 		int kind = getCubeKind(worldX, worldY, worldZ);
-		return null;
+		Cube c = hmKindCube.get(kind);
+		if (c==null) return null;
+		c = c.copy(this);
+		c.x = worldX;
+		c.y = worldY;
+		c.z = worldZ;
+		return c;
 	}
 
 	int GROUND_LEVEL = 0;
@@ -150,24 +249,25 @@ public class MountainNew extends Geography implements Surface{
 	
 	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
 		int kind = getCubeKind(worldX, worldY, worldZ);
-
+		if (kind>=0 && kind<=4)
+		{
+			return new int[]{GROUND_LEVEL,kind};
+		}
 		return new int[]{GROUND_LEVEL,SurfaceHeightAndType.NOT_STEEP};
 		//return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
 	}
 	
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
-		int realSizeY = mountainRealSizeY-1;
-		for (int i=0; i<=realSizeY; i++)
-		{
-			int[] ret = isGroundLevel(worldX, worldGroundLevel+i, worldZ);
-			if (ret[0]>-1)
-			{
-				int r = ret[1];
-				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+i,true,r)};
-			}
-		}
-		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldHeight,false,SurfaceHeightAndType.NOT_STEEP)};
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, 0, worldZ);
+		int realSizeX = blockUsedSize[0]; 
+		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
+		int realSizeZ = blockUsedSize[1];
+		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
+		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
+
+		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
+		return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
 
