@@ -64,4 +64,21 @@ public class Geography extends Place {
 		return super.getCube(worldX, worldY, worldZ);
 	}
 	
+	/**
+	 * Tells the geo hashed generic size on a given block - usable for example Mountain - Cave relation.
+	 * @param blockSize
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return The X and Z size of the used area in the block.
+	 */
+	public int[] getBlocksGenericSize(int blockSize, int worldX, int worldY, int worldZ)
+	{
+		int realSizeX = blockSize-1 - (int)( (getGeographyHashPercentage(worldX/blockSize, 0, worldZ/blockSize)/200d)*(blockSize/2) );
+		int realSizeZ = blockSize-1 - (int)( (getGeographyHashPercentage(worldZ/blockSize, 0, worldX/blockSize)/200d)*(blockSize/2) );
+		realSizeX-=realSizeX%2;
+		realSizeZ-=realSizeZ%2;
+		return new int[]{realSizeX,realSizeZ};
+	}
+	
 }

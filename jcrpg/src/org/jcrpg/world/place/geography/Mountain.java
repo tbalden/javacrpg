@@ -102,14 +102,21 @@ public class Mountain extends Geography implements Surface{
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		int relX = worldX%blockSize;//-origoX*magnification;
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
+		int realSizeX = blockUsedSize[0]; 
+		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
+		int realSizeZ = blockUsedSize[1];
+		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
 		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1;
-		int realSizeY = mountainRealSizeY-1;
-		int realSizeZ = blockSize-1;
+		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
 		
-		if (relY>mountainRealSizeY-1) return null;
+		if (relY>realSizeY) return null;
+		
+		if (relX<0 || relZ<0 || relX>realSizeX || relZ>realSizeZ)
+		{
+			Cube c = new Cube(this,MOUNTAIN_GROUND,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+			return c;
+		}
 		
 		/*if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{
@@ -305,15 +312,25 @@ public class Mountain extends Geography implements Surface{
 	int GROUND_LEVEL = 0;
 	int GROUND_LEVEL_CONTAINER = 1;
 	
+	
+	
 	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
-		int relX = worldX%blockSize;//-origoX*magnification;
-		int relY = worldY-worldGroundLevel;
-		int relZ = worldZ%blockSize;//-origoZ*magnification;
-		int realSizeX = blockSize-1; //sizeX*magnification-1;
-		int realSizeY = mountainRealSizeY-1;
-		int realSizeZ = blockSize-1; // sizeZ*magnification-1;
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
+		int realSizeX = blockUsedSize[0]; 
+		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
+		int realSizeZ = blockUsedSize[1];
 		
-		if (relY>mountainRealSizeY-1) return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
+		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
+		int relY = worldY-worldGroundLevel;
+		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
+
+		if (relY>realSizeY) return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
+
+		if (relX<0 || relZ<0 || relX>realSizeX || relZ>realSizeZ)
+		{
+			return new int[]{GROUND_LEVEL,SurfaceHeightAndType.NOT_STEEP};
+		}
+		
 		
 		if (relX==0 && relY==0 && (relZ==0 ||relZ==realSizeZ) || relX==realSizeX && relY==0 && (relZ==0 ||relZ==realSizeZ))
 		{

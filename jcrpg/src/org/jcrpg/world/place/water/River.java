@@ -277,7 +277,7 @@ public class River extends Water {
 		int width1 = width+widthMod1;
 		int width2 = width-widthMod1;
 		
-		
+		if (geoCube==null) geoCube = new Cube((World)getRoot(),new Side[][]{{}},0,0,0);
 		if (y != surface.surfaceY || geoCube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
 		{
 				
@@ -549,6 +549,9 @@ public class River extends Water {
 
 	public int bendStartSide(int worldX, int worldY, int worldZ)
 	{
+		//boolean[] flows = flowDirections.getFlowDirections(worldX, worldY, worldZ);
+		//System.out.println("FDIRS = "+flows[0]+" "+flows[1]+" "+flows[2]+" "+flows[3]);
+		
 		boolean riverBlockWest = boundaries.isInside(((worldX-blockSize)/blockSize)*blockSize, worldY, worldZ);
 		boolean riverBlockEast = boundaries.isInside(((worldX+blockSize)/blockSize)*blockSize, worldY, worldZ);
 		boolean riverBlockNorth = boundaries.isInside(worldX, worldY, ((worldZ/blockSize)+1)*blockSize);

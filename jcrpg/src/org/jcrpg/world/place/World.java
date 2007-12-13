@@ -232,7 +232,7 @@ public class World extends Place {
 							if (worldY>=bottom&&worldY<=y)
 							{
 								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
-								if (currentMerged.overwrite) {
+								if (currentMerged!=null && currentMerged.overwrite) {
 									collectCubes(c,false);
 									//c = appendCube(retCube, c, worldX, worldY, worldZ);
 									c = mergeCubes();
