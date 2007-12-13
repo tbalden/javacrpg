@@ -187,7 +187,7 @@ public class World extends Place {
 							}
 							if (worldY==surf[surfCount].surfaceY && surf[surfCount].canContain)
 							{
-								// this can cotain things upon it, do the clima and flora... 
+								// this can contain things upon it, do the climate and flora... 
 								CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
 								Cube floraCube = null;
 								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
@@ -208,13 +208,10 @@ public class World extends Place {
 								}
 							} else 
 							{
-								//collectCubes(ge)
-								//retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
 							}
 						}
 					} else 
 					{
-						//retCube = appendCube(retCube, geoCube, worldX, worldY, worldZ);
 					}
 				}
 			}

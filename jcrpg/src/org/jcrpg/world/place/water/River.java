@@ -33,6 +33,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.WorldSizeBitBoundaries;
+import org.jcrpg.world.place.WorldSizeFlowDirections;
 
 public class River extends Water {
 
@@ -96,11 +97,6 @@ public class River extends Water {
 	public int width = 2;
 	//
 	public int depth = 1;
-	// where the river begins...
-	public int startSide = 0;
-	// where it turns in the end :-)
-	public int endSide = 2;
-	public int joinSide = 3;
 	
 	public static int SIDE_SOUTH=0;
 	public static int SIDE_WEST=1;
@@ -114,7 +110,9 @@ public class River extends Water {
 	int realMiddleX, realMiddleZ;
 	public int blockSize;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int endSide, int joinSide, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
+	public WorldSizeFlowDirections flowDirections;
+	
+	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc);
 		this.magnification = magnification;
 		blockSize = magnification;
@@ -126,17 +124,18 @@ public class River extends Water {
 		this.origoZ = origoZ;
 		this.width = width;
 		this.depth = depth;
-		this.startSide = startSide;
-		this.endSide = endSide;
-		this.joinSide = joinSide;
+
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
 		realMiddleX = blockSize/2;
 		realMiddleZ = blockSize/2;
 		if (fillBoundaries)
 			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
+		else 
+		{
 			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
+			flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
+		}
 	}
 	
 	
@@ -550,11 +549,13 @@ public class River extends Water {
 
 	public int bendStartSide(int worldX, int worldY, int worldZ)
 	{
-		boolean riverBlockWest = boundaries.isInside((worldX/blockSize)-1, (worldY/blockSize), (worldZ/blockSize));
-		boolean riverBlockEast = boundaries.isInside((worldX/blockSize)+1, (worldY/blockSize), (worldZ/blockSize));
-		boolean riverBlockNorth = boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize)+1);
-		boolean riverBlockSouth = boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize)-1);
-		joinSide = SIDE_NONE;
+		boolean riverBlockWest = boundaries.isInside(((worldX-blockSize)/blockSize)*blockSize, worldY, worldZ);
+		boolean riverBlockEast = boundaries.isInside(((worldX+blockSize)/blockSize)*blockSize, worldY, worldZ);
+		boolean riverBlockNorth = boundaries.isInside(worldX, worldY, ((worldZ/blockSize)+1)*blockSize);
+		boolean riverBlockSouth = boundaries.isInside(worldX, worldY, ((worldZ/blockSize)-1)*blockSize);
+		int joinSide = SIDE_NONE;
+		int startSide = 0;
+		int endSide = 2;
 		if (riverBlockNorth)
 		{
 			startSide = SIDE_NORTH;
@@ -610,9 +611,10 @@ public class River extends Water {
 			endSide = SIDE_WEST;
 		} else
 		{
+			System.out.println("NO RIVER AROUND AT ALL!" + worldX + " "+worldY+ " "+worldZ);
 			return -1;
 		}
-		System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
+		//System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
 		// 2 - 0 - 1 N S W
 		
 		// north-south
@@ -840,7 +842,7 @@ public class River extends Water {
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
 		
 		
-		int startSidel;// = this.startSide;
+		int startSide;// = this.startSide;
 		
 		startSide = bendStartSide(worldX, worldY, worldZ);
 		if (startSide==-1) return false;

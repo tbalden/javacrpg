@@ -21,6 +21,7 @@ package org.jcrpg.world;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -166,7 +167,7 @@ public class WorldGenerator {
 		w.addGeography(c);
 		Mountain m = new Mountain("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+4*gMag/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
-		River r = new River("RIVERS_LAYER1",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, River.SIDE_EAST,River.SIDE_NORTH,River.SIDE_SOUTH,1,1,0.2f,4, false);
+		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
 		w.waters.put(r.id, r); //r.noWaterInTheBed = true;
 		
 		for (int x=0; x<gWX; x++)
@@ -177,6 +178,8 @@ public class WorldGenerator {
 				{
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
+					r.flowDirections.setCubeFlowDirection(x, w.getSeaLevel(gMag), z, J3DCore.NORTH, true);
+					r.flowDirections.setCubeFlowDirection(x, w.getSeaLevel(gMag), z, J3DCore.WEST, true);
 				}
 				if ((x+z)%2==0)
 				{
