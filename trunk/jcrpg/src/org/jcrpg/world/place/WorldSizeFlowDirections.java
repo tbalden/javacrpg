@@ -33,6 +33,7 @@ public class WorldSizeFlowDirections {
 		int wX = w.sizeX;
 		int wY = w.sizeY;
 		int wZ = w.sizeZ;
+		this.magnification = magnification;
 		int wMag = w.magnification;
 		int gMag = magnification;
 		gWX = (wX*wMag)/gMag;
