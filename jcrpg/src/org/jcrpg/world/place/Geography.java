@@ -74,8 +74,8 @@ public class Geography extends Place {
 	 */
 	public int[] getBlocksGenericSize(int blockSize, int worldX, int worldY, int worldZ)
 	{
-		int realSizeX = blockSize-1 - (int)( (getGeographyHashPercentage(worldX/blockSize, 0, worldZ/blockSize)/200d)*(blockSize/2) );
-		int realSizeZ = blockSize-1 - (int)( (getGeographyHashPercentage(worldZ/blockSize, 0, worldX/blockSize)/200d)*(blockSize/2) );
+		int realSizeX = blockSize-1 - (int)( (getGeographyHashPercentage(worldX/blockSize, 0, worldZ/blockSize)/50d)*(blockSize/2) );
+		int realSizeZ = blockSize-1 - (int)( (getGeographyHashPercentage(worldZ/blockSize, 0, worldX/blockSize)/50d)*(blockSize/2) );
 		realSizeX-=realSizeX%2;
 		realSizeZ-=realSizeZ%2;
 		return new int[]{realSizeX,realSizeZ};
