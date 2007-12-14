@@ -28,6 +28,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -119,6 +120,7 @@ public class MountainNew extends Geography implements Surface{
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
+		Y+=(HashUtil.mixPercentage(x/3, z/3, 0)/2)-50;
 		//int ret = Math.min(0,-Y/30); // valley
 		int ret = Math.max(0,Y/30); // mountain
 		return ret;
