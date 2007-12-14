@@ -119,8 +119,8 @@ public class MountainNew extends Geography implements Surface{
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		int ret = -Y/14;
-		//System.out.println("- "+ret);
+		//int ret = Math.min(0,-Y/30); // valley
+		int ret = Math.max(0,Y/30); // mountain
 		return ret;
 
 	}
@@ -422,7 +422,17 @@ public class MountainNew extends Geography implements Surface{
 			return K_NORMAL_GROUND;
 		}
 		// checking if there are lower parts on neighbor cubes that would make an empty cube visible - if so place a rock block instead
-		if (Y>relY && (relY>=YNorth || relY>=YSouth|| relY>=YWest || relY>=YEast)) return K_ROCK_BLOCK; //
+		if (Y>relY && (relY-1>=YNorth || relY-1>=YSouth|| relY-1>=YWest || relY-1>=YEast)) return K_ROCK_BLOCK; //
+		if (Y>relY && (relY==YNorth || relY==YSouth|| relY==YWest || relY==YEast)) 
+		{
+			int i=0;
+			if (relY==YNorth+1) i++;
+			if (relY==YWest+1) i++;
+			if (relY==YSouth+1) i++;
+			if (relY==YEast+1) i++;
+			if (i<=1)			
+			return K_ROCK_BLOCK; //
+		}
 		return K_EMPTY;
 	}
 
