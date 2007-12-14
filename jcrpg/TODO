@@ -9,6 +9,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 [ ] mountain steep cliff!
 	[ ] corner,intersect -> grass on it?? cubic form of grass more sophistication in FloraListElement?
+	[ ] cave total rewrite needed, especially the entrance and size part! -> make usable with new mountain / valley+underplain?
 
 [ ] World generator
 	parameterized cool world generation!
