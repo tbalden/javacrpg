@@ -680,7 +680,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered rotated!
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, 40); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));
