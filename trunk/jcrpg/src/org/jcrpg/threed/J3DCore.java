@@ -680,10 +680,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, 40); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));
+		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
@@ -1135,7 +1135,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		QuadModel qm_waterfall = new QuadModel("water_fall1.jpg"); qm_waterfall.rotateOnSteep = true; qm_waterfall.waterQuad = false; qm_waterfall.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
-		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("sides/hill.3ds",null));
+		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("models/ground/mountain_rock.obj",null));
 		SimpleModel sm_intersect = new SimpleModel("models/ground/hillintersect.obj",null); sm_intersect.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide(new Model[]{sm_intersect}));
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
@@ -1143,6 +1143,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
 		SimpleModel sm_rockcorner = new SimpleModel("models/ground/rockcorner.obj",null); sm_rockcorner.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(40), new RenderedSide(new Model[]{sm_rockcorner}));
+		SimpleModel sm_rocksteep = new SimpleModel("models/ground/rocksteep.obj",null); sm_rocksteep.farViewEnabled = true;
+		hm3dTypeRenderedSide.put(new Integer(41), new RenderedSide(new Model[]{sm_rocksteep}));
 		
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground,sm_cave_ground_2,sm_cave_ground_3,sm_cave_ground_3,sm_cave_ground_3}}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
@@ -2676,8 +2678,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param classNames
 	 * @return
 	 */
-	public int hasSideOfInstanceInAnyDir(Cube c, HashSet<Class> classNames)
+	public Integer[] hasSideOfInstanceInAnyDir(Cube c, HashSet<Class> classNames)
 	{
+		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int j=0; j<c.sides.length; j++)
 		{
 			Side[] sides = c.sides[j];
@@ -2689,12 +2692,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					//System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
 					if (classNames.contains(sides[i].subtype.getClass()))
 					{
-						return j;
+						list.add(j);
 					}
 				}
 			}
 		}
-		return -1;
+		if (list.size()==0) return null;
+		return (Integer[])list.toArray(new Integer[0]);
 		
 	}
 	
@@ -2763,7 +2767,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		climbers.add(Climbing.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
@@ -2811,12 +2815,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (c!=null) {
 			System.out.println("Current Cube = "+c.toString());
 			// get current steep dir for knowing if checking below or above Cube for moving on steep 
-			int currentCubeSteepDirection = hasSideOfInstanceInAnyDir(c, climbers);
-			System.out.println("STEEP DIRECTION"+currentCubeSteepDirection+" - "+directions[0]);
-			if (currentCubeSteepDirection==oppositeDirections.get(new Integer(directions[0])).intValue())
-			{
-				newCoords = calcMovement(newCoords, TOP, true); 
-				newRelCoords = calcMovement(newRelCoords, TOP, false);
+			Integer[] currentCubeSteepDirections = hasSideOfInstanceInAnyDir(c, climbers);
+			System.out.println("STEEP DIRECTION"+(currentCubeSteepDirections!=null?currentCubeSteepDirections.length:"null")+" - "+directions[0]+"  "+c.steepDirection);
+			if (currentCubeSteepDirections!=null)
+			for (int steepDir: currentCubeSteepDirections) {
+				if ( steepDir==oppositeDirections.get(new Integer(directions[0])).intValue())
+				{
+					newCoords = calcMovement(newCoords, TOP, true); 
+					newRelCoords = calcMovement(newRelCoords, TOP, false);
+					break;
+				}
 			}
 			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)
@@ -2844,8 +2852,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 
 				// checking steep setting
-				int nextCubeSteepDirection = hasSideOfInstanceInAnyDir(nextCube, climbers);
-				if (nextCubeSteepDirection!=-1) {
+				Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
+				if (nextCubeSteepDirections!=null) {
 					onSteep = true;
 				} else
 				{
@@ -2902,8 +2910,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						{							
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-							if (hasSideOfInstanceInAnyDir(nextCube, climbers)!=-1) // check for climbers
-							{
+							Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
+							if (nextCubeSteepDirections!=null) 
+							{// check for climbers
 								onSteep = true;
 							} else
 							{

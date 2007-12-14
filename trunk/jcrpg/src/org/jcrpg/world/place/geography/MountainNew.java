@@ -70,10 +70,10 @@ public class MountainNew extends Geography implements Surface{
 	static Side[][] MOUNTAIN_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, INTERSECT,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] MOUNTAIN_INTERSECT_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,INTERSECT,BLOCK,BLOCK };
-	static Side[][] MOUNTAIN_CORNER_NORTH = new Side[][] { CORNER, I_EMPTY, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
-	static Side[][] MOUNTAIN_CORNER_EAST = new Side[][] { I_EMPTY, CORNER, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
-	static Side[][] MOUNTAIN_CORNER_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, CORNER,I_EMPTY,BLOCK,BLOCK };
-	static Side[][] MOUNTAIN_CORNER_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,CORNER,BLOCK,BLOCK };
+	static Side[][] MOUNTAIN_CORNER_NORTH = new Side[][] { CORNER, I_EMPTY, I_EMPTY,I_EMPTY,null,null};
+	static Side[][] MOUNTAIN_CORNER_EAST = new Side[][] { I_EMPTY, CORNER, I_EMPTY,I_EMPTY,null,null};
+	static Side[][] MOUNTAIN_CORNER_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, CORNER,I_EMPTY,null,null};
+	static Side[][] MOUNTAIN_CORNER_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,CORNER,null,null };
 	static Side[][] STEEP_NORTH = new Side[][] { STEEP, null, INTERNAL_ROCK_SIDE,null,null,null };
 	static Side[][] STEEP_EAST = new Side[][] { null, STEEP, null,INTERNAL_ROCK_SIDE,null,null };
 	static Side[][] STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, null, STEEP,null,null,null };
@@ -108,7 +108,7 @@ public class MountainNew extends Geography implements Surface{
 
 	}
 
-	public int getPointHeight(int x, int z, int sizeX, int sizeZ)
+	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
 	{
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int x1 = sizeX / 2;
@@ -120,9 +120,9 @@ public class MountainNew extends Geography implements Surface{
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		Y+=(HashUtil.mixPercentage(x/3, z/3, 0))-50;
-		int ret = Math.min(0,-Y/30); // valley
-		//int ret = Math.max(0,Y/30); // mountain
+		Y+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/2;
+		//int ret = Math.min(0,-Y/30); // valley
+		int ret = Math.max(0,Y/30); // mountain
 		return ret;
 
 	}
@@ -182,7 +182,7 @@ public class MountainNew extends Geography implements Surface{
 					ret[P_EQUAL][i] = 1;
 				}
 			}
-			if (Y-1==directionYs[i])
+			if (Y>directionYs[i])
 			{
 				if (i<4)
 				{
@@ -194,7 +194,7 @@ public class MountainNew extends Geography implements Surface{
 					ret[P_GREATER][i] = 1;
 				}
 			}
-			if (Y+1==directionYs[i])
+			if (Y<directionYs[i])
 			{
 				if (i<4)
 				{
@@ -256,53 +256,86 @@ public class MountainNew extends Geography implements Surface{
 		int relY = worldY-worldGroundLevel;
 		int relZ = (worldZ%blockSize);//-(blockSize-realSizeZ)/2;//-origoZ*magnification;
 		
-		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
-		int YNorth = getPointHeight(relX, relZ+1, realSizeX, realSizeZ);
-		int YNorthEast = getPointHeight(relX+1, relZ+1, realSizeX, realSizeZ);
-		int YNorthWest = getPointHeight(relX-1, relZ+1, realSizeX, realSizeZ);
-		int YSouth = getPointHeight(relX, relZ-1, realSizeX, realSizeZ);
-		int YSouthEast = getPointHeight(relX+1, relZ-1, realSizeX, realSizeZ);
-		int YSouthWest = getPointHeight(relX-1, relZ-1, realSizeX, realSizeZ);
-		int YWest = getPointHeight(relX-1, relZ, realSizeX, realSizeZ);
-		int YEast = getPointHeight(relX+1, relZ, realSizeX, realSizeZ);
+		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ);
+		int YNorth = getPointHeight(relX, relZ+1, realSizeX, realSizeZ,worldX,worldZ+1);
+		int YNorthEast = getPointHeight(relX+1, relZ+1, realSizeX, realSizeZ,worldX+1,worldZ+1);
+		int YNorthWest = getPointHeight(relX-1, relZ+1, realSizeX, realSizeZ,worldX-1,worldZ+1);
+		int YSouth = getPointHeight(relX, relZ-1, realSizeX, realSizeZ,worldX,worldZ-1);
+		int YSouthEast = getPointHeight(relX+1, relZ-1, realSizeX, realSizeZ,worldX+1,worldZ-1);
+		int YSouthWest = getPointHeight(relX-1, relZ-1, realSizeX, realSizeZ,worldX-1,worldZ-1);
+		int YWest = getPointHeight(relX-1, relZ, realSizeX, realSizeZ,worldX-1,worldZ);
+		int YEast = getPointHeight(relX+1, relZ, realSizeX, realSizeZ,worldX+1,worldZ);
 
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 
 		{
 			// 0 half side is bigger
-			/*if (eval[P_LESSER][C_HALF]==0 && eval[P_GE][C_HALF]==)
+			if (eval[P_LESSER][C_HALF]==0)
 			{
-				if (eval[P_EQUAL][C_NORMAL]==3 || eval[P_EQUAL][C_NORMAL]==2 && eval[P_GREATER][C_NORMAL]==1)
+				if (eval[P_LESSER][C_NORMAL]==3)
+				{
+					if (eval[P_GE][NORTH]==1)
+						return K_STEEP_NORTH;
+					if (eval[P_GE][EAST]==1)
+						return K_STEEP_EAST;
+					if (eval[P_GE][SOUTH]==1)
+						return K_STEEP_SOUTH;
+					if (eval[P_GE][WEST]==1)
+						return K_STEEP_WEST;
+				}
+				if (eval[P_LESSER][C_NORMAL]==1)
 				{
 					if (eval[P_LESSER][NORTH]==1)
-					{
 						return K_STEEP_SOUTH;
-					}
 					if (eval[P_LESSER][EAST]==1)
-					{
 						return K_STEEP_WEST;
-					}
 					if (eval[P_LESSER][SOUTH]==1)
-					{
 						return K_STEEP_NORTH;
-					}
 					if (eval[P_LESSER][WEST]==1)
-					{
 						return K_STEEP_EAST;
-					}
 				}
-			}*/
-			if (eval[P_LESSER][C_HALF]==3)
+			}
+			if (eval[P_LESSER][C_HALF]>=3)
 			{
-				//if (eval[P_LESSER][C_NORMAL]==2)
-				//{
-					return K_CORNER_EAST;
-				//}
+				if (eval[P_LESSER][C_NORMAL]==2)
+				{
+					if (eval[P_LESSER][NORTH] == 1 && eval[P_LESSER][WEST]==1)
+						return K_CORNER_EAST;
+					if (eval[P_LESSER][NORTH] == 1 && eval[P_LESSER][EAST]==1)
+						return K_CORNER_SOUTH;
+					if (eval[P_LESSER][SOUTH] == 1 && eval[P_LESSER][WEST]==1)
+						return K_CORNER_NORTH;
+					if (eval[P_LESSER][SOUTH] == 1 && eval[P_LESSER][EAST]==1)
+						return K_CORNER_WEST;
+				}
+				if (eval[P_LESSER][C_NORMAL]==3)
+				{
+					if (eval[P_GE][NORTH]==1)
+						return K_STEEP_NORTH;
+					if (eval[P_GE][EAST]==1)
+						return K_STEEP_EAST;
+					if (eval[P_GE][SOUTH]==1)
+						return K_STEEP_SOUTH;
+					if (eval[P_GE][WEST]==1)
+						return K_STEEP_WEST;
+					
+				}
 				
 			}			
 			// two half side is bigger
 			if (eval[P_LESSER][C_HALF]==2)
 			{
+				if (eval[P_LESSER][C_NORMAL]==3)
+				{
+					if (eval[P_GE][NORTH]==1)
+						return K_STEEP_NORTH;
+					if (eval[P_GE][EAST]==1)
+						return K_STEEP_EAST;
+					if (eval[P_GE][SOUTH]==1)
+						return K_STEEP_SOUTH;
+					if (eval[P_GE][WEST]==1)
+						return K_STEEP_WEST;
+				}
 				if (eval[P_LESSER][NORTH_EAST] == 1 && eval[P_LESSER][NORTH_WEST]==1)
 				{
 					if (eval[P_LESSER][C_NORMAL]==1)
@@ -388,7 +421,7 @@ public class MountainNew extends Geography implements Surface{
 			
 			// one half side is bigger
 			
-			if (eval[P_LESSER][C_HALF]==1 && eval[P_EQUAL][C_HALF]==3)
+			if (eval[P_LESSER][C_HALF]==1)// && eval[P_EQUAL][C_HALF]==3)
 			{
 				if (eval[P_LESSER][NORTH_EAST]==1)
 				{
@@ -396,11 +429,11 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_INTERSECT_WEST;
 					}
-					if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][EAST]==0)
+					/*if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][EAST]==0)
 					{
 						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][NORTH]==0 || eval[P_GREATER][EAST]==0)
+					}*/
+					if (eval[P_LESSER][C_NORMAL]==1)
 					{
 						if (eval[P_LESSER][NORTH]==1)
 						{
@@ -411,13 +444,9 @@ public class MountainNew extends Geography implements Surface{
 							return K_STEEP_WEST;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					if (eval[P_LESSER][C_NORMAL]==2)
 					{
-						if (eval[P_LESSER][NORTH]==1)
-						{
-							return K_CORNER_WEST;
-						}
-						if (eval[P_LESSER][EAST]==1)
+						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
 						{
 							return K_CORNER_SOUTH;
 						}
@@ -429,11 +458,11 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_INTERSECT_SOUTH;
 					}
-					if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][WEST]==0)
+					/*if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][WEST]==0)
 					{
 						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][NORTH]==0 || eval[P_GREATER][WEST]==0)
+					}*/
+					if (eval[P_LESSER][C_NORMAL]==1)
 					{
 						if (eval[P_LESSER][NORTH]==1)
 						{
@@ -444,13 +473,9 @@ public class MountainNew extends Geography implements Surface{
 							return K_STEEP_EAST;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					if (eval[P_LESSER][C_NORMAL]==2)
 					{
-						if (eval[P_LESSER][NORTH]==1)
-						{
-							return K_CORNER_SOUTH;
-						}
-						if (eval[P_LESSER][WEST]==1)
+						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
 						{
 							return K_CORNER_EAST;
 						}
@@ -462,11 +487,11 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_INTERSECT_NORTH;
 					}
-					if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][EAST]==0)
+					/*if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][EAST]==0)
 					{
 						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][EAST]==0)
+					}*/
+					if (eval[P_LESSER][C_NORMAL]==1)
 					{
 						if (eval[P_LESSER][SOUTH]==1)
 						{
@@ -477,13 +502,9 @@ public class MountainNew extends Geography implements Surface{
 							return K_STEEP_WEST;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					if (eval[P_LESSER][C_NORMAL]==2)
 					{
-						if (eval[P_LESSER][SOUTH]==1)
-						{
-							return K_CORNER_NORTH;
-						}
-						if (eval[P_LESSER][EAST]==1)
+						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
 						{
 							return K_CORNER_WEST;
 						}
@@ -495,11 +516,11 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_INTERSECT_EAST;
 					}
-					if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][WEST]==0)
+					/*if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][WEST]==0)
 					{
 						return K_CORNER_NORTH;
-					}
-					if (eval[P_LESSER][C_NORMAL]==1 && (eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][WEST]==0) )
+					}*/
+					if (eval[P_LESSER][C_NORMAL]==1)// && (eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][WEST]==0) )
 					{
 						if (eval[P_LESSER][SOUTH]==1)
 						{
@@ -510,16 +531,33 @@ public class MountainNew extends Geography implements Surface{
 							return K_STEEP_EAST;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					if (eval[P_LESSER][C_NORMAL]==2)
 					{
-						if (eval[P_LESSER][SOUTH]==1)
-						{
-							return K_CORNER_EAST;
-						}
-						if (eval[P_LESSER][WEST]==1)
+						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
 						{
 							return K_CORNER_NORTH;
 						}
+					}
+				}
+				
+				
+				if (eval[P_LESSER][C_NORMAL]==2)
+				{
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_SOUTH;
+					}
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_EAST;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_WEST;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_NORTH;
 					}
 				}
 			}
@@ -562,7 +600,7 @@ public class MountainNew extends Geography implements Surface{
 		//int relY = worldY-worldGroundLevel;
 		int relZ = (worldZ%blockSize);//-(blockSize-realSizeZ)/2;//-origoZ*magnification;
 
-		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
+		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ);
 		int kind = getCubeKind(worldX, Y, worldZ);
 		if (kind>=0 && kind<=4)
 		{
@@ -570,7 +608,7 @@ public class MountainNew extends Geography implements Surface{
 		} else
 		if (kind>=6)
 		{
-			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,J3DCore.BOTTOM)};
+			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,false,J3DCore.BOTTOM)};
 		}
 		return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
 	}
