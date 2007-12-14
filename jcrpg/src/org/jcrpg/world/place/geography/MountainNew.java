@@ -109,6 +109,7 @@ public class MountainNew extends Geography implements Surface{
 
 	public int getPointHeight(int x, int z, int sizeX, int sizeZ)
 	{
+		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int x1 = sizeX / 2;
 		int z1 = sizeZ / 2;
 		
@@ -118,7 +119,9 @@ public class MountainNew extends Geography implements Surface{
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		return Math.max(0, 10-(Y/40)-4);
+		int ret = -Y/14;
+		//System.out.println("- "+ret);
+		return ret;
 
 	}
 	
@@ -215,12 +218,12 @@ public class MountainNew extends Geography implements Surface{
 	public int getCubeKind(int worldX, int worldY, int worldZ)
 	{
 		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
-		int realSizeX = blockUsedSize[0]; 
+		int realSizeX = blockSize;//blockUsedSize[0]; 
 		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
-		int realSizeZ = blockUsedSize[1];
-		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
+		int realSizeZ = blockSize;//blockUsedSize[1];
+		int relX = (worldX%blockSize);//-(blockSize-realSizeX)/2;//-origoX*magnification;
 		int relY = worldY-worldGroundLevel;
-		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
+		int relZ = (worldZ%blockSize);//-(blockSize-realSizeZ)/2;//-origoZ*magnification;
 		
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
 		int YNorth = getPointHeight(relX, relZ+1, realSizeX, realSizeZ);
@@ -231,9 +234,10 @@ public class MountainNew extends Geography implements Surface{
 		int YSouthWest = getPointHeight(relX-1, relZ-1, realSizeX, realSizeZ);
 		int YWest = getPointHeight(relX-1, relZ, realSizeX, realSizeZ);
 		int YEast = getPointHeight(relX+1, relZ, realSizeX, realSizeZ);
+
+		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 
 		{
-			int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 			
 			// two half side is lesser
 			if (eval[P_LESSER][C_HALF]==2)
@@ -415,74 +419,10 @@ public class MountainNew extends Geography implements Surface{
 				}
 			}
 			
-			/*
-			if (YNorth == YSouth && YSouth == YEast && YEast == YWest)
-			{
-				if (YWest == Y)
-				{
-					// all is equal
-					if (YNorthEast-Y == 1)
-					{
-						return K_INTERSECT_NORTH;
-					}
-					if (YNorthWest-Y == 1)
-					{
-						return K_INTERSECT_SOUTH;
-					}
-					if (YSouthEast-Y == 1)
-					{
-						return K_INTERSECT_WEST;
-					}
-					if (YSouthWest-Y == 1)
-					{
-						return K_INTERSECT_EAST;
-					}
-				}
-				
-			}
-			if (YNorth==YWest)
-			{
-				if (YNorth == Y)
-				{
-					//if (Y)
-				}
-			}
-			
-			if (YNorth-Y==1)
-			{
-				if (YWest-Y==1)
-				{
-					return K_CORNER_EAST;
-				}
-				if (YEast-Y==1)
-				{
-					return K_CORNER_WEST;
-				}
-				return K_STEEP_SOUTH;
-			}
-			if (YSouth-Y==1)
-			{
-				if (YWest-Y==1)
-				{
-					return K_CORNER_EAST;
-				}
-				if (YEast-Y==1)
-				{
-					return K_CORNER_WEST;
-				}
-				return K_STEEP_NORTH;
-			}
-			if (YWest-Y==1)
-			{
-				return K_STEEP_EAST;
-			}
-			if (YEast-Y==1)
-			{
-				return K_STEEP_WEST;
-			}*/
 			return K_NORMAL_GROUND;
 		}
-		if (worldY>=worldGroundLevel && Y>relY && (relY>=YNorth || relY>=YSouth|| relY>=YWest || relY>=YEast)) return K_ROCK_BLOCK;
+		// checking if there are lower parts on neighbor cubes that would make an empty cube visible - if so place a rock block instead
+		if (Y>relY && (relY>=YNorth || relY>=YSouth|| relY>=YWest || relY>=YEast)) return K_ROCK_BLOCK; //
 		return K_EMPTY;
 	}
 
@@ -497,32 +437,26 @@ public class MountainNew extends Geography implements Surface{
 		c.z = worldZ;
 		return c;
 	}
-
-	int GROUND_LEVEL = 0;
-	int GROUND_LEVEL_CONTAINER = 1;
-	
-	
-	
-	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
-		int kind = getCubeKind(worldX, worldY, worldZ);
-		if (kind>=0 && kind<=4)
-		{
-			return new int[]{GROUND_LEVEL,kind};
-		}
-		return new int[]{GROUND_LEVEL,SurfaceHeightAndType.NOT_STEEP};
-		//return new int[]{-1,SurfaceHeightAndType.NOT_STEEP};
-	}
-	
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
 		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, 0, worldZ);
-		int realSizeX = blockUsedSize[0]; 
+		int realSizeX = blockSize;//blockUsedSize[0]; 
 		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
-		int realSizeZ = blockUsedSize[1];
-		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
-		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
+		int realSizeZ = blockSize;//blockUsedSize[1];
+		int relX = (worldX%blockSize);//-(blockSize-realSizeX)/2;//-origoX*magnification;
+		//int relY = worldY-worldGroundLevel;
+		int relZ = (worldZ%blockSize);//-(blockSize-realSizeZ)/2;//-origoZ*magnification;
 
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ);
+		int kind = getCubeKind(worldX, Y, worldZ);
+		if (kind>=0 && kind<=4)
+		{
+			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
+		} else
+		if (kind>=6)
+		{
+			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,J3DCore.BOTTOM)};
+		}
 		return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
