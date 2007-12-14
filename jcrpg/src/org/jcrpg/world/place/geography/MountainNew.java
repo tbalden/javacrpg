@@ -120,9 +120,9 @@ public class MountainNew extends Geography implements Surface{
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		Y+=(HashUtil.mixPercentage(x/3, z/3, 0)/2)-50;
-		//int ret = Math.min(0,-Y/30); // valley
-		int ret = Math.max(0,Y/30); // mountain
+		Y+=(HashUtil.mixPercentage(x/3, z/3, 0))-50;
+		int ret = Math.min(0,-Y/30); // valley
+		//int ret = Math.max(0,Y/30); // mountain
 		return ret;
 
 	}
@@ -156,6 +156,7 @@ public class MountainNew extends Geography implements Surface{
 
 	public static final int C_NORMAL = 8, C_HALF = 9;
 	int P_EQUAL = 0, P_GREATER = 1, P_LESSER = 2;
+	int P_GE = 3, P_LE = 4;
 	/**
 	 * 0 "==" , 1 ">" , 2 "<"
 	 * @param Y
@@ -164,9 +165,9 @@ public class MountainNew extends Geography implements Surface{
 	 */
 	public int[][] evaluate(int Y, int[] directionYs)
 	{
-		int[][] ret = new int[3][C_HALF+1];
-		int countEqual = 0, countGreater = 0, countLess = 0;
-		int countEqual2 = 0, countGreater2 = 0, countLess2 = 0;
+		int[][] ret = new int[P_LE+1][C_HALF+1];
+		int countEqual = 0, countGreater = 0, countLess = 0,countGreaterEq = 0, countLessEq = 0;
+		int countEqual2 = 0, countGreater2 = 0, countLess2 = 0,countGreaterEq2 = 0, countLessEq2 = 0;
 		for (int i=0; i<directionYs.length; i++)
 		{
 			if (Y==directionYs[i])
@@ -181,7 +182,7 @@ public class MountainNew extends Geography implements Surface{
 					ret[P_EQUAL][i] = 1;
 				}
 			}
-			if (Y>directionYs[i])
+			if (Y-1==directionYs[i])
 			{
 				if (i<4)
 				{
@@ -193,7 +194,7 @@ public class MountainNew extends Geography implements Surface{
 					ret[P_GREATER][i] = 1;
 				}
 			}
-			if (Y<directionYs[i])
+			if (Y+1==directionYs[i])
 			{
 				if (i<4)
 				{
@@ -205,14 +206,42 @@ public class MountainNew extends Geography implements Surface{
 					ret[P_LESSER][i] = 1;
 				}
 			}
+			if (Y>=directionYs[i])
+			{
+				if (i<4)
+				{
+					countGreaterEq++;
+					ret[P_GE][i] = 1;
+				} else
+				{
+					countGreaterEq2++;
+					ret[P_GE][i] = 1;
+				}
+			}
+			if (Y<=directionYs[i])
+			{
+				if (i<4)
+				{
+					countLessEq++;
+					ret[P_LE][i] = 1;
+				} else
+				{
+					countLessEq2++;
+					ret[P_LE][i] = 1;
+				}
+			}
 		
 		}
 		ret[P_EQUAL][C_NORMAL] = countEqual;
 		ret[P_GREATER][C_NORMAL] = countGreater;
 		ret[P_LESSER][C_NORMAL] = countLess;
+		ret[P_GE][C_NORMAL] = countGreaterEq;
+		ret[P_LE][C_NORMAL] = countLessEq;
 		ret[P_EQUAL][C_HALF] = countEqual2;
 		ret[P_GREATER][C_HALF] = countGreater2;
 		ret[P_LESSER][C_HALF] = countLess2;
+		ret[P_GE][C_HALF] = countGreaterEq2;
+		ret[P_LE][C_HALF] = countLessEq2;
 		return ret;
 		
 	}
@@ -241,7 +270,7 @@ public class MountainNew extends Geography implements Surface{
 		if (Y==relY) 
 		{
 			// 0 half side is bigger
-			if (eval[P_LESSER][C_HALF]==0)
+			/*if (eval[P_LESSER][C_HALF]==0 && eval[P_GE][C_HALF]==)
 			{
 				if (eval[P_EQUAL][C_NORMAL]==3 || eval[P_EQUAL][C_NORMAL]==2 && eval[P_GREATER][C_NORMAL]==1)
 				{
@@ -262,8 +291,15 @@ public class MountainNew extends Geography implements Surface{
 						return K_STEEP_EAST;
 					}
 				}
-			}
-			
+			}*/
+			if (eval[P_LESSER][C_HALF]==3)
+			{
+				//if (eval[P_LESSER][C_NORMAL]==2)
+				//{
+					return K_CORNER_EAST;
+				//}
+				
+			}			
 			// two half side is bigger
 			if (eval[P_LESSER][C_HALF]==2)
 			{
@@ -352,7 +388,7 @@ public class MountainNew extends Geography implements Surface{
 			
 			// one half side is bigger
 			
-			if (eval[P_LESSER][C_HALF]==1)
+			if (eval[P_LESSER][C_HALF]==1 && eval[P_EQUAL][C_HALF]==3)
 			{
 				if (eval[P_LESSER][NORTH_EAST]==1)
 				{
@@ -364,7 +400,7 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_CORNER_SOUTH;
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_EQUAL][C_NORMAL]>=2 && eval[P_EQUAL][C_HALF]>=2)
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][NORTH]==0 || eval[P_GREATER][EAST]==0)
 					{
 						if (eval[P_LESSER][NORTH]==1)
 						{
@@ -373,6 +409,17 @@ public class MountainNew extends Geography implements Surface{
 						if (eval[P_LESSER][EAST]==1)
 						{
 							return K_STEEP_WEST;
+						}
+					}
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					{
+						if (eval[P_LESSER][NORTH]==1)
+						{
+							return K_CORNER_WEST;
+						}
+						if (eval[P_LESSER][EAST]==1)
+						{
+							return K_CORNER_SOUTH;
 						}
 					}
 				}
@@ -386,7 +433,7 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_CORNER_EAST;
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_EQUAL][C_NORMAL]>=2 && eval[P_EQUAL][C_HALF]>=2)
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][NORTH]==0 || eval[P_GREATER][WEST]==0)
 					{
 						if (eval[P_LESSER][NORTH]==1)
 						{
@@ -395,6 +442,17 @@ public class MountainNew extends Geography implements Surface{
 						if (eval[P_LESSER][WEST]==1)
 						{
 							return K_STEEP_EAST;
+						}
+					}
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					{
+						if (eval[P_LESSER][NORTH]==1)
+						{
+							return K_CORNER_SOUTH;
+						}
+						if (eval[P_LESSER][WEST]==1)
+						{
+							return K_CORNER_EAST;
 						}
 					}
 				}
@@ -408,7 +466,7 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_CORNER_WEST;
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_EQUAL][C_NORMAL]>=2 && eval[P_EQUAL][C_HALF]>=2)
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][EAST]==0)
 					{
 						if (eval[P_LESSER][SOUTH]==1)
 						{
@@ -417,6 +475,17 @@ public class MountainNew extends Geography implements Surface{
 						if (eval[P_LESSER][EAST]==1)
 						{
 							return K_STEEP_WEST;
+						}
+					}
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					{
+						if (eval[P_LESSER][SOUTH]==1)
+						{
+							return K_CORNER_NORTH;
+						}
+						if (eval[P_LESSER][EAST]==1)
+						{
+							return K_CORNER_WEST;
 						}
 					}
 				}
@@ -430,7 +499,7 @@ public class MountainNew extends Geography implements Surface{
 					{
 						return K_CORNER_NORTH;
 					}
-					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_EQUAL][C_NORMAL]>=2 && eval[P_EQUAL][C_HALF]>=2)
+					if (eval[P_LESSER][C_NORMAL]==1 && (eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][WEST]==0) )
 					{
 						if (eval[P_LESSER][SOUTH]==1)
 						{
@@ -439,6 +508,17 @@ public class MountainNew extends Geography implements Surface{
 						if (eval[P_LESSER][WEST]==1)
 						{
 							return K_STEEP_EAST;
+						}
+					}
+					if (eval[P_LESSER][C_NORMAL]==1 && eval[P_GREATER][C_HALF]!=0)
+					{
+						if (eval[P_LESSER][SOUTH]==1)
+						{
+							return K_CORNER_EAST;
+						}
+						if (eval[P_LESSER][WEST]==1)
+						{
+							return K_CORNER_NORTH;
 						}
 					}
 				}
