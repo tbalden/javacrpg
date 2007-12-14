@@ -240,8 +240,31 @@ public class MountainNew extends Geography implements Surface{
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 
 		{
+			// 0 half side is bigger
+			if (eval[P_LESSER][C_HALF]==0)
+			{
+				if (eval[P_EQUAL][C_NORMAL]==3 || eval[P_EQUAL][C_NORMAL]==2 && eval[P_GREATER][C_NORMAL]==1)
+				{
+					if (eval[P_LESSER][NORTH]==1)
+					{
+						return K_STEEP_SOUTH;
+					}
+					if (eval[P_LESSER][EAST]==1)
+					{
+						return K_STEEP_WEST;
+					}
+					if (eval[P_LESSER][SOUTH]==1)
+					{
+						return K_STEEP_NORTH;
+					}
+					if (eval[P_LESSER][WEST]==1)
+					{
+						return K_STEEP_EAST;
+					}
+				}
+			}
 			
-			// two half side is lesser
+			// two half side is bigger
 			if (eval[P_LESSER][C_HALF]==2)
 			{
 				if (eval[P_LESSER][NORTH_EAST] == 1 && eval[P_LESSER][NORTH_WEST]==1)
@@ -327,7 +350,7 @@ public class MountainNew extends Geography implements Surface{
 			}
 			
 			
-			// one half side is lesser
+			// one half side is bigger
 			
 			if (eval[P_LESSER][C_HALF]==1)
 			{
