@@ -76,7 +76,7 @@ public class MountainNew extends Geography {
 	public MountainNew(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		// override default geo
-		hmKindCube.put(K_EMPTY, null);
+		/*hmKindCube.put(K_EMPTY, null);
 		hmKindCube.put(K_NORMAL_GROUND, new Cube(null,MOUNTAIN_GROUND,0,0,0));
 		hmKindCube.put(K_ROCK_BLOCK, new Cube(null,MOUNTAIN_ROCK_VISIBLE,0,0,0));
 		hmKindCube.put(K_STEEP_NORTH, new Cube(null,STEEP_NORTH,0,0,0,0));
@@ -90,7 +90,7 @@ public class MountainNew extends Geography {
 		hmKindCube.put(K_CORNER_SOUTH, new Cube(null,MOUNTAIN_CORNER_SOUTH,0,0,0,J3DCore.BOTTOM));
 		hmKindCube.put(K_CORNER_NORTH, new Cube(null,MOUNTAIN_CORNER_NORTH,0,0,0,J3DCore.BOTTOM));
 		hmKindCube.put(K_CORNER_WEST, new Cube(null,MOUNTAIN_CORNER_WEST,0,0,0,J3DCore.BOTTOM));
-		hmKindCube.put(K_CORNER_EAST, new Cube(null,MOUNTAIN_CORNER_EAST,0,0,0,J3DCore.BOTTOM));
+		hmKindCube.put(K_CORNER_EAST, new Cube(null,MOUNTAIN_CORNER_EAST,0,0,0,J3DCore.BOTTOM));*/
 	}
 
 	@Override

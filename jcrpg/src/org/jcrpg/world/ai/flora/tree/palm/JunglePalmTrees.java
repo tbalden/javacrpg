@@ -19,15 +19,15 @@ package org.jcrpg.world.ai.flora.tree.palm;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
-import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.ai.flora.tree.Tree;
 
 public class JunglePalmTrees extends Tree {
 	
 	public static final String TYPE_FOREST = "JUNGLE";
-	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_FOREST+"_PALMS");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_PALMS");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
