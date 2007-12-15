@@ -21,52 +21,72 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
-import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
-import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
-public class Plain extends Geography implements Surface {
+public class Plain extends Geography {
 
 	public static final String TYPE_PLAIN = "PLAIN";
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_PLAIN+"_GROUND");
-	
-	private int worldGroundLevel;
-	
 
 	public Plain(String id, Place parent,PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
-		super(id, parent, loc);
-		this.magnification = magnification;
-		this.worldGroundLevel=worldGroundLevel;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
-			setBoundaries( new WorldSizeBitBoundaries(magnification,(World)parent));
+		super(id, parent, loc,worldGroundLevel,worldGroundLevel+2,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 	}
 
 
 	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_PLAIN,SUBTYPE_GROUND)} };
 	
-	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ) {
-		return new Cube(this, worldY==worldGroundLevel?GRASS:EMPTY,worldX,worldY,worldZ);
-	}
-
 	SurfaceHeightAndType[] cachedType = null;
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
-		if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)}; 
-		return cachedType; 
+	@Override
+	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
+	{
+		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ)) 
+		{
+			return super.getPointHeight(x, z, sizeX, sizeZ, worldX, worldZ);
+		}
+		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
+		int Y = 0;
+		Y+=(((((HashUtil.mixPercentage(worldX/3, worldZ/3, 0)))+30)%100)/50);
+		//int ret = Math.min(0,-Y/30); // valley
+		int ret = Math.max(0,Y); // mountain
+		//System.out.println("PLAIN H: "+ret);
+		return ret;
+
 	}
+
+	/*@Override
+	public Cube getCube(int worldX, int worldY, int worldZ) {
+		Cube c = super.getCube(worldX, worldY, worldZ);
+		if (c==null) return null;
+		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
+
+		if (getPointHeight(values[3]-1, values[5], values[0], values[2],worldX-1,worldZ)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+
+		if (getPointHeight(values[3]+1, values[5], values[0], values[2],worldX+1,worldZ)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+
+		if (getPointHeight(values[3]+1, values[5]-1, values[0], values[2],worldX+1,worldZ-1)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+
+		if (getPointHeight(values[3]+1, values[5]+1, values[0], values[2],worldX+1,worldZ+1)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+
+		if (getPointHeight(values[3], values[5]+1, values[0], values[2],worldX,worldZ+1)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+		if (getPointHeight(values[3], values[5]-1, values[0], values[2],worldX,worldZ-1)>0) {
+			c.overwritePower = 1;  c.overwrite = true;
+		}
+		return c;
+	}*/
 	
 }

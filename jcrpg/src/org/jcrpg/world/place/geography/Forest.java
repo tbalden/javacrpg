@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -34,7 +35,7 @@ import org.jcrpg.world.place.WorldSizeBitBoundaries;
 import org.jcrpg.world.place.geography.forest.Bushes;
 import org.jcrpg.world.place.geography.forest.Clearing;
 
-public class Forest extends Geography implements Surface {
+public class Forest extends Geography {
 
 	public static final String TYPE_FOREST = "FOREST";
 	public static final SideSubType SUBTYPE_FOREST = new SideSubType(TYPE_FOREST+"_FOREST");
@@ -42,48 +43,31 @@ public class Forest extends Geography implements Surface {
 	public HashMap<String, Clearing>clearings;
 	public HashMap<String, Bushes>bushes;
 	
-	private int worldGroundLevel;
 	
 	public Forest(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
-		super(id, parent, loc);
+		super(id, parent, loc,worldGroundLevel,worldGroundLevel,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		clearings = new HashMap<String, Clearing>();
 		bushes = new HashMap<String, Bushes>();
-		this.magnification = magnification;
-		this.worldGroundLevel=worldGroundLevel;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
-			setBoundaries( new WorldSizeBitBoundaries(magnification,(World)parent));
 	}
 
 	static Side[][] FOREST = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };
 
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ) {
-		Place[] places = getDirectSubPlacesForCoordinates(worldX, worldY, worldZ, new HashMap[]{clearings,bushes});
-		for (Place place : places) {
-			return place.getCube(worldX, worldY, worldZ);
+	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
+	{
+		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ)) 
+		{
+			return super.getPointHeight(x, z, sizeX, sizeZ, worldX, worldZ);
 		}
-		
-		if (worldY!=worldGroundLevel) return new Cube(this,EMPTY,worldX,worldY,worldZ);
-		Cube base = new Cube(this,FOREST,worldX,worldY,worldZ);
-		return base;
-	}
+		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
+		int Y = 0;
+		Y+=(((((HashUtil.mixPercentage(worldX/3, worldZ/3, 0)))-30)%100)/50);
+		//int ret = Math.min(0,-Y/30); // valley
+		int ret = Math.max(0,Y); // mountain
+		//System.out.println("PLAIN H: "+ret);
+		return ret;
 
-	SurfaceHeightAndType[] cachedType = null;
-	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
-		if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)}; 
-		return cachedType; 
 	}
-	
-	
 	
 
 }

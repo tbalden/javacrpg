@@ -127,7 +127,7 @@ public class Cave extends Geography implements Surface {
 	{
 		if (worldY>=worldHeight) return null;
 
-		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = blockUsedSize[0]; 
 		int realSizeY = worldY-worldGroundLevel;
 		int realSizeZ = blockUsedSize[1];
