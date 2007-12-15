@@ -31,6 +31,7 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
@@ -83,6 +84,7 @@ import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.place.water.Lake;
+import org.jcrpg.world.place.water.Ocean;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
@@ -667,6 +669,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKSIDE.id, new Integer(39));
 		hmAreaSubType3dType.put(Lake.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
 		hmAreaSubType3dType.put(Lake.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
+		hmAreaSubType3dType.put(Ocean.SUBTYPE_WATER.id, new Integer(10));
+		hmAreaSubType3dType.put(Ocean.SUBTYPE_ROCKSIDE.id, new Integer(39));
+		hmAreaSubType3dType.put(Ocean.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
+		hmAreaSubType3dType.put(Ocean.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
 		hmAreaSubType3dType.put(River.SUBTYPE_WATER.id, new Integer(10));
 		hmAreaSubType3dType.put(River.SUBTYPE_WATERFALL.id, new Integer(36));
 		hmAreaSubType3dType.put(River.SUBTYPE_INTERSECT.id, new Integer(27));
@@ -684,7 +690,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
-		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_INTERSECT.id, new Integer(27));
@@ -694,7 +700,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(Geography.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmAreaSubType3dType.put(Geography.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
-		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
 		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmAreaSubType3dType.put(Geography.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
 		hmAreaSubType3dType.put(Geography.SUBTYPE_INTERSECT.id, new Integer(27));
@@ -2766,6 +2772,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public static HashSet<Class> notPassable = new HashSet<Class>();
 	/**
+	 * You cannot fall onto this (from top).
+	 */
+	public static HashSet<Class> notFallable = new HashSet<Class>();
+	/**
 	 * You get onto steep on these.
 	 */
 	public static HashSet<Class> climbers = new HashSet<Class>();
@@ -2773,10 +2783,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		notWalkable.add(NotPassable.class);
 		notWalkable.add(Swimming.class);
+		notWalkable.add(StickingOut.class);
 		notPassable.add(NotPassable.class);
 		notPassable.add(GroundSubType.class);
 		notPassable.add(Swimming.class);
+		notPassable.add(StickingOut.class);
 		climbers.add(Climbing.class);
+		notFallable.add(StickingOut.class);
 	}
 
 	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
@@ -2842,7 +2855,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (sides!=null)
 			{
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable) && !onSteep) return false;
+				if (hasSideOfInstance(sides, notPassable) && (!onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
@@ -2906,6 +2919,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							if (sides!=null)
 							if (hasSideOfInstance(sides, notPassable))
 							{	
+								if (hasSideOfInstance(sides, notFallable)) return false;
 								// yeah, a place to stand...
 								newCoords[1] = newCoords[1]-(yMinus-1);
 								newRelCoords[1] = newRelCoords[1]-(yMinus-1);
@@ -2919,7 +2933,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						sides = nextCube!=null?nextCube.getSide(BOTTOM):null;
 						if (sides!=null)
 						if (hasSideOfInstance(sides, notPassable))
-						{							
+						{				
+							if (hasSideOfInstance(sides, notFallable)) return false;
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
 							Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);

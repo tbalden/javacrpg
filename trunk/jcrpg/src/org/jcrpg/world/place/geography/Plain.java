@@ -17,7 +17,6 @@
 
 package org.jcrpg.world.place.geography;
 
-import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
@@ -50,7 +49,7 @@ public class Plain extends Geography {
 		}
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int Y = 0;
-		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))+30)%100)/50);
+		Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/5, worldX/5, 0)+20)/20), 0)))+30)%100)/50);
 		//int ret = Math.min(0,-Y/30); // valley
 		int ret = Math.max(0,Y); // mountain
 		//System.out.println("PLAIN H: "+ret);
@@ -58,35 +57,5 @@ public class Plain extends Geography {
 
 	}
 
-	/*@Override
-	public Cube getCube(int worldX, int worldY, int worldZ) {
-		Cube c = super.getCube(worldX, worldY, worldZ);
-		if (c==null) return null;
-		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
-
-		if (getPointHeight(values[3]-1, values[5], values[0], values[2],worldX-1,worldZ)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-
-		if (getPointHeight(values[3]+1, values[5], values[0], values[2],worldX+1,worldZ)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-
-		if (getPointHeight(values[3]+1, values[5]-1, values[0], values[2],worldX+1,worldZ-1)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-
-		if (getPointHeight(values[3]+1, values[5]+1, values[0], values[2],worldX+1,worldZ+1)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-
-		if (getPointHeight(values[3], values[5]+1, values[0], values[2],worldX,worldZ+1)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-		if (getPointHeight(values[3], values[5]-1, values[0], values[2],worldX,worldZ-1)>0) {
-			c.overwritePower = 1;  c.overwrite = true;
-		}
-		return c;
-	}*/
 	
 }

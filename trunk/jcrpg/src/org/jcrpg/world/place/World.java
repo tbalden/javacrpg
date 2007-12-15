@@ -159,25 +159,15 @@ public class World extends Place {
 			finalRounders.clear();
 			boolean insideGeography = false;
 			tempGeosForSurface.clear();
-			//System.out.println(geographies.values().size());
-			//ArrayList<Geography> cachedOnes = geographyCache.get(generatePositionCacheKey(worldX, worldY, worldZ, lossFactor));
-			//if (cachedOnes!=null) System.out.println(cachedOnes.size());
-			//if (cachedOnes!=null)
-			//for (Geography geo : cachedOnes) {
+
 			for (Geography geo : geographies.values()) {
 				//System.out.print("-!");
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
-					/*try {
-						throw new Exception("--");
-					} catch (Exception ex)
-					{
-						ex.printStackTrace();
-					}*/
 					insideGeography = true;
 					Cube geoCube = geo.getCube(worldX, worldY, worldZ);
 					collectCubes(geoCube,false);
-					if (geoCube!=null && geo instanceof Surface)
+					if (geo instanceof Surface)
 					{
 						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ);
 						for (int surfCount = 0; surfCount<surf.length; surfCount++) {
@@ -185,29 +175,31 @@ public class World extends Place {
 								// collecting surfaces that can contain, e.g. waters
 								tempGeosForSurface.put(geo,surf[surfCount]);
 							}
-							if (worldY==surf[surfCount].surfaceY && surf[surfCount].canContain)
-							{
-								// this can contain things upon it, do the climate and flora... 
-								CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
-								Cube floraCube = null;
-								floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
-								if (floraCube!=null)
+							if (geoCube!=null) { 
+								if (worldY==surf[surfCount].surfaceY && surf[surfCount].canContain)
 								{
-									collectCubes(floraCube,true);
-								} 
-								else 
-								{
-									if (geoCube.internalCube) 
+									// this can contain things upon it, do the climate and flora... 
+									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+									Cube floraCube = null;
+									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
+									if (floraCube!=null)
 									{
-									} else 
+										collectCubes(floraCube,true);
+									} 
+									else 
 									{
-										// outside green ground appended
-										collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ),false);
+										if (geoCube.internalCube) 
+										{
+										} else 
+										{
+											// outside green ground appended
+											collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ),false);
+										}
+										
 									}
-									
+								} else 
+								{
 								}
-							} else 
-							{
 							}
 						}
 					} else 
@@ -221,7 +213,7 @@ public class World extends Place {
 			for (Water w : waters.values()) {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{
-					//System.out.println("WATER INSIDE: "+w.id);
+					boolean thePoint = false;
 					if (w.isWaterPoint(worldX, worldY, worldZ))
 					{
 						for (SurfaceHeightAndType s:tempGeosForSurface.values())
@@ -229,7 +221,7 @@ public class World extends Place {
 							int y = s.surfaceY;
 							int depth = w.getDepth(worldX, worldY, worldZ);
 							int bottom = y - depth;
-							if (worldY>=bottom)//&&worldY<=y)
+							if (worldY>=bottom&&worldY<=y)
 							{
 								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
 								if (currentMerged!=null && currentMerged.overwrite) {
@@ -247,10 +239,10 @@ public class World extends Place {
 					}
 				}
 			}
-			if (insideGeography) return mergeCubes();
+			if (insideGeography) return currentMerged;
 
 			// not in geography, return ocean
-			return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
+			return null;//worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
 		}
 		else return null;
 	}

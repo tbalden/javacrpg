@@ -34,16 +34,16 @@ import com.jme.math.Vector3f;
 
 public class Ocean extends Water {
 
-	public static final String TYPE_LAKE = "LAKE";
-	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_LAKE+"_WATER");
-	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_LAKE+"_ROCKSIDE");
-	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_LAKE+"_ROCKBOTTOM");
-	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_LAKE+"_WATER_EMPTY");
+	public static final String TYPE_OCEAN = "OCEAN";
+	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_OCEAN+"_WATER");
+	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_OCEAN+"_ROCKSIDE");
+	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_OCEAN+"_ROCKBOTTOM");
+	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_OCEAN+"_WATER_EMPTY");
 
-	static Side[] WATER = {new Side(TYPE_LAKE,SUBTYPE_WATER)};
-	static Side[] ROCKSIDE = {new Side(TYPE_LAKE,SUBTYPE_ROCKSIDE)};
-	static Side[] ROCKBOTTOM = {new Side(TYPE_LAKE,SUBTYPE_ROCKBOTTOM)};
-	static Side[] WATER_EMPTY = {new Side(TYPE_LAKE,SUBTYPE_WATER_EMPTY)};
+	static Side[] WATER = {new Side(TYPE_OCEAN,SUBTYPE_WATER)};
+	static Side[] ROCKSIDE = {new Side(TYPE_OCEAN,SUBTYPE_ROCKSIDE)};
+	static Side[] ROCKBOTTOM = {new Side(TYPE_OCEAN,SUBTYPE_ROCKBOTTOM)};
+	static Side[] WATER_EMPTY = {new Side(TYPE_OCEAN,SUBTYPE_WATER_EMPTY)};
 
 	static Side[][] LAKE_WATER = new Side[][] { null, null, null,null,null,WATER };
 	static Side[][] LAKE_ROCKSIDE_NORTH = new Side[][] { ROCKSIDE, null, null,null,null,WATER_EMPTY };
@@ -96,6 +96,8 @@ public class Ocean extends Water {
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
 			SurfaceHeightAndType surface) {
+		if (x==503&&z==498) System.out.println("getWaterCube");
+		
 		if (y==worldGroundLevel && !noWaterInTheBed) 
 		{
 			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
@@ -148,7 +150,7 @@ public class Ocean extends Water {
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_SOUTH,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (geoCube.overwrite) c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+				if (geoCube!=null && geoCube.overwrite) c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 				return c;
 			}
 		}
@@ -168,7 +170,6 @@ public class Ocean extends Water {
 	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
 	{
 		
-		
 		x = shrinkToWorld(x);
 		z = shrinkToWorld(z);
 		int xMinusMag = shrinkToWorld(x-magnification);
@@ -185,7 +186,7 @@ public class Ocean extends Water {
 		int localY = y-worldGroundLevel;
 		int localZ = z-origoZ;
 		temp.set(localX, localZ, 0);
-		//System.out.println("worldGroundLevel"+worldGroundLevel);
+		
 		if (worldGroundLevel-y <= depth && worldGroundLevel-y>=0) 
 		{
 			{
@@ -208,8 +209,8 @@ public class Ocean extends Water {
 							return false;
 					}
 				}
-				int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
-				if (cY<0 && y==worldGroundLevel) return true;
+				//int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
+				//if (cY<=0 && y<=worldGroundLevel) return true;
 				
 				int densModifierXPlus = calcDensModifier(xPlusMag, z, density, magnification);//getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
 				int densModifierZPlus = calcDensModifier(x, zPlusMag, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
@@ -511,7 +512,10 @@ public class Ocean extends Water {
 								}
 							}
 						}
-						if (!smallCoastIt) return true;
+						if (!smallCoastIt) 
+						{
+							return true;
+						}
 					}
 					
 					int pV1 = 0, pV2 = 0;
@@ -529,7 +533,6 @@ public class Ocean extends Water {
 							return false;
 						}
 					}
-						
 					return true;
 				} else 
 				{

@@ -26,6 +26,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -67,10 +68,10 @@ public class Geography extends Place implements Surface {
 	static Side[][] GEO_CORNER_EAST = new Side[][] { I_EMPTY, CORNER, I_EMPTY,I_EMPTY,null,null};
 	static Side[][] GEO_CORNER_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, CORNER,I_EMPTY,null,null};
 	static Side[][] GEO_CORNER_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,CORNER,null,null };
-	static Side[][] GEO_STEEP_NORTH = new Side[][] { STEEP, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,null,null };
-	static Side[][] GEO_STEEP_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,null,null };
-	static Side[][] GEO_STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,null,null };
-	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,null,null };
+	static Side[][] GEO_STEEP_NORTH = new Side[][] { STEEP, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] GEO_STEEP_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,BLOCK };
+	static Side[][] GEO_STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,BLOCK,BLOCK };
 	
 	
 	public static final int K_EMPTY = -1, K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
@@ -164,10 +165,6 @@ public class Geography extends Place implements Surface {
 	public Cube getCube(int worldX, int worldY, int worldZ) {
 		int kind = getCubeKind(worldX, worldY, worldZ);
 		Cube c = hmKindCube.get(kind);
-		/*if (this instanceof Plain)
-		{
-			System.out.println("PLAIN CUBE = "+kind+c);
-		}*/
 		if (c==null) return null;
 		c = c.copy(this);
 		c.x = worldX;
@@ -331,6 +328,13 @@ public class Geography extends Place implements Surface {
 		return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
 	}
 	
+	/**
+	 * return 0 realSizeX, 1 realsizeY, 2 realSizeZ, 3 relX, 4 relY, 5 relZ 
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return
+	 */
 	public int[] calculateTransformedCoordinates(int worldX, int worldY, int worldZ)
 	{
 		// 0 realSizeX, 1 realsizeY, 2 realSizeZ, 3 relX, 4 relY, 5 relZ 
@@ -414,8 +418,19 @@ public class Geography extends Place implements Surface {
 						return K_STEEP_WEST;
 					
 				}
-				
 			}			
+			if (eval[P_LESSER][C_NORMAL]==4)
+			{
+				int per = HashUtil.mixPercentage(worldX, worldY, worldZ);
+				if (per<25)
+					return K_STEEP_NORTH;
+				if (per<50)
+					return K_STEEP_EAST;
+				if (per<75)
+					return K_STEEP_SOUTH;
+				return K_STEEP_WEST;
+			}
+
 			// two half side is bigger
 			if (eval[P_LESSER][C_HALF]==2)
 			{
