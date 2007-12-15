@@ -50,7 +50,7 @@ public class Plain extends Geography {
 		}
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int Y = 0;
-		Y+=(((((HashUtil.mixPercentage(worldX/3, worldZ/3, 0)))+30)%100)/50);
+		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))+30)%100)/50);
 		//int ret = Math.min(0,-Y/30); // valley
 		int ret = Math.max(0,Y); // mountain
 		//System.out.println("PLAIN H: "+ret);

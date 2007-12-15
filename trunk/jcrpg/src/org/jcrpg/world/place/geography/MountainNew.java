@@ -72,10 +72,6 @@ public class MountainNew extends Geography {
 	static Side[][] STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,null,null };
 
 
-	//public int groundLevel;
-	public int worldGroundLevel;
-	public int worldHeight;
-	public int blockSize; 
 	
 	public MountainNew(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
@@ -114,9 +110,10 @@ public class MountainNew extends Geography {
 		int r = sizeX / 2;
 		
 		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
-		Y+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/2;
 		//int ret = Math.min(0,-Y/30); // valley
-		int ret = Math.max(0,Y/30); // mountain
+		int ret = (int)(Math.max(0,Y/30d)*worldRealHeight); // mountain
+		ret+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/60;
+		//System.out.println("MOUNTAIN HEIGHT"+ret);
 		return ret;
 
 	}

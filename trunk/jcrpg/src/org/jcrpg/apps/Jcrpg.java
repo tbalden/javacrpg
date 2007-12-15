@@ -75,7 +75,7 @@ public class Jcrpg {
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(10,10,2,10,10,40,1,climates,climateSizeMuls,geos,10));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(100,10,2,10,10,40,1,climates,climateSizeMuls,geos,20));
 		w2.engine = e;
 
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();
@@ -86,7 +86,7 @@ public class Jcrpg {
 
 		/**/app.setWorld(w2);
 		app.setEngine(e);
-		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1), w2.realSizeZ/2);
+		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1)+10, w2.realSizeZ/2);
 		app.initCore();/**/
 
 		// ----

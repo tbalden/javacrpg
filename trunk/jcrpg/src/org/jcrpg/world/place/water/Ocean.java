@@ -198,6 +198,18 @@ public class Ocean extends Water {
 				
 				if (!coasting) return true; // just a magnified bigmap view detail is required, return now!
 
+				// let's see if there is overlapping geography with non 0 height neigbor cube -> no water there!
+				for (int dx=-1; dx<=1; dx++)
+				{
+					for (int dz=-1; dz<=1; dz++)
+					{
+						int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz));
+						if (Y>0)
+							return false;
+					}
+				}
+				int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
+				if (cY<0 && y==worldGroundLevel) return true;
 				
 				int densModifierXPlus = calcDensModifier(xPlusMag, z, density, magnification);//getGeographyHashPercentage((xPlusMag/(magnification*density)), 0, (z)/(magnification*density)) - 50;
 				int densModifierZPlus = calcDensModifier(x, zPlusMag, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (zPlusMag)/(magnification*density)) - 50;
@@ -499,21 +511,7 @@ public class Ocean extends Water {
 								}
 							}
 						}
-						if (!smallCoastIt) {
-							// let's see if there is overlapping geography with non 0 height neigbor cube -> no water there!
-							for (int dx=-1; dx<=1; dx++)
-							{
-								for (int dz=-1; dz<=1; dz++)
-								{
-									int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz));
-									if (Y>0)
-										return false;
-								}
-							}
-							int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
-							if (cY<0 && y==worldGroundLevel) return true;
-							return true;
-						}
+						if (!smallCoastIt) return true;
 					}
 					
 					int pV1 = 0, pV2 = 0;
@@ -532,34 +530,10 @@ public class Ocean extends Water {
 						}
 					}
 						
-					// let's see if there is overlapping geography with non 0 height neigbor cube -> no water there!
-					for (int dx=-1; dx<=1; dx++)
-					{
-						for (int dz=-1; dz<=1; dz++)
-						{
-							int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz));
-							if (Y>0)
-								return false;
-						}
-					}
-					int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
-					if (cY<0 && y==worldGroundLevel) return true;
 					return true;
 				} else 
 				{
 					// not coastal part, return true for water
-					// let's see if there is overlapping geography with non 0 height neigbor cube -> no water there!
-					for (int dx=-1; dx<=1; dx++)
-					{
-						for (int dz=-1; dz<=1; dz++)
-						{
-							int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz));
-							if (Y>0)
-								return false;
-						}
-					}
-					int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
-					if (cY<0 && y==worldGroundLevel) return true;
 					return true;
 				}
 			}
