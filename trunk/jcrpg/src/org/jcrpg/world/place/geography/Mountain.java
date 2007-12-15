@@ -102,7 +102,7 @@ public class Mountain extends Geography implements Surface{
 
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ) {
-		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = blockUsedSize[0]; 
 		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
 		int realSizeZ = blockUsedSize[1];
@@ -304,7 +304,7 @@ public class Mountain extends Geography implements Surface{
 	
 	
 	public int[] isGroundLevel(int worldX, int worldY, int worldZ) {
-		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldY, worldZ);
+		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = blockUsedSize[0]; 
 		int realSizeY = (int) ( (mountainRealSizeY-1) * ( ((Math.min(blockUsedSize[0],blockUsedSize[1])))*1d/blockSize ) );
 		int realSizeZ = blockUsedSize[1];

@@ -229,7 +229,7 @@ public class World extends Place {
 							int y = s.surfaceY;
 							int depth = w.getDepth(worldX, worldY, worldZ);
 							int bottom = y - depth;
-							if (worldY>=bottom&&worldY<=y)
+							if (worldY>=bottom)//&&worldY<=y)
 							{
 								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
 								if (currentMerged!=null && currentMerged.overwrite) {

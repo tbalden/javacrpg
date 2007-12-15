@@ -70,6 +70,7 @@ import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Boundaries;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -680,15 +681,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hmAreaSubType3dType.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmAreaSubType3dType.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmAreaSubType3dType.put(House.SUBTYPE_WALL.id, new Integer(1));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_ROCK_SIDE.id, new Integer(35));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_ROCK_SIDE.id, new Integer(35));
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_INTERSECT.id, new Integer(27));
 		hmAreaSubType3dType.put(MountainNew.SUBTYPE_CORNER.id, new Integer(40));
-		hmAreaSubType3dType.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
+		hmAreaSubType3dType.put(MountainNew.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
+		
+		hmAreaSubType3dType.put(Geography.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
+		hmAreaSubType3dType.put(Geography.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
+		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(34));//13));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_ROCK_SIDE.id, new Integer(35));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
+		hmAreaSubType3dType.put(Geography.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_CORNER.id, new Integer(40));
+		hmAreaSubType3dType.put(Geography.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
+		
 		hmAreaSubType3dType.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
 		hmAreaSubType3dType.put(CherryTree.SUBTYPE_TREE.id, new Integer(12));
 		hmAreaSubType3dType.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
