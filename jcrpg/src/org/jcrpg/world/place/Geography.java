@@ -367,97 +367,29 @@ public class Geography extends Place implements Surface {
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 
 		{
-			// 0 half side is bigger
-			if (eval[P_LESSER][C_HALF]==0)
-			{
-				if (eval[P_LESSER][C_NORMAL]==3)
-				{
-					if (eval[P_GE][NORTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_GE][EAST]==1)
-						return K_STEEP_EAST;
-					if (eval[P_GE][SOUTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_GE][WEST]==1)
-						return K_STEEP_WEST;
-				}
-				if (eval[P_LESSER][C_NORMAL]==1)
-				{
-					if (eval[P_LESSER][NORTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_LESSER][EAST]==1)
-						return K_STEEP_WEST;
-					if (eval[P_LESSER][SOUTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_LESSER][WEST]==1)
-						return K_STEEP_EAST;
-				}
-				if (eval[P_LESSER][C_NORMAL]==2) {
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][SOUTH]==1)
-					{
-						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][NORTH]==1)
-					{
-						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_NORTH;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][NORTH]==1)
-					{
-						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][SOUTH]==1)
-					{
-						return K_CORNER_NORTH;
-					}
-				}
-			}
-			if (eval[P_LESSER][C_HALF]>=3)
-			{
-				if (eval[P_LESSER][C_NORMAL]==2)
-				{
-					if (eval[P_LESSER][NORTH] == 1 && eval[P_LESSER][WEST]==1)
-						return K_CORNER_EAST;
-					if (eval[P_LESSER][NORTH] == 1 && eval[P_LESSER][EAST]==1)
-						return K_CORNER_SOUTH;
-					if (eval[P_LESSER][SOUTH] == 1 && eval[P_LESSER][WEST]==1)
-						return K_CORNER_NORTH;
-					if (eval[P_LESSER][SOUTH] == 1 && eval[P_LESSER][EAST]==1)
-						return K_CORNER_WEST;
 
-					if (eval[P_LESSER][NORTH] == 1 && eval[P_LESSER][SOUTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_LESSER][WEST] == 1 && eval[P_LESSER][EAST]==1)
-						return K_STEEP_WEST;
-				}
-				if (eval[P_LESSER][C_NORMAL]==3)
-				{
-					if (eval[P_GE][NORTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_GE][EAST]==1)
-						return K_STEEP_EAST;
-					if (eval[P_GE][SOUTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_GE][WEST]==1)
-						return K_STEEP_WEST;
-					
-				}
-			}			
+			if (eval[P_LESSER][C_NORMAL]==3)
+			{
+				if (eval[P_GE][NORTH]==1)
+					return K_STEEP_NORTH;
+				if (eval[P_GE][EAST]==1)
+					return K_STEEP_EAST;
+				if (eval[P_GE][SOUTH]==1)
+					return K_STEEP_SOUTH;
+				if (eval[P_GE][WEST]==1)
+					return K_STEEP_WEST;
+			}
+			if (eval[P_LESSER][C_NORMAL]==1)
+			{
+				if (eval[P_LESSER][NORTH]==1)
+					return K_STEEP_SOUTH;
+				if (eval[P_LESSER][EAST]==1)
+					return K_STEEP_WEST;
+				if (eval[P_LESSER][SOUTH]==1)
+					return K_STEEP_NORTH;
+				if (eval[P_LESSER][WEST]==1)
+					return K_STEEP_EAST;
+			}
 			if (eval[P_LESSER][C_NORMAL]==4)
 			{
 				int per = HashUtil.mixPercentage(worldX, worldY, worldZ);
@@ -469,151 +401,38 @@ public class Geography extends Place implements Surface {
 					return K_STEEP_SOUTH;
 				return K_STEEP_WEST;
 			}
-
-			// two half side is bigger
-			if (eval[P_LESSER][C_HALF]==2)
+			
+			if (eval[P_LESSER][C_NORMAL]==2)
 			{
-				if (eval[P_LESSER][C_NORMAL]==3)
+				if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
 				{
-					if (eval[P_GE][NORTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_GE][EAST]==1)
-						return K_STEEP_EAST;
-					if (eval[P_GE][SOUTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_GE][WEST]==1)
-						return K_STEEP_WEST;
+					return K_CORNER_SOUTH;
 				}
-				if (eval[P_LESSER][NORTH_EAST] == 1 && eval[P_LESSER][NORTH_WEST]==1)
+				if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
 				{
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][NORTH]==1)
-						{
-							return K_STEEP_SOUTH;
-						}
-					}
+					return K_CORNER_EAST;
 				}
-				if (eval[P_LESSER][NORTH_EAST] == 1 && eval[P_LESSER][SOUTH_EAST]==1)
+				if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
 				{
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][EAST]==1)
-						{
-							return K_STEEP_WEST;
-						}
-					}
+					return K_CORNER_WEST;
 				}
-				if (eval[P_LESSER][SOUTH_EAST] == 1 && eval[P_LESSER][SOUTH_WEST]==1)
+				if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
 				{
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][SOUTH]==1)
-						{
-							return K_STEEP_NORTH;
-						}
-					}
-				}
-				if (eval[P_LESSER][SOUTH_WEST] == 1 && eval[P_LESSER][NORTH_WEST]==1)
-				{
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][WEST]==1)
-						{
-							return K_STEEP_EAST;
-						}
-					}
-				}
-				if (eval[P_LESSER][C_NORMAL]==1)
-				{
-					if (eval[P_LESSER][NORTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_LESSER][EAST]==1)
-						return K_STEEP_WEST;
-					if (eval[P_LESSER][SOUTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_LESSER][WEST]==1)
-						return K_STEEP_EAST;
-				}
-				if (eval[P_LESSER][C_NORMAL]==2) {
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][SOUTH]==1)
-					{
-						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][NORTH]==1)
-					{
-						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_NORTH;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][NORTH]==1)
-					{
-						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][SOUTH]==1)
-					{
-						return K_CORNER_NORTH;
-					}
+					return K_CORNER_NORTH;
 				}
 			}
+
 			
 			
 			// one half side is bigger
 			
 			if (eval[P_LESSER][C_HALF]==1)// && eval[P_EQUAL][C_HALF]==3)
 			{
-				if (eval[P_LESSER][C_NORMAL]==1)
-				{
-					if (eval[P_LESSER][NORTH]==1)
-						return K_STEEP_SOUTH;
-					if (eval[P_LESSER][EAST]==1)
-						return K_STEEP_WEST;
-					if (eval[P_LESSER][SOUTH]==1)
-						return K_STEEP_NORTH;
-					if (eval[P_LESSER][WEST]==1)
-						return K_STEEP_EAST;
-				}
 				if (eval[P_LESSER][NORTH_EAST]==1)
 				{
 					if (eval[P_EQUAL][NORTH]==1 && eval[P_EQUAL][EAST]==1)
 					{
 						return K_INTERSECT_WEST;
-					}
-					/*if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][EAST]==0)
-					{
-						return K_CORNER_SOUTH;
-					}*/
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][NORTH]==1)
-						{
-							return K_STEEP_SOUTH;
-						}
-						if (eval[P_LESSER][EAST]==1)
-						{
-							return K_STEEP_WEST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2)
-					{
-						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
-						{
-							return K_CORNER_SOUTH;
-						}
 					}
 				}
 				if (eval[P_LESSER][NORTH_WEST]==1) // good
@@ -622,56 +441,12 @@ public class Geography extends Place implements Surface {
 					{
 						return K_INTERSECT_SOUTH;
 					}
-					/*if (eval[P_EQUAL][NORTH]==0 && eval[P_EQUAL][WEST]==0)
-					{
-						return K_CORNER_EAST;
-					}*/
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][NORTH]==1)
-						{
-							return K_STEEP_SOUTH;
-						}
-						if (eval[P_LESSER][WEST]==1)
-						{
-							return K_STEEP_EAST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2)
-					{
-						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
-						{
-							return K_CORNER_EAST;
-						}
-					}
 				}
 				if (eval[P_LESSER][SOUTH_EAST]==1)
 				{
 					if (eval[P_EQUAL][SOUTH]==1 && eval[P_EQUAL][EAST]==1)
 					{
 						return K_INTERSECT_NORTH;
-					}
-					/*if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][EAST]==0)
-					{
-						return K_CORNER_WEST;
-					}*/
-					if (eval[P_LESSER][C_NORMAL]==1)
-					{
-						if (eval[P_LESSER][SOUTH]==1)
-						{
-							return K_STEEP_NORTH;
-						}
-						if (eval[P_LESSER][EAST]==1)
-						{
-							return K_STEEP_WEST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2)
-					{
-						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
-						{
-							return K_CORNER_WEST;
-						}
 					}
 				}
 				if (eval[P_LESSER][SOUTH_WEST]==1) // good
@@ -680,50 +455,9 @@ public class Geography extends Place implements Surface {
 					{
 						return K_INTERSECT_EAST;
 					}
-					/*if (eval[P_EQUAL][SOUTH]==0 && eval[P_EQUAL][WEST]==0)
-					{
-						return K_CORNER_NORTH;
-					}*/
-					if (eval[P_LESSER][C_NORMAL]==1)// && (eval[P_GREATER][C_HALF]==0 || eval[P_GREATER][SOUTH]==0 || eval[P_GREATER][WEST]==0) )
-					{
-						if (eval[P_LESSER][SOUTH]==1)
-						{
-							return K_STEEP_NORTH;
-						}
-						if (eval[P_LESSER][WEST]==1)
-						{
-							return K_STEEP_EAST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2)
-					{
-						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
-						{
-							return K_CORNER_NORTH;
-						}
-					}
 				}
 				
 				
-				if (eval[P_LESSER][C_NORMAL]==2)
-				{
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_SOUTH;
-					}
-					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_EAST;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
-					{
-						return K_CORNER_WEST;
-					}
-					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
-					{
-						return K_CORNER_NORTH;
-					}
-				}
 			}
 			
 			return K_NORMAL_GROUND;
