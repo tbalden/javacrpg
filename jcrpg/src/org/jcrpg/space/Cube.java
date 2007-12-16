@@ -26,7 +26,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 
 public class Cube extends ChangingImpl {
 
-
+	public String climateId;
 
 	public Side[] n, e, s, w, top, bottom;
 	
@@ -80,6 +80,10 @@ public class Cube extends ChangingImpl {
 	}
 
 	public Cube(Cube c1, Cube c2, int x, int y, int z, int steepDir) {
+		if (c1.climateId==null)
+			this.climateId = c2.climateId;
+		else
+			this.climateId = c1.climateId;
 		int steep = c1.steepDirection;
 		if (c1.steepDirection==SurfaceHeightAndType.NOT_STEEP || c1.steepDirection == J3DCore.BOTTOM || c1.steepDirection == J3DCore.TOP)
 		{
@@ -160,25 +164,6 @@ public class Cube extends ChangingImpl {
 			this.sides[i] = merged;
 		}
 		
-		/*if (!overwrite)
-		{
-			if (c1.toString().indexOf("CAVE")!=-1 && c2.toString().indexOf("JUNGLE")!=-1 || c2.toString().indexOf("CAVE")!=-1 && c1.toString().indexOf("JUNGLE")!=-1)
-			{System.out.println("MERGED "+c1.toString());
-			System.out.println(c2.toString());
-			System.out.println(this.toString());
-			}
-		} else
-		{
-			if (c1.toString().indexOf("CAVE")!=-1 && c2.toString().indexOf("JUNGLE")!=-1 || c2.toString().indexOf("CAVE")!=-1 && c1.toString().indexOf("JUNGLE")!=-1)
-			//if (c1.toString().indexOf("CAVE")!=-1 || c2.toString().indexOf("CAVE")!=-1 )
-			{System.out.println("OVERWROTE "+c1.toString());
-			System.out.println(c2.toString());
-			System.out.println(this.toString());
-			}
-			//System.out.println("OVERWRITE "+c1.toString());
-			//System.out.println(c2.toString());
-		}*/
-		//System.out.println(" MERGED CUBE == "+this);
 	}
 	
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
@@ -242,6 +227,7 @@ public class Cube extends ChangingImpl {
 		c.overwrite = overwrite;
 		c.overwritePower = overwritePower;
 		c.onlyIfOverlaps = onlyIfOverlaps;
+		c.climateId = climateId;
 		return c;
 	}
 	

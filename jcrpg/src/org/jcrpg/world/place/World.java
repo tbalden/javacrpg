@@ -180,6 +180,7 @@ public class World extends Place {
 								{
 									// this can contain things upon it, do the climate and flora... 
 									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+									geoCube.climateId = conditions.belt.STATIC_ID;
 									Cube floraCube = null;
 									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 									if (floraCube!=null)

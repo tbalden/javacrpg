@@ -29,6 +29,7 @@ public class RenderedSide {
 	public static final int RS_HASHALTERED = 2;
 	public static final int RS_TOPSIDE = 3;
 	public static final int RS_CONTINUOUS = 4;
+	public static final int RS_CLIMATEDEPENDENT = 5;
 	
 	
 	public int type = RS_SIDE;
