@@ -530,6 +530,17 @@ public class Geography extends Place implements Surface {
 						}
 					}
 				}
+				if (eval[P_LESSER][C_NORMAL]==1)
+				{
+					if (eval[P_LESSER][NORTH]==1)
+						return K_STEEP_SOUTH;
+					if (eval[P_LESSER][EAST]==1)
+						return K_STEEP_WEST;
+					if (eval[P_LESSER][SOUTH]==1)
+						return K_STEEP_NORTH;
+					if (eval[P_LESSER][WEST]==1)
+						return K_STEEP_EAST;
+				}
 			}
 			
 			
