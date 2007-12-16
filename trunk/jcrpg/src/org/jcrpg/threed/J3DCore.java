@@ -46,6 +46,7 @@ import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.threed.scene.side.RenderedClimateDependentSide;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
 import org.jcrpg.threed.scene.side.RenderedHashAlteredSide;
 import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
@@ -70,13 +71,16 @@ import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.climate.impl.arctic.Arctic;
+import org.jcrpg.world.climate.impl.continental.Continental;
+import org.jcrpg.world.climate.impl.desert.Desert;
+import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
@@ -110,7 +114,6 @@ import com.jme.renderer.pass.RenderPass;
 import com.jme.renderer.pass.ShadowedRenderPass;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
@@ -1154,15 +1157,48 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		hm3dTypeRenderedSide.put(new Integer(10), new RenderedSide(new Model[]{qm_water}));
 		//hm3dTypeRenderedSide.put(new Integer(11), new RenderedSide("models/ground/hill_side.3ds",null));
 		hm3dTypeRenderedSide.put(new Integer(13), new RenderedSide("models/ground/mountain_rock.obj",null));
+		
+		// climate dependent
 		SimpleModel sm_intersect = new SimpleModel("models/ground/hillintersect.obj",null); sm_intersect.farViewEnabled = true;
-		hm3dTypeRenderedSide.put(new Integer(27), new RenderedSide(new Model[]{sm_intersect}));
+		SimpleModel sm_intersect_desert = new SimpleModel("models/ground/hillintersect.obj","sand2.jpg"); sm_intersect_desert.farViewEnabled = true;
+		SimpleModel sm_intersect_continental = new SimpleModel("models/ground/hillintersect.obj","grass2.jpg"); sm_intersect_continental.farViewEnabled = true;
+		SimpleModel sm_intersect_arctic = new SimpleModel("models/ground/hillintersect.obj","snow1.jpg"); sm_intersect_arctic.farViewEnabled = true;
+		SimpleModel sm_intersect_tropical = new SimpleModel("models/ground/hillintersect.obj","jungle.jpg"); sm_intersect_tropical.farViewEnabled = true;
+		HashMap<String, Model[]> dependentModels = new HashMap<String, Model[]>();
+		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_intersect_desert});
+		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_intersect_continental});
+		dependentModels.put(Arctic.ARCTIC_ID, new Model[]{sm_intersect_arctic});
+		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_intersect_tropical});
+		hm3dTypeRenderedSide.put(new Integer(27), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_intersect},dependentModels));
+		
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
 		sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
+		
+		// climate dependent
 		SimpleModel sm_rockcorner = new SimpleModel("models/ground/rockcorner.obj",null); sm_rockcorner.farViewEnabled = true;
-		hm3dTypeRenderedSide.put(new Integer(40), new RenderedSide(new Model[]{sm_rockcorner}));
+		SimpleModel sm_rockcorner_desert = new SimpleModel("models/ground/rockcorner.obj","sand2.jpg"); sm_rockcorner_desert.farViewEnabled = true;
+		SimpleModel sm_rockcorner_continental = new SimpleModel("models/ground/rockcorner.obj","grass2.jpg"); sm_rockcorner_continental.farViewEnabled = true;
+		SimpleModel sm_rockcorner_arctic = new SimpleModel("models/ground/rockcorner.obj","snow1.jpg"); sm_rockcorner_arctic.farViewEnabled = true;
+		SimpleModel sm_rockcorner_jungle = new SimpleModel("models/ground/rockcorner.obj","jungle.jpg"); sm_rockcorner_jungle.farViewEnabled = true;
+		dependentModels = new HashMap<String, Model[]>();
+		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_rockcorner_desert});
+		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_rockcorner_continental});
+		dependentModels.put(Arctic.ARCTIC_ID, new Model[]{sm_rockcorner_arctic});
+		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_rockcorner_jungle});
+		hm3dTypeRenderedSide.put(new Integer(40), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_rockcorner},dependentModels));
+		
 		SimpleModel sm_rocksteep = new SimpleModel("models/ground/rocksteep.obj",null); sm_rocksteep.farViewEnabled = true;
-		hm3dTypeRenderedSide.put(new Integer(41), new RenderedSide(new Model[]{sm_rocksteep}));
+		SimpleModel sm_rocksteep_desert = new SimpleModel("models/ground/rocksteep.obj","sand2.jpg"); sm_rocksteep_desert.farViewEnabled = true;
+		SimpleModel sm_rocksteep_continental = new SimpleModel("models/ground/rocksteep.obj","grass2.jpg"); sm_rocksteep_continental.farViewEnabled = true;
+		SimpleModel sm_rocksteep_arctic = new SimpleModel("models/ground/rocksteep.obj","snow1.jpg"); sm_rocksteep_arctic.farViewEnabled = true;
+		SimpleModel sm_rocksteep_jungle = new SimpleModel("models/ground/rocksteep.obj","jungle.jpg"); sm_rocksteep_jungle.farViewEnabled = true;
+		dependentModels = new HashMap<String, Model[]>();
+		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_rocksteep_desert});
+		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_rocksteep_continental});
+		dependentModels.put(Arctic.ARCTIC_ID, new Model[]{sm_rocksteep_arctic});
+		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_rocksteep_jungle});
+		hm3dTypeRenderedSide.put(new Integer(41), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_rocksteep},dependentModels));
 		
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground,sm_cave_ground_2,sm_cave_ground_3,sm_cave_ground_3,sm_cave_ground_3}}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
@@ -2524,6 +2560,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					renderNodes(n2, cube, x, y, z, direction);
 			} 
 			else
+				if (renderedSide.type == RenderedSide.RS_CLIMATEDEPENDENT)
+				{
+					renderNodes(n, cube, x, y, z, direction);
+					Model[] m = ((RenderedClimateDependentSide)renderedSide).getRenderedModels(cube.cube.climateId);
+					if (m!=null) {
+						NodePlaceholder[] n2 = modelPool.loadPlaceHolderObjects(cube,m,fakeLoadForCacheMaint);
+						if (n2.length>0)
+							renderNodes(n2, cube, x, y, z, direction);
+					}
+				} 
+				else
 			{
 				renderNodes(n, cube, x, y, z, direction);
 			}
