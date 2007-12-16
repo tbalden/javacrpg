@@ -1039,6 +1039,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		SimpleModel sm_desert_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","sand2.jpg"); sm_desert_steep_3.rotateOnSteep = true; sm_desert_steep_3.yGeomBatchSize = yCommon; sm_desert_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep_3.noSpecialSteepRotation = false; sm_desert_steep_3.farViewEnabled = true;
 		
 		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true; qm_arctic.farViewEnabled = true;
+		SimpleModel sm_arctic = new SimpleModel("models/ground/ground_1.obj","snow1.jpg"); sm_arctic.rotateOnSteep = true; sm_arctic.yGeomBatchSize = yCommon; sm_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic.farViewEnabled = true;
+		SimpleModel sm_arctic_2 = new SimpleModel("models/ground/ground_2.obj","snow1.jpg"); sm_arctic_2.rotateOnSteep = true; sm_arctic_2.yGeomBatchSize = yCommon; sm_arctic_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_2.farViewEnabled = true;
+		SimpleModel sm_arctic_3 = new SimpleModel("models/ground/ground_3.obj","snow1.jpg"); sm_arctic_3.rotateOnSteep = true; sm_arctic_3.yGeomBatchSize = yCommon; sm_arctic_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_3.farViewEnabled = true;
+		SimpleModel sm_arctic_steep = new SimpleModel("models/ground/ground_steep_1.obj","snow1.jpg"); sm_arctic_steep.rotateOnSteep = true; sm_arctic_steep.yGeomBatchSize = yCommon; sm_arctic_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep.noSpecialSteepRotation = false; sm_arctic_steep.farViewEnabled = true;
+		SimpleModel sm_arctic_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","snow1.jpg"); sm_arctic_steep_2.rotateOnSteep = true; sm_arctic_steep_2.yGeomBatchSize = yCommon; sm_arctic_steep_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep_2.noSpecialSteepRotation = false; sm_arctic_steep_2.farViewEnabled = true;
+		SimpleModel sm_arctic_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","snow1.jpg"); sm_arctic_steep_3.rotateOnSteep = true; sm_arctic_steep_3.yGeomBatchSize = yCommon; sm_arctic_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep_3.noSpecialSteepRotation = false; sm_arctic_steep_3.farViewEnabled = true;
 		
 		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true; qm_jungle.farViewEnabled = true;
 		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = true; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
@@ -1087,7 +1093,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
 		}
-		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
+		if (BUMPED_GROUND) 
+		{
+			hm3dTypeRenderedSide.put(new Integer(17), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_arctic,sm_arctic_2,sm_arctic_3,sm_arctic_3,sm_arctic_3}},new Model[][]{{sm_arctic_steep,sm_arctic_steep_2,sm_arctic_steep_3,sm_arctic_steep_3}}));
+		} else
+		{
+			hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
+		}
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{sm_grass}));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
@@ -1108,7 +1120,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
-		boolean LOD_VEG = LOD_VEGETATION;
+		boolean LOD_VEG = LOD_VEGETATION; 
 		
 		// lod vegetations
 		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!

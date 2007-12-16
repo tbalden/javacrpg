@@ -392,6 +392,40 @@ public class Geography extends Place implements Surface {
 					if (eval[P_LESSER][WEST]==1)
 						return K_STEEP_EAST;
 				}
+				if (eval[P_LESSER][C_NORMAL]==2) {
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_EAST;
+					}
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_SOUTH;
+					}
+					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][SOUTH]==1)
+					{
+						return K_CORNER_WEST;
+					}
+					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][NORTH]==1)
+					{
+						return K_CORNER_SOUTH;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_NORTH;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_WEST;
+					}
+					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][NORTH]==1)
+					{
+						return K_CORNER_EAST;
+					}
+					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][SOUTH]==1)
+					{
+						return K_CORNER_NORTH;
+					}
+				}
 			}
 			if (eval[P_LESSER][C_HALF]>=3)
 			{
@@ -459,16 +493,6 @@ public class Geography extends Place implements Surface {
 							return K_STEEP_SOUTH;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==2) {
-						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
-						{
-							return K_CORNER_EAST;
-						}
-						if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
-						{
-							return K_CORNER_SOUTH;
-						}
-					}
 				}
 				if (eval[P_LESSER][NORTH_EAST] == 1 && eval[P_LESSER][SOUTH_EAST]==1)
 				{
@@ -477,16 +501,6 @@ public class Geography extends Place implements Surface {
 						if (eval[P_LESSER][EAST]==1)
 						{
 							return K_STEEP_WEST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2) {
-						if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][SOUTH]==1)
-						{
-							return K_CORNER_WEST;
-						}
-						if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][NORTH]==1)
-						{
-							return K_CORNER_SOUTH;
 						}
 					}
 				}
@@ -499,16 +513,6 @@ public class Geography extends Place implements Surface {
 							return K_STEEP_NORTH;
 						}
 					}
-					if (eval[P_LESSER][C_NORMAL]==2) {
-						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
-						{
-							return K_CORNER_NORTH;
-						}
-						if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
-						{
-							return K_CORNER_WEST;
-						}
-					}
 				}
 				if (eval[P_LESSER][SOUTH_WEST] == 1 && eval[P_LESSER][NORTH_WEST]==1)
 				{
@@ -517,16 +521,6 @@ public class Geography extends Place implements Surface {
 						if (eval[P_LESSER][WEST]==1)
 						{
 							return K_STEEP_EAST;
-						}
-					}
-					if (eval[P_LESSER][C_NORMAL]==2) {
-						if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][NORTH]==1)
-						{
-							return K_CORNER_EAST;
-						}
-						if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][SOUTH]==1)
-						{
-							return K_CORNER_NORTH;
 						}
 					}
 				}
@@ -541,6 +535,40 @@ public class Geography extends Place implements Surface {
 					if (eval[P_LESSER][WEST]==1)
 						return K_STEEP_EAST;
 				}
+				if (eval[P_LESSER][C_NORMAL]==2) {
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_EAST;
+					}
+					if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_SOUTH;
+					}
+					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][SOUTH]==1)
+					{
+						return K_CORNER_WEST;
+					}
+					if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][NORTH]==1)
+					{
+						return K_CORNER_SOUTH;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][WEST]==1)
+					{
+						return K_CORNER_NORTH;
+					}
+					if (eval[P_LESSER][SOUTH]==1 && eval[P_LESSER][EAST]==1)
+					{
+						return K_CORNER_WEST;
+					}
+					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][NORTH]==1)
+					{
+						return K_CORNER_EAST;
+					}
+					if (eval[P_LESSER][WEST]==1 && eval[P_LESSER][SOUTH]==1)
+					{
+						return K_CORNER_NORTH;
+					}
+				}
 			}
 			
 			
@@ -548,6 +576,17 @@ public class Geography extends Place implements Surface {
 			
 			if (eval[P_LESSER][C_HALF]==1)// && eval[P_EQUAL][C_HALF]==3)
 			{
+				if (eval[P_LESSER][C_NORMAL]==1)
+				{
+					if (eval[P_LESSER][NORTH]==1)
+						return K_STEEP_SOUTH;
+					if (eval[P_LESSER][EAST]==1)
+						return K_STEEP_WEST;
+					if (eval[P_LESSER][SOUTH]==1)
+						return K_STEEP_NORTH;
+					if (eval[P_LESSER][WEST]==1)
+						return K_STEEP_EAST;
+				}
 				if (eval[P_LESSER][NORTH_EAST]==1)
 				{
 					if (eval[P_EQUAL][NORTH]==1 && eval[P_EQUAL][EAST]==1)
