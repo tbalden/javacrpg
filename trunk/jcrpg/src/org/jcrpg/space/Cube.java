@@ -169,6 +169,10 @@ public class Cube extends ChangingImpl {
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
 		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}
+	public Cube(Place parent, int overwritePower, Side[][] sides, int x, int y, int z ) {
+		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		this.overwritePower = overwritePower;
+	}
 	
 	public Cube(Place parent, Side[][] sides, int x, int y, int z, int steepDir) {
 		steepDirection = steepDir;

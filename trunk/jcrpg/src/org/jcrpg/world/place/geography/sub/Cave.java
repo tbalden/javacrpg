@@ -78,32 +78,13 @@ public class Cave extends Geography implements Surface {
 	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, EMPTY_SIDE, BLOCK,ENTRANCE,BLOCK_GROUND,GROUND };
 	
 	
-	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
-	int density,entranceSide, walledSide, levels, entranceLength;
-	public int worldGroundLevel, worldHeight;
-	public int blockSize; 
+	public int density,entranceSide, levels;
 
-	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int walledSide, int levels, int entranceLength, boolean fillBoundaries ) throws Exception{
-		super(id, parent, loc);
-		this.magnification = magnification;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
+	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levels, boolean fillBoundaries ) throws Exception{
+		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		this.density = density;
 		this.entranceSide = entranceSide;
-		this.walledSide = walledSide;
-		this.entranceLength = entranceLength;
 		this.levels = levels;
-		this.worldGroundLevel = worldGroundLevel;
-		this.worldHeight = worldHeight;
-		blockSize = magnification;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		else
-			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
 	}
 	
 	@Override
@@ -113,7 +94,7 @@ public class Cave extends Geography implements Surface {
 		if (c==null) {
 			return null;
 		}
-		c.onlyIfOverlaps = true;
+		//c.onlyIfOverlaps = true;
 		c.overwrite = true;
 		if (c.overwritePower!=2)
 			c.internalCube = true; // except entrance all is inside
@@ -127,170 +108,73 @@ public class Cave extends Geography implements Surface {
 	{
 		if (worldY>=worldHeight) return null;
 
-		int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
-		int realSizeX = blockUsedSize[0]; 
-		int realSizeY = worldY-worldGroundLevel;
-		int realSizeZ = blockUsedSize[1];
-		int relX = (worldX%blockSize)-(blockSize-realSizeX)/2;//-origoX*magnification;
-		int relY = worldY-worldGroundLevel;
-		int relZ = (worldZ%blockSize)-(blockSize-realSizeZ)/2;//-origoZ*magnification;
+		int kind = getCubeKindOutside(worldX, worldY, worldZ);
+		
+		
+		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
+		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
+		int realSizeX = values[0];
+		//int realSizeY = values[1];
+		int realSizeZ = values[2];
+		int relX = values[3];
+		int relY = values[4];
+		int relZ = values[5];
 
-		if (relX<0 || relZ<0 || relX>realSizeX || relZ>realSizeZ)
+		if (relX<0 || relZ<0 || relY<0 || relX>realSizeX || relZ>realSizeZ)
 		{
 			return null;		
 		}
-
-		if (relX<entranceLength || relX>realSizeX-entranceLength)
+		int height = getPointHeightOutside(worldX, worldZ);
+		if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 		{
-			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relZ<entranceLength || relZ>realSizeZ-entranceLength)
+			Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+			if ((kind==K_STEEP_WEST || kind==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
 			{
-				// on the corners, no cube
-				return null;
+				c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
+				c.overwritePower = 2;
 			}
-			if (relZ%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
-			{
-				if (relX<=entranceLength && (entranceSide&LIMIT_WEST)>0)
-				{
-					// checking if entrance would be blocked...
-					int per = HashUtil.mixPercentage(worldX+entranceLength, (worldY-(origoY*magnification)%levels)/levels, worldZ);
-					if (per<density)
-					{
-						return null; // rock would block the entrance
-					}
-					c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
-					c.overwritePower = 2;
-				} else
-				if (relX>=realSizeX-entranceLength && (entranceSide&LIMIT_EAST)>0)
-				{
-					// checking if entrance would be blocked...
-					int per = HashUtil.mixPercentage(worldX-entranceLength, (worldY-(origoY*magnification)%levels)/levels, worldZ);
-					if (per<density)
-					{
-						return null; // rock would block the entrance
-					}
-					c = new Cube(this,CAVE_ENTRANCE_WEST,worldX,worldY,worldZ);
-					c.overwritePower = 2;
-				} else
-				if (relX<=entranceLength && (walledSide&LIMIT_SOUTH)==0)
-				{
-					return null;
-				} else
-				if (relX>=realSizeX-entranceLength && (walledSide&LIMIT_NORTH)==0)
-				{
-					return null;
-				}
-				
+			if (c!=null)
 				return c;
-			} else
-			{
-				if (relX<=entranceLength && (walledSide&LIMIT_WEST)==0)
-				{
-					return null;
-				} else
-				if (relX>=realSizeX-entranceLength && (walledSide&LIMIT_EAST)==0)
-				{
-					return null;
-				}
-			}
-			if (c!=null) c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
-			// internal space to 0 too!
-			return c;
-		} else
-		if (relZ<entranceLength || relZ>realSizeZ-entranceLength)
+		}
+		if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 		{
-			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-			if (relX%ENTRANCE_DISTANCE==2 && relY==ENTRANCE_LEVEL)
+			Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+			if ((kind==K_STEEP_NORTH||kind==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
 			{
-				if (relZ<=entranceLength && (entranceSide&LIMIT_SOUTH)>0)
-				{
-					// checking if entrance would be blocked...
-					int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ+entranceLength);
-					if (per<density)
-					{
-						return null; // rock would block the entrance
-					}
-					c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
-					c.overwritePower = 2;
-				} else
-				if (relZ>=realSizeZ-entranceLength && (entranceSide&LIMIT_NORTH)>0)
-				{
-					// checking if entrance would be blocked...
-					int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ-entranceLength);
-					if (per<density)
-					{
-						return null; // rock would block the entrance
-					}
-					c = new Cube(this,CAVE_ENTRANCE_SOUTH,worldX,worldY,worldZ);
-					c.overwritePower = 2;
-						
-				} else
-				if (relZ<=entranceLength && (walledSide&LIMIT_WEST)==0)
-				{
-					return null;
-				} else
-				if (relZ>=realSizeZ-entranceLength && (walledSide&LIMIT_EAST)==0)
-				{
-					return null;
-				}
-				return c;
-			} else
-			{
-				if (relZ<=entranceLength && (walledSide&LIMIT_SOUTH)==0)
-				{
-					return null;
-				} else
-				if (relZ>=realSizeZ-entranceLength && (walledSide&LIMIT_NORTH)==0)
-				{
-					return null;
-				}
-			}
-			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
-			// internal space to 0 too!
-			return c;
-		} 
-		else {
-			int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
-			if (per<density)
-			{
-				Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
-				c.overwritePower = 1; // this should overwrite only empty spaces, other geos should set their empty
-				// internal space to 0 too!
-				return c;
-			}
-			Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-			if (realSizeY>1) {
-				if (relY%levels==0)
-					c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
-				else if (relY%levels==levels-1)
-					c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
-				else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
-			}
-			c.overwritePower = 0;			 // this should overwrite only empty spaces, other geos should set their empty
-			// internal space to 0 too!
-
-			if (relX==entranceLength && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
-			{
-				c = new Cube(c,new Cube(this,CAVE_WEST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-				c.overwritePower = 1;
-			}
-			if (relX==realSizeX - entranceLength && (relZ%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
-			{
-				c = new Cube(c,new Cube(this,CAVE_EAST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-				c.overwritePower = 1;
-			}
-			if (relZ==entranceLength && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
-			{
-				c = new Cube(c,new Cube(this,CAVE_SOUTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-				c.overwritePower = 1;
-			}
-			if (relZ==realSizeZ - entranceLength && (relX%ENTRANCE_DISTANCE!=2 || relY!=ENTRANCE_LEVEL))
-			{
-				c = new Cube(c,new Cube(this,CAVE_NORTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
-				c.overwritePower = 1;
+				c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
+				c.overwritePower = 2;
 			}
 			return c;
 		}
+		
+		System.out.println("HEIGHT = "+height+" - "+relY);
+		if (height+((World)getRoot()).worldGroundLevel<=worldY)
+		{
+			return null;
+		}
+		
+		int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
+		if ((relZ%ENTRANCE_DISTANCE==2 || relX%ENTRANCE_DISTANCE==2) && relY==ENTRANCE_LEVEL) {
+			per+=20;
+		}
+		if (per<density)
+		{
+			Cube c = new Cube(this,CAVE_ROCK,worldX,worldY,worldZ);
+			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+			// internal space to 0 too!
+			return c;
+		}
+		Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
+		if (worldRealHeight>1) {
+			if (relY%levels==0)
+				c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+			else if (relY%levels==levels-1)
+				c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
+			else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
+		}
+		c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+		return c;
+
 	}
 
 	SurfaceHeightAndType[] cachedType = null;

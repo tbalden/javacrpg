@@ -100,18 +100,32 @@ public class MountainNew extends Geography {
 		{
 			return super.getPointHeight(x, z, sizeX, sizeZ, worldX, worldZ);
 		}
+		int Y = 0;
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
-		int x1 = sizeX / 2;
-		int z1 = sizeZ / 2;
-		
-		int x2 = x;
-		int z2 = z;
-		
-		int r = sizeX / 2;
-		
-		int Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
+		{
+			int x1 = sizeX / 2;
+			int z1 = sizeZ / 2;
+			
+			int x2 = x;
+			int z2 = z;
+			
+			int r = sizeX / 2;
+			
+			Y = r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) );
+		}
+		{
+			int x1 = sizeX / 8;
+			int z1 = sizeZ / 8;
+			
+			int x2 = x-(sizeX/8)*3;
+			int z2 = z-(sizeZ/8)*3;
+			
+			int r = sizeX / 8;
+			
+			Y += Math.max(0, r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) ))*5;
+		}
 		//int ret = Math.min(0,-Y/30); // valley
-		int ret = (int)(Math.max(0,Y/30d)*worldRealHeight); // mountain
+		int ret = (int)(Math.max(0,Y*1d/(sizeX*(sizeZ/10)))*worldRealHeight); // mountain
 		ret+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/60;
 		//System.out.println("MOUNTAIN HEIGHT"+ret);
 		return ret;

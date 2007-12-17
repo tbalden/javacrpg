@@ -86,12 +86,15 @@ public class Geography extends Place implements Surface {
 	public static final int P_EQUAL = 0, P_GREATER = 1, P_LESSER = 2;
 	public static final int P_GE = 3, P_LE = 4;
 
+
+	
+	public static HashMap<Long, Integer> quickCubeKindCache = new HashMap<Long, Integer>();
 	
 	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();
 	static {
 		hmKindCube.put(K_EMPTY, null);
 		hmKindCube.put(K_NORMAL_GROUND, new Cube(null,GEO_GROUND,0,0,0));
-		hmKindCube.put(K_ROCK_BLOCK, new Cube(null,GEO_ROCK_VISIBLE,0,0,0));
+		hmKindCube.put(K_ROCK_BLOCK, new Cube(null,0,GEO_ROCK_VISIBLE,0,0,0));
 		hmKindCube.put(K_STEEP_NORTH, new Cube(null,GEO_STEEP_NORTH,0,0,0,0));
 		hmKindCube.put(K_STEEP_EAST, new Cube(null,GEO_STEEP_EAST,0,0,0,1));
 		hmKindCube.put(K_STEEP_SOUTH, new Cube(null,GEO_STEEP_SOUTH,0,0,0,2));
@@ -341,8 +344,63 @@ public class Geography extends Place implements Surface {
 		return new int[]{blockSize,worldRealHeight,blockSize,worldX%blockSize,worldY-worldGroundLevel,worldZ%blockSize};
 	}
 
+	/**
+	 * Get Cube Kind from other outside geographies than the current geography.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return
+	 */
+	public int getCubeKindOutside(int worldX, int worldY, int worldZ)
+	{
+		for (Geography geo:((World)getRoot()).geographies.values())
+		{
+			if (this!=geo)
+			{
+				if (geo.boundaries.isInside(worldX, worldY, worldZ))
+				{
+					return geo.getCubeKind(worldX,worldY,worldZ);
+				}
+			}
+		}
+		return K_EMPTY;
+	}
+
+	/**
+	 * Gets the cubekind of a coordinate based on the height and the height of neighbor points.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return
+	 */
 	public int getCubeKind(int worldX, int worldY, int worldZ)
 	{
+		if (numericId!=0) 
+		{
+			long key = numericId+((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+			Integer cachedKind = quickCubeKindCache.get(key);
+			if (cachedKind!=null) 
+			{
+				//System.out.println("CUBE CACHE USED!");
+				return cachedKind;
+			}
+			int kind = getCubeKindNoCache(worldX, worldY, worldZ);
+			if (quickCubeKindCache.size()>5)
+			{
+				quickCubeKindCache.clear();
+			}
+			quickCubeKindCache.put(key, kind);
+			return kind;
+		} else
+		{
+			// no right unique numbericId, use no cache 
+			return getCubeKindNoCache(worldX, worldY, worldZ);
+		}
+	}
+	
+	private int getCubeKindNoCache(int worldX, int worldY, int worldZ)
+	{
+
 		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
 		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = values[0];
