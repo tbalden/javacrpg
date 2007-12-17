@@ -55,6 +55,7 @@ public class Forest extends Geography {
 	@Override
 	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
 	{
+		if (overrideHeightForRiver(worldX, 0, worldZ)) return 0;
 		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ)) 
 		{
 			return super.getPointHeight(x, z, sizeX, sizeZ, worldX, worldZ);

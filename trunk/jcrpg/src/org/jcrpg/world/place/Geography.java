@@ -30,6 +30,7 @@ import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 public class Geography extends Place implements Surface {
@@ -74,7 +75,7 @@ public class Geography extends Place implements Surface {
 	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,BLOCK,BLOCK };
 	
 	
-	public static final int K_EMPTY = -1, K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
+	public static final int K_UNDEFINED = -2, K_EMPTY = -1, K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
 	public static final int K_ROCK_BLOCK = 4, K_NORMAL_GROUND = 5;
 	public static final int K_INTERSECT_NORTH = 6, K_INTERSECT_EAST = 7, K_INTERSECT_SOUTH = 8, K_INTERSECT_WEST = 9;
 	public static final int K_CORNER_SOUTH = 10, K_CORNER_NORTH = 11, K_CORNER_WEST = 12, K_CORNER_EAST = 13;
@@ -145,6 +146,7 @@ public class Geography extends Place implements Surface {
 	}
 
 	
+	
 	public Cube getFloraCube(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, boolean onSteep)
 	{
 		World w = (World)getRoot();
@@ -173,6 +175,7 @@ public class Geography extends Place implements Surface {
 		c.x = worldX;
 		c.y = worldY;
 		c.z = worldZ;
+		c.geoCubeKind = kind;
 		return c;
 	}
 	
@@ -283,6 +286,21 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
+	public boolean overrideHeightForRiver(int worldX, int worldY, int worldZ)
+	{
+		for (Water geo:((World)getRoot()).waters.values())
+		{
+			if (this!=geo)
+			{
+				if (geo instanceof River && geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
+				{
+					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ)) return true;;
+				}
+			}
+		}
+		return false;
+	}
+
 	public int getPointHeightOutside(int worldX, int worldZ)
 	{
 		for (Geography geo:((World)getRoot()).geographies.values())
@@ -298,6 +316,7 @@ public class Geography extends Place implements Surface {
 		}
 		return 0;
 	}
+	
 	
 	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
 	{

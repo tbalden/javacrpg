@@ -147,7 +147,7 @@ public class Cave extends Geography implements Surface {
 			return c;
 		}
 		
-		System.out.println("HEIGHT = "+height+" - "+relY);
+		
 		if (height+((World)getRoot()).worldGroundLevel<=worldY)
 		{
 			return null;
@@ -181,6 +181,14 @@ public class Cave extends Geography implements Surface {
 	SurfaceHeightAndType[] cachedNonType = null;
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
+		if (getCubeBase(worldX, worldGroundLevel, worldZ)==null)
+		{
+			if (cachedNonType==null)
+			{
+				cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+			}
+			return cachedNonType;
+		}
 		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levels)/levels, worldZ);
 		if (per>=density)
 		{

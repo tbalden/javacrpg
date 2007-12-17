@@ -175,7 +175,7 @@ public class WorldGenerator {
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				if (!l.isWaterPointSpecial(x*gMag, l.worldGroundLevel, z*gMag,false) && true==false) 
+				if (!l.isWaterPointSpecial(x*gMag, l.worldGroundLevel, z*gMag,false)) 
 				{
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
