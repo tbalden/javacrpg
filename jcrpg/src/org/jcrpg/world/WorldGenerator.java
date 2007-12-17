@@ -164,7 +164,7 @@ public class WorldGenerator {
 		w.addGeography(p);
 		Forest f = new Forest("BIGFOREST",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(f);
-		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+1,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,0,1,1,false);
+		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1)+1,w.getSeaLevel(1)+3,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
 		w.addGeography(c);
 		MountainNew m = new MountainNew("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+5*(int)(Math.sqrt(gMag))/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
@@ -194,7 +194,7 @@ public class WorldGenerator {
 					{
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
-						//c.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
+						c.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						
 					} else
 					{

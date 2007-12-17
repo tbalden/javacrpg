@@ -92,6 +92,7 @@ public abstract class Place {
 	}
 	
 	public String id;
+	public long numericId;
 	
 	public PlaceLocator loc;
 	
@@ -100,6 +101,11 @@ public abstract class Place {
 	public Place(String id, Place parent, PlaceLocator loc)
 	{
 		this.id = id;
+		for (int i=0; i<id.length(); i++)
+		{
+			numericId=(numericId<<8)+id.charAt(i);
+		}
+		numericId = numericId<<8;
 		this.parent = parent;
 	}
 	

@@ -64,7 +64,7 @@ public class Jcrpg {
     public static void start() throws Exception {
 		Engine e = new Engine();
 		Time wmt = new Time();
-		wmt.setHour(11);
+		wmt.setHour(17);
 		e.setWorldMeanTime(wmt);
 		Thread t = new Thread(e);
 		t.start();
@@ -131,7 +131,7 @@ public class Jcrpg {
 		System.out.println("SEALEV PLAIN:"+w.getSeaLevel(10));
 		w.geographies.put(p.id, p);
 
-		Cave cave = new Cave("cave",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+2,2,20,1,20,5,w.getSeaLevel(2),5,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,Cave.LIMIT_EAST|Cave.LIMIT_NORTH,2,2,true);
+		Cave cave = new Cave("cave",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+2,2,20,1,20,5,w.getSeaLevel(2),5,30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH,2,true);
 		w.geographies.put(cave.id, cave);
 		
 		
