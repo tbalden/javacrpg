@@ -227,11 +227,10 @@ public class World extends Place {
 								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
 								if (currentMerged!=null && currentMerged.overwrite) {
 									collectCubes(c,false);
-									//c = appendCube(retCube, c, worldX, worldY, worldZ);
 									c = mergeCubes();
 								}
-								
-								return c;
+								if (c!=null)
+									return c;
 							}
 						}
 					} else

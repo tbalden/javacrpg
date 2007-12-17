@@ -20,6 +20,7 @@ package org.jcrpg.space;
 
 import org.jcrpg.abs.change.ChangingImpl;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -27,6 +28,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 public class Cube extends ChangingImpl {
 
 	public String climateId;
+	public int geoCubeKind = Geography.K_UNDEFINED;
 
 	public Side[] n, e, s, w, top, bottom;
 	
@@ -84,6 +86,12 @@ public class Cube extends ChangingImpl {
 			this.climateId = c2.climateId;
 		else
 			this.climateId = c1.climateId;
+		
+		if (c1.geoCubeKind==Geography.K_UNDEFINED)
+			this.geoCubeKind = c2.geoCubeKind;
+		else
+			this.geoCubeKind = c1.geoCubeKind;
+
 		int steep = c1.steepDirection;
 		if (c1.steepDirection==SurfaceHeightAndType.NOT_STEEP || c1.steepDirection == J3DCore.BOTTOM || c1.steepDirection == J3DCore.TOP)
 		{
@@ -232,6 +240,7 @@ public class Cube extends ChangingImpl {
 		c.overwritePower = overwritePower;
 		c.onlyIfOverlaps = onlyIfOverlaps;
 		c.climateId = climateId;
+		c.geoCubeKind = geoCubeKind;
 		return c;
 	}
 	

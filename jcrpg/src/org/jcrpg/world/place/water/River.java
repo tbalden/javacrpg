@@ -178,7 +178,7 @@ public class River extends Water {
 		
 		int startSide; //= this.startSide;
 		
-		startSide = bendStartSide(worldX, worldY, worldZ);
+		startSide = bendStartSide(worldX, worldY, worldZ,false);
 		if (startSide==-1) return null;
 			
 		
@@ -286,20 +286,20 @@ public class River extends Water {
 				{
 					// edge : checking for water in river bend
 					if (startSide%2==0) {
-						edge1 = !isWaterPoint(worldX-1, worldY, worldZ);	
+						edge1 = !isWaterPointPrivate(worldX-1, worldY, worldZ,false);	
 					} else
 					{
-						edge1 = !isWaterPoint(worldX, worldY, worldZ-1);
+						edge1 = !isWaterPointPrivate(worldX, worldY, worldZ-1,false);
 					}
 				}
 				if (x==checkX+width2)
 				{
 					// edge : checking for water in river bend
 					if (startSide%2==0) {
-						edge2 = !isWaterPoint(worldX+1, worldY, worldZ);	
+						edge2 = !isWaterPointPrivate(worldX+1, worldY, worldZ,false);	
 					} else
 					{
-						edge2 = !isWaterPoint(worldX, worldY, worldZ+1);
+						edge2 = !isWaterPointPrivate(worldX, worldY, worldZ+1,false);
 					}
 				}
 				if (surface.surfaceY-y == depth)
@@ -319,8 +319,8 @@ public class River extends Water {
 						return c;
 					} else
 					{
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPointPrivate(worldX+addWX, worldY, worldZ+addWZ,false);
+						boolean prevNotWater = !this.isWaterPointPrivate(worldX-addWX, worldY, worldZ-addWZ,false);
 						// TODO based on next/prev no water add more rockside!
 						Cube c = null;
 						if (edge1)
@@ -408,8 +408,8 @@ public class River extends Water {
 						}
 					}
 					if (geoCube.steepDirection==steepRight) {
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPointPrivate(worldX+addWX, worldY, worldZ+addWZ,false);
+						boolean prevNotWater = !this.isWaterPointPrivate(worldX-addWX, worldY, worldZ-addWZ,false);
 						if (nextNotWater && prevNotWater)
 						{
 							if (!noWaterInTheBed) 
@@ -485,8 +485,8 @@ public class River extends Water {
 						}
 					}
 					if (geoCube.steepDirection==steepLeft) {
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPointPrivate(worldX+addWX, worldY, worldZ+addWZ,false);
+						boolean prevNotWater = !this.isWaterPointPrivate(worldX-addWX, worldY, worldZ-addWZ,false);
 						if (nextNotWater && prevNotWater)
 						{
 							if (!noWaterInTheBed) 
@@ -536,7 +536,7 @@ public class River extends Water {
 					return c;
 				}
 		}
-		return new Cube(this,EMPTY,worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
+		return null;
 	}
 
 
@@ -547,15 +547,24 @@ public class River extends Water {
 		return null;
 	}
 
-	public int bendStartSide(int worldX, int worldY, int worldZ)
+	/**
+	 * 
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param leaveOne Tells is width should be calculated one size bigger -> for world WaterPoint calculation set it true,
+	 * for internal use set it to false.
+	 * @return
+	 */
+	public int bendStartSide(int worldX, int worldY, int worldZ,boolean leaveOne)
 	{
 		//boolean[] flows = flowDirections.getFlowDirections(worldX, worldY, worldZ);
 		//System.out.println("FDIRS = "+flows[0]+" "+flows[1]+" "+flows[2]+" "+flows[3]);
 		
-		boolean riverBlockWest = boundaries.isInside(((worldX-blockSize)/blockSize)*blockSize, worldY, worldZ);
-		boolean riverBlockEast = boundaries.isInside(((worldX+blockSize)/blockSize)*blockSize, worldY, worldZ);
-		boolean riverBlockNorth = boundaries.isInside(worldX, worldY, ((worldZ/blockSize)+1)*blockSize);
-		boolean riverBlockSouth = boundaries.isInside(worldX, worldY, ((worldZ/blockSize)-1)*blockSize);
+		boolean riverBlockWest = boundaries.isInside(shrinkToWorld(((worldX-blockSize)/blockSize)*blockSize), worldY, worldZ);
+		boolean riverBlockEast = boundaries.isInside(shrinkToWorld(((worldX+blockSize)/blockSize)*blockSize), worldY, worldZ);
+		boolean riverBlockNorth = boundaries.isInside(worldX, worldY, shrinkToWorld(((worldZ/blockSize)+1)*blockSize));
+		boolean riverBlockSouth = boundaries.isInside(worldX, worldY, shrinkToWorld(((worldZ/blockSize)-1)*blockSize));
 		int joinSide = SIDE_NONE;
 		int startSide = 0;
 		int endSide = 2;
@@ -619,6 +628,8 @@ public class River extends Water {
 		}
 		//System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
 		// 2 - 0 - 1 N S W
+		
+		int width = this.width+(leaveOne?1:0);
 		
 		// north-south
 		if (startSide==SIDE_NORTH)
@@ -840,14 +851,22 @@ public class River extends Water {
 		return boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize));
 	}
 	
-	@Override
-	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
+	/**
+	 * Tells if this is water point, for River's internal use supplied with a leaveOne (cube) flag.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param leaveOne Tells is width should be calculated one size bigger -> for world WaterPoint calculation set it true,
+	 * for internal use set it to false.
+	 * @return
+	 */
+	private boolean isWaterPointPrivate(int worldX, int worldY, int worldZ, boolean leaveOne) {
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0;
 		
 		
 		int startSide;// = this.startSide;
 		
-		startSide = bendStartSide(worldX, worldY, worldZ);
+		startSide = bendStartSide(worldX, worldY, worldZ,leaveOne);
 		if (startSide==-1) return false;
 			
 		
@@ -866,8 +885,8 @@ public class River extends Water {
 			checkX = realMiddleZ;
 		}
 		int widthMod1 = (int) ( ((curveZ%(curveLength*2)>=curveLength)?-1:1)*(curvedness)*((curveZ%curveLength)-(curvedness/2)) );
-		int width1 = width+widthMod1;
-		int width2 = width-widthMod1;
+		int width1 = width+widthMod1+(leaveOne?1:0); // +1 if for leaving place for steeps
+		int width2 = width-widthMod1+(leaveOne?1:0); // +1 if for leaving place for steeps
 		if (x>=checkX-width1 && x<=checkX+width2)
 		{
 			//System.out.println("RIVER WATER");
@@ -876,6 +895,13 @@ public class River extends Water {
 		
 		//System.out.println("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
 		return false;
+	
+	}
+	
+	@Override
+	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
+		return isWaterPointPrivate(worldX, worldY, worldZ, true); // leaveOne set true for world waterpoint calculation.
+		// really overwritten cubes should only be one size smaller , using isWaterPointPrivate + leaveOne set to false.
 	}
 
 	@Override
