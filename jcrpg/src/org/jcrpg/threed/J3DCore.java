@@ -1153,7 +1153,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
     	// get a specific part of the area to render
 		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
-    	RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection);
+    	RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection, false);
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
     	System.out.println("!!!! REMOVABLE CUBES = "+removableCubes.length);
@@ -2278,7 +2278,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{ // test free movement
 			setViewPosition(newCoords);
 			setRelativePosition(newRelCoords);
-			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 			if (c!=null) {
 				if (c.internalCube)
 				{
@@ -2300,7 +2300,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 		}
 
-		Cube c = world.getCube(from[0], from[1], from[2]);
+		Cube c = world.getCube(from[0], from[1], from[2], false);
 		
 		if (c!=null) {
 			System.out.println("Current Cube = "+c.toString());
@@ -2323,7 +2323,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (hasSideOfInstance(sides, notPassable) && (!onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
-			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
 			if (nextCube!=null && hasSideOfInstance(nextCube.getSide(BOTTOM), notPassable))
 			{
@@ -2356,7 +2356,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				while (true)
 				{
 					// cube below
-					nextCube = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2]);
+					nextCube = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
 					System.out.println("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
@@ -2426,7 +2426,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		setViewPosition(newCoords);
 		setRelativePosition(newRelCoords);
-		c = world.getCube(newCoords[0], newCoords[1], newCoords[2]);
+		c = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 		if (c!=null) {
 			if (c.internalCube)
 			{

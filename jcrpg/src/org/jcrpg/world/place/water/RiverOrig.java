@@ -491,7 +491,7 @@ public class RiverOrig extends Water {
 
 
 	@Override
-	public Cube getCube(int x,int y,int z)
+	public Cube getCube(int x,int y,int z, boolean farView)
 	{
 		return null;
 	}

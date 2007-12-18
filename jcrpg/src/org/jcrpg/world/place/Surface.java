@@ -24,6 +24,6 @@ package org.jcrpg.world.place;
  */
 public interface Surface {
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ);
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView);
 	
 }

@@ -99,7 +99,7 @@ public class CaveOrig extends Geography implements Surface {
 	}
 	
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ)
+	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		Cube c = getCubeBase(worldX, worldY, worldZ);
 		if (c==null) return null;
