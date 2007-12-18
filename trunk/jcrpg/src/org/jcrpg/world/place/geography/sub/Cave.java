@@ -180,6 +180,7 @@ public class Cave extends Geography implements Surface {
 	SurfaceHeightAndType[] cachedType = null;
 	SurfaceHeightAndType[] cachedNonType = null;
 	
+	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
 		if (getCubeBase(worldX, worldGroundLevel, worldZ)==null)
 		{

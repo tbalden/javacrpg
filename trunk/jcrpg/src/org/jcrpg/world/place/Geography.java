@@ -301,6 +301,12 @@ public class Geography extends Place implements Surface {
 		return false;
 	}
 
+	/**
+	 * If this geo is not covering the coordinate, this should look up other geo that covers it and return the height.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
 	public int getPointHeightOutside(int worldX, int worldZ)
 	{
 		for (Geography geo:((World)getRoot()).geographies.values())
@@ -324,6 +330,10 @@ public class Geography extends Place implements Surface {
 		{
 			return getPointHeightOutside(worldX, worldZ);
 		}
+		return getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ);
+	}
+	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
+	{
 		return 0;
 	}
 	

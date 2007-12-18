@@ -568,6 +568,7 @@ public class River extends Water {
 		int joinSide = SIDE_NONE;
 		int startSide = 0;
 		int endSide = 2;
+		// TODO if no river on two sides endside should be SIDE_NONE!!
 		if (riverBlockNorth)
 		{
 			startSide = SIDE_NORTH;
@@ -623,7 +624,7 @@ public class River extends Water {
 			endSide = SIDE_WEST;
 		} else
 		{
-			System.out.println("NO RIVER AROUND AT ALL!" + worldX + " "+worldY+ " "+worldZ);
+			//System.out.println("NO RIVER AROUND AT ALL!" + worldX + " "+worldY+ " "+worldZ);
 			return -1;
 		}
 		//System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
