@@ -94,13 +94,8 @@ public class MountainNew extends Geography {
 	}
 
 	@Override
-	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
+	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
 	{
-		//if (overridePointHeightWithWorldGroundLevel(worldX,worldZ)) return 0;
-		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ)) 
-		{
-			return super.getPointHeight(x, z, sizeX, sizeZ, worldX, worldZ);
-		}
 		int Y = 0;
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		{

@@ -7,9 +7,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-[ ] blender STEEP rock and steep other nicer
-[ ] cave total rewrite needed, especially the entrance and size part! -> make usable with new mountain / valley+underplain?
-[ ] river review -> mountain gives elements that not existed before
+[ ] River: if no river on two sides endside should be SIDE_NONE!!
 
 
 [ ] World generator
@@ -87,6 +85,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 
 --
+[X] blender STEEP rock and steep other nicer
+[X] cave total rewrite needed, especially the entrance and size part! -> make usable with new mountain / valley+underplain?
+[X] river review -> mountain gives elements that not existed before
+
 [X] RenderedClimateChangingSide
 
 [X] Ocean -> where to put +/- of height in plain...water is bad!
