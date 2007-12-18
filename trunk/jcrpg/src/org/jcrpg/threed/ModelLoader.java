@@ -29,6 +29,7 @@ import java.util.Iterator;
 
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.model.BillboardModel;
 import org.jcrpg.threed.scene.model.ImposterModel;
 import org.jcrpg.threed.scene.model.LODModel;
@@ -171,7 +172,7 @@ public class ModelLoader {
 					node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 					//node = loadNodeOriginal((SimpleModel)objects[i],fakeLoadForCacheMaint,true);
 					if (fakeLoadForCacheMaint) continue;
-					bbOrig = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)objects[i],horRotated, rc.cube.internalCube);
+					bbOrig = new BillboardPartVegetation(core,core.getCamera(),SideTypeModels.TREE_LOD_DIST[3][1],(PartlyBillboardModel)objects[i],horRotated, rc.cube.internalCube);
 					//sharedBBNodeCache.put(key, bbOrig);
 					bbOrig.attachChild(node);
 					if (J3DCore.FARVIEW_ENABLED)
@@ -228,7 +229,7 @@ public class ModelLoader {
 						node = loadNode((SimpleModel)m,fakeLoadForCacheMaint);
 						if (fakeLoadForCacheMaint) continue;
 						// adding to drawer
-						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),core.treeLodDist[3][1],(PartlyBillboardModel)m,horRotated, rc.cube.internalCube);
+						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),SideTypeModels.TREE_LOD_DIST[3][1],(PartlyBillboardModel)m,horRotated, rc.cube.internalCube);
 						bbNode.attachChild(node);
 				    	node = bbNode;
 				    	node.setName(((SimpleModel)m).modelName+i);
