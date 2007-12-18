@@ -32,7 +32,7 @@ public class RenderedCube {
 		renderedY = y;
 		renderedZ = z;
 	}
-	
+	public boolean farview = false;
 	public Cube cube;
 	public int renderedX, renderedY, renderedZ;
 	public ArrayList<NodePlaceholder> hsRenderedNodes = new ArrayList<NodePlaceholder>();

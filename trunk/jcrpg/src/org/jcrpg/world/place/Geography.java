@@ -406,7 +406,7 @@ public class Geography extends Place implements Surface {
 	{
 		if (numericId!=0) 
 		{
-			long key = numericId+((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+			Long key = (numericId*(farView?2:1)+((worldX)<< 16) + ((worldY) << 8) + ((worldZ)));
 			Integer cachedKind = quickCubeKindCache.get(key);
 			if (cachedKind!=null) 
 			{
@@ -451,6 +451,20 @@ public class Geography extends Place implements Surface {
 		int YSouthWest = getPointHeight(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP));
 		int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ);
 		int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ);
+
+		int K_STEEP_EAST = Geography.K_STEEP_EAST;
+		int K_STEEP_SOUTH = Geography.K_STEEP_SOUTH;
+		int K_STEEP_WEST = Geography.K_STEEP_WEST;
+		int K_STEEP_NORTH = Geography.K_STEEP_NORTH;
+		
+		if (farView)
+		{
+			K_STEEP_EAST = Geography.K_CORNER_EAST;
+			K_STEEP_SOUTH = Geography.K_CORNER_SOUTH;
+			K_STEEP_WEST = Geography.K_CORNER_WEST;
+			K_STEEP_NORTH = Geography.K_CORNER_NORTH;
+			
+		}
 
 		//if (this instanceof Plain) System.out.println("-- RELY - "+relY+" - "+Y);
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});

@@ -28,8 +28,11 @@ public class RenderedArea {
 	
 	public HashMap<Integer, RenderedCube> worldCubeCache = new HashMap<Integer, RenderedCube>(); 
 	public HashMap<Integer, RenderedCube> worldCubeCacheNext = new HashMap<Integer, RenderedCube>(); 
-	
-	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farView)
+
+	public HashMap<Integer, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Integer, RenderedCube>(); 
+	public HashMap<Integer, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Integer, RenderedCube>(); 
+
+	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
 		
@@ -62,7 +65,9 @@ public class RenderedArea {
 			}
 		}
 		worldCubeCacheNext = new HashMap<Integer, RenderedCube>();
+		worldCubeCacheNext_FARVIEW = new HashMap<Integer, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
+		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
 			for (int y1=-1*Math.min(distance,20); y1<=1*Math.min(distance,20); y1++)
@@ -77,7 +82,7 @@ public class RenderedArea {
 					int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
 					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
-						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, farView);
+						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, false);
 						if (cube!=null)
 						{
 							c = new RenderedCube(cube,x1,y1,z1);
@@ -88,6 +93,31 @@ public class RenderedArea {
 					{	
 						elements.add(c);
 					}
+					
+					
+					if (farViewEnabled)
+					{
+						if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0)
+						{
+							// render this one for farview
+							c = worldCubeCache_FARVIEW.remove(key);
+							if (c==null) {
+								Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
+								if (cube!=null)
+								{
+									c = new RenderedCube(cube,x1,y1,z1);
+									c.farview = true;
+								}
+							}
+							worldCubeCacheNext_FARVIEW.put(key, c);
+							if (c!=null) 
+							{	
+								elements_FARVIEW.add(c);
+							}
+					}
+						
+					}
+					
 				}
 			}
 		}
@@ -96,7 +126,12 @@ public class RenderedArea {
 		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
 		
-		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable};
+		// farview part
+		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
+		worldCubeCache_FARVIEW.clear();
+		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
+		
+		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable, (RenderedCube[])elements_FARVIEW.toArray(new RenderedCube[0]),removable_FARVIEW};
 		
 	}
 	
