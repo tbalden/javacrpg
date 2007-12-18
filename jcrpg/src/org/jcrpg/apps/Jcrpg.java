@@ -30,6 +30,7 @@ import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.generator.WorldParams;
+import org.jcrpg.world.generator.program.DefaultGenProgram;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -75,7 +76,7 @@ public class Jcrpg {
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(40,10,2,10,10,80,1,climates,climateSizeMuls,geos,40));
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(40,10,2,10,10,80,1,climates,climateSizeMuls,geos,40), new DefaultGenProgram());
 		w2.engine = e;
 
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();
