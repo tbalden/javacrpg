@@ -31,9 +31,11 @@ public abstract class Water extends Geography {
 	 * If noWater is true, the bed of the water should be empty of water.
 	 */
 	public boolean noWaterInTheBed = false;
+	public int depth = 1;
 	
-	public Water(String id, Place parent, PlaceLocator loc) {
-		super(id, parent, loc);
+	public Water(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int depth, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception{
+		super(id,parent,loc,worldGroundLevel,worldGroundLevel,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
+		this.depth = depth;
 	}
 
 	/**
@@ -44,6 +46,7 @@ public abstract class Water extends Geography {
 	 * @return True if river passes.
 	 */
 	public abstract boolean isWaterBlock(int worldX, int worldY,int worldZ);
+
 
 	/**
 	 * Tells if one cube coordinate is a waterpoint.

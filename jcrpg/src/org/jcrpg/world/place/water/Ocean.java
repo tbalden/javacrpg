@@ -32,6 +32,10 @@ import org.jcrpg.world.place.World;
 
 import com.jme.math.Vector3f;
 
+/**
+ * Ocean - one earth like foundation water geography.
+ * @author illes
+ */
 public class Ocean extends Water {
 
 	public static final String TYPE_OCEAN = "OCEAN";
@@ -53,7 +57,6 @@ public class Ocean extends Water {
 	static Side[][] LAKE_ROCKSIDE_BOTTOM = new Side[][] { null, null, null, null, null,null };//ROCKBOTTOM };
 
 
-	public int depth = 1;
 	public int noWaterPercentage = 0;
 	//public int worldGroundLevel;
 
@@ -66,15 +69,7 @@ public class Ocean extends Water {
 	Vector3f center = new Vector3f();
 
 	public Ocean(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
-		super(id, parent, loc);
-		this.magnification = magnification;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
-		this.depth = depth;
+		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,true);
 		centerX = sizeX*magnification/2;
 		centerZ = sizeZ*magnification/2;
 		realSizeX = sizeX*magnification;
@@ -82,8 +77,7 @@ public class Ocean extends Water {
 		
 		center.set(centerX, centerZ, 0);
 		
-		setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
-		this.worldGroundLevel=worldGroundLevel;
+		//setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		this.noWaterPercentage = noWaterPercentage;
 		this.density = density;
 	}
@@ -167,6 +161,11 @@ public class Ocean extends Water {
 		return dm;
 	}
 	
+	@Override
+	public boolean isAlgrithmicallyInside(int worldX, int worldY, int worldZ) {
+		return isWaterPointSpecial(worldX, worldY, worldZ, false);
+	}
+
 	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
 	{
 		

@@ -96,7 +96,6 @@ public class River extends Water {
 	//
 	public int width = 2;
 	//
-	public int depth = 1;
 	
 	public static int SIDE_SOUTH=0;
 	public static int SIDE_WEST=1;
@@ -106,34 +105,24 @@ public class River extends Water {
 	public static int SIDE_JOIN_BOTH=5;
 	
 
-	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
-	public int blockSize;
 	
 	public WorldSizeFlowDirections flowDirections;
 	
-	public River(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
-		super(id, parent, loc);
+	public River(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
+		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,false);
 		this.magnification = magnification;
-		blockSize = magnification;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
 		this.width = width;
-		this.depth = depth;
 
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;
 		realMiddleX = blockSize/2;
 		realMiddleZ = blockSize/2;
-		if (fillBoundaries)
-			setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
+		if (fillBoundaries) {
+			
+		}
 		else 
 		{
-			setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
 			flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
 		}
 	}

@@ -28,6 +28,8 @@ import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -127,8 +129,13 @@ public class DefaultGenProgram extends GenProgram {
 		int gWY = (wY*wMag)/gMag;
 		int gWZ = (wZ*wMag)/gMag;
 		
-		Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(1),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
-		w.waters.put(l.id, l);
+		Geography l = instantiateGeography(params.foundationGeo, w, params);
+		if (l instanceof Water) {
+			w.waters.put(l.id, (Water)l);
+		} else
+		{
+			w.geographies.put(l.id, l);
+		}
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
 		Plain p = new Plain("BIGPLAIN",w,null,w.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
@@ -137,16 +144,16 @@ public class DefaultGenProgram extends GenProgram {
 		w.addGeography(f);
 		Cave c = new Cave("BIGCAVE",w,null,w.getSeaLevel(1)+1,w.getSeaLevel(1)+3,gMag, gWX, 2, gWZ, 0, w.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
 		w.addGeography(c);
-		MountainNew m = new MountainNew("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+5*(int)(Math.sqrt(gMag))/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
+		MountainNew m = new MountainNew("MOUNTAINS",w,null,w.getSeaLevel(1),w.getSeaLevel(1)+5*(int)(Math.sqrt(gMag)*params.heightRatio)/10 ,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, false);
 		w.addGeography(m);
-		River r = new River("RIVERS",w,null,gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
+		River r = new River("RIVERS",w,null,w.getSeaLevel(1), gMag, gWX, gWY, gWZ, 0, w.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
 		w.waters.put(r.id, r); //r.noWaterInTheBed = true;
 		
 		for (int x=0; x<gWX; x++)
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				if (!l.isWaterPointSpecial(x*gMag, l.worldGroundLevel, z*gMag,false)) 
+				if (!l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 				{
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
@@ -161,7 +168,7 @@ public class DefaultGenProgram extends GenProgram {
 					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
 				} else
 				{
-					if (!l.isWaterPointSpecial(x*gMag, l.worldGroundLevel, z*gMag,false)) 
+					if (!l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 					{
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 						m.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
@@ -184,6 +191,20 @@ public class DefaultGenProgram extends GenProgram {
 		long time = System.currentTimeMillis(); 
 		h = new House("house",w,null,4,1,4,0,w.getSeaLevel(1),5);		
 		w.economics.put(h.id, h);
+	}
+	
+	public Geography instantiateGeography(String geoClass, World w, WorldParams params) throws Exception
+	{
+		int wMag = params.magnification;
+		int wX = params.sizeX;
+		int wY = params.sizeY;
+		int wZ = params.sizeZ;
+		if (geoClass.equals("Ocean"))
+		{
+			Ocean l = new Ocean("OCEANS", w, null, w.getSeaLevel(1),wMag,wX,wY,wZ,0,0,0,1,params.landMass,params.landDensity);
+			return l;
+		}
+		return null;
 	}
 
 }

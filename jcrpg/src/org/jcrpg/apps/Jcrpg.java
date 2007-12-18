@@ -74,9 +74,12 @@ public class Jcrpg {
 		
 		String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
 		int[] climateSizeMuls = new int[] {1,4,2,2};
-		String[] geos = new String[] {"Plain","Forest","Mountain"};
+		String[] geos = new String[] {"Plain","Forest","MountainNew"};
+		int[] geoLikenessValues = new int[] {4,4,2};
+		String[] additionalGeos = new String[] {"River","Cave"};
+		int[] additionalGeoLikenessValues = new int[] {4,4,2};
 		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(40,10,2,10,10,80,1,climates,climateSizeMuls,geos,40), new DefaultGenProgram());
+		World w2 = new WorldGenerator().generateWorld(new WorldParams(40,10,2,10,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40), new DefaultGenProgram());
 		w2.engine = e;
 
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();
@@ -139,7 +142,7 @@ public class Jcrpg {
 		Mountain m = new Mountain("m1",w,null,w.getSeaLevel(1),20,10,5,2,5,1,w.getSeaLevel(10)-1,1,true);
 		w.geographies.put(m.id, m);
 		
-		River r = new River("r1",w,null,10,4,10,4,1,w.getSeaLevel(10)-5,0,2,1,0.2f,12,true);
+		River r = new River("r1",w,null,w.getSeaLevel(1),10,4,10,4,1,w.getSeaLevel(10)-5,0,2,1,0.2f,12,true);
 		w.waters.put(r.id, r);
 		r.noWaterInTheBed = false;
 		
