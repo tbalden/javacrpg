@@ -104,17 +104,8 @@ public class RiverOrig extends Water {
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	int realMiddleX, realMiddleZ;
 	
-	public RiverOrig(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength) throws Exception {
-		super(id, parent, loc);
-		this.magnification = magnification;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.sizeZ = sizeZ;
-		this.origoX = origoX;
-		this.origoY = origoY;
-		this.origoZ = origoZ;
-		this.width = width;
-		this.depth = depth;
+	public RiverOrig(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int startSide, int width, int depth, float curvedness, int curveLength) throws Exception {
+		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,false);
 		this.startSide = startSide;
 		this.curvedness = curvedness;
 		this.curveLength = curveLength;

@@ -39,11 +39,27 @@ public class WorldParams {
 	 */
 	public int landMass = 1;
 	
+	/**
+	 * The overall height ratio of the world geography (0 - 0.1 ,,, 2 ,,, parameter used for multiplication) .
+	 */
+	public float heightRatio = 1f;
+	
+	/**
+	 * Makes all things different :) .
+	 */
 	public int randomSeed = 0;
 	
 	public String[] climates;
 	public int[] climateSizeMuls;
+	
+	public String foundationGeo;
+	
 	public String[] geos;
+	public int[] geoLikenessValues;
+
+	public String[] additionalGeos;
+	public int[] additionalGeoLikenessValues;
+	
 	public int geoNormalSize;
 
 	/**
@@ -59,18 +75,22 @@ public class WorldParams {
 	 * @param climateSizeMuls Climate size multiplier
 	 * @param geos Geography keys to use for generation.
 	 */
-	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, int landDensity, int landMass, int randomSeed, String[] climates, int[] climateSizeMuls,String[] geos, int geoNormalSize) {
+	public WorldParams(int magnification, int sizeX, int sizeY, int sizeZ, String foundationGeo, int landDensity, int landMass, int randomSeed, String[] climates, int[] climateSizeMuls,String[] geos,int[] geoLikenessValues,String[] additionalGeos,int[] additionalGeoLikenessValues, int geoNormalSize) {
 		super();
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.sizeZ = sizeZ;
+		this.foundationGeo = foundationGeo;
 		this.landDensity = landDensity;
 		this.landMass = landMass;
 		this.randomSeed = randomSeed;
 		this.climates = climates;
 		this.climateSizeMuls = climateSizeMuls;
 		this.geos = geos;
+		this.geoLikenessValues = geoLikenessValues;
+		this.additionalGeos = additionalGeos;
+		this.additionalGeoLikenessValues = additionalGeoLikenessValues;
 		this.geoNormalSize = geoNormalSize;
 		if (this.geoNormalSize<10) this.geoNormalSize = 10;
 	}
