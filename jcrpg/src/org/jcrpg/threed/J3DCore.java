@@ -157,7 +157,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
-    public static int FARVIEW_GAP = 1;
+    public static int FARVIEW_GAP = 8;
     public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
@@ -605,6 +605,45 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepRotations_special.put(new Integer(WEST), steepW_noRot);
 		steepRotations_special.put(new Integer(EAST), steepE_noRot);
 	}
+	// farview steeps
+	public static HashMap<Integer,Quaternion> steepRotations_FARVIEW = new HashMap<Integer, Quaternion>();
+	static
+	{
+		// steep rotations
+		Quaternion steepE = new Quaternion();
+		steepE.fromAngles(new float[]{0,(FastMath.PI/4)/FARVIEW_GAP,0});
+		Quaternion steepW = new Quaternion();
+		steepW.fromAngles(new float[]{0,(-FastMath.PI/4)/FARVIEW_GAP,0});
+		Quaternion steepS = new Quaternion();
+		steepS.fromAngles(new float[]{(FastMath.PI/4)/FARVIEW_GAP,0,0});
+		Quaternion steepN = new Quaternion();
+		steepN.fromAngles(new float[]{(-FastMath.PI/4)/FARVIEW_GAP,0,0});
+
+		steepRotations_FARVIEW.put(new Integer(NORTH), steepN);
+		steepRotations_FARVIEW.put(new Integer(SOUTH), steepS);
+		steepRotations_FARVIEW.put(new Integer(WEST), steepW);
+		steepRotations_FARVIEW.put(new Integer(EAST), steepE);
+	}
+	
+	public static HashMap<Integer,Quaternion> steepRotations_special_FARVIEW = new HashMap<Integer, Quaternion>();
+	static
+	{
+		// steep rotations with special in-one-step rotation
+		Quaternion steepE_noRot = new Quaternion();
+		steepE_noRot.fromAngles(new float[]{FastMath.PI/2,0,(3*FastMath.PI/4)/FARVIEW_GAP});
+		Quaternion steepW_noRot = new Quaternion();
+		steepW_noRot.fromAngles(new float[]{-FastMath.PI/2,0,(FastMath.PI/4)/FARVIEW_GAP});
+		Quaternion steepS_noRot = new Quaternion();
+		steepS_noRot.fromAngles(new float[]{0,(FastMath.PI/4)/FARVIEW_GAP,FastMath.PI/2});
+		Quaternion steepN_noRot = new Quaternion();
+		steepN_noRot.fromAngles(new float[]{0,(-3*FastMath.PI/4)/FARVIEW_GAP,-FastMath.PI/2});
+
+		steepRotations_special_FARVIEW.put(new Integer(NORTH), steepN_noRot);
+		steepRotations_special_FARVIEW.put(new Integer(SOUTH), steepS_noRot);
+		steepRotations_special_FARVIEW.put(new Integer(WEST), steepW_noRot);
+		steepRotations_special_FARVIEW.put(new Integer(EAST), steepE_noRot);
+	}
+	
 
 	public static HashMap<Integer,int[]> moveTranslations = new HashMap<Integer,int[]>();
 	static 
@@ -658,6 +697,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	HashMap<Integer, RenderedCube> hmCurrentCubes = new HashMap<Integer, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
+	HashMap<Integer, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Integer, RenderedCube>();
+	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
 	/**
 	 * Creates the spatials (spheres) for a world orbiter
@@ -1113,10 +1154,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
-	public HashSet<RenderedCube> render()
+	public HashSet<RenderedCube>[] render()
 	{
-		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		
+		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
+		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
 		modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
 		
@@ -1132,13 +1174,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
-		long timeS = System.currentTimeMillis();
 		
 		System.out.println("**** RENDER ****");
 		
-		int already = 0;
-		int newly = 0;
-		int removed = 0;
 
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
@@ -1152,11 +1190,49 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 */
 		
     	// get a specific part of the area to render
-		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
-    	RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection, false);
+		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,viewDirection, FARVIEW_ENABLED);
+    	
+    	
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
-    	System.out.println("!!!! REMOVABLE CUBES = "+removableCubes.length);
+		
+    	detacheable = doRender(cubes, removableCubes, hmCurrentCubes);
+    	if (FARVIEW_ENABLED)
+    	{
+        	cubes = newAndOldCubes[2];
+        	removableCubes = newAndOldCubes[3];
+        	detacheable_FARVIEW = doRender(cubes, removableCubes, hmCurrentCubes_FARVIEW);
+    	}
+    	
+		fpsNode.detachChild(loadText);
+
+
+		modelLoader.setLockForSharedNodes(true);
+		
+		// stop to collect and clean the nodes/binaries which this render will not use now
+		modelLoader.stopRenderAndClear();
+
+		//loadingText(0,false);
+    	//updateDisplay(null);
+
+		//TextureManager.clearCache();
+		//System.gc();
+		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
+		uiBase.hud.sr.setVisibility(false, "LOAD");
+		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
+		return ret;
+	}
+	
+	public HashSet<RenderedCube> doRender(RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Integer, RenderedCube> hmCurrentCubes)
+	{
+		int already = 0;
+		int newly = 0;
+		int removed = 0;
+ 		long timeS = System.currentTimeMillis();
+
+ 		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
+		System.out.println("!!!! REMOVABLE CUBES = "+removableCubes.length);
     	for (RenderedCube c:removableCubes)
     	{
     		if (c==null) continue;
@@ -1210,28 +1286,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			removed++;
     		outOfViewPort.remove(cToDetach);
     		inViewPort.remove(cToDetach);
+    		inFarViewPort.remove(cToDetach);
 	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
 	    hmCurrentCubes.clear();
-	    hmCurrentCubes = hmNewCubes; // the newly rendered/remaining cubes are now the current cubes
-		
-		fpsNode.detachChild(loadText);
-
+	    hmCurrentCubes.putAll(hmNewCubes); // the newly rendered/remaining cubes are now the current cubes
 		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
-
-		modelLoader.setLockForSharedNodes(true);
-		
-		// stop to collect and clean the nodes/binaries which this render will not use now
-		modelLoader.stopRenderAndClear();
-
-		//loadingText(0,false);
-    	//updateDisplay(null);
-
-		//TextureManager.clearCache();
-		//System.gc();
-		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
-		uiBase.hud.sr.setVisibility(false, "LOAD");
 		return detacheable;
+		
 	}
 
 	/**
@@ -1293,14 +1355,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					// mult with steep rotation quaternion for the steep direction...
 					if (n[i].model.noSpecialSteepRotation) 
 					{	try {
-							qC.multLocal(steepRotations.get(cube.cube.steepDirection));
+							qC.multLocal(cube.farview?steepRotations_FARVIEW.get(cube.cube.steepDirection):steepRotations.get(cube.cube.steepDirection));
 						}catch (Exception ex)
 						{
 							System.out.println(cube.cube + " --- "+cube.cube.steepDirection);
 						}
 					} else 
 					{
-						qC = steepRotations_special.get(cube.cube.steepDirection);
+						qC = cube.farview?steepRotations_special_FARVIEW.get(cube.cube.steepDirection):steepRotations_special.get(cube.cube.steepDirection);
 					}
 					// the necessary local translation : half cube up
 					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
@@ -1376,9 +1438,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (lastLoc.distance(currLoc)*mulWalkDist > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
 			// doing the render, getting the unneeded renderedCubes too.
-			HashSet<RenderedCube> detacheable = render();
+			HashSet<RenderedCube>[] detacheable = render();
+			for (int i=0; i<detacheable.length; i++)
 			// removing the unneeded.
-			for (RenderedCube c:detacheable) { 
+			for (RenderedCube c:detacheable[i]) { 
 	    		if (c!=null) {
     	    		inViewPort.remove(c);
     	    		inFarViewPort.remove(c);
@@ -1426,8 +1489,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			alCurrentCubes.clear();
 			alCurrentCubes.addAll(hmCurrentCubes.values());
+			if (FARVIEW_ENABLED)
+			{
+				alCurrentCubes_FARVIEW.clear();
+				alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
+			}
 		}
 		int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
+		int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 		if (segmented)
 		{
 			int sSize = alCurrentCubes.size()/segments;
@@ -1438,10 +1507,264 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				toCubeCount = alCurrentCubes.size();
 			}
 		}
+		if (segmented && FARVIEW_ENABLED)
+		{
+			int sSize = alCurrentCubes_FARVIEW.size()/segments;
+			fromCubeCount_FARVIEW = sSize*segmentCount;
+			toCubeCount_FARVIEW = sSize*(segmentCount+1);
+			if (toCubeCount_FARVIEW>alCurrentCubes_FARVIEW.size())
+			{
+				toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
+			}
+		}
 		
 		for (int cc = fromCubeCount; cc<toCubeCount; cc++)
 		{
 			RenderedCube c = alCurrentCubes.get(cc);
+			// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
+			if (c.hsRenderedNodes.size()>0)
+			{
+				boolean found = false;
+				boolean foundFar = false;
+				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
+				boolean fragmentViewDist = false;
+				if (c.cube!=null) {
+					fragmentViewDist = c.cube.internalCube&&(!insideArea) || (!c.cube.internalCube)&&insideArea;
+				}
+
+				int checkDistCube = (fragmentViewDist?VIEW_DISTANCE/4 : VIEW_DISTANCE/2);
+				boolean checked = false;
+				int distX = Math.abs(viewPositionX-c.cube.x);
+				int distY = Math.abs(viewPositionY-c.cube.y);
+				int distZ = Math.abs(viewPositionZ-c.cube.z);
+				
+				// handling the globe world border cube distances...
+				if (distX>world.realSizeX/2)
+				{
+					if (viewPositionX<world.realSizeX/2) {
+						distX = Math.abs(viewPositionX - (c.cube.x - world.realSizeX) );
+					} else
+					{
+						distX = Math.abs(viewPositionX - (c.cube.x + world.realSizeX) );
+					}
+				}
+				if (distZ>world.realSizeZ/2)
+				{
+					if (viewPositionZ<world.realSizeZ/2) {
+						distZ = Math.abs(viewPositionZ - (c.cube.z - world.realSizeZ) );
+					} else
+					{
+						distZ = Math.abs(viewPositionZ - (c.cube.z + world.realSizeZ) );	
+					}
+				}
+				
+				
+				// checking the view distance of the cube from viewpoint
+				if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
+				{
+					// inside view dist...
+					checked = true;
+				} else
+				{
+					//System.out.println("DIST X,Z: "+distX+" "+distZ);
+				}
+				//checked = true;
+				
+				
+				for (NodePlaceholder n : c.hsRenderedNodes)
+				{
+					if (checked)
+					{
+						float dist = n.getLocalTranslation().distanceSquared(cam.getLocation());
+
+						if (dist<CUBE_EDGE_SIZE*CUBE_EDGE_SIZE*6) {
+							found = true;
+							break;
+						}
+						Vector3f relative = n.getLocalTranslation().subtract(cam.getLocation()).normalize();
+						float angle = cam.getDirection().normalize().angleBetween(relative);
+						//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+						if (angle<refAngle) {
+							found = true;
+						}
+						break;
+					}
+				}
+				
+				
+				if (found)
+				{
+					visibleNodeCounter++;
+					if (!inViewPort.contains(c)) 
+					{
+						addedNodeCounter++;
+						inViewPort.add(c);
+						if (inFarViewPort.contains(c))
+						{
+							removedNodeCounter++;							
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{
+								if (!n.model.farViewEnabled) continue;
+								if (GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+												|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									 )
+								{
+									if (n!=null)
+										batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
+								} else 
+								{
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (SHADOWS) removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+								}
+								n.farView = false;
+							}
+						}
+
+						inFarViewPort.remove(c);
+						outOfViewPort.remove(c);
+						for (NodePlaceholder n : c.hsRenderedNodes)
+						{
+							n.farView = false;
+							if (GEOMETRY_BATCH && n.model.batchEnabled && 
+									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+									//(n.model.type == Model.SIMPLEMODEL
+											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+								) 
+							{
+								
+								if (n.batchInstance==null)
+									batchHelper.addItem(c.cube.internalCube, n.model, n, false);
+							} else 
+							{
+								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
+								if (realPooledNode==null) continue;
+								n.realNode = (PooledNode)realPooledNode;
+							
+								// unlock
+								boolean sharedNode = false;
+								if (realPooledNode instanceof SharedNode)
+								{	
+									realPooledNode.unlockMeshes();
+									sharedNode = true;
+								}
+								{
+									realPooledNode.unlockShadows();
+									realPooledNode.unlockTransforms();
+									realPooledNode.unlockBounds();
+									realPooledNode.unlockBranch();
+								}
+							
+								// set data from placeholder
+								realPooledNode.setLocalTranslation(n.getLocalTranslation());
+								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+								for (Spatial s:realPooledNode.getChildren()) {
+									if ( (s.getType()&Node.NODE)>0 )
+									{
+										for (Spatial s2:((Node)s).getChildren())
+										{	
+											if ( (s2.getType()&Node.NODE)>0 )
+											{
+												for (Spatial s3:((Node)s2).getChildren())
+												{
+													if (s3 instanceof TrimeshGeometryBatch) {
+														// setting separate horizontalRotation for trimeshGeomBatch
+														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+													}												
+												}												
+											}
+											s2.setLocalScale(n.getLocalScale());
+											if (s2 instanceof TrimeshGeometryBatch) {
+												// setting separate horizontalRotation for trimeshGeomBatch
+												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+											} else {
+												s2.setLocalRotation(n.getLocalRotation());
+											}
+										}
+									} else {
+										s.setLocalRotation(n.getLocalRotation());
+										s.setLocalScale(n.getLocalScale());
+									}
+								}
+							
+								if (c.cube.internalCube) {
+									intRootNode.attachChild((Node)realPooledNode);
+								} else 
+								{
+									extRootNode.attachChild((Node)realPooledNode);
+								}
+								if (sharedNode)
+								{	
+									realPooledNode.lockMeshes();
+									
+								}
+								{
+									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+									{
+										for (Spatial s:realPooledNode.getChildren())
+										{
+											//s.lockBounds();
+										}
+									}
+									realPooledNode.lockShadows();
+									realPooledNode.lockTransforms();								
+									realPooledNode.lockBranch();
+									realPooledNode.lockBounds();
+								}
+							}
+						}
+					} 
+				}
+				else
+				{
+					 nonVisibleNodeCounter++;
+					 if (!outOfViewPort.contains(c)) 
+					 {
+						removedNodeCounter++;
+						outOfViewPort.add(c);
+						inViewPort.remove(c);
+						inFarViewPort.remove(c);
+						for (NodePlaceholder n : c.hsRenderedNodes)
+						{
+							if (GEOMETRY_BATCH && n.model.batchEnabled && 
+									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+								 )
+							{
+								if (n!=null)
+									batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+							} else 
+							{
+								PooledNode pooledRealNode = n.realNode;
+								
+								n.realNode = null;
+								if (pooledRealNode!=null) {
+									Node realNode = (Node)pooledRealNode;
+									if (SHADOWS) removeOccludersRecoursive(realNode);
+									realNode.removeFromParent();
+									modelPool.releaseNode(pooledRealNode);
+								}
+							}
+							n.farView = false;
+						}
+						
+					 }
+				}
+			}
+		}
+		
+		if (FARVIEW_ENABLED)
+		for (int cc = fromCubeCount_FARVIEW; cc<toCubeCount_FARVIEW; cc++)
+		{
+			RenderedCube c = alCurrentCubes_FARVIEW.get(cc);
 			// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
 			if (c.hsRenderedNodes.size()>0)
 			{
@@ -1700,138 +2023,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							}
 						}
 					} 
-				} else
-				if (found)
-				{
-					visibleNodeCounter++;
-					if (!inViewPort.contains(c)) 
-					{
-						addedNodeCounter++;
-						inViewPort.add(c);
-						if (inFarViewPort.contains(c))
-						{
-							removedNodeCounter++;							
-							for (NodePlaceholder n : c.hsRenderedNodes)
-							{
-								if (!n.model.farViewEnabled) continue;
-								if (GEOMETRY_BATCH && n.model.batchEnabled && 
-										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-												|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-									 )
-								{
-									if (n!=null)
-										batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
-								} else 
-								{
-									PooledNode pooledRealNode = n.realNode;
-									
-									n.realNode = null;
-									if (pooledRealNode!=null) {
-										Node realNode = (Node)pooledRealNode;
-										if (SHADOWS) removeOccludersRecoursive(realNode);
-										realNode.removeFromParent();
-										modelPool.releaseNode(pooledRealNode);
-									}
-								}
-								n.farView = false;
-							}
-						}
-
-						inFarViewPort.remove(c);
-						outOfViewPort.remove(c);
-						for (NodePlaceholder n : c.hsRenderedNodes)
-						{
-							n.farView = false;
-							if (GEOMETRY_BATCH && n.model.batchEnabled && 
-									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-									//(n.model.type == Model.SIMPLEMODEL
-											|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-								) 
-							{
-								
-								if (n.batchInstance==null)
-									batchHelper.addItem(c.cube.internalCube, n.model, n, false);
-							} else 
-							{
-								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
-								if (realPooledNode==null) continue;
-								n.realNode = (PooledNode)realPooledNode;
-							
-								// unlock
-								boolean sharedNode = false;
-								if (realPooledNode instanceof SharedNode)
-								{	
-									realPooledNode.unlockMeshes();
-									sharedNode = true;
-								}
-								{
-									realPooledNode.unlockShadows();
-									realPooledNode.unlockTransforms();
-									realPooledNode.unlockBounds();
-									realPooledNode.unlockBranch();
-								}
-							
-								// set data from placeholder
-								realPooledNode.setLocalTranslation(n.getLocalTranslation());
-								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
-								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
-								for (Spatial s:realPooledNode.getChildren()) {
-									if ( (s.getType()&Node.NODE)>0 )
-									{
-										for (Spatial s2:((Node)s).getChildren())
-										{	
-											if ( (s2.getType()&Node.NODE)>0 )
-											{
-												for (Spatial s3:((Node)s2).getChildren())
-												{
-													if (s3 instanceof TrimeshGeometryBatch) {
-														// setting separate horizontalRotation for trimeshGeomBatch
-														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
-													}												
-												}												
-											}
-											s2.setLocalScale(n.getLocalScale());
-											if (s2 instanceof TrimeshGeometryBatch) {
-												// setting separate horizontalRotation for trimeshGeomBatch
-												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
-											} else {
-												s2.setLocalRotation(n.getLocalRotation());
-											}
-										}
-									} else {
-										s.setLocalRotation(n.getLocalRotation());
-										s.setLocalScale(n.getLocalScale());
-									}
-								}
-							
-								if (c.cube.internalCube) {
-									intRootNode.attachChild((Node)realPooledNode);
-								} else 
-								{
-									extRootNode.attachChild((Node)realPooledNode);
-								}
-								if (sharedNode)
-								{	
-									realPooledNode.lockMeshes();
-									
-								}
-								{
-									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-									{
-										for (Spatial s:realPooledNode.getChildren())
-										{
-											//s.lockBounds();
-										}
-									}
-									realPooledNode.lockShadows();
-									realPooledNode.lockTransforms();								
-									realPooledNode.lockBranch();
-									realPooledNode.lockBounds();
-								}
-							}
-						}
-					} 
-				}
+				} 
 				else
 				{
 					 nonVisibleNodeCounter++;
@@ -1869,6 +2061,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				}
 			}
 		}
+		
 		if (segmentCount==segments-1 || !segmented) {
 			
 			if (GEOMETRY_BATCH) batchHelper.updateAll();
@@ -1933,6 +2126,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		engine.setPause(false);
 	}
+	
 	
 	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction)
 	{
