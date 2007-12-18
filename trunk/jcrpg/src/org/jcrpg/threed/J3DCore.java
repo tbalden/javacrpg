@@ -2830,9 +2830,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		skySphere.updateRenderState();
 		
-		//
-		
-		//setupSkyDome();
 		
 		setCalculatedCameraLocation();
         
@@ -2856,15 +2853,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
         
         updateDisplay(null);
-
-		/*Spatial map = world.worldMap.getMapQuad();
-		if (map.getParent()==null)
-		{
-			extRootNode.attachChild(map);
-			//map.setLocalTranslation((relativeX)*CUBE_EDGE_SIZE, relativeY*CUBE_EDGE_SIZE, (-1.5f+(-1*relativeZ))*CUBE_EDGE_SIZE);
-			//map.updateRenderState();
-			extRootNode.updateRenderState();
-		}*/
 		
 		render();
 		renderToViewPort();
