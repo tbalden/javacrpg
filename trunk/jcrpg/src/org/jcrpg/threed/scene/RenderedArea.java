@@ -29,7 +29,7 @@ public class RenderedArea {
 	public HashMap<Integer, RenderedCube> worldCubeCache = new HashMap<Integer, RenderedCube>(); 
 	public HashMap<Integer, RenderedCube> worldCubeCacheNext = new HashMap<Integer, RenderedCube>(); 
 	
-	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction)
+	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farView)
 	{
 		int distance = J3DCore.RENDER_DISTANCE;
 		
@@ -77,7 +77,7 @@ public class RenderedArea {
 					int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
 					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
-						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ);
+						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, farView);
 						if (cube!=null)
 						{
 							c = new RenderedCube(cube,x1,y1,z1);

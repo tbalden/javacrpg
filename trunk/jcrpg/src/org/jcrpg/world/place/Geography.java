@@ -167,8 +167,8 @@ public class Geography extends Place implements Surface {
 
 	
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ) {
-		int kind = getCubeKind(worldX, worldY, worldZ);
+	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
+		int kind = getCubeKind(worldX, worldY, worldZ, farView);
 		Cube c = hmKindCube.get(kind);
 		if (c==null) return null;
 		c = c.copy(this);
@@ -337,7 +337,7 @@ public class Geography extends Place implements Surface {
 		return 0;
 	}
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ) {
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView) {
 		int[] values = calculateTransformedCoordinates(worldX, worldGroundLevel, worldZ);
 		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = values[0];
@@ -348,7 +348,7 @@ public class Geography extends Place implements Surface {
 		int relZ = values[5];
 
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ);
-		int kind = getCubeKind(worldX, Y, worldZ);
+		int kind = getCubeKind(worldX, Y, worldZ,  farView);
 		if (kind>=0 && kind<=4)
 		{
 			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
@@ -380,7 +380,7 @@ public class Geography extends Place implements Surface {
 	 * @param worldZ
 	 * @return
 	 */
-	public int getCubeKindOutside(int worldX, int worldY, int worldZ)
+	public int getCubeKindOutside(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		for (Geography geo:((World)getRoot()).geographies.values())
 		{
@@ -388,7 +388,7 @@ public class Geography extends Place implements Surface {
 			{
 				if (geo.boundaries.isInside(worldX, worldY, worldZ))
 				{
-					return geo.getCubeKind(worldX,worldY,worldZ);
+					return geo.getCubeKind(worldX,worldY,worldZ, farView);
 				}
 			}
 		}
@@ -402,7 +402,7 @@ public class Geography extends Place implements Surface {
 	 * @param worldZ
 	 * @return
 	 */
-	public int getCubeKind(int worldX, int worldY, int worldZ)
+	public int getCubeKind(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		if (numericId!=0) 
 		{
@@ -413,7 +413,7 @@ public class Geography extends Place implements Surface {
 				//System.out.println("CUBE CACHE USED!");
 				return cachedKind;
 			}
-			int kind = getCubeKindNoCache(worldX, worldY, worldZ);
+			int kind = getCubeKindNoCache(worldX, worldY, worldZ,  farView);
 			if (quickCubeKindCache.size()>5)
 			{
 				quickCubeKindCache.clear();
@@ -423,11 +423,11 @@ public class Geography extends Place implements Surface {
 		} else
 		{
 			// no right unique numbericId, use no cache 
-			return getCubeKindNoCache(worldX, worldY, worldZ);
+			return getCubeKindNoCache(worldX, worldY, worldZ,  farView);
 		}
 	}
 	
-	private int getCubeKindNoCache(int worldX, int worldY, int worldZ)
+	private int getCubeKindNoCache(int worldX, int worldY, int worldZ, boolean farView)
 	{
 
 		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
@@ -441,14 +441,16 @@ public class Geography extends Place implements Surface {
 		
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ);
 		
-		int YNorth = getPointHeight(relX, relZ+1, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+1));
-		int YNorthEast = getPointHeight(relX+1, relZ+1, realSizeX, realSizeZ,shrinkToWorld(worldX+1),shrinkToWorld(worldZ+1));
-		int YNorthWest = getPointHeight(relX-1, relZ+1, realSizeX, realSizeZ,shrinkToWorld(worldX-1),shrinkToWorld(worldZ+1));
-		int YSouth = getPointHeight(relX, relZ-1, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-1));
-		int YSouthEast = getPointHeight(relX+1, relZ-1, realSizeX, realSizeZ,shrinkToWorld(worldX+1),shrinkToWorld(worldZ-1));
-		int YSouthWest = getPointHeight(relX-1, relZ-1, realSizeX, realSizeZ,shrinkToWorld(worldX-1),shrinkToWorld(worldZ-1));
-		int YWest = getPointHeight(relX-1, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-1),worldZ);
-		int YEast = getPointHeight(relX+1, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+1),worldZ);
+		int FARVIEW_GAP = farView?J3DCore.FARVIEW_GAP:1;
+		
+		int YNorth = getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP));
+		int YNorthEast = getPointHeight(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP));
+		int YNorthWest = getPointHeight(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP));
+		int YSouth = getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP));
+		int YSouthEast = getPointHeight(relX+FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP));
+		int YSouthWest = getPointHeight(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP));
+		int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ);
+		int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ);
 
 		//if (this instanceof Plain) System.out.println("-- RELY - "+relY+" - "+Y);
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});

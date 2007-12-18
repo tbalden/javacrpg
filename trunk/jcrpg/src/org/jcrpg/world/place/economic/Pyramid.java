@@ -66,7 +66,7 @@ public class Pyramid extends Economic {
 	
 
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ) {
+	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-origoY*magnification;
 		int relZ = worldZ-origoZ*magnification;
