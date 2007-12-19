@@ -190,10 +190,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			
 			if (placeholder!=null) {
 
-				HashSet instances = (HashSet)placeholder.batchInstance;
+				HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
 				if (instances==null)
 				{
-					instances = new HashSet();
+					instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 					placeholder.batchInstance = instances;
 				}
 				instances.add(instance);
@@ -211,10 +211,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		addInstance(instance);
 		
 		if (placeholder!=null) {
-			HashSet instances = (HashSet)placeholder.batchInstance;
+			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
 			if (instances==null)
 			{
-				instances = new HashSet();
+				instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 				placeholder.batchInstance = instances;
 			}
 			instances.add(instance);
@@ -226,7 +226,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	}
 	public void removeItem(NodePlaceholder placeholder)
 	{
-		HashSet instances = (HashSet)placeholder.batchInstance;
+		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
 		if (instances!=null)
 		{
 			for (Object instance:instances)

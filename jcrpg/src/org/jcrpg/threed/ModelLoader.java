@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -53,7 +54,6 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
@@ -846,11 +846,11 @@ public class ModelLoader {
 		if (ts != null)
 			ts.deleteAll(true);
 		if (s instanceof Node) {
-			ArrayList<Spatial> children = ((Node) s).getChildren();
+			List<Spatial> children = ((Node) s).getChildren();
 			if (children != null) {
-				Iterator i = children.iterator();
+				Iterator<Spatial> i = children.iterator();
 				while (i.hasNext()) {
-					cleanTexture((Spatial) i.next());
+					cleanTexture(i.next());
 				}
 			}
 		}
