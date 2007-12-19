@@ -74,7 +74,6 @@ public class DefaultGenProgram extends GenProgram {
 		
 		
 		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(climateSizeDivider*2));
-		int[] correctedClimateSizes = new int[params.climates.length];
 		// calc the remaining size in the world
 		int diffAvailable = wZ-climateSize*(climateSizeDivider*2);
 		System.out.println("DIFF = "+diffAvailable);
@@ -88,7 +87,7 @@ public class DefaultGenProgram extends GenProgram {
 				String climateName = params.climates[count];
 				System.out.println("CLIMATE: "+climateName);
 				String className = gen.climateBeltMap.get(climateName);
-				Class c = Class.forName(className);
+				Class<?> c = Class.forName(className);
 				Constructor<ClimateBelt> constructor = c.getConstructors()[0];
 				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
 				int climateSizeCorrected = climateSize*params.climateSizeMuls[count];
