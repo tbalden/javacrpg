@@ -18,20 +18,22 @@
 package org.jcrpg.world.ai.flora;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.time.Time;
 
 /**
- * Contains the base for FloraContaining encapsulating mapp of FloraGenerator to Place types.
+ * Contains the base for FloraContaining encapsulating map of FloraGenerator to Place types.
  * @author pali
  */
 public class FloraContainer {
 
-	public HashMap<Class, FloraGenerator> hmPlaceToGenerator = new HashMap<Class, FloraGenerator>();
+	public Map<Class<? extends Geography>, FloraGenerator> hmPlaceToGenerator = new HashMap<Class<? extends Geography>, FloraGenerator>();
 	public FloraGenerator defaultGenerator; 
 	
-	public FloraCube getFlora(int worldX, int worldY, int worldZ, Class place, CubeClimateConditions conditions, Time time, boolean onSteep)
+	public FloraCube getFlora(int worldX, int worldY, int worldZ, Class<? extends Geography> place, CubeClimateConditions conditions, Time time, boolean onSteep)
 	{
 		if (hmPlaceToGenerator.get(place)!=null) return hmPlaceToGenerator.get(place).generate(worldX, worldY, worldZ, conditions,time, onSteep);
 		if (defaultGenerator!=null) return defaultGenerator.generate(worldX, worldY, worldZ, conditions,time, onSteep);

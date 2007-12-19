@@ -25,12 +25,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
@@ -1709,7 +1711,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								{
 									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 									{
-										for (Spatial s:realPooledNode.getChildren())
+										//for (Spatial s:realPooledNode.getChildren())
 										{
 											//s.lockBounds();
 										}
@@ -2330,7 +2332,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param classNames
 	 * @return
 	 */
-	public boolean hasSideOfInstance(Side[] sides, HashSet<Class> classNames)
+	public boolean hasSideOfInstance(Side[] sides, Set<Class<? extends SideSubType>> classNames)
 	{
 		if (sides!=null)
 		for (int i=0; i<sides.length; i++)
@@ -2355,7 +2357,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param classNames
 	 * @return
 	 */
-	public Integer[] hasSideOfInstanceInAnyDir(Cube c, HashSet<Class> classNames)
+	public Integer[] hasSideOfInstanceInAnyDir(Cube c, Set<Class<? extends SideSubType>> classNames)
 	{
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int j=0; j<c.sides.length; j++)
@@ -2425,19 +2427,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * You cannot walk (horizontal) through these.
 	 */
-	public static HashSet<Class> notWalkable = new HashSet<Class>();
+	public static Set<Class<? extends SideSubType>> notWalkable = new HashSet<Class<? extends SideSubType>>();
 	/**
 	 * You cannot pass through this (any direction).
 	 */
-	public static HashSet<Class> notPassable = new HashSet<Class>();
+	public static Set<Class<? extends SideSubType>> notPassable = new HashSet<Class<? extends SideSubType>>();
 	/**
 	 * You cannot fall onto this (from top).
 	 */
-	public static HashSet<Class> notFallable = new HashSet<Class>();
+	public static Set<Class<? extends SideSubType>> notFallable = new HashSet<Class<? extends SideSubType>>();
 	/**
 	 * You get onto steep on these.
 	 */
-	public static HashSet<Class> climbers = new HashSet<Class>();
+	public static Set<Class<? extends SideSubType>> climbers = new HashSet<Class<? extends SideSubType>>();
 	static
 	{
 		notWalkable.add(NotPassable.class);
@@ -2836,7 +2838,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		bloomRenderPass = new BloomRenderPass(cam, 4);
 		
-		ShadeState ss = display.getDisplaySystem().getRenderer().createShadeState();
+		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer().createShadeState();
 		ss.setShade(ShadeState.SM_FLAT);
 		ss.setEnabled(false);
 		//rootNode.setRenderState(ss);

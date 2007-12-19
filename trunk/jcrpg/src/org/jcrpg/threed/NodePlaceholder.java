@@ -22,16 +22,8 @@ import java.util.HashMap;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 
-import com.jme.bounding.BoundingVolume;
-import com.jme.intersection.CollisionResults;
-import com.jme.intersection.PickResults;
 import com.jme.math.Quaternion;
-import com.jme.math.Ray;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
-import com.jme.scene.geometryinstancing.GeometryBatchInstance;
 import com.jme.util.export.Savable;
 
 public class NodePlaceholder {
