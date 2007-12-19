@@ -122,6 +122,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * rendered cubes in each direction (N,S,E,W,T,B).
 	 */
     public static int RENDER_DISTANCE_ORIG = 10;
+    public static int RENDER_DISTANCE_FARVIEW = 60;
     public static int RENDER_DISTANCE = 10;
     public static int VIEW_DISTANCE = 10;
     public static int VIEW_DISTANCE_SQR = 100;
@@ -159,7 +160,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
-    public static int FARVIEW_GAP = 8;
+    public static int FARVIEW_GAP = 4;
     public static boolean FARVIEW_ENABLED = false;
 
     static Properties p = new Properties();
@@ -1866,7 +1867,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						if (!J3DCore.FARVIEW_ENABLED || fragmentViewDist) break;
 						
 						// enabled, we can check for the cube coordinates in between the gaps...
-						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+						if (c.cube.x%FARVIEW_GAP==0 && c.cube.z%FARVIEW_GAP==0 && c.cube.y%FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 						{
 							// looking for farview enabled model on the cube...
 							if (n.model.farViewEnabled)
