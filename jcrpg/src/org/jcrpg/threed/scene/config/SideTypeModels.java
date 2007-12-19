@@ -110,7 +110,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_WALL.id, new Integer(1));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
+		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_STEEP.id, 41); 
 		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
 		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
@@ -152,6 +152,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_ENTRANCE.id, new Integer(33));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_ROCK.id, new Integer(34));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_BLOCK.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_ROCK_DOWNSIDE.id, 42);
 	
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -642,7 +643,20 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(38), new RenderedSide(new Model[]{sm_river_bottom}));
 		hm3dTypeRenderedSide.put(new Integer(39), new RenderedSide(new Model[]{sm_water_rock_side}));
 
-		// NEXT ID = 41
+		// climate dependent
+		SimpleModel sm_rock_downside = new SimpleModel("models/ground/ground_farview.obj",null); sm_rock_downside.farViewEnabled = true;
+		SimpleModel sm_rock_downside_desert = new SimpleModel("models/ground/ground_farview.obj","sand2.jpg"); sm_rock_downside_desert.farViewEnabled = true;
+		SimpleModel sm_rock_downside_continental = new SimpleModel("models/ground/ground_farview.obj","grass2.jpg"); sm_rock_downside_continental.farViewEnabled = true;
+		SimpleModel sm_rock_downside_arctic = new SimpleModel("models/ground/ground_farview.obj","snow1.jpg"); sm_rock_downside_arctic.farViewEnabled = true;
+		SimpleModel sm_rock_downside_tropical = new SimpleModel("models/ground/ground_farview.obj","jungle.jpg"); sm_rock_downside_tropical.farViewEnabled = true;
+		dependentModels = new HashMap<String, Model[]>();
+		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_rock_downside_desert});
+		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_rock_downside_continental});
+		dependentModels.put(Arctic.ARCTIC_ID, new Model[]{sm_rock_downside_arctic});
+		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_rock_downside_tropical});
+		hm3dTypeRenderedSide.put(new Integer(42), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_rock_downside},dependentModels));
+
+		// NEXT ID = 43
 		
 	}
 	

@@ -47,7 +47,9 @@ public class Geography extends Place implements Surface {
 	public static final SideSubType SUBTYPE_CORNER = new Climbing(TYPE_GEO+"_GROUND_CORNER");
 	public static final SideSubType SUBTYPE_INTERSECT_EMPTY = new Climbing(TYPE_GEO+"_GROUND_INTERSECT_EMPTY");
 	public static final SideSubType SUBTYPE_INTERSECT_BLOCK = new GroundSubType(TYPE_GEO+"_GROUND_INTERSECT_BLOCK");
+	public static final SideSubType SUBTYPE_ROCK_DOWNSIDE = new GroundSubType(TYPE_GEO+"_ROCK_DOWNSIDE");
 
+	
 	static Side[] ROCK_VISIBLE = {new Side(TYPE_GEO,SUBTYPE_ROCK_BLOCK_VISIBLE)};
 	static Side[] ROCK = {new Side(TYPE_GEO,SUBTYPE_ROCK_BLOCK)};
 	static Side[] GROUND = {new Side(TYPE_GEO,SUBTYPE_GROUND)};
@@ -57,6 +59,7 @@ public class Geography extends Place implements Surface {
 	static Side[] I_EMPTY = {new Side(TYPE_GEO,SUBTYPE_INTERSECT_EMPTY)};
 	static Side[] BLOCK = {new Side(TYPE_GEO,SUBTYPE_INTERSECT_BLOCK)};
 	static Side[] INTERNAL_ROCK_SIDE = null;//{new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
+	static Side[] ROCK_DOWNSIDE = {new Side(TYPE_GEO,SUBTYPE_ROCK_DOWNSIDE)};
 	
 	static Side[][] GEO_ROCK = new Side[][] { null, null, null,null,null,ROCK };
 	static Side[][] GEO_ROCK_VISIBLE = new Side[][] { null, null, null,null,null,ROCK_VISIBLE };
@@ -73,6 +76,8 @@ public class Geography extends Place implements Surface {
 	static Side[][] GEO_STEEP_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,BLOCK };
 	static Side[][] GEO_STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,BLOCK,BLOCK };
+
+	static Side[][] GEO_ROCK_FARVIEW = new Side[][] { null, null, null,null,null,ROCK_DOWNSIDE };
 	
 	
 	public static final int K_UNDEFINED = -2, K_EMPTY = -1, K_STEEP_NORTH = 0, K_STEEP_SOUTH = 2, K_STEEP_EAST = 1, K_STEEP_WEST = 3;
@@ -92,6 +97,7 @@ public class Geography extends Place implements Surface {
 	public static HashMap<Long, Integer> quickCubeKindCache = new HashMap<Long, Integer>();
 	
 	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();
+	public static HashMap<Integer, Cube> hmKindCube_FARVIEW = new HashMap<Integer, Cube>();
 	static {
 		hmKindCube.put(K_EMPTY, null);
 		hmKindCube.put(K_NORMAL_GROUND, new Cube(null,GEO_GROUND,0,0,0));
@@ -108,6 +114,13 @@ public class Geography extends Place implements Surface {
 		hmKindCube.put(K_CORNER_NORTH, new Cube(null,GEO_CORNER_NORTH,0,0,0,J3DCore.BOTTOM));
 		hmKindCube.put(K_CORNER_WEST, new Cube(null,GEO_CORNER_WEST,0,0,0,J3DCore.BOTTOM));
 		hmKindCube.put(K_CORNER_EAST, new Cube(null,GEO_CORNER_EAST,0,0,0,J3DCore.BOTTOM));
+
+		hmKindCube_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,GEO_ROCK_FARVIEW,0,0,0)); // TODO down extending rock block!
+		hmKindCube_FARVIEW.put(K_STEEP_NORTH, new Cube(null,GEO_CORNER_NORTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube_FARVIEW.put(K_STEEP_EAST, new Cube(null,GEO_CORNER_EAST,0,0,0,J3DCore.BOTTOM));
+		hmKindCube_FARVIEW.put(K_STEEP_SOUTH, new Cube(null,GEO_CORNER_SOUTH,0,0,0,J3DCore.BOTTOM));
+		hmKindCube_FARVIEW.put(K_STEEP_WEST, new Cube(null,GEO_CORNER_WEST,0,0,0,J3DCore.BOTTOM));
+
 	}
 	public Geography(String id, Place parent, PlaceLocator loc)
 	{
@@ -169,7 +182,15 @@ public class Geography extends Place implements Surface {
 	@Override
 	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
 		int kind = getCubeKind(worldX, worldY, worldZ, farView);
-		Cube c = hmKindCube.get(kind);
+		Cube c;
+		if (farView)
+		{
+			c = hmKindCube_FARVIEW.get(kind);
+			if (c==null) c = hmKindCube.get(kind);
+		} else
+		{
+			c = hmKindCube.get(kind);
+		}
 		if (c==null) return null;
 		c = c.copy(this);
 		c.x = worldX;
@@ -439,25 +460,27 @@ public class Geography extends Place implements Surface {
 		int relY = values[4];
 		int relZ = values[5];
 		
-		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ);
 		
 		int FARVIEW_GAP = farView?J3DCore.FARVIEW_GAP:1;
+
+		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ)/FARVIEW_GAP;
+		relY /= FARVIEW_GAP;
 		
-		int YNorth = getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP));
-		int YNorthEast = getPointHeight(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP));
-		int YNorthWest = getPointHeight(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP));
-		int YSouth = getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP));
-		int YSouthEast = getPointHeight(relX+FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP));
-		int YSouthWest = getPointHeight(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP));
-		int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ);
-		int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ);
+		int YNorth = getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP))/FARVIEW_GAP;
+		int YNorthEast = getPointHeight(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP))/FARVIEW_GAP;
+		int YNorthWest = getPointHeight(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP))/FARVIEW_GAP;
+		int YSouth = getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP))/FARVIEW_GAP;
+		int YSouthEast = getPointHeight(relX+FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP))/FARVIEW_GAP;
+		int YSouthWest = getPointHeight(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP))/FARVIEW_GAP;
+		int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ)/FARVIEW_GAP;
+		int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ)/FARVIEW_GAP;
 
 		int K_STEEP_EAST = Geography.K_STEEP_EAST;
 		int K_STEEP_SOUTH = Geography.K_STEEP_SOUTH;
 		int K_STEEP_WEST = Geography.K_STEEP_WEST;
 		int K_STEEP_NORTH = Geography.K_STEEP_NORTH;
 		
-		if (farView)
+/*		if (farView)
 		{
 			K_STEEP_EAST = Geography.K_CORNER_EAST;
 			K_STEEP_SOUTH = Geography.K_CORNER_SOUTH;
@@ -465,7 +488,7 @@ public class Geography extends Place implements Surface {
 			K_STEEP_NORTH = Geography.K_CORNER_NORTH;
 			
 		}
-
+*/
 		//if (this instanceof Plain) System.out.println("-- RELY - "+relY+" - "+Y);
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 

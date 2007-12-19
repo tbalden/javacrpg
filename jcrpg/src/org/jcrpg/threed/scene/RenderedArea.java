@@ -94,30 +94,52 @@ public class RenderedArea {
 						elements.add(c);
 					}
 					
-					
-					if (farViewEnabled)
+				}
+			}
+		}
+
+		if (farViewEnabled) 
+		{
+			distance = J3DCore.RENDER_DISTANCE_FARVIEW;
+			
+			for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
+			{
+				for (int y1=-1*Math.min(distance,20); y1<=1*Math.min(distance,20); y1++)
+				{
+					for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 					{
-						if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0)
+						int worldX = x+x1;
+						int worldY = y+y1;
+						int worldZ = z-z1;
+						worldX = world.shrinkToWorld(worldX);
+						worldZ = world.shrinkToWorld(worldZ);
+						int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+						
+						
+						if (farViewEnabled)
 						{
-							// render this one for farview
-							c = worldCubeCache_FARVIEW.remove(key);
-							if (c==null) {
-								Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
-								if (cube!=null)
-								{
-									c = new RenderedCube(cube,x1,y1,z1);
-									c.farview = true;
+							if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0 && worldY%J3DCore.FARVIEW_GAP==0)
+							{
+								// render this one for farview
+								RenderedCube c = worldCubeCache_FARVIEW.remove(key);
+								if (c==null) {
+									Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
+									if (cube!=null)
+									{
+										c = new RenderedCube(cube,x1,y1,z1);
+										c.farview = true;
+									}
 								}
-							}
-							worldCubeCacheNext_FARVIEW.put(key, c);
-							if (c!=null) 
-							{	
-								elements_FARVIEW.add(c);
-							}
-					}
+								worldCubeCacheNext_FARVIEW.put(key, c);
+								if (c!=null) 
+								{	
+									elements_FARVIEW.add(c);
+								}
+						}
+							
+						}
 						
 					}
-					
 				}
 			}
 		}
