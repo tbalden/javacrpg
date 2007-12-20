@@ -53,9 +53,10 @@ public abstract class Water extends Geography {
 	 * @param x
 	 * @param y
 	 * @param z
+	 * @param farView If farview set true.
 	 * @return
 	 */
-	public abstract boolean isWaterPoint(int x,int y, int z);
+	public abstract boolean isWaterPoint(int x,int y, int z, boolean farView);
 	/**
 	 * Returns the depth of the water at a given point.
 	 * @param x
@@ -73,6 +74,6 @@ public abstract class Water extends Geography {
 	 * @param surface the surface information at the give x/z point (do depth and such calculation based on this).
 	 * @return
 	 */
-	public abstract Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface);
+	public abstract Cube getWaterCube(int x, int y, int z, Cube geoCube, SurfaceHeightAndType surface, boolean farView);
 
 }

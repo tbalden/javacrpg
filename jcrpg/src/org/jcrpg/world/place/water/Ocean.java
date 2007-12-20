@@ -89,7 +89,7 @@ public class Ocean extends Water {
 
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
-			SurfaceHeightAndType surface) {
+			SurfaceHeightAndType surface, boolean farView) {
 		if (x==503&&z==498) System.out.println("getWaterCube");
 		
 		if (y==worldGroundLevel && !noWaterInTheBed) 
@@ -120,25 +120,25 @@ public class Ocean extends Water {
 					c = new Cube (this,LAKE_ROCKSIDE_BOTTOM,x,y,z,surface.steepDirection);
 				}
 				// direction rockside tests
-				if (!isWaterPoint(x+1, y, z))
+				if (!isWaterPoint(x+1, y, z, farView))
 				{
 					eastRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_EAST,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x-1, y, z))
+				if (!isWaterPoint(x-1, y, z, farView))
 				{
 					westRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_WEST,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x, y, z+1))
+				if (!isWaterPoint(x, y, z+1, farView))
 				{
 					northRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_NORTH,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x, y, z-1))
+				if (!isWaterPoint(x, y, z-1, farView))
 				{
 					southRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_SOUTH,x,y,z,surface.steepDirection);
@@ -163,10 +163,10 @@ public class Ocean extends Water {
 	
 	@Override
 	public boolean isAlgrithmicallyInside(int worldX, int worldY, int worldZ) {
-		return isWaterPointSpecial(worldX, worldY, worldZ, false);
+		return isWaterPointSpecial(worldX, worldY, worldZ, false,false);
 	}
 
-	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting)
+	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting, boolean farView)
 	{
 		
 		x = shrinkToWorld(x);
@@ -203,7 +203,7 @@ public class Ocean extends Water {
 				{
 					for (int dz=-1; dz<=1; dz++)
 					{
-						int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz));
+						int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz), farView);
 						if (Y>0)
 							return false;
 					}
@@ -546,13 +546,13 @@ public class Ocean extends Water {
 	}
 	
 	@Override
-	public boolean isWaterPoint(int x, int y, int z) {
-		return isWaterPointSpecial(x, y, z, true);
+	public boolean isWaterPoint(int x, int y, int z, boolean farView) {
+		return isWaterPointSpecial(x, y, z, true, farView);
 	}
 
 	@Override
 	public boolean isWaterBlock(int worldX, int worldY, int worldZ) {
-		return isWaterPointSpecial(worldX, worldY, worldZ, false);
+		return isWaterPointSpecial(worldX, worldY, worldZ, false, false);
 	}
 
 }

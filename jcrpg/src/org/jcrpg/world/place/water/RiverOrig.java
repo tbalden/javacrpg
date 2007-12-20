@@ -117,7 +117,7 @@ public class RiverOrig extends Water {
 	
 	
 	@Override
-	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) {
+	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface, boolean farView) {
 		
 		int x = 0,y = 0,z = 0, checkX = 0;
 		int steepAhead = 0, steepBack = 0, steepLeft = 0, steepRight = 0;
@@ -269,8 +269,8 @@ public class RiverOrig extends Water {
 						return c;
 					} else
 					{
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ, farView);
+						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ, farView);
 						// TODO based on next/prev no water add more rockside!
 						Cube c = null;
 						if (edge1)
@@ -358,8 +358,8 @@ public class RiverOrig extends Water {
 						}
 					}
 					if (geoCube.steepDirection==steepRight) {
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ, farView);
+						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ, farView);
 						if (nextNotWater && prevNotWater)
 						{
 							if (!noWaterInTheBed) 
@@ -435,8 +435,8 @@ public class RiverOrig extends Water {
 						}
 					}
 					if (geoCube.steepDirection==steepLeft) {
-						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ);
-						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ);
+						boolean nextNotWater = !this.isWaterPoint(worldX+addWX, worldY, worldZ+addWZ, farView);
+						boolean prevNotWater = !this.isWaterPoint(worldX-addWX, worldY, worldZ-addWZ, farView);
 						if (nextNotWater && prevNotWater)
 						{
 							if (!noWaterInTheBed) 
@@ -497,7 +497,7 @@ public class RiverOrig extends Water {
 	}
 
 	@Override
-	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
+	public boolean isWaterPoint(int worldX, int worldY, int worldZ, boolean farView) {
 		int x = 0,y = 0,z = 0, checkX = 0;
 		if (startSide==0) {
 			x=worldX;

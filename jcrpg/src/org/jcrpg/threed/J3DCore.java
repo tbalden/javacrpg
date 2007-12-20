@@ -1316,16 +1316,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//String coordKey = ""+s;
 		
 		if (n==null) return;
-		Object[] f = (Object[])directionAnglesAndTranslations.get(new Integer(direction));
-		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1*((int[])f[1])[0]);//+0.5f;
-		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1*((int[])f[1])[1]);//+0.5f;
-		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1*((int[])f[1])[2]);//+25.5f;
+		Object[] f = (Object[])directionAnglesAndTranslations.get(direction);
+		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?FARVIEW_GAP:1));//+0.5f;
+		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?FARVIEW_GAP:1));//+0.5f;
+		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?FARVIEW_GAP:1));//+25.5f;
 		
 		Quaternion hQ = null;
 		Quaternion hQReal = null;
 		if (horizontalRotation!=-1) {
-			hQ = horizontalRotations.get(new Integer(horizontalRotation));
-			hQReal = horizontalRotationsReal.get(new Integer(horizontalRotation));
+			hQ = horizontalRotations.get(horizontalRotation);
+			hQReal = horizontalRotationsReal.get(horizontalRotation);
 		}
 		
 		//Node sideNode = new Node();
@@ -1358,14 +1358,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					// mult with steep rotation quaternion for the steep direction...
 					if (n[i].model.noSpecialSteepRotation) 
 					{	try {
-							qC.multLocal(cube.farview?steepRotations_FARVIEW.get(cube.cube.steepDirection):steepRotations.get(cube.cube.steepDirection));
+							qC.multLocal(steepRotations.get(cube.cube.steepDirection));
 						}catch (Exception ex)
 						{
 							System.out.println(cube.cube + " --- "+cube.cube.steepDirection);
 						}
 					} else 
 					{
-						qC = cube.farview?steepRotations_special_FARVIEW.get(cube.cube.steepDirection):steepRotations_special.get(cube.cube.steepDirection);
+						qC = steepRotations_special.get(cube.cube.steepDirection);
 					}
 					// the necessary local translation : half cube up
 					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
@@ -1390,11 +1390,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					}
 				} else
 				{
-					n[i].setLocalScale(1);
+					n[i].setLocalScale(cube.farview?scale*FARVIEW_GAP:1);
 				}
 			} else
 			{				
-				n[i].setLocalScale(scale);
+				n[i].setLocalScale(cube.farview?scale*FARVIEW_GAP:scale);
 			}
 			
 			n[i].setLocalRotation(qC);
