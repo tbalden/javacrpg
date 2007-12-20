@@ -55,11 +55,11 @@ public class GeometryBatchHelper {
 	 */
 	private String getKey(boolean internal, Model m, NodePlaceholder place, boolean farView)
 	{
-		float viewMul = 1;
-		float yLevelMul = 1;
+		int viewMul = 1;
+		int yLevelMul = 1;
 		if (farView) {
-			viewMul = J3DCore.FARVIEW_GAP * 4f;
-			yLevelMul = 4;
+			viewMul = J3DCore.FARVIEW_GAP * 10;
+			yLevelMul = 10;
 		}
     	String key = m.type+m.id+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
@@ -97,6 +97,7 @@ public class GeometryBatchHelper {
     	{   // other models only by Y // quad
     		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
     	}
+    	
     	return key+farView;
 	}
     /**
