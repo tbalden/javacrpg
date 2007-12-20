@@ -1331,7 +1331,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		float cX = ((x+relativeX)*CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?FARVIEW_GAP:1));//+0.5f;
 		float cY = ((y+relativeY)*CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?FARVIEW_GAP:1));//+0.5f;
 		float cZ = ((z-relativeZ)*CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?FARVIEW_GAP:1));//+25.5f;
-		
+		if (cube.farview)
+		{
+			cY+=CUBE_EDGE_SIZE*1.5f;
+		}
 		Quaternion hQ = null;
 		Quaternion hQReal = null;
 		if (horizontalRotation!=-1) {
@@ -1379,7 +1382,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						qC = steepRotations_special.get(cube.cube.steepDirection);
 					}
 					// the necessary local translation : half cube up
-					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,CUBE_EDGE_SIZE/2,0f));
+					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,(CUBE_EDGE_SIZE/2)*(cube.farview?FARVIEW_GAP:1),0f));
 					n[i].setLocalTranslation(newTrans);
 
 					// square root 2 is the scaling for that side, so we will set it depending on N-S or E-W steep direction
@@ -1388,16 +1391,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						// NORTH-SOUTH steep...
 						if (n[i].model.noSpecialSteepRotation) 
 						{
-							n[i].setLocalScale(new Vector3f(1f,1.41421356f,1f));
+							n[i].setLocalScale(new Vector3f(1f,1.41421356f,1f).multLocal(cube.farview?FARVIEW_GAP:1));
 						} else
 						{
-							n[i].setLocalScale(new Vector3f(1.41421356f,1,1f));							
+							n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(cube.farview?FARVIEW_GAP:1));							
 						}
 					}
 					else
 					{
 						// EAST-WEST steep...
-						n[i].setLocalScale(new Vector3f(1.41421356f,1,1f));
+						n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(cube.farview?scale*FARVIEW_GAP:1));
 					}
 				} else
 				{
