@@ -80,7 +80,7 @@ public class Lake extends Water {
 
 	@Override
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
-			SurfaceHeightAndType surface) {
+			SurfaceHeightAndType surface, boolean farView) {
 		if (y==worldGroundLevel && !noWaterInTheBed) 
 		{
 			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
@@ -109,25 +109,25 @@ public class Lake extends Water {
 					c = new Cube (this,LAKE_ROCKSIDE_BOTTOM,x,y,z,surface.steepDirection);
 				}
 				// direction rockside tests
-				if (!isWaterPoint(x+1, y, z))
+				if (!isWaterPoint(x+1, y, z, farView))
 				{
 					eastRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_EAST,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x-1, y, z))
+				if (!isWaterPoint(x-1, y, z, farView))
 				{
 					westRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_WEST,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x, y, z+1))
+				if (!isWaterPoint(x, y, z+1, farView))
 				{
 					northRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_NORTH,x,y,z,surface.steepDirection);
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
-				if (!isWaterPoint(x, y, z-1))
+				if (!isWaterPoint(x, y, z-1, farView))
 				{
 					southRock = true;
 					Cube c2 = new Cube (this,LAKE_ROCKSIDE_SOUTH,x,y,z,surface.steepDirection);
@@ -142,7 +142,7 @@ public class Lake extends Water {
 	Vector3f temp = new Vector3f();
 	
 	@Override
-	public boolean isWaterPoint(int x, int y, int z) {
+	public boolean isWaterPoint(int x, int y, int z, boolean farView) {
 		int localX = x-origoX;
 		int localY = y-worldGroundLevel;
 		int localZ = z-origoZ;
@@ -163,7 +163,7 @@ public class Lake extends Water {
 
 	@Override
 	public boolean isWaterBlock(int worldX, int worldY, int worldZ) {
-		return isWaterPoint(worldX, worldY, worldZ);
+		return isWaterPoint(worldX, worldY, worldZ, false);
 	}
 
 }

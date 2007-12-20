@@ -124,7 +124,7 @@ public class Cave extends Geography implements Surface {
 		{
 			return null;		
 		}
-		int height = getPointHeightOutside(worldX, worldZ);
+		int height = getPointHeightOutside(worldX, worldZ, farView);
 		if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 		{
 			Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);

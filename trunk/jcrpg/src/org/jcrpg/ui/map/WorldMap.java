@@ -79,7 +79,7 @@ public class WorldMap {
 				{
 					if (water instanceof Ocean)
 					{
-						boolean oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false);
+						boolean oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false, false);
 						if (oceanWater)
 						{
 							map[z][x] = (map[z][x]^WATER);

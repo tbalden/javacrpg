@@ -94,7 +94,7 @@ public class MountainNew extends Geography {
 	}
 
 	@Override
-	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ)
+	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
 		int Y = 0;
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;

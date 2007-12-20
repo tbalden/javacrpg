@@ -130,7 +130,7 @@ public class River extends Water {
 	
 	
 	@Override
-	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface) 
+	public Cube getWaterCube(int worldX, int worldY, int worldZ, Cube geoCube, SurfaceHeightAndType surface, boolean farView) 
 	{
 		
 		int x = 0,y = 0,z = 0, checkX = 0, curveZ = 0, edgeWX = 0, edgeWZ = 0;
@@ -889,7 +889,7 @@ public class River extends Water {
 	}
 	
 	@Override
-	public boolean isWaterPoint(int worldX, int worldY, int worldZ) {
+	public boolean isWaterPoint(int worldX, int worldY, int worldZ, boolean farView) {
 		return isWaterPointPrivate(worldX, worldY, worldZ, true); // leaveOne set true for world waterpoint calculation.
 		// really overwritten cubes should only be one size smaller , using isWaterPointPrivate + leaveOne set to false.
 	}

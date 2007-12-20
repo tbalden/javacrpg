@@ -115,9 +115,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
-				scale.x*=J3DCore.FARVIEW_GAP;
+				//scale.multLocal(J3DCore.FARVIEW_GAP);
+				/*scale.x*=J3DCore.FARVIEW_GAP;
 				scale.z*=J3DCore.FARVIEW_GAP;
-				scale.y*=J3DCore.FARVIEW_GAP;
+				scale.y*=J3DCore.FARVIEW_GAP;*/
 				instance.getAttributes().setScale(scale);
 			} else
 			{
@@ -139,9 +140,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
-				scale.x*=J3DCore.FARVIEW_GAP;
+				//scale.multLocal(J3DCore.FARVIEW_GAP);
+				/*scale.x*=J3DCore.FARVIEW_GAP;
 				scale.z*=J3DCore.FARVIEW_GAP;
-				scale.y*=J3DCore.FARVIEW_GAP;
+				scale.y*=J3DCore.FARVIEW_GAP;*/
 				quad.setLocalScale(scale);
 			} else
 			{

@@ -199,7 +199,11 @@ public class World extends Place {
 										
 									}
 								} else 
+								if (farView)
 								{
+									// for far view set climate always even if its not surface
+									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+									geoCube.climateId = conditions.belt.STATIC_ID;
 								}
 							}
 						}
@@ -215,7 +219,7 @@ public class World extends Place {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{
 					boolean thePoint = false;
-					if (w.isWaterPoint(worldX, worldY, worldZ))
+					if (w.isWaterPoint(worldX, worldY, worldZ, farView))
 					{
 						for (SurfaceHeightAndType s:tempGeosForSurface.values())
 						{
@@ -224,7 +228,7 @@ public class World extends Place {
 							int bottom = y - depth;
 							if (worldY>=bottom&&worldY<=y)
 							{
-								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s);
+								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s, farView);
 								if (currentMerged!=null && currentMerged.overwrite) {
 									collectCubes(c,false);
 									c = mergeCubes();
