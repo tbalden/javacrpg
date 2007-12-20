@@ -146,6 +146,7 @@ public class World extends Place {
 			worldX = shrinkToWorld(worldX);
 			worldZ = shrinkToWorld(worldZ);
 		}
+		int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
 		{
@@ -176,7 +177,7 @@ public class World extends Place {
 								tempGeosForSurface.put(geo,surf[surfCount]);
 							}
 							if (geoCube!=null) { 
-								if (worldY==surf[surfCount].surfaceY && surf[surfCount].canContain)
+								if (worldY/CONST_FARVIEW==surf[surfCount].surfaceY/CONST_FARVIEW && surf[surfCount].canContain)
 								{
 									// this can contain things upon it, do the climate and flora... 
 									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
