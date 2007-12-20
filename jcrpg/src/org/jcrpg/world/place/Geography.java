@@ -116,6 +116,7 @@ public class Geography extends Place implements Surface {
 		hmKindCube.put(K_CORNER_EAST, new Cube(null,GEO_CORNER_EAST,0,0,0,J3DCore.BOTTOM));
 
 		hmKindCube_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,GEO_ROCK_FARVIEW,0,0,0));
+		//hmKindCube.put(K_ROCK_BLOCK, new Cube(null,0,EMPTY,0,0,0));
 		/*hmKindCube_FARVIEW.put(K_STEEP_NORTH, new Cube(null,GEO_CORNER_NORTH,0,0,0,0));
 		hmKindCube_FARVIEW.put(K_STEEP_EAST, new Cube(null,GEO_CORNER_EAST,0,0,0,0));
 		hmKindCube_FARVIEW.put(K_STEEP_SOUTH, new Cube(null,GEO_CORNER_SOUTH,0,0,0,0));

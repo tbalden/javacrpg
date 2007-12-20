@@ -23,6 +23,7 @@ import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -92,7 +93,7 @@ public class Ocean extends Water {
 			SurfaceHeightAndType surface, boolean farView) {
 		if (x==503&&z==498) System.out.println("getWaterCube");
 		
-		if (y==worldGroundLevel && !noWaterInTheBed) 
+		if (y/(farView?J3DCore.FARVIEW_GAP:1)==worldGroundLevel/(farView?J3DCore.FARVIEW_GAP:1) && !noWaterInTheBed) 
 		{
 			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 		} else
@@ -186,7 +187,9 @@ public class Ocean extends Water {
 		int localZ = z-origoZ;
 		temp.set(localX, localZ, 0);
 		
-		if (worldGroundLevel-y <= depth && worldGroundLevel-y>=0) 
+		int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
+		
+		if ((worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW) <= depth && (worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW)>=0) 
 		{
 			{
 				int densModifier = calcDensModifier(x, z, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
