@@ -181,6 +181,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    			p.setProperty("FARVIEW_ENABLED", "false");
 	    		}
 	    	}
+	    	String renderDistanceFarview = p.getProperty("RENDER_DISTANCE_FARVIEW");
+	    	if (renderDistanceFarview!=null)
+	    	{
+	    		renderDistanceFarview = renderDistanceFarview.trim();
+	    		try {
+	    			RENDER_DISTANCE_FARVIEW = Integer.parseInt(renderDistanceFarview);
+	    			RENDER_DISTANCE_FARVIEW = (int)(RENDER_DISTANCE_FARVIEW/CUBE_EDGE_SIZE);
+	    			if (RENDER_DISTANCE_FARVIEW<20) RENDER_DISTANCE_FARVIEW = 20;
+	    		} catch (Exception pex)
+	    		{
+	    			p.setProperty("RENDER_DISTANCE_FARVIEW", "60");
+	    		}
+	    	}
 	    	
 	    	String renderDistance = p.getProperty("RENDER_DISTANCE");
 	    	if (renderDistance!=null)
@@ -1312,8 +1325,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
-		//int s = (x << 16) + (y << 8) + z;
-		//String coordKey = ""+s;
 		
 		if (n==null) return;
 		Object[] f = (Object[])directionAnglesAndTranslations.get(direction);
