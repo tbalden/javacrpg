@@ -390,8 +390,13 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				setLocalRotation(q);
 			}
 			if (vertexShader) {
-				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());				
-				fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1);
+				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
+				if (J3DCore.FARVIEW_ENABLED) {
+					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1); // TODO
+				} else
+				{
+					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1);
+				}
 			}
 			
 			
