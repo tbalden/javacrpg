@@ -2473,7 +2473,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		notFallable.add(StickingOut.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
@@ -2541,10 +2541,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
+				else 
+			{
+					System.out.println("Next Cube = "+nextCube.toString());
+					sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
+					if (sides!=null)
+					{
+						if (hasSideOfInstance(sides, notPassable)) return false;
+					}
+			}
+			
 			if (nextCube!=null && hasSideOfInstance(nextCube.getSide(BOTTOM), notPassable))
 			{
 				// we have next cube in walk dir, and it has bottom too
-				System.out.println("Next Cube = "+nextCube.toString());
+				
 				sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 				if (sides!=null)
 				{
