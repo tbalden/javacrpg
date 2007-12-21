@@ -1343,8 +1343,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		
 		//Node sideNode = new Node();
+		boolean needsFarviewScale = true;
 	
 		for (int i=0; i<n.length; i++) {
+			needsFarviewScale = true&&cube.farview;
+			if (n[i].model.type == Model.PARTLYBILLBOARDMODEL) {
+				needsFarviewScale = false;
+			}
 			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
 			Quaternion q = (Quaternion)f[0];
 			Quaternion qC = null;
@@ -1391,24 +1396,24 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						// NORTH-SOUTH steep...
 						if (n[i].model.noSpecialSteepRotation) 
 						{
-							n[i].setLocalScale(new Vector3f(1f,1.41421356f,1f).multLocal(cube.farview?FARVIEW_GAP:1));
+							n[i].setLocalScale(new Vector3f(1f,1.41421356f,1f).multLocal(needsFarviewScale?FARVIEW_GAP:1));
 						} else
 						{
-							n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(cube.farview?FARVIEW_GAP:1));							
+							n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(needsFarviewScale?FARVIEW_GAP:1));							
 						}
 					}
 					else
 					{
 						// EAST-WEST steep...
-						n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(cube.farview?scale*FARVIEW_GAP:1));
+						n[i].setLocalScale(new Vector3f(1.41421356f,1,1f).multLocal(needsFarviewScale?scale*FARVIEW_GAP:1));
 					}
 				} else
 				{
-					n[i].setLocalScale(cube.farview?scale*FARVIEW_GAP:1);
+					n[i].setLocalScale(needsFarviewScale?scale*FARVIEW_GAP:1);
 				}
 			} else
 			{				
-				n[i].setLocalScale(cube.farview?scale*FARVIEW_GAP:scale);
+				n[i].setLocalScale(needsFarviewScale?scale*FARVIEW_GAP:scale);
 			}
 			
 			n[i].setLocalRotation(qC);
