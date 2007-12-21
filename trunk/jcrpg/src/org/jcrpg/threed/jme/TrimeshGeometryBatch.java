@@ -146,7 +146,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
         
         if (J3DCore.FARVIEW_ENABLED && model!=null && model.type==Model.PARTLYBILLBOARDMODEL)
     	{
-    		startFog = 2*J3DCore.RENDER_DISTANCE_ORIG/3;
+    		startFog = (2*J3DCore.RENDER_DISTANCE_FARVIEW*2)/3;
     	} else
     	{
     		startFog = 2*J3DCore.VIEW_DISTANCE/3;
@@ -392,7 +392,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			if (vertexShader) {
 				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
 				if (J3DCore.FARVIEW_ENABLED) {
-					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1); // TODO
+					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.3f),0,0,0}, 1); // TODO
 				} else
 				{
 					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1);

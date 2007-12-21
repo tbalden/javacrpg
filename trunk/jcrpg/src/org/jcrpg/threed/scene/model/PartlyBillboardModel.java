@@ -74,7 +74,7 @@ public class PartlyBillboardModel extends SimpleModel {
 			removedParts.add(n);
 		}
 		this.id = id;
-		//this.farViewEnabled = true;
+		this.farViewEnabled = true;
 	}
 
 	/**

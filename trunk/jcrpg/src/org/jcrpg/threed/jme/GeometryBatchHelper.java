@@ -58,7 +58,7 @@ public class GeometryBatchHelper {
 		int viewMul = 1;
 		int yLevelMul = 1;
 		if (farView) {
-			viewMul = J3DCore.FARVIEW_GAP * 10;
+			viewMul = J3DCore.FARVIEW_GAP;
 			yLevelMul = 10;
 		}
     	String key = m.type+m.id+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
