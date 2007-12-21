@@ -152,7 +152,7 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				if (!l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
+				if (x%2==0 && !l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 				{
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
 					r.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag)-1, z);
@@ -161,6 +161,7 @@ public class DefaultGenProgram extends GenProgram {
 					r.flowDirections.setCubeFlowDirection(x, w.getSeaLevel(gMag)-1, z, J3DCore.NORTH, true);
 					r.flowDirections.setCubeFlowDirection(x, w.getSeaLevel(gMag)-1, z, J3DCore.WEST, true);
 				}
+				
 				if ((x+z)%2==0)
 				{
 					p.getBoundaries().addCube(gMag, x, w.getSeaLevel(gMag), z);
