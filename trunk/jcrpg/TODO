@@ -49,6 +49,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
 	[ ] Wildlife -> animal kingdom with a chain of predating, complex fauna interaction rethinking
 
+[ ] Knowledge base Modularity -> things can have knowledge attached to it, which modifies the possibilities of players to handle them:
+	plug knowledge about object/monsters/animals etc with the given
+	object/being! Thus you can collect bonus info about them random
+	scattered around the world, -- beat monsters more easy etc.
 
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[ ] make it better with big gaps (non 1)
