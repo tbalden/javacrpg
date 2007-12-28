@@ -18,23 +18,14 @@
 
 package org.jcrpg.world.generator;
 
-import org.jcrpg.world.WorldGenerator;
-import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.Water;
 
-public abstract class GenProgram {
-
-	public ClassFactory factory;
-	public WorldGenerator generator;
-	public WorldParams params;
-
-	public GenProgram(ClassFactory factory, WorldGenerator generator, WorldParams params)
-	{
-		this.factory = factory;
-		this.factory.program = this;
-		this.generator = generator;
-		this.params = params;
-	}
+public abstract class ClassFactory {
 	
-	public abstract void runProgram(World world) throws Exception;
+	public GenProgram program;
+	
+	public abstract Geography createGeography(Class<? extends Geography> type) throws Exception;
+	public abstract Water createWater(Class<? extends Water> type) throws Exception;
 	
 }
