@@ -30,6 +30,7 @@ import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.generator.WorldParams;
+import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.World;
@@ -78,8 +79,9 @@ public class Jcrpg {
 		int[] geoLikenessValues = new int[] {4,4,2};
 		String[] additionalGeos = new String[] {"River","Cave"};
 		int[] additionalGeoLikenessValues = new int[] {4,4,2};
-		
-		World w2 = new WorldGenerator().generateWorld(new WorldParams(40,10,2,10,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40), new DefaultGenProgram());
+		WorldParams params = new WorldParams(40,10,2,10,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
+		WorldGenerator gen = new WorldGenerator();
+		World w2 = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
 		w2.engine = e;
 
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();

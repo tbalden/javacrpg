@@ -26,7 +26,6 @@ import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.generator.GenProgram;
-import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
@@ -34,6 +33,8 @@ import org.jcrpg.world.place.geography.Plain;
 
 public class WorldGenerator {
 
+	public World world;
+	
 	public HashMap<String, String> climateBeltMap = new HashMap<String, String>();
 	public HashMap<String, String> geographyMap = new HashMap<String, String>();
 
@@ -50,15 +51,15 @@ public class WorldGenerator {
 		
 	}
 	
-	public World generateWorld(WorldParams params, GenProgram program) throws Exception
+	public World generateWorld(GenProgram program) throws Exception
 	{
-		World w = new World("world", null,params.magnification,params.sizeX,params.sizeY,params.sizeZ);
+		World w = new World("world", null,program.params.magnification,program.params.sizeX,program.params.sizeY,program.params.sizeZ);
+		w.lossFactor = program.params.geoNormalSize;
 		
-		w.lossFactor = params.geoNormalSize;
+		w.GEOGRAPHY_RANDOM_SEED = program.params.randomSeed;
+		world = w;
 		
-		w.GEOGRAPHY_RANDOM_SEED = params.randomSeed;
-		
-		program.runProgram(this, w, params);
+		program.runProgram(w);
 		
 		w.worldMap = new WorldMap(w);
 
