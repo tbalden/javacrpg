@@ -163,7 +163,7 @@ public class Ocean extends Water {
 	}
 	
 	@Override
-	public boolean isAlgrithmicallyInside(int worldX, int worldY, int worldZ) {
+	public boolean isAlgorithmicallyInside(int worldX, int worldY, int worldZ) {
 		return isWaterPointSpecial(worldX, worldY, worldZ, false,false);
 	}
 

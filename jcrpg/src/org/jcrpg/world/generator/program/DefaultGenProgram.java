@@ -143,13 +143,16 @@ public class DefaultGenProgram extends GenProgram {
 		}
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
-		Plain p = new Plain("BIGPLAIN",world,null,world.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, false);
+		
+		Geography p = instantiateGeography("Plain", world);
 		world.addGeography(p);
-		Forest f = new Forest("BIGFOREST",world,null,world.getSeaLevel(1),gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, false);
+		Geography f = instantiateGeography("Forest", world);
 		world.addGeography(f);
-		Cave c = new Cave("BIGCAVE",world,null,world.getSeaLevel(1)+1,world.getSeaLevel(1)+3,gMag, gWX, 2, gWZ, 0, world.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
+		Geography c = instantiateGeography("Cave", world);
 		world.addGeography(c);
-		MountainNew m = new MountainNew("MOUNTAINS",world,null,world.getSeaLevel(1),world.getSeaLevel(1)+5*(int)(Math.sqrt(gMag)*params.heightRatio)/10 ,gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, false);
+		Geography m = instantiateGeography("Mountain", world);
+		// TODO add programmable ruleset for big size tiling of Geography / Subgeography
+		// TODO add them into a big set for generation -> instantiate them based on the worlparam list
 		world.addGeography(m);
 		River r = new River("RIVERS",world,null,world.getSeaLevel(1), gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
 		world.waters.put(r.id, r); //r.noWaterInTheBed = true;
@@ -158,7 +161,7 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				if (x%2==0 && !l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
+				if (x%2==0 && !l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 				{
 					r.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 					r.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
@@ -174,7 +177,7 @@ public class DefaultGenProgram extends GenProgram {
 					p.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
 				} else
 				{
-					if (!l.isAlgrithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
+					if (!l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 					{
 						m.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						m.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
@@ -206,6 +209,22 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			Ocean l = (Ocean)factory.createWater(Ocean.class);
 			r = l;
+		}
+		if (geoClass.equals("Plain"))
+		{
+			r = factory.createGeography(Plain.class);
+		}
+		if (geoClass.equals("Forest"))
+		{
+			r = factory.createGeography(Forest.class);
+		}
+		if (geoClass.equals("Cave"))
+		{
+			r = factory.createGeography(Cave.class);
+		}
+		if (geoClass.equals("Mountain"))
+		{
+			r = factory.createGeography(MountainNew.class);
 		}
 		return r;
 	}

@@ -599,7 +599,7 @@ public class Geography extends Place implements Surface {
 		return K_EMPTY;
 	}
 	
-	public boolean isAlgrithmicallyInside(int worldX, int worldY, int worldZ)
+	public boolean isAlgorithmicallyInside(int worldX, int worldY, int worldZ)
 	{
 		return true;
 	}
