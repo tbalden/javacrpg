@@ -94,7 +94,7 @@ public class DefaultGenProgram extends GenProgram {
 				System.out.println("CLIMATE: "+climateName);
 				String className = generator.climateBeltMap.get(climateName);
 				Class<?> c = Class.forName(className);
-				Constructor<ClimateBelt> constructor = c.getConstructors()[0];
+				Constructor<ClimateBelt> constructor = (Constructor<ClimateBelt>)c.getConstructors()[0];
 				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
 				int climateSizeCorrected = climateSize*params.climateSizeMuls[count];
 				if (diffAvailable>0 && ((i+j*params.climates.length)%mod == 0))
