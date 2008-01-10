@@ -41,6 +41,7 @@ public class FloraGenerator {
 	
 	public HashMap<String, ArrayList<FloraListElement>[]> cache = new HashMap<String, ArrayList<FloraListElement>[]>();
 	
+	@SuppressWarnings("unchecked")
 	public FloraCube generate(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, boolean onSteep)
 	{
 		if (conditions==null) return new FloraCube();
