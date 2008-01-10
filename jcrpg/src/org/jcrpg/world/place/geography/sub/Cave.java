@@ -82,6 +82,7 @@ public class Cave extends Geography implements Surface {
 
 	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levels, boolean fillBoundaries ) throws Exception{
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
+		ruleSet.presentWhereBaseExists = false;
 		this.density = density;
 		this.entranceSide = entranceSide;
 		this.levels = levels;

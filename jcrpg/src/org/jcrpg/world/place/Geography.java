@@ -30,10 +30,13 @@ import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.generator.GeneratedPartRuleSet;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 public class Geography extends Place implements Surface {
+	
+	public GeneratedPartRuleSet ruleSet = new GeneratedPartRuleSet(this.getClass().getSimpleName());
 	
 	public int worldGroundLevel, worldHeight, blockSize, worldRealHeight;
 
@@ -602,6 +605,10 @@ public class Geography extends Place implements Surface {
 	public boolean isAlgorithmicallyInside(int worldX, int worldY, int worldZ)
 	{
 		return true;
+	}
+	
+	public GeneratedPartRuleSet getRuleSet() {
+		return ruleSet;
 	}
 	
 }
