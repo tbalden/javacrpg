@@ -19,6 +19,7 @@
 package org.jcrpg.world.generator.program;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.WorldGenerator;
@@ -143,17 +144,25 @@ public class DefaultGenProgram extends GenProgram {
 		}
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
+		HashMap<String , Geography> mainGeos = new HashMap<String, Geography>();
+		for (int i=0; i<params.geos.length; i++)
+		{
+			String geo = params.geos[i];
+			Geography g = instantiateGeography(geo, world);
+			mainGeos.put(g.ruleSet.geoTypeName, g);
+			world.addGeography(g);
+		}
 		
-		Geography p = instantiateGeography("Plain", world);
+		/*Geography p = instantiateGeography("Plain", world);
 		world.addGeography(p);
 		Geography f = instantiateGeography("Forest", world);
 		world.addGeography(f);
 		Geography c = instantiateGeography("Cave", world);
 		world.addGeography(c);
-		Geography m = instantiateGeography("Mountain", world);
+		Geography m = instantiateGeography("Mountain", world);*/
 		// TODO add programmable ruleset for big size tiling of Geography / Subgeography
 		// TODO add them into a big set for generation -> instantiate them based on the worlparam list
-		world.addGeography(m);
+		//world.addGeography(m);
 		River r = new River("RIVERS",world,null,world.getSeaLevel(1), gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
 		world.waters.put(r.id, r); //r.noWaterInTheBed = true;
 		
@@ -161,6 +170,20 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			for (int z=0; z<gWZ;z++)
 			{
+				int gCount = 0;
+				boolean basePresent =  l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag);
+				for (Geography g:mainGeos.values())
+				{
+					gCount++;					
+					if (!g.ruleSet.presentWhereBaseExists() && basePresent)
+					{
+						continue;
+					}
+					g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
+					g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
+					break;
+				}
+				/*
 				if (x%2==0 && !l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
 				{
 					r.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
@@ -191,7 +214,7 @@ public class DefaultGenProgram extends GenProgram {
 							f.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
 						}
 					}
-				}					
+				}				*/	
 			}
 		}
 

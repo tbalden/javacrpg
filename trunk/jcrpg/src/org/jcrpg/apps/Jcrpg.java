@@ -75,7 +75,7 @@ public class Jcrpg {
 		
 		String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
 		int[] climateSizeMuls = new int[] {1,4,2,2};
-		String[] geos = new String[] {"Plain","Forest","MountainNew"};
+		String[] geos = new String[] {"Plain","Forest","Mountain"};
 		int[] geoLikenessValues = new int[] {4,4,2};
 		String[] additionalGeos = new String[] {"River","Cave"};
 		int[] additionalGeoLikenessValues = new int[] {4,4,2};
