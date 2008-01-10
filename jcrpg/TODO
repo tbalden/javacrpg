@@ -27,7 +27,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
 
 [ ] UI worldmap	
-	[ ] geographies
+	[ ] geographies -> !!! mountains/forests/plains different gray
 	[ ] cities... 
 [ ] UI transparent text box in the middle bottom, small contrast fonts, transparent, like FPSnode (take a look at that one!)
 
