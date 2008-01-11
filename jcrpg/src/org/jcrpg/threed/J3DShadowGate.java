@@ -29,8 +29,8 @@ public class J3DShadowGate extends DefaultShadowGate {
 		//if (true==true)return true;
 		//int l = batch.getParentGeom().getName().length();
 		//if (batch.getParentGeom().getName().charAt(l-1)=='3') return false;
-		float dS =batch.getParentGeom().getWorldTranslation().distanceSquared(core.getCamera().getLocation());
-		if (dS>J3DCore.RENDER_SHADOW_DISTANCE_SQR) return false;
+		//float dS =batch.getParentGeom().getWorldTranslation().distanceSquared(core.getCamera().getLocation());
+		//if (dS>J3DCore.RENDER_SHADOW_DISTANCE_SQR) return false;
 		return true;
 	}
 

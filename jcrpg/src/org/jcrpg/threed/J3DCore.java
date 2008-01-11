@@ -2989,10 +2989,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
 			System.out.println("SHADOWS!");
-			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
+			sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
-	    	sPass.add(extRootNode);
-	    	sPass.add(intRootNode);
+			sPass.add(rootNode);
+			//sPass.add(extRootNode);
+	    	//sPass.add(intRootNode);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
 	    	J3DShadowGate dsg = new J3DShadowGate();
@@ -3127,6 +3128,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         		pManager.renderPasses(display.getRenderer());
         } catch (NullPointerException npe)
         {
+        	npe.printStackTrace();
         }
  		super.simpleRender();
 	}
