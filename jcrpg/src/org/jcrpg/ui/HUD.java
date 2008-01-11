@@ -107,6 +107,15 @@ public class HUD {
         mapQuad_pos.setRenderState(hudAS);
         hudNode.attachChild(mapQuad_pos);
         
+        Quad mapQuad_geo = new Quad("hud_geo", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
+        mapQuad_geo.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+        mapQuad_geo.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
+        mapQuad_geo.setLightCombineMode(LightState.OFF);
+        mapQuad_geo.setRenderState(textures[2]);
+        mapQuad_geo.updateRenderState();
+        mapQuad_geo.setRenderState(hudAS);
+        hudNode.attachChild(mapQuad_geo);
+
         // meter area
         
         meter = new DirectionTimeMeter(this);
