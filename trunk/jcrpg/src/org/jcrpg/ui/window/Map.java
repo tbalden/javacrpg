@@ -77,7 +77,7 @@ public class Map extends Window {
         }
         
         {
-        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
+        	Quad hudQuad = new Quad("hud_pos", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
@@ -86,6 +86,15 @@ public class Map extends Window {
 	        hudQuad.setRenderState(hudAS);
         }
         
+        {
+        	Quad hudQuad = new Quad("hud_geo", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
+	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+			
+	        hudQuad.setRenderState(textureStates[2]);
+	        windowNode.attachChild(hudQuad);
+	        hudQuad.setRenderState(hudAS);
+        }
         
 	}
 

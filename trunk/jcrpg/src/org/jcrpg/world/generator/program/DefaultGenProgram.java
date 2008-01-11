@@ -188,7 +188,7 @@ public class DefaultGenProgram extends GenProgram {
 					limit+=geoToLikeness.get(g.ruleSet.geoTypeName);
 					if (limit>randomValue)
 					{
-						System.out.println(randomValue+"<"+limit+" "+g.ruleSet.geoTypeName);
+						//System.out.println(randomValue+"<"+limit+" "+g.ruleSet.geoTypeName);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
 						break;

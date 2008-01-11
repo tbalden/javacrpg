@@ -38,6 +38,11 @@ public class Geography extends Place implements Surface {
 	
 	public GeneratedPartRuleSet ruleSet = new GeneratedPartRuleSet(this.getClass().getSimpleName());
 	
+	/**
+	 * Color for the maps.
+	 */
+	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
+	
 	public int worldGroundLevel, worldHeight, blockSize, worldRealHeight;
 
 	public static final String TYPE_GEO = "GEO";

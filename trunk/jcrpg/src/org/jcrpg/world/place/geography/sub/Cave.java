@@ -25,14 +25,12 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.util.HashUtil;
-import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Surface;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 
 public class Cave extends Geography implements Surface {
 

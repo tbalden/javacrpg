@@ -19,9 +19,11 @@
 package org.jcrpg.ui.map;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.water.Ocean;
@@ -42,12 +44,13 @@ public class WorldMap {
 	public Image oceanImage;
 	public Image positionImage; 
 	public Image climateImage;
+	public Image geoImage;
 	public byte[] positionImageSet;
 	
 	public int[][] map;
 	
-	public Texture oceanTex, posTex, climateTex;
-	public TextureState baseTexState, posTexState, climateTexState;
+	public Texture oceanTex, posTex, climateTex, geoTex;
+	public TextureState baseTexState, posTexState, climateTexState, geoTexState;
 
 	public World world;
 	
@@ -67,7 +70,9 @@ public class WorldMap {
 		map = new int[w.sizeZ][w.sizeX];
 		byte[] mapImage = new byte[w.sizeZ*w.sizeX*4];
 		byte[] climateImage = new byte[w.sizeZ*w.sizeX*4];
+		byte[] geoImageSet = new byte[w.sizeZ*w.sizeX*4];
 		positionImageSet = new byte[w.sizeZ*w.sizeX*4];
+		Collection<Geography> geos = world.geographies.values();
 		for (int z = 0; z<w.sizeZ;z++)
 		{
 			for (int x=0; x<w.sizeX; x++)
@@ -86,6 +91,7 @@ public class WorldMap {
 							System.out.print("W");
 							mapImage[((z*w.sizeX)+x)*4+2] = (byte)100;
 							mapImage[((z*w.sizeX)+x)*4+1] = (byte)0;
+							geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)0;
 						} else {
 							System.out.print(".");
 							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification, 0, z*w.magnification, false).getBelt();
@@ -95,11 +101,25 @@ public class WorldMap {
 							mapImage[((z*w.sizeX)+x)*4+0] = belt.colorBytes[0];
 							mapImage[((z*w.sizeX)+x)*4+1] = belt.colorBytes[1];
 							mapImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
+							int wx = x*w.magnification;
+							int wz = z*w.magnification;
+							for (Geography g:geos)
+							{
+								if (g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
+								{
+									geoImageSet[((z*w.sizeX)+x)*4+0] = g.colorBytes[0];
+									geoImageSet[((z*w.sizeX)+x)*4+1] = g.colorBytes[1];
+									geoImageSet[((z*w.sizeX)+x)*4+2] = g.colorBytes[2];
+									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)150;
+									break;
+								}
+							}
 						}
 					}
 					
 				}
 				mapImage[((z*w.sizeX)+x)*4+3] = (byte)150;
+				
 				
 			}
 			System.out.println("");
@@ -117,6 +137,14 @@ public class WorldMap {
 		positionImage.setWidth(w.sizeX);
 		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(buffer2);
+		
+		geoImage = new Image();
+		geoImage.setType(Image.RGBA8888);
+		geoImage.setHeight(w.sizeZ);
+		geoImage.setWidth(w.sizeX);
+		ByteBuffer buffer3 = ByteBuffer.wrap(geoImageSet);
+		geoImage.setData(buffer3);
+		
 	}
 	
 	int lastCx = -1 , lastCy = -1 , lastCz = -1;
@@ -174,11 +202,15 @@ public class WorldMap {
 		oceanTex.setImage(oceanImage);
 		posTex = new Texture();
 		posTex.setImage(positionImage);
+		geoTex = new Texture();
+		geoTex.setImage(geoImage);
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		baseTexState.setTexture(oceanTex);
 		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		posTexState.setTexture(posTex);
-		return new TextureState[]{baseTexState,posTexState};
+		geoTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+		geoTexState.setTexture(geoTex);
+		return new TextureState[]{baseTexState,posTexState,geoTexState};
 	}
 
 	
