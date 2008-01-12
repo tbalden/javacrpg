@@ -27,6 +27,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.water.Ocean;
+import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 import com.jme.image.Image;
@@ -80,11 +81,13 @@ public class WorldMap {
 				map[z][x] = NOTHING;
 				mapImage[((z*w.sizeX)+x)*4+1] = (byte)150;
 				mapImage[((z*w.sizeX)+x)*4+0] = (byte)50;
+				boolean oceanWater = false;
+				boolean riverWater = false;
 				for (Water water :w.waters.values())
 				{
-					if (water instanceof Ocean)
+					if (water instanceof Ocean && !riverWater)
 					{
-						boolean oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false, false);
+						oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false, false);
 						if (oceanWater)
 						{
 							map[z][x] = (map[z][x]^WATER);
@@ -114,6 +117,23 @@ public class WorldMap {
 									break;
 								}
 							}
+						}
+					} else
+					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
+					{
+						
+						int wx = x*w.magnification;
+						int wz = z*w.magnification;
+						riverWater = ((River)water).isWaterBlock(wx, world.worldGroundLevel, wz);
+						if (riverWater) {
+							System.out.print("!");
+							mapImage[((z*w.sizeX)+x)*4+2] = (byte)200;
+							mapImage[((z*w.sizeX)+x)*4+1] = (byte)30;
+							mapImage[((z*w.sizeX)+x)*4+0] = (byte)30;
+							climateImage[((z*w.sizeX)+x)*4+0] = 0;
+							climateImage[((z*w.sizeX)+x)*4+1] = 0;
+							climateImage[((z*w.sizeX)+x)*4+2] = 0;
+							geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)0;
 						}
 					}
 					

@@ -26,16 +26,15 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.FlowGeography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.WorldSizeBitBoundaries;
 import org.jcrpg.world.place.WorldSizeFlowDirections;
 
-public class River extends Water {
+public class River extends Water implements FlowGeography {
 
 	public static final String TYPE_RIVER = "RIVER";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER");
@@ -838,7 +837,7 @@ public class River extends Water {
 	@Override
 	public boolean isWaterBlock(int worldX, int worldY,int worldZ)
 	{
-		return boundaries.isInside((worldX/blockSize), (worldY/blockSize), (worldZ/blockSize));
+		return boundaries.isInside((worldX), (worldY), (worldZ));
 	}
 	
 	/**
@@ -897,6 +896,12 @@ public class River extends Water {
 	@Override
 	public int getDepth(int x, int y, int z) {
 		return depth;
+	}
+
+
+
+	public WorldSizeFlowDirections getWorldSizeFlowDirections() {
+		return flowDirections;
 	}
 	
 	
