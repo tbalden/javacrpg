@@ -1456,7 +1456,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Vector3f lastLoc = new Vector3f(lastRenderX*CUBE_EDGE_SIZE,lastRenderY*CUBE_EDGE_SIZE,lastRenderZ*CUBE_EDGE_SIZE);
 		Vector3f currLoc = new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE,relativeZ*CUBE_EDGE_SIZE);
 		int mulWalkDist = 1;
-		//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more ofter render is added by this multiplier
+		//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 		if (lastLoc.distance(currLoc)*mulWalkDist > (RENDER_DISTANCE*CUBE_EDGE_SIZE)-VIEW_DISTANCE)
 		{
 			// doing the render, getting the unneeded renderedCubes too.
@@ -1474,7 +1474,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	    	    		
 	    				if (GEOMETRY_BATCH && n.model.batchEnabled && 
 	    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-   	    						//(n.model.type == Model.SIMPLEMODEL
 	    								|| GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 	    					 )
 	    				{
@@ -2982,20 +2981,33 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			internalLightState.attach(dr);
 		}
         
+		try 
+		{
+			uiBase = new UIBase(this);
+			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
+			rootNode.attachChild(uiBase.hud.hudNode); // TODO shadows not working because of this node
+			//uiBase.hud.hudNode.setLightCombineMode(LightState.OFF);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			System.exit(-1);
+			
+		}
+
 		RenderPass rootPass = new RenderPass();
-		//rootPass.add(rootNode);
 		pManager.add(rootPass);
 
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
 			System.out.println("SHADOWS!");
-			sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
+			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
-			sPass.add(rootNode);
 			//sPass.add(extRootNode);
-	    	//sPass.add(intRootNode);
+			sPass.add(extRootNode);
+	    	sPass.add(intRootNode);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
+	    	//sPass.rTexture = false;
 	    	J3DShadowGate dsg = new J3DShadowGate();
 	    	dsg.core = this;
 	    	sPass.setShadowGate(dsg);
@@ -3069,17 +3081,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		// initial hud part for world map
 		
-		try 
-		{
-			uiBase = new UIBase(this);
-			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
-			rootNode.attachChild(uiBase.hud.hudNode);
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-			System.exit(-1);
-			
-		}
         
         updateDisplay(null);
 		
