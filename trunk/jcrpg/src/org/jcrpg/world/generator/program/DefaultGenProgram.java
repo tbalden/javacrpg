@@ -19,6 +19,7 @@
 package org.jcrpg.world.generator.program;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.generator.ClassFactory;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.WorldParams;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
@@ -138,12 +140,12 @@ public class DefaultGenProgram extends GenProgram {
 		int gWY = (wY*wMag)/gMag;
 		int gWZ = (wZ*wMag)/gMag;
 		
-		Geography l = instantiateGeography(params.foundationGeo, world);
-		if (l instanceof Water) {
-			world.waters.put(l.id, (Water)l);
+		Geography foundation = instantiateGeography(params.foundationGeo, world);
+		if (foundation instanceof Water) {
+			world.waters.put(foundation.id, (Water)foundation);
 		} else
 		{
-			world.geographies.put(l.id, l);
+			world.geographies.put(foundation.id, foundation);
 		}
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
@@ -164,7 +166,7 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			for (int z=0; z<gWZ;z++)
 			{
-				boolean basePresent =  l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag);
+				boolean basePresent =  foundation.isAlgorithmicallyInside(x*gMag, foundation.worldGroundLevel, z*gMag);
 				int sumOfLikenesses = 0;
 				geoToLikeness.clear();
 				for (Geography g:mainGeos.values())
@@ -194,40 +196,24 @@ public class DefaultGenProgram extends GenProgram {
 						break;
 					}
 				}
-				/*
-				if (x%2==0 && !l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
-				{
-					r.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
-					r.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
-					r.flowDirections.setCubeFlowDirection(x, world.getSeaLevel(gMag), z, J3DCore.NORTH, true);
-					r.flowDirections.setCubeFlowDirection(x, world.getSeaLevel(gMag), z, J3DCore.WEST, true);
-					r.flowDirections.setCubeFlowDirection(x, world.getSeaLevel(gMag)-1, z, J3DCore.NORTH, true);
-					r.flowDirections.setCubeFlowDirection(x, world.getSeaLevel(gMag)-1, z, J3DCore.WEST, true);
-				}
-				
-				if ((x+z)%2==0)
-				{
-					p.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
-					p.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
-				} else
-				{
-					if (!l.isAlgorithmicallyInside(x*gMag, l.worldGroundLevel, z*gMag)) 
-					{
-						m.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
-						m.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
-						c.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
+//						c.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						
-					} else
-					{
-						//if (!m.getBoundaries().isInside(x*gMag, m.worldGroundLevel, z*gMag))
-						{
-							f.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
-							f.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
-						}
-					}
-				}				*/	
 			}
 		}
+		ArrayList<Geography> starters = new ArrayList<Geography>();
+		ArrayList<Geography> blockers = new ArrayList<Geography>();
+		ArrayList<Geography> enders = new ArrayList<Geography>();
+		for (Geography g:mainGeos.values())
+		{
+			// TODO put into interface a boolean
+			if (g instanceof MountainNew)
+			{
+				starters.add(g);
+			}
+		}
+		enders.add(foundation);
+		new GenAlgoFlow(r,starters,enders,blockers,10).runGeneration(this);
+		
 
 		//int i =0;
 		House h = null; 
