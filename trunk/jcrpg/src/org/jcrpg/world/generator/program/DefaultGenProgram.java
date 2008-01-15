@@ -33,6 +33,7 @@ import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.generator.ClassFactory;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.WorldParams;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
@@ -200,6 +201,8 @@ public class DefaultGenProgram extends GenProgram {
 						
 			}
 		}
+		
+		// TODO additional geos' geo rule must contain the algorithm - e.g. flow (river) or add (cave)
 		ArrayList<Geography> starters = new ArrayList<Geography>();
 		ArrayList<Geography> blockers = new ArrayList<Geography>();
 		ArrayList<Geography> enders = new ArrayList<Geography>();
@@ -212,8 +215,10 @@ public class DefaultGenProgram extends GenProgram {
 			}
 		}
 		enders.add(foundation);
+		// flow algo
 		new GenAlgoFlow(r,starters,enders,blockers,10).runGeneration(this);
-		
+		// add algo
+		new GenAlgoAdd(instantiateGeography("Cave", world),starters,10,new int [] {0}).runGeneration(this);
 
 		//int i =0;
 		House h = null; 

@@ -210,6 +210,7 @@ public class GenAlgoFlow extends GenAlgoBase {
 					if (geo instanceof FlowGeography)
 					{	
 						FlowGeography flowGeo = (FlowGeography)geo;
+						// TODO direction dependent set!
 						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag), cZ, J3DCore.NORTH, true);
 						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag), cZ, J3DCore.WEST, true);
 						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag)-1, cZ, J3DCore.NORTH, true);

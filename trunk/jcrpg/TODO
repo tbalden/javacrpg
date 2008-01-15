@@ -12,19 +12,25 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ] World generator
 	parameterized cool world generation!
 	
-	[ ] Geography GenerationProperty -> what to put on and what not, where to begin where not. Use implementation independent type references for FLOW_BEGIN, FLOW_END etc...
-	
-	[ ] rivers depending on oceans! ;-)
+	[X] Geography GenerationProperty -> what to put on and what not, where to begin where not. Use implementation independent type references for FLOW_BEGIN, FLOW_END etc...
+		[ ] sophisticate
+		
+	[X] rivers depending on oceans! ;-)
 		
 		[ ] ! River: if no river on two sides endside should be SIDE_NONE!!
+			[ ] River end is too rocky in the sea?? check outside water (like geo getoutsideheightpoint, getOutsideWaterPoint)
 		
-	[ ] mountain bigger than blocks, trickier mountain algorithm.
+	[ ] mountain bigger than blocks, trickier mountain algorithm. ?
+	[ ] valley?
 	
 	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
 	
 
+
+[ ] light of the skysphere goes wrong with walking one direction a lot! lightnode or sg?
+
 [ ] moving N-S should be limited on map edge!  
-[ ] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
+[?] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
 
 [ ] UI worldmap	
 	[ ] geographies -> !!! mountains/forests/plains different gray
