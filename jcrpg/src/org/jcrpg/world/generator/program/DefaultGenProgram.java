@@ -143,14 +143,10 @@ public class DefaultGenProgram extends GenProgram {
 		int gWZ = (wZ*wMag)/gMag;
 		
 		Geography foundation = instantiateGeography(params.foundationGeo, world);
-		if (foundation instanceof Water) {
-			world.waters.put(foundation.id, (Water)foundation);
-		} else
-		{
-			world.geographies.put(foundation.id, foundation);
-		}
+		world.addGeography(foundation);
 		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
+		// collection normal geos
 		TreeMap<String , Geography> mainGeos = new TreeMap<String, Geography>();
 		for (int i=0; i<params.geos.length; i++)
 		{
@@ -160,6 +156,8 @@ public class DefaultGenProgram extends GenProgram {
 			mainGeos.put(g.ruleSet.geoTypeName, g);
 			world.addGeography(g);
 		}
+		
+		// collecting additional geos
 		TreeMap<String , Geography> additionalGeos = new TreeMap<String, Geography>();
 		for (int i=0; i<params.additionalGeos.length; i++)
 		{
@@ -167,18 +165,10 @@ public class DefaultGenProgram extends GenProgram {
 			Geography g = instantiateGeography(geo, world);
 			if (GeneratedPartRuleSet.GEN_TYPE_RANDOM.equals(g.ruleSet.getGeneratorType())) continue;
 			additionalGeos.put(g.ruleSet.geoTypeName, g);
-			if (g instanceof Water)
-			{
-				world.waters.put(g.id, (Water)g);
-			} else
-			{
-				world.addGeography(g);
-			}
+			world.addGeography(g);
 		}
 		
-		River r = new River("RIVERS",world,null,world.getSeaLevel(1), gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
-		world.waters.put(r.id, r); //r.noWaterInTheBed = true;
-		
+		// normal "random" generation
 		HashMap<String, Integer> geoToLikeness = new HashMap<String, Integer>(); 
 		for (int x=0; x<gWX; x++)
 		{
@@ -214,42 +204,26 @@ public class DefaultGenProgram extends GenProgram {
 						break;
 					}
 				}
-//						c.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						
 			}
 		}
 		
+		
+		// Running programs for additional geos
 		for (Geography geo: additionalGeos.values())
 		{
+			System.out.println("ADDITIONAL GEO:"+geo.ruleSet.geoTypeName+" "+geo.ruleSet.genType);
 			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoFlow.GEN_TYPE_NAME))
 			{
 				// flow
-				// TODO call new constructors and run...
+				new GenAlgoFlow(world,geo.ruleSet.genParams,geo).runGeneration(this);
 			} else
 			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoAdd.GEN_TYPE_NAME))
 			{
 				// add
-				// TODO call new constructors and run...
+				new GenAlgoAdd(world,geo.ruleSet.genParams,geo).runGeneration(this);
 			}
 		}
-		
-		// TODO additional geos' geo rule must contain the algorithm - e.g. flow (river) or add (cave)
-		ArrayList<Geography> starters = new ArrayList<Geography>();
-		ArrayList<Geography> blockers = new ArrayList<Geography>();
-		ArrayList<Geography> enders = new ArrayList<Geography>();
-		for (Geography g:mainGeos.values())
-		{
-			// TODO put into interface a boolean
-			if (g instanceof MountainNew)
-			{
-				starters.add(g);
-			}
-		}
-		enders.add(foundation);
-		// flow algo
-		new GenAlgoFlow(r,starters,enders,blockers,10).runGeneration(this);
-		// add algo
-		new GenAlgoAdd(instantiateGeography("Cave", world),starters,10,new int [] {0}).runGeneration(this);
 
 		//int i =0;
 		House h = null; 
@@ -315,6 +289,10 @@ public class DefaultGenProgram extends GenProgram {
 		if (geoClass.equals("Mountain"))
 		{
 			r = factory.createGeography(MountainNew.class);
+		}
+		if (geoClass.equals("River"))
+		{
+			r = factory.createWater(River.class);
 		}
 		return r;
 	}

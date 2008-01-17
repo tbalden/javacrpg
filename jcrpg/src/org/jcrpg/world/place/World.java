@@ -19,6 +19,7 @@
 package org.jcrpg.world.place;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
@@ -371,18 +372,19 @@ public class World extends Place {
 	
 	public void addGeography(Geography g)
 	{
-		geographies.put(g.id, g);
-		/*String[] keys = g.generatePositionCacheKeys(lossFactor);
-		for (String key : keys)
+		if (g instanceof Water)
 		{
-			ArrayList<Geography> geos = geographyCache.get(key);
-			if (geos==null)
-			{
-				geos = new ArrayList<Geography>();
-				geographyCache.put(key, geos);
-			}
-			geos.add(g);
-		}*/
+			waters.put(g.id, (Water)g);
+		} else
+			geographies.put(g.id, g);
+	}
+	
+	public Collection<Geography> getAllGeographies()
+	{
+		ArrayList<Geography> g = new ArrayList<Geography>();
+		g.addAll(geographies.values());
+		g.addAll(waters.values());
+		return g;
 	}
 
 }

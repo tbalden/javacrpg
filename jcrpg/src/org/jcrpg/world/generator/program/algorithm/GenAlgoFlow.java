@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.generator.program.algorithm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jcrpg.threed.J3DCore;
@@ -60,9 +61,44 @@ public class GenAlgoFlow extends GenAlgoBase {
 	 */
 	public int startLikeness = 50;
 	
-	public GenAlgoFlow(GenAlgoFlowParams params)
+	public GenAlgoFlow(World w, Object[] paramsArray, Geography flow)
 	{
-		// TODO instanciated geos use
+		
+		GenAlgoFlowParams params = (GenAlgoFlowParams) paramsArray[0];
+		
+		this.flow = flow;
+		starters = new ArrayList<Geography>();
+		blockers = new ArrayList<Geography>();
+		enders = new ArrayList<Geography>();
+		
+		Collection<Geography> pool = w.getAllGeographies();
+
+		for (Geography g:pool)
+		{
+			String geoTypeName = g.ruleSet.geoTypeName;
+			for (String s:params.starters)
+			{
+				if (s.equals(geoTypeName))
+				{
+					starters.add(g);
+				}
+			}
+			for (String s:params.blockers)
+			{
+				if (s.equals(geoTypeName))
+				{
+					blockers.add(g);
+				}
+			}
+			for (String s:params.enders)
+			{
+				if (s.equals(geoTypeName))
+				{
+					enders.add(g);
+				}
+			}
+		}
+		startLikeness = params.startLikeness;
 	}
 
 	public GenAlgoFlow(Geography flow, Collection<Geography> starters, Collection<Geography> enders, Collection<Geography> blockers, int startLikeness)

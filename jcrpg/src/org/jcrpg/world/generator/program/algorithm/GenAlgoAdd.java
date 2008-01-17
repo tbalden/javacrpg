@@ -18,12 +18,14 @@
 
 package org.jcrpg.world.generator.program.algorithm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.World;
 
 /**
  * Algorithm to generate additional things to certain places.
@@ -32,7 +34,7 @@ import org.jcrpg.world.place.Geography;
  */
 public class GenAlgoAdd extends GenAlgoBase {
 
-	public static String GEN_TYPE_NAME = "Flow"; 
+	public static String GEN_TYPE_NAME = "Add"; 
 
 	/**
 	 * The additional geography to add into.
@@ -50,9 +52,27 @@ public class GenAlgoAdd extends GenAlgoBase {
 	
 	public int[] worldHeightsToAddTo = new int[] {};
 	
-	public GenAlgoAdd(GenAlgoAddParams params)
+	public GenAlgoAdd(World w, Object[] paramsArray, Geography added)
 	{
-		// TODO instanciated geos use
+		GenAlgoAddParams params = (GenAlgoAddParams) paramsArray[0];
+		this.added = added;
+		baseGeos = new ArrayList<Geography>();
+		
+		Collection<Geography> pool = w.getAllGeographies();
+
+		for (Geography g:pool)
+		{
+			String geoTypeName = g.ruleSet.geoTypeName;
+			for (String s:params.baseGeos)
+			{
+				if (s.equals(geoTypeName))
+				{
+					baseGeos.add(g);
+				}
+			}
+		}
+		likeness = params.likeness;
+		worldHeightsToAddTo = params.worldHeightsToAddTo;
 	}
 	
 	public GenAlgoAdd(Geography added, Collection<Geography> baseGeos, int likeness, int[] worldHeightsToAddTo)

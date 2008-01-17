@@ -113,7 +113,7 @@ public class River extends Water implements FlowGeography {
 	public River(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
 		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,false);
 		ruleSet.genType = GenAlgoFlow.GEN_TYPE_NAME;
-		ruleSet.genParams = new Object[] { new GenAlgoFlowParams(new String[]{"Mountain"},new String[]{"Ocean","Lake"}, new String[]{}, 10) };
+		ruleSet.genParams = new Object[] { new GenAlgoFlowParams(new String[]{"MountainNew"},new String[]{"Ocean","Lake"}, new String[]{}, 10) };
 		
 		this.magnification = magnification;
 		this.width = width;
