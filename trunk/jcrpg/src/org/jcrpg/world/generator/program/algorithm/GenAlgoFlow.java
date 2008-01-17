@@ -34,6 +34,9 @@ import org.jcrpg.world.place.World;
  *
  */
 public class GenAlgoFlow extends GenAlgoBase {
+	
+	
+	public static String GEN_TYPE_NAME = "Flow"; 
 	/**
 	 * The geography to put flowing pattern into.
 	 */
@@ -57,6 +60,11 @@ public class GenAlgoFlow extends GenAlgoBase {
 	 */
 	public int startLikeness = 50;
 	
+	public GenAlgoFlow(GenAlgoFlowParams params)
+	{
+		// TODO instanciated geos use
+	}
+
 	public GenAlgoFlow(Geography flow, Collection<Geography> starters, Collection<Geography> enders, Collection<Geography> blockers, int startLikeness)
 	{
 		this.flow = flow;
