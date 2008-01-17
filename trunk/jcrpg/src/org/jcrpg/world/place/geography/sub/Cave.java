@@ -25,6 +25,8 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoAddParams;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -81,7 +83,8 @@ public class Cave extends Geography implements Surface {
 	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levels, boolean fillBoundaries ) throws Exception{
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		ruleSet.presentWhereBaseExists = false;
-		ruleSet.genParams = new Object[0];
+		ruleSet.genType = GenAlgoAdd.GEN_TYPE_NAME;
+		ruleSet.genParams = new Object[] { new GenAlgoAddParams(new String[]{"MountainNew"}, 100, new int[]{0}) };
 		this.density = density;
 		this.entranceSide = entranceSide;
 		this.levels = levels;
