@@ -27,6 +27,7 @@ public class GeneratedPartRuleSet {
 	
 	public String geoTypeName = null;
 	
+	public static String GEN_TYPE_RANDOM = "GEN_TYPE_RANDOM"; 
 
 	public GeneratedPartRuleSet(String geoTypeName) {
 		super();
@@ -58,5 +59,17 @@ public class GeneratedPartRuleSet {
 	public boolean presentWhereBaseExists()
 	{
 		return presentWhereBaseExists;
+	}
+	
+	public String genType = GEN_TYPE_RANDOM;
+	public String getGeneratorType()
+	{
+		return genType;
+	}
+	
+	public Object[] genParams = new Object[0];
+	public Object[] getGeneratorParameters()
+	{
+		return genParams;
 	}
 }

@@ -26,6 +26,8 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoFlowParams;
 import org.jcrpg.world.place.FlowGeography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -110,6 +112,9 @@ public class River extends Water implements FlowGeography {
 	
 	public River(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int width, int depth, float curvedness, int curveLength, boolean fillBoundaries) throws Exception {
 		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,false);
+		ruleSet.genType = GenAlgoFlow.GEN_TYPE_NAME;
+		ruleSet.genParams = new Object[] { new GenAlgoFlowParams(new String[]{"Mountain"},new String[]{"Ocean","Lake"}, new String[]{}, 10) };
+		
 		this.magnification = magnification;
 		this.width = width;
 

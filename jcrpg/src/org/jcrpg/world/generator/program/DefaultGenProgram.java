@@ -32,6 +32,7 @@ import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.generator.ClassFactory;
 import org.jcrpg.world.generator.GenProgram;
+import org.jcrpg.world.generator.GeneratedPartRuleSet;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
@@ -155,8 +156,24 @@ public class DefaultGenProgram extends GenProgram {
 		{
 			String geo = params.geos[i];
 			Geography g = instantiateGeography(geo, world);
+			if (!GeneratedPartRuleSet.GEN_TYPE_RANDOM.equals(g.ruleSet.getGeneratorType())) continue;
 			mainGeos.put(g.ruleSet.geoTypeName, g);
 			world.addGeography(g);
+		}
+		TreeMap<String , Geography> additionalGeos = new TreeMap<String, Geography>();
+		for (int i=0; i<params.additionalGeos.length; i++)
+		{
+			String geo = params.additionalGeos[i];
+			Geography g = instantiateGeography(geo, world);
+			if (GeneratedPartRuleSet.GEN_TYPE_RANDOM.equals(g.ruleSet.getGeneratorType())) continue;
+			additionalGeos.put(g.ruleSet.geoTypeName, g);
+			if (g instanceof Water)
+			{
+				world.waters.put(g.id, (Water)g);
+			} else
+			{
+				world.addGeography(g);
+			}
 		}
 		
 		River r = new River("RIVERS",world,null,world.getSeaLevel(1), gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, 1,1,0.2f,4, false);
@@ -199,6 +216,20 @@ public class DefaultGenProgram extends GenProgram {
 				}
 //						c.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						
+			}
+		}
+		
+		for (Geography geo: additionalGeos.values())
+		{
+			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoFlow.GEN_TYPE_NAME))
+			{
+				// flow
+				// TODO call new constructors and run...
+			} else
+			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoAdd.GEN_TYPE_NAME))
+			{
+				// add
+				// TODO call new constructors and run...
 			}
 		}
 		

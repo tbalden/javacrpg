@@ -31,6 +31,9 @@ import org.jcrpg.world.place.Geography;
  *
  */
 public class GenAlgoAdd extends GenAlgoBase {
+
+	public static String GEN_TYPE_NAME = "Flow"; 
+
 	/**
 	 * The additional geography to add into.
 	 */
@@ -46,6 +49,11 @@ public class GenAlgoAdd extends GenAlgoBase {
 	public int likeness = 50;
 	
 	public int[] worldHeightsToAddTo = new int[] {};
+	
+	public GenAlgoAdd(GenAlgoAddParams params)
+	{
+		// TODO instanciated geos use
+	}
 	
 	public GenAlgoAdd(Geography added, Collection<Geography> baseGeos, int likeness, int[] worldHeightsToAddTo)
 	{
