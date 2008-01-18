@@ -20,27 +20,34 @@ package org.jcrpg.threed.scene.config;
 
 import java.util.HashMap;
 
+import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 
 /**
- * 
+ * Mapping for moving life forms to renderend moving units.
  * @author illes
- *
  */
 public class MovingTypeModels {
 	
+	public static final String NON_INSTANCE = "-NONE-";
 	
 	HashMap<String, Integer> hmMobIdToModelId = new HashMap<String, Integer>();
-	HashMap<String, RenderedMovingUnit> hmModelIdToRenderedMovingUnit = new HashMap<String, RenderedMovingUnit>();
+	HashMap<Integer, RenderedMovingUnit> hmModelIdToRenderedMovingUnit = new HashMap<Integer, RenderedMovingUnit>();
 
 	public MovingTypeModels()
 	{
-		
+		fillMap();
 	}
 	
 	public void fillMap()
 	{
-		// TODO
+		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_MALE,0);
+
+		MovingModel gorilla = new MovingModel("models/fauna/gorilla_texture.obj",null,null,false);
+		RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(NON_INSTANCE,0,0,0,new Model[]{gorilla});
+		hmModelIdToRenderedMovingUnit.put(0, gorilla_unit);
 	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)

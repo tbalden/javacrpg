@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.scene.Node;
@@ -107,6 +108,49 @@ public class ModelPool {
 			return n;
 		}
 	}
+
+	public PooledNode getMovingModel(RenderedMovingUnit rmu, Model model, NodePlaceholder place) {
+		
+		boolean rotated = false;
+		if (place.horizontalRotation==J3DCore.horizontalEReal || place.horizontalRotation==J3DCore.horizontalWReal )
+		{
+			// these directions may need rotation when billboarding
+			rotated = true;
+		}
+		
+		String key = model.id+(rotated)+rmu.internal;
+		
+		PoolItemContainer cont = pool.get(key);
+		synchronized (pool) {
+			if (cont == null) {
+				cont = new PoolItemContainer(key);
+				pool.put(key, cont);
+			} else {
+				if (cont.notUsed.iterator().hasNext()) {
+					// System.out.println("++ FROM POOL MODEL!"+model.id);
+					PooledNode n = cont.notUsed.iterator().next();
+					cont.notUsed.remove(n);
+					cont.used.add(n);
+					return n;
+				}
+			}
+			PooledNode n = core.modelLoader.loadObject(rmu, model, rotated);
+			// System.out.println("LOADING MODEL!"+model.id);
+			n.setPooledContainer(cont);
+			cont.used.add(n);
+			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			if ( toCreate>0)
+			{
+				for (int i=0; i<toCreate; i++)
+				{
+					PooledNode unused = core.modelLoader.loadObject(rmu, model, rotated);
+					unused.setPooledContainer(cont);
+					cont.notUsed.add(unused);
+				}
+			}
+			return n;
+		}
+	}
 	
 	public void releaseNode(PooledNode n)
 	{
@@ -139,6 +183,32 @@ public class ModelPool {
 			retNodes[count++] = new NodePlaceholder();
 			retNodes[count-1].model = objModel;
 			retNodes[count-1].cube = cube;
+			if (objModel.rotateOnSteep) {
+				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
+			}
+			if (core.sPass!=null && objModel.shadowCaster)
+			{
+				if (retNodes[count-1]!=null) {
+					//if (!J3DCore.GEOMETRY_BATCH)// || retNodes[count-1].model.type != Model.SIMPLEMODEL)
+						core.possibleOccluders.add(retNodes[count-1]);
+				}
+			}
+			
+		}
+		return retNodes;
+		
+	}
+
+	public NodePlaceholder[] loadMovingPlaceHolderObjects(RenderedMovingUnit cube,Model[] objects,boolean fakeLoadForCacheMaint)
+	{
+		if (fakeLoadForCacheMaint) return null; 
+		NodePlaceholder[] retNodes = new NodePlaceholder[objects.length];
+		int count = 0;
+		for (Model objModel : objects)
+		{
+			retNodes[count++] = new NodePlaceholder();
+			retNodes[count-1].model = objModel;
+			retNodes[count-1].unit = cube;
 			if (objModel.rotateOnSteep) {
 				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
 			}

@@ -39,6 +39,8 @@ import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.lwjgl.opengl.GLContext;
 
 import com.jme.bounding.BoundingBox;
@@ -119,13 +121,21 @@ public class ModelLoader {
     {
 		return loadObjects(rc, new Model[]{object}, horRotated, false)[0];
     }    
+    protected PooledNode loadObject(RenderedMovingUnit rmu, Model object, boolean horRotated)
+    {
+		return loadObjects(null, rmu, new Model[]{object}, horRotated, false)[0];
+    }    
+	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
+	{
+		return loadObjects(rc, null, objects, horRotated, false);
+	}
 	/**
 	 * Loading a set of models into JME nodes.
 	 * @param objects
 	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
 	 * @return
 	 */
-	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
+	protected PooledNode[] loadObjects(RenderedCube rc, RenderedMovingUnit rmu, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
     {
 		
 		//GeometryBatchCreator cr = new GeometryBatchCreator();
@@ -186,15 +196,24 @@ public class ModelLoader {
 				//r[i] = sn;//bbOrig;// new PooledSharedNode("1",node);// bbOrig;
 				r[i] = bbOrig;
 			} else
-			if (objects[i] instanceof SimpleModel) 
-			{
-				PooledSharedNode node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
-				if (fakeLoadForCacheMaint) continue;
-				
-		    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
-				r[i] = node;
-				node.setName(((SimpleModel)objects[i]).modelName+i);
+				if (objects[i] instanceof SimpleModel) 
+				{
+					PooledSharedNode node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					if (fakeLoadForCacheMaint) continue;
+					
+			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+					r[i] = node;
+					node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
+				if (objects[i] instanceof MovingModel) 
+				{
+					PooledSharedNode node = loadNode((MovingModel)objects[i],fakeLoadForCacheMaint);
+					if (fakeLoadForCacheMaint) continue;
+					
+			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+					r[i] = node;
+					node.setName(((MovingModel)objects[i]).modelName+i);
+				} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
 			{

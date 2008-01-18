@@ -40,6 +40,7 @@ import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
+import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
@@ -1170,6 +1171,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
+	@SuppressWarnings("unchecked")
 	public HashSet<RenderedCube>[] render()
 	{
 		
@@ -3087,6 +3089,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		render();
 		renderToViewPort();
 		renderToViewPort(); // for correct culling, call it twice ;-)
+		
+		J3DMovingEngine mEngine = new J3DMovingEngine(this);
+		mEngine.render();
+		mEngine.renderToViewPort(0f);
+		
 		engine.setPause(false);
 	}
 	

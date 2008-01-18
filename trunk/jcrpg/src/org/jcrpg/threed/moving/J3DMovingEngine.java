@@ -19,12 +19,18 @@
 package org.jcrpg.threed.moving;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
+import com.jme.scene.Node;
 
 /**
  * Moving units 3d display part.
@@ -35,14 +41,55 @@ public class J3DMovingEngine {
 	
 	J3DCore core = null;
 	
-	MovingTypeModels mobTypeModels = null;
+	MovingTypeModels movingTypeModels = null;
 	
 	HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
 	
 	public J3DMovingEngine(J3DCore core)
 	{
 		this.core = core;
-		mobTypeModels = new MovingTypeModels();
+		movingTypeModels = new MovingTypeModels();
+	}
+	
+	boolean firstRender = true;
+	
+	
+	/**
+	 * Renders a set of node into 3d space, rotating, positioning them.
+	 * @param n Nodes
+	 * @param unit the r.cube parent of the nodes, needed for putting the rendered node as child into it.
+	 * @param x X cubesized distance from current relativeX
+	 * @param y Y cubesized distance from current relativeY
+	 * @param z Z cubesized distance from current relativeZ
+	 * @param direction Direction
+	 * @param horizontalRotation Horizontal rotation
+	 * @param scale Scale
+	 */
+	private void renderNodes(NodePlaceholder[] n, RenderedMovingUnit unit)
+	{
+		if (n==null) return;
+	
+		for (int i=0; i<n.length; i++) {
+			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY-(0.5f*J3DCore.CUBE_EDGE_SIZE),unit.c3dZ));
+			Quaternion q = new Quaternion();
+			Quaternion qC = null;
+			if (n[i].model.noSpecialSteepRotation) {
+				qC = new Quaternion(q); // base rotation
+			} else
+			{
+				qC = new Quaternion();
+			}
+			
+			{				
+				//n[i].setLocalScale(needsFarviewScale?scale*FARVIEW_GAP:scale);
+			}
+			
+			n[i].setLocalRotation(qC);
+			n[i].setLocalScale(1f);
+
+			unit.nodePlaceholders.add((NodePlaceholder)n[i]);
+			//liveNodes++;
+		}
 	}
 	
 	/**
@@ -50,9 +97,20 @@ public class J3DMovingEngine {
 	 */
 	public void render()
 	{
+		if (firstRender)
+		{
+			// TODO this only testing code! :-)
+			firstRender = false;
+			GorillaHorde horde = new GorillaHorde();
+			VisibleLifeForm form = horde.getOne();
+			RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX, core.viewPositionY, core.viewPositionZ);
+			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
+			renderNodes(placeHolders, unit);
+		}
 		// TODO 
 	}
 	
+	boolean firstRenderToViewPort = true;
 	/**
 	 * Set in view units visible / out of view units invisible on every movement of player or every new turn if no
 	 * movement. 
@@ -60,7 +118,30 @@ public class J3DMovingEngine {
 	 */
 	public void renderToViewPort(float refAngle)
 	{
-		// TODO check all rendered moving units if they are in view and set them visible 
+		if (firstRenderToViewPort) // TODO check if it's visible...
+		{
+			firstRenderToViewPort = false;
+			// TODO check all rendered moving units if they are in view and set them visible
+			for (RenderedMovingUnit unit: units.values())
+			{
+				for (NodePlaceholder n : unit.nodePlaceholders)
+				{
+					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
+					n.realNode = (PooledNode)realPooledNode;
+					realPooledNode.setLocalTranslation(n.getLocalTranslation().subtract(new Vector3f(core.viewPositionX,core.viewPositionY,core.viewPositionZ).mult(J3DCore.CUBE_EDGE_SIZE)));
+					System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
+					realPooledNode.setLocalRotation(n.getLocalRotation());
+					realPooledNode.setLocalScale(n.getLocalScale());
+					if (unit.internal) {
+						core.intRootNode.attachChild((Node)realPooledNode);
+					} else 
+					{
+						core.extRootNode.attachChild((Node)realPooledNode);
+					}
+					
+				}
+			}
+		}
 	}
 	
 	/**
@@ -72,10 +153,11 @@ public class J3DMovingEngine {
 		// TODO check all visible rendered moving units and update their coordinates etc.
 	}
 	
-	public void materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)
+	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		RenderedMovingUnit unit = mobTypeModels.getRenderedUnit(form.typeId).instanciate(form, worldX, worldY, worldZ);
+		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.typeId).instanciate(form.uniqueId, form, worldX, worldY, worldZ);
 		units.put(form.uniqueId, unit);
+		return unit;
 	}
 	
 }
