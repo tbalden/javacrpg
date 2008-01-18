@@ -102,10 +102,12 @@ public class J3DMovingEngine {
 			// TODO this only testing code! :-)
 			firstRender = false;
 			GorillaHorde horde = new GorillaHorde();
-			VisibleLifeForm form = horde.getOne();
-			RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX, core.viewPositionY, core.viewPositionZ);
-			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
-			renderNodes(placeHolders, unit);
+			for (int i=0; i<10; i++) {
+				VisibleLifeForm form = horde.getOne();
+				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-1-i/2);
+				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
+				renderNodes(placeHolders, unit);
+			}
 		}
 		// TODO 
 	}
@@ -128,7 +130,7 @@ public class J3DMovingEngine {
 				{
 					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
 					n.realNode = (PooledNode)realPooledNode;
-					realPooledNode.setLocalTranslation(n.getLocalTranslation().subtract(new Vector3f(core.viewPositionX,core.viewPositionY,core.viewPositionZ).mult(J3DCore.CUBE_EDGE_SIZE)));
+					realPooledNode.setLocalTranslation(n.getLocalTranslation().subtract(new Vector3f(core.viewPositionX-core.relativeX,core.viewPositionY-core.relativeY,core.viewPositionZ-core.relativeZ).mult(J3DCore.CUBE_EDGE_SIZE)));
 					System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
 					realPooledNode.setLocalScale(n.getLocalScale());
@@ -151,6 +153,18 @@ public class J3DMovingEngine {
 	public void updateScene(float timePerFrame)
 	{
 		// TODO check all visible rendered moving units and update their coordinates etc.
+		for (RenderedMovingUnit unit: units.values())
+		{
+			for (NodePlaceholder n : unit.nodePlaceholders)
+			{
+				if (n.realNode!=null)
+				{
+					unit.c3dX+=0.01f*timePerFrame;
+					n.getLocalTranslation().addLocal(0.01f*timePerFrame, 0, 0);
+					((Node)n.realNode).setLocalTranslation(n.getLocalTranslation().subtract(new Vector3f(core.viewPositionX-core.relativeX,core.viewPositionY-core.relativeY,core.viewPositionZ-core.relativeZ).mult(J3DCore.CUBE_EDGE_SIZE)));
+				}
+			}
+		}
 	}
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)

@@ -3090,12 +3090,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		renderToViewPort();
 		renderToViewPort(); // for correct culling, call it twice ;-)
 		
-		J3DMovingEngine mEngine = new J3DMovingEngine(this);
+		mEngine = new J3DMovingEngine(this);
 		mEngine.render();
 		mEngine.renderToViewPort(0f);
 		
 		engine.setPause(false);
 	}
+	
+	J3DMovingEngine mEngine = null;
 	
 	LightNode drn;
 	PointLight dr;
@@ -3119,6 +3121,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */
+			if (mEngine!=null) mEngine.updateScene(tpf);
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 			
