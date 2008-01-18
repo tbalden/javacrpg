@@ -25,11 +25,29 @@ package org.jcrpg.world.ai.fauna;
  */
 public class AnimalEntityDescription {
 
+	public String ANIMAL_NONE_TYPE = "NONE";
+	
 	public static final int GENDER_NEUTRAL = 0;
 	public static final int GENDER_MALE = 1;
 	public static final int GENDER_FEMALE = 2;
 	public static final int GENDER_BOTH = 3;
 	
+	public static int visibleSequence = 0;
+	public static Object mutex = new Object();
 	public int numberOfMembers = 1;
 	public int genderType = GENDER_NEUTRAL;
+	
+	public VisibleLifeForm getOne()
+	{
+		nextVisibleSequence();
+		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,ANIMAL_NONE_TYPE);
+	}
+	
+	public int nextVisibleSequence()
+	{
+		synchronized (mutex) {
+			visibleSequence++;
+		}
+		return visibleSequence;
+	}
 }

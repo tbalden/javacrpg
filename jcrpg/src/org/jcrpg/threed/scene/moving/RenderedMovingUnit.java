@@ -18,7 +18,10 @@
 
 package org.jcrpg.threed.scene.moving;
 
+import java.util.HashSet;
+
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
@@ -44,24 +47,35 @@ public class RenderedMovingUnit {
 	public VisibleLifeForm form = null;
 	
 	public String state = STATE_STANDING;
+	public boolean internal = false;
 	
+	public HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
+	
+	
+	public RenderedMovingUnit(String id, int worldX, int worldY, int worldZ, Model[] models) {
+		super();
+		this.id = id;
+		this.worldX = worldX;
+		this.worldY = worldY;
+		this.worldZ = worldZ;
+		this.models = models;
+	}
 	public void resetOrigo3DCoords()
 	{
 		c3dX = worldX * J3DCore.CUBE_EDGE_SIZE;
 		c3dY = worldY * J3DCore.CUBE_EDGE_SIZE;
 		c3dZ = worldZ * J3DCore.CUBE_EDGE_SIZE;
 	}
-	public RenderedMovingUnit instanciate(VisibleLifeForm form, int worldX, int worldY, int worldZ)
+	public RenderedMovingUnit instanciate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		RenderedMovingUnit instance = new RenderedMovingUnit();
+		System.out.println(uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
+		RenderedMovingUnit instance = new RenderedMovingUnit(uniqueId,worldX,worldY,worldZ,models);
 		instance.form = form;
-		instance.models = models;
 		instance.state = state;
-		instance.worldX = worldX;
-		instance.worldY = worldY;
-		instance.worldZ = worldZ;
 		instance.resetOrigo3DCoords();
 		return instance;
 	}
+	
+	
 	
 }

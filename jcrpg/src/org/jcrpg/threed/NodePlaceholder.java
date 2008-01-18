@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -30,6 +31,7 @@ public class NodePlaceholder {
 
 	public Model model;
 	public RenderedCube cube;
+	public RenderedMovingUnit unit;
 	public PooledNode realNode;
 	public Object batchInstance;
 	public boolean farView = false;
