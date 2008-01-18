@@ -19,6 +19,8 @@
 package org.jcrpg.world.generator.program.algorithm;
 
 import org.jcrpg.world.generator.GenProgram;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.World;
 
 /**
  * Base class for generation algorithms.
@@ -27,6 +29,14 @@ import org.jcrpg.world.generator.GenProgram;
  */
 public class GenAlgoBase {
 
+	public GenAlgoBase()
+	{
+		
+	}
+	public GenAlgoBase(World w, Object[] paramsArray, Geography geo)
+	{
+	}
+	
 	public void runGeneration(GenProgram program)
 	{
 		

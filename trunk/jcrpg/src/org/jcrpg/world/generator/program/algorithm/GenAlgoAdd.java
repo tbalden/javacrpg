@@ -52,10 +52,10 @@ public class GenAlgoAdd extends GenAlgoBase {
 	
 	public int[] worldHeightsToAddTo = new int[] {};
 	
-	public GenAlgoAdd(World w, Object[] paramsArray, Geography added)
+	public GenAlgoAdd(World w, Object[] paramsArray, Geography geo)
 	{
 		GenAlgoAddParams params = (GenAlgoAddParams) paramsArray[0];
-		this.added = added;
+		this.added = geo;
 		baseGeos = new ArrayList<Geography>();
 		
 		Collection<Geography> pool = w.getAllGeographies();
