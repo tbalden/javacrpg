@@ -18,7 +18,10 @@
 
 package org.jcrpg.world.generator;
 
+import java.util.HashMap;
+
 import org.jcrpg.world.WorldGenerator;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoBase;
 import org.jcrpg.world.place.World;
 
 public abstract class GenProgram {
@@ -26,6 +29,9 @@ public abstract class GenProgram {
 	public ClassFactory factory;
 	public WorldGenerator generator;
 	public WorldParams params;
+	
+	public HashMap<String,  Class<? extends GenAlgoBase>> genAlgorithms = new HashMap<String, Class<? extends GenAlgoBase>>();
+	
 
 	public GenProgram(ClassFactory factory, WorldGenerator generator, WorldParams params)
 	{

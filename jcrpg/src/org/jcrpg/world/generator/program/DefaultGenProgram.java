@@ -19,7 +19,6 @@
 package org.jcrpg.world.generator.program;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,10 +34,10 @@ import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.GeneratedPartRuleSet;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
+import org.jcrpg.world.generator.program.algorithm.GenAlgoBase;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
@@ -51,11 +50,17 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.place.water.Ocean;
 import org.jcrpg.world.place.water.River;
 
+/**
+ * Default Generation Program implementation with Climate/Foundation/Base/Additional geography handling.
+ * @author illes
+ */
 public class DefaultGenProgram extends GenProgram {
 	
 
 	public DefaultGenProgram(ClassFactory factory, WorldGenerator generator, WorldParams params) {
 		super(factory, generator, params);
+		genAlgorithms.put(GenAlgoAdd.GEN_TYPE_NAME, GenAlgoAdd.class);
+		genAlgorithms.put(GenAlgoFlow.GEN_TYPE_NAME, GenAlgoFlow.class);
 	}
 
 	@Override
@@ -102,8 +107,8 @@ public class DefaultGenProgram extends GenProgram {
 				System.out.println("CLIMATE: "+climateName);
 				String className = generator.climateBeltMap.get(climateName);
 				Class<?> c = Class.forName(className);
-				Constructor<ClimateBelt> constructor = (Constructor<ClimateBelt>)c.getConstructors()[0];
-				ClimateBelt belt = constructor.newInstance(climateName+j+" "+i,climate);
+				Constructor<?> constructor = (Constructor<?>)c.getConstructors()[0];
+				ClimateBelt belt = (ClimateBelt)constructor.newInstance(climateName+j+" "+i,climate);
 				int climateSizeCorrected = climateSize*params.climateSizeMuls[count];
 				if (diffAvailable>0 && ((i+j*params.climates.length)%mod == 0))
 				{
@@ -139,7 +144,7 @@ public class DefaultGenProgram extends GenProgram {
 		
 		int gMag = params.geoNormalSize;
 		int gWX = (wX*wMag)/gMag;
-		int gWY = (wY*wMag)/gMag;
+		//int gWY = (wY*wMag)/gMag;
 		int gWZ = (wZ*wMag)/gMag;
 		
 		Geography foundation = instantiateGeography(params.foundationGeo, world);
@@ -213,21 +218,17 @@ public class DefaultGenProgram extends GenProgram {
 		for (Geography geo: additionalGeos.values())
 		{
 			System.out.println("ADDITIONAL GEO:"+geo.ruleSet.geoTypeName+" "+geo.ruleSet.genType);
-			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoFlow.GEN_TYPE_NAME))
-			{
-				// flow
-				new GenAlgoFlow(world,geo.ruleSet.genParams,geo).runGeneration(this);
-			} else
-			if (geo.getRuleSet().getGeneratorType().equals(GenAlgoAdd.GEN_TYPE_NAME))
-			{
-				// add
-				new GenAlgoAdd(world,geo.ruleSet.genParams,geo).runGeneration(this);
-			}
+			Class<? extends GenAlgoBase> algo = genAlgorithms.get(geo.getRuleSet().getGeneratorType());
+			if (algo==null) continue;
+			// get constructor of the algo class
+			Constructor<? extends GenAlgoBase> cons = (Constructor<? extends GenAlgoBase>)algo.getConstructor(World.class, Object[].class, Geography.class);
+			// create instance and run...
+			cons.newInstance(world,geo.ruleSet.genParams,geo).runGeneration(this);
 		}
 
 		//int i =0;
 		House h = null; 
-		long time = System.currentTimeMillis(); 
+		//long time = System.currentTimeMillis(); 
 		h = new House("house",world,null,4,1,4,0,world.getSeaLevel(1),5);		
 		world.economics.put(h.id, h);
 	}

@@ -61,12 +61,12 @@ public class GenAlgoFlow extends GenAlgoBase {
 	 */
 	public int startLikeness = 50;
 	
-	public GenAlgoFlow(World w, Object[] paramsArray, Geography flow)
+	public GenAlgoFlow(World w, Object[] paramsArray, Geography geo)
 	{
-		
+		//super(w,paramsArray,flow);
 		GenAlgoFlowParams params = (GenAlgoFlowParams) paramsArray[0];
 		
-		this.flow = flow;
+		this.flow = geo;
 		starters = new ArrayList<Geography>();
 		blockers = new ArrayList<Geography>();
 		enders = new ArrayList<Geography>();
