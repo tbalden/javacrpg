@@ -38,7 +38,15 @@ public class RenderedMovingUnit {
 	public static final String STATE_LAYING = "S_LAYING";
 	public static final String STATE_ATTACK_1 = "S_ATTACK_1";
 	public static final String STATE_ATTACK_2 = "S_ATTACK_2";
+	
+	/**
+	 * The direction the unit is facing.
+	 */
+	public int direction = 0;
 
+	/**
+	 * Unique id of the unit.
+	 */
 	public String id = null;
 	public int worldX, worldY, worldZ;
 	public float c3dX, c3dY, c3dZ;
@@ -84,6 +92,9 @@ public class RenderedMovingUnit {
 	public int endCoordX, endCoordY, endCoordZ;
 	public String stateAfterMovement = STATE_STANDING;
 	
+	// TODO function with moveToDirection!
+	
+	
 	public void startToMoveOneCube(float speed, int toX, int toY, int toZ, boolean fromSteep, boolean toSteep)
 	{
 		startCoordX = worldX;
@@ -92,9 +103,9 @@ public class RenderedMovingUnit {
 		startPositionX = c3dX;
 		startPositionY = c3dY;
 		startPositionZ = c3dZ;
-		this.endCoordX = toX;
-		this.endCoordY = toY;
-		this.endCoordZ = toZ;
+		endCoordX = toX;
+		endCoordY = toY;
+		endCoordZ = toZ;
 		movingSpeed = speed;
 		state = STATE_WALKING;
 	}
@@ -105,6 +116,7 @@ public class RenderedMovingUnit {
 		worldY = endCoordY;
 		worldZ = endCoordZ;
 		state = stateAfterMovement;
+		resetOrigo3DCoords();
 	}
 	
 	

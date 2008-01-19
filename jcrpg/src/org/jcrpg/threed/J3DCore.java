@@ -417,6 +417,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public int viewPositionY = 0;
 	public int viewPositionZ = 0;
 	public int relativeX = 0, relativeY = 0, relativeZ = 0;
+	public int origoX = 0;
+	public int origoY = 0;
+	public int origoZ = 0;
 	public boolean onSteep = false;
 	public boolean insideArea = false;
 	
@@ -454,7 +457,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		viewPositionZ = z;
 	}
 
-    
+	/**
+	 * For storing the origo cube coordinate in the world when starting a game session - for rendering use. 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void setOrigoRenderPosition(int x,int y,int z)
+	{
+		origoX = x;
+		origoY = y;
+		origoZ = z;
+	}
+   
 	/**
 	 * cube side rotation quaternion
 	 */
