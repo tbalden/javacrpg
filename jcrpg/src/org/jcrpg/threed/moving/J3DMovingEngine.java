@@ -28,6 +28,7 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 
+import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -132,7 +133,7 @@ public class J3DMovingEngine {
 					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
 					n.realNode = (PooledNode)realPooledNode;
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
-					System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
+					//System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
 					realPooledNode.setLocalScale(n.getLocalScale());
 					if (unit.internal) {
@@ -166,12 +167,12 @@ public class J3DMovingEngine {
 					{
 						if (unit.direction==0)
 						{
-							unit.startToMoveOneCube(10f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
 							unit.direction=2;
 						} else
 						if (unit.direction==2)
 						{
-							unit.startToMoveOneCube(10f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
 							unit.direction=0;
 						}
 						
@@ -188,24 +189,25 @@ public class J3DMovingEngine {
 						float cY = unit.c3dY;
 						float cZ = unit.c3dZ;
 						
+						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 						Vector3f sVec = new Vector3f(sX,sY,sZ);
 						Vector3f eVec = new Vector3f(eX,eY,eZ);
-						System.out.println("START: "+sVec.x+" "+sVec.y+" "+sVec.z);
+						/*System.out.println("START: "+sVec.x+" "+sVec.y+" "+sVec.z);
 						System.out.println("END: "+eVec.x+" "+eVec.y+" "+eVec.z);
-						System.out.println("C: "+n.getLocalTranslation().x+" "+n.getLocalTranslation().y+" "+n.getLocalTranslation().z);
-						Vector3f mVec = eVec.subtract(sVec).mult(0.1f*timePerFrame);
+						System.out.println("C: "+n.getLocalTranslation().x+" "+n.getLocalTranslation().y+" "+n.getLocalTranslation().z);*/
+						Vector3f mVec = eVec.subtract(cVec).normalize().mult(unit.movingSpeed * 0.1f*timePerFrame);
 						n.getLocalTranslation().addLocal(mVec);
-						//unit.c3dX = n.getLocalTranslation().x;
-						//unit.c3dY = n.getLocalTranslation().y;
-						//unit.c3dZ = n.getLocalTranslation().z;
 						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
-						((Node)n.realNode).getLocalRotation().set(mVec.z, mVec.y, mVec.x, 1);
+						Quaternion q = new Quaternion();
+						q.fromAngleNormalAxis(mVec.normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(0,1,0).normalize());
+						((Node)n.realNode).setLocalRotation(q);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						float dist = eVec.distance(n.getLocalTranslation());
-						System.out.println("######### "+dist);
-						if (dist<0.2f)
+						//System.out.println("######### "+dist);
+						
+						if (dist<0.1f)
 						{
-							System.out.println("TURN");
+							//System.out.println("TURN");
 							unit.endMoveOneCube();
 						}
 					}
