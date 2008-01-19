@@ -79,6 +79,7 @@ public class Jcrpg {
 		app.setWorld(w2);
 		app.setEngine(e);
 		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		app.setOrigoRenderPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
 		//app.setViewPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
 		app.initCore();
 
