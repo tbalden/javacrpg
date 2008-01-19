@@ -76,6 +76,37 @@ public class RenderedMovingUnit {
 		return instance;
 	}
 	
+	public boolean onSteep;
+	float movingSpeed;
+	public float startPositionX, startPositionY, startPositionZ;
+	public float endPositionX, endPositionY, endPositionZ;
+	public int startCoordX, startCoordY, startCoordZ;
+	public int endCoordX, endCoordY, endCoordZ;
+	public String stateAfterMovement = STATE_STANDING;
+	
+	public void startToMoveOneCube(float speed, int toX, int toY, int toZ, boolean fromSteep, boolean toSteep)
+	{
+		startCoordX = worldX;
+		startCoordY = worldY;
+		startCoordZ = worldZ;
+		startPositionX = c3dX;
+		startPositionY = c3dY;
+		startPositionZ = c3dZ;
+		this.endCoordX = toX;
+		this.endCoordY = toY;
+		this.endCoordZ = toZ;
+		movingSpeed = speed;
+		state = STATE_WALKING;
+	}
+	
+	public void endMoveOneCube()
+	{
+		worldX = endCoordX;
+		worldY = endCoordY;
+		worldZ = endCoordZ;
+		state = stateAfterMovement;
+	}
+	
 	
 	
 }
