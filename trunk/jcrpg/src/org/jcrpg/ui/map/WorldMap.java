@@ -205,8 +205,10 @@ public class WorldMap {
 				}
 			}
 		}
-		positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
-		positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
+		try {
+			positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
+			positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
+		} catch (ArrayIndexOutOfBoundsException aiex){}
 
 		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(buffer2);

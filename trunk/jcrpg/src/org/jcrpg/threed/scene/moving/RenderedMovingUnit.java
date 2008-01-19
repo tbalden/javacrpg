@@ -24,6 +24,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.place.World;
 
 /**
  * Class for rendered moving life forms with info about its movement/action states
@@ -85,7 +86,7 @@ public class RenderedMovingUnit {
 	}
 	
 	public boolean onSteep;
-	float movingSpeed;
+	public float movingSpeed;
 	public float startPositionX, startPositionY, startPositionZ;
 	public float endPositionX, endPositionY, endPositionZ;
 	public int startCoordX, startCoordY, startCoordZ;
@@ -112,7 +113,7 @@ public class RenderedMovingUnit {
 	
 	public void endMoveOneCube()
 	{
-		worldX = endCoordX;
+		worldX = endCoordX; // shrink to world TODO
 		worldY = endCoordY;
 		worldZ = endCoordZ;
 		state = stateAfterMovement;
