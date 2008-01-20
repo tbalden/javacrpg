@@ -21,10 +21,13 @@ import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.meter.DirectionTimeMeter;
+import org.jcrpg.ui.text.TextBox;
+import org.jcrpg.ui.text.TextEntry;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
@@ -45,6 +48,7 @@ public class HUD {
 	public AlphaState hudAS;
 	public DirectionTimeMeter meter;
 	public SystemRelated sr;
+	public TextBox mainBox;
 	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
@@ -125,6 +129,11 @@ public class HUD {
         
         // system
         sr = new SystemRelated(this,new String[]{"LOAD"},new String[]{"./data/ui/floppy.png"});
+        
+        // main textbox
+        
+        mainBox = new TextBox(this,"Main",0.088f,0.088f,0.3f,0.1f);
+        mainBox.addEntry(new TextEntry("JCRPG pre-alpha version",ColorRGBA.orange));
 		
 	}
 	

@@ -1060,6 +1060,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	//loadingText(0,true);
 		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
+		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+viewPositionX+"/"+viewPositionZ+"...");
     	updateDisplay(null);
 
 		/*lastRenderX = viewPositionX;
@@ -1101,21 +1102,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         	detacheable_FARVIEW = doRender(cubes, removableCubes, hmCurrentCubes_FARVIEW);
     	}
     	
-		fpsNode.detachChild(loadText);
-
 
 		modelLoader.setLockForSharedNodes(true);
 		
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
 
-		//loadingText(0,false);
     	//updateDisplay(null);
 
 		//TextureManager.clearCache();
 		//System.gc();
 		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+hmSolidColorSpatials.size());
 		uiBase.hud.sr.setVisibility(false, "LOAD");
+		uiBase.hud.mainBox.addEntry("Load Complete.");
 		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
 		return ret;
 	}
