@@ -166,250 +166,114 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     static Properties p = new Properties();
     static {
-    	try {
-    		File f = new File("./config.properties");
-	    	FileInputStream fis = new FileInputStream(f);
-	    	p.load(fis);
-	    	
-	    	String farViewEnabled = p.getProperty("FARVIEW_ENABLED");
-	    	if (farViewEnabled!=null)
-	    	{
-	    		farViewEnabled = farViewEnabled.trim();
-	    		try {
-	    			FARVIEW_ENABLED = Boolean.parseBoolean(farViewEnabled);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("FARVIEW_ENABLED", "false");
-	    		}
-	    	}
-	    	String renderDistanceFarview = p.getProperty("RENDER_DISTANCE_FARVIEW");
-	    	if (renderDistanceFarview!=null)
-	    	{
-	    		renderDistanceFarview = renderDistanceFarview.trim();
-	    		try {
-	    			RENDER_DISTANCE_FARVIEW = Integer.parseInt(renderDistanceFarview);
-	    			RENDER_DISTANCE_FARVIEW = (int)(RENDER_DISTANCE_FARVIEW/CUBE_EDGE_SIZE);
-	    			if (RENDER_DISTANCE_FARVIEW<20) RENDER_DISTANCE_FARVIEW = 20;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("RENDER_DISTANCE_FARVIEW", "60");
-	    		}
-	    	}
-	    	
-	    	String renderDistance = p.getProperty("RENDER_DISTANCE");
-	    	if (renderDistance!=null)
-	    	{
-	    		renderDistance = renderDistance.trim();
-	    		try {
-	    			RENDER_DISTANCE_ORIG = Integer.parseInt(renderDistance);
-	    			RENDER_DISTANCE = (int)(RENDER_DISTANCE_ORIG/CUBE_EDGE_SIZE);
-	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
-	    			if (RENDER_DISTANCE<5) RENDER_DISTANCE = 5;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("RENDER_DISTANCE", "10");
-	    		}
-	    	}
-	    	String viewDistance = p.getProperty("VIEW_DISTANCE");
-	    	if (viewDistance!=null)
-	    	{
-	    		viewDistance = viewDistance.trim();
-	    		try {
-	    			VIEW_DISTANCE = Integer.parseInt(viewDistance);
-	    			//if (RENDER_DISTANCE>15) RENDER_DISTANCE = 15;
-	    			if (VIEW_DISTANCE<5) VIEW_DISTANCE = 5;
-	    			VIEW_DISTANCE_SQR = VIEW_DISTANCE*VIEW_DISTANCE;
-	    			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR/4;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("VIEW_DISTANCE", "10");
-	    		}
-	    	}
-	    	String renderGrassDistance = p.getProperty("RENDER_GRASS_DISTANCE");
-	    	if (renderGrassDistance!=null)
-	    	{
-	    		renderGrassDistance = renderGrassDistance.trim();
-	    		try {
-	    			RENDER_GRASS_DISTANCE = Integer.parseInt(renderGrassDistance);
-	    			if (RENDER_GRASS_DISTANCE>15*CUBE_EDGE_SIZE) RENDER_GRASS_DISTANCE = (int)(15*CUBE_EDGE_SIZE);
-	    			if (RENDER_GRASS_DISTANCE>RENDER_DISTANCE*CUBE_EDGE_SIZE) RENDER_GRASS_DISTANCE = (int)(RENDER_DISTANCE*CUBE_EDGE_SIZE);
-	    			if (RENDER_GRASS_DISTANCE<0) RENDER_GRASS_DISTANCE = 0;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("RENDER_GRASS_DISTANCE", "10");
-	    		}
-	    	}
-	    	String renderShadowDistance = p.getProperty("RENDER_SHADOW_DISTANCE");
-	    	if (renderShadowDistance!=null)
-	    	{
-	    		renderShadowDistance = renderShadowDistance.trim();
-	    		try {
-	    			RENDER_SHADOW_DISTANCE = Integer.parseInt(renderShadowDistance);
-	    			if (RENDER_SHADOW_DISTANCE>15*CUBE_EDGE_SIZE) RENDER_SHADOW_DISTANCE = (int)(15*CUBE_EDGE_SIZE);
-	    			if (RENDER_SHADOW_DISTANCE>RENDER_DISTANCE*CUBE_EDGE_SIZE) RENDER_SHADOW_DISTANCE = (int)(RENDER_DISTANCE*CUBE_EDGE_SIZE);
-	    			if (RENDER_SHADOW_DISTANCE<5) RENDER_SHADOW_DISTANCE = 5;
-	    			RENDER_SHADOW_DISTANCE_SQR=RENDER_SHADOW_DISTANCE*RENDER_SHADOW_DISTANCE;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("RENDER_SHADOW_DISTANCE", "10");
-	    		}
-	    	}
-	    	String mipmapGlobal = p.getProperty("MIPMAP_GLOBAL");
-	    	if (mipmapGlobal!=null)
-	    	{
-	    		mipmapGlobal = mipmapGlobal.trim();
-	    		try {
-	    			MIPMAP_GLOBAL = Boolean.parseBoolean(mipmapGlobal);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("MIPMAP_GLOBAL", "true");
-	    		}
-	    	}
-	    	String mipmapTrees = p.getProperty("MIPMAP_TREES");
-	    	if (mipmapTrees!=null)
-	    	{
-	    		mipmapTrees = mipmapTrees.trim();
-	    		try {
-	    			MIPMAP_TREES = Boolean.parseBoolean(mipmapTrees);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("MIPMAP_TREES", "false");
-	    		}
-	    	}
-	    	String textureQuality = p.getProperty("TEXTURE_QUALITY");
-	    	if (textureQuality!=null)
-	    	{
-	    		textureQuality = textureQuality.trim();
-	    		try {
-	    			TEXTURE_QUALITY = Integer.parseInt(textureQuality);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("TEXTURE_QUALITY", "false");
-	    		}
-	    	}
-	    	String bloomEffect = p.getProperty("BLOOM_EFFECT");
-	    	if (bloomEffect!=null)
-	    	{
-	    		bloomEffect = bloomEffect.trim();
-	    		try {
-	    			BLOOM_EFFECT = Boolean.parseBoolean(bloomEffect);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("BLOOM_EFFECT", "false");
-	    		}
-	    	}
+		try {
+			File f = new File("./config.properties");
+			FileInputStream fis = new FileInputStream(f);
+			p.load(fis);
 
-	    	String cpuAnimatedGrass = p.getProperty("ANIMATED_GRASS");
-	    	if (cpuAnimatedGrass!=null)
-	    	{
-	    		cpuAnimatedGrass = cpuAnimatedGrass.trim();
-	    		try {
-	    			ANIMATED_GRASS = Boolean.parseBoolean(cpuAnimatedGrass);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("ANIMATED_GRASS", "false");
-	    		}
-	    	}
-	    	String doubleGrass = p.getProperty("DOUBLE_GRASS");
-	    	if (doubleGrass!=null)
-	    	{
-	    		doubleGrass = doubleGrass.trim();
-	    		try {
-	    			DOUBLE_GRASS = Boolean.parseBoolean(doubleGrass);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("DOUBLE_GRASS", "false");
-	    		}
-	    	}
+			FARVIEW_ENABLED = loadValue("FARVIEW_ENABLED", false);
 
-	    	String shadows = p.getProperty("SHADOWS");
-	    	if (shadows!=null)
-	    	{
-	    		shadows = shadows.trim();
-	    		try {
-	    			SHADOWS = Boolean.parseBoolean(shadows);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("SHADOWS", "false");
-	    		}
-	    	}
+			RENDER_DISTANCE_FARVIEW = loadValue("RENDER_DISTANCE_FARVIEW",
+					(int) (60 * CUBE_EDGE_SIZE), (int) (20 * CUBE_EDGE_SIZE),
+					Integer.MAX_VALUE);
+			RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
 
-	    	String cpuAnimatedTrees = p.getProperty("ANIMATED_TREES");
-	    	if (cpuAnimatedTrees!=null)
-	    	{
-	    		cpuAnimatedGrass = cpuAnimatedGrass.trim();
-	    		try {
-	    			ANIMATED_TREES = Boolean.parseBoolean(cpuAnimatedTrees);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("ANIMATED_TREES", "false");
-	    		}
-	    	}
-	    	String detailedTrees = p.getProperty("DETAILED_TREES");
-	    	if (detailedTrees!=null)
-	    	{
-	    		detailedTrees = detailedTrees.trim();
-	    		try {
-	    			DETAILED_TREES = Boolean.parseBoolean(detailedTrees);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("DETAILED_TREES", "false");
-	    		}
-	    	}
-	    	String antialiasSamples = p.getProperty("ANTIALIAS_SAMPLES");
-	    	if (antialiasSamples!=null)
-	    	{
-	    		antialiasSamples = antialiasSamples.trim();
-	    		try {
-	    			ANTIALIAS_SAMPLES = Integer.parseInt(antialiasSamples);
-	    			if (ANTIALIAS_SAMPLES>8) ANTIALIAS_SAMPLES = 8;
-	    			if (ANTIALIAS_SAMPLES<0) ANTIALIAS_SAMPLES = 0;
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("ANTIALIAS_SAMPLES", "0");
-	    		}
-	    	}
-	    	String bumpedGround = p.getProperty("BUMPED_GROUND");
-	    	if (bloomEffect!=null)
-	    	{
-	    		bumpedGround = bumpedGround.trim();
-	    		try {
-	    			BUMPED_GROUND = Boolean.parseBoolean(bumpedGround);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("BUMPED_GROUND", "false");
-	    		}
-	    	}
-	    	String waterShader = p.getProperty("WATER_SHADER");
-	    	if (waterShader!=null)
-	    	{
-	    		waterShader = waterShader.trim();
-	    		try {
-	    			WATER_SHADER = Boolean.parseBoolean(waterShader);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("WATER_SHADER", "false");
-	    		}
-	    	}
-	    	String waterDetailed = p.getProperty("WATER_DETAILED");
-	    	if (waterDetailed!=null)
-	    	{
-	    		waterDetailed = waterDetailed.trim();
-	    		try {
-	    			WATER_DETAILED = Boolean.parseBoolean(waterDetailed);
-	    		} catch (Exception pex)
-	    		{
-	    			p.setProperty("WATER_DETAILED", "false");
-	    		}
-	    	}
-	    	
-	    	
-    	} catch (Exception ex)
-    	{
-    		ex.printStackTrace();
-    	}
-    }
+			RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
+					(int) (10 * CUBE_EDGE_SIZE), (int) (10 * CUBE_EDGE_SIZE),
+					Integer.MAX_VALUE);
+			RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
+			VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
+			VIEW_DISTANCE_SQR = VIEW_DISTANCE * VIEW_DISTANCE;
+			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR / 4;
+
+			RENDER_GRASS_DISTANCE = loadValue("RENDER_GRASS_DISTANCE", 10, 0,
+					(int) (15 * CUBE_EDGE_SIZE));
+
+			RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
+					(int) (15 * CUBE_EDGE_SIZE));
+			if (RENDER_SHADOW_DISTANCE > RENDER_DISTANCE * CUBE_EDGE_SIZE)
+				RENDER_SHADOW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
+			RENDER_SHADOW_DISTANCE_SQR = RENDER_SHADOW_DISTANCE
+					* RENDER_SHADOW_DISTANCE;
+
+			MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
+			MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
+
+			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
+					Integer.MAX_VALUE);
+			BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
+			ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
+			DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
+			SHADOWS = loadValue("SHADOWS", false);
+			ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
+			DETAILED_TREES = loadValue("DETAILED_TREES", false);
+			ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
+			BUMPED_GROUND = loadValue("BUMPED_GROUND", false);
+			WATER_SHADER = loadValue("WATER_SHADER", false);
+			WATER_DETAILED = loadValue("WATER_DETAILED", false);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	static private boolean loadValue(String name, boolean defaultValue) {
+		boolean result = parse(p.getProperty(name), defaultValue);
+		p.setProperty(name, result + "");
+		return result;
+	}
+
+	static private <T extends Comparable<T>> T loadValue(String name,
+			T defaultValue, T min, T max) {
+		T result = parse(p.getProperty(name), defaultValue);
+		if (result.compareTo(min) < 0)
+			result = min;
+		if (result.compareTo(max) > 0)
+			result = max;
+		p.setProperty(name, result + "");
+		return result;
+	}
+
+	/*
+	 * this is a generic and useful function that is better to put in a place
+	 * where all can see it, typically used in graph interface and so on.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T parse(String info, T defaultValue) {
+		if (defaultValue.getClass() == String.class)
+			return (T) (Object) info;
+		info = info.trim();
+		if (defaultValue.getClass() == Character.class)
+			if (info.length() == 1)
+				return (T) (Object) info.charAt(0);
+			else
+				return defaultValue;
+		if (defaultValue.getClass() == Boolean.class) {
+			Boolean b = Boolean.parseBoolean(info);
+			if (b || info.equalsIgnoreCase("false"))
+				return (T) (Object) b;
+			return defaultValue;
+		}
+		try {
+			if (defaultValue.getClass() == Byte.class)
+				return (T) (Object) Byte.parseByte(info);
+			if (defaultValue.getClass() == Short.class)
+				return (T) (Object) Short.parseShort(info);
+			if (defaultValue.getClass() == Integer.class)
+				return (T) (Object) Integer.parseInt(info);
+			if (defaultValue.getClass() == Long.class)
+				return (T) (Object) Long.parseLong(info);
+			if (defaultValue.getClass() == Float.class)
+				return (T) (Object) Float.parseFloat(info);
+			if (defaultValue.getClass() == Double.class)
+				return (T) (Object) Double.parseDouble(info);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+		assert false : "FAST_PARSE::Type not reconized";
+		throw new AssertionError("FAST_PARSE::Type not reconized");
+	}
 
     
 	public int viewDirection = NORTH;
