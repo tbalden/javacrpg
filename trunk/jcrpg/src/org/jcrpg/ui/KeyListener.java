@@ -1,6 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
- *	Copyright (C) 2007 Illes Pal Zoltan
+ *  Copyright (C) 2008 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,31 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.threed.input.menu;
+package org.jcrpg.ui;
 
-import org.jcrpg.threed.J3DCore;
-import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
+public interface KeyListener {
 
-import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-
-public class CKeyMenu extends KeyInputAction{
-
-
-	ClassicKeyboardLookHandler handler;
-	J3DCore core;
-	public CKeyMenu(ClassicKeyboardLookHandler handler)
-	{
-		this.handler = handler;
-		core = handler.core;
-	}
-	public void performAction(InputActionEvent evt) {
-		String event = evt.getTriggerName();
-		if (!core.uiBase.handleWindowEvent(event))
-		{
-			core.uiBase.handleEvent(event);
-		}
-	}
+	public boolean handleKey(String key); 
 	
-
 }

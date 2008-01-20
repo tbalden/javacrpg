@@ -18,7 +18,6 @@
 package org.jcrpg.ui;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 
@@ -28,6 +27,7 @@ public class UIBase {
 	
 	public HUD hud;
 	public HashMap<String,Window> windows = new HashMap<String, Window>();
+	public HashMap<String,KeyListener> eventToElements = new HashMap<String, KeyListener>();
 	
 	public UIBase(J3DCore core) throws Exception
 	{
@@ -38,10 +38,19 @@ public class UIBase {
 	{
 		windows.put(trigger, window);
 	}
-	public void handleWindowEvent(String trigger)
+	public boolean handleWindowEvent(String trigger)
 	{
+		if (windows.get(trigger)==null) return false;
 		windows.get(trigger).toggle();
-		
+		return true;
+	}
+	public void handleEvent(String key)
+	{
+		eventToElements.get(key).handleKey(key);
+	}
+	public void addEventHandler(String key, KeyListener list)
+	{
+		eventToElements.put(key, list);
 	}
 	
 }
