@@ -21,6 +21,7 @@ package org.jcrpg.ui.text;
 import java.util.ArrayList;
 
 import org.jcrpg.ui.HUD;
+import org.jcrpg.ui.KeyListener;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -29,7 +30,7 @@ import com.jme.scene.Text;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
-public class TextBox {
+public class TextBox implements KeyListener {
 	
 	
 
@@ -41,6 +42,8 @@ public class TextBox {
 	
 	int maxLines = 1;
 	int fontSize = 12;
+	
+	int backFrom = 0;
 	
 	public TextBox(HUD hud, String name, float middleX, float middleY, float sizeX, float sizeY)
 	{
@@ -65,14 +68,13 @@ public class TextBox {
 		n.setRenderState( textLines[0].getRenderState( RenderState.RS_ALPHA ) );
         n.setRenderState( textLines[0].getRenderState( RenderState.RS_TEXTURE ) );
         n.setCullMode( SceneElement.CULL_NEVER );
-		updateText(0);
+		updateText();
 		hud.hudNode.attachChild(n);
 	}
 	
-	public void updateText(int backFrom)
+	public void updateText()
 	{
 		synchronized(boxFullTextEntries) {
-			StringBuffer buff = new StringBuffer();
 			int size = boxFullTextEntries.size();
 			int end = Math.max(0, size-backFrom);
 			int start = Math.max(0, size-backFrom-maxLines);
@@ -86,12 +88,30 @@ public class TextBox {
 	
 	public void addEntry(String entry)
 	{
-		boxFullTextEntries.add(new TextEntry(entry,ColorRGBA.white));
-		updateText(0);
+		boxFullTextEntries.add(new TextEntry(entry,ColorRGBA.lightGray));
+		updateText();
 	}
 	public void addEntry(TextEntry entry)
 	{
 		boxFullTextEntries.add(entry);
-		updateText(0);
+		updateText();
+	}
+
+	public boolean handleKey(String key) {
+		if (key.equals("logUp"))
+		{
+			if (!(backFrom>=boxFullTextEntries.size()-maxLines))
+			{
+				backFrom++;
+			}
+		} else
+		if (key.equals("logDown"))
+		{
+			backFrom--;
+		}
+		if (backFrom<0) backFrom = 0;
+		updateText();
+		System.out.println("--- BACKFROM = "+backFrom);
+		return true;
 	}
 }

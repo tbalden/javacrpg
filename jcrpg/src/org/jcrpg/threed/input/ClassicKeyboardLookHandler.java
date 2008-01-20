@@ -36,13 +36,6 @@ import org.jcrpg.threed.input.menu.CKeyMenu;
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.input.action.KeyBackwardAction;
-import com.jme.input.action.KeyLookDownAction;
-import com.jme.input.action.KeyLookUpAction;
-import com.jme.input.action.KeyRotateLeftAction;
-import com.jme.input.action.KeyRotateRightAction;
-import com.jme.input.action.KeyStrafeLeftAction;
-import com.jme.input.action.KeyStrafeRightAction;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
@@ -75,6 +68,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
         keyboard.set( "worldMap", KeyInput.KEY_F1 );
+        keyboard.set( "logUp", KeyInput.KEY_PGUP );
+        keyboard.set( "logDown", KeyInput.KEY_PGDN );
         
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
@@ -90,6 +85,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyUpAction( this, cam, rotateSpeed ), "climbUp", true );
         addAction( new CKeyDownAction( this, cam, rotateSpeed ), "climbDown", true );
         addAction( new CKeyMenu(this), "worldMap", false);
+        addAction( new CKeyMenu(this), "logUp", false);
+        addAction( new CKeyMenu(this), "logDown", false);
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );
         right.setLockAxis(new Vector3f(cam.getUp()));
         addAction(right, "turnRight", true );
