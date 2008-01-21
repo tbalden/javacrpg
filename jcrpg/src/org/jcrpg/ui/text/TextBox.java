@@ -40,7 +40,7 @@ public class TextBox implements KeyListener {
 	
 	ArrayList<TextEntry> boxFullTextEntries = new ArrayList<TextEntry>();
 	
-	int maxLines = 1;
+	int maxLines = 8;
 	int fontSize = 12;
 	
 	int backFrom = 0;
@@ -50,18 +50,22 @@ public class TextBox implements KeyListener {
 	
 		this.hud = hud;
 		
-		maxLines = (int)(hud.base.core.getDisplay().getHeight()*sizeY) / fontSize;
+		//maxLines = (int)(hud.base.core.getDisplay().getHeight()*sizeY) / fontSize;
 		textLines = new Text[maxLines];
 		
 		Node n = new Node("TextBoxNode_"+name);
 	
+		int pixels = (int)(hud.base.core.getDisplay().getHeight()*sizeY);
+		int neededVirtualPixels = maxLines*fontSize;
+		float stretch = pixels*1f/neededVirtualPixels;
 		for (int i=0; i<maxLines; i++)
 		{
 			textLines[i] = Text.createDefaultTextLabel("TextBox_"+name, "");
 			textLines[i].setCullMode( SceneElement.CULL_NEVER );
 			textLines[i].setTextureCombineMode( TextureState.REPLACE );
 			
-			textLines[i].setLocalTranslation(hud.core.getDisplay().getWidth()*middleX, (hud.core.getDisplay().getHeight()*middleY)-i*fontSize, 0);
+			textLines[i].setLocalTranslation(hud.core.getDisplay().getWidth()*middleX, (hud.core.getDisplay().getHeight()*middleY)-i*fontSize*stretch, 0);
+			textLines[i].setLocalScale(stretch);
 			n.attachChild(textLines[i]);
 		}
 		
