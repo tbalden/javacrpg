@@ -28,7 +28,6 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 
-import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -179,18 +178,18 @@ public class J3DMovingEngine {
 					} else
 					if (unit.state.equals(RenderedMovingUnit.STATE_WALKING))
 					{
-						float sX = (unit.startCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						float sZ = (unit.startCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
+						//float sX = (unit.startCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						//float sZ = (unit.startCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
 						float eX = (unit.endCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
 						float eY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.endCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
 						float eZ = (unit.endCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
-						float cX = unit.c3dX;
+						/*float cX = unit.c3dX;
 						float cY = unit.c3dY;
-						float cZ = unit.c3dZ;
+						float cZ = unit.c3dZ;*/
 						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
-						Vector3f sVec = new Vector3f(sX,sY,sZ);
+						//Vector3f sVec = new Vector3f(sX,sY,sZ);
 						Vector3f eVec = new Vector3f(eX,eY,eZ);
 						/*System.out.println("START: "+sVec.x+" "+sVec.y+" "+sVec.z);
 						System.out.println("END: "+eVec.x+" "+eVec.y+" "+eVec.z);
