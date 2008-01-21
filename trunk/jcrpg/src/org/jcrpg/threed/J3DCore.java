@@ -2725,6 +2725,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     BillboardNode bbFloppy;
 	@Override
 	protected void simpleInitGame() {
+		rootNode.setCullMode(Node.CULL_NEVER);
 		//cam.resize(100, 100);
 		//cam.setViewPort(30, 90, 30, 90);
 		bigSphere.setCenter(new Vector3f(0,0,0));
