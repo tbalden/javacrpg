@@ -27,6 +27,7 @@ import com.jme.animation.AnimationController;
 import com.jme.animation.Bone;
 import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
@@ -108,6 +109,10 @@ public class AnimatedModelNode extends Node {
 	        Box box = new Box("a",new Vector3f(0,0,0),1,1,1);
 	        //attachChild(box);
 	        attachChild(bone);
+	        
+			setModelBound(new BoundingBox());
+			updateModelBound();
+	        
 	        
 	        ColladaImporter.cleanUp();
 
