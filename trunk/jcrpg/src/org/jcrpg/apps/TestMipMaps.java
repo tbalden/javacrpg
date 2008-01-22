@@ -207,7 +207,7 @@ public class TestMipMaps extends SimpleGame {
         stripTexturesAndMaterials(sn);
 
         // Now add our mipmap texture
-        /*Texture texture = new Texture();
+        Texture texture = new Texture();
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_NEAREST);
         try {
@@ -219,28 +219,31 @@ public class TestMipMaps extends SimpleGame {
         }
         TextureState ts = display.getRenderer().createTextureState();
         ts.setTexture(texture);
-        sn.setRenderState(ts);*/
+        sn.setRenderState(ts);
         
         // attach the skeleton and the skin to the rootnode. Skeletons could
         // possibly be used to update multiple skins, so they are seperate
         // objects.
         rootNode.attachChild(sn);
-        rootNode.attachChild(skel);
+        //rootNode.attachChild(skel);
 
         // all done clean up.
         ColladaImporter.cleanUp();
 
         lightState.detachAll();
-        lightState.setEnabled(false);
+        //lightState.setEnabled(false);
     }
 
     private void stripTexturesAndMaterials(SceneElement sp) {
         sp.clearRenderState(RenderState.RS_TEXTURE);
         sp.clearRenderState(RenderState.RS_MATERIAL);
+        for (int i=0; i<RenderState.RS_MAX_STATE; i++)
+        	sp.clearRenderState(i);
         if (sp instanceof Node) {
             Node n = (Node) sp;
             for (Spatial child : n.getChildren()) {
                 stripTexturesAndMaterials(child);
+                child.setCullMode(child.CULL_NEVER);
             }
         } else if (sp instanceof Geometry) {
             Geometry g = (Geometry) sp;
