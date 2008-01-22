@@ -4,8 +4,9 @@ Contents:
 
 * gorilla_model.blend
 * gorilla_texture.blend
+* gorilla_rig.blend
+* gorilla_walking.blend
 * gorilla_prev.jpg
-* gorilla_texture_prev.jpg
 * sheepskin.jpg (from BurningWell.org) 
 * refs
   * gorilla_frontview
