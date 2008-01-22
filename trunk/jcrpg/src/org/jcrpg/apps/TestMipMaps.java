@@ -159,11 +159,11 @@ public class TestMipMaps extends SimpleGame {
         URL url = TestMipMaps.class.getClassLoader().getResource(
                 "./jmetest/data/model/collada/");
         // this stream points to the model itself.
-        InputStream mobboss = new FileInputStream(new File("./data/models/fauna/gorilla.dae"));//TestMipMaps.class.getClassLoader()
+        InputStream mobboss = new FileInputStream(new File("./data/models/fauna/gorilla_walking1.dae"));//TestMipMaps.class.getClassLoader()
                 //.getResourceAsStream("./jmetest/data/model/collada/man.dae");
         // this stream points to the animation file. Note: You don't necessarily
         // have to split animations out into seperate files, this just helps.
-        InputStream animation = new FileInputStream(new File("./data/models/fauna/gorilla.dae"));//TestMipMaps.class.getClassLoader()
+        InputStream animation = new FileInputStream(new File("./data/models/fauna/gorilla_walking1.dae"));//TestMipMaps.class.getClassLoader()
                 //.getResourceAsStream("./jmetest/data/model/collada/man_walk.dae");
         if (mobboss == null) {
             System.out
@@ -204,7 +204,7 @@ public class TestMipMaps extends SimpleGame {
         skel.addController(ac);
 
         // Let's strip out any textures.
-        //stripTexturesAndMaterials(sn);
+        stripTexturesAndMaterials(sn);
 
         // Now add our mipmap texture
         /*Texture texture = new Texture();

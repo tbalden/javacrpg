@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -96,6 +97,7 @@ public class ModelPool {
 			n.setPooledContainer(cont);
 			cont.used.add(n);
 			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			
 			if ( toCreate>0)
 			{
 				for (int i=0; i<toCreate; i++)
@@ -139,6 +141,7 @@ public class ModelPool {
 			n.setPooledContainer(cont);
 			cont.used.add(n);
 			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			if (model instanceof MovingModel) toCreate = 1;
 			if ( toCreate>0)
 			{
 				for (int i=0; i<toCreate; i++)

@@ -29,7 +29,6 @@ import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Box;
 import com.jmex.model.collada.ColladaImporter;
@@ -52,6 +51,9 @@ public class AnimatedModelNode extends Node {
 	public AnimatedModelNode(String fileName) 
 	{
 		try {
+			//Md3ToJme m3d2jme = new Md3ToJme();
+			//m3d2jme.
+//			md
 			InputStream stream = new FileInputStream(new File(fileName));
 			
 		    ColladaImporter.load(stream, "model");
@@ -62,15 +64,18 @@ public class AnimatedModelNode extends Node {
 		    skinNode = ColladaImporter.getSkinNode(ColladaImporter.getSkinNodeNames()
 	                .get(0));
 		    
-		    //modelNode = ColladaImporter.getModel();
+		    modelNode = ColladaImporter.getModel();
 		    //Geometry g = ColladaImporter.getGeometry(ColladaImporter.getGeometryNames().get(0));
 		    //modelNode.attachChild(g);
-		    for (int i=0; i<ColladaImporter.getSkeletonNames().size(); i++)
+		    if (ColladaImporter.getSkeletonNames()!=null)
 		    {
-		    	System.out.println("SKELETON NODE NAME:"+ColladaImporter.getSkeletonNames().get(i));
+		    	for (int i=0; i<ColladaImporter.getSkeletonNames().size(); i++)
+		    	{
+		    		System.out.println("SKELETON NODE NAME:"+ColladaImporter.getSkeletonNames().get(i));
+		    	}
+		    	bone = ColladaImporter.getSkeleton(ColladaImporter
+		    		.getSkeletonNames().get(0));
 		    }
-	        bone = ColladaImporter.getSkeleton(ColladaImporter
-	                .getSkeletonNames().get(0));
 		    
 	        animationNames = ColladaImporter.getControllerNames();
 	        
@@ -79,8 +84,6 @@ public class AnimatedModelNode extends Node {
 	
 		        // set up a new animation controller with our BoneAnimation
 		        AnimationController ac = new AnimationController();
-		        ac.setRepeatType(Controller.RT_CYCLE);
-		        ac.setActive(true);
 	
 		        for (int i = 0; i < animationNames.size(); i++) {
 		            System.out.println(animationNames.get(i));
@@ -88,21 +91,24 @@ public class AnimatedModelNode extends Node {
 			                .get(i));
 			        ac.addAnimation(anim);
 			        animations.add(anim);
+			        if (animations.size()>0)
+			        	ac.setActiveAnimation(anim);
 		        }
+		        ac.setRepeatType(Controller.RT_CYCLE);
+		        ac.setActive(true);
 	
-		        if (animations.size()>0)
-		        	ac.setActiveAnimation(0);
 		        
 	
 		        // assign the animation controller to our skeleton
 		        bone.addController(ac);
+		        ac.setActive(true);
 	        }
 	        //attachChild(modelNode);
 	        attachChild(skinNode);
 	        Box box = new Box("a",new Vector3f(0,0,0),1,1,1);
 	        //attachChild(box);
-	        //attachChild(bone);
-
+	        attachChild(bone);
+	        
 	        ColladaImporter.cleanUp();
 
 
