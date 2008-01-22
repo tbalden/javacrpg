@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
@@ -196,7 +197,26 @@ public class ModelLoader {
 				//r[i] = sn;//bbOrig;// new PooledSharedNode("1",node);// bbOrig;
 				r[i] = bbOrig;
 			} else
-				if (objects[i] instanceof SimpleModel) 
+			if (objects[i] instanceof MovingModel) 
+			{
+				if ( ((MovingModel)objects[i]).modelName.endsWith(".dae") )
+				{
+					// TODO this needs a total refactor!
+					Node node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName);
+					PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+					r[i] = psnode;
+					psnode.setName(node.getName());
+				} else 
+				{
+					PooledSharedNode node = loadNode((MovingModel)objects[i],fakeLoadForCacheMaint);
+					if (fakeLoadForCacheMaint) continue;
+					
+			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+					r[i] = node;
+					node.setName(((MovingModel)objects[i]).modelName+i);
+				}
+			} else
+			if (objects[i] instanceof SimpleModel) 
 				{
 					PooledSharedNode node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
 					if (fakeLoadForCacheMaint) continue;
@@ -205,15 +225,6 @@ public class ModelLoader {
 					r[i] = node;
 					node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
-				if (objects[i] instanceof MovingModel) 
-				{
-					PooledSharedNode node = loadNode((MovingModel)objects[i],fakeLoadForCacheMaint);
-					if (fakeLoadForCacheMaint) continue;
-					
-			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
-					r[i] = node;
-					node.setName(((MovingModel)objects[i]).modelName+i);
-				} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)
 			{
