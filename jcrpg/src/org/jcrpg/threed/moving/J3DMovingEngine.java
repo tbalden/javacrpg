@@ -134,7 +134,7 @@ public class J3DMovingEngine {
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
 					//System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
-					realPooledNode.setLocalScale(n.getLocalScale());
+					realPooledNode.setLocalScale(n.getLocalScale().mult(10f));
 					if (unit.internal) {
 						core.intRootNode.attachChild((Node)realPooledNode);
 					} else 
