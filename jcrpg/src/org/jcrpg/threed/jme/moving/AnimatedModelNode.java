@@ -84,7 +84,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	        bodyInstance.updateGeometricState(0, false);
 
 	        runningAnimator.fadeIn(.5f);
-	        runningAnimator.setSpeed(0.07f);
+	        runningAnimator.setSpeed(0.8f);
 	        attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
