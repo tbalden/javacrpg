@@ -28,7 +28,7 @@ joints {
 }
 
 mesh {
-	shader ""
+	shader "data/models/fauna/gorilla/marine"
 
 	numverts 1984
 	vert 0 ( 0.000000 0.000000 ) 0 1
@@ -5849,7 +5849,7 @@ mesh {
 }
 
 mesh {
-	shader "//gorilla_face.png"
+	shader "data/models/fauna/gorilla/marine"
 
 	numverts 109
 	vert 0 ( 0.515775 0.876715 ) 0 1

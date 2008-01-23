@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.ModelPool.PoolItemContainer;
+
 import md5reader.MD5AnimReader;
 import md5reader.MD5MeshReader;
 import model.Model;
@@ -38,11 +41,13 @@ import com.jme.animation.Bone;
 import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
 import com.jme.scene.shape.Box;
 
-public class AnimatedModelNode extends Node {
+public class AnimatedModelNode extends Node implements PooledNode {
 
 	/**
 	 * 
@@ -68,15 +73,19 @@ public class AnimatedModelNode extends Node {
 			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
 			SkeletalAnimationController bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 	        AnimationAnimator runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
-
+	        bodyInstance.setNormalsMode(SceneElement.NM_GL_NORMALIZE_PROVIDED);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
-	        bodyInstance.setLocalScale(1f);
+	        bodyInstance.setLocalScale(0.2f);
+	        Quaternion q = new Quaternion();
+			q.fromAngleNormalAxis(new Vector3f(1,0,0).normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(1,0,0).normalize());
+			q.inverseLocal();
+	        bodyInstance.setLocalRotation(q);
+			
 	        bodyInstance.updateGeometricState(0, false);
 
 	        runningAnimator.fadeIn(.5f);
-			Box b = new Box("bo",new Vector3f(0,0,0),1f,1f,1f);
-			//attachChild(b);
-	        //attachChild(bodyInstance);
+	        runningAnimator.setSpeed(0.07f);
+	        attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
 	        
@@ -114,6 +123,15 @@ public class AnimatedModelNode extends Node {
 
         return animation;
     }
+
+    PoolItemContainer cont = null;
+	public PoolItemContainer getPooledContainer() {
+		return cont;
+	}
+
+	public void setPooledContainer(PoolItemContainer cont) {
+		this.cont = cont;
+	}
 
 
 }

@@ -199,13 +199,12 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof MovingModel) 
 			{
-				if ( ((MovingModel)objects[i]).modelName.endsWith(".md5") )
+				if ( ((MovingModel)objects[i]).modelName.endsWith(".md5mesh") )
 				{
 					// TODO this needs a total refactor!
-					Node node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation);
-					PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
-					r[i] = psnode;
-					psnode.setName(node.getName());
+					PooledNode node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation);
+					
+					r[i] = node;
 				} else 
 				{
 					PooledSharedNode node = loadNode((MovingModel)objects[i],fakeLoadForCacheMaint);
