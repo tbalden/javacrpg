@@ -202,7 +202,7 @@ public class ModelLoader {
 				if ( ((MovingModel)objects[i]).modelName.endsWith(".md5") )
 				{
 					// TODO this needs a total refactor!
-					Node node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName);
+					Node node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation);
 					PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
 					r[i] = psnode;
 					psnode.setName(node.getName());
