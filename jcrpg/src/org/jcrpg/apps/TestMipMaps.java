@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.jcrpg.threed.scene.model.Model;
+
 import com.jme.animation.AnimationController;
 import com.jme.animation.Bone;
 import com.jme.animation.BoneAnimation;
@@ -87,6 +89,7 @@ public class TestMipMaps extends SimpleGame {
         	setupModel();
         } catch (Exception ex)
         {
+        	ex.printStackTrace();
         	System.exit(1);
         }
         setupMonitor();
@@ -100,7 +103,8 @@ public class TestMipMaps extends SimpleGame {
     protected void simpleRender() {
         lastRend += tpf;
         if (lastRend > throttle) {
-            tRenderer.render(sn, fakeTex);
+            if (sn!=null)
+        	tRenderer.render(sn, fakeTex);
             lastRend = 0;
         }
     }
@@ -161,10 +165,12 @@ public class TestMipMaps extends SimpleGame {
         // this stream points to the model itself.
         InputStream mobboss = new FileInputStream(new File("./data/models/fauna/gorilla_walking1.dae"));//TestMipMaps.class.getClassLoader()
                 //.getResourceAsStream("./jmetest/data/model/collada/man.dae");
+        //mobboss = new FileInputStream("./jmetest/data/model/collada/man.dae");
         // this stream points to the animation file. Note: You don't necessarily
         // have to split animations out into seperate files, this just helps.
         InputStream animation = new FileInputStream(new File("./data/models/fauna/gorilla_walking1.dae"));//TestMipMaps.class.getClassLoader()
                 //.getResourceAsStream("./jmetest/data/model/collada/man_walk.dae");
+        //animation = new FileInputStream("./jmetest/data/model/collada/man_walk.dae");
         if (mobboss == null) {
             System.out
                     .println("Unable to find file, did you include jme-test.jar in classpath?");
@@ -174,40 +180,62 @@ public class TestMipMaps extends SimpleGame {
         ColladaImporter.load(mobboss, "model");
         // we can then retrieve the skin from the importer as well as the
         // skeleton
-        sn = ColladaImporter.getSkinNode(ColladaImporter.getSkinNodeNames()
-                .get(0));
-        Bone skel = ColladaImporter.getSkeleton(ColladaImporter
-                .getSkeletonNames().get(0));
+        if (ColladaImporter.getSkinNodeNames()!=null) {
+        	System.out.println("!!!!!!!! "+ColladaImporter.getSkinNodeNames().size());
+        	sn = ColladaImporter.getSkinNode(ColladaImporter.getSkinNodeNames()
+                    .get(0));
+        }  else
+        {
+        	System.out.println("SKIN NODES NULL");
+        }
+        System.out.println("GEOS: " +ColladaImporter.getGeometryNames().size());
+        Geometry g = ColladaImporter.getGeometry(ColladaImporter.getGeometryNames().get(0));
+        //Node g = ColladaImporter.getModel();
+        rootNode.attachChild(g);
+        
+        Bone skel = null;
+        if (ColladaImporter.getSkeletonNames()!=null) {
+        	System.out.println("SKELETON NODES "+ColladaImporter.getSkeletonNames().size());
+        	ColladaImporter.getSkeleton(ColladaImporter
+        			.getSkeletonNames().get(0));
+        } else
+        {
+        	System.out.println("SKELETON NODES NULL");
+        }
         // clean up the importer as we are about to use it again.
         ColladaImporter.cleanUp();
+        //if (true) return;
 
         // load the animation file.
         ColladaImporter.load(animation, "anim");
         // this file might contain multiple animations, (in our case it's one)
         ArrayList<String> animations = ColladaImporter.getControllerNames();
-        System.out.println("Number of animations: " + animations.size());
-        for (int i = 0; i < animations.size(); i++) {
-            System.out.println(animations.get(i));
-        }
-        // Obtain the animation from the file by name
-        BoneAnimation anim1 = ColladaImporter.getAnimationController(animations
-                .get(0));
-
-        // set up a new animation controller with our BoneAnimation
-        AnimationController ac = new AnimationController();
-        ac.addAnimation(anim1);
-        ac.setRepeatType(Controller.RT_CYCLE);
-        ac.setActive(true);
-        ac.setActiveAnimation(anim1);
-
-        // assign the animation controller to our skeleton
-        skel.addController(ac);
+        if (animations!=null && animations.size()>0) {
+	        System.out.println("Number of animations: " + animations.size());
+	        for (int i = 0; i < animations.size(); i++) {
+	            System.out.println(animations.get(i));
+	        }
+	        
+	        // Obtain the animation from the file by name
+	        BoneAnimation anim1 = ColladaImporter.getAnimationController(animations
+	                .get(0));
+	
+	        // set up a new animation controller with our BoneAnimation
+	        AnimationController ac = new AnimationController();
+	        ac.addAnimation(anim1);
+	        ac.setRepeatType(Controller.RT_CYCLE);
+	        ac.setActive(true);
+	        ac.setActiveAnimation(anim1);
+	
+	        // assign the animation controller to our skeleton
+	        if (skel!=null) skel.addController(ac);
+	    }
 
         // Let's strip out any textures.
-        stripTexturesAndMaterials(sn);
+        //stripTexturesAndMaterials(sn);
 
         // Now add our mipmap texture
-        Texture texture = new Texture();
+        /*Texture texture = new Texture();
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_NEAREST);
         try {
@@ -219,31 +247,30 @@ public class TestMipMaps extends SimpleGame {
         }
         TextureState ts = display.getRenderer().createTextureState();
         ts.setTexture(texture);
-        sn.setRenderState(ts);
+        sn.setRenderState(ts);*/
         
         // attach the skeleton and the skin to the rootnode. Skeletons could
         // possibly be used to update multiple skins, so they are seperate
         // objects.
-        rootNode.attachChild(sn);
-        //rootNode.attachChild(skel);
+        if (sn!=null) {rootNode.attachChild(sn); 
+        	sn.setCullMode(sn.CULL_NEVER);
+        }
+        if (skel!=null) rootNode.attachChild(skel);
 
         // all done clean up.
         ColladaImporter.cleanUp();
 
         lightState.detachAll();
-        //lightState.setEnabled(false);
+        lightState.setEnabled(false);
     }
 
     private void stripTexturesAndMaterials(SceneElement sp) {
         sp.clearRenderState(RenderState.RS_TEXTURE);
         sp.clearRenderState(RenderState.RS_MATERIAL);
-        for (int i=0; i<RenderState.RS_MAX_STATE; i++)
-        	sp.clearRenderState(i);
         if (sp instanceof Node) {
             Node n = (Node) sp;
             for (Spatial child : n.getChildren()) {
                 stripTexturesAndMaterials(child);
-                child.setCullMode(child.CULL_NEVER);
             }
         } else if (sp instanceof Geometry) {
             Geometry g = (Geometry) sp;
