@@ -20,19 +20,25 @@ package org.jcrpg.threed.jme.moving;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import md5reader.MD5AnimReader;
+import md5reader.MD5MeshReader;
+import model.Model;
+import model.SkeletalModelInstance;
+import model.animation.Animation;
+import model.animation.AnimationAnimator;
+import model.animation.SkeletalAnimationController;
 
 import com.jme.animation.AnimationController;
 import com.jme.animation.Bone;
 import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
-import com.jme.math.Vector3f;
-import com.jme.scene.Controller;
 import com.jme.scene.Node;
-import com.jme.scene.shape.Box;
-import com.jmex.model.collada.ColladaImporter;
 
 public class AnimatedModelNode extends Node {
 
@@ -51,72 +57,25 @@ public class AnimatedModelNode extends Node {
 	
 	public AnimatedModelNode(String fileName) 
 	{
+		System.out.println("LOADING ANIMATED MODEL: "+fileName);
 		try {
-			//Md3ToJme m3d2jme = new Md3ToJme();
-			//m3d2jme.
-//			md
-			InputStream stream = new FileInputStream(new File(fileName));
+			Model bodyModel = loadModel(fileName);
 			
-		    ColladaImporter.load(stream, "model");
-		    for (int i=0; i<ColladaImporter.getSkinNodeNames().size(); i++)
-		    {
-		    	System.out.println("SKIN NODE NAME:"+ColladaImporter.getSkinNodeNames().get(i));
-		    }
-		    skinNode = ColladaImporter.getSkinNode(ColladaImporter.getSkinNodeNames()
-	                .get(0));
-		    
-		    modelNode = ColladaImporter.getModel();
-		    //Geometry g = ColladaImporter.getGeometry(ColladaImporter.getGeometryNames().get(0));
-		    //modelNode.attachChild(g);
-		    if (ColladaImporter.getSkeletonNames()!=null)
-		    {
-		    	for (int i=0; i<ColladaImporter.getSkeletonNames().size(); i++)
-		    	{
-		    		System.out.println("SKELETON NODE NAME:"+ColladaImporter.getSkeletonNames().get(i));
-		    	}
-		    	bone = ColladaImporter.getSkeleton(ColladaImporter
-		    		.getSkeletonNames().get(0));
-		    }
-		    
-	        animationNames = ColladaImporter.getControllerNames();
-	        
-	        if (animationNames!=null) {
-		        System.out.println("Number of animations: " + animationNames.size());
-	
-		        // set up a new animation controller with our BoneAnimation
-		        AnimationController ac = new AnimationController();
-	
-		        for (int i = 0; i < animationNames.size(); i++) {
-		            System.out.println(animationNames.get(i));
-			        BoneAnimation anim = ColladaImporter.getAnimationController(animationNames
-			                .get(i));
-			        ac.addAnimation(anim);
-			        animations.add(anim);
-			        if (animations.size()>0)
-			        	ac.setActiveAnimation(anim);
-		        }
-		        ac.setRepeatType(Controller.RT_CYCLE);
-		        ac.setActive(true);
-	
-		        
-	
-		        // assign the animation controller to our skeleton
-		        bone.addController(ac);
-		        ac.setActive(true);
-	        }
-	        //attachChild(modelNode);
-	        attachChild(skinNode);
-	        Box box = new Box("a",new Vector3f(0,0,0),1,1,1);
-	        //attachChild(box);
-	        attachChild(bone);
-	        
-			setModelBound(new BoundingBox());
-			updateModelBound();
-	        
-	        
-	        ColladaImporter.cleanUp();
+			Animation runningAnimation = loadAnimation("data/models/fauna/gorilla1anim.md5");
 
+			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
+			SkeletalAnimationController bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
+	        AnimationAnimator runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
 
+	        bodyInstance.getLocalTranslation().set(0, 0, 0);
+	        bodyInstance.updateGeometricState(0, false);
+	        bodyInstance.setModelBound(new BoundingBox());
+	        bodyInstance.updateModelBound();
+
+	        runningAnimator.fadeIn(.5f);
+			
+	        attachChild(bodyInstance);
+	        
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -124,4 +83,33 @@ public class AnimatedModelNode extends Node {
 		
 	}
 	
+    private Model loadModel(String path) throws IOException {
+        InputStream in = new FileInputStream(new File(path));
+
+        if (in == null) {
+            throw new FileNotFoundException("Cannot find " + path);
+        }
+
+        MD5MeshReader reader = new MD5MeshReader();
+
+        reader.setProperty(MD5MeshReader.CLASSLOADER, getClass().getClassLoader());
+
+        return reader.readModel(in);
+    }
+
+    private Animation loadAnimation(String path) throws IOException {
+    	InputStream in = new FileInputStream(new File(path));
+
+        if (in == null) {
+            throw new FileNotFoundException("Cannot find " + path);
+        }
+
+        MD5AnimReader animReader = new MD5AnimReader();
+
+        Animation animation = animReader.readAnimation(in);
+
+        return animation;
+    }
+
+
 }

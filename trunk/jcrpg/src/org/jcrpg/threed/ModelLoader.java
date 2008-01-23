@@ -199,7 +199,7 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof MovingModel) 
 			{
-				if ( ((MovingModel)objects[i]).modelName.endsWith(".dae") )
+				if ( ((MovingModel)objects[i]).modelName.endsWith(".md5") )
 				{
 					// TODO this needs a total refactor!
 					Node node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName);
