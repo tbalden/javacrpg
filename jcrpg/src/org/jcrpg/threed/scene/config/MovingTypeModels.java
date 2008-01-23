@@ -45,8 +45,8 @@ public class MovingTypeModels {
 	{
 		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_MALE,0);
 
-		MovingModel gorilla = new MovingModel("models/fauna/gorilla_texture.obj",null,null,false);
-		//MovingModel gorilla = new MovingModel("data/models/fauna/gorilla1mesh.md5",null,null,false);
+		MovingModel gorilla = new MovingModel("models/fauna/gorilla_texture.obj",null,null,null,false);
+		//MovingModel gorilla = new MovingModel("data/models/fauna/gorilla1mesh.md5","data/models/fauna/gorilla1anim.md5",null,null,false);
 		RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(NON_INSTANCE,0,0,0,new Model[]{gorilla});
 		hmModelIdToRenderedMovingUnit.put(0, gorilla_unit);
 	}

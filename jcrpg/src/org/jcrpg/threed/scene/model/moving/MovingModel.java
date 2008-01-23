@@ -28,11 +28,13 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 public class MovingModel extends SimpleModel {
 
 	public String[] additionalModels = null;
+	public String animation = null;
 
-	public MovingModel(String modelName, String[] additionalModels, String textureName, boolean mipMap)
+	public MovingModel(String modelName, String animation, String[] additionalModels, String textureName, boolean mipMap)
 	{
 		super(modelName,textureName,mipMap);
 		type = MOVINGMODEL;
+		this.animation = animation;
 		this.id = modelName+textureName+mipMap;
 		this.modelName = modelName;
 		this.textureName = textureName;

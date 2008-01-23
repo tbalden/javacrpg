@@ -38,7 +38,9 @@ import com.jme.animation.Bone;
 import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.shape.Box;
 
 public class AnimatedModelNode extends Node {
 
@@ -55,26 +57,28 @@ public class AnimatedModelNode extends Node {
 	public ArrayList<BoneAnimation> animations = new ArrayList<BoneAnimation>();
 	public SkinNode skinNode;
 	
-	public AnimatedModelNode(String fileName) 
+	public AnimatedModelNode(String fileName, String animation) 
 	{
 		System.out.println("LOADING ANIMATED MODEL: "+fileName);
 		try {
 			Model bodyModel = loadModel(fileName);
 			
-			Animation runningAnimation = loadAnimation("data/models/fauna/gorilla1anim.md5");
+			Animation runningAnimation = loadAnimation(animation);
 
 			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
 			SkeletalAnimationController bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 	        AnimationAnimator runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
 
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
+	        bodyInstance.setLocalScale(1f);
 	        bodyInstance.updateGeometricState(0, false);
-	        bodyInstance.setModelBound(new BoundingBox());
-	        bodyInstance.updateModelBound();
 
 	        runningAnimator.fadeIn(.5f);
-			
-	        attachChild(bodyInstance);
+			Box b = new Box("bo",new Vector3f(0,0,0),1f,1f,1f);
+			//attachChild(b);
+	        //attachChild(bodyInstance);
+	        setModelBound(new BoundingBox());
+	        updateModelBound();
 	        
 		} catch (Exception ex)
 		{
@@ -92,7 +96,7 @@ public class AnimatedModelNode extends Node {
 
         MD5MeshReader reader = new MD5MeshReader();
 
-        reader.setProperty(MD5MeshReader.CLASSLOADER, getClass().getClassLoader());
+        //reader.setProperty(MD5MeshReader.CLASSLOADER, getClass().getClassLoader());
 
         return reader.readModel(in);
     }
