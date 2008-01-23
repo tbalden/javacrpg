@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.Model;
 
 import com.jme.animation.AnimationController;
@@ -163,6 +164,18 @@ public class TestMipMaps extends SimpleGame {
         URL url = TestMipMaps.class.getClassLoader().getResource(
                 "./jmetest/data/model/collada/");
         // this stream points to the model itself.
+        
+        AnimatedModelNode node = new AnimatedModelNode("./data/models/fauna/gorilla1mesh.md5", "./data/models/fauna/gorilla.md5anim");
+        sn = null;
+        //stripTexturesAndMaterials(node);
+        rootNode.attachChild(node);
+        
+        cam.setLocation(node.getLocalTranslation().add(0.0f, 75.0f, 300.0f));
+		cam.lookAt(node.getLocalTranslation().add(0.0f, 50.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
+		
+        
+        if (true) return;
+        
         InputStream mobboss = new FileInputStream(new File("./data/models/fauna/gorilla_walking1.dae"));//TestMipMaps.class.getClassLoader()
                 //.getResourceAsStream("./jmetest/data/model/collada/man.dae");
         //mobboss = new FileInputStream("./jmetest/data/model/collada/man.dae");

@@ -40,7 +40,7 @@ public class Jcrpg {
      */
     public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
-    	java.util.logging.Logger.getLogger("").setLevel(Level.SEVERE);
+    	java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
     	try {
     		start();
     	} catch (Exception ex)

@@ -70,7 +70,7 @@ public class J3DMovingEngine {
 		if (n==null) return;
 	
 		for (int i=0; i<n.length; i++) {
-			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY-(0.5f*J3DCore.CUBE_EDGE_SIZE),unit.c3dZ));
+			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY,unit.c3dZ));
 			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.origoX,core.origoY,core.origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
@@ -103,7 +103,7 @@ public class J3DMovingEngine {
 			// TODO this only testing code! :-)
 			firstRender = false;
 			GorillaHorde horde = new GorillaHorde();
-			for (int i=0; i<3; i++) {
+			for (int i=0; i<1; i++) {
 				VisibleLifeForm form = horde.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-1-i/2);
 				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
@@ -134,7 +134,7 @@ public class J3DMovingEngine {
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
 					//System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
-					realPooledNode.setLocalScale(n.getLocalScale());//.mult(10f));
+					realPooledNode.setLocalScale(n.getLocalScale());
 					if (unit.internal) {
 						core.intRootNode.attachChild((Node)realPooledNode);
 					} else 
@@ -182,7 +182,7 @@ public class J3DMovingEngine {
 						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
 						//float sZ = (unit.startCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
 						float eX = (unit.endCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.endCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (unit.endCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
 						float eZ = (unit.endCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
 						/*float cX = unit.c3dX;
 						float cY = unit.c3dY;
