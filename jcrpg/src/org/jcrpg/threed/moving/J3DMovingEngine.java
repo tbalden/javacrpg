@@ -28,6 +28,8 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 
+import com.jme.math.FastMath;
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -103,10 +105,10 @@ public class J3DMovingEngine {
 			// TODO this only testing code! :-)
 			firstRender = false;
 			GorillaHorde horde = new GorillaHorde();
-			for (int i=0; i<3; i++) {
+			for (int i=0; i<2; i++) {
 				VisibleLifeForm form = horde.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);
-				unit.direction = (i%2==1?0:2);
+				unit.direction = (i%2==1?0:1);
 				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
 				renderNodes(placeHolders, unit);
 			}
@@ -167,12 +169,22 @@ public class J3DMovingEngine {
 					{
 						if (unit.direction==0)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-2, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
+							unit.direction=1;
+						} else
+						if (unit.direction==1)
+						{
+							unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=2;
 						} else
 						if (unit.direction==2)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+2, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
+							unit.direction=3;
+						} else
+						if (unit.direction==3)
+						{
+							unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=0;
 						}
 						
@@ -199,8 +211,21 @@ public class J3DMovingEngine {
 						n.getLocalTranslation().addLocal(mVec);
 						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
+						Vector3f m = new Vector3f(mVec);
+						m.y=0;
 						Quaternion q = new Quaternion();
-						q.fromAngleNormalAxis(mVec.normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(0,1,0).normalize());
+						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
+						Matrix3f m3f = new Matrix3f();
+						
+						m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
+						//q.fromRotationMatrix(m3f);
+						//q.oppositeLocal();
+						//if (unit.direction== 0) 
+						//if (q.mult(mVec).x>0 && q.mult(mVec).z>0) q.oppositeLocal();
+						
+						// trick for quaternion fixing, opposite local if ...
+						m.normalizeLocal();
+						if (m.x>0 && m.z>-0.2f && m.z<0.2f) q.oppositeLocal();
 						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
 						Quaternion between = new Quaternion(current);
