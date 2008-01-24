@@ -103,9 +103,10 @@ public class J3DMovingEngine {
 			// TODO this only testing code! :-)
 			firstRender = false;
 			GorillaHorde horde = new GorillaHorde();
-			for (int i=0; i<1; i++) {
+			for (int i=0; i<3; i++) {
 				VisibleLifeForm form = horde.getOne();
-				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-1-i/2);
+				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);
+				unit.direction = (i%2==1?0:2);
 				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
 				renderNodes(placeHolders, unit);
 			}
@@ -166,12 +167,12 @@ public class J3DMovingEngine {
 					{
 						if (unit.direction==0)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-2, false, false);
 							unit.direction=2;
 						} else
 						if (unit.direction==2)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
+							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+2, false, false);
 							unit.direction=0;
 						}
 						
@@ -200,7 +201,13 @@ public class J3DMovingEngine {
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
 						Quaternion q = new Quaternion();
 						q.fromAngleNormalAxis(mVec.normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(0,1,0).normalize());
-						((Node)n.realNode).setLocalRotation(q);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
+						
+						Quaternion current = ((Node)n.realNode).getLocalRotation();
+						Quaternion between = new Quaternion(current);
+						between.slerp(q, 1f);
+						current.slerp(between, 0.1f);
+						
+						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						float dist = eVec.distance(n.getLocalTranslation());
 						//System.out.println("######### "+dist);
 						

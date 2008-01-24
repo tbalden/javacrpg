@@ -43,8 +43,11 @@ import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
+import com.jme.scene.Spatial;
+import com.jme.scene.state.RenderState;
 
 public class AnimatedModelNode extends Node implements PooledNode {
 
@@ -79,11 +82,11 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			q.fromAngleNormalAxis(new Vector3f(1,0,0).normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(1,0,0).normalize());
 			q.inverseLocal();
 	        bodyInstance.setLocalRotation(q);
-			
-	        bodyInstance.updateGeometricState(0, false);
-
+	        
 	        runningAnimator.fadeIn(.5f);
-	        runningAnimator.setSpeed(0.8f);
+	        runningAnimator.setSpeed(.6f);
+	        //runningAnimator.fadeOut(.5f, false);
+	        //bodyAnimationController.setActive(false);
 	        attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
@@ -94,6 +97,26 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		}
 		
 	}
+    private void stripTexturesAndMaterials(SceneElement sp) {
+        sp.clearRenderState(RenderState.RS_TEXTURE);
+        sp.clearRenderState(RenderState.RS_MATERIAL);
+        for (int i=0; i<RenderState.RS_MAX_STATE; i++)
+        {
+        	sp.clearRenderState(i);
+        }
+        if (sp instanceof Node) {
+            Node n = (Node) sp;
+            for (Spatial child : n.getChildren()) {
+                stripTexturesAndMaterials(child);
+            }
+        } else if (sp instanceof Geometry) {
+            Geometry g = (Geometry) sp;
+            //g.setNormalsMode(SceneElement.NM_GL_NORMALIZE_PROVIDED);
+            for (int x = 0; x < g.getBatchCount(); x++) {
+                stripTexturesAndMaterials(g.getBatch(x));
+            }
+        }
+    }
 	
     private Model loadModel(String path) throws IOException {
         InputStream in = new FileInputStream(new File(path));
