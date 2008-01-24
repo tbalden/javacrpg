@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>exporting_animated_.md5_models_from_blender [jME Wiki]</title>
+  
+
+  <meta name="generator" content="DokuWiki Release rc2006-10-08">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2007-11-09T00:54:48-0800">
+<meta name="keywords" content="exporting_animated_.md5_models_from_blender">
+<link rel="start" href="http://www.jmonkeyengine.com/wiki/">
+<link rel="contents" href="http://www.jmonkeyengine.com/wiki/doku.php?id=exporting_animated_.md5_models_from_blender&amp;do=index" title="Index">
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="http://www.jmonkeyengine.com/wiki/feed.php">
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="http://www.jmonkeyengine.com/wiki/feed.php?mode=list&amp;ns=">
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://www.jmonkeyengine.com/wiki/doku.php?do=export_xhtml&amp;id=exporting_animated_.md5_models_from_blender">
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="http://www.jmonkeyengine.com/wiki/doku.php?do=export_raw&amp;id=exporting_animated_.md5_models_from_blender">
+<link rel="stylesheet" media="screen" type="text/css" href="readme_files/css.css">
+<link rel="stylesheet" media="print" type="text/css" href="readme_files/css_002.css">
+<script type="text/javascript" charset="utf-8" src="readme_files/js.php"></script>
+
+  <link rel="shortcut icon" href="http://www.jmonkeyengine.com/wiki/lib/tpl/default/images/favicon.ico"></head><body>
+<div class="dokuwiki">
+  
+  <div class="stylehead">
+
+    <div class="header">
+      <div class="pagename">
+        [[<a href="http://www.jmonkeyengine.com/wiki/doku.php?id=exporting_animated_.md5_models_from_blender&amp;do=backlink">exporting_animated_.md5_models_from_blender</a>]]
+      </div>
+      <div class="logo">
+        <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=" name="dokuwiki__top" id="dokuwiki__top" accesskey="h" title="[ALT+H]">jME Wiki</a>      </div>
+
+      <div class="clearer"></div>
+    </div>
+
+    
+    <div class="bar" id="bar__top">
+      <div class="bar-left" id="bar__topleft">
+        <form class="button" method="post" action="/wiki/doku.php"><div class="no"><input name="do" value="edit" type="hidden"><input name="rev" value="" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Show pagesource" class="button" accesskey="v" title="Show pagesource [ALT+V]" type="submit"></div></form>        <form class="button" method="get" action="/wiki/doku.php"><div class="no"><input name="do" value="revisions" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Old revisions" class="button" accesskey="o" title="Old revisions [ALT+O]" type="submit"></div></form>      </div>
+
+      <div class="bar-right" id="bar__topright">
+        <form class="button" method="get" action="/wiki/doku.php"><div class="no"><input name="do" value="recent" type="hidden"><input name="id" value="" type="hidden"><input value="Recent changes" class="button" accesskey="r" title="Recent changes [ALT+R]" type="submit"></div></form>        <form action="/wiki/doku.php?id=" accept-charset="utf-8" class="search" id="dw__search"><div class="no"><input name="do" value="search" type="hidden"><input id="qsearch__in" accesskey="f" name="id" class="edit" title="[ALT+F]" type="text"><input value="Search" class="button" title="Search" type="submit"><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>&nbsp;
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+
+        <div class="breadcrumbs">
+      Trace: <span class="bcsep">»</span> <span class="curid"><a href="http://www.jmonkeyengine.com/wiki/doku.php?id=exporting_animated_.md5_models_from_blender" class="breadcrumbs" title="exporting_animated_.md5_models_from_blender">exporting_animated_.md5_models_from_blender</a></span>          </div>
+    
+        <div class="breadcrumbs">
+      You are here: <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=jME%20Wiki" title="jME Wiki">jME Wiki</a> » <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=exporting_animated_.md5_models_from_blender" title="exporting_animated_.md5_models_from_blender">exporting_animated_.md5_models_from_blender</a>    </div>
+    
+  </div>
+  
+  
+  <div class="page">
+    <!-- wikipage start -->
+    <div class="toc">
+<div class="tocheader toctoggle" id="toc__header"><img alt="-" src="readme_files/arrow_up.gif" id="toc__hide"><img style="display: none;" alt="+" src="readme_files/arrow_down.gif" id="toc__show">Table of Contents</div>
+<div id="toc__inside">
+
+<ul class="toc">
+<li class="level1"><div class="li"><span class="li"><a href="#exporting_animated_.md5_models_from_blender" class="toc">Exporting Animated .md5 models from blender</a></span></div>
+<ul class="toc">
+<li class="level2"><div class="li"><span class="li"><a href="#introduction" class="toc">Introduction</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#prerequisites" class="toc">Prerequisites</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#tutorial" class="toc">Tutorial</a></span></div>
+<ul class="toc">
+<li class="level3"><div class="li"><span class="li"><a href="#adding_bone_to_mesh" class="toc">Adding bone to Mesh</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#animating_model" class="toc">Animating Model</a></span></div></li>
+<li class="level3"><div class="li"><span class="li"><a href="#exporting_model" class="toc">Exporting Model</a></span></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><span class="li"><a href="#tips" class="toc">Tips</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#troubleshooting" class="toc">Troubleshooting</a></span></div></li>
+<li class="level2"><div class="li"><span class="li"><a href="#links" class="toc">Links</a></span></div></li></ul>
+</li></ul>
+</div>
+</div>
+
+
+
+<h1><a name="exporting_animated_.md5_models_from_blender" id="exporting_animated_.md5_models_from_blender">Exporting Animated .md5 models from blender</a></h1>
+<div class="level1">
+
+</div>
+
+<h2><a name="introduction" id="introduction">Introduction</a></h2>
+<div class="level2">
+
+<p>
+ This tutorial was made using Blender version 2.43. It is an example of exporting a simple animated object with one bone.
+</p>
+
+</div>
+
+<h2><a name="prerequisites" id="prerequisites">Prerequisites</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Download the .md5 export script for Blender from here: <a href="http://www.katsbits.com/files/md5/blender2md5_v0.94_02sept06.zip" class="urlextern" target="_blank" title="http://www.katsbits.com/files/md5/blender2md5_v0.94_02sept06.zip" rel="nofollow">http://www.katsbits.com/files/md5/blender2md5_v0.94_02sept06.zip</a> unpack it and put ‘blender2md5.py’ in your Blender scripts directory.<br>
+</div>
+</li>
+</ul>
+
+<p>
+There appears to be two loaders for .md5 models, one at Java.net and one at SourceForge<br>
+ As far as I know the more advanced and supported one is option 2 from sourceforge, but they both work.<br>
+
+</p>
+
+</div>
+
+<h4><a name="option1" id="option1">Option1</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Get the md5 code from Java.net the module name is jme-contrib: Its in the cvs repository at cvs.dev.java.net (same as jme).<br>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h5><a name="checking_out_jme-contrib_from_repository_in_eclipse" id="checking_out_jme-contrib_from_repository_in_eclipse">Checking out jme-contrib from repository in Eclipse</a></h5>
+<div class="level5">
+
+<p>
+<strong>1.</strong>right-click on jme-contrib→kproject-md5 and select
+‘check out as...’ then check out as a new Java project using the new
+project wizard.<br>
+ <strong>2.</strong>Now right click on project→properties→Java build path→projects tab→add and add jme project to build path.<br>
+ <strong>3.</strong>Also
+in Java build path, click the Source tab→Add folder... and add both
+‘kproject-md5/src’ and ‘kproject-md5/src-jme’. In addition, add
+‘kproject-md5/data’ to properly load test data. You may have to edit
+the ‘kproject-md5/data’ folder to be simply ‘data’ if you get a blank
+screen and errors upon running JmeMD5Test. Project is now ready.<br>
+ <strong>4.</strong>Run the test ‘JmeMD5Test’ in src-jme to confirm that it works.<br>
+ 
+</p>
+
+</div>
+
+<h4><a name="option2" id="option2">Option2</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Get the .md5 code from SourceForge</div>
+</li>
+</ul>
+
+</div>
+
+<h5><a name="getting_the_md5_code_from_sourceforge_is_as_easy_as_typing_in_these_2_commands" id="getting_the_md5_code_from_sourceforge_is_as_easy_as_typing_in_these_2_commands">Getting the md5 code from SourceForge is as easy as typing in these 2 commands</a></h5>
+<div class="level5">
+<pre class="code">cvs -d:pserver:anonymous@md5reader.cvs.sourceforge.net:/cvsroot/md5reader login</pre>
+
+<p>
+ Hit enter when asked for password. 
+</p>
+<pre class="code">cvs -z3 -d:pserver:anonymous@md5reader.cvs.sourceforge.net:/cvsroot/md5reader co -P md5reader2</pre>
+
+<p>
+ or in Eclipse:
+</p>
+<ul>
+<li class="level1"><div class="li">connection type: pserver</div>
+</li>
+<li class="level1"><div class="li">user: anonymous</div>
+</li>
+<li class="level1"><div class="li">host: md5reader.cvs.sourceforge.net</div>
+</li>
+<li class="level1"><div class="li">path /cvsroot/md5reader</div>
+</li>
+</ul>
+
+</div>
+
+<h2><a name="tutorial" id="tutorial">Tutorial</a></h2>
+<div class="level2">
+
+</div>
+
+<h3><a name="adding_bone_to_mesh" id="adding_bone_to_mesh">Adding bone to Mesh</a></h3>
+<div class="level3">
+
+<p>
+The model used in this tutorial is a textured sphere created in <a href="http://www.jmonkeyengine.com/wiki/doku.php?id=exporting_.obj_models_from_blender" class="wikilink1" title="exporting_.obj_models_from_blender">Exporting .obj Models From Blender</a><br>
+
+</p>
+
+<p>
+<strong>1.</strong>In object mode hit spacebar→Add→Armature<br>
+ <strong>2.</strong>In object mode select the sphere then shift-select the armature so that they are both selected<br>
+ <strong>3.</strong>Hit ctrl-p→Armature→Create From Closest Bones<br>
+ <strong>4.</strong>In
+edit mode hit ‘a’ to select all vertices, on Link and Materials tab
+under ‘Vertex Groups’ click ‘assign’ to assign verticies to bone<br>
+ (model can be exported w/o animation after this step, skip to step 7) 
+</p>
+
+</div>
+
+<h3><a name="animating_model" id="animating_model">Animating Model</a></h3>
+<div class="level3">
+
+<p>
+<strong>5.</strong>In object mode select the armature(bone) then enter pose mode. Then change screen to SR:1-Animtion<br>
+ <strong>6.</strong>Hit
+‘i’→LocRot to insert the first keyframe then skip to frame 11, rotate
+model(r key), and hit ‘i’→LocRot again.Go back to SR:2-Model<br>
+
+</p>
+
+</div>
+
+<h3><a name="exporting_model" id="exporting_model">Exporting Model</a></h3>
+<div class="level3">
+
+<p>
+<strong>7.</strong> (This step is only necessary when using code from jme-contrib)<br>
+With sphere selected in edit mode hit shift-ctrl-n to recalculate
+normals inside(this may not be necessary), save the file as a .blend.<br>
+ (I’ve found that saving as .blend applies the changes to normals otherwise they dont get flipped when exporting.)<br>
+ <strong>8.</strong>Export model as .md5 File→Export→Doom3 MD5, just select a location for your model and animation to export to and export it!<br>
+ <strong>9.</strong>Load into JME, dont forget to put your texture(s) in the right location, and youre done.<br>
+ <strong>10.</strong>You are most likely going to need to edit the &lt;shader ““&gt; line in .md5mesh file, see troubleshooting.<br>
+
+</p>
+
+</div>
+
+<h2><a name="tips" id="tips">Tips</a></h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Use ‘Top’ view in blender (Y up X
+right) as front view and you wont have to rotate your model in jme.In
+other words, In top view in blender your character will look like this<pre class="code">                                                 o
+                                                -|-
+                                                 ^
+</pre>
+</div>
+</li>
+<li class="level1"><div class="li">When UV mapping your model any seams marked as edges (ctrl-e mark seam) might be noticable so place seams in hard to see places.</div>
+</li>
+<li class="level1"><div class="li">When UV mapping dont use smart
+projections or youll probably have seams where you dont want them.
+Instead manually mark seams and use unwrap.</div>
+</li>
+</ul>
+
+</div>
+
+<h2><a name="troubleshooting" id="troubleshooting">Troubleshooting</a></h2>
+<div class="level2">
+
+</div>
+
+<h4><a name="problemno_model_displaying_but_mesh_and_triangle_stats_are_listed_when_using_loader_from_sourceforge" id="problemno_model_displaying_but_mesh_and_triangle_stats_are_listed_when_using_loader_from_sourceforge">Problem: No model displaying but mesh and triangle stats are listed when using loader from Sourceforge</a></h4>
+<div class="level4">
+
+<p>
+The loader cant find your texture.<br>
+
+</p>
+<ul>
+<li class="level1"><div class="li">Put all your model stuff in the models folder (example.md5mesh, example.md5anim, texture.tga)</div>
+</li>
+<li class="level1"><div class="li">Your texture must be a .tga file and it must NOT use RLE compression</div>
+</li>
+<li class="level1"><div class="li">Open your example.md5mesh file with
+an editor and replace shader “” with shader “models/texture” or
+whatever the path is to the texture file</div>
+</li>
+<li class="level1"><div class="li">Specify NO file extension for the targa file. Example: models/texture NOT models/texture.tga</div>
+</li>
+<li class="level1"><div class="li">If your model contains more then one mesh then there are more than one shader “” lines you need to change</div>
+</li>
+<li class="level1"><div class="li">The texture file might need to contain an alpha channel(?)</div>
+</li>
+</ul>
+
+</div>
+
+<h4><a name="problemtexture_flickers_or_looks_distorted_when_scaling_model" id="problemtexture_flickers_or_looks_distorted_when_scaling_model">Problem: Texture "flickers" or looks distorted when scaling model</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Your normals are off, try <pre class="code">bodyInstance.setNormalsMode(SceneElement.NM_GL_NORMALIZE_PROVIDED)</pre>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h4><a name="problemanimation_not_rotated_the_same_as_model" id="problemanimation_not_rotated_the_same_as_model">Problem: animation not rotated the same as model</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Currently there is a bug in lines 202 and 225 in Md5AnimReader. If you change <pre class="code">frame.positions[it] = new Vector3f(tz, ty, tx)</pre>
+
+<p>
+ to:
+</p>
+<pre class="code">frame.positions[it] = new Vector3f(tx, ty, tz)</pre>
+
+<p>
+ in both lines the animation will be properly rotated.<br>
+
+</p>
+</div>
+</li>
+</ul>
+
+<p> This fixes the blender animation, but the sarge walking animation
+supplied with the code walks to the right insted of forward so this
+isnt a real fix.<br>
+ 
+</p>
+
+</div>
+
+<h4><a name="problemtexture_looks_blocky_or_distorted" id="problemtexture_looks_blocky_or_distorted">Problem: Texture looks blocky or distorted</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">To load without S3TC, change line 90 in MD5DefaultSkin to: <pre class="code">return TextureManager.loadTexture( url, Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.GUESS_FORMAT_NO_S3TC, 0.0f, true );</pre>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h4><a name="problemshadows_dont_update_with_animation" id="problemshadows_dont_update_with_animation">Problem: Shadows dont update with animation</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Try adding the following code to SkeletalAnimationController in the animate method<pre class="code">Geometry geom=(Geometry)instance.getChild(0);
+        
+        for(int x=0;x&lt;geom.getBatchCount();x++) {
+            geom.getBatch(x).setHasDirtyVertices(true);
+        }</pre>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h4><a name="problemmesh_not_showing_or_partially_showing_in_jme" id="problemmesh_not_showing_or_partially_showing_in_jme">Problem: mesh not showing or partially showing in jme</a></h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li">Make sure ALL verticies are assigned to a bone(step 4), any verticies not assigned to a bone will not be exported. <br>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h2><a name="links" id="links">Links</a></h2>
+<div class="level2">
+
+<p>
+<a href="http://www.blender.org/" class="urlextern" target="_blank" title="http://www.blender.org/" rel="nofollow">Blender</a><br>
+ <a href="http://www.blender.org/documentation/htmlI/c1205.html" class="urlextern" target="_blank" title="http://www.blender.org/documentation/htmlI/c1205.html" rel="nofollow">Animation tutorial</a><br>
+ <a href="http://en.wikibooks.org/wiki/Category:Blender" class="urlextern" target="_blank" title="http://en.wikibooks.org/wiki/Category:Blender" rel="nofollow">Blender wikibooks</a><br>
+ <br>
+ good luck <img src="readme_files/icon_cool.gif" class="middle" alt="8-)"> 
+</p>
+
+</div>
+
+    <!-- wikipage stop -->
+  </div>
+
+  <div class="clearer">&nbsp;</div>
+
+  
+  <div class="stylefoot">
+
+    <div class="meta">
+      <div class="user">
+              </div>
+      <div class="doc">
+/home/jmonke2/public_html/wiki/data/pages/exporting_animated_.md5_models_from_blender.txt
+· Last modified: 2007/11/09 00:54 by mud2005 </div>
+    </div>
+
+   
+    <div class="bar" id="bar__bottom">
+      <div class="bar-left" id="bar__bottomleft">
+        <form class="button" method="post" action="/wiki/doku.php"><div class="no"><input name="do" value="edit" type="hidden"><input name="rev" value="" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Show pagesource" class="button" accesskey="v" title="Show pagesource [ALT+V]" type="submit"></div></form>        <form class="button" method="get" action="/wiki/doku.php"><div class="no"><input name="do" value="revisions" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Old revisions" class="button" accesskey="o" title="Old revisions [ALT+O]" type="submit"></div></form>      </div>
+      <div class="bar-right" id="bar__bottomright">
+                                <form class="button" method="get" action="/wiki/doku.php"><div class="no"><input name="do" value="login" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Login" class="button" title="Login" type="submit"></div></form>        <form class="button" method="get" action="/wiki/doku.php"><div class="no"><input name="do" value="index" type="hidden"><input name="id" value="exporting_animated_.md5_models_from_blender" type="hidden"><input value="Index" class="button" accesskey="x" title="Index [ALT+X]" type="submit"></div></form>        <a class="nolink" href="#dokuwiki__top"><input class="button" value="Back to top" onclick="window.scrollTo(0, 0)" title="Back to top" type="button"></a>&nbsp;
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footerinc">
+  <a target="_blank" href="http://www.jmonkeyengine.com/wiki/feed.php" title="Recent changes RSS feed"><img src="readme_files/button-rss.png" alt="Recent changes RSS feed" height="15" width="80"></a>
+
+  <a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.0/" rel="license" title="Creative Commons License"><img src="readme_files/button-cc.gif" alt="Creative Commons License" height="15" width="80"></a>
+
+  <a target="_blank" href="https://www.paypal.com/xclick/business=andi%40splitbrain.org&amp;item_name=DokuWiki+Donation&amp;no_shipping=1&amp;no_note=1&amp;tax=0&amp;currency_code=EUR&amp;lc=US" title="Donate"><img src="readme_files/button-donate.gif" alt="Donate" height="15" width="80"></a>
+
+  <a target="_blank" href="http://www.php.net/" title="Powered by PHP"><img src="readme_files/button-php.gif" alt="Powered by PHP" height="15" width="80"></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="readme_files/button-xhtml.png" alt="Valid XHTML 1.0" height="15" width="80"></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="readme_files/button-css.png" alt="Valid CSS" height="15" width="80"></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="readme_files/button-dw.png" alt="Driven by DokuWiki" height="15" width="80"></a>
+
+
+
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/2.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by-nc-sa/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <prohibits rdf:resource="http://web.resource.org/cc/CommercialUse" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+</License>
+
+</rdf:RDF>
+
+-->
+
+
+</div>
+
+<div class="no"><img src="readme_files/indexer.gif" alt="" height="1" width="1"></div>
+</body></html>
