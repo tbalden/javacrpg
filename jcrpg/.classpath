@@ -9,10 +9,10 @@
 	<classpathentry kind="lib" path="lib/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/sun-jdk-1.5.0.10"/>
-	<classpathentry kind="lib" path="jme/jme.jar"/>
+	<classpathentry kind="lib" path="jme/jme.jar" sourcepath="/s0/Install/jme/jme/src"/>
 	<classpathentry kind="lib" path="jme/jme-audio.jar"/>
 	<classpathentry kind="lib" path="jme/jme-awt.jar"/>
-	<classpathentry kind="lib" path="jme/jme-collada.jar"/>
+	<classpathentry kind="lib" path="jme/jme-collada.jar" sourcepath="/s0/Install/jme/jme/src/"/>
 	<classpathentry kind="lib" path="jme/jme-editors.jar"/>
 	<classpathentry kind="lib" path="jme/jme-effects.jar"/>
 	<classpathentry kind="lib" path="jme/jme-font.jar"/>
@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="jme/jme-sound.jar"/>
 	<classpathentry kind="lib" path="jme/jme-terrain.jar"/>
 	<classpathentry kind="lib" path="jme/jme-xml.jar"/>
+	<classpathentry kind="lib" path="lib/md5r2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
