@@ -165,7 +165,7 @@ public class TestMipMaps extends SimpleGame {
                 "./jmetest/data/model/collada/");
         // this stream points to the model itself.
         
-        AnimatedModelNode node = new AnimatedModelNode("./data/models/fauna/gorilla1mesh.md5", "./data/models/fauna/gorilla.md5anim");
+        AnimatedModelNode node = new AnimatedModelNode("./data/models/fauna/gorilla.md5mesh", "./data/models/fauna/gorilla.md5anim");
         sn = null;
         //stripTexturesAndMaterials(node);
         rootNode.attachChild(node);

@@ -24,7 +24,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.place.World;
 
 /**
  * Class for rendered moving life forms with info about its movement/action states
@@ -34,6 +33,7 @@ public class RenderedMovingUnit {
 	
 	public static final String STATE_STANDING = "S_STANDING";
 	public static final String STATE_WALKING = "S_WALKING";
+	public static final String STATE_TURNING = "S_TURNING";
 	public static final String STATE_RUNNING = "S_RUNNING";
 	public static final String STATE_FALLING = "S_FALLING"; // between stand and lay - falling :-)
 	public static final String STATE_LAYING = "S_LAYING";
@@ -109,6 +109,20 @@ public class RenderedMovingUnit {
 		endCoordZ = toZ;
 		movingSpeed = speed;
 		state = STATE_WALKING;
+	}
+	
+	public void turn(float speed, int afterDirection, int toX, int toY, int toZ)
+	{
+		endCoordX = toX;
+		endCoordY = toY;
+		endCoordZ = toZ;
+		movingSpeed = speed;
+		direction = afterDirection;
+		state = STATE_TURNING;
+	}
+	public void endTurn()
+	{
+		state = stateAfterMovement;
 	}
 	
 	public void endMoveOneCube()
