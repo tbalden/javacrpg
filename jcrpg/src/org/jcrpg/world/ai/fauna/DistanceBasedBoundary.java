@@ -21,6 +21,8 @@ package org.jcrpg.world.ai.fauna;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
+import com.jme.math.Vector3f;
+
 /**
  * Distance/position based boundary - tells if a position is inside its radius. Used with moving units e.g.
  * @author pali
@@ -30,10 +32,11 @@ public class DistanceBasedBoundary extends Boundaries {
 
 	int gWX, gWY, gWZ;
 	
-	public int radiusInRealCubes, posX, posY;
+	public int radiusInRealCubes, posX, posY, posZ;
+	public Vector3f pv;
 	
-	public DistanceBasedBoundary(int magnification, World w, int positionX, int positionY, int radiusInRealCubes) {
-		super(magnification);
+	public DistanceBasedBoundary(World w, int positionX, int positionY, int positionZ, int radiusInRealCubes) {
+		super(1);
 		int wX = w.sizeX;
 		int wY = w.sizeY;
 		int wZ = w.sizeZ;
@@ -46,11 +49,16 @@ public class DistanceBasedBoundary extends Boundaries {
 		this.radiusInRealCubes = radiusInRealCubes;
 		posX = positionX;
 		posY = positionY;
+		posZ = positionZ;
+		pv = new Vector3f(posX,posY,posZ);
 	}
 
 	
 	@Override
 	public void addCube(int magnification, int x, int y, int z) throws Exception {
+		posX = x*magnification;
+		posY = y*magnification;
+		posZ = z*magnification;
 		return;
 	}
 
@@ -59,7 +67,12 @@ public class DistanceBasedBoundary extends Boundaries {
 		int x = absoluteX / magnification;
 		int y = absoluteY / magnification;
 		int z = absoluteZ / magnification;
-		return false; // TODO 
+		float dist = new Vector3f(x,y,z).distance(pv);
+		if (dist<=radiusInRealCubes)
+		{
+			return true;
+		}
+		return false;
 	}
 
 }
