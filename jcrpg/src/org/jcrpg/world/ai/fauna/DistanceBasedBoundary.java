@@ -53,13 +53,23 @@ public class DistanceBasedBoundary extends Boundaries {
 		pv = new Vector3f(posX,posY,posZ);
 	}
 
-	
 	@Override
 	public void addCube(int magnification, int x, int y, int z) throws Exception {
+		setPosition(magnification, x, y, z);
+	}
+	
+	/**
+	 * Sets the center of the circle of boundary.
+	 * @param magnification
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void setPosition(int magnification, int x, int y, int z) 
+	{
 		posX = x*magnification;
 		posY = y*magnification;
 		posZ = z*magnification;
-		return;
 	}
 
 	@Override
