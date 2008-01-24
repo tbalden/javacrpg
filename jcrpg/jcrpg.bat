@@ -1,1 +1,1 @@
-java -Xmx150m -Djava.library.path=./lib -cp ./lib/lwjgl.jar;./lib/jogg-0.0.5.jar;./lib/jorbis-0.0.12.jar;./jme/jme.jar;./jme/jme-awt.jar;./jme/jme-effects.jar;./jme/jme-model.jar;./jme/jme-sound.jar;./jme/jme-terrain.jar;./bin org.jcrpg.apps.Jcrpg
+java -Xmx150m -Djava.library.path=./lib -cp ./lib/lwjgl.jar;./lib/jogg-0.0.5.jar;./lib/jorbis-0.0.12.jar;./jme/jme.jar;./jme/jme-awt.jar;./jme/jme-effects.jar;./jme/jme-model.jar;./jme/jme-sound.jar;./jme/jme-terrain.jar;./lib/md5r2.jar;./bin org.jcrpg.apps.Jcrpg
