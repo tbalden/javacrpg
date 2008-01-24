@@ -25,9 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.jcrpg.threed.PooledNode;
-import org.jcrpg.threed.ModelPool.PoolItemContainer;
-
 import md5reader.MD5AnimReader;
 import md5reader.MD5MeshReader;
 import model.Model;
@@ -35,6 +32,9 @@ import model.SkeletalModelInstance;
 import model.animation.Animation;
 import model.animation.AnimationAnimator;
 import model.animation.SkeletalAnimationController;
+
+import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.ModelPool.PoolItemContainer;
 
 import com.jme.animation.AnimationController;
 import com.jme.animation.Bone;
@@ -45,7 +45,6 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
-import com.jme.scene.shape.Box;
 
 public class AnimatedModelNode extends Node implements PooledNode {
 
@@ -73,7 +72,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
 			SkeletalAnimationController bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 	        AnimationAnimator runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
-	        bodyInstance.setNormalsMode(SceneElement.NM_GL_NORMALIZE_PROVIDED);
+	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
 	        bodyInstance.setLocalScale(0.2f);
 	        Quaternion q = new Quaternion();
