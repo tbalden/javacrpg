@@ -31,6 +31,7 @@ public abstract class Water extends Geography {
 	 * If noWater is true, the bed of the water should be empty of water.
 	 */
 	public boolean noWaterInTheBed = false;
+	public boolean sweetWater = false;
 	public int depth = 1;
 	
 	public Water(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int depth, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception{

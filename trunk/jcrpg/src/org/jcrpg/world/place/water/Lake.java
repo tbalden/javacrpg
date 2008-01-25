@@ -63,6 +63,8 @@ public class Lake extends Water {
 	public Lake(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage) throws Exception {
 		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,false);
 
+		sweetWater = true;
+		
 		centerX = sizeX*magnification/2;
 		centerZ = sizeZ*magnification/2;
 		realSizeX = sizeX*magnification;
