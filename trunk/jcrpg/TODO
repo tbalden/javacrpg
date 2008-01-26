@@ -8,13 +8,33 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+UI:
+--
+[ ] UI worldmap	
+	[ ] geographies -> !!! mountains/forests/plains different gray
+	[ ] cities... 
+[ ] UI transparent text box in the middle bottom, small contrast fonts, transparent, like FPSnode (take a look at that one!)
+[ ] UI detailed map
 [ ] ui element encounter predisplay -> icons representing the lifeform, ? icon if you cannot identify it/don't know it yet.
 
+Moving:
+------
 [ ] j3dmovingengine
     http://jsourcery.com/api/captiveimagination.com/jmonkeyengine/02-05-2007/jmetest/renderer/TestMipMaps.source.html -> animated model
 	[ ] wildlife -> rangedBoundaries
 	
 	[ ] refactor of loadObjects in model loader , extend AnimatedModelNode with additional object nodes like weapon etc... 
+[ ] living things foundations -
+	[ ] !! Boundary based, not really moving, only when you enter the boundary !! -> for turns they can interoperate in their intersecting boundaries! quasi random seed based events / turn
+	[ ] a common entity engine will process the happenings turn based
+	[ ] Generator needed for start out - later reproduction system for animals/humans? 
+	[ ] hierarchy -> dynamic, boundaries added together, processed to the top of the hierarchy -> events possible on every level of living example: country <-> city population <-> guards etc.
+	[ ] entering domain in a given turn will trigger possibilities for you to start skill based processes -> trying to hunt down animals in the domain, or avoiding a group of bandits there
+	[ ] foodchain based generation, growing/decay, multiplication, new groups later ...
+
+
+Worlg Generator:
+---------------
 [-] World generator
 	parameterized cool world generation!
 	
@@ -34,16 +54,14 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
 	
 
+Other:
+-----
 
 [ ] light of the skysphere goes wrong with walking one direction a lot! lightnode or sg?
 
 [ ] moving N-S should be limited on map edge!  
 [?] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
 
-[ ] UI worldmap	
-	[ ] geographies -> !!! mountains/forests/plains different gray
-	[ ] cities... 
-[ ] UI transparent text box in the middle bottom, small contrast fonts, transparent, like FPSnode (take a look at that one!)
 
 [ ] climate
 	[ ] swamp , savana climate belt
@@ -52,12 +70,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] seasonal models for plants
 	[ ] detailed fruit object structure later and such!
 
-[ ] living things foundations -
-	[ ] !! Boundary based, not really moving, only when you enter the boundary !! -> for turns they can interoperate in their intersecting boundaries! quasi random seed based events / turn
-	[ ] a common entity engine will process the happenings turn based
-	[ ] Generator needed for start out - later reproduction system for animals/humans? 
-	[ ] hierarchy -> dynamic, boundaries added together, processed to the top of the hierarchy -> events possible on every level of living example: country <-> city population <-> guards etc.
-	[ ] entering domain in a given turn will trigger possibilities for you to start skill based processes -> trying to hunt down animals in the domain, or avoiding a group of bandits there
 
 
 [ ] Wildlife should be generated based on Flora percentage given by flora generators??
