@@ -32,7 +32,7 @@ public class CKeyDownAction extends CKeyAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveDown()) {
-	        handler.core.renderToViewPort();
+        	handler.core.sEngine.renderToViewPort();
 	        Vector3f toReach = handler.core.getCurrentLocation();
 	        
 	        float steps = J3DCore.MOVE_STEPS;

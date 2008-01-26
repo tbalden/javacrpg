@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
@@ -29,6 +30,19 @@ public class Ecology {
 	public void addEntity(AnimalEntityDescription description)
 	{
 		beings.put(description.id, description);
+	}
+	
+	public Collection<AnimalEntityDescription> getEntities(int worldX, int worldY, int worldZ)
+	{
+		return null;
+	}
+	
+	public void doTurn()
+	{
+		for (AnimalEntityDescription entity:beings.values())
+		{
+			entity.liveOneTurn();
+		}
 	}
 	
 }

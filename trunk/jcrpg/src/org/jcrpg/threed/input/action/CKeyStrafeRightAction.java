@@ -37,7 +37,7 @@ public class CKeyStrafeRightAction extends CKeyAction {
 	        movePosition(steps, from, toReach);
 	    	handler.core.setCalculatedCameraLocation();
 	        camera.update();
-	        handler.core.renderToViewPort();
+	        handler.core.sEngine.renderToViewPort();
       }
         handler.unlockHandling(true);
     }
