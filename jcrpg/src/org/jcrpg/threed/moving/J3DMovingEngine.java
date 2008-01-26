@@ -104,7 +104,7 @@ public class J3DMovingEngine {
 		{
 			// TODO this only testing code! :-)
 			firstRender = false;
-			GorillaHorde horde = new GorillaHorde();
+			GorillaHorde horde = new GorillaHorde("One",10);
 			for (int i=0; i<2; i++) {
 				VisibleLifeForm form = horde.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);
@@ -249,7 +249,7 @@ public class J3DMovingEngine {
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.typeId).instanciate(form.uniqueId, form, worldX, worldY, worldZ);
+		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.typeId).instantiate(form.uniqueId, form, worldX, worldY, worldZ);
 		units.put(form.uniqueId, unit);
 		return unit;
 	}

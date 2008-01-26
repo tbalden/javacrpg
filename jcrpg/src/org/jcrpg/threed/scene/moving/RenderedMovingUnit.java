@@ -75,7 +75,7 @@ public class RenderedMovingUnit {
 		c3dY = worldY * J3DCore.CUBE_EDGE_SIZE;
 		c3dZ = worldZ * J3DCore.CUBE_EDGE_SIZE;
 	}
-	public RenderedMovingUnit instanciate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
+	public RenderedMovingUnit instantiate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
 		System.out.println(uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
 		RenderedMovingUnit instance = new RenderedMovingUnit(uniqueId,worldX,worldY,worldZ,models);
