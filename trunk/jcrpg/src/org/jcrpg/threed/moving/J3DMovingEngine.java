@@ -103,7 +103,7 @@ public class J3DMovingEngine {
 		{
 			// TODO this only testing code! :-)
 			firstRender = false;
-			GorillaHorde horde = new GorillaHorde("One",10);
+			GorillaHorde horde = new GorillaHorde(core.world,"One",10,1,1,1);
 			for (int i=0; i<2; i++) {
 				VisibleLifeForm form = horde.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);

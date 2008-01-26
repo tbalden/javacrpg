@@ -85,4 +85,12 @@ public class DistanceBasedBoundary extends Boundaries {
 		return false;
 	}
 
+	public int getRadiusInRealCubes() {
+		return radiusInRealCubes;
+	}
+
+	public void setRadiusInRealCubes(int radiusInRealCubes) {
+		this.radiusInRealCubes = radiusInRealCubes;
+	}
+
 }

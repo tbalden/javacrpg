@@ -47,6 +47,7 @@ import org.jcrpg.threed.standing.J3DStandingeEngine;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -295,10 +296,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	public World world = null;
+	public Ecology ecology = null;
 	
 	public void setWorld(World area)
 	{
 		world = area;
+	}
+
+	public void setEcology(Ecology ecology)
+	{
+		this.ecology = ecology;
 	}
 	
 	public void setViewPosition(int x,int y,int z)	
@@ -1791,6 +1798,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public J3DMovingEngine mEngine = null;
 	public J3DStandingeEngine sEngine = null;
 	
+	
 	LightNode drn;
 	PointLight dr;
 
@@ -1808,6 +1816,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			engine.setTimeChanged(false);
 			updateTimeRelated();
 			
+		}
+		if (engine.turnComes())
+		{
+			pause = true;
+			ecology.doTurn();
+			engine.turnFinished();
+			pause = false;
 		}
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
