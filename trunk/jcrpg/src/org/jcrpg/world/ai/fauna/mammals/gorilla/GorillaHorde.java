@@ -18,16 +18,32 @@
 
 package org.jcrpg.world.ai.fauna.mammals.gorilla;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Condition;
+import org.jcrpg.world.climate.impl.tropical.Tropical;
 
 public class GorillaHorde extends AnimalEntityDescription {
 	
 	public static String GORILLA_TYPE_MALE = "GORILLA_MALE";
 	public static String GORILLA_TYPE_FEMALE = "GORILLA_FEMALE";
 	
-	public GorillaHorde()
+	public static ArrayList<String> foodEntities = new ArrayList<String>();
+	public static ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
+	public static ArrayList<Condition> conditions = new ArrayList<Condition>();
+	
+	static
 	{
+		foodEntities.add("");
+		climates.add(Tropical.class);
+	}
+	
+	public GorillaHorde(String id, int number)
+	{
+		super(id,number);
 		genderType = GENDER_BOTH;
 		
 	}
@@ -36,6 +52,21 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public VisibleLifeForm getOne() {
 		nextVisibleSequence();
 		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,GORILLA_TYPE_MALE);
+	}
+
+	@Override
+	public ArrayList<Class <? extends ClimateBelt>> getClimates() {
+		return climates;
+	}
+
+	@Override
+	public ArrayList<Condition> getConditions() {
+		return conditions;
+	}
+
+	@Override
+	public ArrayList<String> getFoodEntities() {
+		return foodEntities;
 	}
 	
 	

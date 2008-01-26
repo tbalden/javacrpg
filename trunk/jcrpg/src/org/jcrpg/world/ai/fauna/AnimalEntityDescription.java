@@ -18,12 +18,17 @@
 
 package org.jcrpg.world.ai.fauna;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.climate.Condition;
+
 /**
  * Represents a description for an animal/pack of animals depending on the nature of an animal species.
  * @author illes
  *
  */
-public class AnimalEntityDescription {
+public abstract class AnimalEntityDescription {
 
 	public String ANIMAL_NONE_TYPE = "NONE";
 	
@@ -37,6 +42,23 @@ public class AnimalEntityDescription {
 	public int numberOfMembers = 1;
 	public int genderType = GENDER_NEUTRAL;
 	
+	
+	
+	public abstract ArrayList<String> getFoodEntities();
+	public abstract ArrayList<Class <? extends ClimateBelt>> getClimates();
+	public abstract ArrayList<Condition> getConditions();
+	
+	/**
+	 * Unique id in the worlds.
+	 */
+	public String id;
+	
+	public AnimalEntityDescription(String id, int numberOfMembers) {
+		super();
+		this.id = id;
+		this.numberOfMembers = numberOfMembers;
+	}
+
 	public VisibleLifeForm getOne()
 	{
 		nextVisibleSequence();
@@ -49,5 +71,10 @@ public class AnimalEntityDescription {
 			visibleSequence++;
 		}
 		return visibleSequence;
+	}
+	
+	public void liveOneTurn()
+	{
+		
 	}
 }
