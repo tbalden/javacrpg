@@ -25,9 +25,9 @@ import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 
 public class Ecology {
 
-	HashMap<String, AnimalEntityDescription> beings = new HashMap<String, AnimalEntityDescription>();
+	HashMap<String, EntityDescription> beings = new HashMap<String, EntityDescription>();
 	
-	public void addEntity(AnimalEntityDescription description)
+	public void addEntity(EntityDescription description)
 	{
 		beings.put(description.id, description);
 	}
@@ -39,7 +39,7 @@ public class Ecology {
 	
 	public void doTurn()
 	{
-		for (AnimalEntityDescription entity:beings.values())
+		for (EntityDescription entity:beings.values())
 		{
 			entity.liveOneTurn();
 		}
