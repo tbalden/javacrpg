@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.fauna;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.place.World;
@@ -29,7 +30,12 @@ import org.jcrpg.world.place.World;
  * @author illes
  *
  */
-public abstract class AnimalEntityDescription {
+public abstract class AnimalEntityDescription extends EntityDescription {
+
+	public AnimalEntityDescription(World w, String id, int numberOfMembers,
+			int startX, int startY, int startZ) {
+		super(w, id, numberOfMembers, startX, startY, startZ);
+	}
 
 	public String ANIMAL_NONE_TYPE = "NONE";
 	
@@ -38,45 +44,20 @@ public abstract class AnimalEntityDescription {
 	public static final int GENDER_FEMALE = 2;
 	public static final int GENDER_BOTH = 3;
 	
-	public static int visibleSequence = 0;
-	public static Object mutex = new Object();
-	public int numberOfMembers = 1;
 	public int genderType = GENDER_NEUTRAL;
 	
-	public DistanceBasedBoundary boundary = null;
 	
 	public abstract ArrayList<String> getFoodEntities();
 	public abstract ArrayList<Class <? extends ClimateBelt>> getClimates();
 	public abstract ArrayList<Condition> getConditions();
 	
-	/**
-	 * Unique id in the worlds.
-	 */
-	public String id;
 	
-	public AnimalEntityDescription(World w, String id, int numberOfMembers, int startX, int startY, int startZ) {
-		super();
-		this.id = id;
-		this.numberOfMembers = numberOfMembers;
-		boundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
-	}
 
 	public VisibleLifeForm getOne()
 	{
-		nextVisibleSequence();
-		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,ANIMAL_NONE_TYPE);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),ANIMAL_NONE_TYPE);
 	}
 	
-	public int nextVisibleSequence()
-	{
-		synchronized (mutex) {
-			visibleSequence++;
-		}
-		return visibleSequence;
-	}
 	
-	public void liveOneTurn()
-	{
-		System.out.println("LIVE ONE TURN "+this.getClass()+" "+id);
-	}
+
 }

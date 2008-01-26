@@ -18,6 +18,7 @@
 
 package org.jcrpg.apps;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.jcrpg.threed.J3DCore;
@@ -25,6 +26,8 @@ import org.jcrpg.world.EcologyGenerator;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
@@ -80,6 +83,10 @@ public class Jcrpg {
 
 		EcologyGenerator eGen = new EcologyGenerator();
 		Ecology ecology = eGen.generateEcology(w2);
+		
+		ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
+		Party p = new Party(w2,"Player",partyMembers,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		ecology.addEntity(p);
 		
 		app.setWorld(w2);
 		app.setEcology(ecology);
