@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
+import org.jcrpg.world.place.World;
 
 /**
  * Represents a description for an animal/pack of animals depending on the nature of an animal species.
@@ -42,7 +43,7 @@ public abstract class AnimalEntityDescription {
 	public int numberOfMembers = 1;
 	public int genderType = GENDER_NEUTRAL;
 	
-	
+	public DistanceBasedBoundary boundary = null;
 	
 	public abstract ArrayList<String> getFoodEntities();
 	public abstract ArrayList<Class <? extends ClimateBelt>> getClimates();
@@ -53,10 +54,11 @@ public abstract class AnimalEntityDescription {
 	 */
 	public String id;
 	
-	public AnimalEntityDescription(String id, int numberOfMembers) {
+	public AnimalEntityDescription(World w, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
 		this.id = id;
 		this.numberOfMembers = numberOfMembers;
+		boundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
 	}
 
 	public VisibleLifeForm getOne()
@@ -75,6 +77,6 @@ public abstract class AnimalEntityDescription {
 	
 	public void liveOneTurn()
 	{
-		
+		System.out.println("LIVE ONE TURN "+this.getClass()+" "+id);
 	}
 }

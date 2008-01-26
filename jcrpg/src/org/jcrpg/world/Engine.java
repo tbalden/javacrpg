@@ -27,7 +27,13 @@ public class Engine implements Runnable {
 	
 	//Engine
 	
+	public static int TICK_SECONDS = 10;
+	
+	public static int SECONDS_PER_TURN = 100; 
+	
 	public boolean timeChanged = false;
+	public boolean turnCome = false;
+	public int ticksLeft = SECONDS_PER_TURN;
 	
 	public void run() {
 		System.out.println("ENGINE STARTED");
@@ -35,7 +41,15 @@ public class Engine implements Runnable {
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
-				worldMeanTime.tick(10);
+				worldMeanTime.tick(TICK_SECONDS);
+				ticksLeft-=TICK_SECONDS;
+				if (ticksLeft<=0)
+				{
+					System.out.println("NEW TURN FOR AI STARTED... pause");
+					ticksLeft = SECONDS_PER_TURN;
+					pause = true;
+					turnCome = true;
+				}
 				setTimeChanged(true);
 			}
 		}
@@ -50,6 +64,24 @@ public class Engine implements Runnable {
 
 	public boolean isPause() {
 		return pause;
+	}
+	
+	/**
+	 * Tells if turn for AI has come.
+	 * @return true if turn.
+	 */
+	public boolean turnComes()
+	{
+		return turnCome;
+	}
+	/**
+	 * Should be called when a turn processing is finished, sets pause off.
+	 */
+	public void turnFinished()
+	{
+		turnCome = false;
+		pause = false;
+		System.out.println("TURN ENDED, UNPAUSE.");
 	}
 
 	public void setPause(boolean pause) {

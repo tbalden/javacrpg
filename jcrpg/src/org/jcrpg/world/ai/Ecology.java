@@ -25,7 +25,7 @@ import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 
 public class Ecology {
 
-	HashMap<String, AnimalEntityDescription> beings;
+	HashMap<String, AnimalEntityDescription> beings = new HashMap<String, AnimalEntityDescription>();
 	
 	public void addEntity(AnimalEntityDescription description)
 	{

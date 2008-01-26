@@ -21,8 +21,10 @@ package org.jcrpg.apps;
 import java.util.logging.Level;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.EcologyGenerator;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.WorldGenerator;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
@@ -76,7 +78,11 @@ public class Jcrpg {
 
 		w2.setOrbiterHandler(woh);
 
+		EcologyGenerator eGen = new EcologyGenerator();
+		Ecology ecology = eGen.generateEcology(w2);
+		
 		app.setWorld(w2);
+		app.setEcology(ecology);
 		app.setEngine(e);
 		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
 		app.setOrigoRenderPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);

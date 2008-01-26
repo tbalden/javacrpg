@@ -25,6 +25,7 @@ import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.World;
 
 public class GorillaHorde extends AnimalEntityDescription {
 	
@@ -41,9 +42,10 @@ public class GorillaHorde extends AnimalEntityDescription {
 		climates.add(Tropical.class);
 	}
 	
-	public GorillaHorde(String id, int number)
+	public GorillaHorde(World w, String id, int number, int x, int y, int z)
 	{
-		super(id,number);
+		super(w,id,number,x,y,z);
+		boundary.setRadiusInRealCubes(number);
 		genderType = GENDER_BOTH;
 		
 	}
