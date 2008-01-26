@@ -8,6 +8,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] ui element encounter predisplay -> icons representing the lifeform, ? icon if you cannot identify it/don't know it yet.
+
 [ ] j3dmovingengine
     http://jsourcery.com/api/captiveimagination.com/jmonkeyengine/02-05-2007/jmetest/renderer/TestMipMaps.source.html -> animated model
 	[ ] wildlife -> rangedBoundaries

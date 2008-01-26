@@ -55,7 +55,7 @@ public class CKeyForwardAction extends CKeyAction {
             handler.core.setCalculatedCameraLocation();
             camera.update();
             //handler.core.updateDisplay(from);
-        	handler.core.renderToViewPort();//1,2);
+            handler.core.sEngine.renderToViewPort();
         } else
         {
         	

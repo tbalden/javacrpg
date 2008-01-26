@@ -32,7 +32,7 @@ public class CKeyLookUpAction extends CKeyAction {
 
 		if (handler.lookLeftRightPercent!=0)
 		{
-			handler.core.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+			handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
 		}
 		handler.lookUpDownPercent += 8;
 		if (handler.lookUpDownPercent > 100)
@@ -42,7 +42,7 @@ public class CKeyLookUpAction extends CKeyAction {
 
 		camera.update();
 		if (renderToViewPort > 4) {
-			if (J3DCore.OPTIMIZE_ANGLES) handler.core.renderToViewPort();
+			if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort();
 			renderToViewPort = 0;
 		} else {
 			renderToViewPort++;
