@@ -18,6 +18,17 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.jcrpg.world.ai.abs.Behavior;
+import org.jcrpg.world.ai.abs.Choice;
+import org.jcrpg.world.ai.abs.behavior.Aggressive;
+import org.jcrpg.world.ai.abs.behavior.Escapist;
+import org.jcrpg.world.ai.abs.choice.Attack;
+import org.jcrpg.world.ai.abs.choice.Hide;
+import org.jcrpg.world.ai.abs.choice.Indifference;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.fauna.DistanceBasedBoundary;
 import org.jcrpg.world.place.World;
 
@@ -29,24 +40,39 @@ import org.jcrpg.world.place.World;
 public class EntityDescription {
 	public DistanceBasedBoundary roamingBoundary = null;
 	public DistanceBasedBoundary domainBoundary = null;
+	public ArrayList<SkillInstance> skills = null;
 	/**
 	 * Unique id in the worlds.
 	 */
 	public String id;
 	public int numberOfMembers = 1;
 	public World world;
+	public Ecology ecology;
+	public int numberOfActionsPerTurn = 1;
 
-	public EntityDescription(World w, String id, int numberOfMembers, int startX, int startY, int startZ) {
+	public EntityDescription(World w, Ecology ecology, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
 		this.id = id;
 		this.numberOfMembers = numberOfMembers;
 		this.world = w;
+		this.ecology = ecology;
 		roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
 		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
+		skills = getStartingSkills();
 	}
-	public void liveOneTurn()
+	public void liveOneTurn(Collection<EntityDescription> nearbyEntities)
 	{
-		System.out.println("LIVE ONE TURN "+this.getClass()+" "+id);
+		System.out.println("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+nearbyEntities.size());
+		if (nearbyEntities!=null && nearbyEntities.size()>0) {
+			for (EntityDescription desc : nearbyEntities)
+			{
+				if (numberOfActionsPerTurn==0) break;
+				System.out.println("Eco:" + ecology+ " - "+this);
+				ecology.callbackMessage(this.getClass().getSimpleName()+": "+desc.getClass().getSimpleName()+" - "+makeTurnChoice(desc).getSimpleName());
+				numberOfActionsPerTurn--;
+			}
+		}
+		
 	}
 
 	public static int visibleSequence = 0;
@@ -69,7 +95,76 @@ public class EntityDescription {
 	
 	public static void getInstance(World w, String id, int size, int startX, int startY, int startZ)
 	{
-		new EntityDescription(w,id,size,startX,startY,startZ);
+		new EntityDescription(w,null,id,size,startX,startY, startZ);
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<SkillInstance> getStartingSkills()
+	{
+		try {
+			ArrayList<SkillInstance> a = (ArrayList<SkillInstance>) getClass().getField("startingSkills").get(this);
+			ArrayList<SkillInstance> sSkills= new ArrayList<SkillInstance>();
+			for (SkillInstance i: a)
+			{
+				sSkills.add(i.copy());
+			}
+			return sSkills;
+		} catch (Exception ex)
+		{
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<Class <? extends Behavior>> getBehaviors()
+	{
+		try {
+			return (ArrayList<Class <? extends Behavior>>) getClass().getField("behaviors").get(this);
+		} catch (Exception ex)
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Return a list of skills, filled with the best available.
+	 * @return
+	 */
+	public ArrayList<SkillInstance> getBestSkillsOfGroup()
+	{
+		return skills;
+	}
+	/**
+	 * Return a list of skills, filled with the worst available.
+	 * @return
+	 */
+	public ArrayList<SkillInstance> getWorstSkillsOfGroup()
+	{
+		return skills;
+	}
+	
+	public boolean isPrey(EntityDescription desc)
+	{
+		return false;
+	}
+	
+	public Class <? extends Choice> makeTurnChoice(EntityDescription desc)
+	{
+		if (getBehaviors()!=null) 
+		{
+			if (getBehaviors().contains(Aggressive.class))
+			{
+				if (isPrey(desc))
+				{
+					return Attack.class;
+				}
+			} else
+			if (getBehaviors().contains(Escapist.class))
+			{
+				return Hide.class;
+			}
+		}
+		return Indifference.class;
 	}
 
 }

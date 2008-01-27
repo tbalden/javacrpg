@@ -18,31 +18,52 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
+import org.jcrpg.threed.J3DCore;
 
 public class Ecology {
 
 	HashMap<String, EntityDescription> beings = new HashMap<String, EntityDescription>();
+	
 	
 	public void addEntity(EntityDescription description)
 	{
 		beings.put(description.id, description);
 	}
 	
-	public Collection<AnimalEntityDescription> getEntities(int worldX, int worldY, int worldZ)
+	public Collection<EntityDescription> getEntities(int worldX, int worldY, int worldZ)
 	{
 		return null;
+	}
+	
+	public Collection<EntityDescription> getNearbyEntities(EntityDescription entity)
+	{
+		ArrayList<EntityDescription> entities = new ArrayList<EntityDescription>();
+		for (EntityDescription targetEntity:beings.values())
+		{
+			if (entity.roamingBoundary.isInside(targetEntity.roamingBoundary.posX,targetEntity.roamingBoundary.posY, targetEntity.roamingBoundary.posZ))
+			{
+				entities.add(targetEntity);
+			}
+		}
+		return entities;
 	}
 	
 	public void doTurn()
 	{
 		for (EntityDescription entity:beings.values())
 		{
-			entity.liveOneTurn();
+			entity.liveOneTurn(getNearbyEntities(entity));
 		}
+	}
+	
+	public void callbackMessage(String message)
+	{
+		// TODO this is just for the testing period
+		J3DCore.getInstance().uiBase.hud.mainBox.addEntry(message);
 	}
 	
 }

@@ -18,6 +18,10 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+
 /**
  * Specially described dependent member of an EntityDescription.
  * @author pali
@@ -25,4 +29,5 @@ package org.jcrpg.world.ai;
  */
 public class EntityMember {
 
+	public ArrayList<SkillInstance> skills = null;	
 }

@@ -111,9 +111,9 @@ public class J3DMovingEngine {
 		{
 			// TODO this only testing code! :-)
 			firstRender = false;
-			GorillaHorde horde = new GorillaHorde(core.world,"One",10,1,1,1);
-			WolfPack pack = new WolfPack(core.world,"One",10,1,1,1);
-			Warthogs hogs = new Warthogs(core.world,"One",10,1,1,1);
+			GorillaHorde horde = new GorillaHorde(core.world,core.ecology,"One",10,1,1,1);
+			WolfPack pack = new WolfPack(core.world,core.ecology,"One",10,1,1,1);
+			Warthogs hogs = new Warthogs(core.world,core.ecology,"One",10,1,1,1);
 			for (int i=0; i<3; i++) {
 				VisibleLifeForm form = i%3==0?horde.getOne():i%3==1?pack.getOne():hogs.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);

@@ -85,7 +85,7 @@ public class Jcrpg {
 		Ecology ecology = eGen.generateEcology(w2);
 		
 		ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		Party p = new Party(w2,"Player",partyMembers,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		Party p = new Party(w2,ecology,"Player",partyMembers,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
 		ecology.addEntity(p);
 		
 		app.setWorld(w2);
