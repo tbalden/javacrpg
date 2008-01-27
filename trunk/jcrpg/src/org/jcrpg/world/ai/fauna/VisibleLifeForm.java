@@ -18,6 +18,9 @@
 
 package org.jcrpg.world.ai.fauna;
 
+import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.EntityMember;
+
 /**
  * Different entities/groups when met visibly should show their appearance through this base class or its extension
  * for the J3DMobEngine.
@@ -33,10 +36,15 @@ public class VisibleLifeForm {
 	 * Generic type of the life form - for 3d display type
 	 */
 	public String typeId;
+	
+	public EntityDescription entity;
+	public EntityMember member;
 
-	public VisibleLifeForm(String uniqueId, String typeId) {
+	public VisibleLifeForm(String uniqueId, String typeId, EntityDescription entity, EntityMember member) {
 		super();
 		this.uniqueId = uniqueId;
 		this.typeId = typeId;
+		this.entity = entity;
+		this.member = member;
 	}
 }

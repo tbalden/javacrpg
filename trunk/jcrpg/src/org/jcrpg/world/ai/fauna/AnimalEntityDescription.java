@@ -20,9 +20,11 @@ package org.jcrpg.world.ai.fauna;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 
 /**
@@ -32,9 +34,9 @@ import org.jcrpg.world.place.World;
  */
 public abstract class AnimalEntityDescription extends EntityDescription {
 
-	public AnimalEntityDescription(World w, String id, int numberOfMembers,
-			int startX, int startY, int startZ) {
-		super(w, id, numberOfMembers, startX, startY, startZ);
+	public AnimalEntityDescription(World w, Ecology ecology, String id,
+			int numberOfMembers, int startX, int startY, int startZ) {
+		super(w, ecology, id, numberOfMembers, startX, startY, startZ);
 	}
 
 	public String ANIMAL_NONE_TYPE = "NONE";
@@ -80,10 +82,28 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	public ArrayList<Class <? extends Geography>> getGeographies()
+	{
+		try {
+			return (ArrayList<Class <? extends Geography>>) getClass().getField("geographies").get(this);
+		} catch (Exception ex)
+		{
+			return null;
+		}
+		
+	}
 
 	public VisibleLifeForm getOne()
 	{
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),ANIMAL_NONE_TYPE);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),ANIMAL_NONE_TYPE,this,null);
+	}
+	@Override
+	public boolean isPrey(EntityDescription desc) {
+		
+		if (getFoodEntities().contains(desc.getClass()))
+			return true;
+		return false;
 	}
 	
 	

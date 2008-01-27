@@ -16,33 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.player;
+package org.jcrpg.world.ai.abs.skill;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
-import org.jcrpg.world.place.World;
-
-/**
- * Player's party.
- * @author pali
- *
- */
-public class Party extends EntityDescription {
-
-	public ArrayList<MemberPerson> members = new ArrayList<MemberPerson>();
+public class SkillBase {
 	
-	public Party(World w, Ecology eco, String id, Collection<MemberPerson> members, int x, int y, int z)
-	{
-		super(w,eco,id,members.size(),x,y, z);
-	}
 
-	@Override
-	public void liveOneTurn(Collection<EntityDescription> nearbyEntities) {
-		super.liveOneTurn(nearbyEntities);
-	}
-	
 }

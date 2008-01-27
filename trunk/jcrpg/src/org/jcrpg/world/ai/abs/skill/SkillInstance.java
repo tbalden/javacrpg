@@ -16,33 +16,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.player;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
-import org.jcrpg.world.place.World;
+package org.jcrpg.world.ai.abs.skill;
 
 /**
- * Player's party.
+ * Entities may have this containing a skill with certain level.
  * @author pali
- *
  */
-public class Party extends EntityDescription {
+public class SkillInstance {
 
-	public ArrayList<MemberPerson> members = new ArrayList<MemberPerson>();
-	
-	public Party(World w, Ecology eco, String id, Collection<MemberPerson> members, int x, int y, int z)
-	{
-		super(w,eco,id,members.size(),x,y, z);
+	public Class <? extends SkillBase> skill;
+	public int level;
+	public SkillInstance(Class <? extends SkillBase> skill, int level) {
+		super();
+		this.skill = skill;
+		this.level = level;
 	}
-
-	@Override
-	public void liveOneTurn(Collection<EntityDescription> nearbyEntities) {
-		super.liveOneTurn(nearbyEntities);
+	
+	public SkillInstance copy()
+	{
+		return new SkillInstance(skill,level);
 	}
 	
 }
