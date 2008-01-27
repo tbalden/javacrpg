@@ -27,6 +27,8 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
+import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
@@ -104,8 +106,10 @@ public class J3DMovingEngine {
 			// TODO this only testing code! :-)
 			firstRender = false;
 			GorillaHorde horde = new GorillaHorde(core.world,"One",10,1,1,1);
-			for (int i=0; i<2; i++) {
-				VisibleLifeForm form = horde.getOne();
+			WolfPack pack = new WolfPack(core.world,"One",10,1,1,1);
+			Warthogs hogs = new Warthogs(core.world,"One",10,1,1,1);
+			for (int i=0; i<3; i++) {
+				VisibleLifeForm form = i%3==0?horde.getOne():i%3==1?pack.getOne():hogs.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);
 				unit.direction = (i%2==1?0:1);
 				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);

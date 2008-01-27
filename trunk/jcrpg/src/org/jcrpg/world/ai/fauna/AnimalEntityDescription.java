@@ -47,10 +47,38 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 	public int genderType = GENDER_NEUTRAL;
 	
 	
-	public abstract ArrayList<String> getFoodEntities();
-	public abstract ArrayList<Class <? extends ClimateBelt>> getClimates();
-	public abstract ArrayList<Condition> getConditions();
-	
+	@SuppressWarnings("unchecked")
+	public ArrayList<Class <? extends EntityDescription>> getFoodEntities()
+	{
+		try {
+			return (ArrayList<Class <? extends EntityDescription>>) getClass().getField("foodEntities").get(this);
+		} catch (Exception ex)
+		{
+			return null;
+		}
+	}
+	@SuppressWarnings("unchecked")
+	public ArrayList<Class <? extends ClimateBelt>> getClimates()
+	{
+		try {
+			return (ArrayList<Class <? extends ClimateBelt>>) getClass().getField("climates").get(this);
+		} catch (Exception ex)
+		{
+			return null;
+		}
+		
+	}
+	@SuppressWarnings("unchecked")
+	public ArrayList<Condition> getConditions()
+	{
+		try {
+			return (ArrayList<Condition>) getClass().getField("conditions").get(this);
+		} catch (Exception ex)
+		{
+			return null;
+		}
+		
+	}
 	
 
 	public VisibleLifeForm getOne()

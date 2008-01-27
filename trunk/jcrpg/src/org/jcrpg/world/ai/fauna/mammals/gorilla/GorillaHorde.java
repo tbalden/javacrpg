@@ -20,6 +20,10 @@ package org.jcrpg.world.ai.fauna.mammals.gorilla;
 
 import java.util.ArrayList;
 
+import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.climate.ClimateBelt;
@@ -32,20 +36,23 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public static String GORILLA_TYPE_MALE = "GORILLA_MALE";
 	public static String GORILLA_TYPE_FEMALE = "GORILLA_FEMALE";
 	
-	public static ArrayList<String> foodEntities = new ArrayList<String>();
+	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla.md5anim",null,null,false);
+	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
+	
+	public static ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
 	public static ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
 	public static ArrayList<Condition> conditions = new ArrayList<Condition>();
 	
 	static
 	{
-		foodEntities.add("");
+		
 		climates.add(Tropical.class);
 	}
 	
-	public GorillaHorde(World w, String id, int number, int x, int y, int z)
+	public GorillaHorde(World w, String id, int numberOfMembers, int x, int y, int z)
 	{
-		super(w,id,number,x,y,z);
-		boundary.setRadiusInRealCubes(number);
+		super(w,id,numberOfMembers,x,y,z);
+		roamingBoundary.setRadiusInRealCubes(numberOfMembers);
 		genderType = GENDER_BOTH;
 		
 	}
@@ -56,20 +63,6 @@ public class GorillaHorde extends AnimalEntityDescription {
 		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,GORILLA_TYPE_MALE);
 	}
 
-	@Override
-	public ArrayList<Class <? extends ClimateBelt>> getClimates() {
-		return climates;
-	}
-
-	@Override
-	public ArrayList<Condition> getConditions() {
-		return conditions;
-	}
-
-	@Override
-	public ArrayList<String> getFoodEntities() {
-		return foodEntities;
-	}
 	
 	
 

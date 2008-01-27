@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world;
+package org.jcrpg.world.ai;
 
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;

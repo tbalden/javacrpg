@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.EcologyGenerator;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EcologyGenerator;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.generator.WorldParams;
