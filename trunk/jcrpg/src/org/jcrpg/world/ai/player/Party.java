@@ -38,6 +38,9 @@ public class Party extends EntityDescription {
 	public Party(World w, Ecology eco, String id, Collection<MemberPerson> members, int x, int y, int z)
 	{
 		super(w,eco,id,members.size(),x,y, z);
+		// TODO skill based set for the radius values:
+		roamingBoundary.setRadiusInRealCubes(10);
+		domainBoundary.setRadiusInRealCubes(1);
 	}
 
 	@Override

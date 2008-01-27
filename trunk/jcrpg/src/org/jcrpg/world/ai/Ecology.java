@@ -44,6 +44,7 @@ public class Ecology {
 		ArrayList<EntityDescription> entities = new ArrayList<EntityDescription>();
 		for (EntityDescription targetEntity:beings.values())
 		{
+			if (targetEntity==entity) continue;
 			if (entity.roamingBoundary.isInside(targetEntity.roamingBoundary.posX,targetEntity.roamingBoundary.posY, targetEntity.roamingBoundary.posZ))
 			{
 				entities.add(targetEntity);

@@ -88,6 +88,7 @@ public class Jcrpg {
 		Party p = new Party(w2,ecology,"Player",partyMembers,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
 		ecology.addEntity(p);
 		
+		app.setPlayer(p);
 		app.setWorld(w2);
 		app.setEcology(ecology);
 		app.setEngine(e);

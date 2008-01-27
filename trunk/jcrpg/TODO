@@ -8,8 +8,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+
+
 UI:
 --
+[ ] combat thingies...
+[ ] player choice window -> actions when meeting entities
 [ ] UI worldmap	
 	[ ] geographies -> !!! mountains/forests/plains different gray
 	[ ] cities... 

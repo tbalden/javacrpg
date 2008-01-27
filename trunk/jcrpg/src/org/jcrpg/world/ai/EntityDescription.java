@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
@@ -62,14 +63,16 @@ public class EntityDescription {
 	}
 	public void liveOneTurn(Collection<EntityDescription> nearbyEntities)
 	{
-		System.out.println("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+nearbyEntities.size());
+			System.out.print("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+nearbyEntities.size());
+			System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
+			int actions = 0;
 			for (EntityDescription desc : nearbyEntities)
 			{
-				if (numberOfActionsPerTurn==0) break;
-				System.out.println("Eco:" + ecology+ " - "+this);
-				ecology.callbackMessage(this.getClass().getSimpleName()+": "+desc.getClass().getSimpleName()+" - "+makeTurnChoice(desc).getSimpleName());
-				numberOfActionsPerTurn--;
+				if (desc.equals(J3DCore.getInstance().player))
+					ecology.callbackMessage(this.getClass().getSimpleName()+": "+desc.getClass().getSimpleName()+" - "+makeTurnChoice(desc).getSimpleName());
+				actions++;
+				//if (numberOfActionsPerTurn==actions) break;
 			}
 		}
 		
