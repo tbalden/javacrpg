@@ -208,7 +208,6 @@ public class J3DMovingEngine {
 						float eZ = (unit.endCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
-							System.out.println("NON MOVING, SUBSTRACT");
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 						}
 						/*float cX = unit.c3dX;
