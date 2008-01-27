@@ -16,20 +16,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai;
+package org.jcrpg.ui.window;
 
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
-import org.jcrpg.world.place.World;
+import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.Window;
 
-public class EcologyGenerator {
-	public Ecology generateEcology(World world) throws Exception
-	{
-		Ecology ecology = new Ecology();
-		int n = 100;
-		for (int i=0; i<n; i++)
-			ecology.addEntity(new GorillaHorde(world,ecology,"1-"+i,10,1+(world.realSizeX/n)*i,0,(world.realSizeZ/n)*i));
-		return ecology;
+public class PlayerChoiceWindow extends Window {
+
+	public PlayerChoiceWindow(UIBase base) {
+		super(base);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -48,6 +48,7 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -306,6 +307,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void setEcology(Ecology ecology)
 	{
 		this.ecology = ecology;
+	}
+	
+	public Party player = null;
+	public void setPlayer(Party player)
+	{
+		this.player = player;
 	}
 	
 	public void setViewPosition(int x,int y,int z)	

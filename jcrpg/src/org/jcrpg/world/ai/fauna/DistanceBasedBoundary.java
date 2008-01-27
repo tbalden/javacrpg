@@ -50,7 +50,7 @@ public class DistanceBasedBoundary extends Boundaries {
 		posX = positionX;
 		posY = positionY;
 		posZ = positionZ;
-		pv = new Vector3f(posX,posY,posZ);
+		pv = new Vector3f(posX,0,posZ);
 	}
 
 	@Override
@@ -70,14 +70,15 @@ public class DistanceBasedBoundary extends Boundaries {
 		posX = x*magnification;
 		posY = y*magnification;
 		posZ = z*magnification;
+		pv.set(posX,0,posZ);
 	}
 
 	@Override
 	public boolean isInside(int absoluteX, int absoluteY, int absoluteZ) {
-		int x = absoluteX / magnification;
-		int y = absoluteY / magnification;
-		int z = absoluteZ / magnification;
-		float dist = new Vector3f(x,y,z).distance(pv);
+		int x = absoluteX;
+		int y = absoluteY;
+		int z = absoluteZ;
+		float dist = new Vector3f(x,0,z).distance(pv);
 		if (dist<=radiusInRealCubes)
 		{
 			return true;
