@@ -27,7 +27,8 @@ import org.jcrpg.world.place.World;
  *
  */
 public class EntityDescription {
-	public DistanceBasedBoundary boundary = null;
+	public DistanceBasedBoundary roamingBoundary = null;
+	public DistanceBasedBoundary domainBoundary = null;
 	/**
 	 * Unique id in the worlds.
 	 */
@@ -40,7 +41,8 @@ public class EntityDescription {
 		this.id = id;
 		this.numberOfMembers = numberOfMembers;
 		this.world = w;
-		boundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
+		roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
+		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
 	}
 	public void liveOneTurn()
 	{
@@ -63,6 +65,11 @@ public class EntityDescription {
 	}
 	public static void setVisibleSequence(int visibleSequence) {
 		EntityDescription.visibleSequence = visibleSequence;
+	}
+	
+	public static void getInstance(World w, String id, int size, int startX, int startY, int startZ)
+	{
+		new EntityDescription(w,id,size,startX,startY,startZ);
 	}
 
 }

@@ -20,10 +20,10 @@ package org.jcrpg.threed.scene.config;
 
 import java.util.HashMap;
 
-import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
+import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -43,12 +43,20 @@ public class MovingTypeModels {
 	
 	public void fillMap()
 	{
-		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_MALE,0);
+		int counter = 0;
+		
+		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_MALE,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, GorillaHorde.gorilla_unit);
+		counter++;
+		
+		hmMobIdToModelId.put(WolfPack.WOLF_TYPE_MALE,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, WolfPack.wolf_unit);
+		counter++;
 
-		//MovingModel gorilla = new MovingModel("models/fauna/gorilla_texture.obj",null,null,null,false);
-		MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla.md5anim",null,null,false);
-		RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(NON_INSTANCE,0,0,0,new Model[]{gorilla});
-		hmModelIdToRenderedMovingUnit.put(0, gorilla_unit);
+		hmMobIdToModelId.put(Warthogs.WARTHOG_TYPE_MALE,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Warthogs.warthog_unit);
+		counter++;
+		
 	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)

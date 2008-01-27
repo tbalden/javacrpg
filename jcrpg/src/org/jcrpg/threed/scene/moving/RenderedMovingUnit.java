@@ -22,6 +22,7 @@ import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
@@ -60,6 +61,14 @@ public class RenderedMovingUnit {
 	
 	public HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
 	
+	public RenderedMovingUnit(Model[] models) {
+		super();
+		this.id = MovingTypeModels.NON_INSTANCE;
+		this.worldX = 0;
+		this.worldY = 0;
+		this.worldZ = 0;
+		this.models = models;
+	}
 	
 	public RenderedMovingUnit(String id, int worldX, int worldY, int worldZ, Model[] models) {
 		super();
