@@ -18,13 +18,25 @@
 
 package org.jcrpg.ui.window.element;
 
+import org.jcrpg.ui.text.TextEntry;
+
+import com.jme.renderer.ColorRGBA;
+
 public class ChoiceDescription {
 
+	public String key;
 	public String id;
-	public String text;
-	public ChoiceDescription(String id, String text) {
+	public TextEntry text;
+	public ChoiceDescription(String key, String id, String text) {
+		super();
+		this.id = id;
+		this.text = new TextEntry(text,ColorRGBA.white);
+		this.key = key;
+	}
+	public ChoiceDescription(String key, String id, TextEntry text) {
 		super();
 		this.id = id;
 		this.text = text;
+		this.key = key;
 	}
 }

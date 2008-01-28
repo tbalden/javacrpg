@@ -20,17 +20,23 @@ package org.jcrpg.ui.window;
 
 import java.util.Collection;
 
+import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.text.TextBox;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 
 public class PlayerChoiceWindow extends Window {
 
 	Collection<ChoiceDescription> choices = null;
 	
-	public PlayerChoiceWindow(UIBase base, Collection<ChoiceDescription> choices) {
+	TextBox box;
+	
+	public PlayerChoiceWindow(UIBase base, Collection<ChoiceDescription> choices, HUD hud, String name, float middleX, float middleY, float sizeX, float sizeY) {
 		super(base);
 		this.choices = choices;
+		box = new TextBox(hud,name,middleX,middleY,sizeX,sizeY);
+		box.hide();
 	}
 
 	@Override
@@ -39,6 +45,7 @@ public class PlayerChoiceWindow extends Window {
 
 	@Override
 	public void show() {
+		box.show();
 	}
 
 }
