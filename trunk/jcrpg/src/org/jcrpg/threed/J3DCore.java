@@ -45,7 +45,10 @@ import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingeEngine;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.Map;
+import org.jcrpg.ui.window.PlayerChoiceWindow;
+import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.player.Party;
@@ -1692,6 +1695,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			uiBase = new UIBase(this);
 			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
+			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
+			ChoiceDescription no = new ChoiceDescription("N","yes","No");
+			ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
+			quitAnswers.add(yes);quitAnswers.add(no);
+			uiBase.addWindow("quitQuestion", new PlayerChoiceWindow(uiBase,new TextEntry("Quit?", ColorRGBA.red),quitAnswers,"Quit",0.088f,0.088f,0.3f,0.1f));
 			rootNode.attachChild(uiBase.hud.hudNode); // shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
 		} catch (Exception ex)
 		{

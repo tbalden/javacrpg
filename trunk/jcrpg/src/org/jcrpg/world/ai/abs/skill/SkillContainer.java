@@ -16,18 +16,39 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai;
+package org.jcrpg.world.ai.abs.skill;
 
+import java.util.Collection;
 import java.util.HashMap;
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.SkillInstance;
-
-/**
- * Specially described dependent member of an EntityDescription.
- * @author pali
- *
- */
-public class EntityMember {
+public class SkillContainer {
+	
+	public HashMap<Class<? extends SkillBase>,SkillInstance> skills = new HashMap<Class<? extends SkillBase>, SkillInstance>();
+	
+	public void addSkill(SkillInstance instance)
+	{
+		if (!skills.containsKey(instance.skill))
+		{
+			skills.put(instance.skill, instance);
+		}
+	}
+	public void setSkillValue(Class<? extends SkillBase> skill, int level)
+	{
+		if (skills.get(skill)!=null)
+		{
+			skills.get(skill).level = level;
+		} else
+		{
+			skills.put(skill, new SkillInstance(skill,level));
+		}
+	}
+	public void addSkills(Collection<SkillInstance> instances)
+	{
+		if (instances!=null)
+		for (SkillInstance skill:instances)
+		{
+			addSkill(skill);
+		}
+	}
 
 }

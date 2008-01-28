@@ -30,7 +30,7 @@ public class ChoiceDescription {
 	public ChoiceDescription(String key, String id, String text) {
 		super();
 		this.id = id;
-		this.text = new TextEntry(text,ColorRGBA.white);
+		this.text = new TextEntry(key+" - " + text,ColorRGBA.white);
 		this.key = key;
 	}
 	public ChoiceDescription(String key, String id, TextEntry text) {

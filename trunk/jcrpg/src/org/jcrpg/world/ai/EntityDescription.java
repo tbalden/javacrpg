@@ -20,6 +20,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.Behavior;
@@ -29,6 +30,8 @@ import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.choice.Hide;
 import org.jcrpg.world.ai.abs.choice.Indifference;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.fauna.DistanceBasedBoundary;
 import org.jcrpg.world.place.World;
@@ -41,7 +44,7 @@ import org.jcrpg.world.place.World;
 public class EntityDescription {
 	public DistanceBasedBoundary roamingBoundary = null;
 	public DistanceBasedBoundary domainBoundary = null;
-	public ArrayList<SkillInstance> skills = null;
+	public SkillContainer skills = new SkillContainer();
 	/**
 	 * Unique id in the worlds.
 	 */
@@ -50,6 +53,8 @@ public class EntityDescription {
 	public World world;
 	public Ecology ecology;
 	public int numberOfActionsPerTurn = 1;
+	
+	public HashMap<String, EntityDescription> subEntities = null;
 
 	public EntityDescription(World w, Ecology ecology, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
@@ -59,7 +64,7 @@ public class EntityDescription {
 		this.ecology = ecology;
 		roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
 		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,0);
-		skills = getStartingSkills();
+		skills.addSkills(getStartingSkills());
 	}
 	public void liveOneTurn(Collection<EntityDescription> nearbyEntities)
 	{
@@ -133,17 +138,17 @@ public class EntityDescription {
 	 * Return a list of skills, filled with the best available.
 	 * @return
 	 */
-	public ArrayList<SkillInstance> getBestSkillsOfGroup()
+	public HashMap<Class<? extends SkillBase>,SkillInstance> getBestSkillsOfGroup()
 	{
-		return skills;
+		return skills.skills;
 	}
 	/**
 	 * Return a list of skills, filled with the worst available.
 	 * @return
 	 */
-	public ArrayList<SkillInstance> getWorstSkillsOfGroup()
+	public HashMap<Class<? extends SkillBase>,SkillInstance> getWorstSkillsOfGroup()
 	{
-		return skills;
+		return skills.skills;
 	}
 	
 	public boolean isPrey(EntityDescription desc)
