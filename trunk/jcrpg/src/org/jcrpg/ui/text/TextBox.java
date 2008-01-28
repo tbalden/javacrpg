@@ -44,6 +44,7 @@ public class TextBox implements KeyListener {
 	int fontSize = 12;
 	
 	int backFrom = 0;
+	Node n = null;
 	
 	public TextBox(HUD hud, String name, float middleX, float middleY, float sizeX, float sizeY)
 	{
@@ -53,7 +54,7 @@ public class TextBox implements KeyListener {
 		//maxLines = (int)(hud.base.core.getDisplay().getHeight()*sizeY) / fontSize;
 		textLines = new Text[maxLines];
 		
-		Node n = new Node("TextBoxNode_"+name);
+		n = new Node("TextBoxNode_"+name);
 	
 		int pixels = (int)(hud.base.core.getDisplay().getHeight()*sizeY);
 		int neededVirtualPixels = maxLines*fontSize;
@@ -117,5 +118,13 @@ public class TextBox implements KeyListener {
 		updateText();
 		System.out.println("--- BACKFROM = "+backFrom);
 		return true;
+	}
+	public void hide()
+	{
+		hud.hudNode.detachChild(n);
+	}
+	public void show()
+	{
+		hud.hudNode.attachChild(n);
 	}
 }
