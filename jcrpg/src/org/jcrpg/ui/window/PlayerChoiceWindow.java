@@ -20,10 +20,10 @@ package org.jcrpg.ui.window;
 
 import java.util.Collection;
 
-import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.TextBox;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 
 public class PlayerChoiceWindow extends Window {
@@ -32,15 +32,22 @@ public class PlayerChoiceWindow extends Window {
 	
 	TextBox box;
 	
-	public PlayerChoiceWindow(UIBase base, Collection<ChoiceDescription> choices, HUD hud, String name, float middleX, float middleY, float sizeX, float sizeY) {
+	public PlayerChoiceWindow(UIBase base, TextEntry heading, Collection<ChoiceDescription> choices, String name, float middleX, float middleY, float sizeX, float sizeY) {
 		super(base);
 		this.choices = choices;
-		box = new TextBox(hud,name,middleX,middleY,sizeX,sizeY);
+		box = new TextBox(base.hud,name,middleX,middleY,sizeX,sizeY);
+		box.addEntry(heading);
+		for (ChoiceDescription choice:choices)
+		{
+			box.addEntry(choice.text);
+		}
+		
 		box.hide();
 	}
 
 	@Override
 	public void hide() {
+		box.hide();
 	}
 
 	@Override
