@@ -18,26 +18,27 @@
 
 package org.jcrpg.ui.window;
 
+import java.util.Collection;
+
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.window.element.ChoiceDescription;
 
 public class PlayerChoiceWindow extends Window {
 
-	public PlayerChoiceWindow(UIBase base) {
+	Collection<ChoiceDescription> choices = null;
+	
+	public PlayerChoiceWindow(UIBase base, Collection<ChoiceDescription> choices) {
 		super(base);
-		// TODO Auto-generated constructor stub
+		this.choices = choices;
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
