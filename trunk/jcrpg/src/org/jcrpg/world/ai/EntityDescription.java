@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.choice.Attack;
@@ -45,6 +46,7 @@ public class EntityDescription {
 	public DistanceBasedBoundary roamingBoundary = null;
 	public DistanceBasedBoundary domainBoundary = null;
 	public SkillContainer skills = new SkillContainer();
+	public Attributes attributes = new Attributes();
 	/**
 	 * Unique id in the worlds.
 	 */

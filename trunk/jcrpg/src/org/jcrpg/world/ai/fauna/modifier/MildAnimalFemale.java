@@ -16,17 +16,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.humanoid;
+package org.jcrpg.world.ai.fauna.modifier;
 
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 
-public class MemberPerson extends EntityMember {
+public class MildAnimalFemale extends EntityMember {
+	
+	public static AttributeRatios commonAttributeRatios = new FantasyAttrRatios();
+	
+	static
+	{
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
+	}
 
-	public MemberPerson(String visibleTypeId) {
+
+	public MildAnimalFemale(String visibleTypeId) {
 		super(visibleTypeId);
 	}
-	public String id;
-	public String foreName;
-	public String sureName;
-	
+
 }

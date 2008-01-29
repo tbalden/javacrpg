@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
+import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.place.Geography;
@@ -41,8 +42,8 @@ import org.jcrpg.world.place.geography.Plain;
 
 public class WolfPack extends AnimalEntityDescription {
 
-	public static String WOLF_TYPE_MALE = "WOLF_MALE";
-	public static String WOLF_TYPE_FEMALE = "WOLF_FEMALE";
+	public static NormalAnimalMale WOLF_TYPE_MALE = new NormalAnimalMale("WOLF_MALE");
+	public static NormalAnimalMale WOLF_TYPE_FEMALE = new NormalAnimalMale("WOLF_FEMALE");
 
 	public static MovingModel wolf = new MovingModel("models/fauna/wolf.obj",null,null,null,false);
 	public static RenderedMovingUnit wolf_unit = new RenderedMovingUnit(new Model[]{wolf});
