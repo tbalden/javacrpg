@@ -8,6 +8,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+Groups:
+	Dune/Wizardry like depersonalized groups moving around! Special NPC and such likely as part of groups.
+	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
+	Decisions made by player affect back through the group if depersonalized is subject.
 
 
 UI:
