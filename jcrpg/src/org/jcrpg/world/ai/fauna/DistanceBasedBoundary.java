@@ -76,7 +76,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	@Override
 	public boolean isInside(int absoluteX, int absoluteY, int absoluteZ) {
 		int x = absoluteX;
-		int y = absoluteY;
+		//int y = absoluteY;
 		int z = absoluteZ;
 		float dist = new Vector3f(x,0,z).distance(pv);
 		if (dist<=radiusInRealCubes)

@@ -29,6 +29,8 @@ import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
+import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
@@ -38,8 +40,8 @@ import org.jcrpg.world.place.geography.Forest;
 
 public class Warthogs extends AnimalEntityDescription {
 
-	public static String WARTHOG_TYPE_MALE = "WARTHOG_MALE";
-	public static String WARTHOG_TYPE_FEMALE = "WARTHOG_FEMALE";
+	public static StrongAnimalMale WARTHOG_TYPE_MALE = new StrongAnimalMale("WARTHOG_MALE");
+	public static MildAnimalFemale WARTHOG_TYPE_FEMALE = new MildAnimalFemale("WARTHOG_FEMALE");
 
 	public static MovingModel wolf = new MovingModel("models/fauna/warthog_model.obj",null,null,null,false);
 	public static RenderedMovingUnit warthog_unit = new RenderedMovingUnit(new Model[]{wolf});

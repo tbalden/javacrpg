@@ -18,10 +18,10 @@
 
 package org.jcrpg.world.ai;
 
-import java.util.HashMap;
+import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.skill.SkillContainer;
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.SkillInstance;
 
 /**
  * Specially described dependent member of an EntityDescription.
@@ -29,5 +29,27 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
  *
  */
 public class EntityMember {
+	public String visibleTypeId;
+	public static SkillContainer commonSkills = new SkillContainer();
+	public static AttributeRatios commonAttributeRatios = new AttributeRatios();
+	public EntityMember(String visibleTypeId) {
+		super();
+		this.visibleTypeId = visibleTypeId;
+	}
+	
+	public static AttributeRatios getCommonAttributes() {
+		return commonAttributeRatios;
+	}
+
+	public static SkillContainer getCommonSkills() {
+		return commonSkills;
+	}
+	
+	public Attributes getAttributes(EntityDescription parent, String attr)
+	{
+		return Attributes.getAttributes(parent.attributes, commonAttributeRatios);
+	}
+
+
 
 }

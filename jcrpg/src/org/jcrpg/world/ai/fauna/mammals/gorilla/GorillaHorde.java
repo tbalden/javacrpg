@@ -29,6 +29,9 @@ import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
+import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
+import org.jcrpg.world.ai.fauna.modifier.WeakAnimalChild;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
@@ -38,8 +41,9 @@ import org.jcrpg.world.place.geography.Forest;
 
 public class GorillaHorde extends AnimalEntityDescription {
 	
-	public static String GORILLA_TYPE_MALE = "GORILLA_MALE";
-	public static String GORILLA_TYPE_FEMALE = "GORILLA_FEMALE";
+	public static StrongAnimalMale GORILLA_TYPE_MALE = new StrongAnimalMale("GORILLA_MALE");
+	public static MildAnimalFemale GORILLA_TYPE_FEMALE = new MildAnimalFemale("GORILLA_FEMALE");
+	public static WeakAnimalChild GORILLA_TYPE_CHILD = new WeakAnimalChild("GORILLA_CHILD");
 	
 	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla.md5anim",null,null,false);
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});

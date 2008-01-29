@@ -262,7 +262,7 @@ public class J3DMovingEngine {
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.typeId).instantiate(form.uniqueId, form, worldX, worldY, worldZ);
+		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, worldX, worldY, worldZ);
 		units.put(form.uniqueId, unit);
 		return unit;
 	}

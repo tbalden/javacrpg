@@ -16,17 +16,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.humanoid;
+package org.jcrpg.world.ai.abs.attribute;
 
-import org.jcrpg.world.ai.EntityMember;
+public class FantasyAttrRatios extends AttributeRatios {
 
-public class MemberPerson extends EntityMember {
+	public static String[] attributeName = null;
 
-	public MemberPerson(String visibleTypeId) {
-		super(visibleTypeId);
+	static 
+	{
+		attributeName = FantasyAttributes.attributeName;
 	}
-	public String id;
-	public String foreName;
-	public String sureName;
+	public FantasyAttrRatios()
+	{
+		for (String a:attributeName)
+		{
+			attributeRatios.put(a, 1f);
+		}
+	}
 	
 }

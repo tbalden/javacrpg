@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.PositionCalculus;
 import org.jcrpg.world.ai.position.NormalCalculus;
 import org.jcrpg.world.climate.ClimateBelt;
@@ -48,7 +49,7 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 		super(w, ecology, id, numberOfMembers, startX, startY, startZ);
 	}
 
-	public String ANIMAL_NONE_TYPE = "NONE";
+	public EntityMember ANIMAL_NONE_TYPE = new EntityMember("NONE");
 	
 	public static final int GENDER_NEUTRAL = 0;
 	public static final int GENDER_MALE = 1;

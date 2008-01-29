@@ -35,15 +35,15 @@ public class VisibleLifeForm {
 	/**
 	 * Generic type of the life form - for 3d display type
 	 */
-	public String typeId;
+	public EntityMember type;
 	
 	public EntityDescription entity;
 	public EntityMember member;
 
-	public VisibleLifeForm(String uniqueId, String typeId, EntityDescription entity, EntityMember member) {
+	public VisibleLifeForm(String uniqueId, EntityMember type, EntityDescription entity, EntityMember member) {
 		super();
 		this.uniqueId = uniqueId;
-		this.typeId = typeId;
+		this.type = type;
 		this.entity = entity;
 		this.member = member;
 	}

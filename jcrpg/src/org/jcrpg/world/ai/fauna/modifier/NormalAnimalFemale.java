@@ -16,17 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.humanoid;
+package org.jcrpg.world.ai.fauna.modifier;
 
 import org.jcrpg.world.ai.EntityMember;
 
-public class MemberPerson extends EntityMember {
+public class NormalAnimalFemale extends EntityMember {
 
-	public MemberPerson(String visibleTypeId) {
+	public NormalAnimalFemale(String visibleTypeId) {
 		super(visibleTypeId);
 	}
-	public String id;
-	public String foreName;
-	public String sureName;
-	
+
 }
