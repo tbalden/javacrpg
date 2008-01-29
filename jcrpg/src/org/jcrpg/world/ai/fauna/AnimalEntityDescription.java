@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.PositionCalculus;
+import org.jcrpg.world.ai.position.NormalCalculus;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.place.Geography;
@@ -34,6 +36,13 @@ import org.jcrpg.world.place.World;
  */
 public abstract class AnimalEntityDescription extends EntityDescription {
 
+	public static Class<? extends PositionCalculus> positionCalcType = NormalCalculus.class;
+	
+	static
+	{
+		calcTypes.put(NormalCalculus.class, new NormalCalculus());
+	}
+	
 	public AnimalEntityDescription(World w, Ecology ecology, String id,
 			int numberOfMembers, int startX, int startY, int startZ) {
 		super(w, ecology, id, numberOfMembers, startX, startY, startZ);

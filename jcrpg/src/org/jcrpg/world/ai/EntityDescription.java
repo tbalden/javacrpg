@@ -54,6 +54,14 @@ public class EntityDescription {
 	public Ecology ecology;
 	public int numberOfActionsPerTurn = 1;
 	
+	public static Class<? extends PositionCalculus> positionCalcType = PositionCalculus.class;
+	public static HashMap<Class<? extends PositionCalculus>, PositionCalculus> calcTypes = new HashMap<Class<? extends PositionCalculus>, PositionCalculus>();
+	
+	static 
+	{
+		calcTypes.put(PositionCalculus.class, new PositionCalculus());
+	}
+	
 	public HashMap<String, EntityDescription> subEntities = null;
 
 	public EntityDescription(World w, Ecology ecology, String id, int numberOfMembers, int startX, int startY, int startZ) {
@@ -175,4 +183,8 @@ public class EntityDescription {
 		return Indifference.class;
 	}
 
+	public PositionCalculus getPositionCalculus()
+	{
+		return calcTypes.get(positionCalcType);
+	}
 }
