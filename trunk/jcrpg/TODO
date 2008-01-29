@@ -13,6 +13,9 @@ Groups:
 	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
 	Decisions made by player affect back through the group if depersonalized is subject.
 
+EntityGroups won't do sophisticated positioning when acting between themselves -> only ActionPoint based thing should be implemented. 
+
+With player : PositionCalculus is used and extended for different Entities.
 
 UI:
 --
