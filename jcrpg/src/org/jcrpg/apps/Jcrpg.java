@@ -26,6 +26,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.generator.WorldParams;
@@ -85,10 +86,10 @@ public class Jcrpg {
 		Ecology ecology = eGen.generateEcology(w2);
 		
 		ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		Party p = new Party(w2,ecology,"Player",partyMembers,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
-		ecology.addEntity(p);
+		EntityInstance party = new EntityInstance(new Party(),w2,ecology,"Player",1,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		ecology.addEntity(party);
 		
-		app.setPlayer(p);
+		app.setPlayer(party);
 		app.setWorld(w2);
 		app.setEcology(ecology);
 		app.setEngine(e);
