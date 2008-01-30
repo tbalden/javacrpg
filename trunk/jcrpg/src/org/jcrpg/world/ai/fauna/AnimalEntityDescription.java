@@ -44,12 +44,9 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 		calcTypes.put(NormalCalculus.class, new NormalCalculus());
 	}
 	
-	public AnimalEntityDescription(World w, Ecology ecology, String id,
-			int numberOfMembers, int startX, int startY, int startZ) {
-		super(w, ecology, id, numberOfMembers, startX, startY, startZ);
+	public AnimalEntityDescription() {
 	}
 
-	public EntityMember ANIMAL_NONE_TYPE = new EntityMember("NONE");
 	
 	public static final int GENDER_NEUTRAL = 0;
 	public static final int GENDER_MALE = 1;
@@ -104,10 +101,6 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 		
 	}
 
-	public VisibleLifeForm getOne()
-	{
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),ANIMAL_NONE_TYPE,this,null);
-	}
 	@Override
 	public boolean isPrey(EntityDescription desc) {
 		

@@ -28,7 +28,7 @@ public class EcologyGenerator {
 		Ecology ecology = new Ecology();
 		int n = 100;
 		for (int i=0; i<n; i++)
-			ecology.addEntity(new GorillaHorde(world,ecology,"1-"+i,10,1+(world.realSizeX/n)*i,0,(world.realSizeZ/n)*i));
+			ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"1-"+i,10,1+(world.realSizeX/n)*i,0,(world.realSizeZ/n)*i));
 		return ecology;
 	}
 

@@ -27,6 +27,7 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
@@ -111,9 +112,9 @@ public class J3DMovingEngine {
 		{
 			// TODO this only testing code! :-)
 			firstRender = false;
-			GorillaHorde horde = new GorillaHorde(core.world,core.ecology,"One",10,1,1,1);
-			WolfPack pack = new WolfPack(core.world,core.ecology,"One",10,1,1,1);
-			Warthogs hogs = new Warthogs(core.world,core.ecology,"One",10,1,1,1);
+			EntityInstance horde = new EntityInstance(new GorillaHorde(),core.world,core.ecology,"One",10,1,1,1);
+			EntityInstance pack = new EntityInstance(new WolfPack(),core.world,core.ecology,"One",10,1,1,1);
+			EntityInstance hogs = new EntityInstance(new Warthogs(),core.world,core.ecology,"One",10,1,1,1);
 			for (int i=0; i<3; i++) {
 				VisibleLifeForm form = i%3==0?horde.getOne():i%3==1?pack.getOne():hogs.getOne();
 				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);

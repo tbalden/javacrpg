@@ -23,19 +23,16 @@ import java.util.ArrayList;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
-import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
 
 public class Warthogs extends AnimalEntityDescription {
@@ -60,17 +57,10 @@ public class Warthogs extends AnimalEntityDescription {
 		behaviors.add(Escapist.class);
 	}
 
-	public Warthogs(World w, Ecology ecology, String id, int numberOfMembers, int startX,
-			int startY, int startZ) {
-		super(w, ecology, id, numberOfMembers, startX, startY, startZ);
-		roamingBoundary.setRadiusInRealCubes(numberOfMembers*2);
+	public Warthogs() {
 		genderType = GENDER_BOTH;
+		addGroupingRuleMember(WARTHOG_TYPE_MALE);
 	}
 
-	@Override
-	public VisibleLifeForm getOne() {
-		nextVisibleSequence();
-		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,WARTHOG_TYPE_MALE,this,null);
-	}
 
 }

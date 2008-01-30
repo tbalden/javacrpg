@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.fauna;
 
 import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
 
 /**
@@ -37,10 +38,10 @@ public class VisibleLifeForm {
 	 */
 	public EntityMember type;
 	
-	public EntityDescription entity;
+	public EntityInstance entity;
 	public EntityMember member;
 
-	public VisibleLifeForm(String uniqueId, EntityMember type, EntityDescription entity, EntityMember member) {
+	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMember member) {
 		super();
 		this.uniqueId = uniqueId;
 		this.type = type;

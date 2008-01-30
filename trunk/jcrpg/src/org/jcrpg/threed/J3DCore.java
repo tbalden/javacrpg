@@ -51,6 +51,7 @@ import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
@@ -312,8 +313,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		this.ecology = ecology;
 	}
 	
-	public Party player = null;
-	public void setPlayer(Party player)
+	public EntityInstance player = null;
+	public void setPlayer(EntityInstance player)
 	{
 		this.player = player;
 	}

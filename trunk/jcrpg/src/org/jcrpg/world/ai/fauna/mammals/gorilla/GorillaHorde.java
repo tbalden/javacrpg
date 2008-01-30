@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
-import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
 import org.jcrpg.world.ai.fauna.modifier.WeakAnimalChild;
@@ -36,7 +34,6 @@ import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
 
 public class GorillaHorde extends AnimalEntityDescription {
@@ -63,21 +60,11 @@ public class GorillaHorde extends AnimalEntityDescription {
 		behaviors.add(Peaceful.class);
 	}
 	
-	public GorillaHorde(World w, Ecology ecology, String id, int numberOfMembers, int x, int y, int z)
+	public GorillaHorde()
 	{
-		super(w,ecology,id,numberOfMembers,x,y, z);
-		roamingBoundary.setRadiusInRealCubes(numberOfMembers);
 		genderType = GENDER_BOTH;
-		
+		addGroupingRuleMember(GORILLA_TYPE_MALE);
 	}
 
-	@Override
-	public VisibleLifeForm getOne() {
-		nextVisibleSequence();
-		return new VisibleLifeForm(this.getClass().getName()+visibleSequence,GORILLA_TYPE_MALE,this,null);
-	}
-
-	
-	
 
 }

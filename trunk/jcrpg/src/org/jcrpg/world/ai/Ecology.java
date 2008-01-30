@@ -26,10 +26,10 @@ import org.jcrpg.threed.J3DCore;
 
 public class Ecology {
 
-	HashMap<String, EntityDescription> beings = new HashMap<String, EntityDescription>();
+	HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
 	
 	
-	public void addEntity(EntityDescription description)
+	public void addEntity(EntityInstance description)
 	{
 		beings.put(description.id, description);
 	}
@@ -39,10 +39,10 @@ public class Ecology {
 		return null;
 	}
 	
-	public Collection<EntityDescription> getNearbyEntities(EntityDescription entity)
+	public Collection<EntityInstance> getNearbyEntities(EntityInstance entity)
 	{
-		ArrayList<EntityDescription> entities = new ArrayList<EntityDescription>();
-		for (EntityDescription targetEntity:beings.values())
+		ArrayList<EntityInstance> entities = new ArrayList<EntityInstance>();
+		for (EntityInstance targetEntity:beings.values())
 		{
 			if (targetEntity==entity) continue;
 			if (entity.roamingBoundary.isInside(targetEntity.roamingBoundary.posX,targetEntity.roamingBoundary.posY, targetEntity.roamingBoundary.posZ))
@@ -55,7 +55,7 @@ public class Ecology {
 	
 	public void doTurn()
 	{
-		for (EntityDescription entity:beings.values())
+		for (EntityInstance entity:beings.values())
 		{
 			entity.liveOneTurn(getNearbyEntities(entity));
 		}
