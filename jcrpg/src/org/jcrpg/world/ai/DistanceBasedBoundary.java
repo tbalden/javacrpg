@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-package org.jcrpg.world.ai.fauna;
+package org.jcrpg.world.ai;
 
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
