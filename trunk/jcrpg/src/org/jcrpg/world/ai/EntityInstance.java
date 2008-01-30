@@ -104,7 +104,7 @@ public class EntityInstance {
 
 	public VisibleLifeForm getOne()
 	{
-		//TODO this is totally crap right now.. we should return groups with coords etc.
+		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus! 
 		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup().iterator().next().description,this,null);
 	}
 	
