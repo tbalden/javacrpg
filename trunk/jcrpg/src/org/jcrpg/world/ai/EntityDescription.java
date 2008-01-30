@@ -34,7 +34,6 @@ import org.jcrpg.world.ai.abs.choice.Indifference;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
-import org.jcrpg.world.ai.fauna.DistanceBasedBoundary;
 import org.jcrpg.world.place.World;
 
 /**
