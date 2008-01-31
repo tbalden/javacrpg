@@ -22,6 +22,7 @@ import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
 import com.jme.math.Vector3f;
+import com.jme.scene.shape.Sphere;
 
 /**
  * Distance/position based boundary - tells if a position is inside its radius. Used with moving units e.g.
@@ -96,6 +97,22 @@ public class DistanceBasedBoundary extends Boundaries {
 	
 	public static int getCommonDistance(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{
+		
+		Vector3f dir = one.pv.subtract(two.pv).normalize();
+		
+		Vector3f rad1 = dir.mult(one.getRadiusInRealCubes());
+		Vector3f point1_1 = one.pv.subtract(rad1);
+		Vector3f point1_2 = one.pv.add(rad1);
+		
+		Vector3f rad2 = dir.mult(one.getRadiusInRealCubes());
+		Vector3f point2_1 = two.pv.subtract(rad2);
+		Vector3f point2_2 = two.pv.add(rad2);
+		
+		//Sphere s = null;
+		//s.get
+		
+		
+		
 		// TODO do this for calculating encounter likeness in Ecology
 		int dist = (int)one.pv.distance(two.pv);
 		int d1 = dist - one.getRadiusInRealCubes();
