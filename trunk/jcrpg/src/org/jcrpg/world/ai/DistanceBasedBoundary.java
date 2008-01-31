@@ -93,5 +93,18 @@ public class DistanceBasedBoundary extends Boundaries {
 	public void setRadiusInRealCubes(int radiusInRealCubes) {
 		this.radiusInRealCubes = radiusInRealCubes;
 	}
+	
+	public static int getCommonDistance(DistanceBasedBoundary one, DistanceBasedBoundary two)
+	{
+		// TODO do this for calculating encounter likeness in Ecology
+		int dist = (int)one.pv.distance(two.pv);
+		int d1 = dist - one.getRadiusInRealCubes();
+		int d2 = dist - two.getRadiusInRealCubes();
+		if (d1<two.getRadiusInRealCubes())
+		{
+			return Math.abs(dist - (d1+d2));
+		}
+		return 0;
+	}
 
 }
