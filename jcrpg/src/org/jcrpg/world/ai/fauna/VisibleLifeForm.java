@@ -18,9 +18,9 @@
 
 package org.jcrpg.world.ai.fauna;
 
-import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.EntityMemberInstance;
 
 /**
  * Different entities/groups when met visibly should show their appearance through this base class or its extension
@@ -39,9 +39,9 @@ public class VisibleLifeForm {
 	public EntityMember type;
 	
 	public EntityInstance entity;
-	public EntityMember member;
+	public EntityMemberInstance member;
 
-	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMember member) {
+	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {
 		super();
 		this.uniqueId = uniqueId;
 		this.type = type;
