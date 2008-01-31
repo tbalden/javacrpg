@@ -21,6 +21,8 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.util.HashUtil;
+
 public class GroupingRule {
 
 	public int averageSize = 2;
@@ -30,13 +32,34 @@ public class GroupingRule {
 	public int sizeDeviation = 1;
 	
 	Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
-	public Collection<EntityMemberInstance> getGroup()
+	public Collection<EntityMemberInstance> getGroup(int size)
 	{
+		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
 		for (GroupingMemberProps prop :possibleMembers)
 		{
 			members.add(new EntityMemberInstance(prop.memberType));
+			counter++;
+			if (counter==size) break;
 		}
 		return members;
+	}
+	
+	/**
+	 * This should return always the same ordered group sizes regardless of number of members of instance. 
+	 * @param instance
+	 * @return
+	 */
+	public int[][] getGroupSizes(EntityInstance instance)
+	{
+		int parts = instance.numberOfMembers/averageSize;
+		int[][] ret = new int[parts][];
+		for (int i=0; i<parts; i++)
+		{
+			int rand = HashUtil.mixPercentage(instance.id.hashCode(), 0, 0);
+			int dev = (((int)((100f/rand)*sizeDeviation))*2)-sizeDeviation;
+			ret[i] = new int[averageSize+sizeDeviation];
+		}
+		return ret;
 	}
 }

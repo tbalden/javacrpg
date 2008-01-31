@@ -28,7 +28,7 @@ import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.World;
 
 public class EntityInstance {
-
+	
 	public EntityDescription description;
 
 	public SkillContainer skills = new SkillContainer();
@@ -60,6 +60,24 @@ public class EntityInstance {
 		roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getRoamingSize(this));
 		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getDomainSize(this));
 		skills.addSkills(description.getStartingSkills());
+		calculateGroupsAndPositions();
+	}
+	
+	public void calculateGroupsAndPositions()
+	{
+		calcGroupSizes();
+	}
+	public int[][] groupSizes = null;
+	public int[][] calcGroupSizes()
+	{
+		if (groupSizes==null)
+			groupSizes = description.groupingRule.getGroupSizes(this);
+		return groupSizes;
+	}
+	public int[][] calcGroupPositions()
+	{
+		//description.calcTypes.get(description.positionCalcType).getVisiblePositionsInArea(seer, watched)
+		return null;
 	}
 	
 	public void liveOneTurn(Collection<EntityInstance> nearbyEntities)
@@ -101,11 +119,20 @@ public class EntityInstance {
 	{
 		new EntityInstance(desc,w,null,id,size,startX,startY,startZ);
 	}
+	
+	
+
+	public Collection<VisibleLifeForm> getVisibles()
+	{
+		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus!
+		return null;
+		//return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup().iterator().next().description,this,null);
+	}
 
 	public VisibleLifeForm getOne()
 	{
 		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus! 
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup().iterator().next().description,this,null);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup(1).iterator().next().description,this,null);
 	}
 	
 }

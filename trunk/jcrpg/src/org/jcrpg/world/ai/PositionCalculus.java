@@ -34,4 +34,6 @@ public class PositionCalculus {
 		// TODO 
 		return new ArrayList<Position>();
 	}
+	
+	//public int[][] 
 }
