@@ -1,0 +1,26 @@
+MODELO DE UN GORILA para el proyecto JCRPG
+
+Contenido:
+
+* gorilla_model.blend
+* gorilla_rig.blend
+* gorilla_steady_R.blend
+* gorilla_walcycle.blend
+* gorilla_prev.jpg
+* sheepskin.jpg (from BurningWell.org)
+* texture.png
+* uv_map.tga
+* Readme.txt
+* License.txt
+* Leame.txt
+* Licencia.txt
+
+Copyright (C) 2007  Luis Felipe Lopez Acevedo
+www.introspectionstudio.com
+introspectionstudio@gmail.com
+
+Este trabajo es libre: puede redistribuirlo o modificarlo bajo los términos de la Licencia Pública General GNU versión 3 o superior publicada por la Fundación del Software Libre.
+
+Este trabajo se distribuye con la esperanza de que será útil, pero no ofrece NINGUNA GARANTÍA; ni siquiera la garantía MERCANTIL implícita o de APTITUD PARA UN PROPÓSITO DETERMINADO. Consulte los detalles de la Licencia Pública General GNU para obtener una información más detallada..
+
+Debió haber recibido una copia de la Licencia Pública General GNU junto con este trabajo. Si no fue así, visite <http://www.gnu.org/licenses/>.
