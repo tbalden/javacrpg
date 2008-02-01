@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
+import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Sphere;
 
@@ -145,6 +146,25 @@ public class DistanceBasedBoundary extends Boundaries {
 		//  |        .    |    .  |  | 		
 		return new int[]{ common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()};
 		
+	}
+	
+	public static Vector3f intersects(DistanceBasedBoundary[] boundaries)
+	{
+		Vector3f sum = new Vector3f(0,0,0);
+		for (DistanceBasedBoundary b:boundaries)
+		{
+			sum.addLocal(b.pv);
+		}
+		sum.divideLocal(boundaries.length);
+		
+		for (DistanceBasedBoundary b:boundaries)
+		{
+			if (!b.isInside((int)sum.x, (int)sum.y, (int)sum.z)) {
+				return null;
+			}
+		}
+		
+		return sum;
 	}
 	
 	public static void main(String[] args) throws Exception 
