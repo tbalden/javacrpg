@@ -3,14 +3,17 @@ GORILLA MODEL for the JCRPG project
 Contents:
 
 * gorilla_model.blend
-* gorilla_texture.blend
 * gorilla_rig.blend
-* gorilla_walking.blend
+* gorilla_steady_R.blend
+* gorilla_walcycle.blend
 * gorilla_prev.jpg
-* sheepskin.jpg (from BurningWell.org) 
-* refs
-  * gorilla_frontview
-  * gorilla_sideview
+* sheepskin.jpg (from BurningWell.org)
+* texture.png
+* uv_map.tga
+* Readme.txt
+* License.txt
+* Leame.txt
+* Licencia.txt
 
 Copyright (C) 2007  Luis Felipe Lopez Acevedo
 
