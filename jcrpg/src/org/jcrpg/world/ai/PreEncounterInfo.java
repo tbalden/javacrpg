@@ -23,6 +23,6 @@ import java.util.HashSet;
 
 public class PreEncounterInfo {
 
-	public HashSet<E>
+	//public HashSet<E>
 	
 }
