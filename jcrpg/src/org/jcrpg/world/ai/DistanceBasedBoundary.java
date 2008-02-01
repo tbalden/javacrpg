@@ -95,33 +95,64 @@ public class DistanceBasedBoundary extends Boundaries {
 		this.radiusInRealCubes = radiusInRealCubes;
 	}
 	
-	public static int getCommonDistance(DistanceBasedBoundary one, DistanceBasedBoundary two)
+	public static int[] zero = new int[]{0,0};
+	
+	/**
+	 * Returns two percent values for each boundary representing how big portion of their radius is inside the other. 
+	 * @param one
+	 * @param two
+	 * @return
+	 */
+	public static int[] getCommonRadiusRatios(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{
-		
-		Vector3f dir = one.pv.subtract(two.pv).normalize();
-		
-		Vector3f rad1 = dir.mult(one.getRadiusInRealCubes());
-		Vector3f point1_1 = one.pv.subtract(rad1);
-		Vector3f point1_2 = one.pv.add(rad1);
-		
-		Vector3f rad2 = dir.mult(one.getRadiusInRealCubes());
-		Vector3f point2_1 = two.pv.subtract(rad2);
-		Vector3f point2_2 = two.pv.add(rad2);
-		
-		//Sphere s = null;
-		//s.get
-		
-		
-		
-		// TODO do this for calculating encounter likeness in Ecology
-		int dist = (int)one.pv.distance(two.pv);
-		int d1 = dist - one.getRadiusInRealCubes();
-		int d2 = dist - two.getRadiusInRealCubes();
-		if (d1<two.getRadiusInRealCubes())
+		DistanceBasedBoundary bigger, smaller;
+		if (one.getRadiusInRealCubes()>two.getRadiusInRealCubes())
 		{
-			return Math.abs(dist - (d1+d2));
+			bigger = one; smaller = two;
+		} else
+		{
+			bigger = two; smaller = one; 
 		}
-		return 0;
+		
+		int common_distance = 0;
+		
+		int dist = (int)one.pv.distance(two.pv);
+		
+		if ( dist + smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
+		{
+			//System.out.println("smaller is fully inside");
+			// smaller is fully inside
+			common_distance = (smaller.getRadiusInRealCubes()*2);
+			
+		} else
+		if (dist<=bigger.getRadiusInRealCubes() && dist+smaller.getRadiusInRealCubes()>bigger.getRadiusInRealCubes())
+		{
+			//System.out.println("smaller is more than half inside");
+			// smaller is more than half inside
+			common_distance = smaller.getRadiusInRealCubes() + (bigger.getRadiusInRealCubes()  - dist);
+		} else
+		if (dist-smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
+		{
+			//System.out.println("smaller is half or less inside");
+			// smaller is half or less inside
+			common_distance = smaller.getRadiusInRealCubes() - (dist - bigger.getRadiusInRealCubes());
+		} else
+		{
+			// no intersection
+			return zero;
+		}
+		//System.out.println("CD: "+common_distance);
+		//  |        .    |    .  |  | 		
+		return new int[]{ common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()};
+		
+	}
+	
+	public static void main(String[] args) throws Exception 
+	{
+		DistanceBasedBoundary d1 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),10,0,10,10);
+		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),20,0,10,2);
+		int[] ratios = getCommonRadiusRatios(d1, d2);
+		System.out.println("RATIOS: "+ratios[0]+" "+ratios[1]);
 	}
 
 }
