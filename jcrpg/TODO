@@ -13,6 +13,12 @@ Groups:
 	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
 	Decisions made by player affect back through the group if depersonalized is subject.
 
+each entity will look for the groups nearby every turn. Even if the nearby entity have acted on it a new acting from itself is needed in every case.
+The unit shall check if there is common intersection with more than one nearby entity and do a common act upon them in one act not two. In this
+case it can use as much entity of it as the sum of the common radius would allow!! 
+If they don't intersect do two separate act for each other nearby entity.
+
+
 EntityGroups won't do sophisticated positioning when acting between themselves -> only ActionPoint based thing should be implemented. 
 
 With player : PositionCalculus is used and extended for different Entities.
