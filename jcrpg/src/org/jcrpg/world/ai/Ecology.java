@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 
 import com.jme.math.Vector3f;
 
@@ -41,6 +42,23 @@ public class Ecology {
 		return null;
 	}
 	
+	public static void calcGroupsOfEncounter(EntityInstance self, EntityInstance target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
+	{
+		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
+		int[] groupIds = target.description.groupingRule.getGroupIds(target, radiusRatio, rand);
+		if (fillOwn)
+		{
+			toFill.ownGroupIds = groupIds;
+		} else
+		{
+			if (self == J3DCore.getInstance().player) {
+				System.out.println("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
+				System.out.println("Ecology.calcGroupsOfEncounter TARGET = "+target.id);
+			}
+			toFill.encounteredGroupIds.put(target, groupIds);
+		}
+	}
+	
 	static ArrayList<PreEncounterInfo> staticEntities = new ArrayList<PreEncounterInfo>();
 	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entity)
 	{
@@ -49,25 +67,40 @@ public class Ecology {
 		for (EntityInstance targetEntity:beings.values())
 		{
 			if (targetEntity==entity) continue;
+			if (entity==J3DCore.getInstance().player)
+			{
+				//System.out.println("Checking "+targetEntity.id);
+			}
 			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
 			if (r==DistanceBasedBoundary.zero) continue; // no common part
+			if (entity==J3DCore.getInstance().player)
+			{
+				System.out.println("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
+			}
+			PreEncounterInfo pre = null;
 			if (staticEntities.size()<=counter)
 			{
-				PreEncounterInfo pre = new PreEncounterInfo(entity);
+				pre = new PreEncounterInfo(entity);
 				pre.encountered.put(targetEntity, r);
 				staticEntities.add(pre);
 			} else
 			{
-				PreEncounterInfo pre = staticEntities.get(counter++);
+				pre = staticEntities.get(counter);
 				pre.subject = entity;
 				pre.encountered.clear();
+				pre.encounteredGroupIds.clear();
 				pre.encountered.put(targetEntity, r);
 			}
+			counter++;
+			calcGroupsOfEncounter(entity, targetEntity, r[0][1], pre, false);
+			calcGroupsOfEncounter(targetEntity, entity, r[0][0], pre, true);
 		}
 		for (int i=counter; i<staticEntities.size(); i++)
 		{
 			staticEntities.get(i).subject = null;
 		}
+		
+		
 		if (true==false) {
 			for (PreEncounterInfo info1:staticEntities)
 			{
@@ -97,6 +130,8 @@ public class Ecology {
 			}
 			return newEntities;
 		}
+		
+		
 		return staticEntities;
 	}
 	

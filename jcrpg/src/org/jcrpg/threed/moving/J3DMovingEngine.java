@@ -59,7 +59,7 @@ public class J3DMovingEngine {
 		movingTypeModels = new MovingTypeModels();
 	}
 	
-	boolean firstRender = true;
+	boolean firstRender = false;
 	
 	
 	/**

@@ -24,6 +24,9 @@ public class PreEncounterInfo {
 
 	public EntityInstance subject;
 	public HashMap<EntityInstance, int[][]> encountered = new HashMap<EntityInstance, int[][]>();
+	public HashMap<EntityInstance, int[]> encounteredGroupIds = new HashMap<EntityInstance, int[]>();
+	public int[] ownGroupIds = null;
+	
 	
 	public PreEncounterInfo(EntityInstance subject) {
 		super();

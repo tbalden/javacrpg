@@ -35,6 +35,8 @@ public class Engine implements Runnable {
 	public boolean turnCome = false;
 	public int ticksLeft = SECONDS_PER_TURN;
 	
+	public long numberOfTurn = 0;
+	
 	public void run() {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
@@ -49,6 +51,7 @@ public class Engine implements Runnable {
 					ticksLeft = SECONDS_PER_TURN;
 					pause = true;
 					turnCome = true;
+					numberOfTurn++;
 				}
 				setTimeChanged(true);
 			}
@@ -98,6 +101,18 @@ public class Engine implements Runnable {
 	
 	public synchronized void setTimeChanged(boolean state) {
 		timeChanged = state;
+	}
+
+	/**
+	 * Current turn's number.
+	 * @return
+	 */
+	public long getNumberOfTurn() {
+		return numberOfTurn;
+	}
+
+	public void setNumberOfTurn(long numberOfTurn) {
+		this.numberOfTurn = numberOfTurn;
 	}
 
 	

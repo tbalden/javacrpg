@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -315,9 +316,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	public EntityInstance player = null;
-	public void setPlayer(EntityInstance player)
+	public PlayerTurnLogic playerTurnLogic = null;
+	public void setPlayer(EntityInstance player, PlayerTurnLogic playerTurnLogic)
 	{
 		this.player = player;
+		this.playerTurnLogic = playerTurnLogic;
 	}
 	
 	public void setViewPosition(int x,int y,int z)	
@@ -326,6 +329,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		viewPositionX = x;
 		viewPositionY = y;
 		viewPositionZ = z;
+		player.setPosition(new int[]{x,y,z});
 	}
 
 	/**
@@ -1148,6 +1152,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		viewPositionX = coords[0];
 		viewPositionY = coords[1];
 		viewPositionZ = coords[2];
+		player.setPosition(coords);
 	}
 	public void setRelativePosition(int[] coords)
 	{
