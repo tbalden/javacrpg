@@ -80,20 +80,28 @@ public class EntityInstance {
 		return null;
 	}
 	
-	public void liveOneTurn(Collection<EntityInstance> nearbyEntities)
+	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
 	{
-			System.out.print("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+nearbyEntities.size());
-			System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
+		int counter = 0;
+		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
 			int actions = 0;
-			for (EntityInstance instance : nearbyEntities)
+			for (PreEncounterInfo info : nearbyEntities)
 			{
-				if (instance.description.equals(J3DCore.getInstance().player))
-					ecology.callbackMessage(this.getClass().getSimpleName()+": "+instance.getClass().getSimpleName()+" - "+description.makeTurnChoice(description,instance).getSimpleName());
+				if (info.subject==null) continue;
+				counter++;
+				EntityInstance instance = info.encountered.keySet().iterator().next();
+				if (instance.equals(J3DCore.getInstance().player))
+					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+instance.description.getClass().getSimpleName()+" - "+description.makeTurnChoice(description,instance).getSimpleName());
+				else
+				{
+					description.makeTurnChoice(instance.description, instance);
+				}
 				actions++;
 				//if (numberOfActionsPerTurn==actions) break;
 			}
 		}
+		//System.out.println("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+counter);
 		
 	}
 

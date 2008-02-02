@@ -19,10 +19,15 @@
 package org.jcrpg.world.ai;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class PreEncounterInfo {
 
-	//public HashSet<E>
+	public EntityInstance subject;
+	public HashMap<EntityInstance, int[][]> encountered = new HashMap<EntityInstance, int[][]>();
+	
+	public PreEncounterInfo(EntityInstance subject) {
+		super();
+		this.subject = subject;
+	}
 	
 }
