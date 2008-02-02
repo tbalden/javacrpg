@@ -25,13 +25,13 @@ import java.util.HashSet;
 import java.util.TreeMap;
 
 import org.jcrpg.util.HashUtil;
-import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.generator.ClassFactory;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.GeneratedPartRuleSet;
+import org.jcrpg.world.generator.WorldGenerator;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoBase;

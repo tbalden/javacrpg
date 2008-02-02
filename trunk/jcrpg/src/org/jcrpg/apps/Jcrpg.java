@@ -18,17 +18,16 @@
 
 package org.jcrpg.apps;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
+import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
-import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
+import org.jcrpg.world.generator.WorldGenerator;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
@@ -85,11 +84,12 @@ public class Jcrpg {
 		EcologyGenerator eGen = new EcologyGenerator();
 		Ecology ecology = eGen.generateEcology(w2);
 		
-		ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		EntityInstance party = new EntityInstance(new Party(),w2,ecology,"Player",1,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
+		EntityInstance party = new EntityInstance(new Party(),w2,ecology,"Player",6,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
 		ecology.addEntity(party);
 		
-		app.setPlayer(party);
+		PlayerTurnLogic logic = new PlayerTurnLogic(e,w2,ecology,party);
+		app.setPlayer(party,logic);
 		app.setWorld(w2);
 		app.setEcology(ecology);
 		app.setEngine(e);

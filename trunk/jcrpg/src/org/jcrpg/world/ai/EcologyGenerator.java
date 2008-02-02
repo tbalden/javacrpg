@@ -26,9 +26,12 @@ public class EcologyGenerator {
 	public Ecology generateEcology(World world) throws Exception
 	{
 		Ecology ecology = new Ecology();
-		int n = 1000;
-		for (int i=0; i<n; i++)
-			ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"1-"+i,10,1+(int)((world.realSizeX*1f/n)*i),0,(int)((world.realSizeZ*1f/n)*i)));
+		int nX = 40;
+		int nY = 40;
+		for (int i=0; i<nX; i++) {
+			for (int j=0; j<nY; j++)
+				ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"G-"+i+" "+j,10,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+		}
 		return ecology;
 	}
 

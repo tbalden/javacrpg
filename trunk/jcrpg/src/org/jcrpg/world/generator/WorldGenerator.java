@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-package org.jcrpg.world;
+package org.jcrpg.world.generator;
 
 import java.util.HashMap;
 
@@ -25,7 +25,6 @@ import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
-import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;

@@ -67,8 +67,8 @@ public class EntityInstance {
 	{
 		calcGroupSizes();
 	}
-	public int[][] groupSizes = null;
-	public int[][] calcGroupSizes()
+	public int[] groupSizes = null;
+	public int[] calcGroupSizes()
 	{
 		if (groupSizes==null)
 			groupSizes = description.groupingRule.getGroupSizes(this);
@@ -85,8 +85,8 @@ public class EntityInstance {
 		int counter = 0;
 		if (this.equals(J3DCore.getInstance().player))
 		{
-			J3DCore.getInstance().mEngine.render(nearbyEntities);
-		}
+			J3DCore.getInstance().playerTurnLogic.newTurn(nearbyEntities);
+		} else
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
 			int actions = 0;
@@ -146,5 +146,9 @@ public class EntityInstance {
 		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus! 
 		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup(1).iterator().next().description,this,null);
 	}
-	
+	public void setPosition(int[] coords)
+	{
+		roamingBoundary.setPosition(1, coords[0], coords[1], coords[2]);
+		domainBoundary.setPosition(1, coords[0], coords[1], coords[2]);
+	}
 }

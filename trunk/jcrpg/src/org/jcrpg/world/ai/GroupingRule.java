@@ -50,16 +50,30 @@ public class GroupingRule {
 	 * @param instance
 	 * @return
 	 */
-	public int[][] getGroupSizes(EntityInstance instance)
+	public int[] getGroupSizes(EntityInstance instance)
 	{
 		int parts = instance.numberOfMembers/averageSize;
-		int[][] ret = new int[parts][];
+		int[] ret = new int[parts];
 		for (int i=0; i<parts; i++)
 		{
 			int rand = HashUtil.mixPercentage(instance.id.hashCode(), 0, 0);
-			int dev = (((int)((100f/rand)*sizeDeviation))*2)-sizeDeviation;
-			ret[i] = new int[averageSize+sizeDeviation];
+			int dev = (((int)((rand/100f)*sizeDeviation))*2)-sizeDeviation;
+			ret[i] = averageSize+dev;
 		}
 		return ret;
 	}
+	
+	public int[] getGroupIds(EntityInstance instance, int radiusRatio, int randomSeed)
+	{
+		
+		int numberOfGroups = (int)(instance.groupSizes.length * 1f * radiusRatio/100)+1;
+		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
+		int[] groupIds = new int[numberOfGroups];
+		for (int i=0; i<groupIds.length; i++)
+		{
+			groupIds[i] = i; // TODO non-sequential version
+		}
+		return groupIds;
+	}
+	
 }

@@ -20,7 +20,6 @@ package org.jcrpg.world.generator;
 
 import java.util.HashMap;
 
-import org.jcrpg.world.WorldGenerator;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoBase;
 import org.jcrpg.world.place.World;
 
