@@ -18,14 +18,17 @@
 
 package org.jcrpg.game;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.World;
 
 /**
@@ -38,6 +41,9 @@ public class PlayerTurnLogic {
 	public HashSet<PreEncounterInfo> previousInfos = new HashSet<PreEncounterInfo>();
 	public HashSet<PreEncounterInfo> infos = new HashSet<PreEncounterInfo>();
 	
+	
+	public Collection<VisibleLifeForm> previousForms = new ArrayList<VisibleLifeForm>();
+	public Collection<VisibleLifeForm> forms = new ArrayList<VisibleLifeForm>();
 	
 	public World world;
 	public Ecology ecology;
@@ -57,6 +63,8 @@ public class PlayerTurnLogic {
 		previousInfos.clear();
 		previousInfos.addAll(infos);
 		infos.addAll(possibleEncounters);
+		previousForms.addAll(forms);
+		forms.clear();
 		for (PreEncounterInfo info:infos)
 		{
 			if (info.subject==null) continue;
@@ -72,10 +80,16 @@ public class PlayerTurnLogic {
 					int size = i.groupSizes[in];
 					Collection<EntityMemberInstance> members = i.description.groupingRule.getGroup(size);
 					ecology.callbackMessage(""+size+" of "+members.iterator().next().description.visibleTypeId);
+					for (EntityMemberInstance member:members)
+					{
+						VisibleLifeForm form = i.getOne(member.description);
+						forms.add(form);
+					}
 				}
 				
 			}
 		}
+		J3DCore.getInstance().mEngine.render(forms);
 	}
 
 }

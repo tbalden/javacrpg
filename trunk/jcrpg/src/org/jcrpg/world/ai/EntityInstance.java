@@ -134,18 +134,12 @@ public class EntityInstance {
 	
 	
 
-	public Collection<VisibleLifeForm> getVisibles()
-	{
-		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus!
-		return null;
-		//return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup().iterator().next().description,this,null);
-	}
 
-	public VisibleLifeForm getOne()
+	public VisibleLifeForm getOne(EntityMember member)
 	{
-		//TODO this is totally crap right now.. we should return groups with coords etc. using PositionCalculus! 
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),description.groupingRule.getGroup(1).iterator().next().description,this,null);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),member,this,null);
 	}
+	
 	public void setPosition(int[] coords)
 	{
 		roamingBoundary.setPosition(1, coords[0], coords[1], coords[2]);
