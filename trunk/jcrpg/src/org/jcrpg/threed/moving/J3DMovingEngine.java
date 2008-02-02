@@ -18,6 +18,7 @@
 
 package org.jcrpg.threed.moving;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
@@ -28,6 +29,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
@@ -106,8 +108,10 @@ public class J3DMovingEngine {
 	/**
 	 * Renders the moving units inside the render distance : looks for life forms in the World in reach of the player.
 	 */
-	public void render()
+	public void render(Collection<PreEncounterInfo> nearbyEntities)
 	{
+		// TODO fade unused units
+		// TODO add nearby units somewhere in the world's walkable part -> water/no water etc.
 		if (firstRender)
 		{
 			// TODO this only testing code! :-)
