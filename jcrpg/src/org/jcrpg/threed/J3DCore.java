@@ -52,6 +52,7 @@ import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
@@ -1805,7 +1806,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
 		
 		mEngine = new J3DMovingEngine(this);
-		mEngine.render();
+		mEngine.render(new ArrayList<PreEncounterInfo>());
 		mEngine.renderToViewPort(0f);
 		
 		engine.setPause(false);
