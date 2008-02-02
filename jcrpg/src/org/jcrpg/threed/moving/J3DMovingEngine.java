@@ -28,12 +28,7 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
-import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
-import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
@@ -105,29 +100,42 @@ public class J3DMovingEngine {
 		}
 	}
 	
+	public void clearPreviousUnits()
+	{
+		for (RenderedMovingUnit u:units.values())
+		{
+			for (NodePlaceholder n:u.nodePlaceholders)
+			{
+				PooledNode pooledRealNode = n.realNode;
+				n.realNode = null;
+				if (pooledRealNode!=null) {
+					Node realNode = (Node)pooledRealNode;
+					if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+					realNode.removeFromParent();
+					core.modelPool.releaseNode(pooledRealNode);
+				}
+			}
+		}
+		units.clear();
+	}
+	
 	/**
 	 * Renders the moving units inside the render distance : looks for life forms in the World in reach of the player.
 	 */
-	public void render(Collection<PreEncounterInfo> nearbyEntities)
+	public void render(Collection<VisibleLifeForm> forms)
 	{
-		// TODO fade unused units
-		// TODO add nearby units somewhere in the world's walkable part -> water/no water etc.
-		if (firstRender)
+		
+		clearPreviousUnits();
+		int i=0;
+		for (VisibleLifeForm form:forms)
 		{
-			// TODO this only testing code! :-)
-			firstRender = false;
-			EntityInstance horde = new EntityInstance(new GorillaHorde(),core.world,core.ecology,"One",10,1,1,1);
-			EntityInstance pack = new EntityInstance(new WolfPack(),core.world,core.ecology,"One",10,1,1,1);
-			EntityInstance hogs = new EntityInstance(new Warthogs(),core.world,core.ecology,"One",10,1,1,1);
-			for (int i=0; i<3; i++) {
-				VisibleLifeForm form = i%3==0?horde.getOne():i%3==1?pack.getOne():hogs.getOne();
-				RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY-1, core.viewPositionZ-3-(i%2)/2);
-				unit.direction = (i%2==1?0:1);
-				NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
-				renderNodes(placeHolders, unit);
-			}
+			RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY, core.origoZ-core.relativeZ-3-(i%2)/2);
+			unit.direction = (i%2==1?0:1);
+			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
+			renderNodes(placeHolders, unit);
+			i++;			
 		}
-		// TODO 
+		renderToViewPort(0f);
 	}
 	
 	boolean firstRenderToViewPort = true;
@@ -138,10 +146,6 @@ public class J3DMovingEngine {
 	 */
 	public void renderToViewPort(float refAngle)
 	{
-		if (firstRenderToViewPort) // TODO check if it's visible...
-		{
-			firstRenderToViewPort = false;
-			// TODO check all rendered moving units if they are in view and set them visible
 			for (RenderedMovingUnit unit: units.values())
 			{
 				for (NodePlaceholder n : unit.nodePlaceholders)
@@ -149,7 +153,6 @@ public class J3DMovingEngine {
 					Node realPooledNode = (Node)core.modelPool.getMovingModel(unit, n.model, n);
 					n.realNode = (PooledNode)realPooledNode;
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
-					//System.out.println("LOCALTRANS: "+realPooledNode.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
 					realPooledNode.setLocalScale(n.getLocalScale());
 					if (unit.internal) {
@@ -158,10 +161,10 @@ public class J3DMovingEngine {
 					{
 						core.extRootNode.attachChild((Node)realPooledNode);
 					}
+					realPooledNode.updateRenderState();
 					
 				}
 			}
-		}
 	}
 	
 	int moveCount = 0;

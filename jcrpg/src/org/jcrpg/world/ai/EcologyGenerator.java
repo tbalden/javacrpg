@@ -20,17 +20,23 @@ package org.jcrpg.world.ai;
 
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
+import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 import org.jcrpg.world.place.World;
 
 public class EcologyGenerator {
 	public Ecology generateEcology(World world) throws Exception
 	{
 		Ecology ecology = new Ecology();
-		int nX = 40;
-		int nY = 40;
+		int nX = 30;
+		int nY = 30;
 		for (int i=0; i<nX; i++) {
 			for (int j=0; j<nY; j++)
-				ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"G-"+i+" "+j,10,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+			{
+				ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"GO-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+				ecology.addEntity(new EntityInstance(new WolfPack(),world,ecology,"WO-"+i+" "+j,20,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+				ecology.addEntity(new EntityInstance(new Warthogs(),world,ecology,"WA-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+			}
 		}
 		return ecology;
 	}

@@ -44,7 +44,7 @@ import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
-import org.jcrpg.threed.standing.J3DStandingeEngine;
+import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.Map;
@@ -1805,20 +1805,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         
         updateDisplay(null);
 		
-        sEngine = new J3DStandingeEngine(this);
+        sEngine = new J3DStandingEngine(this);
 		sEngine.render();
 		sEngine.renderToViewPort();
 		sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
 		
 		mEngine = new J3DMovingEngine(this);
-		mEngine.render(new ArrayList<PreEncounterInfo>());
-		mEngine.renderToViewPort(0f);
+		//mEngine.render(new ArrayList<PreEncounterInfo>());
+		//mEngine.renderToViewPort(0f);
 		
 		engine.setPause(false);
 	}
 	
 	public J3DMovingEngine mEngine = null;
-	public J3DStandingeEngine sEngine = null;
+	public J3DStandingEngine sEngine = null;
 	
 	
 	LightNode drn;

@@ -59,7 +59,7 @@ import com.jme.scene.Spatial;
  * @author pali
  *
  */
-public class J3DStandingeEngine {
+public class J3DStandingEngine {
 
 	public J3DCore core;
 	public ModelLoader modelLoader;
@@ -68,7 +68,7 @@ public class J3DStandingeEngine {
 	public Engine engine;
 	public World world;
 	public RenderedArea renderedArea;
-	public J3DStandingeEngine(J3DCore core)
+	public J3DStandingEngine(J3DCore core)
 	{
 		this.core = core;
 		this.modelLoader = core.modelLoader;
