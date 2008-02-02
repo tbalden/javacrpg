@@ -24,6 +24,8 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
 
+import com.jme.math.Vector3f;
+
 public class Ecology {
 
 	HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
@@ -39,26 +41,73 @@ public class Ecology {
 		return null;
 	}
 	
-	public Collection<EntityInstance> getNearbyEntities(EntityInstance entity)
+	static ArrayList<PreEncounterInfo> staticEntities = new ArrayList<PreEncounterInfo>();
+	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entity)
 	{
-		ArrayList<EntityInstance> entities = new ArrayList<EntityInstance>();
+		int counter = 0;
+		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
 		for (EntityInstance targetEntity:beings.values())
 		{
 			if (targetEntity==entity) continue;
-			if (entity.roamingBoundary.isInside(targetEntity.roamingBoundary.posX,targetEntity.roamingBoundary.posY, targetEntity.roamingBoundary.posZ))
+			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
+			if (r==DistanceBasedBoundary.zero) continue; // no common part
+			if (staticEntities.size()<=counter)
 			{
-				entities.add(targetEntity);
+				PreEncounterInfo pre = new PreEncounterInfo(entity);
+				pre.encountered.put(targetEntity, r);
+				staticEntities.add(pre);
+			} else
+			{
+				PreEncounterInfo pre = staticEntities.get(counter++);
+				pre.subject = entity;
+				pre.encountered.clear();
+				pre.encountered.put(targetEntity, r);
 			}
 		}
-		return entities;
+		for (int i=counter; i<staticEntities.size(); i++)
+		{
+			staticEntities.get(i).subject = null;
+		}
+		if (true==false) {
+			for (PreEncounterInfo info1:staticEntities)
+			{
+				if (info1.encountered==null) continue;
+				int[][] r = info1.encountered.values().iterator().next();
+				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
+				for (PreEncounterInfo info2:staticEntities)
+				{
+					if (info2.encountered==null) continue;
+					if (info2!=info1)
+					{
+						int[][] r2 = info2.encountered.values().iterator().next();
+						Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
+						if (v2.distance(v1)<10)
+						{
+							info1.encountered.putAll(info2.encountered);
+							info2.encountered = null;
+						}
+					}
+				}
+			}
+			ArrayList<PreEncounterInfo> newEntities = new ArrayList<PreEncounterInfo>();
+			for (PreEncounterInfo targetEntity:staticEntities)
+			{
+				if (targetEntity.encountered==null) continue;
+				newEntities.add(targetEntity);
+			}
+			return newEntities;
+		}
+		return staticEntities;
 	}
 	
 	public void doTurn()
 	{
+		long time = System.currentTimeMillis();
 		for (EntityInstance entity:beings.values())
 		{
-			entity.liveOneTurn(getNearbyEntities(entity));
+			entity.liveOneTurn(getNearbyEncounters(entity));
 		}
+		System.out.println("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 	}
 	
 	public void callbackMessage(String message)

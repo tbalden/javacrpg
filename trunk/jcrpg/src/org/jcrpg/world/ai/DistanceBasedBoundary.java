@@ -96,7 +96,7 @@ public class DistanceBasedBoundary extends Boundaries {
 		this.radiusInRealCubes = radiusInRealCubes;
 	}
 	
-	public static int[] zero = new int[]{0,0};
+	public static int[][] zero = new int[][]{{0,0},{0,0,0}};
 	
 	/**
 	 * Returns two percent values for each boundary representing how big portion of their radius is inside the other. 
@@ -104,7 +104,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	 * @param two
 	 * @return
 	 */
-	public static int[] getCommonRadiusRatios(DistanceBasedBoundary one, DistanceBasedBoundary two)
+	public static int[][] getCommonRadiusRatiosAndMiddlePoint(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{
 		DistanceBasedBoundary bigger, smaller;
 		if (one.getRadiusInRealCubes()>two.getRadiusInRealCubes())
@@ -119,6 +119,7 @@ public class DistanceBasedBoundary extends Boundaries {
 		
 		int dist = (int)one.pv.distance(two.pv);
 		
+		if (dist> bigger.getRadiusInRealCubes()+smaller.getRadiusInRealCubes()) return zero;
 		if ( dist + smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
 		{
 			//System.out.println("smaller is fully inside");
@@ -143,36 +144,25 @@ public class DistanceBasedBoundary extends Boundaries {
 			return zero;
 		}
 		//System.out.println("CD: "+common_distance);
-		//  |        .    |    .  |  | 		
-		return new int[]{ common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()};
+		//  |        .    |    .  |  |
+		if (true==false) {
+			Vector3f normalizedDistDirVect = bigger.pv.subtract(smaller.pv).normalize();
+			float f = smaller.getRadiusInRealCubes() - ( dist/2 - bigger.getRadiusInRealCubes() );
+			Vector3f middle = smaller.pv.add( normalizedDistDirVect.mult(f) );
+			
+			return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {(int)middle.x, (int)middle.y, (int)middle.z}};
+		}
+		return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {0, 0, 0}};
 		
 	}
 	
-	public static Vector3f intersects(DistanceBasedBoundary[] boundaries)
-	{
-		Vector3f sum = new Vector3f(0,0,0);
-		for (DistanceBasedBoundary b:boundaries)
-		{
-			sum.addLocal(b.pv);
-		}
-		sum.divideLocal(boundaries.length);
-		
-		for (DistanceBasedBoundary b:boundaries)
-		{
-			if (!b.isInside((int)sum.x, (int)sum.y, (int)sum.z)) {
-				return null;
-			}
-		}
-		
-		return sum;
-	}
 	
 	public static void main(String[] args) throws Exception 
 	{
 		DistanceBasedBoundary d1 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),10,0,10,10);
-		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),20,0,10,2);
-		int[] ratios = getCommonRadiusRatios(d1, d2);
-		System.out.println("RATIOS: "+ratios[0]+" "+ratios[1]);
+		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),23,0,10,5);
+		int[][] ratios = getCommonRadiusRatiosAndMiddlePoint(d1, d2);
+		System.out.println("RATIOS: "+ratios[0][0]+" "+ratios[0][1] + " "+ratios[1][0]+" "+ratios[1][1]+" "+ratios[1][2]);
 	}
 
 }
