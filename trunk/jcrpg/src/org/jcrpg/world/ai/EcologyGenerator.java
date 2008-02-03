@@ -28,8 +28,8 @@ public class EcologyGenerator {
 	public Ecology generateEcology(World world) throws Exception
 	{
 		Ecology ecology = new Ecology();
-		int nX = 20;
-		int nY = 20;
+		int nX = 10;
+		int nY = 10;
 		GorillaHorde gorillaDesc = new GorillaHorde();
 		WolfPack wolfDesc = new WolfPack();
 		Warthogs wartDesc = new Warthogs();
