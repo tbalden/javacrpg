@@ -55,6 +55,24 @@ public class EntityDescription {
 		calcTypes.put(PositionCalculus.class, new PositionCalculus());
 	}
 	
+	/**
+	 * Tells if entity can go to water cube.
+	 */
+	public boolean waterDweller = false;
+	/**
+	 * Tells if entity can go on land.
+	 */
+	public boolean landDweller = true;
+	
+	/**
+	 * Tells if entity can go indoor places.
+	 */
+	public boolean indoorDweller = true;
+	/**
+	 * Tells if entity can go outdoor places.
+	 */
+	public boolean outdoorDweller = true;
+	
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<SkillInstance> getStartingSkills()
@@ -130,6 +148,11 @@ public class EntityDescription {
 		return calcTypes.get(positionCalcType);
 	}
 	
+	protected void setAverageGroupSizeAndDeviation(int size, int dev)
+	{
+		groupingRule.averageSize = size;
+		groupingRule.sizeDeviation = dev;
+	}
 	protected void addGroupingRuleMember(EntityMember member)
 	{
 		groupingRule.possibleMembers.add(new GroupingMemberProps(50,1,1,member));
@@ -142,5 +165,25 @@ public class EntityDescription {
 	public int getDomainSize(EntityInstance instance)
 	{
 		return instance.numberOfMembers;
+	}
+
+	public int getNumberOfActionsPerTurn() {
+		return numberOfActionsPerTurn;
+	}
+
+	public boolean isWaterDweller() {
+		return waterDweller;
+	}
+
+	public boolean isLandDweller() {
+		return landDweller;
+	}
+
+	public boolean isIndoorDweller() {
+		return indoorDweller;
+	}
+
+	public boolean isOutdoorDweller() {
+		return outdoorDweller;
 	}
 }

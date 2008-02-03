@@ -46,14 +46,18 @@ public class MovingTypeModels {
 		int counter = 0;
 		
 		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_FEMALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(GorillaHorde.GORILLA_TYPE_CHILD.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, GorillaHorde.gorilla_unit);
 		counter++;
 		
 		hmMobIdToModelId.put(WolfPack.WOLF_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(WolfPack.WOLF_TYPE_FEMALE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, WolfPack.wolf_unit);
 		counter++;
 
 		hmMobIdToModelId.put(Warthogs.WARTHOG_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(Warthogs.WARTHOG_TYPE_FEMALE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Warthogs.warthog_unit);
 		counter++;
 		

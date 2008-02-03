@@ -49,9 +49,11 @@ public class PlayerTurnLogic {
 	public Ecology ecology;
 	public EntityInstance player;
 	public Engine engine;
+	public J3DCore core;
 	
-	public PlayerTurnLogic(Engine engine, World world, Ecology ecology, EntityInstance player)
+	public PlayerTurnLogic(J3DCore core, Engine engine, World world, Ecology ecology, EntityInstance player)
 	{
+		this.core = core;
 		this.world = world;
 		this.ecology = ecology;
 		this.player = player;
@@ -78,7 +80,7 @@ public class PlayerTurnLogic {
 				for (int in:groupIds)
 				{
 					int size = i.groupSizes[in];
-					Collection<EntityMemberInstance> members = i.description.groupingRule.getGroup(size);
+					Collection<EntityMemberInstance> members = i.description.groupingRule.getGroup(i,in,size);
 					ecology.callbackMessage(""+size+" of "+members.iterator().next().description.visibleTypeId);
 					for (EntityMemberInstance member:members)
 					{
@@ -89,7 +91,20 @@ public class PlayerTurnLogic {
 				
 			}
 		}
+		placeVisibleForms(forms);
 		J3DCore.getInstance().mEngine.render(forms);
+	}
+	
+	public void placeVisibleForms(Collection<VisibleLifeForm> forms)
+	{
+		int i=0;
+		for (VisibleLifeForm form:forms)
+		{
+			form.worldX = core.viewPositionX+i;
+			form.worldY = core.viewPositionY;
+			form.worldZ = core.viewPositionZ+(i%2)-3;
+			i++;
+		}
 	}
 
 }

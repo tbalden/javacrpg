@@ -63,7 +63,10 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public GorillaHorde()
 	{
 		genderType = GENDER_BOTH;
+		setAverageGroupSizeAndDeviation(5, 2);
 		addGroupingRuleMember(GORILLA_TYPE_MALE);
+		addGroupingRuleMember(GORILLA_TYPE_FEMALE);
+		addGroupingRuleMember(GORILLA_TYPE_CHILD);
 	}
 
 

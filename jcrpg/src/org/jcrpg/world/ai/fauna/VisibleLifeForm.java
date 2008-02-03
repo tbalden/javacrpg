@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.fauna;
 
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -40,6 +41,16 @@ public class VisibleLifeForm {
 	
 	public EntityInstance entity;
 	public EntityMemberInstance member;
+	
+	/**
+	 * Temporary render data for callbacks.
+	 */
+	public RenderedMovingUnit unit;
+	
+	/**
+	 * Starting point coords for initial render.
+	 */
+	public int worldX, worldY, worldZ;
 
 	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {
 		super();

@@ -53,8 +53,6 @@ import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
-import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.Orbiter;
