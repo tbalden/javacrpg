@@ -63,6 +63,7 @@ public class WolfPack extends AnimalEntityDescription {
 	}
 
 	public WolfPack() {
+		indoorDweller = false;
 		genderType = GENDER_BOTH;
 		addGroupingRuleMember(WOLF_TYPE_MALE);
 		addGroupingRuleMember(WOLF_TYPE_FEMALE);

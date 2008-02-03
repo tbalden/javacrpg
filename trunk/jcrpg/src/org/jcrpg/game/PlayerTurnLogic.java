@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -84,7 +85,7 @@ public class PlayerTurnLogic {
 					ecology.callbackMessage(""+size+" of "+members.iterator().next().description.visibleTypeId);
 					for (EntityMemberInstance member:members)
 					{
-						VisibleLifeForm form = i.getOne(member.description);
+						VisibleLifeForm form = i.getOne(member.description,member);
 						forms.add(form);
 					}
 				}
@@ -97,14 +98,63 @@ public class PlayerTurnLogic {
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)
 	{
-		int i=0;
+		int dir = core.viewDirection;
+		int[] trans = J3DCore.moveTranslations.get(dir);
+		HashSet<Integer> usedPositions = new HashSet<Integer>();
 		for (VisibleLifeForm form:forms)
 		{
-			form.worldX = core.viewPositionX+i;
-			form.worldY = core.viewPositionY;
-			form.worldZ = core.viewPositionZ+(i%2)-3;
-			i++;
+			boolean found = true;
+			int i=0;
+			while (true) { 
+				if (i>15) {
+					form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+					form.worldY = core.viewPositionY;
+					form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+					found=false; break;
+				}
+				form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+				form.worldY = core.viewPositionY;
+				form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+				Cube c = world.getCube(form.worldX, form.worldY, form.worldZ, false);
+				if (c==null)
+				{
+					i++; continue;
+				}
+				boolean land = form.entity.description.isLandDweller();
+				boolean water = form.entity.description.isWaterDweller();
+				boolean air = form.entity.description.isAirDweller();
+				boolean indoor = form.entity.description.isIndoorDweller();
+				boolean outdoor= form.entity.description.isOutdoorDweller();
+				if (air && !usedPositions.contains(i)) break;
+				if (c.internalCube && !indoor)
+				{
+					i++;
+					continue;
+				}
+				if (!c.internalCube && !outdoor)
+				{
+					i++;
+					continue;
+				}
+				if (water && c.waterCube && !usedPositions.contains(i))
+				{
+					System.out.println("FOUND WATER"+c);
+					break;
+				}
+				if (land && !c.waterCube && !usedPositions.contains(i)) 
+				{
+					System.out.println("FOUND LAND "+c);
+					break;
+				}
+				i++;
+			}
+			if (found)
+			{
+				usedPositions.add(i);
+			}
 		}
 	}
+	
+	
 
 }

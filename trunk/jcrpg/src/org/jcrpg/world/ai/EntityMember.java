@@ -30,24 +30,29 @@ import org.jcrpg.world.ai.abs.skill.SkillContainer;
  */
 public class EntityMember {
 	public String visibleTypeId;
-	public static SkillContainer commonSkills = new SkillContainer();
-	public static AttributeRatios commonAttributeRatios = new AttributeRatios();
+	public SkillContainer commonSkills = new SkillContainer();
+	public AttributeRatios commonAttributeRatios = new AttributeRatios();
+	public float[] scale = new float[]{1,1,1};
 	public EntityMember(String visibleTypeId) {
 		super();
 		this.visibleTypeId = visibleTypeId;
 	}
 	
-	public static AttributeRatios getCommonAttributes() {
+	public AttributeRatios getCommonAttributes() {
 		return commonAttributeRatios;
 	}
 
-	public static SkillContainer getCommonSkills() {
+	public SkillContainer getCommonSkills() {
 		return commonSkills;
 	}
 	
 	public Attributes getAttributes(EntityDescription parent, String attr)
 	{
 		return Attributes.getAttributes(parent.attributes, commonAttributeRatios);
+	}
+
+	public float[] getScale() {
+		return scale;
 	}
 
 

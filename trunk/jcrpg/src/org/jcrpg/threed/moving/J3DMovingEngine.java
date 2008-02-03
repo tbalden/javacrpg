@@ -28,6 +28,8 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.math.Matrix3f;
@@ -77,7 +79,7 @@ public class J3DMovingEngine {
 			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.origoX,core.origoY,core.origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
 			if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 			{
-				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,-.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
 			}
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
@@ -88,12 +90,14 @@ public class J3DMovingEngine {
 				qC = new Quaternion();
 			}
 			
-			{				
-				//n[i].setLocalScale(needsFarviewScale?scale*FARVIEW_GAP:scale);
-			}
-			
 			n[i].setLocalRotation(qC);
-			n[i].setLocalScale(1f);
+			//System.out.println("- "+unit.id+" "+unit.form.member);
+			VisibleLifeForm form = unit.form;
+			EntityMemberInstance member = form.member;
+			EntityMember desc = member.description;
+			//System.out.println("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
+			float[] scale = desc.getScale();
+			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
 
 			unit.nodePlaceholders.add((NodePlaceholder)n[i]);
 			//liveNodes++;
@@ -186,22 +190,22 @@ public class J3DMovingEngine {
 					{
 						if (unit.direction==0)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
 							unit.direction=1;
 						} else
 						if (unit.direction==1)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=2;
 						} else
 						if (unit.direction==2)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
 							unit.direction=3;
 						} else
 						if (unit.direction==3)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=0;
 						}
 						

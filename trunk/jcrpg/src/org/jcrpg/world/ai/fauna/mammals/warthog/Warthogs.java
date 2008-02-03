@@ -58,6 +58,7 @@ public class Warthogs extends AnimalEntityDescription {
 	}
 
 	public Warthogs() {
+		indoorDweller = false;
 		genderType = GENDER_BOTH;
 		addGroupingRuleMember(WARTHOG_TYPE_MALE);
 	}
