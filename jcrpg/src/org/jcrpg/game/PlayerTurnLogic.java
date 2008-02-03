@@ -25,6 +25,7 @@ import java.util.HashSet;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -74,25 +75,33 @@ public class PlayerTurnLogic {
 		for (PreEncounterInfo info:infos)
 		{
 			if (info.subject==null) continue;
-			for (EntityInstance i:info.encountered.keySet()) {
-				if (i==player) continue;
-				int[] groupIds = info.encounteredGroupIds.get(i);
-				//System.out.println("PlayerTurnLogic : "+i.description.getClass().getSimpleName());
-				ecology.callbackMessage("You would encounter : "+i.description.getClass().getSimpleName()+ " "+i.id +" g:"+(groupIds!=null?groupIds.length:null));
+			for (EntityInstance entityInstance:info.encountered.keySet()) {
+				if (entityInstance==player) continue;
+				int[] groupIds = info.encounteredGroupIds.get(entityInstance);
+				ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName()+ " "+entityInstance.id +" g:"+(groupIds!=null?groupIds.length:null));
 				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds);
 				if (groupIds !=null)
 				for (int in:groupIds)
 				{
-					int size = i.groupSizes[in];
-					Collection<EntityMemberInstance> members = i.description.groupingRule.getGroup(i,in,size);
-					ecology.callbackMessage(""+size+" of "+members.iterator().next().description.visibleTypeId);
+					int size = entityInstance.groupSizes[in];
+					Collection<EntityMemberInstance> members = entityInstance.description.groupingRule.getGroup(entityInstance,in,size);
+					String types = "";
+					HashSet<String> typesSet = new HashSet<String>();
+					for (EntityMemberInstance mInst:members)
+					{
+						typesSet.add(mInst.description.visibleTypeId);
+					}
+					for (String type:typesSet)
+					{
+						types+=","+type;
+					}
+					ecology.callbackMessage(""+size+" "+types);
 					for (EntityMemberInstance member:members)
 					{
-						VisibleLifeForm form = i.getOne(member.description,member);
+						VisibleLifeForm form = entityInstance.getOne(member.description,member);
 						forms.add(form);
 					}
 				}
-				
 			}
 		}
 		placeVisibleForms(forms);
@@ -111,17 +120,17 @@ public class PlayerTurnLogic {
 			Cube c = null;
 			while (true) { 
 				if (i>15) {
-					form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+					form.worldX = core.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
 					form.worldY = core.viewPositionY;
-					form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+					form.worldZ = core.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 					form.notRendered = true;
 					found=false; break;
 				}
-				form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+				form.worldX = core.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
 				form.worldY = core.viewPositionY;
-				form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+				form.worldZ = core.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 				c = world.getCube(form.worldX, form.worldY, form.worldZ, false);
-				if (c==null)
+				if (c==null || core.hasSideOfInstance(c.getSide(J3DCore.BOTTOM), stickingOut))
 				{
 					i++; continue;
 				}
@@ -143,12 +152,12 @@ public class PlayerTurnLogic {
 				}
 				if (water && c.waterCube && !usedPositions.contains(i))
 				{
-					System.out.println("FOUND WATER"+c);
+					//System.out.println("FOUND WATER"+c);
 					break;
 				}
 				if (land && !c.waterCube && !usedPositions.contains(i)) 
 				{
-					System.out.println("FOUND LAND "+c);
+					//System.out.println("FOUND LAND "+c);
 					break;
 				}
 				i++;
@@ -167,6 +176,10 @@ public class PlayerTurnLogic {
 	static HashSet<Class<? extends SideSubType>> steepSides = new HashSet<Class<? extends SideSubType>>();
 	static {
 		steepSides.add(Climbing.class);
+	}
+	static HashSet<Class<? extends SideSubType>> stickingOut = new HashSet<Class<? extends SideSubType>>();
+	static {
+		stickingOut.add(StickingOut.class);
 	}
 	
 	

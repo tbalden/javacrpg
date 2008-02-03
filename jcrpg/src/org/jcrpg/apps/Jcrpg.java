@@ -86,8 +86,11 @@ public class Jcrpg {
 		EcologyGenerator eGen = new EcologyGenerator();
 		Ecology ecology = eGen.generateEcology(world);
 		
+		int xDiff = -1;
+		int yDiff = 0;
+		int zDiff = 3;
 		//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6,world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
+		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6,world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
 		ecology.addEntity(party);
 		
 		PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
@@ -95,8 +98,8 @@ public class Jcrpg {
 		core.setWorld(world);
 		core.setEcology(ecology);
 		core.setEngine(engine);
-		core.setViewPosition(world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
-		core.setOrigoRenderPosition(world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
+		core.setViewPosition(world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
+		core.setOrigoRenderPosition(world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
 		//app.setViewPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
 		//app.setOrigoRenderPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
 		core.initCore();

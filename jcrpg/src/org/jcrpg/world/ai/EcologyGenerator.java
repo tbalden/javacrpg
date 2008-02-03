@@ -28,8 +28,8 @@ public class EcologyGenerator {
 	public Ecology generateEcology(World world) throws Exception
 	{
 		Ecology ecology = new Ecology();
-		int nX = 30;
-		int nY = 30;
+		int nX = 20;
+		int nY = 20;
 		for (int i=0; i<nX; i++) {
 			for (int j=0; j<nY; j++)
 			{

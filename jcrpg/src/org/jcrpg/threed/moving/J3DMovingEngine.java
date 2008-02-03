@@ -77,14 +77,6 @@ public class J3DMovingEngine {
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY,unit.c3dZ));
 			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.origoX,core.origoY,core.origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
-			if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
-			{
-				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
-			}
-			if (unit.onSteep)
-			{
-				n[i].getLocalTranslation().addLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
-			}
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
 			if (n[i].model.noSpecialSteepRotation) {
@@ -102,7 +94,20 @@ public class J3DMovingEngine {
 			//System.out.println("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
 			float[] scale = desc.getScale();
 			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
-
+			if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
+			{
+				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+				
+			} else
+			{
+				// scaling for md5 needs substraction
+				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,(1-scale[2])*0.4f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+			}
+			if (unit.onSteep)
+			{
+				n[i].getLocalTranslation().addLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+			}
+			
 			unit.nodePlaceholders.add((NodePlaceholder)n[i]);
 			//liveNodes++;
 		}
@@ -233,6 +238,9 @@ public class J3DMovingEngine {
 						if (unit.toSteep)
 						{
 							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
+							float[] scale = unit.form.member.description.getScale();
+							// scaling for md5 needs substraction
+							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
 						}
 						/*float cX = unit.c3dX;
 						float cY = unit.c3dY;
