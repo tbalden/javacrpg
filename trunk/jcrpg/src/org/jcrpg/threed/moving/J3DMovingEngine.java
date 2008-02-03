@@ -129,7 +129,7 @@ public class J3DMovingEngine {
 		int i=0;
 		for (VisibleLifeForm form:forms)
 		{
-			RenderedMovingUnit unit = materializeLifeForm(form, core.viewPositionX+i%3, core.viewPositionY, core.origoZ-core.relativeZ-3-(i%2)/2);
+			RenderedMovingUnit unit = materializeLifeForm(form);
 			unit.direction = (i%2==1?0:1);
 			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
 			renderNodes(placeHolders, unit);
@@ -213,7 +213,10 @@ public class J3DMovingEngine {
 						//float sZ = (unit.startCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
 						float eX = (unit.endCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
 						float eY = (unit.endCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						float eZ = (unit.endCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
+						int origoZ = core.origoZ;
+						int endCoordZCorrect = (origoZ-(unit.endCoordZ-origoZ));
+						float eZ = ( endCoordZCorrect - (core.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+						//float eZ = ( ((core.origoZ)*2) - unit.endCoordZ )*J3DCore.CUBE_EDGE_SIZE;
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
@@ -268,9 +271,10 @@ public class J3DMovingEngine {
 		}
 	}
 	
-	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form, int worldX, int worldY, int worldZ)
+	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form)
 	{
-		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, worldX, worldY, worldZ);
+		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, form.worldX, form.worldY, form.worldZ);
+		form.unit = unit;
 		units.put(form.uniqueId, unit);
 		return unit;
 	}

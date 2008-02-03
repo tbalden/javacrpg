@@ -32,15 +32,33 @@ public class GroupingRule {
 	public int sizeDeviation = 1;
 	
 	Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
-	public Collection<EntityMemberInstance> getGroup(int size)
+	public Collection<EntityMemberInstance> getGroup(EntityInstance instance, int groupId, int size)
 	{
 		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
-		for (GroupingMemberProps prop :possibleMembers)
-		{
-			members.add(new EntityMemberInstance(prop.memberType));
-			counter++;
-			if (counter==size) break;
+		while (members.size()<size) {
+			for (GroupingMemberProps prop :possibleMembers)
+			{
+				
+				for (int i=0; i<prop.maxNumberInAGroup; i++)
+				{
+					if (i<prop.minNumberInAGroup)
+					{
+						counter++;
+						members.add(new EntityMemberInstance(prop.memberType));		
+					} else
+					{
+						int rand = HashUtil.mixPercentage(instance.id.hashCode(), groupId, 0);
+						if (prop.likeness<rand)
+						{
+							counter++;
+							members.add(new EntityMemberInstance(prop.memberType));
+						}
+					}
+					if (counter==size) break;
+				}
+				if (counter==size) break;
+			}
 		}
 		return members;
 	}
@@ -56,7 +74,7 @@ public class GroupingRule {
 		int[] ret = new int[parts];
 		for (int i=0; i<parts; i++)
 		{
-			int rand = HashUtil.mixPercentage(instance.id.hashCode(), 0, 0);
+			int rand = HashUtil.mixPercentage(instance.id.hashCode(), i, 0);
 			int dev = (((int)((rand/100f)*sizeDeviation))*2)-sizeDeviation;
 			ret[i] = averageSize+dev;
 		}

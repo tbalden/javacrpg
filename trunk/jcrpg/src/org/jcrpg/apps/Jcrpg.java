@@ -55,13 +55,15 @@ public class Jcrpg {
    }
 
     public static void start() throws Exception {
-		Engine e = new Engine();
+    	
+		Engine engine = new Engine();
 		Time wmt = new Time();
 		wmt.setHour(17);
-		e.setWorldMeanTime(wmt);
-		Thread t = new Thread(e);
+		engine.setWorldMeanTime(wmt);
+		engine.setNumberOfTurn(0);
+		Thread t = new Thread(engine);
 		t.start();
-		J3DCore app = new J3DCore();
+		J3DCore core = new J3DCore();
 		
 		
 		String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
@@ -72,32 +74,32 @@ public class Jcrpg {
 		int[] additionalGeoLikenessValues = new int[] {4,4,2};
 		WorldParams params = new WorldParams(40,100,2,100,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
 		WorldGenerator gen = new WorldGenerator();
-		World w2 = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
-		w2.engine = e;
+		World world = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
+		world.engine = engine;
 
 		WorldOrbiterHandler woh = new WorldOrbiterHandler();
 		woh.addOrbiter("sun", new SimpleSun("SUN"));
 		woh.addOrbiter("moon", new SimpleMoon("moon"));
 
-		w2.setOrbiterHandler(woh);
+		world.setOrbiterHandler(woh);
 
 		EcologyGenerator eGen = new EcologyGenerator();
-		Ecology ecology = eGen.generateEcology(w2);
+		Ecology ecology = eGen.generateEcology(world);
 		
 		//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		EntityInstance party = new EntityInstance(new Party(),w2,ecology,"Player",6,w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6,world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
 		ecology.addEntity(party);
 		
-		PlayerTurnLogic logic = new PlayerTurnLogic(e,w2,ecology,party);
-		app.setPlayer(party,logic);
-		app.setWorld(w2);
-		app.setEcology(ecology);
-		app.setEngine(e);
-		app.setViewPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
-		app.setOrigoRenderPosition(w2.realSizeX/2, w2.getSeaLevel(1)+1, w2.realSizeZ/2);
+		PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
+		core.setPlayer(party,logic);
+		core.setWorld(world);
+		core.setEcology(ecology);
+		core.setEngine(engine);
+		core.setViewPosition(world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
+		core.setOrigoRenderPosition(world.realSizeX/2, world.getSeaLevel(1)+1, world.realSizeZ/2);
 		//app.setViewPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
 		//app.setOrigoRenderPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
-		app.initCore();
+		core.initCore();
 
 		
 	}
