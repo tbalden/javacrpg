@@ -37,6 +37,8 @@ public class Engine implements Runnable {
 	
 	public long numberOfTurn = 0;
 	
+	public static Object mutex = new Object();
+	
 	public void run() {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
@@ -47,11 +49,13 @@ public class Engine implements Runnable {
 				ticksLeft-=TICK_SECONDS;
 				if (ticksLeft<=0)
 				{
-					System.out.println("NEW TURN FOR AI STARTED... pause");
-					ticksLeft = SECONDS_PER_TURN;
-					pause = true;
-					turnCome = true;
-					numberOfTurn++;
+					synchronized (mutex) {
+						System.out.println("NEW TURN FOR AI STARTED... pause");
+						ticksLeft = SECONDS_PER_TURN;
+						pause = true;
+						turnCome = true;
+						numberOfTurn++;
+					}
 				}
 				setTimeChanged(true);
 			}
@@ -92,7 +96,7 @@ public class Engine implements Runnable {
 		System.out.println("TURN ENDED, UNPAUSE.");
 	}
 
-	public void setPause(boolean pause) {
+	public synchronized void setPause(boolean pause) {
 		this.pause = pause;
 	}
 

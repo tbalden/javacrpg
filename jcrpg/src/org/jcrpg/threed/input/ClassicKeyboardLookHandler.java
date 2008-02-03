@@ -103,8 +103,22 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     }
 	
     public boolean lock = false;
+    /**
+     * For concurrency and minor locking later.
+     */
+    public boolean secLock = false;
     private long timeLockStart = 0;
     
+    public synchronized void lockSecondaryHandling()
+    {
+    	secLock = true;
+    }
+    public synchronized void unlockSecondaryHandling()
+    {
+    	secLock = false;
+    	lock = false;
+    }
+
     public synchronized void lockHandling()
     {
     	lock = true;
@@ -120,7 +134,9 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     	{
     		
     	}
-    	lock = false;
+    	if (!secLock) {
+    		lock = false;
+    	}
     }
     
 }

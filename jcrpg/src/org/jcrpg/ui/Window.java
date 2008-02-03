@@ -31,6 +31,8 @@ public abstract class Window {
 	public UIBase base;
 	public J3DCore core;
 	
+	static int windowCounter = 0;
+	
 	public Window(UIBase base)
 	{
 		this.base = base;
@@ -39,16 +41,19 @@ public abstract class Window {
 
 	}
 	
-	public void toggle()
+	public synchronized void toggle()
 	{
 		if (visible)
 		{
 			core.engine.setPause(false);
-			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lock = false;
+			windowCounter--;
+			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
 			hide();
 		} else
 		{
+			windowCounter++;
 			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lock = true;
+			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lockSecondaryHandling();
 			core.engine.setPause(true);
 			show();
 		}
