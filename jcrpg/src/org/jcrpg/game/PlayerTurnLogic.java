@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.jcrpg.space.Cube;
+import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -30,6 +32,7 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 
 /**
@@ -105,17 +108,19 @@ public class PlayerTurnLogic {
 		{
 			boolean found = true;
 			int i=0;
+			Cube c = null;
 			while (true) { 
 				if (i>15) {
 					form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
 					form.worldY = core.viewPositionY;
 					form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+					form.notRendered = true;
 					found=false; break;
 				}
 				form.worldX = core.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
 				form.worldY = core.viewPositionY;
 				form.worldZ = core.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
-				Cube c = world.getCube(form.worldX, form.worldY, form.worldZ, false);
+				c = world.getCube(form.worldX, form.worldY, form.worldZ, false);
 				if (c==null)
 				{
 					i++; continue;
@@ -150,9 +155,18 @@ public class PlayerTurnLogic {
 			}
 			if (found)
 			{
+				if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP || core.hasSideOfInstanceInAnyDir(c, steepSides)!=null)
+				{
+					form.onSteep = true;
+				}
 				usedPositions.add(i);
 			}
 		}
+	}
+	
+	static HashSet<Class<? extends SideSubType>> steepSides = new HashSet<Class<? extends SideSubType>>();
+	static {
+		steepSides.add(Climbing.class);
 	}
 	
 	

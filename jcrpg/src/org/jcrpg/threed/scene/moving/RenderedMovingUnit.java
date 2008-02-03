@@ -96,6 +96,7 @@ public class RenderedMovingUnit {
 	}
 	
 	public boolean onSteep;
+	public boolean toSteep;
 	public float movingSpeed;
 	public float startPositionX, startPositionY, startPositionZ;
 	public float endPositionX, endPositionY, endPositionZ;
@@ -118,6 +119,7 @@ public class RenderedMovingUnit {
 		endCoordY = toY;
 		endCoordZ = toZ;
 		movingSpeed = speed;
+		this.toSteep = toSteep;
 		state = STATE_WALKING;
 	}
 	
