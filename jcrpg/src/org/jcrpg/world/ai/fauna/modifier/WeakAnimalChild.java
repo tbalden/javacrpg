@@ -33,6 +33,7 @@ public class WeakAnimalChild extends EntityMember {
 
 	public WeakAnimalChild(String visibleTypeId) {
 		super(visibleTypeId);
+		scale = new float[]{0.5f,0.5f,0.5f};
 	}
 
 }

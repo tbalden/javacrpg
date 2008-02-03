@@ -65,6 +65,11 @@ public class EntityDescription {
 	public boolean landDweller = true;
 	
 	/**
+	 * entity can fly?
+	 */
+	public boolean airDweller = false;
+	
+	/**
 	 * Tells if entity can go indoor places.
 	 */
 	public boolean indoorDweller = true;
@@ -185,5 +190,9 @@ public class EntityDescription {
 
 	public boolean isOutdoorDweller() {
 		return outdoorDweller;
+	}
+
+	public boolean isAirDweller() {
+		return airDweller;
 	}
 }

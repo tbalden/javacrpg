@@ -24,7 +24,6 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -95,7 +94,9 @@ public class Ocean extends Water {
 		
 		if (y/(farView?J3DCore.FARVIEW_GAP:1)==worldGroundLevel/(farView?J3DCore.FARVIEW_GAP:1) && !noWaterInTheBed) 
 		{
-			return new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+			Cube c = new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+			c.waterCube = true;
+			return c;
 		} else
 		{
 			if (worldGroundLevel-y > depth || y==worldGroundLevel)
@@ -146,6 +147,7 @@ public class Ocean extends Water {
 					c = new Cube(c,c2,x,y,z,surface.steepDirection);
 				}
 				if (geoCube!=null && geoCube.overwrite) c = new Cube (this,EMPTY,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+				c.waterCube = true;
 				return c;
 			}
 		}

@@ -135,9 +135,9 @@ public class EntityInstance {
 	
 
 
-	public VisibleLifeForm getOne(EntityMember member)
+	public VisibleLifeForm getOne(EntityMember member, EntityMemberInstance instance)
 	{
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),member,this,null);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),member,this,instance);
 	}
 	
 	public void setPosition(int[] coords)
