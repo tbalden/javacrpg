@@ -29,7 +29,7 @@ public class Engine implements Runnable {
 	
 	public static int TICK_SECONDS = 10;
 	
-	public static int SECONDS_PER_TURN = 200; 
+	public static int SECONDS_PER_TURN = 100; 
 	
 	public boolean timeChanged = false;
 	public boolean turnCome = false;
@@ -80,9 +80,14 @@ public class Engine implements Runnable {
 	/**
 	 * Should be called when a turn processing is finished, sets pause off.
 	 */
-	public void turnFinished()
+	public void turnFinishedForAI()
 	{
 		turnCome = false;
+		System.out.println("TURN COME DONE.");
+	}
+	
+	public void turnFinishedForPlayer()
+	{
 		pause = false;
 		System.out.println("TURN ENDED, UNPAUSE.");
 	}

@@ -133,6 +133,7 @@ public class HUD {
         // main textbox
         
         mainBox = new TextBox(this,"Main",0.088f,0.088f,0.3f,0.1f);
+        mainBox.show();
         mainBox.addEntry(new TextEntry("JCRPG pre-alpha version",ColorRGBA.orange));
         base.addEventHandler("logUp", mainBox);
         base.addEventHandler("logDown", mainBox);

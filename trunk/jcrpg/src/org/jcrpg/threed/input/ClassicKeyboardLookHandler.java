@@ -70,7 +70,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "worldMap", KeyInput.KEY_F1 );
         keyboard.set( "logUp", KeyInput.KEY_PGUP );
         keyboard.set( "logDown", KeyInput.KEY_PGDN );
-        
+        keyboard.set( "Y", KeyInput.KEY_Y );
+       
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
 
@@ -87,6 +88,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "worldMap", false);
         addAction( new CKeyMenu(this), "logUp", false);
         addAction( new CKeyMenu(this), "logDown", false);
+        addAction( new CKeyMenu(this), "Y", false);
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );
         right.setLockAxis(new Vector3f(cam.getUp()));
         addAction(right, "turnRight", true );

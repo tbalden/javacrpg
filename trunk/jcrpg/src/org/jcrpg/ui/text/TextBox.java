@@ -45,7 +45,7 @@ public class TextBox implements KeyListener {
 	
 	int backFrom = 0;
 	Node n = null;
-	
+	static int counter  = 0;
 	public TextBox(HUD hud, String name, float middleX, float middleY, float sizeX, float sizeY)
 	{
 	
@@ -54,7 +54,7 @@ public class TextBox implements KeyListener {
 		//maxLines = (int)(hud.base.core.getDisplay().getHeight()*sizeY) / fontSize;
 		textLines = new Text[maxLines];
 		
-		n = new Node("TextBoxNode_"+name);
+		n = new Node("TextBoxNode_"+name+"_"+counter++);
 	
 		int pixels = (int)(hud.base.core.getDisplay().getHeight()*sizeY);
 		int neededVirtualPixels = maxLines*fontSize;
@@ -74,7 +74,7 @@ public class TextBox implements KeyListener {
         n.setRenderState( textLines[0].getRenderState( RenderState.RS_TEXTURE ) );
         n.setCullMode( SceneElement.CULL_NEVER );
 		updateText();
-		hud.hudNode.attachChild(n);
+		//hud.hudNode.attachChild(n);
 	}
 	
 	public void updateText()
@@ -122,9 +122,11 @@ public class TextBox implements KeyListener {
 	public void hide()
 	{
 		hud.hudNode.detachChild(n);
+		hud.hudNode.updateRenderState();
 	}
 	public void show()
 	{
 		hud.hudNode.attachChild(n);
+		hud.hudNode.updateRenderState();
 	}
 }
