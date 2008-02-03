@@ -192,6 +192,47 @@ public class J3DMovingEngine {
 				{
 					if (unit.state.equals(RenderedMovingUnit.STATE_STANDING))
 					{
+						
+						
+						float eX = (core.player.roamingBoundary.posX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (core.player.roamingBoundary.posY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						int origoZ = core.origoZ;
+						int endCoordZCorrect = (origoZ-(core.player.roamingBoundary.posZ-origoZ));
+						float eZ = ( endCoordZCorrect - (core.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+	
+						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
+						{
+							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
+						}
+						if (unit.toSteep)
+						{
+							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
+							float[] scale = unit.form.member.description.getScale();
+							// scaling for md5 needs substraction
+							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
+						}
+						
+						Vector3f cVec = new Vector3f(n.getLocalTranslation());
+						Vector3f eVec = new Vector3f(eX,eY,eZ);
+						//System.out.println("-- "+cVec +" "+eVec);
+						Vector3f mVec = eVec.subtract(cVec).normalize().mult(20f * 0.1f*timePerFrame);
+						//n.getLocalTranslation().addLocal(mVec);
+						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
+						//((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
+						Vector3f m = new Vector3f(mVec);
+						m.y=0;
+						Quaternion q = new Quaternion();
+						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
+						m.normalizeLocal();
+						if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
+						
+						Quaternion current = ((Node)n.realNode).getLocalRotation();
+						Quaternion between = new Quaternion(current);
+						between.slerp(q, 1f);
+						current.slerp(between, 0.1f);
+						
+						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
+						
 						if (unit.direction==0)
 						{
 							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
@@ -254,9 +295,9 @@ public class J3DMovingEngine {
 						m.y=0;
 						Quaternion q = new Quaternion();
 						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
-						Matrix3f m3f = new Matrix3f();
-						
-						m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
+						//Matrix3f m3f = new Matrix3f();
+						//m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
+
 						//q.fromRotationMatrix(m3f);
 						//q.oppositeLocal();
 						//if (unit.direction== 0) 
