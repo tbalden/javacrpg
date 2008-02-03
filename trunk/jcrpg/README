@@ -6,6 +6,8 @@ m. Movement/Keyboard
 W/S/A/D for turning, moving.
 Q/E for strafe.
 Up/Down for looking up and down.
+F1 World map
+Press Y to exit encounters
 
 ESC to exit the demo.
 
@@ -21,6 +23,9 @@ Use BLOOM_EFFECT and SHADOWS set to true if you have a decent PC (CPU and GPU).
 You can get additional FPS with turning Grass of (set RENDER_GRASS_DISTANCE=0) and turning 
 MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less mem use.
 
+
+
+
 r. Requirements
 - Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
 - At least ~300-400 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
@@ -28,3 +33,72 @@ r. Requirements
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
 - Processor around 1.6GHz (Single core will do it)
 
+
+
+What to do if jcrpg is slow?
+
+If you are testing JCRPG and it runs slow there are a few things you can check to improve performance.
+
+Firstly there's config.properties in the root directory of the game that can be modified with a text editor. Things to care about in ascending order of impact on game aesthetics:
+
+    * WATER_SHADER - turn it "false" for more FPS
+    * RENDER_GRASS_DISTANCE - set it to 0 to switch of grass, this may help a lot in terms of FPS and memory usage too
+    * TEXTURE_DETAIL - set it to 0 or 1 for low and middle settings, can be a big FPS and memory eater
+    * DETAILED_TREES - set it to false for less detailed trees with less foliage
+    * VIEW_DISTANCE - a really large factor in FPS - as much as in the look of the game. Set to lower values for bigger FPS
+    * RENDER_DISTANCE - helps out the loading and the memory usage - big memory usage may load the Java VM too. Set it to lower values, especially if you have little memory
+    * RENDER_DISTANCE_FARVIEW - the higher this is the more memory and CPU/GPU it will consume rendering it. If using far view a sane value is used to be VIEW_DISTANCE/RENDER_DISTANCE/RENDER_DISTANCE_FARVIEW = 26/52/80. You will be able to see ~ 13 cubes distance detailed plus 27 cubes distance undetailed tiles magnified/simplified.
+    * FARVIEW_ENABLED - set it to false, will help a great lot, cutting down the whole far view part
+
+Second you can have hogging problems if you set high detail values and Java runs with low memory parameters or your system has small free memory. If you plan to run on high settings you may consider edit jcrpg.bat or jcrpg.sh and modify the -Xmx parameter to a higher value. (Example: -Xmx200m.) I recommend you to have at least 300MB free memory or more for the current default configuration (dec 2007).
+
+Thirdly you may try to run it in lower resolutions - this can help a lot too.
+
+
+
+What is jcrpg?
+
+Here stands the brief feature list of the Java Classic RPG framework and the reference game.
+
+Complete features:
+
+- Classic tile based world view in opengl 3D
+- Neoclassic simple mountains with 45 degree slopes
+- Cave with various parameters (height, size, density, levels)
+- Plains, forests
+- Classic keyboard input with four direction movement
+- Neoclassic look around in 45 degrees.
+- Changing day and night with orbiters and optional lighting and route parameters
+- Climate with belts
+- Flora engine with climate dependency: continental, jungle, desert and arctic implemented
+- Configurable graphics detail level 3D core (based on JMonkeyEngine) with optional grass, water reflection, billboarded trees, fog state, bloom effect, shader based wind animation etc. that can load .obj and .3ds models.
+- UI widgets & detailed map system (partially)
+- Water system
+
+Features of the future:
+
+- Wildlife engine
+- Civilization engine (group intelligence instead of personal)
+- Economy, populations
+- Object system
+- Special NPCs for plots
+- Plot, scripting, quest system
+- Turn based combat
+- Character leveling
+- Strong skill system
+- 3D model animation
+- Save/Load of game
+- External map editor
+- Other tools
+- The reference game
+- ?
+
+
+
+How to check out latest SVN development code and how to run it?
+
+SVN is for subversion - a concurrent versioning system for developers. If you want to check it, you should have sun java + svn tool from subversion's homepage installed, plust java ant toolkit to compile it. If you have these installed type
+
+# svn co https://javacrpg.svn.sourceforge.net/svnroot/javacrpg javacrpg
+
+After go to root dir, and type ant. It should compile and start it.
