@@ -63,12 +63,6 @@ public class J3DMovingEngine {
 	 * Renders a set of node into 3d space, rotating, positioning them.
 	 * @param n Nodes
 	 * @param unit the r.cube parent of the nodes, needed for putting the rendered node as child into it.
-	 * @param x X cubesized distance from current relativeX
-	 * @param y Y cubesized distance from current relativeY
-	 * @param z Z cubesized distance from current relativeZ
-	 * @param direction Direction
-	 * @param horizontalRotation Horizontal rotation
-	 * @param scale Scale
 	 */
 	private void renderNodes(NodePlaceholder[] n, RenderedMovingUnit unit)
 	{
