@@ -29,7 +29,7 @@ public class Engine implements Runnable {
 	
 	public static int TICK_SECONDS = 10;
 	
-	public static int SECONDS_PER_TURN = 100; 
+	public static int SECONDS_PER_TURN = 200; 
 	
 	public boolean timeChanged = false;
 	public boolean turnCome = false;

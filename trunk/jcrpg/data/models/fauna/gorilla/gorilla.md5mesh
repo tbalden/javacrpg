@@ -28,7 +28,7 @@ joints {
 }
 
 mesh {
-	shader "data/models/fauna/gorilla/texture"
+        shader "data/models/fauna/gorilla/texture"
 
 	numverts 883
 	vert 0 ( 0.741817 0.350155 ) 0 1

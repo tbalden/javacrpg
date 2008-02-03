@@ -49,6 +49,11 @@ import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.RenderState;
 
+/**
+ * Animated model helper node for md5.
+ * @author pali
+ *
+ */
 public class AnimatedModelNode extends Node implements PooledNode {
 
 	/**
@@ -84,7 +89,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	        bodyInstance.setLocalRotation(q);
 	        
 	        runningAnimator.fadeIn(.5f);
-	        runningAnimator.setSpeed(.6f);
+	        runningAnimator.setSpeed(0.2f+(float)(.15f*Math.random()));
 	        //runningAnimator.fadeOut(.5f, false);
 	        //bodyAnimationController.setActive(false);
 	        attachChild(bodyInstance);
@@ -97,7 +102,8 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		}
 		
 	}
-    private void stripTexturesAndMaterials(SceneElement sp) {
+    @SuppressWarnings("unused")
+	private void stripTexturesAndMaterials(SceneElement sp) {
         sp.clearRenderState(RenderState.RS_TEXTURE);
         sp.clearRenderState(RenderState.RS_MATERIAL);
         for (int i=0; i<RenderState.RS_MAX_STATE; i++)

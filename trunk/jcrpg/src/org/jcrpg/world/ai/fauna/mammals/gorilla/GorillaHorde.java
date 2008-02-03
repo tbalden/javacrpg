@@ -42,7 +42,7 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public static MildAnimalFemale GORILLA_TYPE_FEMALE = new MildAnimalFemale("GORILLA_FEMALE");
 	public static WeakAnimalChild GORILLA_TYPE_CHILD = new WeakAnimalChild("GORILLA_CHILD");
 	
-	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla.md5anim",null,null,false);
+	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
 	
 	public static ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();

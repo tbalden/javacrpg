@@ -137,12 +137,17 @@ public class Ecology {
 	
 	public void doTurn()
 	{
+		J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
+		J3DCore.getInstance().updateDisplay(null);
+
 		long time = System.currentTimeMillis();
 		for (EntityInstance entity:beings.values())
 		{
 			entity.liveOneTurn(getNearbyEncounters(entity));
 		}
 		System.out.println("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
+		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
+		J3DCore.getInstance().updateDisplay(null);
 	}
 	
 	public void callbackMessage(String message)

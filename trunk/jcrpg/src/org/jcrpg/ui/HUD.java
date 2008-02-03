@@ -129,6 +129,7 @@ public class HUD {
         
         // system
         sr = new SystemRelated(this,new String[]{"LOAD"},new String[]{"./data/ui/floppy.png"});
+        sr = new SystemRelated(this,new String[]{"DICE"},new String[]{"./data/ui/dice.png"});
         
         // main textbox
         
