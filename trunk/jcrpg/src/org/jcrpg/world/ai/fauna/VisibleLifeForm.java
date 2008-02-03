@@ -42,6 +42,8 @@ public class VisibleLifeForm {
 	public EntityInstance entity;
 	public EntityMemberInstance member;
 	
+	public boolean notRendered = false;
+	
 	/**
 	 * Temporary render data for callbacks.
 	 */
@@ -51,6 +53,7 @@ public class VisibleLifeForm {
 	 * Starting point coords for initial render.
 	 */
 	public int worldX, worldY, worldZ;
+	public boolean onSteep = false;
 
 	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {
 		super();

@@ -81,6 +81,10 @@ public class J3DMovingEngine {
 			{
 				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
 			}
+			if (unit.onSteep)
+			{
+				n[i].getLocalTranslation().addLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+			}
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
 			if (n[i].model.noSpecialSteepRotation) {
@@ -133,6 +137,7 @@ public class J3DMovingEngine {
 		int i=0;
 		for (VisibleLifeForm form:forms)
 		{
+			if (form.notRendered) continue;
 			RenderedMovingUnit unit = materializeLifeForm(form);
 			unit.direction = (i%2==1?0:1);
 			NodePlaceholder[] placeHolders = core.modelPool.loadMovingPlaceHolderObjects(unit, unit.models, false);
@@ -225,6 +230,10 @@ public class J3DMovingEngine {
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 						}
+						if (unit.toSteep)
+						{
+							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
+						}
 						/*float cX = unit.c3dX;
 						float cY = unit.c3dY;
 						float cZ = unit.c3dZ;*/
@@ -278,6 +287,7 @@ public class J3DMovingEngine {
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form)
 	{
 		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, form.worldX, form.worldY, form.worldZ);
+		unit.onSteep = form.onSteep;
 		form.unit = unit;
 		units.put(form.uniqueId, unit);
 		return unit;
