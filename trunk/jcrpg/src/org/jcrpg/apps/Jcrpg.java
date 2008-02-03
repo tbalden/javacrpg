@@ -89,8 +89,11 @@ public class Jcrpg {
 		int xDiff = +10;
 		int yDiff = 0;
 		int zDiff = -77;
+		int wX = world.realSizeX/2+xDiff;
+		int wY = world.getSeaLevel(1)+yDiff;
+		int wZ = world.realSizeZ/2+zDiff;
 		//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6,world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
+		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6, wX, wY, wZ);
 		ecology.addEntity(party);
 		
 		PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
@@ -98,9 +101,6 @@ public class Jcrpg {
 		core.setWorld(world);
 		core.setEcology(ecology);
 		core.setEngine(engine);
-		int wX = world.realSizeX/2+xDiff;
-		int wY = world.getSeaLevel(1)+yDiff;
-		int wZ = world.realSizeZ/2+zDiff;
 		core.setViewPosition(wX,wY,wZ);
 		core.setOrigoRenderPosition(wX,wY,wZ);
 		core.initCore();
