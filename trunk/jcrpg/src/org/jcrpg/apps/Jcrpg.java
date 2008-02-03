@@ -69,10 +69,10 @@ public class Jcrpg {
 		String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
 		int[] climateSizeMuls = new int[] {1,4,2,2};
 		String[] geos = new String[] {"Plain","Forest","Mountain"};
-		int[] geoLikenessValues = new int[] {4,4,2};
+		int[] geoLikenessValues = new int[] {4,8,2};
 		String[] additionalGeos = new String[] {"River","Cave"};
 		int[] additionalGeoLikenessValues = new int[] {4,4,2};
-		WorldParams params = new WorldParams(40,100,2,100,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
+		WorldParams params = new WorldParams(40,10,2,10,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
 		WorldGenerator gen = new WorldGenerator();
 		World world = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
 		world.engine = engine;
@@ -86,9 +86,9 @@ public class Jcrpg {
 		EcologyGenerator eGen = new EcologyGenerator();
 		Ecology ecology = eGen.generateEcology(world);
 		
-		int xDiff = -1;
+		int xDiff = +10;
 		int yDiff = 0;
-		int zDiff = 3;
+		int zDiff = -77;
 		//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
 		EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6,world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
 		ecology.addEntity(party);
@@ -98,10 +98,11 @@ public class Jcrpg {
 		core.setWorld(world);
 		core.setEcology(ecology);
 		core.setEngine(engine);
-		core.setViewPosition(world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
-		core.setOrigoRenderPosition(world.realSizeX/2+xDiff, world.getSeaLevel(1)+yDiff, world.realSizeZ/2+zDiff);
-		//app.setViewPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
-		//app.setOrigoRenderPosition(w2.realSizeX-3, w2.getSeaLevel(1)+1, w2.realSizeZ);
+		int wX = world.realSizeX/2+xDiff;
+		int wY = world.getSeaLevel(1)+yDiff;
+		int wZ = world.realSizeZ/2+zDiff;
+		core.setViewPosition(wX,wY,wZ);
+		core.setOrigoRenderPosition(wX,wY,wZ);
 		core.initCore();
 
 		

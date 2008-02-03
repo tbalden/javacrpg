@@ -368,321 +368,39 @@ public class J3DStandingEngine {
 	}
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
-		boolean storedPauseState = engine.isPause();
-		engine.setPause(true);
-		
-		
-		Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
-		Vector3f currLoc = new Vector3f(core.relativeX*J3DCore.CUBE_EDGE_SIZE,core.relativeY*J3DCore.CUBE_EDGE_SIZE,core.relativeZ*J3DCore.CUBE_EDGE_SIZE);
-		int mulWalkDist = 1;
-		//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-		if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
-		{
-			// doing the render, getting the unneeded renderedCubes too.
-			HashSet<RenderedCube>[] detacheable = render();
-			for (int i=0; i<detacheable.length; i++)
-			// removing the unneeded.
-			for (RenderedCube c:detacheable[i]) { 
-	    		if (c!=null) {
-    	    		inViewPort.remove(c);
-    	    		inFarViewPort.remove(c);
-    	    		outOfViewPort.remove(c);
-	    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
-	    	    	{
-	    	    		NodePlaceholder n = itNode.next();
-	    	    		
-	    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-	    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-	    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-	    					 )
-	    				{
-	    					if (n!=null && n.batchInstance!=null)
-	    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-	    				} else 
-	    				{ 
-							PooledNode pooledRealNode = n.realNode;
-							
-							n.realNode = null;
-							if (pooledRealNode!=null) {
-								Node realNode = (Node)pooledRealNode;
-								if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-								realNode.removeFromParent();
-								modelPool.releaseNode(pooledRealNode);
-							}
-	    				}
-	    				n.farView = false;
-	    	    	}
-	    		}
-			}
-
-		}
-		
-		long sysTime = System.currentTimeMillis();
-		
-		int visibleNodeCounter = 0;
-		int nonVisibleNodeCounter = 0;
-		int addedNodeCounter = 0;
-		int removedNodeCounter = 0;
-		
-		
-		if (segmented && segmentCount==0 || !segmented)
-		{
-			alCurrentCubes.clear();
-			alCurrentCubes.addAll(hmCurrentCubes.values());
-			if (J3DCore.FARVIEW_ENABLED)
+		synchronized(Engine.mutex) {
+			boolean storedPauseState = engine.isPause();
+			engine.setPause(true);
+			
+			
+			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
+			Vector3f currLoc = new Vector3f(core.relativeX*J3DCore.CUBE_EDGE_SIZE,core.relativeY*J3DCore.CUBE_EDGE_SIZE,core.relativeZ*J3DCore.CUBE_EDGE_SIZE);
+			int mulWalkDist = 1;
+			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
+			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
-				alCurrentCubes_FARVIEW.clear();
-				alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
-			}
-		}
-		int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
-		int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
-		if (segmented)
-		{
-			int sSize = alCurrentCubes.size()/segments;
-			fromCubeCount = sSize*segmentCount;
-			toCubeCount = sSize*(segmentCount+1);
-			if (toCubeCount>alCurrentCubes.size())
-			{
-				toCubeCount = alCurrentCubes.size();
-			}
-		}
-		if (segmented && J3DCore.FARVIEW_ENABLED)
-		{
-			int sSize = alCurrentCubes_FARVIEW.size()/segments;
-			fromCubeCount_FARVIEW = sSize*segmentCount;
-			toCubeCount_FARVIEW = sSize*(segmentCount+1);
-			if (toCubeCount_FARVIEW>alCurrentCubes_FARVIEW.size())
-			{
-				toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
-			}
-		}
-		
-		for (int cc = fromCubeCount; cc<toCubeCount; cc++)
-		{
-			RenderedCube c = alCurrentCubes.get(cc);
-			// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
-			if (c.hsRenderedNodes.size()>0)
-			{
-				boolean found = false;
-				//boolean foundFar = false;
-				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
-				boolean fragmentViewDist = false;
-				if (c.cube!=null) {
-					fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
-				}
-
-				int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
-				boolean checked = false;
-				int distX = Math.abs(core.viewPositionX-c.cube.x);
-				int distY = Math.abs(core.viewPositionY-c.cube.y);
-				int distZ = Math.abs(core.viewPositionZ-c.cube.z);
-				
-				// handling the globe world border cube distances...
-				if (distX>world.realSizeX/2)
-				{
-					if (core.viewPositionX<world.realSizeX/2) {
-						distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
-					} else
-					{
-						distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
-					}
-				}
-				if (distZ>world.realSizeZ/2)
-				{
-					if (core.viewPositionZ<world.realSizeZ/2) {
-						distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
-					} else
-					{
-						distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
-					}
-				}
-				
-				
-				// checking the view distance of the cube from viewpoint
-				if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
-				{
-					// inside view dist...
-					checked = true;
-				} else
-				{
-					//System.out.println("DIST X,Z: "+distX+" "+distZ);
-				}
-				//checked = true;
-				
-				
-				for (NodePlaceholder n : c.hsRenderedNodes)
-				{
-					if (checked)
-					{
-						float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
-
-						if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
-							found = true;
-							break;
-						}
-						Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
-						float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-						//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
-						if (angle<refAngle) {
-							found = true;
-						}
-						break;
-					}
-				}
-				
-				
-				if (found)
-				{
-					visibleNodeCounter++;
-					if (!inViewPort.contains(c)) 
-					{
-						addedNodeCounter++;
-						inViewPort.add(c);
-						if (inFarViewPort.contains(c))
-						{
-							removedNodeCounter++;							
-							for (NodePlaceholder n : c.hsRenderedNodes)
-							{
-								if (!n.model.farViewEnabled) continue;
-								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-									 )
-								{
-									if (n!=null)
-										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
-								} else 
-								{
-									PooledNode pooledRealNode = n.realNode;
-									
-									n.realNode = null;
-									if (pooledRealNode!=null) {
-										Node realNode = (Node)pooledRealNode;
-										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-										realNode.removeFromParent();
-										modelPool.releaseNode(pooledRealNode);
-									}
-								}
-								n.farView = false;
-							}
-						}
-
-						inFarViewPort.remove(c);
-						outOfViewPort.remove(c);
-						for (NodePlaceholder n : c.hsRenderedNodes)
-						{
-							n.farView = false;
-							if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-									//(n.model.type == Model.SIMPLEMODEL
-											|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-								) 
-							{
-								
-								if (n.batchInstance==null)
-									core.batchHelper.addItem(c.cube.internalCube, n.model, n, false);
-							} else 
-							{
-								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
-								if (realPooledNode==null) continue;
-								n.realNode = (PooledNode)realPooledNode;
-							
-								// unlock
-								boolean sharedNode = false;
-								if (realPooledNode instanceof SharedNode)
-								{	
-									realPooledNode.unlockMeshes();
-									sharedNode = true;
-								}
-								{
-									realPooledNode.unlockShadows();
-									realPooledNode.unlockTransforms();
-									realPooledNode.unlockBounds();
-									realPooledNode.unlockBranch();
-								}
-							
-								// set data from placeholder
-								realPooledNode.setLocalTranslation(n.getLocalTranslation());
-								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
-								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
-								for (Spatial s:realPooledNode.getChildren()) {
-									if ( (s.getType()&Node.NODE)>0 )
-									{
-										for (Spatial s2:((Node)s).getChildren())
-										{	
-											if ( (s2.getType()&Node.NODE)>0 )
-											{
-												for (Spatial s3:((Node)s2).getChildren())
-												{
-													if (s3 instanceof TrimeshGeometryBatch) {
-														// setting separate horizontalRotation for trimeshGeomBatch
-														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
-													}												
-												}												
-											}
-											s2.setLocalScale(n.getLocalScale());
-											if (s2 instanceof TrimeshGeometryBatch) {
-												// setting separate horizontalRotation for trimeshGeomBatch
-												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
-											} else {
-												s2.setLocalRotation(n.getLocalRotation());
-											}
-										}
-									} else {
-										s.setLocalRotation(n.getLocalRotation());
-										s.setLocalScale(n.getLocalScale());
-									}
-								}
-							
-								if (c.cube.internalCube) {
-									core.intRootNode.attachChild((Node)realPooledNode);
-								} else 
-								{
-									core.extRootNode.attachChild((Node)realPooledNode);
-								}
-								if (sharedNode)
-								{	
-									realPooledNode.lockMeshes();
-									
-								}
-								{
-									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-									{
-										//for (Spatial s:realPooledNode.getChildren())
-										{
-											//s.lockBounds();
-										}
-									}
-									realPooledNode.lockShadows();
-									realPooledNode.lockTransforms();								
-									realPooledNode.lockBranch();
-									realPooledNode.lockBounds();
-								}
-							}
-						}
-					} 
-				}
-				else
-				{
-					 nonVisibleNodeCounter++;
-					 if (!outOfViewPort.contains(c)) 
-					 {
-						removedNodeCounter++;
-						outOfViewPort.add(c);
-						inViewPort.remove(c);
-						inFarViewPort.remove(c);
-						for (NodePlaceholder n : c.hsRenderedNodes)
-						{
-							if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-											|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-								 )
-							{
-								if (n!=null)
-									core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-							} else 
-							{
+				// doing the render, getting the unneeded renderedCubes too.
+				HashSet<RenderedCube>[] detacheable = render();
+				for (int i=0; i<detacheable.length; i++)
+				// removing the unneeded.
+				for (RenderedCube c:detacheable[i]) { 
+		    		if (c!=null) {
+	    	    		inViewPort.remove(c);
+	    	    		inFarViewPort.remove(c);
+	    	    		outOfViewPort.remove(c);
+		    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+		    	    	{
+		    	    		NodePlaceholder n = itNode.next();
+		    	    		
+		    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+		    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+		    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+		    					 )
+		    				{
+		    					if (n!=null && n.batchInstance!=null)
+		    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+		    				} else 
+		    				{ 
 								PooledNode pooledRealNode = n.realNode;
 								
 								n.realNode = null;
@@ -692,163 +410,271 @@ public class J3DStandingEngine {
 									realNode.removeFromParent();
 									modelPool.releaseNode(pooledRealNode);
 								}
-							}
-							n.farView = false;
-						}
-						
-					 }
+		    				}
+		    				n.farView = false;
+		    	    	}
+		    		}
+				}
+	
+			}
+			
+			long sysTime = System.currentTimeMillis();
+			
+			int visibleNodeCounter = 0;
+			int nonVisibleNodeCounter = 0;
+			int addedNodeCounter = 0;
+			int removedNodeCounter = 0;
+			
+			
+			if (segmented && segmentCount==0 || !segmented)
+			{
+				alCurrentCubes.clear();
+				alCurrentCubes.addAll(hmCurrentCubes.values());
+				if (J3DCore.FARVIEW_ENABLED)
+				{
+					alCurrentCubes_FARVIEW.clear();
+					alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
 				}
 			}
-		}
-		
-		if (J3DCore.FARVIEW_ENABLED)
-		for (int cc = fromCubeCount_FARVIEW; cc<toCubeCount_FARVIEW; cc++)
-		{
-			RenderedCube c = alCurrentCubes_FARVIEW.get(cc);
-			// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
-			if (c.hsRenderedNodes.size()>0)
+			int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
+			int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
+			if (segmented)
 			{
-				//boolean found = false;
-				boolean foundFar = false;
-				// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
-				boolean fragmentViewDist = false;
-				if (c.cube!=null) {
-					fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
-				}
-
-				int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
-				boolean checked = false;
-				int distX = Math.abs(core.viewPositionX-c.cube.x);
-				int distY = Math.abs(core.viewPositionY-c.cube.y);
-				int distZ = Math.abs(core.viewPositionZ-c.cube.z);
-				
-				// handling the globe world border cube distances...
-				if (distX>world.realSizeX/2)
+				int sSize = alCurrentCubes.size()/segments;
+				fromCubeCount = sSize*segmentCount;
+				toCubeCount = sSize*(segmentCount+1);
+				if (toCubeCount>alCurrentCubes.size())
 				{
-					if (core.viewPositionX<world.realSizeX/2) {
-						distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
-					} else
-					{
-						distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
+					toCubeCount = alCurrentCubes.size();
+				}
+			}
+			if (segmented && J3DCore.FARVIEW_ENABLED)
+			{
+				int sSize = alCurrentCubes_FARVIEW.size()/segments;
+				fromCubeCount_FARVIEW = sSize*segmentCount;
+				toCubeCount_FARVIEW = sSize*(segmentCount+1);
+				if (toCubeCount_FARVIEW>alCurrentCubes_FARVIEW.size())
+				{
+					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
+				}
+			}
+			
+			for (int cc = fromCubeCount; cc<toCubeCount; cc++)
+			{
+				RenderedCube c = alCurrentCubes.get(cc);
+				// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
+				if (c.hsRenderedNodes.size()>0)
+				{
+					boolean found = false;
+					//boolean foundFar = false;
+					// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
+					boolean fragmentViewDist = false;
+					if (c.cube!=null) {
+						fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
 					}
-				}
-				if (distZ>world.realSizeZ/2)
-				{
-					if (core.viewPositionZ<world.realSizeZ/2) {
-						distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
-					} else
-					{
-						distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
-					}
-				}
-				
-				
-				// checking the view distance of the cube from viewpoint
-				if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
-				{
-					// inside view dist...
-					checked = true;
-				} else
-				{
-					//System.out.println("DIST X,Z: "+distX+" "+distZ);
-				}
-				//checked = true;
-				
-				// this tells if a not in farview cube can be a farview cube
-				// regardless its position, to cover the gap between farview part and normal view part:
-				boolean farviewGapFiller = false; 
-				
-				if (checked && J3DCore.FARVIEW_ENABLED)
-				{
-					int viewDistFarViewModuloX = core.viewPositionX%J3DCore.FARVIEW_GAP;
-					int viewDistFarViewModuloZ = core.viewPositionZ%J3DCore.FARVIEW_GAP;
+	
+					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
+					boolean checked = false;
+					int distX = Math.abs(core.viewPositionX-c.cube.x);
+					int distY = Math.abs(core.viewPositionY-c.cube.y);
+					int distZ = Math.abs(core.viewPositionZ-c.cube.z);
 					
-					if (Math.abs(checkDistCube-distX)<=viewDistFarViewModuloX)
+					// handling the globe world border cube distances...
+					if (distX>world.realSizeX/2)
 					{
-						farviewGapFiller = true;
+						if (core.viewPositionX<world.realSizeX/2) {
+							distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
+						} else
+						{
+							distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
+						}
 					}
-					if (Math.abs(checkDistCube-distZ)<=viewDistFarViewModuloZ)
+					if (distZ>world.realSizeZ/2)
 					{
-						farviewGapFiller = true;
+						if (core.viewPositionZ<world.realSizeZ/2) {
+							distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
+						} else
+						{
+							distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
+						}
 					}
-					if (c.cube.x%J3DCore.FARVIEW_GAP==0 && c.cube.z%J3DCore.FARVIEW_GAP==0)
+					
+					
+					// checking the view distance of the cube from viewpoint
+					if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
 					{
-						// this can be a gapfiller magnified farview cube.
+						// inside view dist...
+						checked = true;
 					} else
 					{
-						//this cannot be
-						farviewGapFiller = false;
+						//System.out.println("DIST X,Z: "+distX+" "+distZ);
 					}
-				} 
-				
-				for (NodePlaceholder n : c.hsRenderedNodes)
-				{
-					if (checked && !farviewGapFiller)
+					//checked = true;
+					
+					
+					for (NodePlaceholder n : c.hsRenderedNodes)
 					{
-						float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
-
-						if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
-							//found = true;
+						if (checked)
+						{
+							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+	
+							if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
+								found = true;
+								break;
+							}
+							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
+							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
+							//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+							if (angle<refAngle) {
+								found = true;
+							}
 							break;
 						}
-						Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
-						float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-						//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
-						if (angle<refAngle) {
-							//found = true;
-						}
-						break;
-					} else
-					{
-						// check if farview enabled
-						if (!J3DCore.FARVIEW_ENABLED || fragmentViewDist) break;
-						
-						// enabled, we can check for the cube coordinates in between the gaps...
-						if (c.cube.x%J3DCore.FARVIEW_GAP==0 && c.cube.z%J3DCore.FARVIEW_GAP==0 && c.cube.y%J3DCore.FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
-						{
-							// looking for farview enabled model on the cube...
-							if (n.model.farViewEnabled)
-							{								
-								//if (c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
-									//foundFar = false;
-									//found = true;
-									//break;
-								//}
-								// found one... checking for angle:								
-								Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
-								float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-								//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
-								if (angle<refAngle) {
-									// angle is good, we can enable foundFar for this cube
-									foundFar = true;
-								}
-								break;
-							} else
-							{
-								// continue to check all the other nodes of the cube in this farview place.
-								continue;
-							}
-						}
-						break;
 					}
-				}
-				
-				
-				// farview
-				if (foundFar)
-				{
-					visibleNodeCounter++;
-					if (!inFarViewPort.contains(c)) 
+					
+					
+					if (found)
 					{
-						addedNodeCounter++;
-						inFarViewPort.add(c);
-						
-						// checking if its in normal view port, if so removing it
-						if (inViewPort.contains(c))
+						visibleNodeCounter++;
+						if (!inViewPort.contains(c)) 
 						{
-							removedNodeCounter++;			
+							addedNodeCounter++;
+							inViewPort.add(c);
+							if (inFarViewPort.contains(c))
+							{
+								removedNodeCounter++;							
+								for (NodePlaceholder n : c.hsRenderedNodes)
+								{
+									if (!n.model.farViewEnabled) continue;
+									if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+											(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+													|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+										 )
+									{
+										if (n!=null)
+											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
+									} else 
+									{
+										PooledNode pooledRealNode = n.realNode;
+										
+										n.realNode = null;
+										if (pooledRealNode!=null) {
+											Node realNode = (Node)pooledRealNode;
+											if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+											realNode.removeFromParent();
+											modelPool.releaseNode(pooledRealNode);
+										}
+									}
+									n.farView = false;
+								}
+							}
+	
+							inFarViewPort.remove(c);
+							outOfViewPort.remove(c);
 							for (NodePlaceholder n : c.hsRenderedNodes)
-							{								
+							{
+								n.farView = false;
+								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+										//(n.model.type == Model.SIMPLEMODEL
+												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									) 
+								{
+									
+									if (n.batchInstance==null)
+										core.batchHelper.addItem(c.cube.internalCube, n.model, n, false);
+								} else 
+								{
+									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
+									if (realPooledNode==null) continue;
+									n.realNode = (PooledNode)realPooledNode;
+								
+									// unlock
+									boolean sharedNode = false;
+									if (realPooledNode instanceof SharedNode)
+									{	
+										realPooledNode.unlockMeshes();
+										sharedNode = true;
+									}
+									{
+										realPooledNode.unlockShadows();
+										realPooledNode.unlockTransforms();
+										realPooledNode.unlockBounds();
+										realPooledNode.unlockBranch();
+									}
+								
+									// set data from placeholder
+									realPooledNode.setLocalTranslation(n.getLocalTranslation());
+									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+									for (Spatial s:realPooledNode.getChildren()) {
+										if ( (s.getType()&Node.NODE)>0 )
+										{
+											for (Spatial s2:((Node)s).getChildren())
+											{	
+												if ( (s2.getType()&Node.NODE)>0 )
+												{
+													for (Spatial s3:((Node)s2).getChildren())
+													{
+														if (s3 instanceof TrimeshGeometryBatch) {
+															// setting separate horizontalRotation for trimeshGeomBatch
+															((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+														}												
+													}												
+												}
+												s2.setLocalScale(n.getLocalScale());
+												if (s2 instanceof TrimeshGeometryBatch) {
+													// setting separate horizontalRotation for trimeshGeomBatch
+													((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+												} else {
+													s2.setLocalRotation(n.getLocalRotation());
+												}
+											}
+										} else {
+											s.setLocalRotation(n.getLocalRotation());
+											s.setLocalScale(n.getLocalScale());
+										}
+									}
+								
+									if (c.cube.internalCube) {
+										core.intRootNode.attachChild((Node)realPooledNode);
+									} else 
+									{
+										core.extRootNode.attachChild((Node)realPooledNode);
+									}
+									if (sharedNode)
+									{	
+										realPooledNode.lockMeshes();
+										
+									}
+									{
+										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										{
+											//for (Spatial s:realPooledNode.getChildren())
+											{
+												//s.lockBounds();
+											}
+										}
+										realPooledNode.lockShadows();
+										realPooledNode.lockTransforms();								
+										realPooledNode.lockBranch();
+										realPooledNode.lockBounds();
+									}
+								}
+							}
+						} 
+					}
+					else
+					{
+						 nonVisibleNodeCounter++;
+						 if (!outOfViewPort.contains(c)) 
+						 {
+							removedNodeCounter++;
+							outOfViewPort.add(c);
+							inViewPort.remove(c);
+							inFarViewPort.remove(c);
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
@@ -870,201 +696,377 @@ public class J3DStandingEngine {
 								}
 								n.farView = false;
 							}
-						}
-						inViewPort.remove(c);
-						outOfViewPort.remove(c);
-						
-						// add all far view enabled model nodes to the scenario
-						for (NodePlaceholder n : c.hsRenderedNodes)
-						{
-							if (!n.model.farViewEnabled) continue;
-							n.farView = true;
-							if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-									//(n.model.type == Model.SIMPLEMODEL
-											|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-								) 
-							{
-								
-								if (n.batchInstance==null)
-									core.batchHelper.addItem(c.cube.internalCube, n.model, n, true);
-							} else 
-							{
-								Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
-								if (realPooledNode==null) continue;
-								n.realNode = (PooledNode)realPooledNode;
 							
-								// unlock
-								boolean sharedNode = false;
-								if (realPooledNode instanceof SharedNode)
-								{	
-									realPooledNode.unlockMeshes();
-									sharedNode = true;
-								}
-								{
-									realPooledNode.unlockShadows();
-									realPooledNode.unlockTransforms();
-									realPooledNode.unlockBounds();
-									realPooledNode.unlockBranch();
-								}
-							
-								// set data from placeholder
-								realPooledNode.setLocalTranslation(n.getLocalTranslation());
-								// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
-								// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
-								for (Spatial s:realPooledNode.getChildren()) {
-									if ( (s.getType()&Node.NODE)>0 )
-									{
-										for (Spatial s2:((Node)s).getChildren())
-										{	
-											if ( (s2.getType()&Node.NODE)>0 )
-											{
-												for (Spatial s3:((Node)s2).getChildren())
-												{
-													if (s3 instanceof TrimeshGeometryBatch) {
-														// setting separate horizontalRotation for trimeshGeomBatch
-														((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
-													}												
-												}												
-											}
-											s2.setLocalScale(n.getLocalScale());
-											if (s2 instanceof TrimeshGeometryBatch) {
-												// setting separate horizontalRotation for trimeshGeomBatch
-												((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
-											} else {
-												s2.setLocalRotation(n.getLocalRotation());
-											}
-										}
-									} else {
-										s.setLocalRotation(n.getLocalRotation());
-										Vector3f scale = new Vector3f(n.getLocalScale());
-										scale.x*=J3DCore.FARVIEW_GAP;
-										scale.z*=J3DCore.FARVIEW_GAP;
-										s.setLocalScale(scale);
-									}
-								}
-							
-								if (c.cube.internalCube) {
-									core.intRootNode.attachChild((Node)realPooledNode);
-								} else 
-								{
-									core.extRootNode.attachChild((Node)realPooledNode);
-								}
-								if (sharedNode)
-								{	
-									realPooledNode.lockMeshes();
-								}
-								{
-									realPooledNode.lockShadows();
-									realPooledNode.lockBranch();
-									realPooledNode.lockBounds();
-									realPooledNode.lockTransforms();																	
-								}
-							}
-						}
-					} 
-				} 
-				else
-				{
-					 nonVisibleNodeCounter++;
-					 if (!outOfViewPort.contains(c)) 
-					 {
-						removedNodeCounter++;
-						outOfViewPort.add(c);
-						inViewPort.remove(c);
-						inFarViewPort.remove(c);
-						for (NodePlaceholder n : c.hsRenderedNodes)
-						{
-							if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-									(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-											|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-								 )
-							{
-								if (n!=null)
-									core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-							} else 
-							{
-								PooledNode pooledRealNode = n.realNode;
-								
-								n.realNode = null;
-								if (pooledRealNode!=null) {
-									Node realNode = (Node)pooledRealNode;
-									if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-									realNode.removeFromParent();
-									modelPool.releaseNode(pooledRealNode);
-								}
-							}
-							n.farView = false;
-						}
-						
-					 }
-				}
-			}
-		}
-		
-		if (segmentCount==segments-1 || !segmented) {
-			
-			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.updateAll();
-			
-			System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
-		    // handling possible occluders
-		    if (J3DCore.SHADOWS) {
-		    	System.out.println("OCCS: "+core.sPass.occludersSize());
-				for (NodePlaceholder psn : core.possibleOccluders) {
-					if (psn.realNode != null) {
-						Node n = (Node) psn.realNode;
-						float dist = n.getWorldTranslation().distanceSquared(
-								core.getCamera().getLocation());
-						if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-							if (!core.sPass.containsOccluder(n))
-							{
-								System.out.println("ADDING OCCLUDER: "+n.getName());
-								core.sPass.addOccluder(n);
-								
-							}
-						} else {
-							core.removeOccludersRecoursive(n);
-						}
+						 }
 					}
 				}
-		    }
-		    
-		    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
-		    sysTime = System.currentTimeMillis();
-		    
-		    
-		    core.updateTimeRelated();
-	
-			cullVariationCounter++;
-			core.groundParentNode.setCullMode(Node.CULL_NEVER);
-			core.updateDisplayNoBackBuffer();
-			core.groundParentNode.setCullMode(Node.CULL_INHERIT);
-			if (cullVariationCounter%1==0) 
+			}
+			
+			if (J3DCore.FARVIEW_ENABLED)
+			for (int cc = fromCubeCount_FARVIEW; cc<toCubeCount_FARVIEW; cc++)
 			{
-				core.groundParentNode.updateRenderState();
-			} else
-			{
-				//updateDisplayNoBackBuffer();
-			}
+				RenderedCube c = alCurrentCubes_FARVIEW.get(cc);
+				// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
+				if (c.hsRenderedNodes.size()>0)
+				{
+					//boolean found = false;
+					boolean foundFar = false;
+					// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
+					boolean fragmentViewDist = false;
+					if (c.cube!=null) {
+						fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
+					}
 	
-			System.out.println("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
-		    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-		    System.out.println("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
+					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
+					boolean checked = false;
+					int distX = Math.abs(core.viewPositionX-c.cube.x);
+					int distY = Math.abs(core.viewPositionY-c.cube.y);
+					int distZ = Math.abs(core.viewPositionZ-c.cube.z);
+					
+					// handling the globe world border cube distances...
+					if (distX>world.realSizeX/2)
+					{
+						if (core.viewPositionX<world.realSizeX/2) {
+							distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
+						} else
+						{
+							distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
+						}
+					}
+					if (distZ>world.realSizeZ/2)
+					{
+						if (core.viewPositionZ<world.realSizeZ/2) {
+							distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
+						} else
+						{
+							distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
+						}
+					}
+					
+					
+					// checking the view distance of the cube from viewpoint
+					if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
+					{
+						// inside view dist...
+						checked = true;
+					} else
+					{
+						//System.out.println("DIST X,Z: "+distX+" "+distZ);
+					}
+					//checked = true;
+					
+					// this tells if a not in farview cube can be a farview cube
+					// regardless its position, to cover the gap between farview part and normal view part:
+					boolean farviewGapFiller = false; 
+					
+					if (checked && J3DCore.FARVIEW_ENABLED)
+					{
+						int viewDistFarViewModuloX = core.viewPositionX%J3DCore.FARVIEW_GAP;
+						int viewDistFarViewModuloZ = core.viewPositionZ%J3DCore.FARVIEW_GAP;
+						
+						if (Math.abs(checkDistCube-distX)<=viewDistFarViewModuloX)
+						{
+							farviewGapFiller = true;
+						}
+						if (Math.abs(checkDistCube-distZ)<=viewDistFarViewModuloZ)
+						{
+							farviewGapFiller = true;
+						}
+						if (c.cube.x%J3DCore.FARVIEW_GAP==0 && c.cube.z%J3DCore.FARVIEW_GAP==0)
+						{
+							// this can be a gapfiller magnified farview cube.
+						} else
+						{
+							//this cannot be
+							farviewGapFiller = false;
+						}
+					} 
+					
+					for (NodePlaceholder n : c.hsRenderedNodes)
+					{
+						if (checked && !farviewGapFiller)
+						{
+							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
 	
-		    if (cullVariationCounter%30==0) {
-				modelPool.cleanPools();
-				System.gc();
+							if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
+								//found = true;
+								break;
+							}
+							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
+							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
+							//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+							if (angle<refAngle) {
+								//found = true;
+							}
+							break;
+						} else
+						{
+							// check if farview enabled
+							if (!J3DCore.FARVIEW_ENABLED || fragmentViewDist) break;
+							
+							// enabled, we can check for the cube coordinates in between the gaps...
+							if (c.cube.x%J3DCore.FARVIEW_GAP==0 && c.cube.z%J3DCore.FARVIEW_GAP==0 && c.cube.y%J3DCore.FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+							{
+								// looking for farview enabled model on the cube...
+								if (n.model.farViewEnabled)
+								{								
+									//if (c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) {
+										//foundFar = false;
+										//found = true;
+										//break;
+									//}
+									// found one... checking for angle:								
+									Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
+									float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
+									//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+									if (angle<refAngle) {
+										// angle is good, we can enable foundFar for this cube
+										foundFar = true;
+									}
+									break;
+								} else
+								{
+									// continue to check all the other nodes of the cube in this farview place.
+									continue;
+								}
+							}
+							break;
+						}
+					}
+					
+					
+					// farview
+					if (foundFar)
+					{
+						visibleNodeCounter++;
+						if (!inFarViewPort.contains(c)) 
+						{
+							addedNodeCounter++;
+							inFarViewPort.add(c);
+							
+							// checking if its in normal view port, if so removing it
+							if (inViewPort.contains(c))
+							{
+								removedNodeCounter++;			
+								for (NodePlaceholder n : c.hsRenderedNodes)
+								{								
+									if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+											(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+													|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+										 )
+									{
+										if (n!=null)
+											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+									} else 
+									{
+										PooledNode pooledRealNode = n.realNode;
+										
+										n.realNode = null;
+										if (pooledRealNode!=null) {
+											Node realNode = (Node)pooledRealNode;
+											if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+											realNode.removeFromParent();
+											modelPool.releaseNode(pooledRealNode);
+										}
+									}
+									n.farView = false;
+								}
+							}
+							inViewPort.remove(c);
+							outOfViewPort.remove(c);
+							
+							// add all far view enabled model nodes to the scenario
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{
+								if (!n.model.farViewEnabled) continue;
+								n.farView = true;
+								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+										//(n.model.type == Model.SIMPLEMODEL
+												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									) 
+								{
+									
+									if (n.batchInstance==null)
+										core.batchHelper.addItem(c.cube.internalCube, n.model, n, true);
+								} else 
+								{
+									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
+									if (realPooledNode==null) continue;
+									n.realNode = (PooledNode)realPooledNode;
+								
+									// unlock
+									boolean sharedNode = false;
+									if (realPooledNode instanceof SharedNode)
+									{	
+										realPooledNode.unlockMeshes();
+										sharedNode = true;
+									}
+									{
+										realPooledNode.unlockShadows();
+										realPooledNode.unlockTransforms();
+										realPooledNode.unlockBounds();
+										realPooledNode.unlockBranch();
+									}
+								
+									// set data from placeholder
+									realPooledNode.setLocalTranslation(n.getLocalTranslation());
+									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+									for (Spatial s:realPooledNode.getChildren()) {
+										if ( (s.getType()&Node.NODE)>0 )
+										{
+											for (Spatial s2:((Node)s).getChildren())
+											{	
+												if ( (s2.getType()&Node.NODE)>0 )
+												{
+													for (Spatial s3:((Node)s2).getChildren())
+													{
+														if (s3 instanceof TrimeshGeometryBatch) {
+															// setting separate horizontalRotation for trimeshGeomBatch
+															((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+														}												
+													}												
+												}
+												s2.setLocalScale(n.getLocalScale());
+												if (s2 instanceof TrimeshGeometryBatch) {
+													// setting separate horizontalRotation for trimeshGeomBatch
+													((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+												} else {
+													s2.setLocalRotation(n.getLocalRotation());
+												}
+											}
+										} else {
+											s.setLocalRotation(n.getLocalRotation());
+											Vector3f scale = new Vector3f(n.getLocalScale());
+											scale.x*=J3DCore.FARVIEW_GAP;
+											scale.z*=J3DCore.FARVIEW_GAP;
+											s.setLocalScale(scale);
+										}
+									}
+								
+									if (c.cube.internalCube) {
+										core.intRootNode.attachChild((Node)realPooledNode);
+									} else 
+									{
+										core.extRootNode.attachChild((Node)realPooledNode);
+									}
+									if (sharedNode)
+									{	
+										realPooledNode.lockMeshes();
+									}
+									{
+										realPooledNode.lockShadows();
+										realPooledNode.lockBranch();
+										realPooledNode.lockBounds();
+										realPooledNode.lockTransforms();																	
+									}
+								}
+							}
+						} 
+					} 
+					else
+					{
+						 nonVisibleNodeCounter++;
+						 if (!outOfViewPort.contains(c)) 
+						 {
+							removedNodeCounter++;
+							outOfViewPort.add(c);
+							inViewPort.remove(c);
+							inFarViewPort.remove(c);
+							for (NodePlaceholder n : c.hsRenderedNodes)
+							{
+								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+									 )
+								{
+									if (n!=null)
+										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+								} else 
+								{
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+								}
+								n.farView = false;
+							}
+							
+						 }
+					}
+				}
 			}
-	
-			// every 20 steps do a garbage collection
-		    core.garbCollCounter++;
-			if (core.garbCollCounter==20) {
-				//
-				core.garbCollCounter = 0;
-			}
-		}
+			
+			if (segmentCount==segments-1 || !segmented) {
+				
+				if (J3DCore.GEOMETRY_BATCH) core.batchHelper.updateAll();
+				
+				System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
+			    // handling possible occluders
+			    if (J3DCore.SHADOWS) {
+			    	System.out.println("OCCS: "+core.sPass.occludersSize());
+					for (NodePlaceholder psn : core.possibleOccluders) {
+						if (psn.realNode != null) {
+							Node n = (Node) psn.realNode;
+							float dist = n.getWorldTranslation().distanceSquared(
+									core.getCamera().getLocation());
+							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
+								if (!core.sPass.containsOccluder(n))
+								{
+									System.out.println("ADDING OCCLUDER: "+n.getName());
+									core.sPass.addOccluder(n);
+									
+								}
+							} else {
+								core.removeOccludersRecoursive(n);
+							}
+						}
+					}
+			    }
+			    
+			    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+			    sysTime = System.currentTimeMillis();
+			    
+			    
+			    core.updateTimeRelated();
 		
-		engine.setPause(storedPauseState);
+				cullVariationCounter++;
+				core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				core.updateDisplayNoBackBuffer();
+				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				if (cullVariationCounter%1==0) 
+				{
+					core.groundParentNode.updateRenderState();
+				} else
+				{
+					//updateDisplayNoBackBuffer();
+				}
+		
+				System.out.println("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
+			    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+			    System.out.println("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
+		
+			    if (cullVariationCounter%30==0) {
+					modelPool.cleanPools();
+					System.gc();
+				}
+		
+				// every 20 steps do a garbage collection
+			    core.garbCollCounter++;
+				if (core.garbCollCounter==20) {
+					//
+					core.garbCollCounter = 0;
+				}
+			}
+			
+			engine.setPause(storedPauseState);
+		}
 	}
 	
 	
