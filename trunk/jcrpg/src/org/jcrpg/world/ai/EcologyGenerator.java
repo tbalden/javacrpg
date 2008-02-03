@@ -30,12 +30,15 @@ public class EcologyGenerator {
 		Ecology ecology = new Ecology();
 		int nX = 20;
 		int nY = 20;
+		GorillaHorde gorillaDesc = new GorillaHorde();
+		WolfPack wolfDesc = new WolfPack();
+		Warthogs wartDesc = new Warthogs();
 		for (int i=0; i<nX; i++) {
 			for (int j=0; j<nY; j++)
 			{
-				ecology.addEntity(new EntityInstance(new GorillaHorde(),world,ecology,"GO-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
-				ecology.addEntity(new EntityInstance(new WolfPack(),world,ecology,"WO-"+i+" "+j,20,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
-				ecology.addEntity(new EntityInstance(new Warthogs(),world,ecology,"WA-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+				ecology.addEntity(new EntityInstance(gorillaDesc,world,ecology,"GO-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+				ecology.addEntity(new EntityInstance(wolfDesc,world,ecology,"WO-"+i+" "+j,20,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
+				ecology.addEntity(new EntityInstance(wartDesc,world,ecology,"WA-"+i+" "+j,50,1+(int)((world.realSizeX*1f/nX)*i),0,(int)((world.realSizeZ*1f/nY)*j)));
 			}
 		}
 		return ecology;
