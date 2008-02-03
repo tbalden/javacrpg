@@ -368,6 +368,7 @@ public class J3DStandingEngine {
 	}
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
+		boolean storedPauseState = engine.isPause();
 		engine.setPause(true);
 		
 		
@@ -1063,7 +1064,7 @@ public class J3DStandingEngine {
 			}
 		}
 		
-		engine.setPause(false);
+		engine.setPause(storedPauseState);
 	}
 	
 	

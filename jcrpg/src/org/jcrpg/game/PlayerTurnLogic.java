@@ -78,7 +78,10 @@ public class PlayerTurnLogic {
 			for (EntityInstance entityInstance:info.encountered.keySet()) {
 				if (entityInstance==player) continue;
 				int[] groupIds = info.encounteredGroupIds.get(entityInstance);
-				ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName()+ " "+entityInstance.id +" g:"+(groupIds!=null?groupIds.length:null));
+				if (groupIds.length>0)
+					ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName()+ " "+entityInstance.id +" g:"+(groupIds!=null?groupIds.length:null));
+				else
+					ecology.callbackMessage("You seem to trespass a Domain : "+entityInstance.description.getClass().getSimpleName());
 				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds);
 				if (groupIds !=null)
 				for (int in:groupIds)
@@ -106,6 +109,13 @@ public class PlayerTurnLogic {
 		}
 		placeVisibleForms(forms);
 		J3DCore.getInstance().mEngine.render(forms);
+		core.switchEncounterMode(true);
+	}
+	
+	public void endPlayerEncounters()
+	{
+		J3DCore.getInstance().mEngine.clearPreviousUnits();
+		
 	}
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)

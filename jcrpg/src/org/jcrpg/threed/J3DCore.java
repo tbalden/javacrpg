@@ -1821,6 +1821,40 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	LightNode drn;
 	PointLight dr;
+	
+	/**
+	 * If doing an engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!
+	 */
+	public boolean encounterMode = false;
+	
+	PlayerChoiceWindow encounterWindow = null;
+	
+	public void switchEncounterMode(boolean value)
+	{
+		encounterMode = value;
+		if (encounterMode)
+		{
+			if (encounterWindow==null) { 
+				ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
+				ArrayList<ChoiceDescription> encAnswers = new ArrayList<ChoiceDescription>();
+				encAnswers.add(yes);
+				encounterWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
+				uiBase.addWindow("Encounter", encounterWindow);
+			}
+			uiBase.hud.mainBox.hide();
+			updateDisplay(null);
+			encounterWindow.toggle();
+		}
+		else
+		{
+			encounterWindow.toggle();
+			uiBase.hud.mainBox.show();
+			uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+			playerTurnLogic.endPlayerEncounters();
+			engine.turnFinishedForPlayer();
+		}
+	}
+	
 
 	@Override
 	protected void simpleUpdate() {
@@ -1841,14 +1875,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			pause = true;
 			ecology.doTurn();
-			engine.turnFinished();
+			engine.turnFinishedForAI();
 			pause = false;
 		}
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */
-			if (mEngine!=null && !engine.isPause()) mEngine.updateScene(tpf);
+			if (mEngine!=null) mEngine.updateScene(tpf);
 			rootNode.updateGeometricState(tpf, true);
 			fpsNode.updateGeometricState(tpf, true);
 			

@@ -25,7 +25,7 @@ import com.jme.scene.Node;
 
 public abstract class Window {
 
-	boolean visible = false;
+	protected boolean visible = false;
 	protected Node windowNode;
 	
 	public UIBase base;
