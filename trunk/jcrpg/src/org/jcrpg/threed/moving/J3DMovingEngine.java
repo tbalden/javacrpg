@@ -32,7 +32,6 @@ import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
-import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -183,7 +182,10 @@ public class J3DMovingEngine {
 	 */
 	public void updateScene(float timePerFrame)
 	{
-		// TODO check all visible rendered moving units and update their coordinates etc.
+		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
+		playerFakeForm.worldX = core.player.roamingBoundary.posX;
+		playerFakeForm.worldY = core.player.roamingBoundary.posY;
+		playerFakeForm.worldZ = core.player.roamingBoundary.posZ;
 		for (RenderedMovingUnit unit: units.values())
 		{
 			for (NodePlaceholder n : unit.nodePlaceholders)
@@ -193,11 +195,11 @@ public class J3DMovingEngine {
 					if (unit.state.equals(RenderedMovingUnit.STATE_STANDING))
 					{
 						
-						
-						float eX = (core.player.roamingBoundary.posX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (core.player.roamingBoundary.posY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
+						float eX = (target.worldX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (target.worldY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
 						int origoZ = core.origoZ;
-						int endCoordZCorrect = (origoZ-(core.player.roamingBoundary.posZ-origoZ));
+						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
 						float eZ = ( endCoordZCorrect - (core.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 	
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))

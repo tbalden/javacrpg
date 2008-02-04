@@ -53,7 +53,10 @@ public class VisibleLifeForm {
 	 * Starting point coords for initial render.
 	 */
 	public int worldX, worldY, worldZ;
+	
 	public boolean onSteep = false;
+	
+	public VisibleLifeForm targetForm = null;
 
 	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {
 		super();

@@ -52,7 +52,6 @@ public abstract class Window {
 		} else
 		{
 			windowCounter++;
-			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lock = true;
 			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lockSecondaryHandling();
 			core.engine.setPause(true);
 			show();

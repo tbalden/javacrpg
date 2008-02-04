@@ -72,6 +72,10 @@ public class PlayerTurnLogic {
 		infos.addAll(possibleEncounters);
 		previousForms.addAll(forms);
 		forms.clear();
+		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
+		playerFakeForm.worldX = player.roamingBoundary.posX;
+		playerFakeForm.worldY = player.roamingBoundary.posY;
+		playerFakeForm.worldZ = player.roamingBoundary.posZ;
 		for (PreEncounterInfo info:infos)
 		{
 			if (info.subject==null) continue;
@@ -99,9 +103,11 @@ public class PlayerTurnLogic {
 						types+=","+type;
 					}
 					ecology.callbackMessage(""+size+" "+types);
+					
 					for (EntityMemberInstance member:members)
 					{
 						VisibleLifeForm form = entityInstance.getOne(member.description,member);
+						form.targetForm = playerFakeForm;
 						forms.add(form);
 					}
 				}
