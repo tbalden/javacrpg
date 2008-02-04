@@ -267,4 +267,9 @@ public class GeometryBatchHelper {
     }
     
 
+    public void clearAll()    
+    {
+    	modelBatchMap.clear();
+    	trimeshBatchMap.clear();    	
+    }
 }

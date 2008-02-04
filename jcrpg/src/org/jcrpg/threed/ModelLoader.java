@@ -103,6 +103,8 @@ public class ModelLoader {
     HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
     HashMap<String,BillboardPartVegetation> sharedBBNodeCache = new HashMap<String, BillboardPartVegetation>();
     
+    
+    
     int counter=0;
     
     //AlphaState as;
@@ -110,6 +112,15 @@ public class ModelLoader {
 
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
+    public void cleanAll()
+    {
+    	binaryCache.clear();
+    	sharedNodeCache.clear();
+    	textureCache.clear();
+    	textureStateCache.clear();
+    	sharedBBNodeCache.clear();
+    	vegetationTargetCache.clear();
+    }
     
 	/**
 	 * Loads a pooled node for a model (rotated or not if needed or not special rotation for billboarding).

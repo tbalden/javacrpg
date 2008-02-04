@@ -104,7 +104,6 @@ public class Jcrpg {
 		core.setViewPosition(wX,wY,wZ);
 		core.setOrigoRenderPosition(wX,wY,wZ);
 		core.initCore();
-
 		
 	}
 }
