@@ -1247,4 +1247,19 @@ public class J3DStandingEngine {
 		
 	}
 	
+	public void clearAll()
+	{
+		hmCurrentCubes.clear();
+		hmCurrentCubes_FARVIEW.clear();
+		alCurrentCubes.clear();
+		alCurrentCubes_FARVIEW.clear();
+		inFarViewPort.clear();
+		inViewPort.clear();
+		outOfViewPort.clear();
+		renderedArea.worldCubeCache.clear();
+		renderedArea.worldCubeCache_FARVIEW.clear();
+		renderedArea.worldCubeCacheNext.clear();
+		renderedArea.worldCubeCacheNext_FARVIEW.clear();
+	}
+	
 }

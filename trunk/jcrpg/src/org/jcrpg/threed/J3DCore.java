@@ -1557,6 +1557,88 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public UIBase uiBase;
 	
+	/**
+	 * This renders a world initially, call it after loading a game into a clean core.
+	 */
+	public void init3DGame()
+	{
+		
+		/*
+		 * Skysphere
+		 */
+		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
+		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?groundParentNode:skyParentNode);
+		skyParentNode.attachChild(skySphere);
+		skySphere.setModelBound(null); // this must be set to null for lens flare
+		skySphere.setRenderState(cs_none);
+		skySphere.setCullMode(Node.CULL_NEVER);
+		
+		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+		rootNode.clearRenderState(RenderState.RS_LIGHT);
+		skySphere.setRenderState(skydomeLightState);
+		
+		//intRootNode.attachChild(skySphereInvisibleGround);
+		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
+                Texture.FM_LINEAR);
+
+		
+		if (texture!=null) {
+
+			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.AM_MODULATE);
+			texture.setRotation(qTexture);
+			TextureState state = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+			state.setTexture(texture,0);
+			state.setEnabled(true);
+			skySphere.setRenderState(state);
+		}
+		skySphere.updateRenderState();
+		
+		
+		setCalculatedCameraLocation();
+        
+		cam.update();
+
+		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+        //t.setLocalTranslation();
+
+        
+        updateDisplay(null);
+		
+        if (sEngine == null) 
+        {
+        	sEngine = new J3DStandingEngine(this);
+        }
+		sEngine.render();
+		sEngine.renderToViewPort();
+		sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
+		
+		if (mEngine==null)
+		{
+			mEngine = new J3DMovingEngine(this);
+		}
+		
+		engine.setPause(false);
+		
+	}
+	
+	/**
+	 * This is responsible to reset the core for a load/new game from main menu.
+	 */
+	public void clearCore()
+	{
+		modelLoader.cleanAll();
+		modelPool.cleanAll();
+		hmSolidColorSpatials.clear();
+		sEngine.clearAll();
+		mEngine.clearAll();
+		extRootNode.detachAllChildren();
+		intRootNode.detachAllChildren();
+		groundParentNode.detachAllChildren();
+		rootNode.detachAllChildren();
+		batchHelper.clearAll();
+	}
+	
 	@Override
 	protected void simpleInitGame() {
 		rootNode.setCullMode(Node.CULL_NEVER);
@@ -1759,60 +1841,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add( waterEffectRenderPass );
 		
-		/*
-		 * Skysphere
-		 */
-		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
-		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?groundParentNode:skyParentNode);
-		skyParentNode.attachChild(skySphere);
-		skySphere.setModelBound(null); // this must be set to null for lens flare
-		skySphere.setRenderState(cs_none);
-		skySphere.setCullMode(Node.CULL_NEVER);
-		
-		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
-		rootNode.clearRenderState(RenderState.RS_LIGHT);
-		skySphere.setRenderState(skydomeLightState);
-		
-		//intRootNode.attachChild(skySphereInvisibleGround);
-		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
-                Texture.FM_LINEAR);
-
-		
-		if (texture!=null) {
-
-			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.AM_MODULATE);
-			texture.setRotation(qTexture);
-			TextureState state = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-			state.setTexture(texture,0);
-			state.setEnabled(true);
-			skySphere.setRenderState(state);
-		}
-		skySphere.updateRenderState();
-		
-		
-		setCalculatedCameraLocation();
-        
-		cam.update();
-
-		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
-        //t.setLocalTranslation();
-
-		// initial hud part for world map
-		
-        
-        updateDisplay(null);
-		
-        sEngine = new J3DStandingEngine(this);
-		sEngine.render();
-		sEngine.renderToViewPort();
-		sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
-		
-		mEngine = new J3DMovingEngine(this);
-		//mEngine.render(new ArrayList<PreEncounterInfo>());
-		//mEngine.renderToViewPort(0f);
-		
-		engine.setPause(false);
+		// TODO do not call init3DGame - instead view Main Menu window - create it. It will use SaveLoadNew class for game creation, and it will
+		// call init3DGame. 
+		init3DGame();
 	}
 	
 	public J3DMovingEngine mEngine = null;

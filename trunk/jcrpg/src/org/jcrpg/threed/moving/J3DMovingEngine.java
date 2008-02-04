@@ -338,4 +338,9 @@ public class J3DMovingEngine {
 		return unit;
 	}
 	
+	public void clearAll()
+	{
+		units.clear();
+	}
+	
 }

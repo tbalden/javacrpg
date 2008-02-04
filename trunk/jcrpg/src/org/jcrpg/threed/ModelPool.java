@@ -258,4 +258,13 @@ public class ModelPool {
 			pool.remove(cont.id);
 		}
 	}
+	
+	public void cleanAll()
+	{
+		for (PoolItemContainer pic: pool.values())
+		{
+			pic.notUsed.clear();
+			pic.used.clear();
+		}
+	}
 }
