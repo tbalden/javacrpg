@@ -8,7 +8,20 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] gorilla model scaling -> walk in the air :-) recenter in blender??
+[?] gorilla model scaling -> walk in the air :-) recenter in blender?? -> fixed temp for gor only probably.
+
+[ ] Combat !!!! 
+	combat encounter -> regroup friendly units left/right flank of player!! :-) Enemies remain opposite of player. --- make possible to look around while combat! ;-)
+
+[ ] ecology
+    [ ] sophisticated generation -> geography, water food etc...
+    [ ] foodchain - generation and per turn eat, plus multiplication etc.
+    [ ] turn choice of AI, skills involved etc.
+    [ ] moving of groups, fixed groups
+    
+[ ] encounter system
+    [ ] encounter choices, skills etc, UI elements
+    [ ] combat - grouped, decisions etc., attribute + skill to lists
 
 Groups:
 	Dune/Wizardry like depersonalized groups moving around! Special NPC and such likely as part of groups.

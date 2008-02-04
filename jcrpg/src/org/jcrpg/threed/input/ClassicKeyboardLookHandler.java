@@ -134,9 +134,9 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     	{
     		
     	}
-    	if (!secLock) {
+    	//if (!secLock) {
     		lock = false;
-    	}
+    	//}
     }
     
 }
