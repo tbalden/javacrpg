@@ -1,0 +1,26 @@
+
+
+Between AI:
+Every turn each EntityInstance (group or individualized with EntityMemberInstance) checks around for Boundary intersections. 
+- If intersection an encounter happens between them and they decide what to do. Encounters happen vica-versa in every turn. If intersection point is near
+AI will encounter the two or more other AI in one encounter. --> *TODO* intersection points to infos!
+
+Player - AI: You can decide to face or try to avoid an encounter
+If intersection all possible encounters are gathered and it's decided if necessary (hiding unit) by skill if the player can meet them, or they run away
+or hide away. This is visualized as text for the player if it can be seen by some skill. The remaining encounters are faced at once. Hostile units are grouped
+together, if friendly units are present they add another group. If only one type (hostile or friendly) is faced it will appear around. If both host./friend they
+will appear grouped separately. And encounter begins with decisions. Player can select which groups to encounter and which to avoid. *TODO* dialog if player wants
+to face them.
+
+AI - Player: Close groups with player are involved as one encounter if AI wants it so. If AI is able /skilled/ to spot the user then AI decides 
+if it wants an encounter with the player and nearby groups. 
+This is handled separately as a different kind of encounter: these cannot be avoided only in a straight situation, no evading the group! 
+*TODO* callback from AI to encounter mode.
+
+
+TODO
+
+1st: program boundary Intersection point calculation - merging of PossibleEncounterInfos based on it
+2nd: dialogs that are missing
+3rd: skills for spot/hide/spy/camouflage...
+...
