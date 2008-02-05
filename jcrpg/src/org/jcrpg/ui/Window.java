@@ -78,16 +78,34 @@ public abstract class Window {
 
 		Image hudImage = TextureManager.loadImage(new File(fileName).toURI()
 				.toURL(), true);
+		/*Image hudImage2 = TextureManager.loadImage(new File("./data/ui/white.png").toURI()
+				.toURL(), true);*/
 
 		TextureState state = core.getDisplay().getRenderer()
 				.createTextureState();
 		Texture texture = new Texture();
 		texture.setImage(hudImage);
-		state.setTexture(texture);
+
+		state.setTexture(texture,0);
 		hudQuad.setRenderState(state);
 
 		return hudQuad;
-
+	}
+	
+	int lockers = 0;
+	
+	public synchronized void lockLookAndMove(boolean value)
+	{
+		if (value) {
+			lockers++;
+		} else
+		{
+			lockers--;
+		}
+		if (value || !value && lockers == 0) 
+		{
+			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lock = value;
+		}
 	}
 	
 	public abstract void hide();
