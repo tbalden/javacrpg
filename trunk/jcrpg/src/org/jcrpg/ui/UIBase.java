@@ -27,7 +27,7 @@ public class UIBase {
 	
 	public HUD hud;
 	public HashMap<String,Window> windows = new HashMap<String, Window>();
-	public HashMap<String,KeyListener> eventToElements = new HashMap<String, KeyListener>();
+	public HashMap<String,KeyListener> eventToElements = new HashMap<String, KeyListener>(); // TODO multiple listeners can handle one key string!!
 	
 	public UIBase(J3DCore core) throws Exception
 	{
@@ -46,7 +46,8 @@ public class UIBase {
 	}
 	public void handleEvent(String key)
 	{
-		eventToElements.get(key).handleKey(key);
+		if (eventToElements.get(key)!=null)
+			eventToElements.get(key).handleKey(key);
 	}
 	public void addEventHandler(String key, KeyListener list)
 	{
