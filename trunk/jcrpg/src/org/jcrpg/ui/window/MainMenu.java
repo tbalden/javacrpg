@@ -123,6 +123,13 @@ public class MainMenu extends Window implements KeyListener {
 		{
 			//
 			core.doQuit();
+		} else
+		if (buttons.get(selected).name.equals(NEW_GAME))
+		{
+			core.clearCore();
+			// TODO new game world etc.
+			core.init3DGame();
+			toggle();
 		}
 	}
 
