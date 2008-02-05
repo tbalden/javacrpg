@@ -1759,7 +1759,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		extRootNode.detachAllChildren();
 		intRootNode.detachAllChildren();
 		groundParentNode.detachAllChildren();
-		rootNode.detachAllChildren();
+		//rootNode.detachAllChildren();
 		batchHelper.clearAll();
 	}
 	
