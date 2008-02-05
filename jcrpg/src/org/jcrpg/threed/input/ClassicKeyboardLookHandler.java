@@ -68,6 +68,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
         keyboard.set( "worldMap", KeyInput.KEY_F1 );
+        keyboard.set( "mainMenu", KeyInput.KEY_F10 );
         keyboard.set( "logUp", KeyInput.KEY_PGUP );
         keyboard.set( "logDown", KeyInput.KEY_PGDN );
         keyboard.set( "Y", KeyInput.KEY_Y );
@@ -86,6 +87,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyUpAction( this, cam, rotateSpeed ), "climbUp", true );
         addAction( new CKeyDownAction( this, cam, rotateSpeed ), "climbDown", true );
         addAction( new CKeyMenu(this), "worldMap", false);
+        addAction( new CKeyMenu(this), "mainMenu", false);
         addAction( new CKeyMenu(this), "logUp", false);
         addAction( new CKeyMenu(this), "logDown", false);
         addAction( new CKeyMenu(this), "Y", false);

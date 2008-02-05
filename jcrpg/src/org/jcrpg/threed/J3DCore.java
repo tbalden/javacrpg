@@ -47,6 +47,7 @@ import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
+import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.element.ChoiceDescription;
@@ -1782,6 +1783,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			uiBase = new UIBase(this);
 			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
+			uiBase.addWindow("mainMenu", new MainMenu(uiBase));
 			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 			ChoiceDescription no = new ChoiceDescription("N","yes","No");
 			ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
