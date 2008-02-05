@@ -18,20 +18,33 @@
 
 package org.jcrpg.ui.window;
 
+import java.util.ArrayList;
+
+import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.window.element.Button;
 
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.ColorMaskState;
+import com.jme.scene.state.RenderState;
 
-public class MainMenu extends Window {
+public class MainMenu extends Window implements KeyListener {
 	
 	public String[] menuImages = new String[] {
 			"mainMenuButtonNewGame.png", "mainMenuButtonSaveGame.png",  "mainMenuButtonLoadGame.png","mainMenuButtonOptions.png",  "mainMenuButtonQuit.png"
 	};
-
+	
+	int selected = 0;
+	
+	public ArrayList<Button> buttons = new ArrayList<Button>();
+	ColorMaskState cMask = null;
 	public MainMenu(UIBase base) {
 		super(base);
-
+		
+		cMask = core.getDisplay().getRenderer().createColorMaskState();
+		cMask.setBlue(false);
+		cMask.setRed(true);
 	
         try {
         	
@@ -54,12 +67,35 @@ public class MainMenu extends Window {
 			{
 				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image,sizeX,sizeY, posX, startPosY - stepPosY*counter++);
 				windowNode.attachChild(button);
+				buttons.add(new Button(image,button,this));
 			}
-			
+			highlightSelected();
+			windowNode.updateRenderState();
+			base.addEventHandler("lookUp", this);
+			base.addEventHandler("lookDown", this);
+			base.addEventHandler("enter", this);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
 	
+	
+	
+	public void highlightSelected()
+	{
+		for (int i=0; i<buttons.size(); i++)
+		{
+			Button b = buttons.get(i);
+			if (i==selected)
+			{
+				b.quad.setRenderState(cMask);		
+			} else
+			{
+				b.quad.clearRenderState(RenderState.RS_COLORMASK_STATE);
+			}
+		}
+		windowNode.updateRenderState();
+		
 	}
 
 	@Override
@@ -72,6 +108,18 @@ public class MainMenu extends Window {
 	public void show() {
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
+	}
+
+
+
+	public boolean handleKey(String key) {
+		if (!visible) return false;
+		selected++;
+		if (selected>buttons.size()) selected = 0;
+		highlightSelected();
+		
+		return true;
+		//return false;
 	}
 	
 
