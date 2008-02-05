@@ -25,27 +25,29 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.element.Button;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.ColorMaskState;
-import com.jme.scene.state.RenderState;
 
 public class MainMenu extends Window implements KeyListener {
 	
-	public String[] menuImages = new String[] {
-			"mainMenuButtonNewGame.png", "mainMenuButtonSaveGame.png",  "mainMenuButtonLoadGame.png","mainMenuButtonOptions.png",  "mainMenuButtonQuit.png"
+	
+	public String QUIT = "mainMenuButtonQuit.png";
+	public String OPTIONS = "mainMenuButtonOptions.png";
+	public String NEW_GAME = "mainMenuButtonNewGame.png";
+	public String SAVE_GAME = "mainMenuButtonSaveGame.png";
+	public String LOAD_GAME = "mainMenuButtonLoadGame.png";
+	
+	public String[][] menuImages = new String[][] {
+			{NEW_GAME,NEW_GAME}, {SAVE_GAME,SAVE_GAME}, {LOAD_GAME,LOAD_GAME}, {OPTIONS,OPTIONS}, {QUIT,QUIT}
 	};
 	
 	int selected = 0;
 	
 	public ArrayList<Button> buttons = new ArrayList<Button>();
-	ColorMaskState cMask = null;
+
 	public MainMenu(UIBase base) {
 		super(base);
 		
-		cMask = core.getDisplay().getRenderer().createColorMaskState();
-		cMask.setBlue(false);
-		cMask.setRed(true);
-	
         try {
         	
         	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.6f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
@@ -63,11 +65,11 @@ public class MainMenu extends Window implements KeyListener {
 			float startPosY = 1.34f*core.getDisplay().getHeight() / 2;
 			float stepPosY = 0.66f* 1.1f*(core.getDisplay().getHeight() / 11);
 			float posX = core.getDisplay().getWidth() / 2;
-			for (String image:menuImages)
+			for (String[] image:menuImages)
 			{
-				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image,sizeX,sizeY, posX, startPosY - stepPosY*counter++);
+				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image[1],sizeX,sizeY, posX, startPosY - stepPosY*counter++);
 				windowNode.attachChild(button);
-				buttons.add(new Button(image,button,this));
+				buttons.add(new Button(image[0],button,this));
 			}
 			highlightSelected();
 			windowNode.updateRenderState();
@@ -88,10 +90,12 @@ public class MainMenu extends Window implements KeyListener {
 			Button b = buttons.get(i);
 			if (i==selected)
 			{
-				b.quad.setRenderState(cMask);		
+				b.quad.setSolidColor(ColorRGBA.white);
+						
 			} else
 			{
-				b.quad.clearRenderState(RenderState.RS_COLORMASK_STATE);
+				b.quad.setSolidColor(ColorRGBA.gray);
+				
 			}
 		}
 		windowNode.updateRenderState();
@@ -102,21 +106,44 @@ public class MainMenu extends Window implements KeyListener {
 	public void hide() {
 		core.getRootNode().detachChild(windowNode);
 		core.getRootNode().updateRenderState();
+		lockLookAndMove(false);
 	}
 
 	@Override
 	public void show() {
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
+		lockLookAndMove(true);
 	}
 
 
+	public void handleChoice()
+	{
+		if (buttons.get(selected).name.equals(QUIT))
+		{
+			//
+			core.doQuit();
+		}
+	}
 
 	public boolean handleKey(String key) {
 		if (!visible) return false;
-		selected++;
-		if (selected>buttons.size()) selected = 0;
+		if (key.equals("lookUp"))
+		{
+			selected--;
+		} else
+		if (key.equals("lookDown"))
+		{
+			selected++;
+		}
+		selected = selected%buttons.size();
+		if (selected<0) selected = buttons.size()-1;
 		highlightSelected();
+		
+		if (key.equals("enter"))
+		{
+			handleChoice();
+		}
 		
 		return true;
 		//return false;
