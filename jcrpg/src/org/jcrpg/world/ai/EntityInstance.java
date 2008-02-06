@@ -83,9 +83,9 @@ public class EntityInstance {
 	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
 	{
 		int counter = 0;
-		if (this.equals(J3DCore.getInstance().player))
+		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
-			J3DCore.getInstance().playerTurnLogic.newTurn(nearbyEntities);
+			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities);
 		} else
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
@@ -95,7 +95,7 @@ public class EntityInstance {
 				if (info.subject==null) continue;
 				counter++;
 				EntityInstance instance = info.encountered.keySet().iterator().next();
-				if (instance.equals(J3DCore.getInstance().player))
+				if (instance.equals(J3DCore.getInstance().gameState.player))
 					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+instance.description.getClass().getSimpleName()+" - "+description.makeTurnChoice(description,instance).getSimpleName());
 				else
 				{

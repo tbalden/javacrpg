@@ -20,6 +20,7 @@ package org.jcrpg.apps;
 
 import java.util.logging.Level;
 
+import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.time.Time;
@@ -51,7 +52,9 @@ public class Jcrpg {
 		Thread t = new Thread(engine);
 		t.start();
 		J3DCore core = new J3DCore();
-		core.setEngine(engine);
+		GameStateContainer gameState = new GameStateContainer();
+		core.setGameState(gameState);
+		core.gameState.setEngine(engine);
 		core.initCore();
 		
 	}

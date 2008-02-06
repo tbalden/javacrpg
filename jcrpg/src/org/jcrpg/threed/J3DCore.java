@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jcrpg.game.PlayerTurnLogic;
+import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -53,11 +53,7 @@ import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.element.ChoiceDescription;
-import org.jcrpg.world.Engine;
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -276,28 +272,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		throw new AssertionError("FAST_PARSE::Type not reconized");
 	}
 
+	
+	public GameStateContainer gameState = null;
     
-	public int viewDirection = NORTH;
-	public int viewPositionX = 0;
-	public int viewPositionY = 0;
-	public int viewPositionZ = 0;
-	public int relativeX = 0, relativeY = 0, relativeZ = 0;
-	public int origoX = 0;
-	public int origoY = 0;
-	public int origoZ = 0;
-	public boolean onSteep = false;
-	public boolean insideArea = false;
 	
 	public ModelLoader modelLoader = new ModelLoader(this);
 	public GeometryBatchHelper batchHelper = new GeometryBatchHelper(this);
 	public ModelPool modelPool = new ModelPool(this);
 	
-	public Engine engine = null;
-	
 	public RenderedArea renderedArea = new RenderedArea();
-
-	public World world = null;
-	public Ecology ecology = null;
 	
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
@@ -319,58 +302,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static HashMap<Spatial,Spatial> hmSolidColorSpatials = new HashMap<Spatial,Spatial>();
 	
 	
-	public void setEngine(Engine engine)
+	public void setGameState(GameStateContainer gameState)
 	{
-		this.engine = engine;
+		this.gameState = gameState;
 	}
 	
-	public void setWorld(World area)
-	{
-		world = area;
-	}
-
-	public void setEcology(Ecology ecology)
-	{
-		this.ecology = ecology;
-	}
-	
-	public EntityInstance player = null;
-	public PlayerTurnLogic playerTurnLogic = null;
-	public void setPlayer(EntityInstance player, PlayerTurnLogic playerTurnLogic)
-	{
-		this.player = player;
-		this.playerTurnLogic = playerTurnLogic;
-	}
-	
-	public void setViewPosition(int x,int y,int z)	
-	{
-		System.out.println("!!!!!!!!!! VIEW POS: "+y);
-		viewPositionX = x;
-		viewPositionY = y;
-		viewPositionZ = z;
-		player.setPosition(new int[]{x,y,z});
-	}
-
-	/**
-	 * For storing the origo cube coordinate in the world when starting a game session - for rendering use. 
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
-	public void setOrigoRenderPosition(int x,int y,int z)
-	{
-		origoX = x;
-		origoY = y;
-		origoZ = z;
-	}
-	
-	public void resetRelativePosition()
-	{
-		relativeX = 0;
-		relativeY = 0;
-		relativeZ = 0;
-		viewDirection = 0;
-	}
    
 	/**
 	 * cube side rotation quaternion
@@ -940,10 +876,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		//map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		
-		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
-		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
-		uiBase.hud.meter.updateQuad(viewDirection, localTime);
-		world.worldMap.update(viewPositionX/world.magnification, viewPositionY/world.magnification, viewPositionZ/world.magnification);
+		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(gameState.world, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ);
+		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false);
+		uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
+		gameState.world.worldMap.update(gameState.viewPositionX/gameState.world.magnification, gameState.viewPositionY/gameState.world.magnification, gameState.viewPositionZ/gameState.world.magnification);
 		uiBase.hud.update();
 
 		/*
@@ -951,8 +887,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 */
 		boolean updateRenderState = false;
 		float[] vTotal = new float[3];
-		// iterating through world's sky orbiters
-		for (Orbiter orb : world.getOrbiterHandler().orbiters.values()) {
+		// iterating through gameState.world's sky orbiters
+		for (Orbiter orb : gameState.world.getOrbiterHandler().orbiters.values()) {
 			if (orbiters3D.get(orb.id)==null)
 			{
 				Spatial s = createSpatialForOrbiter(orb);
@@ -1072,7 +1008,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			skyParentNode.attachChild(skySphere);
 		}
-		if (insideArea)
+		if (gameState.insideArea)
 		{
 			skyParentNode.setCullMode(Node.CULL_ALWAYS);
 			skySphere.setCullMode(Node.CULL_ALWAYS);
@@ -1184,7 +1120,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public Vector3f getCurrentLocation()
 	{
-		Vector3f v = new Vector3f(relativeX*CUBE_EDGE_SIZE,relativeY*CUBE_EDGE_SIZE+0.11f+(onSteep?1.5f:0f),-1*relativeZ*CUBE_EDGE_SIZE);
+		Vector3f v = new Vector3f(gameState.relativeX*CUBE_EDGE_SIZE,gameState.relativeY*CUBE_EDGE_SIZE+0.11f+(gameState.onSteep?1.5f:0f),-1*gameState.relativeZ*CUBE_EDGE_SIZE);
 		return v;
 	}
 	
@@ -1264,28 +1200,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		r[1] = orig[1]+vector[1];
 		r[2] = orig[2]+vector[2];
 		if (limitsCut) {
-			r[0] = world.shrinkToWorld(r[0]);
-			r[1] = world.shrinkToWorld(r[1]);
-			r[2] = world.shrinkToWorld(r[2]);
+			r[0] = gameState.world.shrinkToWorld(r[0]);
+			r[1] = gameState.world.shrinkToWorld(r[1]);
+			r[2] = gameState.world.shrinkToWorld(r[2]);
 		}
 		
 		return r;
 	}
 	
-	public void setViewPosition(int[] coords)
-	{
-		System.out.println(" NEW VIEW POSITION = "+coords[0]+" - "+coords[1]+" - "+coords[2]);
-		viewPositionX = coords[0];
-		viewPositionY = coords[1];
-		viewPositionZ = coords[2];
-		player.setPosition(coords);
-	}
-	public void setRelativePosition(int[] coords)
-	{
-		relativeX = coords[0];
-		relativeY = coords[1];
-		relativeZ = coords[2];
-	}
 	
 	// putting common sidetypes together
 	/**
@@ -1321,8 +1243,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
-	 * @param from From coordinates (world coords)
-	 * @param fromRel From coordinates relative (3d space coords)
+	 * @param from From coordinates (gameState.world coords)
+	 * @param fromRel From coordinates gameState.relative (3d space coords)
 	 * @param directions A set of directions to move into
 	 */
 	public boolean move(int[] from, int[] fromRel, int[] directions)
@@ -1336,21 +1258,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		if (FREE_MOVEMENT)
 		{ // test free movement
-			setViewPosition(newCoords);
-			setRelativePosition(newRelCoords);
-			Cube c = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+			gameState.setViewPosition(newCoords);
+			gameState.setRelativePosition(newRelCoords);
+			Cube c = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 			if (c!=null) {
 				if (c.internalCube)
 				{
 					System.out.println("Moved: INTERNAL");
-					insideArea = true;
+					gameState.insideArea = true;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(intRootNode);
 					groundParentNode.attachChild(extRootNode);
 				} else
 				{
 					System.out.println("Moved: EXTERNAL");
-					insideArea = false;
+					gameState.insideArea = false;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(extRootNode);
 					groundParentNode.attachChild(intRootNode);
@@ -1360,7 +1282,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 		}
 
-		Cube c = world.getCube(from[0], from[1], from[2], false);
+		Cube c = gameState.world.getCube(from[0], from[1], from[2], false);
 		
 		if (c!=null) {
 			System.out.println("Current Cube = "+c.toString());
@@ -1380,10 +1302,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (sides!=null)
 			{
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable) && (!onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
+				if (hasSideOfInstance(sides, notPassable) && (!gameState.onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
 				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
-			Cube nextCube = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+			Cube nextCube = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
 				else 
 			{
@@ -1414,10 +1336,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				// checking steep setting
 				Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
 				if (nextCubeSteepDirections!=null) {
-					onSteep = true;
+					gameState.onSteep = true;
 				} else
 				{
-					onSteep = false;
+					gameState.onSteep = false;
 				}
 			} else 
 			{
@@ -1426,7 +1348,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				while (true)
 				{
 					// cube below
-					nextCube = world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
+					nextCube = gameState.world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
 					System.out.println("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
@@ -1441,7 +1363,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							if (hasSideOfInstance(sides, notWalkable)) return false;
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-							onSteep = true; // found steep
+							gameState.onSteep = true; // found steep
 							break;
 						} else
 						{
@@ -1458,7 +1380,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								// yeah, a place to stand...
 								newCoords[1] = newCoords[1]-(yMinus-1);
 								newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-								onSteep = false; // yeah, found
+								gameState.onSteep = false; // yeah, found
 								break;
 							}
 						}
@@ -1475,10 +1397,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
 							if (nextCubeSteepDirections!=null) 
 							{// check for climbers
-								onSteep = true;
+								gameState.onSteep = true;
 							} else
 							{
-								onSteep = false; // yeah, found
+								gameState.onSteep = false; // yeah, found
 							}
 							break;
 						}
@@ -1491,24 +1413,24 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 		} else 
 		{
-			onSteep = false;
+			gameState.onSteep = false;
 			//return;
 		}
-		setViewPosition(newCoords);
-		setRelativePosition(newRelCoords);
-		c = world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+		gameState.setViewPosition(newCoords);
+		gameState.setRelativePosition(newRelCoords);
+		c = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
 		if (c!=null) {
 			if (c.internalCube)
 			{
 				System.out.println("Moved: INTERNAL");
-				insideArea = true;
+				gameState.insideArea = true;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(intRootNode);
 				groundParentNode.attachChild(extRootNode);
 			} else
 			{
 				System.out.println("Moved: EXTERNAL");
-				insideArea = false;
+				gameState.insideArea = false;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(extRootNode);
 				groundParentNode.attachChild(intRootNode);
@@ -1519,11 +1441,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	boolean debugLeak = false;
 	public boolean moveForward(int direction) {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		if (debugLeak) {
-			viewPositionX+=40;
-			relativeX+=40;
+			gameState.viewPositionX+=40;
+			gameState.relativeX+=40;
 			return true;
 		} else
 		return move(coords,relCoords,new int[]{direction});
@@ -1534,8 +1456,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveLeft(int direction) {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		if (direction == NORTH) {
 			return move(coords,relCoords,new int[]{WEST});
 		} else if (direction == SOUTH) {
@@ -1552,8 +1474,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveRight(int direction) {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		if (direction == NORTH) {
 			return move(coords,relCoords,new int[]{EAST});
 		} else if (direction == SOUTH) {
@@ -1567,8 +1489,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	public boolean moveBackward(int direction) {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		return move(coords,relCoords,new int[]{oppositeDirections.get(new Integer(direction)).intValue()});
 	}
 
@@ -1578,26 +1500,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveUp() {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		return move(coords,relCoords,new int[]{TOP});
 	}
 	public boolean moveDown() {
-		int[] coords = new int[]{viewPositionX,viewPositionY,viewPositionZ};
-		int[] relCoords = new int[]{relativeX,relativeY,relativeZ};
+		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
+		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
 		return move(coords,relCoords,new int[]{BOTTOM});
 	}
 	
 	
 	public void turnRight()
 	{
-		viewDirection++;
-		if (viewDirection==directions.length) viewDirection = 0;
+		gameState.viewDirection++;
+		if (gameState.viewDirection==directions.length) gameState.viewDirection = 0;
 	}
 	public void turnLeft()
 	{
-		viewDirection--;
-		if (viewDirection==-1) viewDirection = directions.length-1;        
+		gameState.viewDirection--;
+		if (gameState.viewDirection==-1) gameState.viewDirection = directions.length-1;        
 	}
 	
 	
@@ -1644,7 +1566,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	@Override
 	protected void cleanup() {
-		//engine.exit();
+		//gameState.engine.exit();
 		super.cleanup();
         if (bloomRenderPass != null)
             bloomRenderPass.cleanup();
@@ -1652,13 +1574,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	@Override
 	public void finish() {
-		//engine.exit();
+		//gameState.engine.exit();
 		super.finish();
 	}
 
 	@Override
 	protected void quit() {
-		engine.exit();
+		gameState.engine.exit();
 		super.quit();
 	}
 	
@@ -1694,7 +1616,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		try {
 			uiBase.removeWindow(worldMap);
-			worldMap = new Map(uiBase,world.worldMap);
+			worldMap = new Map(uiBase,gameState.world.worldMap);
 			uiBase.addWindow("worldMap", worldMap);
 		} catch (Exception ex)
 		{
@@ -1703,7 +1625,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	/**
-	 * This renders a world initially, call it after loading a game into a clean core.
+	 * This renders a gameState.world initially, call it after loading a game into a clean core.
 	 */
 	public void init3DGame()
 	{
@@ -1745,7 +1667,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		setCalculatedCameraLocation();
         
-		cam.setDirection(J3DCore.directions[viewDirection]);			
+		cam.setDirection(J3DCore.directions[gameState.viewDirection]);			
 		cam.update();
 
 		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
@@ -1768,11 +1690,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skyParentNode.updateRenderState();
 		updateDisplay(null);
 		rootNode.updateGeometricState(0, false);
-		cam.update(); // TODO only when moving camera is other parts not culled when NEW GAME...serious experimentation needed, moving camera like in CKeyForwardAction??
-		engine.setPause(false);
+		gameState.engine.setPause(false);
+		if (coreFullyInitialized)
+		{
+			reinitialized = true;
+		}
 		coreFullyInitialized = true;
-		
 	}
+	
+	boolean reinitialized = false;
 	
 	/**
 	 * This is responsible to reset the core for a load/new game from main menu.
@@ -1786,8 +1712,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			orbiters3D.clear();
 			orbitersLight3D.clear();
-			insideArea = false;
-			onSteep = false;
+			gameState.insideArea = false;
+			gameState.onSteep = false;
 			skyParentNode.detachAllChildren();
 			modelLoader.cleanAll();
 			modelPool.cleanAll();
@@ -2059,7 +1985,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	PointLight dr;
 	
 	/**
-	 * If doing an engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!
+	 * If doing an gameState.engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!
 	 */
 	public boolean encounterMode = false;
 	
@@ -2090,14 +2016,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			encounterWindow.toggle();
 			uiBase.hud.mainBox.show();
 			uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
-			playerTurnLogic.endPlayerEncounters();
-			engine.turnFinishedForPlayer();
+			gameState.playerTurnLogic.endPlayerEncounters();
+			gameState.engine.turnFinishedForPlayer();
 		}
 	}
 	
 
 	@Override
 	protected void simpleUpdate() {
+		
 		super.simpleUpdate();
 		
 		if (dr!=null) {
@@ -2105,17 +2032,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//dr.setDirection(cam.getDirection());
 		}
 
-		if (engine.timeChanged) 
+		if (gameState.engine.timeChanged) 
 		{
-			engine.setTimeChanged(false);
+			gameState.engine.setTimeChanged(false);
 			updateTimeRelated();
 			
 		}
-		if (engine.turnComes())
+		if (gameState.engine.turnComes())
 		{
 			pause = true;
-			ecology.doTurn();
-			engine.turnFinishedForAI();
+			gameState.ecology.doTurn();
+			gameState.engine.turnFinishedForAI();
 			pause = false;
 		}
 		if ( !pause ) {

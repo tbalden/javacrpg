@@ -51,7 +51,7 @@ public class Ecology {
 			toFill.ownGroupIds = groupIds;
 		} else
 		{
-			if (self == J3DCore.getInstance().player) {
+			if (self == J3DCore.getInstance().gameState.player) {
 				System.out.println("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
 				System.out.println("Ecology.calcGroupsOfEncounter TARGET = "+target.id);
 			}
@@ -67,13 +67,13 @@ public class Ecology {
 		for (EntityInstance targetEntity:beings.values())
 		{
 			if (targetEntity==entity) continue;
-			if (entity==J3DCore.getInstance().player)
+			if (entity==J3DCore.getInstance().gameState.player)
 			{
 				//System.out.println("Checking "+targetEntity.id);
 			}
 			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
 			if (r==DistanceBasedBoundary.zero) continue; // no common part
-			if (entity==J3DCore.getInstance().player)
+			if (entity==J3DCore.getInstance().gameState.player)
 			{
 				System.out.println("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
 			}

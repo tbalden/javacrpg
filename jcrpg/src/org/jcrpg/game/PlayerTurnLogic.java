@@ -126,7 +126,7 @@ public class PlayerTurnLogic {
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)
 	{
-		int dir = core.viewDirection;
+		int dir = core.gameState.viewDirection;
 		int[] trans = J3DCore.moveTranslations.get(dir);
 		HashSet<Integer> usedPositions = new HashSet<Integer>();
 		for (VisibleLifeForm form:forms)
@@ -136,15 +136,15 @@ public class PlayerTurnLogic {
 			Cube c = null;
 			while (true) { 
 				if (i>15) {
-					form.worldX = core.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
-					form.worldY = core.viewPositionY;
-					form.worldZ = core.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
+					form.worldX = core.gameState.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
+					form.worldY = core.gameState.viewPositionY;
+					form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 					form.notRendered = true;
 					found=false; break;
 				}
-				form.worldX = core.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
-				form.worldY = core.viewPositionY;
-				form.worldZ = core.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
+				form.worldX = core.gameState.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
+				form.worldY = core.gameState.viewPositionY;
+				form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 				c = world.getCube(form.worldX, form.worldY, form.worldZ, false);
 				if (c==null || core.hasSideOfInstance(c.getSide(J3DCore.BOTTOM), stickingOut))
 				{

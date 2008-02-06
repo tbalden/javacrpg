@@ -69,7 +69,7 @@ public class HUD {
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
         mapQuad.setLightCombineMode(LightState.OFF);
-        TextureState[] textures = core.world.worldMap.getMapTextures();
+        TextureState[] textures = core.gameState.world.worldMap.getMapTextures();
         mapQuad.setRenderState(textures[0]);
         mapQuad.updateRenderState();
         mapQuad.setRenderState(hudAS);
