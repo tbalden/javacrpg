@@ -61,35 +61,8 @@ public class HUD {
 	}
 	Quad mapQuad_pos;
 	
-	public void initNodes() throws Exception
+	public void initGameStateNodes()
 	{
-        hudNode = new Node("hudNode");
-
-        // main hud image area
-        
-        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/8));
-        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-
-        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/16,0));
- 
-        Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
-		
-        TextureState state = core.getDisplay().getRenderer().createTextureState();
-        Texture texture = new Texture();
-        texture.setImage(hudImage);
-        state.setTexture(texture);
-        hudQuad.setRenderState(state);
-
-        hudAS = core.getDisplay().getRenderer().createAlphaState();
-        hudAS.setBlendEnabled(true);
-  
-        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-        hudAS.setTestEnabled(false);
-        hudAS.setEnabled(true);
-        hudQuad.setRenderState(hudAS);
-        hudNode.attachChild(hudQuad);
-                
         // world map area
         
         Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
@@ -118,7 +91,37 @@ public class HUD {
         mapQuad_geo.setRenderState(textures[2]);
         mapQuad_geo.updateRenderState();
         mapQuad_geo.setRenderState(hudAS);
-        hudNode.attachChild(mapQuad_geo);
+        hudNode.attachChild(mapQuad_geo);		
+	}
+	
+	public void initNodes() throws Exception
+	{
+        hudNode = new Node("hudNode");
+
+        // main hud image area
+        
+        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/8));
+        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+
+        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/16,0));
+ 
+        Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
+		
+        TextureState state = core.getDisplay().getRenderer().createTextureState();
+        Texture texture = new Texture();
+        texture.setImage(hudImage);
+        state.setTexture(texture);
+        hudQuad.setRenderState(state);
+
+        hudAS = core.getDisplay().getRenderer().createAlphaState();
+        hudAS.setBlendEnabled(true);
+  
+        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        hudAS.setTestEnabled(false);
+        hudAS.setEnabled(true);
+        hudQuad.setRenderState(hudAS);
+        hudNode.attachChild(hudQuad);
 
         // meter area
         

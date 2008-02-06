@@ -120,6 +120,7 @@ public class ModelLoader {
     	textureStateCache.clear();
     	sharedBBNodeCache.clear();
     	vegetationTargetCache.clear();
+    	//TextureManager.clearCache();
     }
     
 	/**

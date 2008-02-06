@@ -296,6 +296,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public RenderedArea renderedArea = new RenderedArea();
 
+	public World world = null;
+	public Ecology ecology = null;
+	
+	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
+	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
+	
+	public Node groundParentNode = new Node(); 
+	/** skyparent for skysphere/sun/moon -> simple water reflection needs this node */
+	public Node skyParentNode = new Node(); 
+	/** external all root */
+	public Node extRootNode;
+	/** internal all root */
+	public Node intRootNode; 
+	/** skyroot */
+	//Node skyRootNode = new Node(); 
+	Sphere skySphere = null;
+
 	/**
 	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
 	 */
@@ -306,9 +323,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		this.engine = engine;
 	}
-	
-	public World world = null;
-	public Ecology ecology = null;
 	
 	public void setWorld(World area)
 	{
@@ -348,6 +362,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		origoX = x;
 		origoY = y;
 		origoZ = z;
+	}
+	
+	public void resetRelativePosition()
+	{
+		relativeX = 0;
+		relativeY = 0;
+		relativeZ = 0;
+		viewDirection = 0;
 	}
    
 	/**
@@ -897,19 +919,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		super.initGame();
 	}
 
-	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
-	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
-	
-	public Node groundParentNode = new Node(); 
-	/** skyparent for skysphere/sun/moon -> simple water reflection needs this node */
-	public Node skyParentNode = new Node(); 
-	/** external all root */
-	public Node extRootNode;
-	/** internal all root */
-	public Node intRootNode; 
-	/** skyroot */
-	//Node skyRootNode = new Node(); 
-	Sphere skySphere = null;
 	
 	/**
 	 * Updates all time related things in the 3d world
@@ -1584,13 +1593,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		viewDirection++;
 		if (viewDirection==directions.length) viewDirection = 0;
-        //cam.setDirection(J3DCore.directions[viewDirection]);
 	}
 	public void turnLeft()
 	{
 		viewDirection--;
-		if (viewDirection==-1) viewDirection = directions.length-1;
-        //cam.setDirection(J3DCore.directions[viewDirection]);
+		if (viewDirection==-1) viewDirection = directions.length-1;        
 	}
 	
 	
@@ -1680,13 +1687,32 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * User Interface base object.
 	 */
 	public UIBase uiBase;
+	public Map worldMap = null;
+	public MainMenu mainMenu = null;
+	
+	public void createWorldMap()
+	{
+		try {
+			uiBase.removeWindow(worldMap);
+			worldMap = new Map(uiBase,world.worldMap);
+			uiBase.addWindow("worldMap", worldMap);
+		} catch (Exception ex)
+		{
+			
+		}
+	}
 	
 	/**
 	 * This renders a world initially, call it after loading a game into a clean core.
 	 */
 	public void init3DGame()
 	{
+		uiBase.hud.initGameStateNodes();
+		createWorldMap();
 		
+		
+		if (skySphere!=null)
+			skyParentNode.detachChild(skySphere);
 		/*
 		 * Skysphere
 		 */
@@ -1704,7 +1730,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//intRootNode.attachChild(skySphereInvisibleGround);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
                 Texture.FM_LINEAR);
-
 		
 		if (texture!=null) {
 
@@ -1718,14 +1743,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		skySphere.updateRenderState();
 		
-		
 		setCalculatedCameraLocation();
         
+		cam.setDirection(J3DCore.directions[viewDirection]);			
 		cam.update();
 
 		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
-        //t.setLocalTranslation();
-
         
         updateDisplay(null);
 		
@@ -1735,14 +1758,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         }
 		sEngine.render();
 		sEngine.renderToViewPort();
-		sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
+		if (!coreFullyInitialized)
+			sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
 		
 		if (mEngine==null)
 		{
 			mEngine = new J3DMovingEngine(this);
 		}
-		
+		skyParentNode.updateRenderState();
+		updateDisplay(null);
+		rootNode.updateGeometricState(0, false);
+		cam.update(); // TODO only when moving camera is other parts not culled when NEW GAME...serious experimentation needed, moving camera like in CKeyForwardAction??
 		engine.setPause(false);
+		coreFullyInitialized = true;
 		
 	}
 	
@@ -1751,17 +1779,35 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void clearCore()
 	{
-		modelLoader.cleanAll();
-		modelPool.cleanAll();
-		hmSolidColorSpatials.clear();
-		sEngine.clearAll();
-		mEngine.clearAll();
-		extRootNode.detachAllChildren();
-		intRootNode.detachAllChildren();
-		groundParentNode.detachAllChildren();
-		//rootNode.detachAllChildren();
-		batchHelper.clearAll();
+		if (coreFullyInitialized) {
+			if (encounterMode)
+			{
+				switchEncounterMode(false);
+			}
+			orbiters3D.clear();
+			orbitersLight3D.clear();
+			insideArea = false;
+			onSteep = false;
+			skyParentNode.detachAllChildren();
+			modelLoader.cleanAll();
+			modelPool.cleanAll();
+			hmSolidColorSpatials.clear();
+			sEngine.clearAll();
+			mEngine.clearAll();
+			extRootNode.detachAllChildren();
+			intRootNode.detachAllChildren();
+			groundParentNode.detachAllChildren();
+			//rootNode.detachAllChildren();
+			batchHelper.clearAll();
+			skySphere.removeFromParent();
+			rootNode.updateRenderState();
+		}
 	}
+	
+	/**
+	 * When a full game is started/loaded this should be true.
+	 */
+	boolean coreFullyInitialized = false;
 	
 	@Override
 	protected void simpleInitGame() {
@@ -1905,8 +1951,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		try 
 		{
 			uiBase = new UIBase(this);
-			uiBase.addWindow("worldMap", new Map(uiBase,world.worldMap));
-			uiBase.addWindow("mainMenu", new MainMenu(uiBase));
+			mainMenu = new MainMenu(uiBase);
+			uiBase.addWindow("mainMenu", mainMenu);			
 			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 			ChoiceDescription no = new ChoiceDescription("N","yes","No");
 			ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
@@ -1965,10 +2011,44 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		waterEffectRenderPass.setBinormal( new Vector3f( 0.0f, 1.0f, 0.0f ));
 		//waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add( waterEffectRenderPass );
+	
+		waterEffectRenderPass.setReflectedScene(groundParentNode);
+		cam.update();
+
+		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+
+		/*
+		 * Skysphere
+		 */
+		skySphere = new Sphere("SKY_SPHERE",20,20,300f);
+		waterEffectRenderPass.setReflectedScene(WATER_DETAILED?groundParentNode:skyParentNode);
+		skyParentNode.attachChild(skySphere);
+		skySphere.setModelBound(null); // this must be set to null for lens flare
+		skySphere.setRenderState(cs_none);
+		skySphere.setCullMode(Node.CULL_NEVER);
 		
-		// TODO do not call init3DGame - instead view Main Menu window - create it. It will use SaveLoadNew class for game creation, and it will
-		// call init3DGame. 
-		init3DGame();
+		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+		rootNode.clearRenderState(RenderState.RS_LIGHT);
+		skySphere.setRenderState(skydomeLightState);
+		
+		//intRootNode.attachChild(skySphereInvisibleGround);
+		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",Texture.MM_LINEAR,
+                Texture.FM_LINEAR);
+		
+		if (texture!=null) {
+
+			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.AM_MODULATE);
+			texture.setRotation(qTexture);
+			TextureState state = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+			state.setTexture(texture,0);
+			state.setEnabled(true);
+			skySphere.setRenderState(state);
+		}
+		skySphere.updateRenderState();
+		
+		
+		mainMenu.toggle();
 	}
 	
 	public J3DMovingEngine mEngine = null;
@@ -1985,6 +2065,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	PlayerChoiceWindow encounterWindow = null;
 	
+	/**
+	 * Used for initializing/finishing encounter mode.
+	 * @param value
+	 */
 	public void switchEncounterMode(boolean value)
 	{
 		encounterMode = value;

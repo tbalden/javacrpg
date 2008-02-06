@@ -24,6 +24,7 @@ import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.element.Button;
+import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Quad;
@@ -126,10 +127,12 @@ public class MainMenu extends Window implements KeyListener {
 		} else
 		if (buttons.get(selected).name.equals(NEW_GAME))
 		{
-			core.clearCore();
-			// TODO new game world etc.
-			core.init3DGame();
 			toggle();
+			core.clearCore();
+			SaveLoadNewGame.newGame(core);
+			core.init3DGame();
+			core.getRootNode().updateRenderState();
+			core.engine.setPause(false);
 		}
 	}
 
