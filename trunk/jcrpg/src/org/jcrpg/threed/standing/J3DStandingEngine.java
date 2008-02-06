@@ -73,8 +73,8 @@ public class J3DStandingEngine {
 		this.core = core;
 		this.modelLoader = core.modelLoader;
 		this.uiBase = core.uiBase;
-		this.engine = core.engine;
-		this.world = core.world;
+		this.engine = core.gameState.engine;
+		this.world = core.gameState.world;
 		renderedArea = core.renderedArea;
 		modelPool = core.modelPool;
 		
@@ -99,15 +99,15 @@ public class J3DStandingEngine {
     	//loadingText(0,true);
 		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
-		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.viewPositionX+"/"+core.viewPositionZ+"...");
+		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.viewPositionX+"/"+core.gameState.viewPositionZ+"...");
     	core.updateDisplay(null);
 
 		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
 		lastRenderZ = viewPositionZ;*/
-    	core.lastRenderX = core.relativeX;
-    	core.lastRenderY = core.relativeY;
-    	core.lastRenderZ = core.relativeZ;
+    	core.lastRenderX = core.gameState.relativeX;
+    	core.lastRenderY = core.gameState.relativeY;
+    	core.lastRenderZ = core.gameState.relativeZ;
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
@@ -115,8 +115,8 @@ public class J3DStandingEngine {
 		System.out.println("**** RENDER ****");
 		
 
-		Time localTime = engine.getWorldMeanTime().getLocalTime(world, core.viewPositionX, core.viewPositionY, core.viewPositionZ);
-		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, core.viewPositionX, core.viewPositionY, core.viewPositionZ, false);
+		Time localTime = engine.getWorldMeanTime().getLocalTime(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ);
+		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ, false);
 		
 		
 		if (conditions!=null) System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
@@ -127,7 +127,7 @@ public class J3DStandingEngine {
 		 */
 		
     	// get a specific part of the area to render
-		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, core.viewPositionX, core.viewPositionY, core.viewPositionZ,core.viewDirection, J3DCore.FARVIEW_ENABLED);
+		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED);
     	
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
@@ -247,9 +247,9 @@ public class J3DStandingEngine {
 		
 		if (n==null) return;
 		Object[] f = (Object[])J3DCore.directionAnglesAndTranslations.get(direction);
-		float cX = ((x+core.relativeX)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
-		float cY = ((y+core.relativeY)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
-		float cZ = ((z-core.relativeZ)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+25.5f;
+		float cX = ((x+core.gameState.relativeX)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
+		float cY = ((y+core.gameState.relativeY)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
+		float cZ = ((z-core.gameState.relativeZ)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+25.5f;
 		if (cube.farview)
 		{
 			cY+=J3DCore.CUBE_EDGE_SIZE*1.5f;
@@ -374,7 +374,7 @@ public class J3DStandingEngine {
 			
 			
 			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
-			Vector3f currLoc = new Vector3f(core.relativeX*J3DCore.CUBE_EDGE_SIZE,core.relativeY*J3DCore.CUBE_EDGE_SIZE,core.relativeZ*J3DCore.CUBE_EDGE_SIZE);
+			Vector3f currLoc = new Vector3f(core.gameState.relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
@@ -470,32 +470,32 @@ public class J3DStandingEngine {
 					// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
 					boolean fragmentViewDist = false;
 					if (c.cube!=null) {
-						fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
+						fragmentViewDist = c.cube.internalCube&&(!core.gameState.insideArea) || (!c.cube.internalCube)&&core.gameState.insideArea;
 					}
 	
 					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
 					boolean checked = false;
-					int distX = Math.abs(core.viewPositionX-c.cube.x);
-					int distY = Math.abs(core.viewPositionY-c.cube.y);
-					int distZ = Math.abs(core.viewPositionZ-c.cube.z);
+					int distX = Math.abs(core.gameState.viewPositionX-c.cube.x);
+					int distY = Math.abs(core.gameState.viewPositionY-c.cube.y);
+					int distZ = Math.abs(core.gameState.viewPositionZ-c.cube.z);
 					
 					// handling the globe world border cube distances...
 					if (distX>world.realSizeX/2)
 					{
-						if (core.viewPositionX<world.realSizeX/2) {
-							distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
+						if (core.gameState.viewPositionX<world.realSizeX/2) {
+							distX = Math.abs(core.gameState.viewPositionX - (c.cube.x - world.realSizeX) );
 						} else
 						{
-							distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
+							distX = Math.abs(core.gameState.viewPositionX - (c.cube.x + world.realSizeX) );
 						}
 					}
 					if (distZ>world.realSizeZ/2)
 					{
-						if (core.viewPositionZ<world.realSizeZ/2) {
-							distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
+						if (core.gameState.viewPositionZ<world.realSizeZ/2) {
+							distZ = Math.abs(core.gameState.viewPositionZ - (c.cube.z - world.realSizeZ) );
 						} else
 						{
-							distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
+							distZ = Math.abs(core.gameState.viewPositionZ - (c.cube.z + world.realSizeZ) );	
 						}
 					}
 					
@@ -714,32 +714,32 @@ public class J3DStandingEngine {
 					// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
 					boolean fragmentViewDist = false;
 					if (c.cube!=null) {
-						fragmentViewDist = c.cube.internalCube&&(!core.insideArea) || (!c.cube.internalCube)&&core.insideArea;
+						fragmentViewDist = c.cube.internalCube&&(!core.gameState.insideArea) || (!c.cube.internalCube)&&core.gameState.insideArea;
 					}
 	
 					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
 					boolean checked = false;
-					int distX = Math.abs(core.viewPositionX-c.cube.x);
-					int distY = Math.abs(core.viewPositionY-c.cube.y);
-					int distZ = Math.abs(core.viewPositionZ-c.cube.z);
+					int distX = Math.abs(core.gameState.viewPositionX-c.cube.x);
+					int distY = Math.abs(core.gameState.viewPositionY-c.cube.y);
+					int distZ = Math.abs(core.gameState.viewPositionZ-c.cube.z);
 					
 					// handling the globe world border cube distances...
 					if (distX>world.realSizeX/2)
 					{
-						if (core.viewPositionX<world.realSizeX/2) {
-							distX = Math.abs(core.viewPositionX - (c.cube.x - world.realSizeX) );
+						if (core.gameState.viewPositionX<world.realSizeX/2) {
+							distX = Math.abs(core.gameState.viewPositionX - (c.cube.x - world.realSizeX) );
 						} else
 						{
-							distX = Math.abs(core.viewPositionX - (c.cube.x + world.realSizeX) );
+							distX = Math.abs(core.gameState.viewPositionX - (c.cube.x + world.realSizeX) );
 						}
 					}
 					if (distZ>world.realSizeZ/2)
 					{
-						if (core.viewPositionZ<world.realSizeZ/2) {
-							distZ = Math.abs(core.viewPositionZ - (c.cube.z - world.realSizeZ) );
+						if (core.gameState.viewPositionZ<world.realSizeZ/2) {
+							distZ = Math.abs(core.gameState.viewPositionZ - (c.cube.z - world.realSizeZ) );
 						} else
 						{
-							distZ = Math.abs(core.viewPositionZ - (c.cube.z + world.realSizeZ) );	
+							distZ = Math.abs(core.gameState.viewPositionZ - (c.cube.z + world.realSizeZ) );	
 						}
 					}
 					
@@ -761,8 +761,8 @@ public class J3DStandingEngine {
 					
 					if (checked && J3DCore.FARVIEW_ENABLED)
 					{
-						int viewDistFarViewModuloX = core.viewPositionX%J3DCore.FARVIEW_GAP;
-						int viewDistFarViewModuloZ = core.viewPositionZ%J3DCore.FARVIEW_GAP;
+						int viewDistFarViewModuloX = core.gameState.viewPositionX%J3DCore.FARVIEW_GAP;
+						int viewDistFarViewModuloZ = core.gameState.viewPositionZ%J3DCore.FARVIEW_GAP;
 						
 						if (Math.abs(checkDistCube-distX)<=viewDistFarViewModuloX)
 						{

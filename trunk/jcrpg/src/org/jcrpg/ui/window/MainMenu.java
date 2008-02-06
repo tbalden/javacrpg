@@ -132,7 +132,7 @@ public class MainMenu extends Window implements KeyListener {
 			SaveLoadNewGame.newGame(core);
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
-			core.engine.setPause(false);
+			core.gameState.engine.setPause(false);
 		}
 	}
 

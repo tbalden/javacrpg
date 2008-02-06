@@ -322,23 +322,23 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				if (direction.intValue() == J3DCore.WEST) {
 					
 
-					if (core.viewDirection == J3DCore.SOUTH) {
+					if (core.gameState.viewDirection == J3DCore.SOUTH) {
 						float temp = orient.y;
 						orient.y = orient.w;
 						orient.w = temp;
 						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.NORTH) {
+					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
-					} else if (core.viewDirection == J3DCore.EAST) {
+					} else if (core.gameState.viewDirection == J3DCore.EAST) {
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
 						temp = orient.y;
 						orient.y = -orient.w;
 						orient.w = temp;
-					}else if (core.viewDirection == J3DCore.WEST) {
+					}else if (core.gameState.viewDirection == J3DCore.WEST) {
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
@@ -347,20 +347,20 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 						orient.w = -temp;
 					} 
 				} else if (direction.intValue() == J3DCore.EAST) {
-					if (core.viewDirection == J3DCore.SOUTH) {
+					if (core.gameState.viewDirection == J3DCore.SOUTH) {
 						float temp = orient.y;
 						orient.y = orient.w;
 						orient.w = -temp;
-					} else if (core.viewDirection == J3DCore.NORTH) {
+					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = -temp;
-					} else if (core.viewDirection == J3DCore.EAST) {
+					} else if (core.gameState.viewDirection == J3DCore.EAST) {
 						float temp = orient.y;
 						orient.y = orient.w;
 						orient.w = temp;
 						orient.w = -orient.w;
-					} else if (core.viewDirection == J3DCore.WEST) {
+					} else if (core.gameState.viewDirection == J3DCore.WEST) {
 						float temp = orient.x;
 						orient.x = orient.z;
 						orient.z = temp;
@@ -369,16 +369,16 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				} else if (direction.intValue() == J3DCore.NORTH) {
 					// nothing to do, it's correct
 				} else if (direction.intValue() == J3DCore.SOUTH) {
-					if (core.viewDirection == J3DCore.SOUTH) {
+					if (core.gameState.viewDirection == J3DCore.SOUTH) {
 						orient.y = -orient.y;
 						orient.w = -orient.w;
-					} else if (core.viewDirection == J3DCore.NORTH) {
+					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
 						orient.w = -orient.w;
 						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.EAST) {
+					} else if (core.gameState.viewDirection == J3DCore.EAST) {
 						orient.w = -orient.w;
 						orient.y = -orient.y;
-					} else if (core.viewDirection == J3DCore.WEST) {
+					} else if (core.gameState.viewDirection == J3DCore.WEST) {
 						orient.w = -orient.w;
 						orient.y = -orient.y;
 					}

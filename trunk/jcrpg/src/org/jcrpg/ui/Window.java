@@ -54,7 +54,7 @@ public abstract class Window {
 	{
 		if (visible)
 		{
-			core.engine.setPause(storedEnginePauseState);
+			core.gameState.engine.setPause(storedEnginePauseState);
 			windowCounter--;
 			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
 			hide();
@@ -62,8 +62,8 @@ public abstract class Window {
 		{
 			windowCounter++;
 			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lockSecondaryHandling();
-			storedEnginePauseState = core.engine.isPause();
-			core.engine.setPause(true);
+			storedEnginePauseState = core.gameState.engine.isPause();
+			core.gameState.engine.setPause(true);
 			show();
 		}
 		visible=!visible;

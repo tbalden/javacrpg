@@ -47,7 +47,7 @@ public class CKeyForwardAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        if (handler.core.moveForward(handler.core.viewDirection)) {
+        if (handler.core.moveForward(handler.core.gameState.viewDirection)) {
         	//handler.core.renderToViewPort(0,2);
             Vector3f toReach = handler.core.getCurrentLocation();        
             float steps = J3DCore.MOVE_STEPS;

@@ -48,10 +48,10 @@ public class CKeyRotateLeftAction extends CKeyAction {
         {
         	if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
         }
-    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         handler.core.turnLeft();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render();
-    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps,from,toReach);
         handler.lookUpDownPercent = 0;

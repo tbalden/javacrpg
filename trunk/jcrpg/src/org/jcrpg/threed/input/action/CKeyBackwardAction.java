@@ -47,7 +47,7 @@ public class CKeyBackwardAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        if (handler.core.moveBackward(handler.core.viewDirection)) {
+        if (handler.core.moveBackward(handler.core.gameState.viewDirection)) {
 	        Vector3f toReach = handler.core.getCurrentLocation();
 	        float steps = J3DCore.MOVE_STEPS;
 	        movePosition(steps, from, toReach);

@@ -18,6 +18,7 @@
 
 package org.jcrpg.util.saveload;
 
+import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
@@ -46,6 +47,9 @@ public class SaveLoadNewGame {
 	public static void newGame(J3DCore core) 
 	{
 		try {
+			
+			GameStateContainer gameState = new GameStateContainer();
+			
 		
 			Engine engine = new Engine();
 			Time wmt = new Time();
@@ -87,13 +91,15 @@ public class SaveLoadNewGame {
 			ecology.addEntity(party);
 			
 			PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
-			core.setPlayer(party,logic);
-			core.setWorld(world);
-			core.setEcology(ecology);
-			core.setEngine(engine);
-			core.setViewPosition(wX,wY,wZ);
-			core.setOrigoRenderPosition(wX,wY,wZ);
-			core.resetRelativePosition();
+			gameState.setPlayer(party, logic);
+			gameState.setWorld(world);
+			gameState.setEcology(ecology);
+			gameState.setEngine(engine);
+			gameState.setViewPosition(wX,wY,wZ);
+			gameState.setOrigoRenderPosition(wX,wY,wZ);
+			gameState.resetRelativePosition();
+			core.setGameState(gameState);
+			
 			
 		} catch (Exception ex)
 		{

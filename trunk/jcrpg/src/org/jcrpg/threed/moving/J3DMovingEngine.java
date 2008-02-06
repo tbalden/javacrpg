@@ -69,7 +69,7 @@ public class J3DMovingEngine {
 	
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY,unit.c3dZ));
-			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.origoX,core.origoY,core.origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
+			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.gameState.origoX,core.gameState.origoY,core.gameState.origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
 			if (n[i].model.noSpecialSteepRotation) {
@@ -183,9 +183,9 @@ public class J3DMovingEngine {
 	public void updateScene(float timePerFrame)
 	{
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
-		playerFakeForm.worldX = core.player.roamingBoundary.posX;
-		playerFakeForm.worldY = core.player.roamingBoundary.posY;
-		playerFakeForm.worldZ = core.player.roamingBoundary.posZ;
+		playerFakeForm.worldX = core.gameState.player.roamingBoundary.posX;
+		playerFakeForm.worldY = core.gameState.player.roamingBoundary.posY;
+		playerFakeForm.worldZ = core.gameState.player.roamingBoundary.posZ;
 		for (RenderedMovingUnit unit: units.values())
 		{
 			for (NodePlaceholder n : unit.nodePlaceholders)
@@ -196,11 +196,11 @@ public class J3DMovingEngine {
 					{
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
-						float eX = (target.worldX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (target.worldY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						int origoZ = core.origoZ;
+						float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						int origoZ = core.gameState.origoZ;
 						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-						float eZ = ( endCoordZCorrect - (core.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 	
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
@@ -259,15 +259,15 @@ public class J3DMovingEngine {
 					} else
 					if (unit.state.equals(RenderedMovingUnit.STATE_WALKING))
 					{
-						//float sX = (unit.startCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						//float sZ = (unit.startCoordZ - (core.origoZ))*J3DCore.CUBE_EDGE_SIZE;
-						float eX = (unit.endCoordX - (core.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (unit.endCoordY - (core.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						int origoZ = core.origoZ;
+						//float sX = (unit.startCoordX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						//float sZ = (unit.startCoordZ - (core.gameState.origoZ))*J3DCore.CUBE_EDGE_SIZE;
+						float eX = (unit.endCoordX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (unit.endCoordY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						int origoZ = core.gameState.origoZ;
 						int endCoordZCorrect = (origoZ-(unit.endCoordZ-origoZ));
-						float eZ = ( endCoordZCorrect - (core.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
-						//float eZ = ( ((core.origoZ)*2) - unit.endCoordZ )*J3DCore.CUBE_EDGE_SIZE;
+						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+						//float eZ = ( ((core.gameState.origoZ)*2) - unit.endCoordZ )*J3DCore.CUBE_EDGE_SIZE;
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;

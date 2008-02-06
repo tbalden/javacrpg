@@ -4,8 +4,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-import com.jme.math.Matrix3f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
@@ -41,10 +39,10 @@ public class CKeyRotateRightAction extends CKeyAction {
         {
         	if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
         }
-    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         handler.core.turnRight();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render();
-    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.viewDirection];
+    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps, from, toReach);
         handler.lookLeftRightPercent = 0;

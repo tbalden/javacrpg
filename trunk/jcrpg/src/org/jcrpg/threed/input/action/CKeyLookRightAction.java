@@ -54,7 +54,7 @@ public class CKeyLookRightAction extends CKeyAction {
 			renderToViewPort++;
 		}
 		handler.core
-				.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.viewDirection]);
+				.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection]);
 		handler.unlockHandling(false);
 	}
 }
