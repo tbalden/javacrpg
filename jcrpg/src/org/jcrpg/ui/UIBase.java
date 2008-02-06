@@ -18,6 +18,7 @@
 package org.jcrpg.ui;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.jcrpg.threed.J3DCore;
 
@@ -37,6 +38,19 @@ public class UIBase {
 	public void addWindow(String trigger, Window window)
 	{
 		windows.put(trigger, window);
+	}
+	public void removeWindow(Window window)
+	{
+		String key = null;
+		for (Entry<String, KeyListener> e:eventToElements.entrySet())
+		{
+			if (e.getValue().equals(window))
+			{
+				key = e.getKey();
+			}
+		}
+		if (key!=null) eventToElements.remove(key);
+		
 	}
 	public boolean handleWindowEvent(String trigger)
 	{
