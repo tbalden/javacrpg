@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="jme/jme-terrain.jar"/>
 	<classpathentry kind="lib" path="jme/jme-xml.jar"/>
 	<classpathentry kind="lib" path="lib/md5r2.jar"/>
+	<classpathentry kind="lib" path="lib/xstream/xstream-1.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

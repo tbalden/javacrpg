@@ -39,7 +39,7 @@ import org.jcrpg.world.time.Time;
 public class World extends Place {
 
 	public Engine engine;
-	public WorldMap worldMap;
+	public transient WorldMap worldMap;
 	
 	public int GEOGRAPHY_RANDOM_SEED = 0;
 	

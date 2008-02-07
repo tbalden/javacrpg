@@ -18,11 +18,17 @@
 
 package org.jcrpg.game;
 
+import java.io.OutputStream;
+import java.io.Reader;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.World;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class GameStateContainer {
 	
@@ -54,9 +60,9 @@ public class GameStateContainer {
 		this.engine = engine;
 	}
 	
-	public void setWorld(World area)
+	public void setWorld(World world)
 	{
-		world = area;
+		this.world = world;
 	}
 
 	public void setEcology(Ecology ecology)
@@ -114,5 +120,33 @@ public class GameStateContainer {
 		this.player = player;
 		this.playerTurnLogic = playerTurnLogic;
 	}
+	
+	public String getGameStateXml()
+	{
+		XStream xstream = new XStream(new DomDriver());
+		
+		String xml = xstream.toXML(this);
+		
+		return xml;
+	}
+	public void getGameStateXml(OutputStream output)
+	{
+		XStream xstream = new XStream(new DomDriver());
+		xstream.toXML(this,output);
+	}
+	
+	public static GameStateContainer createGameStateFromXml(String xml)
+	{
+		XStream xstream = new XStream(new DomDriver());
+		GameStateContainer gameState = (GameStateContainer)xstream.fromXML(xml);
+		return gameState;
+	}
+	public static GameStateContainer createGameStateFromXml(Reader xml)
+	{
+		XStream xstream = new XStream(new DomDriver());
+		GameStateContainer gameState = (GameStateContainer)xstream.fromXML(xml);
+		return gameState;
+	}
+	
 	
 }

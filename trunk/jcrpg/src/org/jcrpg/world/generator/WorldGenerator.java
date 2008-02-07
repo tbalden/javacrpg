@@ -20,7 +20,6 @@ package org.jcrpg.world.generator;
 
 import java.util.HashMap;
 
-import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
@@ -58,9 +57,7 @@ public class WorldGenerator {
 		w.GEOGRAPHY_RANDOM_SEED = program.params.randomSeed;
 		world = w;
 		
-		program.runProgram(w);
-		
-		w.worldMap = new WorldMap(w);
+		program.runProgram(w);	
 
 		return w;
 	}
