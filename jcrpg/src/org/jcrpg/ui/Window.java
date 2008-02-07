@@ -57,6 +57,7 @@ public abstract class Window {
 			core.gameState.engine.setPause(storedEnginePauseState);
 			windowCounter--;
 			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
+			base.activeWindows.remove(this);
 			hide();
 		} else
 		{
@@ -64,19 +65,23 @@ public abstract class Window {
 			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lockSecondaryHandling();
 			storedEnginePauseState = core.gameState.engine.isPause();
 			core.gameState.engine.setPause(true);
+			base.activeWindows.add(this);
 			show();
 		}
 		visible=!visible;
 	}
-	
 	public Quad loadImageToQuad(String fileName, float sizeX, float sizeY,
 			float posX, float posY) throws Exception {
-		Quad hudQuad = new Quad(fileName, sizeX, sizeY);
+		return loadImageToQuad(new File(fileName), sizeX, sizeY, posX, posY);
+	}	
+	public Quad loadImageToQuad(File file, float sizeX, float sizeY,
+			float posX, float posY) throws Exception {
+		Quad hudQuad = new Quad(file.getName(), sizeX, sizeY);
 		hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		hudQuad.setLocalTranslation(new Vector3f(posX, posY, 0));
 
-		Image hudImage = TextureManager.loadImage(new File(fileName).toURI()
+		Image hudImage = TextureManager.loadImage(file.toURI()
 				.toURL(), true);
 		/*Image hudImage2 = TextureManager.loadImage(new File("./data/ui/white.png").toURI()
 				.toURL(), true);*/

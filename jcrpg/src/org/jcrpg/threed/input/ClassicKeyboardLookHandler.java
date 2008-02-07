@@ -72,6 +72,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "logUp", KeyInput.KEY_PGUP );
         keyboard.set( "logDown", KeyInput.KEY_PGDN );
         keyboard.set( "enter", KeyInput.KEY_RETURN );
+        keyboard.set( "back", KeyInput.KEY_BACK);
         keyboard.set( "Y", KeyInput.KEY_Y );
        
         float moveSpeed = 0.001f;
@@ -94,6 +95,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "Y", false);
         // add these to menu too
         addAction( new CKeyMenu(this), "enter", false);
+        addAction( new CKeyMenu(this), "back", false);
         addAction( new CKeyMenu(this), "lookUp", false);
         addAction( new CKeyMenu(this), "lookDown", false);
         addAction( new CKeyMenu(this), "lookLeft", false);

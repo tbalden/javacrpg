@@ -18,6 +18,7 @@
 package org.jcrpg.ui;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import org.jcrpg.threed.J3DCore;
@@ -28,7 +29,9 @@ public class UIBase {
 	
 	public HUD hud;
 	public HashMap<String,Window> windows = new HashMap<String, Window>();
-	public HashMap<String,KeyListener> eventToElements = new HashMap<String, KeyListener>(); // TODO multiple listeners can handle one key string!!
+	public HashMap<String,HashSet<KeyListener>> eventToElements = new HashMap<String, HashSet<KeyListener>>(); // TODO multiple listeners can handle one key string!!
+	
+	public HashSet<Window> activeWindows = new HashSet<Window>(); 
 	
 	public UIBase(J3DCore core) throws Exception
 	{
@@ -41,15 +44,17 @@ public class UIBase {
 	}
 	public void removeWindow(Window window)
 	{
-		String key = null;
-		for (Entry<String, KeyListener> e:eventToElements.entrySet())
+		for (Entry<String, HashSet<KeyListener>> e:eventToElements.entrySet())
 		{
-			if (e.getValue().equals(window))
+			for (KeyListener kl:e.getValue())
 			{
-				key = e.getKey();
+				if (kl.equals(window))
+				{
+					e.getValue().remove(kl);
+					break;
+				}
 			}
 		}
-		if (key!=null) eventToElements.remove(key);
 		
 	}
 	public boolean handleWindowEvent(String trigger)
@@ -61,11 +66,24 @@ public class UIBase {
 	public void handleEvent(String key)
 	{
 		if (eventToElements.get(key)!=null)
-			eventToElements.get(key).handleKey(key);
+		{
+			HashSet<KeyListener> set = eventToElements.get(key);
+			for (KeyListener w:set)
+			{
+				if (activeWindows.contains(w))
+				{
+					if (((KeyListener)w).handleKey(key)) break;
+				}
+			}
+		}
 	}
 	public void addEventHandler(String key, KeyListener list)
 	{
-		eventToElements.put(key, list);
+		if (eventToElements.get(key)==null)
+		{
+			eventToElements.put(key, new HashSet<KeyListener>());
+		}
+		eventToElements.get(key).add(list);
 	}
 	
 }

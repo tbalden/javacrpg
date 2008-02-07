@@ -21,9 +21,10 @@ package org.jcrpg.util.saveload;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -53,6 +54,7 @@ import org.jcrpg.world.time.Time;
  */
 public class SaveLoadNewGame {
 
+	public static final String saveDir = "./save";
 	
 	public static void newGame(J3DCore core) 
 	{
@@ -110,7 +112,8 @@ public class SaveLoadNewGame {
 			gameState.setOrigoRenderPosition(wX,wY,wZ);
 			gameState.resetRelativePosition();
 			core.setGameState(gameState);
-			
+			if (core.coreFullyInitialized)
+				core.sEngine.reinit();
 			
 		} catch (Exception ex)
 		{
@@ -122,10 +125,17 @@ public class SaveLoadNewGame {
 	public static void saveGame(J3DCore core)
 	{
 		try {
-			File saveGame = new File("./savegame.zip");
+			Date d = new Date();
+			String dT = new SimpleDateFormat("yyyyddMM-HH.mm.ss.SSS").format(d);
+			String slot = saveDir+"/"+core.gameState.gameId+"_"+dT+"/";
+			File f = new File(slot);
+			f.mkdir();
+			
+			File saveGame = new File(slot+"savegame.zip");
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
 			zipOutputStream.putNextEntry(new ZipEntry("gamestate.xml"));
 			core.gameState.getGameStateXml(zipOutputStream);
+			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			zipOutputStream.close();
 			
 		} catch (Exception ex)
@@ -134,14 +144,13 @@ public class SaveLoadNewGame {
 		}
 	}
 	
-	public static void loadGame(J3DCore core)
+	public static void loadGame(J3DCore core, File saveGame)
 	{
 		try {
 			if (core.engineThread!=null)
 			{
 				core.engineThread.interrupt();
 			}
-			File saveGame = new File("./savegame.zip");
 			//ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
 			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(saveGame));
 			zipInputStream.getNextEntry();
@@ -153,6 +162,7 @@ public class SaveLoadNewGame {
 			t.start();
 			core.engineThread = t;
 			core.gameState.playerTurnLogic.core = core;
+			core.sEngine.reinit();
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();

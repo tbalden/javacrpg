@@ -77,7 +77,17 @@ public class J3DStandingEngine {
 		this.world = core.gameState.world;
 		renderedArea = core.renderedArea;
 		modelPool = core.modelPool;
-		
+	}
+	/**
+	 * Start this when newly initializing core.
+	 */
+	public void reinit()
+	{
+		this.uiBase = core.uiBase;
+		this.engine = core.gameState.engine;
+		this.world = core.gameState.world;
+		renderedArea = core.renderedArea;
+		modelPool = core.modelPool;
 	}
 
 	HashMap<Integer, RenderedCube> hmCurrentCubes = new HashMap<Integer, RenderedCube>();

@@ -32,6 +32,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class GameStateContainer {
 	
+	public String gameId = "game1";
+	
 	public int viewDirection = J3DCore.NORTH;
 	public int viewPositionX = 0;
 	public int viewPositionY = 0;
@@ -148,5 +150,10 @@ public class GameStateContainer {
 		return gameState;
 	}
 	
+	public void clearAll()
+	{
+		world.clearAll();
+		ecology.clearAll();
+	}
 	
 }

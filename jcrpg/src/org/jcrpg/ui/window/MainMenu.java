@@ -137,17 +137,18 @@ public class MainMenu extends Window implements KeyListener {
 		} else
 		if (name.equals(SAVE_GAME))
 		{
+			if (!core.coreFullyInitialized) return;
+			toggle();
+			core.updateDisplay(null);
+			core.getRootNode().updateRenderState();
 			SaveLoadNewGame.saveGame(core);
 		} else
 		if (name.equals(LOAD_GAME))
 		{
-			toggle();
-			core.clearCore();
-			SaveLoadNewGame.loadGame(core);
-			core.init3DGame();
-			core.getRootNode().updateRenderState();
-			core.gameState.engine.setPause(false);
-
+			if (LoadMenu.updateFromDirectory()) {
+				toggle();
+				core.loadMenu.toggle();
+			}
 		}
 	}
 
