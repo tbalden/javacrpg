@@ -54,7 +54,7 @@ public class PlayerTurnLogic {
 	public Ecology ecology;
 	public EntityInstance player;
 	public Engine engine;
-	public J3DCore core;
+	public transient J3DCore core;
 	
 	public PlayerTurnLogic(J3DCore core, Engine engine, World world, Ecology ecology, EntityInstance player)
 	{

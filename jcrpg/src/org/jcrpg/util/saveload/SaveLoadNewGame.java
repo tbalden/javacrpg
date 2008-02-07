@@ -18,6 +18,16 @@
 
 package org.jcrpg.util.saveload;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
@@ -58,6 +68,7 @@ public class SaveLoadNewGame {
 			engine.setNumberOfTurn(0);
 			Thread t = new Thread(engine);
 			t.start();
+			core.engineThread = t;
 			
 			
 			String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
@@ -108,13 +119,44 @@ public class SaveLoadNewGame {
 		}
 	}
 	
-	public void saveGame(J3DCore core)
+	public static void saveGame(J3DCore core)
 	{
-		
+		try {
+			File saveGame = new File("./savegame.zip");
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
+			zipOutputStream.putNextEntry(new ZipEntry("gamestate.xml"));
+			core.gameState.getGameStateXml(zipOutputStream);
+			zipOutputStream.close();
+			
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 	
-	public void loadGame(J3DCore core)
+	public static void loadGame(J3DCore core)
 	{
+		try {
+			if (core.engineThread!=null)
+			{
+				core.engineThread.interrupt();
+			}
+			File saveGame = new File("./savegame.zip");
+			//ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
+			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(saveGame));
+			zipInputStream.getNextEntry();
+			Reader reader = new InputStreamReader(zipInputStream);
+			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
+			core.setGameState(gameState);
+			zipInputStream.close();
+			Thread t = new Thread(gameState.engine);
+			t.start();
+			core.engineThread = t;
+			core.gameState.playerTurnLogic.core = core;
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		
 	}
 	

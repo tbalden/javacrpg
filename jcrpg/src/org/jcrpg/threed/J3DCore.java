@@ -48,6 +48,7 @@ import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
@@ -684,7 +685,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public Spatial createSpatialForOrbiter(Orbiter o)
 	{
-		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
+		if (o.type.equals(SimpleSun.SIMPLE_SUN_ORBITER)) {
 			// lens flare code...
 	        LightNode lightNode;
 	        LensFlare flare;
@@ -761,7 +762,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 	        
 		} else
-		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
+		if (o.type.equals(SimpleMoon.SIMPLE_MOON_ORBITER)) {
 			TriMesh moon = new Sphere(o.id,20,20,5f);
 			
 			Texture texture = TextureManager.loadTexture("./data/orbiters/moon2.jpg",Texture.MM_LINEAR,
@@ -799,7 +800,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public LightNode[] createLightsForOrbiter(Orbiter o)
 	{
-		if (o.type==SimpleSun.SIMPLE_SUN_ORBITER) {
+		if (o.type.equals(SimpleSun.SIMPLE_SUN_ORBITER)) {
 			LightNode dirLightNode = new LightNode("Sun light "+o.id, extLightState);		
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
@@ -821,7 +822,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        
 			return new LightNode[]{dirLightNode,pointLightNode};
 		} else
-		if (o.type==SimpleMoon.SIMPLE_MOON_ORBITER) {
+		if (o.type.equals(SimpleMoon.SIMPLE_MOON_ORBITER)) {
 			LightNode dirLightNode = new LightNode("Moon light "+o.id, extLightState);		
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1,1,1,1));
@@ -848,6 +849,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		return null;
 			
 	}
+	
+	public Thread engineThread = null;
 	
 	@Override
 	protected void initGame() {
@@ -1629,6 +1632,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void init3DGame()
 	{
+		gameState.world.worldMap = new WorldMap(gameState.world);
 		uiBase.hud.initGameStateNodes();
 		createWorldMap();
 		

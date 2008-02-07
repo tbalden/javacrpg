@@ -120,12 +120,13 @@ public class MainMenu extends Window implements KeyListener {
 
 	public void handleChoice()
 	{
-		if (buttons.get(selected).name.equals(QUIT))
+		String name = buttons.get(selected).name;
+		if (name.equals(QUIT))
 		{
 			//
 			core.doQuit();
 		} else
-		if (buttons.get(selected).name.equals(NEW_GAME))
+		if (name.equals(NEW_GAME))
 		{
 			toggle();
 			core.clearCore();
@@ -133,6 +134,20 @@ public class MainMenu extends Window implements KeyListener {
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
+		} else
+		if (name.equals(SAVE_GAME))
+		{
+			SaveLoadNewGame.saveGame(core);
+		} else
+		if (name.equals(LOAD_GAME))
+		{
+			toggle();
+			core.clearCore();
+			SaveLoadNewGame.loadGame(core);
+			core.init3DGame();
+			core.getRootNode().updateRenderState();
+			core.gameState.engine.setPause(false);
+
 		}
 	}
 
