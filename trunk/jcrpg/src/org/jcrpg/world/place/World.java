@@ -220,7 +220,7 @@ public class World extends Place {
 			for (Water w : waters.values()) {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{
-					boolean thePoint = false;
+					//boolean thePoint = false;
 					if (w.isWaterPoint(worldX, worldY, worldZ, farView))
 					{
 						for (SurfaceHeightAndType s:tempGeosForSurface.values())
@@ -247,8 +247,9 @@ public class World extends Place {
 			}
 			if (insideGeography) return currentMerged;
 
-			// not in geography, return ocean
-			return null;//worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null;
+			// not in geography, return null
+			return null;
+			//return worldY==worldGroundLevel?new Cube(this,OCEAN,worldX,worldY,worldZ):null; -- world generation made this deprecated
 		}
 		else return null;
 	}
@@ -387,4 +388,13 @@ public class World extends Place {
 		return g;
 	}
 
+	public void clearAll()
+	{
+		geographies.clear();
+		economics.clear();
+		geographyCache.clear();
+		waters.clear();
+		overLappers.clear();
+		politicals.clear();
+	}
 }

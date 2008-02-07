@@ -50,6 +50,7 @@ import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
+import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
@@ -1614,6 +1615,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public UIBase uiBase;
 	public Map worldMap = null;
 	public MainMenu mainMenu = null;
+	public LoadMenu loadMenu = null;
 	
 	public void createWorldMap()
 	{
@@ -1731,13 +1733,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			batchHelper.clearAll();
 			skySphere.removeFromParent();
 			rootNode.updateRenderState();
+			gameState.clearAll();
 		}
 	}
 	
 	/**
 	 * When a full game is started/loaded this should be true.
 	 */
-	boolean coreFullyInitialized = false;
+	public boolean coreFullyInitialized = false;
 	
 	@Override
 	protected void simpleInitGame() {
@@ -1882,6 +1885,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			uiBase = new UIBase(this);
 			mainMenu = new MainMenu(uiBase);
+			loadMenu = new LoadMenu(uiBase);
 			uiBase.addWindow("mainMenu", mainMenu);			
 			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 			ChoiceDescription no = new ChoiceDescription("N","yes","No");

@@ -18,28 +18,12 @@
 
 package org.jcrpg.ui.window.element;
 
-import org.jcrpg.ui.Window;
+import java.io.File;
 
-import com.jme.scene.Node;
-import com.jme.scene.shape.Quad;
+public class SaveSlotData {
+	public String id = "1";
+	public String slotName = "SLOT";
+	public File gameData = null;
+	public File pic = null;
 
-public class Button {
-
-	public String name;
-	public Quad quad;
-	public Node node;
-	public Window parent;
-	public Button(String name, Quad quad, Window parent) {
-		super();
-		this.name = name;
-		this.quad = quad;
-		this.parent = parent;
-	}
-	public Button(String name, Quad quad, Node n, Window parent) {
-		super();
-		this.name = name;
-		this.quad = quad;
-		this.node = n;
-		this.parent = parent;
-	}
 }

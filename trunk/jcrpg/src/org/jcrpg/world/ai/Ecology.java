@@ -29,7 +29,7 @@ import com.jme.math.Vector3f;
 
 public class Ecology {
 
-	HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
+	public HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
 	
 	
 	public void addEntity(EntityInstance description)
@@ -154,6 +154,11 @@ public class Ecology {
 	{
 		// TODO this is just for the testing period
 		J3DCore.getInstance().uiBase.hud.mainBox.addEntry(message);
+	}
+	
+	public void clearAll()
+	{
+		beings.clear();
 	}
 	
 }
