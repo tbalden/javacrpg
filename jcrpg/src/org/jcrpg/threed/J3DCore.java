@@ -108,7 +108,7 @@ import com.jmex.effects.glsl.BloomRenderPass;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
-    public HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId = new HashMap<String,Integer>();
+	public HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId = new HashMap<String,Integer>();
 
     public HashMap<Integer,RenderedSide> hm3dTypeRenderedSide = new HashMap<Integer,RenderedSide>();
     
@@ -1683,6 +1683,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cam.update();
 
 		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+		fpsNode.getChild(0).setLocalScale(display.getWidth()/1000f);
         
         updateDisplay(null);
 		
@@ -1956,6 +1957,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		cam.update();
 
 		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+		fpsNode.getChild(0).setLocalScale(display.getWidth()/1000f);
 
 		/*
 		 * Skysphere
