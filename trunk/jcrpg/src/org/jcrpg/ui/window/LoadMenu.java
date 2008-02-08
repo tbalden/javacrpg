@@ -18,6 +18,7 @@
 
 package org.jcrpg.ui.window;
 
+import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -25,11 +26,13 @@ import java.util.TreeMap;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.SaveSlotData;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Text;
 import com.jme.scene.shape.Quad;
@@ -50,16 +53,20 @@ public class LoadMenu extends Window implements KeyListener {
 	
 	int fromSlot = 0;
 	
-	public static int maxSlots = 5;
+	public static int maxSlots = 4;
 	
 	public ArrayList<Button> buttons = new ArrayList<Button>();
 
+	Font font;
+	FontTT text;
+	
 	public LoadMenu(UIBase base) {
 		super(base);
-		
+		font = new Font("Verdana", Font.BOLD, 32);
+		text = new FontTT(font.deriveFont(Font.BOLD),64,0);
         try {
         	
-        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.6f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
+        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
         			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
         	Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/logo.png", 1.2f*core.getDisplay().getWidth() / 5f, 1.2f*(core.getDisplay().getHeight() / 11), 
         			core.getDisplay().getWidth() / 2, 1.63f*core.getDisplay().getHeight() / 2);
@@ -153,23 +160,24 @@ public class LoadMenu extends Window implements KeyListener {
 		}
 		buttons.clear();
 		int counter = 0;
-		float sizeX = 0.3f* 1.2f * core.getDisplay().getWidth() / 5f;
-		float sizeY = 0.65f* (core.getDisplay().getHeight() / 11);
-		float startPosY = 1.34f*core.getDisplay().getHeight() / 2;
-		float stepPosY = 0.66f* 1.1f*(core.getDisplay().getHeight() / 11);
-		float posX = 0.83f*core.getDisplay().getWidth() / 2;
+		float sizeX = 0.35f* 1.2f * core.getDisplay().getWidth() / 5f;
+		float sizeY = 0.85f* (core.getDisplay().getHeight() / 11);
+		float startPosY = 1.33f*core.getDisplay().getHeight() / 2;
+		float stepPosY = 0.87f* 1.1f*(core.getDisplay().getHeight() / 11);
+		float posX = 0.75f*core.getDisplay().getWidth() / 2;
 		for (SaveSlotData data:dataList.values())
 		{
 			if (counter>=fromSlot && counter-fromSlot<maxSlots) {
 				Quad button = loadImageToQuad(data.pic,sizeX,sizeY, posX, startPosY - stepPosY*(counter - fromSlot));
 				windowNode.attachChild(button);
-				Text text = Text.createDefaultTextLabel("TextBox_"+data.slotName, data.slotName);
-				text.setLocalTranslation(posX*1.1f, startPosY - stepPosY*(counter - fromSlot),0);
-				text.setLocalScale(core.getDisplay().getWidth()/2000f);
-				Node n = new Node();
-				n.attachChild(text);
-				windowNode.attachChild(n);
-				buttons.add(new Button(data.id,button,n,this));
+				
+				Node slottextNode = this.text.createText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),false);
+				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				
+				//n.attachChild(playertext);
+				windowNode.attachChild(slottextNode);
+				buttons.add(new Button(data.id,button,slottextNode,this));
 			}
 			counter++;
 		}
@@ -264,7 +272,7 @@ public class LoadMenu extends Window implements KeyListener {
 			}
 		}
 		if (selected<0) {
-			if (fromSlot-5>=0)
+			if (fromSlot-maxSlots>=0)
 			{
 				fromSlot -= maxSlots;
 				selected = maxSlots-1;

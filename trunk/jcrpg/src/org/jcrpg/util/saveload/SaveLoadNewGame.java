@@ -164,6 +164,7 @@ public class SaveLoadNewGame {
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
 			core.setGameState(gameState);
 			zipInputStream.close();
+			gameState.engine.setPause(true);
 			Thread t = new Thread(gameState.engine);
 			t.start();
 			core.engineThread = t;
