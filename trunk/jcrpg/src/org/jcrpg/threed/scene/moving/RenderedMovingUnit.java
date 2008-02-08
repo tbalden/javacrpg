@@ -59,7 +59,7 @@ public class RenderedMovingUnit {
 	public String state = STATE_STANDING;
 	public boolean internal = false;
 	
-	public HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
+	public transient HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
 	
 	public RenderedMovingUnit(Model[] models) {
 		super();
