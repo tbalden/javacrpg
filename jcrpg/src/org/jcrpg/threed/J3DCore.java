@@ -1634,6 +1634,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void init3DGame()
 	{
+		if (coreFullyInitialized)
+		{
+			groundParentNode.attachChild(intRootNode);
+			groundParentNode.attachChild(extRootNode);
+			groundParentNode.attachChild(skyParentNode);
+		}
 		gameState.world.worldMap = new WorldMap(gameState.world);
 		uiBase.hud.initGameStateNodes();
 		createWorldMap();

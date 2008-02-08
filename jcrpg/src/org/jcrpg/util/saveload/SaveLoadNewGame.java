@@ -162,7 +162,8 @@ public class SaveLoadNewGame {
 			t.start();
 			core.engineThread = t;
 			core.gameState.playerTurnLogic.core = core;
-			core.sEngine.reinit();
+			if (core.sEngine!=null)
+				core.sEngine.reinit();
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
