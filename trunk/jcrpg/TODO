@@ -14,6 +14,7 @@ j3dcore simpleInitGame's end:
 
 [ ] portraits, and character creation in new Game window
 
+
 [ ] rocks to mountain side with new RenderedHashGeneratedSides probably...
 
 [ ] audio support
@@ -153,6 +154,8 @@ Other:
 [?] Lod modelling trees with billboard images captured in blender!
 
 --
+[X] loading twice results an empty blue screen -> moving makes it good again, culling problem!?
+
 [X] sea
 [-] lens flare too intensive with bloom -> check what's to be done - no way to improve yet :-/
 [X] Write the wind vertex program? Now it's cpu based!
