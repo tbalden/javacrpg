@@ -129,7 +129,7 @@ public class SaveLoadNewGame {
 			String dT = new SimpleDateFormat("yyyyddMM-HH.mm.ss.SSS").format(d);
 			String slot = saveDir+"/"+core.gameState.gameId+"_"+dT+"/";
 			File f = new File(slot);
-			f.mkdir();
+			f.mkdirs();
 			
 			File saveGame = new File(slot+"savegame.zip");
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
