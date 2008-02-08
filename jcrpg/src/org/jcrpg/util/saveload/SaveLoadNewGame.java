@@ -124,6 +124,10 @@ public class SaveLoadNewGame {
 	
 	public static void saveGame(J3DCore core)
 	{
+		if (core.encounterMode) {
+			core.uiBase.hud.mainBox.addEntry("Cannot save while encounter.");
+			return;
+		}
 		try {
 			Date d = new Date();
 			String dT = new SimpleDateFormat("yyyyddMM-HH.mm.ss.SSS").format(d);
@@ -137,6 +141,8 @@ public class SaveLoadNewGame {
 			core.gameState.getGameStateXml(zipOutputStream);
 			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			zipOutputStream.close();
+			
+			core.uiBase.hud.mainBox.addEntry("Game saved.");
 			
 		} catch (Exception ex)
 		{
@@ -164,6 +170,7 @@ public class SaveLoadNewGame {
 			core.gameState.playerTurnLogic.core = core;
 			if (core.sEngine!=null)
 				core.sEngine.reinit();
+			core.uiBase.hud.mainBox.addEntry("Game loaded.");
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
