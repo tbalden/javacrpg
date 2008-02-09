@@ -34,7 +34,6 @@ import org.jcrpg.util.saveload.SaveLoadNewGame;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Text;
 import com.jme.scene.shape.Quad;
 
 public class LoadMenu extends Window implements KeyListener {
