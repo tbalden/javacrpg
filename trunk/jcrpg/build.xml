@@ -66,6 +66,7 @@
 			<classpath>
 				<fileset dir="${srcjme.dir}" includes="*.jar"/>
 				<fileset dir="${srclib.dir}" includes="*.jar"/>
+				<fileset dir="${srclib.dir}/xstream" includes="*.jar"/>
 			</classpath>
 			<include name="org/jcrpg/**"/>
 		</javac>
@@ -78,6 +79,9 @@
 		</copy>
 		<copy todir="${runjar.dir}">
 			<fileset dir="${srclib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${srclib.dir}/xstream">
 				<include name="*.jar"/>
 			</fileset>
 		</copy>

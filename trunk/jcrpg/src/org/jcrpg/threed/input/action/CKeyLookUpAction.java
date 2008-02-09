@@ -23,7 +23,7 @@ public class CKeyLookUpAction extends CKeyAction {
 	 */
 	public synchronized void performAction(InputActionEvent evt) {
 		if (handler.lock) {
-			System.out.println("locked...");
+			//System.out.println("locked...");
 			return;
 		}
 
