@@ -174,9 +174,9 @@ public class LoadMenu extends Window implements KeyListener {
 				Node slottextNode = this.text.createText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),false);
 				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				
-				//n.attachChild(playertext);
+				slottextNode.setLocalScale(core.getDisplay().getWidth()/900f);
 				windowNode.attachChild(slottextNode);
+
 				buttons.add(new Button(data.id,button,slottextNode,this));
 			}
 			counter++;
