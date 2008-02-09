@@ -70,11 +70,11 @@ public abstract class Window {
 		}
 		visible=!visible;
 	}
-	public Quad loadImageToQuad(String fileName, float sizeX, float sizeY,
+	public static Quad loadImageToQuad(String fileName, float sizeX, float sizeY,
 			float posX, float posY) throws Exception {
 		return loadImageToQuad(new File(fileName), sizeX, sizeY, posX, posY);
 	}	
-	public Quad loadImageToQuad(File file, float sizeX, float sizeY,
+	public static Quad loadImageToQuad(File file, float sizeX, float sizeY,
 			float posX, float posY) throws Exception {
 		Quad hudQuad = new Quad(file.getName(), sizeX, sizeY);
 		hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
@@ -86,7 +86,7 @@ public abstract class Window {
 		/*Image hudImage2 = TextureManager.loadImage(new File("./data/ui/white.png").toURI()
 				.toURL(), true);*/
 
-		TextureState state = core.getDisplay().getRenderer()
+		TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
 				.createTextureState();
 		Texture texture = new Texture();
 		texture.setImage(hudImage);

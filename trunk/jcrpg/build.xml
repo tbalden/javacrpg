@@ -102,7 +102,7 @@
 			<fileset dir="${classes.dir}" includes="**/*"/>
 			<fileset dir="${apidoc.dir}" includes="**/*"/>
 		</jar>
-		<echo>The created jar file has been put in ${runjar.dir}/jrcpg.jar</echo>
+		<echo>The created jar file has been put in ${runjar.dir}/jcrpg.jar</echo>
 	</target>
 
 	<!--###########################################################################-->
