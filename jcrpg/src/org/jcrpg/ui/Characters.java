@@ -27,11 +27,12 @@ import org.jcrpg.ui.text.FontTT;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 
 public class Characters {
 
-	public ArrayList<Character> characterData = new ArrayList<Character>();
+	public ArrayList<org.jcrpg.ui.window.element.Character> characterData = new ArrayList<org.jcrpg.ui.window.element.Character>();
 	Font font;
 	FontTT text;
 	
@@ -52,22 +53,49 @@ public class Characters {
 		{
 				"Balzac", "Fred", "Friedrich", "Baran", "Marie", "Max"
 		};
+		String[] classes = 
+		{
+				"BARD", "ROGUE", "FIGHTER", "PRIESTESS", "ALCHEMIST", "WIZARD"
+		};
 		
 		int counter = 0, c2 = 0;
 		int sideYMul = 1, sideYMulFont = 1;
-		float stepY = hud.core.getDisplay().getHeight()/5f;
+		float stepY = hud.core.getDisplay().getHeight()/6.6f;
 		float startY = hud.core.getDisplay().getHeight()*0.8f;
+		Quad frame  = null;
+		try {
+			frame = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
+		} catch (Exception ex)
+		{
+			
+		}
 		for (String pic:pics)
 		{
 			org.jcrpg.ui.window.element.Character c = new org.jcrpg.ui.window.element.Character();
 			try 
 			{
-				Quad q = Window.loadImageToQuad(new File(pic), hud.core.getDisplay().getWidth()/10, hud.core.getDisplay().getHeight()/8, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
-				Node slottextNode = this.text.createText(names[c2++], 9, new ColorRGBA(1,1,0.1f,1f),false);
-				slottextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.4f,0);
-				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
-				hud.hudNode.attachChild(slottextNode);
+				SharedMesh sm = new SharedMesh("1",frame);
+				sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counter,0);
+				
+				Quad q = Window.loadImageToQuad(new File(pic), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
+				
+				Node nametextNode = this.text.createText(names[c2], 9, new ColorRGBA(1,1,0.6f,1f),false);
+				
+				nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.37f,0);
+				
+				nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+				
+				Node classtextNode = this.text.createText(classes[c2++], 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
+				
+				classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
+				
+				classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+
+				hud.hudNode.attachChild(nametextNode);
+				hud.hudNode.attachChild(classtextNode);
+				hud.hudNode.attachChild(sm);
 				hud.hudNode.attachChild(q);
 			} catch (Exception ex)
 			{
@@ -79,6 +107,7 @@ public class Characters {
 				sideYMul = 19;
 				sideYMulFont = 46;
 			}
+			characterData.add(c);
 		}
 	}
 }
