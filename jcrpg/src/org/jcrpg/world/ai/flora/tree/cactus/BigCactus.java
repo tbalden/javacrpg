@@ -20,13 +20,14 @@ package org.jcrpg.world.ai.flora.tree.cactus;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.ai.flora.tree.Tree;
 
 public class BigCactus extends Tree {
 	
 	public static final String TYPE_MIDDLE = "TOP";
-	public static final SideSubType SUBTYPE_CACTUS = new SideSubType(TYPE_MIDDLE+"_CACTUS");
+	public static final SideSubType SUBTYPE_CACTUS = new StickingOut(TYPE_MIDDLE+"_CACTUS");
 	
 	static Side[][] CACTUS = new Side[][] { null, null, null,null,null,{new Side(TYPE_MIDDLE,SUBTYPE_CACTUS)} };
 	

@@ -19,15 +19,15 @@ package org.jcrpg.world.ai.flora.tree.pine;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
-import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.ai.flora.tree.Tree;
 
 public class GreatPineTree extends Tree {
 	
 	public static final String TYPE_TREE = "TREE";
-	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_TREE+"_GREATPINE");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_TREE+"_GREATPINE");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_TREE,SUBTYPE_TREE)} };
 	
