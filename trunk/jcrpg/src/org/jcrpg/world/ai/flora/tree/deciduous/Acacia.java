@@ -19,15 +19,15 @@ package org.jcrpg.world.ai.flora.tree.deciduous;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
-import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.ai.flora.tree.Tree;
 
 public class Acacia extends Tree {
 
 	public static final String TYPE_FOREST = "FOREST";
-	public static final SideSubType SUBTYPE_TREE = new NotPassable(TYPE_FOREST+"_ACACIA");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_ACACIA");
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
