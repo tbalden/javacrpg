@@ -256,7 +256,7 @@ public class LoadMenu extends Window implements KeyListener {
 			}
 			if (selected>=buttons.size())
 			{
-				if (selected<dataList.size())
+				if (selected+fromSlot<dataList.size())
 				{
 					fromSlot = selected;
 					selected = 0;
