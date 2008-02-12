@@ -20,6 +20,8 @@ package org.jcrpg.ui.window.element.input;
 
 import org.jcrpg.ui.Window;
 
+import com.jme.renderer.ColorRGBA;
+
 public class ListSelect extends InputBase {
 
 	public String[] ids;
@@ -31,10 +33,16 @@ public class ListSelect extends InputBase {
 	public int maxVisible = 0;
 	public boolean reloadNeeded = false;
 	
-	public ListSelect(Window w, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts) {
+	public ColorRGBA normal = null;
+	public ColorRGBA highlighted = null;
+	
+	public ListSelect(Window w, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		super(w, centerX, centerY, sizeX, sizeY);
 		this.ids = ids;
 		this.texts = texts;
+		this.normal = normal;
+		this.highlighted = highlighted;
+		deactive();
 	}
 	
 	public boolean select(boolean next)
@@ -89,5 +97,15 @@ public class ListSelect extends InputBase {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public void activate() {
+		super.activate();
+	}
+
+	@Override
+	public void deactive() {
+		super.deactive();
 	}
 }
