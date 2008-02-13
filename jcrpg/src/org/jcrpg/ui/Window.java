@@ -35,7 +35,7 @@ import com.jme.util.TextureManager;
 public abstract class Window {
 
 	protected boolean visible = false;
-	protected Node windowNode;
+	public Node windowNode;
 	
 	public UIBase base;
 	public J3DCore core;

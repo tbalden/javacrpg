@@ -23,16 +23,18 @@ import java.util.ArrayList;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.player.PartyMember;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class PartySetup extends Window implements KeyListener{
+public class PartySetup extends InputWindow implements KeyListener{
 
+	public static final String charsDir = "./chars";
+	
 	FontTT text;
 	
 	Node pageMemberSelection = new Node();
@@ -41,13 +43,22 @@ public class PartySetup extends Window implements KeyListener{
 
 	int currentPage = 0;
 	
+	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
+	
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
 		try {
-	    	Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
+	    	
+			// page selection
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+	    	
 	    	pageMemberSelection.attachChild(hudQuad);
+	    	
+	    	ListSelect select = new ListSelect(this,pageMemberSelection,0.2f,0.2f,0.1f,0.1f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	addInput(select);
+	    	
 			base.addEventHandler("lookUp", this);
 			base.addEventHandler("lookDown", this);
 			base.addEventHandler("enter", this);
@@ -72,6 +83,7 @@ public class PartySetup extends Window implements KeyListener{
 			windowNode.detachAllChildren();
 			windowNode.attachChild(pageMemberSelection);
 		}
+		activateSelectedInput();			
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(true);
@@ -82,7 +94,7 @@ public class PartySetup extends Window implements KeyListener{
 			toggle();
 			base.hud.characters.show();
 			core.clearCore();
-			ArrayList<PartyMember> members = new ArrayList<PartyMember>();
+			
 			for (int i=0; i<6; i++)
 			{
 				members.add(new PartyMember("_"+i));
