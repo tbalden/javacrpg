@@ -39,14 +39,17 @@ public class DistanceBasedBoundary extends Boundaries {
 	
 	public DistanceBasedBoundary(World w, int positionX, int positionY, int positionZ, int radiusInRealCubes) {
 		super(1);
-		int wX = w.sizeX;
-		int wY = w.sizeY;
-		int wZ = w.sizeZ;
-		int wMag = w.magnification;
-		int gMag = magnification;
-		gWX = (wX*wMag)/gMag;
-		gWY = (wY*wMag)/gMag;
-		gWZ = (wZ*wMag)/gMag;
+		if (w!=null) 
+		{
+			int wX = w.sizeX;
+			int wY = w.sizeY;
+			int wZ = w.sizeZ;
+			int wMag = w.magnification;
+			int gMag = magnification;
+			gWX = (wX*wMag)/gMag;
+			gWY = (wY*wMag)/gMag;
+			gWZ = (wZ*wMag)/gMag;
+		}
 		
 		this.radiusInRealCubes = radiusInRealCubes;
 		posX = positionX;

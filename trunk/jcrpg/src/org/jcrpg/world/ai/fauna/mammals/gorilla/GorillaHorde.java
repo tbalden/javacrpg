@@ -18,22 +18,15 @@
 
 package org.jcrpg.world.ai.fauna.mammals.gorilla;
 
-import java.util.ArrayList;
-
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
 import org.jcrpg.world.ai.fauna.modifier.WeakAnimalChild;
-import org.jcrpg.world.climate.ClimateBelt;
-import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
-import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.geography.Forest;
 
 public class GorillaHorde extends AnimalEntityDescription {
@@ -45,23 +38,17 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
 	
-	public static ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
-	public static ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
-	public static ArrayList<Condition> conditions = new ArrayList<Condition>();
-	public static ArrayList<Class <? extends Geography>> geographies = new ArrayList<Class <? extends Geography>>();
-
-	public static ArrayList<Class <? extends Behavior>> behaviors = new ArrayList<Class<? extends Behavior>>();
 	
 	static
 	{
 		
-		climates.add(Tropical.class);
-		geographies.add(Forest.class);
-		behaviors.add(Peaceful.class);
 	}
 	
 	public GorillaHorde()
 	{
+		climates.add(Tropical.class);
+		geographies.add(Forest.class);
+		behaviors.add(Peaceful.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
 		setAverageGroupSizeAndDeviation(5, 2);

@@ -28,5 +28,24 @@ public class MemberPerson extends EntityMember {
 	public String id;
 	public String foreName;
 	public String sureName;
+	public String pictureId;
+	public String getForeName() {
+		return foreName;
+	}
+	public void setForeName(String foreName) {
+		this.foreName = foreName;
+	}
+	public String getSureName() {
+		return sureName;
+	}
+	public void setSureName(String sureName) {
+		this.sureName = sureName;
+	}
+	public String getPictureId() {
+		return pictureId;
+	}
+	public void setPictureId(String pictureId) {
+		this.pictureId = pictureId;
+	}
 	
 }

@@ -18,13 +18,9 @@
 
 package org.jcrpg.world.ai.fauna.mammals.wolf;
 
-import java.util.ArrayList;
-
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.physical.martial.BiteFight;
@@ -32,9 +28,6 @@ import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
-import org.jcrpg.world.climate.ClimateBelt;
-import org.jcrpg.world.climate.Condition;
-import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.geography.Plain;
 
 public class WolfPack extends AnimalEntityDescription {
@@ -45,24 +38,17 @@ public class WolfPack extends AnimalEntityDescription {
 	public static MovingModel wolf = new MovingModel("models/fauna/wolf.obj",null,null,null,false);
 	public static RenderedMovingUnit wolf_unit = new RenderedMovingUnit(new Model[]{wolf});
 
-	public static ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
-	public static ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
-	public static ArrayList<Condition> conditions = new ArrayList<Condition>();
-	public static ArrayList<Class <? extends Geography>> geographies = new ArrayList<Class <? extends Geography>>();
-
-	public static ArrayList<SkillInstance> startingSkills = new ArrayList<SkillInstance>();
-	public static ArrayList<Class <? extends Behavior>> behaviors = new ArrayList<Class<? extends Behavior>>();
 	
 	static
 	{
+	}
+
+	public WolfPack() {
 		foodEntities.add(Warthogs.class);
 		geographies.add(Plain.class);
 		startingSkills.add(new SkillInstance(Tracking.class,20));
 		startingSkills.add(new SkillInstance(BiteFight.class,20));
 		behaviors.add(Aggressive.class);
-	}
-
-	public WolfPack() {
 		indoorDweller = false;
 		genderType = GENDER_BOTH;
 		addGroupingRuleMember(WOLF_TYPE_MALE);

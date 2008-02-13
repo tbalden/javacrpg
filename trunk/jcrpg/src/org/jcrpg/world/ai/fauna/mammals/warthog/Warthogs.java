@@ -18,21 +18,14 @@
 
 package org.jcrpg.world.ai.fauna.mammals.warthog;
 
-import java.util.ArrayList;
-
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
-import org.jcrpg.world.climate.ClimateBelt;
-import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
-import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.geography.Forest;
 
 public class Warthogs extends AnimalEntityDescription {
@@ -42,22 +35,12 @@ public class Warthogs extends AnimalEntityDescription {
 
 	public static MovingModel wolf = new MovingModel("models/fauna/warthog_model.obj",null,null,null,false);
 	public static RenderedMovingUnit warthog_unit = new RenderedMovingUnit(new Model[]{wolf});
+	
 
-	public static ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
-	public static ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
-	public static ArrayList<Condition> conditions = new ArrayList<Condition>();
-	public static ArrayList<Class <? extends Geography>> geographies = new ArrayList<Class <? extends Geography>>();
-	
-	public static ArrayList<Class <? extends Behavior>> behaviors = new ArrayList<Class<? extends Behavior>>();
-	
-	static
-	{
+	public Warthogs() {
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Escapist.class);
-	}
-
-	public Warthogs() {
 		indoorDweller = false;
 		genderType = GENDER_BOTH;
 		addGroupingRuleMember(WARTHOG_TYPE_MALE);

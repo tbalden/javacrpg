@@ -47,8 +47,8 @@ public class EntityInstance {
 	public World world;
 	public Ecology ecology;
 
-	public HashMap<String, EntityInstance> subEntities = null;
-	public HashMap<String, EntityMemberInstance> fixMembers = null;
+	public HashMap<String, EntityInstance> subEntities = new HashMap<String, EntityInstance>();
+	public HashMap<String, EntityMemberInstance> fixMembers = new HashMap<String, EntityMemberInstance>();
 	
 	public EntityInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
@@ -61,6 +61,12 @@ public class EntityInstance {
 		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getDomainSize(this));
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
+	}
+	
+	public void recalcBoundarySizes()
+	{
+		roamingBoundary.setRadiusInRealCubes(description.getRoamingSize(this));
+		domainBoundary.setRadiusInRealCubes(description.getDomainSize(this));
 	}
 	
 	public void calculateGroupsAndPositions()

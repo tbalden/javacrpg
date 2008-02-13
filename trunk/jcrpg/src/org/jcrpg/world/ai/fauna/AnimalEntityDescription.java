@@ -20,15 +20,12 @@ package org.jcrpg.world.ai.fauna;
 
 import java.util.ArrayList;
 
-import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.PositionCalculus;
 import org.jcrpg.world.ai.position.NormalCalculus;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Condition;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.World;
 
 /**
  * Represents a description for an animal/pack of animals depending on the nature of an animal species.
@@ -38,7 +35,13 @@ import org.jcrpg.world.place.World;
 public abstract class AnimalEntityDescription extends EntityDescription {
 
 	public static Class<? extends PositionCalculus> positionCalcType = NormalCalculus.class;
-	
+
+	public ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
+	public ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
+	public ArrayList<Condition> conditions = new ArrayList<Condition>();
+	public ArrayList<Class <? extends Geography>> geographies = new ArrayList<Class <? extends Geography>>();
+
+
 	static
 	{
 		calcTypes.put(NormalCalculus.class, new NormalCalculus());
@@ -56,49 +59,22 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 	public int genderType = GENDER_NEUTRAL;
 	
 	
-	@SuppressWarnings("unchecked")
 	public ArrayList<Class <? extends EntityDescription>> getFoodEntities()
 	{
-		try {
-			return (ArrayList<Class <? extends EntityDescription>>) getClass().getField("foodEntities").get(this);
-		} catch (Exception ex)
-		{
-			return null;
-		}
+		return foodEntities;
 	}
-	@SuppressWarnings("unchecked")
 	public ArrayList<Class <? extends ClimateBelt>> getClimates()
 	{
-		try {
-			return (ArrayList<Class <? extends ClimateBelt>>) getClass().getField("climates").get(this);
-		} catch (Exception ex)
-		{
-			return null;
-		}
-		
+		return climates;
 	}
-	@SuppressWarnings("unchecked")
 	public ArrayList<Condition> getConditions()
 	{
-		try {
-			return (ArrayList<Condition>) getClass().getField("conditions").get(this);
-		} catch (Exception ex)
-		{
-			return null;
-		}
-		
+		return conditions;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ArrayList<Class <? extends Geography>> getGeographies()
 	{
-		try {
-			return (ArrayList<Class <? extends Geography>>) getClass().getField("geographies").get(this);
-		} catch (Exception ex)
-		{
-			return null;
-		}
-		
+		return geographies;
 	}
 
 	@Override

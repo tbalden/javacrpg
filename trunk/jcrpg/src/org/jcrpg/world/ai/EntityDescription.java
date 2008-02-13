@@ -50,6 +50,9 @@ public class EntityDescription {
 	public static Class<? extends PositionCalculus> positionCalcType = PositionCalculus.class;
 	public static HashMap<Class<? extends PositionCalculus>, PositionCalculus> calcTypes = new HashMap<Class<? extends PositionCalculus>, PositionCalculus>();
 	
+	public ArrayList<SkillInstance> startingSkills = new ArrayList<SkillInstance>();
+	public ArrayList<Class <? extends Behavior>> behaviors = new ArrayList<Class<? extends Behavior>>();
+	
 	static 
 	{
 		calcTypes.put(PositionCalculus.class, new PositionCalculus());
@@ -79,32 +82,20 @@ public class EntityDescription {
 	public boolean outdoorDweller = true;
 	
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<SkillInstance> getStartingSkills()
 	{
-		try {
-			ArrayList<SkillInstance> a = (ArrayList<SkillInstance>) getClass().getField("startingSkills").get(this);
-			ArrayList<SkillInstance> sSkills= new ArrayList<SkillInstance>();
-			for (SkillInstance i: a)
-			{
-				sSkills.add(i.copy());
-			}
-			return sSkills;
-		} catch (Exception ex)
+		ArrayList<SkillInstance> a = startingSkills;
+		ArrayList<SkillInstance> sSkills= new ArrayList<SkillInstance>();
+		for (SkillInstance i: a)
 		{
-			return null;
+			sSkills.add(i.copy());
 		}
+		return sSkills;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ArrayList<Class <? extends Behavior>> getBehaviors()
 	{
-		try {
-			return (ArrayList<Class <? extends Behavior>>) getClass().getField("behaviors").get(this);
-		} catch (Exception ex)
-		{
-			return null;
-		}
+			return behaviors;
 	}
 	
 	/**
