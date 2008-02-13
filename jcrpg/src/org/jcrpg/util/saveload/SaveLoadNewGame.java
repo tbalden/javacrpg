@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -37,6 +38,8 @@ import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.player.Party;
+import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.ai.player.PartyMember;
 import org.jcrpg.world.generator.WorldGenerator;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
@@ -56,7 +59,7 @@ public class SaveLoadNewGame {
 
 	public static final String saveDir = "./save";
 	
-	public static void newGame(J3DCore core) 
+	public static void newGame(J3DCore core, Collection<PartyMember> partyMembers) 
 	{
 		try {
 			
@@ -100,8 +103,14 @@ public class SaveLoadNewGame {
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
 			//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
-			EntityInstance party = new EntityInstance(new Party(),world,ecology,"Player",6, wX, wY, wZ);
+			PartyInstance party = new PartyInstance(new Party(),world,ecology,"Player",0, wX, wY, wZ);
+			for (PartyMember m:partyMembers)
+			{
+				party.addPartyMemberInstance(m);
+			}
+			party.recalcBoundarySizes();
 			ecology.addEntity(party);
+			party.setPosition(new int[]{wX,wY,wZ});
 			
 			PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
 			gameState.setPlayer(party, logic);

@@ -30,6 +30,7 @@ public class Party extends EntityDescription {
 	public Party()
 	{
 	}
+	
 
 	
 }

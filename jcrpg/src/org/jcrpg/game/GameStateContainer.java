@@ -24,7 +24,7 @@ import java.io.Reader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.World;
 
 import com.thoughtworks.xstream.XStream;
@@ -49,7 +49,7 @@ public class GameStateContainer {
 	public World world = null;
 
 	public Ecology ecology = null;
-	public EntityInstance player = null;
+	public PartyInstance player = null;
 	public PlayerTurnLogic playerTurnLogic = null;
 
 	/**
@@ -117,7 +117,7 @@ public class GameStateContainer {
 		viewDirection = 0;
 	}
 	
-	public void setPlayer(EntityInstance player, PlayerTurnLogic playerTurnLogic)
+	public void setPlayer(PartyInstance player, PlayerTurnLogic playerTurnLogic)
 	{
 		this.player = player;
 		this.playerTurnLogic = playerTurnLogic;

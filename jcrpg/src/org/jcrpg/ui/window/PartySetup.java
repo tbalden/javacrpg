@@ -18,12 +18,17 @@
 
 package org.jcrpg.ui.window;
 
+import java.util.ArrayList;
+
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
+import org.jcrpg.world.ai.player.Party;
+import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.ai.player.PartyMember;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
@@ -79,7 +84,12 @@ public class PartySetup extends Window implements KeyListener{
 			toggle();
 			base.hud.characters.show();
 			core.clearCore();
-			SaveLoadNewGame.newGame(core);
+			ArrayList<PartyMember> members = new ArrayList<PartyMember>();
+			for (int i=0; i<6; i++)
+			{
+				members.add(new PartyMember("_"+i));
+			}			
+			SaveLoadNewGame.newGame(core,members);
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
