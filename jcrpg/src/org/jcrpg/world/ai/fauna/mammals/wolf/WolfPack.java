@@ -28,6 +28,8 @@ import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
+import org.jcrpg.world.climate.impl.arctic.Arctic;
+import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.place.geography.Plain;
 
 public class WolfPack extends AnimalEntityDescription {
@@ -44,6 +46,8 @@ public class WolfPack extends AnimalEntityDescription {
 	}
 
 	public WolfPack() {
+		climates.add(Continental.class);
+		climates.add(Arctic.class);
 		foodEntities.add(Warthogs.class);
 		geographies.add(Plain.class);
 		startingSkills.add(new SkillInstance(Tracking.class,20));
