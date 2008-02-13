@@ -18,7 +18,6 @@
 
 package org.jcrpg.ui;
 
-import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 

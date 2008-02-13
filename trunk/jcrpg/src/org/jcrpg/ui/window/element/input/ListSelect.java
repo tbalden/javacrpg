@@ -18,9 +18,12 @@
 
 package org.jcrpg.ui.window.element.input;
 
+import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+import com.jme.scene.Node;
 
 public class ListSelect extends InputBase {
 
@@ -30,21 +33,55 @@ public class ListSelect extends InputBase {
 	public int selected = 0;
 	public int fromCount = 0;
 	public int maxCount = 0;
-	public int maxVisible = 0;
+	public int maxVisible = 5;
 	public boolean reloadNeeded = false;
 	
 	public ColorRGBA normal = null;
 	public ColorRGBA highlighted = null;
 	
-	public ListSelect(Window w, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+	public Node deactivatedNode = null;
+	public Node activatedNode = null;
+	
+	public ListSelect(Window w, Node parent, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		super(w, centerX, centerY, sizeX, sizeY);
 		this.ids = ids;
 		this.texts = texts;
+		maxCount = texts.length;
 		this.normal = normal;
 		this.highlighted = highlighted;
 		deactive();
+		parent.attachChild(baseNode);
+		parent.updateRenderState();
 	}
 	
+	public void setupDeactivated()
+	{
+		baseNode.detachAllChildren();
+		String text = texts[selected+fromCount];
+		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/400f);
+		baseNode.attachChild(slottextNode);
+		baseNode.updateRenderState();
+	}
+
+	public void setupActivated()
+	{
+		baseNode.detachAllChildren();
+		for (int i=0; i<maxVisible; i++) {
+			if (i+selected+fromCount<maxCount) {
+				String text = texts[i+selected+fromCount];
+				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/400f);
+				baseNode.attachChild(slottextNode);
+			}
+		}
+		baseNode.updateRenderState();
+	}
+
 	public boolean select(boolean next)
 	{
 		if (!next) {
@@ -102,10 +139,12 @@ public class ListSelect extends InputBase {
 	@Override
 	public void activate() {
 		super.activate();
+		setupActivated();
 	}
 
 	@Override
 	public void deactive() {
 		super.deactive();
+		setupDeactivated();
 	}
 }
