@@ -18,7 +18,7 @@
 
 package org.jcrpg.ui.window.element.input;
 
-import org.jcrpg.ui.Window;
+import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.scene.Node;
 
@@ -29,13 +29,17 @@ public abstract class InputBase {
 	public float sizeX, sizeY;
 	public float dCenterX, dCenterY;
 	public float dSizeX, dSizeY;
-	public Window w;
+	public InputWindow w;
 	public Node baseNode;
 	boolean active = false;
 	boolean enabled = true;
+	boolean updated = false;
 	
-	public InputBase(Window w, float centerX, float centerY, float sizeX, float sizeY)
+	public Node parentNode = null;
+	
+	public InputBase(InputWindow w, Node parentNode, float centerX, float centerY, float sizeX, float sizeY)
 	{
+		this.parentNode = parentNode;
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.sizeX = sizeX;
@@ -46,6 +50,8 @@ public abstract class InputBase {
 		dSizeX =  w.core.getDisplay().getWidth()*(sizeX);
 		dSizeY =  w.core.getDisplay().getHeight()*(sizeY);
 		baseNode = new Node("InputBaseNode");
+		parentNode.attachChild(baseNode);
+		parentNode.updateRenderState();
 	}
 
 	public String value = "";
@@ -82,6 +88,14 @@ public abstract class InputBase {
 	public boolean handleKey(String key)
 	{
 		return true;
+	}
+
+	public boolean isUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(boolean updated) {
+		this.updated = updated;
 	}
 	
 	
