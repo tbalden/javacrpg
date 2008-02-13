@@ -154,10 +154,20 @@ public class EntityDescription {
 		groupingRule.possibleMembers.add(new GroupingMemberProps(50,1,1,member));
 	}
 	
+	/**
+	 * Returns roaming size calculation result, override it in specific descriptions if you like.
+	 * @param instance
+	 * @return
+	 */
 	public int getRoamingSize(EntityInstance instance)
 	{
 		return instance.numberOfMembers;
 	}
+	/**
+	 * Returns domain size calculation result, override it in specific descriptions if you like.
+	 * @param instance
+	 * @return
+	 */
 	public int getDomainSize(EntityInstance instance)
 	{
 		return instance.numberOfMembers;

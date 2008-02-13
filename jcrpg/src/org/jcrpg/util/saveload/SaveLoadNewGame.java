@@ -36,7 +36,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
-import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.player.PartyMember;

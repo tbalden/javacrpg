@@ -26,8 +26,6 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
-import org.jcrpg.world.ai.player.Party;
-import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.player.PartyMember;
 
 import com.jme.scene.Node;
