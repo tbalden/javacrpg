@@ -49,6 +49,7 @@ public class HUD {
 	public DirectionTimeMeter meter;
 	public SystemRelated sr;
 	public TextBox mainBox;
+	public Characters characters;
 	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
@@ -141,7 +142,7 @@ public class HUD {
         base.addEventHandler("logUp", mainBox);
         base.addEventHandler("logDown", mainBox);
         
-        new Characters(this);
+        characters = new Characters(this);
 		
 	}
 	

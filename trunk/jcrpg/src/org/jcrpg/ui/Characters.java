@@ -33,13 +33,15 @@ import com.jme.scene.shape.Quad;
 public class Characters {
 
 	public ArrayList<org.jcrpg.ui.window.element.Character> characterData = new ArrayList<org.jcrpg.ui.window.element.Character>();
-	Font font;
+
 	FontTT text;
 	
+	Node node = new Node();
+	HUD hud = null;
 	public Characters(HUD hud)
 	{
-		font = new Font("Verdana", Font.BOLD, 32);
-		text = new FontTT(font.deriveFont(Font.BOLD),64,0);
+		this.hud = hud;
+		text = FontUtils.textVerdana;
  		String[] pics =
 		{
 				"./data/portraits/human/male/balzac.png", 
@@ -93,10 +95,10 @@ public class Characters {
 				classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
 
-				hud.hudNode.attachChild(nametextNode);
-				hud.hudNode.attachChild(classtextNode);
-				hud.hudNode.attachChild(sm);
-				hud.hudNode.attachChild(q);
+				node.attachChild(nametextNode);
+				node.attachChild(classtextNode);
+				node.attachChild(sm);
+				node.attachChild(q);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -109,5 +111,15 @@ public class Characters {
 			}
 			characterData.add(c);
 		}
+	}
+	
+	public void hide()
+	{
+		node.removeFromParent();
+	}
+	public void show()
+	{
+		hud.hudNode.attachChild(node);
+		node.updateRenderState();
 	}
 }
