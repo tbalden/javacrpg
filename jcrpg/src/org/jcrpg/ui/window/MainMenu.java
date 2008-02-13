@@ -77,6 +77,7 @@ public class MainMenu extends Window implements KeyListener {
 			base.addEventHandler("lookUp", this);
 			base.addEventHandler("lookDown", this);
 			base.addEventHandler("enter", this);
+			base.addEventHandler("back", this);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -128,12 +129,10 @@ public class MainMenu extends Window implements KeyListener {
 		} else
 		if (name.equals(NEW_GAME))
 		{
+			base.hud.characters.hide();
 			toggle();
-			core.clearCore();
-			SaveLoadNewGame.newGame(core);
-			core.init3DGame();
-			core.getRootNode().updateRenderState();
-			core.gameState.engine.setPause(false);
+			core.partySetup.toggle();
+			
 		} else
 		if (name.equals(SAVE_GAME))
 		{
@@ -161,6 +160,13 @@ public class MainMenu extends Window implements KeyListener {
 		if (key.equals("lookDown"))
 		{
 			selected++;
+		}
+		if (key.equals("back"))
+		{
+			if (core.coreFullyInitialized) {
+				toggle();
+				return true;
+			}
 		}
 		selected = selected%buttons.size();
 		if (selected<0) selected = buttons.size()-1;

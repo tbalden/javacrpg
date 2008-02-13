@@ -18,11 +18,11 @@
 
 package org.jcrpg.ui.window;
 
-import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
@@ -56,13 +56,11 @@ public class LoadMenu extends Window implements KeyListener {
 	
 	public ArrayList<Button> buttons = new ArrayList<Button>();
 
-	Font font;
 	FontTT text;
 	
 	public LoadMenu(UIBase base) {
 		super(base);
-		font = new Font("Verdana", Font.BOLD, 32);
-		text = new FontTT(font.deriveFont(Font.BOLD),64,0);
+		text = FontUtils.textVerdana;
         try {
         	
         	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
@@ -231,6 +229,7 @@ public class LoadMenu extends Window implements KeyListener {
 		toggle();
 		core.clearCore();
 		SaveLoadNewGame.loadGame(core,data.gameData);
+		base.hud.characters.show();
 		System.out.println("---------------------- LOADING GAME ----------------------------");
 		core.init3DGame();
 		System.out.println("---------------------- END LOADING GAME ------------------------");

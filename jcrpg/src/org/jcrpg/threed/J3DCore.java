@@ -53,6 +53,7 @@ import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
+import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -1616,6 +1617,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Map worldMap = null;
 	public MainMenu mainMenu = null;
 	public LoadMenu loadMenu = null;
+	public PartySetup partySetup = null;
 	
 	public void createWorldMap()
 	{
@@ -1893,6 +1895,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			uiBase = new UIBase(this);
 			mainMenu = new MainMenu(uiBase);
 			loadMenu = new LoadMenu(uiBase);
+			partySetup = new PartySetup(uiBase);
 			uiBase.addWindow("mainMenu", mainMenu);			
 			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 			ChoiceDescription no = new ChoiceDescription("N","yes","No");
