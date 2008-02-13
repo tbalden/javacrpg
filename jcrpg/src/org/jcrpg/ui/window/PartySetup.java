@@ -18,20 +18,24 @@
 
 package org.jcrpg.ui.window;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import org.jcrpg.ui.FontUtils;
-import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.window.element.CharListData;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.player.PartyMember;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class PartySetup extends InputWindow implements KeyListener{
+public class PartySetup extends InputWindow {
 
 	public static final String charsDir = "./chars";
 	
@@ -44,7 +48,9 @@ public class PartySetup extends InputWindow implements KeyListener{
 	int currentPage = 0;
 	
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
-	
+	ListSelect select = null;
+	TextButton newChar;
+	TextButton startGame; 
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
@@ -56,12 +62,14 @@ public class PartySetup extends InputWindow implements KeyListener{
 	    	
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	ListSelect select = new ListSelect(this,pageMemberSelection,0.2f,0.2f,0.1f,0.1f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	select = new ListSelect(this,pageMemberSelection,0.2f,0.2f,0.1f,0.1f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(select);
 	    	
-			base.addEventHandler("lookUp", this);
-			base.addEventHandler("lookDown", this);
-			base.addEventHandler("enter", this);
+	    	newChar = new TextButton(this,pageMemberSelection, 0.2f, 0.5f, 0.1f, 0.1f,"New Character");
+	    	addInput(newChar);
+	    	startGame = new TextButton(this,pageMemberSelection, 0.5f, 0.5f, 0.1f, 0.1f,"Start Game");
+	    	addInput(startGame);
+	    	
 			base.addEventHandler("back", this);
 		} catch (Exception ex)
 		{
@@ -82,27 +90,82 @@ public class PartySetup extends InputWindow implements KeyListener{
 		{
 			windowNode.detachAllChildren();
 			windowNode.attachChild(pageMemberSelection);
+			refreshCharacterList();
+			select.ids = dataList.keySet().toArray(new String[0]);
+			String[] names = new String[dataList.values().size()];
+			int i=0;
+			for (CharListData d:dataList.values())
+			{
+				names[i++] = d.charName;
+			}
+			select.texts = names;
+			select.setUpdated(true);
 		}
 		activateSelectedInput();			
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
+	
+	static TreeMap<String, CharListData> dataList = null;
+	
+	public void refreshCharacterList()
+	{
+		try {
+			File f = new File(charsDir);
+			System.out.println("# FILE: "+f.getAbsolutePath());
+			String[] files = f.list();
+			TreeMap<String, CharListData> dataList1 = new TreeMap<String, CharListData>();
+			if (files!=null)
+			for (String file:files)
+			{
+				System.out.println("# FILE: "+file);
+				if (new File(f.getAbsolutePath()+"/"+file).isDirectory())
+				{
+					CharListData data = new CharListData();
+					data.charName = file;
+
+					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
+					for (String sFile:subFiles)
+					{
+						System.out.println("F: "+sFile);
+						File sF = new File(charsDir+"/"+file+"/"+sFile);
+						if (sF.isFile())
+						{
+							if (sF.getName().endsWith(".zip"))
+							{
+								data.charData = sF;
+							}
+							if (sF.getName().endsWith("portrait.png"))
+							{
+								data.pic = sF;
+							}
+							if (data.charData!=null && data.pic!=null) break;
+						}
+					}
+					if (data.charData!=null && data.pic!=null)
+					{
+						dataList1.put(data.charName,data);
+					}
+				}
+			}
+			dataList= dataList1; /*new TreeMap<String, CharListData>();
+			int reorderCount = dataList1.size();
+			for (CharListData d:dataList1.values())
+			{
+				dataList.put(reorderCount+" - "+d.charName, d);
+				d.id = reorderCount+" - "+d.charName;				
+				reorderCount--;
+			}*/
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
 	public boolean handleKey(String key) {
+		if (super.handleKey(key)) return true;
 		if (key.equals("enter")) {
-			toggle();
-			base.hud.characters.show();
-			core.clearCore();
-			
-			for (int i=0; i<6; i++)
-			{
-				members.add(new PartyMember("_"+i));
-			}			
-			SaveLoadNewGame.newGame(core,members);
-			core.init3DGame();
-			core.getRootNode().updateRenderState();
-			core.gameState.engine.setPause(false);
 		} else
 		if (key.equals("back"))
 		{
@@ -114,6 +177,26 @@ public class PartySetup extends InputWindow implements KeyListener{
 			core.mainMenu.toggle();
 		}
 		return true;
+	}
+
+	@Override
+	public void inputUsed(InputBase base, String message) {
+		if (base.equals(startGame))
+		{
+			toggle();
+			this.base.hud.characters.show();
+			core.clearCore();
+			
+			for (int i=0; i<6; i++)
+			{
+				members.add(new PartyMember("_"+i));
+			}			
+			SaveLoadNewGame.newGame(core,members);
+			core.init3DGame();
+			core.getRootNode().updateRenderState();
+			core.gameState.engine.setPause(false);
+			
+		}
 	}
 
 }

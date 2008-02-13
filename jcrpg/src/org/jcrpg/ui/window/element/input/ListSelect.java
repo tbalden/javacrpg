@@ -19,7 +19,7 @@
 package org.jcrpg.ui.window.element.input;
 
 import org.jcrpg.ui.FontUtils;
-import org.jcrpg.ui.Window;
+import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -42,21 +42,21 @@ public class ListSelect extends InputBase {
 	public Node deactivatedNode = null;
 	public Node activatedNode = null;
 	
-	public ListSelect(Window w, Node parent, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
-		super(w, centerX, centerY, sizeX, sizeY);
+	public ListSelect(InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+		super(w, parent, centerX, centerY, sizeX, sizeY);
 		this.ids = ids;
 		this.texts = texts;
-		maxCount = texts.length;
+		maxCount = ids.length;		
 		this.normal = normal;
 		this.highlighted = highlighted;
 		deactive();
-		parent.attachChild(baseNode);
 		parent.updateRenderState();
 	}
 	
 	public void setupDeactivated()
 	{
 		baseNode.detachAllChildren();
+		if (maxCount==0) return;
 		String text = texts[selected+fromCount];
 		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
@@ -69,6 +69,7 @@ public class ListSelect extends InputBase {
 	public void setupActivated()
 	{
 		baseNode.detachAllChildren();
+		if (maxCount==0) return;
 		for (int i=0; i<maxVisible; i++) {
 			if (i+selected+fromCount<maxCount) {
 				String text = texts[i+selected+fromCount];
@@ -138,6 +139,11 @@ public class ListSelect extends InputBase {
 
 	@Override
 	public void activate() {
+		if (updated)
+		{
+			maxCount = ids.length;
+			selected = 0;
+		}
 		super.activate();
 		setupActivated();
 	}
