@@ -26,6 +26,7 @@ import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.element.CharListData;
+import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
@@ -50,6 +51,7 @@ public class PartySetup extends InputWindow {
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect select = null;
 	TextButton newChar;
+	TextButton rmChar;
 	TextButton startGame; 
 	public PartySetup(UIBase base) {
 		super(base);
@@ -65,11 +67,14 @@ public class PartySetup extends InputWindow {
 	    	select = new ListSelect(this,pageMemberSelection,0.2f,0.2f,0.1f,0.1f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(select);
 	    	
-	    	newChar = new TextButton(this,pageMemberSelection, 0.2f, 0.5f, 0.1f, 0.1f,"New Character");
+	    	newChar = new TextButton(this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
 	    	addInput(newChar);
-	    	startGame = new TextButton(this,pageMemberSelection, 0.5f, 0.5f, 0.1f, 0.1f,"Start Game");
+	    	rmChar = new TextButton(this,pageMemberSelection, 0.50f, 0.5f, 0.2f, 0.07f,400f,"Remove Char.");
+	    	addInput(rmChar);
+	    	startGame = new TextButton(this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
 	    	addInput(startGame);
-	    	
+	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
+	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);	    	
 			base.addEventHandler("back", this);
 		} catch (Exception ex)
 		{

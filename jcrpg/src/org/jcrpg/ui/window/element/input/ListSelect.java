@@ -49,7 +49,7 @@ public class ListSelect extends InputBase {
 		maxCount = ids.length;		
 		this.normal = normal;
 		this.highlighted = highlighted;
-		deactive();
+		deactivate();
 		parent.updateRenderState();
 	}
 	
@@ -149,8 +149,8 @@ public class ListSelect extends InputBase {
 	}
 
 	@Override
-	public void deactive() {
-		super.deactive();
+	public void deactivate() {
+		super.deactivate();
 		setupDeactivated();
 	}
 }

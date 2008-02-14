@@ -16,32 +16,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.ui.window.element.input;
+package org.jcrpg.ui.window.element;
 
 import java.io.File;
 
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
+import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class TextButton extends InputBase {
+public class TextLabel extends InputBase {
 
 	public String text;
 	
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
-	public TextButton(InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
-			float sizeY, float textProportion, String text) {
+	public boolean useImage = false;
+	public TextLabel(InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+			float sizeY, float textProportion, String text, boolean useImage) {
 		super(w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = text;
 		this.textProportion = textProportion;
-		deactivate();
+		activate();
 	}
 	
 	Node activeNode = null;
@@ -52,6 +54,7 @@ public class TextButton extends InputBase {
 		baseNode.detachAllChildren();
 		if (activeNode==null ) {
 			activeNode = new Node();
+			if (useImage)
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
@@ -61,7 +64,7 @@ public class TextButton extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.6f,0.6f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -77,6 +80,7 @@ public class TextButton extends InputBase {
 		baseNode.detachAllChildren();
 		if (deactiveNode==null ) {
 			deactiveNode = new Node();
+			if (useImage)
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);
@@ -85,7 +89,7 @@ public class TextButton extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);

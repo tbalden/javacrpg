@@ -76,7 +76,7 @@ public abstract class InputBase {
 	/**
 	 * This is run when an input field is deselected in an input window.
 	 */
-	public void deactive()
+	public void deactivate()
 	{
 		active = false;
 	}
