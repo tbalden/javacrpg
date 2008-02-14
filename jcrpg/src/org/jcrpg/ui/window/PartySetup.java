@@ -65,7 +65,7 @@ public class PartySetup extends InputWindow {
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
 	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
-	    	select = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	select = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(select);
 	    	
 	    	newChar = new TextButton(this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
@@ -105,6 +105,11 @@ public class PartySetup extends InputWindow {
 				names[i++] = d.charName;
 			}
 			select.texts = names;
+			
+			// TODO just testing...
+			select.ids = new String[]{"1", "2"};
+			select.texts = new String[]{"Urmuc - Dwarf, Fighter", "Athos - Human, Mage"};			
+			
 			select.setUpdated(true);
 		}
 		activateSelectedInput();			
