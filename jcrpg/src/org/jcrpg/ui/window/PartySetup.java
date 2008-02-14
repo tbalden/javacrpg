@@ -64,7 +64,8 @@ public class PartySetup extends InputWindow {
 	    	
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	select = new ListSelect(this,pageMemberSelection,0.2f,0.2f,0.1f,0.1f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
+	    	select = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(select);
 	    	
 	    	newChar = new TextButton(this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
