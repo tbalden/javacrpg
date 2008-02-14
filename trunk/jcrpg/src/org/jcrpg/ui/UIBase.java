@@ -59,6 +59,7 @@ public class UIBase {
 	}
 	public boolean handleWindowEvent(String trigger)
 	{
+		if (Window.windowCounter>0) return false;
 		if (windows.get(trigger)==null) return false;
 		windows.get(trigger).toggle();
 		return true;

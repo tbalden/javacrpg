@@ -134,7 +134,7 @@ public class ListSelect extends InputBase {
 				
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override

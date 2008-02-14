@@ -63,9 +63,9 @@ public class TextButton extends InputBase {
 		if (key.equals("enter"))
 		{
 			w.inputUsed(this, key);
-			
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 }
