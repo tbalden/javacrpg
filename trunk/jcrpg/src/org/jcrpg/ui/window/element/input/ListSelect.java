@@ -18,12 +18,16 @@
 
 package org.jcrpg.ui.window.element.input;
 
+import java.io.File;
+
 import org.jcrpg.ui.FontUtils;
+import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.shape.Quad;
 
 public class ListSelect extends InputBase {
 
@@ -41,6 +45,9 @@ public class ListSelect extends InputBase {
 	
 	public Node deactivatedNode = null;
 	public Node activatedNode = null;
+
+	public static final String defaultImage = "./data/ui/buttonBase.png";
+	public String bgImage = defaultImage; 
 	
 	public ListSelect(InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		super(w, parent, centerX, centerY, sizeX, sizeY);
@@ -52,13 +59,27 @@ public class ListSelect extends InputBase {
 		deactivate();
 		parent.updateRenderState();
 	}
+
 	
 	public void setupDeactivated()
 	{
 		baseNode.detachAllChildren();
+		if (deactivatedNode==null) 
+		{
+			deactivatedNode = new Node();
+			try {
+				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				w1.setSolidColor(ColorRGBA.gray);
+				deactivatedNode.attachChild(w1);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		baseNode.attachChild(deactivatedNode);
 		if (maxCount==0) return;
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/400f);
@@ -69,11 +90,27 @@ public class ListSelect extends InputBase {
 	public void setupActivated()
 	{
 		baseNode.detachAllChildren();
-		if (maxCount==0) return;
+		if (maxCount==0)
+		{
+			if (activatedNode==null) 
+			{
+				activatedNode = new Node();
+				try {
+					Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+					w1.setSolidColor(ColorRGBA.white);
+					activatedNode.attachChild(w1);
+				} catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+			baseNode.attachChild(activatedNode);
+			return;
+		}
 		for (int i=0; i<maxVisible; i++) {
 			if (i+selected+fromCount<maxCount) {
 				String text = texts[i+selected+fromCount];
-				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/400f);
