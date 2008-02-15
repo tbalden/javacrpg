@@ -97,27 +97,42 @@ public class AudioServer {
 	
 	public void pause(String id)
 	{
-		//hmTracks.get(id).fadeOut(0.7f);
-		if (hmTracks.get(id).isPlaying())
-			hmTracks.get(id).pause();
-		played.remove(id);
-		paused.add(id);
+		try {
+			//hmTracks.get(id).fadeOut(0.7f);
+			if (hmTracks.get(id).isPlaying())
+				hmTracks.get(id).pause();
+			played.remove(id);
+			paused.add(id);
+		} catch (NullPointerException npex)
+		{
+			npex.printStackTrace();
+		}
 	}
 	
 	public void stop(String id)
 	{
-		//hmTracks.get(id).fadeOut(0.7f);
-		if (hmTracks.get(id).isPlaying())
-			hmTracks.get(id).stop();
-		played.remove(id);
-		paused.remove(id);
+		try {
+			//hmTracks.get(id).fadeOut(0.7f);
+			if (hmTracks.get(id).isPlaying())
+				hmTracks.get(id).stop();
+			played.remove(id);
+			paused.remove(id);
+		} catch (NullPointerException npex)
+		{
+			npex.printStackTrace();
+		}
 	}
 	public void stopStart(String id, String startId)
 	{
-		//hmTracks.get(id).fadeOut(0.7f);
-		if (hmTracks.get(id).isPlaying())
-			hmTracks.get(id).stop();
-		hmTracks.get(startId).play();
+		try {
+			//hmTracks.get(id).fadeOut(0.7f);
+			if (hmTracks.get(id).isPlaying())
+				hmTracks.get(id).stop();
+			hmTracks.get(startId).play();
+		} catch (NullPointerException npex)
+		{
+			npex.printStackTrace();
+		}
 	}
 	
 }
