@@ -206,7 +206,7 @@ public class PartySetup extends InputWindow {
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
-			
+			core.audioServer.stopAndResumeOthers("main");
 		}
 	}
 

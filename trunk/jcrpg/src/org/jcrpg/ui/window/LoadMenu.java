@@ -235,6 +235,7 @@ public class LoadMenu extends Window implements KeyListener {
 		System.out.println("---------------------- END LOADING GAME ------------------------");
 		core.getRootNode().updateRenderState();
 		core.gameState.engine.setPause(false);
+		core.audioServer.stopAndResumeOthers("main");
 	}
 
 	public boolean handleKey(String key) {
