@@ -36,13 +36,13 @@ public class AudioServer {
 	public AudioServer()
 	{
 		try {
-			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), false);
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), true);
 			mainTheme.setType(TrackType.POSITIONAL);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
 			mainTheme.setVolume(1f);
 			hmTracks.put("main", mainTheme);
-			mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), false);
+			mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
 			mainTheme.setType(TrackType.POSITIONAL);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
