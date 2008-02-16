@@ -97,7 +97,8 @@ public class AudioServer {
 	
 	public void playOnlyThis(String id)
 	{
-		for (String p:played)
+		String[] playedA = played.toArray(new String[0]); 
+		for (String p:playedA)
 		{
 			pause(p);
 		}
@@ -107,7 +108,8 @@ public class AudioServer {
 	{
 		stop(id);
 		played.remove(id);
-		for (String p:paused)
+		String[] pausedA = paused.toArray(new String[0]); 
+		for (String p:pausedA)
 		{
 			play(p);
 		}
