@@ -1248,6 +1248,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
+	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
 	 * @param from From coordinates (gameState.world coords)
@@ -1255,6 +1256,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param directions A set of directions to move into
 	 */
 	public boolean move(int[] from, int[] fromRel, int[] directions)
+	{
+		boolean success = moveBase(from, fromRel, directions);
+		if (success)
+		{
+			audioServer.play(AudioServer.STEP_SOIL);
+		} else
+		{
+			audioServer.play(AudioServer.STEP_NO_WAY);
+		}
+		return success;
+	}
+	
+	/**
+	 * Tries to move in directions, and sets coords if successfull
+	 * @param from From coordinates (gameState.world coords)
+	 * @param fromRel From coordinates gameState.relative (3d space coords)
+	 * @param directions A set of directions to move into
+	 */
+	public boolean moveBase(int[] from, int[] fromRel, int[] directions)
 	{
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;

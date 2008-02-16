@@ -33,17 +33,35 @@ public class AudioServer {
 	HashSet<String> played = new HashSet<String>();
 	HashSet<String> paused = new HashSet<String>();
 	
+	public static final String STEP_ROCK = "steps_rock";
+	public static final String STEP_SOFT = "steps_soft";
+	public static final String STEP_SOIL = "steps_soil";
+	public static final String STEP_SNOW = "steps_snow";
+	public static final String STEP_WATER = "steps_water";
+	public static final String STEP_FLY = "steps_fly";
+	public static final String STEP_SWIM = "steps_swim";
+	public static final String STEP_NO_WAY= "noway";
+	
+	public static final String[] stepTypes = new String[] {
+		STEP_SOIL, STEP_NO_WAY
+	};
+	
 	public AudioServer()
 	{
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), true);
-			mainTheme.setType(TrackType.POSITIONAL);
+			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
 			mainTheme.setVolume(1f);
 			hmTracks.put("main", mainTheme);
-			mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
-			mainTheme.setType(TrackType.POSITIONAL);
+		}catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		try {	
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
+			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
 			mainTheme.setVolume(0.05f);
@@ -52,6 +70,21 @@ public class AudioServer {
 		}catch (Exception ex)
 		{
 			ex.printStackTrace();
+		}
+		for (String step:stepTypes)
+		{
+			try {
+				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), true);
+				mainTheme.setType(TrackType.HEADSPACE);
+				mainTheme.setRelative(false);
+				mainTheme.setLooping(false);
+				mainTheme.setVolume(1f);
+				hmTracks.put(step, mainTheme);
+			} catch (Exception ex)
+			{
+				
+			}
+			
 		}
 		
 		
@@ -86,7 +119,9 @@ public class AudioServer {
 			if (!hmTracks.get(id).isPlaying()) {
 				float v = hmTracks.get(id).getVolume();
 				hmTracks.get(id).play();
-				hmTracks.get(id).fadeIn(v, v);
+				if (hmTracks.get(id).getType().equals(TrackType.MUSIC)) {
+					hmTracks.get(id).fadeIn(v, v);
+				}
 			}
 			played.add(id);
 		} catch (NullPointerException npex)

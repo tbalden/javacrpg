@@ -17,9 +17,12 @@
 
 package org.jcrpg.space.sidetype;
 
+import org.jcrpg.audio.AudioServer;
+
 public class SideSubType {
 
 	public String id;
+	public String audioStepType = AudioServer.STEP_SOIL;
 
 	public SideSubType(String id) {
 		super();
