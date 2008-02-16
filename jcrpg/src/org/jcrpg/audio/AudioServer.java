@@ -26,7 +26,7 @@ import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
 
-public class AudioServer {
+public class AudioServer implements Runnable {
 
 	HashMap<String, AudioTrack> hmTracks = new HashMap<String, AudioTrack>();
 	
@@ -64,7 +64,7 @@ public class AudioServer {
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
-			mainTheme.setVolume(0.05f);
+			mainTheme.setVolume(0.07f);
 			hmTracks.put("ingame", mainTheme);
 			
 		}catch (Exception ex)
@@ -86,7 +86,7 @@ public class AudioServer {
 			}
 			
 		}
-		
+		new Thread(this).start();
 		
 	}
 	
@@ -117,8 +117,10 @@ public class AudioServer {
 	
 	public synchronized void play(String id)
 	{
+		System.out.println("Playing "+id);
 		try {
 			if (!hmTracks.get(id).isPlaying()) {
+				System.out.println("Playing "+id);
 				float v = hmTracks.get(id).getVolume();
 				hmTracks.get(id).play();
 				if (hmTracks.get(id).getType().equals(TrackType.MUSIC)) {
@@ -134,6 +136,7 @@ public class AudioServer {
 	
 	public synchronized  void pause(String id)
 	{
+		System.out.println("Pausing "+id);
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
 			if (hmTracks.get(id).isPlaying())
@@ -148,6 +151,7 @@ public class AudioServer {
 	
 	public synchronized  void stop(String id)
 	{
+		System.out.println("Stopping "+id);
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
 			if (hmTracks.get(id).isPlaying())
@@ -171,5 +175,48 @@ public class AudioServer {
 			npex.printStackTrace();
 		}
 	}
+	public synchronized boolean addTrack(String id, String file)
+	{
+		if (hmTracks.get(id)==null)
+		try {
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), true);
+			mainTheme.setType(TrackType.HEADSPACE);
+			mainTheme.setRelative(false);
+			mainTheme.setLooping(false);
+			mainTheme.setVolume(1f);
+			hmTracks.put(id, mainTheme);
+			
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public void run() {
+		System.out.println("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
+		//Thread.currentThread().setPriority(1);
+		while (true)
+		{
+			AudioSystem.getSystem().update();
+			try{Thread.sleep(4);}catch (Exception ex){}
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
