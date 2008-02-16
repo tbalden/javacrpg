@@ -113,7 +113,7 @@ public class AudioServer {
 		}
 	}
 	
-	public void play(String id)
+	public synchronized void play(String id)
 	{
 		try {
 			if (!hmTracks.get(id).isPlaying()) {
@@ -130,7 +130,7 @@ public class AudioServer {
 		}
 	}
 	
-	public void pause(String id)
+	public synchronized  void pause(String id)
 	{
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
@@ -144,7 +144,7 @@ public class AudioServer {
 		}
 	}
 	
-	public void stop(String id)
+	public synchronized  void stop(String id)
 	{
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
@@ -157,7 +157,7 @@ public class AudioServer {
 			npex.printStackTrace();
 		}
 	}
-	public void stopStart(String id, String startId)
+	public synchronized  void stopStart(String id, String startId)
 	{
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
