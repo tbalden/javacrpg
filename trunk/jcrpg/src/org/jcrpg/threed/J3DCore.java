@@ -104,7 +104,6 @@ import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
-import com.jmex.audio.AudioSystem;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
@@ -1781,6 +1780,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	@Override
 	protected void simpleInitGame() {
+		audioServer = new AudioServer();
+		audioServer.init();
+		
 		rootNode.setCullMode(Node.CULL_NEVER);
 		//cam.resize(100, 100);
 		//cam.setViewPort(30, 90, 30, 90);
@@ -2020,8 +2022,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		skySphere.updateRenderState();
 		
-		audioServer = new AudioServer();
-		audioServer.init();
 		
 		mainMenu.toggle();
 	}
@@ -2078,7 +2078,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		super.simpleUpdate();
 		
-		AudioSystem.getSystem().update();
+		//AudioSystem.getSystem().update();
 		
 		if (dr!=null) {
 			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));

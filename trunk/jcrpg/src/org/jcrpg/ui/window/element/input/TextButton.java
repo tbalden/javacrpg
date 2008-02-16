@@ -100,6 +100,7 @@ public class TextButton extends InputBase {
 	public boolean handleKey(String key) {
 		if (key.equals("enter"))
 		{
+			w.core.audioServer.play(SOUND_INPUTSELECTED);
 			w.inputUsed(this, key);
 			return true;
 		}
