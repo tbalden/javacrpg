@@ -376,7 +376,7 @@ public class AudioServer implements Runnable {
 	public void run() {
 		if (!J3DCore.SOUND_ENABLED) return;
 		System.out.println("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
-		//Thread.currentThread().setPriority(10);
+		Thread.currentThread().setPriority(10);
 		while (true)
 		{
 			AudioSystem.getSystem().update();
