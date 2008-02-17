@@ -183,6 +183,7 @@ public class AudioServer implements Runnable {
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
+						System.out.println("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}

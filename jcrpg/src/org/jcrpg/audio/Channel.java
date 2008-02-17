@@ -100,7 +100,7 @@ public class Channel implements TrackStateListener{
 	public synchronized void trackStopped(AudioTrack arg0) {
 		System.out.println("##### STOPPED TRACK : "+soundId);
 		track.removeTrackStateListener(this);
-		if (track.equals(track)) {
+		if (this.track!=null && this.track.equals(track)) {
 			track = null;
 			soundId = null;
 			paused = false;
