@@ -1780,6 +1780,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	@Override
 	protected void simpleInitGame() {
+		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
 		audioServer.init();
 		
@@ -2051,13 +2052,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		encounterMode = value;
 		if (encounterMode)
 		{
-			if (encounterWindow==null) { 
+			if (encounterWindow==null) {
+
 				ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 				ArrayList<ChoiceDescription> encAnswers = new ArrayList<ChoiceDescription>();
 				encAnswers.add(yes);
 				encounterWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
 				uiBase.addWindow("Encounter", encounterWindow);
 			}
+			audioServer.play(AudioServer.EVENT_ENC1);
 			uiBase.hud.mainBox.hide();
 			updateDisplay(null);
 			encounterWindow.toggle();

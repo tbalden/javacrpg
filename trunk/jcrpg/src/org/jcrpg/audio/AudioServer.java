@@ -19,16 +19,19 @@
 package org.jcrpg.audio;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
+import com.jmex.audio.event.TrackStateListener;
 
-public class AudioServer implements Runnable {
+public class AudioServer implements Runnable, TrackStateListener {
 
-	HashMap<String, AudioTrack> hmTracks = new HashMap<String, AudioTrack>();
+	HashMap<String, ArrayList<AudioTrack>> hmTracks = new HashMap<String, ArrayList<AudioTrack>>();
+	HashMap<String, String> hmTracksAndFiles = new HashMap<String, String>();
 	
 	HashSet<String> played = new HashSet<String>();
 	HashSet<String> paused = new HashSet<String>();
@@ -42,6 +45,8 @@ public class AudioServer implements Runnable {
 	public static final String STEP_SWIM = "steps_swim";
 	public static final String STEP_NO_WAY= "noway";
 	
+	public static final String EVENT_ENC1 = "enc1";
+	
 	public static final String[] stepTypes = new String[] {
 		STEP_SOIL, STEP_NO_WAY
 	};
@@ -50,22 +55,28 @@ public class AudioServer implements Runnable {
 	{
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), true);
+			mainTheme.addTrackStateListener(this);
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
 			mainTheme.setVolume(1f);
-			hmTracks.put("main", mainTheme);
+			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+			tracks.add(mainTheme);
+			hmTracks.put("main", tracks);
 		}catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 		try {	
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
+			mainTheme.addTrackStateListener(this);
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
 			mainTheme.setVolume(0.07f);
-			hmTracks.put("ingame", mainTheme);
+			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+			tracks.add(mainTheme);
+			hmTracks.put("ingame", tracks);
 			
 		}catch (Exception ex)
 		{
@@ -75,32 +86,41 @@ public class AudioServer implements Runnable {
 		{
 			try {
 				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), true);
-				mainTheme.setType(TrackType.HEADSPACE);
+				mainTheme.addTrackStateListener(this);
+				mainTheme.setType(TrackType.POSITIONAL);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
 				mainTheme.setVolume(1f);
-				hmTracks.put(step, mainTheme);
+				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+				tracks.add(mainTheme);
+				hmTracks.put(step, tracks);
 			} catch (Exception ex)
 			{
 				
 			}
 			
 		}
-		new Thread(this).start();
+		addTrack(EVENT_ENC1, "./data/audio/sound/events/enc1.ogg");
+		Thread t = new Thread(this);
+		t.setDaemon(true);
+		t.start();
 		
 	}
 	
 	public void init()
 	{
 		pause("ingame");
+		paused.add("ingame");
 	}
 	
 	public void playOnlyThis(String id)
 	{
+		
 		String[] playedA = played.toArray(new String[0]); 
 		for (String p:playedA)
 		{
-			pause(p);
+			if (!p.equals(id))
+				pause(p);
 		}
 		play(id);
 	}
@@ -111,21 +131,74 @@ public class AudioServer implements Runnable {
 		String[] pausedA = paused.toArray(new String[0]); 
 		for (String p:pausedA)
 		{
-			play(p);
+			if (!p.equals(id))
+				play(p);
 		}
 	}
 	
+	public synchronized AudioTrack getPlayableTrack(String id) {
+		try {
+			if (hmTracks.get(id).get(0).isPlaying())
+			{
+				System.out.println("############       ############# IS PLAYING TRACK!!!!"+ id+" "+hmTracks.get(id).size());
+				if (hmTracksAndFiles.get(id)==null)
+				{
+					return null;
+				}
+				
+				if (hmTracks.get(id).size()==1)
+				{
+					System.out.println("############################### DUPLICATING TRACK!!!!");
+					addTrack(id, hmTracksAndFiles.get(id));
+					return hmTracks.get(id).get(1);
+				} else
+				{
+					if (!hmTracks.get(id).get(1).isPlaying())
+					{
+						System.out.println("############################### RET DUPLICATING TRACK!!!!");
+						return hmTracks.get(id).get(1);
+					}
+					else 
+						return null;
+				}
+			} else
+			{
+				return (hmTracks.get(id).get(0));
+			}
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public int playedAtOnce = 0;
+	public int MAX_PLAYED = 4;
+	
 	public synchronized void play(String id)
 	{
+		System.out.println("######## PLAYED AT ONCE = "+playedAtOnce);
+		if (MAX_PLAYED<=playedAtOnce) return;
 		System.out.println("Playing "+id);
 		try {
-			if (!hmTracks.get(id).isPlaying()) {
-				System.out.println("Playing "+id);
-				float v = hmTracks.get(id).getVolume();
-				hmTracks.get(id).play();
-				if (hmTracks.get(id).getType().equals(TrackType.MUSIC)) {
-					hmTracks.get(id).fadeIn(v, v);
+			if (getPlayableTrack(id)==null) {
+				/*if (hmTracks.get(id).get(0).getCurrentTime()>0.2f)
+				{
+					hmTracks.get(id).get(0).stop();
+				} else*/
+				{
+					return;
 				}
+			}
+			AudioTrack track = getPlayableTrack(id);
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(1f);
+			}
+			track.play();
+			playedAtOnce++;
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(v, v);
 			}
 			played.add(id);
 		} catch (NullPointerException npex)
@@ -139,10 +212,14 @@ public class AudioServer implements Runnable {
 		System.out.println("Pausing "+id);
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
-			if (hmTracks.get(id).isPlaying())
-				hmTracks.get(id).pause();
+			for (AudioTrack t:hmTracks.get(id)) {
+				if (t.isPlaying())
+				{
+					t.pause();
+					paused.add(id);
+				}
+			}
 			played.remove(id);
-			paused.add(id);
 		} catch (NullPointerException npex)
 		{
 			npex.printStackTrace();
@@ -154,8 +231,12 @@ public class AudioServer implements Runnable {
 		System.out.println("Stopping "+id);
 		try {
 			//hmTracks.get(id).fadeOut(0.7f);
-			if (hmTracks.get(id).isPlaying())
-				hmTracks.get(id).stop();
+			for (AudioTrack t:hmTracks.get(id)) {
+				if (t.isPlaying())
+				{
+					t.stop();
+				}
+			}
 			played.remove(id);
 			paused.remove(id);
 		} catch (NullPointerException npex)
@@ -163,28 +244,28 @@ public class AudioServer implements Runnable {
 			npex.printStackTrace();
 		}
 	}
-	public synchronized  void stopStart(String id, String startId)
-	{
-		try {
-			//hmTracks.get(id).fadeOut(0.7f);
-			if (hmTracks.get(id).isPlaying())
-				hmTracks.get(id).stop();
-			hmTracks.get(startId).play();
-		} catch (NullPointerException npex)
-		{
-			npex.printStackTrace();
-		}
-	}
+
 	public synchronized boolean addTrack(String id, String file)
 	{
-		if (hmTracks.get(id)==null)
+		hmTracksAndFiles.put(id, file);
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), true);
-			mainTheme.setType(TrackType.HEADSPACE);
+			mainTheme.addTrackStateListener(this);
+			mainTheme.setType(TrackType.POSITIONAL);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
 			mainTheme.setVolume(1f);
-			hmTracks.put(id, mainTheme);
+			mainTheme.setMinVolume(1f);
+			if (hmTracks.get(id)==null)
+			{
+				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+				tracks.add(mainTheme);
+				hmTracks.put(id, tracks);	
+			} else
+			{
+				hmTracks.get(id).add(mainTheme);
+			}
+			
 			
 		} catch (Exception ex)
 		{
@@ -196,13 +277,37 @@ public class AudioServer implements Runnable {
 
 	public void run() {
 		System.out.println("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
-		//Thread.currentThread().setPriority(1);
+		//Thread.currentThread().setPriority(10);
 		while (true)
 		{
 			AudioSystem.getSystem().update();
-			try{Thread.sleep(4);}catch (Exception ex){}
+			try{Thread.sleep(1);}catch (Exception ex){}
 		}
 
+	}
+
+	public void trackFinishedFade(AudioTrack arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("FINISHED FADE");
+		playedAtOnce--;
+	}
+
+	public void trackPaused(AudioTrack arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("PAUSED");
+		playedAtOnce--;
+	}
+
+	public void trackPlayed(AudioTrack arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("PLAYED");
+		//playedAtOnce--;
+	}
+
+	public void trackStopped(AudioTrack arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("STOPPED");
+		playedAtOnce--;
 	}
 	
 	
