@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.window.element.input.InputBase;
 
 public class UIBase {
 
@@ -37,6 +38,7 @@ public class UIBase {
 	{
 		this.core = core;
 		hud = new HUD(new HUDParams(),this, core);
+		core.audioServer.addTrack(InputBase.SOUND_INPUTSELECTED, "./data/audio/sound/ui/input_selected.ogg");
 	}
 	public void addWindow(String trigger, Window window)
 	{

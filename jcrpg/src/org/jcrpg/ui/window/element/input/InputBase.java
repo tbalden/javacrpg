@@ -54,7 +54,6 @@ public abstract class InputBase {
 		baseNode = new Node("InputBaseNode");
 		parentNode.attachChild(baseNode);
 		parentNode.updateRenderState();
-		w.core.audioServer.addTrack(SOUND_INPUTSELECTED, "./data/audio/sound/ui/input_selected.ogg");
 	}
 
 	public String value = "";
