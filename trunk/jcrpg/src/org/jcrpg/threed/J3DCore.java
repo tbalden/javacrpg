@@ -1248,6 +1248,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
 	
+	long lastStepSoundTime = System.currentTimeMillis();
+	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
 	 * @param from From coordinates (gameState.world coords)
@@ -1257,18 +1259,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean move(int[] from, int[] fromRel, int[] directions)
 	{
 		boolean success = moveBase(from, fromRel, directions);
-		if (success)
-		{
-			try {
-				Side[] s = gameState.world.getCube(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false).getSide(BOTTOM);
-				audioServer.play(s[0].subtype.audioStepType);				
-			} catch (Exception ex)
+		if (System.currentTimeMillis()-lastStepSoundTime>300) { // don't play sound too often
+			if (success)
 			{
-				audioServer.play(AudioServer.STEP_SOIL);
+				try {
+					Side[] s = gameState.world.getCube(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false).getSide(BOTTOM);
+					audioServer.play(s[0].subtype.audioStepType);				
+				} catch (Exception ex)
+				{
+					audioServer.play(AudioServer.STEP_SOIL);
+				}
+			} else
+			{
+				audioServer.play(AudioServer.STEP_NO_WAY);
 			}
-		} else
-		{
-			audioServer.play(AudioServer.STEP_NO_WAY);
+			lastStepSoundTime = System.currentTimeMillis();
 		}
 		return success;
 	}
@@ -2060,7 +2065,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				encounterWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
 				uiBase.addWindow("Encounter", encounterWindow);
 			}
-			audioServer.play(AudioServer.EVENT_ENC1);
+			audioServer.playForced(AudioServer.EVENT_ENC1);
 			uiBase.hud.mainBox.hide();
 			updateDisplay(null);
 			encounterWindow.toggle();

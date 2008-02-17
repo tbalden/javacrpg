@@ -117,7 +117,7 @@ public class MainMenu extends Window implements KeyListener {
 
 	@Override
 	public void show() {
-		core.audioServer.playOnlyThis("main");
+		core.audioServer.playOnlyThisMusic("main");
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(true);
