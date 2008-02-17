@@ -16,26 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.fauna.modifier;
+package org.jcrpg.world.ai;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+public class AudioDescription {
 
-public class MildAnimalFemale extends EntityMember {
 	
-	public static AttributeRatios commonAttributeRatios = new FantasyAttrRatios();
+	public String[] ENCOUNTER = null;
+	public String[] ATTACK = null;
+	public String[] FRIENDLY = null;
+	public String[] PAIN = null;
+	public String[] DEATH = null;
+	public String[] ENVIRONMENTAL = null;
 	
-	static
-	{
-		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
-	}
-
-
-	public MildAnimalFemale(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
-	}
-
 }

@@ -149,6 +149,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     public static int TEXTURE_QUALITY = 0;
 
+    public static boolean SOUND_ENABLED = true;
+    public static int MUSIC_VOLUME_PERCENT = 10;
+    public static int EFFECT_VOLUME_PERCENT = 60;
+    
     public static boolean BLOOM_EFFECT = false;
     public static boolean SHADOWS = true;
 
@@ -213,6 +217,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			BUMPED_GROUND = loadValue("BUMPED_GROUND", false);
 			WATER_SHADER = loadValue("WATER_SHADER", false);
 			WATER_DETAILED = loadValue("WATER_DETAILED", false);
+			
+			SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
+			MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
+			EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0, 100);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

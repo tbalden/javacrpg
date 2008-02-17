@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.fauna.modifier;
 
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
@@ -32,8 +33,8 @@ public class NormalAnimalMale extends EntityMember {
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 1.1f);
 	}
 	
-	public NormalAnimalMale(String visibleTypeId) {
-		super(visibleTypeId);
+	public NormalAnimalMale(String visibleTypeId, AudioDescription audio) {
+		super(visibleTypeId, audio);
 	}
 
 }

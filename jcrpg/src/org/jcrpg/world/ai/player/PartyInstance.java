@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.player;
 
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
@@ -31,9 +32,9 @@ public class PartyInstance extends EntityInstance {
 		super(description, w, ecology, id, numberOfMembers, startX, startY, startZ);
 	}
 
-	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId)
+	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
-		PartyMember member = new PartyMember(id);
+		PartyMember member = new PartyMember(id,audio);
 		EntityMemberInstance mI = new EntityMemberInstance(member);
 		fixMembers.put(id, mI);
 		numberOfMembers++;

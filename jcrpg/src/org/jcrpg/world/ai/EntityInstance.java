@@ -37,7 +37,7 @@ public class EntityInstance {
 	public DistanceBasedBoundary roamingBoundary = null;
 	public DistanceBasedBoundary domainBoundary = null;
 
-	public EntityMember NONE_TYPE = new EntityMember("NONE");
+	public EntityMember NONE_TYPE = new EntityMember("NONE", null);
 
 	/**
 	 * Unique id in the worlds.

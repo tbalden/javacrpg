@@ -33,9 +33,11 @@ public class EntityMember {
 	public SkillContainer commonSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public float[] scale = new float[]{1,1,1};
-	public EntityMember(String visibleTypeId) {
+	public AudioDescription audioDescription = null;
+	public EntityMember(String visibleTypeId, AudioDescription audioDescription) {
 		super();
 		this.visibleTypeId = visibleTypeId;
+		this.audioDescription = audioDescription;
 	}
 	
 	public AttributeRatios getCommonAttributes() {

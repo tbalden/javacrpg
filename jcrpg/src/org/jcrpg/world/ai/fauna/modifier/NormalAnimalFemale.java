@@ -18,12 +18,13 @@
 
 package org.jcrpg.world.ai.fauna.modifier;
 
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
 
 public class NormalAnimalFemale extends EntityMember {
 
-	public NormalAnimalFemale(String visibleTypeId) {
-		super(visibleTypeId);
+	public NormalAnimalFemale(String visibleTypeId, AudioDescription audio) {
+		super(visibleTypeId, audio);
 	}
 
 }
