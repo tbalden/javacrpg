@@ -18,12 +18,13 @@
 
 package org.jcrpg.world.ai.humanoid;
 
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
 
 public class MemberPerson extends EntityMember {
 
-	public MemberPerson(String visibleTypeId) {
-		super(visibleTypeId);
+	public MemberPerson(String visibleTypeId, AudioDescription audio) {
+		super(visibleTypeId, audio);
 	}
 	public String id;
 	public String foreName;

@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.fauna.mammals.wolf;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.physical.martial.BiteFight;
@@ -34,8 +35,13 @@ import org.jcrpg.world.place.geography.Plain;
 
 public class WolfPack extends AnimalEntityDescription {
 
-	public static NormalAnimalMale WOLF_TYPE_MALE = new NormalAnimalMale("WOLF_MALE");
-	public static NormalAnimalMale WOLF_TYPE_FEMALE = new NormalAnimalMale("WOLF_FEMALE");
+	public static AudioDescription audio = new AudioDescription();
+	static {
+		audio.ENCOUNTER = new String[]{"wolf_1"};
+	}
+
+	public static NormalAnimalMale WOLF_TYPE_MALE = new NormalAnimalMale("WOLF_MALE",audio);
+	public static NormalAnimalMale WOLF_TYPE_FEMALE = new NormalAnimalMale("WOLF_FEMALE",audio);
 
 	public static MovingModel wolf = new MovingModel("models/fauna/wolf.obj",null,null,null,false);
 	public static RenderedMovingUnit wolf_unit = new RenderedMovingUnit(new Model[]{wolf});

@@ -31,6 +31,7 @@ import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.player.PartyMember;
 
 import com.jme.scene.Node;
@@ -200,7 +201,7 @@ public class PartySetup extends InputWindow {
 			
 			for (int i=0; i<6; i++)
 			{
-				members.add(new PartyMember("_"+i));
+				members.add(new PartyMember("_"+i,new AudioDescription()));
 			}			
 			SaveLoadNewGame.newGame(core,members);
 			core.init3DGame();

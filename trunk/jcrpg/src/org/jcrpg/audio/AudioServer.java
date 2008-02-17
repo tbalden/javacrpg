@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.threed.J3DCore;
+
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
@@ -56,21 +58,27 @@ public class AudioServer implements Runnable {
 	public ArrayList<Channel> musicChannels = new ArrayList<Channel>();
 	public AudioServer()
 	{
-		for (int i=0; i<MAX_PLAYED; i++)
+		if (J3DCore.SOUND_ENABLED) {
+			for (int i=0; i<MAX_PLAYED; i++)
+			{
+				channels.add(new Channel(this,"NORM "+i));
+			}
+			for (int i=0; i<MAX_MUSIC; i++) 
+			{
+				musicChannels.add(new Channel(this,"MUSIC "+i));
+			}
+		} else
 		{
-			channels.add(new Channel(this,"NORM "+i));
+			return;
 		}
-		for (int i=0; i<MAX_MUSIC; i++) 
-		{
-			musicChannels.add(new Channel(this,"MUSIC "+i));
-		}
+		
 		
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), true);
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
-			mainTheme.setVolume(1f);
+			mainTheme.setVolume(J3DCore.MUSIC_VOLUME_PERCENT/100f);
 			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 			tracks.add(mainTheme);
 			hmTracks.put("main", tracks);
@@ -83,7 +91,7 @@ public class AudioServer implements Runnable {
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
-			mainTheme.setVolume(0.07f);
+			mainTheme.setVolume(J3DCore.MUSIC_VOLUME_PERCENT/100f);
 			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 			tracks.add(mainTheme);
 			hmTracks.put("ingame", tracks);
@@ -99,7 +107,7 @@ public class AudioServer implements Runnable {
 				mainTheme.setType(TrackType.POSITIONAL);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
-				mainTheme.setVolume(1f);
+				mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 				tracks.add(mainTheme);
 				hmTracksAndFiles.put(step, "./data/audio/sound/steps/"+step+".ogg");
@@ -184,7 +192,13 @@ public class AudioServer implements Runnable {
 	{
 		pauseAllChannels();
 		pauseAllMusicChannels();
-		getAvailableMusicChannel().setTrack(id,getPlayableTrack(id)).playTrack();
+		try {
+			getAvailableMusicChannel().setTrack(id,getPlayableTrack(id)).playTrack();
+		} catch (Exception ex)
+		{
+			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
+
+		}
 	}
 	public void stopAndResumeOthers(String id)
 	{
@@ -194,6 +208,7 @@ public class AudioServer implements Runnable {
 	}
 	
 	public synchronized AudioTrack getPlayableTrack(String id) {
+		if (!J3DCore.SOUND_ENABLED) return null;
 		try {
 			int counter = 0;
 			while (true)
@@ -215,7 +230,7 @@ public class AudioServer implements Runnable {
 			}			
 		} catch (Exception ex)
 		{
-			ex.printStackTrace();
+			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
 			return null;
 		}
 	}
@@ -242,6 +257,7 @@ public class AudioServer implements Runnable {
 		System.out.println("Playing "+id);
 		if (c==null)
 		{
+			if (!J3DCore.SOUND_ENABLED) return;
 			c = channels.get(0);
 			c.stopTrack();
 		}
@@ -251,7 +267,7 @@ public class AudioServer implements Runnable {
 					return;
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(1f);
+				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
 			c.playTrack();
@@ -261,7 +277,7 @@ public class AudioServer implements Runnable {
 			}
 		} catch (NullPointerException npex)
 		{
-			npex.printStackTrace();
+			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 	
@@ -276,7 +292,7 @@ public class AudioServer implements Runnable {
 					return;
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(1f);
+				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
 			c.playTrack();
@@ -286,7 +302,32 @@ public class AudioServer implements Runnable {
 			}
 		} catch (NullPointerException npex)
 		{
-			npex.printStackTrace();
+			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+		}
+	}
+
+	public synchronized void playLoading(String id, String type)
+	{
+		Channel c = getAvailableChannel();
+		System.out.println("Playing "+id);
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			}
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+			}
+			c.setTrack(id, track);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(v, v);
+			}
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 	
@@ -326,13 +367,14 @@ public class AudioServer implements Runnable {
 			
 		} catch (Exception ex)
 		{
-			ex.printStackTrace();
+			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
 			return null;
 		}
 		return mainTheme;
 	}
 
 	public void run() {
+		if (!J3DCore.SOUND_ENABLED) return;
 		System.out.println("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
 		//Thread.currentThread().setPriority(10);
 		while (true)

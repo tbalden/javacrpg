@@ -76,6 +76,7 @@ public class PlayerTurnLogic {
 		playerFakeForm.worldX = player.roamingBoundary.posX;
 		playerFakeForm.worldY = player.roamingBoundary.posY;
 		playerFakeForm.worldZ = player.roamingBoundary.posZ;
+		HashSet<String> playedAudios = new HashSet<String>();
 		for (PreEncounterInfo info:infos)
 		{
 			if (info.subject==null) continue;
@@ -87,6 +88,7 @@ public class PlayerTurnLogic {
 				else
 					ecology.callbackMessage("You seem to trespass a Domain : "+entityInstance.description.getClass().getSimpleName());
 				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds);
+				boolean played = false;
 				if (groupIds !=null)
 				for (int in:groupIds)
 				{
@@ -103,9 +105,18 @@ public class PlayerTurnLogic {
 						types+=","+type;
 					}
 					ecology.callbackMessage(""+size+" "+types);
-					
 					for (EntityMemberInstance member:members)
 					{
+						if (!played) 
+						{
+							if (member.description.audioDescription!=null && member.description.audioDescription.ENCOUNTER!=null && member.description.audioDescription.ENCOUNTER.length>0) {
+								if (!playedAudios.contains(member.description.audioDescription.ENCOUNTER[0])) {
+									core.audioServer.playLoading(member.description.audioDescription.ENCOUNTER[0], "ai");
+									playedAudios.add(member.description.audioDescription.ENCOUNTER[0]);
+									played = true;
+								}
+							}
+						}
 						VisibleLifeForm form = entityInstance.getOne(member.description,member);
 						form.targetForm = playerFakeForm;
 						forms.add(form);

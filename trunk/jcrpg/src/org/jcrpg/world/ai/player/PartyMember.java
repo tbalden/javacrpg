@@ -18,12 +18,13 @@
 
 package org.jcrpg.world.ai.player;
 
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 public class PartyMember extends MemberPerson {
 
-	public PartyMember(String visibleTypeId) {
-		super(visibleTypeId);
+	public PartyMember(String visibleTypeId, AudioDescription audio) {
+		super(visibleTypeId, audio);
 	}
 
 }
