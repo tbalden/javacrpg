@@ -21,7 +21,6 @@ package org.jcrpg.audio;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
@@ -32,8 +31,6 @@ public class AudioServer implements Runnable {
 	HashMap<String, ArrayList<AudioTrack>> hmTracks = new HashMap<String, ArrayList<AudioTrack>>();
 	HashMap<String, String> hmTracksAndFiles = new HashMap<String, String>();
 	
-	HashSet<String> played = new HashSet<String>();
-	HashSet<String> paused = new HashSet<String>();
 	
 	public static final String STEP_ROCK = "steps_rock";
 	public static final String STEP_SOFT = "steps_soft";
@@ -48,6 +45,7 @@ public class AudioServer implements Runnable {
 	
 	public int playedAtOnce = 0;
 	public int MAX_PLAYED = 6;
+	public int MAX_MUSIC = 2;
 	
 	public static final String[] stepTypes = new String[] {
 		STEP_SOIL, STEP_NO_WAY
@@ -55,11 +53,16 @@ public class AudioServer implements Runnable {
 	
 	
 	public ArrayList<Channel> channels = new ArrayList<Channel>();
+	public ArrayList<Channel> musicChannels = new ArrayList<Channel>();
 	public AudioServer()
 	{
 		for (int i=0; i<MAX_PLAYED; i++)
 		{
-			channels.add(new Channel(this));
+			channels.add(new Channel(this,"NORM "+i));
+		}
+		for (int i=0; i<MAX_MUSIC; i++) 
+		{
+			musicChannels.add(new Channel(this,"MUSIC "+i));
 		}
 		
 		try {
@@ -92,7 +95,7 @@ public class AudioServer implements Runnable {
 		for (String step:stepTypes)
 		{
 			try {
-				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), true);
+				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), false);
 				mainTheme.setType(TrackType.POSITIONAL);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
@@ -116,13 +119,22 @@ public class AudioServer implements Runnable {
 	
 	public void init()
 	{
-		setChannelNotPlayingYet("ingame");
+		setMusicChannelNotPlayingYet("ingame");
 	}
 	
 	
 	public synchronized Channel getAvailableChannel()
 	{
 		for (Channel c:channels)
+		{
+			if (c.isAvailable()) return c;
+		}
+		return null;
+	}
+	
+	public synchronized Channel getAvailableMusicChannel()
+	{
+		for (Channel c:musicChannels)
 		{
 			if (c.isAvailable()) return c;
 		}
@@ -136,7 +148,14 @@ public class AudioServer implements Runnable {
 			c.pauseTrack();
 		}
 	}
-	public synchronized void playAllChannels(String except)
+	public synchronized void pauseAllMusicChannels()
+	{
+		for (Channel c:musicChannels)
+		{
+			c.pauseTrack();
+		}
+	}
+	public synchronized void playAllChannels(ArrayList<Channel> channels,String except)
 	{
 		for (Channel c:channels)
 		{
@@ -144,7 +163,7 @@ public class AudioServer implements Runnable {
 				c.playTrack();
 		}
 	}
-	public synchronized void stopIdOnAllChannels(String id)
+	public synchronized void stopIdOnAllChannels(ArrayList<Channel> channels, String id)
 	{
 		for (Channel c:channels)
 		{
@@ -161,15 +180,17 @@ public class AudioServer implements Runnable {
 		}
 	}
 	
-	public void playOnlyThis(String id)
+	public void playOnlyThisMusic(String id)
 	{
 		pauseAllChannels();
-		getAvailableChannel().setTrack(id,getPlayableTrack(id)).playTrack();
+		pauseAllMusicChannels();
+		getAvailableMusicChannel().setTrack(id,getPlayableTrack(id)).playTrack();
 	}
 	public void stopAndResumeOthers(String id)
 	{
-		stopIdOnAllChannels(id);
-		playAllChannels(id);
+		stopIdOnAllChannels(musicChannels,id);
+		playAllChannels(musicChannels,id);
+		playAllChannels(channels,id);
 	}
 	
 	public synchronized AudioTrack getPlayableTrack(String id) {
@@ -200,9 +221,9 @@ public class AudioServer implements Runnable {
 	}
 	
 	
-	public synchronized void setChannelNotPlayingYet(String id)
+	public synchronized void setMusicChannelNotPlayingYet(String id)
 	{
-		Channel c = getAvailableChannel();
+		Channel c = getAvailableMusicChannel();
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track!=null)
@@ -212,6 +233,35 @@ public class AudioServer implements Runnable {
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
+		}
+	}
+	
+	public synchronized void playForced(String id)
+	{
+		Channel c = getAvailableChannel();
+		System.out.println("Playing "+id);
+		if (c==null)
+		{
+			c = channels.get(0);
+			c.stopTrack();
+		}
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+					return;
+			}
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(1f);
+			}
+			c.setTrack(id, track);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(v, v);
+			}
+		} catch (NullPointerException npex)
+		{
+			npex.printStackTrace();
 		}
 	}
 	
@@ -249,7 +299,7 @@ public class AudioServer implements Runnable {
 	public synchronized  void stop(String id)
 	{
 		System.out.println("Stopping "+id);
-		stopIdOnAllChannels(id);
+		stopIdOnAllChannels(channels,id);
 	}
 
 	public synchronized AudioTrack addTrack(String id, String file)
@@ -257,7 +307,7 @@ public class AudioServer implements Runnable {
 		hmTracksAndFiles.put(id, file);
 		AudioTrack mainTheme = null;
 		try {
-			mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), true);
+			mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), false);
 			mainTheme.setType(TrackType.POSITIONAL);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);

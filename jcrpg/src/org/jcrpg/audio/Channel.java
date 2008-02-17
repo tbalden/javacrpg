@@ -29,11 +29,12 @@ public class Channel implements TrackStateListener{
 	public boolean paused;
 	public AudioTrack track;
 	public String soundId;
-	
+	public String channelId = "";
 	AudioServer server;
-	public Channel(AudioServer server)
+	public Channel(AudioServer server, String id)
 	{
-		this.server = server;		
+		this.server = server;
+		this.channelId = id;
 	}
 	
 	public synchronized Channel setTrack(String soundId, AudioTrack track)
@@ -65,9 +66,10 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void playTrack()
 	{
-		System.out.println("PLAY TRACK : "+soundId);
+		System.out.println(channelId+" PLAY TRACK : "+soundId);
 		if (track!=null && !track.isPlaying()) {
 			track.play();
+			if (track!=null)
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
 				track.fadeIn(v, v);
@@ -81,7 +83,7 @@ public class Channel implements TrackStateListener{
 	}
 	
 	public synchronized void trackFinishedFade(AudioTrack arg0) {
-		System.out.println("##### FINISHED TRACK : "+soundId);
+		System.out.println(channelId+" ##### FINISHED FADE TRACK : "+soundId);
 		//playing = false;
 		//paused = false;
 		//track = null;
@@ -89,16 +91,21 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackPaused(AudioTrack arg0) {
+		System.out.println(channelId+" ##### PAUSED TRACK : "+soundId);
 		paused = true;
 	}
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
-		playing = true;
-		paused = false;
+		System.out.println(channelId+" ##### PLAYED TRACK : "+soundId);
+		if (!arg0.isStreaming()) // Workaround for trackStopped not called when non-streaming audiotrack
+			trackStopped(arg0); else {
+			playing = true;
+			paused = false;
+		}
 	}
 
 	public synchronized void trackStopped(AudioTrack arg0) {
-		System.out.println("##### STOPPED TRACK : "+soundId);
+		System.out.println(channelId+" ##### STOPPED TRACK : "+soundId);
 		track.removeTrackStateListener(this);
 		if (this.track!=null && this.track.equals(track)) {
 			track = null;
