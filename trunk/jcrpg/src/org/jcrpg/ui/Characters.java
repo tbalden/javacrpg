@@ -43,7 +43,7 @@ public class Characters {
 		text = FontUtils.textVerdana;
  		String[] pics =
 		{
-				"./data/portraits/human/male/balzac.png", 
+				"./data/portraits/human/male/leonhard1.png", 
 				"./data/portraits/human/male/fred2.png", 
 				"./data/portraits/human/male/friedrich.png", 
 				"./data/portraits/human/female/baran.png", 
@@ -52,7 +52,7 @@ public class Characters {
 		};
 		String[] names = 
 		{
-				"Balzac", "Fred", "Friedrich", "Baran", "Marie", "Max"
+				"Leon", "Fred", "Friedrich", "Baran", "Marie", "Max"
 		};
 		String[] classes = 
 		{
