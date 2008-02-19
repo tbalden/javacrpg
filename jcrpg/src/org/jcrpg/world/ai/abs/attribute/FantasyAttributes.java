@@ -20,8 +20,6 @@ package org.jcrpg.world.ai.abs.attribute;
 
 public class FantasyAttributes extends Attributes {
 
-	public static String HEALTHPOINTS = "HEALTHPOINTS";
-	public static String MAGICPOINTS = "MAGICPOINTS";
 	public static String STRENGTH = "STRENGTH";
 	public static String SPEED = "SPEED";
 	public static String CONCENTRATION = "CONCENTRATION";
@@ -29,7 +27,7 @@ public class FantasyAttributes extends Attributes {
 	public static String PSYCHE = "PSYCHE";
 	public static String PIETY = "PIETY";
 	public static String[] attributeName = new String[] {
-		HEALTHPOINTS,MAGICPOINTS,STRENGTH,SPEED,CONCENTRATION,CONSTITUTION, PSYCHE, PIETY
+		STRENGTH,SPEED,CONCENTRATION,CONSTITUTION, PSYCHE, PIETY
 	};
 	
 	public FantasyAttributes()

@@ -57,6 +57,7 @@ import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.element.ChoiceDescription;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
@@ -542,6 +543,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,8f},{8f,16f},{16f,24f},{24f,50f}};
 	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,20f},{20f,40f}};
 	
+	public Language language = null;
+	
 	public J3DCore()
 	{
 		self = this;
@@ -549,6 +552,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		alphaBits = 0;
 		depthBits = 4;
 		samples = ANTIALIAS_SAMPLES;
+		
+		language = new Language("en");
 
 		new SideTypeModels().fillMap(hmCubeSideSubTypeToRenderedSideId, hm3dTypeRenderedSide, MIPMAP_TREES, DETAILED_TREES, BUMPED_GROUND, RENDER_GRASS_DISTANCE, LOD_VEGETATION);
 		

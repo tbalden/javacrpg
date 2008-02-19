@@ -61,7 +61,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 		}
 	}
 	
-	public abstract void inputUsed(InputBase base, String message);
+	public abstract boolean inputUsed(InputBase base, String message);
 
 	@Override
 	public void hide() {
