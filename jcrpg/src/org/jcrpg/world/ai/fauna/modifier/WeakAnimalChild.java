@@ -20,21 +20,14 @@ package org.jcrpg.world.ai.fauna.modifier;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 
 public class WeakAnimalChild extends EntityMember {
-	public static AttributeRatios commonAttributeRatios = new FantasyAttrRatios();
-	
-	static
-	{
-		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
-	}
 
 	public WeakAnimalChild(String visibleTypeId, AudioDescription audio) {
 		super(visibleTypeId, audio);
 		scale = new float[]{0.5f,0.5f,0.5f};
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
 	}
 
 }

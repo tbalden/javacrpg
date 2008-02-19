@@ -16,17 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.fauna.modifier;
+package org.jcrpg.world.ai.profession.adventurer;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.profession.Profession;
 
-public class MildAnimalFemale extends EntityMember {
-	
-	public MildAnimalFemale(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
-		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
-	}
+public class Fighter extends Profession {
 
 }

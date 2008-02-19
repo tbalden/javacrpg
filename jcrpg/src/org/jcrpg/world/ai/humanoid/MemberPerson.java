@@ -19,10 +19,21 @@
 package org.jcrpg.world.ai.humanoid;
 
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 
 public class MemberPerson extends EntityMember {
 
+	public static String UNDEFINED_VISIBLE_TYPEID = "--UNDEFINED--";
+	
+	public int possibleGenders = EntityDescription.GENDER_BOTH;
+	public String pictureRoot = "human";
+	
+	public MemberPerson()
+	{
+		super(UNDEFINED_VISIBLE_TYPEID, null); 
+	}
+	
 	public MemberPerson(String visibleTypeId, AudioDescription audio) {
 		super(visibleTypeId, audio);
 	}

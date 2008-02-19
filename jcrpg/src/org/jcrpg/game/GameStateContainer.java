@@ -51,6 +51,7 @@ public class GameStateContainer {
 	public Ecology ecology = null;
 	public PartyInstance player = null;
 	public PlayerTurnLogic playerTurnLogic = null;
+	public CharacterCreationRules charCreationRules = null;
 
 	/**
 	 * If doing an engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!
@@ -154,6 +155,14 @@ public class GameStateContainer {
 	{
 		world.clearAll();
 		ecology.clearAll();
+	}
+
+	public CharacterCreationRules getCharCreationRules() {
+		return charCreationRules;
+	}
+
+	public void setCharCreationRules(CharacterCreationRules charCreationRules) {
+		this.charCreationRules = charCreationRules;
 	}
 	
 }

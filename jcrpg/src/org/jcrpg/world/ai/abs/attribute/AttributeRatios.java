@@ -20,6 +20,12 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
+/**
+ * Class that can be used for an entity member to shade the common Attributes of a group
+ * to a detailed level for an entity member type.
+ * @author pali
+ *
+ */
 public class AttributeRatios {
 
 	public HashMap<String, Float> attributeRatios = new HashMap<String, Float>();

@@ -16,17 +16,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.fauna.modifier;
+package org.jcrpg.world.ai.profession;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import java.util.HashSet;
 
-public class MildAnimalFemale extends EntityMember {
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+
+/**
+ * A being can learn a profession with certain attributes in a school.
+ * It will give a momentum to succeed in certain skill learning and
+ * can add a bunch of new skills that can be learnt by the professional.
+ * Any entity member can have a profession if the attributes are okay. 
+ * @author pali
+ *
+ */
+public class Profession {
+
+	public HashSet<SkillBase> additionalLearntSkills = new HashSet<SkillBase>();
+	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
+	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
 	
-	public MildAnimalFemale(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
-		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
-	}
-
 }
