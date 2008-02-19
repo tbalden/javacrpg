@@ -15,7 +15,7 @@ import com.jme.util.geom.BufferUtils;
  * <code>GeometryBatchMesh</code> is a container class for <code>GeometryInstances</code>, which
  * contains the batch created from the instances.
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 
 public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extends TriMesh {

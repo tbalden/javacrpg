@@ -8,7 +8,7 @@ import com.jme.scene.batch.GeomBatch;
  * <code>GeometryInstance</code> uses <code>GeometryInstanceAttributes</code>
  * to define an instance of object in world space.
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public abstract class GeometryInstance<T extends GeometryInstanceAttributes> {
     protected T attributes;
