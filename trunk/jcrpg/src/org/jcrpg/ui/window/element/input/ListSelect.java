@@ -56,8 +56,8 @@ public class ListSelect extends InputBase {
 	
 	public float fontRatio = 400f;
 	
-	public ListSelect(InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
-		super(w, parent, centerX, centerY, sizeX, sizeY);
+	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
 		this.texts = texts;

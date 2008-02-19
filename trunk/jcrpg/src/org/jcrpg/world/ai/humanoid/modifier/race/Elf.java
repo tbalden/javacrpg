@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.humanoid.modifier.race;
 
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 public class Elf extends MemberPerson {
@@ -26,6 +27,10 @@ public class Elf extends MemberPerson {
 	public Elf(String visibleTypeId, AudioDescription audio) {
 		super(visibleTypeId, audio);
 		pictureRoot = "elf";
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONSTITUTION, 0.8f);
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.PSYCHE, 1.2f);
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONCENTRATION, 1.2f);
 	}
 
 }

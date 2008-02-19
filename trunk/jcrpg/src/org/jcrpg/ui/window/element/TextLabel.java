@@ -38,9 +38,9 @@ public class TextLabel extends InputBase {
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	public boolean useImage = false;
-	public TextLabel(InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+	public TextLabel(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text, boolean useImage) {
-		super(w, parentNode, centerX, centerY, sizeX, sizeY);
+		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = text;
 		this.textProportion = textProportion;
 		activate();

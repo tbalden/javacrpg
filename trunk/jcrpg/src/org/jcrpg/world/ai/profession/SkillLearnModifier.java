@@ -24,6 +24,6 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 public class SkillLearnModifier {
 
-	public HashMap<Class <? extends SkillBase>, Float> multipliers = new HashMap<Class<? extends SkillBase>, Float>();	
+	public HashMap<Class <? extends SkillBase>, Integer> multipliers = new HashMap<Class<? extends SkillBase>, Integer>();	
 	
 }

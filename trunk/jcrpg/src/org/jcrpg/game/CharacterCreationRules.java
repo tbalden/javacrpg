@@ -19,8 +19,11 @@
 package org.jcrpg.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.humanoid.modifier.race.Dwarf;
+import org.jcrpg.world.ai.humanoid.modifier.race.Elf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Human;
 import org.jcrpg.world.ai.profession.Profession;
 import org.jcrpg.world.ai.profession.adventurer.Fighter;
@@ -32,6 +35,9 @@ public class CharacterCreationRules {
 	public ArrayList<Class<? extends MemberPerson>> selectableRaces = new ArrayList<Class<? extends MemberPerson>>();
 	public ArrayList<Class<? extends Profession>> selectableProfessions = new ArrayList<Class<? extends Profession>>();
 	
+	public HashMap<Class<? extends MemberPerson>, MemberPerson> raceInstances = new HashMap<Class<? extends MemberPerson>, MemberPerson>();
+	public HashMap<Class<? extends Profession>, Profession> profInstances = new HashMap<Class<? extends Profession>, Profession>();
+	
 	public CharacterCreationRules(ArrayList<Class<? extends MemberPerson>> selectableRaces, ArrayList<Class<? extends Profession>> selectableProfessions)
 	{
 		if (selectableRaces!=null) {
@@ -39,8 +45,11 @@ public class CharacterCreationRules {
 		} else
 		{
 			this.selectableRaces.add(Human.class);
-			//selectableRaces.add(Elf.class);
-			//selectableRaces.add(Dwarf.class);
+			selectableRaces.add(Elf.class);
+			selectableRaces.add(Dwarf.class);
+			raceInstances.put(Human.class, new Human(Human.UNDEFINED_VISIBLE_TYPEID,null));
+			raceInstances.put(Elf.class, new Elf(Elf.UNDEFINED_VISIBLE_TYPEID,null));
+			raceInstances.put(Dwarf.class, new Dwarf(Dwarf.UNDEFINED_VISIBLE_TYPEID,null));
 		}
 		if (selectableProfessions!=null) {
 			this.selectableProfessions = selectableProfessions;
@@ -49,6 +58,9 @@ public class CharacterCreationRules {
 			this.selectableProfessions.add(Fighter.class);
 			this.selectableProfessions.add(Thief.class);
 			this.selectableProfessions.add(Mage.class);
+			profInstances.put(Fighter.class, new Fighter());
+			profInstances.put(Thief.class, new Thief());
+			profInstances.put(Mage.class, new Mage());
 		}
 	}
 	

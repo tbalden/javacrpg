@@ -20,6 +20,7 @@ package org.jcrpg.ui.window;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.jcrpg.game.CharacterCreationRules;
@@ -31,8 +32,11 @@ import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.ui.window.element.input.ValueTuner;
+import org.jcrpg.util.Language;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyMember;
 import org.jcrpg.world.ai.profession.Profession;
@@ -61,6 +65,8 @@ public class PartySetup extends PagedInputWindow {
 	
 	ListSelect raceSelect = null;
 	ListSelect professionSelect = null;
+	HashMap<String, ValueTuner> attributes = new HashMap<String, ValueTuner>();
+	
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
@@ -72,18 +78,18 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
-	    	addCharSelect = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
+	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
-	    	newChar = new TextButton(this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
+	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
 	    	addInput(0,newChar);
-	    	rmChar = new TextButton(this,pageMemberSelection, 0.50f, 0.5f, 0.2f, 0.07f,400f,"Remove Char.");
+	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.2f, 0.07f,400f,"Remove Char.");
 	    	addInput(0,rmChar);
-	    	startGame = new TextButton(this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
+	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
 	    	addInput(0,startGame);
-	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
-	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);
 	    	
 	    	// page char creation 1
 	    	
@@ -91,14 +97,25 @@ public class PartySetup extends PagedInputWindow {
 	    	pageCreationFirst.attachChild(sQuad);
 
 	    	{
-		    	raceSelect = new ListSelect(this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,raceSelect);
 	    	
 	    	{
-		    	professionSelect = new ListSelect(this,pageCreationFirst, 0.63f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.63f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
+	    	
+	    	int posY = 0;
+	    	for (String s: FantasyAttributes.attributeName)
+	    	{
+	    		String text = Language.v("fantasyattributes."+s);
+	    		System.out.println("TEXT" +text);
+	    		TextLabel t = new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.5f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.5f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
+	    		addInput(1,v);
+	    		posY++;
+	    	}
 	    	
 	    	
 			base.addEventHandler("back", this);
@@ -270,7 +287,7 @@ public class PartySetup extends PagedInputWindow {
 	}
 
 	@Override
-	public void inputUsed(InputBase base, String message) {
+	public boolean inputUsed(InputBase base, String message) {
 		if (base.equals(newChar))
 		{
 			currentPage=1;
@@ -297,6 +314,7 @@ public class PartySetup extends PagedInputWindow {
 			core.gameState.engine.setPause(false);
 			core.audioServer.stopAndResumeOthers("main");
 		}
+		return true;
 	}
 
 }

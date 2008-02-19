@@ -29,19 +29,34 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class TextButton extends InputBase {
+/**
+ * Numeric value selection.
+ * @author pali
+ *
+ */
+public class ValueTuner extends InputBase {
 
+	public static final int UNDEFINED = -999999;
 	public String text;
 	
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
-	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
-			float sizeY, float textProportion, String text) {
+	
+	int oldValue, value, minValue, maxValue;
+	
+	public ValueTuner(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+			float sizeY, float textProportion, int value, int minValue, int maxValue) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
-		this.text = text;
+		this.text = ""+value;
+		this.value = value;
+		this.minValue = minValue;
+		this.maxValue = maxValue;
 		this.textProportion = textProportion;
 		deactivate();
+		w.base.addEventHandler("lookLeft", w);
+		w.base.addEventHandler("lookRight", w);
+		w.base.addEventHandler("enter", w);
 	}
 	
 	Node activeNode = null;
@@ -50,7 +65,7 @@ public class TextButton extends InputBase {
 	@Override
 	public void activate() {
 		baseNode.detachAllChildren();
-		if (activeNode==null ) {
+		{
 			activeNode = new Node();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
@@ -98,6 +113,20 @@ public class TextButton extends InputBase {
 
 	@Override
 	public boolean handleKey(String key) {
+		if (key.equals("lookLeft"))
+		{
+			value--;
+			if (!w.inputUsed(this, key)) value++;
+			text = ""+value;
+			activate();
+		} else
+		if (key.equals("lookRight"))
+		{
+			value++;
+			if (!w.inputUsed(this, key)) value--;
+			text = ""+value;
+			activate();
+		} else
 		if (key.equals("enter"))
 		{
 			w.core.audioServer.play(SOUND_INPUTSELECTED);
