@@ -45,8 +45,8 @@ public class CharacterCreationRules {
 		} else
 		{
 			this.selectableRaces.add(Human.class);
-			selectableRaces.add(Elf.class);
-			selectableRaces.add(Dwarf.class);
+			this.selectableRaces.add(Elf.class);
+			this.selectableRaces.add(Dwarf.class);
 			raceInstances.put(Human.class, new Human(Human.UNDEFINED_VISIBLE_TYPEID,null));
 			raceInstances.put(Elf.class, new Elf(Elf.UNDEFINED_VISIBLE_TYPEID,null));
 			raceInstances.put(Dwarf.class, new Dwarf(Dwarf.UNDEFINED_VISIBLE_TYPEID,null));

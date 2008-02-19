@@ -17,7 +17,7 @@ import com.jme.util.geom.BufferUtils;
  * to define an instance of object in world space. Uses Geometry as source
  * data for the instance.
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttributes> extends GeometryInstance<A> {
 	public Geometry mesh;

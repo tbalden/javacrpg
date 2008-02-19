@@ -8,7 +8,7 @@ import com.jme.math.Vector3f;
  * <code>GeometryInstanceAttributes</code> specifies the attributes for a
  * <code>GeometryInstance</code>.
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public class GeometryInstanceAttributes {
     protected Vector3f scale;       // Scale

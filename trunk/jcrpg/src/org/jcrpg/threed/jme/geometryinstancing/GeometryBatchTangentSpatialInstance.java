@@ -9,7 +9,7 @@ import com.jme.scene.batch.GeomBatch;
  * <code>GeometryBatchTangentSpatialInstance</code> extends <code>GeometryBatchSpatialInstance</code>
  * and adds tangent buffers to an instance.
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public class GeometryBatchTangentSpatialInstance<A extends GeometryBatchInstanceAttributes> extends GeometryBatchSpatialInstance<A> {
 	private FloatBuffer tangentBufDst;

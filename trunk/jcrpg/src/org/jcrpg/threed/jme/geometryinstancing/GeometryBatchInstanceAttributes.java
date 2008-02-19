@@ -11,7 +11,7 @@ import com.jme.scene.TriMesh;
  * <code>GeometryBatchInstanceAttributes</code> specifies the attributes for a
  * <code>GeometryBatchInstance</code>
  *
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public class GeometryBatchInstanceAttributes extends GeometryInstanceAttributes {
     protected ColorRGBA color;

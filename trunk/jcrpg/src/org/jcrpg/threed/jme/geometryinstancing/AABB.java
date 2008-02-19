@@ -8,7 +8,7 @@ import com.jme.util.geom.BufferUtils;
 
 /**
  * <code>AABB/code> is an axis aligned bounding box, that is easy to <code>expand</code> using vertices. 
- * @author Patrik Lindegrén
+ * @author Patrik Lindegran
  */
 public class AABB {
 	private static final long serialVersionUID = 1L;
