@@ -39,6 +39,12 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
  *
  */
 public class EntityDescription {
+	public static final int GENDER_NEUTRAL = 0;
+	public static final int GENDER_MALE = 1;
+	public static final int GENDER_FEMALE = 2;
+	public static final int GENDER_BOTH = 3;
+	
+	public int genderType = GENDER_NEUTRAL;
 	public SkillContainer skills = new SkillContainer();
 	public Attributes attributes = new Attributes();
 	/**

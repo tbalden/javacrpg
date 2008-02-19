@@ -51,12 +51,6 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 	}
 
 	
-	public static final int GENDER_NEUTRAL = 0;
-	public static final int GENDER_MALE = 1;
-	public static final int GENDER_FEMALE = 2;
-	public static final int GENDER_BOTH = 3;
-	
-	public int genderType = GENDER_NEUTRAL;
 	
 	
 	public ArrayList<Class <? extends EntityDescription>> getFoodEntities()

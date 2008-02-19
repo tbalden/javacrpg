@@ -18,9 +18,12 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
+import org.jcrpg.world.ai.profession.Profession;
 
 
 /**
@@ -34,6 +37,10 @@ public class EntityMember {
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public float[] scale = new float[]{1,1,1};
 	public AudioDescription audioDescription = null;
+	public ArrayList<Profession> professions = new ArrayList<Profession>();
+	
+	public int genderType = EntityDescription.GENDER_NEUTRAL;
+	
 	public EntityMember(String visibleTypeId, AudioDescription audioDescription) {
 		super();
 		this.visibleTypeId = visibleTypeId;

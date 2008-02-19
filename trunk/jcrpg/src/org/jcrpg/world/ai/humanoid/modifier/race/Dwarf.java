@@ -16,17 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.fauna.modifier;
+package org.jcrpg.world.ai.humanoid.modifier.race;
 
 import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 
-public class MildAnimalFemale extends EntityMember {
-	
-	public MildAnimalFemale(String visibleTypeId, AudioDescription audio) {
+public class Dwarf extends MemberPerson {
+
+	public Dwarf(String visibleTypeId, AudioDescription audio) {
 		super(visibleTypeId, audio);
-		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 0.8f);
+		pictureRoot = "dwarf";
 	}
 
 }

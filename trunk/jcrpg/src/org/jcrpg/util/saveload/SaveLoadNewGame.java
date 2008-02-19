@@ -30,6 +30,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
@@ -58,12 +59,13 @@ public class SaveLoadNewGame {
 
 	public static final String saveDir = "./save";
 	
-	public static void newGame(J3DCore core, Collection<PartyMember> partyMembers) 
+	public static void newGame(J3DCore core, Collection<PartyMember> partyMembers, CharacterCreationRules cCR) 
 	{
 		try {
 			
 			GameStateContainer gameState = new GameStateContainer();
-			
+						
+			gameState.setCharCreationRules(cCR);
 		
 			Engine engine = new Engine();
 			Time wmt = new Time();

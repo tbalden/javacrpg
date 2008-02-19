@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
@@ -32,12 +33,15 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyMember;
+import org.jcrpg.world.ai.profession.Profession;
 
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 
-public class PartySetup extends InputWindow {
+public class PartySetup extends PagedInputWindow {
 
 	public static final String charsDir = "./chars";
 	
@@ -50,10 +54,13 @@ public class PartySetup extends InputWindow {
 	int currentPage = 0;
 	
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
-	ListSelect select = null;
+	ListSelect addCharSelect = null;
 	TextButton newChar;
 	TextButton rmChar;
-	TextButton startGame; 
+	TextButton startGame;
+	
+	ListSelect raceSelect = null;
+	ListSelect professionSelect = null;
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
@@ -66,17 +73,34 @@ public class PartySetup extends InputWindow {
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
 	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
-	    	select = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
-	    	addInput(select);
+	    	addCharSelect = new ListSelect(this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	addInput(0,addCharSelect);
 	    	
 	    	newChar = new TextButton(this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
-	    	addInput(newChar);
+	    	addInput(0,newChar);
 	    	rmChar = new TextButton(this,pageMemberSelection, 0.50f, 0.5f, 0.2f, 0.07f,400f,"Remove Char.");
-	    	addInput(rmChar);
+	    	addInput(0,rmChar);
 	    	startGame = new TextButton(this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
-	    	addInput(startGame);
+	    	addInput(0,startGame);
 	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
-	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);	    	
+	    	new TextLabel(this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);
+	    	
+	    	// page char creation 1
+	    	
+	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
+	    	pageCreationFirst.attachChild(sQuad);
+
+	    	{
+		    	raceSelect = new ListSelect(this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,raceSelect);
+	    	
+	    	{
+		    	professionSelect = new ListSelect(this,pageCreationFirst, 0.63f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,professionSelect);
+	    	
+	    	
 			base.addEventHandler("back", this);
 		} catch (Exception ex)
 		{
@@ -93,30 +117,84 @@ public class PartySetup extends InputWindow {
 
 	@Override
 	public void show() {
+		currentPage = 0;
+		setupPage();
+		changePage(0);
+		//activateSelectedInput();			
+		core.getRootNode().attachChild(windowNode);
+		core.getRootNode().updateRenderState();
+		lockLookAndMove(true);
+	}
+	CharacterCreationRules cCR = null;
+	public void setupPage()
+	{
 		if (currentPage==0)
 		{
 			windowNode.detachAllChildren();
 			windowNode.attachChild(pageMemberSelection);
 			refreshCharacterList();
-			select.ids = dataList.keySet().toArray(new String[0]);
+			addCharSelect.ids = dataList.keySet().toArray(new String[0]);
 			String[] names = new String[dataList.values().size()];
 			int i=0;
 			for (CharListData d:dataList.values())
 			{
 				names[i++] = d.charName;
 			}
-			select.texts = names;
+			addCharSelect.texts = names;
 			
 			// TODO just testing...
-			select.ids = new String[]{"1", "2"};
-			select.texts = new String[]{"Urmuc - Dwarf, Fighter", "Athos - Human, Mage"};			
+			addCharSelect.ids = new String[]{"1", "2"};
+			addCharSelect.texts = new String[]{"Urmuc - Dwarf, Fighter", "Athos - Human, Mage"};			
 			
-			select.setUpdated(true);
+			addCharSelect.setUpdated(true);
 		}
-		activateSelectedInput();			
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
-		lockLookAndMove(true);
+		if (currentPage==1)
+		{
+			windowNode.detachAllChildren();
+			windowNode.attachChild(pageCreationFirst);
+			if (core.gameState==null || core.gameState.charCreationRules == null)
+			{
+				cCR = new CharacterCreationRules(null,null);
+			} else
+			{
+				cCR = core.gameState.charCreationRules;
+			}
+	    	{
+		    	int id = 0;
+		    	String[] ids = new String[cCR.selectableRaces.size()];
+		    	String[] names = new String[cCR.selectableRaces.size()];
+		    	for (Class<? extends MemberPerson> c: cCR.selectableRaces)
+		    	{
+		    		String s = c.getSimpleName();
+		    		ids[id] = ""+id;
+		    		names[id] = s;
+		    		id++;
+		    	}	    	
+		    	raceSelect.ids = ids;
+		    	raceSelect.texts = names;
+		    	raceSelect.setUpdated(true);
+	    	}
+	    	
+	    	{
+		    	int id = 0;
+		    	String[] ids = new String[cCR.selectableProfessions.size()];
+		    	String[] names = new String[cCR.selectableProfessions.size()];
+		    	for (Class<? extends Profession> c: cCR.selectableProfessions)
+		    	{
+		    		String s = c.getSimpleName();
+		    		ids[id] = ""+id;
+		    		names[id] = s;
+		    		id++;
+		    	}	    	
+		    	professionSelect.ids = ids;
+		    	professionSelect.texts = names;
+		    	professionSelect.setUpdated(true);
+	    	}
+			changePage(1);
+			
+			windowNode.updateRenderState();
+		}
+		
 	}
 	
 	static TreeMap<String, CharListData> dataList = null;
@@ -193,6 +271,12 @@ public class PartySetup extends InputWindow {
 
 	@Override
 	public void inputUsed(InputBase base, String message) {
+		if (base.equals(newChar))
+		{
+			currentPage=1;
+			setupPage();
+		}
+		else
 		if (base.equals(startGame))
 		{
 			toggle();
@@ -203,7 +287,11 @@ public class PartySetup extends InputWindow {
 			{
 				members.add(new PartyMember("_"+i,new AudioDescription()));
 			}			
-			SaveLoadNewGame.newGame(core,members);
+			if (cCR == null)
+			{
+				cCR = new CharacterCreationRules(null,null);
+			}
+			SaveLoadNewGame.newGame(core,members,cCR);
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
