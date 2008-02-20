@@ -43,7 +43,7 @@ public class ValueTuner extends InputBase {
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	
-	int oldValue, value, minValue, maxValue;
+	public int oldValue, value, minValue, maxValue;
 	
 	public ValueTuner(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, int value, int minValue, int maxValue) {
@@ -120,6 +120,7 @@ public class ValueTuner extends InputBase {
 	public boolean handleKey(String key) {
 		if (key.equals("lookLeft"))
 		{
+			if (value==minValue) return true;
 			value--;
 			if (!w.inputUsed(this, key)) value++;
 			text = ""+value;
@@ -128,6 +129,7 @@ public class ValueTuner extends InputBase {
 		} else
 		if (key.equals("lookRight"))
 		{
+			if (value==maxValue) return true;
 			value++;
 			if (!w.inputUsed(this, key)) value--;
 			text = ""+value;

@@ -18,8 +18,15 @@
 
 package org.jcrpg.world.ai.profession.adventurer;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Thief extends Profession {
+
+	public Thief()
+	{
+		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 11);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 11);
+	}
 
 }

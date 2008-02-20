@@ -34,6 +34,10 @@ public class Attributes {
 	{
 		attributes.put(attr, value);
 	}
+	public int getAttribute(String attr)
+	{
+		return attributes.get(attr);
+	}
 	
 	public static int getAttribute(String attr, Attributes base, Attributes modifier)
 	{

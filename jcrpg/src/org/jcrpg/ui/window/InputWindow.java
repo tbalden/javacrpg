@@ -60,7 +60,11 @@ public abstract class InputWindow extends Window implements KeyListener{
 			previouslyActive = selectedInput;
 		}
 	}
-	
+
+	public abstract boolean inputLeft(InputBase base, String message);
+
+	public abstract boolean inputEntered(InputBase base, String message);
+
 	public abstract boolean inputUsed(InputBase base, String message);
 
 	@Override
@@ -84,6 +88,8 @@ public abstract class InputWindow extends Window implements KeyListener{
 				selectedInput--;
 			} else
 			{
+				inputLeft(inputs.get(previouslyActive), key);
+				inputEntered(inputs.get(selectedInput), key);
 				activateSelectedInput();
 			}
 			return true;
@@ -96,6 +102,8 @@ public abstract class InputWindow extends Window implements KeyListener{
 				selectedInput = 0;
 			} else
 			{
+				inputLeft(inputs.get(previouslyActive), key);
+				inputEntered(inputs.get(selectedInput), key);
 				activateSelectedInput();
 			}
 			return true;

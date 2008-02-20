@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.humanoid;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 
 public class MemberPerson extends EntityMember {
 
@@ -28,6 +29,8 @@ public class MemberPerson extends EntityMember {
 	
 	public int possibleGenders = EntityDescription.GENDER_BOTH;
 	public String pictureRoot = "human";
+	
+	public Attributes attributes = null;
 	
 	public MemberPerson()
 	{
@@ -71,7 +74,16 @@ public class MemberPerson extends EntityMember {
 		copy.setSureName(sureName);
 		copy.id = id;
 		copy.genderType = genderType;
+		copy.setAttributes(attributes);
 		return copy;
+	}
+
+	public Attributes getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
 	}
 	
 }

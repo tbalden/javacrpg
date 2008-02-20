@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.profession;
 
 import java.util.HashSet;
 
+import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 /**
@@ -35,5 +37,23 @@ public class Profession {
 	public HashSet<SkillBase> additionalLearntSkills = new HashSet<SkillBase>();
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
+	
+	public boolean isQualifiedEnough(Attributes attr)
+	{
+		for (String name : FantasyAttributes.attributeName)
+		{
+			Integer value = attrMinLevels.minimumLevels.get(name);
+			if (value!=null)
+			{
+				int iV = value;
+				Integer value2 = attr.getAttribute(name);
+				if (value2 == null) return false;
+				int iV2 = value2;
+				if (iV2<iV) return false;
+			}
+		}
+		return true;
+	}
+	
 	
 }
