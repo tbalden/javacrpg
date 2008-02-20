@@ -65,8 +65,10 @@ public class PictureSelect extends InputBase {
 		return selected;
 	}
 	
-	public File getPicture()
+	public String getPictureId()
 	{
+		if (filesList!=null && filesList.size()>0)
+			return filesList.get(selected).getName();
 		return null;
 	}
 	

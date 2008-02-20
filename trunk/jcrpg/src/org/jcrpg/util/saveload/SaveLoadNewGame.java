@@ -37,6 +37,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.player.PartyMember;
@@ -58,6 +59,7 @@ import org.jcrpg.world.time.Time;
 public class SaveLoadNewGame {
 
 	public static final String saveDir = "./save";
+	public static final String charsDir = "./chars";
 	
 	public static void newGame(J3DCore core, Collection<PartyMember> partyMembers, CharacterCreationRules cCR) 
 	{
@@ -188,9 +190,39 @@ public class SaveLoadNewGame {
 		}
 	}
 	
-	public static void saveCharacter()
+	public static void saveCharacter(MemberPerson person)
 	{
+		Date d = new Date();
+		String dT = new SimpleDateFormat("yyyyddMM-HH.mm.ss.SSS").format(d);
+		String slot = charsDir+"/"+dT+"_"+person.foreName+"/";
+		File f = new File(slot);
+		f.mkdirs();
+		File saveGame = new File(slot+"character.zip");
+		try {
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
+			zipOutputStream.putNextEntry(new ZipEntry("character.xml"));
+			person.getXml(zipOutputStream);
+			zipOutputStream.close();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		
+	}
+	
+	public static MemberPerson loadCharacter(File fileName)
+	{
+		try {
+			//ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
+			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(fileName));
+			zipInputStream.getNextEntry();
+			Reader reader = new InputStreamReader(zipInputStream);
+			return MemberPerson.createFromXml(reader);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			return null;
+		}
 	}
 	
 }
