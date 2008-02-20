@@ -51,7 +51,6 @@ import com.jme.scene.shape.Quad;
 
 public class PartySetup extends PagedInputWindow {
 
-	public static final String charsDir = "./chars";
 	
 	FontTT text;
 	
@@ -221,10 +220,6 @@ public class PartySetup extends PagedInputWindow {
 			}
 			addCharSelect.texts = names;
 			
-			// TODO just testing...
-			addCharSelect.ids = new String[]{"1", "2"};
-			addCharSelect.texts = new String[]{"Urmuc - Dwarf, Fighter", "Athos - Human, Mage"};			
-			
 			addCharSelect.setUpdated(true);
 		}
 		if (currentPage==1)
@@ -285,7 +280,7 @@ public class PartySetup extends PagedInputWindow {
 	public void refreshCharacterList()
 	{
 		try {
-			File f = new File(charsDir);
+			File f = new File(SaveLoadNewGame.charsDir);
 			System.out.println("# FILE: "+f.getAbsolutePath());
 			String[] files = f.list();
 			TreeMap<String, CharListData> dataList1 = new TreeMap<String, CharListData>();
@@ -302,16 +297,14 @@ public class PartySetup extends PagedInputWindow {
 					for (String sFile:subFiles)
 					{
 						System.out.println("F: "+sFile);
-						File sF = new File(charsDir+"/"+file+"/"+sFile);
+						File sF = new File(SaveLoadNewGame.charsDir+"/"+file+"/"+sFile);
 						if (sF.isFile())
 						{
 							if (sF.getName().endsWith(".zip"))
 							{
 								data.charData = sF;
-							}
-							if (sF.getName().endsWith("portrait.png"))
-							{
-								data.pic = sF;
+								MemberPerson p = SaveLoadNewGame.loadCharacter(sF);
+								data.pic = new File(p.getPicturePath());
 							}
 							if (data.charData!=null && data.pic!=null) break;
 						}
@@ -392,10 +385,9 @@ public class PartySetup extends PagedInputWindow {
 			profession = cCR.profInstances.get(cCR.selectableProfessions.get(professionSelect.getSelection()));
 			if (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0) return true;
 			attributeValues = new FantasyAttributes();
-			int i = 0;
-			for (ValueTuner v:attributes.values())
+			for (String id:attributes.keySet())
 			{
-				String id = FantasyAttributes.attributeName[i];
+				ValueTuner v = attributes.get(id);
 				int value = v.getSelection();
 				attributeValues.setAttribute(id, value);
 				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
@@ -407,8 +399,13 @@ public class PartySetup extends PagedInputWindow {
 		}
 		if (base.equals(readyChar))
 		{
+			if (foreName.text.length()==0) return true; // a name must be entered
 			personWithGenderAndRace.professions.add(profession);
 			personWithGenderAndRace.setAttributes(attributeValues);
+			personWithGenderAndRace.setForeName(foreName.text);
+			personWithGenderAndRace.setSureName(sureName.text);
+			personWithGenderAndRace.setPictureId(pictureSelect.getPictureId());
+			SaveLoadNewGame.saveCharacter(personWithGenderAndRace);
 			base.deactivate();
 			currentPage=0;
 			setupPage();

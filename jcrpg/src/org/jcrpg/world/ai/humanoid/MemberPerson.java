@@ -18,10 +18,16 @@
 
 package org.jcrpg.world.ai.humanoid;
 
+import java.io.OutputStream;
+import java.io.Reader;
+
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class MemberPerson extends EntityMember {
 
@@ -63,6 +69,15 @@ public class MemberPerson extends EntityMember {
 		this.pictureId = pictureId;
 	}
 	
+	public String getPicturePath()
+	{
+		String genderPath = "";
+		if (genderType==EntityDescription.GENDER_MALE) genderPath="male/";
+		if (genderType==EntityDescription.GENDER_FEMALE) genderPath="female/";
+		String path = "./data/portraits/"+pictureRoot+"/"+genderPath;
+		return path;
+	}
+	
 	public MemberPerson copy(MemberPerson copy)
 	{
 		if (copy==null)
@@ -84,6 +99,18 @@ public class MemberPerson extends EntityMember {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+	
+	public void getXml(OutputStream output)
+	{
+		XStream xstream = new XStream(new DomDriver());
+		xstream.toXML(this,output);
+	}
+	public static MemberPerson createFromXml(Reader xml)
+	{
+		XStream xstream = new XStream(new DomDriver());
+		MemberPerson m = (MemberPerson)xstream.fromXML(xml);
+		return m;
 	}
 	
 }
