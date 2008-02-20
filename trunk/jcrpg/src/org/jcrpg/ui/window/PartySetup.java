@@ -55,24 +55,29 @@ public class PartySetup extends PagedInputWindow {
 	Node pageCreationFirst = new Node();
 	Node pageCreationSecond = new Node();
 
-	int currentPage = 0;
 	
+	// party select
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
 	TextButton newChar;
 	TextButton rmChar;
 	TextButton startGame;
 	
+	// creation 1
 	ListSelect raceSelect = null;
 	ListSelect professionSelect = null;
 	HashMap<String, ValueTuner> attributes = new HashMap<String, ValueTuner>();
+	TextButton nextPage;
+
+	// creation 2
+	TextButton readyChar;
 	
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
 		try {
 	    	
-			// page selection
+			// page selection -----------------------------------------------
 			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
 	    	
@@ -91,8 +96,7 @@ public class PartySetup extends PagedInputWindow {
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);
 	    	
-	    	// page char creation 1
-	    	
+	    	// page char creation 1 -------------------------------------------
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	pageCreationFirst.attachChild(sQuad);
 
@@ -111,11 +115,20 @@ public class PartySetup extends PagedInputWindow {
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
 	    		System.out.println("TEXT" +text);
-	    		TextLabel t = new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.5f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.5f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.5f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
 	    		addInput(1,v);
 	    		posY++;
 	    	}
+	    	
+	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Next Page");
+	    	addInput(1,nextPage);
+	    	
+	    	// page char creation 2 -------------------------------------------
+	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
+	    	pageCreationSecond.attachChild(sQuad2);
+	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Ready");
+	    	addInput(2,readyChar);
 	    	
 	    	
 			base.addEventHandler("back", this);
@@ -142,7 +155,9 @@ public class PartySetup extends PagedInputWindow {
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
+	
 	CharacterCreationRules cCR = null;
+	@Override
 	public void setupPage()
 	{
 		if (currentPage==0)
@@ -207,10 +222,14 @@ public class PartySetup extends PagedInputWindow {
 		    	professionSelect.texts = names;
 		    	professionSelect.setUpdated(true);
 	    	}
-			changePage(1);
-			
-			windowNode.updateRenderState();
 		}
+		if (currentPage==2)
+		{
+			windowNode.detachAllChildren();
+			windowNode.attachChild(pageCreationSecond);
+			
+		}
+		super.setupPage();
 		
 	}
 	
@@ -290,12 +309,27 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base.equals(newChar))
 		{
+			base.deactivate();
 			currentPage=1;
+			setupPage();
+		}
+		else
+		if (base.equals(nextPage))
+		{
+			base.deactivate();
+			currentPage=2;
+			setupPage();
+		}
+		if (base.equals(readyChar))
+		{
+			base.deactivate();
+			currentPage=0;
 			setupPage();
 		}
 		else
 		if (base.equals(startGame))
 		{
+			base.deactivate();
 			toggle();
 			this.base.hud.characters.show();
 			core.clearCore();

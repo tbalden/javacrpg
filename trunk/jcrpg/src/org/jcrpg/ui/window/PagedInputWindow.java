@@ -42,7 +42,35 @@ public abstract class PagedInputWindow extends InputWindow {
 		activateSelectedInput();
 	}
 	
+	/**
+	 * On page change this should be called after subclass has done its setup.
+	 */
+	public void setupPage()
+	{
+		changePage(currentPage);
+		activateSelectedInput();
+		windowNode.updateRenderState();
+		
+	}
+	
+	
 
+	@Override
+	public void addInput(InputBase input) {
+		// Don't use this!!, use the one with pageNumber.
+	}
+
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * This must be used to add input to a specified page. Normal addInput shouldn't be used! 
+	 * @param pageNumber
+	 * @param input
+	 */
 	public void addInput(int pageNumber, InputBase input)
 	{
 		ArrayList<InputBase> inputs = this.inputs.get(pageNumber);
