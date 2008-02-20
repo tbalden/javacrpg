@@ -197,13 +197,12 @@ public class PartySetup extends PagedInputWindow {
 		currentPage = 0;
 		setupPage();
 		changePage(0);
-		//activateSelectedInput();			
 		core.getRootNode().attachChild(windowNode);
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
 	
-	CharacterCreationRules cCR = null;
+	CharacterCreationRules charCreationRule = null;
 	@Override
 	public void setupPage()
 	{
@@ -232,16 +231,16 @@ public class PartySetup extends PagedInputWindow {
 			windowNode.attachChild(pageCreationFirst);
 			if (core.gameState==null || core.gameState.charCreationRules == null)
 			{
-				cCR = new CharacterCreationRules(null,null);
+				charCreationRule = new CharacterCreationRules(null,null);
 			} else
 			{
-				cCR = core.gameState.charCreationRules;
+				charCreationRule = core.gameState.charCreationRules;
 			}
 	    	{
 		    	int id = 0;
-		    	String[] ids = new String[cCR.selectableRaces.size()];
-		    	String[] names = new String[cCR.selectableRaces.size()];
-		    	for (Class<? extends EntityMember> c: cCR.selectableRaces)
+		    	String[] ids = new String[charCreationRule.selectableRaces.size()];
+		    	String[] names = new String[charCreationRule.selectableRaces.size()];
+		    	for (Class<? extends EntityMember> c: charCreationRule.selectableRaces)
 		    	{
 		    		String s = c.getSimpleName();
 		    		ids[id] = ""+id;
@@ -255,9 +254,9 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	{
 		    	int id = 0;
-		    	String[] ids = new String[cCR.selectableProfessions.size()];
-		    	String[] names = new String[cCR.selectableProfessions.size()];
-		    	for (Class<? extends Profession> c: cCR.selectableProfessions)
+		    	String[] ids = new String[charCreationRule.selectableProfessions.size()];
+		    	String[] names = new String[charCreationRule.selectableProfessions.size()];
+		    	for (Class<? extends Profession> c: charCreationRule.selectableProfessions)
 		    	{
 		    		String s = c.getSimpleName();
 		    		ids[id] = ""+id;
@@ -402,8 +401,8 @@ public class PartySetup extends PagedInputWindow {
 		else
 		if (base.equals(nextPage))
 		{
-			personWithGenderAndRace = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection())).copy(null);
-			profession = cCR.profInstances.get(cCR.selectableProfessions.get(professionSelect.getSelection()));
+			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
+			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(professionSelect.getSelection()));
 			if (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0) return true;
 			attributeValues = new FantasyAttributes();
 			for (String id:attributes.keySet())
@@ -446,11 +445,11 @@ public class PartySetup extends PagedInputWindow {
 			{
 				members.add(new PartyMember("_"+i,new AudioDescription()));
 			}			
-			if (cCR == null)
+			if (charCreationRule == null)
 			{
-				cCR = new CharacterCreationRules(null,null);
+				charCreationRule = new CharacterCreationRules(null,null);
 			}
-			SaveLoadNewGame.newGame(core,members,cCR);
+			SaveLoadNewGame.newGame(core,members,charCreationRule);
 			core.init3DGame();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
@@ -464,7 +463,7 @@ public class PartySetup extends PagedInputWindow {
 		if (base.equals(raceSelect))
 		{
 			System.out.println("RACE SELECT LEFT");
-			MemberPerson race = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection()));
+			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
 			if (race.possibleGenders==EntityDescription.GENDER_BOTH)
 			{
 				genderSelect.ids = new String[]{""+EntityDescription.GENDER_MALE, ""+EntityDescription.GENDER_FEMALE};
@@ -511,7 +510,7 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(genderSelect))
 		{
-			MemberPerson race = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection()));
+			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
 			int i = genderSelect.getSelection();
 			int id = Integer.parseInt(genderSelect.ids[i]);
 			String genderPath = "";
@@ -540,9 +539,9 @@ public class PartySetup extends PagedInputWindow {
 			ArrayList<String> texts = new ArrayList<String>();
 			
 			int id = 0;
-			for (Class<? extends Profession> pClass: cCR.selectableProfessions)
+			for (Class<? extends Profession> pClass: charCreationRule.selectableProfessions)
 			{
-				Profession p = cCR.profInstances.get(pClass);
+				Profession p = charCreationRule.profInstances.get(pClass);
 				if (p.isQualifiedEnough(attributeValues))
 				{
 		    		String s = pClass.getSimpleName();
