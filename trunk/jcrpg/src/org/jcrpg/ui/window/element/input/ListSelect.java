@@ -94,7 +94,10 @@ public class ListSelect extends InputBase {
 			}
 		}
 		baseNode.attachChild(deactivatedNode);
-		if (maxCount==0) return;
+		if (maxCount==0) {
+			baseNode.updateRenderState();
+			return;			
+		}
 		String text = texts[selected+fromCount];
 		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
@@ -122,8 +125,10 @@ public class ListSelect extends InputBase {
 			}
 		}
 		baseNode.attachChild(activatedNode);
+		
 		if (maxCount==0)
 		{
+			baseNode.updateRenderState();
 			return;
 		}
 		textNodes.clear();

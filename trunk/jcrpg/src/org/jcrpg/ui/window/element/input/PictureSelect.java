@@ -19,13 +19,13 @@
 package org.jcrpg.ui.window.element.input;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
@@ -43,17 +43,13 @@ public class PictureSelect extends InputBase {
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	
-	int oldValue, value, minValue, maxValue;
-	
 	public String picturesPath = null; 
+	public int selected = 0;
 	
 	public PictureSelect(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
-			float sizeY, float textProportion, int value, int minValue, int maxValue) {
+			float sizeY, float textProportion) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = ""+value;
-		this.value = value;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
 		this.textProportion = textProportion;
 		deactivate();
 		w.base.addEventHandler("lookLeft", w);
@@ -66,11 +62,45 @@ public class PictureSelect extends InputBase {
 	
 	public int getSelection()
 	{
-		return value;
+		return selected;
+	}
+	
+	public File getPicture()
+	{
+		return null;
+	}
+	
+	ArrayList<File> filesList = new ArrayList<File>();
+	HashMap<File, Quad> picQuads = new HashMap<File, Quad>();
+	
+	public void updateFiles()
+	{
+		picQuads.clear();
+		filesList.clear();
+		File f = new File(picturesPath);
+		System.out.println("# FILE: "+f.getAbsolutePath());
+		String[] files = f.list();
+		if (files!=null)
+		for (String file:files)
+		{
+			System.out.println("# FILE: "+file);
+			if (file.endsWith(".png"))
+			if (!new File(f.getAbsolutePath()+"/"+file).isDirectory())
+			{
+				filesList.add(new File(f.getAbsolutePath()+"/"+file));
+			}
+		}
+		
 	}
 
 	@Override
 	public void activate() {
+		if (updated)
+		{
+			updated = false;
+			updateFiles();
+			selected = 0;
+		}
 		baseNode.detachAllChildren();
 		{
 			if (activeNode==null) {
@@ -84,12 +114,21 @@ public class PictureSelect extends InputBase {
 					ex.printStackTrace();
 				}
 			}
-			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.6f,0.6f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			activeNode.attachChild(slottextNode);
+			if (filesList.size()!=0) {
+				File f = filesList.get(selected);
+				Quad q = picQuads.get(f);
+				if (q==null)
+				{
+					try {
+						q = Window.loadImageToQuad(f, dSizeX*0.96f, dSizeY*0.96f, dCenterX, dCenterY);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
+				q.setSolidColor(ColorRGBA.white);
+				activeNode.attachChild(q);
+			}
 		}
 		baseNode.attachChild(activeNode);
 		baseNode.updateRenderState();
@@ -98,6 +137,12 @@ public class PictureSelect extends InputBase {
 
 	@Override
 	public void deactivate() {
+		if (updated)
+		{
+			updated = false;
+			updateFiles();
+			selected = 0;
+		}
 		baseNode.detachAllChildren();
 		{
 			if (deactiveNode==null) {
@@ -111,11 +156,22 @@ public class PictureSelect extends InputBase {
 					ex.printStackTrace();
 				}
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			deactiveNode.attachChild(slottextNode);
+			if (filesList.size()!=0) {
+				File f = filesList.get(selected);
+				Quad q = picQuads.get(f);
+				if (q==null)
+				{
+					try {
+						q = Window.loadImageToQuad(f, dSizeX*0.96f, dSizeY*0.96f, dCenterX, dCenterY);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
+				q.setSolidColor(ColorRGBA.gray);
+				deactiveNode.attachChild(q);
+			}
+			
 		}
 		baseNode.attachChild(deactiveNode);
 		baseNode.updateRenderState();
@@ -124,30 +180,18 @@ public class PictureSelect extends InputBase {
 
 	@Override
 	public boolean handleKey(String key) {
-		if (key.equals("lookLeft"))
-		{
-			if (value==minValue) return true;
-			value--;
-			if (!w.inputUsed(this, key)) value++;
-			text = ""+value;
-			setValue(text);
-			activate();
-		} else
 		if (key.equals("lookRight"))
 		{
-			if (value==maxValue) return true;
-			value++;
-			if (!w.inputUsed(this, key)) value--;
-			text = ""+value;
-			setValue(text);
+			if (selected == filesList.size()-1) return true;
+			selected++;
 			activate();
 		} else
-		if (key.equals("enter"))
+		if (key.equals("lookLeft"))
 		{
-			w.core.audioServer.play(SOUND_INPUTSELECTED);
-			w.inputUsed(this, key);
-			return true;
-		}
+			if (selected == 0) return true;
+			selected--;
+			activate();
+		} 
 		return false;
 	}
 
