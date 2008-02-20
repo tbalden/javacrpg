@@ -188,4 +188,9 @@ public class SaveLoadNewGame {
 		}
 	}
 	
+	public static void saveCharacter()
+	{
+		
+	}
+	
 }
