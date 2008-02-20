@@ -74,7 +74,7 @@ public class MemberPerson extends EntityMember {
 		String genderPath = "";
 		if (genderType==EntityDescription.GENDER_MALE) genderPath="male/";
 		if (genderType==EntityDescription.GENDER_FEMALE) genderPath="female/";
-		String path = "./data/portraits/"+pictureRoot+"/"+genderPath;
+		String path = "./data/portraits/"+pictureRoot+"/"+genderPath+pictureId;
 		return path;
 	}
 	

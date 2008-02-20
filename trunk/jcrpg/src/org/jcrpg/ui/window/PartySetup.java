@@ -21,6 +21,7 @@ package org.jcrpg.ui.window;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.jcrpg.game.CharacterCreationRules;
@@ -106,8 +107,8 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.25f, 0.2f, 0.07f,400f,"Select a character to add:",false); 
-	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.37f,0.3f,0.3f,0.06f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Select a character to add:",false); 
+	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
 	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
@@ -219,7 +220,10 @@ public class PartySetup extends PagedInputWindow {
 				names[i++] = d.charName;
 			}
 			addCharSelect.texts = names;
-			
+			if (addCharSelect.texts.length>0)
+			{
+				inputChanged(addCharSelect, "");
+			}
 			addCharSelect.setUpdated(true);
 		}
 		if (currentPage==1)
@@ -303,8 +307,25 @@ public class PartySetup extends PagedInputWindow {
 							if (sF.getName().endsWith(".zip"))
 							{
 								data.charData = sF;
-								MemberPerson p = SaveLoadNewGame.loadCharacter(sF);
-								data.pic = new File(p.getPicturePath());
+								try 
+								{
+									MemberPerson p = SaveLoadNewGame.loadCharacter(sF);
+									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getClass().getSimpleName()+" - "+p.foreName+" "+p.sureName;
+									while (true) {
+										if (dataList1.get(data.charName)!=null)
+										{
+											data.charName += "_";
+										} else
+										{
+											break;
+										}
+									}
+									data.pic = new File(p.getPicturePath());
+								} catch (Exception ex)
+								{
+									ex.printStackTrace();
+									break;
+								}
 							}
 							if (data.charData!=null && data.pic!=null) break;
 						}
@@ -405,6 +426,9 @@ public class PartySetup extends PagedInputWindow {
 			personWithGenderAndRace.setForeName(foreName.text);
 			personWithGenderAndRace.setSureName(sureName.text);
 			personWithGenderAndRace.setPictureId(pictureSelect.getPictureId());
+			int i = genderSelect.getSelection();
+			int id = Integer.parseInt(genderSelect.ids[i]);
+			personWithGenderAndRace.genderType = id;
 			SaveLoadNewGame.saveCharacter(personWithGenderAndRace);
 			base.deactivate();
 			currentPage=0;
@@ -530,6 +554,40 @@ public class PartySetup extends PagedInputWindow {
 	    	professionSelect.ids = ids.toArray(new String[0]);
 	    	professionSelect.texts = texts.toArray(new String[0]);
 	    	professionSelect.setUpdated(true);			
+		}
+		return true;
+	}
+
+	Node imageNode = new Node();
+	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		if (base.equals(addCharSelect))
+		{
+			int s = addCharSelect.getSelection();
+			Iterator<CharListData> it = dataList.values().iterator();
+			CharListData d = null;
+			for (int i=0; i<=s; i++) {
+				d = it.next();
+			}
+			System.out.println(d.pic.getName());
+			try {
+				Quad q = imgQuads.get(d.pic.getAbsolutePath());
+				if (q==null) 
+				{
+					q = loadImageToQuad(d.pic,  0.14f*core.getDisplay().getWidth(), (0.16f)*core.getDisplay().getHeight(),0.75f*core.getDisplay().getWidth(), (1f-0.2f)*core.getDisplay().getHeight()  );
+					imgQuads.put(d.pic.getAbsolutePath(), q);
+				}
+				imageNode.detachAllChildren();
+				imageNode.attachChild(q);
+				imageNode.attachChild(imageNode);
+				pageMemberSelection.attachChild(imageNode);
+				pageMemberSelection.updateRenderState();
+			} catch (Exception ex)
+			{
+				
+			}
+				
 		}
 		return true;
 	}
