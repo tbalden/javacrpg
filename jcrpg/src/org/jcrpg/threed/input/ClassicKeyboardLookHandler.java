@@ -73,7 +73,34 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "logDown", KeyInput.KEY_PGDN );
         keyboard.set( "enter", KeyInput.KEY_RETURN );
         keyboard.set( "back", KeyInput.KEY_BACK);
+        keyboard.set( "A", KeyInput.KEY_A );
+        keyboard.set( "B", KeyInput.KEY_B );
+        keyboard.set( "C", KeyInput.KEY_C );
+        keyboard.set( "D", KeyInput.KEY_D );
+        keyboard.set( "E", KeyInput.KEY_E );
+        keyboard.set( "F", KeyInput.KEY_F );
+        keyboard.set( "G", KeyInput.KEY_G );
+        keyboard.set( "H", KeyInput.KEY_H );
+        keyboard.set( "I", KeyInput.KEY_I );
+        keyboard.set( "J", KeyInput.KEY_J );
+        keyboard.set( "K", KeyInput.KEY_K );
+        keyboard.set( "L", KeyInput.KEY_L );
+        keyboard.set( "M", KeyInput.KEY_M );
+        keyboard.set( "N", KeyInput.KEY_N );
+        keyboard.set( "O", KeyInput.KEY_O );
+        keyboard.set( "P", KeyInput.KEY_P );
+        keyboard.set( "Q", KeyInput.KEY_Q );
+        keyboard.set( "R", KeyInput.KEY_R );
+        keyboard.set( "S", KeyInput.KEY_S );
+        keyboard.set( "T", KeyInput.KEY_T );
+        keyboard.set( "U", KeyInput.KEY_U );
+        keyboard.set( "V", KeyInput.KEY_V );
+        keyboard.set( "W", KeyInput.KEY_W );
+        keyboard.set( "X", KeyInput.KEY_X );
         keyboard.set( "Y", KeyInput.KEY_Y );
+        keyboard.set( "Z", KeyInput.KEY_Z );
+        keyboard.set( "space", KeyInput.KEY_SPACE );
+        keyboard.set( "delete", KeyInput.KEY_DELETE );
        
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
@@ -88,25 +115,55 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyLookRightAction( this, cam, rotateSpeed ), "lookRight", true );
         addAction( new CKeyUpAction( this, cam, rotateSpeed ), "climbUp", true );
         addAction( new CKeyDownAction( this, cam, rotateSpeed ), "climbDown", true );
-        addAction( new CKeyMenu(this), "worldMap", false);
-        addAction( new CKeyMenu(this), "mainMenu", false);
-        addAction( new CKeyMenu(this), "logUp", false);
-        addAction( new CKeyMenu(this), "logDown", false);
-        addAction( new CKeyMenu(this), "Y", false);
-        // add these to menu too
-        addAction( new CKeyMenu(this), "enter", false);
-        addAction( new CKeyMenu(this), "back", false);
-        addAction( new CKeyMenu(this), "lookUp", false);
-        addAction( new CKeyMenu(this), "lookDown", false);
-        addAction( new CKeyMenu(this), "lookLeft", false);
-        addAction( new CKeyMenu(this), "lookRight", false);
- 
+
         right = new CKeyRotateRightAction( this, cam, rotateSpeed );
         right.setLockAxis(new Vector3f(cam.getUp()));
         addAction(right, "turnRight", true );
         left = new CKeyRotateLeftAction( this, cam, rotateSpeed );
         left.setLockAxis(new Vector3f(cam.getUp()));
         addAction( left, "turnLeft", true );
+
+        // add these to menu too
+ 
+        addAction( new CKeyMenu(this), "worldMap", false);
+        addAction( new CKeyMenu(this), "mainMenu", false);
+        addAction( new CKeyMenu(this), "logUp", false);
+        addAction( new CKeyMenu(this), "logDown", false);
+        addAction( new CKeyMenu(this), "A", false);
+        addAction( new CKeyMenu(this), "B", false);
+        addAction( new CKeyMenu(this), "C", false);
+        addAction( new CKeyMenu(this), "D", false);
+        addAction( new CKeyMenu(this), "E", false);
+        addAction( new CKeyMenu(this), "F", false);
+        addAction( new CKeyMenu(this), "G", false);
+        addAction( new CKeyMenu(this), "H", false);
+        addAction( new CKeyMenu(this), "I", false);
+        addAction( new CKeyMenu(this), "J", false);
+        addAction( new CKeyMenu(this), "K", false);
+        addAction( new CKeyMenu(this), "L", false);
+        addAction( new CKeyMenu(this), "M", false);
+        addAction( new CKeyMenu(this), "N", false);
+        addAction( new CKeyMenu(this), "O", false);
+        addAction( new CKeyMenu(this), "P", false);
+        addAction( new CKeyMenu(this), "Q", false);
+        addAction( new CKeyMenu(this), "R", false);
+        addAction( new CKeyMenu(this), "S", false);
+        addAction( new CKeyMenu(this), "T", false);
+        addAction( new CKeyMenu(this), "U", false);
+        addAction( new CKeyMenu(this), "V", false);
+        addAction( new CKeyMenu(this), "W", false);
+        addAction( new CKeyMenu(this), "X", false);
+        addAction( new CKeyMenu(this), "Y", false);
+        addAction( new CKeyMenu(this), "Z", false);
+        addAction( new CKeyMenu(this), "enter", false);
+        addAction( new CKeyMenu(this), "space", false);
+        addAction( new CKeyMenu(this), "delete", false);
+        addAction( new CKeyMenu(this), "back", false);
+        addAction( new CKeyMenu(this), "lookUp", false);
+        addAction( new CKeyMenu(this), "lookDown", false);
+        addAction( new CKeyMenu(this), "lookLeft", false);
+        addAction( new CKeyMenu(this), "lookRight", false);
+ 
     }
     
     public void setLockAxis(Vector3f lock) {

@@ -33,6 +33,7 @@ import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.PictureSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.ui.window.element.input.TextInputField;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
@@ -77,6 +78,8 @@ public class PartySetup extends PagedInputWindow {
 
 	// creation 2
 	TextButton readyChar;
+	TextInputField sureName;
+	TextInputField foreName;
 	
 	/**
 	 * how many attribute points can be used by default.
@@ -164,6 +167,14 @@ public class PartySetup extends PagedInputWindow {
 	    	// page char creation 2 -------------------------------------------
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
 	    	pageCreationSecond.attachChild(sQuad2);
+
+	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,"Forename:",false); 
+	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15);
+	    	addInput(2,foreName);
+	    	new TextLabel("",this,pageCreationSecond, 0.66f, 0.57f, 0.3f, 0.06f,600f,"Surename:",false); 
+	    	sureName = new TextInputField("sureName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15); 
+	    	addInput(2,sureName);
+
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Ready");
 	    	addInput(2,readyChar);
 	    	
