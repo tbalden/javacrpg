@@ -222,8 +222,11 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
-			if (ids.length>0)
+			if (ids.length>0) 
+			{
 				setValue(ids[fromCount+selected]);
+				w.inputChanged(this, key);
+			}
 		} else
 		if (key.equals("lookRight"))
 		{
@@ -239,8 +242,11 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
-			if (ids.length>0)
+			if (ids.length>0) 
+			{
 				setValue(ids[fromCount+selected]);
+				w.inputChanged(this, key);
+			}
 		}
 		return false;
 	}

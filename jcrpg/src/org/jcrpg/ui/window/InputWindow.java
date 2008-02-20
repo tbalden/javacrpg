@@ -61,6 +61,8 @@ public abstract class InputWindow extends Window implements KeyListener{
 		}
 	}
 
+	public abstract boolean inputChanged(InputBase base, String message);
+
 	public abstract boolean inputLeft(InputBase base, String message);
 
 	public abstract boolean inputEntered(InputBase base, String message);
