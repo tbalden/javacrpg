@@ -36,6 +36,7 @@ import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyMember;
@@ -71,6 +72,21 @@ public class PartySetup extends PagedInputWindow {
 
 	// creation 2
 	TextButton readyChar;
+	
+	/**
+	 * how many attribute points can be used by default.
+	 */
+	public static final int ATTRIBUTE_POINTS_TO_USE = 20;
+	/**
+	 * How many attribute points are left.
+	 */
+	int attrPointsLeft = 0;
+	
+	
+	// character creation result classes
+	public EntityMember personWithGenderAndRace = null;
+	public Profession profession = null;
+	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
 	
 	public PartySetup(UIBase base) {
 		super(base);
@@ -117,6 +133,7 @@ public class PartySetup extends PagedInputWindow {
 	    		System.out.println("TEXT" +text);
 	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.5f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.5f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
+	    		attributes.put(s, v);
 	    		addInput(1,v);
 	    		posY++;
 	    	}
@@ -316,6 +333,18 @@ public class PartySetup extends PagedInputWindow {
 		else
 		if (base.equals(nextPage))
 		{
+			personWithGenderAndRace = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection())).copy(null);
+			profession = cCR.profInstances.get(cCR.selectableProfessions.get(raceSelect.getSelection()));
+			attributeValues = new FantasyAttributes();
+			int i = 0;
+			for (ValueTuner v:attributes.values())
+			{
+				String id = FantasyAttributes.attributeName[i];
+				int value = v.getSelection();
+				attributeValues.setAttribute(id, value);
+				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+			}
+			System.out.println("CHARACTER PERSON & PROFESSION : "+personWithGenderAndRace+" "+profession);
 			base.deactivate();
 			currentPage=2;
 			setupPage();
