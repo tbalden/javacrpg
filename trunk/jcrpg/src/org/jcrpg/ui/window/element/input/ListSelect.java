@@ -78,6 +78,8 @@ public class ListSelect extends InputBase {
 	
 	public void setupDeactivated()
 	{
+		baseNode.removeFromParent();
+		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
 		if (deactivatedNode==null) 
 		{
@@ -104,6 +106,8 @@ public class ListSelect extends InputBase {
 
 	public void setupActivated()
 	{
+		baseNode.removeFromParent();
+		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
 		if (activatedNode==null) 
 		{
@@ -213,7 +217,8 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
-			setValue(ids[fromCount+selected]);
+			if (ids.length>0)
+				setValue(ids[fromCount+selected]);
 		} else
 		if (key.equals("lookRight"))
 		{
@@ -229,7 +234,8 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
-			setValue(ids[fromCount+selected]);
+			if (ids.length>0)
+				setValue(ids[fromCount+selected]);
 		}
 		return false;
 	}

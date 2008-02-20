@@ -36,6 +36,7 @@ import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
@@ -66,7 +67,9 @@ public class PartySetup extends PagedInputWindow {
 	
 	// creation 1
 	ListSelect raceSelect = null;
+	ListSelect genderSelect = null;
 	ListSelect professionSelect = null;
+	TextLabel pointsLeft = null;
 	HashMap<String, ValueTuner> attributes = new HashMap<String, ValueTuner>();
 	TextButton nextPage;
 
@@ -84,7 +87,7 @@ public class PartySetup extends PagedInputWindow {
 	
 	
 	// character creation result classes
-	public EntityMember personWithGenderAndRace = null;
+	public MemberPerson personWithGenderAndRace = null;
 	public Profession profession = null;
 	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
 	
@@ -117,14 +120,17 @@ public class PartySetup extends PagedInputWindow {
 	    	pageCreationFirst.attachChild(sQuad);
 
 	    	{
-		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.37f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,raceSelect);
-	    	
+
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.63f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	genderSelect = new ListSelect("gender", this,pageCreationFirst, 0.67f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
-	    	addInput(1,professionSelect);
+	    	addInput(1,genderSelect);
+	    	
+	    	
+	    	pointsLeft = new TextLabel("",this,pageCreationFirst, 0.23f, 0.8f, 0.2f, 0.07f,400f,attrPointsLeft+" points left.",false); 
 	    	
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
@@ -137,14 +143,19 @@ public class PartySetup extends PagedInputWindow {
 	    		addInput(1,v);
 	    		posY++;
 	    	}
+
+	    	{
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,professionSelect);
 	    	
-	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Next Page");
+	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Next Page");
 	    	addInput(1,nextPage);
 	    	
 	    	// page char creation 2 -------------------------------------------
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
 	    	pageCreationSecond.attachChild(sQuad2);
-	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Ready");
+	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Ready");
 	    	addInput(2,readyChar);
 	    	
 	    	
@@ -212,7 +223,7 @@ public class PartySetup extends PagedInputWindow {
 		    	int id = 0;
 		    	String[] ids = new String[cCR.selectableRaces.size()];
 		    	String[] names = new String[cCR.selectableRaces.size()];
-		    	for (Class<? extends MemberPerson> c: cCR.selectableRaces)
+		    	for (Class<? extends EntityMember> c: cCR.selectableRaces)
 		    	{
 		    		String s = c.getSimpleName();
 		    		ids[id] = ""+id;
@@ -324,9 +335,41 @@ public class PartySetup extends PagedInputWindow {
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base instanceof ValueTuner) {
+			int count = 0;
+			for (ValueTuner v:attributes.values())
+			{
+				if (base.equals(v))
+				{
+					if (message.equals("lookLeft"))
+					{
+						attrPointsLeft++;
+					} else
+					if (message.equals("lookRight"))
+					{
+						attrPointsLeft--;
+					}
+					if (attrPointsLeft<0)
+					{
+						attrPointsLeft = 0;
+						return false;
+					} else
+					{
+						pointsLeft.text = attrPointsLeft + " points left.";
+						pointsLeft.activate();
+						return true;
+					}
+						
+				}
+				count++;
+			}
+		}
 		if (base.equals(newChar))
 		{
 			base.deactivate();
+			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
+			pointsLeft.text = attrPointsLeft + " points left.";
+			pointsLeft.activate();
 			currentPage=1;
 			setupPage();
 		}
@@ -334,7 +377,7 @@ public class PartySetup extends PagedInputWindow {
 		if (base.equals(nextPage))
 		{
 			personWithGenderAndRace = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection())).copy(null);
-			profession = cCR.profInstances.get(cCR.selectableProfessions.get(raceSelect.getSelection()));
+			profession = cCR.profInstances.get(cCR.selectableProfessions.get(professionSelect.getSelection()));
 			attributeValues = new FantasyAttributes();
 			int i = 0;
 			for (ValueTuner v:attributes.values())
@@ -351,6 +394,8 @@ public class PartySetup extends PagedInputWindow {
 		}
 		if (base.equals(readyChar))
 		{
+			personWithGenderAndRace.professions.add(profession);
+			personWithGenderAndRace.setAttributes(attributeValues);
 			base.deactivate();
 			currentPage=0;
 			setupPage();
@@ -376,6 +421,93 @@ public class PartySetup extends PagedInputWindow {
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
 			core.audioServer.stopAndResumeOthers("main");
+		}
+		return true;
+	}
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		if (base.equals(raceSelect))
+		{
+			System.out.println("RACE SELECT LEFT");
+			MemberPerson race = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection()));
+			if (race.possibleGenders==EntityDescription.GENDER_BOTH)
+			{
+				genderSelect.ids = new String[]{""+EntityDescription.GENDER_MALE, ""+EntityDescription.GENDER_FEMALE};
+				genderSelect.texts = new String[]{Language.v("gender."+EntityDescription.GENDER_MALE), Language.v("gender."+EntityDescription.GENDER_FEMALE)};
+			}
+			if (race.possibleGenders==EntityDescription.GENDER_NEUTRAL)
+			{
+				genderSelect.ids = new String[]{""+EntityDescription.GENDER_NEUTRAL};
+				genderSelect.texts = new String[]{Language.v("gender."+EntityDescription.GENDER_NEUTRAL)};
+				
+			}
+			if (race.possibleGenders==EntityDescription.GENDER_FEMALE)
+			{
+				genderSelect.ids = new String[]{""+EntityDescription.GENDER_FEMALE};
+				genderSelect.texts = new String[]{Language.v("gender."+EntityDescription.GENDER_FEMALE)};
+				
+			}
+			if (race.possibleGenders==EntityDescription.GENDER_MALE)
+			{
+				genderSelect.ids = new String[]{""+EntityDescription.GENDER_MALE};
+				genderSelect.texts = new String[]{Language.v("gender."+EntityDescription.GENDER_MALE)};
+			}
+			genderSelect.setUpdated(true);
+			
+
+			// attribute ratio
+			int baseValue = 10;
+			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
+			if (attributeValues==null) attributeValues = new FantasyAttributes();
+			for (String id: FantasyAttributes.attributeName) {
+				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
+				{
+					attributeValues.setAttribute(id, (int)(baseValue*race.commonAttributeRatios.attributeRatios.get(id)));
+				} else
+				{
+					attributeValues.setAttribute(id, baseValue);
+				}
+				System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
+				ValueTuner v = attributes.get(id);
+				v.value = attributeValues.attributes.get(id);
+				v.text = ""+v.value;
+				v.deactivate();
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		if (base.equals(professionSelect))
+		{
+			int i = 0;
+			for (ValueTuner v:attributes.values())
+			{
+				String id = FantasyAttributes.attributeName[i];
+				int value = v.getSelection();
+				attributeValues.setAttribute(id, value);
+				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+			}
+			ArrayList<String> ids = new ArrayList<String>();
+			ArrayList<String> texts = new ArrayList<String>();
+			
+			int id = 0;
+			for (Class<? extends Profession> pClass: cCR.selectableProfessions)
+			{
+				Profession p = cCR.profInstances.get(pClass);
+				if (p.isQualifiedEnough(attributeValues))
+				{
+		    		String s = pClass.getSimpleName();
+		    		ids.add(""+id);
+		    		texts.add(s);
+		    		id++;
+				}
+			}
+	    	professionSelect.ids = ids.toArray(new String[0]);
+	    	professionSelect.texts = texts.toArray(new String[0]);
+	    	professionSelect.setUpdated(true);			
 		}
 		return true;
 	}

@@ -18,8 +18,14 @@
 
 package org.jcrpg.world.ai.profession.adventurer;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Fighter extends Profession {
 
+	public Fighter()
+	{
+		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
+	}
 }
