@@ -31,6 +31,7 @@ import org.jcrpg.ui.window.element.CharListData;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.PictureSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
@@ -68,9 +69,10 @@ public class PartySetup extends PagedInputWindow {
 	// creation 1
 	ListSelect raceSelect = null;
 	ListSelect genderSelect = null;
-	ListSelect professionSelect = null;
 	TextLabel pointsLeft = null;
 	HashMap<String, ValueTuner> attributes = new HashMap<String, ValueTuner>();
+	ListSelect professionSelect = null;
+	PictureSelect pictureSelect = null;
 	TextButton nextPage;
 
 	// creation 2
@@ -119,13 +121,15 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	pageCreationFirst.attachChild(sQuad);
 
+	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.15f, 0.3f, 0.06f,600f,"Race:",false); 
 	    	{
 		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.37f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,raceSelect);
 
+	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.15f, 0.3f, 0.06f,600f,"Gender:",false); 
 	    	{
-		    	genderSelect = new ListSelect("gender", this,pageCreationFirst, 0.67f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	genderSelect = new ListSelect("gender", this,pageCreationFirst, 0.7f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,genderSelect);
 	    	
@@ -137,17 +141,22 @@ public class PartySetup extends PagedInputWindow {
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
 	    		System.out.println("TEXT" +text);
-	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.5f+0.05f*posY,0.15f,0.04f,600f, text, false);
-	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.5f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
+	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
 	    		attributes.put(s, v);
 	    		addInput(1,v);
 	    		posY++;
 	    	}
 
+	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.4f,0.15f,0.2f,600f);
+	    	addInput(1,pictureSelect);
+
+	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.65f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.37f,0.3f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.37f,0.7f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
+	    	
 	    	
 	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Next Page");
 	    	addInput(1,nextPage);
@@ -157,7 +166,6 @@ public class PartySetup extends PagedInputWindow {
 	    	pageCreationSecond.attachChild(sQuad2);
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Ready");
 	    	addInput(2,readyChar);
-	    	
 	    	
 			base.addEventHandler("back", this);
 		} catch (Exception ex)
@@ -303,14 +311,7 @@ public class PartySetup extends PagedInputWindow {
 					}
 				}
 			}
-			dataList= dataList1; /*new TreeMap<String, CharListData>();
-			int reorderCount = dataList1.size();
-			for (CharListData d:dataList1.values())
-			{
-				dataList.put(reorderCount+" - "+d.charName, d);
-				d.id = reorderCount+" - "+d.charName;				
-				reorderCount--;
-			}*/
+			dataList= dataList1;
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -378,6 +379,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			personWithGenderAndRace = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection())).copy(null);
 			profession = cCR.profInstances.get(cCR.selectableProfessions.get(professionSelect.getSelection()));
+			if (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0) return true;
 			attributeValues = new FantasyAttributes();
 			int i = 0;
 			for (ValueTuner v:attributes.values())
@@ -474,6 +476,19 @@ public class PartySetup extends PagedInputWindow {
 				v.text = ""+v.value;
 				v.deactivate();
 			}
+		} else
+		if (base.equals(genderSelect))
+		{
+			MemberPerson race = cCR.raceInstances.get(cCR.selectableRaces.get(raceSelect.getSelection()));
+			int i = genderSelect.getSelection();
+			int id = Integer.parseInt(genderSelect.ids[i]);
+			String genderPath = "";
+			if (id==EntityDescription.GENDER_MALE) genderPath="male/";
+			if (id==EntityDescription.GENDER_FEMALE) genderPath="female/";
+			String path = "./data/portraits/"+race.pictureRoot+"/"+genderPath;
+			pictureSelect.picturesPath = path;
+			pictureSelect.setUpdated(true);
+			pictureSelect.deactivate();
 		}
 		return true;
 	}
@@ -482,10 +497,9 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputEntered(InputBase base, String message) {
 		if (base.equals(professionSelect))
 		{
-			int i = 0;
-			for (ValueTuner v:attributes.values())
+			for (String id:attributes.keySet())
 			{
-				String id = FantasyAttributes.attributeName[i];
+				ValueTuner v = attributes.get(id);
 				int value = v.getSelection();
 				attributeValues.setAttribute(id, value);
 				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
