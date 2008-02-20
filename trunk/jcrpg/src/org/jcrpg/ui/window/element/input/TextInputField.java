@@ -35,6 +35,7 @@ public class TextInputField extends InputBase {
 	public String text;
 	public int cursorPosition = 0;
 	public int maxLength = 20;
+	public boolean capsLock = true;
 	
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
@@ -57,6 +58,7 @@ public class TextInputField extends InputBase {
 		w.base.addEventHandler("back", w);
 		w.base.addEventHandler("lookLeft", w);
 		w.base.addEventHandler("lookRight", w);
+		w.base.addEventHandler("shift", w);
 		deactivate();
 	}
 	
@@ -174,6 +176,11 @@ public class TextInputField extends InputBase {
 			activate();
 			return true;
 		}
+		if (key.equals("shift"))
+		{
+			capsLock=!capsLock;
+			return true;
+		}
 		if (listenedKeys.contains(key))
 		{
 			if (text.length()==maxLength) return true;
@@ -183,6 +190,7 @@ public class TextInputField extends InputBase {
 			{
 				appended = " ";
 			}
+			if (!capsLock) appended = appended.toLowerCase();
 			StringBuffer newText = new StringBuffer();
 			for (int i=0; i<text.length()+1; i++)
 			{

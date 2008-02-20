@@ -101,6 +101,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "Z", KeyInput.KEY_Z );
         keyboard.set( "space", KeyInput.KEY_SPACE );
         keyboard.set( "delete", KeyInput.KEY_DELETE );
+        keyboard.set( "shift", KeyInput.KEY_LSHIFT);
        
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
@@ -156,6 +157,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "Y", false);
         addAction( new CKeyMenu(this), "Z", false);
         addAction( new CKeyMenu(this), "enter", false);
+        addAction( new CKeyMenu(this), "shift", false);
         addAction( new CKeyMenu(this), "space", false);
         addAction( new CKeyMenu(this), "delete", false);
         addAction( new CKeyMenu(this), "back", false);
