@@ -71,6 +71,10 @@ public class ListSelect extends InputBase {
 		parent.updateRenderState();
 	}
 
+	public int getSelection()
+	{
+		return fromCount+selected;
+	}
 	
 	public void setupDeactivated()
 	{
@@ -209,6 +213,7 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
+			setValue(ids[fromCount+selected]);
 		} else
 		if (key.equals("lookRight"))
 		{
@@ -224,6 +229,7 @@ public class ListSelect extends InputBase {
 					i++;
 				}
 			}
+			setValue(ids[fromCount+selected]);
 		}
 		return false;
 	}

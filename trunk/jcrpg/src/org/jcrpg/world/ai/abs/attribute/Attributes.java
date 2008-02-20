@@ -22,7 +22,10 @@ import java.util.HashMap;
 
 public class Attributes {
 
-	public HashMap<String, Integer> attributes = new HashMap<String, Integer>();	
+	public HashMap<String, Integer> attributes = new HashMap<String, Integer>();
+	/**
+	 * For tuning attributes in a common way for group entities. Shouldn't be used with genuine NPCs or player characters.
+	 */
 	public HashMap<String, Float> attributeRatios = new HashMap<String, Float>();
 
 	public static String[] attributeName = new String[0];

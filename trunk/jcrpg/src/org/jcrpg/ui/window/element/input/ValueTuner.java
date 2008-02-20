@@ -61,6 +61,11 @@ public class ValueTuner extends InputBase {
 	
 	Node activeNode = null;
 	Node deactiveNode = null;
+	
+	public int getSelection()
+	{
+		return value;
+	}
 
 	@Override
 	public void activate() {
@@ -90,7 +95,7 @@ public class ValueTuner extends InputBase {
 	@Override
 	public void deactivate() {
 		baseNode.detachAllChildren();
-		if (deactiveNode==null ) {
+		{
 			deactiveNode = new Node();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
@@ -118,6 +123,7 @@ public class ValueTuner extends InputBase {
 			value--;
 			if (!w.inputUsed(this, key)) value++;
 			text = ""+value;
+			setValue(text);
 			activate();
 		} else
 		if (key.equals("lookRight"))
@@ -125,6 +131,7 @@ public class ValueTuner extends InputBase {
 			value++;
 			if (!w.inputUsed(this, key)) value--;
 			text = ""+value;
+			setValue(text);
 			activate();
 		} else
 		if (key.equals("enter"))

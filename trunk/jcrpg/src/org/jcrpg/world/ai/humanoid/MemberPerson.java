@@ -60,4 +60,18 @@ public class MemberPerson extends EntityMember {
 		this.pictureId = pictureId;
 	}
 	
+	public MemberPerson copy(MemberPerson copy)
+	{
+		if (copy==null)
+		{
+			copy = new MemberPerson(visibleTypeId,audioDescription);
+		}
+		copy.setForeName(foreName);
+		copy.setPictureId(pictureId);
+		copy.setSureName(sureName);
+		copy.id = id;
+		copy.genderType = genderType;
+		return copy;
+	}
+	
 }

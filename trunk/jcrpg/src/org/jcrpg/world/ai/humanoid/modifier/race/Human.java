@@ -27,5 +27,11 @@ public class Human extends MemberPerson {
 		super(visibleTypeId, audio);
 		pictureRoot = "human";
 	}
+	
+	@Override
+	public MemberPerson copy(MemberPerson copy) {
+		copy = new Human(visibleTypeId,audioDescription);
+		return super.copy(copy);
+	}
 
 }

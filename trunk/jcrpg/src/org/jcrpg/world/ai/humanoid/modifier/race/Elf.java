@@ -33,4 +33,10 @@ public class Elf extends MemberPerson {
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONCENTRATION, 1.2f);
 	}
 
+	@Override
+	public MemberPerson copy(MemberPerson copy) {
+		copy = new Elf(visibleTypeId,audioDescription);
+		return super.copy(copy);
+	}
+	
 }

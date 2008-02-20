@@ -33,4 +33,10 @@ public class Dwarf extends MemberPerson {
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONCENTRATION, 0.8f);
 	}
 
+	@Override
+	public MemberPerson copy(MemberPerson copy) {
+		copy = new Human(visibleTypeId,audioDescription);
+		return super.copy(copy);
+	}
+	
 }
