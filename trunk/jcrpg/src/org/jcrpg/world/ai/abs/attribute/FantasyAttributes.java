@@ -20,14 +20,16 @@ package org.jcrpg.world.ai.abs.attribute;
 
 public class FantasyAttributes extends Attributes {
 
-	public static String STRENGTH = "STRENGTH";
-	public static String SPEED = "SPEED";
-	public static String CONCENTRATION = "CONCENTRATION";
-	public static String CONSTITUTION = "CONSTITUTION";
-	public static String PSYCHE = "PSYCHE";
-	public static String PIETY = "PIETY";
+	public static String STRENGTH = "STRENGTH"; // your muscles
+	public static String SPEED = "SPEED"; // your reflexes
+	public static String CONCENTRATION = "CONCENTRATION"; // your nerves
+	public static String CONSTITUTION = "CONSTITUTION"; // your body's hardiness
+	public static String PSYCHE = "PSYCHE"; // buildup of your mind
+	public static String PIETY = "PIETY"; // devotion to transcendental
+	public static String CHARISMA = "CHARISMA"; // for charming
+	public static String KARMA = "KARMA"; // bad karma gives affiliation to bad things
 	public static String[] attributeName = new String[] {
-		STRENGTH,SPEED,CONCENTRATION,CONSTITUTION, PSYCHE, PIETY
+		STRENGTH,SPEED,CONCENTRATION,CONSTITUTION, PSYCHE, PIETY, CHARISMA, KARMA
 	};
 	
 	public FantasyAttributes()
