@@ -42,6 +42,8 @@ import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyMember;
 import org.jcrpg.world.ai.profession.Profession;
@@ -71,12 +73,14 @@ public class PartySetup extends PagedInputWindow {
 	ListSelect raceSelect = null;
 	ListSelect genderSelect = null;
 	TextLabel pointsLeft = null;
-	HashMap<String, ValueTuner> attributes = new HashMap<String, ValueTuner>();
+	HashMap<String, ValueTuner> attributeTuners = new HashMap<String, ValueTuner>();
 	ListSelect professionSelect = null;
 	PictureSelect pictureSelect = null;
 	TextButton nextPage;
 
 	// creation 2
+	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
+	ValueTuner skillValueTuner;
 	TextButton readyChar;
 	TextInputField sureName;
 	TextInputField foreName;
@@ -148,7 +152,7 @@ public class PartySetup extends PagedInputWindow {
 	    		System.out.println("TEXT" +text);
 	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
-	    		attributes.put(s, v);
+	    		attributeTuners.put(s, v);
 	    		addInput(1,v);
 	    		posY++;
 	    	}
@@ -170,6 +174,30 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
 	    	pageCreationSecond.attachChild(sQuad2);
 
+	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
+
+	    	posY = 0;
+	    	for (String groupId : SkillGroups.orderedGroups)
+	    	{
+	    		String groupName = Language.v("skillgroups."+groupId);
+	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.13f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		ArrayList<String> skillIds = new ArrayList<String>();
+	    		ArrayList<String> skillTexts = new ArrayList<String>();
+	    		int counter = 0;
+	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
+	    		{
+	    			String id = groupId+"."+counter;
+	    			String text = skill.getSimpleName();
+	    			text = Language.v("skills."+text);
+	    			skillIds.add(id);
+	    			skillTexts.add(text);
+	    		}
+	    		ListSelect sel = new ListSelect("profession", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
+	    		posY++;
+	    		skillSelects.put(groupId, sel);
+	    		addInput(2,sel);
+	    	}
+	    	
 	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,"Forename:",false); 
 	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15);
 	    	addInput(2,foreName);
@@ -364,7 +392,7 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base instanceof ValueTuner) {
 			int count = 0;
-			for (ValueTuner v:attributes.values())
+			for (ValueTuner v:attributeTuners.values())
 			{
 				if (base.equals(v))
 				{
@@ -405,11 +433,12 @@ public class PartySetup extends PagedInputWindow {
 		{
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(professionSelect.getSelection()));
-			if (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0) return true;
+			if (true==false &&(professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
+			//if ((professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true; // TODO uncomment this version
 			attributeValues = new FantasyAttributes();
-			for (String id:attributes.keySet())
+			for (String id:attributeTuners.keySet())
 			{
-				ValueTuner v = attributes.get(id);
+				ValueTuner v = attributeTuners.get(id);
 				int value = v.getSelection();
 				attributeValues.setAttribute(id, value);
 				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
@@ -504,7 +533,7 @@ public class PartySetup extends PagedInputWindow {
 					attributeValues.setAttribute(id, baseValue);
 				}
 				System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
-				ValueTuner v = attributes.get(id);
+				ValueTuner v = attributeTuners.get(id);
 				v.value = attributeValues.attributes.get(id);
 				v.text = ""+v.value;
 				v.deactivate();
@@ -530,9 +559,9 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputEntered(InputBase base, String message) {
 		if (base.equals(professionSelect))
 		{
-			for (String id:attributes.keySet())
+			for (String id:attributeTuners.keySet())
 			{
-				ValueTuner v = attributes.get(id);
+				ValueTuner v = attributeTuners.get(id);
 				int value = v.getSelection();
 				attributeValues.setAttribute(id, value);
 				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
