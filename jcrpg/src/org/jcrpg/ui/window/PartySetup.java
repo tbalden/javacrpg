@@ -79,6 +79,7 @@ public class PartySetup extends PagedInputWindow {
 	TextButton nextPage;
 
 	// creation 2
+	TextLabel charInfo;
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
 	ValueTuner skillValueTuner;
 	TextButton readyChar;
@@ -175,7 +176,7 @@ public class PartySetup extends PagedInputWindow {
 	    	pageCreationSecond.attachChild(sQuad2);
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
-	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
+	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
 
 	    	posY = 0;
 	    	for (String groupId : SkillGroups.orderedGroups)
@@ -192,6 +193,7 @@ public class PartySetup extends PagedInputWindow {
 	    			text = Language.v("skills."+text);
 	    			skillIds.add(id);
 	    			skillTexts.add(text);
+	    			counter++;
 	    		}
 	    		ListSelect sel = new ListSelect("profession", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
 	    		posY++;
@@ -433,8 +435,8 @@ public class PartySetup extends PagedInputWindow {
 		if (base.equals(nextPage))
 		{
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
-			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(professionSelect.getSelection()));
-			if (true==false &&(professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
+			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));
+			if (true==false && (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
 			//if ((professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true; // TODO uncomment this version
 			attributeValues = new FantasyAttributes();
 			for (String id:attributeTuners.keySet())
@@ -445,6 +447,31 @@ public class PartySetup extends PagedInputWindow {
 				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 			}
 			System.out.println("CHARACTER PERSON & PROFESSION : "+personWithGenderAndRace+" "+profession);
+			charInfo.text = Language.v("races."+personWithGenderAndRace.getClass().getSimpleName()) + " " + Language.v("professions."+profession.getClass().getSimpleName());
+			charInfo.activate();
+
+	    	for (String groupId : SkillGroups.orderedGroups)
+	    	{
+	    		ArrayList<String> skillIds = new ArrayList<String>();
+	    		ArrayList<String> skillTexts = new ArrayList<String>();
+	    		int counter = 0;
+	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
+	    		{
+	    			if (profession.additionalLearntSkills.contains(skill)) {
+		    			String id = groupId+"."+counter;
+		    			String text = skill.getSimpleName();
+		    			text = Language.v("skills."+text);
+		    			skillIds.add(id);
+		    			skillTexts.add(text);
+	    			}
+	    			counter++;
+	    		}
+	    		ListSelect sel = skillSelects.get(groupId);
+	    		sel.ids = skillIds.toArray(new String[0]);
+	    		sel.texts = skillTexts.toArray(new String[0]);
+	    		sel.setUpdated(true);
+	    	}
+			
 			base.deactivate();
 			currentPage=2;
 			setupPage();
@@ -576,11 +603,11 @@ public class PartySetup extends PagedInputWindow {
 				Profession p = charCreationRule.profInstances.get(pClass);
 				if (p.isQualifiedEnough(attributeValues))
 				{
-		    		String s = pClass.getSimpleName();
+		    		String s = Language.v("professions."+p.getClass().getSimpleName());
 		    		ids.add(""+id);
-		    		texts.add(s);
-		    		id++;
+		    		texts.add(s);		    		
 				}
+				id++;
 			}
 	    	professionSelect.ids = ids.toArray(new String[0]);
 	    	professionSelect.texts = texts.toArray(new String[0]);

@@ -34,7 +34,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  */
 public class Profession {
 
-	public HashSet<SkillBase> additionalLearntSkills = new HashSet<SkillBase>();
+	public HashSet<Class<? extends SkillBase>> additionalLearntSkills = new HashSet<Class<? extends SkillBase>>();
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
 	

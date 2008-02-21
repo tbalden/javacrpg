@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.magical.FireMagic;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Mage extends Profession {
@@ -26,6 +27,7 @@ public class Mage extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 10);
+		additionalLearntSkills.add(FireMagic.class);
 	}
 
 }

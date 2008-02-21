@@ -44,6 +44,7 @@ public class SkillGroups {
 	
 	
 	public static HashMap<String, ArrayList<Class<? extends SkillBase>>> groupedSkills = new HashMap<String, ArrayList<Class<? extends SkillBase>>>();
+	public static HashMap<Class<? extends SkillBase>,String> skillsGroup = new HashMap<Class<? extends SkillBase>,String>();
 	public static ArrayList<String> orderedGroups = new ArrayList<String>();
 	public static HashMap<Class<? extends SkillBase>, SkillBase> skillBaseInstances = new HashMap<Class<? extends SkillBase>, SkillBase>();
 	static {
@@ -82,6 +83,7 @@ public class SkillGroups {
 		{
 			list.add(skill.getClass());
 			skillBaseInstances.put(skill.getClass(), skill);
+			skillsGroup.put(skill.getClass(), group);
 		}
 	}
 	
