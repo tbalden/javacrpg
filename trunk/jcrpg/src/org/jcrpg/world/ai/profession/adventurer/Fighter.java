@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Fighter extends Profession {
@@ -27,5 +28,6 @@ public class Fighter extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
+		additionalLearntSkills.add(Wrestling.class);
 	}
 }
