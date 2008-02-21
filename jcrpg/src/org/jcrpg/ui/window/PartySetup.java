@@ -175,6 +175,7 @@ public class PartySetup extends PagedInputWindow {
 	    	pageCreationSecond.attachChild(sQuad2);
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
+	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
 
 	    	posY = 0;
 	    	for (String groupId : SkillGroups.orderedGroups)
