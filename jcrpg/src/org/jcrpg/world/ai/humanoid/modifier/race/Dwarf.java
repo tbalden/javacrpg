@@ -35,7 +35,7 @@ public class Dwarf extends MemberPerson {
 
 	@Override
 	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
+		copy = new Dwarf(visibleTypeId,audioDescription);
 		return super.copy(copy);
 	}
 	

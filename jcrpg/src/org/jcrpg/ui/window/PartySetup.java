@@ -124,9 +124,11 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	pageCreationFirst.attachChild(sQuad);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.15f, 0.3f, 0.06f,600f,"Race:",false); 
+	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
+
+	    	new TextLabel("",this,pageCreationFirst, 0.30f, 0.15f, 0.3f, 0.06f,600f,"Race:",false); 
 	    	{
-		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.37f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	raceSelect = new ListSelect("race",this,pageCreationFirst, 0.30f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,raceSelect);
 
@@ -137,7 +139,7 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(1,genderSelect);
 	    	
 	    	
-	    	pointsLeft = new TextLabel("",this,pageCreationFirst, 0.23f, 0.8f, 0.2f, 0.07f,400f,attrPointsLeft+" points left.",false); 
+	    	pointsLeft = new TextLabel("",this,pageCreationFirst, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
 	    	
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
@@ -154,14 +156,14 @@ public class PartySetup extends PagedInputWindow {
 	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.4f,0.15f,0.2f,600f);
 	    	addInput(1,pictureSelect);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.65f, 0.3f, 0.06f,600f,"Profession:",false); 
+	    	new TextLabel("",this,pageCreationFirst, 0.30f, 0.75f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.37f,0.7f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.30f,0.8f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
 	    	
 	    	
-	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Next Page");
+	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.8f, 0.2f, 0.07f,400f,"Next Page");
 	    	addInput(1,nextPage);
 	    	
 	    	// page char creation 2 -------------------------------------------
