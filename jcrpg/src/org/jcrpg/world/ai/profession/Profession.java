@@ -18,7 +18,7 @@
 
 package org.jcrpg.world.ai.profession;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
@@ -34,7 +34,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  */
 public class Profession {
 
-	public HashSet<Class<? extends SkillBase>> additionalLearntSkills = new HashSet<Class<? extends SkillBase>>();
+	public HashMap<Class<? extends SkillBase>, Integer> additionalLearntSkills = new HashMap<Class<? extends SkillBase>,Integer>();
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
 	

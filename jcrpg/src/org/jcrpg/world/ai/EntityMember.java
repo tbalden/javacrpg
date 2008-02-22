@@ -22,7 +22,9 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.profession.Profession;
 
 
@@ -62,6 +64,21 @@ public class EntityMember {
 
 	public float[] getScale() {
 		return scale;
+	}
+	
+	public void addProfessionInitially(Profession profession)
+	{
+		 professions.add(profession);
+		 for (Class<? extends SkillBase> skill:profession.additionalLearntSkills.keySet()) {
+			 if (!commonSkills.skills.containsKey(skill))
+			 {
+				 commonSkills.addSkill(new SkillInstance(skill,profession.additionalLearntSkills.get(skill)));
+			 } else
+			 {
+				 commonSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
+			 }
+		 }
+		 
 	}
 
 

@@ -36,5 +36,8 @@ public class SkillInstance {
 	{
 		return new SkillInstance(skill,level);
 	}
-	
+	public void increase(int value)
+	{
+		level+=value;
+	}
 }

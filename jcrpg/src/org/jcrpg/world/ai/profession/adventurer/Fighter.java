@@ -28,6 +28,6 @@ public class Fighter extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
-		additionalLearntSkills.add(Wrestling.class);
+		additionalLearntSkills.put(Wrestling.class,10);
 	}
 }

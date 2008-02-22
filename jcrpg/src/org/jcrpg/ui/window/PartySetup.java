@@ -85,6 +85,8 @@ public class PartySetup extends PagedInputWindow {
 	TextButton readyChar;
 	TextInputField sureName;
 	TextInputField foreName;
+	// which skillgroup was used to enter modification ValueTuner
+	int skillGroupLeftLast = 0;
 	
 	/**
 	 * how many attribute points can be used by default.
@@ -438,6 +440,9 @@ public class PartySetup extends PagedInputWindow {
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));
 			if (true==false && (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
 			//if ((professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true; // TODO uncomment this version
+			if (profession==null) return true;
+			personWithGenderAndRace.addProfessionInitially(profession);
+
 			attributeValues = new FantasyAttributes();
 			for (String id:attributeTuners.keySet())
 			{
@@ -450,6 +455,8 @@ public class PartySetup extends PagedInputWindow {
 			charInfo.text = Language.v("races."+personWithGenderAndRace.getClass().getSimpleName()) + " " + Language.v("professions."+profession.getClass().getSimpleName());
 			charInfo.activate();
 
+			
+			
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		ArrayList<String> skillIds = new ArrayList<String>();
@@ -457,10 +464,11 @@ public class PartySetup extends PagedInputWindow {
 	    		int counter = 0;
 	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
-	    			if (profession.additionalLearntSkills.contains(skill)) {
+	    			if (personWithGenderAndRace.commonSkills.skills.containsKey(skill)) {
+	    				int level = personWithGenderAndRace.commonSkills.skills.get(skill).level;
 		    			String id = groupId+"."+counter;
 		    			String text = skill.getSimpleName();
-		    			text = Language.v("skills."+text);
+		    			text = Language.v("skills."+text)+ ": "+level;
 		    			skillIds.add(id);
 		    			skillTexts.add(text);
 	    			}
@@ -620,6 +628,10 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
+		if (skillSelects.values().contains(base))
+		{
+			
+		} else		
 		if (base.equals(addCharSelect))
 		{
 			int s = addCharSelect.getSelection();

@@ -126,7 +126,7 @@ public class ListSelect extends InputBase {
 		}
 		baseNode.attachChild(activatedNode);
 		
-		if (maxCount==0)
+		if (maxCount==0 || texts.length==0)
 		{
 			baseNode.updateRenderState();
 			return;
