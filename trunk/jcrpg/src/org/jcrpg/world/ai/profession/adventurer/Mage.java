@@ -27,7 +27,7 @@ public class Mage extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 10);
-		additionalLearntSkills.add(FireMagic.class);
+		additionalLearntSkills.put(FireMagic.class,10);
 	}
 
 }
