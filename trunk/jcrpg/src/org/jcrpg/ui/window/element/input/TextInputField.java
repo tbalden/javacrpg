@@ -37,7 +37,7 @@ public class TextInputField extends InputBase {
 	public int maxLength = 20;
 	public boolean capsLock = true;
 	
-	public static final String defaultImage = "./data/ui/buttonBase.png";
+	public static final String defaultImage = "./data/ui/inputBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	public TextInputField(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,

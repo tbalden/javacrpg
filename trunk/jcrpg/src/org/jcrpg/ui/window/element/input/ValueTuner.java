@@ -39,11 +39,11 @@ public class ValueTuner extends InputBase {
 	public static final int UNDEFINED = -999999;
 	public String text;
 	
-	public static final String defaultImage = "./data/ui/buttonBase.png";
+	public static final String defaultImage = "./data/ui/tunerBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	
-	public int oldValue, value, minValue, maxValue, step;
+	public int oldValue, value, minValue, maxValue, step = 1;
 	public Object tunedObject;
 	
 	public ValueTuner(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
@@ -53,6 +53,7 @@ public class ValueTuner extends InputBase {
 		this.value = value;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
+		this.step = step;
 		this.textProportion = textProportion;
 		deactivate();
 		w.base.addEventHandler("lookLeft", w);
@@ -87,7 +88,7 @@ public class ValueTuner extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.6f,0.6f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -116,7 +117,7 @@ public class ValueTuner extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.6f,0.6f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
