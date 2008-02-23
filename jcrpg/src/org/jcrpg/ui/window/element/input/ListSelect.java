@@ -52,7 +52,7 @@ public class ListSelect extends InputBase {
 	
 	public ArrayList<Node> textNodes = new ArrayList<Node>(); 
 
-	public static final String defaultImage = "./data/ui/buttonBase.png";
+	public static final String defaultImage = "./data/ui/inputBase.png";
 	public String bgImage = defaultImage;
 	
 	public float fontRatio = 400f;
