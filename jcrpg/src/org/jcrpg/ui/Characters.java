@@ -88,14 +88,14 @@ public class Characters {
 						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.37f,0);
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/800f);
 						
 						Node classtextNode = this.text.createText(p.professions.get(0).getClass().getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
 						
 						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
 						
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/800f);
 	
 						node.attachChild(nametextNode);
 						node.attachChild(classtextNode);
