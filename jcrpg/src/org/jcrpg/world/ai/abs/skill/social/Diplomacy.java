@@ -16,10 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.abs.skill.magical;
+package org.jcrpg.world.ai.abs.skill.social;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class FireMagic extends SkillBase {
+public class Diplomacy extends SkillBase {
 
 }

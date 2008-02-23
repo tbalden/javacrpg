@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.profession;
 
 import java.util.HashMap;
 
+import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -38,6 +39,8 @@ public class Profession {
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
 	
+	public int genderNeed = EntityDescription.GENDER_BOTH;
+	
 	public boolean isQualifiedEnough(Attributes attr)
 	{
 		for (String name : FantasyAttributes.attributeName)
@@ -55,5 +58,17 @@ public class Profession {
 		return true;
 	}
 	
+	public boolean validForGender(int gender)
+	{
+		if (genderNeed==EntityDescription.GENDER_BOTH)
+		{
+			return true;
+		} else
+		{
+			if (genderNeed==gender) 
+				return true;
+		}
+		return false;
+	}
 	
 }

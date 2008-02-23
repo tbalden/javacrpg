@@ -1,0 +1,90 @@
+! Licensed content !
+
+This material is licensed under GPLv3, Author Illes Pal Zoltan, 2008
+
+------------------------------------ Professions:
+
+Major magic users:
+
+	Mage - Major elementarist
+	Psionic - Major mentalist
+	Priest - Major celestial
+	Demonist - Major demonology
+	Witch/Witch Master - Major alchemy + Demons
+	Alchemist - Major Alchemy + Elemental
+	Bard - minor in all except Celestial
+	
+Major socializers:
+
+	Wise - Master of reasoning
+	Diplomat - Master of diplomacy
+	Lobbist - Master of politics
+	Liar - Master of cheating
+	Tongue - Master of chatter
+
+Major martial
+	Warrior
+	Crusader
+	Shadow
+	Enlightened
+
+Major physical
+	Thief
+
+------------------------------------- SKILLS
+
+Magic:
+
+
+Major (+ = 3x) and Minor (- = 2x) books of magic by profession.
+
+possibilities
+
+Thick Spell book (type depending on exact profession) received when Profession is gained - spells are learnt from it with the skills maturing. 
+Profession is required for understanding the basics and advanced things and learning it.
+
+Demonology - (Black Magic, summoning) 
+Celestial - (Transcendental, healing magic)
+Alchemist - fumes and strange liquids
+Elementarist - Mage
+Mentalist - Psionic, illusions
+
+			D C A E M
+Mage - 		    - +
+Psionic         -   +
+Priest      - +
+Demonist    + -
+Witch       -   +
+Alchemist       + -     
+
+Bard        -   - - -
+Shadow          -   -    Ninja like
+Enlightened   -     -    Samurai like
+Crusader(M)   -   -      Lord like
+Wise(M)       -
+
+
+
+Social:
+
+Chatter
+Politics
+Diplomacy
+Cheating
+Reasoning
+
+Mental:
+
+Quick Planning
+Strategy
+Languages - every 20 points can add a new language met in the world during the journey, if world has more than one common language
+Mapmaking
+
+Physical:
+Locks&Traps
+Hiding
+
+Martial:
+
+Nerve attack
+Backstab

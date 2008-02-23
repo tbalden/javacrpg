@@ -22,8 +22,8 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Mage extends Profession {
-	public Mage()
+public class Psionic extends Profession {
+	public Psionic()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 10);
