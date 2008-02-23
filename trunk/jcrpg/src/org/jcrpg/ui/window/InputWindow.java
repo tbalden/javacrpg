@@ -40,13 +40,67 @@ public abstract class InputWindow extends Window implements KeyListener{
 		
 	}
 	
+	/**
+	 * Adds an input to the window.
+	 * @param input
+	 */
 	public void addInput(InputBase input)
 	{
 		inputs.add(input);
 	}
+	/**
+	 * Get an input at given place.
+	 * @param count
+	 * @return
+	 */
 	public InputBase getInput(int count)
 	{
 		return inputs.get(count);
+	}
+	
+	/**
+	 * Sets the active input.
+	 * @param input
+	 */
+	public void setSelected(InputBase input)
+	{
+		int i = getInputPlace(input);
+		if (i>=0 && i!=selectedInput) {
+			selectedInput = i;
+			activateSelectedInput();
+		}
+	}
+	
+	public void setSelected(int selectedInput)
+	{
+		if (inputs.size()>selectedInput && this.selectedInput!=selectedInput)
+		{
+			this.selectedInput = selectedInput;
+			activateSelectedInput();
+		}
+	}
+	
+	/**
+	 * Returns place in array of the input.
+	 * @param input
+	 * @return
+	 */
+	public int getInputPlace(InputBase input)
+	{
+		int i=0;
+		//System.out.println(input);
+		for (InputBase cinput:inputs)
+		{
+			//System.out.println(cinput);
+			if (input.equals(cinput))
+			{
+				System.out.println("INPUT FOUND "+i);
+				return i;
+			}
+			i++;
+		}
+		//System.out.println("INPUT NOT FOUND "+i);
+		return -1;
 	}
 	
 	public void activateSelectedInput()
@@ -71,20 +125,29 @@ public abstract class InputWindow extends Window implements KeyListener{
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean handleKey(String key) {
 		if (key.equals("lookDown"))
 		{
-			selectedInput++;
+			int orig = selectedInput;
+			while (true)
+			{
+				selectedInput++;
+				if (selectedInput>=inputs.size())
+				{
+					selectedInput = orig;
+					return true;
+				}
+				if (inputs.get(selectedInput).isEnabled())
+				{
+					break;
+				}
+			}
 			if (selectedInput>=inputs.size())
 			{
 				selectedInput--;
@@ -98,7 +161,20 @@ public abstract class InputWindow extends Window implements KeyListener{
 		} else
 		if (key.equals("lookUp"))
 		{
-			selectedInput--;
+			int orig = selectedInput;
+			while (true)
+			{
+				selectedInput--;
+				if (selectedInput<0)
+				{
+					selectedInput = orig;
+					return true;
+				}
+				if (inputs.get(selectedInput).isEnabled())
+				{
+					break;
+				}
+			}
 			if (selectedInput<0)
 			{
 				selectedInput = 0;

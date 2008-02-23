@@ -43,10 +43,11 @@ public class ValueTuner extends InputBase {
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	
-	public int oldValue, value, minValue, maxValue;
+	public int oldValue, value, minValue, maxValue, step;
+	public Object tunedObject;
 	
 	public ValueTuner(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
-			float sizeY, float textProportion, int value, int minValue, int maxValue) {
+			float sizeY, float textProportion, int value, int minValue, int maxValue, int step) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = ""+value;
 		this.value = value;
@@ -69,6 +70,11 @@ public class ValueTuner extends InputBase {
 
 	@Override
 	public void activate() {
+		if (updated)
+		{
+			updated = false;
+			text = ""+value;
+		}
 		baseNode.detachAllChildren();
 		{
 			activeNode = new Node();
@@ -94,6 +100,11 @@ public class ValueTuner extends InputBase {
 
 	@Override
 	public void deactivate() {
+		if (updated)
+		{
+			updated = false;
+			text = ""+value;
+		}
 		baseNode.detachAllChildren();
 		{
 			deactiveNode = new Node();
@@ -120,21 +131,25 @@ public class ValueTuner extends InputBase {
 	public boolean handleKey(String key) {
 		if (key.equals("lookLeft"))
 		{
-			if (value==minValue) return true;
-			value--;
-			if (!w.inputUsed(this, key)) value++;
+			if (value-step<minValue) return true;
+			int orig = value;
+			value-=step;
+			if (!w.inputUsed(this, key)) value=orig;
 			text = ""+value;
 			setValue(text);
 			activate();
+			return true;
 		} else
 		if (key.equals("lookRight"))
 		{
-			if (value==maxValue) return true;
-			value++;
-			if (!w.inputUsed(this, key)) value--;
+			if (value+step>maxValue) return true;
+			int orig = value;
+			value+=step;
+			if (!w.inputUsed(this, key)) value=orig;
 			text = ""+value;
 			setValue(text);
 			activate();
+			return true;
 		} else
 		if (key.equals("enter"))
 		{
@@ -143,6 +158,14 @@ public class ValueTuner extends InputBase {
 			return true;
 		}
 		return false;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public void setStep(int step) {
+		this.step = step;
 	}
 
 }

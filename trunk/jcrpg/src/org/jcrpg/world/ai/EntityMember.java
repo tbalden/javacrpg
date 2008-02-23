@@ -66,19 +66,18 @@ public class EntityMember {
 		return scale;
 	}
 	
-	public void addProfessionInitially(Profession profession)
-	{
-		 professions.add(profession);
-		 for (Class<? extends SkillBase> skill:profession.additionalLearntSkills.keySet()) {
-			 if (!commonSkills.skills.containsKey(skill))
-			 {
-				 commonSkills.addSkill(new SkillInstance(skill,profession.additionalLearntSkills.get(skill)));
-			 } else
-			 {
-				 commonSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
-			 }
-		 }
-		 
+	public void addProfessionInitially(Profession profession) {
+		if (professions.contains(profession))
+			return;
+		professions.add(profession);
+		for (Class<? extends SkillBase> skill : profession.additionalLearntSkills.keySet()) {
+			if (!commonSkills.skills.containsKey(skill)) {
+				commonSkills.addSkill(new SkillInstance(skill, profession.additionalLearntSkills.get(skill)));
+			} else {
+				commonSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
+			}
+		}
+
 	}
 
 

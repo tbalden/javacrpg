@@ -72,7 +72,7 @@ public class PartySetup extends PagedInputWindow {
 	// creation 1
 	ListSelect raceSelect = null;
 	ListSelect genderSelect = null;
-	TextLabel pointsLeft = null;
+	TextLabel attrPointsLeftLabel = null;
 	HashMap<String, ValueTuner> attributeTuners = new HashMap<String, ValueTuner>();
 	ListSelect professionSelect = null;
 	PictureSelect pictureSelect = null;
@@ -81,12 +81,15 @@ public class PartySetup extends PagedInputWindow {
 	// creation 2
 	TextLabel charInfo;
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
+	TextLabel skillText;
 	ValueTuner skillValueTuner;
+	TextLabel skillPointsLeftLabel = null;
 	TextButton readyChar;
-	TextInputField sureName;
+	TextInputField surName;
 	TextInputField foreName;
 	// which skillgroup was used to enter modification ValueTuner
-	int skillGroupLeftLast = 0;
+	ListSelect skillGroupLeftLast = null;
+	Class<? extends SkillBase> skillTuned = null; 
 	
 	/**
 	 * how many attribute points can be used by default.
@@ -97,6 +100,14 @@ public class PartySetup extends PagedInputWindow {
 	 */
 	int attrPointsLeft = 0;
 	
+	/**
+	 * how many attribute points can be used by default.
+	 */
+	public static final int SKILL_POINTS_TO_USE = 20;
+	/**
+	 * How many attribute points are left.
+	 */
+	int skillPointsLeft = 0;
 	
 	// character creation result classes
 	public MemberPerson personWithGenderAndRace = null;
@@ -146,7 +157,7 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(1,genderSelect);
 	    	
 	    	
-	    	pointsLeft = new TextLabel("",this,pageCreationFirst, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
+	    	attrPointsLeftLabel = new TextLabel("",this,pageCreationFirst, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
 	    	
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
@@ -154,7 +165,7 @@ public class PartySetup extends PagedInputWindow {
 	    		String text = Language.v("fantasyattributes."+s);
 	    		System.out.println("TEXT" +text);
 	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
-	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100);
+	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
 	    		addInput(1,v);
 	    		posY++;
@@ -187,6 +198,7 @@ public class PartySetup extends PagedInputWindow {
 	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.13f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
+	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
 	    		int counter = 0;
 	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
@@ -195,22 +207,30 @@ public class PartySetup extends PagedInputWindow {
 	    			text = Language.v("skills."+text);
 	    			skillIds.add(id);
 	    			skillTexts.add(text);
+	    			skillObjects.add(skill);
 	    			counter++;
 	    		}
-	    		ListSelect sel = new ListSelect("profession", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
+	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
+	    		sel.objects = skillObjects.toArray(new Object[0]); // helping the selection
 	    		posY++;
 	    		skillSelects.put(groupId, sel);
 	    		addInput(2,sel);
 	    	}
+	    	skillPointsLeftLabel = new TextLabel("",this,pageCreationSecond, 0.23f, 0.7f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
 	    	
-	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,"Forename:",false); 
+	    	skillText = new TextLabel("",this,pageCreationSecond, 0.6f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
+	    	skillValueTuner = new ValueTuner("skill_tuner",this,pageCreationSecond, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
+	    	addInput(2,skillValueTuner);
+	    	skillValueTuner.setEnabled(false);
+	    	
+	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,Language.v("partySetup.foreName")+":",false); 
 	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15);
 	    	addInput(2,foreName);
-	    	new TextLabel("",this,pageCreationSecond, 0.66f, 0.57f, 0.3f, 0.06f,600f,"Surename:",false); 
-	    	sureName = new TextInputField("sureName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15); 
-	    	addInput(2,sureName);
+	    	new TextLabel("",this,pageCreationSecond, 0.66f, 0.57f, 0.3f, 0.06f,600f,Language.v("partySetup.surName")+":",false); 
+	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15); 
+	    	addInput(2,surName);
 
-	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,"Ready");
+	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	addInput(2,readyChar);
 	    	
 			base.addEventHandler("back", this);
@@ -344,7 +364,7 @@ public class PartySetup extends PagedInputWindow {
 								try 
 								{
 									MemberPerson p = SaveLoadNewGame.loadCharacter(sF);
-									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getClass().getSimpleName()+" - "+p.foreName+" "+p.sureName;
+									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getClass().getSimpleName()+" - "+p.foreName+" "+p.surName;
 									while (true) {
 										if (dataList1.get(data.charName)!=null)
 										{
@@ -393,8 +413,76 @@ public class PartySetup extends PagedInputWindow {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base.equals(skillValueTuner))
+		{
+			if (message.equals("enter")) {
+				// ############## SKILL VALUE SET, feed it back into listSelect
+				personWithGenderAndRace.commonSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+				skillGroupLeftLast.setUpdated(true);
+				int id = 0;
+				for (Object o:skillGroupLeftLast.objects)
+				{
+					if (o.equals(skillValueTuner.tunedObject))
+					{
+						// this is the id that's modified:
+						skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+ ": "+skillValueTuner.value;
+					}
+					id++;
+				}
+				setSelected(skillGroupLeftLast);
+			} else 
+			{
+				// ################ Tuning the skill level value, modifying pointsLeft textlabel
+				if (message.equals("lookLeft"))
+				{
+					skillPointsLeft++;
+				} else
+				if (message.equals("lookRight"))
+				{
+					skillPointsLeft--;
+				}
+				if (skillPointsLeft<0)
+				{
+					skillPointsLeft = 0;
+					return false;
+				} else
+				{
+					skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+					skillPointsLeftLabel.activate();
+					return true;
+				}
+			}
+		} else
+		if (skillSelects.values().contains(base))
+		{
+			//#################### MODIFYING A SKILL with skillValueTuner... 
+			ListSelect select = (ListSelect)base;
+			if (select.ids.length==0) return true;
+			skillGroupLeftLast = select;
+			String id = select.ids[select.getSelection()];
+			Class<?extends SkillBase> skill = (Class<? extends SkillBase>)select.objects[select.getSelection()];
+			skillTuned = skill;
+			String group = id.substring(0,id.indexOf('.'));
+			int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
+			System.out.println("GROUP = "+group+ " - "+count);
+			skillValueTuner.setEnabled(true);
+			skillValueTuner.value = personWithGenderAndRace.commonSkills.getSkillLevel(skill, null);
+			skillValueTuner.setUpdated(true);
+			skillValueTuner.tunedObject = skill;
+			int modifier = 1;
+			try {
+				modifier = profession.skillLearnModifier.multipliers.get(skill);
+			} catch (Exception ex)
+			{	
+			}
+			skillValueTuner.setStep(modifier);
+			skillText.text = Language.v("skills."+skill.getSimpleName())+" ("+modifier+"x):";
+			skillText.activate();
+			setSelected(skillValueTuner);
+		} else		
 		if (base instanceof ValueTuner) {
 			int count = 0;
 			for (ValueTuner v:attributeTuners.values())
@@ -415,8 +503,8 @@ public class PartySetup extends PagedInputWindow {
 						return false;
 					} else
 					{
-						pointsLeft.text = attrPointsLeft + " points left.";
-						pointsLeft.activate();
+						attrPointsLeftLabel.text = attrPointsLeft + " points left.";
+						attrPointsLeftLabel.activate();
 						return true;
 					}
 						
@@ -424,18 +512,24 @@ public class PartySetup extends PagedInputWindow {
 				count++;
 			}
 		}
+		else
 		if (base.equals(newChar))
 		{
+			// ######### STARTING A NEW CHARACTER
 			base.deactivate();
 			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
-			pointsLeft.text = attrPointsLeft + " points left.";
-			pointsLeft.activate();
+			skillPointsLeft = SKILL_POINTS_TO_USE;
+			attrPointsLeftLabel.text = attrPointsLeft + " points left.";
+			attrPointsLeftLabel.activate();
+			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+			skillPointsLeftLabel.activate();
 			currentPage=1;
 			setupPage();
 		}
 		else
 		if (base.equals(nextPage))
 		{
+			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));
 			if (true==false && (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
@@ -461,6 +555,7 @@ public class PartySetup extends PagedInputWindow {
 	    	{
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
+	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
 	    		int counter = 0;
 	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
@@ -471,12 +566,14 @@ public class PartySetup extends PagedInputWindow {
 		    			text = Language.v("skills."+text)+ ": "+level;
 		    			skillIds.add(id);
 		    			skillTexts.add(text);
+		    			skillObjects.add(skill);
 	    			}
 	    			counter++;
 	    		}
 	    		ListSelect sel = skillSelects.get(groupId);
 	    		sel.ids = skillIds.toArray(new String[0]);
 	    		sel.texts = skillTexts.toArray(new String[0]);
+	    		sel.objects = skillObjects.toArray(new Object[0]);
 	    		sel.setUpdated(true);
 	    	}
 			
@@ -486,11 +583,12 @@ public class PartySetup extends PagedInputWindow {
 		}
 		if (base.equals(readyChar))
 		{
+			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
 			personWithGenderAndRace.professions.add(profession);
 			personWithGenderAndRace.setAttributes(attributeValues);
 			personWithGenderAndRace.setForeName(foreName.text);
-			personWithGenderAndRace.setSureName(sureName.text);
+			personWithGenderAndRace.setSurName(surName.text);
 			personWithGenderAndRace.setPictureId(pictureSelect.getPictureId());
 			int i = genderSelect.getSelection();
 			int id = Integer.parseInt(genderSelect.ids[i]);
@@ -503,6 +601,7 @@ public class PartySetup extends PagedInputWindow {
 		else
 		if (base.equals(startGame))
 		{
+			// ################ Let's start the game...
 			base.deactivate();
 			toggle();
 			this.base.hud.characters.show();
@@ -628,10 +727,6 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		if (skillSelects.values().contains(base))
-		{
-			
-		} else		
 		if (base.equals(addCharSelect))
 		{
 			int s = addCharSelect.getSelection();
