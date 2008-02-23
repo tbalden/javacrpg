@@ -79,10 +79,17 @@ Quick Planning
 Strategy
 Languages - every 20 points can add a new language met in the world during the journey, if world has more than one common language
 Mapmaking
+Artifcats
+Mythology
+
 
 Physical:
 Locks&Traps
 Hiding
+Swimming
+Climbing
+Scouting
+
 
 Martial:
 
