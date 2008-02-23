@@ -18,25 +18,43 @@
 
 package org.jcrpg.world.ai.player;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
 
 public class PartyInstance extends EntityInstance {
 
+	
+	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();
+	
 	public PartyInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers,
 			int startX, int startY, int startZ) {
 		super(description, w, ecology, id, numberOfMembers, startX, startY, startZ);
 	}
 
+	public void addPartyMember(EntityMemberInstance m)
+	{
+		if (m.description instanceof MemberPerson) {
+			MemberPerson desc = (MemberPerson)m.description;
+			fixMembers.put(desc.foreName+orderedParty.size(), m);
+			orderedParty.add(m);
+			numberOfMembers++;
+		}
+		
+	}
+	
 	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
 		PartyMember member = new PartyMember(id,audio);
 		EntityMemberInstance mI = new EntityMemberInstance(member);
 		fixMembers.put(id, mI);
+		orderedParty.add(mI);
 		numberOfMembers++;
 	}
 	public void removePartyMemberInstance(String id)

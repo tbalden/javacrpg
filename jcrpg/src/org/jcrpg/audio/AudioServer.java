@@ -188,8 +188,22 @@ public class AudioServer implements Runnable {
 		}
 	}
 	
+	
+	public boolean isMusicPlaying(String id)
+	{
+		for (Channel c:musicChannels)
+		{
+			if (!c.isAvailable() && c.soundId.equals(id))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void playOnlyThisMusic(String id)
 	{
+		if (isMusicPlaying(id)) return;
 		pauseAllChannels();
 		pauseAllMusicChannels();
 		try {

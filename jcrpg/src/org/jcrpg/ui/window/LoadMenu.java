@@ -228,11 +228,13 @@ public class LoadMenu extends Window implements KeyListener {
 		SaveSlotData data = dataList.get(buttons.get(selected).name);
 		toggle();
 		core.clearCore();
+		base.hud.characters.hide();
 		SaveLoadNewGame.loadGame(core,data.gameData);
-		base.hud.characters.show();
 		System.out.println("---------------------- LOADING GAME ----------------------------");
 		core.init3DGame();
 		System.out.println("---------------------- END LOADING GAME ------------------------");
+		core.uiBase.hud.characters.update();
+		core.uiBase.hud.characters.show();
 		core.getRootNode().updateRenderState();
 		core.gameState.engine.setPause(false);
 		core.audioServer.stopAndResumeOthers("main");
