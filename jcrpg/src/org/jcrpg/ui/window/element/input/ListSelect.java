@@ -36,6 +36,7 @@ public class ListSelect extends InputBase {
 
 	public String[] ids;
 	public String[] texts;
+	public Object[] objects;
 	
 	public int selected = 0;
 	public int fromCount = 0;
@@ -247,6 +248,10 @@ public class ListSelect extends InputBase {
 				setValue(ids[fromCount+selected]);
 				w.inputChanged(this, key);
 			}
+		} else
+		if (key.equals("enter"))
+		{
+			w.inputUsed(this , key);
 		}
 		return false;
 	}

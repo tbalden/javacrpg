@@ -53,7 +53,10 @@ public class SkillContainer {
 
 	public int getSkillLevel(Class<? extends SkillBase> skillType, SkillContainer modifier)
 	{
-		
+		if (modifier==null)
+		{
+			return (skills.get(skillType)!=null?skills.get(skillType).level:0);
+		}
 		return (skills.get(skillType)!=null?skills.get(skillType).level:0)+(modifier.skills.get(skillType)!=null?modifier.skills.get(skillType).level:0);
 		
 	}

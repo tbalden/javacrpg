@@ -102,6 +102,14 @@ public abstract class InputBase {
 	public void setUpdated(boolean updated) {
 		this.updated = updated;
 	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	
 	
 }

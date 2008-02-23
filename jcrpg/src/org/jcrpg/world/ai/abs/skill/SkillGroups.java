@@ -24,6 +24,9 @@ import java.util.HashMap;
 import org.jcrpg.world.ai.abs.skill.magical.FireMagic;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.QuickPlanning;
 import org.jcrpg.world.ai.abs.skill.physical.martial.BiteFight;
+import org.jcrpg.world.ai.abs.skill.physical.martial.LargeBlades;
+import org.jcrpg.world.ai.abs.skill.physical.martial.MediumBlades;
+import org.jcrpg.world.ai.abs.skill.physical.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.abs.skill.social.Chatter;
@@ -51,6 +54,9 @@ public class SkillGroups {
 		orderedGroups.add(GROUP_MARTIAL);
 		addSkillToGroup(GROUP_MARTIAL, new BiteFight());
 		addSkillToGroup(GROUP_MARTIAL, new Wrestling());
+		addSkillToGroup(GROUP_MARTIAL, new ShortBlades());
+		addSkillToGroup(GROUP_MARTIAL, new MediumBlades());
+		addSkillToGroup(GROUP_MARTIAL, new LargeBlades());
 		
 		orderedGroups.add(GROUP_SOCIAL);
 		addSkillToGroup(GROUP_SOCIAL, new Chatter());

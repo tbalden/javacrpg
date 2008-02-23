@@ -48,7 +48,7 @@ public class MemberPerson extends EntityMember {
 	}
 	public String id;
 	public String foreName;
-	public String sureName;
+	public String surName;
 	public String pictureId;
 	public String getForeName() {
 		return foreName;
@@ -57,10 +57,10 @@ public class MemberPerson extends EntityMember {
 		this.foreName = foreName;
 	}
 	public String getSureName() {
-		return sureName;
+		return surName;
 	}
-	public void setSureName(String sureName) {
-		this.sureName = sureName;
+	public void setSurName(String sureName) {
+		this.surName = sureName;
 	}
 	public String getPictureId() {
 		return pictureId;
@@ -86,7 +86,7 @@ public class MemberPerson extends EntityMember {
 		}
 		copy.setForeName(foreName);
 		copy.setPictureId(pictureId);
-		copy.setSureName(sureName);
+		copy.setSurName(surName);
 		copy.id = id;
 		copy.genderType = genderType;
 		copy.setAttributes(attributes);
