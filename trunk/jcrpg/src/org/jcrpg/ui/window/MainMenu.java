@@ -107,9 +107,9 @@ public class MainMenu extends Window implements KeyListener {
 	@Override
 	public void hide() {
 		//core.audioServer.stopMainMenu();
-		if (core.coreFullyInitialized) {
+		//if (core.coreFullyInitialized) {
 			core.audioServer.stopAndResumeOthers("main");
-		}
+		//}
 		core.getRootNode().detachChild(windowNode);
 		core.getRootNode().updateRenderState();
 		lockLookAndMove(false);

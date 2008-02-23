@@ -21,9 +21,7 @@ package org.jcrpg.world.ai;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
-import com.jme.bounding.BoundingSphere;
 import com.jme.math.Vector3f;
-import com.jme.scene.shape.Sphere;
 
 /**
  * Distance/position based boundary - tells if a position is inside its radius. Used with moving units e.g.

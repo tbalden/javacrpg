@@ -41,6 +41,7 @@ import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -61,6 +62,8 @@ public class PartySetup extends PagedInputWindow {
 	Node pageCreationFirst = new Node();
 	Node pageCreationSecond = new Node();
 
+	
+	ArrayList<EntityMemberInstance> charactersOfParty = new ArrayList<EntityMemberInstance>();
 	
 	// party select
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
@@ -199,8 +202,8 @@ public class PartySetup extends PagedInputWindow {
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
 	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
-	    		int counter = 0;
-	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
+	    		//int counter = 0;
+	    		/*for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
@@ -209,7 +212,7 @@ public class PartySetup extends PagedInputWindow {
 	    			skillTexts.add(text);
 	    			skillObjects.add(skill);
 	    			counter++;
-	    		}
+	    		}*/
 	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
 	    		sel.objects = skillObjects.toArray(new Object[0]); // helping the selection
 	    		posY++;
@@ -239,6 +242,17 @@ public class PartySetup extends PagedInputWindow {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void resetForms()
+	{
+		skillText.text = Language.v("partySetup.selectSkill");
+		skillText.activate();
+		foreName.text = "";
+		surName.text = "";
+		foreName.activate();
+		surName.activate();
+		
+	}
 
 	@Override
 	public void hide() {
@@ -250,6 +264,10 @@ public class PartySetup extends PagedInputWindow {
 	@Override
 	public void show() {
 		currentPage = 0;
+		charactersOfParty.clear();
+		core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
+		core.uiBase.hud.characters.show();
+		
 		setupPage();
 		changePage(0);
 		core.getRootNode().attachChild(windowNode);
@@ -374,6 +392,7 @@ public class PartySetup extends PagedInputWindow {
 											break;
 										}
 									}
+									data.person = p;
 									data.pic = new File(p.getPicturePath());
 								} catch (Exception ex)
 								{
@@ -405,7 +424,8 @@ public class PartySetup extends PagedInputWindow {
 		{
 			if (core.coreFullyInitialized)
 			{
-				base.hud.characters.show();
+				core.uiBase.hud.characters.update();
+				core.uiBase.hud.characters.show();
 			}
 			toggle();
 			core.mainMenu.toggle();
@@ -416,6 +436,24 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base.equals(addCharSelect))
+		{
+			if (charactersOfParty.size()==6) return true;
+			int s = addCharSelect.getSelection();
+			Iterator<CharListData> it = dataList.values().iterator();
+			CharListData d = null;
+			for (int i=0; i<=s; i++) {
+				d = it.next();
+			}
+			for (EntityMemberInstance i:charactersOfParty)
+			{
+				if (i.description.equals(d.person)) return true; // no duplication
+			}
+			charactersOfParty.add(new EntityMemberInstance(d.person));
+			core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
+			core.uiBase.hud.characters.show();
+			
+		} else
 		if (base.equals(skillValueTuner))
 		{
 			if (message.equals("enter")) {
@@ -517,6 +555,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ######### STARTING A NEW CHARACTER
 			base.deactivate();
+			resetForms();
 			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
 			skillPointsLeft = SKILL_POINTS_TO_USE;
 			attrPointsLeftLabel.text = attrPointsLeft + " points left.";
@@ -601,10 +640,10 @@ public class PartySetup extends PagedInputWindow {
 		else
 		if (base.equals(startGame))
 		{
+			if (charactersOfParty.size()==0) return true;
 			// ################ Let's start the game...
 			base.deactivate();
 			toggle();
-			this.base.hud.characters.show();
 			core.clearCore();
 			
 			for (int i=0; i<6; i++)
@@ -615,8 +654,11 @@ public class PartySetup extends PagedInputWindow {
 			{
 				charCreationRule = new CharacterCreationRules(null,null);
 			}
-			SaveLoadNewGame.newGame(core,members,charCreationRule);
+			core.uiBase.hud.characters.hide();
+			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule);
 			core.init3DGame();
+			core.uiBase.hud.characters.update();
+			core.uiBase.hud.characters.show();
 			core.getRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
 			core.audioServer.stopAndResumeOthers("main");

@@ -20,10 +20,13 @@ package org.jcrpg.ui.window.element;
 
 import java.io.File;
 
+import org.jcrpg.world.ai.humanoid.MemberPerson;
+
 public class CharListData {
 	public String id = "1";
 	public String charName = "SLOT";
 	public File charData = null;
 	public File pic = null;
+	public MemberPerson person;
 
 }

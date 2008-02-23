@@ -37,10 +37,10 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
-import org.jcrpg.world.ai.player.PartyMember;
 import org.jcrpg.world.generator.WorldGenerator;
 import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
@@ -61,7 +61,7 @@ public class SaveLoadNewGame {
 	public static final String saveDir = "./save";
 	public static final String charsDir = "./chars";
 	
-	public static void newGame(J3DCore core, Collection<PartyMember> partyMembers, CharacterCreationRules cCR) 
+	public static void newGame(J3DCore core, Collection<EntityMemberInstance> partyMembers, CharacterCreationRules cCR) 
 	{
 		try {
 			
@@ -105,11 +105,10 @@ public class SaveLoadNewGame {
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
-			//ArrayList<MemberPerson> partyMembers = new ArrayList<MemberPerson>();
 			PartyInstance party = new PartyInstance(new Party(),world,ecology,"Player",0, wX, wY, wZ);
-			for (PartyMember m:partyMembers)
+			for (EntityMemberInstance m:partyMembers)
 			{
-				party.addPartyMemberInstance(m);
+				party.addPartyMember(m);
 			}
 			party.recalcBoundarySizes();
 			ecology.addEntity(party);

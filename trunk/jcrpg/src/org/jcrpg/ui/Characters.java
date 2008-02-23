@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -41,81 +43,92 @@ public class Characters {
 	{
 		this.hud = hud;
 		text = FontUtils.textVerdana;
- 		String[] pics =
-		{
-				"./data/portraits/human/male/leonhard1.png", 
-				"./data/portraits/human/male/fred2.png", 
-				"./data/portraits/human/male/friedrich.png", 
-				"./data/portraits/human/female/baran.png", 
-				"./data/portraits/human/female/marie.png", 
-				"./data/portraits/human/male/max.png" 
-		};
-		String[] names = 
-		{
-				"Leon", "Fred", "Friedrich", "Baran", "Marie", "Max"
-		};
-		String[] classes = 
-		{
-				"BARD", "ROGUE", "FIGHTER", "PRIESTESS", "ALCHEMIST", "WIZARD"
-		};
-		
-		int counter = 0, c2 = 0;
-		int sideYMul = 1, sideYMulFont = 1;
-		float stepY = hud.core.getDisplay().getHeight()/6.6f;
-		float startY = hud.core.getDisplay().getHeight()*0.8f;
-		Quad frame  = null;
-		try {
-			frame = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
-		} catch (Exception ex)
-		{
-			
-		}
-		for (String pic:pics)
-		{
-			org.jcrpg.ui.window.element.Character c = new org.jcrpg.ui.window.element.Character();
-			try 
-			{
-				SharedMesh sm = new SharedMesh("1",frame);
-				sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counter,0);
-				
-				Quad q = Window.loadImageToQuad(new File(pic), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
-				
-				Node nametextNode = this.text.createText(names[c2], 9, new ColorRGBA(1,1,0.6f,1f),false);
-				
-				nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.37f,0);
-				
-				nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
-				
-				Node classtextNode = this.text.createText(classes[c2++], 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
-				
-				classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
-				
-				classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
-
-				node.attachChild(nametextNode);
-				node.attachChild(classtextNode);
-				node.attachChild(sm);
-				node.attachChild(q);
-			} catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-			if (counter==3)
-			{
-				counter = 0;
-				sideYMul = 19;
-				sideYMulFont = 46;
-			}
-			characterData.add(c);
-		}
 	}
 	
 	public void hide()
 	{
 		node.removeFromParent();
 	}
+	
+	public void updateForPartyCreation(ArrayList<EntityMemberInstance> orderedParty)
+	{
+		node.detachAllChildren();
+		addMembers(orderedParty);
+		node.updateRenderState();
+	}
+	
+	public void addMembers(ArrayList<EntityMemberInstance> orderedParty)
+	{
+		try {
+			int counter = 0;
+			int sideYMul = 1, sideYMulFont = 1;
+			float stepY = hud.core.getDisplay().getHeight()/6.6f;
+			float startY = hud.core.getDisplay().getHeight()*0.8f;
+			Quad frame  = null;
+			try {
+				frame = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
+			} catch (Exception ex)
+			{
+				
+			}
+			for (EntityMemberInstance i:orderedParty)
+			{
+				if (i.description instanceof MemberPerson)
+				{
+					MemberPerson p = (MemberPerson)i.description;
+					try 
+					{
+						SharedMesh sm = new SharedMesh("1",frame);
+						sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counter,0);
+						
+						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
+						
+						Node nametextNode = this.text.createText(p.foreName+" "+p.surName, 9, new ColorRGBA(1,1,0.6f,1f),false);
+						
+						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.37f,0);
+						
+						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+						
+						Node classtextNode = this.text.createText(p.professions.get(0).getClass().getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
+						
+						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
+						
+						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/1000f);
+	
+						node.attachChild(nametextNode);
+						node.attachChild(classtextNode);
+						node.attachChild(sm);
+						node.attachChild(q);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					if (counter==3)
+					{
+						counter = 0;
+						sideYMul = 19;
+						sideYMulFont = 46;
+					}
+					
+				}
+				
+			}
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	
+	}
+	
+	public void update()
+	{ 
+		node.detachAllChildren();
+		addMembers(hud.core.gameState.player.orderedParty);
+		node.updateRenderState();
+	}
+	
 	public void show()
 	{
 		hud.hudNode.attachChild(node);
