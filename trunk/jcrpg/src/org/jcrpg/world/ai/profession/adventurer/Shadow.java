@@ -24,9 +24,14 @@ import org.jcrpg.world.ai.abs.skill.physical.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Fighter extends Profession {
+/**
+ * Ninja like
+ * @author pali
+ *
+ */
+public class Shadow extends Profession {
 
-	public Fighter()
+	public Shadow()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);

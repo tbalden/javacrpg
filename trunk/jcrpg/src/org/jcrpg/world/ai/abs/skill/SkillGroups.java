@@ -21,7 +21,7 @@ package org.jcrpg.world.ai.abs.skill;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.world.ai.abs.skill.magical.FireMagic;
+import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.QuickPlanning;
 import org.jcrpg.world.ai.abs.skill.physical.martial.BiteFight;
 import org.jcrpg.world.ai.abs.skill.physical.martial.LargeBlades;
@@ -68,7 +68,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_MENTAL, new QuickPlanning());
 		
 		orderedGroups.add(GROUP_MAGICAL);
-		addSkillToGroup(GROUP_MAGICAL, new FireMagic());
+		addSkillToGroup(GROUP_MAGICAL, new Demonology());
 		
 	}
 	

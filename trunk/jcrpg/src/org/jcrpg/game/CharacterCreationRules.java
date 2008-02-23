@@ -26,7 +26,7 @@ import org.jcrpg.world.ai.humanoid.modifier.race.Dwarf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Elf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Human;
 import org.jcrpg.world.ai.profession.Profession;
-import org.jcrpg.world.ai.profession.adventurer.Fighter;
+import org.jcrpg.world.ai.profession.adventurer.Warrior;
 import org.jcrpg.world.ai.profession.adventurer.Mage;
 import org.jcrpg.world.ai.profession.adventurer.Thief;
 
@@ -55,10 +55,10 @@ public class CharacterCreationRules {
 			this.selectableProfessions = selectableProfessions;
 		} else
 		{
-			this.selectableProfessions.add(Fighter.class);
+			this.selectableProfessions.add(Warrior.class);
 			this.selectableProfessions.add(Thief.class);
 			this.selectableProfessions.add(Mage.class);
-			profInstances.put(Fighter.class, new Fighter());
+			profInstances.put(Warrior.class, new Warrior());
 			profInstances.put(Thief.class, new Thief());
 			profInstances.put(Mage.class, new Mage());
 		}
