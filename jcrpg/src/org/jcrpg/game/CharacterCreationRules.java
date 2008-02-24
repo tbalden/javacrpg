@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.humanoid.modifier.race.Catkind;
 import org.jcrpg.world.ai.humanoid.modifier.race.Dwarf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Elf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Human;
@@ -63,9 +64,11 @@ public class CharacterCreationRules {
 			this.selectableRaces.add(Human.class);
 			this.selectableRaces.add(Elf.class);
 			this.selectableRaces.add(Dwarf.class);
+			this.selectableRaces.add(Catkind.class);
 			raceInstances.put(Human.class, new Human(Human.UNDEFINED_VISIBLE_TYPEID,null));
 			raceInstances.put(Elf.class, new Elf(Elf.UNDEFINED_VISIBLE_TYPEID,null));
 			raceInstances.put(Dwarf.class, new Dwarf(Dwarf.UNDEFINED_VISIBLE_TYPEID,null));
+			raceInstances.put(Catkind.class, new Catkind(Catkind.UNDEFINED_VISIBLE_TYPEID,null));
 		}
 		if (selectableProfessions!=null) {
 			this.selectableProfessions = selectableProfessions;

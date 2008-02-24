@@ -779,6 +779,21 @@ public class PartySetup extends PagedInputWindow {
 			pictureSelect.picturesPath = path;
 			pictureSelect.setUpdated(true);
 			pictureSelect.deactivate();
+		} else
+		if (base.equals(skillValueTuner))
+		{
+			personWithGenderAndRace.commonSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+			skillGroupLeftLast.setUpdated(true);
+			int id = 0;
+			for (Object o:skillGroupLeftLast.objects)
+			{
+				if (o.equals(skillValueTuner.tunedObject))
+				{
+					// this is the id that's modified:
+					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+ ": "+skillValueTuner.value;
+				}
+				id++;
+			}
 		}
 		return true;
 	}
