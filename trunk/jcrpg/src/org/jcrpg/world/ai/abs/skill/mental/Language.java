@@ -16,18 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.profession.adventurer;
+package org.jcrpg.world.ai.abs.skill.mental;
 
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.social.Politics;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Lobbist extends Profession {
+public class Language extends SkillBase {
 
-	public Lobbist()
-	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 13);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);
-		addMajorSkill(Politics.class);
-	}
 }

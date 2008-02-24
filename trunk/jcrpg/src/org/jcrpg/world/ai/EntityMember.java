@@ -41,6 +41,8 @@ public class EntityMember {
 	public AudioDescription audioDescription = null;
 	public ArrayList<Profession> professions = new ArrayList<Profession>();
 	
+	public ArrayList<Class<? extends Profession>> forbiddenProfessions = new ArrayList<Class <? extends Profession>>();
+	
 	public int genderType = EntityDescription.GENDER_NEUTRAL;
 	
 	public EntityMember(String visibleTypeId, AudioDescription audioDescription) {
@@ -67,6 +69,7 @@ public class EntityMember {
 	}
 	
 	public void addProfessionInitially(Profession profession) {
+		if (forbiddenProfessions.contains(profession.getClass())) return;
 		if (professions.contains(profession))
 			return;
 		professions.add(profession);
@@ -80,6 +83,10 @@ public class EntityMember {
 
 	}
 
-
-
+	public boolean isProfessionForbidden(Class<?extends Profession> p)
+	{
+		if (forbiddenProfessions.contains(p)) return true;
+		return false;
+	}
+	
 }

@@ -19,21 +19,19 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.social.Diplomacy;
+import org.jcrpg.world.ai.abs.skill.social.Laws;
+import org.jcrpg.world.ai.abs.skill.social.Trade;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Diplomat extends Profession {
+public class Negotiator extends Profession {
 
-	public Diplomat()
+	public Negotiator()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
-		additionalLearntSkills.put(Wrestling.class,10);
-		additionalLearntSkills.put(ShortBlades.class,10);
-		additionalLearntSkills.put(MediumBlades.class,10);
-		skillLearnModifier.multipliers.put(Wrestling.class, 2);
-		skillLearnModifier.multipliers.put(MediumBlades.class, 2);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
+		addMajorSkill(Diplomacy.class);
+		addMinorSkill(Trade.class);
+		addMinorSkill(Laws.class);
 	}
 }

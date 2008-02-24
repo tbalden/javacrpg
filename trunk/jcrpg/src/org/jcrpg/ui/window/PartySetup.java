@@ -97,7 +97,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int ATTRIBUTE_POINTS_TO_USE = 20;
+	public static final int ATTRIBUTE_POINTS_TO_USE = 30;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -106,7 +106,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int SKILL_POINTS_TO_USE = 20;
+	public static final int SKILL_POINTS_TO_USE = 10;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -138,12 +138,13 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(0,rmChar);
 	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
 	    	addInput(0,startGame);
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,400f,"Use Up/Down to navigate through the screen.",false); 
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,400f,"Press Enter to act.",false);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Enter to act.",false);
 	    	
 	    	// page char creation 1 -------------------------------------------
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	pageCreationFirst.attachChild(sQuad);
+	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession.",false);
 
 	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 
@@ -177,9 +178,9 @@ public class PartySetup extends PagedInputWindow {
 	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.4f,0.15f,0.2f,600f);
 	    	addInput(1,pictureSelect);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.30f, 0.75f, 0.3f, 0.06f,600f,"Profession:",false); 
+	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.6f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.30f,0.8f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
 	    	
@@ -530,10 +531,12 @@ public class PartySetup extends PagedInputWindow {
 					if (message.equals("lookLeft"))
 					{
 						attrPointsLeft++;
+						inputEntered(professionSelect, "fake");
 					} else
 					if (message.equals("lookRight"))
 					{
 						attrPointsLeft--;
+						inputEntered(professionSelect, "fake");
 					}
 					if (attrPointsLeft<0)
 					{
@@ -614,6 +617,7 @@ public class PartySetup extends PagedInputWindow {
 	    		sel.texts = skillTexts.toArray(new String[0]);
 	    		sel.objects = skillObjects.toArray(new Object[0]);
 	    		sel.setUpdated(true);
+	    		sel.deactivate();
 	    	}
 			
 			base.deactivate();
@@ -745,12 +749,14 @@ public class PartySetup extends PagedInputWindow {
 			}
 			ArrayList<String> ids = new ArrayList<String>();
 			ArrayList<String> texts = new ArrayList<String>();
-			
+			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
+			int i = genderSelect.getSelection();
+			int genderId = Integer.parseInt(genderSelect.ids[i]);
 			int id = 0;
 			for (Class<? extends Profession> pClass: charCreationRule.selectableProfessions)
 			{
 				Profession p = charCreationRule.profInstances.get(pClass);
-				if (p.isQualifiedEnough(attributeValues))
+				if (p.isQualifiedEnough(race,genderId,attributeValues))
 				{
 		    		String s = Language.v("professions."+p.getClass().getSimpleName());
 		    		ids.add(""+id);
@@ -758,9 +764,33 @@ public class PartySetup extends PagedInputWindow {
 				}
 				id++;
 			}
+			String[] oldTexts = professionSelect.texts;
 	    	professionSelect.ids = ids.toArray(new String[0]);
 	    	professionSelect.texts = texts.toArray(new String[0]);
-	    	professionSelect.setUpdated(true);			
+	    	professionSelect.setUpdated(true);
+	    	if (message.equals("fake")) {
+	    		int count = 0;
+	    		boolean needActivate = false;
+	    		if (oldTexts.length!=professionSelect.texts.length) needActivate = true;
+	    		for (String old:oldTexts)
+	    		{
+	    			try {
+		    			if (!old.equals(professionSelect.texts[count++]))
+		    			{
+		    				needActivate = true; break;
+		    			}
+	    			}
+	    			catch (Exception ex)
+	    			{
+	    				needActivate = true; break;
+	    			}
+	    		}
+	    		if (needActivate) {
+	    			core.audioServer.play(InputBase.SOUND_INPUTSELECTED);
+	    			professionSelect.activate();
+	    			professionSelect.deactivate();
+	    		}
+	    	}
 		}
 		return true;
 	}

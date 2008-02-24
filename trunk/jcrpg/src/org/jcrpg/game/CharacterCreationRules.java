@@ -26,9 +26,24 @@ import org.jcrpg.world.ai.humanoid.modifier.race.Dwarf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Elf;
 import org.jcrpg.world.ai.humanoid.modifier.race.Human;
 import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.adventurer.Alchemist;
+import org.jcrpg.world.ai.profession.adventurer.Bard;
+import org.jcrpg.world.ai.profession.adventurer.Crusader;
+import org.jcrpg.world.ai.profession.adventurer.Demonist;
+import org.jcrpg.world.ai.profession.adventurer.Enlightened;
+import org.jcrpg.world.ai.profession.adventurer.Liar;
+import org.jcrpg.world.ai.profession.adventurer.Lobbist;
+import org.jcrpg.world.ai.profession.adventurer.Negotiator;
+import org.jcrpg.world.ai.profession.adventurer.Psionic;
+import org.jcrpg.world.ai.profession.adventurer.Ranger;
+import org.jcrpg.world.ai.profession.adventurer.Shadow;
+import org.jcrpg.world.ai.profession.adventurer.Tongue;
 import org.jcrpg.world.ai.profession.adventurer.Warrior;
 import org.jcrpg.world.ai.profession.adventurer.Mage;
 import org.jcrpg.world.ai.profession.adventurer.Thief;
+import org.jcrpg.world.ai.profession.adventurer.Wise;
+import org.jcrpg.world.ai.profession.adventurer.Witch;
+import org.jcrpg.world.ai.profession.adventurer.WitchMaster;
 
 public class CharacterCreationRules {
 
@@ -55,13 +70,32 @@ public class CharacterCreationRules {
 			this.selectableProfessions = selectableProfessions;
 		} else
 		{
-			this.selectableProfessions.add(Warrior.class);
-			this.selectableProfessions.add(Thief.class);
-			this.selectableProfessions.add(Mage.class);
-			profInstances.put(Warrior.class, new Warrior());
-			profInstances.put(Thief.class, new Thief());
-			profInstances.put(Mage.class, new Mage());
+			addProfession(new Warrior());
+			addProfession(new Shadow());
+			addProfession(new Enlightened());
+			addProfession(new Crusader());
+			addProfession(new Thief());
+			addProfession(new Ranger());
+			addProfession(new Mage());
+			addProfession(new Witch());
+			addProfession(new WitchMaster());
+			addProfession(new Bard());
+			addProfession(new Psionic());
+			addProfession(new Alchemist());
+			addProfession(new Demonist());
+			addProfession(new Wise());
+			addProfession(new Lobbist());
+			addProfession(new Negotiator());
+			addProfession(new Tongue());
+			addProfession(new Liar());
 		}
+	}
+	
+	public void addProfession(Profession p)
+	{
+		if (selectableProfessions.contains(p.getClass())) return;
+		selectableProfessions.add(p.getClass());
+		profInstances.put(p.getClass(), p);
 	}
 	
 	

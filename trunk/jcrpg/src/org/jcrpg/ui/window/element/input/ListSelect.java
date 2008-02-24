@@ -169,6 +169,7 @@ public class ListSelect extends InputBase {
 		{
 			selected++;
 		}
+		
 		if (selected+fromCount>=maxCount)
 		{
 			selected--;
@@ -187,7 +188,7 @@ public class ListSelect extends InputBase {
 			if (fromCount-maxVisible>=0)
 			{
 				fromCount -= maxVisible;
-				selected = maxCount-1;
+				selected = maxVisible-1;
 				reloadNeeded = true;
 			} else {
 				selected = 0;

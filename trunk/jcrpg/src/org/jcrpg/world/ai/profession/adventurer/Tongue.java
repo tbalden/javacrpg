@@ -19,21 +19,16 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.social.Chatter;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Tongue extends Profession {
 
 	public Tongue()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
-		additionalLearntSkills.put(Wrestling.class,10);
-		additionalLearntSkills.put(ShortBlades.class,10);
-		additionalLearntSkills.put(MediumBlades.class,10);
-		skillLearnModifier.multipliers.put(Wrestling.class, 2);
-		skillLearnModifier.multipliers.put(MediumBlades.class, 2);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 10);
+		addMajorSkill(Chatter.class);
 	}
 }

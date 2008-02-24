@@ -56,7 +56,15 @@ public class Language {
 	
 	public String getValue(String key)
 	{
-		return properties.getProperty(key);
+		String r = properties.getProperty(key);
+		if (r==null)
+		{
+			try {
+				return key.substring(key.lastIndexOf('.')+1);
+			} catch (Exception ex)
+			{}
+		}
+		return r;
 	}
 	
 	public static String v(String key)

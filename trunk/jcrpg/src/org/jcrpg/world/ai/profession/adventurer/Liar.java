@@ -19,15 +19,18 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.social.Politics;
+import org.jcrpg.world.ai.abs.skill.social.Cheating;
+import org.jcrpg.world.ai.abs.skill.social.Reasoning;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Lobbist extends Profession {
+public class Liar extends Profession {
 
-	public Lobbist()
+	public Liar()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 13);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);
-		addMajorSkill(Politics.class);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
+		addMajorSkill(Cheating.class);
+		addMinorSkill(Reasoning.class);
 	}
 }
+
