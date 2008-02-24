@@ -19,9 +19,11 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.martial.HandsAndFeet;
+import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
 import org.jcrpg.world.ai.profession.Profession;
 
 /**
@@ -37,10 +39,10 @@ public class Enlightened extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.KARMA, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
-		additionalLearntSkills.put(Wrestling.class,10);
-		additionalLearntSkills.put(ShortBlades.class,10);
-		additionalLearntSkills.put(MediumBlades.class,10);
-		skillLearnModifier.multipliers.put(Wrestling.class, 2);
-		skillLearnModifier.multipliers.put(MediumBlades.class, 2);
+		addMajorSkill(MediumBlades.class);
+		addMajorSkill(ShortBlades.class);
+		addMinorSkill(LargeBlades.class);
+		addMinorSkill(HandsAndFeet.class);
+		addMajorSkill(MartialTrance.class);
 	}
 }

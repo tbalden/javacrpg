@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.social.Diplomacy;
 import org.jcrpg.world.ai.abs.skill.social.Laws;
 import org.jcrpg.world.ai.abs.skill.social.Trade;
@@ -31,6 +32,7 @@ public class Negotiator extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		addMajorSkill(Diplomacy.class);
+		addMajorSkill(Languages.class);
 		addMinorSkill(Trade.class);
 		addMinorSkill(Laws.class);
 	}

@@ -20,6 +20,6 @@ package org.jcrpg.world.ai.abs.skill.mental;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Language extends SkillBase {
+public class Artifacts extends SkillBase {
 
 }

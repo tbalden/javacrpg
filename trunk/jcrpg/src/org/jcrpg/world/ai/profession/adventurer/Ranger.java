@@ -20,6 +20,9 @@ package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
+import org.jcrpg.world.ai.abs.skill.martial.Bows;
+import org.jcrpg.world.ai.abs.skill.martial.Crossbows;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Ranger extends Profession {
@@ -31,6 +34,9 @@ public class Ranger extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);
 		addMinorSkill(CelestialMagic.class);
+		addMajorSkill(Crossbows.class);
+		addMajorSkill(Bows.class);
+		addMajorSkill(MediumBlades.class);
 	}
 
 }

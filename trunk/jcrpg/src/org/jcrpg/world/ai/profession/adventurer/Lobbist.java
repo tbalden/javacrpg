@@ -19,6 +19,8 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.mental.Ecology;
+import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.social.Politics;
 import org.jcrpg.world.ai.profession.Profession;
 
@@ -29,5 +31,7 @@ public class Lobbist extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 13);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);
 		addMajorSkill(Politics.class);
+		addMinorSkill(Languages.class);
+		addMinorSkill(Ecology.class);
 	}
 }

@@ -272,6 +272,12 @@ public class ListSelect extends InputBase {
 	@Override
 	public void deactivate() {
 		super.deactivate();
+		if (updated)
+		{
+			maxCount = ids.length;
+			selected = 0;
+			updated = false;
+		}
 		setupDeactivated();
 	}
 }

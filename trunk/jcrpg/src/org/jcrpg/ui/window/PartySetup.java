@@ -97,7 +97,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int ATTRIBUTE_POINTS_TO_USE = 30;
+	public static final int ATTRIBUTE_POINTS_TO_USE = 8;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -106,7 +106,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int SKILL_POINTS_TO_USE = 10;
+	public static final int SKILL_POINTS_TO_USE = 4;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -116,6 +116,7 @@ public class PartySetup extends PagedInputWindow {
 	public MemberPerson personWithGenderAndRace = null;
 	public Profession profession = null;
 	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
+	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
 	
 	public PartySetup(UIBase base) {
 		super(base);
@@ -139,7 +140,7 @@ public class PartySetup extends PagedInputWindow {
 	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
 	    	addInput(0,startGame);
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Enter to act.",false);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
 	    	
 	    	// page char creation 1 -------------------------------------------
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
@@ -194,6 +195,7 @@ public class PartySetup extends PagedInputWindow {
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
 
 	    	posY = 0;
 	    	for (String groupId : SkillGroups.orderedGroups)
@@ -428,8 +430,16 @@ public class PartySetup extends PagedInputWindow {
 				core.uiBase.hud.characters.update();
 				core.uiBase.hud.characters.show();
 			}
-			toggle();
-			core.mainMenu.toggle();
+			if (currentPage>0) 
+			{
+				currentPage=0;
+				resetForms();
+				setupPage();
+				changePage(0);
+			} else {
+				toggle();
+				core.mainMenu.toggle();
+			}
 		}
 		return true;
 	}
@@ -437,8 +447,32 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base.equals(rmChar))
+		{
+			// ############### REMOVING Selected Char
+			if (charactersOfParty.size()==0) return true;
+			int s = addCharSelect.getSelection();
+			Iterator<CharListData> it = dataList.values().iterator();
+			CharListData d = null;
+			for (int i=0; i<=s; i++) {
+				d = it.next();
+			}
+			int count = 0;
+			for (EntityMemberInstance i:charactersOfParty)
+			{
+				if (i.description.equals(d.person)) 
+					{
+						charactersOfParty.remove(count);
+						core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
+						core.uiBase.hud.characters.show();
+						break;
+					}
+				count++;
+			}
+		} else
 		if (base.equals(addCharSelect))
 		{
+			// ############# ADDING Char
 			if (charactersOfParty.size()==6) return true;
 			int s = addCharSelect.getSelection();
 			Iterator<CharListData> it = dataList.values().iterator();
@@ -528,6 +562,8 @@ public class PartySetup extends PagedInputWindow {
 			{
 				if (base.equals(v))
 				{
+					int val = lowestAttrValues.getAttribute(v.id); // cannot go under original attributes for race
+					if (v.value<val) return false;
 					if (message.equals("lookLeft"))
 					{
 						attrPointsLeft++;
@@ -573,9 +609,9 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
+			if (professionSelect.texts.length==0) return true;
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));
-			if (true==false && (professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true;
-			//if ((professionSelect.texts.length==0 || profession==null || attrPointsLeft>0)) return true; // TODO uncomment this version
+			if (true==false && (profession==null || attrPointsLeft>0)) return true;
 			if (profession==null) return true;
 			personWithGenderAndRace.addProfessionInitially(profession);
 
@@ -590,8 +626,6 @@ public class PartySetup extends PagedInputWindow {
 			System.out.println("CHARACTER PERSON & PROFESSION : "+personWithGenderAndRace+" "+profession);
 			charInfo.text = Language.v("races."+personWithGenderAndRace.getClass().getSimpleName()) + " " + Language.v("professions."+profession.getClass().getSimpleName());
 			charInfo.activate();
-
-			
 			
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
@@ -605,7 +639,13 @@ public class PartySetup extends PagedInputWindow {
 	    				int level = personWithGenderAndRace.commonSkills.skills.get(skill).level;
 		    			String id = groupId+"."+counter;
 		    			String text = skill.getSimpleName();
-		    			text = Language.v("skills."+text)+ ": "+level;
+		    			int modifier = 1;
+		    			try {
+		    				modifier = profession.skillLearnModifier.multipliers.get(skill);
+		    			} catch (Exception ex)
+		    			{	
+		    			}
+		    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;
 		    			skillIds.add(id);
 		    			skillTexts.add(text);
 		    			skillObjects.add(skill);
@@ -628,6 +668,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
+			if (skillPointsLeft>0) return true; // all skill points must be used
 			personWithGenderAndRace.professions.add(profession);
 			personWithGenderAndRace.setAttributes(attributeValues);
 			personWithGenderAndRace.setForeName(foreName.text);
@@ -709,9 +750,11 @@ public class PartySetup extends PagedInputWindow {
 				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
 				{
 					attributeValues.setAttribute(id, (int)(baseValue*race.commonAttributeRatios.attributeRatios.get(id)));
+					lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
 				} else
 				{
 					attributeValues.setAttribute(id, baseValue);
+					lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
 				}
 				System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
 				ValueTuner v = attributeTuners.get(id);

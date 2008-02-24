@@ -19,6 +19,8 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.mental.Ecology;
+import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.Strategy;
 import org.jcrpg.world.ai.abs.skill.social.Laws;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
@@ -34,6 +36,8 @@ public class Wise extends Profession {
 		addMajorSkill(Reasoning.class);
 		addMinorSkill(Strategy.class);
 		addMinorSkill(Laws.class);
+		addMajorSkill(Ecology.class);
+		addMinorSkill(Languages.class);
 	}
 }
 

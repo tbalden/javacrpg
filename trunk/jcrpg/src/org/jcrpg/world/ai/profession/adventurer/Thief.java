@@ -19,6 +19,13 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.martial.Bows;
+import org.jcrpg.world.ai.abs.skill.martial.Crossbows;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
+import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
+import org.jcrpg.world.ai.abs.skill.martial.Throwing;
+import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
+import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Thief extends Profession {
@@ -27,7 +34,13 @@ public class Thief extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 14);
-		//addMajorSkill(Stea)
+		addMajorSkill(LocksAndTraps.class);
+		addMajorSkill(PickPocket.class);
+		addMajorSkill(Throwing.class);
+		addMinorSkill(Bows.class);
+		addMinorSkill(Crossbows.class);
+		addMinorSkill(MediumBlades.class);
+		addMinorSkill(ShortBlades.class);
 	}
 
 }
