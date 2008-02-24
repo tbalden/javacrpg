@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.player;
 
 import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.EntityInstance;
 
 /**
  * Player's party.
@@ -26,6 +27,16 @@ import org.jcrpg.world.ai.EntityDescription;
  *
  */
 public class Party extends EntityDescription {
+
+	@Override
+	public int getDomainSize(EntityInstance instance) {
+		return 4;
+	}
+
+	@Override
+	public int getRoamingSize(EntityInstance instance) {
+		return 4;
+	}
 
 	public Party()
 	{
