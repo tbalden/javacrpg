@@ -19,9 +19,9 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.physical.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
+import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
+import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Lobbist extends Profession {

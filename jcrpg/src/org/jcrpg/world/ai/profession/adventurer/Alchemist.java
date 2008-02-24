@@ -19,15 +19,17 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.magical.Demonology;
+import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
+import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Alchemist extends Profession {
 	public Alchemist()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 10);
-		additionalLearntSkills.put(Demonology.class,10);
+		attrMinLevels.addLevel(FantasyAttributes.PSYCHE, 12);
+		attrMinLevels.addLevel(FantasyAttributes.CONCENTRATION, 14);
+		addMajorSkill(Alchemy.class);
+		addMinorSkill(Elementarism.class);
 	}
 
 }

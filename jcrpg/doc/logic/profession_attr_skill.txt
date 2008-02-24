@@ -10,9 +10,9 @@ Major magic users:
 	Psionic - Major mentalist
 	Priest - Major celestial
 	Demonist - Major demonology
-	Witch/Witch Master - Major alchemy + Demons
 	Alchemist - Major Alchemy + Elemental
-	Bard - minor in all except Celestial
+	Bard - minor in all except Celestial and Demon.
+	Witch/Witch Master - minor in all except Celestial
 	
 Major socializers:
 
@@ -27,9 +27,11 @@ Major martial
 	Crusader
 	Shadow
 	Enlightened
-
-Major physical
 	Thief
+	Ranger
+	
+Major physical
+	
 
 ------------------------------------- SKILLS
 
@@ -49,15 +51,15 @@ Alchemist - fumes and strange liquids
 Elementarist - Mage
 Mentalist - Psionic, illusions
 
-			D C A E M
-Mage - 		    - +
-Psionic         -   +
+	    D C A E M
+Mage  		- +
+Psionic           - +
 Priest      - +
 Demonist    + -
-Witch       -   +
+Witch       -   - - -
 Alchemist       + -     
 
-Bard        -   - - -
+Bard            - - -
 Shadow          -   -    Ninja like
 Enlightened   -     -    Samurai like
 Crusader(M)   -   -      Lord like
@@ -67,7 +69,7 @@ Wise(M)       -
 
 Social:
 
-Chatter
+Chatter - rumors
 Politics
 Diplomacy
 Cheating

@@ -19,17 +19,18 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
-import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Mage extends Profession {
-	public Mage()
+public class Ranger extends Profession {
+
+	public Ranger()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
-		addSkill(Elementarism.class, 10, MAJOR);
-		addSkill(Alchemy.class, 6, MINOR);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);
+		addMinorSkill(CelestialMagic.class);
 	}
 
 }

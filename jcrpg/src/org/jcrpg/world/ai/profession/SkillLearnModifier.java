@@ -23,6 +23,9 @@ import java.util.HashMap;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 public class SkillLearnModifier {
+	
+	public static int MAJOR = 4;
+	public static int MINOR = 2;
 
 	public HashMap<Class <? extends SkillBase>, Integer> multipliers = new HashMap<Class<? extends SkillBase>, Integer>();	
 	

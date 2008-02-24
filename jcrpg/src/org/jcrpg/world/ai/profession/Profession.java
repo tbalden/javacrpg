@@ -34,6 +34,11 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  *
  */
 public class Profession {
+	
+	public static int MAJOR = SkillLearnModifier.MAJOR;
+	public static int MINOR = SkillLearnModifier.MAJOR;
+	public static int GENDER_MALE = EntityDescription.GENDER_MALE;
+	public static int GENDER_FEMALE = EntityDescription.GENDER_FEMALE;
 
 	public HashMap<Class<? extends SkillBase>, Integer> additionalLearntSkills = new HashMap<Class<? extends SkillBase>,Integer>();
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
@@ -69,6 +74,21 @@ public class Profession {
 				return true;
 		}
 		return false;
+	}
+	
+	public void addSkill(Class<? extends SkillBase> skill, int level, int multiplier)
+	{
+		additionalLearntSkills.put(skill, level);
+		skillLearnModifier.multipliers.put(skill, multiplier);
+	}
+	
+	public void addMinorSkill(Class<? extends SkillBase> skill)
+	{
+		addSkill(skill, 6, MINOR);
+	}
+	public void addMajorSkill(Class<? extends SkillBase> skill)
+	{
+		addSkill(skill, 10, MAJOR);
 	}
 	
 }

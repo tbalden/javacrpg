@@ -23,5 +23,8 @@ import java.util.HashMap;
 public class AttributeMinLevels {
 
 	public HashMap<String, Integer> minimumLevels = new HashMap<String, Integer>();
-	
+	public void addLevel(String attr, int minLevel)
+	{
+		minimumLevels.put(attr, minLevel);
+	}
 }

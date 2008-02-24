@@ -19,9 +19,9 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.physical.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
+import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
+import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.profession.Profession;
 
 /**
@@ -34,7 +34,9 @@ public class Shadow extends Profession {
 	public Shadow()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		additionalLearntSkills.put(Wrestling.class,10);
 		additionalLearntSkills.put(ShortBlades.class,10);
 		additionalLearntSkills.put(MediumBlades.class,10);

@@ -18,8 +18,18 @@
 
 package org.jcrpg.world.ai.profession.adventurer;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
+import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Priest extends Profession {
+	public Priest()
+	{
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 14);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
+		addSkill(CelestialMagic.class, 10, MAJOR);
+		addSkill(Demonology.class, 6, MINOR);
+	}
 
 }
