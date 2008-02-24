@@ -97,7 +97,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int ATTRIBUTE_POINTS_TO_USE = 8;
+	public static final int ATTRIBUTE_POINTS_TO_USE = 10;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -106,7 +106,7 @@ public class PartySetup extends PagedInputWindow {
 	/**
 	 * how many attribute points can be used by default.
 	 */
-	public static final int SKILL_POINTS_TO_USE = 4;
+	public static final int SKILL_POINTS_TO_USE = 5;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -196,6 +196,8 @@ public class PartySetup extends PagedInputWindow {
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
 	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.8f, 0.2f, 0.07f,600f,"While tuning skill press Enter to set selected value for skill.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.85f, 0.2f, 0.07f,600f,"Leave no points unused to be able finish.",false);
 
 	    	posY = 0;
 	    	for (String groupId : SkillGroups.orderedGroups)
@@ -250,10 +252,10 @@ public class PartySetup extends PagedInputWindow {
 	{
 		skillText.text = Language.v("partySetup.selectSkill");
 		skillText.activate();
-		foreName.text = "";
-		surName.text = "";
-		foreName.activate();
-		surName.activate();
+		foreName.reset();
+		surName.reset();
+		foreName.deactivate();
+		surName.deactivate();
 		
 	}
 
@@ -429,6 +431,9 @@ public class PartySetup extends PagedInputWindow {
 			{
 				core.uiBase.hud.characters.update();
 				core.uiBase.hud.characters.show();
+			} else
+			{
+				core.uiBase.hud.characters.hide();
 			}
 			if (currentPage>0) 
 			{
@@ -567,12 +572,10 @@ public class PartySetup extends PagedInputWindow {
 					if (message.equals("lookLeft"))
 					{
 						attrPointsLeft++;
-						inputEntered(professionSelect, "fake");
 					} else
 					if (message.equals("lookRight"))
 					{
 						attrPointsLeft--;
-						inputEntered(professionSelect, "fake");
 					}
 					if (attrPointsLeft<0)
 					{
@@ -582,6 +585,7 @@ public class PartySetup extends PagedInputWindow {
 					{
 						attrPointsLeftLabel.text = attrPointsLeft + " points left.";
 						attrPointsLeftLabel.activate();
+						inputEntered(professionSelect, "fake");
 						return true;
 					}
 						

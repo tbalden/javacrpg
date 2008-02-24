@@ -111,4 +111,8 @@ public class TextLabel extends InputBase {
 		return false;
 	}
 
+	@Override
+	public void reset() {
+	}
+
 }

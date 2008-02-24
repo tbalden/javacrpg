@@ -29,10 +29,12 @@ public class Dwarf extends MemberPerson {
 	public Dwarf(String visibleTypeId, AudioDescription audio) {
 		super(visibleTypeId, audio);
 		pictureRoot = "dwarf";
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 1.1f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.PIETY, 1.2f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONSTITUTION, 1.2f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.PSYCHE, 0.8f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONCENTRATION, 0.8f);
+		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CHARISMA, 0.9f);
 		forbiddenProfessions.add(Mage.class);
 		forbiddenProfessions.add(Psionic.class);
 	}

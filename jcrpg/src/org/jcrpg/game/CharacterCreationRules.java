@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.profession.adventurer.Enlightened;
 import org.jcrpg.world.ai.profession.adventurer.Liar;
 import org.jcrpg.world.ai.profession.adventurer.Lobbist;
 import org.jcrpg.world.ai.profession.adventurer.Negotiator;
+import org.jcrpg.world.ai.profession.adventurer.Priest;
 import org.jcrpg.world.ai.profession.adventurer.Psionic;
 import org.jcrpg.world.ai.profession.adventurer.Ranger;
 import org.jcrpg.world.ai.profession.adventurer.Shadow;
@@ -77,6 +78,7 @@ public class CharacterCreationRules {
 			addProfession(new Thief());
 			addProfession(new Ranger());
 			addProfession(new Mage());
+			addProfession(new Priest());
 			addProfession(new Witch());
 			addProfession(new WitchMaster());
 			addProfession(new Bard());

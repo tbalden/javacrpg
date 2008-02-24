@@ -197,4 +197,10 @@ public class PictureSelect extends InputBase {
 		return false;
 	}
 
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
