@@ -280,4 +280,16 @@ public class ListSelect extends InputBase {
 		}
 		setupDeactivated();
 	}
+
+	@Override
+	public void reset() {
+		texts = new String[0];
+		ids = new String[0];
+		objects = new Object[0];
+		selected = 0;
+		maxCount = 0;
+		fromCount = 0;
+		setupDeactivated();
+	}
+	
 }

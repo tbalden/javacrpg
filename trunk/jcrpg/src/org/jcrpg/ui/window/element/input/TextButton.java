@@ -107,4 +107,8 @@ public class TextButton extends InputBase {
 		return false;
 	}
 
+	@Override
+	public void reset() {
+	}
+
 }

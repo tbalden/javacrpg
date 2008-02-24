@@ -104,11 +104,18 @@ public class MainMenu extends Window implements KeyListener {
 		
 	}
 
+	boolean keepPlayingMusic = false;
+	
 	@Override
 	public void hide() {
 		//core.audioServer.stopMainMenu();
 		//if (core.coreFullyInitialized) {
+		if (!keepPlayingMusic) {
 			core.audioServer.stopAndResumeOthers("main");
+		} else
+		{
+			keepPlayingMusic = false;
+		}
 		//}
 		core.getRootNode().detachChild(windowNode);
 		core.getRootNode().updateRenderState();
@@ -135,6 +142,7 @@ public class MainMenu extends Window implements KeyListener {
 		if (name.equals(NEW_GAME))
 		{
 			base.hud.characters.hide();
+			keepPlayingMusic = true;
 			toggle();
 			core.partySetup.toggle();
 			

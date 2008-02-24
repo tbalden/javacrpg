@@ -169,4 +169,11 @@ public class ValueTuner extends InputBase {
 		this.step = step;
 	}
 
+	@Override
+	public void reset() {
+		value = oldValue;
+		text = ""+value;
+		
+	}
+
 }

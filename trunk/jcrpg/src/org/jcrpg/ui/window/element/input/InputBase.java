@@ -111,5 +111,6 @@ public abstract class InputBase {
 		this.enabled = enabled;
 	}
 	
+	public abstract void reset();
 	
 }

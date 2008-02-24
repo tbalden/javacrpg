@@ -213,4 +213,10 @@ public class TextInputField extends InputBase {
 		return false;
 	}
 
+	@Override
+	public void reset() {
+		text = "";
+		cursorPosition = 0;
+	}
+
 }
