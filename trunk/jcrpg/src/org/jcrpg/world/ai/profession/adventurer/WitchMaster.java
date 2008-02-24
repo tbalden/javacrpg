@@ -19,15 +19,23 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
+import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class WitchMaster extends Profession {
 	public WitchMaster()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
+		genderNeed = GENDER_MALE;
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 10);
-		additionalLearntSkills.put(Demonology.class,10);
+		addMinorSkill(Demonology.class);
+		addMinorSkill(Alchemy.class);
+		addMinorSkill(Elementarism.class);
+		addMinorSkill(Mentalism.class);
 	}
 
 }

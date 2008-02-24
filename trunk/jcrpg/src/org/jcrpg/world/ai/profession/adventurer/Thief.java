@@ -25,8 +25,9 @@ public class Thief extends Profession {
 
 	public Thief()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 11);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 11);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 14);
+		//addMajorSkill(Stea)
 	}
 
 }

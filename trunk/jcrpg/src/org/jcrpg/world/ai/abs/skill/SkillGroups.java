@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
+import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
+import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
+import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.QuickPlanning;
-import org.jcrpg.world.ai.abs.skill.physical.martial.BiteFight;
-import org.jcrpg.world.ai.abs.skill.physical.martial.LargeBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.physical.martial.Wrestling;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.abs.skill.social.Chatter;
 

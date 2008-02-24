@@ -16,20 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.profession.adventurer;
+package org.jcrpg.world.ai.abs.skill.martial;
 
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
-import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Mage extends Profession {
-	public Mage()
-	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
-		addSkill(Elementarism.class, 10, MAJOR);
-		addSkill(Alchemy.class, 6, MINOR);
-	}
+public class ShortBlades extends SkillBase {
 
 }
