@@ -22,6 +22,9 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
+import org.jcrpg.world.ai.abs.skill.mental.Mythology;
+import org.jcrpg.world.ai.abs.skill.physical.Hiding;
+import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Bard extends Profession {
@@ -33,6 +36,9 @@ public class Bard extends Profession {
 		addMinorSkill(Alchemy.class);
 		addMinorSkill(Elementarism.class);
 		addMinorSkill(Mentalism.class);
+		addMajorSkill(Mythology.class);
+		addMinorSkill(Hiding.class);
+		addMinorSkill(LocksAndTraps.class);
 	}
 
 }

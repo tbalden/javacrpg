@@ -29,6 +29,7 @@ Major martial
 	Enlightened
 	Thief
 	Ranger
+	Monk
 	
 Major physical
 	
@@ -59,11 +60,13 @@ Demonist    + -
 Witch       -   - - -
 Alchemist       + -     
 
+Monk              - -
 Bard            - - -
 Shadow          -   -    Ninja like
 Enlightened   -     -    Samurai like
 Crusader(M)   -   -      Lord like
 Wise(M)       -
+Ranger        -
 
 
 
@@ -83,7 +86,7 @@ Languages - every 20 points can add a new language met in the world during the j
 Mapmaking
 Artifcats
 Mythology
-
+Magical Lore
 
 Physical:
 Locks&Traps

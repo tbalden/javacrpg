@@ -21,6 +21,8 @@ package org.jcrpg.world.ai.profession.adventurer;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.mental.MagicalLore;
+import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Mage extends Profession {
@@ -28,8 +30,10 @@ public class Mage extends Profession {
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
-		addSkill(Elementarism.class, 10, MAJOR);
-		addSkill(Alchemy.class, 6, MINOR);
+		addMajorSkill(Elementarism.class);
+		addMinorSkill(Alchemy.class);
+		addMajorSkill(MagicalLore.class);
+		addMinorSkill(Mythology.class);
 	}
 
 }

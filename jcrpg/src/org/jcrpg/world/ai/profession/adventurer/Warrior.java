@@ -19,11 +19,13 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
+import org.jcrpg.world.ai.abs.skill.martial.MaceAndFlail;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
+import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.profession.Profession;
-import org.jcrpg.world.ai.profession.SkillLearnModifier;
 
 public class Warrior extends Profession {
 
@@ -32,10 +34,11 @@ public class Warrior extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 16);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONSTITUTION, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
-		additionalLearntSkills.put(Wrestling.class,10);
-		additionalLearntSkills.put(ShortBlades.class,10);
-		additionalLearntSkills.put(MediumBlades.class,10);
-		skillLearnModifier.multipliers.put(Wrestling.class, SkillLearnModifier.MAJOR);
-		skillLearnModifier.multipliers.put(MediumBlades.class, SkillLearnModifier.MAJOR);
+		addMajorSkill(Wrestling.class);
+		addMajorSkill(LargeBlades.class);
+		addMajorSkill(MediumBlades.class);
+		addMinorSkill(ShortBlades.class);
+		addMajorSkill(MaceAndFlail.class);
+		addMinorSkill(StaffsAndWands.class);
 	}
 }

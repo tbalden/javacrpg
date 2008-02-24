@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.profession.adventurer;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
+import org.jcrpg.world.ai.abs.skill.mental.MagicalLore;
 import org.jcrpg.world.ai.profession.Profession;
 
 public class Psionic extends Profession {
@@ -30,6 +31,7 @@ public class Psionic extends Profession {
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 13);
 		addMajorSkill(Mentalism.class);
 		addMinorSkill(Elementarism.class);
+		addMajorSkill(MagicalLore.class);
 	}
 
 }

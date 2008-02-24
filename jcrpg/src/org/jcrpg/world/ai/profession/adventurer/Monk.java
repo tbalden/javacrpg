@@ -19,12 +19,11 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.martial.HandsAndFeet;
-import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
-import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
-import org.jcrpg.world.ai.abs.skill.martial.Throwing;
+import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
-import org.jcrpg.world.ai.abs.skill.physical.StrikeNerves;
 import org.jcrpg.world.ai.profession.Profession;
 
 /**
@@ -32,19 +31,18 @@ import org.jcrpg.world.ai.profession.Profession;
  * @author pali
  *
  */
-public class Shadow extends Profession {
+public class Monk extends Profession {
 
-	public Shadow()
+	public Monk()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
-		addMajorSkill(HandsAndFeet.class);
-		addMinorSkill(Throwing.class);
-		addMinorSkill(MediumBlades.class);
-		addMinorSkill(ShortBlades.class);
-		addMajorSkill(StrikeNerves.class);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
+		addMajorSkill(StaffsAndWands.class);
+		addMinorSkill(HandsAndFeet.class);
 		addMinorSkill(MartialTrance.class);
+		addMinorSkill(Elementarism.class);
+		addMinorSkill(Mentalism.class);
 	}
 }
