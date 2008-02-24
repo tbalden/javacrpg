@@ -18,9 +18,11 @@
 
 package org.jcrpg.world.ai.profession;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityDescription;
+import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -43,11 +45,14 @@ public class Profession {
 	public HashMap<Class<? extends SkillBase>, Integer> additionalLearntSkills = new HashMap<Class<? extends SkillBase>,Integer>();
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
+	public ArrayList<Class<? extends EntityMember>> forbiddenRaces = new ArrayList<Class<? extends EntityMember>>();
 	
 	public int genderNeed = EntityDescription.GENDER_BOTH;
 	
-	public boolean isQualifiedEnough(Attributes attr)
+	public boolean isQualifiedEnough(EntityMember race, int genderId, Attributes attr)
 	{
+		if (race.isProfessionForbidden(this.getClass())) return false;
+		if (!validForGender(genderId)) return false;
 		for (String name : FantasyAttributes.attributeName)
 		{
 			Integer value = attrMinLevels.minimumLevels.get(name);

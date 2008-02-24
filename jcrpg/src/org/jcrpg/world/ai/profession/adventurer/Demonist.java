@@ -19,15 +19,17 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.skill.social.Politics;
+import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
+import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Lobbist extends Profession {
-
-	public Lobbist()
+public class Demonist extends Profession {
+	public Demonist()
 	{
-		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 13);
-		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);
-		addMajorSkill(Politics.class);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
+		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
+		addMajorSkill(Demonology.class);
+		addMinorSkill(CelestialMagic.class);
 	}
+
 }

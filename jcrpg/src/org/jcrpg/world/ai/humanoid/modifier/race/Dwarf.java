@@ -21,6 +21,8 @@ package org.jcrpg.world.ai.humanoid.modifier.race;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.profession.adventurer.Mage;
+import org.jcrpg.world.ai.profession.adventurer.Psionic;
 
 public class Dwarf extends MemberPerson {
 
@@ -31,6 +33,8 @@ public class Dwarf extends MemberPerson {
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONSTITUTION, 1.2f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.PSYCHE, 0.8f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONCENTRATION, 0.8f);
+		forbiddenProfessions.add(Mage.class);
+		forbiddenProfessions.add(Psionic.class);
 	}
 
 	@Override
