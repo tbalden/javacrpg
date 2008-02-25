@@ -193,13 +193,13 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
 	    	pageCreationSecond.attachChild(sQuad2);
 
-	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
+	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
-	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.8f, 0.2f, 0.07f,600f,"While tuning skill press Enter to set selected value for skill.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.85f, 0.2f, 0.07f,600f,"Leave no points unused to be able finish.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,700f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,700f,"While tuning skill press Enter to set selected value for skill.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,700f,"Leave no points unused to be able finish.",false);
 
-	    	posY = 0;
+	    	posY = 0; 
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		String groupName = Language.v("skillgroups."+groupId);

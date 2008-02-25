@@ -7,7 +7,11 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-[ ] Separate thread for updating audio!
+
+[ ] Skill tuner page with subframes - selecting a group of skills makes changing to those skill tuners - just like in Wiz7
+[ ] common Profession extension for superclass of professions with pre-added normal skills available for any profession
+
+[X] Separate thread for updating audio!
  
 [X] Main Menu window!
 j3dcore simpleInitGame's end:
