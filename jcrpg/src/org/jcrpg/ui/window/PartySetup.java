@@ -875,7 +875,7 @@ public class PartySetup extends PagedInputWindow {
 				Quad q = imgQuads.get(d.pic.getAbsolutePath());
 				if (q==null) 
 				{
-					q = loadImageToQuad(d.pic,  0.14f*core.getDisplay().getWidth(), (0.16f)*core.getDisplay().getHeight(),0.75f*core.getDisplay().getWidth(), (1f-0.2f)*core.getDisplay().getHeight()  );
+					q = loadImageToQuad(d.pic,  0.12f*core.getDisplay().getWidth(), (0.16f)*core.getDisplay().getHeight(),0.75f*core.getDisplay().getWidth(), (1f-0.2f)*core.getDisplay().getHeight()  );
 					imgQuads.put(d.pic.getAbsolutePath(), q);
 				}
 				imageNode.detachAllChildren();
