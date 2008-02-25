@@ -19,17 +19,19 @@
 package org.jcrpg.world.ai.profession.adventurer;
 
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.physical.Disguise;
 import org.jcrpg.world.ai.abs.skill.social.Cheating;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Liar extends Profession {
+public class Swindler extends Profession {
 
-	public Liar()
+	public Swindler()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		addMajorSkill(Cheating.class);
+		addMajorSkill(Disguise.class);
 		addMinorSkill(Reasoning.class);
 	}
 }

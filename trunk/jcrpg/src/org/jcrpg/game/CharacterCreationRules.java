@@ -32,7 +32,7 @@ import org.jcrpg.world.ai.profession.adventurer.Bard;
 import org.jcrpg.world.ai.profession.adventurer.Crusader;
 import org.jcrpg.world.ai.profession.adventurer.Demonist;
 import org.jcrpg.world.ai.profession.adventurer.Enlightened;
-import org.jcrpg.world.ai.profession.adventurer.Liar;
+import org.jcrpg.world.ai.profession.adventurer.Swindler;
 import org.jcrpg.world.ai.profession.adventurer.Lobbist;
 import org.jcrpg.world.ai.profession.adventurer.Negotiator;
 import org.jcrpg.world.ai.profession.adventurer.Priest;
@@ -92,7 +92,7 @@ public class CharacterCreationRules {
 			addProfession(new Lobbist());
 			addProfession(new Negotiator());
 			addProfession(new Tongue());
-			addProfession(new Liar());
+			addProfession(new Swindler());
 		}
 	}
 	
