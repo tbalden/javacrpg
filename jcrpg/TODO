@@ -11,6 +11,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [ ] Skill tuner page with subframes - selecting a group of skills makes changing to those skill tuners - just like in Wiz7
 [ ] common Profession extension for superclass of professions with pre-added normal skills available for any profession
 
+[ ] social skills -> in a combat these people can throw their different skills into combat -> fighting other social skills
+of the enemy or friend. We'll have to develop different 'words' for the different skills to make it really funny, and make 
+a peaceful solution available in most of the cases.
+
 [X] Separate thread for updating audio!
  
 [X] Main Menu window!

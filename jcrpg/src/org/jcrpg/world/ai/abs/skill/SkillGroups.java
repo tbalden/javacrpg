@@ -45,7 +45,9 @@ import org.jcrpg.world.ai.abs.skill.mental.Mapmaking;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.QuickPlanning;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.Strategy;
+import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
 import org.jcrpg.world.ai.abs.skill.physical.Climbing;
+import org.jcrpg.world.ai.abs.skill.physical.Disguise;
 import org.jcrpg.world.ai.abs.skill.physical.Hiding;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
@@ -113,6 +115,8 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_PHYSICAL, new Tumbling());
 		addSkillToGroup(GROUP_PHYSICAL, new MartialTrance());
 		addSkillToGroup(GROUP_PHYSICAL, new StrikeNerves());
+		addSkillToGroup(GROUP_PHYSICAL, new Disguise());
+		addSkillToGroup(GROUP_PHYSICAL, new AnimalHandling());
 		
 		orderedGroups.add(GROUP_MENTAL);
 		addSkillToGroup(GROUP_MENTAL, new QuickPlanning());
