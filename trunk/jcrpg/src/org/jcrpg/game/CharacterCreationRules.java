@@ -39,7 +39,7 @@ import org.jcrpg.world.ai.profession.adventurer.Priest;
 import org.jcrpg.world.ai.profession.adventurer.Psionic;
 import org.jcrpg.world.ai.profession.adventurer.Ranger;
 import org.jcrpg.world.ai.profession.adventurer.Shadow;
-import org.jcrpg.world.ai.profession.adventurer.Tongue;
+import org.jcrpg.world.ai.profession.adventurer.Jester;
 import org.jcrpg.world.ai.profession.adventurer.Warrior;
 import org.jcrpg.world.ai.profession.adventurer.Mage;
 import org.jcrpg.world.ai.profession.adventurer.Thief;
@@ -91,7 +91,7 @@ public class CharacterCreationRules {
 			addProfession(new Wise());
 			addProfession(new Lobbist());
 			addProfession(new Negotiator());
-			addProfession(new Tongue());
+			addProfession(new Jester());
 			addProfession(new Swindler());
 		}
 	}

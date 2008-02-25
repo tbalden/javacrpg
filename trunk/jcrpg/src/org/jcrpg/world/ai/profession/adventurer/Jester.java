@@ -23,9 +23,9 @@ import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.social.Chatter;
 import org.jcrpg.world.ai.profession.Profession;
 
-public class Tongue extends Profession {
+public class Jester extends Profession {
 
-	public Tongue()
+	public Jester()
 	{
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
