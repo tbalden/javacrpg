@@ -479,6 +479,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ############# ADDING Char
 			if (charactersOfParty.size()==6) return true;
+			if (dataList.size()==0) return true;
 			int s = addCharSelect.getSelection();
 			Iterator<CharListData> it = dataList.values().iterator();
 			CharListData d = null;
