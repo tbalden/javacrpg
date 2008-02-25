@@ -65,6 +65,7 @@ public class LoadMenu extends Window implements KeyListener {
         	
         	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
         			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+        	hudQuad.setRenderState(base.hud.hudAS);
         	Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/logo.png", 1.2f*core.getDisplay().getWidth() / 5f, 1.2f*(core.getDisplay().getHeight() / 11), 
         			core.getDisplay().getWidth() / 2, 1.63f*core.getDisplay().getHeight() / 2);
         	logoQuad.setRenderState(base.hud.hudAS);
