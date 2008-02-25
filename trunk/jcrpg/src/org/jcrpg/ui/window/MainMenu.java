@@ -69,6 +69,7 @@ public class MainMenu extends Window implements KeyListener {
 			for (String[] image:menuImages)
 			{
 				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image[1],sizeX,sizeY, posX, startPosY - stepPosY*counter++);
+				button.setRenderState(base.hud.hudAS);
 				windowNode.attachChild(button);
 				buttons.add(new Button(image[0],button,this));
 			}
