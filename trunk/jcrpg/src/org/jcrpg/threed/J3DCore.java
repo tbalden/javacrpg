@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.audio.AudioServer;
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.space.Cube;
@@ -1157,7 +1158,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			if (sides[i]!=null)
 			{
-				//System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+				//Jcrpg.LOGGER.info("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
 				
 				if (classNames.contains(sides[i].subtype.getClass()))
 				{
@@ -1186,7 +1187,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			{
 				if (sides[i]!=null)
 				{
-					//System.out.println("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
+					//Jcrpg.LOGGER.info("SIDE SUBTYPE: "+sides[i].subtype.getClass().getCanonicalName());
 					if (classNames.contains(sides[i].subtype.getClass()))
 					{
 						list.add(j);
@@ -1302,7 +1303,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;
 		for (int i=0; i<directions.length; i++) {
-			System.out.println("Moving dir: "+directions[i]);
+			Jcrpg.LOGGER.info("Moving dir: "+directions[i]);
 			newCoords = calcMovement(newCoords, directions[i],true); 
 			newRelCoords = calcMovement(newRelCoords, directions[i],false);
 		}
@@ -1314,14 +1315,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c!=null) {
 				if (c.internalCube)
 				{
-					System.out.println("Moved: INTERNAL");
+					Jcrpg.LOGGER.info("Moved: INTERNAL");
 					gameState.insideArea = true;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(intRootNode);
 					groundParentNode.attachChild(extRootNode);
 				} else
 				{
-					System.out.println("Moved: EXTERNAL");
+					Jcrpg.LOGGER.info("Moved: EXTERNAL");
 					gameState.insideArea = false;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(extRootNode);
@@ -1335,10 +1336,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		Cube c = gameState.world.getCube(from[0], from[1], from[2], false);
 		
 		if (c!=null) {
-			System.out.println("Current Cube = "+c.toString());
+			Jcrpg.LOGGER.info("Current Cube = "+c.toString());
 			// get current steep dir for knowing if checking below or above Cube for moving on steep 
 			Integer[] currentCubeSteepDirections = hasSideOfInstanceInAnyDir(c, climbers);
-			System.out.println("STEEP DIRECTION"+(currentCubeSteepDirections!=null?currentCubeSteepDirections.length:"null")+" - "+directions[0]+"  "+c.steepDirection);
+			Jcrpg.LOGGER.info("STEEP DIRECTION"+(currentCubeSteepDirections!=null?currentCubeSteepDirections.length:"null")+" - "+directions[0]+"  "+c.steepDirection);
 			if (currentCubeSteepDirections!=null)
 			for (int steepDir: currentCubeSteepDirections) {
 				if ( steepDir==oppositeDirections.get(new Integer(directions[0])).intValue())
@@ -1351,15 +1352,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)
 			{
-				System.out.println("SAME CUBE CHECK: NOTPASSABLE");
+				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
 				if (hasSideOfInstance(sides, notPassable) && (!gameState.onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
-				System.out.println("SAME CUBE CHECK: NOTPASSABLE - passed");
+				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
-			if (nextCube==null) System.out.println("NEXT CUBE = NULL");
+			if (nextCube==null) Jcrpg.LOGGER.info("NEXT CUBE = NULL");
 				else 
 			{
-					System.out.println("Next Cube = "+nextCube.toString());
+					Jcrpg.LOGGER.info("Next Cube = "+nextCube.toString());
 					sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 					if (sides!=null)
 					{
@@ -1399,7 +1400,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// cube below
 					nextCube = gameState.world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
-					System.out.println("FALLING: "+nextCube);
+					Jcrpg.LOGGER.info("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
 
@@ -1472,14 +1473,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (c!=null) {
 			if (c.internalCube)
 			{
-				System.out.println("Moved: INTERNAL");
+				Jcrpg.LOGGER.info("Moved: INTERNAL");
 				gameState.insideArea = true;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(intRootNode);
 				groundParentNode.attachChild(extRootNode);
 			} else
 			{
-				System.out.println("Moved: EXTERNAL");
+				Jcrpg.LOGGER.info("Moved: EXTERNAL");
 				gameState.insideArea = false;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(extRootNode);
@@ -1964,7 +1965,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
-			System.out.println("SHADOWS!");
+			Jcrpg.LOGGER.info("SHADOWS!");
 			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
 			//sPass.add(extRootNode);
@@ -1982,7 +1983,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		if (BLOOM_EFFECT) {
 	      if(!bloomRenderPass.isSupported()) {
-	    	   System.out.println("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
+	    	  Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
 	           Text t = new Text("Text", "Bloom not supported (FBO needed).");
 	           t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	           t.setLightCombineMode(LightState.OFF);
@@ -1990,7 +1991,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           fpsNode.attachChild(t);
 	           BLOOM_EFFECT = false;
 	       } else {
-	    	   System.out.println("!!!!!!!!!!!!!! BLOOM!");
+	    	   Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 	           bloomRenderPass.add(rootNode);
 	           bloomRenderPass.setUseCurrentScene(true);
 	           bloomRenderPass.setBlurIntensityMultiplier(1f);

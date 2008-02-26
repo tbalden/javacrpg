@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 
 import com.jmex.audio.AudioSystem;
@@ -233,7 +234,7 @@ public class AudioServer implements Runnable {
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
-						System.out.println("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
+						Jcrpg.LOGGER.info("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -268,7 +269,7 @@ public class AudioServer implements Runnable {
 	public synchronized void playForced(String id)
 	{
 		Channel c = getAvailableChannel();
-		System.out.println("Playing "+id);
+		Jcrpg.LOGGER.info("Playing "+id);
 		if (c==null)
 		{
 			if (!J3DCore.SOUND_ENABLED) return;
@@ -298,7 +299,7 @@ public class AudioServer implements Runnable {
 	public synchronized void play(String id)
 	{
 		Channel c = getAvailableChannel();
-		System.out.println("Playing "+id);
+		Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -323,7 +324,7 @@ public class AudioServer implements Runnable {
 	public synchronized void playLoading(String id, String type)
 	{
 		Channel c = getAvailableChannel();
-		System.out.println("Playing "+id);
+		Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -347,13 +348,13 @@ public class AudioServer implements Runnable {
 	
 	public synchronized void pause(String id)
 	{
-		System.out.println("Pausing "+id);
+		Jcrpg.LOGGER.info("Pausing "+id);
 		pauseIdOnAllChannels(id);
 	}
 	
 	public synchronized  void stop(String id)
 	{
-		System.out.println("Stopping "+id);
+		Jcrpg.LOGGER.info("Stopping "+id);
 		stopIdOnAllChannels(channels,id);
 	}
 
@@ -389,7 +390,7 @@ public class AudioServer implements Runnable {
 
 	public void run() {
 		if (!J3DCore.SOUND_ENABLED) return;
-		System.out.println("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
+		Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
 		Thread.currentThread().setPriority(10);
 		while (true)
 		{

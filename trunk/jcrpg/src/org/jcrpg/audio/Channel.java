@@ -18,6 +18,8 @@
 
 package org.jcrpg.audio;
 
+import org.jcrpg.apps.Jcrpg;
+
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
 import com.jmex.audio.event.TrackStateListener;
@@ -52,7 +54,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void stopTrack()
 	{
-		System.out.println("STOP TRACK : "+soundId);
+		Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
 		try {
 			track.stop();
 			playing = false;
@@ -66,7 +68,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void playTrack()
 	{
-		System.out.println(channelId+" PLAY TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" PLAY TRACK : "+soundId);
 		if (track!=null && !track.isPlaying()) {
 			track.play();
 			if (track!=null)
@@ -83,7 +85,7 @@ public class Channel implements TrackStateListener{
 	}
 	
 	public synchronized void trackFinishedFade(AudioTrack arg0) {
-		System.out.println(channelId+" ##### FINISHED FADE TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" ##### FINISHED FADE TRACK : "+soundId);
 		//playing = false;
 		//paused = false;
 		//track = null;
@@ -91,12 +93,12 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackPaused(AudioTrack arg0) {
-		System.out.println(channelId+" ##### PAUSED TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" ##### PAUSED TRACK : "+soundId);
 		paused = true;
 	}
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
-		System.out.println(channelId+" ##### PLAYED TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
 		if (!arg0.isStreaming()) // Workaround for trackStopped not called when non-streaming audiotrack
 			trackStopped(arg0); else {
 			playing = true;
@@ -105,7 +107,7 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackStopped(AudioTrack arg0) {
-		System.out.println(channelId+" ##### STOPPED TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
 		track.removeTrackStateListener(this);
 		if (this.track!=null && this.track.equals(track)) {
 			track = null;

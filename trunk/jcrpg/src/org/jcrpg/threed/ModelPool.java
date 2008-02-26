@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
@@ -245,12 +246,12 @@ public class ModelPool {
 					removed.add(node);
 				}
 				pic.notUsed.removeAll(removed);
-				System.out.println("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);
+				Jcrpg.LOGGER.info("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);
 			}
 			if (pic.used.size()==0 && pic.notUsed.size()==0)
 			{
 				removedPoolCont.add(pic);
-				System.out.println("ModelPool.cleanPools: removing pool "+pic.id);
+				Jcrpg.LOGGER.info("ModelPool.cleanPools: removing pool "+pic.id);
 			}
 		}
 		for (PoolItemContainer cont:removedPoolCont)

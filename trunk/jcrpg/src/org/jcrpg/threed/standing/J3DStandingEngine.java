@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.J3DCore;
@@ -123,14 +124,14 @@ public class J3DStandingEngine {
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
 		
-		System.out.println("**** RENDER ****");
+		Jcrpg.LOGGER.info("**** RENDER ****");
 		
 
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ, false);
 		
 		
-		if (conditions!=null) System.out.println("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
+		if (conditions!=null) Jcrpg.LOGGER.info("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
 
 		
 		/*
@@ -162,7 +163,7 @@ public class J3DStandingEngine {
 
 		//TextureManager.clearCache();
 		//System.gc();
-		System.out.println(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
+		Jcrpg.LOGGER.info(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
 		uiBase.hud.sr.setVisibility(false, "LOAD");
 		uiBase.hud.mainBox.addEntry("Load Complete.");
 		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
@@ -176,9 +177,9 @@ public class J3DStandingEngine {
 		int removed = 0;
  		long timeS = System.currentTimeMillis();
 
- 		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+ 		Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
-		System.out.println("!!!! REMOVABLE CUBES = "+removableCubes.length);
+		Jcrpg.LOGGER.info("!!!! REMOVABLE CUBES = "+removableCubes.length);
     	for (RenderedCube c:removableCubes)
     	{
     		if (c==null) continue;
@@ -188,17 +189,17 @@ public class J3DStandingEngine {
     		liveNodes-= c.hsRenderedNodes.size();
     	}
     	
-		System.out.println("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+    	Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
-    	System.out.println("getRenderedSpace size="+cubes.length);
+    	Jcrpg.LOGGER.info("getRenderedSpace size="+cubes.length);
 		
 		HashMap<Integer, RenderedCube> hmNewCubes = new HashMap<Integer, RenderedCube>();
 
-		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
+		Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 		
 	    for (int i=0; i<cubes.length; i++)
 		{
-			//System.out.println("CUBE "+i);
+			//Jcrpg.LOGGER.info("CUBE "+i);
 			RenderedCube c = cubes[i];
 			Integer cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
 			if (hmCurrentCubes.containsKey(cubeKey))
@@ -226,7 +227,7 @@ public class J3DStandingEngine {
 			// store it to new cubes hashmap
 			hmNewCubes.put(cubeKey,c);
 		}
-		System.out.println("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
+	    Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 	    for (RenderedCube cToDetach:hmCurrentCubes.values())
 	    {
 			removed++;
@@ -237,7 +238,7 @@ public class J3DStandingEngine {
 	    }
 	    hmCurrentCubes.clear();
 	    hmCurrentCubes.putAll(hmNewCubes); // the newly rendered/remaining cubes are now the current cubes
-		System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+	    Jcrpg.LOGGER.info("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		return detacheable;
 		
 	}
@@ -310,7 +311,7 @@ public class J3DStandingEngine {
 							qC.multLocal(J3DCore.steepRotations.get(cube.cube.steepDirection));
 						}catch (Exception ex)
 						{
-							System.out.println(cube.cube + " --- "+cube.cube.steepDirection);
+							Jcrpg.LOGGER.info(cube.cube + " --- "+cube.cube.steepDirection);
 						}
 					} else 
 					{
@@ -519,7 +520,7 @@ public class J3DStandingEngine {
 						checked = true;
 					} else
 					{
-						//System.out.println("DIST X,Z: "+distX+" "+distZ);
+						//Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
 					}
 					//checked = true;
 					
@@ -536,7 +537,7 @@ public class J3DStandingEngine {
 							}
 							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
 							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-							//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+							//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 							if (angle<refAngle) {
 								found = true;
 							}
@@ -778,7 +779,7 @@ public class J3DStandingEngine {
 						checked = true;
 					} else
 					{
-						//System.out.println("DIST X,Z: "+distX+" "+distZ);
+						//Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
 					}
 					//checked = true;
 					
@@ -821,7 +822,7 @@ public class J3DStandingEngine {
 							}
 							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
 							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-							//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+							//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 							if (angle<refAngle) {
 								//found = true;
 							}
@@ -845,7 +846,7 @@ public class J3DStandingEngine {
 									// found one... checking for angle:								
 									Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
 									float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-									//System.out.println("RELATIVE = "+relative+ " - ANGLE = "+angle);
+									//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 									if (angle<refAngle) {
 										// angle is good, we can enable foundFar for this cube
 										foundFar = true;
@@ -1058,10 +1059,10 @@ public class J3DStandingEngine {
 					core.batchHelper.lockAll();
 				}
 				
-				System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
+				Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 			    // handling possible occluders
 			    if (J3DCore.SHADOWS) {
-			    	System.out.println("OCCS: "+core.sPass.occludersSize());
+			    	Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
 					for (NodePlaceholder psn : core.possibleOccluders) {
 						if (psn.realNode != null) {
 							Node n = (Node) psn.realNode;
@@ -1070,7 +1071,7 @@ public class J3DStandingEngine {
 							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
 								if (!core.sPass.containsOccluder(n))
 								{
-									System.out.println("ADDING OCCLUDER: "+n.getName());
+									Jcrpg.LOGGER.info("ADDING OCCLUDER: "+n.getName());
 									core.sPass.addOccluder(n);
 									
 								}
@@ -1081,7 +1082,7 @@ public class J3DStandingEngine {
 					}
 			    }
 			    
-			    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+			    Jcrpg.LOGGER.info("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
 			    sysTime = System.currentTimeMillis();
 			    
 			    
@@ -1099,9 +1100,9 @@ public class J3DStandingEngine {
 					//updateDisplayNoBackBuffer();
 				}
 		
-				System.out.println("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
-			    System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-			    System.out.println("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
+				Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
+				Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+				Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 		
 			    if (cullVariationCounter%30==0) {
 					modelPool.cleanPools();
@@ -1194,7 +1195,7 @@ public class J3DStandingEngine {
 				}
 				
 			} else {
-				//System.out.println("# TOP IS NULL!");
+				//Jcrpg.LOGGER.info("# TOP IS NULL!");
 			}
 			boolean render = true;
 			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...

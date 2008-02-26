@@ -21,6 +21,7 @@ package org.jcrpg.ui.map;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.place.Geography;
@@ -177,7 +178,7 @@ public class WorldMap {
 		lastCy = cy;
 		lastCz = cz;			
 		
-		System.out.println("UPDATE: "+cx+" "+cz);
+		Jcrpg.LOGGER.info("UPDATE: "+cx+" "+cz);
 		for (int z = 0; z<world.sizeZ;z++)
 		{
 			for (int x=0; x<world.sizeX; x++)

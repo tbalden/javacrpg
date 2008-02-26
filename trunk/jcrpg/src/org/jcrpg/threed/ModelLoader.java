@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -461,7 +462,7 @@ public class ModelLoader {
     		String key = textureNames[i]+(normalNames!=null?normalNames[i]:"null");
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
-	    	System.out.println("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
+	    	Jcrpg.LOGGER.info("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
 	    	
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    	if (normalNames!=null && normalNames[i]!=null)
@@ -684,7 +685,7 @@ public class ModelLoader {
     {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
-    	//System.out.println("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
+    	//Jcrpg.LOGGER.info("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
 		
 		tempNodeKeys.add(key);
@@ -705,7 +706,7 @@ public class ModelLoader {
     			return n;
     		}
     	}
-    	System.out.println("ModelLoader.loadNode - New model: "+o.modelName);
+    	Jcrpg.LOGGER.info("ModelLoader.loadNode - New model: "+o.modelName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{
@@ -773,7 +774,7 @@ public class ModelLoader {
 						
 					} else 
 					{
-						System.out.println(o.modelName);
+						Jcrpg.LOGGER.info(o.modelName);
 						setTextures(node,o.mipMap);
 					}
 					
@@ -792,7 +793,7 @@ public class ModelLoader {
 		            //r.setRenderState(core.fp);
 		            return node;
 				} catch(Exception err)  {
-				    System.out.println("Error loading model:"+err);
+					Jcrpg.LOGGER.severe("Error loading model:"+err);
 				    err.printStackTrace();
 				    return null;
 				}
@@ -827,7 +828,7 @@ public class ModelLoader {
 			    	Node node2 = getClodNodeFromParent(node);
 				    for (Spatial child:node.getChildren())
 				    {
-				    	System.out.println("child type = "+child.getType());
+				    	Jcrpg.LOGGER.info("child type = "+child.getType());
 				    	if (child instanceof Node)
 				    	{
 				    		node2.attachChild(getClodNodeFromParent((Node)child));
@@ -863,7 +864,7 @@ public class ModelLoader {
 					
 				} else 
 				{
-					System.out.println(o.modelName);
+					Jcrpg.LOGGER.info(o.modelName);
 					setTextures(node,o.mipMap);
 				}
 				
@@ -874,7 +875,7 @@ public class ModelLoader {
 				node.updateModelBound();		
 	            return node;
 			} catch(Exception err)  {
-			    System.out.println("Error loading model:"+err);
+				Jcrpg.LOGGER.severe("Error loading model:"+err);
 			    err.printStackTrace();
 			    return null;
 			}
