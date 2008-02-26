@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.NodePlaceholder;
-import org.jcrpg.threed.PooledNode;
 
 public class RenderedCube {
 
