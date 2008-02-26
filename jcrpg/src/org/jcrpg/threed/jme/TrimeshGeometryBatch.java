@@ -70,7 +70,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	String shaderDirectory = "./data/shaders/";
 	String shaderName = "bbGrass";
 
-	private GLSLShaderObjectsState createShader(String shaderDirectory, String shaderName) {
+	/*private GLSLShaderObjectsState createShader(String shaderDirectory, String shaderName) {
 
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 		
@@ -78,7 +78,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		shader = display.getRenderer().createGLSLShaderObjectsState();
 		try {
 			/*shader.load(getClass().getClassLoader().getResource(shaderDirectory + shaderName + ".vert"),
-				 		getClass().getClassLoader().getResource(shaderDirectory + shaderName + ".frag"));*/
+				 		getClass().getClassLoader().getResource(shaderDirectory + shaderName + ".frag"));* /
 			shader.load(new File(shaderDirectory + shaderName + ".vert").toURI().toURL(),
 						new File(shaderDirectory + shaderName + ".frag").toURI().toURL());
 			
@@ -86,7 +86,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 		shader.setEnabled(true);
 		return shader;
-	}
+	}*/
 	static GLSLShaderObjectsState gl = null;
 	static VertexProgramState vp = null;
 	FragmentProgramState fp = null;
@@ -176,6 +176,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	
+	@SuppressWarnings("unchecked")
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
 		
@@ -224,6 +225,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		visible.add(instance);
 		return;
 	}
+	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder)
 	{
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
@@ -267,153 +269,159 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	Quaternion orient = null;
 	
 	public static boolean passedTimeCalculated = false;
-	
+	public static Quaternion qZero = new Quaternion();
 	@Override
 	public void onDraw(Renderer r) {
-		Vector3f look = core.getCamera().getDirection().negate();
-		Vector3f left1 = core.getCamera().getLeft().negate();
-		Vector3f loc = core.getCamera().getLocation();
 		
-		// calculating needsUpdate of rotation
-		boolean needsUpdate = true;
-		if (lastLeft!=null)
-		{
-			if (look.distanceSquared(lastLook)==0 && left1.distanceSquared(lastLeft)==0 && loc.distanceSquared(lastLoc)==0)
+		if (System.currentTimeMillis()%8>3) {
+			Vector3f look = core.getCamera().getDirection().negate();
+			Vector3f left1 = core.getCamera().getLeft().negate();
+			Vector3f loc = core.getCamera().getLocation();
+			// calculating needsUpdate of rotation
+			boolean needsUpdate = true;//true;
+			if (lastLeft!=null)
 			{
-				needsUpdate = false;
-			}
-		} else
-		{
-			lastLoc = new Vector3f();
-			lastLook = new Vector3f();
-			lastLeft = new Vector3f();
-		}
-		lastLoc.set(loc);
-		lastLook.set(look);
-		lastLeft.set(left1);
-		
-		if (needsUpdate) {
-			orient = new Quaternion();
-			orient.fromAxes(left1, core.getCamera().getUp(), look);
-
-			// reseting orientation of parent, and self
-			Quaternion q = new Quaternion();
-			parent.setLocalRotation(q);
-			getWorldRotation().set(q);
-			
-			if (horizontalRotation!=null) {
-				// needs horizontal rotation
-				
-				
-				// biggest hack of billboard rotation in the world comes here...by experimentation, it needs although rotated quads  put into this batch!!
-				// check BillboardPartVegetation fill() method how it is done.
-				
-				// fetching horizontal rotation direction:
-				Integer direction = new Integer(0);
-				for (Entry<Integer, Quaternion> qH : J3DCore.horizontalRotationsReal.entrySet())
+				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.05f)
 				{
-					if (qH.getValue().equals(horizontalRotation))
-					{
-						direction = qH.getKey();
-					}
-				}
-				
-				// if west or east the trick must be done to correct the rotation quaternion
-				if (direction.intValue() == J3DCore.WEST) {
-					
-
-					if (core.gameState.viewDirection == J3DCore.SOUTH) {
-						float temp = orient.y;
-						orient.y = orient.w;
-						orient.w = temp;
-						orient.y = -orient.y;
-					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
-						float temp = orient.x;
-						orient.x = orient.z;
-						orient.z = temp;
-					} else if (core.gameState.viewDirection == J3DCore.EAST) {
-						float temp = orient.x;
-						orient.x = orient.z;
-						orient.z = temp;
-						temp = orient.y;
-						orient.y = -orient.w;
-						orient.w = temp;
-					}else if (core.gameState.viewDirection == J3DCore.WEST) {
-						float temp = orient.x;
-						orient.x = orient.z;
-						orient.z = temp;
-						temp = orient.y;
-						orient.y = orient.w;
-						orient.w = -temp;
-					} 
-				} else if (direction.intValue() == J3DCore.EAST) {
-					if (core.gameState.viewDirection == J3DCore.SOUTH) {
-						float temp = orient.y;
-						orient.y = orient.w;
-						orient.w = -temp;
-					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
-						float temp = orient.x;
-						orient.x = orient.z;
-						orient.z = -temp;
-					} else if (core.gameState.viewDirection == J3DCore.EAST) {
-						float temp = orient.y;
-						orient.y = orient.w;
-						orient.w = temp;
-						orient.w = -orient.w;
-					} else if (core.gameState.viewDirection == J3DCore.WEST) {
-						float temp = orient.x;
-						orient.x = orient.z;
-						orient.z = temp;
-						orient.z = -orient.z;
-					}
-				} else if (direction.intValue() == J3DCore.NORTH) {
-					// nothing to do, it's correct
-				} else if (direction.intValue() == J3DCore.SOUTH) {
-					if (core.gameState.viewDirection == J3DCore.SOUTH) {
-						orient.y = -orient.y;
-						orient.w = -orient.w;
-					} else if (core.gameState.viewDirection == J3DCore.NORTH) {
-						orient.w = -orient.w;
-						orient.y = -orient.y;
-					} else if (core.gameState.viewDirection == J3DCore.EAST) {
-						orient.w = -orient.w;
-						orient.y = -orient.y;
-					} else if (core.gameState.viewDirection == J3DCore.WEST) {
-						orient.w = -orient.w;
-						orient.y = -orient.y;
-					}
-				}
-
-				// rotation the whole trimesh to position in the cube:
-				setLocalRotation(horizontalRotation);
-			} else {
-				setLocalRotation(q);
-			}
-			if (vertexShader) {
-				float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
-				if (J3DCore.FARVIEW_ENABLED) {
-					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.3f),0,0,0}, 1); // TODO
+					needsUpdate = false;
 				} else
 				{
-					fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1);
+					parent.unlockMeshes();
 				}
-			}
-			
-			
-			for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
-			{
-				geoInstance.getAttributes().setRotation(orient);
-				geoInstance.getAttributes().buildMatrices();
-			}
-		}
-
-		
-		if (vertexShader) {
-			if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
-				fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 			} else
 			{
-				fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+				lastLoc = new Vector3f();
+				lastLook = new Vector3f();
+				lastLeft = new Vector3f();
+			}
+			
+			if (needsUpdate) {
+				lastLoc.set(loc);
+				lastLook.set(look);
+				lastLeft.set(left1);
+				
+				orient = new Quaternion();
+				orient.fromAxes(left1, core.getCamera().getUp(), look);
+	
+				// reseting orientation of parent, and self
+				//Quaternion q = new Quaternion();
+				parent.setLocalRotation(qZero);
+				getWorldRotation().set(qZero);
+				
+				if (horizontalRotation!=null) {
+					// needs horizontal rotation
+					
+					
+					// biggest hack of billboard rotation in the world comes here...by experimentation, it needs although rotated quads  put into this batch!!
+					// check BillboardPartVegetation fill() method how it is done.
+					
+					// fetching horizontal rotation direction:
+					Integer direction = new Integer(0);
+					for (Entry<Integer, Quaternion> qH : J3DCore.horizontalRotationsReal.entrySet())
+					{
+						if (qH.getValue().equals(horizontalRotation))
+						{
+							direction = qH.getKey();
+						}
+					}
+					
+					// if west or east the trick must be done to correct the rotation quaternion
+					if (direction.intValue() == J3DCore.WEST) {
+						
+	
+						if (core.gameState.viewDirection == J3DCore.SOUTH) {
+							float temp = orient.y;
+							orient.y = orient.w;
+							orient.w = temp;
+							orient.y = -orient.y;
+						} else if (core.gameState.viewDirection == J3DCore.NORTH) {
+							float temp = orient.x;
+							orient.x = orient.z;
+							orient.z = temp;
+						} else if (core.gameState.viewDirection == J3DCore.EAST) {
+							float temp = orient.x;
+							orient.x = orient.z;
+							orient.z = temp;
+							temp = orient.y;
+							orient.y = -orient.w;
+							orient.w = temp;
+						}else if (core.gameState.viewDirection == J3DCore.WEST) {
+							float temp = orient.x;
+							orient.x = orient.z;
+							orient.z = temp;
+							temp = orient.y;
+							orient.y = orient.w;
+							orient.w = -temp;
+						} 
+					} else if (direction.intValue() == J3DCore.EAST) {
+						if (core.gameState.viewDirection == J3DCore.SOUTH) {
+							float temp = orient.y;
+							orient.y = orient.w;
+							orient.w = -temp;
+						} else if (core.gameState.viewDirection == J3DCore.NORTH) {
+							float temp = orient.x;
+							orient.x = orient.z;
+							orient.z = -temp;
+						} else if (core.gameState.viewDirection == J3DCore.EAST) {
+							float temp = orient.y;
+							orient.y = orient.w;
+							orient.w = temp;
+							orient.w = -orient.w;
+						} else if (core.gameState.viewDirection == J3DCore.WEST) {
+							float temp = orient.x;
+							orient.x = orient.z;
+							orient.z = temp;
+							orient.z = -orient.z;
+						}
+					} else if (direction.intValue() == J3DCore.NORTH) {
+						// nothing to do, it's correct
+					} else if (direction.intValue() == J3DCore.SOUTH) {
+						if (core.gameState.viewDirection == J3DCore.SOUTH) {
+							orient.y = -orient.y;
+							orient.w = -orient.w;
+						} else if (core.gameState.viewDirection == J3DCore.NORTH) {
+							orient.w = -orient.w;
+							orient.y = -orient.y;
+						} else if (core.gameState.viewDirection == J3DCore.EAST) {
+							orient.w = -orient.w;
+							orient.y = -orient.y;
+						} else if (core.gameState.viewDirection == J3DCore.WEST) {
+							orient.w = -orient.w;
+							orient.y = -orient.y;
+						}
+					}
+	
+					// rotation the whole trimesh to position in the cube:
+					setLocalRotation(horizontalRotation);
+				} else {
+					setLocalRotation(qZero);
+				}
+				if (vertexShader) {
+					float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
+					if (J3DCore.FARVIEW_ENABLED) {
+						fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.3f),0,0,0}, 1); // TODO
+					} else
+					{
+						fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.8f),0,0,0}, 1);
+					}
+				}
+				
+				
+				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+				{
+					geoInstance.getAttributes().setRotation(orient);
+					geoInstance.getAttributes().buildMatrices();
+				}
+			}
+	
+			
+			if (vertexShader) {
+				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
+					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+				} else
+				{
+					fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+				}
 			}
 		}
 		
