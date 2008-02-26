@@ -225,6 +225,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
 			MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
 			EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0, 100);
+			if (!loadValue("LOGGING", false))
+			{
+				Jcrpg.LOGGER.setLevel(Level.OFF);
+			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -21,6 +21,7 @@ package org.jcrpg.game;
 import java.io.OutputStream;
 import java.io.Reader;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -75,7 +76,7 @@ public class GameStateContainer {
 
 	public void setViewPosition(int[] coords)
 	{
-		System.out.println(" NEW VIEW POSITION = "+coords[0]+" - "+coords[1]+" - "+coords[2]);
+		Jcrpg.LOGGER.info(" NEW VIEW POSITION = "+coords[0]+" - "+coords[1]+" - "+coords[2]);
 		viewPositionX = coords[0];
 		viewPositionY = coords[1];
 		viewPositionZ = coords[2];
