@@ -51,8 +51,8 @@ public class MainMenu extends Window implements KeyListener {
 		
         try {
         	
-        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.6f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
-        			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.95f*1.2f*(core.getDisplay().getHeight() / 2), 
+        			core.getDisplay().getWidth() / 2, 0.975f*core.getDisplay().getHeight() / 2);
         	hudQuad.setRenderState(base.hud.hudAS);
         	Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/logo.png", 1.2f*core.getDisplay().getWidth() / 5f, 1.2f*(core.getDisplay().getHeight() / 11), 
         			core.getDisplay().getWidth() / 2, 1.63f*core.getDisplay().getHeight() / 2);
@@ -62,10 +62,10 @@ public class MainMenu extends Window implements KeyListener {
 			windowNode.attachChild(logoQuad);
 			
 			int counter = 0;
-			float sizeX = 1.00f* 1.2f * core.getDisplay().getWidth() / 5f;
-			float sizeY = 0.65f* (core.getDisplay().getHeight() / 11);
-			float startPosY = 1.34f*core.getDisplay().getHeight() / 2;
-			float stepPosY = 0.66f* 1.1f*(core.getDisplay().getHeight() / 11);
+			float sizeX = 1.28f* 1.2f * core.getDisplay().getWidth() / 5f;
+			float sizeY = 0.82f* (core.getDisplay().getHeight() / 11);
+			float startPosY = 1.31f*core.getDisplay().getHeight() / 2;
+			float stepPosY = 0.85f* 1.1f*(core.getDisplay().getHeight() / 11);
 			float posX = core.getDisplay().getWidth() / 2;
 			for (String[] image:menuImages)
 			{
