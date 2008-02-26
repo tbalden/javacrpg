@@ -266,7 +266,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	public static final float TIME_DIVIDER = 400;
 	public static final long TIME_LIMIT = 0;
-	Quaternion orient = null;
+	Quaternion orient = new Quaternion();
 	
 	public static boolean passedTimeCalculated = false;
 	public static Quaternion qZero = new Quaternion();
@@ -301,7 +301,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				lastLook.set(look);
 				lastLeft.set(left1);
 				
-				orient = new Quaternion();
+				//orient = new Quaternion();
 				orient.fromAxes(left1, core.getCamera().getUp(), look);
 	
 				// reseting orientation of parent, and self

@@ -163,6 +163,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
     public static boolean ANIMATED_TREES = true;
     public static boolean DETAILED_TREES = true;
+    public static boolean DETAILED_TREE_FOLIAGE = true;
     public static boolean LOD_VEGETATION = false;
     public static boolean BUMPED_GROUND = false;
     public static boolean WATER_SHADER = false;
@@ -215,6 +216,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			SHADOWS = loadValue("SHADOWS", false);
 			ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
 			DETAILED_TREES = loadValue("DETAILED_TREES", false);
+			DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
 			ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
 			BUMPED_GROUND = loadValue("BUMPED_GROUND", false);
 			WATER_SHADER = loadValue("WATER_SHADER", false);

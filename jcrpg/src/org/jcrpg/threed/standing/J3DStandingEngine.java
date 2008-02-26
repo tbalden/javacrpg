@@ -678,7 +678,7 @@ public class J3DStandingEngine {
 											{
 												if (s instanceof PooledSharedNode)
 												{
-													s.lockMeshes();
+													//s.lockMeshes();
 												}
 											}
 										}
@@ -1000,7 +1000,7 @@ public class J3DStandingEngine {
 											{
 												if (s instanceof PooledSharedNode)
 												{
-													s.lockMeshes();
+													//s.lockMeshes();
 												}
 											}
 										}

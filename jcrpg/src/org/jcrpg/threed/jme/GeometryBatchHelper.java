@@ -28,6 +28,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.scene.TriMesh;
@@ -157,10 +158,16 @@ public class GeometryBatchHelper {
 	    		batch.lockShadows();
 	    	}
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
-
+    		boolean sparse = true;
     		for (int k=0; k<quadQuantity; k++)
     		{
+    			if (sparse) {
+    				if (HashUtil.mixPercentage(place.cube.cube.x+k, place.cube.cube.y, place.cube.cube.z)<20) continue;
+    			}
     			for (int j=0; j<quadQuantity; j++) {
+    				if (sparse) {
+    					if (HashUtil.mixPercentage(place.cube.cube.x+k+j, place.cube.cube.y, place.cube.cube.z)<60) continue;
+    				}
     				TriMesh tri;
     				if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
     				{
