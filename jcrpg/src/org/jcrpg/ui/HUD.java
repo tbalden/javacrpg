@@ -132,7 +132,7 @@ public class HUD {
         hudNode.attachChild(meter.quad_sign_sun);
         
         // system
-        sr = new SystemRelated(this,new String[]{"LOAD","DICE"},new String[]{"./data/ui/floppy.png","./data/ui/dice.png"});
+        sr = new SystemRelated(this,new String[]{"LOAD","DICE"},new String[]{"./data/ui/hourglass.png","./data/ui/dice2.png"});
         
         // main textbox
         
