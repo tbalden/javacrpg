@@ -273,7 +273,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	@Override
 	public void onDraw(Renderer r) {
 		
-		if (System.currentTimeMillis()%8>3) {
+		//if (System.currentTimeMillis()%8>1) 
+		{
 			Vector3f look = core.getCamera().getDirection().negate();
 			Vector3f left1 = core.getCamera().getLeft().negate();
 			Vector3f loc = core.getCamera().getLocation();
