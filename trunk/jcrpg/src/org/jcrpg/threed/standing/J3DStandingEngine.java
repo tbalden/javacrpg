@@ -30,6 +30,7 @@ import org.jcrpg.threed.ModelLoader;
 import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.PooledSharedNode;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -382,6 +383,7 @@ public class J3DStandingEngine {
 			boolean storedPauseState = engine.isPause();
 			engine.setPause(true);
 			
+			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.unlockAll();
 			
 			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
 			Vector3f currLoc = new Vector3f(core.gameState.relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeZ*J3DCore.CUBE_EDGE_SIZE);
@@ -607,6 +609,17 @@ public class J3DStandingEngine {
 										sharedNode = true;
 									}
 									{
+										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										{
+											for (Spatial s:realPooledNode.getChildren())
+											{
+												if (s instanceof PooledSharedNode)
+												{
+													s.unlockMeshes();
+												}
+											}
+										}
+										//realPooledNode.unlockMeshes();
 										realPooledNode.unlockShadows();
 										realPooledNode.unlockTransforms();
 										realPooledNode.unlockBounds();
@@ -660,11 +673,15 @@ public class J3DStandingEngine {
 									{
 										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 										{
-											//for (Spatial s:realPooledNode.getChildren())
+											for (Spatial s:realPooledNode.getChildren())
 											{
-												//s.lockBounds();
+												if (s instanceof PooledSharedNode)
+												{
+													s.lockMeshes();
+												}
 											}
 										}
+										//realPooledNode.lockMeshes();
 										realPooledNode.lockShadows();
 										realPooledNode.lockTransforms();								
 										realPooledNode.lockBranch();
@@ -913,6 +930,16 @@ public class J3DStandingEngine {
 										sharedNode = true;
 									}
 									{
+										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										{
+											for (Spatial s:realPooledNode.getChildren())
+											{
+												if (s instanceof PooledSharedNode)
+												{
+													s.unlockMeshes();
+												}
+											}
+										}
 										realPooledNode.unlockShadows();
 										realPooledNode.unlockTransforms();
 										realPooledNode.unlockBounds();
@@ -966,6 +993,16 @@ public class J3DStandingEngine {
 										realPooledNode.lockMeshes();
 									}
 									{
+										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										{
+											for (Spatial s:realPooledNode.getChildren())
+											{
+												if (s instanceof PooledSharedNode)
+												{
+													s.lockMeshes();
+												}
+											}
+										}
 										realPooledNode.lockShadows();
 										realPooledNode.lockBranch();
 										realPooledNode.lockBounds();
@@ -1015,7 +1052,11 @@ public class J3DStandingEngine {
 			
 			if (segmentCount==segments-1 || !segmented) {
 				
-				if (J3DCore.GEOMETRY_BATCH) core.batchHelper.updateAll();
+				if (J3DCore.GEOMETRY_BATCH) 
+				{
+					core.batchHelper.updateAll();
+					core.batchHelper.lockAll();
+				}
 				
 				System.out.println("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 			    // handling possible occluders

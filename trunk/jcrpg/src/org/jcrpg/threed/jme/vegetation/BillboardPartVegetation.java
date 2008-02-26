@@ -184,10 +184,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		if (child != null) {
 			{
 				{
-					if ((child.getType() & child.NODE) != 0) {
+					if ((child.getType() & Node.NODE) != 0) {
 						Node n = (Node) child;
 						ArrayList<Spatial> c2 = n.getChildren();
-						int sCounter = 0;
+						//int sCounter = 0;
 						for (Spatial s2 : c2) {
 							ArrayList<Spatial> spatials = new ArrayList<Spatial>();
 							Node removeFromNow = null;
@@ -540,7 +540,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							ArrayList<Spatial> c2 = n.getChildren();
 							int sCounter = 0;
 							for (Spatial s : c2) {
-								if ( (s.getType() & s.TRIMESH)!=0)
+								if ( (s.getType() & Node.TRIMESH)!=0)
 								{
 									// System.out.println("SPATIAL: "+s.getName()+"
 									// "+sCounter++);

@@ -216,6 +216,30 @@ public class GeometryBatchHelper {
     		}
     	}
     }
+    boolean locking = true;
+    public void lockAll()
+    {
+    	if (!locking) return;
+    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values()) {
+    		
+    		if (batch.parent!=null)
+    		{
+    			batch.parent.lockMeshes();
+    		}
+    	}
+    }
+    public void unlockAll()
+    {
+    	if (!locking) return;
+    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values()) {
+    		
+    		if (batch.parent!=null)
+    		{
+    			batch.parent.unlockMeshes();
+    		}
+    	}
+    }
+
     public void updateAll()
     {
     	System.out.println(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
