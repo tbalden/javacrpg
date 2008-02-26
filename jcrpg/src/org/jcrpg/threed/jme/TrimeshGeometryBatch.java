@@ -281,7 +281,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			boolean needsUpdate = true;//true;
 			if (lastLeft!=null)
 			{
-				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.05f)
+				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
 				{
 					needsUpdate = false;
 				} else
