@@ -19,6 +19,7 @@
 package org.jcrpg.apps;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
@@ -28,12 +29,14 @@ import org.jcrpg.world.time.Time;
 
 public class Jcrpg {
 
+	public static Logger LOGGER = null;
 	/**
      * @param args
      */
     public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
-    	java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
+    	LOGGER = java.util.logging.Logger.getLogger("");
+    	LOGGER.setLevel(Level.WARNING); //LOGGER.setLevel(Level.SEVERE);
     	try {
     		start();
     	} catch (Exception ex)

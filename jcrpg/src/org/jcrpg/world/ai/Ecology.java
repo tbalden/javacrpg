@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 
@@ -52,8 +53,8 @@ public class Ecology {
 		} else
 		{
 			if (self == J3DCore.getInstance().gameState.player) {
-				System.out.println("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
-				System.out.println("Ecology.calcGroupsOfEncounter TARGET = "+target.id);
+				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
+				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.id);
 			}
 			toFill.encounteredGroupIds.put(target, groupIds);
 		}
@@ -69,13 +70,13 @@ public class Ecology {
 			if (targetEntity==entity) continue;
 			if (entity==J3DCore.getInstance().gameState.player)
 			{
-				//System.out.println("Checking "+targetEntity.id);
+				//Jcrpg.LOGGER.info("Checking "+targetEntity.id);
 			}
 			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
 			if (r==DistanceBasedBoundary.zero) continue; // no common part
 			if (entity==J3DCore.getInstance().gameState.player)
 			{
-				System.out.println("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
+				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
 			}
 			PreEncounterInfo pre = null;
 			if (staticEntities.size()<=counter)
@@ -145,7 +146,7 @@ public class Ecology {
 		{
 			entity.liveOneTurn(getNearbyEncounters(entity));
 		}
-		System.out.println("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
+		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
 		J3DCore.getInstance().updateDisplay(null);
 	}

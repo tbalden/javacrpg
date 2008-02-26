@@ -20,6 +20,7 @@ package org.jcrpg.threed.jme;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
@@ -242,7 +243,7 @@ public class GeometryBatchHelper {
 
     public void updateAll()
     {
-    	System.out.println(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
+    	Jcrpg.LOGGER.info(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
     	{
 	    	HashSet<ModelGeometryBatch> removables = new HashSet<ModelGeometryBatch>();
 	    	for (ModelGeometryBatch batch: modelBatchMap.values())

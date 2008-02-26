@@ -20,6 +20,7 @@ package org.jcrpg.ui.window;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
@@ -88,18 +89,18 @@ public abstract class InputWindow extends Window implements KeyListener{
 	public int getInputPlace(InputBase input)
 	{
 		int i=0;
-		//System.out.println(input);
+		//Jcrpg.LOGGER.info(input);
 		for (InputBase cinput:inputs)
 		{
-			//System.out.println(cinput);
+			//Jcrpg.LOGGER.info(cinput);
 			if (input.equals(cinput))
 			{
-				System.out.println("INPUT FOUND "+i);
+				Jcrpg.LOGGER.info("INPUT FOUND "+i);
 				return i;
 			}
 			i++;
 		}
-		//System.out.println("INPUT NOT FOUND "+i);
+		//Jcrpg.LOGGER.info("INPUT NOT FOUND "+i);
 		return -1;
 	}
 	

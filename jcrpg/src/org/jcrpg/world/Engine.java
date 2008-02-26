@@ -17,6 +17,7 @@
 
 package org.jcrpg.world;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.world.time.Time;
 
 public class Engine implements Runnable {
@@ -50,7 +51,7 @@ public class Engine implements Runnable {
 				if (ticksLeft<=0)
 				{
 					synchronized (mutex) {
-						System.out.println("NEW TURN FOR AI STARTED... pause");
+						Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
 						ticksLeft = SECONDS_PER_TURN;
 						pause = true;
 						turnCome = true;

@@ -20,6 +20,7 @@ package org.jcrpg.world.climate;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.world.climate.impl.generic.Day;
 import org.jcrpg.world.climate.impl.generic.Night;
 import org.jcrpg.world.time.Time;
@@ -65,17 +66,17 @@ public class Season implements ConditionGiver {
 	{
 		if (halfDayPercentage==-1) halfDayPercentage = dayPercentage/2;
 		float p = time.getCurrentDayPercent();
-		//if (p!=0)System.out.println("CURRENT DAY PERCENT = "+p);
+		//if (p!=0)Jcrpg.LOGGER.info("CURRENT DAY PERCENT = "+p);
 		if (p>50-(halfDayPercentage) && p<50+(halfDayPercentage))
 		{
 			float r = (float) (((p-(50-(halfDayPercentage))) / (dayPercentage*1f)) * 100f);
-			//if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
+			//if (p!=0)Jcrpg.LOGGER.info("dayOrNightPeriodPercentage = "+r);
 			return r;
 		}
 		int nightPercentage = 100-dayPercentage;
 		float pNew = (p+ (nightPercentage/2))%100;
 		float r = (float)( (pNew / (nightPercentage*1f) ) * -100f );
-		//if (p!=0)System.out.println("dayOrNightPeriodPercentage = "+r);
+		//if (p!=0)Jcrpg.LOGGER.info("dayOrNightPeriodPercentage = "+r);
 		return r;
 	}
 	
