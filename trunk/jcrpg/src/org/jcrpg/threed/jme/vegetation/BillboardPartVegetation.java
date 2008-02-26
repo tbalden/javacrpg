@@ -330,7 +330,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														added+=8;
 													}
 												} else
-												if (model.LOD==0 || HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1 || !J3DCore.DETAILED_TREES && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>2) 
+												if (J3DCore.DETAILED_TREE_FOLIAGE && model.LOD==0 || J3DCore.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1 || !J3DCore.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>2) 
 												{
 													float x = sumX/counter;
 													float y = sumY/counter;
