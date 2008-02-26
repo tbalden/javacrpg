@@ -63,8 +63,8 @@ public class LoadMenu extends Window implements KeyListener {
 		text = FontUtils.textVerdana;
         try {
         	
-        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.7f*1.2f*(core.getDisplay().getHeight() / 2), 
-        			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.95f*1.2f*(core.getDisplay().getHeight() / 2), 
+        			core.getDisplay().getWidth() / 2, 0.975f*core.getDisplay().getHeight() / 2);
         	hudQuad.setRenderState(base.hud.hudAS);
         	Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/logo.png", 1.2f*core.getDisplay().getWidth() / 5f, 1.2f*(core.getDisplay().getHeight() / 11), 
         			core.getDisplay().getWidth() / 2, 1.63f*core.getDisplay().getHeight() / 2);
@@ -159,9 +159,9 @@ public class LoadMenu extends Window implements KeyListener {
 		buttons.clear();
 		int counter = 0;
 		float sizeX = 0.35f* 1.2f * core.getDisplay().getWidth() / 5f;
-		float sizeY = 0.85f* (core.getDisplay().getHeight() / 11);
-		float startPosY = 1.33f*core.getDisplay().getHeight() / 2;
-		float stepPosY = 0.87f* 1.1f*(core.getDisplay().getHeight() / 11);
+		float sizeY = 0.87f* (core.getDisplay().getHeight() / 11);
+		float startPosY = 1.265f*core.getDisplay().getHeight() / 2;
+		float stepPosY = 0.879f* 1.1f*(core.getDisplay().getHeight() / 11);
 		float posX = 0.75f*core.getDisplay().getWidth() / 2;
 		for (SaveSlotData data:dataList.values())
 		{
