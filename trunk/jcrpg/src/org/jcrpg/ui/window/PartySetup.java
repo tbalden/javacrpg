@@ -716,6 +716,7 @@ public class PartySetup extends PagedInputWindow {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
 		if (base.equals(raceSelect))
