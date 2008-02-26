@@ -284,6 +284,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
 				{
 					needsUpdate = false;
+					if ((parent.getLocks()&Node.LOCKED_MESH_DATA)==0) parent.lockMeshes();
 				} else
 				{
 					parent.unlockMeshes();
