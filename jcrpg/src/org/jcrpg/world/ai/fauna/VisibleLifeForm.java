@@ -56,6 +56,9 @@ public class VisibleLifeForm {
 	
 	public boolean onSteep = false;
 	
+	/**
+	 * Which this life form is targeted at (as hostile or friendly).
+	 */
 	public VisibleLifeForm targetForm = null;
 
 	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {

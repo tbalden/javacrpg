@@ -89,10 +89,6 @@ public class EntityInstance {
 	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
 	{
 		int counter = 0;
-		if (this.equals(J3DCore.getInstance().gameState.player))
-		{
-			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities);
-		} else
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
 			int actions = 0;
