@@ -19,18 +19,28 @@
 package org.jcrpg.world.ai.player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
 
 public class PartyInstance extends EntityInstance {
 
 	
+	@Override
+	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
+		if (this.equals(J3DCore.getInstance().gameState.player))
+		{
+			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities);
+		}
+	}
 	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();
 	
 	public PartyInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers,

@@ -77,6 +77,7 @@ public class PlayerTurnLogic {
 		playerFakeForm.worldY = player.roamingBoundary.posY;
 		playerFakeForm.worldZ = player.roamingBoundary.posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
+		int sizeOfAll = 0;
 		for (PreEncounterInfo info:infos)
 		{
 			if (info.subject==null) continue;
@@ -120,13 +121,19 @@ public class PlayerTurnLogic {
 						VisibleLifeForm form = entityInstance.getOne(member.description,member);
 						form.targetForm = playerFakeForm;
 						forms.add(form);
+						sizeOfAll++;
 					}
 				}
 			}
 		}
-		placeVisibleForms(forms);
-		J3DCore.getInstance().mEngine.render(forms);
-		core.switchEncounterMode(true);
+		if (sizeOfAll>0) {
+			placeVisibleForms(forms);
+			J3DCore.getInstance().mEngine.render(forms);
+			core.switchEncounterMode(true);
+		} else
+		{
+			core.gameState.engine.turnFinishedForPlayer();
+		}
 	}
 	
 	public void endPlayerEncounters()
