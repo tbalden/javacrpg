@@ -21,6 +21,7 @@ package org.jcrpg.threed.scene.config;
 import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
@@ -59,6 +60,12 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(Warthogs.WARTHOG_TYPE_MALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(Warthogs.WARTHOG_TYPE_FEMALE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Warthogs.warthog_unit);
+		counter++;
+		
+		hmMobIdToModelId.put(FoxFamily.FOX_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(FoxFamily.FOX_TYPE_FEMALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(FoxFamily.FOX_TYPE_CHILD.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, FoxFamily.fox_unit);
 		counter++;
 		
 	}

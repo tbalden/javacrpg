@@ -24,6 +24,7 @@ import java.util.HashSet;
 
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
+import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
@@ -42,10 +43,12 @@ public class EcologyGenerator {
 		GorillaHorde gorillaDesc = new GorillaHorde();
 		WolfPack wolfDesc = new WolfPack();
 		Warthogs wartDesc = new Warthogs();
+		FoxFamily foxDesc = new FoxFamily();
 		ArrayList<EntityDescription> descs = new ArrayList<EntityDescription>();
 		descs.add(gorillaDesc);
 		descs.add(wolfDesc);
 		descs.add(wartDesc);
+		descs.add(foxDesc);
 		HashMap<Class<? extends Geography>, HashSet<EntityDescription>> hmGeography = new HashMap<Class<? extends Geography>, HashSet<EntityDescription>>();
 		HashMap<Class<? extends ClimateBelt>, HashSet<EntityDescription>> hmClimate = new HashMap<Class<? extends ClimateBelt>, HashSet<EntityDescription>>();
 		for (EntityDescription desc:descs)
