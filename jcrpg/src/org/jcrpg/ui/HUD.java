@@ -65,10 +65,15 @@ public class HUD {
 	public void initGameStateNodes()
 	{
         // world map area
+		
+		float dispY = 1.12f;
+		float dispX = 1.1f;
+		float sizeY = 1.05f;
+		float sizeX = 1.05f;
         
-        Quad mapQuad = new Quad("hud", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
+        Quad mapQuad = new Quad("hud", (1f/sizeX) * core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
+        mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
         mapQuad.setLightCombineMode(LightState.OFF);
         TextureState[] textures = core.gameState.world.worldMap.getMapTextures();
         mapQuad.setRenderState(textures[0]);
@@ -76,18 +81,18 @@ public class HUD {
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
 
-        mapQuad_pos = new Quad("hud_pos", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
+        mapQuad_pos = new Quad("hud_pos", 1f/sizeX *core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
         mapQuad_pos.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        mapQuad_pos.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
+        mapQuad_pos.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
         mapQuad_pos.setLightCombineMode(LightState.OFF);
         mapQuad_pos.setRenderState(textures[1]);
         mapQuad_pos.updateRenderState();
         mapQuad_pos.setRenderState(hudAS);
         hudNode.attachChild(mapQuad_pos);
         
-        Quad mapQuad_geo = new Quad("hud_geo", core.getDisplay().getWidth()/12, (core.getDisplay().getHeight()/9));
+        Quad mapQuad_geo = new Quad("hud_geo", (1f/sizeX) *core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
         mapQuad_geo.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        mapQuad_geo.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - (core.getDisplay().getWidth()/24),(core.getDisplay().getHeight()/18),0));
+        mapQuad_geo.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
         mapQuad_geo.setLightCombineMode(LightState.OFF);
         mapQuad_geo.setRenderState(textures[2]);
         mapQuad_geo.updateRenderState();
