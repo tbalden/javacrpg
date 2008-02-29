@@ -153,9 +153,16 @@ public class LocalMap {
 						continue;
 					}
 					RenderedCube c = area.getCubeAtPosition(world,wX+x,wY,wZ+z);
+					RenderedCube cBelow = area.getCubeAtPosition(world,wX+x,wY-1,wZ+z);
+					boolean water = cBelow!=null && cBelow.cube!=null && cBelow.cube.waterCube;
 					if (c==null)
 					{
-						paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)0, (byte)70);
+						if (water) {
+							paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)200, (byte)90);
+						} else
+						{
+							paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)0, (byte)70);
+						}
 					} else
 					{
 						if (c.cube!=null && c.cube.bottom!=null) {
@@ -170,13 +177,16 @@ public class LocalMap {
 									neutralColor[RED] = b[RED];
 									neutralColor[GREEN] = b[GREEN];
 									neutralColor[BLUE] = b[BLUE];
-									neutralColorSum[RED]+= b[RED];
-									neutralColorSum[GREEN]+= b[GREEN];
-									neutralColorSum[BLUE]+= b[BLUE];
-									colorsAdded++;
+									if (side.subtype.colorOverwrite) {
+										neutralColorSum[RED]+= b[RED];
+										neutralColorSum[GREEN]+= b[GREEN];
+										neutralColorSum[BLUE]+= b[BLUE];
+										colorsAdded++;
+									}
 								}
 								colorized = true;
-							}							
+							}
+							if (colorsAdded==0) colorsAdded=1;
 							paintPoint(staticLayerSet, x, z, 5, (byte)(neutralColorSum[RED]/colorsAdded), (byte)(neutralColorSum[GREEN]/colorsAdded), (byte)(neutralColorSum[BLUE]/colorsAdded), (byte)80);
 							for (int i=0; i<4; i++) {
 								colorized = false;
