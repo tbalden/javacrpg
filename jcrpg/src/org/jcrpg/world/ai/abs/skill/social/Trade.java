@@ -18,8 +18,9 @@
 
 package org.jcrpg.world.ai.abs.skill.social;
 
+import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Trade extends SkillBase {
+public class Trade extends SkillBase implements EncounterSkill {
 
 }

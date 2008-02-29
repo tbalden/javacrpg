@@ -22,12 +22,13 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.physical.Disguise;
 import org.jcrpg.world.ai.abs.skill.social.Cheating;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Swindler extends Profession {
+public class Swindler extends HumanoidProfessional {
 
 	public Swindler()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		addMajorSkill(Cheating.class);

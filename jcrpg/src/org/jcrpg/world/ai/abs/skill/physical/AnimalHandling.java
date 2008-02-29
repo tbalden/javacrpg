@@ -18,8 +18,10 @@
 
 package org.jcrpg.world.ai.abs.skill.physical;
 
+import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class AnimalHandling extends SkillBase {
+public class AnimalHandling extends SkillBase implements TurnActSkill, EncounterSkill {
 
 }

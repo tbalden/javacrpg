@@ -25,11 +25,12 @@ import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.social.Cheating;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Witch extends Profession {
+public class Witch extends HumanoidProfessional {
 	public Witch()
 	{
+		super();
 		genderNeed = GENDER_FEMALE;
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 13);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);

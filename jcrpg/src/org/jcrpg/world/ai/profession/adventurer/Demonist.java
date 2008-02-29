@@ -22,11 +22,12 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Demonist extends Profession {
+public class Demonist extends HumanoidProfessional {
 	public Demonist()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		addMajorSkill(Demonology.class);

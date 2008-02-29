@@ -22,11 +22,12 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Priest extends Profession {
+public class Priest extends HumanoidProfessional{
 	public Priest()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
 		addMajorSkill(CelestialMagic.class);

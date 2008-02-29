@@ -24,12 +24,15 @@ import org.jcrpg.world.ai.abs.skill.martial.Bows;
 import org.jcrpg.world.ai.abs.skill.martial.Crossbows;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.abs.skill.physical.Climbing;
+import org.jcrpg.world.ai.abs.skill.physical.Swimming;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Ranger extends Profession {
+public class Ranger extends HumanoidProfessional {
 
 	public Ranger()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
@@ -39,6 +42,8 @@ public class Ranger extends Profession {
 		addMajorSkill(Bows.class);
 		addMajorSkill(MediumBlades.class);
 		addMajorSkill(AnimalHandling.class);
+		addMinorSkill(Swimming.class);
+		addMinorSkill(Climbing.class);
 	}
 
 }

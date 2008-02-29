@@ -18,8 +18,9 @@
 
 package org.jcrpg.world.ai.abs.skill.mental;
 
+import org.jcrpg.world.ai.abs.skill.ObjectSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Artifacts extends SkillBase {
+public class Artifacts extends SkillBase implements ObjectSkill {
 
 }

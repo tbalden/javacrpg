@@ -25,12 +25,15 @@ import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.abs.skill.physical.Climbing;
+import org.jcrpg.world.ai.abs.skill.physical.Swimming;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Warrior extends Profession {
+public class Warrior extends HumanoidProfessional{
 
 	public Warrior()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 16);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONSTITUTION, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);
@@ -40,5 +43,7 @@ public class Warrior extends Profession {
 		addMinorSkill(ShortBlades.class);
 		addMajorSkill(MaceAndFlail.class);
 		addMinorSkill(StaffsAndWands.class);
+		addMinorSkill(Swimming.class);
+		addMinorSkill(Climbing.class);
 	}
 }

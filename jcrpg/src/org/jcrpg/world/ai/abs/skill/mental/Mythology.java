@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.abs.skill.mental;
 
+import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 /**
@@ -25,6 +26,6 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  * @author pali
  *
  */
-public class Mythology extends SkillBase {
+public class Mythology extends SkillBase implements HelperSkill {
 
 }

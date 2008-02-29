@@ -24,12 +24,13 @@ import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Crusader extends Profession {
+public class Crusader extends HumanoidProfessional {
 
 	public Crusader()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);

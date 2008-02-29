@@ -23,11 +23,12 @@ import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.mental.MagicalLore;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Mage extends Profession {
+public class Mage extends HumanoidProfessional {
 	public Mage()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		addMajorSkill(Elementarism.class);

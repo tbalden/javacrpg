@@ -25,17 +25,18 @@ import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
 import org.jcrpg.world.ai.abs.skill.physical.StrikeNerves;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 /**
  * Ninja like
  * @author pali
  *
  */
-public class Shadow extends Profession {
+public class Shadow extends HumanoidProfessional {
 
 	public Shadow()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);

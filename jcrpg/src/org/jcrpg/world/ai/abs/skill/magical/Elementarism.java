@@ -19,7 +19,8 @@
 package org.jcrpg.world.ai.abs.skill.magical;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Elementarism extends SkillBase {
+public class Elementarism extends SkillBase implements TurnActSkill {
 
 }
