@@ -7,6 +7,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
+[X] local map on screen
+ [ ] develop it more, sides not just bottom
 
 [ ] Skill tuner page with subframes - selecting a group of skills makes changing to those skill tuners - just like in Wiz7
 [ ] common Profession extension for superclass of professions with pre-added normal skills available for any profession
@@ -15,7 +17,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 of the enemy or friend. We'll have to develop different 'words' for the different skills to make it really funny, and make 
 a peaceful solution available in most of the cases.
 
-
+[ ] possible portraits? http://search.freegamedev.net/artitems/tag/campaigns
 
 [ ] rocks to mountain side with new RenderedHashGeneratedSides probably...
 

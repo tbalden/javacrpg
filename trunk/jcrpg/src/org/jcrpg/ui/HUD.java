@@ -20,6 +20,7 @@ package org.jcrpg.ui;
 import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.map.LocalMap;
 import org.jcrpg.ui.meter.DirectionTimeMeter;
 import org.jcrpg.ui.text.TextBox;
 import org.jcrpg.ui.text.TextEntry;
@@ -50,6 +51,7 @@ public class HUD {
 	public SystemRelated sr;
 	public TextBox mainBox;
 	public Characters characters;
+	public LocalMap localMap;
 	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
@@ -60,44 +62,32 @@ public class HUD {
 		
 		
 	}
-	Quad mapQuad_pos;
+	Quad mapQuad;
 	
+	/**
+	 * Used for reinitializing too when gamestate is ready.
+	 */
 	public void initGameStateNodes()
 	{
         // world map area
-		
+        
 		float dispY = 1.12f;
 		float dispX = 1.1f;
 		float sizeY = 1.05f;
 		float sizeX = 1.05f;
-        
-        Quad mapQuad = new Quad("hud", (1f/sizeX) * core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
+        if (mapQuad!=null) mapQuad.removeFromParent();
+        mapQuad = new Quad("hud", (1f/sizeX) * core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
         mapQuad.setLightCombineMode(LightState.OFF);
-        TextureState[] textures = core.gameState.world.worldMap.getMapTextures();
+        localMap = new LocalMap(core.gameState.world, core.renderedArea);
+        TextureState[] textures = localMap.getMapTextures();
         mapQuad.setRenderState(textures[0]);
         mapQuad.updateRenderState();
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
+        hudNode.updateRenderState();
 
-        mapQuad_pos = new Quad("hud_pos", 1f/sizeX *core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
-        mapQuad_pos.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        mapQuad_pos.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
-        mapQuad_pos.setLightCombineMode(LightState.OFF);
-        mapQuad_pos.setRenderState(textures[1]);
-        mapQuad_pos.updateRenderState();
-        mapQuad_pos.setRenderState(hudAS);
-        hudNode.attachChild(mapQuad_pos);
-        
-        Quad mapQuad_geo = new Quad("hud_geo", (1f/sizeX) *core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
-        mapQuad_geo.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        mapQuad_geo.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
-        mapQuad_geo.setLightCombineMode(LightState.OFF);
-        mapQuad_geo.setRenderState(textures[2]);
-        mapQuad_geo.updateRenderState();
-        mapQuad_geo.setRenderState(hudAS);
-        hudNode.attachChild(mapQuad_geo);		
 	}
 	
 	public void initNodes() throws Exception

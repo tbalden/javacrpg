@@ -26,7 +26,7 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 public class Sand extends Ground {
 
 	public static final String TYPE_SAND = "SAND";
-	public static final SideSubType SUBTYPE_SAND = new GroundSubType(TYPE_SAND+"_SAND");
+	public static final SideSubType SUBTYPE_SAND = new GroundSubType(TYPE_SAND+"_SAND",new byte[]{(byte)240,(byte)240,100});
 	
 	static Side[][] SAND = new Side[][] { null, null, null,null,null,{new Side(TYPE_SAND,SUBTYPE_SAND)} };
 	
