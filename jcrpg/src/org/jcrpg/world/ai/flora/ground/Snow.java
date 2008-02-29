@@ -26,7 +26,7 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 public class Snow extends Ground {
 
 	public static final String TYPE_SNOW = "SNOW";
-	public static final SideSubType SUBTYPE_SNOW = new GroundSubType(TYPE_SNOW+"_SNOW");
+	public static final SideSubType SUBTYPE_SNOW = new GroundSubType(TYPE_SNOW+"_SNOW",new byte[] { (byte)240,(byte)240,(byte)240 });
 	
 	static Side[][] SNOW = new Side[][] { null, null, null,null,null,{new Side(TYPE_SNOW,SUBTYPE_SNOW)} };
 	
