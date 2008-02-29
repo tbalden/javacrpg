@@ -142,9 +142,14 @@ public class LocalMap {
 				for (int x=0; x<localMapSizeX; x++)
 				{
 					//int offset = ((z*localMapSizeX)+x)*4;
-					if (x==centerX && z==centerY || x==centerXPlus && z==centerYPlus)
+					if (x==centerX && z==centerY)
 					{
-						paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)20, (byte)20, (byte)60);
+						paintPointAllSides(staticLayerSet, x, z, (byte)235, (byte)20, (byte)20, (byte)110);
+						continue;
+					}
+					if (x==centerXPlus && z==centerYPlus)
+					{
+						paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)100, (byte)100, (byte)110);
 						continue;
 					}
 					RenderedCube c = area.getCubeAtPosition(world,wX+x,wY,wZ+z);
@@ -155,14 +160,33 @@ public class LocalMap {
 					{
 						if (c.cube!=null && c.cube.bottom!=null) {
 							boolean colorized = false;
+							byte[] neutralColor = new byte[] {(byte)255, (byte)255, (byte)255, (byte)70};
 							for (Side side:c.cube.bottom)
 							{
 								byte[] b = side.subtype.colorBytes;
 								if (!colorized || colorized && side.subtype.colorOverwrite) {
 									paintPoint(staticLayerSet, x, z, 5, b[RED], b[GREEN], b[BLUE], (byte)80);
+									neutralColor[RED] = b[RED];
+									neutralColor[GREEN] = b[GREEN];
+									neutralColor[BLUE] = b[BLUE];
 								}
 								colorized = true;
-							} 
+							}							
+							for (int i=0; i<4; i++) {
+								colorized = false;
+								if (c.cube.sides!=null && c.cube.sides[i]!=null)
+								for (Side side:c.cube.sides[i])
+								{
+									byte[] b = side.subtype.colorBytes;
+									if (!colorized || colorized && side.subtype.colorOverwrite) {
+										paintPoint(staticLayerSet, x, z, i, b[RED], b[GREEN], b[BLUE], (byte)80);
+									}
+									colorized = true;
+								}
+								if (!colorized) { // color this with neutral (ground) color
+									paintPoint(staticLayerSet, x, z, i, neutralColor[RED], neutralColor[GREEN], neutralColor[BLUE], (byte)80);
+								}
+							}
 						} else
 						{
 							System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
