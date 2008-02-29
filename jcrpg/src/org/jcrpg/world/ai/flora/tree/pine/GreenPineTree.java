@@ -27,7 +27,7 @@ import org.jcrpg.world.ai.flora.tree.Tree;
 public class GreenPineTree extends Tree {
 	
 	public static final String TYPE_PINE = "PINE";
-	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_PINE+"_TREE");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_PINE+"_TREE",TREE_COLOR);
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_PINE,SUBTYPE_TREE)} };
 	

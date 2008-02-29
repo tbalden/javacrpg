@@ -27,7 +27,7 @@ import org.jcrpg.world.ai.flora.tree.Tree;
 public class OakTree extends Tree {
 
 	public static final String TYPE_FOREST = "OAK";
-	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_TREE");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_TREE",TREE_COLOR);
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	

@@ -161,17 +161,23 @@ public class LocalMap {
 						if (c.cube!=null && c.cube.bottom!=null) {
 							boolean colorized = false;
 							byte[] neutralColor = new byte[] {(byte)255, (byte)255, (byte)255, (byte)70};
+							int[] neutralColorSum = new int[] {0,0,0};
+							int colorsAdded = 0;
 							for (Side side:c.cube.bottom)
 							{
 								byte[] b = side.subtype.colorBytes;
 								if (!colorized || colorized && side.subtype.colorOverwrite) {
-									paintPoint(staticLayerSet, x, z, 5, b[RED], b[GREEN], b[BLUE], (byte)80);
 									neutralColor[RED] = b[RED];
 									neutralColor[GREEN] = b[GREEN];
 									neutralColor[BLUE] = b[BLUE];
+									neutralColorSum[RED]+= b[RED];
+									neutralColorSum[GREEN]+= b[GREEN];
+									neutralColorSum[BLUE]+= b[BLUE];
+									colorsAdded++;
 								}
 								colorized = true;
 							}							
+							paintPoint(staticLayerSet, x, z, 5, (byte)(neutralColorSum[RED]/colorsAdded), (byte)(neutralColorSum[GREEN]/colorsAdded), (byte)(neutralColorSum[BLUE]/colorsAdded), (byte)80);
 							for (int i=0; i<4; i++) {
 								colorized = false;
 								if (c.cube.sides!=null && c.cube.sides[i]!=null)

@@ -27,7 +27,7 @@ import org.jcrpg.world.ai.flora.tree.Tree;
 public class JunglePalmTrees extends Tree {
 	
 	public static final String TYPE_FOREST = "JUNGLE";
-	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_PALMS");
+	public static final SideSubType SUBTYPE_TREE = new StickingOut(TYPE_FOREST+"_PALMS",TREE_COLOR);
 	
 	static Side[][] TREE = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_TREE)} };
 	
