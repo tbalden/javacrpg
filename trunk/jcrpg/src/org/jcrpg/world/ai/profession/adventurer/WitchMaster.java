@@ -24,16 +24,17 @@ import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 /**
  * Self rigorous magic user.
  * @author pali
  *
  */
-public class WitchMaster extends Profession {
+public class WitchMaster extends HumanoidProfessional {
 	public WitchMaster()
 	{
+		super();
 		genderNeed = GENDER_MALE;
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONSTITUTION, 13);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);

@@ -19,7 +19,9 @@
 package org.jcrpg.world.ai.abs.skill.magical;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
-public class Alchemy extends SkillBase {
+public class Alchemy extends SkillBase implements TurnActSkill, WorkSkill {
 
 }

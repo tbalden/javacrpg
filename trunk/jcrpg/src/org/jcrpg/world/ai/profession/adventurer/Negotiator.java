@@ -23,12 +23,13 @@ import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.social.Diplomacy;
 import org.jcrpg.world.ai.abs.skill.social.Laws;
 import org.jcrpg.world.ai.abs.skill.social.Trade;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Negotiator extends Profession {
+public class Negotiator extends HumanoidProfessional {
 
 	public Negotiator()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		addMajorSkill(Diplomacy.class);

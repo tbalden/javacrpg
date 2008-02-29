@@ -18,8 +18,10 @@
 
 package org.jcrpg.world.ai.abs.skill.social;
 
+import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Politics extends SkillBase {
+public class Politics extends SkillBase implements EncounterSkill, TurnActSkill {
 
 }

@@ -24,14 +24,16 @@ import org.jcrpg.world.ai.abs.skill.martial.Crossbows;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
+import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Thief extends Profession {
+public class Thief extends HumanoidProfessional {
 
 	public Thief()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 14);
 		addMajorSkill(LocksAndTraps.class);
@@ -41,6 +43,7 @@ public class Thief extends Profession {
 		addMinorSkill(Crossbows.class);
 		addMinorSkill(MediumBlades.class);
 		addMinorSkill(ShortBlades.class);
+		addMinorSkill(Climbing.class);
 	}
 
 }

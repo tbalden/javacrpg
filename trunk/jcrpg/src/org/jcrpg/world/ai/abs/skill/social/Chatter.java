@@ -18,8 +18,9 @@
 
 package org.jcrpg.world.ai.abs.skill.social;
 
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Chatter extends SkillBase {
+public class Chatter extends SkillBase implements InterceptionSkill{
 
 }

@@ -18,8 +18,10 @@
 
 package org.jcrpg.world.ai.abs.skill.physical;
 
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Hiding extends SkillBase {
+public class Hiding extends SkillBase implements InterceptionSkill, TurnActSkill{
 
 }

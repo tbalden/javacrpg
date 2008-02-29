@@ -16,11 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.abs.skill.physical;
+package org.jcrpg.world.ai.abs.skill;
 
-import org.jcrpg.world.ai.abs.skill.HelperSkill;
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-
-public class Climbing extends SkillBase implements HelperSkill {
+/**
+ * Skill that can be used on objects - repairing, identify...
+ * @author pali
+ *
+ */
+public interface ObjectSkill {
 
 }

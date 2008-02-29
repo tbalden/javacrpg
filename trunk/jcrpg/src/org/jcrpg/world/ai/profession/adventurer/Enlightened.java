@@ -24,17 +24,18 @@ import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 /**
  * Samurai like
  * @author pali
  *
  */
-public class Enlightened extends Profession {
+public class Enlightened extends HumanoidProfessional {
 
 	public Enlightened()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.KARMA, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);

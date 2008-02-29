@@ -25,11 +25,12 @@ import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.physical.Hiding;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Bard extends Profession {
+public class Bard extends HumanoidProfessional {
 	public Bard()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);

@@ -19,7 +19,8 @@
 package org.jcrpg.world.ai.abs.skill.magical;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class CelestialMagic extends SkillBase {
+public class CelestialMagic extends SkillBase implements TurnActSkill {
 
 }

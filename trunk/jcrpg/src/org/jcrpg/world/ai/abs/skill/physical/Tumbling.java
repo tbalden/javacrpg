@@ -18,8 +18,10 @@
 
 package org.jcrpg.world.ai.abs.skill.physical;
 
+import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Tumbling extends SkillBase {
+public class Tumbling extends SkillBase implements TurnActSkill, HelperSkill {
 
 }

@@ -24,17 +24,18 @@ import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.martial.HandsAndFeet;
 import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 /**
  * Ninja like
  * @author pali
  *
  */
-public class Monk extends Profession {
+public class Monk extends HumanoidProfessional {
 
 	public Monk()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);

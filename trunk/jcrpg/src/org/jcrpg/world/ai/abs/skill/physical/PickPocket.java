@@ -18,8 +18,9 @@
 
 package org.jcrpg.world.ai.abs.skill.physical;
 
+import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class PickPocket extends SkillBase {
+public class PickPocket extends SkillBase implements EncounterSkill {
 
 }

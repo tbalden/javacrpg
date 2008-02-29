@@ -19,12 +19,13 @@
 package org.jcrpg.world.ai.abs.skill.martial;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 /**
  * Fighting with bites - like dog/wolf and such.
  * @author pali
  *
  */
-public class Throwing extends SkillBase {
+public class Throwing extends SkillBase implements TurnActSkill  {
 
 }

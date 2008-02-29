@@ -86,7 +86,12 @@ public class Profession {
 		additionalLearntSkills.put(skill, level);
 		skillLearnModifier.multipliers.put(skill, multiplier);
 	}
-	
+
+	public void addSkill(Class<? extends SkillBase> skill)
+	{
+		addSkill(skill, 0, 1);
+	}
+
 	public void addMinorSkill(Class<? extends SkillBase> skill)
 	{
 		addSkill(skill, 6, MINOR);

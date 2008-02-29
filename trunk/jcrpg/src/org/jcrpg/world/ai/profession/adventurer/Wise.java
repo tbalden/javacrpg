@@ -24,12 +24,13 @@ import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.Strategy;
 import org.jcrpg.world.ai.abs.skill.social.Laws;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
-import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
-public class Wise extends Profession {
+public class Wise extends HumanoidProfessional {
 
 	public Wise()
 	{
+		super();
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);

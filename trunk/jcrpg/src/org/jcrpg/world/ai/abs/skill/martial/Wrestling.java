@@ -19,7 +19,8 @@
 package org.jcrpg.world.ai.abs.skill.martial;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Wrestling extends SkillBase {
+public class Wrestling extends SkillBase implements TurnActSkill  {
 
 }
