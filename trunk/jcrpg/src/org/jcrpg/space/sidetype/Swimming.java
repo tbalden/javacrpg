@@ -20,7 +20,10 @@ public class Swimming extends SideSubType {
 
 	public Swimming(String id) {
 		super(id);
-		// TODO Auto-generated constructor stub
+	}
+
+	public Swimming(String id, byte[] color) {
+		super(id, color);
 	}
 
 }

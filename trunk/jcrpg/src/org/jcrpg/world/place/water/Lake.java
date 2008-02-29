@@ -35,10 +35,10 @@ import com.jme.math.Vector3f;
 public class Lake extends Water {
 
 	public static final String TYPE_LAKE = "LAKE";
-	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_LAKE+"_WATER");
+	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_LAKE+"_WATER",WATER_COLOR);
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_LAKE+"_ROCKSIDE");
 	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_LAKE+"_ROCKBOTTOM");
-	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_LAKE+"_WATER_EMPTY");
+	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_LAKE+"_WATER_EMPTY",WATER_COLOR);
 
 	static Side[] WATER = {new Side(TYPE_LAKE,SUBTYPE_WATER)};
 	static Side[] ROCKSIDE = {new Side(TYPE_LAKE,SUBTYPE_ROCKSIDE)};

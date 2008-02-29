@@ -33,6 +33,7 @@ public abstract class Water extends Geography {
 	public boolean noWaterInTheBed = false;
 	public boolean sweetWater = false;
 	public int depth = 1;
+	public static byte[] WATER_COLOR = new byte[]{0,0,(byte)210};
 	
 	public Water(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int depth, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception{
 		super(id,parent,loc,worldGroundLevel,worldGroundLevel,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);

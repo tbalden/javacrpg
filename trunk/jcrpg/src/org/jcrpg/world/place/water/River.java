@@ -39,13 +39,13 @@ import org.jcrpg.world.place.WorldSizeFlowDirections;
 public class River extends Water implements FlowGeography {
 
 	public static final String TYPE_RIVER = "RIVER";
-	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER");
-	public static final Climbing SUBTYPE_WATERFALL = new Climbing(TYPE_RIVER+"_WATERFALL");
+	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER",WATER_COLOR);
+	public static final Climbing SUBTYPE_WATERFALL = new Climbing(TYPE_RIVER+"_WATERFALL",WATER_COLOR);
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_RIVER+"_WATERFALL_INTERSECT");
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_RIVER+"_ROCKSIDE");
 	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_RIVER+"_ROCKBOTTOM");
 	public static final Climbing SUBTYPE_ROCKBOTTOM_STEEP = new Climbing(TYPE_RIVER+"_ROCKBOTTOM_STEEP");
-	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_RIVER+"_WATER_EMPTY");
+	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_RIVER+"_WATER_EMPTY",WATER_COLOR);
 
 	static Side[] WATER = {new Side(TYPE_RIVER,SUBTYPE_WATER)};
 	static Side[] WATERFALL = {new Side(TYPE_RIVER,SUBTYPE_WATERFALL)};
