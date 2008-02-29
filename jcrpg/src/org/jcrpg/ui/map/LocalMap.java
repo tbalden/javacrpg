@@ -62,12 +62,12 @@ public class LocalMap {
 	// 64
 	// 128
 	
-	public static int localMapSizeX = 11; 
-	public static int localMapSizeY = 11;
-	public static int centerX = 5;
-	public static int centerY = 5;
-	public int centerXPlus = 6;
-	public int centerYPlus = 5;
+	public static int localMapSizeX = 13; 
+	public static int localMapSizeY = 13;
+	public static int centerX = 7;
+	public static int centerY = 7;
+	public int centerXPlus = 8;
+	public int centerYPlus = 7;
 	public int pointSizeX =5, pointSizeY = 5;
 	public int pointSize = pointSizeX*pointSizeY;
 	
