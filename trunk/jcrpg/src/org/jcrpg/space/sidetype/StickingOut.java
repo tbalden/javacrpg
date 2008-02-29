@@ -20,7 +20,10 @@ public class StickingOut extends SideSubType {
 
 	public StickingOut(String id) {
 		super(id);
-		// TODO Auto-generated constructor stub
+	}
+
+	public StickingOut(String id, byte[] color) {
+		super(id, color);
 	}
 
 }

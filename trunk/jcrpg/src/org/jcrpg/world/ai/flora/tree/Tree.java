@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.flora.tree;
 import org.jcrpg.world.ai.flora.Flora;
 
 public class Tree extends Flora {
+	public static byte[] TREE_COLOR = new byte[]{0,0,0};
 	public Tree()
 	{
 		super();
