@@ -31,6 +31,11 @@ public class Side extends ChangingImpl {
 	public static final SideSubType DEFAULT_SUBTYPE = new SideSubType("0");
 	public static final String DEFAULT_TYPE = "0";
 
+	/**
+	 * Color for the maps.
+	 */
+	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
+
 	public Side()
 	{
 		this.type = DEFAULT_TYPE;

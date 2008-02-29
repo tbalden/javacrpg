@@ -157,5 +157,13 @@ public class RenderedArea {
 		
 	}
 	
+	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ)
+	{
+		worldX = world.shrinkToWorld(worldX);
+		worldZ = world.shrinkToWorld(worldZ);
+		int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+		return worldCubeCache.get(key);
+	}
+	
 	
 }

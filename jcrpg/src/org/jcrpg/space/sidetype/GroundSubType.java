@@ -22,4 +22,8 @@ public class GroundSubType extends SideSubType {
 		super(id);
 	}
 
+	public GroundSubType(String id, byte[] color) {
+		super(id, color);
+	}
+
 }

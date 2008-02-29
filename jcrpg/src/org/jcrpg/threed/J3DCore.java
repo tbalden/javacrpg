@@ -906,6 +906,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false);
 		uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
 		gameState.world.worldMap.update(gameState.viewPositionX/gameState.world.magnification, gameState.viewPositionY/gameState.world.magnification, gameState.viewPositionZ/gameState.world.magnification);
+		uiBase.hud.localMap.update(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ,gameState.viewDirection);
 		uiBase.hud.update();
 
 		/*

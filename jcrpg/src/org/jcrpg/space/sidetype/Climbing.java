@@ -22,4 +22,8 @@ public class Climbing extends SideSubType {
 		super(id);
 	}
 
+	public Climbing(String id, byte[] color) {
+		super(id, color);
+	}
+
 }

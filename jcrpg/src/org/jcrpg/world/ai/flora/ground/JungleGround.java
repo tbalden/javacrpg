@@ -26,7 +26,7 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 public class JungleGround extends Ground {
 
 	public static final String TYPE_JUNGLE = "JUNGLE";
-	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_JUNGLE+"_GROUND");
+	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_JUNGLE+"_GROUND", new byte[]{40,(byte)140,40});
 	
 	static Side[][] JUNGLEGROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_JUNGLE,SUBTYPE_GROUND)} };
 	

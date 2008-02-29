@@ -79,6 +79,19 @@ public class Cube extends ChangingImpl {
 		{
 			this.sides[i] = new Side[] {sides[i]};
 		}
+		fillSideFields();
+	}
+	public void fillSideFields()
+	{
+		for (int i=0; i<sides.length; i++)
+		{
+			if (i==0) n = this.sides[i];
+			if (i==1) e = this.sides[i];
+			if (i==2) s = this.sides[i];
+			if (i==3) w = this.sides[i];
+			if (i==4) top = this.sides[i];
+			if (i==5) bottom = this.sides[i];
+		}
 	}
 
 	public Cube(Cube c1, Cube c2, int x, int y, int z, int steepDir) {
@@ -171,6 +184,7 @@ public class Cube extends ChangingImpl {
 			internalCube = c1.internalCube||c2.internalCube;
 			this.sides[i] = merged;
 		}
+		fillSideFields();
 		
 	}
 	
@@ -192,6 +206,7 @@ public class Cube extends ChangingImpl {
 		{
 			this.sides[i] = sides[i];
 		}
+		fillSideFields();
 	}
 	
 	public Side[] getSide(int sideId)
