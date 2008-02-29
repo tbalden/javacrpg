@@ -173,20 +173,30 @@ public class LocalMap {
 							for (Side side:c.cube.bottom)
 							{
 								byte[] b = side.subtype.colorBytes;
-								if (!colorized || colorized && side.subtype.colorOverwrite) {
+								if (!colorized || side.subtype.colorOverwrite) {
 									neutralColor[RED] = b[RED];
 									neutralColor[GREEN] = b[GREEN];
 									neutralColor[BLUE] = b[BLUE];
 									if (side.subtype.colorOverwrite) {
-										neutralColorSum[RED]+= b[RED];
-										neutralColorSum[GREEN]+= b[GREEN];
-										neutralColorSum[BLUE]+= b[BLUE];
+										neutralColorSum[RED]+= ((int)b[RED]+256)%256;
+										neutralColorSum[GREEN]+= ((int)b[GREEN]+256)%256;
+										neutralColorSum[BLUE]+= ((int)b[BLUE]+256)%256;
 										colorsAdded++;
+										/*if (colorsAdded==2)
+										{
+											System.out.println(side.subtype.id);
+											System.out.println("C: "+c.cube);
+											System.out.println("C: "+neutralColorSum[GREEN]);
+											System.out.println("C: "+(byte)(neutralColorSum[GREEN]/colorsAdded));
+										}*/
 									}
 								}
 								colorized = true;
 							}
 							if (colorsAdded==0) colorsAdded=1;
+							neutralColor[RED] = (byte)(neutralColorSum[RED]/colorsAdded);
+							neutralColor[GREEN] = (byte)(neutralColorSum[GREEN]/colorsAdded);
+							neutralColor[BLUE] = (byte)(neutralColorSum[BLUE]/colorsAdded);
 							paintPoint(staticLayerSet, x, z, 5, (byte)(neutralColorSum[RED]/colorsAdded), (byte)(neutralColorSum[GREEN]/colorsAdded), (byte)(neutralColorSum[BLUE]/colorsAdded), (byte)80);
 							for (int i=0; i<4; i++) {
 								colorized = false;
@@ -205,7 +215,7 @@ public class LocalMap {
 							}
 						} else
 						{
-							System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
+							//System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
 							paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)255, (byte)255, (byte)70);
 						}
 					}
