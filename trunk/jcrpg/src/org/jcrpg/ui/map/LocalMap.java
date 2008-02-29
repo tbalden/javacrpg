@@ -68,12 +68,55 @@ public class LocalMap {
 	public static int centerY = 5;
 	public int centerXPlus = 6;
 	public int centerYPlus = 5;
+	public int pointSizeX =5, pointSizeY = 5;
+	public int pointSize = pointSizeX*pointSizeY;
 	
-	public byte[] staticLayerSet = new byte[localMapSizeX*localMapSizeY*4];
-	public byte[] dynamicLayerSet1 = new byte[localMapSizeX*localMapSizeY*4];
-	public byte[] dynamicLayerSet2 = new byte[localMapSizeX*localMapSizeY*4];
+	public byte[] staticLayerSet = new byte[localMapSizeX*localMapSizeY*4*pointSize];
+	public byte[] dynamicLayerSet1 = new byte[localMapSizeX*localMapSizeY*4*pointSize];
+	public byte[] dynamicLayerSet2 = new byte[localMapSizeX*localMapSizeY*4*pointSize];
 	
 	public int RED = 0, GREEN = 1, BLUE = 2, ALPHA = 3;
+	
+
+	public void paintPointAllSides(byte[] set, int x, int y, byte r, byte g, byte b, byte a)
+	{
+		for (int i=0; i<6; i++)
+		{
+			paintPoint(set, x, y, i, r, g, b, a);
+		}
+	}
+	public void paintPoint(byte[] set, int x, int y, int side, byte r, byte g, byte b, byte a)
+	{
+		for (byte[] p : sideOffsets[side])
+		{
+			int offset = (((y*pointSizeY+p[0])*(localMapSizeX*pointSizeX)+x*pointSizeX+p[1]))*4;
+			if (offset<0 || offset+ALPHA>=set.length) return;
+			set[offset+RED] = r;
+			set[offset+GREEN] = g;
+			set[offset+BLUE] = b;
+			set[offset+ALPHA] = a;
+		}
+	}
+	
+	
+	public byte[][][] sideOffsets = new byte[][][]{
+			//North 0
+			{{-2,2},{-1,2},{0,2},{1,2},{2,2}},
+			//East 1
+			{{2,-1},{2,0},{2,1}},
+			//South 2
+			{{-2,-2},{-1,-2},{0,-2},{1,-2},{2,-2}},
+			//West 3
+			{{-2,-1},{-2,0},{-2,1}},
+			//Top 4
+			{},
+			//Bottom 5
+			{
+				{-1,-1},{-1,0},{-1,1},
+				{0,-1},{0,0},{0,1},
+				{1,-1},{1,0},{1,1}
+			},
+	};
 	
 	public void update() {
 		try {
@@ -98,22 +141,16 @@ public class LocalMap {
 			{
 				for (int x=0; x<localMapSizeX; x++)
 				{
-					int offset = ((z*localMapSizeX)+x)*4;
+					//int offset = ((z*localMapSizeX)+x)*4;
 					if (x==centerX && z==centerY || x==centerXPlus && z==centerYPlus)
 					{
-						staticLayerSet[offset+RED] = (byte)255;
-						staticLayerSet[offset+GREEN] = 20;
-						staticLayerSet[offset+BLUE] = 20;
-						staticLayerSet[offset+ALPHA] = 60;
+						paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)20, (byte)20, (byte)60);
 						continue;
 					}
 					RenderedCube c = area.getCubeAtPosition(world,wX+x,wY,wZ+z);
 					if (c==null)
 					{
-						staticLayerSet[offset+RED] = 0;
-						staticLayerSet[offset+GREEN] = 0;
-						staticLayerSet[offset+BLUE] = 0;
-						staticLayerSet[offset+ALPHA] = 70;
+						paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)0, (byte)70);
 					} else
 					{
 						if (c.cube!=null && c.cube.bottom!=null) {
@@ -122,20 +159,14 @@ public class LocalMap {
 							{
 								byte[] b = side.subtype.colorBytes;
 								if (!colorized || colorized && side.subtype.colorOverwrite) {
-									staticLayerSet[offset+RED] = b[RED];
-									staticLayerSet[offset+GREEN] = b[GREEN];
-									staticLayerSet[offset+BLUE] = b[BLUE];
-									staticLayerSet[offset+ALPHA] = 80;
+									paintPoint(staticLayerSet, x, z, 5, b[RED], b[GREEN], b[BLUE], (byte)80);
 								}
 								colorized = true;
 							} 
 						} else
 						{
 							System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
-							staticLayerSet[offset+RED] = (byte)255;
-							staticLayerSet[offset+GREEN] = (byte)255;
-							staticLayerSet[offset+BLUE] = (byte)255;
-							staticLayerSet[offset+ALPHA] = 70;
+							paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)255, (byte)255, (byte)70);
 						}
 					}
 				}
@@ -162,8 +193,8 @@ public class LocalMap {
 		
 		staticLayer = new Image();
 		staticLayer.setType(Image.RGBA8888);
-		staticLayer.setHeight(localMapSizeX);
-		staticLayer.setWidth(localMapSizeY);
+		staticLayer.setHeight(localMapSizeX*pointSizeX);
+		staticLayer.setWidth(localMapSizeY*pointSizeY);
 		
 		update();
 	}
