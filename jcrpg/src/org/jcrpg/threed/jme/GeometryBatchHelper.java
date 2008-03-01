@@ -142,6 +142,7 @@ public class GeometryBatchHelper {
 	    	{
 	    		TriMesh tri = VegetationSetup.getVegTrimesh(internal,place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
 	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal);
+	    		batch.model = m;
 	    		if (internal)
 	    		{
 	    			batch.setAnimated(false); // inside no wind
@@ -285,6 +286,7 @@ public class GeometryBatchHelper {
 					removables.add(batch);
 				} else
 				{
+					if (batch.model!=null && batch.model.alwaysRenderBatch) continue;
 					if (batch.avarageTranslation.distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
 					{
 						batch.setCullMode(TriMesh.CULL_ALWAYS);

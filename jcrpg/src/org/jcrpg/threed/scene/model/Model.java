@@ -58,4 +58,8 @@ public abstract class Model {
 	public boolean cullNone = false;
 	
 	public boolean windAnimation = true;
+	/**
+	 * Tells GeometryBatchHelper if this model is to be shown not depending on distance
+	 */
+	public boolean alwaysRenderBatch = false;
 }
