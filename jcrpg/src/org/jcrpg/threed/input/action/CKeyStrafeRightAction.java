@@ -23,7 +23,7 @@ public class CKeyStrafeRightAction extends CKeyAction {
      */
     public void performAction(InputActionEvent evt) {
     	if (handler.lock || handler.secLock){
-        	System.out.println("locked...");
+        	//System.out.println("locked...");
     		return;
     	}
     	handler.lockHandling();
