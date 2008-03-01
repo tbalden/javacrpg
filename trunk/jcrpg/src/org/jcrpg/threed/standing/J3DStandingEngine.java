@@ -1089,9 +1089,9 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				core.groundParentNode.setCullMode(Node.CULL_NEVER);
-				core.updateDisplayNoBackBuffer();
-				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				//core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				//core.updateDisplayNoBackBuffer();
+				//core.groundParentNode.setCullMode(Node.CULL_INHERIT);
 				if (cullVariationCounter%1==0) 
 				{
 					core.groundParentNode.updateRenderState();
