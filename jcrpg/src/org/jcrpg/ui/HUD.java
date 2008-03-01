@@ -143,7 +143,8 @@ public class HUD {
 	
 	public void update()
 	{
-	
+		mapQuad.updateRenderState();
+		hudNode.updateRenderState();
 	}
 	
 }

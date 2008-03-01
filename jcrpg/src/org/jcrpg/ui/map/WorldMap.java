@@ -170,6 +170,8 @@ public class WorldMap {
 	
 	int lastCx = -1 , lastCy = -1 , lastCz = -1;
 	
+	public ByteBuffer posBuffer = null;
+	
 	public void update(int cx, int cy, int cz)
 	{
 		if (cx==lastCx && cy==lastCy && cz==lastCz) return;
@@ -211,12 +213,11 @@ public class WorldMap {
 			positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
 		} catch (ArrayIndexOutOfBoundsException aiex){}
 
-		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
-		positionImage.setData(buffer2);
-		posTex = new Texture();
-		posTex.setImage(positionImage);
-		posTexState.setTexture(posTex);
+		posBuffer = ByteBuffer.wrap(positionImageSet);
+		positionImage.setData(posBuffer);
+		posTexState.getTexture().setImage(positionImage);
 		posTexState.setNeedsRefresh(true);
+		posTexState.load();
 	}
 
 	public TextureState[] getMapTextures()

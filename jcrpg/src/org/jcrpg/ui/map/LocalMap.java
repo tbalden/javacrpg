@@ -46,7 +46,7 @@ public class LocalMap {
 	
 	public int[][] map;
 	
-	public Texture oceanTex, staticLayerTex, climateTex, geoTex;
+	public Texture oceanTex, staticLayerTex,staticLayerTex2, climateTex, geoTex;
 	public TextureState baseTexState, staticTexState, climateTexState, geoTexState;
 
 	public RenderedArea area;
@@ -223,14 +223,16 @@ public class LocalMap {
 			}
 			ByteBuffer buffer2 = ByteBuffer.wrap(staticLayerSet);
 			staticLayer.setData(buffer2);
-			staticLayerTex = new Texture();
-			staticLayerTex.setImage(staticLayer);
 			if (staticTexState==null) 
 			{
+				System.out.println("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-			}
-			staticTexState.setTexture(staticLayerTex);
+				staticLayerTex = new Texture();
+				staticTexState.setTexture(staticLayerTex);
+			} 
+			staticTexState.getTexture().setImage(staticLayer);
 			staticTexState.setNeedsRefresh(true);
+			staticTexState.load();
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();

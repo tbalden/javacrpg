@@ -98,17 +98,18 @@ public class DirectionTimeMeter {
         quad_sign_sun.updateRenderState();
 		
 	}
-
+	Quaternion q = new Quaternion();
+	Quaternion q_d = new Quaternion();
+	Vector3f axis = new Vector3f(0,0,1);
+	
 	public void updateQuad(int direction, Time time)
 	{
 		
-		Quaternion q = new Quaternion();
-		q.fromAngleAxis(FastMath.PI*(-2*(time.hour*1f)/time.maxHour), new Vector3f(0,0,1));
+		q.fromAngleAxis(FastMath.PI*(-2*(time.hour*1f)/time.maxHour), axis);
 		quad_sign_sun.setLocalRotation(q);
 		quad_sign_sun.updateRenderState();
 		
-		Quaternion q_d = new Quaternion();
-		q_d.fromAngleAxis(FastMath.PI*(-2*(direction*6*1f)/24), new Vector3f(0,0,1));
+		q_d.fromAngleAxis(FastMath.PI*(-2*(direction*6*1f)/24), axis);
 		quad_sign_dir.setLocalRotation(q_d);
 		quad_sign_dir.updateRenderState();
 	}
