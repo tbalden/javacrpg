@@ -475,5 +475,24 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 		super.onDraw(r);
 	}
+
+	public boolean isAnimated() {
+		return animated;
+	}
+
+	public void setAnimated(boolean animated) {
+		this.animated = animated;
+		vertexShader=animated;
+		if (animated)  {
+        	this.setRenderState(core.fs_external);
+        	this.setRenderState(vp);
+        	this.setRenderState(fp);
+		} else
+		{
+        	this.setRenderState(core.fs_external);
+        	this.clearRenderState(vp.RS_VERTEX_PROGRAM);
+        	this.clearRenderState(vp.RS_FRAGMENT_PROGRAM);
+		}
+	}
 	
 }

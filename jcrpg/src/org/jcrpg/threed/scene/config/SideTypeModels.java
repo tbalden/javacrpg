@@ -39,6 +39,8 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.middle.mushroom.CaveMushroom;
+import org.jcrpg.world.ai.flora.middle.mushroom.RedForestMushroom;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
 import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
@@ -153,7 +155,10 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_ROCK.id, new Integer(34));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_BLOCK.id, EMPTY_SIDE);
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_ROCK_DOWNSIDE.id, 42);
-	
+
+		hmCubeSideSubTypeToRenderedSideId.put(RedForestMushroom.SUBTYPE_REDFORESTMUSHROOM.id, new Integer(43));
+		hmCubeSideSubTypeToRenderedSideId.put(CaveMushroom.SUBTYPE_CAVEMUSHROOM.id, new Integer(44));
+
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.shadowCaster = true;
@@ -336,6 +341,12 @@ public class SideTypeModels {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
+		TextureStateVegetationModel tsm_red_forest_mushroom = new TextureStateVegetationModel(new String[]{"red_mushroom.png"},0.55f,0.6f,2,1f);
+		tsm_red_forest_mushroom.windAnimation = false;
+		TextureStateVegetationModel tsm_cave_mushroom = new TextureStateVegetationModel(new String[]{"cave_mushroom.png"},0.55f,0.4f,2,1f);
+		tsm_cave_mushroom.windAnimation = false;
+
+		
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.55f,0.4f,3,0.7f);
 		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower_2.png"},0.7f,0.4f,2,1.0f);
 		//,"grass1_flower.png","grass1_flower_2.png"
@@ -656,7 +667,10 @@ public class SideTypeModels {
 		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_rock_downside_tropical});
 		hm3dTypeRenderedSide.put(new Integer(42), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_rock_downside},dependentModels));
 
-		// NEXT ID = 43
+		// mushrooms
+		hm3dTypeRenderedSide.put(new Integer(43), new RenderedSide(new Model[]{tsm_red_forest_mushroom}));
+		hm3dTypeRenderedSide.put(new Integer(44), new RenderedSide(new Model[]{tsm_cave_mushroom}));
+		// NEXT ID = 45
 		
 	}
 	

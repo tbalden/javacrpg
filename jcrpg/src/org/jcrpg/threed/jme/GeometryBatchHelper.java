@@ -144,12 +144,12 @@ public class GeometryBatchHelper {
 	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal);
 	    		if (internal)
 	    		{
-		    		batch.animated = false; // inside no wind
+	    			batch.setAnimated(false); // inside no wind
 	    			core.intRootNode.attachChild(batch.parent);
 	    			core.intRootNode.updateRenderState();
 	    		} else
 	    		{
-		    		batch.animated = true && J3DCore.ANIMATED_GRASS; // animate wind only outside
+	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation); // animate wind only outside
 	    			core.extRootNode.attachChild(batch.parent);
 	    			core.extRootNode.updateRenderState();
 	    		}
@@ -159,15 +159,17 @@ public class GeometryBatchHelper {
 	    	}
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
     		boolean sparse = true;
+    		int counter = 0;
     		for (int k=0; k<quadQuantity; k++)
     		{
-    			if (sparse) {
+    			if (sparse && counter>0) {
     				if (HashUtil.mixPercentage(place.cube.cube.x+k, place.cube.cube.y, place.cube.cube.z)<20) continue;
     			}
     			for (int j=0; j<quadQuantity; j++) {
     				if (sparse) {
     					if (HashUtil.mixPercentage(place.cube.cube.x+k+j, place.cube.cube.y, place.cube.cube.z)<60) continue;
     				}
+    				counter++;
     				TriMesh tri;
     				if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
     				{
