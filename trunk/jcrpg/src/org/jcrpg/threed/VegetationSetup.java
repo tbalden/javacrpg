@@ -19,6 +19,7 @@ package org.jcrpg.threed;
 
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
@@ -80,6 +81,7 @@ public class VegetationSetup {
 		Node[] quads = quadCache.get(tm.getKey()+internal);
 		if (quads==null) 
 		{
+			Jcrpg.LOGGER.warning("New veg quad :"+tm.getKey()+internal);
 			quads = new Node[ts.length];
 			for (int i=0; i<ts.length; i++){
 				Node n = new Node();

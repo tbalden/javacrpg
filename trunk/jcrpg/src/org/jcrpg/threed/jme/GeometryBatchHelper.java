@@ -218,7 +218,7 @@ public class GeometryBatchHelper {
 	    	}
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
-    		if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
+    		//if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
     		// texture state vegetation, trimesh
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
     		if (batch!=null)
@@ -250,12 +250,15 @@ public class GeometryBatchHelper {
     		}
     	}
     }
+    HashSet<TrimeshGeometryBatch> trimeshRemovables = new HashSet<TrimeshGeometryBatch>();
+    HashSet<ModelGeometryBatch> modelRemovables = new HashSet<ModelGeometryBatch>();
 
     public void updateAll()
     {
     	Jcrpg.LOGGER.info(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
     	{
-	    	HashSet<ModelGeometryBatch> removables = new HashSet<ModelGeometryBatch>();
+	    	HashSet<ModelGeometryBatch> removables = modelRemovables;
+	    	modelRemovables.clear();
 	    	for (ModelGeometryBatch batch: modelBatchMap.values())
 	    	{
 	    		boolean removableFlag = true;
@@ -272,7 +275,8 @@ public class GeometryBatchHelper {
 	    	modelBatchMap.values().removeAll(removables);
     	}
     	{
-	    	HashSet<TrimeshGeometryBatch> removables = new HashSet<TrimeshGeometryBatch>();
+	    	HashSet<TrimeshGeometryBatch> removables = trimeshRemovables;
+	    	removables.clear();
 	    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values())
 	    	{
 	    		boolean removableFlag = true;

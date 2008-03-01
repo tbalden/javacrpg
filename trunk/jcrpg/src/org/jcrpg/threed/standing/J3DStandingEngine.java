@@ -32,6 +32,7 @@ import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
+import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -381,6 +382,30 @@ public class J3DStandingEngine {
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
 		synchronized(Engine.mutex) {
+			
+			if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
+				//System.out.println("   -    "+ core.extRootNode.getChildren().size());
+				if (true == false)
+				for (Spatial s:core.extRootNode.getChildren())
+				{
+					if (s instanceof SharedNode)
+					{
+						Spatial s1 = ((SharedNode)s).getChild(0);
+						if (s1 instanceof TrimeshGeometryBatch)
+						{
+							System.out.println("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
+						} else
+						if (s1 instanceof ModelGeometryBatch)
+						{
+							System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.size());
+						} else
+						System.out.println(s1.getName()+ " "+s1);
+					} else
+					System.out.println(s.getName()+ " "+s);
+				}
+			}
+			
+			
 			boolean storedPauseState = engine.isPause();
 			engine.setPause(true);
 			
@@ -709,7 +734,13 @@ public class J3DStandingEngine {
 									 )
 								{
 									if (n!=null)
+									{
+										/*if (n.model.type == Model.TEXTURESTATEVEGETATION)
+										{
+											System.out.println("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
+										}*/
 										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+									}
 								} else 
 								{
 									PooledNode pooledRealNode = n.realNode;
