@@ -39,7 +39,7 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
-import org.jcrpg.world.ai.flora.middle.grass.Anathum;
+import org.jcrpg.world.ai.flora.middle.grass.Anethum;
 import org.jcrpg.world.ai.flora.middle.mushroom.CaveMushroom;
 import org.jcrpg.world.ai.flora.middle.mushroom.RedForestMushroom;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
@@ -160,7 +160,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(RedForestMushroom.SUBTYPE_REDFORESTMUSHROOM.id, new Integer(43));
 		hmCubeSideSubTypeToRenderedSideId.put(CaveMushroom.SUBTYPE_CAVEMUSHROOM.id, new Integer(44));
 		
-		hmCubeSideSubTypeToRenderedSideId.put(Anathum.SUBTYPE_ANATHUM.id, new Integer(45));
+		hmCubeSideSubTypeToRenderedSideId.put(Anethum.SUBTYPE_ANETHUM.id, new Integer(45));
 
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
