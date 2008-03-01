@@ -395,7 +395,7 @@ public class AudioServer implements Runnable {
 		while (true)
 		{
 			AudioSystem.getSystem().update();
-			try{Thread.sleep(1);}catch (Exception ex){}
+			try{Thread.sleep(60);}catch (Exception ex){}
 		}
 
 	}
