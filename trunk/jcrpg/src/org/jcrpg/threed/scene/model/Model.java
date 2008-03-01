@@ -56,4 +56,6 @@ public abstract class Model {
 	public boolean useClodMesh = false;
 	
 	public boolean cullNone = false;
+	
+	public boolean windAnimation = true;
 }

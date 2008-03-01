@@ -24,6 +24,8 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
+import org.jcrpg.world.ai.flora.middle.mushroom.CaveMushroom;
+import org.jcrpg.world.ai.flora.middle.mushroom.RedForestMushroom;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
 import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
@@ -32,7 +34,6 @@ import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
 import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
-import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
 import org.jcrpg.world.climate.ClimateLevel;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
@@ -45,11 +46,11 @@ public class BaseFloraGenerator extends FloraGenerator{
 	
 	public BaseFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new OakTree(),20), new FloraListElement(new CherryTree(),30),new FloraListElement(new GreenPineTree(),40),new FloraListElement(new Acacia(),50),new FloraListElement(new GreenBush(),60)});
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new OakTree(),0), new FloraListElement(new CherryTree(),0),new FloraListElement(new GreenPineTree(),0),new FloraListElement(new GreatPineTree(),0),new FloraListElement(new GreenBush(),120)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new RedForestMushroom(),20),new FloraListElement(new OakTree(),20), new FloraListElement(new CherryTree(),30),new FloraListElement(new GreenPineTree(),40),new FloraListElement(new Acacia(),50),new FloraListElement(new GreenBush(),60)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new CaveMushroom(),100)});
 
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),40),new FloraListElement(new JunglePalmTrees(),60),new FloraListElement(new JungleBush(),90),new FloraListElement(new GreenFern(),90)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new JungleBush(),120),new FloraListElement(new GreenFern(),120)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new RedForestMushroom(),35),new FloraListElement(new CoconutTree(),40),new FloraListElement(new JunglePalmTrees(),60),new FloraListElement(new JungleBush(),90),new FloraListElement(new GreenFern(),90)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new CaveMushroom(),100)});
 		
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Snow())});
 		addFlora(Desert.DESERT_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Sand()),new FloraListElement(new Acacia(),5),new FloraListElement(new BigCactus(),20),new FloraListElement(new GreenBush(),10)});
