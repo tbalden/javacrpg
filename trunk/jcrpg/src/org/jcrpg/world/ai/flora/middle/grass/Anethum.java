@@ -23,17 +23,17 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.ai.flora.middle.MiddlePlant;
 
-public class Anathum extends MiddlePlant {
+public class Anethum extends MiddlePlant {
 	
 	public static final String TYPE_MIDDLE = "MIDDLE";
-	public static final SideSubType SUBTYPE_ANATHUM = new SideSubType(TYPE_MIDDLE+"_ANATHUM");
+	public static final SideSubType SUBTYPE_ANETHUM = new SideSubType(TYPE_MIDDLE+"_ANETHUM");
 	
-	static Side[][] ANATHUM = new Side[][] { null, null, null,null,null,{new Side(TYPE_MIDDLE,SUBTYPE_ANATHUM)} };
+	static Side[][] ANETHUM = new Side[][] { null, null, null,null,null,{new Side(TYPE_MIDDLE,SUBTYPE_ANETHUM)} };
 	
-	public Anathum()
+	public Anethum()
 	{
 		super();
-		defaultDescription = new FloraDescription(new Cube(null,ANATHUM,0,0,0),0,false,false);
+		defaultDescription = new FloraDescription(new Cube(null,ANETHUM,0,0,0),0,false,false);
 	}
 
 }
