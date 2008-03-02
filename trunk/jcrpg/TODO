@@ -7,7 +7,14 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-[ ] mushroom quad size is not good, it's not scaled correctly!!!
+
+[ ] performance decreasing with time! debug it, what eats what
+	[-] map problem, load texture didn't help -> or maybe something else... releaseTexture didn't help, maybe not a map problem
+	[ ] audio system??
+	
+[ ] farview problems -> left over of unneeded magnified farview models model geom batches, trees, all !! :-O
+
+[?] mushroom quad size is not good, it's not scaled correctly!!!
 
 [X] local map on screen
  [ ] develop it more, sides not just bottom
