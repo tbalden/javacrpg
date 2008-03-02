@@ -193,6 +193,7 @@ public class Cave extends Geography implements Surface {
 			}
 			return cachedNonType;
 		}
+		// TODO !!!this is not complete enough for a multilevel cave!!!
 		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levelSize)/levelSize, worldZ);
 		if (per>=density)
 		{
