@@ -344,7 +344,7 @@ public class SideTypeModels {
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
 		lod_fern.shadowCaster = true;
 
-		TextureStateVegetationModel tsm_red_forest_mushroom = new TextureStateVegetationModel(new String[]{"red_mushroom.png"},0.55f,0.6f,2,1f);
+		TextureStateVegetationModel tsm_red_forest_mushroom = new TextureStateVegetationModel(new String[]{"red_mushroom.png"},0.4f,0.5f,2,1f);
 		tsm_red_forest_mushroom.windAnimation = false;
 		tsm_red_forest_mushroom.alwaysRenderBatch = true;
 		TextureStateVegetationModel tsm_cave_mushroom = new TextureStateVegetationModel(new String[]{"cave_mushroom.png"},0.55f,0.4f,2,1f);

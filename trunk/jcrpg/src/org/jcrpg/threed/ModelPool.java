@@ -260,6 +260,16 @@ public class ModelPool {
 		}
 	}
 	
+	public static int getPooledSize()
+	{
+		int c = 0;
+		for (PoolItemContainer pic: pool.values())
+		{
+				c += pic.used!=null?pic.used.size():0 + (pic.notUsed!=null?pic.notUsed.size():0);
+		}
+		return c;
+	}
+	
 	public void cleanAll()
 	{
 		for (PoolItemContainer pic: pool.values())

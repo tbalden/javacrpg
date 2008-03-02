@@ -97,12 +97,12 @@ public class ModelLoader {
 	}
 	
     
-	HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
-    HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
+	public static HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
+	public static HashMap<String,byte[]> binaryCache = new HashMap<String,byte[]>();
     // this better be not weak hashmap
-    HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
-    HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
-    HashMap<String,BillboardPartVegetation> sharedBBNodeCache = new HashMap<String, BillboardPartVegetation>();
+    public static HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
+    public static HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
+    public static HashMap<String,BillboardPartVegetation> sharedBBNodeCache = new HashMap<String, BillboardPartVegetation>();
     
     
     

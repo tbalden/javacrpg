@@ -58,7 +58,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 	}
 
-	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
+	public static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public ModelGeometryBatch(J3DCore core, Model m) {
 		model = m;

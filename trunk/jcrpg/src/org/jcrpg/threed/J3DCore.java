@@ -57,6 +57,7 @@ import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
+import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -1954,6 +1955,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			loadMenu = new LoadMenu(uiBase);
 			partySetup = new PartySetup(uiBase);
 			uiBase.addWindow("mainMenu", mainMenu);			
+			uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
 			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 			ChoiceDescription no = new ChoiceDescription("N","yes","No");
 			ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();

@@ -32,6 +32,7 @@ import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
+import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -397,8 +398,10 @@ public class J3DStandingEngine {
 						} else
 						if (s1 instanceof ModelGeometryBatch)
 						{
-							//System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key);
-						}// else
+							if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
+								System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
+							;
+						} //else
 						//System.out.println(s1.getName()+ " "+s1);
 					} //else
 					//System.out.println(s.getName()+ " "+s);
@@ -429,7 +432,6 @@ public class J3DStandingEngine {
 		    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 		    	    	{
 		    	    		NodePlaceholder n = itNode.next();
-		    	    		
 		    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 		    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 		    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
@@ -941,7 +943,6 @@ public class J3DStandingEngine {
 								n.farView = true;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-										//(n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									) 
 								{
