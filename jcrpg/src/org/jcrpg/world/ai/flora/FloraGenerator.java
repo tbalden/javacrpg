@@ -100,9 +100,9 @@ public class FloraGenerator {
 			}
 		}
 
-		chooseFlora(worldX, worldY, worldZ, conditions, time, c, groundFlora);
-		chooseFlora(worldX, worldY, worldZ, conditions, time, c, middleFlora);
-		chooseFlora(worldX, worldY, worldZ, conditions, time, c, topFlora);
+		chooseFlora(0,worldX, worldY, worldZ, conditions, time, c, groundFlora);
+		chooseFlora(1,worldX, worldY, worldZ, conditions, time, c, middleFlora);
+		chooseFlora(2,worldX, worldY, worldZ, conditions, time, c, topFlora);
 		
 		if (arrayLists==null)
 		{
@@ -125,12 +125,12 @@ public class FloraGenerator {
 	 * @param c
 	 * @param elements
 	 */
-	private void chooseFlora(int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, FloraCube c, ArrayList<FloraListElement> elements)
+	private void chooseFlora(int level, int worldX, int worldY, int worldZ, CubeClimateConditions conditions, Time time, FloraCube c, ArrayList<FloraListElement> elements)
 	{
 		int i = 0;
 		for (FloraListElement element : elements) {
 			int likeness=element.likenessToGrow;
-			int h = HashUtil.mixPer1000(worldX+i, worldY+i, worldZ+i);
+			int h = HashUtil.mixPer1000(worldX+i+level, worldY+i, worldZ+i);
 			i++;
 			if  ( h < likeness ) 
 			{

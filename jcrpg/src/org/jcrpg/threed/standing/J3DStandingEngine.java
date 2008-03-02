@@ -384,8 +384,8 @@ public class J3DStandingEngine {
 		synchronized(Engine.mutex) {
 			
 			if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
-				//System.out.println("   -    "+ core.extRootNode.getChildren().size());
-				if (true == false)
+				System.out.println("   -    "+ core.extRootNode.getChildren().size());
+				//if (true == false)
 				for (Spatial s:core.extRootNode.getChildren())
 				{
 					if (s instanceof SharedNode)
@@ -393,15 +393,15 @@ public class J3DStandingEngine {
 						Spatial s1 = ((SharedNode)s).getChild(0);
 						if (s1 instanceof TrimeshGeometryBatch)
 						{
-							System.out.println("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
+							//System.out.println("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
 						} else
 						if (s1 instanceof ModelGeometryBatch)
 						{
-							System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.size());
-						} else
-						System.out.println(s1.getName()+ " "+s1);
-					} else
-					System.out.println(s.getName()+ " "+s);
+							System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key);
+						}// else
+						//System.out.println(s1.getName()+ " "+s1);
+					} //else
+					//System.out.println(s.getName()+ " "+s);
 				}
 			}
 			
@@ -1120,9 +1120,9 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				//core.groundParentNode.setCullMode(Node.CULL_NEVER);
-				//core.updateDisplayNoBackBuffer();
-				//core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				core.updateDisplayNoBackBuffer();
+				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
 				if (cullVariationCounter%1==0) 
 				{
 					core.groundParentNode.updateRenderState();
