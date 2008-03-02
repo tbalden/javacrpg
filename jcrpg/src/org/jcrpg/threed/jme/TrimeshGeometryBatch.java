@@ -92,7 +92,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	FragmentProgramState fp = null;
 	
 	boolean vertexShader = false;
-	static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
+	public static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	float startFog;
 	

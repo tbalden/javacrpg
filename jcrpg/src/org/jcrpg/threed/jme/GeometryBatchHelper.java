@@ -35,8 +35,8 @@ import com.jme.scene.TriMesh;
 
 public class GeometryBatchHelper {
 
-	static HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
-	static HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
+	public static HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
+	public static HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
 	J3DCore core;
 	
 	public GeometryBatchHelper(J3DCore core)
