@@ -78,16 +78,16 @@ public class Cave extends Geography implements Surface {
 	static Side[][] CAVE_ENTRANCE_WEST = new Side[][] { BLOCK, EMPTY_SIDE, BLOCK,ENTRANCE,BLOCK_GROUND,GROUND };
 	
 	
-	public int density,entranceSide, levels;
+	public int density,entranceSide, levelSize;
 
-	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levels, boolean fillBoundaries ) throws Exception{
+	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levelSize, boolean fillBoundaries ) throws Exception{
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		ruleSet.presentWhereBaseExists = false;
 		ruleSet.genType = GenAlgoAdd.GEN_TYPE_NAME;
 		ruleSet.genParams = new Object[] { new GenAlgoAddParams(new String[]{"MountainNew"}, 100, new int[]{0}) };
 		this.density = density;
 		this.entranceSide = entranceSide;
-		this.levels = levels;
+		this.levelSize = levelSize;
 	}
 	
 	@Override
@@ -156,7 +156,7 @@ public class Cave extends Geography implements Surface {
 			return null;
 		}
 		
-		int per = HashUtil.mixPercentage(worldX, (worldY-(origoY*magnification)%levels)/levels, worldZ);
+		int per = HashUtil.mixPercentage(worldX, relY/levelSize, worldZ);
 		if ((relZ%ENTRANCE_DISTANCE==2 || relX%ENTRANCE_DISTANCE==2) && relY==ENTRANCE_LEVEL) {
 			per+=20;
 		}
@@ -169,9 +169,9 @@ public class Cave extends Geography implements Surface {
 		}
 		Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
 		if (worldRealHeight>1) {
-			if (relY%levels==0)
+			if (relY%levelSize==0)
 				c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
-			else if (relY%levels==levels-1)
+			else if (relY%levelSize==levelSize-1)
 				c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
 			else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
 		}
@@ -193,7 +193,7 @@ public class Cave extends Geography implements Surface {
 			}
 			return cachedNonType;
 		}
-		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levels)/levels, worldZ);
+		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levelSize)/levelSize, worldZ);
 		if (per>=density)
 		{
 			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};

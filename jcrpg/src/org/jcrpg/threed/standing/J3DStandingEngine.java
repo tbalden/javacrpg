@@ -397,7 +397,7 @@ public class J3DStandingEngine {
 						} else
 						if (s1 instanceof ModelGeometryBatch)
 						{
-							System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key);
+							//System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key);
 						}// else
 						//System.out.println(s1.getName()+ " "+s1);
 					} //else

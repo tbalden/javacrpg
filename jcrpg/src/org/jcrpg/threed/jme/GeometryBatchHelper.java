@@ -97,7 +97,7 @@ public class GeometryBatchHelper {
     		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
     	} else
     	{   // other models only by Y // quad
-    		key+=(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
+    		key+=(int)(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)place.cube.cube.y/yLevelMul;
     	}
     	
     	return key+farView;
