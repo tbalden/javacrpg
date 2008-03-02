@@ -74,21 +74,21 @@ public class GeometryBatchHelper {
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
     			}
     			else
     			{
-    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+""+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
+    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
     			}
     		} else
     		{
     			if (sm.yGeomBatchSize==-1) 
     			{
-    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+"_"+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+"_"+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
     			}
     			else
     			{
-    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+""+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+""+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
+    				key+=((place.cube.cube.x/sm.xGeomBatchSize)/viewMul)+"_"+((place.cube.cube.z/sm.xGeomBatchSize)/viewMul)+"_"+(place.cube.cube.y/(sm.yGeomBatchSize*yLevelMul));
     			}
     		}
     	} else
@@ -115,6 +115,7 @@ public class GeometryBatchHelper {
 	    	if (batch==null)
 	    	{
 	    		batch = new ModelGeometryBatch(core,m);
+	    		batch.key = key;
 	    		if (m.type == Model.QUADMODEL && ((QuadModel)m).waterQuad)
 	    		{
 	    			J3DCore.waterEffectRenderPass.setWaterEffectOnSpatial(batch);
