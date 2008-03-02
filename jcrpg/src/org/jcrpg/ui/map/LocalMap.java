@@ -33,6 +33,7 @@ import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 public class LocalMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
@@ -227,12 +228,16 @@ public class LocalMap {
 			{
 				System.out.println("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-				staticLayerTex = new Texture();
-				staticTexState.setTexture(staticLayerTex);
-			} 
-			staticTexState.getTexture().setImage(staticLayer);
+			} else
+			{
+				TextureManager.releaseTexture(staticTexState.getTexture());
+			}
+			staticLayerTex = new Texture();
+			staticLayerTex.setImage(staticLayer);
+			staticTexState.setTexture(staticLayerTex);
 			staticTexState.setNeedsRefresh(true);
-			staticTexState.load();
+			//staticTexState.load();
+			
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();

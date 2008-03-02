@@ -38,6 +38,7 @@ import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 public class WorldMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
@@ -215,9 +216,13 @@ public class WorldMap {
 
 		posBuffer = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(posBuffer);
-		posTexState.getTexture().setImage(positionImage);
+		Texture t = posTexState.getTexture();
+		if (t!=null) TextureManager.releaseTexture(t);
+		t = new Texture();
+		t.setImage(positionImage);
+		posTexState.setTexture(t);
 		posTexState.setNeedsRefresh(true);
-		posTexState.load();
+		//posTexState.load();
 	}
 
 	public TextureState[] getMapTextures()
