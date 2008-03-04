@@ -91,9 +91,10 @@ public class TextBox implements KeyListener {
 		}
 	}
 	
+	ColorRGBA black = new ColorRGBA(0,0,0,1f);
 	public void addEntry(String entry)
 	{
-		boxFullTextEntries.add(new TextEntry(entry,ColorRGBA.lightGray));
+		boxFullTextEntries.add(new TextEntry(entry,black));
 		updateText();
 	}
 	public void addEntry(TextEntry entry)
