@@ -1,3 +1,4 @@
-dice2.png GNU GPL3 Created by Tranberry@freegamer
-hourglass.png GNU GPL3 Created by Tranberry@freegamer
-scroll.png GNU GPL3 Created by Tranberry@freegamer
+dice2.png GNU GPLv3 Created by Tranberry@freegamer
+hourglass.png GNU GPLv3 Created by Tranberry@freegamer
+scroll.png GNU GPLv3 Created by Tranberry@freegamer
+hud1.png GNU GPLv3 Created by Tranberry@freegamer
