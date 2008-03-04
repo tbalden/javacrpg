@@ -77,7 +77,7 @@ public class DirectionTimeMeter {
 		quad.setRenderState(state);
 		quad.setRenderState(hud.hudAS);
         quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        quad.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
         quad.setLightCombineMode(LightState.OFF);
         quad.updateRenderState();
 
@@ -85,7 +85,7 @@ public class DirectionTimeMeter {
 		quad_sign_dir.setRenderState(state1);
 		quad_sign_dir.setRenderState(hud.hudAS);
         quad_sign_dir.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        quad_sign_dir.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad_sign_dir.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
         quad_sign_dir.setLightCombineMode(LightState.OFF);
         quad_sign_dir.updateRenderState();
 
@@ -93,7 +93,7 @@ public class DirectionTimeMeter {
 		quad_sign_sun.setRenderState(state2);
 		quad_sign_sun.setRenderState(hud.hudAS);
         quad_sign_sun.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-        quad_sign_sun.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/26),(hud.core.getDisplay().getHeight()/18),0));
+        quad_sign_sun.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
         quad_sign_sun.setLightCombineMode(LightState.OFF);
         quad_sign_sun.updateRenderState();
 		
