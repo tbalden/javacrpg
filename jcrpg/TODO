@@ -8,6 +8,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] leveling for chars/entityMembers, points for them, bars on UI
+[ ] groups trespassed - icons - UI
+
 [ ] performance decreasing with time! debug it, what eats what
 	[-] map problem, load texture didn't help -> or maybe something else... releaseTexture didn't help, maybe not a map problem
 	[ ] audio system??
