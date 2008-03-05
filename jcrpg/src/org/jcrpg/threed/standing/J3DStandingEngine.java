@@ -94,10 +94,10 @@ public class J3DStandingEngine {
 		modelPool = core.modelPool;
 	}
 
-	HashMap<Integer, RenderedCube> hmCurrentCubes = new HashMap<Integer, RenderedCube>();
+	HashMap<Long, RenderedCube> hmCurrentCubes = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
-	HashMap<Integer, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Integer, RenderedCube>();
+	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
 	/**
@@ -172,7 +172,7 @@ public class J3DStandingEngine {
 		return ret;
 	}
 	
-	public HashSet<RenderedCube> doRender(RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Integer, RenderedCube> hmCurrentCubes)
+	public HashSet<RenderedCube> doRender(RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Long, RenderedCube> hmCurrentCubes)
 	{
 		int already = 0;
 		int newly = 0;
@@ -185,7 +185,7 @@ public class J3DStandingEngine {
     	for (RenderedCube c:removableCubes)
     	{
     		if (c==null) continue;
-    		Integer cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
+    		Long cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
     		c = hmCurrentCubes.get(cubeKey);
     		detacheable.add(c);
     		liveNodes-= c.hsRenderedNodes.size();
@@ -195,7 +195,7 @@ public class J3DStandingEngine {
 
     	Jcrpg.LOGGER.info("getRenderedSpace size="+cubes.length);
 		
-		HashMap<Integer, RenderedCube> hmNewCubes = new HashMap<Integer, RenderedCube>();
+		HashMap<Long, RenderedCube> hmNewCubes = new HashMap<Long, RenderedCube>();
 
 		Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 		
@@ -203,7 +203,7 @@ public class J3DStandingEngine {
 		{
 			//Jcrpg.LOGGER.info("CUBE "+i);
 			RenderedCube c = cubes[i];
-			Integer cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
+			Long cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
 			if (hmCurrentCubes.containsKey(cubeKey))
 			{
 				already++;
@@ -234,8 +234,12 @@ public class J3DStandingEngine {
 	    {
 			removed++;
     		outOfViewPort.remove(cToDetach);
-    		inViewPort.remove(cToDetach);
-    		inFarViewPort.remove(cToDetach);
+    		if (!cToDetach.farview) {
+    			inViewPort.remove(cToDetach);
+    		}
+    		if (cToDetach.farview) {
+    			inFarViewPort.remove(cToDetach);
+    		}
 	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
 	    hmCurrentCubes.clear();
@@ -364,6 +368,7 @@ public class J3DStandingEngine {
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> inFarViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
+	HashSet<RenderedCube> outOfFarViewPort = new HashSet<RenderedCube>();
 	
 	int cullVariationCounter = 0;
 	
@@ -422,6 +427,7 @@ public class J3DStandingEngine {
 			{
 				// doing the render, getting the unneeded renderedCubes too.
 				HashSet<RenderedCube>[] detacheable = render();
+
 				for (int i=0; i<detacheable.length; i++)
 				// removing the unneeded.
 				for (RenderedCube c:detacheable[i]) { 
@@ -498,6 +504,9 @@ public class J3DStandingEngine {
 					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 				}
 			}
+
+			float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
+			float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
 			
 			for (int cc = fromCubeCount; cc<toCubeCount; cc++)
 			{
@@ -558,7 +567,7 @@ public class J3DStandingEngine {
 						{
 							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
 	
-							if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
+							if (dist<minAngleCalc) {
 								found = true;
 								break;
 							}
@@ -842,28 +851,25 @@ public class J3DStandingEngine {
 							farviewGapFiller = false;
 						}
 					} 
-					
 					for (NodePlaceholder n : c.hsRenderedNodes)
 					{
 						if (checked && !farviewGapFiller)
 						{
 							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
 	
-							if (dist<J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6) {
-								//found = true;
+							if (dist<minAngleCalc) {
 								break;
 							}
-							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
-							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-							//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
-							if (angle<refAngle) {
-								//found = true;
-							}
-							break;
 						} else
 						{
 							// check if farview enabled
 							if (!J3DCore.FARVIEW_ENABLED || fragmentViewDist) break;
+							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+							if (dist>maxFarViewDist)
+							{
+								// out of far view
+								break;
+							}
 							
 							// enabled, we can check for the cube coordinates in between the gaps...
 							if (c.cube.x%J3DCore.FARVIEW_GAP==0 && c.cube.z%J3DCore.FARVIEW_GAP==0 && c.cube.y%J3DCore.FARVIEW_GAP==0)// || c.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
@@ -905,36 +911,7 @@ public class J3DStandingEngine {
 							addedNodeCounter++;
 							inFarViewPort.add(c);
 							
-							// checking if its in normal view port, if so removing it
-							if (inViewPort.contains(c))
-							{
-								removedNodeCounter++;			
-								for (NodePlaceholder n : c.hsRenderedNodes)
-								{								
-									if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-											(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-													|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-										 )
-									{
-										if (n!=null)
-											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-									} else 
-									{
-										PooledNode pooledRealNode = n.realNode;
-										
-										n.realNode = null;
-										if (pooledRealNode!=null) {
-											Node realNode = (Node)pooledRealNode;
-											if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-											realNode.removeFromParent();
-											modelPool.releaseNode(pooledRealNode);
-										}
-									}
-									n.farView = false;
-								}
-							}
-							inViewPort.remove(c);
-							outOfViewPort.remove(c);
+							outOfFarViewPort.remove(c);
 							
 							// add all far view enabled model nodes to the scenario
 							for (NodePlaceholder n : c.hsRenderedNodes)
@@ -1048,11 +1025,10 @@ public class J3DStandingEngine {
 					else
 					{
 						 nonVisibleNodeCounter++;
-						 if (!outOfViewPort.contains(c)) 
+						 if (!outOfFarViewPort.contains(c)) 
 						 {
 							removedNodeCounter++;
-							outOfViewPort.add(c);
-							inViewPort.remove(c);
+							outOfFarViewPort.add(c);
 							inFarViewPort.remove(c);
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{

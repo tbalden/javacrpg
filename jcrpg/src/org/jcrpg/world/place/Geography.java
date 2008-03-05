@@ -440,7 +440,7 @@ public class Geography extends Place implements Surface {
 	{
 		if (numericId!=0) 
 		{
-			Long key = (numericId*(farView?2:1)+((worldX)<< 16) + ((worldY) << 8) + ((worldZ)));
+			Long key = (numericId*(farView?2:1)+(((long)worldX)<< 32) + ((worldY) << 16) + ((worldZ)));
 			Integer cachedKind = quickCubeKindCache.get(key);
 			if (cachedKind!=null) 
 			{

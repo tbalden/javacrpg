@@ -34,25 +34,25 @@ public class Boundaries {
 	/**
 	 * All coordinates
 	 */
-	public HashSet<Integer> area;
+	public HashSet<Long> area;
 
 	/**
 	 * The limiting coordinates
 	 */
-	public HashSet<Integer> limits;
+	public HashSet<Long> limits;
 	
 	public Boundaries(int magnification)
 	{
 		this.magnification = magnification;
-		area = new HashSet<Integer>();
-		limits = new HashSet<Integer>();
+		area = new HashSet<Long>();
+		limits = new HashSet<Long>();
 	}
 	
 
 	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		Integer key = getKey(x*magnification, y*magnification, z*magnification);
+		Long key = getKey(x*magnification, y*magnification, z*magnification);
 		limits.add(key);
 	}
 	public void removeLimiterCube(int magnification, int x, int y, int z) throws Exception
@@ -65,7 +65,7 @@ public class Boundaries {
 	public void addCube(int magnification, int x, int y, int z) throws Exception
 	{
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
-		Integer key = getKey(x*magnification, y*magnification, z*magnification);
+		Long key = getKey(x*magnification, y*magnification, z*magnification);
 		area.add(key);
 	}
 	public void removeCube(int magnification, int x, int y, int z) throws Exception
@@ -81,7 +81,7 @@ public class Boundaries {
 		 * The common limits can be removed, they are overlapping,
 		 * not common limits are new limits.
 		 */
-		for (Integer element : area2.getArea()) {
+		for (Long element : area2.getArea()) {
 			if (limits.contains(element))
 			{
 				limits.remove(element);
@@ -98,14 +98,14 @@ public class Boundaries {
 	public void subtractBoundaries(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (Integer element : area2.getArea()) {
+		for (Long element : area2.getArea()) {
 			area.remove(element);
 		};
 		/*
 		 * The common limits can be removed, they are overlapping,
 		 * not common limits are new limits.
 		 */
-		for (Integer element : area2.getArea()) {
+		for (Long element : area2.getArea()) {
 			if (limits.contains(element))
 			{
 				limits.remove(element);
@@ -119,7 +119,7 @@ public class Boundaries {
 	public boolean isOverlapping(Boundaries area2) throws Exception
 	{
 		if (area2.magnification!=this.magnification) throw new Exception("Wrong magnification");
-		for (Integer element : area2.getArea()) {
+		for (Long element : area2.getArea()) {
 			return area.contains(element);
 		}
 		return false;
@@ -135,17 +135,18 @@ public class Boundaries {
 		return ret;
 	}
 	
-	public HashSet<Integer> getArea()
+	public HashSet<Long> getArea()
 	{
 		return area;
 	}
-	public HashSet<Integer> getLimits()
+	public HashSet<Long> getLimits()
 	{
 		return limits;
 	}
 	
-	public static Integer getKey(int x,int y,int z){
-		int s = ((x) << 16) + ((y) << 8) + (z);
+	public static Long getKey(int x,int y,int z){
+		long s = (((long)x) << 32) + ((y) << 16) + (z);
+		//System.out.println("##"+ s);
 		return s;
 	}
 	
