@@ -187,6 +187,7 @@ public class ModelPool {
 			retNodes[count++] = new NodePlaceholder();
 			retNodes[count-1].model = objModel;
 			retNodes[count-1].cube = cube;
+			retNodes[count-1].farView = cube.farview;
 			if (objModel.rotateOnSteep) {
 				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
 			}

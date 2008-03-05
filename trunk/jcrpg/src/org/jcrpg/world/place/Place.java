@@ -32,7 +32,7 @@ public abstract class Place {
 
 	public static String generatePositionCacheKey(int worldX, int worldY, int worldZ, int lossFactor)
 	{
-		int k = ((worldX/lossFactor)<< 16) + ((worldY/lossFactor) << 8) + ((worldZ/lossFactor));
+		long k = (((long)(worldX/lossFactor))<< 32) + ((worldY/lossFactor) << 16) + ((worldZ/lossFactor));
 		
 		return ""+k;
 	}

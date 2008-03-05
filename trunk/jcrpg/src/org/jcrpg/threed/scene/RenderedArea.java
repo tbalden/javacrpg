@@ -22,15 +22,16 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
 
 public class RenderedArea {
 	
-	public HashMap<Integer, RenderedCube> worldCubeCache = new HashMap<Integer, RenderedCube>(); 
-	public HashMap<Integer, RenderedCube> worldCubeCacheNext = new HashMap<Integer, RenderedCube>(); 
+	public HashMap<Long, RenderedCube> worldCubeCache = new HashMap<Long, RenderedCube>(); 
+	public HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
 
-	public HashMap<Integer, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Integer, RenderedCube>(); 
-	public HashMap<Integer, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Integer, RenderedCube>(); 
+	public HashMap<Long, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Long, RenderedCube>(); 
+	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>(); 
 
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled)
 	{
@@ -64,8 +65,8 @@ public class RenderedArea {
 				
 			}
 		}
-		worldCubeCacheNext = new HashMap<Integer, RenderedCube>();
-		worldCubeCacheNext_FARVIEW = new HashMap<Integer, RenderedCube>();
+		worldCubeCacheNext = new HashMap<Long, RenderedCube>();
+		worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
@@ -79,7 +80,7 @@ public class RenderedArea {
 					int worldZ = z-z1;
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
-					int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+					long key = Boundaries.getKey(worldX,worldY,worldZ);
 					RenderedCube c = worldCubeCache.remove(key);
 					if (c==null) {
 						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, false);
@@ -113,7 +114,7 @@ public class RenderedArea {
 						int worldZ = z-z1;
 						worldX = world.shrinkToWorld(worldX);
 						worldZ = world.shrinkToWorld(worldZ);
-						int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+						long key = Boundaries.getKey(worldX,worldY,worldZ);
 						
 						
 						if (farViewEnabled)
@@ -161,7 +162,7 @@ public class RenderedArea {
 	{
 		worldX = world.shrinkToWorld(worldX);
 		worldZ = world.shrinkToWorld(worldZ);
-		int key = ((worldX)<< 16) + ((worldY) << 8) + ((worldZ));
+		long key = Boundaries.getKey(worldX, worldY, worldZ);
 		return worldCubeCache.get(key);
 	}
 	
