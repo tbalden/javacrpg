@@ -31,11 +31,12 @@ public class RenderedArea {
 	public HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
 
 	public HashMap<Long, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Long, RenderedCube>(); 
-	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>(); 
+	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
+	
 
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled)
 	{
-		int distance = J3DCore.RENDER_DISTANCE;
+		int distance = farViewEnabled?J3DCore.RENDER_DISTANCE_FARVIEW:J3DCore.RENDER_DISTANCE;
 		
 		float xPlusMult = 1;
 		float xMinusMult = -1;
@@ -65,41 +66,87 @@ public class RenderedArea {
 				
 			}
 		}
+		
+
 		worldCubeCacheNext = new HashMap<Long, RenderedCube>();
 		worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
+		boolean calcNormalView = false;
 		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 		{
+			if (Math.abs(z1)<=J3DCore.RENDER_DISTANCE)
+			{
+				calcNormalView = true;
+			}
 			for (int y1=-1*Math.min(distance,20); y1<=1*Math.min(distance,20); y1++)
 			{
+				if (calcNormalView && !(Math.abs(y1)<=J3DCore.RENDER_DISTANCE))
+				{
+					calcNormalView = false;
+				}
 				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 				{
 					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
+					
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
 					long key = Boundaries.getKey(worldX,worldY,worldZ);
-					RenderedCube c = worldCubeCache.remove(key);
-					if (c==null) {
-						Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, false);
-						if (cube!=null)
+					if (!farViewEnabled || calcNormalView && Math.abs(x1)<J3DCore.RENDER_DISTANCE)
+					{
+						RenderedCube c = null;
+						if (!worldCubeCache.containsKey(key))
 						{
-							c = new RenderedCube(cube,x1,y1,z1);
+							Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, false);
+							if (cube!=null)
+							{
+								c = new RenderedCube(cube,x1,y1,z1);
+							}
+							if (c!=null) 
+							{	// only gather newly rendered cubes
+								elements.add(c);
+							}
+						} else
+						{
+							c = worldCubeCache.remove(key);
 						}
+						worldCubeCacheNext.put(key, c);
 					}
-					worldCubeCacheNext.put(key, c);
-					if (c!=null) 
-					{	
-						elements.add(c);
+
+					if (farViewEnabled)
+					{
+						if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0 && worldY%J3DCore.FARVIEW_GAP==0)
+						{
+							// render this one for farview
+							RenderedCube c = null;
+							if (!worldCubeCache_FARVIEW.containsKey(key))
+							{
+								Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
+								if (cube!=null)
+								{
+									c = new RenderedCube(cube,x1,y1,z1);
+									c.farview = true;
+								}
+								if (c!=null) 
+								{	// only gather newly rendered cubes
+									elements_FARVIEW.add(c);
+								}
+							} else
+							{
+								c = worldCubeCache_FARVIEW.remove(key);
+							}
+							worldCubeCacheNext_FARVIEW.put(key, c);
+						}
+						
 					}
 					
 				}
 			}
 		}
 
-		if (farViewEnabled) 
+		/*if (farViewEnabled) 
 		{
 			distance = J3DCore.RENDER_DISTANCE_FARVIEW;
 			
@@ -112,38 +159,13 @@ public class RenderedArea {
 						int worldX = x+x1;
 						int worldY = y+y1;
 						int worldZ = z-z1;
-						worldX = world.shrinkToWorld(worldX);
-						worldZ = world.shrinkToWorld(worldZ);
-						long key = Boundaries.getKey(worldX,worldY,worldZ);
 						
 						
-						if (farViewEnabled)
-						{
-							if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0 && worldY%J3DCore.FARVIEW_GAP==0)
-							{
-								// render this one for farview
-								RenderedCube c = worldCubeCache_FARVIEW.remove(key);
-								if (c==null) {
-									Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
-									if (cube!=null)
-									{
-										c = new RenderedCube(cube,x1,y1,z1);
-										c.farview = true;
-									}
-								}
-								worldCubeCacheNext_FARVIEW.put(key, c);
-								if (c!=null) 
-								{	
-									elements_FARVIEW.add(c);
-								}
-						}
-							
-						}
 						
 					}
 				}
 			}
-		}
+		}*/
 		
 		RenderedCube[] removable =  worldCubeCache.values().toArray(new RenderedCube[0]);
 		worldCubeCache.clear();
