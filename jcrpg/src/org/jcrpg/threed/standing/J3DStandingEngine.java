@@ -186,7 +186,7 @@ public class J3DStandingEngine {
     	{
     		if (c==null) continue;
     		Long cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
-    		c = hmCurrentCubes.get(cubeKey);
+    		c = hmCurrentCubes.remove(cubeKey);
     		detacheable.add(c);
     		liveNodes-= c.hsRenderedNodes.size();
     	}
@@ -195,7 +195,7 @@ public class J3DStandingEngine {
 
     	Jcrpg.LOGGER.info("getRenderedSpace size="+cubes.length);
 		
-		HashMap<Long, RenderedCube> hmNewCubes = new HashMap<Long, RenderedCube>();
+		//HashMap<Long, RenderedCube> hmNewCubes = new HashMap<Long, RenderedCube>();
 
 		Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 		
@@ -209,10 +209,10 @@ public class J3DStandingEngine {
 				already++;
 				// yes, we have it rendered...
 				// remove to let the unrendered ones in the hashmap for after removal from space of cRootNode
-				RenderedCube cOrig = hmCurrentCubes.remove(cubeKey);
+				//RenderedCube cOrig = hmCurrentCubes.remove(cubeKey);
 				
 				// add to the new cubes, it is rendered already
-				hmNewCubes.put(cubeKey,cOrig); // keep cOrig with jme nodes!!
+				//hmNewCubes.put(cubeKey,cOrig); // keep cOrig with jme nodes!!
 				continue;				
 			}
 			newly++;
@@ -227,24 +227,25 @@ public class J3DStandingEngine {
 				}
 			}
 			// store it to new cubes hashmap
-			hmNewCubes.put(cubeKey,c);
+			hmCurrentCubes.put(cubeKey,c);
 		}
 	    Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
-	    for (RenderedCube cToDetach:hmCurrentCubes.values())
+	    for (RenderedCube cToDetach:detacheable)
 	    {
 			removed++;
-    		outOfViewPort.remove(cToDetach);
     		if (!cToDetach.farview) {
     			inViewPort.remove(cToDetach);
+        		outOfViewPort.remove(cToDetach);
     		}
     		if (cToDetach.farview) {
     			inFarViewPort.remove(cToDetach);
+        		outOfFarViewPort.remove(cToDetach);
     		}
 	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
-	    hmCurrentCubes.clear();
-	    hmCurrentCubes.putAll(hmNewCubes); // the newly rendered/remaining cubes are now the current cubes
-	    Jcrpg.LOGGER.info("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+	    //hmCurrentCubes.clear();
+	    //hmCurrentCubes.putAll(hmNewCubes); // the newly rendered/remaining cubes are now the current cubes
+	    System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		return detacheable;
 		
 	}
@@ -1316,6 +1317,7 @@ public class J3DStandingEngine {
 		inFarViewPort.clear();
 		inViewPort.clear();
 		outOfViewPort.clear();
+		outOfFarViewPort.clear();
 		renderedArea.worldCubeCache.clear();
 		renderedArea.worldCubeCache_FARVIEW.clear();
 		renderedArea.worldCubeCacheNext.clear();
