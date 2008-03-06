@@ -357,21 +357,38 @@ public class Geography extends Place implements Surface {
 		return 0;
 	}
 	
+	int lastWorldX = -9999, lastWorldZ = -9999, lastHeight;
 	
 	public int getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
+		if (lastWorldX==worldX && lastWorldZ==worldZ)
+		{
+			return lastHeight;
+		}
+		lastWorldX = worldX; lastWorldZ = worldZ;
 		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ))
 		{
-			return getPointHeightOutside(worldX, worldZ, farView);
-		}
-		return getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
+			lastHeight = getPointHeightOutside(worldX, worldZ, farView);
+		} else
+			lastHeight = getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
+		return lastHeight;
 	}
 	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
 		return 0;
 	}
+	int s_lastWorldX = -9999, s_lastWorldZ = -9999;
+	boolean s_boolean_farview = false;
+	SurfaceHeightAndType[] s_lastType = null; 
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView) {
+		if (s_lastWorldX==worldX && s_lastWorldZ==worldZ)
+		{
+			return s_lastType;
+		} else
+		{
+			s_lastWorldX = worldX; s_lastWorldZ = worldZ;
+		}
 		int[] values = calculateTransformedCoordinates(worldX, worldGroundLevel, worldZ);
 		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = values[0];
@@ -385,13 +402,14 @@ public class Geography extends Place implements Surface {
 		int kind = getCubeKind(-1, worldX, Y, worldZ,  farView);
 		if (kind>=0 && kind<=4)
 		{
-			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
+			s_lastType =  new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
 		} else
 		if (kind>=6)
 		{
-			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,false,J3DCore.BOTTOM)};
+			s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,false,J3DCore.BOTTOM)};
 		}
-		return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
+		s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
+		return s_lastType;
 	}
 	
 	/**

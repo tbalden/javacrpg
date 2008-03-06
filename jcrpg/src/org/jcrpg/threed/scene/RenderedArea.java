@@ -24,6 +24,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
 public class RenderedArea {
 	
@@ -67,32 +68,39 @@ public class RenderedArea {
 			}
 		}
 		
-
+		Time wtime = world.engine.getWorldMeanTime();
+		
 		worldCubeCacheNext = new HashMap<Long, RenderedCube>();
 		worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		boolean calcNormalView = false;
-		
+		long sumTime = 0, sumTime_1 = 0;
+		world.perf_climate_t0 = 0;
+		world.perf_flora_t0 = 0;
+		world.perf_geo_t0 = 0;
+		world.perf_surface_t0 = 0;
+		world.perf_water_t0 = 0;
 		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
-			if (Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
+			if (!farViewEnabled ||Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
 			{
 				calcNormalView = true;
 			}
-			for (int y1=-1*Math.min(distance,20); y1<=1*Math.min(distance,20); y1++)
+			for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 			{
-				if (calcNormalView && !(Math.abs(y1)<=J3DCore.RENDER_DISTANCE))
+				if (calcNormalView && (!farViewEnabled || !(Math.abs(z1)<=J3DCore.RENDER_DISTANCE)))
 				{
 					calcNormalView = false;
 				}
 				long key = 0; boolean getKey = true;
-				for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
+				for (int y1=-1*Math.min(distance,15); y1<=1*Math.min(distance,15); y1++)
 				{
+					long t0_1 = System.currentTimeMillis();
 					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
-					if (worldZ<0) getKey = true; // key recalc needed
+					if (worldY<0) getKey = true; // key recalc needed
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
 
@@ -103,28 +111,33 @@ public class RenderedArea {
 					} else
 					{
 						// no key calc needed, decrease it...
-						key--;
+						key++;
 					}
-					
-					if (!farViewEnabled || calcNormalView && Math.abs(z1)<J3DCore.RENDER_DISTANCE)
+					sumTime_1+=System.currentTimeMillis()-t0_1;
+					if (!farViewEnabled || calcNormalView && Math.abs(y1)<J3DCore.RENDER_DISTANCE)
 					{
+						long t0 = System.currentTimeMillis();
 						RenderedCube c = null;
 						if (!worldCubeCache.containsKey(key))
 						{
-							Cube cube = world.getCube(world.engine.getWorldMeanTime(),key, worldX, worldY, worldZ, false);
+							//t0 = System.currentTimeMillis();
+							Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
+							
 							if (cube!=null)
 							{
 								c = new RenderedCube(cube,x1,y1,z1);
-							}
-							if (c!=null) 
-							{	// only gather newly rendered cubes
+								// gather newly rendered cubes
 								elements.add(c);
 							}
+							//sumTime+=System.currentTimeMillis()-t0;
 						} else
 						{
+							//t0 = System.currentTimeMillis();
 							c = worldCubeCache.remove(key);
+							
 						}
 						worldCubeCacheNext.put(key, c);
+						sumTime+=System.currentTimeMillis()-t0;
 					}
 
 					if (farViewEnabled)
@@ -140,9 +153,7 @@ public class RenderedArea {
 								{
 									c = new RenderedCube(cube,x1,y1,z1);
 									c.farview = true;
-								}
-								if (c!=null) 
-								{	// only gather newly rendered cubes
+									// gather newly rendered cubes
 									elements_FARVIEW.add(c);
 								}
 							} else
@@ -157,27 +168,15 @@ public class RenderedArea {
 				}
 			}
 		}
-
-		/*if (farViewEnabled) 
-		{
-			distance = J3DCore.RENDER_DISTANCE_FARVIEW;
-			
-			for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
-			{
-				for (int y1=-1*Math.min(distance,20); y1<=1*Math.min(distance,20); y1++)
-				{
-					for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
-					{
-						int worldX = x+x1;
-						int worldY = y+y1;
-						int worldZ = z-z1;
-						
-						
-						
-					}
-				}
-			}
-		}*/
+		System.out.println("Key calculation sumTime = "+sumTime_1);
+		System.out.println("World.getCube sumTime = "+sumTime);
+		System.out.println("-- geo = "+world.perf_geo_t0);
+		System.out.println("-- flo = "+world.perf_flora_t0);
+		System.out.println("-- cli = "+world.perf_climate_t0);
+		System.out.println("-- wat = "+world.perf_water_t0);
+		System.out.println("-- sur = "+world.perf_surface_t0);
+		
+		long t0 = System.currentTimeMillis();
 		
 		RenderedCube[] removable =  worldCubeCache.values().toArray(new RenderedCube[0]);
 		worldCubeCache.clear();
@@ -187,7 +186,7 @@ public class RenderedArea {
 		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
-		
+		System.out.println("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
 		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable, (RenderedCube[])elements_FARVIEW.toArray(new RenderedCube[0]),removable_FARVIEW};
 		
 	}

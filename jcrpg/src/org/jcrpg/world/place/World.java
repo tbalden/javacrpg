@@ -141,6 +141,11 @@ public class World extends Place {
 	
 	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
 	
+	public long perf_flora_t0 = System.currentTimeMillis();
+	public long perf_geo_t0 = perf_flora_t0;
+	public long perf_climate_t0 = perf_flora_t0;
+	public long perf_water_t0 = perf_flora_t0;
+	public long perf_surface_t0 = perf_flora_t0;
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
 		if (WORLD_IS_GLOBE) {
@@ -167,11 +172,16 @@ public class World extends Place {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
 					insideGeography = true;
+					long t0 = 0;
+					t0 = System.currentTimeMillis();
 					Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
+					perf_geo_t0+=System.currentTimeMillis()-t0;
 					collectCubes(geoCube,false);
 					if (geo instanceof Surface)
 					{
+						t0 = System.currentTimeMillis();
 						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, farView);
+						perf_surface_t0+=System.currentTimeMillis()-t0;
 						for (int surfCount = 0; surfCount<surf.length; surfCount++) {
 							if (surf!=null && surf[surfCount].canContain) {
 								// collecting surfaces that can contain, e.g. waters
@@ -181,10 +191,14 @@ public class World extends Place {
 								if (worldY/CONST_FARVIEW==surf[surfCount].surfaceY/CONST_FARVIEW && surf[surfCount].canContain)
 								{
 									// this can contain things upon it, do the climate and flora... 
+									t0 = System.currentTimeMillis();
 									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
+									perf_climate_t0+=System.currentTimeMillis()-t0;
 									geoCube.climateId = conditions.belt.STATIC_ID;
 									Cube floraCube = null;
+									t0 = System.currentTimeMillis();
 									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
+									perf_flora_t0+=System.currentTimeMillis()-t0;
 									if (floraCube!=null)
 									{
 										collectCubes(floraCube,true);
@@ -216,7 +230,8 @@ public class World extends Place {
 			}
 			mergeCubes();
 			
-			// waters				
+			// waters
+			long t0 = System.currentTimeMillis();
 			for (Water w : waters.values()) {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{
@@ -245,6 +260,7 @@ public class World extends Place {
 					}
 				}
 			}
+			perf_water_t0+=System.currentTimeMillis()-t0;
 			if (insideGeography) return currentMerged;
 
 			// not in geography, return null
@@ -297,7 +313,9 @@ public class World extends Place {
 	public Cube appendCube(Cube orig, Cube newCube, int worldX, int worldY, int worldZ)
 	{
 		if (orig!=null && newCube!=null) {
-			return new Cube(orig,newCube,worldX,worldY,worldZ,orig.steepDirection);
+			orig.merge(newCube,worldX,worldY,worldZ,orig.steepDirection);
+			return orig;
+					//new Cube(orig,
 		}
 		if (orig!=null && newCube==null)
 		{
