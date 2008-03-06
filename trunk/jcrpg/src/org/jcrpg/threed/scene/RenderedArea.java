@@ -73,9 +73,10 @@ public class RenderedArea {
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		boolean calcNormalView = false;
-		for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
+		
+		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
-			if (Math.abs(z1)<=J3DCore.RENDER_DISTANCE)
+			if (Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
 			{
 				calcNormalView = true;
 			}
@@ -85,21 +86,32 @@ public class RenderedArea {
 				{
 					calcNormalView = false;
 				}
-				for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
+				long key = 0; boolean getKey = true;
+				for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 				{
 					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
-					
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
-					long key = Boundaries.getKey(worldX,worldY,worldZ);
-					if (!farViewEnabled || calcNormalView && Math.abs(x1)<J3DCore.RENDER_DISTANCE)
+
+					if (getKey)
+					{
+						key = Boundaries.getKey(worldX,worldY,worldZ);
+						//System.out.println(key);
+						getKey = false;
+					} else
+					{
+						key--;
+						//System.out.println(key+" -- "+Boundaries.getKey(worldX,worldY,worldZ));
+					}
+					
+					if (!farViewEnabled || calcNormalView && Math.abs(z1)<J3DCore.RENDER_DISTANCE)
 					{
 						RenderedCube c = null;
 						if (!worldCubeCache.containsKey(key))
 						{
-							Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, false);
+							Cube cube = world.getCube(world.engine.getWorldMeanTime(),key, worldX, worldY, worldZ, false);
 							if (cube!=null)
 							{
 								c = new RenderedCube(cube,x1,y1,z1);
@@ -123,7 +135,7 @@ public class RenderedArea {
 							RenderedCube c = null;
 							if (!worldCubeCache_FARVIEW.containsKey(key))
 							{
-								Cube cube = world.getCube(world.engine.getWorldMeanTime(),worldX, worldY, worldZ, true);
+								Cube cube = world.getCube(world.engine.getWorldMeanTime(),key, worldX, worldY, worldZ, true);
 								if (cube!=null)
 								{
 									c = new RenderedCube(cube,x1,y1,z1);

@@ -193,8 +193,8 @@ public class Geography extends Place implements Surface {
 
 	
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
-		int kind = getCubeKind(worldX, worldY, worldZ, farView);
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		int kind = getCubeKind(key, worldX, worldY, worldZ, farView);
 		Cube c;
 		if (farView)
 		{
@@ -382,7 +382,7 @@ public class Geography extends Place implements Surface {
 		int relZ = values[5];
 
 		int Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
-		int kind = getCubeKind(worldX, Y, worldZ,  farView);
+		int kind = getCubeKind(-1, worldX, Y, worldZ,  farView);
 		if (kind>=0 && kind<=4)
 		{
 			return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
@@ -414,7 +414,7 @@ public class Geography extends Place implements Surface {
 	 * @param worldZ
 	 * @return
 	 */
-	public int getCubeKindOutside(int worldX, int worldY, int worldZ, boolean farView)
+	public int getCubeKindOutside(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
 		for (Geography geo:((World)getRoot()).geographies.values())
 		{
@@ -422,7 +422,7 @@ public class Geography extends Place implements Surface {
 			{
 				if (geo.boundaries.isInside(worldX, worldY, worldZ))
 				{
-					return geo.getCubeKind(worldX,worldY,worldZ, farView);
+					return geo.getCubeKind(key, worldX,worldY,worldZ, farView);
 				}
 			}
 		}
@@ -436,12 +436,19 @@ public class Geography extends Place implements Surface {
 	 * @param worldZ
 	 * @return
 	 */
-	public int getCubeKind(int worldX, int worldY, int worldZ, boolean farView)
+	public int getCubeKind(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
 		if (numericId!=0) 
 		{
-			Long key = (numericId*(farView?2:1)+(((long)worldX)<< 32) + ((worldY) << 16) + ((worldZ)));
-			Integer cachedKind = quickCubeKindCache.get(key);
+			Long keyNew = numericId*(farView?2:1);
+			if (key==-1)
+			{
+				keyNew += Boundaries.getKey(worldX, worldY, worldZ);
+			} else
+			{
+				keyNew+=key;
+			}
+			Integer cachedKind = quickCubeKindCache.get(keyNew);
 			if (cachedKind!=null) 
 			{
 				//System.out.println("CUBE CACHE USED!");
@@ -452,7 +459,7 @@ public class Geography extends Place implements Surface {
 			{
 				quickCubeKindCache.clear();
 			}
-			quickCubeKindCache.put(key, kind);
+			quickCubeKindCache.put(keyNew, kind);
 			return kind;
 		} else
 		{

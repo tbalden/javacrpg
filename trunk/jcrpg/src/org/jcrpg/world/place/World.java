@@ -127,7 +127,7 @@ public class World extends Place {
 
 
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		int _worldX = worldX;
 		int _worldY = worldY;
 		int _worldZ = worldZ;
@@ -136,12 +136,12 @@ public class World extends Place {
 			_worldZ = shrinkToWorld(_worldZ);
 		}
 		Time localTime = engine.getWorldMeanTime().getLocalTime(this, _worldX, _worldY, _worldZ);
-		return getCube(localTime,worldX,worldY,worldZ, farView);
+		return getCube(localTime,key, worldX,worldY,worldZ, farView);
 	}
 	
 	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
 	
-	public Cube getCube(Time localTime, int worldX, int worldY, int worldZ, boolean farView) {
+	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
 		if (WORLD_IS_GLOBE) {
 			worldX = shrinkToWorld(worldX);
@@ -153,7 +153,7 @@ public class World extends Place {
 		{
 			for (Economic eco : economics.values()) {
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ))
-					return eco.getCube(worldX, worldY, worldZ, farView);
+					return eco.getCube(key, worldX, worldY, worldZ, farView);
 			}
 			//Cube retCube = null;
 			currentMerged = null;
@@ -167,7 +167,7 @@ public class World extends Place {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
 					insideGeography = true;
-					Cube geoCube = geo.getCube(worldX, worldY, worldZ, farView);
+					Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
 					collectCubes(geoCube,false);
 					if (geo instanceof Surface)
 					{

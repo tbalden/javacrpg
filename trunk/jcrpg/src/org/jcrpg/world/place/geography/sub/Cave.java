@@ -91,9 +91,9 @@ public class Cave extends Geography implements Surface {
 	}
 	
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView)
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
-		Cube c = getCubeBase(worldX, worldY, worldZ, farView);
+		Cube c = getCubeBase(key, worldX, worldY, worldZ, farView);
 		if (c==null) {
 			return null;
 		}
@@ -107,11 +107,11 @@ public class Cave extends Geography implements Surface {
 	public int ENTRANCE_DISTANCE = 8;
 	public int ENTRANCE_LEVEL = 0;
 
-	private Cube getCubeBase(int worldX, int worldY, int worldZ, boolean farView)
+	private Cube getCubeBase(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
 		if (worldY>=worldHeight) return null;
 
-		int kind = getCubeKindOutside(worldX, worldY, worldZ, farView);
+		int kind = getCubeKindOutside(key, worldX, worldY, worldZ, farView);
 		
 		
 		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
@@ -185,7 +185,7 @@ public class Cave extends Geography implements Surface {
 	
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView ) {
-		if (getCubeBase(worldX, worldGroundLevel, worldZ, farView)==null)
+		if (getCubeBase(-1, worldX, worldGroundLevel, worldZ, farView)==null)
 		{
 			if (cachedNonType==null)
 			{
