@@ -119,7 +119,7 @@ public abstract class Place {
 	 * @param worldZ
 	 * @return
 	 */
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView)
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
 		return null;
 	}

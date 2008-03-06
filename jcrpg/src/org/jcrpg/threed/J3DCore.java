@@ -1285,7 +1285,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (success)
 			{
 				try {
-					Side[] s = gameState.world.getCube(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false).getSide(BOTTOM);
+					Side[] s = gameState.world.getCube(-1,gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false).getSide(BOTTOM);
 					audioServer.play(s[0].subtype.audioStepType);				
 				} catch (Exception ex)
 				{
@@ -1319,7 +1319,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{ // test free movement
 			gameState.setViewPosition(newCoords);
 			gameState.setRelativePosition(newRelCoords);
-			Cube c = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+			Cube c = gameState.world.getCube(-1,newCoords[0], newCoords[1], newCoords[2], false);
 			if (c!=null) {
 				if (c.internalCube)
 				{
@@ -1341,7 +1341,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 		}
 
-		Cube c = gameState.world.getCube(from[0], from[1], from[2], false);
+		Cube c = gameState.world.getCube(-1,from[0], from[1], from[2], false);
 		
 		if (c!=null) {
 			Jcrpg.LOGGER.info("Current Cube = "+c.toString());
@@ -1364,7 +1364,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (hasSideOfInstance(sides, notPassable) && (!gameState.onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
 				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
-			Cube nextCube = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+			Cube nextCube = gameState.world.getCube(-1,newCoords[0], newCoords[1], newCoords[2], false);
 			if (nextCube==null) Jcrpg.LOGGER.info("NEXT CUBE = NULL");
 				else 
 			{
@@ -1407,7 +1407,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				while (true)
 				{
 					// cube below
-					nextCube = gameState.world.getCube(newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
+					nextCube = gameState.world.getCube(-1,newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
 					Jcrpg.LOGGER.info("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
@@ -1477,7 +1477,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		gameState.setViewPosition(newCoords);
 		gameState.setRelativePosition(newRelCoords);
-		c = gameState.world.getCube(newCoords[0], newCoords[1], newCoords[2], false);
+		c = gameState.world.getCube(-1,newCoords[0], newCoords[1], newCoords[2], false);
 		if (c!=null) {
 			if (c.internalCube)
 			{

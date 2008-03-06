@@ -96,7 +96,7 @@ public class MountainOrig extends Geography implements Surface{
 	
 
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		int relX = worldX-origoX*magnification;
 		int relY = worldY-worldGroundLevel;
 		int relZ = worldZ-origoZ*magnification;

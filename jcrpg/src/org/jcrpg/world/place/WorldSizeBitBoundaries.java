@@ -59,17 +59,28 @@ public class WorldSizeBitBoundaries extends Boundaries {
 		bytes[byteCount] = b;
 	}
 
+	int lastX = -9999, lastY = -9999, lastZ = -9999;
+	boolean lastResult = false;
+	
 	@Override
 	public boolean isInside(int absoluteX, int absoluteY, int absoluteZ) {
 		int x = absoluteX / magnification;
 		int y = absoluteY / magnification;
 		int z = absoluteZ / magnification;
+		if (lastX==x && lastY==y && lastZ==z)
+		{
+			return lastResult;
+		} else
+		{
+			lastX = x; lastY = y; lastZ = z;
+		}
 		int base = (x + y*gWX + z*(gWY*gWX));
 		int place = base%8;
 		place = placeBitMap[place];
 		int byteCount = base/8;
 		byte b = bytes[byteCount];
-		return (b&place)==place;
+		lastResult = (b&place)==place;
+		return lastResult;
 	}
 
 }

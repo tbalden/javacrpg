@@ -174,7 +174,7 @@ public class House extends Economic {
 
 
 	@Override
-	public Cube getCube(int worldX, int worldY, int worldZ, boolean farView) {
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		Cube o = getStoredCube(worldX-origoX, worldY-origoY, worldZ-origoZ);
 		if (o==null) return null;
 		Cube c = o.copy(this);

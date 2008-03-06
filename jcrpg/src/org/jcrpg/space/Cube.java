@@ -242,7 +242,7 @@ public class Cube extends ChangingImpl {
 	{
 		Object[] o = J3DCore.directionAnglesAndTranslations.get(new Integer(direction));
 		int[] f = (int[])o[1];
-		Cube n = parent.getCube(x+f[0], y+f[1], z+f[2], false);
+		Cube n = parent.getCube(-1, x+f[0], y+f[1], z+f[2], false);
 		//if (n==null) System.out.println(this+" : "+parent.id+" "+direction+" NEIGHBOUR = "+n);
 		return n;
 	}
