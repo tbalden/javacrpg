@@ -92,18 +92,18 @@ public class RenderedArea {
 					int worldX = x+x1;
 					int worldY = y+y1;
 					int worldZ = z-z1;
+					if (worldZ<0) getKey = true; // key recalc needed
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
 
 					if (getKey)
 					{
 						key = Boundaries.getKey(worldX,worldY,worldZ);
-						//System.out.println(key);
 						getKey = false;
 					} else
 					{
+						// no key calc needed, decrease it...
 						key--;
-						//System.out.println(key+" -- "+Boundaries.getKey(worldX,worldY,worldZ));
 					}
 					
 					if (!farViewEnabled || calcNormalView && Math.abs(z1)<J3DCore.RENDER_DISTANCE)
