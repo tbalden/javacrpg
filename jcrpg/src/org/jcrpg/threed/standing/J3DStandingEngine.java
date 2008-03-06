@@ -244,13 +244,9 @@ public class J3DStandingEngine {
     			inFarViewPort.remove(cToDetach);
         		outOfFarViewPort.remove(cToDetach);
     		}
-	    	cToDetach.hsRenderedNodes.clear(); // clear references to nodePlaceholders
 	    }
-	    //hmCurrentCubes.clear();
-	    //hmCurrentCubes.putAll(hmNewCubes); // the newly rendered/remaining cubes are now the current cubes
 	    System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		return detacheable;
-		
 	}
 
 	/**
