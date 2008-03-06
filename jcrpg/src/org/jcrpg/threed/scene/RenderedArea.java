@@ -74,7 +74,6 @@ public class RenderedArea {
 		worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
-		boolean calcNormalView = false;
 		long sumTime = 0, sumTime_1 = 0;
 		world.perf_climate_t0 = 0;
 		world.perf_flora_t0 = 0;
@@ -83,16 +82,8 @@ public class RenderedArea {
 		world.perf_water_t0 = 0;
 		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
-			if (!farViewEnabled ||Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
-			{
-				calcNormalView = true;
-			}
 			for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
 			{
-				if (calcNormalView && (!farViewEnabled || !(Math.abs(z1)<=J3DCore.RENDER_DISTANCE)))
-				{
-					calcNormalView = false;
-				}
 				long key = 0; boolean getKey = true;
 				for (int y1=-1*Math.min(distance,15); y1<=1*Math.min(distance,15); y1++)
 				{
@@ -103,6 +94,15 @@ public class RenderedArea {
 					if (worldY<0) getKey = true; // key recalc needed
 					worldX = world.shrinkToWorld(worldX);
 					worldZ = world.shrinkToWorld(worldZ);
+					
+					boolean normalView = !farViewEnabled;
+					if (!normalView)
+					{
+						if (Math.abs(z1)<=J3DCore.RENDER_DISTANCE && Math.abs(y1)<=J3DCore.RENDER_DISTANCE && Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
+						{
+							normalView = true;
+						}
+					}
 
 					if (getKey)
 					{
@@ -114,7 +114,7 @@ public class RenderedArea {
 						key++;
 					}
 					sumTime_1+=System.currentTimeMillis()-t0_1;
-					if (!farViewEnabled || calcNormalView && Math.abs(y1)<J3DCore.RENDER_DISTANCE)
+					if (!farViewEnabled || normalView)
 					{
 						long t0 = System.currentTimeMillis();
 						RenderedCube c = null;
