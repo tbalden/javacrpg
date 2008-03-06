@@ -145,7 +145,7 @@ public class Boundaries {
 	}
 	
 	public static Long getKey(int x,int y,int z){
-		long s = (((long)x) << 32) + ((y) << 16) + (z);
+		long s = (((long)x) << 32) + ((z) << 16) + (y);
 		//System.out.println("##"+ s);
 		return s;
 	}

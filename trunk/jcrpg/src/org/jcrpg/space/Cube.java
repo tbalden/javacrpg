@@ -93,6 +93,100 @@ public class Cube extends ChangingImpl {
 			if (i==5) bottom = this.sides[i];
 		}
 	}
+	
+	public void merge(Cube c2, int x, int y, int z, int steepDir) {
+		if (this.climateId==null)
+			this.climateId = c2.climateId;
+		else
+			this.climateId = this.climateId;
+		
+		if (this.geoCubeKind==Geography.K_UNDEFINED)
+			this.geoCubeKind = c2.geoCubeKind;
+		else
+			this.geoCubeKind = this.geoCubeKind;
+
+		int steep = this.steepDirection;
+		if (this.steepDirection==SurfaceHeightAndType.NOT_STEEP || this.steepDirection == J3DCore.BOTTOM || this.steepDirection == J3DCore.TOP)
+		{
+			if (c2.steepDirection == J3DCore.BOTTOM || c2.steepDirection == J3DCore.TOP)
+			{
+				c2.steepDirection = SurfaceHeightAndType.NOT_STEEP;
+			} else {
+				steep = c2.steepDirection;
+			}
+		}
+		steepDirection = steep;
+		if (c2.overwrite && c2.overwritePower>=this.overwritePower)
+		{
+			steepDirection = c2.steepDirection;
+		}
+		if (this.overwrite && this.overwritePower>=c2.overwritePower)
+		{
+			steepDirection = this.steepDirection;
+		}
+		this.parent = this.parent;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		if (this.overwrite || c2.overwrite) 
+		{
+			this.overwrite = true;
+			if (this.onlyIfOverlaps || c2.onlyIfOverlaps) 
+			{
+				this.onlyIfOverlaps = true;
+			}
+		}
+		if (this.internalCube || c2.internalCube)
+		{
+			internalCube = true;
+		}
+		this.overwritePower = Math.max(this.overwritePower, c2.overwritePower);
+
+		for (int i=0; i<sides.length; i++)
+		{
+			Side[] sides1 = this.sides[i];
+			Side[] sides2 = c2.sides[i];
+			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
+			if (sides1==null || c2.overwrite && c2.overwritePower>=this.overwritePower)
+			{				
+				if (c2.onlyIfOverlaps) {
+					if (!(c2.overwrite && c2.overwritePower>=this.overwritePower))
+						merged = sides1==null?sides2:null;
+					else
+						merged = sides2;
+				}
+				else {
+					merged = sides2;
+				}
+			} else
+			if (sides2==null || this.overwrite && this.overwritePower>=c2.overwritePower)
+			{				
+				if (this.onlyIfOverlaps) {
+					if (!(this.overwrite && this.overwritePower>=c2.overwritePower))
+						merged = sides2==null?sides1:null;
+					else
+						merged = sides1;
+				}
+				else {
+					merged = sides1;
+				}
+			} else
+			{
+				for (int j=0; j<merged.length; j++)
+				{
+					
+					if (j<sides1.length)
+						merged[j] =sides1[j];
+					else
+						merged[j] = sides2[j-sides1.length];
+				}
+			}
+			internalCube = this.internalCube||c2.internalCube;
+			this.sides[i] = merged;
+		}
+		fillSideFields();
+		
+	}
 
 	public Cube(Cube c1, Cube c2, int x, int y, int z, int steepDir) {
 		if (c1.climateId==null)

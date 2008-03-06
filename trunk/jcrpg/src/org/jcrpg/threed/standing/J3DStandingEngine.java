@@ -141,8 +141,9 @@ public class J3DStandingEngine {
 		 */
 		
     	// get a specific part of the area to render
+		long time = System.currentTimeMillis();
 		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED);
-    	
+    	System.out.println("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
@@ -172,6 +173,13 @@ public class J3DStandingEngine {
 		return ret;
 	}
 	
+	/**
+	 * Renders all the cubes' sides' placeholders with renderSide.
+	 * @param cubes
+	 * @param removableCubes
+	 * @param hmCurrentCubes
+	 * @return
+	 */
 	public HashSet<RenderedCube> doRender(RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Long, RenderedCube> hmCurrentCubes)
 	{
 		int already = 0;
@@ -208,11 +216,6 @@ public class J3DStandingEngine {
 			{
 				already++;
 				// yes, we have it rendered...
-				// remove to let the unrendered ones in the hashmap for after removal from space of cRootNode
-				//RenderedCube cOrig = hmCurrentCubes.remove(cubeKey);
-				
-				// add to the new cubes, it is rendered already
-				//hmNewCubes.put(cubeKey,cOrig); // keep cOrig with jme nodes!!
 				continue;				
 			}
 			newly++;
@@ -388,9 +391,10 @@ public class J3DStandingEngine {
 	}
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
+		long t1 = System.currentTimeMillis(); 
 		synchronized(Engine.mutex) {
 			
-			if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
+			/*if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
 				System.out.println("   -    "+ core.extRootNode.getChildren().size());
 				//if (true == false)
 				for (Spatial s:core.extRootNode.getChildren())
@@ -412,7 +416,7 @@ public class J3DStandingEngine {
 					} //else
 					//System.out.println(s.getName()+ " "+s);
 				}
-			}
+			}*/
 			
 			
 			boolean storedPauseState = engine.isPause();
@@ -427,7 +431,9 @@ public class J3DStandingEngine {
 			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				// doing the render, getting the unneeded renderedCubes too.
+				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = render();
+				System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 
 				for (int i=0; i<detacheable.length; i++)
 				// removing the unneeded.
@@ -1098,9 +1104,9 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				core.groundParentNode.setCullMode(Node.CULL_NEVER);
-				core.updateDisplayNoBackBuffer();
-				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				//core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				//core.updateDisplayNoBackBuffer();
+				//core.groundParentNode.setCullMode(Node.CULL_INHERIT);
 				if (cullVariationCounter%1==0) 
 				{
 					core.groundParentNode.updateRenderState();
@@ -1128,6 +1134,7 @@ public class J3DStandingEngine {
 			
 			engine.setPause(storedPauseState);
 		}
+		System.out.println("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 	}
 	
 	

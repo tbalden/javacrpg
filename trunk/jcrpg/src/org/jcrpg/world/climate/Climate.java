@@ -39,7 +39,7 @@ public class Climate extends ClimatePart {
 		belts = new HashMap<String, ClimateBelt>();
 		levels = new HashMap<String, ClimateLevel>();
 	}
-
+	ClimateLevel fake = new ClimateLevel("1",this,0,0);
 	@Override
 	public CubeClimateConditions getCubeClimate(Time time, int worldX, int worldY, int worldZ, boolean internal) {
 		for (ClimateBelt belt : belts.values()) {
@@ -49,7 +49,7 @@ public class Climate extends ClimatePart {
 			{
 				CubeClimateConditions c = belt.getCubeClimate(time, worldX, worldY, worldZ, internal);
 				c.setBelt(belt);
-				c.setLevel(new ClimateLevel("1",this,0,0));
+				c.setLevel(fake);
 				c.setInternal(internal);
 			
 				return c;
