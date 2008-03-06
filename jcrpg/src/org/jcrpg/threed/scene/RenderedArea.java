@@ -104,7 +104,7 @@ public class RenderedArea {
 						}
 					}
 
-					if (getKey)
+					if (normalView && getKey)
 					{
 						key = Boundaries.getKey(worldX,worldY,worldZ);
 						getKey = false;
@@ -114,7 +114,7 @@ public class RenderedArea {
 						key++;
 					}
 					sumTime_1+=System.currentTimeMillis()-t0_1;
-					if (!farViewEnabled || normalView)
+					if (normalView)
 					{
 						long t0 = System.currentTimeMillis();
 						RenderedCube c = null;
@@ -144,6 +144,12 @@ public class RenderedArea {
 					{
 						if (worldX%J3DCore.FARVIEW_GAP==0 && worldZ%J3DCore.FARVIEW_GAP==0 && worldY%J3DCore.FARVIEW_GAP==0)
 						{
+							if (!normalView)
+							{
+								key = Boundaries.getKey(worldX,worldY,worldZ);
+								getKey = false;
+							}
+							
 							// render this one for farview
 							RenderedCube c = null;
 							if (!worldCubeCache_FARVIEW.containsKey(key))
