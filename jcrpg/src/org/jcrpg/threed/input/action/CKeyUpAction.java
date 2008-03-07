@@ -32,7 +32,10 @@ public class CKeyUpAction extends CKeyAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveUp()) {
-	        handler.core.sEngine.renderToViewPort();
+            if (!handler.core.rendering)
+            {
+            	new Thread(handler.core).start();
+            }
 	        Vector3f toReach = handler.core.getCurrentLocation();
 	        
 	        float steps = J3DCore.MOVE_STEPS;
@@ -40,6 +43,10 @@ public class CKeyUpAction extends CKeyAction {
 	    	handler.core.setCalculatedCameraLocation();
 	        camera.update();
 	        //handler.core.render();
+            if (!handler.core.rendering)
+            {
+            	handler.core.sEngine.renderToViewPort();
+            }
         }
         handler.unlockHandling(true);
     }

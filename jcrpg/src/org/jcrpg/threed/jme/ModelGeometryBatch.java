@@ -96,6 +96,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		return key;
 		
 	}
+	public static long sumBuildMatricesTime = 0; 
 	public void addItem(NodePlaceholder placeholder)
 	{
 		
@@ -115,20 +116,18 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
-				//scale.multLocal(J3DCore.FARVIEW_GAP);
-				/*scale.x*=J3DCore.FARVIEW_GAP;
-				scale.z*=J3DCore.FARVIEW_GAP;
-				scale.y*=J3DCore.FARVIEW_GAP;*/
 				instance.getAttributes().setScale(scale);
 			} else
 			{
 				instance.getAttributes().setScale(placeholder.getLocalScale());
 			}
 			instance.getAttributes().setVisible(true);
+			long t0 = System.currentTimeMillis();
 			instance.getAttributes().buildMatrices();
 			placeholder.batchInstance = instance;
 			nVSet.remove(instance);
 			vSet.add(instance);
+			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			return;
 		} else
 		{
@@ -140,21 +139,19 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
-				//scale.multLocal(J3DCore.FARVIEW_GAP);
-				/*scale.x*=J3DCore.FARVIEW_GAP;
-				scale.z*=J3DCore.FARVIEW_GAP;
-				scale.y*=J3DCore.FARVIEW_GAP;*/
 				quad.setLocalScale(scale);
 			} else
 			{
 				quad.setLocalScale(placeholder.getLocalScale());
 			}
 			
+			long t0 = System.currentTimeMillis();
 			// Add a Box instance (batch and attributes)
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
 					 new GeometryBatchInstanceAttributes(quad));
 			placeholder.batchInstance = instance;
 			addInstance(instance);
+			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			vSet.add(instance);
 		}
 			

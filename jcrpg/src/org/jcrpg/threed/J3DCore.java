@@ -46,6 +46,7 @@ import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
+import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
@@ -140,7 +141,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
 	public static final int MOVE_STEPS = 16;
-	public static long TIME_TO_ENSURE = 16; 
+	public static long TIME_TO_ENSURE = 18; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
@@ -1747,7 +1748,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         {
         	sEngine = new J3DStandingEngine(this);
         }
-		sEngine.render();
+		sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ);
 		sEngine.renderToViewPort();
 		if (!coreFullyInitialized)
 			sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
@@ -2109,6 +2110,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		super.simpleUpdate();
 		
+		/*if (renderFinished && )
+		{
+			sEngine.renderToViewPort();
+			renderFinished = false;
+		}*/
+		
 		//AudioSystem.getSystem().update();
 		
 		if (dr!=null) {
@@ -2158,15 +2165,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
     protected BasicPassManager pManager;
 
-    boolean rendering = false;
+    public boolean rendering = false;
+    public boolean renderFinished = false;
     Object mutex = new Object();
+    public HashSet<RenderedCube>[] renderResult = null;
 	public void run() {
-		
+		Thread.currentThread().setPriority(10);
 		if (rendering) return;
 		synchronized (mutex) {
-			rendering = true;		
-			sEngine.renderToViewPort();
+			renderFinished = false;
+			rendering = true;
+			renderResult = null;
+			long t0 = System.currentTimeMillis();
+			renderResult = sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ);
+			System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 			rendering = false;
+			renderFinished = true;
 		}
 	}
 

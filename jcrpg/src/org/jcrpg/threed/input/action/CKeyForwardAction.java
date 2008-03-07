@@ -49,13 +49,20 @@ public class CKeyForwardAction extends CKeyAction {
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveForward(handler.core.gameState.viewDirection)) {
         	//handler.core.renderToViewPort(0,2);
+            if (!handler.core.rendering)
+            {
+            	new Thread(handler.core).start();
+            }
             Vector3f toReach = handler.core.getCurrentLocation();        
             float steps = J3DCore.MOVE_STEPS;
             movePosition(steps, from, toReach);
             handler.core.setCalculatedCameraLocation();
             camera.update();
             //handler.core.updateDisplay(from);
-            handler.core.sEngine.renderToViewPort();
+            if (!handler.core.rendering)
+            {
+            	handler.core.sEngine.renderToViewPort();
+            }
         } else
         {
         	
