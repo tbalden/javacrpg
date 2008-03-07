@@ -261,6 +261,9 @@ public class LocalMap {
 	public void update(int cx, int cy, int cz, int dir)
 	{
 		if (cx==lastCx && cy==lastCy && cz==lastCz && dir==lastDir) return;
+		lastCx = cx;
+		lastCy = cy;
+		lastCz = cz;
 		update();
 		
 	}

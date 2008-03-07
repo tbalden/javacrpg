@@ -32,7 +32,6 @@ import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
-import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -107,7 +106,7 @@ public class J3DStandingEngine {
 	@SuppressWarnings("unchecked")
 	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ)
 	{
-		
+		System.out.println("RENDERING...");
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
 		//modelLoader.setLockForSharedNodes(false);
@@ -115,7 +114,7 @@ public class J3DStandingEngine {
 		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
 		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.viewPositionX+"/"+core.gameState.viewPositionZ+"...");
-    	//core.updateDisplay(null);
+    	if (!J3DCore.CONTINUOUS_LOAD) core.updateDisplay(null);
 
 		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
@@ -196,8 +195,10 @@ public class J3DStandingEngine {
     		if (c==null) continue;
     		Long cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
     		c = hmCurrentCubes.remove(cubeKey);
-    		detacheable.add(c);
-    		liveNodes-= c.hsRenderedNodes.size();
+    		if (c!=null && c.hsRenderedNodes!=null) {
+    			detacheable.add(c);
+    			liveNodes-= c.hsRenderedNodes.size();
+    		}
     	}
     	
     	Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
@@ -424,7 +425,7 @@ public class J3DStandingEngine {
 			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
 			Vector3f currLoc = new Vector3f(core.gameState.relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
-			if (core.renderResult!=null) 
+			if (J3DCore.CONTINUOUS_LOAD && core.renderResult!=null) 
 			{
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = core.renderResult;
@@ -467,13 +468,13 @@ public class J3DStandingEngine {
 					}
 				}		
 				System.out.println("DETACH TIME = "+(System.currentTimeMillis()-t0));
-			}
+			} else
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-			/*if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
+			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = render();
+				HashSet<RenderedCube>[] detacheable = render(core.gameState.viewPositionX,core.gameState.viewPositionY,core.gameState.viewPositionZ);
 				System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 
 				for (int i=0; i<detacheable.length; i++)
@@ -510,7 +511,7 @@ public class J3DStandingEngine {
 		    		}
 				}
 	
-			}*/
+			}
 			
 			long sysTime = System.currentTimeMillis();
 			
