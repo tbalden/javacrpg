@@ -44,14 +44,27 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public String key = null;
 	
 	public TriMesh nullmesh = new TriMesh();
+	// TODO create a cache cleaning way!!! in GeometryBatchHelper maybe, check if the model is used at all...
+	// till then it fastens up thing much, so keep it!
+	private static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
 	private TriMesh getModelMesh(Model m)
 	{
 		if (m.type == Model.QUADMODEL) {
-			return (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)m, false).getChild(0);
+			TriMesh mesh = cache.get(m);
+			if (cache.get(m)==null){
+				mesh = (TriMesh)core.modelLoader.loadQuadModelNode((QuadModel)m, false).getChild(0);
+				cache.put(m, mesh);
+			}
+			return mesh; 	
 		} else
 		if (m.type == Model.SIMPLEMODEL)
 		{
-			return (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)m, false).getChild(0);			
+			TriMesh mesh = cache.get(m);
+			if (cache.get(m)==null){
+				mesh = (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)m, false).getChild(0);
+				cache.put(m, mesh);
+			}
+			return mesh; 	
 		} else
 		{
 			return nullmesh;
@@ -110,9 +123,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		if (nVSet!=null && nVSet.size()>0)
 		{
+			long t0 = System.currentTimeMillis();
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = nVSet.iterator().next();
 			instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
 			instance.getAttributes().setRotation(placeholder.getLocalRotation());
+			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
@@ -122,15 +137,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				instance.getAttributes().setScale(placeholder.getLocalScale());
 			}
 			instance.getAttributes().setVisible(true);
-			long t0 = System.currentTimeMillis();
 			instance.getAttributes().buildMatrices();
 			placeholder.batchInstance = instance;
 			nVSet.remove(instance);
 			vSet.add(instance);
-			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			return;
 		} else
 		{
+			long t0 = System.currentTimeMillis();
 			TriMesh quad = getModelMesh(placeholder.model);
 			//System.out.println("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation());
@@ -145,14 +159,13 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				quad.setLocalScale(placeholder.getLocalScale());
 			}
 			
-			long t0 = System.currentTimeMillis();
 			// Add a Box instance (batch and attributes)
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
 					 new GeometryBatchInstanceAttributes(quad));
 			placeholder.batchInstance = instance;
 			addInstance(instance);
-			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			vSet.add(instance);
+			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 		}
 			
 	}

@@ -183,14 +183,13 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		
 		if (notVisible.size()>0)
 		{
+			long t0 = System.currentTimeMillis();
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = notVisible.iterator().next();
 			instance.getAttributes().setTranslation(trimesh.getLocalTranslation());
 			instance.getAttributes().setRotation(trimesh.getLocalRotation());
 			instance.getAttributes().setScale(trimesh.getLocalScale());
 			instance.getAttributes().setVisible(true);
-			long t0 = System.currentTimeMillis();
 			instance.getAttributes().buildMatrices();
-			sumAddItemReal += System.currentTimeMillis()-t0;
 			
 			if (placeholder!=null) {
 
@@ -206,6 +205,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			calcAvarageTranslation(trimesh.getLocalTranslation());				
 			notVisible.remove(instance);
 			visible.add(instance);
+			sumAddItemReal += System.currentTimeMillis()-t0;
 			return;
 		}
 			
@@ -214,7 +214,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(trimesh,
 				 new GeometryBatchInstanceAttributes(trimesh));
 		addInstance(instance);
-		sumAddItemReal += System.currentTimeMillis()-t0;
 		
 		if (placeholder!=null) {
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
@@ -225,6 +224,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 			instances.add(instance);
 		}
+		sumAddItemReal += System.currentTimeMillis()-t0;
 		
 		long t1 = System.currentTimeMillis();
 		calcAvarageTranslation(trimesh.getLocalTranslation());				
