@@ -48,7 +48,9 @@ public class CKeyForwardAction extends CKeyAction {
         
         Vector3f from = handler.core.getCurrentLocation();
         if (handler.core.moveForward(handler.core.gameState.viewDirection)) {
-        	//handler.core.renderToViewPort(0,2);
+        	if (!handler.core.rendering) {
+        		//handler.core.sEngine.renderToViewPort(0,2);
+        	}
             if (!handler.core.rendering)
             {
             	new Thread(handler.core).start();
@@ -61,6 +63,7 @@ public class CKeyForwardAction extends CKeyAction {
             //handler.core.updateDisplay(from);
             if (!handler.core.rendering)
             {
+            	//handler.core.sEngine.renderToViewPort(1,2);
             	handler.core.sEngine.renderToViewPort();
             }
         } else

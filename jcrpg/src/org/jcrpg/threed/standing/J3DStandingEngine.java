@@ -1190,6 +1190,9 @@ public class J3DStandingEngine {
 					//
 					core.garbCollCounter = 0;
 				}
+			} else
+			{
+			    core.updateTimeRelated();
 			}
 			
 			engine.setPause(storedPauseState);
