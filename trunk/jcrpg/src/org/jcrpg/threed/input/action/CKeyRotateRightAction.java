@@ -41,7 +41,7 @@ public class CKeyRotateRightAction extends CKeyAction {
         }
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         handler.core.turnRight();
-        if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render();
+        if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render(handler.core.gameState.viewPositionX,handler.core.gameState.viewPositionY,handler.core.gameState.viewPositionZ);
     	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
         float steps = J3DCore.MOVE_STEPS;
         turnDirection(steps, from, toReach);

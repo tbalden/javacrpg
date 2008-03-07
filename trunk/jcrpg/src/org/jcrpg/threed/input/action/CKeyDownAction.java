@@ -40,6 +40,10 @@ public class CKeyDownAction extends CKeyAction {
 	    	handler.core.setCalculatedCameraLocation();
 	        camera.update();
 	        //handler.core.render();
+            if (!handler.core.rendering)
+            {
+            	handler.core.sEngine.renderToViewPort();
+            }
         }
         handler.unlockHandling(true);
     }

@@ -36,7 +36,7 @@ public class Jcrpg {
     public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
     	LOGGER = java.util.logging.Logger.getLogger("");
-    	LOGGER.setLevel(Level.WARNING); //LOGGER.setLevel(Level.SEVERE);
+    	LOGGER.setLevel(Level.ALL); //LOGGER.setLevel(Level.SEVERE);
     	try {
     		start();
     	} catch (Exception ex)

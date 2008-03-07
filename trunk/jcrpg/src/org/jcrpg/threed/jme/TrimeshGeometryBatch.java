@@ -176,6 +176,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	
+	public static long sumAddItemReal = 0;
 	@SuppressWarnings("unchecked")
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
@@ -187,7 +188,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			instance.getAttributes().setRotation(trimesh.getLocalRotation());
 			instance.getAttributes().setScale(trimesh.getLocalScale());
 			instance.getAttributes().setVisible(true);
+			long t0 = System.currentTimeMillis();
 			instance.getAttributes().buildMatrices();
+			sumAddItemReal += System.currentTimeMillis()-t0;
 			
 			if (placeholder!=null) {
 
@@ -206,10 +209,12 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			return;
 		}
 			
+		long t0 = System.currentTimeMillis();
 		// Add a Trimesh instance (batch and attributes)
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(trimesh,
 				 new GeometryBatchInstanceAttributes(trimesh));
 		addInstance(instance);
+		sumAddItemReal += System.currentTimeMillis()-t0;
 		
 		if (placeholder!=null) {
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
@@ -221,7 +226,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			instances.add(instance);
 		}
 		
+		long t1 = System.currentTimeMillis();
 		calcAvarageTranslation(trimesh.getLocalTranslation());				
+		sumAddItemReal += System.currentTimeMillis()-t1;
 		visible.add(instance);
 		return;
 	}

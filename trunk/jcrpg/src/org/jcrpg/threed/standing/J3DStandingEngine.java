@@ -100,21 +100,22 @@ public class J3DStandingEngine {
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
+	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	@SuppressWarnings("unchecked")
-	public HashSet<RenderedCube>[] render()
+	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ)
 	{
 		
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
-		modelLoader.setLockForSharedNodes(false);
+		//modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
 		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
 		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.viewPositionX+"/"+core.gameState.viewPositionZ+"...");
-    	core.updateDisplay(null);
+    	//core.updateDisplay(null);
 
 		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
@@ -129,8 +130,8 @@ public class J3DStandingEngine {
 		Jcrpg.LOGGER.info("**** RENDER ****");
 		
 
-		Time localTime = engine.getWorldMeanTime().getLocalTime(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ);
-		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ, false);
+		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
+		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
 		
 		
 		if (conditions!=null) Jcrpg.LOGGER.info("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
@@ -142,7 +143,7 @@ public class J3DStandingEngine {
 		
     	// get a specific part of the area to render
 		long time = System.currentTimeMillis();
-		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, core.gameState.viewPositionX, core.gameState.viewPositionY, core.gameState.viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED);
+		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED);
     	System.out.println("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
@@ -157,7 +158,7 @@ public class J3DStandingEngine {
     	}
     	
 
-		modelLoader.setLockForSharedNodes(true);
+		//modelLoader.setLockForSharedNodes(true);
 		
 		// stop to collect and clean the nodes/binaries which this render will not use now
 		modelLoader.stopRenderAndClear();
@@ -423,8 +424,52 @@ public class J3DStandingEngine {
 			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
 			Vector3f currLoc = new Vector3f(core.gameState.relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
+			if (core.renderResult!=null) 
+			{
+				long t0 = System.currentTimeMillis();
+				HashSet<RenderedCube>[] detacheable = core.renderResult;
+				core.renderResult = null;
+
+				if (true)  {
+					
+					for (int i=0; i<detacheable.length; i++)
+					// removing the unneeded.
+					for (RenderedCube c:detacheable[i]) { 
+			    		if (c!=null) {
+		    	    		inViewPort.remove(c);
+		    	    		inFarViewPort.remove(c);
+		    	    		outOfViewPort.remove(c);
+			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+			    	    	{
+			    	    		NodePlaceholder n = itNode.next();
+			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+			    					 )
+			    				{
+			    					if (n!=null && n.batchInstance!=null)
+			    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			    				} else 
+			    				{ 
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+			    				}
+			    				n.farView = false;
+			    	    	}
+			    		}
+					}
+				}		
+				System.out.println("DETACH TIME = "+(System.currentTimeMillis()-t0));
+			}
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
+			/*if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
@@ -465,7 +510,7 @@ public class J3DStandingEngine {
 		    		}
 				}
 	
-			}
+			}*/
 			
 			long sysTime = System.currentTimeMillis();
 			
@@ -474,6 +519,7 @@ public class J3DStandingEngine {
 			int addedNodeCounter = 0;
 			int removedNodeCounter = 0;
 			
+			long t2 = System.currentTimeMillis();
 			
 			if (segmented && segmentCount==0 || !segmented)
 			{
@@ -507,9 +553,14 @@ public class J3DStandingEngine {
 					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 				}
 			}
+			System.out.println("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
 
 			float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
 			float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
+			
+			long sumAddRemoveBatch = 0;
+			ModelGeometryBatch.sumBuildMatricesTime = 0;
+			TrimeshGeometryBatch.sumAddItemReal = 0;
 			
 			for (int cc = fromCubeCount; cc<toCubeCount; cc++)
 			{
@@ -603,8 +654,11 @@ public class J3DStandingEngine {
 													|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 										 )
 									{
-										if (n!=null)
+										if (n!=null) {
+											long t0 = System.currentTimeMillis();
 											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
+											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+										}
 									} else 
 									{
 										PooledNode pooledRealNode = n.realNode;
@@ -632,9 +686,12 @@ public class J3DStandingEngine {
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									) 
 								{
-									
-									if (n.batchInstance==null)
+									if (n.batchInstance==null) 
+									{
+										long t0 = System.currentTimeMillis();
 										core.batchHelper.addItem(c.cube.internalCube, n.model, n, false);
+										sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+									}
 								} else 
 								{
 									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
@@ -753,7 +810,9 @@ public class J3DStandingEngine {
 										{
 											System.out.println("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
 										}*/
+										long t0 = System.currentTimeMillis();
 										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+										sumAddRemoveBatch+=System.currentTimeMillis()-t0;
 									}
 								} else 
 								{
@@ -1061,6 +1120,10 @@ public class J3DStandingEngine {
 					}
 				}
 			}
+			
+			System.out.println("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
+			System.out.println("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
+			System.out.println("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
 			
 			if (segmentCount==segments-1 || !segmented) {
 				

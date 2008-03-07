@@ -316,9 +316,6 @@ public abstract class CKeyAction extends KeyInputAction{
     			J3DCore.waterEffectRenderPass.setWaterHeight(camera.getLocation().y);
     		}
     		
-            //camera.update();
-            //camera.normalize();
-            //handler.core.renderToViewPort((int)i,(int)steps);
             handler.core.updateTimeRelated();
             handler.core.updateDisplay(from);
             skipStep+= ensureTimeStop();
