@@ -193,7 +193,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					Integer.MAX_VALUE);
 			RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
-			VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
+			VIEW_DISTANCE = (int)(RENDER_DISTANCE * CUBE_EDGE_SIZE);//loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
+			//VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
 			VIEW_DISTANCE_SQR = VIEW_DISTANCE * VIEW_DISTANCE;
 			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR / 4;
 
