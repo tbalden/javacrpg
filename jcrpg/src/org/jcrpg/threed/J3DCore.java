@@ -140,8 +140,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 16;
-	public static long TIME_TO_ENSURE = 16; 
+	public static final int MOVE_STEPS = 18;
+	public static long TIME_TO_ENSURE = 18; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
@@ -173,6 +173,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     
     public static int FARVIEW_GAP = 4;
     public static boolean FARVIEW_ENABLED = false;
+    
+    public static boolean CONTINUOUS_LOAD = false;
 
     static Properties p = new Properties();
     static {
@@ -193,8 +195,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					Integer.MAX_VALUE);
 			RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
-			VIEW_DISTANCE = (int)(RENDER_DISTANCE * CUBE_EDGE_SIZE);//loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
-			//VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
+			if (CONTINUOUS_LOAD) VIEW_DISTANCE = (int)(RENDER_DISTANCE * CUBE_EDGE_SIZE);
+				else
+					VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5, Integer.MAX_VALUE);
 			VIEW_DISTANCE_SQR = VIEW_DISTANCE * VIEW_DISTANCE;
 			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR / 4;
 
@@ -2171,7 +2174,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     Object mutex = new Object();
     public HashSet<RenderedCube>[] renderResult = null;
 	public void run() {
-		Thread.currentThread().setPriority(10);
+		if (!CONTINUOUS_LOAD) return;
+		//Thread.currentThread().setPriority(10);
 		if (rendering) return;
 		synchronized (mutex) {
 			renderFinished = false;
