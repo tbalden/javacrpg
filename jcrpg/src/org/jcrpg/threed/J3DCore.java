@@ -141,7 +141,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
 	public static final int MOVE_STEPS = 16;
-	public static long TIME_TO_ENSURE = 18; 
+	public static long TIME_TO_ENSURE = 16; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
