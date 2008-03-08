@@ -187,10 +187,12 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				nVSet = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 				notVisible.put(key, nVSet);
 			}
-			vSet.remove(instance);
-			if (vSet.size()==0)
-			{
-				visible.remove(key);
+			if (vSet!=null) {
+				vSet.remove(instance);
+				if (vSet.size()==0)
+				{
+					visible.remove(key);
+				}
 			}
 			nVSet.add(instance);
 			/*if (visible.size()>0)

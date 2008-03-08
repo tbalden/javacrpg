@@ -52,6 +52,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	private static final long serialVersionUID = 0L;
 	
 	public Model model;
+	public String key;
+	
 	public J3DCore core;
 	public Node parent = new Node();
 	/**
@@ -279,6 +281,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public static Quaternion qZero = new Quaternion();
 	@Override
 	public void onDraw(Renderer r) {
+		
+		if (visible.size()==0) return;
 		
 		//if (System.currentTimeMillis()%8>1) 
 		{
