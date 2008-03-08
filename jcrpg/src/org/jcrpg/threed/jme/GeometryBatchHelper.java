@@ -123,11 +123,11 @@ public class GeometryBatchHelper {
 	    		if (internal)
 	    		{
 	    			core.intRootNode.attachChild(batch.parent);
-	    			core.intRootNode.updateRenderState();
+	    			//core.intRootNode.updateRenderState();
 	    		} else
 	    		{
 	    			core.extRootNode.attachChild(batch.parent);
-	    			core.extRootNode.updateRenderState();
+	    			//core.extRootNode.updateRenderState();
 	    		}
 	    		modelBatchMap.put(key, batch);
 	    		batch.lockTransforms();
@@ -144,16 +144,17 @@ public class GeometryBatchHelper {
 	    		TriMesh tri = VegetationSetup.getVegTrimesh(internal,place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
 	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal);
 	    		batch.model = m;
+	    		batch.key = key;
 	    		if (internal)
 	    		{
 	    			batch.setAnimated(false); // inside no wind
 	    			core.intRootNode.attachChild(batch.parent);
-	    			core.intRootNode.updateRenderState();
+	    			//core.intRootNode.updateRenderState();
 	    		} else
 	    		{
 	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation); // animate wind only outside
 	    			core.extRootNode.attachChild(batch.parent);
-	    			core.extRootNode.updateRenderState();
+	    			//core.extRootNode.updateRenderState();
 	    		}
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
