@@ -39,7 +39,7 @@ public class ModelPool {
 
 	public J3DCore core;
 	
-	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 2; 
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 5; 
 	
 	public class PoolItemContainer {
 		public String id;
@@ -54,7 +54,7 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
-		POOL_NUMBER_OF_UNUSED_TO_KEEP = 0;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = 5;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();

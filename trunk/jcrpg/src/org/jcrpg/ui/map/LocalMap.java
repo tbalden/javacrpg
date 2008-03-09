@@ -105,7 +105,7 @@ public class LocalMap {
 	{
 		for (byte[] p : sideOffsets[side])
 		{
-			//a = 255;
+			a = 255;
 			int k = (r<<24)+(g<<16)+(b<<8)+a;
 			Color c = colorCache.get(k);
 			if (c==null)
@@ -132,9 +132,9 @@ public class LocalMap {
 			{},
 			//Bottom 5
 			{
-				{-1,-1,0,2},
-				{0,-1,0,2},
-				{1,-1,0,2}
+				{-1,-1,2,2},
+				//{0,-1,0,2},
+				//{1,-1,0,2}
 			},
 	};
 	
@@ -300,7 +300,9 @@ public class LocalMap {
 		lastCy = cy;
 		lastCz = cz;
 		lastDir = dir;
+		long t0 = System.currentTimeMillis();
 		update();
+		System.out.println("LOC MAP UPDATE = "+(System.currentTimeMillis()-t0));
 		
 	}
 
