@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
@@ -38,7 +39,7 @@ public class ModelPool {
 
 	public J3DCore core;
 	
-	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 20; 
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 2; 
 	
 	public class PoolItemContainer {
 		public String id;
@@ -53,7 +54,7 @@ public class ModelPool {
 	public ModelPool(J3DCore core)
 	{
 		this.core = core;
-		POOL_NUMBER_OF_UNUSED_TO_KEEP = J3DCore.VIEW_DISTANCE;
+		POOL_NUMBER_OF_UNUSED_TO_KEEP = 0;
 	}
 
 	public static HashMap<String, PoolItemContainer> pool = new HashMap<String, PoolItemContainer>();
@@ -244,9 +245,17 @@ public class ModelPool {
 				{
 					PooledNode node = it.next();
 					core.removeSolidColorQuadsRecoursive((Node)node);
+					if (node instanceof BillboardPartVegetation)
+					{
+						//System.out.println("REMOVING BBPART VEG:");
+						{
+							((BillboardPartVegetation)node).batch.parent.removeFromParent();
+						}
+					}
 					removed.add(node);
 				}
 				pic.notUsed.removeAll(removed);
+				//System.out.println(("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete));
 				Jcrpg.LOGGER.info("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);
 			}
 			if (pic.used.size()==0 && pic.notUsed.size()==0)
@@ -266,7 +275,7 @@ public class ModelPool {
 		int c = 0;
 		for (PoolItemContainer pic: pool.values())
 		{
-				c += pic.used!=null?pic.used.size():0 + (pic.notUsed!=null?pic.notUsed.size():0);
+				c += (pic.used!=null?pic.used.size():0) + (pic.notUsed!=null?pic.notUsed.size():0);
 		}
 		return c;
 	}

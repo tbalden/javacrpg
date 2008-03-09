@@ -46,7 +46,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public TriMesh nullmesh = new TriMesh();
 	// TODO create a cache cleaning way!!! in GeometryBatchHelper maybe, check if the model is used at all...
 	// till then it fastens up thing much, so keep it!
-	private static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
+	public  static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
 	private TriMesh getModelMesh(Model m)
 	{
 		if (m.type == Model.QUADMODEL) {
