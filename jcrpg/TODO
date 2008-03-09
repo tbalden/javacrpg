@@ -14,6 +14,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	- Mem Profiler?
 	- audio - not
 	- FUCKING maps eats memory
+	[ ] local map fixed
+	[ ] world map shouldn't be updating a full position image now, only repositioning a sign image quad!!
+		[ ] replace all with ImageGraphics - different imagegraphics transparents
 
 [-] seemless movement -> batch add/remove takes too much time of the render
 
