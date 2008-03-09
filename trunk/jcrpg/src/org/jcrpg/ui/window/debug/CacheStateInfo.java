@@ -18,9 +18,12 @@
 
 package org.jcrpg.ui.window.debug;
 
+import java.lang.management.MemoryUsage;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.ModelLoader;
 import org.jcrpg.threed.ModelPool;
+import org.jcrpg.threed.VegetationSetup;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
@@ -79,16 +82,18 @@ public class CacheStateInfo extends InputWindow {
 	{
 		try {
 			extIntNodes.text = ""+(J3DCore.getInstance().extRootNode.getChildren()==null?"0":J3DCore.getInstance().extRootNode.getChildren().size()) + " / "+(J3DCore.getInstance().intRootNode.getChildren()==null?"0":J3DCore.getInstance().intRootNode.getChildren().size());
+			extIntNodes.text+=" / "+(J3DCore.getInstance().groundParentNode.getChildren()==null?"0":J3DCore.getInstance().groundParentNode.getChildren().size());
+			extIntNodes.text+=" / "+(J3DCore.getInstance().skyParentNode.getChildren()==null?"0":J3DCore.getInstance().skyParentNode.getChildren().size());
 			extIntNodes.activate();
 			trimeshGeoCacheSize.text = ""+GeometryBatchHelper.trimeshBatchMap.size()+" / " +TrimeshGeometryBatch.sharedParentCache.size();
 			trimeshGeoCacheSize.activate();
-			modelGeoCacheSize.text = ""+GeometryBatchHelper.modelBatchMap.size()+" / " +ModelGeometryBatch.sharedParentCache.size();
+			modelGeoCacheSize.text = ""+GeometryBatchHelper.modelBatchMap.size()+" / " +ModelGeometryBatch.sharedParentCache.size()+ " / Trimesh model cache: "+ModelGeometryBatch.cache.size();
 			modelGeoCacheSize.activate();
-			poolSize.text = ""+ModelPool.getPooledSize();
+			poolSize.text = ""+ModelPool.getPooledSize()+ " (Types: "+ModelPool.pool.size()+")"+" VegSetupQuadC.: "+VegetationSetup.quadCache.size();
 			poolSize.activate();
 			bbCacheSize.text = ""+BillboardPartVegetation.quadCache.size();
 			bbCacheSize.activate();
-			modelCacheSize.text = "SharedN: "+ModelLoader.sharedNodeCache.size()+" TexSt.: "+ModelLoader.textureStateCache.size();
+			modelCacheSize.text = "SharedN:"+ModelLoader.sharedNodeCache.size()+" TxSt:"+ModelLoader.textureStateCache.size()+" Bin:"+ModelLoader.binaryCache.size()+" Tx:"+ModelLoader.textureCache.size();
 			modelCacheSize.activate();
 			
 		} catch (Exception ex)

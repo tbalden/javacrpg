@@ -910,10 +910,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(gameState.world, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ);
 		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false);
-		uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
+		// REMOVING IT till fixed mem leak TODO
+		/*uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
 		gameState.world.worldMap.update(gameState.viewPositionX/gameState.world.magnification, gameState.viewPositionY/gameState.world.magnification, gameState.viewPositionZ/gameState.world.magnification);
 		uiBase.hud.localMap.update(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ,gameState.viewDirection);
-		uiBase.hud.update();
+		uiBase.hud.update();*/
 
 		/*
 		 * Orbiters

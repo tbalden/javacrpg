@@ -176,7 +176,7 @@ public class WorldMap {
 	public void update(int cx, int cy, int cz)
 	{
 		if (cx==lastCx && cy==lastCy && cz==lastCz) return;
-		
+		System.out.println("UPDATEING");
 		lastCx = cx;
 		lastCy = cy;
 		lastCz = cz;			
@@ -217,8 +217,8 @@ public class WorldMap {
 		posBuffer = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(posBuffer);
 		Texture t = posTexState.getTexture();
-		if (t!=null) TextureManager.releaseTexture(t);
-		t = new Texture();
+		if (t!=null) TextureManager.releaseTexture(t.getTextureKey());
+		//t = new Texture();
 		t.setImage(positionImage);
 		posTexState.setTexture(t);
 		posTexState.setNeedsRefresh(true);

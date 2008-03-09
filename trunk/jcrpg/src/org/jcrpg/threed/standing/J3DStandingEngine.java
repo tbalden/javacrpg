@@ -1179,8 +1179,8 @@ public class J3DStandingEngine {
 				Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 				Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 		
-			    if (cullVariationCounter%30==0) {
-					modelPool.cleanPools();
+				modelPool.cleanPools();
+			    if (cullVariationCounter%10==0) {
 					System.gc();
 				}
 		

@@ -230,7 +230,7 @@ public class LocalMap {
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 			} else
 			{
-				TextureManager.releaseTexture(staticTexState.getTexture());
+				TextureManager.releaseTexture(staticTexState.getTexture().getTextureKey());
 			}
 			staticLayerTex = new Texture();
 			staticLayerTex.setImage(staticLayer);

@@ -78,7 +78,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	public float viewDistance;
 	private Vector3f tmpVec = new Vector3f();
 	
-	TrimeshGeometryBatch batch;
+	public TrimeshGeometryBatch batch;
 	
 	boolean horRotated = false;
 	boolean internal = false;
@@ -129,6 +129,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		{
 			if (this.parent!=null) {
 				this.parent.removeFromParent();
+				if (batch!=null)
+				{
+					batch.parent.removeFromParent();
+				}
 				batch = null;
 				this.detachAllChildren();
 			}
@@ -363,7 +367,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	}
 	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
-		Quad targetQuad = quadCache.get(model.id+rotated+xSize+ySize+internal);
+		String qkey = model.id+rotated+xSize+ySize+internal;
+		Quad targetQuad = quadCache.get(qkey);
 		if (targetQuad == null)
 		{
 			targetQuad = new Quad(name,xSize,ySize);
@@ -399,7 +404,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				}
 			}
 			
-			quadCache.put(model.id+rotated+xSize+ySize+internal, targetQuad);
+			quadCache.put(qkey, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
 			if (batch==null)
