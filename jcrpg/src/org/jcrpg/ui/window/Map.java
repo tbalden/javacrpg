@@ -81,7 +81,8 @@ public class Map extends Window {
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
-	        hudQuad.setRenderState(textureStates[1]);
+	        //hudQuad.setRenderState(textureStates[1]);
+	        wmap.registerQuad(hudQuad);
 	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
         }
