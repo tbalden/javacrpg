@@ -81,9 +81,10 @@ public class HUD {
         mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
         mapQuad.setLightCombineMode(LightState.OFF);
         localMap = new LocalMap(core.gameState.world, core.renderedArea);
-        TextureState[] textures = localMap.getMapTextures();
-        mapQuad.setRenderState(textures[0]);
-        mapQuad.updateRenderState();
+        localMap.registerQuad(mapQuad);
+        //TextureState[] textures = localMap.getMapTextures();
+        //mapQuad.setRenderState(textures[0]);
+        //mapQuad.updateRenderState();
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
         hudNode.updateRenderState();

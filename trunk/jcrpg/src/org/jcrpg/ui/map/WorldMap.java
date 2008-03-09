@@ -20,6 +20,7 @@ package org.jcrpg.ui.map;
 
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -66,6 +67,12 @@ public class WorldMap {
 	// 32
 	// 64
 	// 128
+	public HashSet<Quad> updatedQuads = new HashSet<Quad>();
+	
+	public void registerQuad(Quad q)
+	{
+		updatedQuads.add(q);
+	}
 	
 	public WorldMap(World w) {
 		world = w;
@@ -175,7 +182,7 @@ public class WorldMap {
 	
 	public void update(int cx, int cy, int cz)
 	{
-		if (cx==lastCx && cy==lastCy && cz==lastCz) return;
+		//if (cx==lastCx && cy==lastCy && cz==lastCz) return;
 		System.out.println("UPDATEING");
 		lastCx = cx;
 		lastCy = cy;
@@ -217,12 +224,16 @@ public class WorldMap {
 		posBuffer = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(posBuffer);
 		Texture t = posTexState.getTexture();
-		if (t!=null) TextureManager.releaseTexture(t.getTextureKey());
-		//t = new Texture();
+		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		t.setImage(positionImage);
 		posTexState.setTexture(t);
-		posTexState.setNeedsRefresh(true);
-		//posTexState.load();
+		posTexState.load();
+		TextureManager.releaseTexture(t.getTextureKey());
+		for (Quad q: updatedQuads)
+		{
+			q.setRenderState(posTexState);
+			q.updateRenderState();
+		}
 	}
 
 	public TextureState[] getMapTextures()

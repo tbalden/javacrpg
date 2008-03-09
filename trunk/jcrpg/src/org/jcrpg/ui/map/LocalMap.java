@@ -19,6 +19,7 @@
 package org.jcrpg.ui.map;
 
 import java.nio.ByteBuffer;
+import java.util.HashSet;
 
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.J3DCore;
@@ -77,6 +78,14 @@ public class LocalMap {
 	public byte[] dynamicLayerSet2 = new byte[localMapSizeX*localMapSizeY*4*pointSize];
 	
 	public int RED = 0, GREEN = 1, BLUE = 2, ALPHA = 3;
+	
+	
+	public HashSet<Quad> updatedQuads = new HashSet<Quad>();
+	
+	public void registerQuad(Quad q)
+	{
+		updatedQuads.add(q);
+	}
 	
 
 	public void paintPointAllSides(byte[] set, int x, int y, byte r, byte g, byte b, byte a)
@@ -228,15 +237,24 @@ public class LocalMap {
 			{
 				System.out.println("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+				staticLayerTex = new Texture();
+				staticLayerTex.setImage(staticLayer);
+				staticTexState.setTexture(staticLayerTex);
+				staticTexState.setNeedsRefresh(true);
 			} else
 			{
-				TextureManager.releaseTexture(staticTexState.getTexture().getTextureKey());
+				staticLayerTex.setImage(staticLayer);
+				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+				staticTexState.setTexture(staticLayerTex);
+				staticTexState.load();
+				TextureManager.releaseTexture(staticLayerTex.getTextureKey());
 			}
-			staticLayerTex = new Texture();
-			staticLayerTex.setImage(staticLayer);
-			staticTexState.setTexture(staticLayerTex);
-			staticTexState.setNeedsRefresh(true);
-			//staticTexState.load();
+			
+			for (Quad q:updatedQuads)
+			{
+				q.setRenderState(staticTexState);
+				q.updateRenderState();
+			}
 			
 		} catch (Exception ex)
 		{
@@ -260,7 +278,7 @@ public class LocalMap {
 	
 	public void update(int cx, int cy, int cz, int dir)
 	{
-		if (cx==lastCx && cy==lastCy && cz==lastCz && dir==lastDir) return;
+		//if (cx==lastCx && cy==lastCy && cz==lastCz && dir==lastDir) return;
 		lastCx = cx;
 		lastCy = cy;
 		lastCz = cz;
