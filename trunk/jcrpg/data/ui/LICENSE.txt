@@ -2,3 +2,4 @@ dice2.png GNU GPLv3 Created by Tranberry@freegamer
 hourglass.png GNU GPLv3 Created by Tranberry@freegamer
 scroll.png GNU GPLv3 Created by Tranberry@freegamer
 hud1.png GNU GPLv3 Created by Tranberry@freegamer
+hud1_v1.png GNU GPLv3 Created by Tranberry@freegamer
