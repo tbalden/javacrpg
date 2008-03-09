@@ -18,7 +18,9 @@
 
 package org.jcrpg.ui.map;
 
+import java.awt.Color;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.space.Side;
@@ -33,8 +35,9 @@ import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
+import com.jmex.awt.swingui.ImageGraphics;
 
 public class LocalMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
@@ -42,6 +45,7 @@ public class LocalMap {
 	public Sphere mapSphere = new Sphere("WORLD_MAP_SPHERE",new Vector3f(0,0,0),10,10,0.5f);
 	public Image oceanImage;
 	public Image staticLayer; 
+	public ImageGraphics staticLayerGraphics;
 	public Image climateImage;
 	public Image geoImage;
 	public byte[] positionImageSet;
@@ -88,48 +92,56 @@ public class LocalMap {
 	}
 	
 
-	public void paintPointAllSides(byte[] set, int x, int y, byte r, byte g, byte b, byte a)
+	public void paintPointAllSides(ImageGraphics set, int x, int y, int r, int g, int b, int a)
 	{
 		for (int i=0; i<6; i++)
 		{
 			paintPoint(set, x, y, i, r, g, b, a);
 		}
 	}
-	public void paintPoint(byte[] set, int x, int y, int side, byte r, byte g, byte b, byte a)
+	
+	public static HashMap<Integer, Color> colorCache = new HashMap<Integer, Color>();
+	public void paintPoint(ImageGraphics set, int x, int y, int side, int r, int g, int b, int a)
 	{
 		for (byte[] p : sideOffsets[side])
 		{
-			int offset = (((y*pointSizeY+p[0])*(localMapSizeX*pointSizeX)+x*pointSizeX+p[1]))*4;
-			if (offset<0 || offset+ALPHA>=set.length) return;
-			set[offset+RED] = r;
-			set[offset+GREEN] = g;
-			set[offset+BLUE] = b;
-			set[offset+ALPHA] = a;
+			//a = 255;
+			int k = (r<<24)+(g<<16)+(b<<8)+a;
+			Color c = colorCache.get(k);
+			if (c==null)
+			{
+				c = new Color(Math.max(0, Math.min(r,255)),Math.max(0, Math.min(g,255)),Math.max(0, Math.min(b,255)),a);
+				colorCache.put(k, c);
+			} 
+			set.setColor(c);
+			set.drawRect(x*pointSizeX+p[1], y*pointSizeY+p[0], p[3], p[2]);
 		}
 	}
 	
 	
 	public byte[][][] sideOffsets = new byte[][][]{
 			//North 0
-			{{-2,2},{-1,2},{0,2},{1,2},{2,2}},
+			{{-2,2,4,0}},
 			//East 1
-			{{2,-1},{2,0},{2,1}},
+			{{2,-1,0,2}},
 			//South 2
-			{{-2,-2},{-1,-2},{0,-2},{1,-2},{2,-2}},
+			{{-2,-2,4,0}},
 			//West 3
-			{{-2,-1},{-2,0},{-2,1}},
+			{{-2,-1,0,2}},
 			//Top 4
 			{},
 			//Bottom 5
 			{
-				{-1,-1},{-1,0},{-1,1},
-				{0,-1},{0,0},{0,1},
-				{1,-1},{1,0},{1,1}
+				{-1,-1,0,2},
+				{0,-1,0,2},
+				{1,-1,0,2}
 			},
 	};
 	
 	public void update() {
 		try {
+			staticLayerGraphics.setBackground(new Color(0,0,0,0));
+			staticLayerGraphics.clearRect(0, 0, staticLayerGraphics.getImage().getWidth(), staticLayerGraphics.getImage().getHeight());
 			int dir = J3DCore.getInstance().gameState.viewDirection;
 			if (dir == J3DCore.NORTH) {
 				centerYPlus = centerY + 1;
@@ -154,12 +166,12 @@ public class LocalMap {
 					//int offset = ((z*localMapSizeX)+x)*4;
 					if (x==centerX && z==centerY)
 					{
-						paintPointAllSides(staticLayerSet, x, z, (byte)235, (byte)20, (byte)20, (byte)110);
+						paintPointAllSides(staticLayerGraphics, x, z, 235, 20, 20, 110);
 						continue;
 					}
 					if (x==centerXPlus && z==centerYPlus)
 					{
-						paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)100, (byte)100, (byte)110);
+						paintPointAllSides(staticLayerGraphics, x, z, 255, 100, 100, 110);
 						continue;
 					}
 					RenderedCube c = area.getCubeAtPosition(world,wX+x,wY,wZ+z);
@@ -168,16 +180,16 @@ public class LocalMap {
 					if (c==null)
 					{
 						if (water) {
-							paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)200, (byte)90);
+							paintPointAllSides(staticLayerGraphics, x, z, 0, 0, 200, 90);
 						} else
 						{
-							paintPointAllSides(staticLayerSet, x, z, (byte)0, (byte)0, (byte)0, (byte)70);
+							paintPointAllSides(staticLayerGraphics, x, z, 0, 0, 0, 70);
 						}
 					} else
 					{
 						if (c.cube!=null && c.cube.bottom!=null) {
 							boolean colorized = false;
-							byte[] neutralColor = new byte[] {(byte)255, (byte)255, (byte)255, (byte)70};
+							int[] neutralColor = new int[] {255, 255, 255, 70};
 							int[] neutralColorSum = new int[] {0,0,0};
 							int colorsAdded = 0;
 							for (Side side:c.cube.bottom)
@@ -197,17 +209,17 @@ public class LocalMap {
 											System.out.println(side.subtype.id);
 											System.out.println("C: "+c.cube);
 											System.out.println("C: "+neutralColorSum[GREEN]);
-											System.out.println("C: "+(byte)(neutralColorSum[GREEN]/colorsAdded));
+											System.out.println("C: "+(neutralColorSum[GREEN]/colorsAdded));
 										}*/
 									}
 								}
 								colorized = true;
 							}
 							if (colorsAdded==0) colorsAdded=1;
-							neutralColor[RED] = (byte)(neutralColorSum[RED]/colorsAdded);
-							neutralColor[GREEN] = (byte)(neutralColorSum[GREEN]/colorsAdded);
-							neutralColor[BLUE] = (byte)(neutralColorSum[BLUE]/colorsAdded);
-							paintPoint(staticLayerSet, x, z, 5, (byte)(neutralColorSum[RED]/colorsAdded), (byte)(neutralColorSum[GREEN]/colorsAdded), (byte)(neutralColorSum[BLUE]/colorsAdded), (byte)80);
+							neutralColor[RED] = (neutralColorSum[RED]/colorsAdded);
+							neutralColor[GREEN] = (neutralColorSum[GREEN]/colorsAdded);
+							neutralColor[BLUE] = (neutralColorSum[BLUE]/colorsAdded);
+							paintPoint(staticLayerGraphics, x, z, 5, (neutralColorSum[RED]/colorsAdded), (neutralColorSum[GREEN]/colorsAdded), (neutralColorSum[BLUE]/colorsAdded), 80);
 							for (int i=0; i<4; i++) {
 								colorized = false;
 								if (c.cube.sides!=null && c.cube.sides[i]!=null)
@@ -215,18 +227,18 @@ public class LocalMap {
 								{
 									byte[] b = side.subtype.colorBytes;
 									if (!colorized || colorized && side.subtype.colorOverwrite) {
-										paintPoint(staticLayerSet, x, z, i, b[RED], b[GREEN], b[BLUE], (byte)80);
+										paintPoint(staticLayerGraphics, x, z, i, b[RED], b[GREEN], b[BLUE], 80);
 									}
 									colorized = true;
 								}
 								if (!colorized) { // color this with neutral (ground) color
-									paintPoint(staticLayerSet, x, z, i, neutralColor[RED], neutralColor[GREEN], neutralColor[BLUE], (byte)80);
+									paintPoint(staticLayerGraphics, x, z, i, neutralColor[RED], neutralColor[GREEN], neutralColor[BLUE], 80);
 								}
 							}
 						} else
 						{
 							//System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
-							paintPointAllSides(staticLayerSet, x, z, (byte)255, (byte)255, (byte)255, (byte)70);
+							paintPointAllSides(staticLayerGraphics, x, z, 255, 255, 255, 70);
 						}
 					}
 				}
@@ -238,21 +250,24 @@ public class LocalMap {
 				System.out.println("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 				staticLayerTex = new Texture();
-				staticLayerTex.setImage(staticLayer);
+				staticLayerTex.setFilter( Texture.FM_LINEAR );
+				staticLayerTex.setMipmapState(Texture.MM_LINEAR);
+				staticLayerTex.setImage(staticLayerGraphics.getImage());
 				staticTexState.setTexture(staticLayerTex);
-				staticTexState.setNeedsRefresh(true);
+				staticTexState.apply();
+				
 			} else
 			{
-				staticLayerTex.setImage(staticLayer);
-				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-				staticTexState.setTexture(staticLayerTex);
-				staticTexState.load();
-				TextureManager.releaseTexture(staticLayerTex.getTextureKey());
+				staticLayerGraphics.update(staticLayerTex,false);
+				staticTexState.apply();
+				
 			}
 			
 			for (Quad q:updatedQuads)
 			{
-				q.setRenderState(staticTexState);
+				if (q.getRenderState(RenderState.RS_TEXTURE)!=staticTexState) {
+					q.setRenderState(staticTexState);
+				}
 				q.updateRenderState();
 			}
 			
@@ -271,6 +286,8 @@ public class LocalMap {
 		staticLayer.setHeight(localMapSizeX*pointSizeX);
 		staticLayer.setWidth(localMapSizeY*pointSizeY);
 		
+		staticLayerGraphics = ImageGraphics.createInstance(localMapSizeX*pointSizeX, localMapSizeY*pointSizeY, 0);
+		
 		update();
 	}
 	
@@ -278,10 +295,11 @@ public class LocalMap {
 	
 	public void update(int cx, int cy, int cz, int dir)
 	{
-		//if (cx==lastCx && cy==lastCy && cz==lastCz && dir==lastDir) return;
+		if (cx==lastCx && cy==lastCy && cz==lastCz && dir==lastDir) return;
 		lastCx = cx;
 		lastCy = cy;
 		lastCz = cz;
+		lastDir = dir;
 		update();
 		
 	}
