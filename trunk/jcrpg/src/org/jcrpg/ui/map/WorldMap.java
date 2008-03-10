@@ -18,8 +18,10 @@
 
 package org.jcrpg.ui.map;
 
+import java.awt.Color;
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
@@ -38,8 +40,10 @@ import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
+import com.jmex.awt.swingui.ImageGraphics;
 
 public class WorldMap {
 	public Quad mapQuad = new Quad("WORLD_MAP",2f,2f);
@@ -67,7 +71,7 @@ public class WorldMap {
 	// 32
 	// 64
 	// 128
-	public HashSet<Quad> updatedQuads = new HashSet<Quad>();
+	public static HashSet<Quad> updatedQuads = new HashSet<Quad>();
 	
 	public void registerQuad(Quad q)
 	{
@@ -173,32 +177,47 @@ public class WorldMap {
 		geoImage.setWidth(w.sizeX);
 		ByteBuffer buffer3 = ByteBuffer.wrap(geoImageSet);
 		geoImage.setData(buffer3);
-		
+		update(0, 0, 0);
 	}
 	
 	int lastCx = -1 , lastCy = -1 , lastCz = -1;
 	
 	public ByteBuffer posBuffer = null;
+
+	
+	public static HashMap<Integer, Color> colorCache = new HashMap<Integer, Color>();
+	public void paintPoint(ImageGraphics set, int x, int y, int r, int g, int b, int a)
+	{
+		a = 255;
+		r = 255;
+		int k = (r<<24)+(g<<16)+(b<<8)+a;
+		Color c = colorCache.get(k);
+		if (c==null)
+		{
+			c = new Color(Math.max(0, Math.min(r,255)),Math.max(0, Math.min(g,255)),Math.max(0, Math.min(b,255)),a);
+			colorCache.put(k, c);
+		} 
+		set.setColor(c);
+		set.drawRect(x, y, 0, 0);
+	}
 	
 	public void update(int cx, int cy, int cz)
 	{
-		//if (cx==lastCx && cy==lastCy && cz==lastCz) return;
-		System.out.println("UPDATEING");
+		if (cx==lastCx && cz==lastCz) return;
 		lastCx = cx;
-		lastCy = cy;
-		lastCz = cz;			
+		lastCz = cz;
+		cz = Math.min(world.sizeZ,++cz);
+		cx = Math.max(0,--cx);
+		boolean newInstance = false;
+		if (positionGraphics==null)
+		{
+			newInstance = true;
+			positionGraphics = ImageGraphics.createInstance(world.sizeX, world.sizeZ, 0);
+		}
+		positionGraphics.setBackground(new Color(0,0,0,0));
+		positionGraphics.clearRect(0, 0, positionGraphics.getImage().getWidth(), positionGraphics.getImage().getHeight());
 		
 		Jcrpg.LOGGER.info("UPDATE: "+cx+" "+cz);
-		for (int z = 0; z<world.sizeZ;z++)
-		{
-			for (int x=0; x<world.sizeX; x++)
-			{
-				positionImageSet[((z*world.sizeX)+x)*4+0] = (byte)0;
-				positionImageSet[((z*world.sizeX)+x)*4+1] = (byte)0;
-				positionImageSet[((z*world.sizeX)+x)*4+2] = (byte)0;
-				positionImageSet[((z*world.sizeX)+x)*4+3] = (byte)0;
-			}
-		}
 		int dotSize = world.sizeX/70;
 		{
 			for (int i=-1*dotSize; i<=1*dotSize; i++)
@@ -206,10 +225,8 @@ public class WorldMap {
 				for (int j=-1*dotSize; j<=1*dotSize; j++)
 				{
 					try {
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+0] = (byte)(((dotSize-Math.abs(j))*1d/dotSize)*((dotSize-Math.abs(i))*1d/dotSize)*355);
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+1] = (byte)0;
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+2] = (byte)0;
-						positionImageSet[(((cz+i)*world.sizeX)+cx+j)*4+3] = (byte)255;
+						int red = (int)((((dotSize-Math.abs(j))*1d/dotSize)*((dotSize-Math.abs(i))*1d/dotSize)*355));
+						paintPoint(positionGraphics, cx+j, cz+i, red , 0, 0, 255);
 					} catch (ArrayIndexOutOfBoundsException aiex)
 					{				
 					}
@@ -217,40 +234,46 @@ public class WorldMap {
 			}
 		}
 		try {
-			positionImageSet[((cz*world.sizeX)+cx)*4+0] = (byte)255;
-			positionImageSet[((cz*world.sizeX)+cx)*4+3] = (byte)255;
-		} catch (ArrayIndexOutOfBoundsException aiex){}
-
-		posBuffer = ByteBuffer.wrap(positionImageSet);
-		positionImage.setData(posBuffer);
-		Texture t = posTexState.getTexture();
-		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		t.setImage(positionImage);
-		posTexState.setTexture(t);
-		posTexState.load();
-		TextureManager.releaseTexture(t.getTextureKey());
-		for (Quad q: updatedQuads)
+			paintPoint(positionGraphics, cx, cz, 255 , 0, 0, 255);
+		} catch (ArrayIndexOutOfBoundsException aiex){
+			
+			aiex.printStackTrace();
+		}
+		
+		if (newInstance)
 		{
-			q.setRenderState(posTexState);
+			posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
+			posTex = new Texture();
+			posTex.setFilter( Texture.FM_LINEAR );
+			posTex.setMipmapState(Texture.MM_LINEAR);
+			posTex.setImage(positionGraphics.getImage());
+			posTexState.setTexture(posTex);
+			posTexState.apply();
+		}else
+		{	positionGraphics.update(posTex,false);
+			posTexState.apply();
+		}
+		for (Quad q:updatedQuads)
+		{
+			if (q.getRenderState(RenderState.RS_TEXTURE)!=posTexState) {
+				q.setRenderState(posTexState);
+			}
 			q.updateRenderState();
 		}
 	}
+	public ImageGraphics positionGraphics;
 
 	public TextureState[] getMapTextures()
 	{
 		oceanTex = new Texture();
 		oceanTex.setImage(oceanImage);
-		posTex = new Texture();
-		posTex.setImage(positionImage);
 		geoTex = new Texture();
 		geoTex.setImage(geoImage);
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		baseTexState.setTexture(oceanTex);
-		posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		posTexState.setTexture(posTex);
 		geoTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		geoTexState.setTexture(geoTex);
-		return new TextureState[]{baseTexState,posTexState,geoTexState};
+		return new TextureState[]{baseTexState,null,geoTexState};
 	}
 
 	

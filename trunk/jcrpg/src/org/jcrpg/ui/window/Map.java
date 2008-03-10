@@ -30,6 +30,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
@@ -55,8 +56,10 @@ public class Map extends Window {
         Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.png").toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
+        float widthRatio = 4.0f;
+        float heightRatio = 5.0f;
         {
-        	Quad hudQuad = new Quad("hud", (int)((core.getDisplay().getWidth()/10)*3.2d), (int)(((core.getDisplay().getHeight()/10)*4.2d)));
+        	Quad hudQuad = new Quad("hud", (int)((core.getDisplay().getWidth()/10)*widthRatio*1.06f), (int)(((core.getDisplay().getHeight()/10)*heightRatio*1.06f)));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
@@ -68,27 +71,18 @@ public class Map extends Window {
         
         TextureState[] textureStates = wmap.getMapTextures();
         {
-        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
+        	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
 	        hudQuad.setRenderState(textureStates[0]);
 	        windowNode.attachChild(hudQuad);
-        }
-        
-        {
-        	Quad hudQuad = new Quad("hud_pos", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
-	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
-			
-	        //hudQuad.setRenderState(textureStates[1]);
-	        wmap.registerQuad(hudQuad);
-	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
         }
         
+        
         {
-        	Quad hudQuad = new Quad("hud_geo", (core.getDisplay().getWidth()/10)*3, ((core.getDisplay().getHeight()/10)*4));
+        	Quad hudQuad = new Quad("hud_geo", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 			
@@ -96,7 +90,16 @@ public class Map extends Window {
 	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
         }
-        
+        {
+        	Quad hudQuad = new Quad("hud_pos", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
+	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
+	        hudQuad.setLightCombineMode(LightState.OFF);
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+	        wmap.registerQuad(hudQuad);
+	        windowNode.attachChild(hudQuad);
+	        hudQuad.setRenderState(hudAS);
+        }
+        windowNode.updateRenderState();
 	}
 
 	@Override
