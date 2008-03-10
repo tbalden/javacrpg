@@ -243,8 +243,6 @@ public class LocalMap {
 					}
 				}
 			}
-			ByteBuffer buffer2 = ByteBuffer.wrap(staticLayerSet);
-			staticLayer.setData(buffer2);
 			if (staticTexState==null) 
 			{
 				System.out.println("NEW STATIC TEX STATE");
