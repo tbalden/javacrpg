@@ -82,9 +82,6 @@ public class HUD {
         mapQuad.setLightCombineMode(LightState.OFF);
         localMap = new LocalMap(core.gameState.world, core.renderedArea);
         localMap.registerQuad(mapQuad);
-        //TextureState[] textures = localMap.getMapTextures();
-        //mapQuad.setRenderState(textures[0]);
-        //mapQuad.updateRenderState();
         mapQuad.setRenderState(hudAS);
         hudNode.attachChild(mapQuad);
         hudNode.updateRenderState();
@@ -123,9 +120,9 @@ public class HUD {
         // meter area
         
         meter = new DirectionTimeMeter(this);
-        hudNode.attachChild(meter.quad_sign_dir);
         hudNode.attachChild(meter.quad_sign_sun);
-        hudNode.attachChild(meter.quad);
+        hudNode.attachChild(meter.quad_sign_dir);
+        //hudNode.attachChild(meter.quad);
         
         // system
         sr = new SystemRelated(this,new String[]{"LOAD","DICE"},new String[]{"./data/ui/hourglass.png","./data/ui/dice2.png"});

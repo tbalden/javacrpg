@@ -847,6 +847,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,0));
 			pointLight.setEnabled(true);
 			pointLight.setShadowCaster(false);
+			pointLight.setAttenuate(false);
 			pointLightNode.setLight(pointLight);
 	        
 			return new LightNode[]{dirLightNode,pointLightNode};
@@ -910,7 +911,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(gameState.world, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ);
 		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false);
-		// REMOVING IT till fixed mem leak TODO
 		uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
 		gameState.world.worldMap.update(gameState.viewPositionX/gameState.world.magnification, gameState.viewPositionY/gameState.world.magnification, gameState.viewPositionZ/gameState.world.magnification);
 		uiBase.hud.localMap.update(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ,gameState.viewDirection);
@@ -983,7 +983,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					l[1].getLight().setDiffuse(c);
 					l[1].getLight().setAmbient(c);
-					l[1].getLight().setSpecular(c);					
+					l[1].getLight().setSpecular(c);				
 					if (updateRenderState) {
 						// this is a workaround, lightstate seems to move to the parent, don't know why. \
 						// Clearing it helps:
@@ -991,7 +991,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 						groundParentNode.updateRenderState();
 					}
-					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]));
+					skyParentNode.attachChild(l[1]);
+					l[1].setLocalTranslation(cam.getLocation());
 				
 				} else 
 				

@@ -41,6 +41,7 @@ public class MainMenu extends Window implements KeyListener {
 	public String[][] menuImages = new String[][] {
 			{NEW_GAME,NEW_GAME}, {SAVE_GAME,SAVE_GAME}, {LOAD_GAME,LOAD_GAME}, {OPTIONS,OPTIONS}, {QUIT,QUIT}
 	};
+	public float[] sizeXRatios = new float[]{1f,0.5f,0.5f, 0.8f, 0.5f};
 	
 	int selected = 0;
 	
@@ -51,14 +52,14 @@ public class MainMenu extends Window implements KeyListener {
 		
         try {
         	
-        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 0.95f*1.2f*(core.getDisplay().getHeight() / 2), 
-        			core.getDisplay().getWidth() / 2, 0.975f*core.getDisplay().getHeight() / 2);
+        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 1.4f*(core.getDisplay().getHeight() / 2), 
+        			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
         	hudQuad.setRenderState(base.hud.hudAS);
-        	Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/menu-logo.png", 2.23f*core.getDisplay().getWidth() / 5f, 2.23f*(core.getDisplay().getHeight() / 11), 
-        			core.getDisplay().getWidth() / 2, 1.62f*core.getDisplay().getHeight() / 2);
-        	logoQuad.setRenderState(base.hud.hudAS);
+        	//Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/menu-logo.png", 2.23f*core.getDisplay().getWidth() / 5f, 2.23f*(core.getDisplay().getHeight() / 11), 
+        		//	core.getDisplay().getWidth() / 2, 1.62f*core.getDisplay().getHeight() / 2);
+        	//logoQuad.setRenderState(base.hud.hudAS);
         	
-			windowNode.attachChild(logoQuad);
+			//windowNode.attachChild(logoQuad);
 			windowNode.attachChild(hudQuad);
 			
 			int counter = 0;
@@ -67,12 +68,14 @@ public class MainMenu extends Window implements KeyListener {
 			float startPosY = 1.31f*core.getDisplay().getHeight() / 2;
 			float stepPosY = 0.85f* 1.1f*(core.getDisplay().getHeight() / 11);
 			float posX = core.getDisplay().getWidth() / 2;
+			int i=0;
 			for (String[] image:menuImages)
 			{
-				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image[1],sizeX,sizeY, posX, startPosY - stepPosY*counter++);
+				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image[1],sizeX*sizeXRatios[i],sizeY, posX, startPosY - stepPosY*counter++);
 				button.setRenderState(base.hud.hudAS);
 				windowNode.attachChild(button);
 				buttons.add(new Button(image[0],button,this));
+				i++;
 			}
 			highlightSelected();
 			windowNode.updateRenderState();
