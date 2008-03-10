@@ -140,8 +140,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f; 
 	
-	public static final int MOVE_STEPS = 15;
-	public static long TIME_TO_ENSURE = 15; 
+	public static final int MOVE_STEPS = 18;
+	public static long TIME_TO_ENSURE = 14; 
 
     public static Integer EMPTY_SIDE = new Integer(0);
     
@@ -1590,6 +1590,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	boolean noInput = false;
 
+	boolean udUpdate = true;
+	public void updateDisplayCalmer(Vector3f from)
+	{
+
+		noInput = true;
+        // update game state, do not use interpolation parameter
+		if (udUpdate) {
+			update(-1.0f);
+		}
+		udUpdate=!udUpdate;
+
+        // render, do not use interpolation parameter
+        render(-1.0f);
+
+        // swap buffers
+//        pManager.remove(sPass);
+        display.getRenderer().displayBackBuffer();
+  //      pManager.add(sPass);
+		noInput = false;
+	}
+	
 	public void updateDisplay(Vector3f from)
 	{
 
@@ -1605,7 +1626,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         display.getRenderer().displayBackBuffer();
   //      pManager.add(sPass);
 		noInput = false;
-		
 	}
 	public void updateDisplayNoBackBuffer()
 	{

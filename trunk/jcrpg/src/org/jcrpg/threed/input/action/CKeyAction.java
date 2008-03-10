@@ -317,7 +317,7 @@ public abstract class CKeyAction extends KeyInputAction{
     		}
     		
             handler.core.updateTimeRelated();
-            handler.core.updateDisplay(from);
+            handler.core.updateDisplayCalmer(from);
             skipStep+= ensureTimeStop();
             if (skipStep>1f) {
             	for (int k=0; k<(int)skipStep; k++)
