@@ -114,7 +114,7 @@ public class LocalMap {
 				colorCache.put(k, c);
 			} 
 			set.setColor(c);
-			set.drawRect(x*pointSizeX+p[1], y*pointSizeY+p[0], p[3], p[2]);
+			set.fillRect(x*pointSizeX+p[1]-1, y*pointSizeY+p[0]-1, p[3]+1, p[2]+1);
 		}
 	}
 	
