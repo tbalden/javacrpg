@@ -279,6 +279,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	public static boolean passedTimeCalculated = false;
 	public static Quaternion qZero = new Quaternion();
+	int lastMinute = 0;
 	@Override
 	public void onDraw(Renderer r) {
 		
@@ -296,10 +297,20 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
 				{
 					needsUpdate = false;
-					if ((parent.getLocks()&Node.LOCKED_MESH_DATA)==0) parent.lockMeshes();
+					
+					// REMOVED LOCKING BECAUSE OF COLORS WERE NOT CHANGING WITH LIGHT...
+					//if (lastMinute==core.gameState.engine.getWorldMeanTime().getMinute()) 
+					//{
+						//if ((parent.getLocks()&Node.LOCKED_MESH_DATA)==0) parent.lockMeshes();
+					//} 
+					/*else
+					{
+						if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
+						lastMinute = core.gameState.engine.getWorldMeanTime().getMinute();
+					}*/
 				} else
 				{
-					if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
+					//if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
 				}
 			} else
 			{
