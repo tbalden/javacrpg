@@ -310,7 +310,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					}*/
 				} else
 				{
-					//if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
+					if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
 				}
 			} else
 			{
