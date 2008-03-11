@@ -126,7 +126,7 @@ public class PartySetup extends PagedInputWindow {
 			// page selection -----------------------------------------------
 			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
-	    	
+	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Select a character to add:",false); 
