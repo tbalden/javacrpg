@@ -314,8 +314,9 @@ public class World extends Place {
 	{
 		if (orig!=null && newCube!=null) {
 			orig.merge(newCube,worldX,worldY,worldZ,orig.steepDirection);
+			//orig = new Cube(orig,newCube,worldX,worldY,worldZ,orig.steepDirection);
 			return orig;
-					//new Cube(orig,
+					//
 		}
 		if (orig!=null && newCube==null)
 		{

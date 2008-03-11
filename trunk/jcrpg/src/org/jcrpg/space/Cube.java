@@ -97,13 +97,15 @@ public class Cube extends ChangingImpl {
 	public void merge(Cube c2, int x, int y, int z, int steepDir) {
 		if (this.climateId==null)
 			this.climateId = c2.climateId;
-		else
-			this.climateId = this.climateId;
+		else {
+			//this.climateId = this.climateId;
+		}
 		
 		if (this.geoCubeKind==Geography.K_UNDEFINED)
 			this.geoCubeKind = c2.geoCubeKind;
-		else
-			this.geoCubeKind = this.geoCubeKind;
+		else {
+			//this.geoCubeKind = this.geoCubeKind;
+		}
 
 		int steep = this.steepDirection;
 		if (this.steepDirection==SurfaceHeightAndType.NOT_STEEP || this.steepDirection == J3DCore.BOTTOM || this.steepDirection == J3DCore.TOP)
@@ -115,32 +117,33 @@ public class Cube extends ChangingImpl {
 				steep = c2.steepDirection;
 			}
 		}
-		steepDirection = steep;
+		int newSteepDirection = steep;
 		if (c2.overwrite && c2.overwritePower>=this.overwritePower)
 		{
 			steepDirection = c2.steepDirection;
 		}
 		if (this.overwrite && this.overwritePower>=c2.overwritePower)
 		{
-			steepDirection = this.steepDirection;
+			newSteepDirection = this.steepDirection;
 		}
-		this.parent = this.parent;
+
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		boolean newOnlyIfOverlaps = false;
 		if (this.overwrite || c2.overwrite) 
 		{
 			this.overwrite = true;
 			if (this.onlyIfOverlaps || c2.onlyIfOverlaps) 
 			{
-				this.onlyIfOverlaps = true;
+				newOnlyIfOverlaps = true;
 			}
 		}
 		if (this.internalCube || c2.internalCube)
 		{
 			internalCube = true;
 		}
-		this.overwritePower = Math.max(this.overwritePower, c2.overwritePower);
+		int newOverwritePower = Math.max(this.overwritePower, c2.overwritePower);
 
 		for (int i=0; i<sides.length; i++)
 		{
@@ -185,6 +188,10 @@ public class Cube extends ChangingImpl {
 			this.sides[i] = merged;
 		}
 		fillSideFields();
+		
+		onlyIfOverlaps = newOnlyIfOverlaps;
+		overwritePower = newOverwritePower;
+		steepDirection = newSteepDirection;
 		
 	}
 
