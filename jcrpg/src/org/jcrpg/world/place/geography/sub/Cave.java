@@ -185,6 +185,8 @@ public class Cave extends Geography implements Surface {
 	
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView ) {
+		// TODO !!!this is not complete enough for a multilevel cave!!! we should iterate through all possible levels
+		// adding to wGLevel + levelSize * level and gather surfaces 
 		if (getCubeBase(-1, worldX, worldGroundLevel, worldZ, farView)==null)
 		{
 			if (cachedNonType==null)
@@ -193,10 +195,10 @@ public class Cave extends Geography implements Surface {
 			}
 			return cachedNonType;
 		}
-		// TODO !!!this is not complete enough for a multilevel cave!!!
-		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levelSize)/levelSize, worldZ);
+		int per = HashUtil.mixPercentage(worldX, 0, worldZ);
 		if (per>=density)
 		{
+			//System.out.println(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
 			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
 			return cachedType;
 		}
