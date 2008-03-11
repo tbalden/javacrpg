@@ -847,7 +847,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,0));
 			pointLight.setEnabled(true);
 			pointLight.setShadowCaster(false);
-			pointLight.setAttenuate(false);
+			pointLight.setAttenuate(true);
+			pointLight.setLinear(0.0002f);
 			pointLightNode.setLight(pointLight);
 	        
 			return new LightNode[]{dirLightNode,pointLightNode};
@@ -938,15 +939,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			Spatial s = orbiters3D.get(orb.id); // get 3d Spatial for the orbiter
 			LightNode l[] = orbitersLight3D.get(orb.id);
 			float[] orbiterCoords = orb.getCurrentCoordinates(localTime, conditions); // get coordinates of the orbiter
+			Vector3f orbiterVector = null;
 			if (orbiterCoords!=null)
 			{
+				orbiterVector = new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation());
 				if (s.getParent()==null)
 				{
 					// newly appearing, attach to root
 					skyParentNode.attachChild(s);
 					updateRenderState = true;
 				}
-				s.setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation()));
+				s.setLocalTranslation(orbiterVector);
 				//s.updateRenderState();
 			}
 			else {
@@ -992,7 +995,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						groundParentNode.updateRenderState();
 					}
 					skyParentNode.attachChild(l[1]);
-					l[1].setLocalTranslation(cam.getLocation());
+					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).mult(3.5f).negate().add(cam.getLocation()));
 				
 				} else 
 				
@@ -1023,7 +1026,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// set fog state color to the light power !
 		fs_external.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/1.5f,vTotal[2]/1.1f,1f));
 		fs_external_special.setColor(new ColorRGBA(vTotal[0]/2f,vTotal[1]/1.5f,vTotal[2]/1.1f,1f));
-
+		
 		// SKYSPHERE
 		// moving skysphere with camera
 		Vector3f sV3f = new Vector3f(cam.getLocation());
@@ -1057,7 +1060,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (updateRenderState) {
 			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
 		}
-		
 	}
 
 	public void renderParallel()
