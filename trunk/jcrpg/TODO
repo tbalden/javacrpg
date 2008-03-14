@@ -7,6 +7,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
+[ ] camera rotating with turning to the back of the given cube reverse the faced direction, so trees and such can
+	be seen.
 
 	replace model geom batch with a HeightMap -> addItem will set the height levels of a big Terrain, texture splatting??
 

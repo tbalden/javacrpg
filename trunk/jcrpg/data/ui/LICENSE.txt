@@ -6,3 +6,4 @@ hud1.png GNU GPLv3 Created by Tranberry@freegamer
 hud1_v1.png GNU GPLv3 Created by Tranberry@freegamer
 sign1.png GNU GPLv3 Created by Tranberry@freegamer
 sign_sun.png GNU GPLv3 Created by Tranberry@freegamer
+baseWindowFram.png,inputBase.png, tunerBase.png, buttonBase.png, windowframe.png GNU GPLv3 Created by Tranberry@freegamer
