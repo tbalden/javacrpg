@@ -62,6 +62,10 @@ public class WorldParams {
 	
 	public int geoNormalSize;
 
+	public WorldParams()
+	{
+		super();
+	}
 	/**
 	 * World generation parameter constructor.
 	 * @param magnification world magnification.
@@ -91,6 +95,231 @@ public class WorldParams {
 		this.geoLikenessValues = geoLikenessValues;
 		this.additionalGeos = additionalGeos;
 		this.additionalGeoLikenessValues = additionalGeoLikenessValues;
+		this.setGeoNormalSize(geoNormalSize);
+		
+	}
+
+	/**
+	 * @return the magnification
+	 */
+	public int getMagnification() {
+		return magnification;
+	}
+
+	/**
+	 * @param magnification the magnification to set
+	 */
+	public void setMagnification(int magnification) {
+		this.magnification = magnification;
+	}
+
+	/**
+	 * @return the sizeX
+	 */
+	public int getSizeX() {
+		return sizeX;
+	}
+
+	/**
+	 * @param sizeX the sizeX to set
+	 */
+	public void setSizeX(int sizeX) {
+		this.sizeX = sizeX;
+	}
+
+	/**
+	 * @return the sizeY
+	 */
+	public int getSizeY() {
+		return sizeY;
+	}
+
+	/**
+	 * @param sizeY the sizeY to set
+	 */
+	public void setSizeY(int sizeY) {
+		this.sizeY = sizeY;
+	}
+
+	/**
+	 * @return the sizeZ
+	 */
+	public int getSizeZ() {
+		return sizeZ;
+	}
+
+	/**
+	 * @param sizeZ the sizeZ to set
+	 */
+	public void setSizeZ(int sizeZ) {
+		this.sizeZ = sizeZ;
+	}
+
+	/**
+	 * @return the landDensity
+	 */
+	public int getLandDensity() {
+		return landDensity;
+	}
+
+	/**
+	 * @param landDensity the landDensity to set
+	 */
+	public void setLandDensity(int landDensity) {
+		this.landDensity = landDensity;
+	}
+
+	/**
+	 * @return the landMass
+	 */
+	public int getLandMass() {
+		return landMass;
+	}
+
+	/**
+	 * @param landMass the landMass to set
+	 */
+	public void setLandMass(int landMass) {
+		this.landMass = landMass;
+	}
+
+	/**
+	 * @return the heightRatio
+	 */
+	public float getHeightRatio() {
+		return heightRatio;
+	}
+
+	/**
+	 * @param heightRatio the heightRatio to set
+	 */
+	public void setHeightRatio(float heightRatio) {
+		this.heightRatio = heightRatio;
+	}
+
+	/**
+	 * @return the randomSeed
+	 */
+	public int getRandomSeed() {
+		return randomSeed;
+	}
+
+	/**
+	 * @param randomSeed the randomSeed to set
+	 */
+	public void setRandomSeed(int randomSeed) {
+		this.randomSeed = randomSeed;
+	}
+
+	/**
+	 * @return the climates
+	 */
+	public String[] getClimates() {
+		return climates;
+	}
+
+	/**
+	 * @param climates the climates to set
+	 */
+	public void setClimates(String[] climates) {
+		this.climates = climates;
+	}
+
+	/**
+	 * @return the climateSizeMuls
+	 */
+	public int[] getClimateSizeMuls() {
+		return climateSizeMuls;
+	}
+
+	/**
+	 * @param climateSizeMuls the climateSizeMuls to set
+	 */
+	public void setClimateSizeMuls(int[] climateSizeMuls) {
+		this.climateSizeMuls = climateSizeMuls;
+	}
+
+	/**
+	 * @return the foundationGeo
+	 */
+	public String getFoundationGeo() {
+		return foundationGeo;
+	}
+
+	/**
+	 * @param foundationGeo the foundationGeo to set
+	 */
+	public void setFoundationGeo(String foundationGeo) {
+		this.foundationGeo = foundationGeo;
+	}
+
+	/**
+	 * @return the geos
+	 */
+	public String[] getGeos() {
+		return geos;
+	}
+
+	/**
+	 * @param geos the geos to set
+	 */
+	public void setGeos(String[] geos) {
+		this.geos = geos;
+	}
+
+	/**
+	 * @return the geoLikenessValues
+	 */
+	public int[] getGeoLikenessValues() {
+		return geoLikenessValues;
+	}
+
+	/**
+	 * @param geoLikenessValues the geoLikenessValues to set
+	 */
+	public void setGeoLikenessValues(int[] geoLikenessValues) {
+		this.geoLikenessValues = geoLikenessValues;
+	}
+
+	/**
+	 * @return the additionalGeos
+	 */
+	public String[] getAdditionalGeos() {
+		return additionalGeos;
+	}
+
+	/**
+	 * @param additionalGeos the additionalGeos to set
+	 */
+	public void setAdditionalGeos(String[] additionalGeos) {
+		this.additionalGeos = additionalGeos;
+	}
+
+	/**
+	 * @return the additionalGeoLikenessValues
+	 */
+	public int[] getAdditionalGeoLikenessValues() {
+		return additionalGeoLikenessValues;
+	}
+
+	/**
+	 * @param additionalGeoLikenessValues the additionalGeoLikenessValues to set
+	 */
+	public void setAdditionalGeoLikenessValues(int[] additionalGeoLikenessValues) {
+		this.additionalGeoLikenessValues = additionalGeoLikenessValues;
+	}
+
+	/**
+	 * @return the geoNormalSize
+	 */
+	public int getGeoNormalSize() {
+		return geoNormalSize;
+	}
+
+	/**
+	 * @param geoNormalSize the geoNormalSize to set
+	 */
+	public void setGeoNormalSize(int geoNormalSize) {
 		this.geoNormalSize = geoNormalSize;
 		if (this.geoNormalSize<10) this.geoNormalSize = 10;
 	}
