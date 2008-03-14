@@ -46,7 +46,7 @@ public class SystemRelated {
 		int y = 0;
 		for (String quString:quadIds)
 		{
-			Quad q = new Quad("Q_"+quString,hud.core.getDisplay().getWidth()/20,hud.core.getDisplay().getHeight()/18);
+			Quad q = new Quad("Q_"+quString,hud.core.getDisplay().getWidth()/19,hud.core.getDisplay().getHeight()/15);
 			Image baseImage = TextureManager.loadImage(new File(images[y]).toURI().toURL(),true);
 			Texture base_tex = new Texture();
 			base_tex.setImage(baseImage);			
