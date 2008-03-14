@@ -49,6 +49,7 @@ public class CacheStateInfo extends InputWindow {
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+			hudQuad.setRenderState(base.hud.hudAS);
 	    	windowNode.attachChild(hudQuad);
 	    	new TextLabel("",this,windowNode, 0.20f, 0.08f, 0.3f, 0.06f,600f,"Ext/Int node number:",false); 
 	    	extIntNodes = new TextLabel("",this,windowNode, 0.57f, 0.08f, 0.3f, 0.06f,600f,"",false); 
