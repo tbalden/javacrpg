@@ -133,11 +133,11 @@ public class PartySetup extends PagedInputWindow {
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
-	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.2f, 0.07f,400f,"New Character");
+	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,400f,"New Character");
 	    	addInput(0,newChar);
-	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.2f, 0.07f,400f,"Remove Char.");
+	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,400f,"Remove Char.");
 	    	addInput(0,rmChar);
-	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.2f, 0.07f,400f,"Start Game");
+	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,400f,"Start Game");
 	    	addInput(0,startGame);
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
@@ -203,7 +203,7 @@ public class PartySetup extends PagedInputWindow {
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		String groupName = Language.v("skillgroups."+groupId);
-	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.13f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.139f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
 	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
