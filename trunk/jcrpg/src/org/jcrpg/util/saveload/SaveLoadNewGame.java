@@ -43,6 +43,7 @@ import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.generator.WorldGenerator;
 import org.jcrpg.world.generator.WorldParams;
+import org.jcrpg.world.generator.WorldParamsConfigLoader;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
 import org.jcrpg.world.place.World;
@@ -71,7 +72,7 @@ public class SaveLoadNewGame {
 		
 			Engine engine = new Engine();
 			Time wmt = new Time();
-			wmt.setHour(17);
+			wmt.setHour(16);
 			engine.setWorldMeanTime(wmt);
 			engine.setNumberOfTurn(0);
 			Thread t = new Thread(engine);
@@ -85,7 +86,8 @@ public class SaveLoadNewGame {
 			int[] geoLikenessValues = new int[] {4,8,2};
 			String[] additionalGeos = new String[] {"River","Cave"};
 			int[] additionalGeoLikenessValues = new int[] {4,4,2};
-			WorldParams params = new WorldParams(40,10,2,10,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
+			//WorldParams params = new WorldParams(40,50,2,50,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
+			WorldParams params = (new WorldParamsConfigLoader()).getWorldParams();
 			WorldGenerator gen = new WorldGenerator();
 			World world = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
 			world.engine = engine;

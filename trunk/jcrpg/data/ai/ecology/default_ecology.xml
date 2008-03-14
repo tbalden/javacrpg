@@ -1,0 +1,58 @@
+<ecology name="default" author="eburriel@yahoo.com" version="1.0">
+	<bestiary>
+		<animal id="GORRILAHORDE"
+			implementation="org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde" />
+		<animal id="WOLFPACK"
+			implementation="org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack" />
+		<animal id="WARTHOGS"
+			implementation="org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs" />
+		<animal id="FOXFAMILY"
+			implementation="org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily" />
+	</bestiary>
+    <!-- populations represent where and how groups can appear in the world -->
+    
+    <!-- populations can be in the food chain                                                                          -->
+    <!-- populations in the food chain should have their position using the attribute  food-chain-position             -->
+    <!-- HERBIVORE eaten by PRIMARY_CARNIVORE eaten by SECONDARY_CARNIVORE                                             -->
+    <!-- a PRIMARY_CARNIVORE cannot exist if no HERBIVORE in predator range                                            -->
+    <!-- a SECONDARY_CARNIVORE cannot exist if no PRIMARY_CARNIVORE in predator-range  (L-DISTANCE)                    -->
+    <!-- populations with the attribute  food-chain-position empty can appear without any food chain restrictions      -->  
+    
+	<populations>
+		<!-- Minimals attributes for a population                                                                      -->
+		<!-- ref-animal-id refers to an animal id in bestiary tag                                                      -->
+		<!-- ref-climat can be "Arctic , Continental, Desert , Tropical                                                -->
+		<!-- percentage-chance-of-appearance is an integer between 0 and 100                                           -->
+		<!-- percentage-chance-of-appearance is an integer between 0 and 100                                           -->
+		<!-- prefix-name : just a prefix name                                                                          -->
+		
+	    <!-- You can adapt the group size to the climat (min and max)-->
+		<population ref-animal-id="WOLFPACK" ref-climat="Arctic"
+			percentage-chance-of-appearance="10" max-in-group="5" min-in-group="1"/>	
+				
+		
+		<!-- You can also include specific groups that can appear just one time in your world                         -->
+		<population ref-animal-id="WOLFPACK" ref-climat="Continental"
+			prefix-name="Wild Wolves Horde" 
+			max-in-world="1" min-in-group="100" max-in-group="250"
+			percentage-chance-of-appearance="10" />		
+    	
+    	<population ref-animal-id="GORRILAHORDE" ref-climat="Tropical"
+			percentage-chance-of-appearance="25" />
+    	
+    	<!-- sample FOOD CHAIN SAMPLE in Tropical Climat                                                               -->		
+		
+		<population ref-animal-id="WARTHOGS" ref-climat="Tropical"
+			percentage-chance-of-appearance="50" food-chain-position="HERBIVORE"/>
+		
+		<population ref-animal-id="FOXFAMILY" ref-climat="Tropical"
+			percentage-chance-of-appearance="30" 
+			food-chain-position="PRIMARY_CARNIVORE"
+			predator-range="5"
+			/>
+		<population ref-animal-id="WOLFPACK" ref-climat="Tropical"
+			percentage-chance-of-appearance="25"
+			food-chain-position="SECONDARY_CARNIVORE" predator-range="15"/>						
+	</populations>
+</ecology>
+
