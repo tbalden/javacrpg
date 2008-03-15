@@ -4,8 +4,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
 import com.jme.input.action.InputActionEvent;
-import com.jme.input.action.KeyInputAction;
-import com.jme.input.controls.controller.CameraController;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 

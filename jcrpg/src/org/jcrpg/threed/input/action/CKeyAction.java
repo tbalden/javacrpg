@@ -65,46 +65,99 @@ public abstract class CKeyAction extends KeyInputAction{
 	}
 	
     
-    protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost)
-	{
+    protected void turnDirection(float steps, Vector3f from, Vector3f toReach, boolean almost) {
 		float skipStep = 0f;
-   	for (float i=0; i<=steps; i++)
-        {
-    		//if (almost && i==0) continue;
-    		//if (almost && i==steps) continue;
-    		ensureTimeStart();
-    		float x, y, z;
-    		x = (1/steps)* i * toReach.x;
-    		y = (1/steps)* i * toReach.y;
-    		z = (1/steps)* i * toReach.z;
-    		
-    		x += (1/steps) * (steps-i) * from.x;
-    		y += (1/steps) * (steps-i) * from.y;
-    		z += (1/steps) * (steps-i) * from.z;
-    		
-    		setCameraDirection(camera, x, y, z);
-    		
-            camera.normalize();
-            camera.update();
-            handler.core.updateDisplay(from);
-            skipStep+= ensureTimeStop();
-            if (skipStep>1f) {
-            	i+=(int)skipStep;
-            	skipStep=0f;
-            }
-            if (i>steps) break;
-    
-        }
-		
+		for (float i = 0; i <= steps; i++) {
+			// if (almost && i==0) continue;
+			// if (almost && i==steps) continue;
+			ensureTimeStart();
+			float x, y, z;
+			x = (1 / steps) * i * toReach.x;
+			y = (1 / steps) * i * toReach.y;
+			z = (1 / steps) * i * toReach.z;
+
+			x += (1 / steps) * (steps - i) * from.x;
+			y += (1 / steps) * (steps - i) * from.y;
+			z += (1 / steps) * (steps - i) * from.z;
+
+			setCameraDirection(camera, x, y, z);
+
+			camera.normalize();
+			camera.update();
+			handler.core.updateDisplay(from);
+			skipStep += ensureTimeStop();
+			if (skipStep > 1f) {
+				i += (int) skipStep;
+				skipStep = 0f;
+			}
+			if (i > steps)
+				break;
+
+		}
+
 	}
     
+    protected void turnDirectionAndMove(float steps, Vector3f from, Vector3f toReach, Vector3f fromPos, Vector3f toPos, boolean almost) {
+		float skipStep = 0f;
+		/*Vector3f center = J3DCore.getInstance().getCurrentLocation();
+		fromPos = center.add(fromPos.negate());
+		toPos = center.add(toPos.negate());*/
+		for (float i = 0; i <= steps; i++) {
+			// if (almost && i==0) continue;
+			// if (almost && i==steps) continue;
+			ensureTimeStart();
+    		float x1, y1, z1;
+    		x1 = (1/steps)* i * toPos.x;
+    		y1 = (1/steps)* i * toPos.y;
+    		z1 = (1/steps)* i * toPos.z;
+    		
+    		x1 += (1/steps) * (steps-i) * fromPos.x;
+    		y1 += (1/steps) * (steps-i) * fromPos.y;
+    		z1 += (1/steps) * (steps-i) * fromPos.z;
+    		
+    		y1+=FastMath.sin((FastMath.PI/steps)*i)/10;
+    		
+    		camera.setLocation(new Vector3f(x1,y1,z1));
+    		if (J3DCore.WATER_SHADER)
+    		{
+    			J3DCore.waterEffectRenderPass.setWaterHeight(camera.getLocation().y);
+    		}
+ 
+            float x, y, z;
+			x = (1 / steps) * i * toReach.x;
+			y = (1 / steps) * i * toReach.y;
+			z = (1 / steps) * i * toReach.z;
+
+			x += (1 / steps) * (steps - i) * from.x;
+			y += (1 / steps) * (steps - i) * from.y;
+			z += (1 / steps) * (steps - i) * from.z;
+
+			setCameraDirection(camera, x, y, z);
+
+			camera.normalize();
+			camera.update();
+			handler.core.updateDisplay(from);
+			skipStep += ensureTimeStop();
+			if (skipStep > 1f) {
+				i += (int) skipStep;
+				skipStep = 0f;
+			}
+			if (i > steps)
+				break;
+
+		}
+
+	}
+
     /**
-     * Sets a camera's direction to a new x,y,z dir, setting its Up and Left too with rotation matrix.
-     * @param camera
-     * @param x
-     * @param y
-     * @param z
-     */
+	 * Sets a camera's direction to a new x,y,z dir, setting its Up and Left too
+	 * with rotation matrix.
+	 * 
+	 * @param camera
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
     private void setCameraDirection(Camera camera,  float x,float y,float z)
     {
     	setCameraDirection(camera, null,x, y, z);

@@ -366,7 +366,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		tdTop = new Vector3f(0, 1, 0),
 		tdBottom = new Vector3f(0, -1, 0);
 	public static Vector3f[] turningDirectionsUnit = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest,tdTop,tdBottom};
-	
+
+
+	public static float dirPostDelta = 0.65f;
+	public static Vector3f dpNorth = new Vector3f(0, 0, -dirPostDelta),
+		dpSouth = new Vector3f(0, 0, dirPostDelta),
+		dpEast = new Vector3f(dirPostDelta, 0, 0),
+		dpWest = new Vector3f(-dirPostDelta, 0, 0),
+		dpTop = new Vector3f(0, dirPostDelta, 0),
+		dpBottom = new Vector3f(0, -dirPostDelta, 0);
+	public static Vector3f[] directionPositions = new Vector3f[] {dpNorth, dpEast, dpSouth, dpWest,dpTop,dpBottom};
+
 	static 
 	{
 		// creating rotation quaternions for all sides of a cube...
@@ -1158,6 +1168,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Vector3f getCurrentLocation()
 	{
 		Vector3f v = new Vector3f(gameState.relativeX*CUBE_EDGE_SIZE,gameState.relativeY*CUBE_EDGE_SIZE+0.11f+(gameState.onSteep?1.5f:0f),-1*gameState.relativeZ*CUBE_EDGE_SIZE);
+		Vector3f fromPos = J3DCore.directionPositions[gameState.viewDirection];
+		v.addLocal(fromPos.negate());
 		return v;
 	}
 	

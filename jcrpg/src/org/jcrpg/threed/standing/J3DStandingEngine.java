@@ -467,7 +467,7 @@ public class J3DStandingEngine {
 			    		}
 					}
 				}		
-				System.out.println("DETACH TIME = "+(System.currentTimeMillis()-t0));
+				Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
 			} else
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
@@ -554,7 +554,7 @@ public class J3DStandingEngine {
 					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 				}
 			}
-			System.out.println("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
+			Jcrpg.LOGGER.finer("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
 
 			float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
 			float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
@@ -1122,9 +1122,9 @@ public class J3DStandingEngine {
 				}
 			}
 			
-			System.out.println("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
-			System.out.println("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
-			System.out.println("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
+			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
+			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
+			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
 			
 			if (segmentCount==segments-1 || !segmented) {
 				
@@ -1197,7 +1197,7 @@ public class J3DStandingEngine {
 			
 			engine.setPause(storedPauseState);
 		}
-		System.out.println("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
+		Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 	}
 	
 	

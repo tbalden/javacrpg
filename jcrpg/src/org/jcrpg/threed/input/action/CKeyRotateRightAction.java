@@ -40,11 +40,13 @@ public class CKeyRotateRightAction extends CKeyAction {
         	if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
         }
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+    	Vector3f fromPos = J3DCore.getInstance().getCurrentLocation();
         handler.core.turnRight();
         if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render(handler.core.gameState.viewPositionX,handler.core.gameState.viewPositionY,handler.core.gameState.viewPositionZ);
     	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+    	Vector3f toPos = J3DCore.getInstance().getCurrentLocation();
         float steps = J3DCore.MOVE_STEPS;
-        turnDirection(steps, from, toReach);
+        turnDirectionAndMove(steps,from,toReach,fromPos,toPos,false);
         handler.lookLeftRightPercent = 0;
         handler.lookUpDownPercent = 0;
         setLookVertical(); // this should be always called to override bad camera view caused by performance related rotation skips
