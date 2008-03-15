@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Side;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -245,7 +246,7 @@ public class LocalMap {
 			}
 			if (staticTexState==null) 
 			{
-				System.out.println("NEW STATIC TEX STATE");
+				//System.out.println("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 				staticLayerTex = new Texture();
 				staticLayerTex.setFilter( Texture.FM_LINEAR );
@@ -300,7 +301,7 @@ public class LocalMap {
 		lastDir = dir;
 		long t0 = System.currentTimeMillis();
 		update();
-		System.out.println("LOC MAP UPDATE = "+(System.currentTimeMillis()-t0));
+		Jcrpg.LOGGER.finer("LOC MAP UPDATE = "+(System.currentTimeMillis()-t0));
 		
 	}
 
