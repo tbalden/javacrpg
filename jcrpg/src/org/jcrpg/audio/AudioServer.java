@@ -21,6 +21,8 @@ package org.jcrpg.audio;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -85,7 +87,9 @@ public class AudioServer implements Runnable {
 			hmTracks.put("main", tracks);
 		}catch (Exception ex)
 		{
-			ex.printStackTrace();
+			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+				ex.printStackTrace();
+			}
 		}
 		try {	
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
@@ -99,7 +103,9 @@ public class AudioServer implements Runnable {
 			
 		}catch (Exception ex)
 		{
-			ex.printStackTrace();
+			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+				ex.printStackTrace();
+			}
 		}
 		for (String step:stepTypes)
 		{
@@ -245,7 +251,11 @@ public class AudioServer implements Runnable {
 			}			
 		} catch (Exception ex)
 		{
-			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
+			if (J3DCore.SOUND_ENABLED) {
+				if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+					ex.printStackTrace();
+				}
+			}
 			return null;
 		}
 	}

@@ -368,7 +368,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static Vector3f[] turningDirectionsUnit = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest,tdTop,tdBottom};
 
 
-	public static float dirPostDelta = 0.65f;
+	public static float dirPostDelta = 0.7f;
 	public static Vector3f dpNorth = new Vector3f(0, 0, -dirPostDelta),
 		dpSouth = new Vector3f(0, 0, dirPostDelta),
 		dpEast = new Vector3f(dirPostDelta, 0, 0),
