@@ -19,7 +19,6 @@
 package org.jcrpg.ui.map;
 
 import java.awt.Color;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
