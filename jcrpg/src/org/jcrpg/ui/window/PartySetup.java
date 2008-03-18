@@ -69,6 +69,7 @@ public class PartySetup extends PagedInputWindow {
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
 	TextButton newChar;
+	TextButton delChar;
 	TextButton rmChar;
 	TextButton startGame;
 	
@@ -133,12 +134,14 @@ public class PartySetup extends PagedInputWindow {
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
-	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,400f,"New Character");
+	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.newChar"));
 	    	addInput(0,newChar);
-	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,400f,"Remove Char.");
+	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.rmChar"));
 	    	addInput(0,rmChar);
-	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,400f,"Start Game");
+	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.startGame"));
 	    	addInput(0,startGame);
+	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,400f,Language.v("partySetup.delChar"));
+	    	addInput(0,delChar);
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
 	    	
@@ -218,8 +221,7 @@ public class PartySetup extends PagedInputWindow {
 	    			skillObjects.add(skill);
 	    			counter++;
 	    		}*/
-	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),null,null);
-	    		sel.objects = skillObjects.toArray(new Object[0]); // helping the selection
+	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),skillObjects.toArray(new Object[0]),null,null);
 	    		posY++;
 	    		skillSelects.put(groupId, sel);
 	    		addInput(2,sel);
@@ -291,12 +293,16 @@ public class PartySetup extends PagedInputWindow {
 			refreshCharacterList();
 			addCharSelect.ids = dataList.keySet().toArray(new String[0]);
 			String[] names = new String[dataList.values().size()];
+			Object[] objects = new Object[dataList.values().size()];
 			int i=0;
 			for (CharListData d:dataList.values())
 			{
-				names[i++] = d.charName;
+				names[i] = d.charName;
+				objects[i++] = d;
 			}
 			addCharSelect.texts = names;
+			addCharSelect.objects = objects;
+			addCharSelect.selected = 0;
 			if (addCharSelect.texts.length>0)
 			{
 				inputChanged(addCharSelect, "");
@@ -358,6 +364,8 @@ public class PartySetup extends PagedInputWindow {
 	
 	static TreeMap<String, CharListData> dataList = null;
 	
+	HashMap<String, MemberPerson> mpCache = new HashMap<String, MemberPerson>();
+	
 	public void refreshCharacterList()
 	{
 		try {
@@ -373,8 +381,8 @@ public class PartySetup extends PagedInputWindow {
 				{
 					CharListData data = new CharListData();
 					data.charName = file;
-
-					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
+					File dirFile = new File(f.getAbsolutePath()+"/"+file);
+					String[] subFiles = dirFile.list();
 					for (String sFile:subFiles)
 					{
 						System.out.println("F: "+sFile);
@@ -383,10 +391,15 @@ public class PartySetup extends PagedInputWindow {
 						{
 							if (sF.getName().endsWith(".zip"))
 							{
+								data.dir = dirFile;
 								data.charData = sF;
 								try 
 								{
-									MemberPerson p = SaveLoadNewGame.loadCharacter(sF);
+									MemberPerson p = mpCache.get(sF.getAbsolutePath());
+									if (p == null) {
+										p = SaveLoadNewGame.loadCharacter(sF);
+										mpCache.put(sF.getAbsolutePath(), p);
+									}
 									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getClass().getSimpleName()+" - "+p.foreName+" "+p.surName;
 									while (true) {
 										if (dataList1.get(data.charName)!=null)
@@ -441,6 +454,7 @@ public class PartySetup extends PagedInputWindow {
 				resetForms();
 				setupPage();
 				changePage(0);
+				core.uiBase.hud.characters.show();
 			} else {
 				toggle();
 				core.mainMenu.toggle();
@@ -452,6 +466,18 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base.equals(delChar))
+		{
+			CharListData d = (CharListData)addCharSelect.getSelectedObject();
+			try {
+				d.charData.delete();
+				d.dir.delete();
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			setupPage();
+		} else
 		if (base.equals(rmChar))
 		{
 			// ############### REMOVING Selected Char
@@ -541,12 +567,12 @@ public class PartySetup extends PagedInputWindow {
 			ListSelect select = (ListSelect)base;
 			if (select.ids.length==0) return true;
 			skillGroupLeftLast = select;
-			String id = select.ids[select.getSelection()];
-			Class<?extends SkillBase> skill = (Class<? extends SkillBase>)select.objects[select.getSelection()];
+			//String id = select.ids[select.getSelection()];
+			Class<?extends SkillBase> skill = (Class<? extends SkillBase>)select.getSelectedObject();
 			skillTuned = skill;
-			String group = id.substring(0,id.indexOf('.'));
-			int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
-			System.out.println("GROUP = "+group+ " - "+count);
+			//String group = id.substring(0,id.indexOf('.'));
+			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
+			//System.out.println("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = personWithGenderAndRace.commonSkills.getSkillLevel(skill, null);
 			skillValueTuner.setUpdated(true);
@@ -804,35 +830,35 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputEntered(InputBase base, String message) {
 		if (base.equals(professionSelect))
 		{
-			for (String id:attributeTuners.keySet())
-			{
-				ValueTuner v = attributeTuners.get(id);
-				int value = v.getSelection();
-				attributeValues.setAttribute(id, value);
-				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
-			}
-			ArrayList<String> ids = new ArrayList<String>();
-			ArrayList<String> texts = new ArrayList<String>();
-			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
-			int i = genderSelect.getSelection();
-			int genderId = Integer.parseInt(genderSelect.ids[i]);
-			int id = 0;
-			for (Class<? extends Profession> pClass: charCreationRule.selectableProfessions)
-			{
-				Profession p = charCreationRule.profInstances.get(pClass);
-				if (p.isQualifiedEnough(race,genderId,attributeValues))
-				{
-		    		String s = Language.v("professions."+p.getClass().getSimpleName());
-		    		ids.add(""+id);
-		    		texts.add(s);		    		
-				}
-				id++;
-			}
-			String[] oldTexts = professionSelect.texts;
-	    	professionSelect.ids = ids.toArray(new String[0]);
-	    	professionSelect.texts = texts.toArray(new String[0]);
-	    	professionSelect.setUpdated(true);
 	    	if (message.equals("fake")) {
+				for (String id:attributeTuners.keySet())
+				{
+					ValueTuner v = attributeTuners.get(id);
+					int value = v.getSelection();
+					attributeValues.setAttribute(id, value);
+					System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+				}
+				ArrayList<String> ids = new ArrayList<String>();
+				ArrayList<String> texts = new ArrayList<String>();
+				MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
+				int i = genderSelect.getSelection();
+				int genderId = Integer.parseInt(genderSelect.ids[i]);
+				int id = 0;
+				for (Class<? extends Profession> pClass: charCreationRule.selectableProfessions)
+				{
+					Profession p = charCreationRule.profInstances.get(pClass);
+					if (p.isQualifiedEnough(race,genderId,attributeValues))
+					{
+			    		String s = Language.v("professions."+p.getClass().getSimpleName());
+			    		ids.add(""+id);
+			    		texts.add(s);		    		
+					}
+					id++;
+				}
+				String[] oldTexts = professionSelect.texts;
+		    	professionSelect.ids = ids.toArray(new String[0]);
+		    	professionSelect.texts = texts.toArray(new String[0]);
+		    	professionSelect.setUpdated(true);
 	    		int count = 0;
 	    		boolean needActivate = false;
 	    		if (oldTexts.length!=professionSelect.texts.length) needActivate = true;

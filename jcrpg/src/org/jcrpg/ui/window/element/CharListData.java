@@ -27,6 +27,7 @@ public class CharListData {
 	public String charName = "SLOT";
 	public File charData = null;
 	public File pic = null;
+	public File dir = null;
 	public MemberPerson person;
 
 }

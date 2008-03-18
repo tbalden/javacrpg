@@ -58,10 +58,15 @@ public class ListSelect extends InputBase {
 	public float fontRatio = 400f;
 	
 	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,centerX,centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
+	}
+	
+	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
 		this.texts = texts;
+		this.objects = objects;
 		maxCount = ids.length;		
 		this.normal = normal;
 		this.highlighted = highlighted;
@@ -75,6 +80,11 @@ public class ListSelect extends InputBase {
 	public int getSelection()
 	{
 		return fromCount+selected;
+	}
+	public Object getSelectedObject()
+	{
+		if (objects==null || objects.length<fromCount+selected) return null;
+		return objects[fromCount+selected];
 	}
 	
 	public void setupDeactivated()
