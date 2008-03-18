@@ -857,7 +857,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f,0));
 			pointLight.setEnabled(true);
 			pointLight.setShadowCaster(false);
-			pointLight.setAttenuate(true);
+			pointLight.setAttenuate(false); // fog looks BAD with attenuation, switching off
 			pointLight.setLinear(0.0002f);
 			pointLightNode.setLight(pointLight);
 	        
@@ -1005,7 +1005,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						groundParentNode.updateRenderState();
 					}
 					skyParentNode.attachChild(l[1]);
-					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).mult(3.5f).negate().add(cam.getLocation()));
+					l[1].setLocalTranslation(new Vector3f(orbiterCoords[0],orbiterCoords[1],orbiterCoords[2]).add(cam.getLocation()));
 				
 				} else 
 				
