@@ -96,6 +96,7 @@ public class LoadMenu extends Window implements KeyListener {
 			System.out.println("# FILE: "+f.getAbsolutePath());
 			String[] files = f.list();
 			TreeMap<String, SaveSlotData> dataList1 = new TreeMap<String, SaveSlotData>();
+			if (files!=null)
 			for (String file:files)
 			{
 				System.out.println("# FILE: "+file);
@@ -163,6 +164,7 @@ public class LoadMenu extends Window implements KeyListener {
 		float startPosY = 1.265f*core.getDisplay().getHeight() / 2;
 		float stepPosY = 0.879f* 1.1f*(core.getDisplay().getHeight() / 11);
 		float posX = 0.75f*core.getDisplay().getWidth() / 2;
+		if (dataList!=null)
 		for (SaveSlotData data:dataList.values())
 		{
 			if (counter>=fromSlot && counter-fromSlot<maxSlots) {
