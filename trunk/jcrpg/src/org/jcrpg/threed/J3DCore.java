@@ -60,6 +60,9 @@ import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
+import org.jcrpg.ui.window.interaction.EncounterWindow;
+import org.jcrpg.ui.window.interaction.InterceptionWindow;
+import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -582,10 +585,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 
-	public void initCore()
-	{
-       this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);//FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
-        this.start();
+	public void initCore() {
+		this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);// FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG);
+		this.start();
 	}
 	
     private static final Logger logger = Logger.getLogger(J3DCore.class
@@ -1991,18 +1993,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         
 		try 
 		{
-			uiBase = new UIBase(this);
-			mainMenu = new MainMenu(uiBase);
-			loadMenu = new LoadMenu(uiBase);
-			partySetup = new PartySetup(uiBase);
-			uiBase.addWindow("mainMenu", mainMenu);			
-			uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
-			ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
-			ChoiceDescription no = new ChoiceDescription("N","yes","No");
-			ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
-			quitAnswers.add(yes);quitAnswers.add(no);
-			uiBase.addWindow("quitQuestion", new PlayerChoiceWindow(uiBase,new TextEntry("Quit?", ColorRGBA.red),quitAnswers,"Quit",0.088f,0.088f,0.3f,0.1f));
-			rootNode.attachChild(uiBase.hud.hudNode); // shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
+			setupUIElements();
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -2097,6 +2088,32 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
+	public void setupUIElements() throws Exception
+	{
+		uiBase = new UIBase(this);
+		
+		mainMenu = new MainMenu(uiBase);
+		loadMenu = new LoadMenu(uiBase);
+		partySetup = new PartySetup(uiBase);
+		
+		interceptionWindow = new InterceptionWindow(uiBase);
+		encounterWindow = new EncounterWindow(uiBase);
+		turnActWindow = new TurnActWindow(uiBase);
+				
+		uiBase.addWindow("mainMenu", mainMenu);			
+		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
+		
+		ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
+		ChoiceDescription no = new ChoiceDescription("N","yes","No");
+		ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
+		quitAnswers.add(yes);quitAnswers.add(no);
+		uiBase.addWindow("quitQuestion", new PlayerChoiceWindow(uiBase,new TextEntry("Quit?", ColorRGBA.red),quitAnswers,"Quit",0.088f,0.088f,0.3f,0.1f));
+		
+		// shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
+		rootNode.attachChild(uiBase.hud.hudNode); 
+		
+	}
+	
 	public AudioServer audioServer =null;
 	public J3DMovingEngine mEngine = null;
 	public J3DStandingEngine sEngine = null;
@@ -2110,7 +2127,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public boolean encounterMode = false;
 	
-	PlayerChoiceWindow encounterWindow = null;
+	public InterceptionWindow interceptionWindow = null;
+	public EncounterWindow encounterWindow = null;
+	public TurnActWindow turnActWindow = null;
+	
+	PlayerChoiceWindow pChoiceWindow = null;
 	
 	/**
 	 * Used for initializing/finishing encounter mode.
@@ -2121,23 +2142,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		encounterMode = value;
 		if (encounterMode)
 		{
-			if (encounterWindow==null) {
+			/*if (pChoiceWindow==null) {
 
 				ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
 				ArrayList<ChoiceDescription> encAnswers = new ArrayList<ChoiceDescription>();
 				encAnswers.add(yes);
-				encounterWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
-				uiBase.addWindow("Encounter", encounterWindow);
-			}
+				pChoiceWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
+				uiBase.addWindow("Encounter", pChoiceWindow);
+			}*/
 			audioServer.playForced(AudioServer.EVENT_ENC1);
-			uiBase.hud.mainBox.hide();
+			//uiBase.hud.mainBox.hide();
 			updateDisplay(null);
-			encounterWindow.toggle();
+			//pChoiceWindow.toggle();
 		}
 		else
 		{
-			encounterWindow.toggle();
-			uiBase.hud.mainBox.show();
+			//pChoiceWindow.toggle();
+			//uiBase.hud.mainBox.show();
 			uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 			gameState.playerTurnLogic.endPlayerEncounters();
 			gameState.engine.turnFinishedForPlayer();

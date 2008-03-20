@@ -65,8 +65,27 @@ public class PlayerTurnLogic {
 		this.engine = engine;
 	}
 	
-	public void newTurn(Collection<PreEncounterInfo> possibleEncounters)
+	
+	public void newTurn(Collection<PreEncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
 	{
+		if (startingPhase==Ecology.PHASE_INTERCEPTION)
+		{
+			core.switchEncounterMode(true);
+			core.interceptionWindow.possibleEncounters = possibleEncounters;
+			core.interceptionWindow.toggle();
+		}
+		
+		if (startingPhase==Ecology.PHASE_ENCOUNTER)
+		{
+			J3DCore.getInstance().switchEncounterMode(false);
+			//encounter(possibleEncounters);
+		}
+	}
+	
+	
+	public void encounter(Collection<PreEncounterInfo> possibleEncounters) 
+	{
+		
 		previousInfos.clear();
 		previousInfos.addAll(infos);
 		infos.addAll(possibleEncounters);

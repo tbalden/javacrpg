@@ -18,9 +18,16 @@
 
 package org.jcrpg.ui.window.interaction;
 
+import java.util.Collection;
+
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.PreEncounterInfo;
+
+import com.jme.scene.Node;
+import com.jme.scene.shape.Quad;
 
 /**
  * Pre encounter decisions when player meets AI - not an AI forced encounter. Here player can
@@ -31,9 +38,36 @@ import org.jcrpg.ui.window.element.input.InputBase;
  */
 public class InterceptionWindow extends PagedInputWindow {
 
+	
+	Node page0 = new Node();
+
 	public InterceptionWindow(UIBase base) {
 		super(base);
-		// TODO Auto-generated constructor stub
+		try {
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+	    	hudQuad.setRenderState(base.hud.hudAS);
+	    	page0.attachChild(hudQuad);
+	    	addPage(0, page0);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		base.addEventHandler("enter", this);
+	}
+	
+	public Collection<PreEncounterInfo> possibleEncounters;
+
+	@Override
+	public boolean handleKey(String key) {
+		if (super.handleKey(key)) return true;
+		if ("enter".equals(key)) 
+		{
+			toggle();
+			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

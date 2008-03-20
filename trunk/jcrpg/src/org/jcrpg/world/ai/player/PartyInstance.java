@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.player;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
@@ -38,9 +39,10 @@ public class PartyInstance extends EntityInstance {
 	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
-			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities);
+			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities,Ecology.PHASE_INTERCEPTION,true);
 		}
 	}
+	
 	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();
 	
 	public PartyInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers,

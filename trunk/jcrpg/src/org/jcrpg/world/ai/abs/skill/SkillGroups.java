@@ -77,12 +77,22 @@ public class SkillGroups {
 	public static final String GROUP_PHYSICAL = "physical";
 	public static final String GROUP_MAGICAL = "magical";
 	
+	public static ArrayList<Class> skillTypeInterfaces = new ArrayList<Class>();
+	
 	
 	public static HashMap<String, ArrayList<Class<? extends SkillBase>>> groupedSkills = new HashMap<String, ArrayList<Class<? extends SkillBase>>>();
 	public static HashMap<Class<? extends SkillBase>,String> skillsGroup = new HashMap<Class<? extends SkillBase>,String>();
 	public static ArrayList<String> orderedGroups = new ArrayList<String>();
 	public static HashMap<Class<? extends SkillBase>, SkillBase> skillBaseInstances = new HashMap<Class<? extends SkillBase>, SkillBase>();
 	static {
+		
+		skillTypeInterfaces.add(InterceptionSkill.class);
+		skillTypeInterfaces.add(ObjectSkill.class);
+		skillTypeInterfaces.add(HelperSkill.class);
+		skillTypeInterfaces.add(EncounterSkill.class);
+		skillTypeInterfaces.add(TurnActSkill.class);
+		skillTypeInterfaces.add(WorkSkill.class);
+		
 		orderedGroups.add(GROUP_MARTIAL);
 		addSkillToGroup(GROUP_MARTIAL, new BiteFight());
 		addSkillToGroup(GROUP_MARTIAL, new Wrestling());
