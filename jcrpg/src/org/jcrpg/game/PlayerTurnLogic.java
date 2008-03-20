@@ -72,6 +72,7 @@ public class PlayerTurnLogic {
 		{
 			core.switchEncounterMode(true);
 			core.interceptionWindow.possibleEncounters = possibleEncounters;
+			core.interceptionWindow.party = core.gameState.player;
 			core.interceptionWindow.toggle();
 		}
 		

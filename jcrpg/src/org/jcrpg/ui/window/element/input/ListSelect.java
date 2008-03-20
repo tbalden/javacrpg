@@ -188,7 +188,7 @@ public class ListSelect extends InputBase {
 		{
 			if (selected+fromCount<maxCount)
 			{
-				fromCount = selected;
+				fromCount += selected;
 				selected = 0;
 
 				reloadNeeded = true;

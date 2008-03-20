@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
 import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
+import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 public class Ranger extends HumanoidProfessional {
@@ -42,6 +43,7 @@ public class Ranger extends HumanoidProfessional {
 		addMajorSkill(Bows.class);
 		addMajorSkill(MediumBlades.class);
 		addMajorSkill(AnimalHandling.class);
+		addMinorSkill(Tracking.class);
 		addMinorSkill(Swimming.class);
 		addMinorSkill(Climbing.class);
 	}
