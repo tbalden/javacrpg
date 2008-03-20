@@ -70,6 +70,26 @@ public class EcologyGeneratorConfigLoader {
 		return vReturn;
 	}
 
+	boolean usePredatorMode() {
+		try{
+			NodeList nl = mainConfigDocument.getElementsByTagName("ecology");
+			Node n = nl.item(0);
+			NamedNodeMap map = n.getAttributes();
+			Node att =map.getNamedItem("predator-mode");
+			String value = att.getNodeValue();
+		if (value.equalsIgnoreCase("true")) {
+			return true;
+		} else {
+			return false;
+		}
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
+
+	}
+
 	/**
 	 * Get the bestiaire
 	 * 
@@ -129,8 +149,13 @@ public class EcologyGeneratorConfigLoader {
 						.getNodeValue();
 				Class<? extends ClimateBelt> climatBeltClass = climatsRef
 						.get(refClimat);
-				String chanceOfAppearance = attributes.getNamedItem(
-						"percentage-chance-of-appearance").getNodeValue();
+				String chanceOfAppearance = "25";
+				try {
+					chanceOfAppearance = attributes.getNamedItem(
+							"percentage-chance-of-appearance").getNodeValue();
+				} catch (Exception e) {
+					chanceOfAppearance = "25";
+				}
 				EcologyGeneratorPopulation egp = new EcologyGeneratorPopulation();
 				egp.setClimatBeltClass(climatBeltClass);
 				egp.setEntityClass(entityDescriptionClass);
@@ -160,16 +185,22 @@ public class EcologyGeneratorConfigLoader {
 				}
 
 				try {
+					egp.setPredatorOnFoodPercentage(Integer.parseInt(attributes
+							.getNamedItem("predator-on-food-percentage")
+							.getNodeValue()));
+				} catch (Exception e) {
+				}
+				try {
 					String position = attributes.getNamedItem(
 							"food-chain-position").getNodeValue();
 					EcologyGeneratorPopulation.FoodChainType positionFCT = EcologyGeneratorPopulation.FoodChainType
 							.valueOf(
-									
-									position);
+
+							position);
 					egp.setPositionInFoodChain(positionFCT);
 
 				} catch (Exception e) {
-					
+
 				}
 
 				try {
