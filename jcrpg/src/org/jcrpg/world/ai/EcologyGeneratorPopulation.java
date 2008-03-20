@@ -56,6 +56,10 @@ public class EcologyGeneratorPopulation {
 	 * Range for hunting.
 	 */
 	Integer predatorRange = 2; 
+	/**
+	 * For 100 hunting targets , you will have <I>predatorOnFoodPercentage</I> predators.
+	 */
+	Integer predatorOnFoodPercentage = 25;
 	
 	/**
 	 * @return the positionInFoodChain
@@ -245,6 +249,20 @@ public class EcologyGeneratorPopulation {
 	 */
 	public void setPredatorHuntingNeeds(Integer predatorHuntingNeeds) {
 		this.predatorHuntingNeeds = predatorHuntingNeeds;
+	}
+
+	/**
+	 * @return the predatorOnFoodPercentage
+	 */
+	public Integer getPredatorOnFoodPercentage() {
+		return predatorOnFoodPercentage;
+	}
+
+	/**
+	 * @param predatorOnFoodPercentage the predatorOnFoodPercentage to set
+	 */
+	public void setPredatorOnFoodPercentage(Integer predatorOnFoodPercentage) {
+		this.predatorOnFoodPercentage = predatorOnFoodPercentage;
 	}
 	
 }

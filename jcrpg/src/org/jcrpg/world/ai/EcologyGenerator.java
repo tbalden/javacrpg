@@ -29,13 +29,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
 /**
- * 
+ * Ecology Generator.
+ * Can be used in two modes:
+ * predator : use AnimalDescriptionFood Entities and predatorOnFoodPercentage:
+ * non-predator : use predatorHuntingNeeds
  * @author eburriel@yahoo.com
  * 
  */
@@ -45,6 +49,10 @@ public class EcologyGenerator {
 			.getName());
 
 	public static String DEFAULT_CONFIG_FILENAME = "./data/ai/ecology/default_ecology.xml";
+	/**
+	 * Specify generation.
+	 */
+	boolean predatorMode = true;
 	/**
 	 * Key is an Key for EntityDescription. Value is canonicalClassName of
 	 * EntityDescription;
@@ -81,6 +89,7 @@ public class EcologyGenerator {
 		}
 		EcologyGeneratorConfigLoader loader = new EcologyGeneratorConfigLoader();
 		loader.loadDocument(is);
+		this.predatorMode = loader.usePredatorMode();
 		bestiary = loader.loadBestiary();
 		climatRefs = loader.loadClimatRef();
 		populations = loader.loadPopulations(bestiary, climatRefs);
@@ -111,12 +120,13 @@ public class EcologyGenerator {
 				.fine("------------------------------------------------------------------------ ");
 	}
 
-
 	/**
 	 * Generate an Ecology for the World.
 	 * (http://fr.wikipedia.org/wiki/Chaine_alimentaire) To simplify Animal
-	 * World can be divided : Herbivore : eat plant Primary Carnivore primaire :
-	 * eat herbivore Secondary Carnivore : eat Primary carnivore
+	 * World can be divided : 
+	 * Herbivore : eat plant 
+	 * Primary Carnivore primaire : eat herbivore 
+	 * Secondary Carnivore : eat Primary carnivore
 	 * 
 	 * @param world
 	 * @return
@@ -125,10 +135,21 @@ public class EcologyGenerator {
 	public Ecology generateEcology(World pWorld) throws Exception {
 		Ecology vEcology = new Ecology();
 		HuntingMap vHerbivoresHuntingMap = generateHerbivores(vEcology, pWorld);
-		HuntingMap vPrimaryCarnivoresHuntingMap = generatePrimaryCarnivores(
-				vEcology, pWorld, vHerbivoresHuntingMap);
-		HuntingMap vSecondaryCarnivoresHuntingMap = generateSecondaryCarnivores(
-				vEcology, pWorld, vPrimaryCarnivoresHuntingMap);
+		if( predatorMode )
+		{
+			HuntingMap vPrimaryCarnivoresHuntingMap = generatePredatorPrimaryCarnivores(
+					vEcology, pWorld, vHerbivoresHuntingMap);
+			HuntingMap vSecondaryCarnivoresHuntingMap = generatePredatorSecondaryCarnivores(
+					vEcology, pWorld, vPrimaryCarnivoresHuntingMap);	
+		}
+		else
+		{
+			HuntingMap vPrimaryCarnivoresHuntingMap = generatePrimaryCarnivores(
+					vEcology, pWorld, vHerbivoresHuntingMap);
+			HuntingMap vSecondaryCarnivoresHuntingMap = generateSecondaryCarnivores(
+					vEcology, pWorld, vPrimaryCarnivoresHuntingMap);	
+		}
+		
 		HuntingMap vOthersHuntingMap = generateNotInFoodChain(vEcology, pWorld);
 		logCreationStats();
 		return vEcology;
@@ -276,6 +297,245 @@ public class EcologyGenerator {
 		return results;
 	}
 
+	/**
+	 * 
+	 * @param pEcology
+	 * @param pWorld
+	 * @param herbivoresHuntingMap
+	 * @return
+	 * @throws Exception
+	 */
+	public HuntingMap generatePredatorSecondaryCarnivores(Ecology pEcology,
+			World pWorld, HuntingMap pHuntingMap) throws Exception {
+
+		HuntingMap vHuntingMap = new HuntingMap(pHuntingMap);
+
+		HuntingMap results = new HuntingMap();
+
+		Collection<EcologyGeneratorPopulation> secondaryCarnivoresPopulations = EcologyGeneratorPopulation
+				.extractThoseOfType(
+						populations,
+						EcologyGeneratorPopulation.FoodChainType.SECONDARY_CARNIVORE);
+
+		int nX = 20;
+		int nY = 20;
+
+		int currentIndex = 0;
+		for (int i = 0; i < nX; i++) {
+			for (int j = 0; j < nY; j++) {
+				int wX = 1 + (int) ((pWorld.realSizeX * 1f / nX) * i);
+				int wY = pWorld.getSeaLevel(1);
+				int wZ = (int) ((pWorld.realSizeZ * 1f / nY) * j);
+
+				PositionInTheWorld currentPos = new PositionInTheWorld(wX, wY,
+						wZ);
+				// get climatic conditions of the current position
+				CubeClimateConditions ccc = pWorld.getCubeClimateConditions(
+						new Time(), wX, wY, wZ, false);
+				Class<? extends ClimateBelt> beltClass = ccc.belt.getClass();
+
+				for (EcologyGeneratorPopulation population : secondaryCarnivoresPopulations) {
+					if (beltClass.equals(population.getClimatBeltClass())) {
+
+						EntityDescription desc = (EntityDescription) population
+								.getEntityClass().newInstance();
+						if (desc instanceof AnimalEntityDescription) {
+							AnimalEntityDescription animalDesc = (AnimalEntityDescription) desc;
+
+							Collection<EntityInstance> huntingTargets = vHuntingMap
+									.getEntitiesInHuntingRangeFromPosition(
+											currentPos, population
+													.getPredatorRange());
+
+							Collection<EntityInstance> approvedHuntingTargets = new ArrayList<EntityInstance>();
+							// extract only species in foodEntities
+							int countTargets = 0;
+							for (EntityInstance huntingTarget : huntingTargets) {
+								for (Class vClass : animalDesc
+										.getFoodEntities()) {
+									String vCurrentClass = vClass.getCanonicalName();
+									String vHuntingClass = vClass.getCanonicalName();
+									if (vCurrentClass.equals(vHuntingClass))
+										{
+										approvedHuntingTargets
+												.add(huntingTarget);
+										countTargets = countTargets
+												+ huntingTarget.numberOfMembers;
+										break;
+									}
+								}
+							}
+							// count number of targets
+							int maxPossiblePredators = (countTargets * population
+									.getPredatorOnFoodPercentage()) / 100;
+
+							String entityId = population.getPrefixName() + "#"
+									+ (currentIndex++);
+							// determine the number of members in the group
+
+							int min = population.getMinInGroup();
+							int numberInTheGroup = min;
+							int max = population.getMaxInGroup();
+							if (max > maxPossiblePredators) {
+								max = maxPossiblePredators;
+							}
+							int ecart = (max - min);
+							if (ecart > 0) {
+								int rollNb = HashUtil.mixPercentage(wX, wY
+										+ population.hashCode(), wZ);
+								numberInTheGroup += ((ecart * rollNb) / 100);
+							}
+							EntityInstance entity = new EntityInstance(desc,
+									pWorld, pEcology, entityId,
+									numberInTheGroup, wX, wY, wZ);
+							PositionInTheWorld pitw = new PositionInTheWorld(
+									wX, wY, wZ);
+							results.put(pitw, entity);
+							pEcology.addEntity(entity);
+							LOGGER.finest("addEntity " + entityId + " (" + wX
+									+ "," + wY + "," + wZ + ") nb="
+									+ numberInTheGroup + " with "
+									+ huntingTargets.size()
+																	+ " hunting target group(s) of " +countTargets
+									+" members in total maxPossiblePredators="+maxPossiblePredators);
+							population.incrementsNumberOfGroupsInWorld();
+							addCreationStat(population.getEntityClass());
+							// delete targets from huntingMap
+							// numberInTheGroup *
+							// population.getPredatorOnFoodPercentage() in
+							// huntingMap
+							// TODO
+						}
+
+					}
+				}
+			}
+		}
+		return results;
+	}
+	
+	
+	/**
+	 * 
+	 * @param pEcology
+	 * @param pWorld
+	 * @param herbivoresHuntingMap
+	 * @return
+	 * @throws Exception
+	 */
+	public HuntingMap generatePredatorPrimaryCarnivores(Ecology pEcology,
+			World pWorld, HuntingMap pHerbivoresHuntingMap) throws Exception {
+
+		HuntingMap herbivoresHuntingMap = new HuntingMap(pHerbivoresHuntingMap);
+
+		HuntingMap results = new HuntingMap();
+
+		Collection<EcologyGeneratorPopulation> primaryCarnivoresPopulations = EcologyGeneratorPopulation
+				.extractThoseOfType(
+						populations,
+						EcologyGeneratorPopulation.FoodChainType.PRIMARY_CARNIVORE);
+
+		int nX = 20;
+		int nY = 20;
+
+		int currentIndex = 0;
+		for (int i = 0; i < nX; i++) {
+			for (int j = 0; j < nY; j++) {
+				int wX = 1 + (int) ((pWorld.realSizeX * 1f / nX) * i);
+				int wY = pWorld.getSeaLevel(1);
+				int wZ = (int) ((pWorld.realSizeZ * 1f / nY) * j);
+
+				PositionInTheWorld currentPos = new PositionInTheWorld(wX, wY,
+						wZ);
+				// get climatic conditions of the current position
+				CubeClimateConditions ccc = pWorld.getCubeClimateConditions(
+						new Time(), wX, wY, wZ, false);
+				Class<? extends ClimateBelt> beltClass = ccc.belt.getClass();
+
+				for (EcologyGeneratorPopulation population : primaryCarnivoresPopulations) {
+					if (beltClass.equals(population.getClimatBeltClass())) {
+
+						EntityDescription desc = (EntityDescription) population
+								.getEntityClass().newInstance();
+						if (desc instanceof AnimalEntityDescription) {
+							AnimalEntityDescription animalDesc = (AnimalEntityDescription) desc;
+
+							if( animalDesc.getFoodEntities().size() == 0)
+							{
+								LOGGER.finest("no FoodEntities for " + animalDesc.getClass() );
+								break;
+							}
+							Collection<EntityInstance> huntingTargets = herbivoresHuntingMap
+									.getEntitiesInHuntingRangeFromPosition(
+											currentPos, population
+													.getPredatorRange());
+
+							Collection<EntityInstance> approvedHuntingTargets = new ArrayList<EntityInstance>();
+							// extract only species in foodEntities
+							int countTargets = 0;
+							for (EntityInstance huntingTarget : huntingTargets) {
+								for (Class vClass : animalDesc
+										.getFoodEntities()) {
+									
+									String vCurrentClass = vClass.getCanonicalName();
+									String vHuntingClass = vClass.getCanonicalName();
+									if (vCurrentClass.equals(vHuntingClass)) {
+										approvedHuntingTargets
+												.add(huntingTarget);
+										countTargets = countTargets
+												+ huntingTarget.numberOfMembers;
+										break;
+									}
+								}
+							}
+							// count number of targets
+							int maxPossiblePredators = (countTargets * population
+									.getPredatorOnFoodPercentage()) / 100;
+
+							String entityId = population.getPrefixName() + "#"
+									+ (currentIndex++);
+							// determine the number of members in the group
+
+							int min = population.getMinInGroup();
+							int numberInTheGroup = min;
+							int max = population.getMaxInGroup();
+							if (max > maxPossiblePredators) {
+								max = maxPossiblePredators;
+							}
+							int ecart = (max - min);
+							if (ecart > 0) {
+								int rollNb = HashUtil.mixPercentage(wX, wY
+										+ population.hashCode(), wZ);
+								numberInTheGroup += ((ecart * rollNb) / 100);
+							}
+							EntityInstance entity = new EntityInstance(desc,
+									pWorld, pEcology, entityId,
+									numberInTheGroup, wX, wY, wZ);
+							PositionInTheWorld pitw = new PositionInTheWorld(
+									wX, wY, wZ);
+							results.put(pitw, entity);
+							pEcology.addEntity(entity);
+							LOGGER.finest("addEntity " + entityId + " (" + wX
+									+ "," + wY + "," + wZ + ") nb="
+									+ numberInTheGroup + " with "
+									+ huntingTargets.size()
+									+ " hunting target group(s) of " +countTargets +" members in total maxPossiblePredators="+maxPossiblePredators);
+							population.incrementsNumberOfGroupsInWorld();
+							addCreationStat(population.getEntityClass());
+							// delete targets from huntingMap
+							// numberInTheGroup *
+							// population.getPredatorOnFoodPercentage() in
+							// huntingMap
+							// TODO
+						}
+
+					}
+				}
+			}
+		}
+		return results;
+	}
+
 	public HuntingMap generatePrimaryCarnivores(Ecology pEcology, World pWorld,
 			HuntingMap herbivoresHuntingMap) throws Exception {
 
@@ -320,7 +580,7 @@ public class EcologyGenerator {
 							if ((huntingTargets == null)
 									|| (huntingTargets.size() < population
 											.getPredatorHuntingNeeds())) {
-							
+
 								break;
 							}
 
@@ -348,7 +608,9 @@ public class EcologyGenerator {
 							pEcology.addEntity(entity);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
-									+ numberInTheGroup +" with "+huntingTargets.size()+" hunting target(s)");
+									+ numberInTheGroup + " with "
+									+ huntingTargets.size()
+									+ " hunting target(s)");
 							population.incrementsNumberOfGroupsInWorld();
 							addCreationStat(population.getEntityClass());
 
@@ -405,7 +667,7 @@ public class EcologyGenerator {
 							if ((huntingTargets == null)
 									|| (huntingTargets.size() < population
 											.getPredatorHuntingNeeds())) {
-								
+
 								break;
 							}
 
@@ -433,7 +695,9 @@ public class EcologyGenerator {
 							pEcology.addEntity(entity);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
-									+ numberInTheGroup +" with "+huntingTargets.size()+" hunting target(s)");
+									+ numberInTheGroup + " with "
+									+ huntingTargets.size()
+									+ " hunting target(s)");
 							population.incrementsNumberOfGroupsInWorld();
 							addCreationStat(population.getEntityClass());
 
@@ -536,6 +800,17 @@ public class EcologyGenerator {
 
 	public class HuntingMap {
 		Map<PositionInTheWorld, EntityInstance> huntingMap = new HashMap<PositionInTheWorld, EntityInstance>();
+
+		public HuntingMap() {
+			super();
+		}
+
+		public HuntingMap(HuntingMap hm) {
+			super();
+			for (PositionInTheWorld pos : hm.huntingMap.keySet()) {
+				this.put(pos, hm.huntingMap.get(pos));
+			}
+		}
 
 		public void put(PositionInTheWorld pos, EntityInstance entity) {
 			huntingMap.put(pos, entity);
