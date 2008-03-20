@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.abs.skill.physical.Hiding;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.abs.skill.physical.Tumbling;
+import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.abs.skill.social.Chatter;
 import org.jcrpg.world.ai.abs.skill.social.Cheating;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
@@ -50,6 +51,7 @@ public class HumanoidProfessional extends Profession {
 		addSkill(Climbing.class);
 		addSkill(Swimming.class);
 		addSkill(Tumbling.class);
+		addSkill(Tracking.class);
 		addSkill(Hiding.class);
 		addSkill(LocksAndTraps.class);
 		addSkill(Languages.class);

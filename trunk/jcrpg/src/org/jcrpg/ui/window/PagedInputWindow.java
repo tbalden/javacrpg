@@ -46,10 +46,18 @@ public abstract class PagedInputWindow extends InputWindow {
 		return false;
 	}
 
+	
+	@Override
+	public void hide() {
+		super.hide();
+		lockLookAndMove(false);		
+	}
+
 	@Override
 	public void show() {
 		setupPage();
 		super.show();
+		lockLookAndMove(true);		
 	}
 
 	int currentPage = 0;

@@ -18,8 +18,9 @@
 
 package org.jcrpg.world.ai.abs.skill.physical.outdoor;
 
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
-public class Tracking extends SkillBase {
+public class Tracking extends SkillBase implements InterceptionSkill {
 
 }
