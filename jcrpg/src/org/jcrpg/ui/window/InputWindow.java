@@ -106,11 +106,11 @@ public abstract class InputWindow extends Window implements KeyListener{
 	
 	public void activateSelectedInput()
 	{
-		if (previouslyActive>=0 && inputs.size()>previouslyActive && selectedInput!=previouslyActive)
+		if (inputs!=null && previouslyActive>=0 && inputs.size()>previouslyActive && selectedInput!=previouslyActive)
 		{
 			inputs.get(previouslyActive).deactivate();
 		}
-		if (inputs.size()>selectedInput && selectedInput!=previouslyActive) {
+		if (inputs!=null && inputs.size()>selectedInput && selectedInput!=previouslyActive) {
 			inputs.get(selectedInput).activate();
 			previouslyActive = selectedInput;
 		}
@@ -126,10 +126,14 @@ public abstract class InputWindow extends Window implements KeyListener{
 
 	@Override
 	public void hide() {
+		core.getRootNode().detachChild(windowNode);
+		core.getRootNode().updateRenderState();
 	}
 
 	@Override
 	public void show() {
+		core.getRootNode().attachChild(windowNode);
+		core.getRootNode().updateRenderState();
 	}
 
 	public boolean handleKey(String key) {
@@ -187,7 +191,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 			}
 			return true;
 		}
-		if (inputs.size()>selectedInput)
+		if (inputs!=null && inputs.size()>selectedInput)
 			return inputs.get(selectedInput).handleKey(key);
 		
 		return false;

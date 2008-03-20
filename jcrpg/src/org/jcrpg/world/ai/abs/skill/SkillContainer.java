@@ -20,16 +20,35 @@ package org.jcrpg.world.ai.abs.skill;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+
+import org.jcrpg.world.ai.Ecology;
 
 public class SkillContainer {
 	
 	public HashMap<Class<? extends SkillBase>,SkillInstance> skills = new HashMap<Class<? extends SkillBase>, SkillInstance>();
+	public HashMap<Class, HashSet<Class<? extends SkillBase>>> skillTypeGroupedBases = new HashMap<Class, HashSet<Class<? extends SkillBase>>>();
 	
 	public void addSkill(SkillInstance instance)
 	{
 		if (!skills.containsKey(instance.skill))
 		{
 			skills.put(instance.skill, instance);
+			Class[] ifaces = instance.skill.getInterfaces();
+			
+			for (Class c:ifaces)
+			{
+				if (SkillGroups.skillTypeInterfaces.contains(c)) 
+				{
+					HashSet<Class<? extends SkillBase>> set = skillTypeGroupedBases.get(c);
+					if (set==null)
+					{
+						set = new HashSet<Class<? extends SkillBase>>();
+						skillTypeGroupedBases.put(c, set);
+					}
+					set.add(instance.skill);
+				}
+			}
 		}
 	}
 	public void setSkillValue(Class<? extends SkillBase> skill, int level)
@@ -39,7 +58,7 @@ public class SkillContainer {
 			skills.get(skill).level = level;
 		} else
 		{
-			skills.put(skill, new SkillInstance(skill,level));
+			addSkill(new SkillInstance(skill,level));
 		}
 	}
 	public void addSkills(Collection<SkillInstance> instances)
@@ -59,6 +78,29 @@ public class SkillContainer {
 		}
 		return (skills.get(skillType)!=null?skills.get(skillType).level:0)+(modifier.skills.get(skillType)!=null?modifier.skills.get(skillType).level:0);
 		
+	}
+	
+	public Collection<Class<? extends SkillBase>> getSkillsOfType(int phase)
+	{
+		if (phase == Ecology.PHASE_INTERCEPTION)
+		{
+			return getSkillsOfType(InterceptionSkill.class);
+		}
+		if (phase == Ecology.PHASE_ENCOUNTER)
+		{
+			return getSkillsOfType(EncounterSkill.class);
+		}
+		if (phase == Ecology.PHASE_TURNACT)
+		{
+			return getSkillsOfType(TurnActSkill.class);
+		}
+		return null;
+		
+	}
+	
+	public Collection<Class<? extends SkillBase>> getSkillsOfType(Class type)
+	{
+		return skillTypeGroupedBases.get(type);
 	}
 
 }

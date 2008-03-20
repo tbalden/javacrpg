@@ -30,6 +30,11 @@ import com.jme.math.Vector3f;
 
 public class Ecology {
 
+	
+	public static int PHASE_INTERCEPTION = 0;
+	public static int PHASE_ENCOUNTER = 1;
+	public static int PHASE_TURNACT = 2;
+	
 	public HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
 	
 	
@@ -43,6 +48,14 @@ public class Ecology {
 		return null;
 	}
 	
+	/**
+	 * Calculates groups in the intersection of target with a self instance. 
+	 * @param self the interceptor entity
+	 * @param target the encountered entity
+	 * @param radiusRatio the common radius.
+	 * @param toFill PreEncounterInfo object to fill
+	 * @param fillOwn If this is true preEncoutnerInfo's ownGroupIds' are set, otherwise the ecounteredGroupIds are filled.
+	 */
 	public static void calcGroupsOfEncounter(EntityInstance self, EntityInstance target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
@@ -93,7 +106,9 @@ public class Ecology {
 				pre.encountered.put(targetEntity, r);
 			}
 			counter++;
+			// fill how many of the target group is intercepted by the given entity
 			calcGroupsOfEncounter(entity, targetEntity, r[0][1], pre, false);
+			// fill how many of the interceptor entity group intercepts the target
 			calcGroupsOfEncounter(targetEntity, entity, r[0][0], pre, true);
 		}
 		for (int i=counter; i<staticEntities.size(); i++)

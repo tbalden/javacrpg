@@ -24,11 +24,38 @@ import java.util.HashMap;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.element.input.InputBase;
 
+import com.jme.scene.Node;
+
 public abstract class PagedInputWindow extends InputWindow {
+
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void show() {
+		setupPage();
+		super.show();
+	}
 
 	int currentPage = 0;
 	
 	public HashMap<Integer, ArrayList<InputBase>> inputs = new HashMap<Integer, ArrayList<InputBase>>();
+	public HashMap<Integer, Node> pageNodes = new HashMap<Integer, Node>();
 	
 
 	public PagedInputWindow(UIBase base) {
@@ -48,12 +75,18 @@ public abstract class PagedInputWindow extends InputWindow {
 	public void setupPage()
 	{
 		changePage(currentPage);
+		if (pageNodes.get(currentPage)!=null) {
+			windowNode.detachAllChildren();
+			windowNode.attachChild(pageNodes.get(currentPage));
+		}
 		activateSelectedInput();
 		windowNode.updateRenderState();
-		
 	}
 	
-	
+	public void addPage(int number, Node page)
+	{
+		pageNodes.put(number, page);
+	}
 
 	@Override
 	public void addInput(InputBase input) {
