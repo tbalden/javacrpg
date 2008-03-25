@@ -1,0 +1,13 @@
+License for table*.png:
+
+Original art was created by Benjamin Green under CC-by license:
+
+"All art in this thread is licensed under CC-by (http://creativecommons.org/licenses/by/3.0/) 
+and should be attributed to Benjamin Green at http://www.scibotic.com unless 
+specified otherwise." - http://forum.freegamedev.net/index.php?t=msg&th=829&start=0, Mon, 17 March 2008 15:56
+
+
+This derivated art is by Benjamin W. Schram. http://forum.freegamedev.net/index.php?t=usrinfo&id=10,
+and by his will it is now licensed under CC-by-SA http://creativecommons.org/licenses/by-sa/3.0/
+
+B.W.Schram.: "timong, of course you are free to use it for whatever you want under whatever license you want."
