@@ -1,4 +1,4 @@
-head2.jpg by Tranberry@freegamer - Licensed under GPL
+head2.jpg,head3.jpg by Tranberry@freegamer - Licensed under GPL
 head-orig.jpg by Tranberry@freegamer - Licensed under GPL
 human_rework.png by Tranberry@freegamer - Licensed under GPL
 catlike.png by Tranberry@freegamer - Licensed under GPL
