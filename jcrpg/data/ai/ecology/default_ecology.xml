@@ -38,7 +38,7 @@
 			percentage-chance-of-appearance="10" />		
     	
     	<population ref-animal-id="GORRILAHORDE" ref-climat="Tropical"
-			percentage-chance-of-appearance="25" />
+			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
     	
     	<!-- sample FOOD CHAIN SAMPLE in Tropical Climat                                                               -->		
 		

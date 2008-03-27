@@ -50,17 +50,19 @@ public class BehaviorWindow extends PagedInputWindow {
 	public BehaviorWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.7f*core.getDisplay().getWidth(), 1.35f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 	    	sQuad = new SharedMesh("",hudQuad);
 
-	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Party Behavior",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Members:",false); 
+	    	new TextLabel("",this,page0, 0.4f, 0.11f, 0.3f, 0.06f,400f,"Party Behavior",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.16f, 0.3f, 0.06f,600f,"Members:",false);
+	    	float sizeSelect = 0.05f;
+	    	for (int i=0; i<6; i++)
 	    	{
-	    		groupSelect = new ListSelect("group", this,page0, 0.4f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		groupSelect = new ListSelect("member"+i, this,page0, 0.53f,0.19f+sizeSelect*i,0.3f,0.04f,1000f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 
@@ -104,7 +106,7 @@ public class BehaviorWindow extends PagedInputWindow {
 			texts[count] = text;
 			objects[count] = i;
 			count++;
-		}
+		}5
 		groupSelect.ids = ids;
 		groupSelect.objects = objects;
 		groupSelect.texts = texts;
