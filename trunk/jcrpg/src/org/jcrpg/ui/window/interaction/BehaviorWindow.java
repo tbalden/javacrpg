@@ -35,21 +35,19 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 
 /**
- * Pre encounter decisions when player meets AI - not an AI forced encounter. Here player can
- * decide which groups to meet and which not of the possible ones. 
+ * Here player can decide what to do to avoid or to make sure an encounter, or can set preparations before the
+ * encounter, or set devices to avoid it (traps, hide, magic etc.). Also rules to what Player based encounters
+ * to pop up as interception/encounter and what not - friendly/neutral/hostile. 
  * @author pali
- *
  */
-public class InterceptionWindow extends PagedInputWindow {
+public class BehaviorWindow extends PagedInputWindow {
 
-	// selecting handled groups out of intercepted group, leaving non-interesting groups out of scope 
-	Node page0 = new Node();
 	// selecting skills which to use for the interception phase
-	Node page1 = new Node();
+	Node page0 = new Node();
 
 	ListSelect groupSelect;
 	
-	public InterceptionWindow(UIBase base) {
+	public BehaviorWindow(UIBase base) {
 		super(base);
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
@@ -58,20 +56,16 @@ public class InterceptionWindow extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 	    	sQuad = new SharedMesh("",hudQuad);
-	    	page1.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Groups:",false); 
+	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Party Behavior",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Members:",false); 
 	    	{
 	    		groupSelect = new ListSelect("group", this,page0, 0.4f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 
-	    	new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
-	    	//new ListSelect();
 	    	
 	    	addPage(0, page0);
-	    	addPage(1, page1);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -84,7 +78,7 @@ public class InterceptionWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		int listSize = 0;
+		/*int listSize = 0;
 		for (PreEncounterInfo i:possibleEncounters)
 		{
 			if (i.encountered.size()<1) continue;
@@ -115,7 +109,7 @@ public class InterceptionWindow extends PagedInputWindow {
 		groupSelect.objects = objects;
 		groupSelect.texts = texts;
 		groupSelect.setUpdated(true);
-		groupSelect.activate();
+		groupSelect.activate();*/
 		super.setupPage();
 	}
 

@@ -68,6 +68,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
         keyboard.set( "worldMap", KeyInput.KEY_F1 );
+        keyboard.set( "behaviorWindow", KeyInput.KEY_F2 );
         keyboard.set( "mainMenu", KeyInput.KEY_F10 );
         keyboard.set( "cacheStateInfo", KeyInput.KEY_F11 );
         keyboard.set( "logUp", KeyInput.KEY_PGUP );
@@ -128,6 +129,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         // add these to menu too
  
         addAction( new CKeyMenu(this), "worldMap", false);
+        addAction( new CKeyMenu(this), "behaviorWindow", false);
         addAction( new CKeyMenu(this), "mainMenu", false);
         addAction( new CKeyMenu(this), "cacheStateInfo", false);
         addAction( new CKeyMenu(this), "logUp", false);

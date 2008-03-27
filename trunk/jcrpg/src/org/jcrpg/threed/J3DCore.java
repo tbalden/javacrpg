@@ -60,6 +60,7 @@ import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
+import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.InterceptionWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
@@ -2096,10 +2097,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		loadMenu = new LoadMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
 		
+		behaviorWindow = new BehaviorWindow(uiBase);
 		interceptionWindow = new InterceptionWindow(uiBase);
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 				
+		uiBase.addWindow("behaviorWindow", behaviorWindow);
 		uiBase.addWindow("mainMenu", mainMenu);			
 		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
 		
@@ -2127,6 +2130,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public boolean encounterMode = false;
 	
+	public BehaviorWindow behaviorWindow = null;
 	public InterceptionWindow interceptionWindow = null;
 	public EncounterWindow encounterWindow = null;
 	public TurnActWindow turnActWindow = null;
