@@ -9,6 +9,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 [ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
+[ ] setting groupingrule sizes makes the group give encounter sizes of 0 always!! change the calc method... (check gorillaHorde commented part)
 
 [ ] leveling for chars/entityMembers, points for them, bars on UI
 [ ] groups trespassed - icons - UI
@@ -61,6 +62,8 @@ Groups:
 	Dune/Wizardry like depersonalized groups moving around! Special NPC and such likely as part of groups.
 	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
 	Decisions made by player affect back through the group if depersonalized is subject.
+
+[ ] encountered group -> actions done with them spread by turn basis in the whole group around. so in a few turns the whole big entityInstance group can become hostile or friendly
 
 each entity will look for the groups nearby every turn. Even if the nearby entity have acted on it a new acting from itself is needed in every case.
 The unit shall check if there is common intersection with more than one nearby entity and do a common act upon them in one act not two. In this
