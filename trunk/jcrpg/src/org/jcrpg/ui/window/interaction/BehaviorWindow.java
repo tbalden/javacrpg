@@ -18,6 +18,7 @@
 
 package org.jcrpg.ui.window.interaction;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jcrpg.ui.UIBase;
@@ -27,7 +28,11 @@ import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.scene.Node;
@@ -45,7 +50,8 @@ public class BehaviorWindow extends PagedInputWindow {
 	// selecting skills which to use for the interception phase
 	Node page0 = new Node();
 
-	ListSelect groupSelect;
+	ArrayList<ListSelect> skillSelectors = new ArrayList<ListSelect>();
+	ArrayList<TextLabel> memberNames = new ArrayList<TextLabel>();
 	
 	public BehaviorWindow(UIBase base) {
 		super(base);
@@ -62,10 +68,10 @@ public class BehaviorWindow extends PagedInputWindow {
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
-	    		groupSelect = new ListSelect("member"+i, this,page0, 0.53f,0.19f+sizeSelect*i,0.3f,0.04f,1000f,new String[0],new String[0],null,null);
+	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		memberNames.add(new TextLabel("nane"+i,this,page0,0.3f,0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		addInput(0,skillSelectors.get(i));
 	    	}
-	    	addInput(0,groupSelect);
-
 	    	
 	    	addPage(0, page0);
 		} catch (Exception ex)
@@ -73,6 +79,46 @@ public class BehaviorWindow extends PagedInputWindow {
 			ex.printStackTrace();
 		}
 		base.addEventHandler("enter", this);
+	}
+	public void updateToParty()
+	{
+		int counter = 0;
+		if (party!=null)
+		for (EntityMemberInstance i:party.orderedParty)
+		{
+			if (i!=null) {
+				ListSelect select = skillSelectors.get(counter);
+				select.reattach();
+				select.subject = i;
+				Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
+				String[] texts = new String[skills.size()];
+				Object[] objects = new Object[skills.size()];
+				String[] ids = new String[skills.size()];
+				
+				int counter_2 = 0;
+				for (Class<?extends SkillBase> skill:skills)
+				{
+					String text = skill.getSimpleName()+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
+					texts[counter_2]=text;
+					ids[counter_2]=""+counter_2;
+					objects[counter_2]=skill;
+					counter_2++;
+				}
+				select.ids = ids;
+				select.texts = texts;
+				select.objects = objects;
+				select.setUpdated(true);
+				select.activate();
+				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
+				memberNames.get(counter).activate();
+			}
+			counter++;
+		}
+		for (int i=counter; i<6; i++)
+		{
+			ListSelect select = skillSelectors.get(i);
+			select.detach();
+		}
 	}
 	
 	public PartyInstance party;

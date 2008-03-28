@@ -18,9 +18,16 @@
 
 package org.jcrpg.world.ai;
 
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+
 public class EntityMemberInstance {
 
 	public EntityMember description = null;
+	
+	/**
+	 * The skill that the given instance is using for his behavior of living around at the current turn.
+	 */
+	public InterceptionSkill behaviorSkill = null;
 
 	public EntityMemberInstance(EntityMember description) {
 		super();

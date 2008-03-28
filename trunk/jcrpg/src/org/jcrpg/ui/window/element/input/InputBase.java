@@ -58,6 +58,23 @@ public abstract class InputBase {
 		parentNode.attachChild(baseNode);
 		parentNode.updateRenderState();
 	}
+	
+	/**
+	 * make this input visible again, and enabled = true.
+	 */
+	public void reattach()
+	{
+		parentNode.attachChild(baseNode);
+		enabled = true;
+	}
+	/**
+	 * remove this input from visible elements and enabled = false.
+	 */
+	public void detach()
+	{
+		baseNode.removeFromParent();
+		enabled = false;
+	}
 
 	public String value = "";
 	

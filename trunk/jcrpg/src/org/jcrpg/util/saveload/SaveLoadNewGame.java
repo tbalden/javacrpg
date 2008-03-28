@@ -78,14 +78,7 @@ public class SaveLoadNewGame {
 			Thread t = new Thread(engine);
 			t.start();
 			core.engineThread = t;
-			
-			
-			String[] climates = new String[] {"Arctic","Continental","Desert","Tropical"};
-			int[] climateSizeMuls = new int[] {1,4,2,2};
-			String[] geos = new String[] {"Plain","Forest","Mountain"};
-			int[] geoLikenessValues = new int[] {4,8,2};
-			String[] additionalGeos = new String[] {"River","Cave"};
-			int[] additionalGeoLikenessValues = new int[] {4,4,2};
+
 			//WorldParams params = new WorldParams(40,50,2,50,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
 			WorldParams params = (new WorldParamsConfigLoader()).getWorldParams();
 			WorldGenerator gen = new WorldGenerator();
@@ -115,6 +108,10 @@ public class SaveLoadNewGame {
 			party.recalcBoundarySizes();
 			ecology.addEntity(party);
 			party.setPosition(new int[]{wX,wY,wZ});
+			
+			// setting up UI elements...
+			core.behaviorWindow.party = party;
+			core.behaviorWindow.updateToParty();
 			
 			PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
 			gameState.setPlayer(party, logic);
@@ -184,6 +181,10 @@ public class SaveLoadNewGame {
 			core.gameState.playerTurnLogic.core = core;
 			if (core.sEngine!=null)
 				core.sEngine.reinit();
+			// ui elements update to loaded state
+			core.behaviorWindow.party = gameState.player;
+			core.behaviorWindow.updateToParty();
+
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
 		} catch (Exception ex)
 		{

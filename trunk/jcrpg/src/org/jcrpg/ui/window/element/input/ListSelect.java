@@ -34,6 +34,8 @@ import com.jme.scene.shape.Quad;
 
 public class ListSelect extends InputBase {
 
+	public Object subject;
+	
 	public String[] ids;
 	public String[] texts;
 	public Object[] objects;
