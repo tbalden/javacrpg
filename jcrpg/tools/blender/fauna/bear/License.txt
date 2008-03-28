@@ -1,0 +1,5 @@
+This directory's content (models and textures) was created by Archenemy @ jatekfejlesztes.hu (http://ilab.hu/jf/users.php?m=details&id=115).
+It's licensed under CreativeCommons-BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0/).
+You must attribute it to him and share it alike. Read the license.
+
+Derivative contents in this directory are licensed with the same license by jcrpg (lead developer is Illes Pal Zoltan).
