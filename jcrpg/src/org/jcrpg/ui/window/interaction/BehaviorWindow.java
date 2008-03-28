@@ -110,7 +110,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				select.texts = texts;
 				select.objects = objects;
 				select.setUpdated(true);
-				select.activate();
+				select.deactivate();
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
 			}
