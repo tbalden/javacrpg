@@ -2168,8 +2168,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		else
 		{
-			//pChoiceWindow.toggle();
-			//uiBase.hud.mainBox.show();
+			if (DEMO_ENCOUTNER_MODE) {
+				pChoiceWindow.toggle();
+				uiBase.hud.mainBox.show();
+			}
 			uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 			gameState.playerTurnLogic.endPlayerEncounters();
 			gameState.engine.turnFinishedForPlayer();
