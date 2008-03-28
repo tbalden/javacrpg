@@ -20,6 +20,7 @@ package org.jcrpg.ui.window.interaction;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -91,6 +92,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				select.reattach();
 				select.subject = i;
 				Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
+				if (skills==null) skills = new HashSet<Class<? extends SkillBase>>();
 				String[] texts = new String[skills.size()];
 				Object[] objects = new Object[skills.size()];
 				String[] ids = new String[skills.size()];
@@ -167,7 +169,7 @@ public class BehaviorWindow extends PagedInputWindow {
 		if ("enter".equals(key)) 
 		{
 			toggle();
-			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
+			//core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

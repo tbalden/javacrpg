@@ -100,6 +100,17 @@ public class SkillContainer {
 	
 	public Collection<Class<? extends SkillBase>> getSkillsOfType(Class type)
 	{
+		if (skillTypeGroupedBases==null) // workaround for old exported chars
+		{
+			HashMap<Class<? extends SkillBase>, SkillInstance> oldSkills = skills;
+			skills = new HashMap<Class<? extends SkillBase>, SkillInstance>();
+			skillTypeGroupedBases = new HashMap<Class, HashSet<Class<? extends SkillBase>>>();
+			for (SkillInstance i:oldSkills.values())
+			{
+				addSkill(i);
+			}
+			skills = oldSkills;
+		}
 		return skillTypeGroupedBases.get(type);
 	}
 
