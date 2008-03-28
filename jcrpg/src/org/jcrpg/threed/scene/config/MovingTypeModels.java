@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily;
+import org.jcrpg.world.ai.fauna.mammals.bear.PolarBears;
 import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
@@ -75,6 +76,11 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, BrownBearFamily.brownbear_unit);
 		counter++;
 
+		hmMobIdToModelId.put(PolarBears.POLARBEAR_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(PolarBears.POLARBEAR_TYPE_FEMALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(PolarBears.POLARBEAR_TYPE_CHILD.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, PolarBears.polarbear_unit);
+		counter++;
 	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)

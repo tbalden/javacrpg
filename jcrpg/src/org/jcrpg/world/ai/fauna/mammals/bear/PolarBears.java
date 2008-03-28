@@ -1,0 +1,69 @@
+/*
+ *  This file is part of JavaCRPG.
+ *  Copyright (C) 2008 Illes Pal Zoltan
+ *
+ *  JavaCRPG is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  JavaCRPG is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+package org.jcrpg.world.ai.fauna.mammals.bear;
+
+import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
+import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
+import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
+import org.jcrpg.world.ai.fauna.modifier.WeakAnimalChild;
+import org.jcrpg.world.climate.impl.arctic.Arctic;
+import org.jcrpg.world.climate.impl.tropical.Tropical;
+
+public class PolarBears extends AnimalEntityDescription {
+	
+	public static AudioDescription bearAudio = new AudioDescription();
+	static {
+		//gorillaAudio.ENCOUNTER = new String[]{"gorilla"};
+		//gorillaAudio.ENVIRONMENTAL = new String[]{"gorilla_environment"};
+	}
+	
+	public static StrongAnimalMale POLARBEAR_TYPE_MALE = new StrongAnimalMale("POLARBEAR_MALE",bearAudio);
+	public static MildAnimalFemale POLARBEAR_TYPE_FEMALE = new MildAnimalFemale("POLARBEAR_FEMALE",bearAudio);
+	public static WeakAnimalChild POLARBEAR_TYPE_CHILD = new WeakAnimalChild("POLARBEAR_CHILD",bearAudio);
+	
+	public static MovingModel polarbear = new MovingModel("models/fauna/polarbear_tex.obj",null,null,null,false);;//new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
+	public static RenderedMovingUnit polarbear_unit = new RenderedMovingUnit(new Model[]{polarbear});
+	
+	
+	static
+	{
+		
+	}
+	
+	public PolarBears()
+	{
+		climates.add(Tropical.class);
+		climates.add(Arctic.class);
+		//geographies.add(Forest.class);
+		behaviors.add(Peaceful.class);
+		genderType = GENDER_BOTH;
+		indoorDweller = false;
+		//setAverageGroupSizeAndDeviation(5, 2);
+		addGroupingRuleMember(POLARBEAR_TYPE_MALE);
+		addGroupingRuleMember(POLARBEAR_TYPE_FEMALE);
+		addGroupingRuleMember(POLARBEAR_TYPE_CHILD);
+	}
+
+
+}
