@@ -20,8 +20,8 @@ package org.jcrpg.world.ai.abs.skill.physical;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.WorkSkill;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class LocksAndTraps extends SkillBase implements WorkSkill, InterceptionSkill {
+public class HideAndSneak extends SkillBase implements InterceptionSkill, TurnActSkill{
 
 }

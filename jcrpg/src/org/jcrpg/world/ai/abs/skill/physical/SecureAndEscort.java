@@ -20,8 +20,12 @@ package org.jcrpg.world.ai.abs.skill.physical;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
-public class LocksAndTraps extends SkillBase implements WorkSkill, InterceptionSkill {
+/**
+ * a watchman what wants to do, spotting hostility and avoiding dangerous situations.
+ * @author pali
+ *
+ */
+public class SecureAndEscort extends SkillBase implements InterceptionSkill {
 
 }

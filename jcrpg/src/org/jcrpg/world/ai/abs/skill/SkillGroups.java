@@ -48,7 +48,7 @@ import org.jcrpg.world.ai.abs.skill.mental.methodology.Strategy;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
 import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.Disguise;
-import org.jcrpg.world.ai.abs.skill.physical.Hiding;
+import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
 import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
@@ -121,7 +121,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_PHYSICAL, new PickPocket());
 		addSkillToGroup(GROUP_PHYSICAL, new Swimming());
 		addSkillToGroup(GROUP_PHYSICAL, new Climbing());
-		addSkillToGroup(GROUP_PHYSICAL, new Hiding());
+		addSkillToGroup(GROUP_PHYSICAL, new HideAndSneak());
 		addSkillToGroup(GROUP_PHYSICAL, new Tumbling());
 		addSkillToGroup(GROUP_PHYSICAL, new MartialTrance());
 		addSkillToGroup(GROUP_PHYSICAL, new StrikeNerves());
