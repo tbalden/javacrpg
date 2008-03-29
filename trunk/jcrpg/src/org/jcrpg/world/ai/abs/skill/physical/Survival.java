@@ -22,6 +22,11 @@ import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
-public class LocksAndTraps extends SkillBase implements WorkSkill, InterceptionSkill {
+/**
+ * collecting food in the wilderness (interception), making a good camp in harsh conditions (work skill)
+ * @author pali
+ *
+ */
+public class Survival extends SkillBase implements InterceptionSkill, WorkSkill {
 
 }

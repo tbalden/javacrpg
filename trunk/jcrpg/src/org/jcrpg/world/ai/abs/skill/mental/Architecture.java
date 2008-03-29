@@ -16,12 +16,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.abs.skill.physical;
+package org.jcrpg.world.ai.abs.skill.mental;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
-public class LocksAndTraps extends SkillBase implements WorkSkill, InterceptionSkill {
+/**
+ * spotting secret doors (interception), building things like wall (work)
+ * @author pali
+ *
+ */
+public class Architecture extends SkillBase implements InterceptionSkill, WorkSkill {
 
 }

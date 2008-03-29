@@ -121,7 +121,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				int counter_2 = 0;
 				for (Class<?extends SkillBase> skill:skills)
 				{
-					String text = skill.getSimpleName()+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
+					String text = Language.v("skills."+skill.getSimpleName())+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
 					texts[counter_2]=text;
 					ids[counter_2]=""+counter_2;
 					objects[counter_2]=skill;

@@ -23,7 +23,7 @@ import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
-import org.jcrpg.world.ai.abs.skill.physical.Hiding;
+import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
@@ -38,7 +38,7 @@ public class Bard extends HumanoidProfessional {
 		addMinorSkill(Elementarism.class);
 		addMinorSkill(Mentalism.class);
 		addMajorSkill(Mythology.class);
-		addMinorSkill(Hiding.class);
+		addMinorSkill(HideAndSneak.class);
 		addMinorSkill(LocksAndTraps.class);
 	}
 

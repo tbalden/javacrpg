@@ -24,12 +24,16 @@ import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
+import org.jcrpg.world.ai.abs.skill.mental.Architecture;
 import org.jcrpg.world.ai.abs.skill.mental.Ecology;
+import org.jcrpg.world.ai.abs.skill.mental.Herbalism;
 import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.physical.Climbing;
-import org.jcrpg.world.ai.abs.skill.physical.Hiding;
+import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
+import org.jcrpg.world.ai.abs.skill.physical.SecureAndEscort;
+import org.jcrpg.world.ai.abs.skill.physical.Survival;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.abs.skill.physical.Tumbling;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
@@ -52,14 +56,18 @@ public class HumanoidProfessional extends Profession {
 		addSkill(Swimming.class);
 		addSkill(Tumbling.class);
 		addSkill(Tracking.class);
-		addSkill(Hiding.class);
+		addSkill(HideAndSneak.class);
+		addSkill(SecureAndEscort.class);
 		addSkill(LocksAndTraps.class);
 		addSkill(Languages.class);
+		addSkill(Architecture.class);
+		addSkill(Herbalism.class);
 		addSkill(Ecology.class);
 		addSkill(Mythology.class);
 		addSkill(Chatter.class);
 		addSkill(Cheating.class);
 		addSkill(Reasoning.class);
 		addSkill(Trade.class);
+		addSkill(Survival.class);
 	}
 }

@@ -20,8 +20,12 @@ package org.jcrpg.world.ai.abs.skill.physical;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Hiding extends SkillBase implements InterceptionSkill, TurnActSkill{
+/**
+ * finding minerals around
+ * @author pali
+ *
+ */
+public class Prospecting extends SkillBase implements InterceptionSkill {
 
 }
