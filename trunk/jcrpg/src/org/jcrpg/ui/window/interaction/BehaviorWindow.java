@@ -27,8 +27,8 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
@@ -53,27 +53,48 @@ public class BehaviorWindow extends PagedInputWindow {
 
 	ArrayList<ListSelect> skillSelectors = new ArrayList<ListSelect>();
 	ArrayList<TextLabel> memberNames = new ArrayList<TextLabel>();
+	ListSelect noticeFriendly, noticeNeutral, noticeHostile;
+	TextButton save, cancel, revert;
+	
+	public static String[] noticeIds = new String[] {"yes","no"};
+	public static String[] noticeTexts = new String[] {Language.v("yes"),Language.v("no")};
 	
 	public BehaviorWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.7f*core.getDisplay().getWidth(), 1.35f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.7f*core.getDisplay().getWidth(), 1.55f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 	    	sQuad = new SharedMesh("",hudQuad);
 
-	    	new TextLabel("",this,page0, 0.4f, 0.11f, 0.3f, 0.06f,400f,"Party Behavior",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.16f, 0.3f, 0.06f,600f,"Members:",false);
+	    	new TextLabel("",this,page0, 0.4f, 0.11f, 0.3f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
+	    	new TextLabel("",this,page0, 0.27f, 0.16f, 0.3f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
 	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		memberNames.add(new TextLabel("nane"+i,this,page0,0.3f,0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    	}
+	    	new TextLabel("friendly_text",this,page0,0.24f,0.19f+sizeSelect*8,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
+	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,null,null);
+	    	new TextLabel("neutral_text",this,page0,0.24f,0.19f+sizeSelect*9,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
+	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,null,null);
+	    	new TextLabel("hostile_text",this,page0,0.24f,0.19f+sizeSelect*10,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
+	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,new String[0],null,null);
 	    	
+	    	addInput(0, noticeFriendly);
+	    	addInput(0, noticeNeutral);
+	    	addInput(0, noticeHostile);
+	    	
+	    	save = new TextButton("save",this,page0,0.3f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.save"));
+	    	revert = new TextButton("revert",this,page0,0.51f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.revert"));
+	    	cancel = new TextButton("cancel",this,page0,0.72f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.cancel"));
+	    	addInput(0, save);
+	    	addInput(0, revert);
+	    	addInput(0, cancel);
 	    	addPage(0, page0);
 		} catch (Exception ex)
 		{

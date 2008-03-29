@@ -21,7 +21,6 @@ package org.jcrpg.world.ai.player;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.jcrpg.game.PlayerTurnLogic;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
@@ -34,6 +33,11 @@ import org.jcrpg.world.place.World;
 
 public class PartyInstance extends EntityInstance {
 
+	
+	public boolean noticeFriendly = true;
+	public boolean noticeNeutral = true;
+	public boolean noticeHostile = true;
+	
 	
 	@Override
 	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
