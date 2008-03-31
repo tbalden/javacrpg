@@ -2137,7 +2137,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	PlayerChoiceWindow pChoiceWindow = null;
 	
-	public static boolean DEMO_ENCOUTNER_MODE = true;
+	public static boolean DEMO_ENCOUTNER_MODE = false;
 	
 	/**
 	 * Used for initializing/finishing encounter mode.

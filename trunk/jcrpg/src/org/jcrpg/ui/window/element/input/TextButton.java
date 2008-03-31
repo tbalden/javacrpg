@@ -32,6 +32,7 @@ import com.jme.scene.shape.Quad;
 public class TextButton extends InputBase {
 
 	public String text;
+	public String shortCut;
 	
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
@@ -42,6 +43,12 @@ public class TextButton extends InputBase {
 		this.text = text;
 		this.textProportion = textProportion;
 		deactivate();
+	}
+	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+			float sizeY, float textProportion, String text, String shortcut) {
+		this(id,w,parentNode,centerX,centerY,sizeX,sizeY,textProportion,text);
+		w.base.addEventHandler(shortCut, w); // save
+		this.shortCut = shortcut;
 	}
 	
 	Node activeNode = null;
@@ -98,12 +105,13 @@ public class TextButton extends InputBase {
 
 	@Override
 	public boolean handleKey(String key) {
-		if (key.equals("enter"))
+		if (key.equals("enter") || shortCut!=null && key.equals(shortCut)) // enter or shortcut
 		{
 			w.core.audioServer.play(SOUND_INPUTSELECTED);
 			w.inputUsed(this, key);
 			return true;
 		}
+		System.out.println("--- "+id+" "+key);
 		return false;
 	}
 
