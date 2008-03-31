@@ -79,6 +79,13 @@ public class ListSelect extends InputBase {
 		parent.updateRenderState();
 	}
 
+	public void setSelected(int counter)
+	{
+		fromCount = (counter/maxVisible)*maxVisible;
+		selected = counter%maxVisible;
+		deactivate();
+	}
+	
 	public int getSelection()
 	{
 		return fromCount+selected;

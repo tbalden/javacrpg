@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -47,6 +48,17 @@ import com.jme.scene.shape.Quad;
  * @author pali
  */
 public class BehaviorWindow extends PagedInputWindow {
+
+	@Override
+	public void hide() {
+		super.hide();
+		lockLookAndMove(false);
+	}
+	@Override
+	public void show() {
+		super.show();
+		lockLookAndMove(true);
+	}
 
 	// selecting skills which to use for the interception phase
 	Node page0 = new Node();
@@ -89,9 +101,9 @@ public class BehaviorWindow extends PagedInputWindow {
 	    	addInput(0, noticeNeutral);
 	    	addInput(0, noticeHostile);
 	    	
-	    	save = new TextButton("save",this,page0,0.3f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.save"));
-	    	revert = new TextButton("revert",this,page0,0.51f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.revert"));
-	    	cancel = new TextButton("cancel",this,page0,0.72f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.cancel"));
+	    	save = new TextButton("save",this,page0,0.3f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.save"),"S");
+	    	revert = new TextButton("revert",this,page0,0.51f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.revert"),"R");
+	    	cancel = new TextButton("cancel",this,page0,0.72f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.cancel"),"C");
 	    	addInput(0, save);
 	    	addInput(0, revert);
 	    	addInput(0, cancel);
@@ -100,6 +112,7 @@ public class BehaviorWindow extends PagedInputWindow {
 		{
 			ex.printStackTrace();
 		}
+		
 		base.addEventHandler("enter", this);
 	}
 	public void updateToParty()
@@ -119,19 +132,26 @@ public class BehaviorWindow extends PagedInputWindow {
 				String[] ids = new String[skills.size()];
 				
 				int counter_2 = 0;
+				int selected = 0;
 				for (Class<?extends SkillBase> skill:skills)
 				{
 					String text = Language.v("skills."+skill.getSimpleName())+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
 					texts[counter_2]=text;
 					ids[counter_2]=""+counter_2;
-					objects[counter_2]=skill;
+					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
+					objects[counter_2]=b;
+					if (i.behaviorSkill!=null && i.behaviorSkill.getClass() == b.getClass())
+					{
+						System.out.println("### FOUND SKILL");
+						selected = counter_2;
+					}
 					counter_2++;
 				}
 				select.ids = ids;
 				select.texts = texts;
 				select.objects = objects;
 				select.setUpdated(true);
-				select.deactivate();
+				select.setSelected(selected);
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
 			}
@@ -187,12 +207,6 @@ public class BehaviorWindow extends PagedInputWindow {
 	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
-		if ("enter".equals(key)) 
-		{
-			toggle();
-			//core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
-			return true;
-		}
 		return false;
 	}
 
@@ -216,7 +230,30 @@ public class BehaviorWindow extends PagedInputWindow {
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		if (base == revert)
+		{
+			updateToParty();
+			return true;
+		} else
+		if (base == save)
+		{
+			for (ListSelect s:skillSelectors)
+			{
+				EntityMemberInstance i = (EntityMemberInstance)s.subject;
+				if (s.isEnabled() && i!=null) {
+					i.behaviorSkill = (InterceptionSkill)s.getSelectedObject();
+				}
+			}
+			// TODO
+			//party.noticeFriendly
+			toggle();
+			return true;
+		}
+		if (base == cancel)
+		{
+			toggle();
+			return true; 
+		}
 		return false;
 	}
 

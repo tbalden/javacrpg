@@ -25,6 +25,7 @@ import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.TextButton;
 
 public abstract class InputWindow extends Window implements KeyListener{
 
@@ -192,8 +193,18 @@ public abstract class InputWindow extends Window implements KeyListener{
 			return true;
 		}
 		if (inputs!=null && inputs.size()>selectedInput)
-			return inputs.get(selectedInput).handleKey(key);
-		
+			if (inputs.get(selectedInput).handleKey(key)) return true;
+		// button shortcut handling ...
+		for (InputBase i:inputs)
+		{
+			if (i instanceof TextButton)
+			{
+				if (((TextButton)i).shortCut!=null)
+				{
+					if (i.handleKey(key)) return true;
+				}
+			}
+		}
 		return false;
 	}
 
