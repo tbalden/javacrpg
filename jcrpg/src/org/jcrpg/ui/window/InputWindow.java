@@ -82,6 +82,11 @@ public abstract class InputWindow extends Window implements KeyListener{
 		}
 	}
 	
+	public InputBase getSelected()
+	{
+		return inputs.get(this.selectedInput);
+	}
+	
 	/**
 	 * Returns place in array of the input.
 	 * @param input
@@ -205,7 +210,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 			{
 				if (((TextButton)i).shortCut!=null)
 				{
-					if (i.handleKey(key)) return true;
+					if (((TextButton)i).shortCut.equals(key) && i.handleKey(key)) return true;
 				}
 			}
 		}

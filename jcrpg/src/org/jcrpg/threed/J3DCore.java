@@ -62,7 +62,7 @@ import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
-import org.jcrpg.ui.window.interaction.InterceptionWindow;
+import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -2098,7 +2098,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		partySetup = new PartySetup(uiBase);
 		
 		behaviorWindow = new BehaviorWindow(uiBase);
-		interceptionWindow = new InterceptionWindow(uiBase);
+		interceptionWindow = new PreEncounterWindow(uiBase);
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 				
@@ -2131,7 +2131,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean encounterMode = false;
 	
 	public BehaviorWindow behaviorWindow = null;
-	public InterceptionWindow interceptionWindow = null;
+	public PreEncounterWindow interceptionWindow = null;
 	public EncounterWindow encounterWindow = null;
 	public TurnActWindow turnActWindow = null;
 	

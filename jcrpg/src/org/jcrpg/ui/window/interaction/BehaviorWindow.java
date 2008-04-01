@@ -40,6 +40,7 @@ import org.jcrpg.world.ai.player.PartyInstance;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 /**
  * Here player can decide what to do to avoid or to make sure an encounter, or can set preparations before the
@@ -58,6 +59,7 @@ public class BehaviorWindow extends PagedInputWindow {
 	public void show() {
 		super.show();
 		lockLookAndMove(true);
+		getSelected().deactivate();
 	}
 
 	// selecting skills which to use for the interception phase
@@ -70,6 +72,7 @@ public class BehaviorWindow extends PagedInputWindow {
 	
 	public static String[] noticeIds = new String[] {"yes","no"};
 	public static String[] noticeTexts = new String[] {Language.v("yes"),Language.v("no")};
+	public static Object[] noticeObjects = new Object[] {true,false};
 	
 	public BehaviorWindow(UIBase base) {
 		super(base);
@@ -91,11 +94,11 @@ public class BehaviorWindow extends PagedInputWindow {
 	    		addInput(0,skillSelectors.get(i));
 	    	}
 	    	new TextLabel("friendly_text",this,page0,0.24f,0.19f+sizeSelect*8,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
-	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,null,null);
+	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
 	    	new TextLabel("neutral_text",this,page0,0.24f,0.19f+sizeSelect*9,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
-	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,null,null);
+	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
 	    	new TextLabel("hostile_text",this,page0,0.24f,0.19f+sizeSelect*10,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
-	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,new String[0],null,null);
+	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
 	    	
 	    	addInput(0, noticeFriendly);
 	    	addInput(0, noticeNeutral);
@@ -112,8 +115,6 @@ public class BehaviorWindow extends PagedInputWindow {
 		{
 			ex.printStackTrace();
 		}
-		
-		base.addEventHandler("enter", this);
 	}
 	public void updateToParty()
 	{
@@ -140,6 +141,7 @@ public class BehaviorWindow extends PagedInputWindow {
 					ids[counter_2]=""+counter_2;
 					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
 					objects[counter_2]=b;
+					System.out.println("--- "+skill);
 					if (i.behaviorSkill!=null && i.behaviorSkill.getClass() == b.getClass())
 					{
 						System.out.println("### FOUND SKILL");
@@ -151,12 +153,24 @@ public class BehaviorWindow extends PagedInputWindow {
 				select.texts = texts;
 				select.objects = objects;
 				select.setUpdated(true);
+				select.deactivate();
 				select.setSelected(selected);
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
 			}
 			counter++;
 		}
+		// notice boolean values
+		noticeFriendly.setUpdated(true);
+		noticeFriendly.deactivate();
+		noticeFriendly.setSelected(party.noticeFriendly);
+		noticeNeutral.setUpdated(true);
+		noticeNeutral.deactivate();
+		noticeNeutral.setSelected(party.noticeNeutral);
+		noticeHostile.setUpdated(true);
+		noticeHostile.deactivate();
+		noticeHostile.setSelected(party.noticeHostile);
+		// unnecessary selects detach...
 		for (int i=counter; i<6; i++)
 		{
 			ListSelect select = skillSelectors.get(i);
@@ -169,38 +183,6 @@ public class BehaviorWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		/*int listSize = 0;
-		for (PreEncounterInfo i:possibleEncounters)
-		{
-			if (i.encountered.size()<1) continue;
-			listSize++;
-		}
-		String[] ids = new String[listSize];
-		Object[] objects = new Object[listSize];
-		String[] texts = new String[listSize];
-		int count = 0;
-		System.out.println("ENC SIZE = "+listSize);
-		for (PreEncounterInfo i:possibleEncounters)
-		{
-			int size = 0;
-			String text = count+" ";
-			if (i.encountered.size()<1) continue;
-			for (EntityInstance instance:i.encountered.keySet())
-			{
-				size++;
-				
-				text+=instance.description.getClass().getSimpleName()+", ";
-			}
-			ids[count] = ""+count;
-			texts[count] = text;
-			objects[count] = i;
-			count++;
-		}5
-		groupSelect.ids = ids;
-		groupSelect.objects = objects;
-		groupSelect.texts = texts;
-		groupSelect.setUpdated(true);
-		groupSelect.activate();*/
 		super.setupPage();
 	}
 
@@ -233,6 +215,7 @@ public class BehaviorWindow extends PagedInputWindow {
 		if (base == revert)
 		{
 			updateToParty();
+			setupPage();
 			return true;
 		} else
 		if (base == save)
@@ -244,17 +227,20 @@ public class BehaviorWindow extends PagedInputWindow {
 					i.behaviorSkill = (InterceptionSkill)s.getSelectedObject();
 				}
 			}
-			// TODO
-			//party.noticeFriendly
+			party.noticeFriendly = (Boolean)noticeFriendly.getSelectedObject();
+			party.noticeNeutral = (Boolean)noticeNeutral.getSelectedObject();
+			party.noticeHostile = (Boolean)noticeHostile.getSelectedObject();
 			toggle();
 			return true;
 		}
 		if (base == cancel)
 		{
 			updateToParty();
+			setupPage();
 			toggle();
 			return true; 
 		}
+		if (message.equals("enter")) return true;
 		return false;
 	}
 

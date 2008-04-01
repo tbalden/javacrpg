@@ -35,7 +35,7 @@ public class PartyInstance extends EntityInstance {
 
 	
 	public boolean noticeFriendly = true;
-	public boolean noticeNeutral = true;
+	public boolean noticeNeutral = false;
 	public boolean noticeHostile = true;
 	
 	
