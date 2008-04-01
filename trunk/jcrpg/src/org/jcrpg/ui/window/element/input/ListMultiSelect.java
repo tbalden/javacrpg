@@ -32,13 +32,14 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
-public class ListSelect extends InputBase {
+public class ListMultiSelect extends InputBase {
 
 	public Object subject;
 	
 	public String[] ids;
 	public String[] texts;
 	public Object[] objects;
+	public boolean[] selectedItems;
 	
 	public int selected = 0;
 	public int fromCount = 0;
@@ -59,11 +60,11 @@ public class ListSelect extends InputBase {
 	
 	public float fontRatio = 400f;
 	
-	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		this(id,w,parent,centerX,centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
 	}
 	
-	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
@@ -252,7 +253,6 @@ public class ListSelect extends InputBase {
 				setupActivated();
 			} else
 			{
-				if (!active) setupActivated();
 				int i=0;
 				for (Node n:textNodes)
 				{
@@ -273,7 +273,6 @@ public class ListSelect extends InputBase {
 				setupActivated();
 			} else
 			{
-				if (!active) setupActivated();
 				int i=0;
 				for (Node n:textNodes)
 				{

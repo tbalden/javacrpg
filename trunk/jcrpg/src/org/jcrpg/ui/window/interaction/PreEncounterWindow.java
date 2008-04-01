@@ -40,7 +40,7 @@ import com.jme.scene.shape.Quad;
  * @author pali
  *
  */
-public class InterceptionWindow extends PagedInputWindow {
+public class PreEncounterWindow extends PagedInputWindow {
 
 	// selecting handled groups out of intercepted group, leaving non-interesting groups out of scope 
 	Node page0 = new Node();
@@ -49,7 +49,7 @@ public class InterceptionWindow extends PagedInputWindow {
 
 	ListSelect groupSelect;
 	
-	public InterceptionWindow(UIBase base) {
+	public PreEncounterWindow(UIBase base) {
 		super(base);
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
