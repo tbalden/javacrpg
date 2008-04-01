@@ -251,6 +251,7 @@ public class BehaviorWindow extends PagedInputWindow {
 		}
 		if (base == cancel)
 		{
+			updateToParty();
 			toggle();
 			return true; 
 		}
