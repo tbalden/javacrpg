@@ -76,6 +76,7 @@ public class UIBase {
 	}
 	public void handleEvent(String key)
 	{
+		System.out.println("handleEvent "+key);
 		if (eventToElements.get(key)!=null)
 		{
 			HashSet<KeyListener> set = eventToElements.get(key);
@@ -88,13 +89,14 @@ public class UIBase {
 			}
 		}
 	}
-	public void addEventHandler(String key, KeyListener list)
+	public void addEventHandler(String key, KeyListener listener)
 	{
+		//System.out.println("################## "+listener+" --- "+key);
 		if (eventToElements.get(key)==null)
 		{
 			eventToElements.put(key, new HashSet<KeyListener>());
 		}
-		eventToElements.get(key).add(list);
+		eventToElements.get(key).add(listener);
 	}
 	
 }

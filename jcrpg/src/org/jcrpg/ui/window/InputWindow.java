@@ -192,8 +192,12 @@ public abstract class InputWindow extends Window implements KeyListener{
 			}
 			return true;
 		}
-		if (inputs!=null && inputs.size()>selectedInput)
-			if (inputs.get(selectedInput).handleKey(key)) return true;
+		if (inputs!=null && inputs.size()>selectedInput) 
+		{
+			if (inputs.get(selectedInput).handleKey(key)) {
+				return true;
+			}
+		}
 		// button shortcut handling ...
 		for (InputBase i:inputs)
 		{

@@ -47,7 +47,7 @@ public class TextButton extends InputBase {
 	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text, String shortcut) {
 		this(id,w,parentNode,centerX,centerY,sizeX,sizeY,textProportion,text);
-		w.base.addEventHandler(shortCut, w); // save
+		w.base.addEventHandler(shortcut, w); // save
 		this.shortCut = shortcut;
 	}
 	
