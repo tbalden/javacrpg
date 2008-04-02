@@ -68,6 +68,11 @@ public class ListMultiSelect extends InputBase {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
+		selectedItems = new boolean[ids.length];
+		for (int i=0; i<ids.length; i++)
+		{
+			selectedItems[i] = false;
+		}
 		this.texts = texts;
 		this.objects = objects;
 		maxCount = ids.length;		
@@ -170,9 +175,19 @@ public class ListMultiSelect extends InputBase {
 		}
 		textNodes.clear();
 		int size = 0;
-		for (int i=0; i<maxVisible; i++) {
+		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
-				String text = texts[i+fromCount];
+				String text = "";
+				if (i==maxVisible && i+fromCount<maxCount)
+				{
+					text = "...";
+				} else {
+					if (i==maxVisible)
+					{
+						continue; // we are at the "..." part we should continue instead of new element
+					}
+					text = (selectedItems[i+fromCount]?"X ":"_ ") + texts[i+fromCount];
+				}
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
@@ -288,7 +303,13 @@ public class ListMultiSelect extends InputBase {
 		} else
 		if (key.equals("enter"))
 		{
-			w.inputUsed(this , key);
+			// inverting selection for current item...
+			selectedItems[fromCount+selected]=!selectedItems[fromCount+selected]; 
+			updated = true;
+			setupActivated();
+			// move to the next item
+			handleKey("lookRight"); 
+			return true;
 		}
 		return false;
 	}
@@ -300,6 +321,11 @@ public class ListMultiSelect extends InputBase {
 			maxCount = ids.length;
 			selected = 0;
 			updated = false;
+			selectedItems = new boolean[ids.length];
+			for (int i=0; i<ids.length; i++)
+			{
+				selectedItems[i] = false;
+			}
 		}
 		super.activate();
 		setupActivated();
@@ -313,6 +339,11 @@ public class ListMultiSelect extends InputBase {
 			maxCount = ids.length;
 			selected = 0;
 			updated = false;
+			selectedItems = new boolean[ids.length];
+			for (int i=0; i<ids.length; i++)
+			{
+				selectedItems[i] = false;
+			}
 		}
 		setupDeactivated();
 	}

@@ -24,7 +24,10 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
@@ -47,7 +50,8 @@ public class PreEncounterWindow extends PagedInputWindow {
 	// selecting skills which to use for the interception phase
 	Node page1 = new Node();
 
-	ListSelect groupSelect;
+	ListMultiSelect groupSelect;
+	TextButton ok;
 	
 	public PreEncounterWindow(UIBase base) {
 		super(base);
@@ -63,15 +67,18 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false);
 	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Groups:",false); 
 	    	{
-	    		groupSelect = new ListSelect("group", this,page0, 0.4f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
+	    	
+	    	ok = new TextButton("ok",this,page0,0.4f, 0.3f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"),"S");
+	    	addInput(0,ok);
 
-	    	new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
+	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
 	    	//new ListSelect();
 	    	
 	    	addPage(0, page0);
-	    	addPage(1, page1);
+	    	//addPage(1, page1);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -151,7 +158,11 @@ public class PreEncounterWindow extends PagedInputWindow {
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		if (base==ok)
+		{
+			toggle();
+			return true;
+		}
 		return false;
 	}
 
