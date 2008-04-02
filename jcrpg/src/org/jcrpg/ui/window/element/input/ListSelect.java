@@ -169,14 +169,25 @@ public class ListSelect extends InputBase {
 		}
 		textNodes.clear();
 		int size = 0;
-		for (int i=0; i<maxVisible; i++) {
+		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
-				String text = texts[i+fromCount];
+				String text = "";
+				if (i==maxVisible && i+fromCount<maxCount)
+				{
+					text = "...";
+				} else {
+					if (i==maxVisible)
+					{
+						continue; // we are at the "..." part we should continue instead of new element
+					}
+					text = texts[i+fromCount];
+				}
+				
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-				if (i==selected)
+				if (i==selected && i!=maxVisible)
 				{
 					colorizeOutlined(slottextNode, ColorRGBA.yellow);
 				} else
