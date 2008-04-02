@@ -161,14 +161,8 @@ public class BehaviorWindow extends PagedInputWindow {
 			counter++;
 		}
 		// notice boolean values
-		noticeFriendly.setUpdated(true);
-		noticeFriendly.deactivate();
 		noticeFriendly.setSelected(party.noticeFriendly);
-		noticeNeutral.setUpdated(true);
-		noticeNeutral.deactivate();
 		noticeNeutral.setSelected(party.noticeNeutral);
-		noticeHostile.setUpdated(true);
-		noticeHostile.deactivate();
 		noticeHostile.setSelected(party.noticeHostile);
 		// unnecessary selects detach...
 		for (int i=counter; i<6; i++)
