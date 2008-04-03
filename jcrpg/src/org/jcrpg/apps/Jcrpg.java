@@ -18,8 +18,12 @@
 
 package org.jcrpg.apps;
 
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
@@ -36,6 +40,19 @@ public class Jcrpg {
     public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
     	LOGGER = java.util.logging.Logger.getLogger("");
+    	for (Handler handler:LOGGER.getHandlers())
+    	{
+    		LOGGER.removeHandler(handler);
+    		System.out.println("H: "+handler);
+    	}
+		try {
+			FileHandler h = new FileHandler("./jcrpg-log%u.txt");
+			h.setFormatter(new SimpleFormatter());
+			LOGGER.addHandler(h);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
     	LOGGER.setLevel(Level.ALL); //LOGGER.setLevel(Level.SEVERE);
     	try {
     		start();
