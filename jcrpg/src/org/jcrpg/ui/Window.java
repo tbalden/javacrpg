@@ -56,6 +56,7 @@ public abstract class Window {
 		{
 			core.gameState.engine.setPause(storedEnginePauseState);
 			windowCounter--;
+			base.catchEventFromSpreading();
 			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
 			base.activeWindows.remove(this);
 			hide();

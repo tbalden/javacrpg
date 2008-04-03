@@ -176,7 +176,6 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==ok)
 		{
-			toggle();
 			int counter = 0;
 			int active = 0;
 			for (Object i:groupSelect.objects)
@@ -192,6 +191,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 				counter++;
 			}
 			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
+			toggle();
 			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
