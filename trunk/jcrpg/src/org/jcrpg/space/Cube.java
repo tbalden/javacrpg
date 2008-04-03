@@ -237,6 +237,13 @@ public class Cube extends ChangingImpl {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		if (c1.canContain || c2.canContain)
+		{
+			this.canContain = true;
+		} else
+		{
+			this.canContain = false;
+		}
 		if (c1.overwrite || c2.overwrite) 
 		{
 			this.overwrite = true;
