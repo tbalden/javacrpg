@@ -195,6 +195,8 @@ public class World extends Place {
 									CubeClimateConditions conditions = getCubeClimateConditions(localTime,worldX, worldY, worldZ, geoCube.internalCube);
 									perf_climate_t0+=System.currentTimeMillis()-t0;
 									geoCube.climateId = conditions.belt.STATIC_ID;
+									// setting canContain for the geoCube, this is a surface cube.
+									geoCube.canContain = true;
 									Cube floraCube = null;
 									t0 = System.currentTimeMillis();
 									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
