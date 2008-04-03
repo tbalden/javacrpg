@@ -54,9 +54,9 @@ public class PreEncounterInfo {
 	{
 		PreEncounterInfo r = new PreEncounterInfo(subject);
 		r.active = active;
-		r.encountered = encountered;
-		r.encounteredGroupIds = encounteredGroupIds;
-		r.ownGroupIds = ownGroupIds;
+		r.encountered.putAll(encountered);
+		r.encounteredGroupIds.putAll(encounteredGroupIds);
+		r.ownGroupIds = ownGroupIds.clone();
 		return r;
 	}
 	

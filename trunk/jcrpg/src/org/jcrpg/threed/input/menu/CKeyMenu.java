@@ -35,6 +35,7 @@ public class CKeyMenu extends KeyInputAction{
 		core = handler.core;
 	}
 	public void performAction(InputActionEvent evt) {
+		handler.eventCatched = false;
 		String event = evt.getTriggerName();
 		if (!core.uiBase.handleWindowEvent(event))
 		{

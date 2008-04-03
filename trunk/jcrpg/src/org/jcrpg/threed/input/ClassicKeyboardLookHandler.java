@@ -47,6 +47,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     
     public int lookUpDownPercent = 0;
     public int lookLeftRightPercent = 0;
+    
+    public boolean eventCatched = false;
 
     public ClassicKeyboardLookHandler( J3DCore core, Camera cam ) {
     	this.core = core;

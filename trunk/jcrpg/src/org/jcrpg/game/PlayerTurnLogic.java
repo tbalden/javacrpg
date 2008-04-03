@@ -192,12 +192,12 @@ public class PlayerTurnLogic {
 				form.worldY = core.gameState.viewPositionY;
 				form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 				c = world.getCube(-1, form.worldX, form.worldY, form.worldZ, false);
-				if (!c.canContain) 
+				if (c==null || !c.canContain) 
 				{
 					i++;
 					continue;
 				}
-				if (c==null || core.hasSideOfInstance(c.getSide(J3DCore.BOTTOM), stickingOut))
+				if (core.hasSideOfInstance(c.getSide(J3DCore.BOTTOM), stickingOut))
 				{
 					i++; continue;
 				}

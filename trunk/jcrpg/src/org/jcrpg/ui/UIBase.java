@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 public class UIBase {
@@ -34,9 +35,12 @@ public class UIBase {
 	
 	public HashSet<Window> activeWindows = new HashSet<Window>(); 
 	
+	ClassicKeyboardLookHandler keyboardHandler = null;
+	
 	public UIBase(J3DCore core) throws Exception
 	{
 		this.core = core;
+		keyboardHandler = ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0));
 		hud = new HUD(new HUDParams(),this, core);
 		core.audioServer.addTrack(InputBase.SOUND_INPUTSELECTED, "./data/audio/sound/ui/input_selected.ogg");
 	}
@@ -98,5 +102,8 @@ public class UIBase {
 		}
 		eventToElements.get(key).add(listener);
 	}
-	
+	public void catchEventFromSpreading()
+	{
+		keyboardHandler.eventCatched = true;
+	}
 }
