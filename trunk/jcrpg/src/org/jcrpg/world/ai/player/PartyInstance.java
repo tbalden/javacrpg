@@ -45,11 +45,32 @@ public class PartyInstance extends EntityInstance {
 		{
 			infos.clear();
 			// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
+			int listSize = 0;
 			for (PreEncounterInfo i:nearbyEntities)
 			{
-				if (i.active) infos.add(i.copy());
+				if (!i.active) continue;
+				int fullSize = 0;
+				for (EntityInstance entityInstance:i.encountered.keySet())
+				{
+					int[] groupIds = i.encounteredGroupIds.get(entityInstance);
+					for (int in:groupIds) {
+						int size = entityInstance.groupSizes[in];
+						fullSize+=size;
+					}
+				}
+				if (fullSize>0) {
+					infos.add(i.copy());
+					listSize++;
+				}
 			}
-			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(infos,Ecology.PHASE_INTERCEPTION,true);
+			if (listSize>0) // only if groups can be encountered should we trigger newturn
+			{
+				J3DCore.getInstance().gameState.playerTurnLogic.newTurn(infos,Ecology.PHASE_INTERCEPTION,true);
+			}
+			else
+			{
+				J3DCore.getInstance().gameState.engine.turnFinishedForPlayer();
+			}
 		}
 	}
 	

@@ -324,12 +324,15 @@ public class ListMultiSelect extends InputBase {
 		} else
 		if (key.equals("enter"))
 		{
-			// inverting selection for current item...
-			selectedItems[fromCount+selected]=!selectedItems[fromCount+selected]; 
-			//updated = true;
-			setupActivated();
-			// move to the next item
-			handleKey("lookRight"); 
+			if (selectedItems.length>0) 
+			{
+				// inverting selection for current item...
+				selectedItems[fromCount+selected]=!selectedItems[fromCount+selected]; 
+				//updated = true;
+				setupActivated();
+				// move to the next item
+				handleKey("lookRight");
+			}
 			return true;
 		}
 		return false;
