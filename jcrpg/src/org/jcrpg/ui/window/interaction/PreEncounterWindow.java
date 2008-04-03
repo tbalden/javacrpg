@@ -105,7 +105,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 		int listSize = 0;
 		for (PreEncounterInfo i:possibleEncounters)
 		{
-			if (i.encountered.size()<1) continue;
+			if (!i.active || i.encountered.size()<1) continue;
 			listSize++;
 		}
 		String[] ids = new String[listSize];
@@ -116,13 +116,14 @@ public class PreEncounterWindow extends PagedInputWindow {
 		for (PreEncounterInfo i:possibleEncounters)
 		{
 			int size = 0;
-			String text = count+" ";
-			if (i.encountered.size()<1) continue;
+			String text = count+"/";
+			if (!i.active || i.encountered.size()<1) continue;
 			for (EntityInstance instance:i.encountered.keySet())
 			{
+				System.out.println(instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 				size++;
 				
-				text+=instance.description.getClass().getSimpleName()+", ";
+				text+=size+" "+instance.description.getClass().getSimpleName()+", ";
 			}
 			ids[count] = ""+count;
 			texts[count] = text;

@@ -199,6 +199,7 @@ public class ListMultiSelect extends InputBase {
 					flag = (selectedItems[i+fromCount]?"X ":"_ ");
 					text = texts[i+fromCount];
 				}
+				System.out.println("TEXT = "+i+" "+text+" max: "+maxCount);
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
