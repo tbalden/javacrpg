@@ -53,19 +53,27 @@ public class ListMultiSelect extends InputBase {
 	public Node deactivatedNode = null;
 	public Node activatedNode = null;
 	
-	public ArrayList<Node> textNodes = new ArrayList<Node>(); 
+	/**
+	 * The text nodes visible currently.
+	 */
+	public ArrayList<Node> textNodes = new ArrayList<Node>();
+	/**
+	 * Sign nodes visible currently.
+	 */
+	public ArrayList<Node> signNodes = new ArrayList<Node>(); 
 
 	public static final String defaultImage = "./data/ui/inputBase.png";
 	public String bgImage = defaultImage;
 	
 	public float fontRatio = 400f;
-	
-	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
-		this(id,w,parent,centerX,centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
+	public float dCenterSignX = 0;
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,centerX,centerSignX, centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
 	}
 	
-	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
+		dCenterSignX = w.core.getDisplay().getWidth()*(centerSignX);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
 		selectedItems = new boolean[ids.length];
@@ -178,15 +186,18 @@ public class ListMultiSelect extends InputBase {
 		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
 				String text = "";
+				String flag = "";
 				if (i==maxVisible && i+fromCount<maxCount)
 				{
 					text = "...";
+					flag = null;
 				} else {
 					if (i==maxVisible)
 					{
 						continue; // we are at the "..." part we should continue instead of new element
 					}
-					text = (selectedItems[i+fromCount]?"X ":"_ ") + texts[i+fromCount];
+					flag = (selectedItems[i+fromCount]?"X ":"_ ");
+					text = texts[i+fromCount];
 				}
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
@@ -198,6 +209,15 @@ public class ListMultiSelect extends InputBase {
 				} else
 				{
 					colorizeOutlined(slottextNode, ColorRGBA.gray);
+				}
+				if (flag!=null) 
+				{
+					Node signNode = FontUtils.textVerdana.createOutlinedText(flag, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+					signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*i,0);
+					signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+					signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+					signNodes.add(signNode);
+					baseNode.attachChild(signNode);
 				}
 				textNodes.add(slottextNode);
 				baseNode.attachChild(slottextNode);
@@ -305,7 +325,7 @@ public class ListMultiSelect extends InputBase {
 		{
 			// inverting selection for current item...
 			selectedItems[fromCount+selected]=!selectedItems[fromCount+selected]; 
-			updated = true;
+			//updated = true;
 			setupActivated();
 			// move to the next item
 			handleKey("lookRight"); 

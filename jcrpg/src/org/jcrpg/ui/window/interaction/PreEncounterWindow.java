@@ -67,7 +67,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false);
 	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Groups:",false); 
 	    	{
-	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f, 0.27f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 	    	
