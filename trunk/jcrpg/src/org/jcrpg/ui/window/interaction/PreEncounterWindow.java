@@ -25,7 +25,6 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
-import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
@@ -89,6 +88,18 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public PartyInstance party;
 	public Collection<PreEncounterInfo> possibleEncounters;
 	
+	/**
+	 * This function fills up the required data fields for displaying the lists and elements of the page.
+	 * After using this you can call toggle().
+	 * @param party
+	 * @param possibleEncounters
+	 */
+	public void setPageData(PartyInstance party, Collection<PreEncounterInfo> possibleEncounters)
+	{
+		this.party = party;
+		this.possibleEncounters = possibleEncounters;
+	}
+	
 	@Override
 	public void setupPage() {
 		int listSize = 0;
@@ -132,6 +143,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 		if ("enter".equals(key)) 
 		{
 			toggle();
+			// TODO pass only selected encounters...
 			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}

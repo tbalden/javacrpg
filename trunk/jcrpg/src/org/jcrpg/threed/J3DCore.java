@@ -2098,7 +2098,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		partySetup = new PartySetup(uiBase);
 		
 		behaviorWindow = new BehaviorWindow(uiBase);
-		interceptionWindow = new PreEncounterWindow(uiBase);
+		preEncounterWindow = new PreEncounterWindow(uiBase);
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 				
@@ -2131,13 +2131,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean encounterMode = false;
 	
 	public BehaviorWindow behaviorWindow = null;
-	public PreEncounterWindow interceptionWindow = null;
+	public PreEncounterWindow preEncounterWindow = null;
 	public EncounterWindow encounterWindow = null;
 	public TurnActWindow turnActWindow = null;
 	
 	PlayerChoiceWindow pChoiceWindow = null;
 	
-	public static boolean DEMO_ENCOUTNER_MODE = true;
+	public static boolean DEMO_ENCOUTNER_MODE = false;
 	
 	/**
 	 * Used for initializing/finishing encounter mode.
