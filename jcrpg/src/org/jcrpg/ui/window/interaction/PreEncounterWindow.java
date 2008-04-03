@@ -99,13 +99,23 @@ public class PreEncounterWindow extends PagedInputWindow {
 		this.party = party;
 		this.possibleEncounters = possibleEncounters;
 	}
+	@Override
+	public void hide() {
+		super.hide();
+		lockLookAndMove(false);
+	}
+	@Override
+	public void show() {
+		super.show();
+		lockLookAndMove(true);
+	}
 	
 	@Override
 	public void setupPage() {
 		int listSize = 0;
 		for (PreEncounterInfo i:possibleEncounters)
 		{
-			if (!i.active || i.encountered.size()<1) continue;
+			if (!i.active) continue;
 			listSize++;
 		}
 		String[] ids = new String[listSize];
@@ -117,13 +127,13 @@ public class PreEncounterWindow extends PagedInputWindow {
 		{
 			int size = 0;
 			String text = count+"/";
-			if (!i.active || i.encountered.size()<1) continue;
+			if (!i.active) continue;
 			for (EntityInstance instance:i.encountered.keySet())
 			{
 				System.out.println(instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 				size++;
 				
-				text+=size+" "+instance.description.getClass().getSimpleName()+", ";
+				text+=size+" "+instance.description.getClass().getSimpleName()+" ";
 			}
 			ids[count] = ""+count;
 			texts[count] = text;
@@ -141,13 +151,6 @@ public class PreEncounterWindow extends PagedInputWindow {
 	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
-		if ("enter".equals(key)) 
-		{
-			toggle();
-			// TODO pass only selected encounters...
-			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
-			return true;
-		}
 		return false;
 	}
 
@@ -174,6 +177,22 @@ public class PreEncounterWindow extends PagedInputWindow {
 		if (base==ok)
 		{
 			toggle();
+			int counter = 0;
+			int active = 0;
+			for (Object i:groupSelect.objects)
+			{
+				if (groupSelect.selectedItems[counter])
+				{
+					((PreEncounterInfo)i).active = true;
+					active++;
+				} else
+				{
+					((PreEncounterInfo)i).active = false;
+				}
+				counter++;
+			}
+			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
+			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

@@ -38,12 +38,18 @@ public class PartyInstance extends EntityInstance {
 	public boolean noticeNeutral = false;
 	public boolean noticeHostile = true;
 	
-	
+	ArrayList<PreEncounterInfo> infos = new ArrayList<PreEncounterInfo>();
 	@Override
 	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
-			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(nearbyEntities,Ecology.PHASE_INTERCEPTION,true);
+			infos.clear();
+			// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
+			for (PreEncounterInfo i:nearbyEntities)
+			{
+				if (i.active) infos.add(i.copy());
+			}
+			J3DCore.getInstance().gameState.playerTurnLogic.newTurn(infos,Ecology.PHASE_INTERCEPTION,true);
 		}
 	}
 	

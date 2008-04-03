@@ -95,13 +95,18 @@ public class Ecology {
 			// calculate the common area sizes.
 			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
 			if (r==DistanceBasedBoundary.zero) continue; // no common part
-			if (entity==J3DCore.getInstance().gameState.player)
+			if (targetEntity==J3DCore.getInstance().gameState.player)
 			{
 				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
 			}
-			PreEncounterInfo pre = null;
-			if (staticEncounterInfoInstances.size()<=counter)
+			if (entity==J3DCore.getInstance().gameState.player)
 			{
+				//System.out.println("## "+counter);
+			}
+			PreEncounterInfo pre = null;
+			if (staticEncounterInfoInstances.size()==counter)
+			{
+				System.out.println("New Static Encounter Info created (name, counter): "+entity.description+" "+counter);
 				pre = new PreEncounterInfo(entity);
 				pre.encountered.put(targetEntity, r);
 				staticEncounterInfoInstances.add(pre);

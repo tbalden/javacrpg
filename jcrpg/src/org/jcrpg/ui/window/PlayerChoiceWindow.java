@@ -62,9 +62,9 @@ public class PlayerChoiceWindow extends Window implements KeyListener {
 
 	public boolean handleKey(String key) {
 		if (visible) {
-		System.out.println("KEY "+key);
-		J3DCore.getInstance().switchEncounterMode(false);
-		return true;
+			System.out.println("KEY "+key);
+			J3DCore.getInstance().switchEncounterMode(false);
+			return true;
 		} else return false;
 	}
 

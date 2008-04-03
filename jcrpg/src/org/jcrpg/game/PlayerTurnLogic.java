@@ -68,22 +68,24 @@ public class PlayerTurnLogic {
 	
 	public void newTurn(Collection<PreEncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
 	{
+		System.out.println("-- newTurn "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
 
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
 			{
-				core.switchEncounterMode(true);
+				
 				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters);
 				core.preEncounterWindow.toggle();
 			}
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
-				J3DCore.getInstance().switchEncounterMode(false);
-				//encounter(possibleEncounters);
+				//core.switchEncounterMode(true);
+				encounter(possibleEncounters);
 			}
 		} else 
 		{
+			core.switchEncounterMode(true);
 			encounter(possibleEncounters);
 		}
 	}
@@ -94,6 +96,7 @@ public class PlayerTurnLogic {
 		
 		previousInfos.clear();
 		previousInfos.addAll(infos);
+		infos.clear();
 		infos.addAll(possibleEncounters);
 		previousForms.addAll(forms);
 		forms.clear();
@@ -103,9 +106,9 @@ public class PlayerTurnLogic {
 		playerFakeForm.worldZ = player.roamingBoundary.posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
-		for (PreEncounterInfo info:infos)
+		for (PreEncounterInfo info:possibleEncounters)
 		{
-			if (info.subject==null) continue;
+			if (!info.active) continue;
 			for (EntityInstance entityInstance:info.encountered.keySet()) {
 				if (entityInstance==player) continue;
 				int[] groupIds = info.encounteredGroupIds.get(entityInstance);
@@ -113,7 +116,7 @@ public class PlayerTurnLogic {
 					ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName()+ " "+entityInstance.id +" g:"+(groupIds!=null?groupIds.length:null));
 				else
 					ecology.callbackMessage("You seem to trespass a Domain : "+entityInstance.description.getClass().getSimpleName());
-				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds);
+				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+entityInstance.description.getClass().getSimpleName());
 				boolean played = false;
 				if (groupIds !=null)
 				for (int in:groupIds)

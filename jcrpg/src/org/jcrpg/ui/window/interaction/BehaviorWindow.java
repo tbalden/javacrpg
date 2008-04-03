@@ -40,7 +40,6 @@ import org.jcrpg.world.ai.player.PartyInstance;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 /**
  * Here player can decide what to do to avoid or to make sure an encounter, or can set preparations before the
