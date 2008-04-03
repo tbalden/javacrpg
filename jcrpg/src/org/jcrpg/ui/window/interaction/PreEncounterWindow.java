@@ -29,6 +29,7 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -116,7 +117,17 @@ public class PreEncounterWindow extends PagedInputWindow {
 		for (PreEncounterInfo i:possibleEncounters)
 		{
 			if (!i.active) continue;
-			listSize++;
+			int fullSize = 0;
+			for (EntityInstance entityInstance:i.encountered.keySet())
+			{
+				int[] groupIds = i.encounteredGroupIds.get(entityInstance);
+				for (int in:groupIds) {
+					int size = entityInstance.groupSizes[in];
+					fullSize+=size;
+				}
+			}
+			if (fullSize>0)
+				listSize++;
 		}
 		String[] ids = new String[listSize];
 		Object[] objects = new Object[listSize];
@@ -128,13 +139,19 @@ public class PreEncounterWindow extends PagedInputWindow {
 			int size = 0;
 			String text = count+"/";
 			if (!i.active) continue;
+			int fullSize = 0;
 			for (EntityInstance instance:i.encountered.keySet())
 			{
 				System.out.println(instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 				size++;
-				
+				int[] groupIds = i.encounteredGroupIds.get(instance);
+				for (int in:groupIds) {
+					int size1 = instance.groupSizes[in];
+					fullSize+=size1;
+				}				
 				text+=size+" "+instance.description.getClass().getSimpleName()+" ";
 			}
+			if (fullSize==0) continue;
 			ids[count] = ""+count;
 			texts[count] = text;
 			objects[count] = i;
