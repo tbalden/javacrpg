@@ -29,6 +29,7 @@ public class Cube extends ChangingImpl {
 
 	public String climateId;
 	public int geoCubeKind = Geography.K_UNDEFINED;
+	public boolean canContain = false; 
 
 	public Side[] n, e, s, w, top, bottom;
 	
@@ -131,6 +132,13 @@ public class Cube extends ChangingImpl {
 		this.y = y;
 		this.z = z;
 		boolean newOnlyIfOverlaps = false;
+		if (this.canContain || c2.canContain)
+		{
+			this.canContain = true;
+		} else
+		{
+			this.canContain = false;
+		}
 		if (this.overwrite || c2.overwrite) 
 		{
 			this.overwrite = true;
