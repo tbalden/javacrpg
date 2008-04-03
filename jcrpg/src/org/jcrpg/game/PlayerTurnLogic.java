@@ -73,9 +73,8 @@ public class PlayerTurnLogic {
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
 			{
 				core.switchEncounterMode(true);
-				core.interceptionWindow.possibleEncounters = possibleEncounters;
-				core.interceptionWindow.party = core.gameState.player;
-				core.interceptionWindow.toggle();
+				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters);
+				core.preEncounterWindow.toggle();
 			}
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
