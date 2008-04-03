@@ -2137,7 +2137,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	PlayerChoiceWindow pChoiceWindow = null;
 	
-	public static boolean DEMO_ENCOUTNER_MODE = true;
+	public static boolean DEMO_ENCOUTNER_MODE = false;
 	
 	/**
 	 * Used for initializing/finishing encounter mode.
@@ -2148,30 +2148,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		encounterMode = value;
 		if (encounterMode)
 		{
-			if (DEMO_ENCOUTNER_MODE) {
-				if (pChoiceWindow==null) {
-	
-					ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
-					ArrayList<ChoiceDescription> encAnswers = new ArrayList<ChoiceDescription>();
-					encAnswers.add(yes);
-					pChoiceWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
-					uiBase.addWindow("Encounter", pChoiceWindow);
-				}
-				uiBase.hud.mainBox.hide();
-				updateDisplay(null);
-				pChoiceWindow.toggle();
-			} else
-			{
-				updateDisplay(null);
+			//if (DEMO_ENCOUTNER_MODE) {
+			if (pChoiceWindow==null) {
+
+				ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
+				ArrayList<ChoiceDescription> encAnswers = new ArrayList<ChoiceDescription>();
+				encAnswers.add(yes);
+				pChoiceWindow = new PlayerChoiceWindow(uiBase,new TextEntry("Encounter acknowledged?", ColorRGBA.red),encAnswers,"Encounter",0.088f,0.088f,0.3f,0.1f);
+				uiBase.addWindow("Encounter", pChoiceWindow);
 			}
+			uiBase.hud.mainBox.hide();
+			updateDisplay(null);
+			pChoiceWindow.toggle();
+
 			audioServer.playForced(AudioServer.EVENT_ENC1);
 		}
 		else
 		{
-			if (DEMO_ENCOUTNER_MODE) {
+			//if (DEMO_ENCOUTNER_MODE) {
 				pChoiceWindow.toggle();
 				uiBase.hud.mainBox.show();
-			}
+			//}
 			uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 			gameState.playerTurnLogic.endPlayerEncounters();
 			gameState.engine.turnFinishedForPlayer();

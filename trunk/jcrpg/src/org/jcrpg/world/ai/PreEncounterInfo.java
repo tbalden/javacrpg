@@ -26,7 +26,7 @@ import java.util.HashMap;
  */
 public class PreEncounterInfo {
 
-	public boolean active = true;
+	public boolean active = false;
 	/**
 	 * The initiator group that faces the encounter.
 	 */
@@ -48,6 +48,16 @@ public class PreEncounterInfo {
 	public PreEncounterInfo(EntityInstance subject) {
 		super();
 		this.subject = subject;
+	}
+	
+	public PreEncounterInfo copy()
+	{
+		PreEncounterInfo r = new PreEncounterInfo(subject);
+		r.active = active;
+		r.encountered = encountered;
+		r.encounteredGroupIds = encounteredGroupIds;
+		r.ownGroupIds = ownGroupIds;
+		return r;
 	}
 	
 }
