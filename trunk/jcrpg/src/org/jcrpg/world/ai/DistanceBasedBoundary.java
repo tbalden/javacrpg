@@ -103,7 +103,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	 * Returns two percent values for each boundary representing how big portion of their radius is inside the other. 
 	 * @param one
 	 * @param two
-	 * @return
+	 * @return two int[] arrays: first is the common area ratio for [one in two] and [two in one]; second is the [x,y,z] coordinates of the middle.
 	 */
 	public static int[][] getCommonRadiusRatiosAndMiddlePoint(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{

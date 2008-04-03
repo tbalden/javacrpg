@@ -73,18 +73,26 @@ public class Ecology {
 		}
 	}
 	
-	static ArrayList<PreEncounterInfo> staticEntities = new ArrayList<PreEncounterInfo>();
+	/**
+	 * To prevent creation of new PreEncounterInfo object instances they are stored
+	 * in this list for reuse on each getNearbyEncounters call. 
+	 */
+	static ArrayList<PreEncounterInfo> staticEncounterInfoInstances = new ArrayList<PreEncounterInfo>();
+	/**
+	 * Returns the possible nearby encounters for a given entity.
+	 * @param entity
+	 * @return
+	 */
 	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entity)
 	{
 		int counter = 0;
 		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
 		for (EntityInstance targetEntity:beings.values())
 		{
+			// don't check for the identical entity, continue. 
 			if (targetEntity==entity) continue;
-			if (entity==J3DCore.getInstance().gameState.player)
-			{
-				//Jcrpg.LOGGER.info("Checking "+targetEntity.id);
-			}
+
+			// calculate the common area sizes.
 			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
 			if (r==DistanceBasedBoundary.zero) continue; // no common part
 			if (entity==J3DCore.getInstance().gameState.player)
@@ -92,14 +100,14 @@ public class Ecology {
 				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
 			}
 			PreEncounterInfo pre = null;
-			if (staticEntities.size()<=counter)
+			if (staticEncounterInfoInstances.size()<=counter)
 			{
 				pre = new PreEncounterInfo(entity);
 				pre.encountered.put(targetEntity, r);
-				staticEntities.add(pre);
+				staticEncounterInfoInstances.add(pre);
 			} else
 			{
-				pre = staticEntities.get(counter);
+				pre = staticEncounterInfoInstances.get(counter);
 				pre.subject = entity;
 				pre.encountered.clear();
 				pre.encounteredGroupIds.clear();
@@ -110,20 +118,22 @@ public class Ecology {
 			calcGroupsOfEncounter(entity, targetEntity, r[0][1], pre, false);
 			// fill how many of the interceptor entity group intercepts the target
 			calcGroupsOfEncounter(targetEntity, entity, r[0][0], pre, true);
+			pre.active = true;
 		}
-		for (int i=counter; i<staticEntities.size(); i++)
+		for (int i=counter; i<staticEncounterInfoInstances.size(); i++)
 		{
-			staticEntities.get(i).subject = null;
+			staticEncounterInfoInstances.get(i).subject = null;
+			staticEncounterInfoInstances.get(i).active = false;
 		}
 		
 		
 		if (true==false) {
-			for (PreEncounterInfo info1:staticEntities)
+			for (PreEncounterInfo info1:staticEncounterInfoInstances)
 			{
 				if (info1.encountered==null) continue;
 				int[][] r = info1.encountered.values().iterator().next();
 				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
-				for (PreEncounterInfo info2:staticEntities)
+				for (PreEncounterInfo info2:staticEncounterInfoInstances)
 				{
 					if (info2.encountered==null) continue;
 					if (info2!=info1)
@@ -139,7 +149,7 @@ public class Ecology {
 				}
 			}
 			ArrayList<PreEncounterInfo> newEntities = new ArrayList<PreEncounterInfo>();
-			for (PreEncounterInfo targetEntity:staticEntities)
+			for (PreEncounterInfo targetEntity:staticEncounterInfoInstances)
 			{
 				if (targetEntity.encountered==null) continue;
 				newEntities.add(targetEntity);
@@ -148,7 +158,7 @@ public class Ecology {
 		}
 		
 		
-		return staticEntities;
+		return staticEncounterInfoInstances;
 	}
 	
 	public void doTurn()
