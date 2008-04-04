@@ -116,7 +116,7 @@ public class Ecology {
 			PreEncounterInfo pre = null;
 			if (staticEncounterInfoInstances.size()==counter)
 			{
-				System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
+				//System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
 				pre = new PreEncounterInfo(entity);
 				pre.encountered.put(targetEntity, r);
 				staticEncounterInfoInstances.add(pre);
