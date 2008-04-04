@@ -58,7 +58,7 @@ public class GorillaHorde extends AnimalEntityDescription {
 		behaviors.add(Peaceful.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
-		//setAverageGroupSizeAndDeviation(5, 2);
+		setAverageGroupSizeAndDeviation(5, 2);
 		addGroupingRuleMember(GORILLA_TYPE_MALE);
 		addGroupingRuleMember(GORILLA_TYPE_FEMALE);
 		addGroupingRuleMember(GORILLA_TYPE_CHILD);

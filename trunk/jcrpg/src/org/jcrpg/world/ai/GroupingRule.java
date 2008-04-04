@@ -39,7 +39,6 @@ public class GroupingRule {
 		while (members.size()<size) {
 			for (GroupingMemberProps prop :possibleMembers)
 			{
-				
 				for (int i=0; i<prop.maxNumberInAGroup; i++)
 				{
 					if (i<prop.minNumberInAGroup)
@@ -71,11 +70,12 @@ public class GroupingRule {
 	public int[] getGroupSizes(EntityInstance instance)
 	{
 		int parts = instance.numberOfMembers/averageSize;
+		if (parts==0) parts = 1;
 		int[] ret = new int[parts];
 		for (int i=0; i<parts; i++)
 		{
 			int rand = HashUtil.mixPercentage(instance.id.hashCode(), i, 0);
-			int dev = (((int)((rand/100f)*sizeDeviation))*2)-sizeDeviation;
+			int dev = ((int)(((rand/100f)*sizeDeviation))*2)-sizeDeviation;
 			ret[i] = averageSize+dev;
 		}
 		return ret;
@@ -83,9 +83,10 @@ public class GroupingRule {
 	
 	public int[] getGroupIds(EntityInstance instance, int radiusRatio, int randomSeed)
 	{
-		
-		int numberOfGroups = (int)(instance.groupSizes.length * 1f * radiusRatio/100)+1;
+		int numberOfGroups = (int)(instance.groupSizes.length * 1f * radiusRatio/100f)+1;
+		System.out.println("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
+		if (numberOfGroups==0) numberOfGroups = 1;
 		int[] groupIds = new int[numberOfGroups];
 		for (int i=0; i<groupIds.length; i++)
 		{
