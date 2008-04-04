@@ -43,6 +43,7 @@ public class EntityInstance {
 	 * Unique id in the worlds.
 	 */
 	public String id;
+	public int numericId;
 	public int numberOfMembers = 1;
 	public World world;
 	public Ecology ecology;
@@ -50,7 +51,7 @@ public class EntityInstance {
 	public HashMap<String, EntityInstance> subEntities = new HashMap<String, EntityInstance>();
 	public HashMap<String, EntityMemberInstance> fixMembers = new HashMap<String, EntityMemberInstance>();
 	
-	public EntityInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers, int startX, int startY, int startZ) {
+	public EntityInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
 		this.id = id;
 		this.numberOfMembers = numberOfMembers;
@@ -135,9 +136,9 @@ public class EntityInstance {
 		EntityInstance.visibleSequence = visibleSequence;
 	}
 	
-	public static void getInstance(EntityDescription desc, World w, String id, int size, int startX, int startY, int startZ)
+	public static void getInstance(EntityDescription desc, World w, int numericId, String id, int size, int startX, int startY, int startZ)
 	{
-		new EntityInstance(desc,w,null,id,size,startX,startY,startZ);
+		new EntityInstance(desc,w,null,numericId, id,size,startX,startY,startZ);
 	}
 	
 	

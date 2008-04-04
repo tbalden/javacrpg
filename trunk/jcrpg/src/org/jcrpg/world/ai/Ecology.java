@@ -36,7 +36,7 @@ public class Ecology {
 	public static int PHASE_ENCOUNTER = 1;
 	public static int PHASE_TURNACT = 2;
 	
-	public HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
+	public HashMap<Integer, EntityInstance> beings = new HashMap<Integer, EntityInstance>();
 	public ArrayList<EntityInstance> orderedBeingList = new ArrayList<EntityInstance>();
 	
 	
@@ -47,9 +47,16 @@ public class Ecology {
 		this.engine = engine;
 	}
 	
+	int entityIdSequence = 0;
+	
+	public synchronized int getNextEntityId()
+	{
+		return entityIdSequence++;
+	}
+	
 	public void addEntity(EntityInstance entityInstance)
 	{
-		beings.put(entityInstance.id, entityInstance);
+		beings.put(entityInstance.numericId, entityInstance);
 		orderedBeingList.add(entityInstance);
 	}
 	
@@ -182,6 +189,7 @@ public class Ecology {
 	boolean interrupted = false;
 	public void doTurn()
 	{
+		System.out.println("ALL ENTITIES IN ECOLOGY IN TURN NO. "+engine.numberOfTurn+" = "+beings.size());
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
 		J3DCore.getInstance().updateDisplay(null);
 

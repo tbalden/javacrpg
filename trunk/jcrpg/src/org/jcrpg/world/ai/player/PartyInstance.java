@@ -83,9 +83,9 @@ public class PartyInstance extends EntityInstance {
 	
 	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();
 	
-	public PartyInstance(EntityDescription description, World w, Ecology ecology, String id, int numberOfMembers,
+	public PartyInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers,
 			int startX, int startY, int startZ) {
-		super(description, w, ecology, id, numberOfMembers, startX, startY, startZ);
+		super(description, w, ecology, numericId, id, numberOfMembers, startX, startY, startZ);
 	}
 
 	public void addPartyMember(EntityMemberInstance m)
