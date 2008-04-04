@@ -63,14 +63,19 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	page1.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.09f, 0.3f, 0.06f,600f,"Groups:",false); 
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Interception",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You sense nearby lifeforms.",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You may choose which of them to face.",false);
+	    	
+	    	 
 	    	{
 	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f, 0.27f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 	    	
-	    	ok = new TextButton("ok",this,page0,0.4f, 0.3f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"),"S");
+	    	ok = new TextButton("ok",this,page0,0.66f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"),"S");
+	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use Enter for selection.",false);
+	    	new TextLabel("",this,page0, 0.56f, 0.32f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
