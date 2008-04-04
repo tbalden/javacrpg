@@ -100,7 +100,7 @@ public class SaveLoadNewGame {
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
-			PartyInstance party = new PartyInstance(new Party(),world,ecology,"Player",0, wX, wY, wZ);
+			PartyInstance party = new PartyInstance(new Party(),world,ecology,ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
 			for (EntityMemberInstance m:partyMembers)
 			{
 				party.addPartyMember(m);

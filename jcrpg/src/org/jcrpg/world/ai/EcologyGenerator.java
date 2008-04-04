@@ -195,6 +195,7 @@ public class EcologyGenerator {
 								.getPercentageChanceofAppearance()) {
 							EntityDescription desc = (EntityDescription) population
 									.getEntityClass().newInstance();
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -209,7 +210,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
@@ -262,6 +263,7 @@ public class EcologyGenerator {
 								.getPercentageChanceofAppearance()) {
 							EntityDescription desc = (EntityDescription) population
 									.getEntityClass().newInstance();
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -276,7 +278,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
@@ -369,6 +371,7 @@ public class EcologyGenerator {
 							int maxPossiblePredators = (countTargets * population
 									.getPredatorOnFoodPercentage()) / 100;
 
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -386,7 +389,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
@@ -492,6 +495,7 @@ public class EcologyGenerator {
 							int maxPossiblePredators = (countTargets * population
 									.getPredatorOnFoodPercentage()) / 100;
 
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -509,7 +513,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
@@ -586,6 +590,7 @@ public class EcologyGenerator {
 
 							EntityDescription desc = (EntityDescription) population
 									.getEntityClass().newInstance();
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -600,7 +605,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
@@ -673,6 +678,7 @@ public class EcologyGenerator {
 
 							EntityDescription desc = (EntityDescription) population
 									.getEntityClass().newInstance();
+							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
 							// determine the number of members in the group
@@ -687,7 +693,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
-									pWorld, pEcology, entityId,
+									pWorld, pEcology, id, entityId,
 									numberInTheGroup, wX, wY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
 									wX, wY, wZ);
