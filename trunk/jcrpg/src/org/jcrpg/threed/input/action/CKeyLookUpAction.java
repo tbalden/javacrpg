@@ -22,7 +22,7 @@ public class CKeyLookUpAction extends CKeyAction {
 	 * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
 	 */
 	public synchronized void performAction(InputActionEvent evt) {
-		if (handler.lock) {
+		if (!performActionCheck(evt)) {
 			//System.out.println("locked...");
 			return;
 		}

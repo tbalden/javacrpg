@@ -40,7 +40,7 @@ public class CKeyBackwardAction extends CKeyAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public void performAction(InputActionEvent evt) {
-    	if (handler.lock || handler.secLock || handler.eventCatched){
+    	if (!performActionCheck(evt) || handler.secLock){
         	//System.out.println("locked...");
     		return;
     	}
