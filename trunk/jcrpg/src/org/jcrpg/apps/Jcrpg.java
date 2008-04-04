@@ -18,11 +18,14 @@
 
 package org.jcrpg.apps;
 
+import java.util.Date;
 import java.util.logging.FileHandler;
+import java.util.logging.Filter;
+import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
@@ -30,7 +33,19 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.time.Time;
 
 
-public class Jcrpg {
+public class Jcrpg extends Formatter implements Filter  {
+
+	Date dateF = new Date(); 
+	@Override
+	public String format(LogRecord record) {
+		dateF.setTime(record.getMillis());
+		return dateF.toString()+" "+record.getMessage()+'\n';
+	}
+	public boolean isLoggable(LogRecord record) {
+		if (record.getSourceClassName().equals("com.jme.scene.Node"))
+			return false;
+		return true;
+	}
 
 	public static Logger LOGGER = null;
 	/**
@@ -46,7 +61,8 @@ public class Jcrpg {
     	}
 		try {
 			FileHandler h = new FileHandler("./jcrpg-log%u.txt");
-			h.setFormatter(new SimpleFormatter());
+			h.setFormatter(new Jcrpg());
+			h.setFilter(new Jcrpg());
 			LOGGER.addHandler(h);
 		} catch (Exception ex)
 		{
@@ -77,4 +93,6 @@ public class Jcrpg {
 		core.initCore();
 		
 	}
+
+
 }
