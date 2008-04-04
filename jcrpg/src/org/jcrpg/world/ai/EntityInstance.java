@@ -86,7 +86,13 @@ public class EntityInstance {
 		return null;
 	}
 	
-	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
+	/**
+	 * Living a turn for this being.
+	 * @param ecology
+	 * @param nearbyEntities
+	 * @return should return true if player interaction is needed, and ecology doTurn should be interrupted.
+	 */
+	public boolean liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
 	{
 		int counter = 0;
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
@@ -108,7 +114,7 @@ public class EntityInstance {
 			}
 		}
 		//System.out.println("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+counter);
-		
+		return false;
 	}
 
 	public static int visibleSequence = 0;

@@ -133,7 +133,7 @@ public class EcologyGenerator {
 	 * @throws Exception
 	 */
 	public Ecology generateEcology(World pWorld) throws Exception {
-		Ecology vEcology = new Ecology();
+		Ecology vEcology = new Ecology(pWorld.engine);
 		HuntingMap vHerbivoresHuntingMap = generateHerbivores(vEcology, pWorld);
 		if( predatorMode )
 		{

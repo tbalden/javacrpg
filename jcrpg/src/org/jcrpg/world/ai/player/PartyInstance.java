@@ -40,7 +40,7 @@ public class PartyInstance extends EntityInstance {
 	
 	ArrayList<PreEncounterInfo> infos = new ArrayList<PreEncounterInfo>();
 	@Override
-	public void liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
+	public boolean liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
 			infos.clear();
@@ -66,12 +66,15 @@ public class PartyInstance extends EntityInstance {
 			if (listSize>0) // only if groups can be encountered should we trigger newturn
 			{
 				J3DCore.getInstance().gameState.playerTurnLogic.newTurn(infos,Ecology.PHASE_INTERCEPTION,true);
+				return true; // interrupt ecology!
 			}
 			else
 			{
 				J3DCore.getInstance().gameState.engine.turnFinishedForPlayer();
 			}
+			return false; // don't interrupt ecology
 		}
+		return false;
 	}
 	
 	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();

@@ -94,6 +94,7 @@ public class Engine implements Runnable {
 	public void turnFinishedForPlayer()
 	{
 		pause = false;
+		turnCome = true;
 		System.out.println("TURN ENDED, UNPAUSE.");
 	}
 
