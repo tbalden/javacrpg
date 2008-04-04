@@ -8,8 +8,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 
 public class CKeyRotateRightAction extends CKeyAction {
-    //the axis to lock
-    private Vector3f lockAxis;
     
 
     public CKeyRotateRightAction(ClassicKeyboardLookHandler handler, Camera camera, float speed) {
@@ -18,7 +16,6 @@ public class CKeyRotateRightAction extends CKeyAction {
     }
 
     public void setLockAxis(Vector3f lockAxis) {
-        this.lockAxis = lockAxis;
     }
 
     /**
@@ -27,7 +24,7 @@ public class CKeyRotateRightAction extends CKeyAction {
      * @see com.jme.input.action.KeyInputAction#performAction(InputActionEvent)
      */
     public void performAction(InputActionEvent evt) {
-    	if (handler.lock){
+    	if (!performActionCheck(evt)){
         	System.out.println("locked...");
     		return;
     	}

@@ -21,6 +21,7 @@ package org.jcrpg.threed.input.action;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
+import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -29,6 +30,10 @@ import com.jme.renderer.Camera;
 
 public abstract class CKeyAction extends KeyInputAction{
 
+	public boolean performActionCheck(InputActionEvent arg0) {
+		if (handler.eventCatched || handler.lock) return false;
+		return true;
+	}
 	long timeStart = 0;
 	
 	static long TIME_TO_ENSURE = J3DCore.TIME_TO_ENSURE; 
