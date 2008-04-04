@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.Engine;
 
 import com.jme.math.Vector3f;
 
@@ -36,11 +37,20 @@ public class Ecology {
 	public static int PHASE_TURNACT = 2;
 	
 	public HashMap<String, EntityInstance> beings = new HashMap<String, EntityInstance>();
+	public ArrayList<EntityInstance> orderedBeingList = new ArrayList<EntityInstance>();
 	
 	
-	public void addEntity(EntityInstance description)
+	public Engine engine; 
+	
+	public Ecology(Engine engine)
 	{
-		beings.put(description.id, description);
+		this.engine = engine;
+	}
+	
+	public void addEntity(EntityInstance entityInstance)
+	{
+		beings.put(entityInstance.id, entityInstance);
+		orderedBeingList.add(entityInstance);
 	}
 	
 	public Collection<EntityDescription> getEntities(int worldX, int worldY, int worldZ)
@@ -58,7 +68,7 @@ public class Ecology {
 	 */
 	public static void calcGroupsOfEncounter(EntityInstance self, EntityInstance target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
 	{
-		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
+		int rand = HashUtil.mix(self.roamingBoundary.posX/2, self.roamingBoundary.posY, self.roamingBoundary.posZ/2);
 		int[] groupIds = target.description.groupingRule.getGroupIds(target, radiusRatio, rand);
 		if (fillOwn)
 		{
@@ -166,15 +176,59 @@ public class Ecology {
 		return staticEncounterInfoInstances;
 	}
 	
+	byte[] placeBitMap = new byte[] {1,2,4,8,16,32,64,(byte)128};
+	byte[] switchArray;	
+	int counterOfDoneTurnBeings = 0;
+	boolean interrupted = false;
 	public void doTurn()
 	{
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
 		J3DCore.getInstance().updateDisplay(null);
 
 		long time = System.currentTimeMillis();
-		for (EntityInstance entity:beings.values())
+		
+		/*
+		 * Every turn do a random order liveOneTurn for the beings of ecology with
+		 * helf of hashutil.
+		 */			
+		if (!interrupted)
 		{
-			entity.liveOneTurn(getNearbyEncounters(entity));
+			counterOfDoneTurnBeings = 0;
+			switchArray = new byte[orderedBeingList.size()/8+orderedBeingList.size()%8];
+			
+		} else
+		{
+			System.out.println("CONTINUING PLAYER INTERRUPTED ECOLOGY TURN...");
+			interrupted = false;
+		}
+		for (int i=counterOfDoneTurnBeings; i<orderedBeingList.size(); i++)
+		{
+			int r = HashUtil.mix((int)engine.numberOfTurn, i, 0);// get a quasi-random number 
+			r = r%orderedBeingList.size();
+			while (true) { // iterate as long as we have found a yet not acting being of this turn... 
+				int bitPlace = r%8;
+				bitPlace = placeBitMap[bitPlace];
+				if ((switchArray[r/8]&bitPlace)==bitPlace)
+				{
+					r++;
+					if (r>=orderedBeingList.size()) r = 0;
+				} else
+				{
+					byte b = switchArray[r/8];
+					b = (byte)((byte)b|(byte)bitPlace);
+					switchArray[r/8] = b;
+					break;
+				}
+			}
+			counterOfDoneTurnBeings++;
+			if (orderedBeingList.get(r).liveOneTurn(getNearbyEncounters(orderedBeingList.get(r))))
+			{
+				// interrupt is needed because UI thread of player will be active for interaction. UI will
+				// have to call this function again with continue = true in method signature.
+				System.out.println("ECOLOGY INTERRUPTED BY: "+orderedBeingList.get(r).description);
+				interrupted=true;
+				break;
+			}
 		}
 		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");

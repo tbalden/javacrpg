@@ -29,7 +29,6 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
 import org.jcrpg.world.ai.player.PartyInstance;
 
