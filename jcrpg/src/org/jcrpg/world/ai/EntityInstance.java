@@ -43,6 +43,9 @@ public class EntityInstance {
 	 * Unique id in the worlds.
 	 */
 	public String id;
+	/**
+	 * Unique numeric id.
+	 */
 	public int numericId;
 	public int numberOfMembers = 1;
 	public World world;
