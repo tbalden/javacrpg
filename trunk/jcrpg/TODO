@@ -8,9 +8,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] preencounter window + !ListMultiSelect!
+[X] preencounter window + !ListMultiSelect!
 
-[ ] ecology groups should generate economy (houses, lairs) in their home place
+[X] ecology groups should generate economy (houses, lairs) in their home place
+	[ ] !!! sophisticate it to big sized communities, quicken loading -> arrays of houses instead of one house/group -> residential areas fully with algorithm
+	[ ] geography heights should be overridden!? it's all wrong now under the houses.
+	
 
 [ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
 [ ] setting groupingrule sizes makes the group give encounter sizes of 0 always!! change the calc method... (check gorillaHorde commented part)

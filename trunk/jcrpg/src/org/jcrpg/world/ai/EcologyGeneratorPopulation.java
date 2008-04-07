@@ -182,6 +182,10 @@ public class EcologyGeneratorPopulation {
 	 * @param minInGroup the minInGroup to set
 	 */
 	public void setMinInGroup(Integer minInGroup) {
+		if (minInGroup>maxInGroup)
+		{
+			maxInGroup = minInGroup+1;
+		}
 		this.minInGroup = minInGroup;
 	}
 
