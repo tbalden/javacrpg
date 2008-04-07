@@ -188,8 +188,8 @@ public class EcologyGenerator {
 
 				for (EcologyGeneratorPopulation population : herbivorePopulations) {
 					if (beltClass.equals(population.getClimatBeltClass())) {
-						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ
-								+ population.hashCode());
+						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ + population.getGenerationHashInt()
+								);
 
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
@@ -206,7 +206,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+  population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
@@ -257,7 +257,7 @@ public class EcologyGenerator {
 				for (EcologyGeneratorPopulation population : herbivorePopulations) {
 					if (beltClass.equals(population.getClimatBeltClass())) {
 						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ
-								+ population.hashCode());
+								+ population.getGenerationHashInt());
 
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
@@ -274,7 +274,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
@@ -385,7 +385,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
@@ -509,7 +509,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
@@ -570,7 +570,7 @@ public class EcologyGenerator {
 				for (EcologyGeneratorPopulation population : primaryCarnivoresPopulations) {
 					if (beltClass.equals(population.getClimatBeltClass())) {
 						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ
-								+ population.hashCode());
+								+ population.getGenerationHashInt());
 
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
@@ -601,7 +601,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
@@ -658,7 +658,7 @@ public class EcologyGenerator {
 				for (EcologyGeneratorPopulation population : secondaryCarnivoresPopulations) {
 					if (beltClass.equals(population.getClimatBeltClass())) {
 						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ
-								+ population.hashCode());
+								+ population.getGenerationHashInt());
 
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
@@ -689,7 +689,7 @@ public class EcologyGenerator {
 							int ecart = (max - min);
 							if (ecart > 0) {
 								int rollNb = HashUtil.mixPercentage(wX, wY
-										+ population.hashCode(), wZ);
+										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,

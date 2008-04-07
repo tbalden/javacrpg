@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
+import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -88,7 +89,13 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(GiantCaveSpiders.GIANTCAVESPIDER_TYPE_CHILD.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, GiantCaveSpiders.giantcavespider_unit);
 		counter++;
-		
+
+		hmMobIdToModelId.put(HumanCommoners.HUMAN_MALE_ARTISAN.visibleTypeId,counter);
+		hmMobIdToModelId.put(HumanCommoners.HUMAN_MALE_PEASANT.visibleTypeId,counter);
+		hmMobIdToModelId.put(HumanCommoners.HUMAN_MALE_SMITH.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, HumanCommoners.humanMale_unit);
+		counter++;
+
 }
 	
 	public RenderedMovingUnit getRenderedUnit(String id)

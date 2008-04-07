@@ -77,6 +77,7 @@ public class GroupingRule {
 			int rand = HashUtil.mixPercentage(instance.id.hashCode(), i, 0);
 			int dev = ((int)(((rand/100f)*sizeDeviation))*2)-sizeDeviation;
 			ret[i] = averageSize+dev;
+			if (ret[i]==0) System.out.println("####### "+instance.description+" ZERO SIZE");
 		}
 		return ret;
 	}
