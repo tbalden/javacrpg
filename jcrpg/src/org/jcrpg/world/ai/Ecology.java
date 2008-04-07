@@ -75,7 +75,7 @@ public class Ecology {
 	 */
 	public static void calcGroupsOfEncounter(EntityInstance self, EntityInstance target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
 	{
-		int rand = HashUtil.mix(self.roamingBoundary.posX/2, self.roamingBoundary.posY, self.roamingBoundary.posZ/2);
+		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
 		int[] groupIds = target.description.groupingRule.getGroupIds(target, radiusRatio, rand);
 		if (fillOwn)
 		{
@@ -118,6 +118,7 @@ public class Ecology {
 			}
 			if (entity==J3DCore.getInstance().gameState.player)
 			{
+				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetEntity.id);
 				//System.out.println("## "+counter);
 			}
 			PreEncounterInfo pre = null;

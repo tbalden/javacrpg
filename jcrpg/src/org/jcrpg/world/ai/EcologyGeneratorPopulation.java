@@ -86,7 +86,7 @@ public class EcologyGeneratorPopulation {
 	 * @param predatorRange the predatorRange to set
 	 */
 	public void setPredatorRange(Integer predatorRange) {
-		predatorRange = predatorRange;
+		this.predatorRange = predatorRange;
 	}
 
 	/**
@@ -263,6 +263,16 @@ public class EcologyGeneratorPopulation {
 	 */
 	public void setPredatorOnFoodPercentage(Integer predatorOnFoodPercentage) {
 		this.predatorOnFoodPercentage = predatorOnFoodPercentage;
+	}
+	
+	int hashCode = -9999;
+	
+	public int getGenerationHashInt()
+	{
+		if (hashCode==-9999) {
+			hashCode = entityClass.getSimpleName().hashCode();
+		}
+		return hashCode;
 	}
 	
 }

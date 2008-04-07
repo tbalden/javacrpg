@@ -39,10 +39,12 @@ public class Jcrpg extends Formatter implements Filter  {
 	@Override
 	public String format(LogRecord record) {
 		dateF.setTime(record.getMillis());
-		return dateF.toString()+" "+record.getMessage()+'\n';
+		return dateF.toString()+" "+record.getSourceClassName()+" - "+record.getMessage()+'\n';
 	}
 	public boolean isLoggable(LogRecord record) {
 		if (record.getSourceClassName().equals("com.jme.scene.Node"))
+			return false;
+		if (record.getSourceClassName().startsWith("sun.awt"))
 			return false;
 		return true;
 	}

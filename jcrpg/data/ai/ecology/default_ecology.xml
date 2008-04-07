@@ -1,5 +1,7 @@
 <ecology name="default" author="eburriel@yahoo.com" version="1.0">
 	<bestiary>
+		<animal id="HUMANCOMMONERS"
+			implementation="org.jcrpg.world.ai.humanoid.group.human.HumanCommoners" />
 		<animal id="GIANTCAVESPIDERS"
 			implementation="org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders" />
 		<animal id="BROWNBEARFAMILY"
@@ -43,21 +45,27 @@
 			max-in-world="1" min-in-group="100" max-in-group="250"
 			percentage-chance-of-appearance="10" />		
  
+
+     	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Tropical"
+			percentage-chance-of-appearance="90" min-in-group="20" food-chain-position="HERBIVORE"/>
+     	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
+			percentage-chance-of-appearance="90" min-in-group="20" food-chain-position="HERBIVORE"/>
+ 
  
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Tropical"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Continental"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
     	
      	<population ref-animal-id="POLARBEARS" ref-climat="Arctic"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
     	<population ref-animal-id="BROWNBEARFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
     	<population ref-animal-id="BROWNBEARFAMILY" ref-climat="Continental"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
 
     	<population ref-animal-id="GORRILAHORDE" ref-climat="Tropical"
-			percentage-chance-of-appearance="70" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
 
     	<!-- sample FOOD CHAIN SAMPLE in Tropical Climate                                                             -->		
 		

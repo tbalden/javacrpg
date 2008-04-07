@@ -57,6 +57,7 @@ public class EntityInstance {
 	public EntityInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
 		this.id = id;
+		this.numericId = numericId;
 		this.numberOfMembers = numberOfMembers;
 		this.world = w;
 		this.ecology = ecology;

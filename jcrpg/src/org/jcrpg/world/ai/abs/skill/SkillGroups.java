@@ -47,6 +47,7 @@ import org.jcrpg.world.ai.abs.skill.mental.Mapmaking;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.QuickPlanning;
 import org.jcrpg.world.ai.abs.skill.mental.methodology.Strategy;
+import org.jcrpg.world.ai.abs.skill.physical.Agriculture;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
 import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.Disguise;
@@ -121,6 +122,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_SOCIAL, new Reasoning());
 
 		orderedGroups.add(GROUP_PHYSICAL);
+		addSkillToGroup(GROUP_PHYSICAL, new Agriculture());
 		addSkillToGroup(GROUP_PHYSICAL, new Tracking());
 		addSkillToGroup(GROUP_PHYSICAL, new LocksAndTraps());
 		addSkillToGroup(GROUP_PHYSICAL, new PickPocket());
