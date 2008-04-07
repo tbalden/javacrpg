@@ -259,12 +259,12 @@ public class CaveOrig extends Geography implements Surface {
 		int per = HashUtil.mixPercentage(worldX, (worldGroundLevel-(origoY*magnification)%levels)/levels, worldZ);
 		if (per>=density)
 		{
-			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
+			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
 			return cachedType;
 		}
 		if (cachedNonType==null)
 		{
-			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
 		}
 		return cachedNonType;
 	}

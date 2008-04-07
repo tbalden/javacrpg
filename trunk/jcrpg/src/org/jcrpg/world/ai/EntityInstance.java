@@ -31,11 +31,25 @@ public class EntityInstance {
 	
 	public EntityDescription description;
 
+	/**
+	 * Skills of the instance.
+	 */
 	public SkillContainer skills = new SkillContainer();
 	public Attributes attributes = new Attributes();
 
+	/**
+	 * which the instance is roaming in this turn.
+	 */
 	public DistanceBasedBoundary roamingBoundary = null;
+	/**
+	 * currently dominated zone.
+	 */
 	public DistanceBasedBoundary domainBoundary = null;
+	/**
+	 * where the instance has its home dwelling.
+	 */
+	public DistanceBasedBoundary homeBoundary = null;
+		
 
 	public EntityMember NONE_TYPE = new EntityMember("NONE", null);
 

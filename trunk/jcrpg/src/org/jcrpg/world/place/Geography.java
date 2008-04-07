@@ -402,13 +402,13 @@ public class Geography extends Place implements Surface {
 		int kind = getCubeKind(-1, worldX, Y, worldZ,  farView);
 		if (kind>=0 && kind<=4)
 		{
-			s_lastType =  new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,kind)};
+			s_lastType =  new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel+Y,true,kind)};
 		} else
 		if (kind>=6)
 		{
-			s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,false,J3DCore.BOTTOM)};
+			s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel+Y,false,J3DCore.BOTTOM)};
 		}
-		s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
+		s_lastType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel+Y,true,SurfaceHeightAndType.NOT_STEEP)};
 		return s_lastType;
 	}
 	

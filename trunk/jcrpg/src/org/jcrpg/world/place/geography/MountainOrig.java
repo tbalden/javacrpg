@@ -456,10 +456,10 @@ public class MountainOrig extends Geography implements Surface{
 			if (ret[0]>-1)
 			{
 				int r = ret[1];
-				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY*magnification+i,true,r)};
+				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,origoY*magnification+i,true,r)};
 			}
 		}
-		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP)};
+		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,origoY+realSizeY,false,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
 

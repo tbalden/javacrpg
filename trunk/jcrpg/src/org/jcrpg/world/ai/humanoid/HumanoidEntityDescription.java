@@ -18,8 +18,38 @@
 
 package org.jcrpg.world.ai.humanoid;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.DistanceBasedBoundary;
+import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
+import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.House;
 
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
+	public ArrayList<EconomyTemplate> economyTemplates = new ArrayList<EconomyTemplate>();
+	
+	
+	@Override
+	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
+	{
+		instance.homeBoundary = new DistanceBasedBoundary(world, instance.domainBoundary.posX,instance.domainBoundary.posY,instance.domainBoundary.posZ, instance.numberOfMembers);
+		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(instance.domainBoundary.posX, instance.domainBoundary.posZ);
+		if (surfaces.size()>0)
+		{
+			int Y = surfaces.get(0)[0].surfaceY;
+			try {
+				House h = new House("house"+instance.id+"_"+instance.domainBoundary.posX+"_"+Y+"_"+instance.domainBoundary.posZ,world,null,10,1,10,instance.domainBoundary.posX,Y,instance.domainBoundary.posZ,instance.homeBoundary);
+				world.economics.put(h.id, h);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			
+		}
+	}
+	
 }

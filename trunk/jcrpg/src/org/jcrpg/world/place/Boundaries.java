@@ -48,6 +48,13 @@ public class Boundaries {
 		limits = new HashSet<Long>();
 	}
 	
+	public boolean nearProbeAvailabe = false;
+	
+	/**
+	 * Helper values for near probe. if nearProbeAv.=true these must be set!
+	 */
+	public int limitXMin, limitYMin, limitZMin, limitXMax, limitYMax, limitZMax;
+	
 
 	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -148,6 +155,70 @@ public class Boundaries {
 		long s = (((long)x) << 32) + ((z) << 16) + (y);
 		//System.out.println("##"+ s);
 		return s;
+	}
+	/**
+	 * Tells if this boundary overlaps the area inside a distance to a given coordinate.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param distance
+	 * @return
+	 */
+	public boolean isNear(int x,int y,int z, int distance)
+	{
+		if (!nearProbeAvailabe)
+			return true;
+		if (x-distance>=limitXMin)
+		{
+			if (x+distance<=limitXMax)
+			{
+				if (y-distance>=limitYMin)
+				{
+					if (y+distance<=limitYMax)
+					{
+						if (z-distance>=limitZMin)
+						{
+							if (z+distance<=limitZMax)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	public void calcLimits()
+	{
+		limitXMin = (limitXMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		limitXMax = (limitXMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		if (limitXMin==limitXMax) limitXMax+=World.PROBE_DISTANCE;
+		limitXMin-=World.PROBE_DISTANCE;
+		limitXMax+=World.PROBE_DISTANCE;
+		
+		limitZMin = (limitZMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		limitZMax = (limitZMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		if (limitZMin==limitZMax) limitZMax+=World.PROBE_DISTANCE;
+		limitZMin-=World.PROBE_DISTANCE;
+		limitZMax+=World.PROBE_DISTANCE;
+		
+		limitYMin = (limitYMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		limitYMax = (limitYMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
+		if (limitYMin==limitYMax) limitYMax+=World.PROBE_DISTANCE;
+		limitYMin-=World.PROBE_DISTANCE;
+		limitYMax+=World.PROBE_DISTANCE;
+
+		nearProbeAvailabe = true;
+	}
+	
+	public boolean changed()
+	{
+		return false;
+	}
+	public void changeAcknowledged()
+	{
+		
 	}
 	
 }

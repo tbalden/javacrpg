@@ -23,6 +23,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanFemaleHousewife;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleArtisan;
@@ -30,6 +31,7 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanMalePeasant;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
@@ -51,6 +53,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 
 	public HumanCommoners()
 	{
+		economyTemplates.add(new EconomyTemplate(House.class));
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);
@@ -66,9 +69,8 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		addGroupingRuleMember(HUMAN_MALE_ARTISAN);
 		addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		addGroupingRuleMember(HUMAN_MALE_SMITH);
-		
-		
 	}
+	
 
 	
 }

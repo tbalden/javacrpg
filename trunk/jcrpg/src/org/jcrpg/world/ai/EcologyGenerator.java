@@ -216,6 +216,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup);
@@ -284,6 +285,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup);
@@ -395,6 +397,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup + " with "
@@ -519,6 +522,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup + " with "
@@ -611,6 +615,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup + " with "
@@ -699,6 +704,7 @@ public class EcologyGenerator {
 									wX, wY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
+							entity.description.setupNewInstance(entity, pWorld, pEcology);
 							LOGGER.finest("addEntity " + entityId + " (" + wX
 									+ "," + wY + "," + wZ + ") nb="
 									+ numberInTheGroup + " with "

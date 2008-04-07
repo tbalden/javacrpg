@@ -76,6 +76,7 @@ public class RenderedArea {
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		long sumTime = 0, sumTime_1 = 0, sumTime_2 = 0;
+		world.perf_eco_t0 = 0;
 		world.perf_climate_t0 = 0;
 		world.perf_flora_t0 = 0;
 		world.perf_geo_t0 = 0;
@@ -180,6 +181,7 @@ public class RenderedArea {
 		System.out.println("Key calculation sumTime = "+sumTime_1);
 		System.out.println("World.getCube sumTime = "+sumTime);
 		System.out.println("World.getCube + cache sumTime = "+sumTime_2);
+		System.out.println("-- eco = "+world.perf_eco_t0);
 		System.out.println("-- geo = "+world.perf_geo_t0);
 		System.out.println("-- flo = "+world.perf_flora_t0);
 		System.out.println("-- cli = "+world.perf_climate_t0);
