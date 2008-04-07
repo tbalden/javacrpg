@@ -227,10 +227,10 @@ public class DefaultGenProgram extends GenProgram {
 		}
 
 		//int i =0;
-		House h = null; 
+		//House h = null; 
 		//long time = System.currentTimeMillis(); 
-		h = new House("house",world,null,4,1,4,0,world.getSeaLevel(1),5);		
-		world.economics.put(h.id, h);
+		//h = new House("house",world,null,4,1,4,0,world.getSeaLevel(1),5,null);		
+		//world.economics.put(h.id, h);
 	}
 	
 	public String[] getNeighbors(Collection<Geography> worldSizedGeos, int x, int y, int z)

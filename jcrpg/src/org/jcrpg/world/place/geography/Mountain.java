@@ -476,10 +476,10 @@ public class Mountain extends Geography implements Surface{
 			if (ret[0]>-1)
 			{
 				int r = ret[1];
-				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel+i,true,r)};
+				return new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel+i,true,r)};
 			}
 		}
-		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldHeight,false,SurfaceHeightAndType.NOT_STEEP)};
+		return  new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldHeight,false,SurfaceHeightAndType.NOT_STEEP)};
 	}
 
 

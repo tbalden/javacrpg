@@ -191,7 +191,7 @@ public class Cave extends Geography implements Surface {
 		{
 			if (cachedNonType==null)
 			{
-				cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+				cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
 			}
 			return cachedNonType;
 		}
@@ -199,12 +199,12 @@ public class Cave extends Geography implements Surface {
 		if (per>=density)
 		{
 			//System.out.println(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
-			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
+			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
 			return cachedType;
 		}
 		if (cachedNonType==null)
 		{
-			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
 		}
 		return cachedNonType;
 	}

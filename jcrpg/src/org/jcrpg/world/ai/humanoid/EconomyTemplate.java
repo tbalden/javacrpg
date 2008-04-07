@@ -1,5 +1,6 @@
 /*
  *  This file is part of JavaCRPG.
+ *  Copyright (C) 2008 Illes Pal Zoltan
  *
  *  JavaCRPG is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,32 +16,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.place;
+package org.jcrpg.world.ai.humanoid;
 
-import org.jcrpg.world.ai.DistanceBasedBoundary;
+import org.jcrpg.world.place.Economic;
 
 /**
- * Intelligently created like cities, outposts, agriculture
+ * Describes a certain economy type which humanoids may build as their home domain.
  * @author pali
  *
  */
-public class Economic extends Place{
+public class EconomyTemplate {
 
-	public Economic(String id, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries) {
-		super(id, parent, loc);
-		// TODO Auto-generated constructor stub
+	Class<? extends Economic> place = null;
+	
+	public EconomyTemplate(Class<? extends Economic> place)
+	{
+		this.place = place;
 	}
-
-	@Override
-	public boolean generateModel() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean loadModelFromFile() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

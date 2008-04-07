@@ -21,6 +21,7 @@ package org.jcrpg.world.place;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -123,9 +124,31 @@ public class World extends Place {
 		return false;
 	}
 	
+
+	public ArrayList<SurfaceHeightAndType[]> getSurfaceData(int worldX, int worldZ)
+	{
+		ArrayList<SurfaceHeightAndType[]> list = new ArrayList<SurfaceHeightAndType[]>();
+		int worldY = getSeaLevel(1);
+		for (Geography geo : geographies.values()) {
+			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				long t0 = 0;
+				t0 = System.currentTimeMillis();
+				Cube geoCube = geo.getCube(-1, worldX, worldY, worldZ, false);
+				perf_geo_t0+=System.currentTimeMillis()-t0;
+				collectCubes(geoCube,false);
+				if (geo instanceof Surface)
+				{
+					t0 = System.currentTimeMillis();
+					SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, false);
+					if (surf!=null && surf.length>0)
+						list.add(surf);
+				}
+			}
+		}
+		return list;
+	}
 	
-
-
 	@Override
 	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		int _worldX = worldX;
@@ -141,11 +164,18 @@ public class World extends Place {
 	
 	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
 	
+	public long perf_eco_t0 = System.currentTimeMillis();
 	public long perf_flora_t0 = System.currentTimeMillis();
 	public long perf_geo_t0 = perf_flora_t0;
 	public long perf_climate_t0 = perf_flora_t0;
 	public long perf_water_t0 = perf_flora_t0;
 	public long perf_surface_t0 = perf_flora_t0;
+	
+	public int lastXProbe = -1, lastYProbe = -1, lastZProbe = -1;
+	public static int PROBE_DISTANCE = 100;
+	public static HashSet<Object> provedToBeAway = new HashSet<Object>();
+	public static HashSet<Object> provedToBeNear = new HashSet<Object>(); 
+	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
 		if (WORLD_IS_GLOBE) {
@@ -156,10 +186,81 @@ public class World extends Place {
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
 		{
-			for (Economic eco : economics.values()) {
-				if (eco.getBoundaries().isInside(worldX, worldY, worldZ))
-					return eco.getCube(key, worldX, worldY, worldZ, farView);
+			long t0 = System.currentTimeMillis();
+			//System.out.println("ECONOMICS SIZE: "+economics.size());
+			
+			boolean newProbe = true;
+			if (lastXProbe!=-1)
+			{
+				if (Math.abs(worldX-lastXProbe)>PROBE_DISTANCE/2 || Math.abs(worldY-lastYProbe)>PROBE_DISTANCE/2 || Math.abs(worldZ-lastZProbe)>PROBE_DISTANCE/2)
+				{
+					
+				} else
+				{
+					newProbe = false;
+				}
 			}
+			if (newProbe)
+			{
+				lastXProbe = worldX;
+				lastYProbe = worldY;
+				lastZProbe = worldZ;
+				provedToBeAway.clear();
+				provedToBeNear.clear();
+			}
+			
+			if (!newProbe)
+			{
+				for (Object o:provedToBeNear)
+				{
+					Economic eco = (Economic)o;
+					if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+						perf_eco_t0+=System.currentTimeMillis()-t0;
+						return eco.getCube(key, worldX, worldY, worldZ, farView);
+					}
+				}
+				for (Object o:provedToBeAway)
+				{
+					Economic eco = (Economic)o;
+					if (eco.getBoundaries().changed())
+					{
+						eco.getBoundaries().changeAcknowledged();
+						if (eco.getBoundaries().isNear(worldX, worldY, worldZ, PROBE_DISTANCE))
+						{
+							provedToBeAway.remove(eco);
+							if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+								perf_eco_t0+=System.currentTimeMillis()-t0;
+								return eco.getCube(key, worldX, worldY, worldZ, farView);
+							}
+						}
+						
+					}
+					
+				}
+			} else
+			{
+				for (Economic eco : economics.values()) {
+					if (eco.getBoundaries().isNear(worldX, worldY, worldZ, PROBE_DISTANCE))
+					{
+						//System.out.println("### IS NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
+						provedToBeNear.add(eco);
+					} else
+					{
+						//System.out.println("### IS NOT NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
+						//System.out.println("## PROVED TO BE AWAY: "+eco);
+						provedToBeAway.add(eco);
+					}
+				}
+				for (Object o:provedToBeNear)
+				{
+					Economic eco = (Economic)o;
+					if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+						perf_eco_t0+=System.currentTimeMillis()-t0;
+						return eco.getCube(key, worldX, worldY, worldZ, farView);
+					}
+				}
+			}
+			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;
 			currentMerged = null;
 			overLappers.clear();
@@ -172,7 +273,7 @@ public class World extends Place {
 				if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 				{
 					insideGeography = true;
-					long t0 = 0;
+					
 					t0 = System.currentTimeMillis();
 					Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
 					perf_geo_t0+=System.currentTimeMillis()-t0;
@@ -233,7 +334,7 @@ public class World extends Place {
 			mergeCubes();
 			
 			// waters
-			long t0 = System.currentTimeMillis();
+			t0 = System.currentTimeMillis();
 			for (Water w : waters.values()) {
 				if (w.boundaries.isInside(worldX, worldY, worldZ)) 
 				{

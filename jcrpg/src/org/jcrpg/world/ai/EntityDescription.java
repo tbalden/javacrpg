@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.abs.choice.Indifference;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.place.World;
 
 /**
  * All moving beings's base class which should interact between group and individual intelligence.
@@ -201,5 +202,16 @@ public class EntityDescription {
 
 	public boolean isAirDweller() {
 		return airDweller;
+	}
+	
+	/**
+	 * This must be called when new ecology is generated to let the desciption settleg things for the instance.
+	 * @param instance
+	 * @param world
+	 * @param ecology
+	 */
+	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
+	{
+		
 	}
 }

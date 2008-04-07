@@ -31,6 +31,10 @@ public class BoundaryUtils {
 					//if (x==0 || x==sizeX-1 && y==0 || y==sizeY-1 && z==0 || z==sizeZ-1)
 						//b.addLimiterCube(magnification,origoX+x, origoY+y, origoZ+z);
 				}
+		b.limitXMin = origoX; b.limitXMax= origoX+sizeX;
+		b.limitYMin = origoY; b.limitYMax = origoY+sizeY;
+		b.limitZMin = origoZ; b.limitZMax = origoZ+sizeZ;
+		b.calcLimits();
 		return b;
 			
 	}
