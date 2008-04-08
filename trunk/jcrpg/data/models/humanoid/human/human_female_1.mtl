@@ -12,14 +12,14 @@ map_Kd capgonnacol.png
 
 
 newmtl capelli_nuoviCap.png
-Ns 317.647059
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.810040 0.932067 0.990000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
-d 0.000000
+d 1.000000
 illum 1
-map_Kd capelli_nuoviCap.png
+map_Kd nuoviCap.png
 
 
 newmtl Material.007_corpoDefinitivoOpt.pn
