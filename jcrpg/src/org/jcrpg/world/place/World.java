@@ -172,9 +172,13 @@ public class World extends Place {
 	public long perf_surface_t0 = perf_flora_t0;
 	
 	public int lastXProbe = -1, lastYProbe = -1, lastZProbe = -1;
+	public Long lastKey;
 	public static int PROBE_DISTANCE = 100;
-	public static HashSet<Object> provedToBeAway = new HashSet<Object>();
-	public static HashSet<Object> provedToBeNear = new HashSet<Object>(); 
+	public static HashMap<Long,HashSet<Object>> provedToBeAway = new HashMap<Long,HashSet<Object>>();
+	public static HashMap<Long,HashSet<Object>> provedToBeNear = new HashMap<Long,HashSet<Object>>(); 
+
+	public static HashSet<Object> hsProvedToBeNear = null;
+	public static HashSet<Object> hsProvedToBeAway = null;
 	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
@@ -188,30 +192,31 @@ public class World extends Place {
 		{
 			long t0 = System.currentTimeMillis();
 			//System.out.println("ECONOMICS SIZE: "+economics.size());
-			
-			boolean newProbe = true;
-			if (lastXProbe!=-1)
+			int worldXProbe = worldX/PROBE_DISTANCE;
+			int worldYProbe = worldY/PROBE_DISTANCE;
+			int worldZProbe = worldZ/PROBE_DISTANCE;
+			boolean newProbe = false;
+			if (worldXProbe!=lastXProbe || worldYProbe!=lastYProbe || worldZProbe!=lastZProbe )
 			{
-				if (Math.abs(worldX-lastXProbe)>PROBE_DISTANCE/2 || Math.abs(worldY-lastYProbe)>PROBE_DISTANCE/2 || Math.abs(worldZ-lastZProbe)>PROBE_DISTANCE/2)
+				lastXProbe = worldXProbe;
+				lastYProbe = worldYProbe;
+				lastZProbe = worldZProbe;
+				lastKey = Boundaries.getKey(lastXProbe, lastYProbe, lastZProbe);
+				hsProvedToBeNear = provedToBeNear.get(lastKey);
+				hsProvedToBeAway = provedToBeAway.get(lastKey);
+				if (hsProvedToBeNear == null)
 				{
-					
-				} else
-				{
-					newProbe = false;
+					hsProvedToBeNear = new HashSet<Object>();
+					provedToBeNear.put(lastKey, hsProvedToBeNear);
+					hsProvedToBeAway = new HashSet<Object>();
+					provedToBeAway.put(lastKey, hsProvedToBeAway);
+					newProbe = true;
 				}
-			}
-			if (newProbe)
-			{
-				lastXProbe = worldX;
-				lastYProbe = worldY;
-				lastZProbe = worldZ;
-				provedToBeAway.clear();
-				provedToBeNear.clear();
-			}
+			} 
 			
 			if (!newProbe)
 			{
-				for (Object o:provedToBeNear)
+				for (Object o:hsProvedToBeNear)
 				{
 					Economic eco = (Economic)o;
 					if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
@@ -219,13 +224,13 @@ public class World extends Place {
 						return eco.getCube(key, worldX, worldY, worldZ, farView);
 					}
 				}
-				for (Object o:provedToBeAway)
+				for (Object o:hsProvedToBeAway)
 				{
 					Economic eco = (Economic)o;
 					if (eco.getBoundaries().changed())
 					{
 						eco.getBoundaries().changeAcknowledged();
-						if (eco.getBoundaries().isNear(worldX, worldY, worldZ, PROBE_DISTANCE))
+						if (eco.getBoundaries().isNear(lastXProbe, lastYProbe, lastZProbe))
 						{
 							provedToBeAway.remove(eco);
 							if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
@@ -240,18 +245,18 @@ public class World extends Place {
 			} else
 			{
 				for (Economic eco : economics.values()) {
-					if (eco.getBoundaries().isNear(worldX, worldY, worldZ, PROBE_DISTANCE))
+					if (eco.getBoundaries().isNear(lastXProbe, lastYProbe, lastZProbe))
 					{
-						//System.out.println("### IS NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
-						provedToBeNear.add(eco);
+						System.out.println("### IS NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
+						hsProvedToBeNear.add(eco);
 					} else
 					{
 						//System.out.println("### IS NOT NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
 						//System.out.println("## PROVED TO BE AWAY: "+eco);
-						provedToBeAway.add(eco);
+						hsProvedToBeAway.add(eco);
 					}
 				}
-				for (Object o:provedToBeNear)
+				for (Object o:hsProvedToBeNear)
 				{
 					Economic eco = (Economic)o;
 					if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {

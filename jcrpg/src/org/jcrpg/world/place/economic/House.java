@@ -182,6 +182,7 @@ public class House extends Economic {
 		c.x = worldX;
 		c.y = worldY;
 		c.z = worldZ;
+		c.canContain = true;
 		return c;
 		
 	}
