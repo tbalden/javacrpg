@@ -242,7 +242,7 @@ public class World extends Place {
 				for (Economic eco : economics.values()) {
 					if (eco.getBoundaries().isNear(worldX, worldY, worldZ, PROBE_DISTANCE))
 					{
-						//System.out.println("### IS NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
+						System.out.println("### IS NEAR ! "+eco.id+" "+" "+worldX+" - "+worldY+" - "+worldZ+" | "+eco.origoX+" "+eco.origoZ+ " -- "+ eco.boundaries.limitXMin+ " "+eco.boundaries.limitXMax+" / "+eco.boundaries.limitYMin+" "+eco.boundaries.limitYMax+" / "+eco.boundaries.limitZMin+" "+eco.boundaries.limitZMax);
 						provedToBeNear.add(eco);
 					} else
 					{

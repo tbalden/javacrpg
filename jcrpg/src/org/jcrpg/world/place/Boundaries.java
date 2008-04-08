@@ -166,6 +166,7 @@ public class Boundaries {
 	 */
 	public boolean isNear(int x,int y,int z, int distance)
 	{
+		distance = distance/2;
 		if (!nearProbeAvailabe)
 			return true;
 		if (x-distance>=limitXMin)
