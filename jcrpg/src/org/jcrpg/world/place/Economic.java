@@ -42,5 +42,11 @@ public class Economic extends Place{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void updateLocationAndSize()
+	{
+		// TODO
+		((World)parent.getRoot()).updateEconomy(origoX, origoX+sizeX, origoY, origoY+sizeY, origoZ, origoZ+sizeZ, this);
+	}
 
 }

@@ -27,6 +27,7 @@ import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.TreeLocator;
 
 public class House extends Economic {
 
@@ -69,8 +70,8 @@ public class House extends Economic {
 	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	
 	
-	public int sizeX, sizeY, sizeZ;
-	public int origoX, origoY, origoZ;
+	//public int sizeX, sizeY, sizeZ;
+	//public int origoX, origoY, origoZ;
 	
 	/**
 	 * Simple Stone House
@@ -154,6 +155,7 @@ public class House extends Economic {
 		addStoredCube(sizeX-1, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
 		addStoredCube(sizeX-1,0,1,new Cube(this,DOOR_GROUND_WEST,0,0,0));
 		storeParameteredArea();
+		((TreeLocator)loc).addEconomic(this);
 	}
 	
 	public String getParameteredKey()
