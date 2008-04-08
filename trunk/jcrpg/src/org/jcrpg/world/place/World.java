@@ -42,6 +42,8 @@ public class World extends Place {
 	public Engine engine;
 	public transient WorldMap worldMap;
 	
+	public TreeLocator treeLocator = null;
+	
 	public int GEOGRAPHY_RANDOM_SEED = 0;
 	
 	/**
@@ -88,6 +90,7 @@ public class World extends Place {
 		realSizeX = sizeX*magnification;
 		realSizeY = sizeY*magnification;
 		realSizeZ = sizeZ*magnification;
+		treeLocator = new TreeLocator(this);
 		if (realSizeX<J3DCore.MINIMUM_WORLD_REALSIZE)
 		{
 			throw new Exception("World X size is smaller than J3DCore.MINIMUM_WORLD_REALSIZE ("+J3DCore.MINIMUM_WORLD_REALSIZE+")");
@@ -193,7 +196,7 @@ public class World extends Place {
 		{
 			long t0 = System.currentTimeMillis();
 			//System.out.println("ECONOMICS SIZE: "+economics.size());
-			int worldXProbe = worldX/PROBE_DISTANCE;
+			/*int worldXProbe = worldX/PROBE_DISTANCE;
 			int worldYProbe = worldY/PROBE_DISTANCE;
 			int worldZProbe = worldZ/PROBE_DISTANCE;
 			boolean newProbe = false;
@@ -278,7 +281,19 @@ public class World extends Place {
 						return eco.getCube(key, worldX, worldY, worldZ, farView);
 					}
 				}
+			}*/
+			
+			ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
+			if (economicsList!=null)
+			for (Object o:economicsList)
+			{
+				Economic eco = (Economic)o;
+				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+					perf_eco_t0+=System.currentTimeMillis()-t0;
+					return eco.getCube(key, worldX, worldY, worldZ, farView);
+				}
 			}
+			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;
 			currentMerged = null;
@@ -511,6 +526,27 @@ public class World extends Place {
 	}
 	
 	public int lossFactor = 1000;
+	
+	/**
+	 * If size or location changes this must be called to update treelocator.
+	 * @param xMin
+	 * @param xMax
+	 * @param yMin
+	 * @param yMax
+	 * @param zMin
+	 * @param zMax
+	 * @param e
+	 */
+	public void updateEconomy(int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, Economic e)
+	{
+		treeLocator.updateEconomic(xMin, xMax, yMin, yMax, zMin, zMax, e);
+	}
+	
+	public void addEconomy(Economic e)
+	{
+		treeLocator.addEconomic(e);
+		economics.put(e.id, e);
+	}
 	
 	public void addGeography(Geography g)
 	{

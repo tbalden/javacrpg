@@ -107,6 +107,7 @@ public abstract class Place {
 		}
 		numericId = numericId<<8;
 		this.parent = parent;
+		this.loc = loc;
 	}
 	
 	/**

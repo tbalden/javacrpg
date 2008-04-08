@@ -42,8 +42,8 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 		{
 			int Y = surfaces.get(0)[0].surfaceY;
 			try {
-				House h = new House("house"+instance.id+"_"+instance.domainBoundary.posX+"_"+Y+"_"+instance.domainBoundary.posZ,world,null,10,1,10,instance.domainBoundary.posX,Y,instance.domainBoundary.posZ,instance.homeBoundary);
-				world.economics.put(h.id, h);
+				House h = new House("house"+instance.id+"_"+instance.domainBoundary.posX+"_"+Y+"_"+instance.domainBoundary.posZ,world,world.treeLocator,10,1,10,instance.domainBoundary.posX,Y,instance.domainBoundary.posZ,instance.homeBoundary);
+				world.addEconomy(h);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
