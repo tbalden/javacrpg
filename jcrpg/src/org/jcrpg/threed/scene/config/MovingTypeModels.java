@@ -96,6 +96,10 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, HumanCommoners.humanMale_unit);
 		counter++;
 
+		hmMobIdToModelId.put(HumanCommoners.HUMAN_FEMALE_HOUSEWIFE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, HumanCommoners.humanFemale_unit);
+		counter++;
+
 }
 	
 	public RenderedMovingUnit getRenderedUnit(String id)
