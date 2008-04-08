@@ -175,7 +175,8 @@ public class World extends Place {
 	public Long lastKey;
 	public static int PROBE_DISTANCE = 100;
 	public static HashMap<Long,HashSet<Object>> provedToBeAway = new HashMap<Long,HashSet<Object>>();
-	public static HashMap<Long,HashSet<Object>> provedToBeNear = new HashMap<Long,HashSet<Object>>(); 
+	public static HashMap<Long,HashSet<Object>> provedToBeNear = new HashMap<Long,HashSet<Object>>();
+	public static ArrayList<Long> probeCacheRemovalList = new ArrayList<Long>();
 
 	public static HashSet<Object> hsProvedToBeNear = null;
 	public static HashSet<Object> hsProvedToBeAway = null;
@@ -244,6 +245,19 @@ public class World extends Place {
 				}
 			} else
 			{
+				// cleaning cache's beginning in removal list, 
+				// refreshing newly probed to the end of the list removalList...
+				if (probeCacheRemovalList.contains(lastKey))
+				{
+					probeCacheRemovalList.remove(probeCacheRemovalList.indexOf(lastKey));
+				}
+				probeCacheRemovalList.add(lastKey);
+				while (probeCacheRemovalList.size()>5) {
+					Long removed = probeCacheRemovalList.remove(0);
+					provedToBeAway.remove(removed);
+					provedToBeNear.remove(removed);
+				}
+				
 				for (Economic eco : economics.values()) {
 					if (eco.getBoundaries().isNear(lastXProbe, lastYProbe, lastZProbe))
 					{
