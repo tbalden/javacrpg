@@ -51,6 +51,9 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public static MovingModel humanMale = new MovingModel("models/humanoid/human/human_male_1.obj",null,null,null,false);
 	public static RenderedMovingUnit humanMale_unit = new RenderedMovingUnit(new Model[]{humanMale});
 
+	public static MovingModel humanFemale = new MovingModel("models/humanoid/human/human_female_1.obj",null,null,null,false);
+	public static RenderedMovingUnit humanFemale_unit = new RenderedMovingUnit(new Model[]{humanFemale});
+
 	public HumanCommoners()
 	{
 		economyTemplates.add(new EconomyTemplate(House.class));
@@ -67,6 +70,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		setAverageGroupSizeAndDeviation(6, 2);
 		
 		addGroupingRuleMember(HUMAN_MALE_ARTISAN);
+		addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE);
 		addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		addGroupingRuleMember(HUMAN_MALE_SMITH);
 	}
