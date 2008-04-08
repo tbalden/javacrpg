@@ -164,22 +164,21 @@ public class Boundaries {
 	 * @param distance
 	 * @return
 	 */
-	public boolean isNear(int x,int y,int z, int distance)
+	public boolean isNear(int x,int y,int z)
 	{
-		distance = distance/2;
 		if (!nearProbeAvailabe)
 			return true;
-		if (x-distance>=limitXMin)
+		if (x>=limitXMin)
 		{
-			if (x+distance<=limitXMax)
+			if (x<=limitXMax)
 			{
-				if (y-distance>=limitYMin)
+				if (y>=limitYMin)
 				{
-					if (y+distance<=limitYMax)
+					if (y<=limitYMax)
 					{
-						if (z-distance>=limitZMin)
+						if (z>=limitZMin)
 						{
-							if (z+distance<=limitZMax)
+							if (z<=limitZMax)
 							{
 								return true;
 							}
@@ -192,23 +191,23 @@ public class Boundaries {
 	}
 	public void calcLimits()
 	{
-		limitXMin = (limitXMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		limitXMax = (limitXMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		if (limitXMin==limitXMax) limitXMax+=World.PROBE_DISTANCE;
-		limitXMin-=World.PROBE_DISTANCE;
-		limitXMax+=World.PROBE_DISTANCE;
+		limitXMin = (limitXMin/World.PROBE_DISTANCE);
+		limitXMax = (limitXMax/World.PROBE_DISTANCE);
+		//if (limitXMin==limitXMax) limitXMax+=1;
+		//limitXMin-=1;
+		//limitXMax+=1;
 		
-		limitZMin = (limitZMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		limitZMax = (limitZMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		if (limitZMin==limitZMax) limitZMax+=World.PROBE_DISTANCE;
-		limitZMin-=World.PROBE_DISTANCE;
-		limitZMax+=World.PROBE_DISTANCE;
+		limitZMin = (limitZMin/World.PROBE_DISTANCE);
+		limitZMax = (limitZMax/World.PROBE_DISTANCE);
+		//if (limitZMin==limitZMax) limitZMax+=1;
+		//limitZMin-=1;
+		//limitZMax+=1;
 		
-		limitYMin = (limitYMin/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		limitYMax = (limitYMax/World.PROBE_DISTANCE)*World.PROBE_DISTANCE;
-		if (limitYMin==limitYMax) limitYMax+=World.PROBE_DISTANCE;
-		limitYMin-=World.PROBE_DISTANCE;
-		limitYMax+=World.PROBE_DISTANCE;
+		limitYMin = (limitYMin/World.PROBE_DISTANCE);
+		limitYMax = (limitYMax/World.PROBE_DISTANCE);
+		//if (limitYMin==limitYMax) limitYMax+=1;
+		//limitYMin-=1;
+		//limitYMax+=1;
 
 		nearProbeAvailabe = true;
 	}
