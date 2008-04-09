@@ -25,6 +25,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.TreeLocator;
@@ -73,6 +74,7 @@ public class House extends Economic {
 	//public int sizeX, sizeY, sizeZ;
 	//public int origoX, origoY, origoZ;
 	
+	
 	/**
 	 * Simple Stone House
 	 * @param id
@@ -85,13 +87,14 @@ public class House extends Economic {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public House(String id, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, DistanceBasedBoundary homeBoundaries) throws Exception {
-		super(id,parent, loc, homeBoundaries);
+	public House(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries) throws Exception {
+		super(id,soilGeo,parent, loc, homeBoundaries);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<1) throw new Exception("House below minimum size"+getParameteredKey());
 
 		this.origoX = origoX;this.origoY = origoY;this.origoZ = origoZ;
 		this.sizeX = sizeX;this.sizeY = sizeY;this.sizeZ = sizeZ;
+		this.groundLevel = groundLevel;
 		boundaries = BoundaryUtils.createCubicBoundaries(1, sizeX, sizeY, sizeZ, origoX, origoY, origoZ);
 		
 		if (searchLoadParameteredArea()) return;
@@ -111,56 +114,56 @@ public class House extends Economic {
 			for (int x=1; x<sizeX-1; x++)
 			{
 				int z = 0;
-				Side[][] s = y==0?WALL_GROUND_NORTH:WALL_NORTH; 
+				Side[][] s = y==groundLevel?WALL_GROUND_NORTH:WALL_NORTH; 
 				if (x%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_NORTH:WINDOW_NORTH; 
+					s = y==groundLevel?WINDOW_GROUND_NORTH:WINDOW_NORTH; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int x=1; x<sizeX-1; x++)
 			{
 				int z = sizeZ-1;
-				Side[][] s = y==0?WALL_GROUND_SOUTH:WALL_SOUTH;
+				Side[][] s = y==groundLevel?WALL_GROUND_SOUTH:WALL_SOUTH;
 				if (x%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
+					s = y==groundLevel?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = 0;
-				Side[][] s = y==0?WALL_GROUND_EAST:WALL_EAST; 
+				Side[][] s = y==groundLevel?WALL_GROUND_EAST:WALL_EAST; 
 				if (z%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_EAST:WINDOW_EAST; 
+					s = y==groundLevel?WINDOW_GROUND_EAST:WINDOW_EAST; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
 				int x = sizeX-1;
-				Side[][] s = y==0?WALL_GROUND_WEST:WALL_WEST; 
+				Side[][] s = y==groundLevel?WALL_GROUND_WEST:WALL_WEST; 
 				if (z%3==2) 
 				{
-					s = y==0?WINDOW_GROUND_WEST:WINDOW_WEST; 
+					s = y==groundLevel?WINDOW_GROUND_WEST:WINDOW_WEST; 
 				}
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z));
 			}
 		}
-		addStoredCube(0, 0, 0, new Cube(this,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1, 0, 0, new Cube(this,EXTERNAL,0,0,0));
-		addStoredCube(0, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1, 0, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
-		addStoredCube(sizeX-1,0,1,new Cube(this,DOOR_GROUND_WEST,0,0,0));
+		addStoredCube(0, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(0, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0));
+		addStoredCube(sizeX-1,groundLevel,1,new Cube(this,DOOR_GROUND_WEST,0,0,0));
 		storeParameteredArea();
 		((TreeLocator)loc).addEconomic(this);
 	}
 	
 	public String getParameteredKey()
 	{
-		return this.getClass().getName()+" "+sizeX+" "+sizeY+" "+sizeZ;//+" "+origoX+" "+origoY+" "+origoZ;
+		return this.getClass().getName()+" "+sizeX+" "+sizeY+" "+sizeZ+" "+groundLevel;//+" "+origoX+" "+origoY+" "+origoZ;
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import org.jcrpg.world.time.Time;
 public abstract class Place {
 	
 	public int origoX, origoY, origoZ, sizeX, sizeY, sizeZ, magnification;
-
+	public int groundLevel = 0;
 	public static String generatePositionCacheKey(int worldX, int worldY, int worldZ, int lossFactor)
 	{
 		long k = (((long)(worldX/lossFactor))<< 32) + ((worldY/lossFactor) << 16) + ((worldZ/lossFactor));

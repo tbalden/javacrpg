@@ -23,7 +23,7 @@ import org.jcrpg.world.place.PlaceLocator;
 public class Population extends Economic{
 
 	public Population(String id,Place parent, PlaceLocator loc) {
-		super(id, parent, loc,null);
+		super(id, null, parent, loc,null);
 		// TODO Auto-generated constructor stub
 	}
 
