@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.place;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
@@ -320,8 +321,34 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
-	public boolean overrideHeightForRiver(int worldX, int worldY, int worldZ, boolean farView)
+	public boolean overrideHeightForException(int worldX, int worldY, int worldZ, boolean farView)
 	{
+		World w = (World)getRoot();
+		ArrayList<Object> list = w.treeLocator.getElements(worldX, worldY, worldZ);
+		if (list!=null) 
+		{
+			for (Object o:list)
+			{
+				Economic e = (Economic)o;
+				{
+					int limitXMin = e.origoX-2;
+					int limitXMax = e.origoX+e.sizeX+2;
+					int limitZMin = e.origoZ-2;
+					int limitZMax = e.origoZ+e.sizeZ+2;
+					if (worldX>=limitXMin && worldX<=limitXMax)
+					{
+						if (worldZ>=limitZMin && worldZ<=limitZMax)
+						{
+							if (e.getBoundaries().isInside(limitXMin+2, ((Economic)o).origoY, limitZMin+2))
+							{
+								return true;
+							}
+						}						
+					}
+				}
+			}
+		}
+		
 		for (Water geo:((World)getRoot()).waters.values())
 		{
 			if (this!=geo)

@@ -23,6 +23,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 
@@ -51,8 +52,8 @@ public class Pyramid extends Economic {
 
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	
-	public Pyramid(String id, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
-		super(id, parent, loc,null);
+	public Pyramid(String id, Geography soilGeo, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
+		super(id, soilGeo,parent, loc,null);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;

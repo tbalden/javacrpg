@@ -26,8 +26,11 @@ import org.jcrpg.world.ai.DistanceBasedBoundary;
  */
 public class Economic extends Place{
 
-	public Economic(String id, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries) {
+	public Geography soilGeo = null;
+	
+	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries) {
 		super(id, parent, loc);
+		this.soilGeo = soilGeo;
 		// TODO Auto-generated constructor stub
 	}
 
