@@ -70,7 +70,7 @@ public class EntityScaledRelationType {
 		{
 			b = NEUTRAL;
 		}
-		b += plus;
+		b = (byte)(b.byteValue()+plus);
 		b = (byte)Math.min(b, BEST_PERMANENT);
 		relations.put(key, b);
 	}
@@ -82,7 +82,7 @@ public class EntityScaledRelationType {
 		{
 			b = NEUTRAL;
 		}
-		b -= minus;
+		b = (byte)(b.byteValue()-minus);
 		b = (byte)Math.min(b, WORST_PERMANENT);
 		relations.put(key, b);
 	}
