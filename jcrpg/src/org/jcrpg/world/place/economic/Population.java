@@ -16,15 +16,57 @@
  */
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.World;
 
 public class Population extends Economic{
+	
+	public ArrayList<Economic> residenceList = new ArrayList<Economic>(); 
 
-	public Population(String id,Place parent, PlaceLocator loc) {
-		super(id, null, parent, loc,null);
-		// TODO Auto-generated constructor stub
+	public Population(String id,Geography soilGeo, Place parent, PlaceLocator loc, EntityInstance owner) {
+		super(id, soilGeo, parent, loc,null,owner);
+		boundaries = new Boundaries(1);
+		update();
 	}
+
+	@Override
+	public void update() {
+		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
+		for (int i=0; i<owner.groupSizes.length; i++)
+		{
+			if (residenceList.size()<=i)
+			{
+				System.out.println("ADDING HOUSE!"+i);
+				World world = (World)getRoot();
+				ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.domainBoundary.posX, owner.domainBoundary.posZ+i*12);
+				if (surfaces.size()>0)
+				{
+					int Y = surfaces.get(0)[0].surfaceY;
+					try {
+						House h = new House("house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
+								surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
+								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+2)*i,0,
+								owner.homeBoundary, owner);
+						world.addEconomy(h);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					
+				}
+				
+			}
+		}
+		super.update();
+	}
+	
 
 }

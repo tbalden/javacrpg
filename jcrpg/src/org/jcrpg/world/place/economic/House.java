@@ -23,6 +23,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -87,8 +88,8 @@ public class House extends Economic {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public House(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries) throws Exception {
-		super(id,soilGeo,parent, loc, homeBoundaries);
+	public House(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
+		super(id,soilGeo,parent, loc, homeBoundaries, owner);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<1) throw new Exception("House below minimum size"+getParameteredKey());
 
