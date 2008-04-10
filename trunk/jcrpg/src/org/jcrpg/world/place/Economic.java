@@ -18,6 +18,7 @@
 package org.jcrpg.world.place;
 
 import org.jcrpg.world.ai.DistanceBasedBoundary;
+import org.jcrpg.world.ai.EntityInstance;
 
 /**
  * Intelligently created like cities, outposts, agriculture
@@ -27,10 +28,12 @@ import org.jcrpg.world.ai.DistanceBasedBoundary;
 public class Economic extends Place{
 
 	public Geography soilGeo = null;
+	public EntityInstance owner = null;
 	
-	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries) {
+	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries, EntityInstance owner) {
 		super(id, parent, loc);
 		this.soilGeo = soilGeo;
+		this.owner = owner;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -50,6 +53,11 @@ public class Economic extends Place{
 	{
 		// TODO
 		((World)parent.getRoot()).updateEconomy(origoX, origoX+sizeX, origoY, origoY+sizeY, origoZ, origoZ+sizeZ, this);
+	}
+	
+	public void update()
+	{
+		
 	}
 
 }

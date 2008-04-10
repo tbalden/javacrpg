@@ -53,7 +53,7 @@ public class Pyramid extends Economic {
 	int magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ;
 	
 	public Pyramid(String id, Geography soilGeo, Place parent, PlaceLocator loc, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception {
-		super(id, soilGeo,parent, loc,null);
+		super(id, soilGeo,parent, loc,null,null);
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;

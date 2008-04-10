@@ -27,6 +27,7 @@ import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.Population;
 
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
@@ -37,20 +38,26 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
 	{
 		instance.homeBoundary = new DistanceBasedBoundary(world, instance.domainBoundary.posX,instance.domainBoundary.posY,instance.domainBoundary.posZ, instance.numberOfMembers);
+		
+		Population p = new Population("population"+instance.id,null,world,null, instance);
+		world.addEconomy(p);
+		/*
 		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(instance.domainBoundary.posX, instance.domainBoundary.posZ);
 		if (surfaces.size()>0)
 		{
 			int Y = surfaces.get(0)[0].surfaceY;
 			try {
 				House h = new House("house"+instance.id+"_"+instance.domainBoundary.posX+"_"+Y+"_"+instance.domainBoundary.posZ,
-						surfaces.get(0)[0].self,world,world.treeLocator,10,3,10,instance.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,instance.domainBoundary.posZ,0,instance.homeBoundary);
+						surfaces.get(0)[0].self,world,world.treeLocator,10,3,10,
+						instance.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,instance.domainBoundary.posZ,0,
+						instance.homeBoundary, instance);
 				world.addEconomy(h);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
 			
-		}
+		}*/
 	}
 	
 }
