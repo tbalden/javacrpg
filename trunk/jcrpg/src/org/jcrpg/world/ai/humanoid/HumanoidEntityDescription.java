@@ -24,12 +24,14 @@ import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.Population;
 
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
-	public ArrayList<EconomyTemplate> economyTemplates = new ArrayList<EconomyTemplate>();
+	public EconomyTemplate economyTemplate = new EconomyTemplate();
 	
 	
 	@Override
@@ -37,8 +39,22 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 	{
 		instance.homeBoundary = new DistanceBasedBoundary(world, instance.domainBoundary.posX,instance.domainBoundary.posY,instance.domainBoundary.posZ, instance.numberOfMembers);
 		
-		Population p = new Population("population"+instance.id,null,world,null, instance);
-		world.addEconomy(p);
+		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(instance.domainBoundary.posX, instance.domainBoundary.posZ);
+		if (surfaces.size()>0)
+		{
+			int count = 0;
+			while (surfaces.size()>count) {
+				Geography g = surfaces.get(count++)[0].self;
+				System.out.println("g: "+g);
+				ArrayList<Class<? extends Population>> list = economyTemplate.populationTypes.get(g.getClass());
+				if (list!=null && list.size()>0) {
+					Class<? extends Population> p = list.get(0);
+					Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
+					world.addEconomy(pI);
+					break;
+				}
+			}
+		}
 	}
 	
 }
