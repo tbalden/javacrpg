@@ -29,6 +29,7 @@ import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.geography.sub.Cave;
 
 public class Population extends Economic{
 	
@@ -41,7 +42,7 @@ public class Population extends Economic{
 	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
-		boundaries = new GroupedBoundaries(parent);
+		boundaries = new GroupedBoundaries(parent,this);
 		update();
 	}
 	
@@ -116,6 +117,10 @@ public class Population extends Economic{
 									surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 									owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+zOffset,0,
 									owner.homeBoundary, owner);
+							if (soilGeo instanceof Cave)
+							{
+								System.out.println("### CAVE HOUSE = "+rI.id);
+							}
 							addResidence(rI);
 						}
 					} catch (Exception ex)
