@@ -40,6 +40,7 @@ public class Population extends Economic{
 	@Override
 	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
+		int streetSize = 0;
 		for (int i=0; i<owner.groupSizes.length; i++)
 		{
 			if (residenceList.size()<=i)
@@ -53,7 +54,7 @@ public class Population extends Economic{
 					try {
 						House h = new House("house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
 								surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
-								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+2)*i,0,
+								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+streetSize)*i,0,
 								owner.homeBoundary, owner);
 						residenceList.add(h);
 						((GroupedBoundaries)boundaries).addBoundary(h.getBoundaries());
