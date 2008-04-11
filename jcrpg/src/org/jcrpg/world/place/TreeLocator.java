@@ -27,9 +27,11 @@ import java.util.ArrayList;
  */
 public class TreeLocator extends PlaceLocator {
 	
-	public static final int MAX_DEPTH = 4;
+	public static final int MAX_DEPTH = 5;
 	
-	public static int DEEPEST_LEVEL_GRANULATION = -1;
+	public static int DEEPEST_LEVEL_GRANULATION_X = -1;
+	public static int DEEPEST_LEVEL_GRANULATION_Y = -1;
+	public static int DEEPEST_LEVEL_GRANULATION_Z = -1;
 	
 	public static final int SEGMENTS_PER_LEVEL_PER_COORDINATE = 2;
 	
@@ -86,6 +88,17 @@ public class TreeLocator extends PlaceLocator {
 		int y= world.realSizeY;
 		int z= world.realSizeZ;
 		this.range = new Range(0,x,0,y,0,z);
+		DEEPEST_LEVEL_GRANULATION_X = x;
+		DEEPEST_LEVEL_GRANULATION_Z = z;
+		DEEPEST_LEVEL_GRANULATION_Y = y;
+		for (int i=1; i<MAX_DEPTH; i++)
+		{
+			DEEPEST_LEVEL_GRANULATION_X /= 2;
+			DEEPEST_LEVEL_GRANULATION_Z /= 2;
+		}
+		System.out.println("### DEEPEST LEVEL X = "+DEEPEST_LEVEL_GRANULATION_X);
+		System.out.println("### DEEPEST LEVEL Z = "+DEEPEST_LEVEL_GRANULATION_Z);
+		
 	}
 	
 	/**
@@ -254,14 +267,63 @@ public class TreeLocator extends PlaceLocator {
 		int yMax = yMin+e.sizeY;
 		int zMin = e.origoZ;
 		int zMax = zMin+e.sizeZ;
-		addElement(xMin, yMin, zMin, e);
-		addElement(xMax, yMin, zMin, e);
-		addElement(xMin, yMax, zMin, e);
-		addElement(xMax, yMax, zMin, e);
-		addElement(xMin, yMin, zMax, e);
+		while (xMin<=xMax)
+		{
+			while (zMin<=zMax)
+			{
+				addElement(xMin, yMin, zMin, e);
+				addElement(xMin, yMax, zMin, e);
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+			}
+			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+		}
 		addElement(xMax, yMin, zMax, e);
-		addElement(xMin, yMax, zMax, e);
-		addElement(xMax, yMax, zMax, e);		
+		addElement(xMax, yMax, zMax, e);
+	}
+
+	
+	public void addBoundary(Boundaries e)
+	{
+		int xMin = e.limitXMin;
+		int xMax = e.limitXMax;
+		int yMin = e.limitYMin;
+		int yMax = e.limitYMax;
+		int zMin = e.limitZMin;
+		int zMax = e.limitZMax;
+		
+		while (xMin<=xMax)
+		{
+			while (zMin<=zMax)
+			{
+				addElement(xMin, yMin, zMin, e);
+				addElement(xMin, yMax, zMin, e);
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+			}
+			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+		}
+		addElement(xMax, yMin, zMax, e);
+		addElement(xMax, yMax, zMax, e);
+	}
+	public void removeBoundary(Boundaries e)
+	{
+		int xMin = e.limitXMin;
+		int xMax = e.limitXMax;
+		int yMin = e.limitYMin;
+		int yMax = e.limitYMax;
+		int zMin = e.limitZMin;
+		int zMax = e.limitZMax;
+		while (xMin<=xMax)
+		{
+			while (zMin<=zMax)
+			{
+				removeElement(xMin, yMin, zMin, e);
+				removeElement(xMin, yMax, zMin, e);
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+			}
+			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+		}
+		removeElement(xMax, yMin, zMax, e);
+		removeElement(xMax, yMax, zMax, e);
 	}
 	
 }

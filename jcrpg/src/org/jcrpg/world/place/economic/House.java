@@ -97,6 +97,7 @@ public class House extends Economic {
 		this.sizeX = sizeX;this.sizeY = sizeY;this.sizeZ = sizeZ;
 		this.groundLevel = groundLevel;
 		boundaries = BoundaryUtils.createCubicBoundaries(1, sizeX, sizeY, sizeZ, origoX, origoY, origoZ);
+		boundaries.boundaryPlace = this;
 		
 		if (searchLoadParameteredArea()) return;
 		

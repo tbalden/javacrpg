@@ -55,6 +55,8 @@ public class Boundaries {
 	 */
 	public int limitXMin, limitYMin, limitZMin, limitXMax, limitYMax, limitZMax;
 	
+	public Place boundaryPlace;
+	
 
 	public void addLimiterCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -67,7 +69,6 @@ public class Boundaries {
 		if (magnification!=this.magnification) throw new Exception("Wrong magnification");
 		limits.remove(getKey(x*magnification, y*magnification, z*magnification));
 	}
-	
 	
 	public void addCube(int magnification, int x, int y, int z) throws Exception
 	{
@@ -191,25 +192,6 @@ public class Boundaries {
 	}
 	public void calcLimits()
 	{
-		limitXMin = (limitXMin/World.PROBE_DISTANCE);
-		limitXMax = (limitXMax/World.PROBE_DISTANCE);
-		//if (limitXMin==limitXMax) limitXMax+=1;
-		//limitXMin-=1;
-		//limitXMax+=1;
-		
-		limitZMin = (limitZMin/World.PROBE_DISTANCE);
-		limitZMax = (limitZMax/World.PROBE_DISTANCE);
-		//if (limitZMin==limitZMax) limitZMax+=1;
-		//limitZMin-=1;
-		//limitZMax+=1;
-		
-		limitYMin = (limitYMin/World.PROBE_DISTANCE);
-		limitYMax = (limitYMax/World.PROBE_DISTANCE);
-		//if (limitYMin==limitYMax) limitYMax+=1;
-		//limitYMin-=1;
-		//limitYMax+=1;
-
-		nearProbeAvailabe = true;
 	}
 	
 	public boolean changed()
