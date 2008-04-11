@@ -18,7 +18,14 @@
 
 package org.jcrpg.world.ai.humanoid;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.Residence;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.
@@ -26,12 +33,50 @@ import org.jcrpg.world.place.Economic;
  *
  */
 public class EconomyTemplate {
-
-	Class<? extends Economic> place = null;
 	
-	public EconomyTemplate(Class<? extends Economic> place)
+	
+	public static HashMap<Class<? extends Economic>, Economic> economicBase = new HashMap<Class<? extends Economic>, Economic>();
+	static 
 	{
-		this.place = place;
+		economicBase.put(Population.class, new Population());
+		economicBase.put(House.class, new House());
 	}
+	
+
+	public HashMap<Class<? extends Geography>, ArrayList<Class<? extends Population>>> populationTypes = new HashMap<Class<? extends Geography>, ArrayList<Class<? extends Population>>>();
+	public HashMap<Class<? extends Geography>, ArrayList<Class<? extends Residence>>> residenceTypes = new HashMap<Class<? extends Geography>, ArrayList<Class<? extends Residence>>>();
+	
+	
+	public EconomyTemplate()
+	{
+	}
+	
+	public void addPopulationType(Class<? extends Geography> geo, Class<? extends Population> eco)
+	{
+		ArrayList<Class<? extends Population>> list = populationTypes.get(geo);
+		if (list == null) 
+		{
+			list = new ArrayList<Class<? extends Population>>();
+			populationTypes.put(geo, list);
+		} else
+		{
+			if (list.contains(eco)) return;
+		}
+		list.add(eco);
+	}
+	public void addResidenceType(Class<? extends Geography> geo, Class<? extends Residence> eco)
+	{
+		ArrayList<Class<? extends Residence>> list = residenceTypes.get(geo);
+		if (list == null) 
+		{
+			list = new ArrayList<Class<? extends Residence>>();
+			residenceTypes.put(geo, list);
+		} else
+		{
+			if (list.contains(eco)) return;
+		}
+		list.add(eco);
+	}
+	
 	
 }

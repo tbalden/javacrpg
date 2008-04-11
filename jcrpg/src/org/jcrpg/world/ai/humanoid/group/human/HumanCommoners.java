@@ -23,7 +23,6 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
-import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanFemaleHousewife;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleArtisan;
@@ -32,6 +31,7 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
@@ -56,7 +56,12 @@ public class HumanCommoners extends HumanoidEntityDescription {
 
 	public HumanCommoners()
 	{
-		economyTemplates.add(new EconomyTemplate(House.class));
+		economyTemplate.addPopulationType(Plain.class, Population.class);
+		economyTemplate.addPopulationType(Forest.class, Population.class);
+		economyTemplate.addPopulationType(MountainNew.class, Population.class);
+		economyTemplate.addResidenceType(Plain.class, House.class);
+		economyTemplate.addResidenceType(Forest.class, House.class);
+		economyTemplate.addResidenceType(MountainNew.class, House.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);

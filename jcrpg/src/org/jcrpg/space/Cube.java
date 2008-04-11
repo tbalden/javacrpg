@@ -304,6 +304,10 @@ public class Cube extends ChangingImpl {
 		
 	}
 	
+	public Cube(Place parent, Side[][] sides, int x, int y, int z, boolean canContain) {
+		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		this.canContain = canContain;
+	}
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
 		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
 	}

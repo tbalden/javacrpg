@@ -19,7 +19,10 @@ package org.jcrpg.world.place.economic;
 import java.util.ArrayList;
 
 import org.jcrpg.space.Cube;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
+import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.GroupedBoundaries;
@@ -31,6 +34,11 @@ public class Population extends Economic{
 	
 	public ArrayList<Economic> residenceList = new ArrayList<Economic>(); 
 
+	public Population()
+	{
+		super(null, null, null, null,null,null);
+	}
+	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
 		boundaries = new GroupedBoundaries(parent);
@@ -67,9 +75,28 @@ public class Population extends Economic{
 	@Override
 	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
+		int zOffset = 0;
 		int streetSize = 0;
 		for (int i=0; i<owner.groupSizes.length; i++)
 		{
+			int rand = HashUtil.mixPercentage(owner.numericId, i, i);
+			if (rand>66)
+			{
+				hsizeY = 1;
+				hsizeZ = Math.max(4,3+owner.groupSizes[i]/2);
+				hsizeX = 4;
+			}
+			else if (rand>33)
+			{
+				hsizeY = 1;
+				hsizeX = Math.max(4,3+owner.groupSizes[i]/2);
+				hsizeZ = 4;
+			} else
+			{
+				hsizeY = Math.max(1,1+owner.groupSizes[i]/4);
+				hsizeX = 4;
+				hsizeZ = 4;
+			}
 			if (residenceList.size()<=i)
 			{
 				System.out.println("ADDING HOUSE!"+i);
@@ -78,12 +105,19 @@ public class Population extends Economic{
 				if (surfaces.size()>0)
 				{
 					int Y = surfaces.get(0)[0].surfaceY;
+					//Geography g = 
 					try {
-						House h = new House("house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
-								surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
-								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+streetSize)*i,0,
-								owner.homeBoundary, owner);
-						addResidence(h);
+						ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(soilGeo.getClass());
+						if (list!=null && list.size()>0)
+						{
+							Class<? extends Residence> r = list.get(0);
+							Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
+									"house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
+									surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
+									owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+zOffset,0,
+									owner.homeBoundary, owner);
+							addResidence(rI);
+						}
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -92,6 +126,7 @@ public class Population extends Economic{
 				}
 				
 			}
+			zOffset+=(hsizeZ+streetSize);
 		}
 		super.update();
 		recalculate();
@@ -113,5 +148,8 @@ public class Population extends Economic{
 		return null;
 	}
 	
-
+	public Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner)
+	{
+		return new Population(id,soilGeo,parent,loc,owner);
+	}
 }
