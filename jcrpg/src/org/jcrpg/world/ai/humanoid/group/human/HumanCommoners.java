@@ -35,6 +35,7 @@ import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.geography.sub.Cave;
 
 public class HumanCommoners extends HumanoidEntityDescription {
 
@@ -58,15 +59,15 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	{
 		economyTemplate.addPopulationType(Plain.class, Population.class);
 		economyTemplate.addPopulationType(Forest.class, Population.class);
-		economyTemplate.addPopulationType(MountainNew.class, Population.class);
+		economyTemplate.addPopulationType(Cave.class, Population.class);
 		economyTemplate.addResidenceType(Plain.class, House.class);
 		economyTemplate.addResidenceType(Forest.class, House.class);
-		economyTemplate.addResidenceType(MountainNew.class, House.class);
+		economyTemplate.addResidenceType(Cave.class, House.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);
 		geographies.add(Plain.class);
-		geographies.add(MountainNew.class);
+		geographies.add(Cave.class);
 		
 		behaviors.add(Peaceful.class);
 		genderType = GENDER_BOTH;
