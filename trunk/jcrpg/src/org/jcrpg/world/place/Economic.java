@@ -55,6 +55,10 @@ public class Economic extends Place{
 		((World)parent.getRoot()).updateEconomy(origoX, origoX+sizeX, origoY, origoY+sizeY, origoZ, origoZ+sizeZ, this);
 	}
 	
+	/**
+	 * This should update the things of an economic. Should be called if the owner entity implies a change
+	 * for it, etc.
+	 */
 	public void update()
 	{
 		

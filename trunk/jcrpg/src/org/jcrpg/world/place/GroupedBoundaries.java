@@ -80,10 +80,19 @@ public class GroupedBoundaries extends Boundaries {
 		locator.addBoundary(b);
 	}
 	
-	public void removeBoundary(Boundaries b)
+	/**
+	 * Removing a boundary from this group.
+	 * @param b boundaries to remove
+	 * @param recalculate
+	 */
+	public void removeBoundary(Boundaries b, boolean recalculate)
 	{
-		// TODO update minimums/maximums in list.
 		locator.removeBoundary(b);
+	}
+	
+	public void recalculateLimits()
+	{
+		// TODO
 	}
 	
 	public void updateBoundary(Boundaries b)

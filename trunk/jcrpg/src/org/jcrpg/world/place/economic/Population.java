@@ -36,6 +36,33 @@ public class Population extends Economic{
 		boundaries = new GroupedBoundaries(parent);
 		update();
 	}
+	
+	/**
+	 * Adds a residential building to the list and to the boundaries.
+	 * @param residence
+	 */
+	public void addResidence(Economic residence)
+	{
+		residenceList.add(residence);
+		((GroupedBoundaries)boundaries).addBoundary(residence.getBoundaries());
+	}
+	
+	/**
+	 * recalculating things based on instance's groupedboundaries,
+	 * also updateLocationAndSize later. TODO this.
+	 */
+	public void recalculate()
+	{
+		((GroupedBoundaries)boundaries).recalculateLimits();
+		// updating limits
+		origoX = boundaries.limitXMin;
+		sizeX = boundaries.limitXMax - boundaries.limitXMin;
+		origoY = boundaries.limitYMin;
+		sizeY = boundaries.limitYMax - boundaries.limitYMin;
+		origoZ = boundaries.limitZMin;
+		sizeZ = boundaries.limitZMax - boundaries.limitZMin;
+		//updateLocationAndSize();
+	}
 
 	@Override
 	public void update() {
@@ -56,8 +83,7 @@ public class Population extends Economic{
 								surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+streetSize)*i,0,
 								owner.homeBoundary, owner);
-						residenceList.add(h);
-						((GroupedBoundaries)boundaries).addBoundary(h.getBoundaries());
+						addResidence(h);
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -68,24 +94,22 @@ public class Population extends Economic{
 			}
 		}
 		super.update();
-		// updating limits
-		origoX = boundaries.limitXMin;
-		sizeX = boundaries.limitXMax - boundaries.limitXMin;
-		origoY = boundaries.limitYMin;
-		sizeY = boundaries.limitYMax - boundaries.limitYMin;
-		origoZ = boundaries.limitZMin;
-		sizeZ = boundaries.limitZMax - boundaries.limitZMin;
+		recalculate();
 	}
 
 	@Override
 	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		// going through the possible residences...
 		for (Economic e:residenceList)
 		{
+			// if inside..
 			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
 			{
+				// return cube.
 				return e.getCube(key, worldX, worldY, worldZ, farView);
 			}
 		}
+		// no cube here...
 		return null;
 	}
 	
