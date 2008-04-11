@@ -186,7 +186,7 @@ public class House extends Residence {
 		c.x = worldX;
 		c.y = worldY;
 		c.z = worldZ;
-		//c.canContain = true;
+		//System.out.println("__ HOUSE CUBE");
 		return c;
 		
 	}
