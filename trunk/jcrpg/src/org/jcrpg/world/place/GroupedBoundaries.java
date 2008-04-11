@@ -20,9 +20,6 @@ package org.jcrpg.world.place;
 
 import java.util.ArrayList;
 
-import org.jcrpg.world.place.economic.Population;
-import org.jcrpg.world.place.geography.sub.Cave;
-
 /**
  * Boundary to contain several boundaries quickened with a treelocator for the subboundaries.
  * @author illes
@@ -120,10 +117,10 @@ public class GroupedBoundaries extends Boundaries {
 			{
 				if (((Boundaries)o).isInside(absouluteX, absoluteY, absoluteZ)) 
 				{
-					if (((Population)parent).soilGeo instanceof Cave)
+					/*if (((Population)parent).soilGeo instanceof Cave)
 					{
 						System.out.println("!!!! NEAR CAVE POPULATION");
-					}
+					}*/
 					return true;
 				}
 			}

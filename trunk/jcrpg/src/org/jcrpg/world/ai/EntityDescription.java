@@ -158,7 +158,11 @@ public class EntityDescription {
 	}
 	protected void addGroupingRuleMember(EntityMember member)
 	{
-		groupingRule.possibleMembers.add(new GroupingMemberProps(50,1,1,member));
+		addGroupingRuleMember(member,50,1,1);
+	}
+	protected void addGroupingRuleMember(EntityMember member, int likeness, int min, int max)
+	{
+		groupingRule.possibleMembers.add(new GroupingMemberProps(likeness,min,max,member));
 	}
 	
 	/**
