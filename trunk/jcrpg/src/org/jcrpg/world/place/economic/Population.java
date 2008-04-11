@@ -18,11 +18,11 @@ package org.jcrpg.world.place.economic;
 
 import java.util.ArrayList;
 
+import org.jcrpg.space.Cube;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.Place;
+import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
@@ -31,9 +31,9 @@ public class Population extends Economic{
 	
 	public ArrayList<Economic> residenceList = new ArrayList<Economic>(); 
 
-	public Population(String id,Geography soilGeo, Place parent, PlaceLocator loc, EntityInstance owner) {
+	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
-		boundaries = new Boundaries(1);
+		boundaries = new GroupedBoundaries(parent);
 		update();
 	}
 
@@ -55,7 +55,8 @@ public class Population extends Economic{
 								surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 								owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+(hsizeZ+2)*i,0,
 								owner.homeBoundary, owner);
-						world.addEconomy(h);
+						residenceList.add(h);
+						((GroupedBoundaries)boundaries).addBoundary(h.getBoundaries());
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -66,6 +67,25 @@ public class Population extends Economic{
 			}
 		}
 		super.update();
+		// updating limits
+		origoX = boundaries.limitXMin;
+		sizeX = boundaries.limitXMax - boundaries.limitXMin;
+		origoY = boundaries.limitYMin;
+		sizeY = boundaries.limitYMax - boundaries.limitYMin;
+		origoZ = boundaries.limitZMin;
+		sizeZ = boundaries.limitZMax - boundaries.limitZMin;
+	}
+
+	@Override
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		for (Economic e:residenceList)
+		{
+			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				return e.getCube(key, worldX, worldY, worldZ, farView);
+			}
+		}
+		return null;
 	}
 	
 
