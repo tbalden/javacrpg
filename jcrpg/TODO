@@ -8,8 +8,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] mountain geography population -> geography pointheight should be averaged at the given area where the house is located.
-    [ ] -> logs for mountain huts with ladders instead of height modification
+[X] mountain geography population -> geography pointheight should be averaged at the given area where the house is located.
+    [-] -> logs for mountain huts with ladders instead of height modification
+
+
 [ ] cave geo population -> rock rooms?
 
 [X] preencounter window + !ListMultiSelect!

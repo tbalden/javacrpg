@@ -327,27 +327,44 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
+	/**
+	 * Checks if the geography height is modified by special elements (river or economics).
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param farView
+	 * @return null if not modified, the height relative to worldgroundlevel if modified
+	 */
 	public Integer overrideHeightForException(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		World w = (World)getRoot();
+		
+		// economics...
 		ArrayList<Object> list = w.treeLocator.getElements(worldX, worldY, worldZ);
+		// check if there is possible economic here...
 		if (list!=null) 
 		{
+			// yes there is...
 			for (Object o:list)
 			{
 				Economic e = (Economic)o;
 				{
+					// get the limits of the population/economic
 					int limitXMin = e.origoX-2;
 					int limitXMax = e.origoX+e.sizeX+2;
 					int limitZMin = e.origoZ-2;
 					int limitZMax = e.origoZ+e.sizeZ+2;
+					// check if we are inside the population...
 					if (worldX>=limitXMin && worldX<=limitXMax)
 					{
 						if (worldZ>=limitZMin && worldZ<=limitZMax)
 						{
+							// check for grouped boundary... (population)
 							if (e.getBoundaries() instanceof GroupedBoundaries)
 							{
+								// yes grouped. let's check the nearby elements one by one...
 								ArrayList<Object> eo = ((GroupedBoundaries)e.getBoundaries()).locator.getElements(worldX, e.origoY, worldZ);
+								if (eo!=null)
 								for (Object o2:eo)
 								{
 									if (o2 instanceof Boundaries)
@@ -356,16 +373,16 @@ public class Geography extends Place implements Surface {
 										if (p.boundaryPlace!=null)
 										if (p.isInside(worldX, p.boundaryPlace.origoY, worldZ))
 										{
+											// yes we are inside...override height.
 											return p.boundaryPlace.origoY-worldGroundLevel;
 										}
 									}
 								}
 							}
 							else
-							//if (e.getBoundaries().isInside(limitXMin+2, ((Economic)o).origoY, limitZMin+2))
 							if (e.getBoundaries().isInside(worldX, e.origoY, worldZ))
 							{
-								System.out.println("override: "+( ((Economic)o).origoY-worldGroundLevel ));
+								//System.out.println("override: "+( ((Economic)o).origoY-worldGroundLevel ));
 								return e.origoY-worldGroundLevel;
 							}
 						}						
@@ -373,7 +390,7 @@ public class Geography extends Place implements Surface {
 				}
 			}
 		}
-		
+		// let's check for waters here...
 		for (Water geo:((World)getRoot()).waters.values())
 		{
 			if (this!=geo)
@@ -391,7 +408,7 @@ public class Geography extends Place implements Surface {
 	 * If this geo is not covering the coordinate, this should look up other geo that covers it and return the height.
 	 * @param worldX
 	 * @param worldZ
-	 * @return
+	 * @return the relative height.
 	 */
 	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
 	{

@@ -91,7 +91,7 @@ public class TreeLocator extends PlaceLocator {
 		DEEPEST_LEVEL_GRANULATION_X = x;
 		DEEPEST_LEVEL_GRANULATION_Z = z;
 		DEEPEST_LEVEL_GRANULATION_Y = y;
-		for (int i=1; i<MAX_DEPTH; i++)
+		for (int i=0; i<MAX_DEPTH; i++)
 		{
 			DEEPEST_LEVEL_GRANULATION_X /= 2;
 			DEEPEST_LEVEL_GRANULATION_Z /= 2;
@@ -269,13 +269,16 @@ public class TreeLocator extends PlaceLocator {
 		int zMax = zMin+e.sizeZ;
 		while (xMin<=xMax)
 		{
+			zMin = e.origoZ;
 			while (zMin<=zMax)
 			{
 				addElement(xMin, yMin, zMin, e);
 				addElement(xMin, yMax, zMin, e);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
 			}
-			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+			addElement(xMin, yMin, zMax, e);
+			addElement(xMin, yMax, zMax, e);
+			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
 		}
 		addElement(xMax, yMin, zMax, e);
 		addElement(xMax, yMax, zMax, e);
@@ -293,13 +296,16 @@ public class TreeLocator extends PlaceLocator {
 		
 		while (xMin<=xMax)
 		{
+			zMin = e.limitZMin;
 			while (zMin<=zMax)
 			{
 				addElement(xMin, yMin, zMin, e);
 				addElement(xMin, yMax, zMin, e);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
 			}
-			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+			addElement(xMin, yMin, zMax, e);
+			addElement(xMin, yMax, zMax, e);
+			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
 		}
 		addElement(xMax, yMin, zMax, e);
 		addElement(xMax, yMax, zMax, e);
@@ -314,13 +320,16 @@ public class TreeLocator extends PlaceLocator {
 		int zMax = e.limitZMax;
 		while (xMin<=xMax)
 		{
+			zMin = e.limitZMin;
 			while (zMin<=zMax)
 			{
 				removeElement(xMin, yMin, zMin, e);
 				removeElement(xMin, yMax, zMin, e);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z;
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
 			}
-			xMin+=DEEPEST_LEVEL_GRANULATION_X;
+			removeElement(xMin, yMin, zMax, e);
+			removeElement(xMin, yMax, zMax, e);
+			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
 		}
 		removeElement(xMax, yMin, zMax, e);
 		removeElement(xMax, yMax, zMax, e);

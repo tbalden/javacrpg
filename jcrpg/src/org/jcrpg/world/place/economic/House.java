@@ -27,7 +27,6 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
-import org.jcrpg.world.place.TreeLocator;
 
 public class House extends Residence {
 
@@ -157,7 +156,7 @@ public class House extends Residence {
 		addStoredCube(sizeX-1, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true));
 		addStoredCube(sizeX-1,groundLevel,1,new Cube(this,DOOR_GROUND_WEST,0,0,0,true));
 		storeParameteredArea();
-		((TreeLocator)loc).addEconomic(this);
+		
 	}
 	
 	public String getParameteredKey()

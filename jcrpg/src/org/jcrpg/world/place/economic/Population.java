@@ -70,12 +70,15 @@ public class Population extends Economic{
 		sizeY = boundaries.limitYMax - boundaries.limitYMin;
 		origoZ = boundaries.limitZMin;
 		sizeZ = boundaries.limitZMax - boundaries.limitZMin;
+		sizeX++;
+		sizeZ++;
 		//updateLocationAndSize();
 	}
 
 	@Override
 	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
+		//int xOffset = 0;
 		int zOffset = 0;
 		int streetSize = 0;
 		for (int i=0; i<owner.groupSizes.length; i++)
@@ -102,7 +105,7 @@ public class Population extends Economic{
 			{
 				
 				World world = (World)getRoot();
-				ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.domainBoundary.posX, owner.domainBoundary.posZ+i*12);
+				ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.homeBoundary.posX, owner.homeBoundary.posZ+zOffset);
 				if (surfaces.size()>0)
 				{
 					
@@ -114,12 +117,37 @@ public class Population extends Economic{
 						if (list!=null && list.size()>0)
 						{
 							Class<? extends Residence> r = list.get(0);
+							int maximumHeight = -1;
+							for (int x = owner.homeBoundary.posX; x<=owner.homeBoundary.posX+hsizeX; x++)
+							{
+								for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
+								{
+									int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
+									int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
+									if (height>maximumHeight)
+									{
+										maximumHeight = height;
+									}
+								}
+							}
+							
+							if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
+							{
+								continue;
+							}
+							
+							
+							if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
+							{
+								continue;
+							}
+							
 							Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
-									"house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
+									"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
 									g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
-									owner.domainBoundary.posX,Y+g.populationPlus,owner.domainBoundary.posZ+zOffset,0,
+									owner.homeBoundary.posX,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
 									owner.homeBoundary, owner);
-							System.out.println("ADDING HOUSE!"+i+" __ "+Y);
+							System.out.println("ADDING HOUSE!"+i+" __ "+Y+ " "+rI.id);
 							if (soilGeo instanceof Cave)
 							{
 								System.out.println("### CAVE HOUSE = "+rI.id);

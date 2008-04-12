@@ -34,7 +34,6 @@ public class Economic extends Place{
 		super(id, parent, loc);
 		this.soilGeo = soilGeo;
 		this.owner = owner;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
