@@ -338,6 +338,7 @@ public class World extends Place {
 									perf_flora_t0+=System.currentTimeMillis()-t0;
 									if (floraCube!=null)
 									{
+										floraCube.internalCube = geoCube.internalCube;
 										collectCubes(floraCube,true);
 									} 
 									else 

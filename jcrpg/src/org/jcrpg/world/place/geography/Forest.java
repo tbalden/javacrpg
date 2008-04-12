@@ -50,7 +50,8 @@ public class Forest extends Geography {
 	@Override
 	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
-		if (overrideHeightForException(worldX, 0, worldZ, farView)) return 0;
+		Integer overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
+		if (overrideHeight!=null) return overrideHeight;
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int Y = 0;
 		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/50);

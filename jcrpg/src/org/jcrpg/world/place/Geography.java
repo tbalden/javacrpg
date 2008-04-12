@@ -37,7 +37,13 @@ import org.jcrpg.world.time.Time;
 
 public class Geography extends Place implements Surface {
 	
+		
 	public GeneratedPartRuleSet ruleSet = new GeneratedPartRuleSet(this.getClass().getSimpleName());
+	
+	/**
+	 * Population height offset.
+	 */
+	public int populationPlus = 0;
 	
 	/**
 	 * Color for the maps.
@@ -321,7 +327,7 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
-	public boolean overrideHeightForException(int worldX, int worldY, int worldZ, boolean farView)
+	public Integer overrideHeightForException(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		World w = (World)getRoot();
 		ArrayList<Object> list = w.treeLocator.getElements(worldX, worldY, worldZ);
@@ -339,9 +345,28 @@ public class Geography extends Place implements Surface {
 					{
 						if (worldZ>=limitZMin && worldZ<=limitZMax)
 						{
-							if (e.getBoundaries().isInside(limitXMin+2, ((Economic)o).origoY, limitZMin+2))
+							if (e.getBoundaries() instanceof GroupedBoundaries)
 							{
-								return true;
+								ArrayList<Object> eo = ((GroupedBoundaries)e.getBoundaries()).locator.getElements(worldX, e.origoY, worldZ);
+								for (Object o2:eo)
+								{
+									if (o2 instanceof Boundaries)
+									{
+										Boundaries p = (Boundaries)o2;
+										if (p.boundaryPlace!=null)
+										if (p.isInside(worldX, p.boundaryPlace.origoY, worldZ))
+										{
+											return p.boundaryPlace.origoY-worldGroundLevel;
+										}
+									}
+								}
+							}
+							else
+							//if (e.getBoundaries().isInside(limitXMin+2, ((Economic)o).origoY, limitZMin+2))
+							if (e.getBoundaries().isInside(worldX, e.origoY, worldZ))
+							{
+								System.out.println("override: "+( ((Economic)o).origoY-worldGroundLevel ));
+								return e.origoY-worldGroundLevel;
 							}
 						}						
 					}
@@ -355,11 +380,11 @@ public class Geography extends Place implements Surface {
 			{
 				if (geo instanceof River && geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
 				{
-					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) return true;;
+					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) return 0;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -383,6 +408,8 @@ public class Geography extends Place implements Surface {
 		}
 		return 0;
 	}
+	
+	
 	
 	int lastWorldX = -9999, lastWorldZ = -9999, lastHeight;
 	

@@ -75,6 +75,7 @@ public class MountainNew extends Geography {
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		ruleSet.presentWhereBaseExists = false;
 		colorBytes = new byte[] {(byte)70,(byte)40,(byte)40};
+		populationPlus = 2;
 		// override default geo
 		/*hmKindCube.put(K_EMPTY, null);
 		hmKindCube.put(K_NORMAL_GROUND, new Cube(null,MOUNTAIN_GROUND,0,0,0));
@@ -96,6 +97,8 @@ public class MountainNew extends Geography {
 	@Override
 	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
+		Integer overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
+		if (overrideHeight!=null) return overrideHeight;
 		int Y = 0;
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		{
