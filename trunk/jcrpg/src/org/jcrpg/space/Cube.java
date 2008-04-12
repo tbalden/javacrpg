@@ -147,9 +147,13 @@ public class Cube extends ChangingImpl {
 				newOnlyIfOverlaps = true;
 			}
 		}
-		if (this.internalCube || c2.internalCube)
+		if (this.overwrite && this.internalCube || c2.overwrite && c2.internalCube)
 		{
 			internalCube = true;
+		} else
+		if (!this.overwrite && !c2.internalCube)
+		{
+			internalCube = false;
 		}
 		int newOverwritePower = Math.max(this.overwritePower, c2.overwritePower);
 
@@ -192,7 +196,7 @@ public class Cube extends ChangingImpl {
 						merged[j] = sides2[j-sides1.length];
 				}
 			}
-			internalCube = this.internalCube||c2.internalCube;
+			
 			this.sides[i] = merged;
 		}
 		fillSideFields();

@@ -33,7 +33,7 @@ import org.jcrpg.world.place.geography.sub.Cave;
 
 public class Population extends Economic{
 	
-	public ArrayList<Economic> residenceList = new ArrayList<Economic>(); 
+	public ArrayList<Residence> residenceList = new ArrayList<Residence>(); 
 
 	public Population()
 	{
@@ -50,7 +50,7 @@ public class Population extends Economic{
 	 * Adds a residential building to the list and to the boundaries.
 	 * @param residence
 	 */
-	public void addResidence(Economic residence)
+	public void addResidence(Residence residence)
 	{
 		residenceList.add(residence);
 		((GroupedBoundaries)boundaries).addBoundary(residence.getBoundaries());
@@ -100,33 +100,36 @@ public class Population extends Economic{
 			}
 			if (residenceList.size()<=i)
 			{
-				System.out.println("ADDING HOUSE!"+i);
+				
 				World world = (World)getRoot();
 				ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.domainBoundary.posX, owner.domainBoundary.posZ+i*12);
 				if (surfaces.size()>0)
 				{
-					int Y = surfaces.get(0)[0].surfaceY;
-					//Geography g = 
-					try {
+					
+					for (SurfaceHeightAndType[] s:surfaces)
+					{
+						int Y = s[0].surfaceY;
+						Geography g = s[0].self;
 						ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(soilGeo.getClass());
 						if (list!=null && list.size()>0)
 						{
 							Class<? extends Residence> r = list.get(0);
 							Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 									"house"+owner.id+"_"+owner.domainBoundary.posX+"_"+Y+"_"+owner.domainBoundary.posZ,
-									surfaces.get(0)[0].self,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
-									owner.domainBoundary.posX,surfaces.get(0)[0].self.worldGroundLevel,owner.domainBoundary.posZ+zOffset,0,
+									g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
+									owner.domainBoundary.posX,Y+g.populationPlus,owner.domainBoundary.posZ+zOffset,0,
 									owner.homeBoundary, owner);
+							System.out.println("ADDING HOUSE!"+i+" __ "+Y);
 							if (soilGeo instanceof Cave)
 							{
 								System.out.println("### CAVE HOUSE = "+rI.id);
 							}
 							addResidence(rI);
+							break;
 						}
-					} catch (Exception ex)
-					{
-						ex.printStackTrace();
+						
 					}
+					
 					
 				}
 				

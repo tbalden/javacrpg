@@ -98,7 +98,11 @@ public class Cave extends Geography implements Surface {
 			return null;
 		}
 		//c.onlyIfOverlaps = true;
-		c.overwrite = true;
+		//c.overwrite = true;
+		if (c.overwritePower>0)
+		{
+			c.overwrite = true;
+		}
 		if (c.overwritePower!=2)
 			c.internalCube = true; // except entrance all is inside
 		return c;
@@ -111,7 +115,6 @@ public class Cave extends Geography implements Surface {
 	{
 		if (worldY>=worldHeight) return null;
 
-		int kind = getCubeKindOutside(key, worldX, worldY, worldZ, farView);
 		
 		
 		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
@@ -128,26 +131,77 @@ public class Cave extends Geography implements Surface {
 			return null;		
 		}
 		int height = getPointHeightOutside(worldX, worldZ, farView);
+		
+		boolean entranceOverwrite = false;
 		if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 		{
+			int kind = getCubeKindOutside(key, worldX, worldY, worldZ, farView);
+			int kindNext = getCubeKindOutside(-1, worldX+1, worldY, worldZ, farView);
+			int kindPrev = getCubeKindOutside(-1, worldX-1, worldY, worldZ, farView);
 			Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
 			if ((kind==K_STEEP_WEST || kind==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
 			{
 				c = new Cube(this,CAVE_ENTRANCE_EAST,worldX,worldY,worldZ);
 				c.overwritePower = 2;
 			}
+			if ((kindNext==K_STEEP_WEST || kindNext==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+			{
+				entranceOverwrite = true;
+			}
+			if ((kindPrev==K_STEEP_WEST || kindPrev==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+			{
+				entranceOverwrite = true;
+			}
 			if (c!=null)
 				return c;
 		}
+		if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
+		{
+			int kindNext = getCubeKindOutside(-1, worldX+1, worldY, worldZ, farView);
+			int kindPrev = getCubeKindOutside(-1, worldX-1, worldY, worldZ, farView);
+			if ((kindNext==K_STEEP_WEST || kindNext==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+			{
+				entranceOverwrite = true;
+			}
+			if ((kindPrev==K_STEEP_WEST || kindPrev==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+			{
+				entranceOverwrite = true;
+			}
+		}
 		if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 		{
+			int kind = getCubeKindOutside(key, worldX, worldY, worldZ, farView);
+			int kindNext = getCubeKindOutside(-1, worldX, worldY, worldZ+1, farView);
+			int kindPrev = getCubeKindOutside(-1, worldX, worldY, worldZ-1, farView);
 			Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
 			if ((kind==K_STEEP_NORTH||kind==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
 			{
 				c = new Cube(this,CAVE_ENTRANCE_NORTH,worldX,worldY,worldZ);
 				c.overwritePower = 2;
 			}
+			if ((kindNext==K_STEEP_NORTH || kindNext==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+			{
+				entranceOverwrite = true;
+			}
+			if ((kindPrev==K_STEEP_NORTH || kindPrev==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+			{
+				entranceOverwrite = true;
+			}
 			return c;
+		}
+		if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && height+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
+		{
+			int kindNext = getCubeKindOutside(-1, worldX, worldY, worldZ+1, farView);
+			int kindPrev = getCubeKindOutside(-1, worldX, worldY, worldZ-1, farView);
+			if ((kindNext==K_STEEP_NORTH || kindNext==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+			{
+				entranceOverwrite = true;
+			}
+			if ((kindPrev==K_STEEP_NORTH || kindPrev==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+			{
+				entranceOverwrite = true;
+			}
+			
 		}
 		
 		
@@ -175,7 +229,14 @@ public class Cave extends Geography implements Surface {
 				c = new Cube(this,CAVE_CEILING,worldX,worldY,worldZ);
 			else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
 		}
-		c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+		if (!entranceOverwrite) {
+			// not entrance port, no overwrite
+			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
+		} else
+		{			
+			// this is entrance part!
+			c.overwritePower = 2;
+		}
 		return c;
 
 	}
