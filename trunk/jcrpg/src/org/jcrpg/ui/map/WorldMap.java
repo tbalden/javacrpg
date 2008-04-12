@@ -20,6 +20,7 @@ package org.jcrpg.ui.map;
 
 import java.awt.Color;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.climate.ClimateBelt;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
@@ -42,7 +44,6 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 import com.jmex.awt.swingui.ImageGraphics;
 
 public class WorldMap {
@@ -96,6 +97,7 @@ public class WorldMap {
 				mapImage[((z*w.sizeX)+x)*4+0] = (byte)50;
 				boolean oceanWater = false;
 				boolean riverWater = false;
+				boolean ecoFound = false;
 				for (Water water :w.waters.values())
 				{
 					if (water instanceof Ocean && !riverWater)
@@ -119,6 +121,45 @@ public class WorldMap {
 							mapImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
+							ArrayList<Object> economics = w.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+							if (economics!=null)
+							{
+								for (Object o:economics)
+								{
+									Economic e = ((Economic)o);
+									if (
+											(e.getBoundaries().limitXMin>wx && e.getBoundaries().limitXMin>wx+w.magnification)
+											||
+											(e.getBoundaries().limitXMax<wx && e.getBoundaries().limitXMax<wx+w.magnification)
+											||
+											(e.getBoundaries().limitZMin>wz && e.getBoundaries().limitZMin>wz+w.magnification)
+											||
+											(e.getBoundaries().limitZMax<wz && e.getBoundaries().limitZMax<wz+w.magnification)
+									) 
+									{
+										/*System.out.println("# OUT "+
+												e.getBoundaries().limitXMin+" > "+wx + " && " +
+												e.getBoundaries().limitXMin+" > "+(wx+w.magnification) + " || " + 
+												e.getBoundaries().limitXMax+" < "+wx + " && " +
+												e.getBoundaries().limitXMax+" < "+(wx+w.magnification) + " || " + 
+												e.getBoundaries().limitZMin+" > "+wz + " && " +
+												e.getBoundaries().limitZMin+" > "+(wz+w.magnification) + " || " + 
+												e.getBoundaries().limitZMax+" < "+wz + " && " +
+												e.getBoundaries().limitZMax+" < "+(wz+w.magnification) 
+										);*/
+										continue;
+									}
+									// matching economic population!
+									geoImageSet[((z*w.sizeX)+x)*4+0] = (byte)255;
+									geoImageSet[((z*w.sizeX)+x)*4+1] = (byte)255;
+									geoImageSet[((z*w.sizeX)+x)*4+2] = (byte)255;
+									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)150;
+									ecoFound = true;
+									break;
+								}
+								
+							}
+							if (ecoFound) break;
 							for (Geography g:geos)
 							{
 								if (g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))

@@ -184,6 +184,33 @@ public class World extends Place {
 	public static HashSet<Object> hsProvedToBeNear = null;
 	public static HashSet<Object> hsProvedToBeAway = null;
 	
+	/**
+	 * Economic cube getter. Null if no economic there.
+	 * @param key
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param farView
+	 * @return economic's cube, or null.
+	 */
+	public Cube getEconomicCube(long key, int worldX, int worldY, int worldZ,boolean farView)
+	{
+		ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
+		if (economicsList!=null) 
+		{
+			//if (economicsList.size()>1) System.out.println("######## economiclist POPULATION is "+economicsList.size());
+			for (Object o:economicsList)
+			{
+				Economic eco = (Economic)o;
+				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+					return eco.getCube(key, worldX, worldY, worldZ, farView);
+				}
+			} 
+		}
+		return null;
+		
+	}
+	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
 		if (WORLD_IS_GLOBE) {
@@ -283,16 +310,10 @@ public class World extends Place {
 				}
 			}*/
 			
-			ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
-			if (economicsList!=null)
-			for (Object o:economicsList)
-			{
-				Economic eco = (Economic)o;
-				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
-					perf_eco_t0+=System.currentTimeMillis()-t0;
-					return eco.getCube(key, worldX, worldY, worldZ, farView);
-				}
-			}
+				
+			Cube ecoCube = getEconomicCube(key, worldX, worldY, worldZ, farView);
+			perf_eco_t0+=System.currentTimeMillis()-t0;
+			if (ecoCube!=null) return ecoCube;
 			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;

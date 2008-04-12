@@ -256,9 +256,13 @@ public class Cube extends ChangingImpl {
 				this.onlyIfOverlaps = true;
 			}
 		}
-		if (c1.internalCube || c2.internalCube)
+		if (c1.overwrite && c1.internalCube || c2.overwrite && c2.internalCube)
 		{
 			internalCube = true;
+		} else
+		if (!c1.overwrite && !c2.internalCube)
+		{
+			internalCube = false;
 		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
 
@@ -301,7 +305,6 @@ public class Cube extends ChangingImpl {
 						merged[j] = sides2[j-sides1.length];
 				}
 			}
-			internalCube = c1.internalCube||c2.internalCube;
 			this.sides[i] = merged;
 		}
 		fillSideFields();
@@ -359,7 +362,7 @@ public class Cube extends ChangingImpl {
 		{
 			r+=sides[s][i]==null?"-":"S("+s+")"+sides[s][i].type+sides[s][i].subtype.getClass().getSimpleName()+" "+sides[s][i].subtype.id+" - ";
 		}
-		return "Cube: "+ x+" "+y+" "+z+" "+r+" -- "+overwritePower+" - "+onlyIfOverlaps;
+		return "Cube: "+ x+" "+y+" "+z+" "+r+" -- "+overwritePower+" - "+onlyIfOverlaps+" cc: "+canContain;
 	}
 	
 	public Cube getNeighbour(int direction)
@@ -380,6 +383,7 @@ public class Cube extends ChangingImpl {
 		c.onlyIfOverlaps = onlyIfOverlaps;
 		c.climateId = climateId;
 		c.geoCubeKind = geoCubeKind;
+		c.canContain = canContain;
 		return c;
 	}
 	
