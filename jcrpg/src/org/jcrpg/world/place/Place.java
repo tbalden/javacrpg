@@ -287,5 +287,13 @@ public abstract class Place {
 		}
 		return thisWorld.shrinkToWorld(x);
 	}
+	
+	/**
+	 * Load related things called upon loading the game, like filling up transient (non-save data) with generation.
+	 */
+	public void onLoad()
+	{
+		
+	}
 
 }

@@ -57,7 +57,7 @@ public class PartyInstance extends EntityInstance {
 						System.out.println("NO GROUPID IN ARRAY: "+entityInstance.description+" - "+entityInstance.numberOfMembers);
 					}
 					for (int in:groupIds) {
-						int size = entityInstance.groupSizes[in];
+						int size = entityInstance.getGroupSizes()[in];
 						if (size==0) System.out.println("SIZE ZERO: "+entityInstance.description);
 						fullSize+=size;
 					}

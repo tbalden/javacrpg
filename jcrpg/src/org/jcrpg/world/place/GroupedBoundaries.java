@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class GroupedBoundaries extends Boundaries {
 
-	TreeLocator locator;
+	transient TreeLocator locator;
 	
 	Object parent = null;
 	

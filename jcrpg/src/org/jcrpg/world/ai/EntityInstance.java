@@ -51,7 +51,9 @@ public class EntityInstance {
 	public DistanceBasedBoundary homeBoundary = null;
 		
 
-	public EntityMember NONE_TYPE = new EntityMember("NONE", null);
+	public static EntityMember NONE_TYPE = new EntityMember("NONE", null);
+
+	private transient int[] groupSizes = null;
 
 	/**
 	 * Unique id in the worlds.
@@ -92,7 +94,7 @@ public class EntityInstance {
 	{
 		calcGroupSizes();
 	}
-	public int[] groupSizes = null;
+
 	public int[] calcGroupSizes()
 	{
 		if (groupSizes==null)
@@ -103,6 +105,15 @@ public class EntityInstance {
 	{
 		//description.calcTypes.get(description.positionCalcType).getVisiblePositionsInArea(seer, watched)
 		return null;
+	}
+	
+	public int[] getGroupSizes()
+	{
+		if (groupSizes==null)
+		{
+			calculateGroupsAndPositions();
+		}
+		return groupSizes;
 	}
 	
 	/**

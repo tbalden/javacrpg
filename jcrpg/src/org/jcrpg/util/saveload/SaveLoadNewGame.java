@@ -172,6 +172,7 @@ public class SaveLoadNewGame {
 			zipInputStream.getNextEntry();
 			Reader reader = new InputStreamReader(zipInputStream);
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
+			gameState.world.onLoad();
 			core.setGameState(gameState);
 			zipInputStream.close();
 			gameState.engine.setPause(true);
@@ -184,7 +185,8 @@ public class SaveLoadNewGame {
 			// ui elements update to loaded state
 			core.behaviorWindow.party = gameState.player;
 			core.behaviorWindow.updateToParty();
-
+			
+			
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
 		} catch (Exception ex)
 		{

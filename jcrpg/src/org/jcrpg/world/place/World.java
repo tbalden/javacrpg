@@ -42,7 +42,7 @@ public class World extends Place {
 	public Engine engine;
 	public transient WorldMap worldMap;
 	
-	public TreeLocator treeLocator = null;
+	public transient TreeLocator treeLocator = null;
 	
 	public int GEOGRAPHY_RANDOM_SEED = 0;
 	
@@ -595,5 +595,16 @@ public class World extends Place {
 		waters.clear();
 		overLappers.clear();
 		politicals.clear();
+	}
+	
+	@Override
+	public void onLoad()
+	{
+		treeLocator = new TreeLocator(this);
+		for (Economic e:economics.values())
+		{
+			e.onLoad();
+			treeLocator.addEconomic(e);
+		}
 	}
 }

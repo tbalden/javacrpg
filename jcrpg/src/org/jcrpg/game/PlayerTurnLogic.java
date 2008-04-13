@@ -121,7 +121,7 @@ public class PlayerTurnLogic {
 				if (groupIds !=null)
 				for (int in:groupIds)
 				{
-					int size = entityInstance.groupSizes[in];
+					int size = entityInstance.getGroupSizes()[in];
 					Collection<EntityMemberInstance> members = entityInstance.description.groupingRule.getGroup(entityInstance,in,size);
 					String types = "";
 					HashSet<String> typesSet = new HashSet<String>();
