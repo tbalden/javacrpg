@@ -126,7 +126,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			{
 				int[] groupIds = i.encounteredGroupIds.get(entityInstance);
 				for (int in:groupIds) {
-					int size = entityInstance.groupSizes[in];
+					int size = entityInstance.getGroupSizes()[in];
 					fullSize+=size;
 				}
 			}
@@ -150,7 +150,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 				size++;
 				int[] groupIds = i.encounteredGroupIds.get(instance);
 				for (int in:groupIds) {
-					int size1 = instance.groupSizes[in];
+					int size1 = instance.getGroupSizes()[in];
 					fullSize+=size1;
 				}				
 				text+=size+" "+instance.description.getClass().getSimpleName()+" ";

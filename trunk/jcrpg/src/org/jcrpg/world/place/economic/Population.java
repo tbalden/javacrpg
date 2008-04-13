@@ -33,11 +33,19 @@ import org.jcrpg.world.place.geography.sub.Cave;
 
 public class Population extends Economic{
 	
-	public ArrayList<Residence> residenceList = new ArrayList<Residence>(); 
+	public transient ArrayList<Residence> residenceList = new ArrayList<Residence>(); 
 
 	public Population()
 	{
 		super(null, null, null, null,null,null);
+	}
+	
+	@Override
+	public void onLoad()
+	{
+		residenceList = new ArrayList<Residence>();
+		boundaries = new GroupedBoundaries((World)parent,this);
+		update();
 	}
 	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
@@ -81,23 +89,23 @@ public class Population extends Economic{
 		//int xOffset = 0;
 		int zOffset = 0;
 		int streetSize = 0;
-		for (int i=0; i<owner.groupSizes.length; i++)
+		for (int i=0; i<owner.getGroupSizes().length; i++)
 		{
 			int rand = HashUtil.mixPercentage(owner.numericId, i, i);
 			if (rand>66)
 			{
 				hsizeY = 1;
-				hsizeZ = Math.max(4,3+owner.groupSizes[i]/2);
+				hsizeZ = Math.max(4,3+owner.getGroupSizes()[i]/2);
 				hsizeX = 4;
 			}
 			else if (rand>33)
 			{
 				hsizeY = 1;
-				hsizeX = Math.max(4,3+owner.groupSizes[i]/2);
+				hsizeX = Math.max(4,3+owner.getGroupSizes()[i]/2);
 				hsizeZ = 4;
 			} else
 			{
-				hsizeY = Math.max(1,1+owner.groupSizes[i]/4);
+				hsizeY = Math.max(1,1+owner.getGroupSizes()[i]/4);
 				hsizeX = 4;
 				hsizeZ = 4;
 			}
@@ -131,16 +139,16 @@ public class Population extends Economic{
 								}
 							}
 							
-							if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
+							/*if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
 							{
 								continue;
-							}
+							}*/
 							
 							
-							if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
+							/*if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
 							{
 								continue;
-							}
+							}*/
 							
 							Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 									"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),

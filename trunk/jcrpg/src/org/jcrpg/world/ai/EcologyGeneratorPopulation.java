@@ -33,6 +33,7 @@ public class EcologyGeneratorPopulation {
 	enum FoodChainType { HERBIVORE, PRIMARY_CARNIVORE, SECONDARY_CARNIVORE };
 	
 	Class<? extends EntityDescription> entityClass;
+	EntityDescription description;
 	
 	Class<? extends ClimateBelt> climatBeltClass;
 	
@@ -109,6 +110,12 @@ public class EcologyGeneratorPopulation {
 		if(prefixName == null)
 		{
 			prefixName = this.entityClass.getSimpleName();
+		}
+		try {
+			description = entityClass.newInstance();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
 		}
 	}
 

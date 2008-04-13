@@ -194,7 +194,7 @@ public class EcologyGenerator {
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
 							EntityDescription desc = (EntityDescription) population
-									.getEntityClass().newInstance();
+									.description;
 							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
@@ -263,7 +263,7 @@ public class EcologyGenerator {
 						if (rollPresent <= population
 								.getPercentageChanceofAppearance()) {
 							EntityDescription desc = (EntityDescription) population
-									.getEntityClass().newInstance();
+									.description;
 							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
@@ -342,7 +342,7 @@ public class EcologyGenerator {
 					if (beltClass.equals(population.getClimatBeltClass())) {
 
 						EntityDescription desc = (EntityDescription) population
-								.getEntityClass().newInstance();
+								.description;
 						if (desc instanceof AnimalEntityDescription) {
 							AnimalEntityDescription animalDesc = (AnimalEntityDescription) desc;
 
@@ -462,7 +462,7 @@ public class EcologyGenerator {
 					if (beltClass.equals(population.getClimatBeltClass())) {
 
 						EntityDescription desc = (EntityDescription) population
-								.getEntityClass().newInstance();
+								.description;
 						if (desc instanceof AnimalEntityDescription) {
 							AnimalEntityDescription animalDesc = (AnimalEntityDescription) desc;
 
@@ -593,7 +593,7 @@ public class EcologyGenerator {
 							}
 
 							EntityDescription desc = (EntityDescription) population
-									.getEntityClass().newInstance();
+									.description;
 							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
@@ -682,7 +682,7 @@ public class EcologyGenerator {
 							}
 
 							EntityDescription desc = (EntityDescription) population
-									.getEntityClass().newInstance();
+									.description;
 							int id = pEcology.getNextEntityId();
 							String entityId = population.getPrefixName() + "#"
 									+ (currentIndex++);
