@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.jme.PooledImposterNode;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -274,7 +275,6 @@ public class ModelLoader {
 						BillboardPartVegetation bbNode = new BillboardPartVegetation(core,core.getCamera(),SideTypeModels.TREE_LOD_DIST[3][1],(PartlyBillboardModel)m,horRotated, rc.cube.internalCube);
 						bbNode.attachChild(node);
 				    	node = bbNode;
-				    	node.setName(((SimpleModel)m).modelName+i);
 						//r[i] = bbNode;
 						
 					} else

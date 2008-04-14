@@ -108,7 +108,6 @@ public class House extends Residence {
 			{
 				for (int z= 1; z<sizeZ-1; z++)
 				{
-					boolean needAdd = true;
 					
 					{
 						if (y%2==0) {

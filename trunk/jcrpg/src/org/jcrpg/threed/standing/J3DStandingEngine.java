@@ -709,6 +709,7 @@ public class J3DStandingEngine {
 									{
 										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 										{
+											if (realPooledNode.getChildren()!=null)
 											for (Spatial s:realPooledNode.getChildren())
 											{
 												if (s instanceof PooledSharedNode)
@@ -728,9 +729,11 @@ public class J3DStandingEngine {
 									realPooledNode.setLocalTranslation(n.getLocalTranslation());
 									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
 									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+									if (realPooledNode.getChildren()!=null)
 									for (Spatial s:realPooledNode.getChildren()) {
 										if ( (s.getType()&Node.NODE)>0 )
 										{
+											if (((Node)s).getChildren()!=null)
 											for (Spatial s2:((Node)s).getChildren())
 											{	
 												if ( (s2.getType()&Node.NODE)>0 )
@@ -771,6 +774,7 @@ public class J3DStandingEngine {
 									{
 										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 										{
+											if (realPooledNode.getChildren()!=null)
 											for (Spatial s:realPooledNode.getChildren())
 											{
 												if (s instanceof PooledSharedNode)
@@ -780,10 +784,10 @@ public class J3DStandingEngine {
 											}
 										}
 										//realPooledNode.lockMeshes();
-										realPooledNode.lockShadows();
-										realPooledNode.lockTransforms();								
-										realPooledNode.lockBranch();
-										realPooledNode.lockBounds();
+										//realPooledNode.lockShadows();
+										//realPooledNode.lockTransforms();								
+										//realPooledNode.lockBranch();
+										//realPooledNode.lockBounds();
 									}
 								}
 							}
