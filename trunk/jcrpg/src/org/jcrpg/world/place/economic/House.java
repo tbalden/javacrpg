@@ -19,6 +19,7 @@ package org.jcrpg.world.place.economic;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
@@ -38,10 +39,12 @@ public class House extends Residence {
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_HOUSE+"_EXTERNAL_DOOR");
 	public static final SideSubType SUBTYPE_WINDOW = new NotPassable(TYPE_HOUSE+"_WINDOW");
 	public static final SideSubType SUBTYPE_BOOKCASE = new NotPassable(TYPE_HOUSE+"_BK");
+	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_HOUSE+"_STAIRS");
 
 	
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
 	static Side[] WINDOW = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_WINDOW)};
+	static Side[] STAIRS = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_STAIRS)};
 	
 	static Side[][] WALL_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null, null,null,null,null };
 	static Side[][] WALL_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,null };
@@ -66,6 +69,8 @@ public class House extends Residence {
 	static Side[][] WINDOW_GROUND_WEST = new Side[][] { null, null,null,WINDOW, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	
 	static Side[][] INTERNAL = new Side[][] { null, null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_CEILING)},{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
+	static Side[][] INTERNAL_STEPS_NORTH = new Side[][] { STAIRS, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
+	static Side[][] INTERNAL_STEPS_SOUTH = new Side[][] { null, null, STAIRS,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	
 	
@@ -103,7 +108,36 @@ public class House extends Residence {
 			{
 				for (int z= 1; z<sizeZ-1; z++)
 				{
+					boolean needAdd = true;
+					
+					{
+						if (y%2==0) {
+							if (sizeY-1!=y)
+							if (x == 1 && z == 2)
+							{
+								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_SOUTH,x,y,z,true));
+								continue;
+							}
+							if (y > 0 && x == 2 && z == 2)
+							{
+								continue;
+							}
+						} else
+						{
+							if (sizeY-1!=y)
+							if (x == 2 && z == 2)
+							{
+								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_NORTH,x,y,z,true));
+							}
+							if (y > 0 && x == 1 && z == 2)
+							{
+								// no ground needed above the stairs
+								continue;
+							}
+						}
+					}
 					addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z,true));
+					
 				}
 				
 			}

@@ -106,6 +106,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(River.SUBTYPE_ROCKBOTTOM.id, new Integer(38));
 		hmCubeSideSubTypeToRenderedSideId.put(River.SUBTYPE_ROCKBOTTOM_STEEP.id, new Integer(38));
 		hmCubeSideSubTypeToRenderedSideId.put(River.SUBTYPE_WATER_EMPTY.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_STAIRS.id, new Integer(46));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_BOOKCASE.id, new Integer(28));
@@ -679,7 +680,12 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(44), new RenderedSide(new Model[]{tsm_cave_mushroom}));
 
 		hm3dTypeRenderedSide.put(new Integer(45), new RenderedSide(new Model[]{tsm_grass_anathum}));
-// NEXT ID = 45
+		
+		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
+		sm_steps_1.batchEnabled = false;
+		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
+		
+// NEXT ID = 47
 		
 	}
 	

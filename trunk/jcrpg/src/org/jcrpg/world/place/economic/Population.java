@@ -83,6 +83,7 @@ public class Population extends Economic{
 	}
 	
 	// TODO write a quick fitter function to build up a population structure quickl.
+	// TODO based on economic (house) heights add steps to the population
 
 	@Override
 	public void update() {
@@ -148,7 +149,6 @@ public class Population extends Economic{
 								{
 									continue;
 								}
-								
 								Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
 										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
