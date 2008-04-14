@@ -27,6 +27,11 @@ import org.jcrpg.world.ai.EntityInstance;
  */
 public class Economic extends Place{
 
+	@Override
+	public boolean overrideGeoHeight() {
+		return true;
+	}
+
 	public Geography soilGeo = null;
 	public EntityInstance owner = null;
 	
