@@ -173,6 +173,7 @@ public class SaveLoadNewGame {
 			Reader reader = new InputStreamReader(zipInputStream);
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
 			gameState.world.onLoad();
+			gameState.ecology.onLoad();
 			core.setGameState(gameState);
 			zipInputStream.close();
 			gameState.engine.setPause(true);

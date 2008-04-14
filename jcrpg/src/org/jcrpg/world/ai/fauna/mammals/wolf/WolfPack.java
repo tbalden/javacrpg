@@ -38,6 +38,7 @@ public class WolfPack extends AnimalEntityDescription {
 	public static AudioDescription audio = new AudioDescription();
 	static {
 		audio.ENCOUNTER = new String[]{"wolf_1"};
+		audio.ENVIRONMENTAL = new String[]{"wolf_env1"};
 	}
 
 	public static NormalAnimalMale WOLF_TYPE_MALE = new NormalAnimalMale("WOLF_MALE",audio);

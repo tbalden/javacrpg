@@ -26,11 +26,15 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.place.TreeLocator;
+import org.jcrpg.world.place.World;
 
 import com.jme.math.Vector3f;
 
 public class Ecology {
 
+	
+	public transient HashMap<World, TreeLocator> locators;
 	
 	public static int PHASE_INTERCEPTION = 0;
 	public static int PHASE_ENCOUNTER = 1;
@@ -44,7 +48,45 @@ public class Ecology {
 	
 	public Ecology(Engine engine)
 	{
+		initTransient();
 		this.engine = engine;
+	}
+	
+	public void initTransient()
+	{
+		locators = new HashMap<World, TreeLocator>();
+	}
+	
+	public void onLoad()
+	{
+		initTransient();
+		for (EntityInstance i:orderedBeingList)
+		{
+			addToLocator(i);
+		}
+	}
+	
+	public void addToLocator(EntityInstance i)
+	{
+		if (i.world==null) return;
+		TreeLocator l = locators.get(i.world);
+		if (l==null)
+		{
+			l = new TreeLocator(i.world);
+			locators.put(i.world, l);
+		}
+		l.addEntityInstance(i);
+	}
+	public void removeFromLocator(EntityInstance i)
+	{
+		if (i.world==null) return;
+		TreeLocator l = locators.get(i.world);
+		if (l==null)
+		{
+			l = new TreeLocator(i.world);
+			locators.put(i.world, l);
+		}
+		l.removeAllOfAnObject(i);
 	}
 	
 	int entityIdSequence = 0;
@@ -58,11 +100,14 @@ public class Ecology {
 	{
 		beings.put(entityInstance.numericId, entityInstance);
 		orderedBeingList.add(entityInstance);
+		addToLocator(entityInstance);
 	}
 	
-	public Collection<EntityDescription> getEntities(int worldX, int worldY, int worldZ)
+	public Collection<Object> getEntities(World w, int worldX, int worldY, int worldZ)
 	{
-		return null;
+		TreeLocator l = locators.get(w);
+		if (l==null) return null;
+		return l.getElements(worldX, worldY, worldZ);		
 	}
 	
 	/**
@@ -230,14 +275,19 @@ public class Ecology {
 				}
 			}
 			counterOfDoneTurnBeings++;
+			removeFromLocator(orderedBeingList.get(r));
 			if (orderedBeingList.get(r).liveOneTurn(getNearbyEncounters(orderedBeingList.get(r))))
 			{
+				// updating tree locator for being...
+				addToLocator(orderedBeingList.get(r));
 				// interrupt is needed because UI thread of player will be active for interaction. UI will
 				// have to call this function again with continue = true in method signature.
 				System.out.println("ECOLOGY INTERRUPTED BY: "+orderedBeingList.get(r).description);
 				interrupted=true;
 				break;
 			}
+			// updating tree locator for being...
+			addToLocator(orderedBeingList.get(r));
 		}
 		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");

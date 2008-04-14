@@ -31,7 +31,8 @@ public class GroupingRule {
 	 */
 	public int sizeDeviation = 1;
 	
-	Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
+	public Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
+	
 	public Collection<EntityMemberInstance> getGroup(EntityInstance instance, int groupId, int size)
 	{
 		int counter = 0;

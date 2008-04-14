@@ -20,6 +20,8 @@ package org.jcrpg.world.place;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.EntityInstance;
+
 /**
  * Helps locating things in the world in a way similar to octree implementations, dividing space into parts recoursively.
  * @author illes
@@ -334,6 +336,64 @@ public class TreeLocator extends PlaceLocator {
 		}
 		removeElement(xMax, yMin, zMax, e);
 		removeElement(xMax, yMax, zMax, e);
+	}
+	
+	public void addEntityInstance(EntityInstance i)
+	{
+		int r = i.roamingBoundary.radiusInRealCubes;
+		
+		int posX = i.roamingBoundary.posX;
+		int posY = i.roamingBoundary.posY;
+		int posZ = i.roamingBoundary.posZ;
+		
+		// TODO circular addition with steps...		
+		addElement(posX, posY, posZ, i);
+		addElement(posX+r, posY, posZ, i);
+		addElement(posX-r, posY, posZ, i);
+		addElement(posX, posY, posZ-r, i);
+		addElement(posX, posY, posZ+r, i);
+	}
+	public void removeEntityInstance(EntityInstance i)
+	{
+		int r = i.roamingBoundary.radiusInRealCubes;
+		
+		int posX = i.roamingBoundary.posX;
+		int posY = i.roamingBoundary.posY;
+		int posZ = i.roamingBoundary.posZ;
+		
+		// TODO circular addition with steps...		
+		removeElement(posX, posY, posZ, i);
+		removeElement(posX+r, posY, posZ, i);
+		removeElement(posX-r, posY, posZ, i);
+		removeElement(posX, posY, posZ-r, i);
+		removeElement(posX, posY, posZ+r, i);
+	}
+	
+	/**
+	 * removing all instances of an object in the hieararchy content.
+	 * @param o
+	 */
+	public void removeAllOfAnObject(Object o)
+	{
+		for (TreeLocator l:locators)
+		{
+			l.removeAllOfAnObject(o);
+		}
+		if (content!=null)
+			content.remove(o);
+		
+	}
+	/**
+	 * clearing the full locator hierarchy.
+	 */
+	public void clear()
+	{
+		for (TreeLocator l:locators)
+		{
+			l.clear();
+		}
+		if (content!=null)
+			content.clear();
 	}
 	
 }

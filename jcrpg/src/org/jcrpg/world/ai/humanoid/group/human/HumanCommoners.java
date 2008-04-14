@@ -42,6 +42,8 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public static AudioDescription humanMaleAudio = new AudioDescription();
 	public static AudioDescription humanFemaleAudio = new AudioDescription();	
 	static {
+		humanMaleAudio.ENVIRONMENTAL = new String[]{"human_env1", "human_env2"};
+		humanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	
 	public static HumanMaleArtisan HUMAN_MALE_ARTISAN = new HumanMaleArtisan("HUMAN_MALE_ARTISAN",humanMaleAudio);

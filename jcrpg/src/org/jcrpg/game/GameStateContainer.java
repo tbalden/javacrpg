@@ -20,11 +20,15 @@ package org.jcrpg.game;
 
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.Collection;
+import java.util.Random;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.World;
 
@@ -164,6 +168,43 @@ public class GameStateContainer {
 
 	public void setCharCreationRules(CharacterCreationRules charCreationRules) {
 		this.charCreationRules = charCreationRules;
+	}
+	
+	
+	public void doEnvironmental()
+	{
+		Collection<Object> list = ecology.getEntities(player.world, player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ);
+		if (list!=null)
+		{
+			boolean played = false;
+			for (Object o:list)
+			{
+				System.out.println("#_#_# "+((EntityInstance)o).id);
+				if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
+				for (GroupingMemberProps p:((EntityInstance)o).description.groupingRule.possibleMembers)
+				{
+					if (p.memberType.audioDescription!=null)
+					{
+						if (p.memberType.audioDescription.ENVIRONMENTAL!=null)
+						{
+							if (p.memberType.audioDescription.ENVIRONMENTAL.length>0)
+							{
+								for (String sound:p.memberType.audioDescription.ENVIRONMENTAL) {
+									if (new Random().nextBoolean())
+									{
+										J3DCore.getInstance().audioServer.playLoading(sound, "ai");
+										played = true; break;
+									}
+								}
+							}
+						}
+					}
+				}
+				if (played) break;
+			}
+		}
+		
+		
 	}
 	
 }
