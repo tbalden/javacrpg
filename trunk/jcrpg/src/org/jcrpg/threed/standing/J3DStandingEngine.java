@@ -783,11 +783,11 @@ public class J3DStandingEngine {
 												}
 											}
 										}
-										//realPooledNode.lockMeshes();
-										//realPooledNode.lockShadows();
-										//realPooledNode.lockTransforms();								
-										//realPooledNode.lockBranch();
-										//realPooledNode.lockBounds();
+										realPooledNode.lockMeshes();
+										realPooledNode.lockShadows();
+										realPooledNode.lockTransforms();								
+										realPooledNode.lockBranch();
+										realPooledNode.lockBounds();
 									}
 								}
 							}
