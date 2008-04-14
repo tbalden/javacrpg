@@ -43,6 +43,7 @@ public class Jcrpg extends Formatter implements Filter  {
 		b.append(dateF.toString()+" "+record.getSourceClassName()+" - "+record.getMessage()+'\n');
 		if (record.getThrown()!=null)
 		{
+			//b.append(record.getThrown().Message()+"\n");
 			StackTraceElement[] elements = record.getThrown().getStackTrace();
 			for (StackTraceElement e:elements)
 			{

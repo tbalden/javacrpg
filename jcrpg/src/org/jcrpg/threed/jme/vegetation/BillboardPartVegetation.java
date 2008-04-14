@@ -155,7 +155,11 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		}
 	}
 	
-	public Quad targetQuad = null; 
+	public Quad targetQuad = null;
+	/**
+	 * Transforming the model's trimesh batchs to quads.
+	 * @param child
+	 */
 	public void transformTrimeshesToQuads(Spatial child) {
 		// get down to the batchtri children, remove them and replace
 		// double tris with new quads, based on the average x/y/z coords of the
@@ -365,6 +369,20 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		}
 		fillBillboardQuadsRotated(horRotated);
 	}
+	
+	/**
+	 * Create a real quad for the tree from the abstract data upon constructing the tree.
+	 * @param rotated
+	 * @param name
+	 * @param states
+	 * @param key
+	 * @param xSize
+	 * @param ySize
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return The quad (or null if batched).
+	 */
 	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
 		String qkey = model.id+rotated+xSize+ySize+internal;
@@ -429,6 +447,17 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		}
 		
 	}
+	/**
+	 * Storing a replacer quad's abstract description for the model for later addition to the tree (in form of quad or batchgeom).
+	 * @param name
+	 * @param states
+	 * @param key
+	 * @param xSize
+	 * @param ySize
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	private void storeQuadParams(String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
 		quads.add(new QuadParams(name,states,key,xSize,ySize,x,y,z));
