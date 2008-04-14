@@ -19,7 +19,6 @@ package org.jcrpg.world.place.economic;
 import java.util.ArrayList;
 
 import org.jcrpg.space.Cube;
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
@@ -82,96 +81,100 @@ public class Population extends Economic{
 		sizeZ++;
 		//updateLocationAndSize();
 	}
+	
+	// TODO write a quick fitter function to build up a population structure quickl.
 
 	@Override
 	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
-		//int xOffset = 0;
+		int xOffset = 0;
 		int zOffset = 0;
 		int streetSize = 0;
-		for (int i=0; i<owner.getGroupSizes().length; i++)
+		int sizeX = (int)Math.sqrt(owner.getGroupSizes().length)+1;
+		int sizeY = sizeX;
+		System.out.println("SIZEX/Y"+sizeX+" "+sizeY);
+		for (int x1=0; x1<sizeX; x1++)
 		{
-			int rand = HashUtil.mixPercentage(owner.numericId, i, i);
-			if (rand>66)
+			hsizeX = 4;
+			zOffset = 0;
+			for (int z1=0; z1<sizeY; z1++)
 			{
-				hsizeY = 1;
-				hsizeZ = Math.max(4,3+owner.getGroupSizes()[i]/2);
-				hsizeX = 4;
-			}
-			else if (rand>33)
-			{
-				hsizeY = 1;
-				hsizeX = Math.max(4,3+owner.getGroupSizes()[i]/2);
-				hsizeZ = 4;
-			} else
-			{
-				hsizeY = Math.max(1,1+owner.getGroupSizes()[i]/4);
-				hsizeX = 4;
-				hsizeZ = 4;
-			}
-			if (residenceList.size()<=i)
-			{
+				int i = x1*sizeX+z1;
+				//System.out.println("Addig "+i);
+				if (i>=owner.getGroupSizes().length) continue;
 				
-				World world = (World)getRoot();
-				ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.homeBoundary.posX, owner.homeBoundary.posZ+zOffset);
-				if (surfaces.size()>0)
+				{
+					hsizeY = Math.max(1,1+owner.getGroupSizes()[i]/4);
+					hsizeZ = 4;
+				}
+				
+				if (residenceList.size()<=i)
 				{
 					
-					for (SurfaceHeightAndType[] s:surfaces)
+					World world = (World)getRoot();
+					ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(owner.homeBoundary.posX, owner.homeBoundary.posZ+zOffset);
+					if (surfaces.size()>0)
 					{
-						int Y = s[0].surfaceY;
-						Geography g = s[0].self;
-						ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(soilGeo.getClass());
-						if (list!=null && list.size()>0)
+						
+						for (SurfaceHeightAndType[] s:surfaces)
 						{
-							Class<? extends Residence> r = list.get(0);
-							int maximumHeight = -1;
-							for (int x = owner.homeBoundary.posX; x<=owner.homeBoundary.posX+hsizeX; x++)
+							int Y = s[0].surfaceY;
+							Geography g = s[0].self;
+							ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(soilGeo.getClass());
+							if (list!=null && list.size()>0)
 							{
-								for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
+								Class<? extends Residence> r = list.get(0);
+								int maximumHeight = -1;
+								for (int x = owner.homeBoundary.posX; x<=owner.homeBoundary.posX+hsizeX; x++)
 								{
-									int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
-									int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
-									if (height>maximumHeight)
+									for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
 									{
-										maximumHeight = height;
+										int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
+										int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
+										if (height>maximumHeight)
+										{
+											maximumHeight = height;
+										}
 									}
 								}
+								
+								if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
+								{
+									continue;
+								}
+								
+								
+								if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
+								{
+									continue;
+								}
+								
+								Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
+										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
+										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
+										owner.homeBoundary.posX+xOffset,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
+										owner.homeBoundary, owner);
+								System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+Y+ " "+rI.id);
+								if (soilGeo instanceof Cave)
+								{
+									System.out.println("### CAVE HOUSE = "+rI.id);
+								}
+								addResidence(rI);
+								break;
 							}
 							
-							/*if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
-							{
-								continue;
-							}*/
-							
-							
-							/*if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
-							{
-								continue;
-							}*/
-							
-							Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
-									"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
-									g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
-									owner.homeBoundary.posX,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
-									owner.homeBoundary, owner);
-							System.out.println("ADDING HOUSE!"+i+" __ "+Y+ " "+rI.id);
-							if (soilGeo instanceof Cave)
-							{
-								System.out.println("### CAVE HOUSE = "+rI.id);
-							}
-							addResidence(rI);
-							break;
 						}
+						
 						
 					}
 					
-					
 				}
-				
+				zOffset+=(hsizeZ+streetSize);
 			}
-			zOffset+=(hsizeZ+streetSize);
+			xOffset+=(hsizeX+streetSize);
 		}
+		
+		
 		super.update();
 		recalculate();
 	}

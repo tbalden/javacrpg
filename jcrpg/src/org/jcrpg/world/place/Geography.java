@@ -370,11 +370,15 @@ public class Geography extends Place implements Surface {
 									if (o2 instanceof Boundaries)
 									{
 										Boundaries p = (Boundaries)o2;
-										if (p.boundaryPlace!=null)
-										if (p.isInside(worldX, p.boundaryPlace.origoY, worldZ))
-										{
-											// yes we are inside...override height.
-											return p.boundaryPlace.origoY-worldGroundLevel;
+										if (p.boundaryPlace!=null) {
+											if (p.boundaryPlace.overrideGeoHeight())
+											{
+												if (p.isInside(worldX, p.boundaryPlace.origoY, worldZ))
+												{
+													// yes we are inside...override height.
+													return p.boundaryPlace.origoY-worldGroundLevel;
+												}
+											}
 										}
 									}
 								}
@@ -441,15 +445,17 @@ public class Geography extends Place implements Surface {
 		{
 			lastHeight = getPointHeightOutside(worldX, worldZ, farView);
 		} else
+		{
 			lastHeight = getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
+		}
 		return lastHeight;
 	}
 	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
 		return 0;
 	}
+	
 	int s_lastWorldX = -9999, s_lastWorldZ = -9999;
-	boolean s_boolean_farview = false;
 	SurfaceHeightAndType[] s_lastType = null; 
 	
 	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView) {

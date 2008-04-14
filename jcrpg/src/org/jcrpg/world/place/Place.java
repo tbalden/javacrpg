@@ -295,5 +295,10 @@ public abstract class Place {
 	{
 		
 	}
+	
+	public boolean overrideGeoHeight()
+	{
+		return false;
+	}
 
 }

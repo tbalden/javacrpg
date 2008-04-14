@@ -261,6 +261,7 @@ public class TreeLocator extends PlaceLocator {
 	 */
 	public void addEconomic(Economic e)
 	{
+		if (e.origoX==-1) return;
 		int xMin = e.origoX;
 		int xMax = xMin+e.sizeX;
 		int yMin = e.origoY;

@@ -110,6 +110,7 @@ public class GroupedBoundaries extends Boundaries {
 
 	@Override
 	public boolean isInside(int absouluteX, int absoluteY, int absoluteZ) {
+		if (limitXMin==-1) return false;
 		ArrayList<Object> es = locator.getElements(absouluteX, absoluteY, absoluteZ);
 		if (es!=null)
 		{
