@@ -26,15 +26,20 @@ public class Engine implements Runnable {
 	boolean pause = true;
 	Time worldMeanTime = null;
 	
+	public boolean doEnvironmentNeeded = false;
+	
 	//Engine
 	
 	public static int TICK_SECONDS = 10;
 	
 	public static int SECONDS_PER_TURN = 100; 
+	public static int SECONDS_PER_ENVIRONMENT = 160; 
 	
 	public boolean timeChanged = false;
 	public boolean turnCome = false;
-	public int ticksLeft = SECONDS_PER_TURN;
+	public int ticksLeftForTurn = SECONDS_PER_TURN;
+	public int ticksLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+	
 	
 	public long numberOfTurn = 0;
 	
@@ -47,15 +52,24 @@ public class Engine implements Runnable {
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
 				worldMeanTime.tick(TICK_SECONDS);
-				ticksLeft-=TICK_SECONDS;
-				if (ticksLeft<=0)
+				ticksLeftForTurn-=TICK_SECONDS;
+				ticksLeftForEnvironment-=TICK_SECONDS;
+				if (ticksLeftForTurn<=0)
 				{
 					synchronized (mutex) {
 						Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
-						ticksLeft = SECONDS_PER_TURN;
+						ticksLeftForTurn = SECONDS_PER_TURN;
 						pause = true;
 						turnCome = true;
 						numberOfTurn++;
+					}
+				}
+				if (ticksLeftForEnvironment<=0)
+				{
+					synchronized (mutex) {
+						Jcrpg.LOGGER.info("NEW ENVIRONMENT");
+						ticksLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+						doEnvironmentNeeded = true;
 					}
 				}
 				setTimeChanged(true);

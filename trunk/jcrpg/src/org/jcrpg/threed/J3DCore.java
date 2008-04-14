@@ -2207,6 +2207,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			gameState.engine.turnFinishedForAI();
 			pause = false;
 		}
+		if (gameState.engine.doEnvironmentNeeded)
+		{
+			gameState.engine.doEnvironmentNeeded = false;
+			gameState.doEnvironmental();
+		}
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 

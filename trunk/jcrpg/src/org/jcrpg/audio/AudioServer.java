@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -253,7 +252,7 @@ public class AudioServer implements Runnable {
 		{
 			if (J3DCore.SOUND_ENABLED) {
 				if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
-					ex.printStackTrace();
+					Jcrpg.LOGGER.finest(ex.toString());
 				}
 			}
 			return null;
