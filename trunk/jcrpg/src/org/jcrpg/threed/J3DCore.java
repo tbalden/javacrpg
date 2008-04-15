@@ -1321,6 +1321,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			lastStepSoundTime = System.currentTimeMillis();
 		}
+		if (success)
+		{
+			gameState.updateEntityIcons();
+		}
 		return success;
 	}
 	
@@ -1743,6 +1747,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		gameState.world.worldMap = new WorldMap(gameState.world);
 		uiBase.hud.initGameStateNodes();
 		createWorldMap();
+		// updating entity icons on HUD
+		gameState.updateEntityIcons();
 		
 		
 		if (skySphere!=null)

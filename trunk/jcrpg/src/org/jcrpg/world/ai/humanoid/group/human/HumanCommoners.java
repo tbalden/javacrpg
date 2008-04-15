@@ -59,6 +59,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 
 	public HumanCommoners()
 	{
+		iconPic = "human";
 		economyTemplate.addPopulationType(Plain.class, Population.class);
 		economyTemplate.addPopulationType(Forest.class, Population.class);
 		economyTemplate.addPopulationType(MountainNew.class, Population.class);

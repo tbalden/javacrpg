@@ -53,6 +53,8 @@ public class WolfPack extends AnimalEntityDescription {
 	}
 
 	public WolfPack() {
+		iconPic = "wolf";
+		
 		climates.add(Continental.class);
 		climates.add(Arctic.class);
 		foodEntities.add(Warthogs.class);

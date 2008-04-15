@@ -52,6 +52,7 @@ public class PolarBears extends AnimalEntityDescription {
 	
 	public PolarBears()
 	{
+		iconPic = "bear";
 		climates.add(Tropical.class);
 		climates.add(Arctic.class);
 		//geographies.add(Forest.class);
