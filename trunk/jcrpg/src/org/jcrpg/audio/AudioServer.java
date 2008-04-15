@@ -39,6 +39,7 @@ public class AudioServer implements Runnable {
 	public static final String STEP_ROCK = "steps_rock";
 	public static final String STEP_SOFT = "steps_soft";
 	public static final String STEP_SOIL = "steps_soil";
+	public static final String STEP_STONE = "steps_stone";
 	public static final String STEP_SNOW = "steps_snow";
 	public static final String STEP_WATER = "steps_water";
 	public static final String STEP_FLY = "steps_fly";
@@ -52,7 +53,7 @@ public class AudioServer implements Runnable {
 	public int MAX_MUSIC = 2;
 	
 	public static final String[] stepTypes = new String[] {
-		STEP_SOIL, STEP_NO_WAY
+		STEP_SOIL, STEP_STONE, STEP_NO_WAY
 	};
 	
 	

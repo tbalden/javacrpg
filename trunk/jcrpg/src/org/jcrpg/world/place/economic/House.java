@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.place.economic;
 
+import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -41,6 +42,11 @@ public class House extends Residence {
 	public static final SideSubType SUBTYPE_BOOKCASE = new NotPassable(TYPE_HOUSE+"_BK");
 	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_HOUSE+"_STAIRS");
 
+	static
+	{
+		SUBTYPE_INTERNAL_GROUND.audioStepType = AudioServer.STEP_STONE;
+		SUBTYPE_EXTERNAL_GROUND.audioStepType = AudioServer.STEP_STONE;
+	}
 	
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
 	static Side[] WINDOW = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_WINDOW)};
