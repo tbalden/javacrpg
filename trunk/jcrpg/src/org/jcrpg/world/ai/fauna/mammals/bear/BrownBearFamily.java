@@ -34,8 +34,8 @@ public class BrownBearFamily extends AnimalEntityDescription {
 	
 	public static AudioDescription bearAudio = new AudioDescription();
 	static {
-		//gorillaAudio.ENCOUNTER = new String[]{"gorilla"};
-		//gorillaAudio.ENVIRONMENTAL = new String[]{"gorilla_environment"};
+		bearAudio.ENCOUNTER = new String[]{"grizzly_1"};
+		bearAudio.ENVIRONMENTAL = new String[]{"brownbear_env1"};
 	}
 	
 	public static StrongAnimalMale BROWNBEAR_TYPE_MALE = new StrongAnimalMale("BROWNBEAR_MALE",bearAudio);

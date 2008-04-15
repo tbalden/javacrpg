@@ -34,8 +34,7 @@ public class PolarBears extends AnimalEntityDescription {
 	
 	public static AudioDescription bearAudio = new AudioDescription();
 	static {
-		//gorillaAudio.ENCOUNTER = new String[]{"gorilla"};
-		//gorillaAudio.ENVIRONMENTAL = new String[]{"gorilla_environment"};
+		bearAudio.ENCOUNTER = new String[]{"polarbear1"};
 	}
 	
 	public static StrongAnimalMale POLARBEAR_TYPE_MALE = new StrongAnimalMale("POLARBEAR_MALE",bearAudio);

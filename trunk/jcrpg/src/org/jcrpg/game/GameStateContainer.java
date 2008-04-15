@@ -21,16 +21,18 @@ package org.jcrpg.game;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Collection;
-import java.util.Random;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.time.Time;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -170,40 +172,66 @@ public class GameStateContainer {
 		this.charCreationRules = charCreationRules;
 	}
 	
+	int environmentAudioCount = 0;
 	
 	public void doEnvironmental()
 	{
-		Collection<Object> list = ecology.getEntities(player.world, player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ);
-		if (list!=null)
+		if (environmentAudioCount==0)
 		{
-			boolean played = false;
-			for (Object o:list)
+			CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ, true);
+			if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null && c.getBelt().audioDescriptor.ENVIRONMENTAL!=null)
 			{
-				System.out.println("#_#_# "+((EntityInstance)o).id);
-				if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
-				for (GroupingMemberProps p:((EntityInstance)o).description.groupingRule.possibleMembers)
+				for (String audio : c.getBelt().audioDescriptor.ENVIRONMENTAL)
 				{
-					if (p.memberType.audioDescription!=null)
+					if (Engine.getTrueRandom().nextInt(10)>3) 
 					{
-						if (p.memberType.audioDescription.ENVIRONMENTAL!=null)
+						J3DCore.getInstance().audioServer.playLoading(audio, "climate");
+						break;
+					}
+				}
+			}
+			environmentAudioCount++;
+		}
+		else 
+		{
+			
+			Collection<Object> list = ecology.getEntities(player.world, player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ);
+			if (list!=null)
+			{
+				boolean played = false;
+				for (Object o:list)
+				{
+					EntityInstance i = ((EntityInstance)o);
+					if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.roamingBoundary)==null) continue;
+					System.out.println("#_#_# "+((EntityInstance)o).id);
+					if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
+					for (GroupingMemberProps p:((EntityInstance)o).description.groupingRule.possibleMembers)
+					{
+						if (p.memberType.audioDescription!=null)
 						{
-							if (p.memberType.audioDescription.ENVIRONMENTAL.length>0)
+							if (p.memberType.audioDescription.ENVIRONMENTAL!=null)
 							{
-								for (String sound:p.memberType.audioDescription.ENVIRONMENTAL) {
-									if (new Random().nextBoolean())
-									{
-										J3DCore.getInstance().audioServer.playLoading(sound, "ai");
-										played = true; break;
+								if (p.memberType.audioDescription.ENVIRONMENTAL.length>0)
+								{
+									for (String sound:p.memberType.audioDescription.ENVIRONMENTAL) {
+										if (Engine.getTrueRandom().nextInt(10)>6)
+										{
+											J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You here faint sounds around.");
+											J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Probably "+p.memberType.visibleTypeId+".");
+											J3DCore.getInstance().audioServer.playLoading(sound, "ai");
+											played = true; break;
+										}
 									}
 								}
 							}
 						}
+						if (played) break;
 					}
+					if (played) break;
 				}
-				if (played) break;
 			}
+			environmentAudioCount--;
 		}
-		
 		
 	}
 	
