@@ -54,6 +54,7 @@ public class FoxFamily extends AnimalEntityDescription {
 	}
 
 	public FoxFamily() {
+		iconPic = "fox";
 		climates.add(Tropical.class);
 		climates.add(Continental.class);	
 		//climates.add(Arctic.class);

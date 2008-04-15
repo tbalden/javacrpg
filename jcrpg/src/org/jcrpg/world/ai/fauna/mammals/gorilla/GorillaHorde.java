@@ -53,6 +53,7 @@ public class GorillaHorde extends AnimalEntityDescription {
 	
 	public GorillaHorde()
 	{
+		iconPic = "gorilla";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Peaceful.class);

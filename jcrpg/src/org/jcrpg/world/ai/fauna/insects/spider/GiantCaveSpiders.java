@@ -54,6 +54,7 @@ public class GiantCaveSpiders extends AnimalEntityDescription {
 	
 	public GiantCaveSpiders()
 	{
+		iconPic = "spider";
 		climates.add(Continental.class);
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);

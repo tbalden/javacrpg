@@ -65,6 +65,8 @@ public class EntityDescription {
 		calcTypes.put(PositionCalculus.class, new PositionCalculus());
 	}
 	
+	public String iconPic = "unknown"; 
+	
 	/**
 	 * Tells if entity can go to water cube.
 	 */

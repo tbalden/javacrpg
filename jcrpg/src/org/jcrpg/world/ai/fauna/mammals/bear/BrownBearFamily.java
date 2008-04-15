@@ -53,6 +53,7 @@ public class BrownBearFamily extends AnimalEntityDescription {
 	
 	public BrownBearFamily()
 	{
+		iconPic = "bear";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Peaceful.class);

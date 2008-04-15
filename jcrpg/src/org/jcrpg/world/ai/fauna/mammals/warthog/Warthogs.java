@@ -44,6 +44,7 @@ public class Warthogs extends AnimalEntityDescription {
 	
 
 	public Warthogs() {
+		iconPic = "warthog";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Escapist.class);

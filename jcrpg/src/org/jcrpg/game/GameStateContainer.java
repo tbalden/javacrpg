@@ -21,6 +21,7 @@ package org.jcrpg.game;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -170,6 +171,24 @@ public class GameStateContainer {
 
 	public void setCharCreationRules(CharacterCreationRules charCreationRules) {
 		this.charCreationRules = charCreationRules;
+	}
+	
+	
+	public void updateEntityIcons()
+	{
+		TreeMap<String, String> map = new TreeMap<String, String>();
+		Collection<Object> list = ecology.getEntities(player.world, player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ);
+		if (list!=null)
+		{
+			for (Object o:list)
+			{
+				EntityInstance i = ((EntityInstance)o);
+				if (i==player) continue;
+				if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.roamingBoundary,i.roamingBoundary)==null) continue;
+				map.put(i.description.iconPic,i.description.iconPic);
+			}
+		}
+		J3DCore.getInstance().uiBase.hud.entityOMeter.update(map.values());
 	}
 	
 	int environmentAudioCount = 0;

@@ -22,6 +22,7 @@ import java.io.File;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.map.LocalMap;
 import org.jcrpg.ui.meter.DirectionTimeMeter;
+import org.jcrpg.ui.meter.EntityOMeter;
 import org.jcrpg.ui.text.TextBox;
 import org.jcrpg.ui.text.TextEntry;
 
@@ -52,6 +53,7 @@ public class HUD {
 	public TextBox mainBox;
 	public Characters characters;
 	public LocalMap localMap;
+	public EntityOMeter entityOMeter;
 	
 	public HUD(HUDParams params, UIBase base, J3DCore core) throws Exception
 	{
@@ -136,6 +138,8 @@ public class HUD {
         base.addEventHandler("logDown", mainBox);
         
         characters = new Characters(this);
+        
+        entityOMeter = new EntityOMeter(this);
 		
 	}
 	
