@@ -17,6 +17,8 @@
 
 package org.jcrpg.world;
 
+import java.util.Random;
+
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.world.time.Time;
 
@@ -45,6 +47,14 @@ public class Engine implements Runnable {
 	
 	public static Object mutex = new Object();
 	
+	private transient static Random random = new Random();
+	
+	public static Random getTrueRandom()
+	{
+		if (random==null) random = new Random();
+		return random;
+	}
+	
 	public void run() {
 		System.out.println("ENGINE STARTED");
 		while (!exit)
@@ -53,7 +63,7 @@ public class Engine implements Runnable {
 			if (!pause) {
 				worldMeanTime.tick(TICK_SECONDS);
 				ticksLeftForTurn-=TICK_SECONDS;
-				ticksLeftForEnvironment-=TICK_SECONDS;
+				ticksLeftForEnvironment-=TICK_SECONDS+getTrueRandom().nextInt(TICK_SECONDS); // this is random
 				if (ticksLeftForTurn<=0)
 				{
 					synchronized (mutex) {

@@ -113,7 +113,7 @@ public class PlayerTurnLogic {
 				if (entityInstance==player) continue;
 				int[] groupIds = info.encounteredGroupIds.get(entityInstance);
 				if (groupIds.length>0)
-					ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName()+ " "+entityInstance.id +" g:"+(groupIds!=null?groupIds.length:null));
+					ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName());
 				else
 					ecology.callbackMessage("You seem to trespass a Domain : "+entityInstance.description.getClass().getSimpleName());
 				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+entityInstance.description.getClass().getSimpleName());
