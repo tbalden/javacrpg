@@ -286,7 +286,7 @@ public class TreeLocator extends PlaceLocator {
 			{
 				addElement(xMin, yMin, zMin, e);
 				addElement(xMin, yMax, zMin, e);
-				zMin+=1;//DEEPEST_LEVEL_GRANULATION_Z/2;
+				zMin+=1;//DEEPEST_LEVEL_GRANULATION_Z/2; //TODO this is not working correctly for a few cases, why?replaced with +1 for now
 			}
 			addElement(xMin, yMin, zMax, e);
 			addElement(xMin, yMax, zMax, e);
