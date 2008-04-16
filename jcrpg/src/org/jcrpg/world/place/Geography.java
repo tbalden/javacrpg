@@ -327,6 +327,8 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
+	public static boolean onLoadQuickFixEconomyOverrideSwitchOff = false; // TODO this shouldn't exist, check why override happens before economy is there...
+	
 	/**
 	 * Checks if the geography height is modified by special elements (river or economics).
 	 * @param worldX
@@ -342,7 +344,7 @@ public class Geography extends Place implements Surface {
 		// economics...
 		ArrayList<Object> list = w.treeLocator.getElements(worldX, worldY, worldZ);
 		// check if there is possible economic here...
-		if (list!=null) 
+		if (list!=null && !onLoadQuickFixEconomyOverrideSwitchOff) 
 		{
 			// yes there is...
 			for (Object o:list)
