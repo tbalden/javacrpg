@@ -772,7 +772,7 @@ public class J3DStandingEngine {
 										
 									}
 									{
-										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										/*if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 										{
 											if (realPooledNode.getChildren()!=null)
 											for (Spatial s:realPooledNode.getChildren())
@@ -782,8 +782,8 @@ public class J3DStandingEngine {
 													//s.lockMeshes();
 												}
 											}
-										}
-										realPooledNode.lockMeshes();
+										}*/
+										// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
 										realPooledNode.lockShadows();
 										realPooledNode.lockTransforms();								
 										realPooledNode.lockBranch();
@@ -1070,7 +1070,7 @@ public class J3DStandingEngine {
 										realPooledNode.lockMeshes();
 									}
 									{
-										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+										/*if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 										{
 											for (Spatial s:realPooledNode.getChildren())
 											{
@@ -1079,7 +1079,7 @@ public class J3DStandingEngine {
 													//s.lockMeshes();
 												}
 											}
-										}
+										}*/
 										realPooledNode.lockShadows();
 										realPooledNode.lockBranch();
 										realPooledNode.lockBounds();
