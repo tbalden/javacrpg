@@ -55,7 +55,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public PreEncounterWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
