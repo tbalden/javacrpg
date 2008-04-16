@@ -145,6 +145,10 @@ public class TreeLocator extends PlaceLocator {
 			{
 				content = new ArrayList<Object>();
 			}
+			/*if (o instanceof Boundaries && ((Boundaries)o).boundaryPlace!=null)
+			{
+				System.out.println("ADDING "+worldX+"/"+worldY+"/"+worldZ+" "+((Boundaries)o).boundaryPlace);
+			}*/
 			if (!content.contains(o)) 
 			{
 				//System.out.println("ADDING CONTENT: "+o+" - "+worldX+" / "+worldY+" / "+worldZ);
@@ -163,11 +167,14 @@ public class TreeLocator extends PlaceLocator {
 			int newMinX = range.xMin;
 			int newMinY = range.yMin;
 			int newMinZ = range.zMin;
+			
 			int newMaxX = range.xMax;
 			int newMaxY = range.yMax;
 			int newMaxZ = range.zMax;
+			
 			int middleX = range.xMin+((range.xMax-range.xMin)/SEGMENTS_PER_LEVEL_PER_COORDINATE);
-			if (worldX<middleX)
+			
+			if (worldX<=middleX)
 			{
 				newMaxX = middleX;
 			} else
@@ -177,15 +184,17 @@ public class TreeLocator extends PlaceLocator {
 			/*
 			// commented out to speed up things, good because Y range of world is small no need to split it up.
 			int middleY = range.yMin+((range.yMax-range.yMin)/SEGMENTS_PER_LEVEL_PER_COORDINATE);
-			if (worldY<middleY)
+			if (worldY<=middleY)
 			{
 				newMaxY = middleY;
 			} else
 			{
 				newMinY = middleY+1;
 			}*/
+			
 			int middleZ = range.zMin+((range.zMax-range.zMin)/SEGMENTS_PER_LEVEL_PER_COORDINATE);
-			if (worldZ<middleZ)
+			
+			if (worldZ<=middleZ)
 			{
 				newMaxZ = middleZ;
 			} else
@@ -265,11 +274,11 @@ public class TreeLocator extends PlaceLocator {
 	{
 		if (e.origoX==-1) return;
 		int xMin = e.origoX;
-		int xMax = xMin+e.sizeX;
+		int xMax = xMin+e.sizeX-1;
 		int yMin = e.origoY;
-		int yMax = yMin+e.sizeY;
+		int yMax = yMin+e.sizeY-1;
 		int zMin = e.origoZ;
-		int zMax = zMin+e.sizeZ;
+		int zMax = zMin+e.sizeZ-1;
 		while (xMin<=xMax)
 		{
 			zMin = e.origoZ;
@@ -296,19 +305,17 @@ public class TreeLocator extends PlaceLocator {
 		int yMax = e.limitYMax;
 		int zMin = e.limitZMin;
 		int zMax = e.limitZMax;
-		
-		while (xMin<=xMax)
+		for (int x=xMin; x<=xMax;)
 		{
-			zMin = e.limitZMin;
-			while (zMin<=zMax)
+			for (int z=zMin; z<=zMax; )
 			{
-				addElement(xMin, yMin, zMin, e);
-				addElement(xMin, yMax, zMin, e);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
-			}
-			addElement(xMin, yMin, zMax, e);
-			addElement(xMin, yMax, zMax, e);
-			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
+				addElement(x, yMin, z, e);
+				addElement(x, yMax, z, e);
+				z+=1;//DEEPEST_LEVEL_GRANULATION_Z/2; TODO this is not working correctly for a few cases, why?replaced with +1 for now
+			}			
+			addElement(x, yMin, zMax, e);
+			addElement(x, yMax, zMax, e);
+			x+=1;//DEEPEST_LEVEL_GRANULATION_X/2;
 		}
 		addElement(xMax, yMin, zMax, e);
 		addElement(xMax, yMax, zMax, e);
@@ -341,32 +348,28 @@ public class TreeLocator extends PlaceLocator {
 	public void addEntityInstance(EntityInstance i)
 	{
 		int r = i.roamingBoundary.radiusInRealCubes;
-		
-		int posX = i.roamingBoundary.posX;
-		int posY = i.roamingBoundary.posY;
-		int posZ = i.roamingBoundary.posZ;
-		
-		// TODO circular addition with steps...		
-		addElement(posX, posY, posZ, i);
-		addElement(posX+r, posY, posZ, i);
-		addElement(posX-r, posY, posZ, i);
-		addElement(posX, posY, posZ-r, i);
-		addElement(posX, posY, posZ+r, i);
+		int xMin = i.roamingBoundary.posX-r;
+		int xMax = i.roamingBoundary.posX+r;
+		int yMin = i.roamingBoundary.posY;
+		int zMin = i.roamingBoundary.posZ-r;
+		int zMax = i.roamingBoundary.posZ+r;
+		// TODO circular addition with steps...	instead of box
+		while (xMin<=xMax)
+		{
+			zMin = i.roamingBoundary.posZ-r;
+			while (zMin<=zMax)
+			{
+				addElement(xMin, yMin, zMin, i);
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
+			}
+			addElement(xMin, yMin, zMax, i);
+			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
+		}
+		addElement(xMax, yMin, zMax, i);
 	}
 	public void removeEntityInstance(EntityInstance i)
 	{
-		int r = i.roamingBoundary.radiusInRealCubes;
-		
-		int posX = i.roamingBoundary.posX;
-		int posY = i.roamingBoundary.posY;
-		int posZ = i.roamingBoundary.posZ;
-		
-		// TODO circular addition with steps...		
-		removeElement(posX, posY, posZ, i);
-		removeElement(posX+r, posY, posZ, i);
-		removeElement(posX-r, posY, posZ, i);
-		removeElement(posX, posY, posZ-r, i);
-		removeElement(posX, posY, posZ+r, i);
+		removeAllOfAnObject(i);
 	}
 	
 	/**

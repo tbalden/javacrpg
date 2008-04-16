@@ -33,6 +33,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	int gWX, gWY, gWZ;
 	
 	public int radiusInRealCubes, posX, posY, posZ;
+	public int previousTurnRadiusInRealCubes, previousTurnPosX, previousTurnPosY, previousTurnPosZ;
 	public Vector3f pv;
 	
 	public DistanceBasedBoundary(World w, int positionX, int positionY, int positionZ, int radiusInRealCubes) {
@@ -70,6 +71,9 @@ public class DistanceBasedBoundary extends Boundaries {
 	 */
 	public void setPosition(int magnification, int x, int y, int z) 
 	{
+		previousTurnPosX = posX;
+		previousTurnPosY = posY;
+		previousTurnPosZ = posZ;
 		posX = x*magnification;
 		posY = y*magnification;
 		posZ = z*magnification;
@@ -94,6 +98,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	}
 
 	public void setRadiusInRealCubes(int radiusInRealCubes) {
+		this.previousTurnRadiusInRealCubes = radiusInRealCubes;
 		this.radiusInRealCubes = radiusInRealCubes;
 	}
 	
@@ -164,6 +169,13 @@ public class DistanceBasedBoundary extends Boundaries {
 		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),23,0,10,5);
 		int[][] ratios = getCommonRadiusRatiosAndMiddlePoint(d1, d2);
 		System.out.println("RATIOS: "+ratios[0][0]+" "+ratios[0][1] + " "+ratios[1][0]+" "+ratios[1][1]+" "+ratios[1][2]);
+	}
+	
+	public boolean changedInTurn()
+	{
+		if (previousTurnPosX!=posX||previousTurnPosY!=posY||previousTurnPosZ!=posZ||previousTurnRadiusInRealCubes!=radiusInRealCubes)
+			return true;
+		return false;
 	}
 
 }
