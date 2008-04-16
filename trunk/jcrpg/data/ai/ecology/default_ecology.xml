@@ -42,43 +42,43 @@
 		<!-- You can also include specific groups that can appear just one time in your world                         -->
 		<population ref-animal-id="WOLFPACK" ref-climat="Continental"
 			prefix-name="Wild Wolves Horde" 
-			max-in-world="1" min-in-group="100" max-in-group="250"
+			max-in-world="1" min-in-group="20" max-in-group="250"
 			percentage-chance-of-appearance="10" />		
  
 
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Tropical"
-			percentage-chance-of-appearance="50" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="10" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
-			percentage-chance-of-appearance="50" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="10" food-chain-position="HERBIVORE"/>
  
  
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Tropical"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Continental"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
     	
      	<population ref-animal-id="POLARBEARS" ref-climat="Arctic"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
     	<population ref-animal-id="BROWNBEARFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
     	<population ref-animal-id="BROWNBEARFAMILY" ref-climat="Continental"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
 
     	<population ref-animal-id="GORRILAHORDE" ref-climat="Tropical"
-			percentage-chance-of-appearance="20" min-in-group="20" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
 
     	<!-- sample FOOD CHAIN SAMPLE in Tropical Climate                                                             -->		
 		
 		<population ref-animal-id="WARTHOGS" ref-climat="Tropical"
-			percentage-chance-of-appearance="50" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="5" food-chain-position="HERBIVORE"/>
 		
 		<population ref-animal-id="FOXFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="30" 
+			percentage-chance-of-appearance="5" 
 			food-chain-position="PRIMARY_CARNIVORE"
 			predator-range="5"
 			/>
 		<population ref-animal-id="WOLFPACK" ref-climat="Tropical"
-			percentage-chance-of-appearance="25"
+			percentage-chance-of-appearance="5"
 			food-chain-position="SECONDARY_CARNIVORE" predator-range="15"/>						
 	</populations>
 </ecology>

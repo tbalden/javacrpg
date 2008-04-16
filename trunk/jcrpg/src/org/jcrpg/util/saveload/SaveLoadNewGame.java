@@ -94,9 +94,9 @@ public class SaveLoadNewGame {
 			EcologyGenerator eGen = new EcologyGenerator();
 			Ecology ecology = eGen.generateEcology(world);
 			
-			int xDiff = -30;
-			int yDiff = 0;
-			int zDiff = -37;
+			int xDiff = -24;
+			int yDiff = 8;
+			int zDiff = -61;
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
@@ -108,6 +108,7 @@ public class SaveLoadNewGame {
 			party.recalcBoundarySizes();
 			ecology.addEntity(party);
 			party.setPosition(new int[]{wX,wY,wZ});
+			//gameState.viewDirection = 2;
 			
 			// setting up UI elements...
 			core.behaviorWindow.party = party;

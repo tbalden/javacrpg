@@ -286,12 +286,14 @@ public class TreeLocator extends PlaceLocator {
 			{
 				addElement(xMin, yMin, zMin, e);
 				addElement(xMin, yMax, zMin, e);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
+				zMin+=1;//DEEPEST_LEVEL_GRANULATION_Z/2;
 			}
 			addElement(xMin, yMin, zMax, e);
 			addElement(xMin, yMax, zMax, e);
-			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
+			xMin+=1;//DEEPEST_LEVEL_GRANULATION_X/2;
 		}
+		addElement(xMax, yMin, zMin, e);
+		addElement(xMax, yMax, zMin, e);
 		addElement(xMax, yMin, zMax, e);
 		addElement(xMax, yMax, zMax, e);
 	}
@@ -311,12 +313,14 @@ public class TreeLocator extends PlaceLocator {
 			{
 				addElement(x, yMin, z, e);
 				addElement(x, yMax, z, e);
-				z+=1;//DEEPEST_LEVEL_GRANULATION_Z/2; TODO this is not working correctly for a few cases, why?replaced with +1 for now
+				z+=1;//DEEPEST_LEVEL_GRANULATION_Z/2; //TODO this is not working correctly for a few cases, why?replaced with +1 for now
 			}			
 			addElement(x, yMin, zMax, e);
 			addElement(x, yMax, zMax, e);
 			x+=1;//DEEPEST_LEVEL_GRANULATION_X/2;
 		}
+		addElement(xMax, yMin, zMin, e);
+		addElement(xMax, yMax, zMin, e);
 		addElement(xMax, yMin, zMax, e);
 		addElement(xMax, yMax, zMax, e);
 	}

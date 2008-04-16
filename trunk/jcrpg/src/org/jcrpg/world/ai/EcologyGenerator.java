@@ -174,6 +174,8 @@ public class EcologyGenerator {
 		int nX = 20;
 		int nY = 20;
 
+		int blockX = (int)(pWorld.realSizeX * 1f / nX);
+		
 		int currentIndex = 0;
 		for (int i = 0; i < nX; i++) {
 			for (int j = 0; j < nY; j++) {
@@ -181,14 +183,15 @@ public class EcologyGenerator {
 				int wY = pWorld.getSeaLevel(1);
 				int wZ = (int) ((pWorld.realSizeZ * 1f / nY) * j);
 
-				// get climatic conditions of the current position
-				CubeClimateConditions ccc = pWorld.getCubeClimateConditions(
-						new Time(), wX, wY, wZ, false);
-				Class<? extends ClimateBelt> beltClass = ccc.belt.getClass();
-
 				for (EcologyGeneratorPopulation population : herbivorePopulations) {
+					int posX = wX + (HashUtil.mix(wX,wY, wZ + population.getGenerationHashInt())%blockX)-blockX/2;									
+					int posZ = wZ + (HashUtil.mix(wX,wY, wZ + population.getGenerationHashInt())%blockX)-blockX/2;									
+					// get climatic conditions of the current position
+					CubeClimateConditions ccc = pWorld.getCubeClimateConditions(
+							new Time(), posX, wY, posZ, false);
+					Class<? extends ClimateBelt> beltClass = ccc.belt.getClass();
 					if (beltClass.equals(population.getClimatBeltClass())) {
-						int rollPresent = HashUtil.mixPercentage(wX, wY, wZ + population.getGenerationHashInt()
+						int rollPresent = HashUtil.mixPercentage(posX, wY, posZ + population.getGenerationHashInt()
 								);
 
 						if (rollPresent <= population
@@ -205,20 +208,20 @@ public class EcologyGenerator {
 							int max = population.getMaxInGroup();
 							int ecart = (max - min);
 							if (ecart > 0) {
-								int rollNb = HashUtil.mixPercentage(wX, wY
-										+  population.getGenerationHashInt(), wZ);
+								int rollNb = HashUtil.mixPercentage(posX, wY
+										+  population.getGenerationHashInt(), posZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							EntityInstance entity = new EntityInstance(desc,
 									pWorld, pEcology, id, entityId,
-									numberInTheGroup, wX, wY, wZ);
+									numberInTheGroup, posX, wY, posZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
-									wX, wY, wZ);
+									posX, wY, posZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
 							entity.description.setupNewInstance(entity, pWorld, pEcology);
-							LOGGER.finest("addEntity " + entityId + " (" + wX
-									+ "," + wY + "," + wZ + ") nb="
+							LOGGER.finest("addEntity " + entityId + " (" + posX
+									+ "," + wY + "," + posZ + ") nb="
 									+ numberInTheGroup);
 							population.incrementsNumberOfGroupsInWorld();
 							addCreationStat(population.getEntityClass());
