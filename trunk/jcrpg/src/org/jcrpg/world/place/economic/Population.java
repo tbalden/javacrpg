@@ -132,7 +132,9 @@ public class Population extends Economic{
 									for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
 									{
 										int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
+										Geography.onLoadQuickFixEconomyOverrideSwitchOff = true;
 										int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
+										Geography.onLoadQuickFixEconomyOverrideSwitchOff = false;
 										if (height>maximumHeight)
 										{
 											maximumHeight = height;
