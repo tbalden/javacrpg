@@ -94,9 +94,9 @@ public class SaveLoadNewGame {
 			EcologyGenerator eGen = new EcologyGenerator();
 			Ecology ecology = eGen.generateEcology(world);
 			
-			int xDiff = +10;
+			int xDiff = -30;
 			int yDiff = 0;
-			int zDiff = -77;
+			int zDiff = -37;
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;

@@ -275,11 +275,13 @@ public class Ecology {
 				}
 			}
 			counterOfDoneTurnBeings++;
-			removeFromLocator(orderedBeingList.get(r));
 			if (orderedBeingList.get(r).liveOneTurn(getNearbyEncounters(orderedBeingList.get(r))))
 			{
 				// updating tree locator for being...
-				addToLocator(orderedBeingList.get(r));
+				if (orderedBeingList.get(r).roamingBoundary.changed()) {
+					removeFromLocator(orderedBeingList.get(r));
+					addToLocator(orderedBeingList.get(r));
+				}
 				// interrupt is needed because UI thread of player will be active for interaction. UI will
 				// have to call this function again with continue = true in method signature.
 				System.out.println("ECOLOGY INTERRUPTED BY: "+orderedBeingList.get(r).description);
@@ -287,7 +289,10 @@ public class Ecology {
 				break;
 			}
 			// updating tree locator for being...
-			addToLocator(orderedBeingList.get(r));
+			if (orderedBeingList.get(r).roamingBoundary.changed()) {
+				removeFromLocator(orderedBeingList.get(r));
+				addToLocator(orderedBeingList.get(r));
+			}
 		}
 		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");

@@ -78,6 +78,7 @@ public class Population extends Economic{
 		origoZ = boundaries.limitZMin;
 		sizeZ = boundaries.limitZMax - boundaries.limitZMin;
 		sizeX++;
+		sizeY++;
 		sizeZ++;
 		//updateLocationAndSize();
 	}
