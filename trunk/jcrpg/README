@@ -6,11 +6,17 @@ m. Movement/Keyboard
 W/S/A/D for turning, moving.
 Q/E for strafe.
 Up/Down for looking up and down.
+Left/Right for looking around.
 F1 World map
+F2 Party behavior window
+F10 Main menu
+F11 debug infos (memory / 3d related)
+F12 Take a screenshot
 Press Y to exit encounters
 
-ESC to exit the demo.
+ESC to exit the demo or through the main menu.
 
+Use main menu for Save/Load your gamestate.
 
 c. Configuration
 
@@ -74,20 +80,20 @@ Complete features:
 - Configurable graphics detail level 3D core (based on JMonkeyEngine) with optional grass, water reflection, billboarded trees, fog state, bloom effect, shader based wind animation etc. that can load .obj and .3ds models.
 - UI widgets & detailed map system (partially)
 - Water system
+- Wildlife engine
+- Economy, populations
+- Strong skill system
+- 3D model animation
+- Save/Load of game
 
 Features of the future:
 
-- Wildlife engine
 - Civilization engine (group intelligence instead of personal)
-- Economy, populations
 - Object system
 - Special NPCs for plots
 - Plot, scripting, quest system
 - Turn based combat
 - Character leveling
-- Strong skill system
-- 3D model animation
-- Save/Load of game
 - External map editor
 - Other tools
 - The reference game
