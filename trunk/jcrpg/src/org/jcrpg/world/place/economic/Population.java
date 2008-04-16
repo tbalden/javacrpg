@@ -85,7 +85,7 @@ public class Population extends Economic{
 	
 	// TODO write a quick fitter function to build up a population structure quickl.
 	// TODO based on economic (house) heights add steps to the population
-
+	
 	@Override
 	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
@@ -120,9 +120,12 @@ public class Population extends Economic{
 						
 						for (SurfaceHeightAndType[] s:surfaces)
 						{
-							int Y = s[0].surfaceY;
+							//int Y = s[0].surfaceY;
 							Geography g = s[0].self;
-							ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(soilGeo.getClass());
+							System.out.println("G: "+g);
+							// TODO geography preference in economyTemplate order -> not going through surfaces up here, but go through economyTemplate's geographies
+							// and see if surface is available -> ordering problems solution
+							ArrayList<Class<?extends Residence>> list = ((HumanoidEntityDescription)(owner.description)).economyTemplate.residenceTypes.get(g.getClass());
 							if (list!=null && list.size()>0)
 							{
 								Class<? extends Residence> r = list.get(0);
@@ -132,9 +135,8 @@ public class Population extends Economic{
 									for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
 									{
 										int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
-										Geography.onLoadQuickFixEconomyOverrideSwitchOff = true;
 										int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
-										Geography.onLoadQuickFixEconomyOverrideSwitchOff = false;
+										System.out.println("HEIGHT = "+height);
 										if (height>maximumHeight)
 										{
 											maximumHeight = height;
@@ -152,12 +154,13 @@ public class Population extends Economic{
 								{
 									continue;
 								}
+								
 								Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
 										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 										owner.homeBoundary.posX+xOffset,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
 										owner.homeBoundary, owner);
-								System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+Y+ " "+rI.id);
+								System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+maximumHeight+ " "+rI.id);
 								if (soilGeo instanceof Cave)
 								{
 									System.out.println("### CAVE HOUSE = "+rI.id);

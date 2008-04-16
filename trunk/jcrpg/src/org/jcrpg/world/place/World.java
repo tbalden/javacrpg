@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -64,7 +65,7 @@ public class World extends Place {
 	public HashMap<String, ArrayList<Geography>> geographyCache = new HashMap<String, ArrayList<Geography>>();
 	public HashMap<String, Water> waters;
 	public HashMap<String, Political> politicals;
-	public HashMap<String, Economic> economics;
+	public TreeMap<String, Economic> economics;
 
 	public static final String TYPE_WORLD = "WORLD";
 	public static final Swimming SUBTYPE_OCEAN = new Swimming(TYPE_WORLD+"_OCEAN");
@@ -104,7 +105,7 @@ public class World extends Place {
 		geographies = new HashMap<String, Geography>();
 		waters = new HashMap<String, Water>();
 		politicals = new HashMap<String, Political>();
-		economics = new HashMap<String, Economic>();
+		economics = new TreeMap<String, Economic>();
 	}
 	
 	
