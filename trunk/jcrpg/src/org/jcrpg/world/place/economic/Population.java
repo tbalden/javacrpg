@@ -136,7 +136,7 @@ public class Population extends Economic{
 									{
 										int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
 										int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
-										System.out.println("HEIGHT = "+height);
+										//System.out.println("HEIGHT = "+height);
 										if (height>maximumHeight)
 										{
 											maximumHeight = height;
