@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jcrpg.apps.Jcrpg;
-import org.jcrpg.threed.jme.PooledImposterNode;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -581,6 +580,12 @@ public class ModelLoader {
      	
     }
 
+    /**
+     * load the original node without pooling.
+     * @param m
+     * @param fake
+     * @return
+     */
     public Node loadQuadModelNode(QuadModel m, boolean fake)
     {
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.

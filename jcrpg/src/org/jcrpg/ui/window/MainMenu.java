@@ -122,16 +122,16 @@ public class MainMenu extends Window implements KeyListener {
 			keepPlayingMusic = false;
 		}
 		//}
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(false);
 	}
 
 	@Override
 	public void show() {
 		core.audioServer.playOnlyThisMusic("main");
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
 
@@ -157,7 +157,7 @@ public class MainMenu extends Window implements KeyListener {
 			if (!core.coreFullyInitialized) return;
 			toggle();
 			core.updateDisplay(null);
-			core.getRootNode().updateRenderState();
+			core.getUIRootNode().updateRenderState();
 			SaveLoadNewGame.saveGame(core);
 			core.audioServer.stopAndResumeOthers("main");
 			

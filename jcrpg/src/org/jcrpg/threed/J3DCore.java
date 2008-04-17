@@ -73,6 +73,7 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
+import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -98,6 +99,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
 import com.jme.scene.TriMesh;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.CullState;
@@ -108,6 +110,7 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
@@ -325,6 +328,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/** skyroot */
 	//Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
+
+	/** ui root */
+	public Node uiRootNode; 
 
 	/**
 	 * Put quads with solid color depending on light power of orbiters, updateTimeRelated will update their shade.
@@ -663,7 +669,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         /** Sets the title of our display. */
         String className = getClass().getName();
         if ( className.lastIndexOf( '.' ) > 0 ) className = className.substring( className.lastIndexOf( '.' )+1 );
-        display.setTitle( className );
+        display.setTitle( "Java Classic RPG - prealpha" );
         /**
          * Signal to the renderer that it should keep track of rendering
          * information.
@@ -671,7 +677,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         display.getRenderer().enableStatistics( true );
 
         /** Assign key P to action "toggle_pause". */
-        if (true==false) {
+        if (true==true) {
 	        KeyBindingManager.getKeyBindingManager().set( "toggle_pause",
 	                KeyInput.KEY_P );
 	        /** Assign key ADD to action "step". */
@@ -1065,14 +1071,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			skySphere.setCullMode(Node.CULL_ALWAYS);
 		} else
 		{
-			skyParentNode.setCullMode(Node.CULL_NEVER);
-			skySphere.setCullMode(Node.CULL_NEVER);
+			skyParentNode.setCullMode(Node.CULL_DYNAMIC);
+			skySphere.setCullMode(Node.CULL_DYNAMIC);
 		}
 		skySphere.updateRenderState(); // do not update root or groundParentNode, no need for that here
 
 		if (updateRenderState) {
 			groundParentNode.updateRenderState(); // this is a must, moon will see through the house if not!
+			uiRootNode.updateRenderState();
 		}
+		quadToFixHUDCulling.setLocalTranslation(cam.getLocation());
 	}
 
 	public void renderParallel()
@@ -1854,19 +1862,37 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * When a full game is started/loaded this should be true.
 	 */
 	public boolean coreFullyInitialized = false;
-	
+	/**
+	 * A quad that is only used to add to an ortho ui node. Otherwise it is culled!
+	 */
+	Quad quadToFixHUDCulling = null;
 	@Override
 	protected void simpleInitGame() {
 		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
 		audioServer.init();
-		
-		rootNode.setCullMode(Node.CULL_NEVER);
+		ZBufferState zStatePasses = display.getRenderer().createZBufferState();
+        zStatePasses.setEnabled(true);
+        zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
+		rootNode.setRenderState(zStatePasses);
+		//rootNode.setCullMode(Node.CULL_NEVER);
+		uiRootNode = new Node();
+		rootNode.attachChild(uiRootNode);		
+        ZBufferState zStateOff = display.getRenderer().createZBufferState();
+        zStateOff.setEnabled(false);
+		uiRootNode.setCullMode(Node.CULL_NEVER);
+		//uiRootNode.setRenderState(zStateOff);
+		uiRootNode.setModelBound(new BoundingBox());
+		uiRootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		//cam.resize(100, 100);
 		//cam.setViewPort(30, 90, 30, 90);
 		bigSphere.setCenter(new Vector3f(0,0,0));
 		//bigSphere.s
 		bigSphere.setRadius(10000f);
+		//uiRootNode.setModelBound(bigSphere);
+		quadToFixHUDCulling = new Quad("",0,0);
+		quadToFixHUDCulling.setModelBound(new BoundingBox());quadToFixHUDCulling.updateModelBound();
+		uiRootNode.attachChild(quadToFixHUDCulling);
 		// external cubes' rootnode
 		extRootNode = new Node();
 		//extRootNode.setModelBound(bigSphere);
@@ -1878,6 +1904,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		groundParentNode.setModelBound(null);
 		intRootNode.setModelBound(null);
 		extRootNode.setModelBound(null);
+		intRootNode.setCullMode(Node.CULL_DYNAMIC);
+		extRootNode.setCullMode(Node.CULL_DYNAMIC);
+		groundParentNode.setCullMode(Node.CULL_DYNAMIC);
 
         //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses
@@ -2119,7 +2148,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		uiBase.addWindow("quitQuestion", new PlayerChoiceWindow(uiBase,new TextEntry("Quit?", ColorRGBA.red),quitAnswers,"Quit",0.088f,0.088f,0.3f,0.1f));
 		
 		// shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
-		rootNode.attachChild(uiBase.hud.hudNode); 
+		uiRootNode.attachChild(uiBase.hud.hudNode); 
 		
 	}
 	
@@ -2311,8 +2340,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         doDebug(r);
     }
 
+
+    public Node getUIRootNode()
+    {
+    	return uiRootNode;
+    }
+     
     
-    public Node getRootNode()
+    public Node getRootNode1()
     {
     	return rootNode;
     }

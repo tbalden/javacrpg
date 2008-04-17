@@ -75,8 +75,8 @@ public class CacheStateInfo extends InputWindow {
 	@Override
 	public void hide() {
 		super.hide();
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 
 	public void update()
@@ -107,8 +107,8 @@ public class CacheStateInfo extends InputWindow {
 	public void show() {
 		update();
 		super.show();
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 
 

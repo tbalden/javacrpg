@@ -205,8 +205,8 @@ public class LoadMenu extends Window implements KeyListener {
 
 	@Override
 	public void hide() {
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(false);
 	}
 
@@ -220,8 +220,8 @@ public class LoadMenu extends Window implements KeyListener {
 			ex.printStackTrace();
 		}
 		highlightSelected();
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
 
@@ -238,7 +238,7 @@ public class LoadMenu extends Window implements KeyListener {
 		System.out.println("---------------------- END LOADING GAME ------------------------");
 		core.uiBase.hud.characters.update();
 		core.uiBase.hud.characters.show();
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().updateRenderState();
 		core.gameState.engine.setPause(false);
 		core.audioServer.stopAndResumeOthers("main");
 	}

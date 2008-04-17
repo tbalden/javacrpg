@@ -132,14 +132,14 @@ public abstract class InputWindow extends Window implements KeyListener{
 
 	@Override
 	public void hide() {
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 
 	@Override
 	public void show() {
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 
 	public boolean handleKey(String key) {
