@@ -104,14 +104,14 @@ public class Map extends Window {
 
 	@Override
 	public void hide() {
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 
 	@Override
 	public void show() {
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 	}
 	
 	

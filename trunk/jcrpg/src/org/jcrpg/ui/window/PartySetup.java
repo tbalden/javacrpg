@@ -263,8 +263,8 @@ public class PartySetup extends PagedInputWindow {
 
 	@Override
 	public void hide() {
-		core.getRootNode().detachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().detachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(false);
 	}
 
@@ -277,8 +277,8 @@ public class PartySetup extends PagedInputWindow {
 		
 		setupPage();
 		changePage(0);
-		core.getRootNode().attachChild(windowNode);
-		core.getRootNode().updateRenderState();
+		core.getUIRootNode().attachChild(windowNode);
+		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
 	
@@ -737,7 +737,7 @@ public class PartySetup extends PagedInputWindow {
 			core.init3DGame();
 			core.uiBase.hud.characters.update();
 			core.uiBase.hud.characters.show();
-			core.getRootNode().updateRenderState();
+			core.getUIRootNode().updateRenderState();
 			core.gameState.engine.setPause(false);
 			core.audioServer.stopAndResumeOthers("main");
 		}

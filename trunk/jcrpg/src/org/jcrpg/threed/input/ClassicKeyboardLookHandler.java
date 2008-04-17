@@ -78,7 +78,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "enter", KeyInput.KEY_RETURN );
         keyboard.set( "back", KeyInput.KEY_BACK);
         keyboard.set( "A", KeyInput.KEY_A );
-        keyboard.set( "B", KeyInput.KEY_B );
+        //keyboard.set( "B", KeyInput.KEY_B );
         keyboard.set( "C", KeyInput.KEY_C );
         keyboard.set( "D", KeyInput.KEY_D );
         keyboard.set( "E", KeyInput.KEY_E );
@@ -137,7 +137,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "logUp", false);
         addAction( new CKeyMenu(this), "logDown", false);
         addAction( new CKeyMenu(this), "A", false);
-        addAction( new CKeyMenu(this), "B", false);
+        //addAction( new CKeyMenu(this), "B", false);
         addAction( new CKeyMenu(this), "C", false);
         addAction( new CKeyMenu(this), "D", false);
         addAction( new CKeyMenu(this), "E", false);
