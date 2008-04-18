@@ -47,7 +47,8 @@ public class Plain extends Geography {
 		if (overrideHeight!=null) return overrideHeight;
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		int Y = 0;
-		Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/8, worldZ/8, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/8, worldX/8, 0)+20)/20), 0)))+30)%100)/50);
+		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/50);
+		//Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/8, worldZ/8, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/8, worldX/8, 0)+20)/20), 0)))+30)%100)/50);
 		//int ret = Math.min(0,-Y/30); // valley
 		int ret = Math.max(0,Y); // mountain
 		//System.out.println("PLAIN H: "+ret);

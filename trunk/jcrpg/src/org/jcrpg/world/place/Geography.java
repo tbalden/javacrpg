@@ -705,7 +705,7 @@ public class Geography extends Place implements Surface {
 			if (relY==YSouth+1) i++;
 			if (relY==YEast+1) i++;
 			if (i<=1)			
-			return K_ROCK_BLOCK; //
+				return K_ROCK_BLOCK; //
 		}
 		return K_EMPTY;
 	}
