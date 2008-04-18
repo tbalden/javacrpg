@@ -1157,7 +1157,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public int garbCollCounter = 0;
 
-	public static boolean OPTIMIZE_ANGLES = false;
+	public static boolean OPTIMIZE_ANGLES = true;
 	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.5f:3.14f;
 
 	public static boolean GEOMETRY_BATCH = true;
@@ -1299,7 +1299,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		notFallable.add(StickingOut.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 	
 	
 	long lastStepSoundTime = System.currentTimeMillis();
