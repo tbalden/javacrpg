@@ -1898,11 +1898,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//uiRootNode.setModelBound(bigSphere);
 
 		// external cubes' rootnode
-		extRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode();
+		extRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode(cam);
 		//extRootNode.setModelBound(bigSphere);
 		//extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
-		intRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode();
+		intRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode(cam);
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
 		/*groundParentNode.setModelBound(null);
@@ -2215,11 +2215,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 	}
 	
+	boolean swapUpdate = false;
 
 	@Override
 	protected void simpleUpdate() {
-		
-		super.simpleUpdate();
 		
 		/*if (renderFinished && )
 		{
@@ -2227,7 +2226,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			renderFinished = false;
 		}*/
 		
-		//AudioSystem.getSystem().update();
 		
 		if (dr!=null) {
 			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
@@ -2252,6 +2250,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			gameState.engine.doEnvironmentNeeded = false;
 			gameState.doEnvironmental();
 		}
+		//if (!swapUpdate)
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
@@ -2263,12 +2262,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER) 
 			pManager.updatePasses(tpf);
 		}
+		//swapUpdate=!swapUpdate;
 	}
 
 	public static boolean TRICK_CULL_RENDER = false;
 	
 	@Override
 	protected void simpleRender() {
+		if (System.currentTimeMillis()%10<=6) return;
 		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
         try {
