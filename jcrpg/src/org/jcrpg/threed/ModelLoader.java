@@ -207,6 +207,7 @@ public class ModelLoader {
 				//PooledSharedNode sn = new PooledSharedNode("!-",bbOrig);
 		    	//Node node = sn;
 				bbOrig.setName(((SimpleModel)objects[i]).modelName+i);
+				bbOrig.updateModelBound();
 				//r[i] = sn;//bbOrig;// new PooledSharedNode("1",node);// bbOrig;
 				r[i] = bbOrig;
 			} else

@@ -1157,7 +1157,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public int garbCollCounter = 0;
 
-	public static boolean OPTIMIZE_ANGLES = true;
+	public static boolean OPTIMIZE_ANGLES = false;
 	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.5f:3.14f;
 
 	public static boolean GEOMETRY_BATCH = true;
@@ -1299,7 +1299,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		notFallable.add(StickingOut.class);
 	}
 
-	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
 	
 	
 	long lastStepSoundTime = System.currentTimeMillis();
@@ -1875,7 +1875,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         zStatePasses.setEnabled(true);
         zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
 		rootNode.setRenderState(zStatePasses);
-		//rootNode.setCullMode(Node.CULL_NEVER);
+		//rootNode.setCullMode(Node.CULL_DYNAMIC);
 		uiRootNode = new Node();
 		rootNode.attachChild(uiRootNode);		
         ZBufferState zStateOff = display.getRenderer().createZBufferState();
@@ -1901,9 +1901,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		intRootNode = new Node();
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
-		groundParentNode.setModelBound(null);
+		/*groundParentNode.setModelBound(null);
+		rootNode.setModelBound(null);
 		intRootNode.setModelBound(null);
-		extRootNode.setModelBound(null);
+		extRootNode.setModelBound(null);*/
 		intRootNode.setCullMode(Node.CULL_DYNAMIC);
 		extRootNode.setCullMode(Node.CULL_DYNAMIC);
 		groundParentNode.setCullMode(Node.CULL_DYNAMIC);

@@ -51,6 +51,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -391,24 +392,26 @@ public class J3DStandingEngine {
 	{
 		long t1 = System.currentTimeMillis(); 
 		synchronized(Engine.mutex) {
-			
-			/*if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
+			/*
+			if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
 				System.out.println("   -    "+ core.extRootNode.getChildren().size());
 				//if (true == false)
 				for (Spatial s:core.extRootNode.getChildren())
 				{
-					if (s instanceof SharedNode)
+					System.out.println("CM: "+s.getCullMode());
+					if (true==false && s instanceof SharedNode)
 					{
 						Spatial s1 = ((SharedNode)s).getChild(0);
 						if (s1 instanceof TrimeshGeometryBatch)
 						{
+							//System.out.println(s1.getCullMode());
 							//System.out.println("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
 						} else
 						if (s1 instanceof ModelGeometryBatch)
 						{
-							if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
-								System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
-							;
+							//if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
+							//	System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
+							//;
 						} //else
 						//System.out.println(s1.getName()+ " "+s1);
 					} //else

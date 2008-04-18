@@ -29,6 +29,7 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.util.HashUtil;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
@@ -148,6 +149,9 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		}
 		if (!NO_BATCH_GEOMETRY) {
 			this.attachChild(batch.parent);
+			//batch.setModelBound(modelBound)
+			batch.parent.updateModelBound();
+			batch.parent.updateWorldBound();
 			batch.parent.getWorldRotation().set(new Quaternion());
 			batch.parent.setLocalRotation(new Quaternion());
 			batch.getWorldRotation().set(new Quaternion());
@@ -402,7 +406,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.setLocalRotation(new Quaternion());
 			TriangleBatch tBatch = targetQuad.getBatch(0);
 			// swapping X,Z
-			if (rotated) {
+			if (!NO_BATCH_GEOMETRY && rotated) {
 				FloatBuffer buff = tBatch.getVertexBuffer();
 				for (int i=0; i<4; i++)
 				{
@@ -432,9 +436,11 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
+			targetQuad.setModelBound(new BoundingBox());
 			targetQuad.setLocalTranslation(x, z, -y);
 			targetQuad.setLocalRotation(new Quaternion());
 			targetQuad.getWorldRotation().set(new Quaternion());
+			targetQuad.updateModelBound();
 			batch.addItem(null, targetQuad);
 		}
 		if (NO_BATCH_GEOMETRY) {

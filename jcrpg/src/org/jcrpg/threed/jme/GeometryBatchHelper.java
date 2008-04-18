@@ -44,9 +44,9 @@ public class GeometryBatchHelper {
 		this.core = core;		
 	}
 	
-	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 10;
-	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 10;
-	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 10;
+	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
 	
 	/**
 	 * Returns Grouping key for batch objects. The key unifies a group of nodes into a batch.
@@ -60,8 +60,8 @@ public class GeometryBatchHelper {
 		int viewMul = 1;
 		int yLevelMul = 1;
 		if (farView) {
-			viewMul = J3DCore.FARVIEW_GAP;
-			yLevelMul = 4;
+			viewMul = 2;
+			yLevelMul = J3DCore.FARVIEW_GAP;
 		}
     	String key = m.type+m.id+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
