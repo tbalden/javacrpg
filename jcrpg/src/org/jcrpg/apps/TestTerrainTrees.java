@@ -106,9 +106,9 @@ public class TestTerrainTrees extends SimpleGame {
 
         ProceduralTextureGenerator pt = new ProceduralTextureGenerator(
                 heightMap);
-        pt.addTexture(new ImageIcon(("jmetest/data/texture/grassb.png")), -128, 0, 128);
-        pt.addTexture(new ImageIcon(("jmetest/data/texture/dirt.jpg")), 0, 128, 255);
-        pt.addTexture(new ImageIcon(("jmetest/data/texture/highest.jpg")), 128, 255,
+        pt.addTexture(new ImageIcon(("../randomworld/jsrc/jmetest/data/texture/grassb.png")), -128, 0, 128);
+        pt.addTexture(new ImageIcon(("../randomworld/jsrc/jmetest/data/texture/dirt.jpg")), 0, 128, 255);
+        pt.addTexture(new ImageIcon(("../randomworld/jsrc/jmetest/data/texture/highest.jpg")), 128, 255,
                 384);
 
         pt.createTexture(512);
@@ -164,6 +164,6 @@ public class TestTerrainTrees extends SimpleGame {
             rootNode.attachChild(s1);
         }
 
-        rootNode.lock();
+        //rootNode.lock();
     }
 } 
