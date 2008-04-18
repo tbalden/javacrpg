@@ -439,7 +439,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 			
 			if (vertexShader) {
-				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent())) {
+				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent()) || parent.getParent().getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent().getParent())) {
 					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 				} else
 				{
