@@ -268,13 +268,13 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	float newDiffs[] = new float[5];
 	boolean windSwitch = true;
 	Vector3f origTranslation = null;
-	long passedTime = 0;
+	static long passedTime = 0;
 	float timeCounter = 0;
-	long startTime = System.currentTimeMillis();
+	static long startTime = System.currentTimeMillis();
 	public float windPower = 1.0f; 
 	int whichDiff = -1;
 	
-	public static final float TIME_DIVIDER = 400;
+	public static final float TIME_DIVIDER = 800;
 	public static final long TIME_LIMIT = 0;
 	Quaternion orient = new Quaternion();
 	
@@ -450,14 +450,14 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 		
-		long additionalTime = Math.min(System.currentTimeMillis() - startTime,10);
 		if (!passedTimeCalculated) {
+			long additionalTime = Math.min(System.currentTimeMillis() - startTime,10);
 			passedTime += additionalTime;
+			startTime= System.currentTimeMillis();
 		} else
 		{
 			passedTimeCalculated = true;
 		}
-		startTime= System.currentTimeMillis();
 
 		boolean doGrassMove = false;
 		if (animated) {

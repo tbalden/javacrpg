@@ -2269,8 +2269,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	@Override
 	protected void simpleRender() {
-		TrimeshGeometryBatch.passedTimeCalculated = false;
-        /** Have the PassManager render. */
+       /** Have the PassManager render. */
         try {
         	//if (BLOOM_EFFECT||SHADOWS||WATER_SHADER)
         	if (!TRICK_CULL_RENDER)
@@ -2278,8 +2277,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         } catch (NullPointerException npe)
         {
         	npe.printStackTrace();
-        }
- 		super.simpleRender();
+        } 		
 	}
 	
     protected BasicPassManager pManager;
@@ -2336,6 +2334,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         
         Renderer r = display.getRenderer();
 
+		TrimeshGeometryBatch.passedTimeCalculated = false;
+		 
         /** Draw the rootNode and all its children. */
         r.draw(rootNode);
         
