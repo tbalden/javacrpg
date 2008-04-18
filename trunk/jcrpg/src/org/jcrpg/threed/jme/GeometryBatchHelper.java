@@ -28,7 +28,6 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
-import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -123,13 +122,11 @@ public class GeometryBatchHelper {
 	    		}
 	    		if (internal)
 	    		{
-	    			core.intNodePasses.get(J3DStandingEngine.currentRenderCount).attachChild(batch.parent);
-	    			//core.intRootNode.attachChild(batch.parent);
+	    			core.intRootNode.attachChild(batch.parent);
 	    			//core.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			core.extNodePasses.get(J3DStandingEngine.currentRenderCount).attachChild(batch.parent);
-	    			//core.extRootNode.attachChild(batch.parent);
+	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
 	    		modelBatchMap.put(key, batch);
@@ -151,12 +148,12 @@ public class GeometryBatchHelper {
 	    		if (internal)
 	    		{
 	    			batch.setAnimated(false); // inside no wind
-	    			core.intNodePasses.get(J3DStandingEngine.currentRenderCount).attachChild(batch.parent);
+	    			core.intRootNode.attachChild(batch.parent);
 	    			//core.intRootNode.updateRenderState();
 	    		} else
 	    		{
 	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation); // animate wind only outside
-	    			core.extNodePasses.get(J3DStandingEngine.currentRenderCount).attachChild(batch.parent);
+	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
 	    		trimeshBatchMap.put(key, batch);
