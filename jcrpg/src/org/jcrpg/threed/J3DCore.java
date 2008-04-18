@@ -2269,7 +2269,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	@Override
 	protected void simpleRender() {
-		if (System.currentTimeMillis()%10<=6) return;
 		TrimeshGeometryBatch.passedTimeCalculated = false;
         /** Have the PassManager render. */
         try {

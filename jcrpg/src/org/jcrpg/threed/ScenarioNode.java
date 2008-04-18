@@ -69,7 +69,7 @@ public class ScenarioNode extends Node {
      * @param states
      *            The Stack[] of render states to apply to each child.
      */
-    protected void applyRenderState(Stack[] states) {
+    /*protected void applyRenderState(Stack[] states) {
         if(children == null) {
             return;
         }
@@ -80,6 +80,6 @@ public class ScenarioNode extends Node {
             		pkChild.updateRenderState();
             }
         }
-    }
+    }*/
 	
 }
