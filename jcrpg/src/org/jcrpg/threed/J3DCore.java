@@ -325,12 +325,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Node extRootNode;
 	/** internal all root */
 	public Node intRootNode; 
-	
-	public Node extNodePass1 = new Node(), extNodePass2 = new Node(), extNodePass3 = new Node(), extNodePass4 = new Node();
-	public Node intNodePass1 = new Node(), intNodePass2 = new Node(), intNodePass3 = new Node(), intNodePass4 = new Node();
-	public ArrayList<Node> extNodePasses = new ArrayList<Node>();
-	public ArrayList<Node> intNodePasses = new ArrayList<Node>();
-	
 	/** skyroot */
 	//Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
@@ -1881,7 +1875,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         zStatePasses.setEnabled(true);
         zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
 		rootNode.setRenderState(zStatePasses);
-		//rootNode.setCullMode(Node.CULL_NEVER);
+		//rootNode.setCullMode(Node.CULL_DYNAMIC);
 		uiRootNode = new Node();
 		rootNode.attachChild(uiRootNode);		
         ZBufferState zStateOff = display.getRenderer().createZBufferState();
@@ -1907,19 +1901,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		intRootNode = new Node();
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
+		/*groundParentNode.setModelBound(null);
+		rootNode.setModelBound(null);
+		intRootNode.setModelBound(null);
+		extRootNode.setModelBound(null);*/
 		intRootNode.setCullMode(Node.CULL_DYNAMIC);
 		extRootNode.setCullMode(Node.CULL_DYNAMIC);
 		groundParentNode.setCullMode(Node.CULL_DYNAMIC);
-		extRootNode.attachChild(extNodePass1);
-		extRootNode.attachChild(extNodePass2);
-		extRootNode.attachChild(extNodePass3);
-		extRootNode.attachChild(extNodePass4);
-		intRootNode.attachChild(intNodePass1);
-		intRootNode.attachChild(intNodePass2);
-		intRootNode.attachChild(intNodePass3);
-		intRootNode.attachChild(intNodePass4);
-		extNodePasses.add(extNodePass1);extNodePasses.add(extNodePass2);extNodePasses.add(extNodePass3);extNodePasses.add(extNodePass4);
-		intNodePasses.add(intNodePass1);intNodePasses.add(intNodePass2);intNodePasses.add(intNodePass3);intNodePasses.add(intNodePass4);
 
         //cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		//Setup renderpasses

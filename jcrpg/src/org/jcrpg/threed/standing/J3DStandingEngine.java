@@ -376,10 +376,6 @@ public class J3DStandingEngine {
 	int cullVariationCounter = 0;
 	
 
-	public static int currentRenderCount = 0;
-	public Node extNode;
-	public Node intNode;
-	
 	public void renderToViewPort()
 	{
 		renderToViewPort(J3DCore.OPTIMIZE_ANGLES?1.1f:3.14f);
@@ -394,9 +390,6 @@ public class J3DStandingEngine {
 	}
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
-		extNode = core.extNodePasses.get(currentRenderCount);
-		intNode = core.intNodePasses.get(currentRenderCount);
-		
 		long t1 = System.currentTimeMillis(); 
 		synchronized(Engine.mutex) {
 			/*
@@ -771,10 +764,10 @@ public class J3DStandingEngine {
 									}
 								
 									if (c.cube.internalCube) {
-										intNode.attachChild((Node)realPooledNode);
+										core.intRootNode.attachChild((Node)realPooledNode);
 									} else 
 									{
-										extNode.attachChild((Node)realPooledNode);
+										core.extRootNode.attachChild((Node)realPooledNode);
 									}
 									if (sharedNode)
 									{	
@@ -1070,10 +1063,10 @@ public class J3DStandingEngine {
 									}
 								
 									if (c.cube.internalCube) {
-										intNode.attachChild((Node)realPooledNode);
+										core.intRootNode.attachChild((Node)realPooledNode);
 									} else 
 									{
-										extNode.attachChild((Node)realPooledNode);
+										core.extRootNode.attachChild((Node)realPooledNode);
 									}
 									if (sharedNode)
 									{	
@@ -1178,17 +1171,14 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				intNode.setCullMode(Node.CULL_NEVER);
-				extNode.setCullMode(Node.CULL_NEVER);
+				core.groundParentNode.setCullMode(Node.CULL_NEVER);
 				J3DCore.TRICK_CULL_RENDER = true;
 				core.updateDisplayNoBackBuffer();
 				J3DCore.TRICK_CULL_RENDER = false;
-				intNode.setCullMode(Node.CULL_DYNAMIC);
-				extNode.setCullMode(Node.CULL_DYNAMIC);
+				core.groundParentNode.setCullMode(Node.CULL_DYNAMIC);
 				if (cullVariationCounter%1==0) 
 				{
-					intNode.updateRenderState();
-					extNode.updateRenderState();
+					core.groundParentNode.updateRenderState();
 				} else
 				{
 					//updateDisplayNoBackBuffer();
@@ -1217,7 +1207,6 @@ public class J3DStandingEngine {
 			engine.setPause(storedPauseState);
 		}
 		Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
-		currentRenderCount=(currentRenderCount+1)%4;
 	}
 	
 	
