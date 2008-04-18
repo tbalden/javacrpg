@@ -73,7 +73,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 
 	public static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
-	public ModelGeometryBatch(J3DCore core, Model m) {
+	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder) {
 		model = m;
 		this.core = core;
 		TriMesh mesh = getModelMesh(m);
@@ -90,6 +90,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			sharedParentCache.put(m.id,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+		parent.setLocalTranslation(placeHolder.getLocalTranslation());
 		parent.attachChild(this);
 		parent.updateModelBound();
 	}
@@ -125,7 +126,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			long t0 = System.currentTimeMillis();
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = nVSet.iterator().next();
-			instance.getAttributes().setTranslation(placeholder.getLocalTranslation());
+			instance.getAttributes().setTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			instance.getAttributes().setRotation(placeholder.getLocalRotation());
 			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			if (placeholder.farView)
@@ -147,7 +148,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			long t0 = System.currentTimeMillis();
 			TriMesh quad = getModelMesh(placeholder.model);
 			//System.out.println("ADDING"+placeholder.model.id+quad.getName());
-			quad.setLocalTranslation(placeholder.getLocalTranslation());
+			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
+			//quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			quad.setLocalRotation(placeholder.getLocalRotation());
 			if (placeholder.farView)

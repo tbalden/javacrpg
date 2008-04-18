@@ -114,7 +114,7 @@ public class GeometryBatchHelper {
 	    	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch==null)
 	    	{
-	    		batch = new ModelGeometryBatch(core,m);
+	    		batch = new ModelGeometryBatch(core,m,place);
 	    		batch.key = key;
 	    		if (m.type == Model.QUADMODEL && ((QuadModel)m).waterQuad)
 	    		{
@@ -142,7 +142,7 @@ public class GeometryBatchHelper {
 	    	if (batch==null)
 	    	{
 	    		TriMesh tri = VegetationSetup.getVegTrimesh(internal,place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
-	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal);
+	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal,place);
 	    		batch.model = m;
 	    		batch.key = key;
 	    		if (internal)
@@ -293,7 +293,7 @@ public class GeometryBatchHelper {
 				} else
 				{
 					if (batch.model!=null && batch.model.alwaysRenderBatch) continue;
-					if (batch.avarageTranslation.distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+					if (batch.parent.getWorldTranslation().add(batch.avarageTranslation).distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
 					{
 						batch.setCullMode(TriMesh.CULL_ALWAYS);
 						batch.updateRenderState();

@@ -240,7 +240,7 @@ public class VegetationSetup {
 			}
 			quadCache.put(tm.getKey(), quads);
 		}
-		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(tm.getKey(),core,(TriMesh)quads[0].getChild(0),false);
+		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(tm.getKey(),core,(TriMesh)quads[0].getChild(0),false,null);
 		
 
 		int quadQuantity = tm.quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);

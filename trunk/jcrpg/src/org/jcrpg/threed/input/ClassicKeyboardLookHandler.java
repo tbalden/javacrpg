@@ -78,7 +78,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "enter", KeyInput.KEY_RETURN );
         keyboard.set( "back", KeyInput.KEY_BACK);
         keyboard.set( "A", KeyInput.KEY_A );
-        keyboard.set( "B", KeyInput.KEY_B );
+        if (!J3DCore.FREE_MOVEMENT)
+        	keyboard.set( "B", KeyInput.KEY_B );
         keyboard.set( "C", KeyInput.KEY_C );
         keyboard.set( "D", KeyInput.KEY_D );
         keyboard.set( "E", KeyInput.KEY_E );
@@ -88,7 +89,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "I", KeyInput.KEY_I );
         keyboard.set( "J", KeyInput.KEY_J );
         keyboard.set( "K", KeyInput.KEY_K );
-        keyboard.set( "L", KeyInput.KEY_L );
+        if (!J3DCore.FREE_MOVEMENT)
+        	keyboard.set( "L", KeyInput.KEY_L );
         keyboard.set( "M", KeyInput.KEY_M );
         keyboard.set( "N", KeyInput.KEY_N );
         keyboard.set( "O", KeyInput.KEY_O );
@@ -96,7 +98,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "Q", KeyInput.KEY_Q );
         keyboard.set( "R", KeyInput.KEY_R );
         keyboard.set( "S", KeyInput.KEY_S );
-        keyboard.set( "T", KeyInput.KEY_T );
+        if (!J3DCore.FREE_MOVEMENT)
+        	keyboard.set( "T", KeyInput.KEY_T );
         keyboard.set( "U", KeyInput.KEY_U );
         keyboard.set( "V", KeyInput.KEY_V );
         keyboard.set( "W", KeyInput.KEY_W );
@@ -137,7 +140,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "logUp", false);
         addAction( new CKeyMenu(this), "logDown", false);
         addAction( new CKeyMenu(this), "A", false);
-        addAction( new CKeyMenu(this), "B", false);
+        if (!J3DCore.FREE_MOVEMENT)
+        	addAction( new CKeyMenu(this), "B", false);
         addAction( new CKeyMenu(this), "C", false);
         addAction( new CKeyMenu(this), "D", false);
         addAction( new CKeyMenu(this), "E", false);
@@ -147,15 +151,18 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "I", false);
         addAction( new CKeyMenu(this), "J", false);
         addAction( new CKeyMenu(this), "K", false);
-        addAction( new CKeyMenu(this), "L", false);
+        if (!J3DCore.FREE_MOVEMENT)
+        	addAction( new CKeyMenu(this), "L", false);
         addAction( new CKeyMenu(this), "M", false);
-        addAction( new CKeyMenu(this), "N", false);
+        if (!J3DCore.FREE_MOVEMENT)
+        	addAction( new CKeyMenu(this), "N", false);
         addAction( new CKeyMenu(this), "O", false);
         addAction( new CKeyMenu(this), "P", false);
         addAction( new CKeyMenu(this), "Q", false);
         addAction( new CKeyMenu(this), "R", false);
         addAction( new CKeyMenu(this), "S", false);
-        addAction( new CKeyMenu(this), "T", false);
+        if (!J3DCore.FREE_MOVEMENT)
+        	addAction( new CKeyMenu(this), "T", false);
         addAction( new CKeyMenu(this), "U", false);
         addAction( new CKeyMenu(this), "V", false);
         addAction( new CKeyMenu(this), "W", false);

@@ -1876,6 +1876,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
 		rootNode.setRenderState(zStatePasses);
 		//rootNode.setCullMode(Node.CULL_DYNAMIC);
+		
+		// ui root
 		uiRootNode = new Node();
 		rootNode.attachChild(uiRootNode);		
         ZBufferState zStateOff = display.getRenderer().createZBufferState();
@@ -1884,21 +1886,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//uiRootNode.setRenderState(zStateOff);
 		uiRootNode.setModelBound(new BoundingBox());
 		uiRootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		quadToFixHUDCulling = new Quad("",0,0);
+		quadToFixHUDCulling.setModelBound(new BoundingBox());quadToFixHUDCulling.updateModelBound();
+		uiRootNode.attachChild(quadToFixHUDCulling);
+
 		//cam.resize(100, 100);
 		//cam.setViewPort(30, 90, 30, 90);
 		bigSphere.setCenter(new Vector3f(0,0,0));
 		//bigSphere.s
 		bigSphere.setRadius(10000f);
 		//uiRootNode.setModelBound(bigSphere);
-		quadToFixHUDCulling = new Quad("",0,0);
-		quadToFixHUDCulling.setModelBound(new BoundingBox());quadToFixHUDCulling.updateModelBound();
-		uiRootNode.attachChild(quadToFixHUDCulling);
+
 		// external cubes' rootnode
-		extRootNode = new Node();
+		extRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode();
 		//extRootNode.setModelBound(bigSphere);
 		//extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
-		intRootNode = new Node();
+		intRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode();
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
 		/*groundParentNode.setModelBound(null);
