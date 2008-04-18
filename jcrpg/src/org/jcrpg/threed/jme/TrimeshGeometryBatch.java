@@ -98,7 +98,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	float startFog;
 	
-	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal) {
+	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal, NodePlaceholder placeHolder) {
 		this.core = core;
 		Node parentOrig = sharedParentCache.get(id+internal);
 		if (parentOrig==null)
@@ -110,6 +110,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			sharedParentCache.put(id+internal,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+		parent.setLocalTranslation(placeHolder.getLocalTranslation());
 		parent.attachChild(this);
 		parent.updateModelBound();
 		if (!internal) J3DCore.hmSolidColorSpatials.put(parent, parent);
@@ -181,6 +182,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	@SuppressWarnings("unchecked")
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
+		trimesh.getLocalTranslation().subtractLocal(parent.getLocalTranslation());
 		
 		if (notVisible.size()>0)
 		{
@@ -203,7 +205,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				instances.add(instance);
 			}
 
-			calcAvarageTranslation(trimesh.getLocalTranslation());				
+			calcAvarageTranslation(trimesh.getLocalTranslation());
 			notVisible.remove(instance);
 			visible.add(instance);
 			sumAddItemReal += System.currentTimeMillis()-t0;
@@ -228,7 +230,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		sumAddItemReal += System.currentTimeMillis()-t0;
 		
 		long t1 = System.currentTimeMillis();
-		calcAvarageTranslation(trimesh.getLocalTranslation());				
+		calcAvarageTranslation(trimesh.getLocalTranslation());
 		sumAddItemReal += System.currentTimeMillis()-t1;
 		visible.add(instance);
 		return;
@@ -420,7 +422,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					setLocalRotation(qZero);
 				}
 				if (vertexShader) {
-					float dist = this.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
+					float dist = parent.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
 					if (J3DCore.FARVIEW_ENABLED) {
 						fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.3f),0,0,0}, 1); // TODO
 					} else
@@ -511,8 +513,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		} else
 		{
         	this.setRenderState(core.fs_external);
-        	this.clearRenderState(vp.RS_VERTEX_PROGRAM);
-        	this.clearRenderState(vp.RS_FRAGMENT_PROGRAM);
+        	this.clearRenderState(VertexProgramState.RS_VERTEX_PROGRAM);
+        	this.clearRenderState(VertexProgramState.RS_FRAGMENT_PROGRAM);
 		}
 	}
 	

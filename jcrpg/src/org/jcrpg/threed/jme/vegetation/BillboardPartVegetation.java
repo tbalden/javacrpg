@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
@@ -429,18 +430,22 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			quadCache.put(qkey, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
+			targetQuad.setLocalTranslation(x, z, -y);
+			targetQuad.setLocalRotation(new Quaternion());
+			targetQuad.getWorldRotation().set(new Quaternion());
+			targetQuad.setModelBound(new BoundingBox());
+			targetQuad.updateModelBound();
 			if (batch==null)
 			{
-				batch = new TrimeshGeometryBatch(model.id,core,targetQuad,internal);
+				NodePlaceholder fake = new NodePlaceholder();
+				fake.setLocalTranslation(new Vector3f());
+				batch = new TrimeshGeometryBatch(model.id,core,targetQuad,internal,fake);
 				batch.animated = !internal && J3DCore.ANIMATED_TREES && model.windAnimation;
 				batch.setName("---");
 				batch.parent.setName("---");
 			}
-			targetQuad.setModelBound(new BoundingBox());
-			targetQuad.setLocalTranslation(x, z, -y);
-			targetQuad.setLocalRotation(new Quaternion());
-			targetQuad.getWorldRotation().set(new Quaternion());
-			targetQuad.updateModelBound();
+			//targetQuad.setLocalTranslation(x, z, -y);
+			//quad.setLocalTranslation(x, y, z);
 			batch.addItem(null, targetQuad);
 		}
 		if (NO_BATCH_GEOMETRY) {

@@ -17,24 +17,25 @@
 
 package org.jcrpg.threed;
 
-import java.util.Stack;
-
-import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
 public class ScenarioNode extends Node {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public float VIEW_DISTANCE_SQR = 10f;
-	public Camera cam;
 
-	public ScenarioNode(float viewDistance, Camera cam)
+	public ScenarioNode()
 	
 	{
-		VIEW_DISTANCE_SQR = viewDistance*viewDistance;
-		this.cam = cam;
+		VIEW_DISTANCE_SQR = J3DCore.VIEW_DISTANCE_SQR;
+		//this.cam = cam;
 	}
+	
 	
 	@Override
 	public void draw(Renderer r) {
@@ -46,7 +47,7 @@ public class ScenarioNode extends Node {
 	            child =  children.get(i);
 	            if (child != null)
 	            {
-	            	if (cam.getLocation().distanceSquared(child.getWorldTranslation())<VIEW_DISTANCE_SQR)
+	            	if (r.getCamera().getLocation().distanceSquared(child.getWorldTranslation())<VIEW_DISTANCE_SQR)
 	            	{
 	            		child.onDraw(r);
 	            	}
@@ -62,17 +63,17 @@ public class ScenarioNode extends Node {
      * @param states
      *            The Stack[] of render states to apply to each child.
      */
-    protected void applyRenderState(Stack[] states) {
+    /*protected void applyRenderState(Stack[] states) {
         if(children == null) {
             return;
         }
         for (int i = 0, cSize = children.size(); i < cSize; i++) {
             Spatial pkChild = getChild(i);
             if (pkChild != null) {
-            	if (cam.getLocation().distanceSquared(pkChild.getWorldTranslation())<VIEW_DISTANCE_SQR)
+            	if (r.getCamera().getLocation().distanceSquared(pkChild.getWorldTranslation())<VIEW_DISTANCE_SQR)
             		pkChild.updateRenderState();
             }
         }
-    }
+    }*/
 	
 }
