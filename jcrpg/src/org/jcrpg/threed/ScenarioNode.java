@@ -42,8 +42,8 @@ public class ScenarioNode extends Node {
 	}
 	
 	
-	@Override
-	public void draw(Renderer r) {
+	//@Override
+	public void drraw(Renderer r) {
 	       if(children == null) {
 	            return;
 	        }
@@ -52,7 +52,7 @@ public class ScenarioNode extends Node {
 	            child =  children.get(i);
 	            if (child != null)
 	            {
-	            	if (r.getCamera().getLocation().distanceSquared(child.getWorldTranslation())<VIEW_DISTANCE_SQR)
+	            	if (child.getCullMode()==Spatial.CULL_NEVER || r.getCamera().getLocation().distanceSquared(child.getWorldTranslation())<VIEW_DISTANCE_SQR)
 	            	{
 	            		//if (System.currentTimeMillis()%10>4)
 	            			child.onDraw(r);
