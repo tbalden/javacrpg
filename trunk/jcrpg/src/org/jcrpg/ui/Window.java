@@ -58,6 +58,7 @@ public abstract class Window {
 			windowCounter--;
 			base.catchEventFromSpreading();
 			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
+			core.setFlare(true);
 			base.activeWindows.remove(this);
 			hide();
 		} else
@@ -65,6 +66,7 @@ public abstract class Window {
 			windowCounter++;
 			((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).lockSecondaryHandling();
 			storedEnginePauseState = core.gameState.engine.isPause();
+			core.setFlare(false);
 			core.gameState.engine.setPause(true);
 			base.activeWindows.add(this);
 			show();
