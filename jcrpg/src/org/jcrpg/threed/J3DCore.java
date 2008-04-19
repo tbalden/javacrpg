@@ -378,14 +378,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static Vector3f[] turningDirectionsUnit = new Vector3f[] {tdNorth, tdEast, tdSouth, tdWest,tdTop,tdBottom};
 
 
-	public static float dirPostDelta = 0.7f;
-	public static Vector3f dpNorth = new Vector3f(0, 0, -dirPostDelta),
+	public static final float dirPostDelta = 0.7f;
+	public static final Vector3f dpNorth = new Vector3f(0, 0, -dirPostDelta),
 		dpSouth = new Vector3f(0, 0, dirPostDelta),
 		dpEast = new Vector3f(dirPostDelta, 0, 0),
 		dpWest = new Vector3f(-dirPostDelta, 0, 0),
 		dpTop = new Vector3f(0, dirPostDelta, 0),
 		dpBottom = new Vector3f(0, -dirPostDelta, 0);
-	public static Vector3f[] directionPositions = new Vector3f[] {dpNorth, dpEast, dpSouth, dpWest,dpTop,dpBottom};
+	public static final Vector3f[] directionPositions = new Vector3f[] {dpNorth, dpEast, dpSouth, dpWest,dpTop,dpBottom};
 
 	static 
 	{
@@ -406,7 +406,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		qTexture.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
 	}
 	
-	public static HashMap<Integer,Vector3f> viewDirectionTranslation = new HashMap<Integer, Vector3f>();
+	public static final HashMap<Integer,Vector3f> viewDirectionTranslation = new HashMap<Integer, Vector3f>();
 	static {
 		viewDirectionTranslation.put(new Integer(NORTH),new Vector3f(0,0,1));
 		viewDirectionTranslation.put(new Integer(SOUTH),new Vector3f(0,0,-1));
@@ -415,7 +415,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 	}
 	
-	public static HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
+	public static final HashMap<Integer,Object[]> directionAnglesAndTranslations = new HashMap<Integer,Object[]>();
 	static 
 	{
 		directionAnglesAndTranslations.put(new Integer(NORTH), new Object[]{qN,new int[]{0,0,-1}});
@@ -426,7 +426,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		directionAnglesAndTranslations.put(new Integer(BOTTOM), new Object[]{qB,new int[]{0,-1,0}});
 	}
 	
-	public static HashMap<Integer,Integer> oppositeDirections = new HashMap<Integer, Integer>();
+	public static final HashMap<Integer,Integer> oppositeDirections = new HashMap<Integer, Integer>();
 	static
 	{
 		oppositeDirections.put(new Integer(NORTH), new Integer(SOUTH));
@@ -436,7 +436,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		oppositeDirections.put(new Integer(TOP), new Integer(BOTTOM));
 		oppositeDirections.put(new Integer(BOTTOM), new Integer(TOP));
 	}
-	public static HashMap<Integer,Integer> nextDirections = new HashMap<Integer, Integer>();
+	public static final HashMap<Integer,Integer> nextDirections = new HashMap<Integer, Integer>();
 	static
 	{
 		nextDirections.put(new Integer(NORTH), new Integer(WEST));
@@ -446,7 +446,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		nextDirections.put(new Integer(TOP), new Integer(BOTTOM));
 		nextDirections.put(new Integer(BOTTOM), new Integer(TOP));
 	}
-	public static HashMap<Integer,Quaternion> horizontalRotations = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> horizontalRotations = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// horizontal rotations
@@ -465,7 +465,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		horizontalRotations.put(new Integer(EAST), horizontalE);
 	}
 
-	public static HashMap<Integer,Quaternion> horizontalRotationsReal = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> horizontalRotationsReal = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// horizontal rotations
@@ -484,7 +484,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		horizontalRotationsReal.put(new Integer(EAST), horizontalEReal);
 	}
 	
-	public static HashMap<Integer,Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// steep rotations
@@ -503,7 +503,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepRotations.put(new Integer(EAST), steepE);
 	}
 	
-	public static HashMap<Integer,Quaternion> steepRotations_special = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> steepRotations_special = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// steep rotations with special in-one-step rotation
@@ -522,7 +522,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepRotations_special.put(new Integer(EAST), steepE_noRot);
 	}
 	// farview steeps
-	public static HashMap<Integer,Quaternion> steepRotations_FARVIEW = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> steepRotations_FARVIEW = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// steep rotations
@@ -541,7 +541,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		steepRotations_FARVIEW.put(new Integer(EAST), steepE);
 	}
 	
-	public static HashMap<Integer,Quaternion> steepRotations_special_FARVIEW = new HashMap<Integer, Quaternion>();
+	public static final HashMap<Integer,Quaternion> steepRotations_special_FARVIEW = new HashMap<Integer, Quaternion>();
 	static
 	{
 		// steep rotations with special in-one-step rotation
@@ -561,7 +561,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 
-	public static HashMap<Integer,int[]> moveTranslations = new HashMap<Integer,int[]>();
+	public static final HashMap<Integer,int[]> moveTranslations = new HashMap<Integer,int[]>();
 	static 
 	{
 		moveTranslations.put(new Integer(NORTH), new int[]{0,0,1});
@@ -573,8 +573,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	
-	public static float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,8f},{8f,16f},{16f,24f},{24f,50f}};
-	public static float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,20f},{20f,40f}};
+	public static final float[][] TREE_LOD_DIST_HIGH = new float[][]{{0f,8f},{8f,16f},{16f,24f},{24f,50f}};
+	public static final float[][] TREE_LOD_DIST_LOW = new float[][]{{0f,0f},{0f,10f},{10f,20f},{20f,40f}};
 	
 	public Language language = null;
 	
@@ -1662,7 +1662,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		noInput = true;
         // update game state, do not use interpolation parameter
-        //update(-1.0f);
+        update(-1.0f);
 
         // render, do not use interpolation parameter
         render(-1.0f);
@@ -2271,9 +2271,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	protected void simpleRender() {
        /** Have the PassManager render. */
         try {
-        	//if (BLOOM_EFFECT||SHADOWS||WATER_SHADER)
-        	if (!TRICK_CULL_RENDER)
-        		pManager.renderPasses(display.getRenderer());
+       		pManager.renderPasses(display.getRenderer());
         } catch (NullPointerException npe)
         {
         	npe.printStackTrace();

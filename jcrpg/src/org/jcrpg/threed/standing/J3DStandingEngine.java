@@ -375,6 +375,9 @@ public class J3DStandingEngine {
 	int cullVariationCounter = 0;
 	
 
+	/**
+	 * Rendering standing nodes to viewport. Converting nodePlaceHolders to actual Nodes if they are visible and removing non-visible nodes. (Using modelPool.)
+	 */
 	public void renderToViewPort()
 	{
 		renderToViewPort(J3DCore.OPTIMIZE_ANGLES?1.1f:3.14f);
@@ -387,12 +390,23 @@ public class J3DStandingEngine {
 	{
 		renderToViewPort(refAngle, false, 0,0);
 	}
+	
+	/**
+	 * list to store the newly rendered nodes during renderToViewPort for special processing: 
+	 * first render with CULL_NEVER then update it to CULL_INHERIT, plus updateRenderState call.
+	 */
 	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
 	
+	/**
+	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
+	 * @param refAngle
+	 * @param segmented
+	 * @param segmentCount
+	 * @param segments
+	 */
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
 		long t1 = System.currentTimeMillis(); 
-		newNodesToSetCullingDynamic.clear();
 		synchronized(Engine.mutex) {
 			
 			
@@ -531,6 +545,10 @@ public class J3DStandingEngine {
 			
 			if (segmented && segmentCount==0 || !segmented)
 			{
+				// clearing newly placed nodes list...
+				newNodesToSetCullingDynamic.clear();
+
+				// clearing current cubes...
 				alCurrentCubes.clear();
 				alCurrentCubes.addAll(hmCurrentCubes.values());
 				if (J3DCore.FARVIEW_ENABLED)
@@ -1143,11 +1161,6 @@ public class J3DStandingEngine {
 			
 			if (segmentCount==segments-1 || !segmented) {
 				
-				if (J3DCore.GEOMETRY_BATCH) 
-				{
-					core.batchHelper.updateAll();
-					core.batchHelper.lockAll();
-				}
 				
 				Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 			    // handling possible occluders
@@ -1179,23 +1192,23 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				//core.groundParentNode.setCullMode(Node.CULL_NEVER);
-				J3DCore.TRICK_CULL_RENDER = true;
+
+				// call an update to render new nodes correctly - workaround for culling problem - new nodes are set to CULL_NEVER..
 				core.updateDisplayNoBackBuffer();
-				J3DCore.TRICK_CULL_RENDER = false;
-				//core.groundParentNode.setCullMode(Node.CULL_DYNAMIC);
-				if (cullVariationCounter%1==0) 
-				{
-					core.groundParentNode.updateRenderState();
-				} else
-				{
-					//updateDisplayNoBackBuffer();
-				}
+				// ...iterate through new nodes and set normal culling mode...
 				for (Node n:newNodesToSetCullingDynamic)
 				{
-					n.setCullMode(Node.CULL_DYNAMIC);
+					n.setCullMode(Node.CULL_INHERIT);
+					n.updateRenderState(); // update render state for the newly placed nodes...
 				}
-		
+				
+				// update geometry batches...
+				if (J3DCore.GEOMETRY_BATCH) 
+				{
+					core.batchHelper.updateAll();
+					core.batchHelper.lockAll();
+				}
+				
 				Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
 				Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 				Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
@@ -1218,6 +1231,7 @@ public class J3DStandingEngine {
 			
 			engine.setPause(storedPauseState);
 		}
+		//System.out.println("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 		Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 	}
 	
