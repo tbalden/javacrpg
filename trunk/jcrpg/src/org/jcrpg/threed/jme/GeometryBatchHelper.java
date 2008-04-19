@@ -31,6 +31,7 @@ import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
+import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 
 public class GeometryBatchHelper {
@@ -129,6 +130,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
+    			batch.parent.setCullMode(Node.CULL_NEVER);
+    			core.sEngine.newNodesToSetCullingDynamic.add(batch.parent);
 	    		modelBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
@@ -156,6 +159,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
+    			batch.parent.setCullMode(Node.CULL_NEVER);
+    			core.sEngine.newNodesToSetCullingDynamic.add(batch.parent);
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
