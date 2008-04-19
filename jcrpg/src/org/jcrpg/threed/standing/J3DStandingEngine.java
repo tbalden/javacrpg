@@ -51,7 +51,6 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -388,10 +387,15 @@ public class J3DStandingEngine {
 	{
 		renderToViewPort(refAngle, false, 0,0);
 	}
+	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
+	
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
 		long t1 = System.currentTimeMillis(); 
+		newNodesToSetCullingDynamic.clear();
 		synchronized(Engine.mutex) {
+			
+			
 			/*
 			if (core.extRootNode!=null && core.extRootNode.getChildren()!=null) {
 				System.out.println("   -    "+ core.extRootNode.getChildren().size());
@@ -769,6 +773,8 @@ public class J3DStandingEngine {
 									{
 										core.extRootNode.attachChild((Node)realPooledNode);
 									}
+									realPooledNode.setCullMode(Node.CULL_NEVER);
+									newNodesToSetCullingDynamic.add(realPooledNode);
 									if (sharedNode)
 									{	
 										realPooledNode.lockMeshes();
@@ -1068,6 +1074,8 @@ public class J3DStandingEngine {
 									{
 										core.extRootNode.attachChild((Node)realPooledNode);
 									}
+									realPooledNode.setCullMode(Node.CULL_NEVER);
+									newNodesToSetCullingDynamic.add(realPooledNode);
 									if (sharedNode)
 									{	
 										realPooledNode.lockMeshes();
@@ -1171,17 +1179,21 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 		
 				cullVariationCounter++;
-				core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				//core.groundParentNode.setCullMode(Node.CULL_NEVER);
 				J3DCore.TRICK_CULL_RENDER = true;
 				core.updateDisplayNoBackBuffer();
 				J3DCore.TRICK_CULL_RENDER = false;
-				core.groundParentNode.setCullMode(Node.CULL_DYNAMIC);
+				//core.groundParentNode.setCullMode(Node.CULL_DYNAMIC);
 				if (cullVariationCounter%1==0) 
 				{
 					core.groundParentNode.updateRenderState();
 				} else
 				{
 					//updateDisplayNoBackBuffer();
+				}
+				for (Node n:newNodesToSetCullingDynamic)
+				{
+					n.setCullMode(Node.CULL_DYNAMIC);
 				}
 		
 				Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(core.extRootNode.getChildren()==null?"-":core.extRootNode.getChildren().size()));
