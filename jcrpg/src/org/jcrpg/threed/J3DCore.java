@@ -725,6 +725,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		return cam;
 	}
 	
+	public HashMap<LensFlare,Node> flares = new HashMap<LensFlare,Node>();
 	
 	/**
 	 * Creates the spatials (spheres) for a world orbiter
@@ -778,8 +779,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	        flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 	        //flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
-	        flare.setRootNode(rootNode);
+	        flare.setRootNode(groundParentNode);
 	        groundParentNode.attachChild(lightNode);
+	        flares.put(flare,flare.getRootNode());
 
 	        // notice that it comes at the end
 	        lightNode.attachChild(flare);
@@ -1858,6 +1860,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 	}
 	
+	public void setFlare(boolean state)
+	{
+		System.out.println("TURNING LENSFLARE "+state);
+		for (LensFlare f:flares.keySet())
+		{
+			f.setIntensity(state?10f:0f);
+			f.setRootNode(state?flares.get(f):null);
+			f.updateRenderState();
+		}
+	}
+	
 	/**
 	 * When a full game is started/loaded this should be true.
 	 */
@@ -1881,11 +1894,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		uiRootNode = new Node();
 		rootNode.attachChild(uiRootNode);		
         ZBufferState zStateOff = display.getRenderer().createZBufferState();
-        zStateOff.setEnabled(false);
+        zStateOff.setFunction(ZBufferState.CF_ALWAYS);
+        zStateOff.setEnabled(true);
 		uiRootNode.setCullMode(Node.CULL_NEVER);
-		//uiRootNode.setRenderState(zStateOff);
+		uiRootNode.setRenderState(zStateOff);
 		uiRootNode.setModelBound(new BoundingBox());
 		uiRootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		uiRootNode.setLightCombineMode(LightState.OFF);
+		
 		quadToFixHUDCulling = new Quad("",0,0);
 		quadToFixHUDCulling.setModelBound(new BoundingBox());quadToFixHUDCulling.updateModelBound();
 		uiRootNode.attachChild(quadToFixHUDCulling);
