@@ -28,6 +28,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
@@ -130,8 +131,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
-    			batch.parent.setCullMode(Node.CULL_NEVER);
-    			core.sEngine.newNodesToSetCullingDynamic.add(batch.parent);
+    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		modelBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
@@ -159,8 +160,8 @@ public class GeometryBatchHelper {
 	    			core.extRootNode.attachChild(batch.parent);
 	    			//core.extRootNode.updateRenderState();
 	    		}
-    			batch.parent.setCullMode(Node.CULL_NEVER);
-    			core.sEngine.newNodesToSetCullingDynamic.add(batch.parent);
+    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
@@ -298,14 +299,17 @@ public class GeometryBatchHelper {
 				} else
 				{
 					if (batch.model!=null && batch.model.alwaysRenderBatch) continue;
-					if (batch.parent.getWorldTranslation().add(batch.avarageTranslation).distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
 					{
-						batch.setCullMode(TriMesh.CULL_ALWAYS);
-						batch.updateRenderState();
-					} else
-					{
-						batch.setCullMode(TriMesh.CULL_DYNAMIC);
-						batch.updateRenderState();
+						if (batch.parent.getWorldTranslation().add(batch.avarageTranslation).distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+						{
+							batch.parent.setCullMode(TriMesh.CULL_ALWAYS);
+							batch.parent.updateRenderState();
+						} else
+						{
+							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
+							batch.parent.updateRenderState();
+						}
 					}
 				}
 	    	}
