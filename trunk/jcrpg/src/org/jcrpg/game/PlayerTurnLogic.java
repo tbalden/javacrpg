@@ -132,6 +132,7 @@ public class PlayerTurnLogic {
 					for (String type:typesSet)
 					{
 						types+=","+type;
+						if (types.length()>30) break;
 					}
 					ecology.callbackMessage(""+size+" "+types);
 					for (EntityMemberInstance member:members)
