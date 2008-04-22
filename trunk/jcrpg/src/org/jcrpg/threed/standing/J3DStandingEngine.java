@@ -326,7 +326,7 @@ public class J3DStandingEngine {
 						qC = J3DCore.steepRotations_special.get(cube.cube.steepDirection);
 					}
 					// the necessary local translation : half cube up
-					Vector3f newTrans = n[i].getLocalTranslation().add(new Vector3f(0f,(J3DCore.CUBE_EDGE_SIZE/2)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f));
+					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE/2)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
 					n[i].setLocalTranslation(newTrans);
 
 					// square root 2 is the scaling for that side, so we will set it depending on N-S or E-W steep direction
