@@ -1193,6 +1193,8 @@ public class J3DStandingEngine {
 		
 				cullVariationCounter++;
 
+				core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				
 				// call an update to render new nodes correctly - workaround for culling problem - new nodes are set to CULL_NEVER..
 				core.updateDisplayNoBackBuffer();
 				// ...iterate through new nodes and set normal culling mode...
@@ -1201,6 +1203,8 @@ public class J3DStandingEngine {
 					n.setCullMode(Node.CULL_INHERIT);
 					n.updateRenderState(); // update render state for the newly placed nodes...
 				}
+				
+				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
 				
 				// update geometry batches...
 				if (J3DCore.GEOMETRY_BATCH) 

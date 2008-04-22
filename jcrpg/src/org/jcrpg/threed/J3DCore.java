@@ -786,7 +786,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        // notice that it comes at the end
 	        lightNode.attachChild(flare);
 
-	        TriMesh sun = new Sphere(o.id,20,20,5f);
+	        TriMesh sun = new Sphere(o.id,20,20,3.5f);
 	        Node sunNode = new Node();
 	        sunNode.attachChild(sun);
 			skyParentNode.attachChild(sunNode);
@@ -813,7 +813,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	        
 		} else
 		if (o.type.equals(SimpleMoon.SIMPLE_MOON_ORBITER)) {
-			TriMesh moon = new Sphere(o.id,20,20,5f);
+			TriMesh moon = new Sphere(o.id,20,20,3.5f);
 			
 			Texture texture = TextureManager.loadTexture("./data/orbiters/moon2.jpg",Texture.MM_LINEAR,
                     Texture.FM_LINEAR);
