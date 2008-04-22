@@ -81,7 +81,6 @@ public class NodePlaceholder {
 	}
 	
 	public void setLocalTranslation(float x, float y, float z) {
-		
 		localTranslation = new Vector3f(x,y,z);
 	}
 	

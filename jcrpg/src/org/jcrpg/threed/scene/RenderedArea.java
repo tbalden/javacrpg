@@ -19,7 +19,6 @@ package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
@@ -82,7 +81,7 @@ public class RenderedArea {
 		world.perf_geo_t0 = 0;
 		world.perf_surface_t0 = 0;
 		world.perf_water_t0 = 0;
-		HashSet<Long> keysToRemove = new HashSet<Long>();
+		//HashSet<Long> keysToRemove = new HashSet<Long>();
 		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
 			for (int z1=Math.round(zMinusMult*distance); z1<=zPlusMult*distance; z1++)
@@ -113,7 +112,7 @@ public class RenderedArea {
 						getKey = false;
 					} else
 					{
-						// no key calc needed, decrease it...
+						// no key calc needed, increase it...
 						key++;
 					}
 					sumTime_1+=System.currentTimeMillis()-t0_1;
