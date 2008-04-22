@@ -14,6 +14,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[ ] Structure base class that can be extended telling how to build the street/building etc. structure
 	[ ] // TODO based on economic (house) heights add steps to the population
 	
+	[ ] gather changed areas into a temporary list in an ecology turn to know if re-render is needed where player is standing.
+	
 [ ] TreeLocator.java
 	[ ] //TODO this is not working correctly for a few cases, why?replaced with +1 for now
 
