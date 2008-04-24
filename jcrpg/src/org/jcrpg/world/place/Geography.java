@@ -145,6 +145,7 @@ public class Geography extends Place implements Surface {
 	public Geography(String id, Place parent, PlaceLocator loc)
 	{
 		super(id,parent, loc);
+		blockSize = 40;
 	}
 	public Geography(String id, Place parent,PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id,parent, loc);
@@ -197,11 +198,15 @@ public class Geography extends Place implements Surface {
 		//if (floraCube!=null) floraCube
 		return floraCube;
 	}
-
 	
-	@Override
-	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
-		int kind = getCubeKind(key, worldX, worldY, worldZ, farView);
+	/**
+	 * Get the Cube object from hashmaps that represents a kind depending on farView.
+	 * @param kind
+	 * @param farView
+	 * @return The Cube.
+	 */
+	public Cube getCubeObject(int kind, boolean farView)
+	{
 		Cube c;
 		if (farView)
 		{
@@ -211,6 +216,14 @@ public class Geography extends Place implements Surface {
 		{
 			c = hmKindCube.get(kind);
 		}
+		return c;
+	}
+
+	
+	@Override
+	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		int kind = getCubeKind(key, worldX, worldY, worldZ, farView);
+		Cube c = getCubeObject(kind, farView);
 		if (c==null) return null;
 		c = c.copy(this);
 		c.x = worldX;
@@ -409,27 +422,6 @@ public class Geography extends Place implements Surface {
 		return null;
 	}
 
-	/**
-	 * If this geo is not covering the coordinate, this should look up other geo that covers it and return the height.
-	 * @param worldX
-	 * @param worldZ
-	 * @return the relative height.
-	 */
-	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
-	{
-		for (Geography geo:((World)getRoot()).geographies.values())
-		{
-			if (this!=geo)
-			{
-				if (geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
-				{
-					int[] values = geo.calculateTransformedCoordinates(worldX, worldGroundLevel, worldZ);
-					return geo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
-				}
-			}
-		}
-		return 0;
-	}
 	
 	
 	

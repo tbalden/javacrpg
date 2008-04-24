@@ -287,6 +287,28 @@ public abstract class Place {
 		}
 		return thisWorld.shrinkToWorld(x);
 	}
+
+	/**
+	 * If this geo is not covering the coordinate, this should look up other geo that covers it and return the height.
+	 * @param worldX
+	 * @param worldZ
+	 * @return the relative height.
+	 */
+	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
+	{
+		for (Geography geo:((World)getRoot()).geographies.values())
+		{
+			if (this!=geo)
+			{
+				if (geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
+				{
+					int[] values = geo.calculateTransformedCoordinates(worldX, geo.worldGroundLevel, worldZ);
+					return geo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
+				}
+			}
+		}
+		return 0;
+	}
 	
 	/**
 	 * Load related things called upon loading the game, like filling up transient (non-save data) with generation.
