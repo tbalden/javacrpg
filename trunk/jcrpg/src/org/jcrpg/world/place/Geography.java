@@ -216,6 +216,9 @@ public class Geography extends Place implements Surface {
 		{
 			c = hmKindCube.get(kind);
 		}
+		if (c!=null)
+			c.needsFurtherMerge = true; // this is normal geography cube - if economy is using Geography as base class this will help economic cube to render further
+			// if not a real economic cube (world.getCube will interpret this.
 		return c;
 	}
 

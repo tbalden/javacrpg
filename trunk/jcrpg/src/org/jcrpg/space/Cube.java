@@ -30,6 +30,10 @@ public class Cube extends ChangingImpl {
 	public String climateId;
 	public int geoCubeKind = Geography.K_UNDEFINED;
 	public boolean canContain = false; 
+	/**
+	 * Tells if this cubes (if is an economic cube) needs further climate and water rendering onto it.
+	 */
+	public boolean needsFurtherMerge = false;
 
 	public Side[] n, e, s, w, top, bottom;
 	
@@ -384,6 +388,7 @@ public class Cube extends ChangingImpl {
 		c.climateId = climateId;
 		c.geoCubeKind = geoCubeKind;
 		c.canContain = canContain;
+		c.needsFurtherMerge = needsFurtherMerge;
 		return c;
 	}
 	
