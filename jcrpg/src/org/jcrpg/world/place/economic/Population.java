@@ -173,25 +173,33 @@ public class Population extends Economic{
 								{
 									continue;
 								}
-								
-								/*Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
+								EconomicGround eg = null;
+								Residence rI = null;
+								if (i%2 == 0)
+								{
+									rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
 										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 										owner.homeBoundary.posX+xOffset,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
-										owner.homeBoundary, owner);*/
-								EconomicGround eg = null;
-								try {
-									eg = new EconomicGround("house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
-										g,world,world.treeLocator,hsizeX,maximumHeight-minimumHeight+2,hsizeZ,
-										owner.homeBoundary.posX+xOffset,minimumHeight,owner.homeBoundary.posZ+zOffset,0,
 										owner.homeBoundary, owner);
-									addEcoGround(eg);
-								} catch (Exception ex)
-								{
-									ex.printStackTrace();
+									
+									addResidence(rI);
+								} else {
+									
+									try {
+										eg = new EconomicGround("house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
+											g,world,world.treeLocator,hsizeX,maximumHeight-minimumHeight+2,hsizeZ,
+											owner.homeBoundary.posX+xOffset,minimumHeight,owner.homeBoundary.posZ+zOffset,0,
+											owner.homeBoundary, owner);
+										addEcoGround(eg);
+									} catch (Exception ex)
+									{
+										ex.printStackTrace();
+									}
 								}
 								
-								if (eg!=null) System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+minimumHeight+ " - " + maximumHeight+ " "+eg.id);
+								if (eg!=null) System.out.println("ADDING GROUNDS!"+x1+":"+z1+" __ "+minimumHeight+ " - " + maximumHeight+ " "+eg.id);
+								if (rI!=null) System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+minimumHeight+ " - " + maximumHeight+ " "+rI.id);
 								if (soilGeo instanceof Cave)
 								{
 								//	System.out.println("### CAVE HOUSE = "+rI.id);
