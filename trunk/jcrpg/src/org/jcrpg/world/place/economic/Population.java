@@ -32,7 +32,8 @@ import org.jcrpg.world.place.geography.sub.Cave;
 
 public class Population extends Economic{
 	
-	public transient ArrayList<Residence> residenceList = new ArrayList<Residence>(); 
+	public transient ArrayList<Residence> residenceList = new ArrayList<Residence>();
+	public transient ArrayList<EconomicGround> groundList = new ArrayList<EconomicGround>(); 
 
 	public Population()
 	{
@@ -43,6 +44,7 @@ public class Population extends Economic{
 	public void onLoad()
 	{
 		residenceList = new ArrayList<Residence>();
+		groundList = new ArrayList<EconomicGround>();
 		boundaries = new GroupedBoundaries((World)parent,this);
 		update();
 	}
@@ -62,6 +64,15 @@ public class Population extends Economic{
 		residenceList.add(residence);
 		((GroupedBoundaries)boundaries).addBoundary(residence.getBoundaries());
 	}
+	/**
+	 * Adds a eco ground to the list and to the boundaries.
+	 * @param ecoGround
+	 */
+	public void addEcoGround(EconomicGround ecoGround)
+	{
+		groundList.add(ecoGround);
+		((GroupedBoundaries)boundaries).addBoundary(ecoGround.getBoundaries());
+	}
 	
 	/**
 	 * recalculating things based on instance's groupedboundaries,
@@ -80,6 +91,9 @@ public class Population extends Economic{
 		sizeX++;
 		sizeY++;
 		sizeZ++;
+		System.out.println("ORIGO X = "+origoX + " / "+sizeX);
+		System.out.println("ORIGO Y = "+origoY + " / "+sizeY);
+		System.out.println("ORIGO Z = "+origoZ + " / "+sizeZ);
 		//updateLocationAndSize();
 	}
 	
@@ -130,6 +144,7 @@ public class Population extends Economic{
 							{
 								Class<? extends Residence> r = list.get(0);
 								int maximumHeight = -1;
+								int minimumHeight = -1;
 								for (int x = owner.homeBoundary.posX; x<=owner.homeBoundary.posX+hsizeX; x++)
 								{
 									for (int z = owner.homeBoundary.posZ+zOffset; z<=owner.homeBoundary.posZ+zOffset+hsizeZ; z++)
@@ -140,6 +155,10 @@ public class Population extends Economic{
 										if (height>maximumHeight)
 										{
 											maximumHeight = height;
+										}
+										if (height<minimumHeight||minimumHeight==-1)
+										{
+											minimumHeight = height;
 										}
 									}
 								}
@@ -155,17 +174,29 @@ public class Population extends Economic{
 									continue;
 								}
 								
-								Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
+								/*Residence rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
 										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
 										owner.homeBoundary.posX+xOffset,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
+										owner.homeBoundary, owner);*/
+								EconomicGround eg = null;
+								try {
+									eg = new EconomicGround("house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
+										g,world,world.treeLocator,hsizeX,maximumHeight-minimumHeight+2,hsizeZ,
+										owner.homeBoundary.posX+xOffset,minimumHeight,owner.homeBoundary.posZ+zOffset,0,
 										owner.homeBoundary, owner);
-								System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+maximumHeight+ " "+rI.id);
+									addEcoGround(eg);
+								} catch (Exception ex)
+								{
+									ex.printStackTrace();
+								}
+								
+								if (eg!=null) System.out.println("ADDING HOUSE!"+x1+":"+z1+" __ "+minimumHeight+ " - " + maximumHeight+ " "+eg.id);
 								if (soilGeo instanceof Cave)
 								{
-									System.out.println("### CAVE HOUSE = "+rI.id);
+								//	System.out.println("### CAVE HOUSE = "+rI.id);
 								}
-								addResidence(rI);
+								//addResidence(rI);
 								break;
 							}
 							
@@ -189,6 +220,15 @@ public class Population extends Economic{
 	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		// going through the possible residences...
 		for (Economic e:residenceList)
+		{
+			// if inside..
+			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				// return cube.
+				return e.getCube(key, worldX, worldY, worldZ, farView);
+			}
+		}
+		for (Economic e:groundList)
 		{
 			// if inside..
 			if (e.getBoundaries().isInside(worldX, worldY, worldZ))

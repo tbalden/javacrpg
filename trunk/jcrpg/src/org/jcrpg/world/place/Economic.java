@@ -25,7 +25,7 @@ import org.jcrpg.world.ai.EntityInstance;
  * @author pali
  *
  */
-public class Economic extends Place{
+public class Economic extends Geography {
 
 	@Override
 	public boolean overrideGeoHeight() {
