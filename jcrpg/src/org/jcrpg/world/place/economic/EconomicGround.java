@@ -50,17 +50,15 @@ public class EconomicGround extends Economic {
 	
 	static 
 	{
+		// TODO add stairs and such
 		hmKindCubeOverride.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
 	}
 	
 
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
-		//System.out.println("CUBE OBJECT FROM ECOGROUND " + kind);
 		Cube c = hmKindCubeOverride.get(kind);
-		if (c!=null) return c;
-		//System.out.println("CUBE OBJECT FROM ECOGROUND NOT FOUND");
-		return super.getCubeObject(kind, farView);
+		return c;
 	}
 
 	public EconomicGround()
