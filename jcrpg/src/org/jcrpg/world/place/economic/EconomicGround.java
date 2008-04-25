@@ -20,7 +20,11 @@ package org.jcrpg.world.place.economic;
 
 import java.util.HashMap;
 
+import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.BoundaryUtils;
@@ -36,6 +40,20 @@ import org.jcrpg.world.place.PlaceLocator;
  */
 public class EconomicGround extends Economic {
 
+	public static final String TYPE_ECOGROUND = "ECOGROUND";
+	
+	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS");
+	static
+	{
+		SUBTYPE_STAIRS.audioStepType = AudioServer.STEP_STONE;
+	}
+	static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
+
+	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,BLOCK };
+	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,BLOCK };
+	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,BLOCK };
+
 	public EconomicGround(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
 		this.origoX = origoX;this.origoY = origoY;this.origoZ = origoZ;
@@ -50,8 +68,11 @@ public class EconomicGround extends Economic {
 	
 	static 
 	{
-		// TODO add stairs and such
 		hmKindCubeOverride.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
+		hmKindCubeOverride.put(K_STEEP_EAST, new Cube(null,STEPS_EAST,0,0,0));
+		hmKindCubeOverride.put(K_STEEP_WEST, new Cube(null,STEPS_WEST,0,0,0));
+		hmKindCubeOverride.put(K_STEEP_NORTH, new Cube(null,STEPS_NORTH,0,0,0));
+		hmKindCubeOverride.put(K_STEEP_SOUTH, new Cube(null,STEPS_SOUTH,0,0,0));
 	}
 	
 

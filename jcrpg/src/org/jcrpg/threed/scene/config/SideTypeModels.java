@@ -58,6 +58,7 @@ import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
@@ -162,6 +163,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(CaveMushroom.SUBTYPE_CAVEMUSHROOM.id, new Integer(44));
 		
 		hmCubeSideSubTypeToRenderedSideId.put(Anethum.SUBTYPE_ANETHUM.id, new Integer(45));
+		
+		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -684,8 +687,11 @@ public class SideTypeModels {
 		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
 		sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
+		SimpleModel sm_extsteps = new SimpleModel("models/external/ext_steps.obj",null);
+		sm_extsteps.batchEnabled = false;
+		hm3dTypeRenderedSide.put(new Integer(47), new RenderedSide(new Model[]{sm_extsteps}));
 		
-// NEXT ID = 47
+// NEXT ID = 48
 		
 	}
 	
