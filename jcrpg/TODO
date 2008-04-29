@@ -10,6 +10,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 [ ] Population.java
+
+	[ ] new idea -> population should be shared by different groups. groups can join a population migrating(?)
+
 	[ ] // TODO write a quick fitter function to build up a population structure quickly.
 		[ ] Structure base class that can be extended telling how to build the street/building etc. structure
 	[ ] // TODO based on economic (house) heights add steps to the population
