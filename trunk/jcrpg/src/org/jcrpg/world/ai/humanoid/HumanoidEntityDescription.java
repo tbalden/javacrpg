@@ -50,7 +50,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 				if (list!=null && list.size()>0) {
 					Class<? extends Population> p = list.get(0);
 					Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
-					world.addEconomy(pI);
+					world.economyContainer.addEconomy(pI);
 					break;
 				}
 			}

@@ -91,7 +91,13 @@ public abstract class Place {
 		return false;
 	}
 	
+	/**
+	 * Unique id.
+	 */
 	public String id;
+	/**
+	 * unique calculated numeric id.
+	 */
 	public long numericId;
 	
 	public PlaceLocator loc;
