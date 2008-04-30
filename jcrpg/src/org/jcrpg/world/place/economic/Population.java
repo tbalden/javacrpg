@@ -23,6 +23,7 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.EconomyHistoryElement;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
@@ -46,13 +47,13 @@ public class Population extends Economic{
 		residenceList = new ArrayList<Residence>();
 		groundList = new ArrayList<EconomicGround>();
 		boundaries = new GroupedBoundaries((World)parent,this);
-		update();
+		settle();
 	}
 	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
 		boundaries = new GroupedBoundaries(parent,this);
-		update();
+		settle();
 	}
 	
 	/**
@@ -100,8 +101,7 @@ public class Population extends Economic{
 	// TODO write a quick fitter function to build up a population structure quickl.
 	// TODO based on economic (house) heights add steps to the population
 	
-	@Override
-	public void update() {
+	public void settle() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
 		int xOffset = 0;
 		int zOffset = 0;
@@ -163,13 +163,13 @@ public class Population extends Economic{
 									}
 								}
 								
-								if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
+								if (world.economyContainer.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ+zOffset, false)!=null)
 								{
 									continue;
 								}
 								
 								
-								if (world.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
+								if (world.economyContainer.getEconomicCube(-1, owner.homeBoundary.posX, maximumHeight, owner.homeBoundary.posZ, false)!=null)
 								{
 									continue;
 								}
@@ -179,7 +179,7 @@ public class Population extends Economic{
 								{
 									rI = ((Residence)EconomyTemplate.economicBase.get(r)).getInstance(
 										"house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
-										g,world,world.treeLocator,hsizeX,hsizeY,hsizeZ,
+										g,world,world.economyContainer.treeLocator,hsizeX,hsizeY,hsizeZ,
 										owner.homeBoundary.posX+xOffset,maximumHeight,owner.homeBoundary.posZ+zOffset,0,
 										owner.homeBoundary, owner);
 									
@@ -188,7 +188,7 @@ public class Population extends Economic{
 									
 									try {
 										eg = new EconomicGround("house"+owner.id+"_"+owner.homeBoundary.posX+"_"+maximumHeight+"_"+(owner.homeBoundary.posZ+zOffset),
-											g,world,world.treeLocator,hsizeX,maximumHeight-minimumHeight+2,hsizeZ,
+											g,world,world.economyContainer.treeLocator,hsizeX,maximumHeight-minimumHeight+2,hsizeZ,
 											owner.homeBoundary.posX+xOffset,minimumHeight,owner.homeBoundary.posZ+zOffset,0,
 											owner.homeBoundary, owner);
 										addEcoGround(eg);
@@ -209,18 +209,12 @@ public class Population extends Economic{
 							}
 							
 						}
-						
-						
 					}
-					
 				}
 				zOffset+=(hsizeZ+streetSize);
 			}
 			xOffset+=(hsizeX+streetSize);
 		}
-		
-		
-		super.update();
 		recalculate();
 	}
 
@@ -249,8 +243,20 @@ public class Population extends Economic{
 		return null;
 	}
 	
+	
+	
 	public Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner)
 	{
 		return new Population(id,soilGeo,parent,loc,owner);
+	}
+	
+	public void doEconomyEvent(EconomyHistoryElement event)
+	{
+		
+	}
+	
+	public void replayHistoryEvent(EconomyHistoryElement event)
+	{
+		doEconomyEvent(event);
 	}
 }

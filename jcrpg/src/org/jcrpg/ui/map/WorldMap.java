@@ -121,7 +121,7 @@ public class WorldMap {
 							mapImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
-							ArrayList<Object> economics = w.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+							ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
 							if (economics!=null)
 							{
 								for (Object o:economics)

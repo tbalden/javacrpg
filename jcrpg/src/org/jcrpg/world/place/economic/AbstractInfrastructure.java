@@ -18,12 +18,28 @@
 
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
+
 public abstract class AbstractInfrastructure {
+	
+	public int currentSize = 0;
 	
 	public class InfrastructureElementParameters
 	{
 		public int relOrigoX,relOrigoY,relOrigoZ;
 		public int maxSizeX, maxSizeY, maxSizeZ;
+	}
+	
+	public Population population;
+	
+	public AbstractInfrastructure(Population population)
+	{
+		this.population = population;
+	}
+	
+	public ArrayList<InfrastructureElementParameters> calculateAddEvent()
+	{
+		return null;
 	}
 
 }

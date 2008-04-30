@@ -43,7 +43,6 @@ public class World extends Place {
 	public Engine engine;
 	public transient WorldMap worldMap;
 	
-	public transient TreeLocator treeLocator = null;
 	
 	public int GEOGRAPHY_RANDOM_SEED = 0;
 	
@@ -60,12 +59,12 @@ public class World extends Place {
 	
 	public Climate climate;
 	public FloraContainer floraContainer;
+	public EconomyContainer economyContainer;
 	
 	public HashMap<String, Geography> geographies;
 	public HashMap<String, ArrayList<Geography>> geographyCache = new HashMap<String, ArrayList<Geography>>();
 	public HashMap<String, Water> waters;
 	public HashMap<String, Political> politicals;
-	public TreeMap<String, Economic> economics;
 
 	public static final String TYPE_WORLD = "WORLD";
 	public static final Swimming SUBTYPE_OCEAN = new Swimming(TYPE_WORLD+"_OCEAN");
@@ -91,7 +90,6 @@ public class World extends Place {
 		realSizeX = sizeX*magnification;
 		realSizeY = sizeY*magnification;
 		realSizeZ = sizeZ*magnification;
-		treeLocator = new TreeLocator(this);
 		if (realSizeX<J3DCore.MINIMUM_WORLD_REALSIZE)
 		{
 			throw new Exception("World X size is smaller than J3DCore.MINIMUM_WORLD_REALSIZE ("+J3DCore.MINIMUM_WORLD_REALSIZE+")");
@@ -105,7 +103,7 @@ public class World extends Place {
 		geographies = new HashMap<String, Geography>();
 		waters = new HashMap<String, Water>();
 		politicals = new HashMap<String, Political>();
-		economics = new TreeMap<String, Economic>();
+		economyContainer = new EconomyContainer(this);
 	}
 	
 	
@@ -185,32 +183,6 @@ public class World extends Place {
 	public static HashSet<Object> hsProvedToBeNear = null;
 	public static HashSet<Object> hsProvedToBeAway = null;
 	
-	/**
-	 * Economic cube getter. Null if no economic there.
-	 * @param key
-	 * @param worldX
-	 * @param worldY
-	 * @param worldZ
-	 * @param farView
-	 * @return economic's cube, or null.
-	 */
-	public Cube getEconomicCube(long key, int worldX, int worldY, int worldZ,boolean farView)
-	{
-		ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
-		if (economicsList!=null) 
-		{
-			//if (economicsList.size()>1) System.out.println("######## economiclist POPULATION is "+economicsList.size());
-			for (Object o:economicsList)
-			{
-				Economic eco = (Economic)o;
-				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
-					return eco.getCube(key, worldX, worldY, worldZ, farView);
-				}
-			} 
-		}
-		return null;
-		
-	}
 	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
@@ -224,7 +196,7 @@ public class World extends Place {
 		{
 			long t0 = System.currentTimeMillis();
 				
-			Cube ecoCube = getEconomicCube(key, worldX, worldY, worldZ, farView);
+			Cube ecoCube = economyContainer.getEconomicCube(key, worldX, worldY, worldZ, farView);
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			if (ecoCube!=null) return ecoCube;
 			
@@ -462,26 +434,6 @@ public class World extends Place {
 	
 	public int lossFactor = 1000;
 	
-	/**
-	 * If size or location changes this must be called to update treelocator.
-	 * @param xMin
-	 * @param xMax
-	 * @param yMin
-	 * @param yMax
-	 * @param zMin
-	 * @param zMax
-	 * @param e
-	 */
-	public void updateEconomy(int xMin, int xMax, int yMin, int yMax, int zMin, int zMax, Economic e)
-	{
-		treeLocator.updateEconomic(xMin, xMax, yMin, yMax, zMin, zMax, e);
-	}
-	
-	public void addEconomy(Economic e)
-	{
-		treeLocator.addEconomic(e);
-		economics.put(e.id, e);
-	}
 	
 	public void addGeography(Geography g)
 	{
@@ -503,21 +455,16 @@ public class World extends Place {
 	public void clearAll()
 	{
 		geographies.clear();
-		economics.clear();
 		geographyCache.clear();
 		waters.clear();
 		overLappers.clear();
 		politicals.clear();
+		economyContainer.clearAll();
 	}
 	
 	@Override
 	public void onLoad()
 	{
-		treeLocator = new TreeLocator(this);
-		for (Economic e:economics.values())
-		{
-			e.onLoad();
-			treeLocator.addEconomic(e);
-		}
+		economyContainer.onLoad(this);
 	}
 }

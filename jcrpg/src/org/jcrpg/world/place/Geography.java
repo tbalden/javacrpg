@@ -357,7 +357,7 @@ public class Geography extends Place implements Surface {
 		World w = (World)getRoot();
 		
 		// economics...
-		ArrayList<Object> list = w.treeLocator.getElements(worldX, worldY, worldZ);
+		ArrayList<Object> list = w.economyContainer.treeLocator.getElements(worldX, worldY, worldZ);
 		// check if there is possible economic here...
 		if (list!=null) 
 		{
