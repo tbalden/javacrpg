@@ -21,9 +21,11 @@ package org.jcrpg.threed.scene.config;
 import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.fauna.birds.heron.Herons;
 import org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders;
 import org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily;
 import org.jcrpg.world.ai.fauna.mammals.bear.PolarBears;
+import org.jcrpg.world.ai.fauna.mammals.deer.DeerFamily;
 import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
@@ -98,6 +100,17 @@ public class MovingTypeModels {
 
 		hmMobIdToModelId.put(HumanCommoners.HUMAN_FEMALE_HOUSEWIFE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, HumanCommoners.humanFemale_unit);
+		counter++;
+
+		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_FEMALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_CHILD.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, DeerFamily.deer_unit);
+		counter++;
+
+		hmMobIdToModelId.put(Herons.HERON_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(Herons.HERON_TYPE_FEMALE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Herons.heron_unit);
 		counter++;
 
 }

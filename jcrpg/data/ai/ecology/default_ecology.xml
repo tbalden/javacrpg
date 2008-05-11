@@ -16,6 +16,10 @@
 			implementation="org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs" />
 		<animal id="FOXFAMILY"
 			implementation="org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily" />
+		<animal id="DEERFAMILY"
+			implementation="org.jcrpg.world.ai.fauna.mammals.deer.DeerFamily" />
+		<animal id="HERONS"
+			implementation="org.jcrpg.world.ai.fauna.birds.heron.Herons" />
 	</bestiary>
     <!-- populations represent where and how groups can appear in the world -->
     
@@ -68,17 +72,26 @@
 			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
 
     	<!-- sample FOOD CHAIN SAMPLE in Tropical Climate                                                             -->		
+		<population ref-animal-id="HERONS" ref-climat="Continental"
+			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
+		<population ref-animal-id="HERONS" ref-climat="Tropical"
+			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
+
+		<population ref-animal-id="DEERFAMILY" ref-climat="Continental"
+			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
+		<population ref-animal-id="DEERFAMILY" ref-climat="Tropical"
+			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
 		
 		<population ref-animal-id="WARTHOGS" ref-climat="Tropical"
 			percentage-chance-of-appearance="5" food-chain-position="HERBIVORE"/>
 		
 		<population ref-animal-id="FOXFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="5" 
+			percentage-chance-of-appearance="75" 
 			food-chain-position="PRIMARY_CARNIVORE"
 			predator-range="5"
 			/>
 		<population ref-animal-id="WOLFPACK" ref-climat="Tropical"
-			percentage-chance-of-appearance="5"
+			percentage-chance-of-appearance="75"
 			food-chain-position="SECONDARY_CARNIVORE" predator-range="15"/>						
 	</populations>
 </ecology>
