@@ -161,6 +161,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			objects[count] = i;
 			count++;
 		}
+		groupSelect.reset();
 		groupSelect.ids = ids;
 		groupSelect.objects = objects;
 		groupSelect.texts = texts;
