@@ -370,6 +370,7 @@ public class AudioServer implements Runnable {
 
 	public synchronized AudioTrack addTrack(String id, String file)
 	{
+		if (!J3DCore.SOUND_ENABLED) return null;
 		hmTracksAndFiles.put(id, file);
 		AudioTrack mainTheme = null;
 		try {

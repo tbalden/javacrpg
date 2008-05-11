@@ -88,9 +88,11 @@ public class ModelLoader {
 	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI());
 	    	SimpleResourceLocator loc2 = new SimpleResourceLocator( new File("./data/orbiters/").toURI());
 	    	SimpleResourceLocator loc3 = new SimpleResourceLocator( new File("./data/flare/").toURI());
+	    	SimpleResourceLocator loc4 = new SimpleResourceLocator( new File("./data/textures/common/").toURI());
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc2);
 	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc3);
+	        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc4);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
