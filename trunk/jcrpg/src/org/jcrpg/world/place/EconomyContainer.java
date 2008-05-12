@@ -28,30 +28,17 @@ public class EconomyContainer {
 
 	public transient TreeLocator treeLocator = null;
 	
-	public TreeMap<String, Economic> economics;
+	public int populationGridSize;
 	
-	/**
-	 * saves history of population element additions in time order.
-	 */
-	public ArrayList<EconomyHistoryElement> populationReloadHistory = new ArrayList<EconomyHistoryElement>(); 
+	public TreeMap<String, Economic> economics;
 	
 	public EconomyContainer(World w)
 	{
+		populationGridSize = w.magnification; // TODO, use generation geography grid size instead?
 		treeLocator = new TreeLocator(w);
 		economics = new TreeMap<String, Economic>();
 	}
 
-	/**
-	 * Should always call it when a groupedEconomy is updated (addition,ruin,remove etc.).
-	 * @param economic The economic unit.
-	 * @param type Event type.
-	 */
-	public void recordHistory(Economic economic, short type)
-	{
-		populationReloadHistory.add(new EconomyHistoryElement(economic.id,type));
-	}
-	
-	
 	/**
 	 * Economic cube getter. Null if no economic there.
 	 * @param key
@@ -93,7 +80,42 @@ public class EconomyContainer {
 		treeLocator.updateEconomic(xMin, xMax, yMin, yMax, zMin, zMax, e);
 	}
 	
-	public void addEconomy(Economic e)
+	/**
+	 * returns the X,Z of the population center in this zone.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
+	public int[] getPopulationCoordinatesInZone(int worldX, int worldZ)
+	{
+		
+		int x= ((worldX/populationGridSize)*populationGridSize)+populationGridSize/2;
+		int z= ((worldZ/populationGridSize)*populationGridSize)+populationGridSize/2;
+		return new int[]{x,z};
+	}
+	
+	/**
+	 * Returns if a given population zone is occupied in the given geography.
+	 * @param geo
+	 * @param popX
+	 * @param popZ
+	 * @return
+	 */
+	public boolean isOccupied(Geography geo, int popX, int popZ)
+	{
+		ArrayList<Object> list = treeLocator.getElements(popX, geo.worldGroundLevel, popZ);
+		if (list != null)
+		for (Object o:list)
+		{
+			if (o instanceof Population) {
+				Population p = (Population)o;
+				if (p.soilGeo == geo && p.boundaries.isInside(popX, p.groundLevel, popZ)) return true;
+			}
+		}
+		return false;
+	}
+	
+	public void addPopulation(Economic e)
 	{
 		treeLocator.addEconomic(e);
 		economics.put(e.id, e);
@@ -102,15 +124,10 @@ public class EconomyContainer {
 	public void onLoad(World w)
 	{
 		treeLocator = new TreeLocator(w);
-		for (EconomyHistoryElement e:populationReloadHistory)
+		for (Economic ec:economics.values())
 		{
-			Economic ec = economics.get(e.id);
-			if (ec instanceof Population)
-			{
-				((Population)ec).replayHistoryEvent(e);
-				treeLocator.removeAllOfAnObject(ec);
-				treeLocator.addEconomic(ec);
-			}
+			ec.onLoad();
+			treeLocator.addEconomic(ec);
 		}
 	}
 

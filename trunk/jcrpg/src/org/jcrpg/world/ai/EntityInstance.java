@@ -25,6 +25,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 
 public class EntityInstance {
@@ -36,6 +37,7 @@ public class EntityInstance {
 	 */
 	public SkillContainer skills = new SkillContainer();
 	public Attributes attributes = new Attributes();
+	
 
 	/**
 	 * which the instance is roaming in this turn.
@@ -49,6 +51,11 @@ public class EntityInstance {
 	 * where the instance has its home dwelling.
 	 */
 	public DistanceBasedBoundary homeBoundary = null;
+	/**
+	 * Entity instance's home economic (if any). (A humanoid group e.g. if it doesn't have one, will go look
+	 * around for a suitable place for home.)
+	 */
+	public Economic homeEconomy = null;
 		
 
 	public static EntityMember NONE_TYPE = new EntityMember("NONE", null);

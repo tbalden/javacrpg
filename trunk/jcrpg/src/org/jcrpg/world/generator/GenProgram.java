@@ -23,10 +23,24 @@ import java.util.HashMap;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoBase;
 import org.jcrpg.world.place.World;
 
+/**
+ * base abstract class for geo generation programs.
+ * @author illes
+ *
+ */
 public abstract class GenProgram {
 
+	/**
+	 * class instantiation factory
+	 */
 	public ClassFactory factory;
+	/**
+	 * parent generator.
+	 */
 	public WorldGenerator generator;
+	/**
+	 * parent generator's parameters.
+	 */
 	public WorldParams params;
 	
 	public HashMap<String,  Class<? extends GenAlgoBase>> genAlgorithms = new HashMap<String, Class<? extends GenAlgoBase>>();
@@ -40,6 +54,11 @@ public abstract class GenProgram {
 		this.params = params;
 	}
 	
+	/**
+	 * run the generation program using World to fill up.
+	 * @param world
+	 * @throws Exception
+	 */
 	public abstract void runProgram(World world) throws Exception;
 	
 }
