@@ -37,7 +37,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 	@Override
 	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
 	{
-		instance.homeBoundary = new DistanceBasedBoundary(world, instance.domainBoundary.posX,instance.domainBoundary.posY,instance.domainBoundary.posZ, instance.numberOfMembers);
+		int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ);
 		
 		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(instance.domainBoundary.posX, instance.domainBoundary.posZ);
 		if (surfaces.size()>0)
@@ -48,12 +48,19 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 				System.out.println("g: "+g);
 				ArrayList<Class<? extends Population>> list = economyTemplate.populationTypes.get(g.getClass());
 				if (list!=null && list.size()>0) {
+					
+					// check if this is an occupied population zone.
+					if (world.economyContainer.isOccupied(g, coords[0], coords[1])) continue;
+					// okay, here we can settle the population for this group...
+					instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 					Class<? extends Population> p = list.get(0);
 					Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
-					world.economyContainer.addEconomy(pI);
+					world.economyContainer.addPopulation(pI);
+					instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
 					break;
 				}
 			}
+			
 		}
 	}
 	

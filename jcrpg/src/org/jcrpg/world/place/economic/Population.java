@@ -23,7 +23,6 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.place.Economic;
-import org.jcrpg.world.place.EconomyHistoryElement;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
@@ -47,13 +46,13 @@ public class Population extends Economic{
 		residenceList = new ArrayList<Residence>();
 		groundList = new ArrayList<EconomicGround>();
 		boundaries = new GroupedBoundaries((World)parent,this);
-		settle();
+		update();
 	}
 	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
 		boundaries = new GroupedBoundaries(parent,this);
-		settle();
+		update();
 	}
 	
 	/**
@@ -101,7 +100,7 @@ public class Population extends Economic{
 	// TODO write a quick fitter function to build up a population structure quickl.
 	// TODO based on economic (house) heights add steps to the population
 	
-	public void settle() {
+	public void update() {
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
 		int xOffset = 0;
 		int zOffset = 0;
@@ -250,13 +249,5 @@ public class Population extends Economic{
 		return new Population(id,soilGeo,parent,loc,owner);
 	}
 	
-	public void doEconomyEvent(EconomyHistoryElement event)
-	{
-		
-	}
 	
-	public void replayHistoryEvent(EconomyHistoryElement event)
-	{
-		doEconomyEvent(event);
-	}
 }

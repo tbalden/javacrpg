@@ -39,7 +39,6 @@ import org.jcrpg.world.generator.program.algorithm.GenAlgoFlow;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
@@ -184,16 +183,20 @@ public class DefaultGenProgram extends GenProgram {
 				geoToLikeness.clear();
 				for (Geography g:mainGeos.values())
 				{
+					// check if base geography is present and the give geography can coexist with it
 					if (!g.ruleSet.presentWhereBaseExists() && basePresent)
 					{
+						// ..it cannot
 						continue;
 					}
 					int likeness = g.ruleSet.likenessToNeighbor(getNeighbors(mainGeos.values(), x, world.getSeaLevel(gMag), z));
 					sumOfLikenesses+=likeness;
 					geoToLikeness.put(g.ruleSet.geoTypeName, likeness);
 				}
+				// roll out the random value...
 				int randomValue = (HashUtil.mixPer1000(x, 0, z)*sumOfLikenesses)/1000;
 				int limit = 0;
+				// check through the geographies, which was randomly sorted out...
 				for (Geography g:mainGeos.values())
 				{
 					if (!g.ruleSet.presentWhereBaseExists() && basePresent)
@@ -203,6 +206,7 @@ public class DefaultGenProgram extends GenProgram {
 					limit+=geoToLikeness.get(g.ruleSet.geoTypeName);
 					if (limit>randomValue)
 					{
+						// here we go, found the geography sorted out...
 						//System.out.println(randomValue+"<"+limit+" "+g.ruleSet.geoTypeName);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
@@ -218,6 +222,7 @@ public class DefaultGenProgram extends GenProgram {
 		for (Geography geo: additionalGeos.values())
 		{
 			System.out.println("ADDITIONAL GEO:"+geo.ruleSet.geoTypeName+" "+geo.ruleSet.genType);
+			// get algorithm type...
 			Class<? extends GenAlgoBase> algo = genAlgorithms.get(geo.getRuleSet().getGeneratorType());
 			if (algo==null) continue;
 			// get constructor of the algo class
@@ -226,13 +231,9 @@ public class DefaultGenProgram extends GenProgram {
 			cons.newInstance(world,geo.ruleSet.genParams,geo).runGeneration(this);
 		}
 
-		//int i =0;
-		//House h = null; 
-		//long time = System.currentTimeMillis(); 
-		//h = new House("house",world,null,4,1,4,0,world.getSeaLevel(1),5,null);		
-		//world.economics.put(h.id, h);
 	}
-	
+
+	// get neighboring geography types.
 	public String[] getNeighbors(Collection<Geography> worldSizedGeos, int x, int y, int z)
 	{
 		int xMinus = x-1;
@@ -267,6 +268,13 @@ public class DefaultGenProgram extends GenProgram {
 		return found.toArray(new String[0]);
 	}
 	
+	/**
+	 * create an instance of the given geoclass.
+	 * @param geoClass
+	 * @param world
+	 * @return
+	 * @throws Exception
+	 */
 	public Geography instantiateGeography(String geoClass, World world) throws Exception
 	{
 		Geography r = null;
