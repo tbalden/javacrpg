@@ -49,6 +49,7 @@ public class Population extends Economic{
 		update();
 	}
 	
+	
 	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc,null,owner);
 		boundaries = new GroupedBoundaries(parent,this);
@@ -105,9 +106,10 @@ public class Population extends Economic{
 		int xOffset = 0;
 		int zOffset = 0;
 		int streetSize = 0;
-		int sizeX = (int)Math.sqrt(owner.getGroupSizes().length)+1;
+		int sizeX = (int)Math.sqrt(this.getNumberOfInhabitants())+1;
 		int sizeY = sizeX;
 		System.out.println("SIZEX/Y"+sizeX+" "+sizeY);
+		EntityInstance owner = owners.get(0); // TODO create districts for different owners?
 		for (int x1=0; x1<sizeX; x1++)
 		{
 			hsizeX = 4;
@@ -249,5 +251,26 @@ public class Population extends Economic{
 		return new Population(id,soilGeo,parent,loc,owner);
 	}
 	
+	/**
+	 * Owners are asked if a homeless instance can join the population or not. 
+	 * @param candidate
+	 * @return
+	 */
+	public boolean canJoinPopulation(EntityInstance candidate)
+	{
+		// TODO
+		return false;
+	}
+
+	/**
+	 * If this returns true, population cannot be any bigger, an entity instance must part 
+	 * and find new population place.
+	 * @return
+	 */
+	public boolean isPopulationFull()
+	{
+		// TODO
+		return false;
+	}
 	
 }
