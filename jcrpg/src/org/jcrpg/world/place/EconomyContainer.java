@@ -101,7 +101,7 @@ public class EconomyContainer {
 	 * @param popZ
 	 * @return
 	 */
-	public boolean isOccupied(Geography geo, int popX, int popZ)
+	public Population isOccupied(Geography geo, int popX, int popZ)
 	{
 		ArrayList<Object> list = treeLocator.getElements(popX, geo.worldGroundLevel, popZ);
 		if (list != null)
@@ -109,11 +109,12 @@ public class EconomyContainer {
 		{
 			if (o instanceof Population) {
 				Population p = (Population)o;
-				if (p.soilGeo == geo && p.boundaries.isInside(popX, p.groundLevel, popZ)) return true;
+				if (p.soilGeo == geo && p.boundaries.isInside(popX, p.groundLevel, popZ)) return p;
 			}
 		}
-		return false;
+		return null;
 	}
+	
 	
 	public void addPopulation(Economic e)
 	{

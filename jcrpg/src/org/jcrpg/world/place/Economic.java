@@ -17,6 +17,8 @@
 
 package org.jcrpg.world.place;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 
@@ -33,12 +35,28 @@ public class Economic extends Geography {
 	}
 
 	public Geography soilGeo = null;
-	public EntityInstance owner = null;
+	public ArrayList<EntityInstance> owners = new ArrayList<EntityInstance>();
 	
 	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries, EntityInstance owner) {
 		super(id, parent, loc);
 		this.soilGeo = soilGeo;
-		this.owner = owner;
+		this.owners.add(owner);
+	}
+	
+	public int getNumberOfInhabitants()
+	{
+		int sum = 0;
+		for (EntityInstance i:owners)
+		{
+			sum+=i.numberOfMembers;
+		}
+		return sum;
+	}
+	
+	public DistanceBasedBoundary getOwnerHomeBoundary()
+	{
+		if (owners.size()==0) return null;
+		return owners.get(0).homeBoundary;
 	}
 
 	@Override

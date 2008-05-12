@@ -50,14 +50,26 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 				if (list!=null && list.size()>0) {
 					
 					// check if this is an occupied population zone.
-					if (world.economyContainer.isOccupied(g, coords[0], coords[1])) continue;
-					// okay, here we can settle the population for this group...
-					instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
-					Class<? extends Population> p = list.get(0);
-					Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
-					world.economyContainer.addPopulation(pI);
-					instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
-					break;
+					Population pO = world.economyContainer.isOccupied(g, coords[0], coords[1]);
+					if (pO!=null) {
+						if (pO.canJoinPopulation(instance))
+						{
+							// the instance is given the possibility to join...
+							// TODO decision if instance wants or not..
+							pO.owners.add(instance);
+							instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
+							instance.homeEconomy = pO;
+							break;
+						}
+					} else {
+						// okay, here we can settle the population for this group...
+						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
+						Class<? extends Population> p = list.get(0);
+						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
+						world.economyContainer.addPopulation(pI);
+						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
+						break;
+					}
 				}
 			}
 			
