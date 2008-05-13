@@ -7,11 +7,13 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-
+[ ] inter-entity relations web
 
 [ ] Population.java
 
-	[ ] population change -> how to modify renderedArea
+	[X] population change -> how to modify renderedArea
+		--> population updates happen in a cycle of X turns. Then a reload is done, clearing rendered
+		area cache too
 
 	[X] new idea -> population should be shared by different groups. groups can join a population migrating(?)
 		Populations should be in center of fix sized "areas", no overlapping this way guaranteed, also
@@ -22,7 +24,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[ ] Structure base class that can be extended telling how to build the street/building etc. structure
 	[ ] // TODO based on economic (house) heights add steps to the population
 	
-	[ ] gather changed areas into a temporary list in an ecology turn to know if re-render is needed where player is standing.
+	[-] gather changed areas into a temporary list in an ecology turn to know if re-render is needed where player is standing.
 	
 [ ] TreeLocator.java
 	[ ] //TODO this is not working correctly for a few cases, why?replaced with +1 for now
@@ -149,16 +151,6 @@ Other:
 	object/being! Thus you can collect bonus info about them random
 	scattered around the world, -- beat monsters more easy etc.
 
-[X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
-	[ ] make it better with big gaps (non 1)
-	[ ] no inside farview from outside! and vica versa?
-	[ ] don't load twice as much when farview...more terrain loaded, farview distance param? 
-
-[ ] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
-		if non culled out of render distance -> new render- ---- less loading and such, more memory! think about it
-[ ] pool the geom batches, do not use add/remove instance
-
-
 [ ] lamp key, to switch on/off lamp in the dark!
 	[ ] spot light to the user in the night, doesnt work!!
 
@@ -183,6 +175,16 @@ Other:
 [?] Lod modelling trees with billboard images captured in blender!
 
 -- ########## DONE ######################################################################################
+
+[X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
+	[X] make it better with big gaps (non 1)
+	[-] no inside farview from outside! and vica versa?
+	[X] don't load twice as much when farview...more terrain loaded, farview distance param? 
+
+[-] bounding box oct tree cull -> render much bigger parts? non-always-culling part - subpart of view distance -> if something out of it -> always cull
+		if non culled out of render distance -> new render- ---- less loading and such, more memory! think about it
+[-] pool the geom batches, do not use add/remove instance
+
 
 [X] performance decreasing with time! debug it, what eats what
 	[-] map problem, load texture didn't help -> or maybe something else... releaseTexture didn't help, maybe not a map problem
