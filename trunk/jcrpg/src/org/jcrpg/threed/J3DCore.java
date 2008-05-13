@@ -2248,24 +2248,41 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//dr.setDirection(cam.getDirection());
 		}
 
+		// time changed, updating lights, orbiters
 		if (gameState.engine.timeChanged) 
 		{
 			gameState.engine.setTimeChanged(false);
 			updateTimeRelated();
 			
 		}
+		// turn has come.
 		if (gameState.engine.turnComes())
 		{
 			pause = true;
 			gameState.ecology.doTurn();
 			gameState.engine.turnFinishedForAI();
 			pause = false;
+		} else
+		if (gameState.engine.doEconomyUpdate)
+		{
+			pause = true;
+			uiBase.hud.mainBox.addEntry("A new economy turn has come...");
+			// big update for economy, re-rendering environment around
+			gameState.world.economyContainer.doEconomyUpdate();
+			renderedArea.fullUpdateClear();
+			sEngine.renderToViewPort();
+			gameState.engine.economyUpdateFinished();
+			uiBase.hud.mainBox.addEntry("Constructions done.");
+			pause = false;
 		}
+		
+		// game-logic independent environmental update (sounds etc.)
 		if (gameState.engine.doEnvironmentNeeded)
 		{
 			gameState.engine.doEnvironmentNeeded = false;
 			gameState.doEnvironmental();
 		}
+		
 		//if (!swapUpdate)
 		if ( !pause ) {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */

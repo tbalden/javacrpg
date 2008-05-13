@@ -131,6 +131,13 @@ public class EconomyContainer {
 			treeLocator.addEconomic(ec);
 		}
 	}
+	
+	/**
+	 * Every X turns an economy update is done based on population's groups changes etc. TODO
+	 */
+	public void doEconomyUpdate()
+	{
+	}
 
 	public void clearAll()
 	{

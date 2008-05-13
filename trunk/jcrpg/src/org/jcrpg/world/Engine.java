@@ -28,20 +28,40 @@ public class Engine implements Runnable {
 	boolean pause = true;
 	Time worldMeanTime = null;
 	
+	/**
+	 * Tells if do environment's time has come. 
+	 */
 	public boolean doEnvironmentNeeded = false;
 	
 	//Engine
 	
+	/**
+	 * Ticks per new second.
+	 */
 	public static int TICK_SECONDS = 10;
 	
-	public static int SECONDS_PER_TURN = 100; 
+	public static int SECONDS_PER_TURN = 100;
+	/**
+	 * Tells around how many seconds (this is randomly calculated half part) till a new
+	 * do environment should be executed (sounds and such only, not gameplay events!)  
+	 */
 	public static int SECONDS_PER_ENVIRONMENT = 160; 
+	
+	/**
+	 * Tells how many turns will take until a full economy
+	 * update will be run in EconomyContainer.
+	 */
+	public static int TURNS_PER_ECONOMY_UPDATE = 10;
 	
 	public boolean timeChanged = false;
 	public boolean turnCome = false;
-	public int ticksLeftForTurn = SECONDS_PER_TURN;
-	public int ticksLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+	public boolean economyUpdateCome = false;
+	public boolean doEconomyUpdate = false;
+	public int secondsLeftForTurn = SECONDS_PER_TURN;
+	public int secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+	public int turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
 	
+	public boolean turnInterruptedByPlayerInteraction = false;
 	
 	public long numberOfTurn = 0;
 	
@@ -62,23 +82,30 @@ public class Engine implements Runnable {
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
 				worldMeanTime.tick(TICK_SECONDS);
-				ticksLeftForTurn-=TICK_SECONDS;
-				ticksLeftForEnvironment-=TICK_SECONDS+getTrueRandom().nextInt(TICK_SECONDS); // this is random
-				if (ticksLeftForTurn<=0)
+				secondsLeftForTurn-=TICK_SECONDS;
+				secondsLeftForEnvironment-=TICK_SECONDS+getTrueRandom().nextInt(TICK_SECONDS); // this is random
+				if (secondsLeftForTurn<=0)
 				{
 					synchronized (mutex) {
 						Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
-						ticksLeftForTurn = SECONDS_PER_TURN;
+						secondsLeftForTurn = SECONDS_PER_TURN;
+						turnsLeftForEconomyUpdate-=1;
 						pause = true;
 						turnCome = true;
 						numberOfTurn++;
+						if (turnsLeftForEconomyUpdate<=0)
+						{
+							Jcrpg.LOGGER.info("NEW ECONOMY TURN!!");
+							economyUpdateCome = true;
+							turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
+						}
 					}
 				}
-				if (ticksLeftForEnvironment<=0)
+				if (secondsLeftForEnvironment<=0)
 				{
 					synchronized (mutex) {
 						Jcrpg.LOGGER.info("NEW ENVIRONMENT");
-						ticksLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+						secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
 						doEnvironmentNeeded = true;
 					}
 				}
@@ -113,13 +140,35 @@ public class Engine implements Runnable {
 	{
 		turnCome = false;
 		System.out.println("TURN COME DONE.");
+		if (!turnInterruptedByPlayerInteraction)
+		{
+			 System.out.println("NO INTERRUPTION...");
+			 // no interruption happened, economy update can be done right now... because no turnFinishedForPlayer
+			 // will happen.
+			 if (economyUpdateCome) doEconomyUpdate = true;
+		} else
+		{
+			System.out.println("INTERRUPTION...");
+			turnInterruptedByPlayerInteraction = false;
+		}
 	}
 	
 	public void turnFinishedForPlayer()
 	{
-		pause = false;
+		if (!economyUpdateCome) {
+			pause = false;
+			System.out.println("TURN ENDED, UNPAUSE.");
+		}
+		// continue with interrupted AI things...
 		turnCome = true;
-		System.out.println("TURN ENDED, UNPAUSE.");
+	}
+	
+	public void economyUpdateFinished()
+	{
+		pause = false;
+		doEconomyUpdate = false;
+		economyUpdateCome = false;
+		System.out.println("TURN ENDED (Economy), UNPAUSE.");
 	}
 
 	public synchronized void setPause(boolean pause) {

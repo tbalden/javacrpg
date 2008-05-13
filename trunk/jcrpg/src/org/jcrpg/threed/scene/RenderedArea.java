@@ -211,5 +211,15 @@ public class RenderedArea {
 		return worldCubeCache.get(key);
 	}
 	
+	/**
+	 * big update is being done, clear out all cached cubes.
+	 */
+	public void fullUpdateClear()
+	{
+		worldCubeCache.clear();
+		worldCubeCache_FARVIEW.clear();
+		worldCubeCacheNext.clear();
+		worldCubeCacheNext_FARVIEW.clear();
+	}
 	
 }
