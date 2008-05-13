@@ -294,6 +294,10 @@ public class Ecology {
 				addToLocator(orderedBeingList.get(r));
 			}
 		}
+		if (interrupted)
+		{
+			engine.turnInterruptedByPlayerInteraction = true;
+		}
 		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
 		J3DCore.getInstance().updateDisplay(null);
