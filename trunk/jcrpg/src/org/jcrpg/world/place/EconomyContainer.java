@@ -23,12 +23,18 @@ import java.util.TreeMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.Town;
 
 public class EconomyContainer {
 
 	public transient TreeLocator treeLocator = null;
 	
 	public TreeMap<String, Economic> economics;
+	
+	/**
+	 * Virtual container for groups of Populations that build up Towns
+	 */
+	public ArrayList<Town> towns = new ArrayList<Town>();
 	
 	public EconomyContainer(World w)
 	{
@@ -88,7 +94,7 @@ public class EconomyContainer {
 		
 		int x= ((worldX/populationGridSize)*populationGridSize)+populationGridSize/2;
 		int z= ((worldZ/populationGridSize)*populationGridSize)+populationGridSize/2;
-		return new int[]{x,z};
+		return new int[]{x,z,(worldX/populationGridSize),(worldZ/populationGridSize)};
 	}
 	
 	/**
@@ -151,5 +157,8 @@ public class EconomyContainer {
 	{
 		economics.clear();
 	}
+	
+	// TODO town organizing functions that tell if a population is close enough to an existing
+	// town to join it, and checking if a population is friendly enough to add to a town
 	
 }

@@ -23,10 +23,11 @@ import java.util.HashMap;
 
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
-import org.jcrpg.world.place.economic.SimpleTown;
+import org.jcrpg.world.place.economic.SimpleDistrict;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.
@@ -39,14 +40,16 @@ public class EconomyTemplate {
 	public static HashMap<Class<? extends Economic>, Economic> economicBase = new HashMap<Class<? extends Economic>, Economic>();
 	static 
 	{
-		economicBase.put(SimpleTown.class, new SimpleTown());
+		economicBase.put(SimpleDistrict.class, new SimpleDistrict());
 		economicBase.put(House.class, new House());
+		economicBase.put(EconomicGround.class, new EconomicGround());
 	}
 	
 
 	public HashMap<Class<? extends Geography>, ArrayList<Class<? extends Population>>> populationTypes = new HashMap<Class<? extends Geography>, ArrayList<Class<? extends Population>>>();
 	public HashMap<Class<? extends Geography>, ArrayList<Class<? extends Residence>>> residenceTypes = new HashMap<Class<? extends Geography>, ArrayList<Class<? extends Residence>>>();
-	
+	public HashMap<Class<? extends Geography>, ArrayList<Class<? extends EconomicGround>>> groundTypes = new HashMap<Class<? extends Geography>, ArrayList<Class<? extends EconomicGround>>>();
+	// TODO workGround types
 	
 	public EconomyTemplate()
 	{
@@ -79,5 +82,18 @@ public class EconomyTemplate {
 		list.add(eco);
 	}
 	
+	public void addEcoGroundType(Class<? extends Geography> geo, Class<? extends EconomicGround> eco)
+	{
+		ArrayList<Class<? extends EconomicGround>> list = groundTypes.get(geo);
+		if (list == null) 
+		{
+			list = new ArrayList<Class<? extends EconomicGround>>();
+			groundTypes.put(geo, list);
+		} else
+		{
+			if (list.contains(eco)) return;
+		}
+		list.add(eco);
+	}
 	
 }

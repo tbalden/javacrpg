@@ -31,8 +31,6 @@ import org.jcrpg.world.place.economic.Population;
 
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
-	public EconomyTemplate economyTemplate = new EconomyTemplate();
-	
 	
 	@Override
 	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
@@ -52,14 +50,11 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 					// check if this is an occupied population zone.
 					Population pO = world.economyContainer.isOccupied(g, coords[0], coords[1]);
 					if (pO!=null) {
-						if (pO.canJoinPopulation(instance))
+						if (pO.owner.wouldMergeWithOther(instance))
 						{
 							// the instance is given the possibility to join...
 							// TODO decision if instance wants or not..
-							pO.owners.add(instance);
-							//pO.update();
-							instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
-							instance.homeEconomy = pO;
+							pO.owner.merge(instance);
 							break;
 						}
 					} else {
@@ -67,6 +62,8 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 						Class<? extends Population> p = list.get(0);
 						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
+						pI.blockStartX = coords[2];
+						pI.blockStartZ = coords[3];
 						pI.update();
 						world.economyContainer.addPopulation(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)

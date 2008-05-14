@@ -1,10 +1,12 @@
 package org.jcrpg.world.place.economic.infrastructure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
@@ -16,12 +18,104 @@ import org.jcrpg.world.place.geography.sub.Cave;
 
 public class DefaultInfrastructure extends AbstractInfrastructure {
 
+	/**
+	 * Minimum size mapped to the next array of infrastructure elements.
+	 */
+	public transient HashMap<Integer, ArrayList<InfrastructureElementParameters>> sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
+	
+	public transient boolean[] occupiedBlocks;
+	
+	public transient int lastUpdatedInhabitantNumber = 0;
+	
 	public DefaultInfrastructure(Population population) {
 		super(population);
+		buildProgram();
+	}
+	
+	public void buildProgram()
+	{
+		occupiedBlocks = new boolean[maxBlocks];
+		
+		System.out.println(population.soilGeo);
+		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
+		System.out.println("PROGRAM res: "+residenceTypes);
+		ArrayList<Class<?extends EconomicGround>> groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
+		System.out.println("PROGRAM ground: "+groundTypes);
+		// base parts
+		ArrayList<InfrastructureElementParameters> baseList = new ArrayList<InfrastructureElementParameters>();
+		sizeDrivenBuildProgram.put(0, baseList);
+		
+		InfrastructureElementParameters mainStreet = new InfrastructureElementParameters();
+		mainStreet.relOrigoX = 0;
+		mainStreet.relOrigoY = 0;
+		mainStreet.relOrigoZ = population.blockSize/2;
+		mainStreet.sizeX = maxSize;
+		mainStreet.sizeY = 1;
+		mainStreet.sizeZ = BUILDING_BLOCK_SIZE;
+		mainStreet.type = groundTypes.get(0);
+		baseList.add(mainStreet);
+		
+		// growing parts		
+		//for (int i=0; i<max; i++)
+		//{
+			
+		//}
+	}
+	
+	public void setOccupiedBlocks(InfrastructureElementParameters mainStreet)
+	{
+		for (int x=mainStreet.relOrigoX; x<mainStreet.sizeX; x++)
+		{
+			for (int z=mainStreet.relOrigoZ; z<mainStreet.sizeZ; z++)
+			{
+				occupiedBlocks[x+z*maxBlocksOneDim] = true;
+			}
+		}
+	}
+	public boolean isOccupiedBlock(int x, int z)
+	{
+		return occupiedBlocks[x+z*maxBlocksOneDim];
+	}
+	
+	public void onLoad()
+	{
+		buildProgram();
 	}
 
+	public void build(InfrastructureElementParameters p)
+	{
+		World world = (World)population.getRoot();
+		Economic e = EconomyTemplate.economicBase.get(p.type);
+		if (e instanceof EconomicGround)
+		{
+			EconomicGround g = ((EconomicGround)e);
+			g = g.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
+					p.sizeX, p.sizeY, p.sizeZ, 
+					population.blockStartX+p.relOrigoX, p.relOrigoY, population.blockStartZ+p.relOrigoZ, 
+					40, population.owner.homeBoundary, population.owner);
+			population.addEcoGround(g);
+			System.out.println("ADDING ecoground "+population.blockStartX+p.relOrigoX+" "+population.blockStartZ+p.relOrigoZ);
+		}
+	}
+	
 	@Override
 	public void update() {
+		for (int i=lastUpdatedInhabitantNumber; i<population.getNumberOfInhabitants(); i++)
+		{
+			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(i);
+			if (toBuild!=null) {
+				System.out.println("TO BUILD SIZE = "+toBuild.size()+" "+toBuild);
+
+				for (InfrastructureElementParameters p:toBuild)
+				{
+					build(p);
+				}
+			}
+		}
+		lastUpdatedInhabitantNumber = population.getNumberOfInhabitants();
+		
+		if (true) return;
+		
 		int hsizeX =5 , hsizeY = 2, hsizeZ = 5;
 		int xOffset = 0;
 		int zOffset = 0;
@@ -29,7 +123,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		int sizeX = (int)Math.sqrt(population.getNumberOfInhabitants())+1;
 		int sizeY = sizeX;
 		System.out.println("SIZEX/Y"+sizeX+" "+sizeY);
-		EntityInstance owner = population.owners.get(0); // TODO create districts for different owners?
+		EntityInstance owner = population.owner; // TODO create districts for different owners?
 		for (int x1=0; x1<sizeX; x1++)
 		{
 			hsizeX = 4;

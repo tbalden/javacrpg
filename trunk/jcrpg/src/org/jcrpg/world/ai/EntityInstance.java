@@ -30,6 +30,8 @@ import org.jcrpg.world.place.World;
 
 public class EntityInstance {
 	
+	public boolean merged = false;
+	
 	public EntityDescription description;
 
 	/**
@@ -190,4 +192,24 @@ public class EntityInstance {
 		roamingBoundary.setPosition(1, coords[0], coords[1], coords[2]);
 		domainBoundary.setPosition(1, coords[0], coords[1], coords[2]);
 	}
+	
+	public boolean wouldMergeWithOther(EntityInstance instance)
+	{
+		if (instance.description.equals(instance.description)) return true; // TODO interrelation check.
+		return false;
+	}
+	
+	/**
+	 * merging two entities.
+	 * @param instance
+	 */
+	public void merge(EntityInstance instance)
+	{
+		System.out.println("# MERGING: "+instance);
+		numberOfMembers+=instance.numberOfMembers;
+		calculateGroupsAndPositions();
+		ecology.removeFromLocator(instance);
+		instance.merged = true;
+	}
+	
 }

@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -247,6 +248,18 @@ public class Ecology {
 		 */			
 		if (!interrupted)
 		{
+			Collection<EntityInstance> toRemove = new HashSet<EntityInstance>();
+			for (EntityInstance i:orderedBeingList)
+			{
+				if (i.merged)
+				{
+					toRemove.add(i);
+					
+				}				
+			}
+			orderedBeingList.removeAll(toRemove);
+			beings.values().removeAll(toRemove);
+			
 			counterOfDoneTurnBeings = 0;
 			switchArray = new byte[orderedBeingList.size()/8+orderedBeingList.size()%8];
 			
