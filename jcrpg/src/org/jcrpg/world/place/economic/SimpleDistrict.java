@@ -6,13 +6,13 @@ import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.infrastructure.DefaultInfrastructure;
 
-public class SimpleTown extends Population {
+public class SimpleDistrict extends Population {
 
-	public SimpleTown() {
+	public SimpleDistrict() {
 		super();
 	}
 
-	public SimpleTown(String id, Geography soilGeo, World parent,
+	public SimpleDistrict(String id, Geography soilGeo, World parent,
 			PlaceLocator loc, EntityInstance owner) {
 		super(id, soilGeo, parent, loc, owner);
 		infrastructure = new DefaultInfrastructure(this);
@@ -21,7 +21,7 @@ public class SimpleTown extends Population {
 	@Override
 	public Population getInstance(String id, Geography soilGeo, World parent,
 			PlaceLocator loc, EntityInstance owner) {
-		return new SimpleTown(id,soilGeo,parent,loc,owner);
+		return new SimpleDistrict(id,soilGeo,parent,loc,owner);
 	}
 
 }

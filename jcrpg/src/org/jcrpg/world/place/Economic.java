@@ -35,28 +35,22 @@ public class Economic extends Geography {
 	}
 
 	public Geography soilGeo = null;
-	public ArrayList<EntityInstance> owners = new ArrayList<EntityInstance>();
+	public EntityInstance owner = null;
 	
 	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries, EntityInstance owner) {
 		super(id, parent, loc);
 		this.soilGeo = soilGeo;
-		this.owners.add(owner);
+		this.owner = owner;
 	}
 	
 	public int getNumberOfInhabitants()
 	{
-		int sum = 0;
-		for (EntityInstance i:owners)
-		{
-			sum+=i.numberOfMembers;
-		}
-		return sum;
+		return owner.numberOfMembers;
 	}
 	
 	public DistanceBasedBoundary getOwnerHomeBoundary()
 	{
-		if (owners.size()==0) return null;
-		return owners.get(0).homeBoundary;
+		return owner.homeBoundary;
 	}
 
 	@Override

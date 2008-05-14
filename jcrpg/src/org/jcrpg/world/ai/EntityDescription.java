@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.abs.choice.Indifference;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.World;
 
 /**
@@ -40,6 +41,8 @@ import org.jcrpg.world.place.World;
  *
  */
 public class EntityDescription {
+	
+	
 	public static final int GENDER_NEUTRAL = 0;
 	public static final int GENDER_MALE = 1;
 	public static final int GENDER_FEMALE = 2;
@@ -48,6 +51,9 @@ public class EntityDescription {
 	public int genderType = GENDER_NEUTRAL;
 	public SkillContainer skills = new SkillContainer();
 	public Attributes attributes = new Attributes();
+
+	public EconomyTemplate economyTemplate = new EconomyTemplate();
+
 	/**
 	 * Tells how to divide the non-specific masses of an Entity into EntityMembers.
 	 */

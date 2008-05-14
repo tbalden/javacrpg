@@ -30,8 +30,9 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanMalePeasant;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
-import org.jcrpg.world.place.economic.SimpleTown;
+import org.jcrpg.world.place.economic.SimpleDistrict;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
@@ -60,12 +61,15 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public HumanCommoners()
 	{
 		iconPic = "human";
-		economyTemplate.addPopulationType(Plain.class, SimpleTown.class);
-		economyTemplate.addPopulationType(Forest.class, SimpleTown.class);
-		economyTemplate.addPopulationType(MountainNew.class, SimpleTown.class);
+		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
+		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
+		economyTemplate.addPopulationType(MountainNew.class, SimpleDistrict.class);
 		economyTemplate.addResidenceType(Plain.class, House.class);
 		economyTemplate.addResidenceType(Forest.class, House.class);
 		economyTemplate.addResidenceType(MountainNew.class, House.class);
+		economyTemplate.addEcoGroundType(Plain.class, EconomicGround.class);
+		economyTemplate.addEcoGroundType(Forest.class, EconomicGround.class);
+		economyTemplate.addEcoGroundType(MountainNew.class, EconomicGround.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);

@@ -31,6 +31,8 @@ public abstract class Population extends Economic{
 	public transient ArrayList<Residence> residenceList = new ArrayList<Residence>();
 	public transient ArrayList<EconomicGround> groundList = new ArrayList<EconomicGround>();
 	
+	public int blockStartX,blockStartZ;
+	
 	public AbstractInfrastructure infrastructure = null;
 
 	public Population()
@@ -135,17 +137,6 @@ public abstract class Population extends Economic{
 	
 	
 	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner);
-	
-	/**
-	 * Owners are asked if a homeless instance can join the population or not. 
-	 * @param candidate
-	 * @return
-	 */
-	public boolean canJoinPopulation(EntityInstance candidate)
-	{
-		// TODO
-		return false;
-	}
 
 	/**
 	 * If this returns true, population cannot be any bigger, an entity instance must part 
