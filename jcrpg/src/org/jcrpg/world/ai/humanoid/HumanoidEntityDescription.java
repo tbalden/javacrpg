@@ -57,6 +57,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 							// the instance is given the possibility to join...
 							// TODO decision if instance wants or not..
 							pO.owners.add(instance);
+							//pO.update();
 							instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 							instance.homeEconomy = pO;
 							break;
@@ -66,6 +67,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 						Class<? extends Population> p = list.get(0);
 						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
+						pI.update();
 						world.economyContainer.addPopulation(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
 						break;

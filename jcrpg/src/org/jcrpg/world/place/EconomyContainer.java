@@ -137,6 +137,17 @@ public class EconomyContainer {
 	 */
 	public void doEconomyUpdate()
 	{
+		for (Economic ec:economics.values())
+		{
+			if (ec instanceof Population)
+			{
+				if (((Population)ec).update())
+				{
+					treeLocator.removeAllOfAnObject(ec);
+					treeLocator.addEconomic(ec);
+				}
+			}
+		}
 	}
 
 	public void clearAll()

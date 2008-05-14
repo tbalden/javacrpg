@@ -26,6 +26,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
+import org.jcrpg.world.place.economic.SimpleTown;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.
@@ -38,7 +39,7 @@ public class EconomyTemplate {
 	public static HashMap<Class<? extends Economic>, Economic> economicBase = new HashMap<Class<? extends Economic>, Economic>();
 	static 
 	{
-		economicBase.put(Population.class, new Population());
+		economicBase.put(SimpleTown.class, new SimpleTown());
 		economicBase.put(House.class, new House());
 	}
 	
