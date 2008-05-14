@@ -31,7 +31,7 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.House;
-import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.SimpleTown;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
@@ -60,9 +60,9 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public HumanCommoners()
 	{
 		iconPic = "human";
-		economyTemplate.addPopulationType(Plain.class, Population.class);
-		economyTemplate.addPopulationType(Forest.class, Population.class);
-		economyTemplate.addPopulationType(MountainNew.class, Population.class);
+		economyTemplate.addPopulationType(Plain.class, SimpleTown.class);
+		economyTemplate.addPopulationType(Forest.class, SimpleTown.class);
+		economyTemplate.addPopulationType(MountainNew.class, SimpleTown.class);
 		economyTemplate.addResidenceType(Plain.class, House.class);
 		economyTemplate.addResidenceType(Forest.class, House.class);
 		economyTemplate.addResidenceType(MountainNew.class, House.class);

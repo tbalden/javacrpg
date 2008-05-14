@@ -18,7 +18,6 @@
 
 package org.jcrpg.world.place.economic;
 
-import java.util.ArrayList;
 
 public abstract class AbstractInfrastructure {
 	
@@ -37,9 +36,5 @@ public abstract class AbstractInfrastructure {
 		this.population = population;
 	}
 	
-	public ArrayList<InfrastructureElementParameters> calculateAddEvent()
-	{
-		return null;
-	}
-
+	public abstract void update(); 
 }
