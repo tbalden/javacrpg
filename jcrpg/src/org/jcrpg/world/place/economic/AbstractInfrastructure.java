@@ -22,6 +22,15 @@ package org.jcrpg.world.place.economic;
 public abstract class AbstractInfrastructure {
 	
 	public int currentSize = 0;
+	public int maxSize = -1;
+	public int centerX = -1;
+	public int centerZ = -1;
+	public int maxBlocks = 0;
+		
+	public int maxInhabitantPerBlock = 20;
+	public int maxLevelsOfBuildings = 5;
+	
+	public int BUILDING_BLOCK_SIZE = 4;
 	
 	public class InfrastructureElementParameters
 	{
@@ -34,6 +43,10 @@ public abstract class AbstractInfrastructure {
 	public AbstractInfrastructure(Population population)
 	{
 		this.population = population;
+		maxSize = population.soilGeo.blockSize;
+		centerX = population.owners.get(0).homeBoundary.posX;
+		centerZ = population.owners.get(0).homeBoundary.posZ;
+		maxBlocks = (maxSize/BUILDING_BLOCK_SIZE)*(maxSize/BUILDING_BLOCK_SIZE);
 	}
 	
 	public abstract void update(); 

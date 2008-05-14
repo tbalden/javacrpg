@@ -28,13 +28,10 @@ public class EconomyContainer {
 
 	public transient TreeLocator treeLocator = null;
 	
-	public int populationGridSize;
-	
 	public TreeMap<String, Economic> economics;
 	
 	public EconomyContainer(World w)
 	{
-		populationGridSize = w.magnification; // TODO, use generation geography grid size instead?
 		treeLocator = new TreeLocator(w);
 		economics = new TreeMap<String, Economic>();
 	}
@@ -86,7 +83,7 @@ public class EconomyContainer {
 	 * @param worldZ
 	 * @return
 	 */
-	public int[] getPopulationCoordinatesInZone(int worldX, int worldZ)
+	public int[] getPopulationCoordinatesInZone(int worldX, int worldZ, int populationGridSize)
 	{
 		
 		int x= ((worldX/populationGridSize)*populationGridSize)+populationGridSize/2;
