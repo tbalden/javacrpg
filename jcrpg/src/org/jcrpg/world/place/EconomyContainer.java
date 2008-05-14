@@ -94,7 +94,7 @@ public class EconomyContainer {
 		
 		int x= ((worldX/populationGridSize)*populationGridSize)+populationGridSize/2;
 		int z= ((worldZ/populationGridSize)*populationGridSize)+populationGridSize/2;
-		return new int[]{x,z,(worldX/populationGridSize),(worldZ/populationGridSize)};
+		return new int[]{x,z,(worldX/populationGridSize)*populationGridSize,(worldZ/populationGridSize)*populationGridSize};
 	}
 	
 	/**
