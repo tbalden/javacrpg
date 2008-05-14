@@ -88,13 +88,54 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		Economic e = EconomyTemplate.economicBase.get(p.type);
 		if (e instanceof EconomicGround)
 		{
-			EconomicGround g = ((EconomicGround)e);
-			g = g.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
-					p.sizeX, p.sizeY, p.sizeZ, 
-					population.blockStartX+p.relOrigoX, p.relOrigoY, population.blockStartZ+p.relOrigoZ, 
-					40, population.owner.homeBoundary, population.owner);
-			population.addEcoGround(g);
-			System.out.println("ADDING ecoground "+population.blockStartX+p.relOrigoX+" "+population.blockStartZ+p.relOrigoZ);
+			EconomicGround ground = ((EconomicGround)e);
+			
+			int oX = 
+					population.blockStartX+p.relOrigoX;
+			int oZ = population.blockStartZ+p.relOrigoZ;
+
+			ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(oX, oZ);
+			int maximumHeight = -1;
+			int minimumHeight = -1;
+			if (surfaces.size()>0)
+			{
+				
+				for (SurfaceHeightAndType[] s:surfaces)
+				{
+					//int Y = s[0].surfaceY;
+					Geography g = s[0].self;
+					System.out.println("G: "+g);
+					// TODO geography preference in economyTemplate order -> not going through surfaces up here, but go through economyTemplate's geographies
+					// and see if surface is available -> ordering problems solution
+					if (population.soilGeo.getClass().equals(g.getClass()))
+					{
+						
+						for (int x = oX; x<=oX+p.sizeX; x++)
+						{
+							for (int z = oZ; z<=oZ+p.sizeZ; z++)
+							{
+								int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
+								int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
+								//System.out.println("HEIGHT = "+height);
+								if (height>maximumHeight)
+								{
+									maximumHeight = height;
+								}
+								if (height<minimumHeight||minimumHeight==-1)
+								{
+									minimumHeight = height;
+								}
+							}
+						}
+					}
+				}
+			}
+			ground = ground.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
+					p.sizeX, maximumHeight-minimumHeight+2, p.sizeZ, 
+					population.blockStartX+p.relOrigoX, minimumHeight, population.blockStartZ+p.relOrigoZ, 
+					0, population.owner.homeBoundary, population.owner);
+			population.addEcoGround(ground);
+			System.out.println("ADDING ecoground "+(population.blockStartX+p.relOrigoX)+" "+(population.blockStartZ+p.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
 		}
 	}
 	
