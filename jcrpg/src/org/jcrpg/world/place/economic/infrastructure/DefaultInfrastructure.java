@@ -27,6 +27,11 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	
 	public transient int lastUpdatedInhabitantNumber = -1;
 	
+	/**
+	 * save game stores this number, so that on load the groups that joined in between eco update turns won't be counted in.
+	 */
+	public int savedInhabitantNumber = -1;
+	
 	public DefaultInfrastructure(Population population) {
 		super(population);
 		buildProgram();
@@ -43,7 +48,14 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	 */
 	public void buildProgram()
 	{
+		//System.out.println("-- NUM ID = "+(population.blockStartX+population.blockStartZ+population.soilGeo.numericId));
 		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks,6,2);
+		/*StringBuffer b = new StringBuffer();
+		for (int i=0; i<fullShuffledBlocks.length; i++)
+		{
+			b.append(fullShuffledBlocks[i]).append(", ");
+		}
+		System.out.println("SHUFFLED = "+b);*/
 		
 		System.out.println(population.soilGeo);
 		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
@@ -203,6 +215,8 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	
 	public void onLoad()
 	{
+		sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
+		lastUpdatedInhabitantNumber=-1;
 		buildProgram();
 	}
 	
@@ -214,10 +228,12 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	@Override
 	public void update() {
 		
-		int newNumber = getNearestSizeProgramCount(population.getNumberOfInhabitants());
+		// if loading, used the saved number instead of the actual number (which will be only used when a real new economy turn will come)
+		int newNumber = loading?savedInhabitantNumber:getNearestSizeProgramCount(population.getNumberOfInhabitants());
 		if (newNumber!=lastUpdatedInhabitantNumber) {
 			population.clear();
 			lastUpdatedInhabitantNumber = newNumber;
+			savedInhabitantNumber = newNumber;
 			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(newNumber);
 			if (toBuild!=null) {
 				System.out.println("TO BUILD SIZE = "+toBuild.size()+" "+toBuild);

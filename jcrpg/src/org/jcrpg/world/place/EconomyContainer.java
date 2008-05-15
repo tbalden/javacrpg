@@ -149,7 +149,7 @@ public class EconomyContainer {
 			{
 				if (((Population)ec).update())
 				{
-					treeLocator.removeAllOfAnObject(ec);
+					//treeLocator.removeAllOfAnObject(ec);
 					treeLocator.addEconomic(ec);
 				}
 			}
@@ -158,6 +158,7 @@ public class EconomyContainer {
 
 	public void clearAll()
 	{
+		treeLocator.clear();
 		economics.clear();
 	}
 	

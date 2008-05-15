@@ -59,7 +59,7 @@ public abstract class AbstractInfrastructure {
 		centerZ = population.owner.homeBoundary.posZ;
 		maxBlocks = (maxSize/BUILDING_BLOCK_SIZE)*(maxSize/BUILDING_BLOCK_SIZE);
 		maxBlocksOneDim = maxSize/BUILDING_BLOCK_SIZE;
-		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock/maxLevelsOfBuildings;
+		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock;
 	}
 	
 	public abstract void onLoad();
@@ -134,6 +134,12 @@ public abstract class AbstractInfrastructure {
 			System.out.println("ADDING residence "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
 			
 		}
+	}
+	
+	protected boolean loading = false;
+	public void setLoadingState(boolean state)
+	{
+		loading = state;
 	}
 	
 }

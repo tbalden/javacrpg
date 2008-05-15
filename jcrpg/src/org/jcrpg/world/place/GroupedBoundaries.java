@@ -129,6 +129,12 @@ public class GroupedBoundaries extends Boundaries {
 		return false;
 	}
 	
-	
+
+	@Override
+	public void clear()
+	{
+		locator.clear();
+		parent = null;
+	}
 
 }
