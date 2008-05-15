@@ -66,6 +66,7 @@ import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -2270,6 +2271,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			// big update for economy, re-rendering environment around
 			gameState.world.economyContainer.doEconomyUpdate();
 			//renderedArea.fullUpdateClear();
+			
+			// looking for surface...
+			ArrayList<SurfaceHeightAndType[]> list = gameState.world.getSurfaceData(gameState.viewPositionX, gameState.viewPositionZ);
+			int y = gameState.viewPositionY;
+			int minDiff = 1000;
+			if (list!=null)
+			for (SurfaceHeightAndType[] st:list)
+			{
+				for (SurfaceHeightAndType s:st)
+				{
+					if (Math.abs((s.surfaceY-gameState.viewPositionY))<minDiff)
+					{
+						minDiff = Math.abs(s.surfaceY-gameState.viewPositionY);
+						y = s.surfaceY;
+					}
+				}
+			}
+			gameState.relativeY += y-gameState.viewPositionY;
+			gameState.viewPositionY = y;
+			setCalculatedCameraLocation();
+			
 			sEngine.rerender = true;
 			sEngine.renderToViewPort();
 			sEngine.rerender = false;
