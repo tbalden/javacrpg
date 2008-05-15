@@ -25,6 +25,7 @@ import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.profession.Profession;
 
 
@@ -42,6 +43,8 @@ public class EntityMember {
 	public ArrayList<Profession> professions = new ArrayList<Profession>();
 	
 	public ArrayList<Class<? extends Profession>> forbiddenProfessions = new ArrayList<Class <? extends Profession>>();
+	
+	public EconomyTemplate economyTemplate = new EconomyTemplate();
 	
 	public int genderType = EntityDescription.GENDER_NEUTRAL;
 	
