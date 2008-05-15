@@ -5,14 +5,17 @@ import java.util.HashMap;
 
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.Economic;
-import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 
+/**
+ * Default infrastructure builder, on a completely shuffled basis, with a main street in middle.
+ * @author illes
+ *
+ */
 public class DefaultInfrastructure extends AbstractInfrastructure {
 
 	/**
@@ -20,7 +23,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	 */
 	public transient HashMap<Integer, ArrayList<InfrastructureElementParameters>> sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
 	
-	public transient boolean[] occupiedBlocks;
+	//public transient boolean[] occupiedBlocks;
 	
 	public transient int lastUpdatedInhabitantNumber = -1;
 	
@@ -29,8 +32,15 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		buildProgram();
 	}
 	
-	public int[] fullShuffledBlocks;
+	/**
+	 * the maxBlock numbers shuffled in a pseudo random order (the order is always the same at the given
+	 * geo block coordinates).
+	 */
+	public transient int[] fullShuffledBlocks;
 	
+	/**
+	 * the pseudo-random program generation.
+	 */
 	public void buildProgram()
 	{
 		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks);
@@ -69,11 +79,12 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		
 		for (int i=0; i<maxInhabitantPerBlock*maxBlocks; i+=INHABITANTS_PER_UPDATE)
 		{
+			boolean[] occupiedBlocks = new boolean[maxBlocks];
+
 			ArrayList<InfrastructureElementParameters> list = new ArrayList<InfrastructureElementParameters>();
 			list.add(mainStreet);
-			//list.add(baseResidence);
-			occupiedBlocks = new boolean[maxBlocks];
-			setOccupiedBlocks(mainStreet);
+
+			setOccupiedBlocks(occupiedBlocks,mainStreet);
 			int shuffleCount = 0;
 			for (int j=0; j<(i/maxInhabitantPerBlock)+1; j++)
 			{
@@ -87,7 +98,11 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 						System.out.println("!!! NO BLOCK FOUND FOR RESIDENCE...");
 						break; // arrived to the beginning counter, no room found
 					}
-					if (isOccupiedBlock(blockCount)) continue;
+					if (isOccupiedBlock(occupiedBlocks,blockCount)) {
+						//System.out.println("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
+						blockCount = -1;
+						continue;
+					}
 					break;
 				}
 				if (blockCount!=-1) {
@@ -101,7 +116,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 					baseResidence.sizeZ = BUILDING_BLOCK_SIZE;
 					baseResidence.type = residenceTypes.get(0);
 					list.add(baseResidence);
-					setOccupiedBlocks(baseResidence);
+					setOccupiedBlocks(occupiedBlocks,baseResidence);
 					
 				} else
 				{
@@ -110,12 +125,18 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				}
 				
 			}
-			//System.out.println("adding program part to "+i);
+			//System.out.println("adding program part to "+i+" -> "+sizeDrivenBuildProgram+" "+list);
 			sizeDrivenBuildProgram.put(i, list);		
 		}
 		
 	}
 	
+	/**
+	 * shuffle algorithm, returns a 'maximum' sized array of ints, with 0-maximum integers in it shuffled. 
+	 * @param seed The rendom seed for the hash util.
+	 * @param maximum The maximum of the range. (the minimum is 0.)
+	 * @return the shuffled range.
+	 */
 	public int[] shuffleRange(long seed, int maximum)
 	{
 		int[] ret = new int[maximum];
@@ -136,13 +157,17 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		return ret;
 	}
 	
-	public void setOccupiedBlocks(InfrastructureElementParameters mainStreet)
+	/**
+	 * 
+	 * @param param
+	 */
+	public void setOccupiedBlocks(boolean[] occupiedBlocks, InfrastructureElementParameters param)
 	{
-		for (int x=mainStreet.relOrigoX; x<mainStreet.sizeX; x++)
+		for (int x=param.relOrigoX; x<param.relOrigoX+param.sizeX; x++)
 		{
-			for (int z=mainStreet.relOrigoZ; z<mainStreet.sizeZ; z++)
+			for (int z=param.relOrigoZ; z<param.relOrigoZ+param.sizeZ; z++)
 			{
-				occupiedBlocks[x+z*maxBlocksOneDim] = true;
+				occupiedBlocks[x/BUILDING_BLOCK_SIZE+(z/BUILDING_BLOCK_SIZE)*maxBlocksOneDim] = true;
 			}
 		}
 	}
@@ -153,11 +178,11 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		int x = count%maxBlocksOneDim;
 		return new int[] {x,z};
 	}
-	public boolean isOccupiedBlock(int count)
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int count)
 	{
 		return occupiedBlocks[count];
 	}
-	public boolean isOccupiedBlock(int x, int z)
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int x, int z)
 	{
 		return occupiedBlocks[x+z*maxBlocksOneDim];
 	}
@@ -165,52 +190,6 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	public void onLoad()
 	{
 		buildProgram();
-	}
-	
-
-	public void build(InfrastructureElementParameters p)
-	{
-		World world = (World)population.getRoot();
-		Economic e = EconomyTemplate.economicBase.get(p.type);
-		if (e instanceof EconomicGround)
-		{
-			EconomicGround ground = ((EconomicGround)e);
-			
-			int oX = 
-					population.blockStartX+p.relOrigoX;
-			int oZ = population.blockStartZ+p.relOrigoZ;
-			
-			int[] minMaxHeight = getMinMaxHeight(population.soilGeo, oX, oZ, p.sizeX, p.sizeZ);
-			int minimumHeight = minMaxHeight[0];
-			int maximumHeight = minMaxHeight[1];
-
-			ground = ground.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
-					p.sizeX, maximumHeight-minimumHeight+2, p.sizeZ, 
-					population.blockStartX+p.relOrigoX, minimumHeight, population.blockStartZ+p.relOrigoZ, 
-					0, population.owner.homeBoundary, population.owner);
-			population.addEcoGround(ground);
-			System.out.println("ADDING ecoground "+(population.blockStartX+p.relOrigoX)+" "+(population.blockStartZ+p.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
-		} else
-		if (e instanceof Residence)
-		{
-			Residence res = ((Residence)e);
-			
-			int oX = 
-					population.blockStartX+p.relOrigoX;
-			int oZ = population.blockStartZ+p.relOrigoZ;
-			
-			int[] minMaxHeight = getMinMaxHeight(population.soilGeo, oX, oZ, p.sizeX, p.sizeZ);
-			int minimumHeight = minMaxHeight[0];
-			int maximumHeight = minMaxHeight[1];
-
-			res = res.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
-					p.sizeX, p.sizeY, p.sizeZ, 
-					population.blockStartX+p.relOrigoX, minimumHeight, population.blockStartZ+p.relOrigoZ, 
-					0, population.owner.homeBoundary, population.owner);
-			population.addResidence(res);
-			System.out.println("ADDING residence "+(population.blockStartX+p.relOrigoX)+" "+(population.blockStartZ+p.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
-			
-		}
 	}
 	
 	public int getNearestSizeProgramCount(int size)
