@@ -61,9 +61,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						// okay, here we can settle the population for this group...
 						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 						Class<? extends Population> p = list.get(0);
-						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance);
-						pI.blockStartX = coords[2];
-						pI.blockStartZ = coords[3];
+						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3]);
 						pI.update();
 						world.economyContainer.addPopulation(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)

@@ -104,7 +104,7 @@ public class J3DStandingEngine {
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	@SuppressWarnings("unchecked")
-	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ)
+	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender)
 	{
 		System.out.println("RENDERING...");
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
@@ -142,7 +142,7 @@ public class J3DStandingEngine {
 		
     	// get a specific part of the area to render
 		long time = System.currentTimeMillis();
-		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED);
+		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.viewDirection, J3DCore.FARVIEW_ENABLED,rerender);
     	System.out.println("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
@@ -397,6 +397,11 @@ public class J3DStandingEngine {
 	 */
 	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
 	
+	
+	/**
+	 * Set this to true if you want a full rerender of the surroundings, renderedArea won't use it's cache and will return you all previous cubes to remove.
+	 */
+	public boolean rerender = false;
 	/**
 	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
 	 * @param refAngle
@@ -491,11 +496,11 @@ public class J3DStandingEngine {
 				Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
 			} else
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-			if (renderedArea.worldCubeCache.size()==0 || lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
+			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = render(core.gameState.viewPositionX,core.gameState.viewPositionY,core.gameState.viewPositionZ);
+				HashSet<RenderedCube>[] detacheable = render(core.gameState.viewPositionX,core.gameState.viewPositionY,core.gameState.viewPositionZ,rerender);
 				System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 
 				for (int i=0; i<detacheable.length; i++)

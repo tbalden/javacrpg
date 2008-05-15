@@ -42,8 +42,10 @@ public abstract class Population extends Economic{
 	
 	public void clear()
 	{
+		((World)getRoot()).economyContainer.treeLocator.removeAllOfAnObject(this); // we should remove this from treelocator to avoid messing up surface levels of geo.
 		residenceList.clear();
 		groundList.clear();
+		boundaries.clear();
 		boundaries = new GroupedBoundaries((World)parent,this);
 	}
 	
@@ -53,12 +55,17 @@ public abstract class Population extends Economic{
 		residenceList = new ArrayList<Residence>();
 		groundList = new ArrayList<EconomicGround>();
 		boundaries = new GroupedBoundaries((World)parent,this);
+		infrastructure.onLoad();
+		infrastructure.setLoadingState(true);
 		update();
+		infrastructure.setLoadingState(false);
 	}
 	
 	
-	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner) {
+	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ) {
 		super(id, soilGeo, parent, loc,null,owner);
+		this.blockStartX = blockStartX;
+		this.blockStartZ = blockStartZ;
 		boundaries = new GroupedBoundaries(parent,this);
 	}
 	
@@ -143,7 +150,7 @@ public abstract class Population extends Economic{
 	
 	
 	
-	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner);
+	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ);
 
 	/**
 	 * If this returns true, population cannot be any bigger, an entity instance must part 

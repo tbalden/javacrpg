@@ -13,15 +13,15 @@ public class SimpleDistrict extends Population {
 	}
 
 	public SimpleDistrict(String id, Geography soilGeo, World parent,
-			PlaceLocator loc, EntityInstance owner) {
-		super(id, soilGeo, parent, loc, owner);
+			PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ) {
+		super(id, soilGeo, parent, loc, owner,blockStartX,blockStartZ);
 		infrastructure = new DefaultInfrastructure(this);
 	}
 
 	@Override
 	public Population getInstance(String id, Geography soilGeo, World parent,
-			PlaceLocator loc, EntityInstance owner) {
-		return new SimpleDistrict(id,soilGeo,parent,loc,owner);
+			PlaceLocator loc, EntityInstance owner,int blockStartX, int blockStartZ) {
+		return new SimpleDistrict(id,soilGeo,parent,loc,owner,blockStartX,blockStartZ);
 	}
 
 }

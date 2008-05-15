@@ -1807,7 +1807,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         {
         	sEngine = new J3DStandingEngine(this);
         }
-		sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ);
+		sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ,false);
 		sEngine.renderToViewPort();
 		if (!coreFullyInitialized)
 			sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
@@ -2269,8 +2269,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			uiBase.hud.mainBox.addEntry("A new economy turn has come...");
 			// big update for economy, re-rendering environment around
 			gameState.world.economyContainer.doEconomyUpdate();
-			renderedArea.fullUpdateClear();
+			//renderedArea.fullUpdateClear();
+			sEngine.rerender = true;
 			sEngine.renderToViewPort();
+			sEngine.rerender = false;
 			gameState.engine.economyUpdateFinished();
 			uiBase.hud.mainBox.addEntry("Constructions done.");
 			pause = false;
@@ -2326,7 +2328,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rendering = true;
 			renderResult = null;
 			long t0 = System.currentTimeMillis();
-			renderResult = sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ);
+			renderResult = sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ,false);
 			System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 			rendering = false;
 			renderFinished = true;

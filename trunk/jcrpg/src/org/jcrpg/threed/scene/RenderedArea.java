@@ -35,7 +35,7 @@ public class RenderedArea {
 	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 	
 
-	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled)
+	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		int distance = farViewEnabled?J3DCore.RENDER_DISTANCE_FARVIEW:J3DCore.RENDER_DISTANCE;
 		
@@ -120,7 +120,7 @@ public class RenderedArea {
 					{
 						long t0 = System.currentTimeMillis();
 						RenderedCube c = null;
-						if (!worldCubeCache.containsKey(key))
+						if (rerender || !worldCubeCache.containsKey(key))
 						{
 							//t0 = System.currentTimeMillis();
 							Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
@@ -155,7 +155,7 @@ public class RenderedArea {
 							
 							// render this one for farview
 							RenderedCube c = null;
-							if (!worldCubeCache_FARVIEW.containsKey(key))
+							if (rerender || !worldCubeCache_FARVIEW.containsKey(key))
 							{
 								Cube cube = world.getCube(world.engine.getWorldMeanTime(),key, worldX, worldY, worldZ, true);
 								if (cube!=null)

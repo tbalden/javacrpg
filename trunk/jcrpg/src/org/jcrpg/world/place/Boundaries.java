@@ -202,5 +202,9 @@ public class Boundaries {
 	{
 		
 	}
+	public void clear()
+	{
+		
+	}
 	
 }
