@@ -18,7 +18,9 @@
 
 package org.jcrpg.world.place.economic;
 
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.place.Economic;
+import org.jcrpg.world.place.Geography;
 
 
 public abstract class AbstractInfrastructure {
@@ -35,11 +37,14 @@ public abstract class AbstractInfrastructure {
 	
 	public int BUILDING_BLOCK_SIZE = 4;
 	
+	public int INHABITANTS_PER_UPDATE = -1;
+	
 	public class InfrastructureElementParameters
 	{
 		public int relOrigoX,relOrigoY,relOrigoZ;
 		public int sizeX, sizeY, sizeZ;
 		public Class<? extends Economic> type;
+		public EntityMemberInstance owner = null;
 	}
 	
 	public Population population;
@@ -52,7 +57,32 @@ public abstract class AbstractInfrastructure {
 		centerZ = population.owner.homeBoundary.posZ;
 		maxBlocks = (maxSize/BUILDING_BLOCK_SIZE)*(maxSize/BUILDING_BLOCK_SIZE);
 		maxBlocksOneDim = maxSize/BUILDING_BLOCK_SIZE;
+		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock/maxLevelsOfBuildings;
 	}
 	
-	public abstract void update(); 
+	public abstract void update();
+	
+	public int[] getMinMaxHeight(Geography g, int oX, int oZ, int sizeX, int sizeZ)
+	{
+		int minimumHeight = -1;
+		int maximumHeight = -1;
+		for (int x = oX; x<=oX+sizeX; x++)
+		{
+			for (int z = oZ; z<=oZ+sizeZ; z++)
+			{
+				int[] values = g.calculateTransformedCoordinates(x, g.worldGroundLevel, z);
+				int height = g.getPointHeight(values[3], values[5], values[0], values[2],x,z, false) + g.worldGroundLevel;
+				if (height>maximumHeight)
+				{
+					maximumHeight = height;
+				}
+				if (height<minimumHeight||minimumHeight==-1)
+				{
+					minimumHeight = height;
+				}
+			}
+		}
+		return new int[]{minimumHeight,maximumHeight};
+	}
+	
 }

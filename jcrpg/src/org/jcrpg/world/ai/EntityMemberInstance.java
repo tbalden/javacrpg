@@ -18,11 +18,16 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.place.Economic;
 
 public class EntityMemberInstance {
 
 	public EntityMember description = null;
+	
+	public ArrayList<Class<? extends Economic>> ownedInfrastructures = null;
 	
 	/**
 	 * The skill that the given instance is using for his behavior of living around at the current turn.

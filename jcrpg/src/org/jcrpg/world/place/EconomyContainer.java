@@ -87,7 +87,7 @@ public class EconomyContainer {
 	 * returns the X,Z of the population center in this zone.
 	 * @param worldX
 	 * @param worldZ
-	 * @return
+	 * @return [centerX, centerZ, origoX, origoZ]
 	 */
 	public int[] getPopulationCoordinatesInZone(int worldX, int worldZ, int populationGridSize)
 	{
@@ -102,7 +102,7 @@ public class EconomyContainer {
 	 * @param geo
 	 * @param popX
 	 * @param popZ
-	 * @return
+	 * @return the Population if present, or null if no population.
 	 */
 	public Population isOccupied(Geography geo, int popX, int popZ)
 	{
