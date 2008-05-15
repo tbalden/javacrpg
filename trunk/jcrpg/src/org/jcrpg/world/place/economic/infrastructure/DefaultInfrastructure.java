@@ -193,7 +193,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		} else
 		if (e instanceof Residence)
 		{
-			Residence ground = ((Residence)e);
+			Residence res = ((Residence)e);
 			
 			int oX = 
 					population.blockStartX+p.relOrigoX;
@@ -203,12 +203,12 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 			int minimumHeight = minMaxHeight[0];
 			int maximumHeight = minMaxHeight[1];
 
-			ground = ground.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
-					p.sizeX, maximumHeight-minimumHeight+2, p.sizeZ, 
+			res = res.getInstance(population+"_"+p, population.soilGeo, population, world.economyContainer.treeLocator, 
+					p.sizeX, p.sizeY, p.sizeZ, 
 					population.blockStartX+p.relOrigoX, minimumHeight, population.blockStartZ+p.relOrigoZ, 
 					0, population.owner.homeBoundary, population.owner);
-			population.addResidence(ground);
-			System.out.println("ADDING residence "+(population.blockStartX+p.relOrigoX)+" "+(population.blockStartZ+p.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
+			population.addResidence(res);
+			System.out.println("ADDING residence "+(population.blockStartX+p.relOrigoX)+" "+(population.blockStartZ+p.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
 			
 		}
 	}
