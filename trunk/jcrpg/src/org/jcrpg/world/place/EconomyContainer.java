@@ -110,9 +110,12 @@ public class EconomyContainer {
 		if (list != null)
 		for (Object o:list)
 		{
+			//System.out.println("P FOUND: "+o);
 			if (o instanceof Population) {
 				Population p = (Population)o;
-				if (p.soilGeo == geo && p.boundaries.isInside(popX, p.groundLevel, popZ)) return p;
+				//System.out.println("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo);
+				if (p.soilGeo == geo && p.owner.homeBoundary.posX==popX && p.owner.homeBoundary.posZ==popZ ) return p;
+				//System.out.println("NOT...");
 			}
 		}
 		return null;

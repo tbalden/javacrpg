@@ -43,7 +43,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	 */
 	public void buildProgram()
 	{
-		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks);
+		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks,6,2);
 		
 		System.out.println(population.soilGeo);
 		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
@@ -95,7 +95,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 					shuffleCount = (shuffleCount+1)%fullShuffledBlocks.length;
 					if (shuffleCount == oldShuffleCount) {
 						blockCount=-1;
-						System.out.println("!!! NO BLOCK FOUND FOR RESIDENCE...");
+						//System.out.println("!!! NO BLOCK FOUND FOR RESIDENCE...");
 						break; // arrived to the beginning counter, no room found
 					}
 					if (isOccupiedBlock(occupiedBlocks,blockCount)) {
@@ -137,22 +137,36 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	 * @param maximum The maximum of the range. (the minimum is 0.)
 	 * @return the shuffled range.
 	 */
-	public int[] shuffleRange(long seed, int maximum)
+	public int[] shuffleRange(long seed, int maximum, int stickyRange, int leapStick)
 	{
 		int[] ret = new int[maximum];
 		for (int i=0; i<maximum; i++)
 		{
 			ret[i] = -1;
 		}
-		for (int i=0; i<maximum; i++)
+		int toGo = maximum-1;
+		while (toGo>=0)
 		{
-			int r = HashUtil.mixPer1000((int)seed, i, i+1, i+2);
+			int r = HashUtil.mixPer1000((int)seed, toGo, toGo+1, toGo+2);
 			r = r%maximum;
-			while (ret[r]!=-1)
+			int sticking = stickyRange;
+			while (sticking-->0)
 			{
-				r = (r+1)%maximum;
+				boolean leapDone = false;
+				while (ret[r]!=-1)
+				{
+					if (!leapDone && sticking%leapStick==0) {
+						r = (r+maxBlocksOneDim-leapStick)%maximum;
+						leapDone = true;
+					} else
+					{
+						r = (r+1)%maximum;
+					}
+				}
+				ret[r] = toGo;
+				toGo--;
+				if (toGo<0) break; 
 			}
-			ret[r] = i;
 		}
 		return ret;
 	}
@@ -202,6 +216,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		
 		int newNumber = getNearestSizeProgramCount(population.getNumberOfInhabitants());
 		if (newNumber!=lastUpdatedInhabitantNumber) {
+			population.clear();
 			lastUpdatedInhabitantNumber = newNumber;
 			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(newNumber);
 			if (toBuild!=null) {
