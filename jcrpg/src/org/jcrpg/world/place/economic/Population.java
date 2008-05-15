@@ -40,6 +40,13 @@ public abstract class Population extends Economic{
 		super(null, null, null, null,null,null);
 	}
 	
+	public void clear()
+	{
+		residenceList.clear();
+		groundList.clear();
+		boundaries = new GroupedBoundaries((World)parent,this);
+	}
+	
 	@Override
 	public void onLoad()
 	{
