@@ -19,8 +19,10 @@
 package org.jcrpg.world.place.economic;
 
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.World;
 
 
 public abstract class AbstractInfrastructure {
@@ -60,7 +62,11 @@ public abstract class AbstractInfrastructure {
 		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock/maxLevelsOfBuildings;
 	}
 	
+	public abstract void onLoad();
+	
 	public abstract void update();
+	
+	public abstract void buildProgram();
 	
 	public int[] getMinMaxHeight(Geography g, int oX, int oZ, int sizeX, int sizeZ)
 	{
@@ -83,6 +89,51 @@ public abstract class AbstractInfrastructure {
 			}
 		}
 		return new int[]{minimumHeight,maximumHeight};
+	}
+	
+	public void build(InfrastructureElementParameters param)
+	{
+		World world = (World)population.getRoot();
+		Economic e = EconomyTemplate.economicBase.get(param.type);
+		if (e instanceof EconomicGround)
+		{
+			EconomicGround ground = ((EconomicGround)e);
+			
+			int oX = 
+					population.blockStartX+param.relOrigoX;
+			int oZ = population.blockStartZ+param.relOrigoZ;
+			
+			int[] minMaxHeight = getMinMaxHeight(population.soilGeo, oX, oZ, param.sizeX, param.sizeZ);
+			int minimumHeight = minMaxHeight[0];
+			int maximumHeight = minMaxHeight[1];
+
+			ground = ground.getInstance(population+"_"+param, population.soilGeo, population, world.economyContainer.treeLocator, 
+					param.sizeX, maximumHeight-minimumHeight+2, param.sizeZ, 
+					population.blockStartX+param.relOrigoX, minimumHeight, population.blockStartZ+param.relOrigoZ, 
+					0, population.owner.homeBoundary, population.owner);
+			population.addEcoGround(ground);
+			System.out.println("ADDING ecoground "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
+		} else
+		if (e instanceof Residence)
+		{
+			Residence res = ((Residence)e);
+			
+			int oX = 
+					population.blockStartX+param.relOrigoX;
+			int oZ = population.blockStartZ+param.relOrigoZ;
+			
+			int[] minMaxHeight = getMinMaxHeight(population.soilGeo, oX, oZ, param.sizeX, param.sizeZ);
+			int minimumHeight = minMaxHeight[0];
+			//int maximumHeight = minMaxHeight[1];
+
+			res = res.getInstance(population+"_"+param, population.soilGeo, population, world.economyContainer.treeLocator, 
+					param.sizeX, param.sizeY, param.sizeZ, 
+					population.blockStartX+param.relOrigoX, minimumHeight, population.blockStartZ+param.relOrigoZ, 
+					0, population.owner.homeBoundary, population.owner);
+			population.addResidence(res);
+			System.out.println("ADDING residence "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
+			
+		}
 	}
 	
 }

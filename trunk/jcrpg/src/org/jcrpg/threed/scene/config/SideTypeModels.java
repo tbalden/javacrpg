@@ -689,6 +689,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
 		SimpleModel sm_extsteps = new SimpleModel("models/external/ext_steps.obj",null);
 		sm_extsteps.batchEnabled = false;
+		//sm_extsteps.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(47), new RenderedSide(new Model[]{sm_extsteps}));
 		
 // NEXT ID = 48
