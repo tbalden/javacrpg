@@ -18,6 +18,9 @@
 
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.Economic;
@@ -26,7 +29,12 @@ import org.jcrpg.world.place.World;
 
 
 public abstract class AbstractInfrastructure {
-	
+
+	/**
+	 * Minimum size mapped to the next array of infrastructure elements.
+	 */
+	public transient HashMap<Integer, ArrayList<InfrastructureElementParameters>> sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
+
 	public int currentSize = 0;
 	public int maxSize = -1;
 	public int centerX = -1;
@@ -62,12 +70,126 @@ public abstract class AbstractInfrastructure {
 		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock;
 	}
 	
-	public abstract void onLoad();
+	/**
+	 * loader.
+	 */
+	public void onLoad()
+	{
+		sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
+		lastUpdatedInhabitantNumber=-1;
+		buildProgram();
+	}
+
 	
-	public abstract void update();
+	public transient int lastUpdatedInhabitantNumber = -1;
 	
-	public abstract void buildProgram();
+	/**
+	 * save game stores this number, so that on load the groups that joined in between eco update turns won't be counted in.
+	 */
+	public int savedInhabitantNumber = -1;
+
 	
+	/**
+	 * Updates a population if size changed that much, running the buildprogram for the given population
+	 * size.
+	 */
+	public void update() {
+		
+		// if loading, used the saved number instead of the actual number (which will be only used when a real new economy turn will come)
+		int newNumber = loading?savedInhabitantNumber:getNearestSizeProgramCount(population.getNumberOfInhabitants());
+		if (newNumber!=lastUpdatedInhabitantNumber) {
+			population.clear();
+			lastUpdatedInhabitantNumber = newNumber;
+			savedInhabitantNumber = newNumber;
+			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(newNumber);
+			if (toBuild!=null) {
+				System.out.println("TO BUILD SIZE = "+toBuild.size()+" "+toBuild);
+
+				for (InfrastructureElementParameters p:toBuild)
+				{
+					build(p);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Returns the int value for which update should look up the list of infrastructures in the sizeDrivenBuildProgram hashmap.
+	 * @param size
+	 * @return the key.
+	 */
+	public int getNearestSizeProgramCount(int size)
+	{
+		return (size/(INHABITANTS_PER_UPDATE))*INHABITANTS_PER_UPDATE;
+	}
+	
+	/**
+	 * the program generation.
+	 */
+	public void buildProgram()
+	{
+		
+		System.out.println(population.soilGeo);
+		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
+		System.out.println("PROGRAM res: "+residenceTypes);
+		ArrayList<Class<?extends EconomicGround>> groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
+		System.out.println("PROGRAM ground: "+groundTypes);
+		// base parts
+		
+		
+		// collecting fix properties of fix NPCs of entityInstance
+		ArrayList<InfrastructureElementParameters> fixProperties = new ArrayList<InfrastructureElementParameters>();
+		for (EntityMemberInstance i:population.owner.fixMembers.values())
+		{
+			for (Class<?extends Economic> ecoClass:i.ownedInfrastructures)
+			{
+				InfrastructureElementParameters prop = new InfrastructureElementParameters();
+				prop.type = ecoClass;
+				prop.owner = i;
+				fixProperties.add(prop);
+			}
+		}
+		
+		prepareBuildProgram(fixProperties, residenceTypes, groundTypes);
+		
+		for (int i=0; i<maxInhabitantPerBlock*maxBlocks; i+=INHABITANTS_PER_UPDATE)
+		{
+			ArrayList<InfrastructureElementParameters> list = buildProgramLevel(i, fixProperties, residenceTypes, groundTypes);
+			
+			//System.out.println("adding program part to "+i+" -> "+sizeDrivenBuildProgram+" "+list);
+			sizeDrivenBuildProgram.put(i, list);		
+		}
+		
+	}
+
+	/**
+	 * Build the program for a given population size. The main things to code in an infrastructure extension. 
+	 * @param sizeLevel
+	 * @param fixProperties the fixed properties of NPC in this population.
+	 * @param residenceTypes The usable residence types.
+	 * @param groundTypes The usable ecoGround types
+	 * @return the generated arraylist of the infrastructure elements for the given pop. size.
+	 */
+	public abstract ArrayList<InfrastructureElementParameters> buildProgramLevel(int sizeLevel, ArrayList<InfrastructureElementParameters> fixProperties, ArrayList<Class<?extends Residence>> residenceTypes, ArrayList<Class<?extends EconomicGround>> groundTypes);
+	
+	/**
+	 * It's called in buildProgram, before starting the actual buildProgram process.
+	 * @param fixProperties
+	 * @param residenceTypes
+	 * @param groundTypes
+	 */
+	public abstract void prepareBuildProgram(ArrayList<InfrastructureElementParameters> fixProperties, ArrayList<Class<?extends Residence>> residenceTypes, ArrayList<Class<?extends EconomicGround>> groundTypes);
+	
+	
+	/**
+	 * Return the surface height min and max in an area.
+	 * @param g the Geography.
+	 * @param oX
+	 * @param oZ
+	 * @param sizeX
+	 * @param sizeZ
+	 * @return [min, max]
+	 */
 	public int[] getMinMaxHeight(Geography g, int oX, int oZ, int sizeX, int sizeZ)
 	{
 		int minimumHeight = -1;
@@ -91,6 +213,10 @@ public abstract class AbstractInfrastructure {
 		return new int[]{minimumHeight,maximumHeight};
 	}
 	
+	/**
+	 * Add an instantiated economic to the parent population based on the parameters.    
+	 * @param param
+	 */
 	public void build(InfrastructureElementParameters param)
 	{
 		World world = (World)population.getRoot();
@@ -140,6 +266,56 @@ public abstract class AbstractInfrastructure {
 	public void setLoadingState(boolean state)
 	{
 		loading = state;
+	}
+
+	// block occupation methods
+
+	/**
+	 * Sets occupied building blocks specified by the area of the infrastructure element parameter. 
+	 * @param param The parameter infrastructure.
+	 */
+	public void setOccupiedBlocks(boolean[] occupiedBlocks, InfrastructureElementParameters param)
+	{
+		for (int x=param.relOrigoX; x<param.relOrigoX+param.sizeX; x++)
+		{
+			for (int z=param.relOrigoZ; z<param.relOrigoZ+param.sizeZ; z++)
+			{
+				occupiedBlocks[x/BUILDING_BLOCK_SIZE+(z/BUILDING_BLOCK_SIZE)*maxBlocksOneDim] = true;
+			}
+		}
+	}
+	
+	/**
+	 * Maps a block counter (of the boolean array) to x,z coordinates. 
+	 * @param count
+	 * @return
+	 */
+	public int[] toBlockCoordinate(int count)
+	{
+		int z = count/maxBlocksOneDim;
+		int x = count%maxBlocksOneDim;
+		return new int[] {x,z};
+	}
+	/**
+	 * Tells if a block at counter is occupied
+	 * @param occupiedBlocks
+	 * @param count
+	 * @return
+	 */
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int count)
+	{
+		return occupiedBlocks[count];
+	}
+	/**
+	 * Tells if a block is occupied at x,z.
+	 * @param occupiedBlocks
+	 * @param x
+	 * @param z
+	 * @return
+	 */
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int x, int z)
+	{
+		return isOccupiedBlock(occupiedBlocks,x+z*maxBlocksOneDim);
 	}
 	
 }
