@@ -24,9 +24,17 @@ import org.jcrpg.world.time.Time;
 
 public class Engine implements Runnable {
 
+		
 	boolean exit = false;
 	boolean pause = true;
 	Time worldMeanTime = null;
+	
+	
+	/**
+	 * Tells how many turns will take until a full economy
+	 * update will be run in EconomyContainer.
+	 */
+	public static int TURNS_PER_ECONOMY_UPDATE = 2;
 	
 	/**
 	 * Tells if do environment's time has come. 
@@ -47,11 +55,6 @@ public class Engine implements Runnable {
 	 */
 	public static int SECONDS_PER_ENVIRONMENT = 160; 
 	
-	/**
-	 * Tells how many turns will take until a full economy
-	 * update will be run in EconomyContainer.
-	 */
-	public static int TURNS_PER_ECONOMY_UPDATE = 3;
 	
 	public boolean timeChanged = false;
 	public boolean turnCome = false;

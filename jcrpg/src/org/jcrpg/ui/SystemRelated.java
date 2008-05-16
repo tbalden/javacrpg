@@ -56,7 +56,7 @@ public class SystemRelated {
 			q.setCullMode(Quad.CULL_ALWAYS);
 			q.setRenderState(hud.hudAS);
 	        q.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        q.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/40)*2,hud.core.getDisplay().getHeight()-(1*(hud.core.getDisplay().getHeight()/36))*2-(y*(hud.core.getDisplay().getHeight()/18)),0));
+	        q.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/40)*2+(y*(hud.core.getDisplay().getWidth()/18)),hud.core.getDisplay().getHeight()-(1*(hud.core.getDisplay().getHeight()/36))*2,0));
 	        q.setLightCombineMode(LightState.OFF);
 	        q.updateRenderState();
 	        hmQuad.put(quString, q);
