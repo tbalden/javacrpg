@@ -20,6 +20,7 @@ package org.jcrpg.game;
 
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
 
@@ -32,6 +33,7 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
@@ -173,7 +175,56 @@ public class GameStateContainer {
 		this.charCreationRules = charCreationRules;
 	}
 	
+	/**
+	 * Repositions player to the nearest sane surface - on economy update this
+	 * is a must.
+	 */
+	public void repositionPlayerToSurface()
+	{
+		// looking for surface...
+		ArrayList<SurfaceHeightAndType[]> list = world.getSurfaceData(viewPositionX,viewPositionZ);
+		int y = viewPositionY;
+		int minDiff = 1000;
+		if (list!=null)
+		for (SurfaceHeightAndType[] st:list)
+		{
+			for (SurfaceHeightAndType s:st)
+			{
+				if (Math.abs((s.surfaceY-viewPositionY))<minDiff)
+				{
+					minDiff = Math.abs(s.surfaceY-viewPositionY);
+					y = s.surfaceY;
+				}
+			}
+		}
+		relativeY += y-viewPositionY;
+		viewPositionY = y;
+	}
 	
+	/**
+	 * Big world update that changes the world structure.
+	 */
+	public void doEconomyUpdate()
+	{
+		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("A new economy turn has come...");
+		// big update for economy, re-rendering environment around
+		world.economyContainer.doEconomyUpdate();
+		//renderedArea.fullUpdateClear();
+		
+		repositionPlayerToSurface();
+		J3DCore.getInstance().setCalculatedCameraLocation();
+		
+		J3DCore.getInstance().sEngine.rerender = true;
+		J3DCore.getInstance().sEngine.renderToViewPort();
+		J3DCore.getInstance().sEngine.rerender = false;
+		engine.economyUpdateFinished();
+		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Constructions done.");
+		
+	}
+	
+	/**
+	 * Updates entityIcons hud part with the nearby entity icons.
+	 */
 	public void updateEntityIcons()
 	{
 		TreeMap<String, String> map = new TreeMap<String, String>();
@@ -193,10 +244,14 @@ public class GameStateContainer {
 	
 	int environmentAudioCount = 0;
 	
+	/**
+	 * Non-gameplay related environmental happenings (audio etc.).
+	 */
 	public void doEnvironmental()
 	{
 		if (environmentAudioCount==0)
 		{
+			// climate related sounds
 			CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ, true);
 			if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null && c.getBelt().audioDescriptor.ENVIRONMENTAL!=null)
 			{
@@ -213,7 +268,7 @@ public class GameStateContainer {
 		}
 		else 
 		{
-			
+			// ecology related sounds			
 			Collection<Object> list = ecology.getEntities(player.world, player.roamingBoundary.posX, player.roamingBoundary.posY, player.roamingBoundary.posZ);
 			if (list!=null)
 			{
@@ -222,7 +277,7 @@ public class GameStateContainer {
 				{
 					EntityInstance i = ((EntityInstance)o);
 					if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.roamingBoundary)==null) continue;
-					System.out.println("#_#_# "+((EntityInstance)o).id);
+					System.out.println("#_# Audio: "+((EntityInstance)o).id);
 					if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
 					for (GroupingMemberProps p:((EntityInstance)o).description.groupingRule.possibleMembers)
 					{
