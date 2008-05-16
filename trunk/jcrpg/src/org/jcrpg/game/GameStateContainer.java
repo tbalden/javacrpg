@@ -206,7 +206,11 @@ public class GameStateContainer {
 	 */
 	public void doEconomyUpdate()
 	{
+		
 		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("A new economy turn has come...");
+		
+		J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "ECONOMY");
+
 		// big update for economy, re-rendering environment around
 		world.economyContainer.doEconomyUpdate();
 		//renderedArea.fullUpdateClear();
@@ -218,8 +222,9 @@ public class GameStateContainer {
 		J3DCore.getInstance().sEngine.renderToViewPort();
 		J3DCore.getInstance().sEngine.rerender = false;
 		engine.economyUpdateFinished();
+		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "ECONOMY");
 		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Constructions done.");
-		
+	
 	}
 	
 	/**

@@ -127,7 +127,7 @@ public class HUD {
         //hudNode.attachChild(meter.quad);
         
         // system
-        sr = new SystemRelated(this,new String[]{"LOAD","DICE"},new String[]{"./data/ui/hourglass.png","./data/ui/dice2.png"});
+        sr = new SystemRelated(this,new String[]{"LOAD","DICE","ECONOMY"},new String[]{"./data/ui/hourglass.png","./data/ui/dice2.png","./data/ui/economic.png"});
         
         // main textbox
         
