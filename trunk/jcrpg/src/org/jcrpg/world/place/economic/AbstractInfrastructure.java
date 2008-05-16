@@ -210,7 +210,7 @@ public abstract class AbstractInfrastructure {
 				}
 			}
 		}
-		return new int[]{minimumHeight,maximumHeight};
+		return new int[]{minimumHeight+(maximumHeight-minimumHeight)/2,maximumHeight};
 	}
 	
 	/**

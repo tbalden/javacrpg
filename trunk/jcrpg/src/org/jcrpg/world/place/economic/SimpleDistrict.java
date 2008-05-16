@@ -5,6 +5,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.infrastructure.DefaultInfrastructure;
+import org.jcrpg.world.place.economic.infrastructure.GrownInfrastructure;
 
 public class SimpleDistrict extends Population {
 
@@ -15,7 +16,7 @@ public class SimpleDistrict extends Population {
 	public SimpleDistrict(String id, Geography soilGeo, World parent,
 			PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ) {
 		super(id, soilGeo, parent, loc, owner,blockStartX,blockStartZ);
-		infrastructure = new DefaultInfrastructure(this);
+		infrastructure = new GrownInfrastructure(this);//DefaultInfrastructure(this);
 	}
 
 	@Override
