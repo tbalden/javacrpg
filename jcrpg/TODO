@@ -9,40 +9,31 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 [ ] inter-entity relations web
 
-[ ] Population.java
-
-	[X] population change -> how to modify renderedArea
-		--> population updates happen in a cycle of X turns. Then a reload is done, clearing rendered
-		area cache too
-
-	[X] new idea -> population should be shared by different groups. groups can join a population migrating(?)
-		Populations should be in center of fix sized "areas", no overlapping this way guaranteed, also
-		if a population is over a size, it should migrate to another area, splitting up the group to
-		[ ] a "settler" and remaining group. Looking for home :)
-
-	[ ] // TODO write a quick fitter function to build up a population structure quickly.
-		[ ] Structure base class that can be extended telling how to build the street/building etc. structure
-	[ ] // TODO based on economic (house) heights add steps to the population
+	[ ] add goals to groups / members based on entity relation qualities + automatically generated
+		goals (colonization etc.), to make drive for different actions for groups.
+	[ ] add some actions / outcomes that take place in encounters between groups and modifies relations
 	
-	[-] gather changed areas into a temporary list in an ecology turn to know if re-render is needed where player is standing.
+	--> this will lead to design encounter mode of player too 
+
+[ ] leveling for chars/entityMembers, points for them, bars on UI
+[ ] encounter screens, Interception, Encounter TurnAction windows
+
+
+	[?] // TODO based on economic (house) heights add steps to the population
 	
-[ ] TreeLocator.java
+[X] TreeLocator.java
 	[ ] //TODO this is not working correctly for a few cases, why?replaced with +1 for now
 
-[ ] skill based hud EntityOMeter -> only detected beings should be displayed
+[X] skill based hud EntityOMeter
+	[ ] -> only detected beings should be displayed
 
 [ ] cave geo population -> rock rooms?
 
 
 [ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
 
-[ ] leveling for chars/entityMembers, points for them, bars on UI
-[ ] groups trespassed - icons - UI
-[ ] encounter screens, Interception, Encounter TurnAction windows
-
 
 [ ] try to set fixed framerate
-
 
 
  [?] a giant 3d bitmap for explored area to make a local map charting work 
@@ -175,6 +166,26 @@ Other:
 [?] Lod modelling trees with billboard images captured in blender!
 
 -- ########## DONE ######################################################################################
+
+[X] groups trespassed - icons - UI - EntityOMeter
+
+[X] Population.java
+
+	[X] population change -> how to modify renderedArea
+		--> population updates happen in a cycle of X turns. Then a reload is done, clearing rendered
+		area cache too
+
+	[X] new idea -> population should be shared by different groups. groups can join a population migrating(?)
+		Populations should be in center of fix sized "areas", no overlapping this way guaranteed, also
+		if a population is over a size, it should migrate to another area, splitting up the group to
+		[ ] a "settler" and remaining group. Looking for home :)
+
+	[X] // TODO write a quick fitter function to build up a population structure quickly.
+		[ ] Structure base class that can be extended telling how to build the street/building etc. structure
+	
+	[-] gather changed areas into a temporary list in an ecology turn to know if re-render is needed where player is standing.
+	 -> instead Economic Update Turn was introduced
+
 
 [X] Farview render -> only every 5th, 10th, and multiply its scale with it (5 or 10)!
 	[X] make it better with big gaps (non 1)
