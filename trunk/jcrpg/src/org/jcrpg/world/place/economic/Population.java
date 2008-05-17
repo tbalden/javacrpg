@@ -33,6 +33,10 @@ public abstract class Population extends Economic{
 	
 	public int blockStartX,blockStartZ;
 	
+	public Town town = null;
+	
+	public String foundationName = "Anonymous District";
+	
 	public AbstractInfrastructure infrastructure = null;
 
 	public Population()

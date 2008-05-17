@@ -19,6 +19,7 @@
 package org.jcrpg.world.place;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 import org.jcrpg.space.Cube;
@@ -155,6 +156,81 @@ public class EconomyContainer {
 			}
 		}
 	}
+	
+	public void checkDistrictToTownIntegration(Population p)
+	{
+		Population[] fP = getFriendlyNeighborDistricts(p);
+		if (fP.length>0)
+		{
+			System.out.println("INTEGRATING TOWN");
+			// TODO decisions which Town to join.
+			System.out.println(fP[0].blockStartX+" "+fP[0].blockStartZ+" "+fP[0].town);
+			fP[0].town.subPopulations.add(p);
+			p.town = fP[0].town;
+		} else
+		{
+			Town t = new Town();
+			t.subPopulations.add(p);
+			p.town = t;
+			p.owner.description.nameTown(t);
+			System.out.println("NEW TOWN "+ p.blockStartX + " "+p.blockStartZ+" "+t.foundationName);
+			towns.add(t);
+		}
+	}
+	
+	public Population[] getFriendlyNeighborDistricts(Population p)
+	{
+		int x = p.blockStartX;
+		int z = p.blockStartZ;
+		
+		int xMinus = x-p.blockSize;
+		int zMinus = z-p.blockSize;
+		int xPlus = x+p.blockSize;
+		int zPlus = z+p.blockSize;
+		World world = (World)p.getRoot();
+		xMinus = world.shrinkToWorld(xMinus);
+		zMinus = world.shrinkToWorld(zMinus);
+		xPlus = world.shrinkToWorld(xPlus);
+		zPlus = world.shrinkToWorld(zPlus);		
+		
+		HashSet<Population> found = new HashSet<Population>();
+		for (Economic eco:economics.values())
+		{
+			if (eco==p) continue;
+			if (eco instanceof Population)
+			{
+				Population p2 = (Population)eco; 
+				int pX = p2.blockStartX;
+				int pZ = p2.blockStartZ;
+				if (pX==xMinus && pZ==z || 
+						pX==x && pZ==zMinus ||
+						pX==xPlus && pZ==z ||
+						pX==x && pZ==zPlus
+				) 
+				{
+					if (p.owner.wouldMergeWithOther(p2.owner))
+					{
+						found.add((Population)eco);	
+					}
+				}
+			}
+		}
+		return found.toArray(new Population[0]);
+	}
+	
+	public Population getPopulationAt(int worldX, int worldY, int worldZ)
+	{
+		ArrayList<Object> list = treeLocator.getElements(worldX, worldY, worldZ);
+		for (Object l:list)
+		{
+			if (l instanceof Population)
+			{
+				if ( ((Population)l).boundaries.isInside(worldX, worldY, worldZ) ) return (Population)l;
+			}
+		}
+		return null;
+	}
+	
 
 	public void clearAll()
 	{
@@ -162,7 +238,7 @@ public class EconomyContainer {
 		economics.clear();
 	}
 	
-	// TODO town organizing functions that tell if a population is close enough to an existing
-	// town to join it, and checking if a population is friendly enough to add to a town
+	
+	
 	
 }

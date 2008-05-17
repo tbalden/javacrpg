@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Town {
 	
 	public ArrayList<Population> subPopulations = new ArrayList<Population>();
-	
+	public String foundationName = "Anonymous";
 	
 
 }

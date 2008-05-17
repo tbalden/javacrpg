@@ -237,9 +237,9 @@ public class DefaultGenProgram extends GenProgram {
 	public String[] getNeighbors(Collection<Geography> worldSizedGeos, int x, int y, int z)
 	{
 		int xMinus = x-1;
-		int zMinus = y-1;
+		int zMinus = z-1;
 		int xPlus = x+1;
-		int zPlus = y+1;
+		int zPlus = z+1;
 		xMinus = generator.world.shrinkToWorld(xMinus);
 		zMinus = generator.world.shrinkToWorld(zMinus);
 		xPlus = generator.world.shrinkToWorld(xPlus);
