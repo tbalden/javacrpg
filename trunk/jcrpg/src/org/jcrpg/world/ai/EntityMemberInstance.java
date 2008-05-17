@@ -25,7 +25,18 @@ import org.jcrpg.world.place.Economic;
 
 public class EntityMemberInstance {
 
+	public static int numericIdSequence = 0;
+	
+	public final static synchronized int getNextNumbericId()
+	{
+		return numericIdSequence++;
+	}
+	
 	public EntityMember description = null;
+	
+	public EntityMemberRelations personalRelations = new EntityMemberRelations();
+	
+	public int numericId = -1;
 	
 	public ArrayList<Class<? extends Economic>> ownedInfrastructures = null;
 	
@@ -34,8 +45,9 @@ public class EntityMemberInstance {
 	 */
 	public InterceptionSkill behaviorSkill = null;
 
-	public EntityMemberInstance(EntityMember description) {
+	public EntityMemberInstance(EntityMember description, int numericId) {
 		super();
 		this.description = description;
+		this.numericId = numericId;
 	}
 }

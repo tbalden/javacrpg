@@ -20,24 +20,25 @@ package org.jcrpg.world.ai;
 
 
 
+
 /**
  * Class for entity inter-relations.
  * @author illes
  *
  */
-public class EntityRelations 
+public class EntityMemberRelations 
 {
 	public EntityScaledRelationType relations = new EntityScaledRelationType();
 	
-	public int getRelationLevel(EntityInstance i)
+	public int getRelationLevel(EntityMemberInstance i)
 	{
 		return relations.getRelationQuality(i.numericId);
 	}
-	public void increaseRelationLevel(EntityInstance i, byte num)
+	public void increaseRelationLevel(EntityMemberInstance i, byte num)
 	{
 		relations.increase(i.numericId, num);
 	}
-	public void decreaseRelationLevel(EntityInstance i, byte num)
+	public void decreaseRelationLevel(EntityMemberInstance i, byte num)
 	{
 		relations.decrease(i.numericId, num);
 	}

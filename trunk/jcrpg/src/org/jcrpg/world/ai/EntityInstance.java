@@ -33,6 +33,8 @@ public class EntityInstance {
 	public boolean merged = false;
 	
 	public EntityDescription description;
+	
+	public EntityRelations relations = new EntityRelations();
 
 	/**
 	 * Skills of the instance.
