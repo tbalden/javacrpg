@@ -45,14 +45,14 @@ public class GroupingRule {
 					if (i<prop.minNumberInAGroup)
 					{
 						counter++;
-						members.add(new EntityMemberInstance(prop.memberType));		
+						members.add(new EntityMemberInstance(prop.memberType,-1));		
 					} else
 					{
 						int rand = HashUtil.mixPercentage(instance.id.hashCode(), groupId, 0);
 						if (prop.likeness<rand)
 						{
 							counter++;
-							members.add(new EntityMemberInstance(prop.memberType));
+							members.add(new EntityMemberInstance(prop.memberType,-1));
 						}
 					}
 					if (counter==size) break;

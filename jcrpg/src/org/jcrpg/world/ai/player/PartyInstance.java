@@ -102,7 +102,7 @@ public class PartyInstance extends EntityInstance {
 	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
 		PartyMember member = new PartyMember(id,audio);
-		EntityMemberInstance mI = new EntityMemberInstance(member);
+		EntityMemberInstance mI = new EntityMemberInstance(member, EntityMemberInstance.getNextNumbericId());
 		fixMembers.put(id, mI);
 		orderedParty.add(mI);
 		numberOfMembers++;
@@ -115,7 +115,7 @@ public class PartyInstance extends EntityInstance {
 	
 	public void addPartyMemberInstance(PartyMember m)
 	{
-		EntityMemberInstance mI = new EntityMemberInstance(m);
+		EntityMemberInstance mI = new EntityMemberInstance(m, EntityMemberInstance.getNextNumbericId());
 		fixMembers.put(m.id, mI);
 		numberOfMembers++;
 	}

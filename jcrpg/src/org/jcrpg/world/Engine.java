@@ -34,7 +34,7 @@ public class Engine implements Runnable {
 	 * Tells how many turns will take until a full economy
 	 * update will be run in EconomyContainer.
 	 */
-	public static int TURNS_PER_ECONOMY_UPDATE = 2;
+	public static int TURNS_PER_ECONOMY_UPDATE = 10;
 	
 	/**
 	 * Tells if do environment's time has come. 
