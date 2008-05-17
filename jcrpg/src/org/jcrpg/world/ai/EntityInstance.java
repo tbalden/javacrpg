@@ -198,7 +198,13 @@ public class EntityInstance {
 		if (instance.description.equals(instance.description)) return true; // TODO interrelation check.
 		return false;
 	}
-	
+
+	public boolean isFriendly(EntityInstance instance)
+	{
+		if (instance.description.equals(instance.description)) return true; // TODO interrelation check.
+		return false;
+	}
+
 	/**
 	 * merging two entities.
 	 * @param instance
@@ -211,5 +217,6 @@ public class EntityInstance {
 		ecology.removeFromLocator(instance);
 		instance.merged = true;
 	}
+	
 	
 }

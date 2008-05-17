@@ -64,6 +64,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3]);
 						pI.update();
 						world.economyContainer.addPopulation(pI);
+						world.economyContainer.checkDistrictToTownIntegration(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
 						break;
 					}

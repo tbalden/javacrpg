@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -34,6 +35,7 @@ import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.Town;
 
 /**
  * All moving beings's base class which should interact between group and individual intelligence.
@@ -226,4 +228,33 @@ public class EntityDescription {
 	{
 		
 	}
+
+	// TODO different races should have different syllables?
+	public ArrayList<String> syllables = new ArrayList<String>();
+	
+	
+	public void nameTown(Town t)
+	{
+		// TODO replace this with race dependent...
+		if (syllables.size()==0) {
+			syllables.add("aw");
+			syllables.add("sho");
+			syllables.add("mig");
+			syllables.add("tra");
+			syllables.add("wam");
+			syllables.add("prah");
+			syllables.add("bu");
+		}
+		long seed = t.subPopulations.get(0).blockStartX+t.subPopulations.get(0).blockStartZ+t.subPopulations.get(0).numericId;
+		String name = "";
+		int i=0;
+		while (true) {
+			int r = HashUtil.mixPer1000((int)seed,i++,0,0);
+			r = r%syllables.size();
+			name+=syllables.get(r);
+			if (i>5 || i>2 && HashUtil.mixPer1000((int)seed,i,0,0)>500) break;
+		}
+		t.foundationName = name.substring(0,1).toUpperCase()+name.substring(1);
+	}
+
 }
