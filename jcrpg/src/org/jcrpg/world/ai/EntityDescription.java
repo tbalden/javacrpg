@@ -35,6 +35,7 @@ import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Town;
 
 /**
@@ -233,7 +234,7 @@ public class EntityDescription {
 	public ArrayList<String> syllables = new ArrayList<String>();
 	
 	
-	public void nameTown(Town t)
+	private String nameThing(long seed)
 	{
 		// TODO replace this with race dependent...
 		if (syllables.size()==0) {
@@ -245,7 +246,6 @@ public class EntityDescription {
 			syllables.add("prah");
 			syllables.add("bu");
 		}
-		long seed = t.subPopulations.get(0).blockStartX+t.subPopulations.get(0).blockStartZ+t.subPopulations.get(0).numericId;
 		String name = "";
 		int i=0;
 		while (true) {
@@ -254,7 +254,20 @@ public class EntityDescription {
 			name+=syllables.get(r);
 			if (i>5 || i>2 && HashUtil.mixPer1000((int)seed,i,0,0)>500) break;
 		}
-		t.foundationName = name.substring(0,1).toUpperCase()+name.substring(1);
+		return name.substring(0,1).toUpperCase()+name.substring(1);
+		
+	}
+	
+	public void nameTown(Town t)
+	{
+		long seed = t.subPopulations.get(0).blockStartX+t.subPopulations.get(0).blockStartZ+t.subPopulations.get(0).numericId;
+		t.foundationName = nameThing(seed);
+	}
+
+	public void namePopulation(Population p)
+	{
+		long seed = p.blockStartX+p.blockStartZ+p.numericId+p.soilGeo.numericId;
+		p.foundationName = nameThing(seed);
 	}
 
 }
