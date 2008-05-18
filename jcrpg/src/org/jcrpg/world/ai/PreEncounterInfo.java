@@ -20,6 +20,8 @@ package org.jcrpg.world.ai;
 
 import java.util.HashMap;
 
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+
 /**
  * Class containing a possible encounter's data. 
  * @author illes
@@ -34,11 +36,11 @@ public class PreEncounterInfo {
 	/**
 	 * Encountered instances and their common radius ratios and middle point data.
 	 */
-	public HashMap<EntityInstance, int[][]> encountered = new HashMap<EntityInstance, int[][]>();
+	public HashMap<EntityFragment, int[][]> encountered = new HashMap<EntityFragment, int[][]>();
 	/**
 	 * encountered instances' subgroupIds facing the possible encounter.
 	 */
-	public HashMap<EntityInstance, int[]> encounteredGroupIds = new HashMap<EntityInstance, int[]>();
+	public HashMap<EntityFragment, int[]> encounteredGroupIds = new HashMap<EntityFragment, int[]>();
 	/**
 	 * The subgroups of the initiator group which face the encountered.  
 	 */

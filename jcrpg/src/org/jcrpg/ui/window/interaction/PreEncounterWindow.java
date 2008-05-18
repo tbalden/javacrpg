@@ -28,8 +28,8 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.scene.Node;
@@ -122,11 +122,11 @@ public class PreEncounterWindow extends PagedInputWindow {
 		{
 			if (!i.active) continue;
 			int fullSize = 0;
-			for (EntityInstance entityInstance:i.encountered.keySet())
+			for (EntityFragment entityInstance:i.encountered.keySet())
 			{
 				int[] groupIds = i.encounteredGroupIds.get(entityInstance);
 				for (int in:groupIds) {
-					int size = entityInstance.getGroupSizes()[in];
+					int size = entityInstance.instance.getGroupSizes()[in];
 					fullSize+=size;
 				}
 			}
@@ -144,16 +144,16 @@ public class PreEncounterWindow extends PagedInputWindow {
 			String text = count+"/";
 			if (!i.active) continue;
 			int fullSize = 0;
-			for (EntityInstance instance:i.encountered.keySet())
+			for (EntityFragment fragment:i.encountered.keySet())
 			{
-				System.out.println(instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+				System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 				size++;
-				int[] groupIds = i.encounteredGroupIds.get(instance);
+				int[] groupIds = i.encounteredGroupIds.get(fragment);
 				for (int in:groupIds) {
-					int size1 = instance.getGroupSizes()[in];
+					int size1 = fragment.instance.getGroupSizes()[in];
 					fullSize+=size1;
 				}				
-				text+=size+" "+instance.description.getClass().getSimpleName()+" ";
+				text+=size+" "+fragment.instance.description.getClass().getSimpleName()+" ";
 			}
 			if (fullSize==0) continue;
 			ids[count] = ""+count;

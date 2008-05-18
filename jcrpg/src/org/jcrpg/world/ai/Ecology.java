@@ -27,6 +27,7 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.place.TreeLocator;
 import org.jcrpg.world.place.World;
 
@@ -63,29 +64,32 @@ public class Ecology {
 		initTransient();
 		for (EntityInstance i:orderedBeingList)
 		{
-			addToLocator(i);
+			for (EntityFragment f:i.fragments.fragments)
+			{
+				addToLocator(f);
+			}
 		}
 	}
 	
-	public void addToLocator(EntityInstance i)
+	public void addToLocator(EntityFragment i)
 	{
-		if (i.world==null) return;
-		TreeLocator l = locators.get(i.world);
+		if (i.instance.world==null) return;
+		TreeLocator l = locators.get(i.instance.world);
 		if (l==null)
 		{
-			l = new TreeLocator(i.world);
-			locators.put(i.world, l);
+			l = new TreeLocator(i.instance.world);
+			locators.put(i.instance.world, l);
 		}
-		l.addEntityInstance(i);
+		l.addEntityFragment(i);
 	}
-	public void removeFromLocator(EntityInstance i)
+	public void removeFromLocator(EntityFragment i)
 	{
-		if (i.world==null) return;
-		TreeLocator l = locators.get(i.world);
+		if (i.instance.world==null) return;
+		TreeLocator l = locators.get(i.instance.world);
 		if (l==null)
 		{
-			l = new TreeLocator(i.world);
-			locators.put(i.world, l);
+			l = new TreeLocator(i.instance.world);
+			locators.put(i.instance.world, l);
 		}
 		l.removeAllOfAnObject(i);
 	}
@@ -101,7 +105,9 @@ public class Ecology {
 	{
 		beings.put(entityInstance.numericId, entityInstance);
 		orderedBeingList.add(entityInstance);
-		addToLocator(entityInstance);
+		for (EntityFragment f:entityInstance.fragments.fragments) {
+			addToLocator(f);
+		}
 	}
 	
 	public Collection<Object> getEntities(World w, int worldX, int worldY, int worldZ)
@@ -113,24 +119,24 @@ public class Ecology {
 	
 	/**
 	 * Calculates groups in the intersection of target with a self instance. 
-	 * @param self the interceptor entity
-	 * @param target the encountered entity
+	 * @param self the interceptor entity fragment.
+	 * @param target the encountered entity fragment.
 	 * @param radiusRatio the common radius.
 	 * @param toFill PreEncounterInfo object to fill
 	 * @param fillOwn If this is true preEncoutnerInfo's ownGroupIds' are set, otherwise the ecounteredGroupIds are filled.
 	 */
-	public static void calcGroupsOfEncounter(EntityInstance self, EntityInstance target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
+	public static void calcGroupsOfEncounter(EntityFragment self, EntityFragment target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
-		int[] groupIds = target.description.groupingRule.getGroupIds(target, radiusRatio, rand);
+		int[] groupIds = target.instance.description.groupingRule.getGroupIds(target,target.instance, radiusRatio, rand);
 		if (fillOwn)
 		{
 			toFill.ownGroupIds = groupIds;
 		} else
 		{
-			if (self == J3DCore.getInstance().gameState.player) {
+			if (self == J3DCore.getInstance().gameState.player.theFragment) {
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
-				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.id);
+				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.instance.id);
 			}
 			toFill.encounteredGroupIds.put(target, groupIds);
 		}
@@ -146,48 +152,52 @@ public class Ecology {
 	 * @param entity
 	 * @return
 	 */
-	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entity)
+	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
 	{
 		int counter = 0;
 		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
-		for (EntityInstance targetEntity:beings.values())
+		for (EntityInstance targetEntityInstance:beings.values())
 		{
 			// don't check for the identical entity, continue. 
-			if (targetEntity==entity) continue;
+			if (targetEntityInstance==entityInstance) continue;
 
-			// calculate the common area sizes.
-			int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(entity.roamingBoundary, targetEntity.roamingBoundary);
-			if (r==DistanceBasedBoundary.zero) continue; // no common part
-			if (targetEntity==J3DCore.getInstance().gameState.player)
-			{
-				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetEntity.id);
+			for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments)
+			for (EntityFragment fragment:entityInstance.fragments.fragments) {
+				// calculate the common area sizes.
+				
+				int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.roamingBoundary, targetFragment.roamingBoundary);
+				if (r==DistanceBasedBoundary.zero) continue; // no common part
+				if (targetFragment==J3DCore.getInstance().gameState.player.theFragment)
+				{
+					Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.instance.id);
+				}
+				if (fragment==J3DCore.getInstance().gameState.player.theFragment)
+				{
+					Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
+					//System.out.println("## "+counter);
+				}
+				PreEncounterInfo pre = null;
+				if (staticEncounterInfoInstances.size()==counter)
+				{
+					//System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
+					pre = new PreEncounterInfo(fragment.instance);
+					pre.encountered.put(targetFragment, r);
+					staticEncounterInfoInstances.add(pre);
+				} else
+				{
+					pre = staticEncounterInfoInstances.get(counter);
+					pre.subject = fragment.instance;
+					pre.encountered.clear();
+					pre.encounteredGroupIds.clear();
+					pre.encountered.put(targetFragment, r);
+				}
+				counter++;
+				// fill how many of the target group is intercepted by the given entity
+				calcGroupsOfEncounter(fragment, targetFragment, r[0][1], pre, false);
+				// fill how many of the interceptor entity group intercepts the target
+				calcGroupsOfEncounter(targetFragment, fragment, r[0][0], pre, true);
+				pre.active = true;
 			}
-			if (entity==J3DCore.getInstance().gameState.player)
-			{
-				Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetEntity.id);
-				//System.out.println("## "+counter);
-			}
-			PreEncounterInfo pre = null;
-			if (staticEncounterInfoInstances.size()==counter)
-			{
-				//System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
-				pre = new PreEncounterInfo(entity);
-				pre.encountered.put(targetEntity, r);
-				staticEncounterInfoInstances.add(pre);
-			} else
-			{
-				pre = staticEncounterInfoInstances.get(counter);
-				pre.subject = entity;
-				pre.encountered.clear();
-				pre.encounteredGroupIds.clear();
-				pre.encountered.put(targetEntity, r);
-			}
-			counter++;
-			// fill how many of the target group is intercepted by the given entity
-			calcGroupsOfEncounter(entity, targetEntity, r[0][1], pre, false);
-			// fill how many of the interceptor entity group intercepts the target
-			calcGroupsOfEncounter(targetEntity, entity, r[0][0], pre, true);
-			pre.active = true;
 		}
 		for (int i=counter; i<staticEncounterInfoInstances.size(); i++)
 		{
@@ -290,10 +300,13 @@ public class Ecology {
 			counterOfDoneTurnBeings++;
 			if (orderedBeingList.get(r).liveOneTurn(getNearbyEncounters(orderedBeingList.get(r))))
 			{
+				
 				// updating tree locator for being...
-				if (orderedBeingList.get(r).roamingBoundary.changed()) {
-					removeFromLocator(orderedBeingList.get(r));
-					addToLocator(orderedBeingList.get(r));
+				for (EntityFragment f:orderedBeingList.get(r).fragments.fragments) {
+					if (f.roamingBoundary.changed()) {
+						removeFromLocator(f);
+						addToLocator(f);
+					}
 				}
 				// interrupt is needed because UI thread of player will be active for interaction. UI will
 				// have to call this function again with continue = true in method signature.
@@ -302,9 +315,11 @@ public class Ecology {
 				break;
 			}
 			// updating tree locator for being...
-			if (orderedBeingList.get(r).roamingBoundary.changed()) {
-				removeFromLocator(orderedBeingList.get(r));
-				addToLocator(orderedBeingList.get(r));
+			for (EntityFragment f:orderedBeingList.get(r).fragments.fragments) {
+				if (f.roamingBoundary.changed()) {
+					removeFromLocator(f);
+					addToLocator(f);
+				}
 			}
 		}
 		if (interrupted)

@@ -92,4 +92,9 @@ public class EntityMember {
 		return false;
 	}
 	
+	public int getRoamingSize()
+	{
+		return 1;
+	}
+	
 }

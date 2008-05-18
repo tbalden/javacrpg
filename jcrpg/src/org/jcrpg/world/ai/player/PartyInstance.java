@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
 
@@ -37,6 +38,8 @@ public class PartyInstance extends EntityInstance {
 	public boolean noticeFriendly = true;
 	public boolean noticeNeutral = false;
 	public boolean noticeHostile = true;
+	
+	public EntityFragment theFragment;
 	
 	ArrayList<PreEncounterInfo> infos = new ArrayList<PreEncounterInfo>();
 	@Override
@@ -50,15 +53,15 @@ public class PartyInstance extends EntityInstance {
 			{
 				if (!i.active) continue;
 				int fullSize = 0;
-				for (EntityInstance entityInstance:i.encountered.keySet())
+				for (EntityFragment entityFragment:i.encountered.keySet())
 				{
-					int[] groupIds = i.encounteredGroupIds.get(entityInstance);
+					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					if (groupIds.length==0) {
-						System.out.println("NO GROUPID IN ARRAY: "+entityInstance.description+" - "+entityInstance.numberOfMembers);
+						System.out.println("NO GROUPID IN ARRAY: "+entityFragment.instance.description+" - "+entityFragment.size);
 					}
 					for (int in:groupIds) {
-						int size = entityInstance.getGroupSizes()[in];
-						if (size==0) System.out.println("SIZE ZERO: "+entityInstance.description);
+						int size = entityFragment.instance.getGroupSizes()[in];
+						if (size==0) System.out.println("SIZE ZERO: "+entityFragment.instance.description);
 						fullSize+=size;
 					}
 				}
@@ -86,6 +89,7 @@ public class PartyInstance extends EntityInstance {
 	public PartyInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers,
 			int startX, int startY, int startZ) {
 		super(description, w, ecology, numericId, id, numberOfMembers, startX, startY, startZ);
+		theFragment = fragments.fragments.get(0);
 	}
 
 	public void addPartyMember(EntityMemberInstance m)
@@ -93,6 +97,8 @@ public class PartyInstance extends EntityInstance {
 		if (m.description instanceof MemberPerson) {
 			MemberPerson desc = (MemberPerson)m.description;
 			fixMembers.put(desc.foreName+orderedParty.size(), m);
+			// add all memberinstances to the fragment's followers.
+			theFragment.followingMembers.add(m);
 			orderedParty.add(m);
 			numberOfMembers++;
 		}
