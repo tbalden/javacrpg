@@ -7,6 +7,28 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
+
+[ ] entity ->
+		! Multiple RoamingBoundaries ! -> added a size parameter, an EntityInstance can be fragmented
+		to do different things around, and can rejoin, RoamingBoundaries removed for that Fragment.
+		If a group's fragment's size is lessening, it will be counted in its own fragment RoamingBoundaries
+		till it rejoins group. -> this way we have little memory overhead for subgroups (and REMOVE the subEntities
+		thing from EntityInstance). EntityMemberInstances (NPCs) can decide which fragment to follow.
+		
+	- Entities in alliances with other entities -> like in a town, commoners with fightesr, nobles etc.
+	(similar to Population -> Town integration)
+		
+[ ] Limiting access to "Population" and closed areas. The presence of an "overlapping boundary" (encounter) 
+	does only count if a population zone's owner doesn't detect access (skill)/ it gives permission / 
+	is friendly. Entities inside
+	a Population won't meet a roaming unit until the population has power to defend the area. Entities inside
+	can nominate defenders? 
+	- Always register CurrentGeography in RoamingBoundaries of its fragment groups of an EntityInstance.
+	- Checks -> upon a roaming boundary overlap of two entities Geography/ EConomics should be checked
+	if they have a "defend" position. 
+	This should be a new rule surely implemented to avoid encounters that are blocked by walls/economic or
+	inaccessible areas.
+
 [ ] inter-entity relations web
 
 	[ ] add goals to groups / members based on entity relation qualities + automatically generated
