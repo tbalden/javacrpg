@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
@@ -101,28 +102,28 @@ public class PlayerTurnLogic {
 		previousForms.addAll(forms);
 		forms.clear();
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
-		playerFakeForm.worldX = player.roamingBoundary.posX;
-		playerFakeForm.worldY = player.roamingBoundary.posY;
-		playerFakeForm.worldZ = player.roamingBoundary.posZ;
+		playerFakeForm.worldX = player.fragments.fragments.get(0).roamingBoundary.posX;
+		playerFakeForm.worldY = player.fragments.fragments.get(0).roamingBoundary.posY;
+		playerFakeForm.worldZ = player.fragments.fragments.get(0).roamingBoundary.posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
 		for (PreEncounterInfo info:possibleEncounters)
 		{
 			if (!info.active) continue;
-			for (EntityInstance entityInstance:info.encountered.keySet()) {
-				if (entityInstance==player) continue;
-				int[] groupIds = info.encounteredGroupIds.get(entityInstance);
+			for (EntityFragment fragment:info.encountered.keySet()) {
+				if (fragment==player.fragments.fragments.get(0)) continue;
+				int[] groupIds = info.encounteredGroupIds.get(fragment);
 				if (groupIds.length>0)
-					ecology.callbackMessage("Facing an *ENCOUNTER* : "+entityInstance.description.getClass().getSimpleName());
+					ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.instance.description.getClass().getSimpleName());
 				else
-					ecology.callbackMessage("You seem to trespass a Domain : "+entityInstance.description.getClass().getSimpleName());
-				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+entityInstance.description.getClass().getSimpleName());
+					ecology.callbackMessage("You seem to trespass a Domain : "+fragment.instance.description.getClass().getSimpleName());
+				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.instance.description.getClass().getSimpleName());
 				boolean played = false;
 				if (groupIds !=null)
 				for (int in:groupIds)
 				{
-					int size = entityInstance.getGroupSizes()[in];
-					Collection<EntityMemberInstance> members = entityInstance.description.groupingRule.getGroup(entityInstance,in,size);
+					int size = fragment.instance.getGroupSizes()[in];
+					Collection<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
 					String types = "";
 					HashSet<String> typesSet = new HashSet<String>();
 					for (EntityMemberInstance mInst:members)
@@ -147,7 +148,7 @@ public class PlayerTurnLogic {
 								}
 							}
 						}
-						VisibleLifeForm form = entityInstance.getOne(member.description,member);
+						VisibleLifeForm form = fragment.instance.getOne(member.description,member);
 						form.targetForm = playerFakeForm;
 						forms.add(form);
 						sizeOfAll++;

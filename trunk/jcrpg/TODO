@@ -9,8 +9,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 [ ] entity ->
+	[X]
 		! Multiple RoamingBoundaries ! -> added a size parameter, an EntityInstance can be fragmented
 		to do different things around, and can rejoin, RoamingBoundaries removed for that Fragment.
+		
+	[ ] implement split and rejoin! 
+	
 		If a group's fragment's size is lessening, it will be counted in its own fragment RoamingBoundaries
 		till it rejoins group. -> this way we have little memory overhead for subgroups (and REMOVE the subEntities
 		thing from EntityInstance). EntityMemberInstances (NPCs) can decide which fragment to follow.

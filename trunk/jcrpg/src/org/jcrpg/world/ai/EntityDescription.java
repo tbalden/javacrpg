@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -138,7 +139,7 @@ public class EntityDescription {
 		return false;
 	}
 	
-	public Class <? extends Choice> makeTurnChoice(EntityDescription desc, EntityInstance instance)
+	public Class <? extends Choice> makeTurnChoice(EntityDescription desc, EntityInstance instance, EntityFragment fragment)
 	{
 		if (getBehaviors()!=null) 
 		{
@@ -185,6 +186,17 @@ public class EntityDescription {
 	{
 		return instance.numberOfMembers;
 	}
+
+	/**
+	 * Returns roaming size calculation result, override it in specific descriptions if you like.
+	 * @param instance
+	 * @return
+	 */
+	public int getRoamingSize(EntityFragment instance)
+	{
+		return instance.size;
+	}
+	
 	/**
 	 * Returns domain size calculation result, override it in specific descriptions if you like.
 	 * @param instance

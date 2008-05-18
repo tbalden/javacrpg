@@ -21,6 +21,7 @@ package org.jcrpg.world.place;
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 
 /**
  * Helps locating things in the world in a way similar to octree implementations, dividing space into parts recoursively.
@@ -351,29 +352,65 @@ public class TreeLocator extends PlaceLocator {
 	
 	public void addEntityInstance(EntityInstance i)
 	{
-		int r = i.roamingBoundary.radiusInRealCubes;
-		int xMin = i.roamingBoundary.posX-r;
-		int xMax = i.roamingBoundary.posX+r;
-		int yMin = i.roamingBoundary.posY;
-		int zMin = i.roamingBoundary.posZ-r;
-		int zMax = i.roamingBoundary.posZ+r;
-		// TODO circular addition with steps...	instead of box
-		while (xMin<=xMax)
-		{
-			zMin = i.roamingBoundary.posZ-r;
-			while (zMin<=zMax)
+		for (EntityFragment f: i.fragments.fragments) {
+			int r = f.roamingBoundary.radiusInRealCubes;
+			int xMin = f.roamingBoundary.posX-r;
+			int xMax = f.roamingBoundary.posX+r;
+			int yMin = f.roamingBoundary.posY;
+			int zMin = f.roamingBoundary.posZ-r;
+			int zMax = f.roamingBoundary.posZ+r;
+			// TODO circular addition with steps...	instead of box
+			while (xMin<=xMax)
 			{
-				addElement(xMin, yMin, zMin, i);
-				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
+				zMin = f.roamingBoundary.posZ-r;
+				while (zMin<=zMax)
+				{
+					addElement(xMin, yMin, zMin, f);
+					zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
+				}
+				addElement(xMin, yMin, zMax, i);
+				xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
 			}
-			addElement(xMin, yMin, zMax, i);
-			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
+			addElement(xMax, yMin, zMax, f);
 		}
-		addElement(xMax, yMin, zMax, i);
 	}
 	public void removeEntityInstance(EntityInstance i)
 	{
-		removeAllOfAnObject(i);
+		for (EntityFragment f: i.fragments.fragments) {
+			removeAllOfAnObject(f);
+		}
+	}
+
+	
+	/**
+	 * Adding an entity fragment's roaming boundary sized.
+	 * @param f
+	 */
+	public void addEntityFragment(EntityFragment f)
+	{
+		int r = f.roamingBoundary.radiusInRealCubes;
+		int xMin = f.roamingBoundary.posX-r;
+		int xMax = f.roamingBoundary.posX+r;
+		int yMin = f.roamingBoundary.posY;
+		int zMin = f.roamingBoundary.posZ-r;
+		int zMax = f.roamingBoundary.posZ+r;
+		// TODO circular addition with steps...	instead of box
+		while (xMin<=xMax)
+		{
+			zMin = f.roamingBoundary.posZ-r;
+			while (zMin<=zMax)
+			{
+				addElement(xMin, yMin, zMin, f);
+				zMin+=DEEPEST_LEVEL_GRANULATION_Z/2;
+			}
+			addElement(xMin, yMin, zMax, f);
+			xMin+=DEEPEST_LEVEL_GRANULATION_X/2;
+		}
+		addElement(xMax, yMin, zMax, f);
+	}
+	public void removeEntityFragment(EntityFragment f)
+	{
+		removeAllOfAnObject(f);
 	}
 	
 	/**

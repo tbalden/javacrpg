@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 
 public class GroupingRule {
 
@@ -33,11 +34,11 @@ public class GroupingRule {
 	
 	public Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
 	
-	public Collection<EntityMemberInstance> getGroup(EntityInstance instance, int groupId, int size)
+	public Collection<EntityMemberInstance> getGroup(int groupId, EntityFragment fragment)
 	{
 		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
-		while (members.size()<size) {
+		while (members.size()<fragment.size) {
 			for (GroupingMemberProps prop :possibleMembers)
 			{
 				for (int i=0; i<prop.maxNumberInAGroup; i++)
@@ -48,16 +49,16 @@ public class GroupingRule {
 						members.add(new EntityMemberInstance(prop.memberType,-1));		
 					} else
 					{
-						int rand = HashUtil.mixPercentage(instance.id.hashCode(), groupId, 0);
+						int rand = HashUtil.mixPercentage(fragment.instance.id.hashCode(), groupId, 0);
 						if (prop.likeness<rand)
 						{
 							counter++;
 							members.add(new EntityMemberInstance(prop.memberType,-1));
 						}
 					}
-					if (counter==size) break;
+					if (counter==fragment.size) break;
 				}
-				if (counter==size) break;
+				if (counter==fragment.size) break;
 			}
 		}
 		return members;
@@ -83,7 +84,7 @@ public class GroupingRule {
 		return ret;
 	}
 	
-	public int[] getGroupIds(EntityInstance instance, int radiusRatio, int randomSeed)
+	public int[] getGroupIds(EntityFragment f, EntityInstance instance, int radiusRatio, int randomSeed)
 	{
 		int numberOfGroups = (int)(instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
 		//System.out.println("getGroupIds = "+instance.description+" "+numberOfGroups);

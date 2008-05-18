@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -42,11 +43,6 @@ public class EntityInstance {
 	public SkillContainer skills = new SkillContainer();
 	public Attributes attributes = new Attributes();
 	
-
-	/**
-	 * which the instance is roaming in this turn.
-	 */
-	public DistanceBasedBoundary roamingBoundary = null;
 	/**
 	 * currently dominated zone.
 	 */
@@ -77,8 +73,12 @@ public class EntityInstance {
 	public int numberOfMembers = 1;
 	public World world;
 	public Ecology ecology;
+	
+	/**
+	 * The independently roaming fragments object of this instance.
+	 */
+	public EntityFragments fragments = new EntityFragments(this);
 
-	public HashMap<String, EntityInstance> subEntities = new HashMap<String, EntityInstance>();
 	public HashMap<String, EntityMemberInstance> fixMembers = new HashMap<String, EntityMemberInstance>();
 	
 	public EntityInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers, int startX, int startY, int startZ) {
@@ -89,15 +89,18 @@ public class EntityInstance {
 		this.world = w;
 		this.ecology = ecology;
 		this.description = description;
-		roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getRoamingSize(this));
+		//roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getRoamingSize(this));
+		
 		domainBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getDomainSize(this));
+		fragments.setupInstance();
+		
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 	}
 	
 	public void recalcBoundarySizes()
 	{
-		roamingBoundary.setRadiusInRealCubes(description.getRoamingSize(this));
+		fragments.recalcBoundaries();
 		domainBoundary.setRadiusInRealCubes(description.getDomainSize(this));
 	}
 	
@@ -143,12 +146,12 @@ public class EntityInstance {
 			{
 				if (info.subject==null) continue;
 				counter++;
-				EntityInstance instance = info.encountered.keySet().iterator().next();
-				if (instance.equals(J3DCore.getInstance().gameState.player))
-					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+instance.description.getClass().getSimpleName()+" - "+description.makeTurnChoice(description,instance).getSimpleName());
+				EntityFragment instance = info.encountered.keySet().iterator().next();
+				if (instance.equals(J3DCore.getInstance().gameState.player.theFragment))
+					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+instance.instance.description.getClass().getSimpleName()+" - "+description.makeTurnChoice(instance.instance.description, instance.instance, instance).getSimpleName());
 				else
 				{
-					description.makeTurnChoice(instance.description, instance);
+					description.makeTurnChoice(instance.instance.description, instance.instance, instance);
 				}
 				actions++;
 				//if (numberOfActionsPerTurn==actions) break;
@@ -191,7 +194,7 @@ public class EntityInstance {
 	
 	public void setPosition(int[] coords)
 	{
-		roamingBoundary.setPosition(1, coords[0], coords[1], coords[2]);
+		//roamingBoundary.setPosition(1, coords[0], coords[1], coords[2]);
 		domainBoundary.setPosition(1, coords[0], coords[1], coords[2]);
 	}
 	
@@ -216,7 +219,7 @@ public class EntityInstance {
 		System.out.println("# MERGING: "+instance);
 		numberOfMembers+=instance.numberOfMembers;
 		calculateGroupsAndPositions();
-		ecology.removeFromLocator(instance);
+		fragments.merge(instance.fragments);
 		instance.merged = true;
 	}
 	

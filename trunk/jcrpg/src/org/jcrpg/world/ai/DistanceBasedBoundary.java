@@ -36,6 +36,17 @@ public class DistanceBasedBoundary extends Boundaries {
 	public int previousTurnRadiusInRealCubes, previousTurnPosX, previousTurnPosY, previousTurnPosZ;
 	public Vector3f pv;
 	
+	public DistanceBasedBoundary(DistanceBasedBoundary b)
+	{
+		super(1);
+		this.radiusInRealCubes = b.radiusInRealCubes;
+		this.gWX = b.gWX;
+		this.gWY = b.gWY;
+		this.gWZ = b.gWZ;
+		this.posX = b.posX;
+		this.posY = b.posY;
+		this.posZ = b.posZ;
+	}
 	public DistanceBasedBoundary(World w, int positionX, int positionY, int positionZ, int radiusInRealCubes) {
 		super(1);
 		if (w!=null) 
@@ -112,6 +123,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	 */
 	public static int[][] getCommonRadiusRatiosAndMiddlePoint(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{
+		//System.out.println("o: "+one.getRadiusInRealCubes()+" "+two.getRadiusInRealCubes());
 		DistanceBasedBoundary bigger, smaller;
 		if (one.getRadiusInRealCubes()>two.getRadiusInRealCubes())
 		{
@@ -125,6 +137,7 @@ public class DistanceBasedBoundary extends Boundaries {
 		
 		int dist = (int)one.pv.distance(two.pv);
 		
+		if (bigger.getRadiusInRealCubes()==0 || smaller.getRadiusInRealCubes()==0) return zero;
 		if (dist> bigger.getRadiusInRealCubes()+smaller.getRadiusInRealCubes()) return zero;
 		if ( dist + smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
 		{

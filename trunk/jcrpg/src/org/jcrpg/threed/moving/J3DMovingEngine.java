@@ -183,9 +183,9 @@ public class J3DMovingEngine {
 	public void updateScene(float timePerFrame)
 	{
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
-		playerFakeForm.worldX = core.gameState.player.roamingBoundary.posX;
-		playerFakeForm.worldY = core.gameState.player.roamingBoundary.posY;
-		playerFakeForm.worldZ = core.gameState.player.roamingBoundary.posZ;
+		playerFakeForm.worldX = core.gameState.player.theFragment.roamingBoundary.posX;
+		playerFakeForm.worldY = core.gameState.player.theFragment.roamingBoundary.posY;
+		playerFakeForm.worldZ = core.gameState.player.theFragment.roamingBoundary.posZ;
 		for (RenderedMovingUnit unit: units.values())
 		{
 			for (NodePlaceholder n : unit.nodePlaceholders)
