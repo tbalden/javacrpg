@@ -46,8 +46,6 @@ public class PreEncounterWindow extends PagedInputWindow {
 
 	// selecting handled groups out of intercepted group, leaving non-interesting groups out of scope 
 	Node page0 = new Node();
-	// selecting skills which to use for the interception phase
-	Node page1 = new Node();
 
 	ListMultiSelect groupSelect;
 	TextButton ok;
@@ -60,8 +58,6 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
-	    	sQuad = new SharedMesh("",hudQuad);
-	    	page1.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Interception",false);
 	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You sense nearby lifeforms.",false);
@@ -82,7 +78,6 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	//new ListSelect();
 	    	
 	    	addPage(0, page0);
-	    	//addPage(1, page1);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
