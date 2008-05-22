@@ -81,7 +81,14 @@ public class PlayerTurnLogic {
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
 				core.encounterWindow.setPageData(core.gameState.player, possibleEncounters);
-				encounter(possibleEncounters);
+				if (encounter(possibleEncounters)) {
+					core.encounterWindow.toggle();
+				}
+			}
+			
+			if (startingPhase==Ecology.PHASE_TURNACT)
+			{
+				core.switchEncounterMode(true);
 			}
 		} else 
 		{
@@ -91,7 +98,7 @@ public class PlayerTurnLogic {
 	}
 	
 	
-	public void encounter(Collection<PreEncounterInfo> possibleEncounters) 
+	public boolean encounter(Collection<PreEncounterInfo> possibleEncounters) 
 	{
 		
 		previousInfos.clear();
@@ -158,10 +165,12 @@ public class PlayerTurnLogic {
 		if (sizeOfAll>0) {
 			placeVisibleForms(forms);
 			J3DCore.getInstance().mEngine.render(forms);
-			core.switchEncounterMode(true);
+			//core.switchEncounterMode(true);
+			return true;
 		} else
 		{
 			core.gameState.engine.turnFinishedForPlayer();
+			return false;
 		}
 	}
 	

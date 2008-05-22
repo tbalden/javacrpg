@@ -282,8 +282,8 @@ public class GameStateContainer {
 				boolean played = false;
 				for (Object o:list)
 				{
-					EntityInstance in = ((EntityInstance)o);
-					for (EntityFragment i:in.fragments.fragments) {
+					EntityFragment i = ((EntityFragment)o);
+					{
 						if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.theFragment.roamingBoundary)==null) continue;
 						System.out.println("#_# Audio: "+((EntityInstance)o).id);
 						if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
