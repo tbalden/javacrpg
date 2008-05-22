@@ -25,6 +25,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
+import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
@@ -33,9 +34,20 @@ public class EntityInstance {
 	
 	public boolean merged = false;
 	
+	/**
+	 * The "genetic" heritage of the instance.
+	 */
 	public EntityDescription description;
 	
+	/**
+	 * Relations of this entityI with outher entityInstances.
+	 */
 	public EntityRelations relations = new EntityRelations();
+	
+	/**
+	 * The "experience" object of the EntityInstance.
+	 */
+	public EntityState entityState = new EntityState();
 
 	/**
 	 * Skills of the instance.

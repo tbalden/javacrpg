@@ -18,9 +18,13 @@
 
 package org.jcrpg.ui.window.interaction;
 
+import java.util.Collection;
+
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.player.PartyInstance;
 
 /**
  * Player-AI or forced AI-player encounter decision maker window. Before  a turn based combat or social rivalry begins
@@ -33,6 +37,15 @@ public class EncounterWindow extends PagedInputWindow {
 	public EncounterWindow(UIBase base) {
 		super(base);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public PartyInstance party;
+	public Collection<PreEncounterInfo> encountered;
+	
+	public void setPageData(PartyInstance party, Collection<PreEncounterInfo> encountered)
+	{
+		this.party = party;
+		this.encountered = encountered;
 	}
 
 	@Override
