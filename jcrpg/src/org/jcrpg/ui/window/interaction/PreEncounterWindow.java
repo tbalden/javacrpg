@@ -214,7 +214,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			}
 			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
 			toggle();
-			core.gameState.playerTurnLogic.newTurn(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
+			core.gameState.playerTurnLogic.newTurnPhase(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

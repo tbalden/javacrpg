@@ -93,6 +93,7 @@ public class CharacterCreationRules {
 			addProfession(new Negotiator());
 			addProfession(new Jester());
 			addProfession(new Swindler());
+		    
 		}
 	}
 	

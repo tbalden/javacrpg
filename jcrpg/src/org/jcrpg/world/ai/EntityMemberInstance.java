@@ -21,24 +21,38 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.place.Economic;
 
 public class EntityMemberInstance {
 
-	public static int numericIdSequence = 0;
 	
-	public final static synchronized int getNextNumbericId()
-	{
-		return numericIdSequence++;
-	}
-	
+	/**
+	 * The "genetic" heritage of the instance.
+	 */
 	public EntityMember description = null;
 	
+	/**
+	 * The existing relations' class of this member instance.
+	 */
 	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
 	public int numericId = -1;
 	
+	/**
+	 * Those infrastructures (buildings) owned by this member in its home population.
+	 * Not the actual instances only Class types, because based on this list the buildProgram 
+	 * of the Infrastructure 
+	 * is modified only, so that in every sizeLevel state of the district the MemberInstance
+	 * will have its infrastructure.
+	 *
+	 */
 	public ArrayList<Class<? extends Economic>> ownedInfrastructures = null;
+	
+	/**
+	 * The different points and such of the memberInstance.
+	 */
+	public EntityMemberState memberState = new EntityMemberState();
 	
 	/**
 	 * The skill that the given instance is using for his behavior of living around at the current turn.
@@ -50,4 +64,12 @@ public class EntityMemberInstance {
 		this.description = description;
 		this.numericId = numericId;
 	}
+
+	public static int numericIdSequence = 0;
+	
+	public final static synchronized int getNextNumbericId()
+	{
+		return numericIdSequence++;
+	}
+
 }

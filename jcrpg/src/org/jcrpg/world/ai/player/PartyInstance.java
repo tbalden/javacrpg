@@ -72,7 +72,7 @@ public class PartyInstance extends EntityInstance {
 			}
 			if (listSize>0) // only if groups can be encountered should we trigger newturn
 			{
-				J3DCore.getInstance().gameState.playerTurnLogic.newTurn(infos,Ecology.PHASE_INTERCEPTION,true);
+				J3DCore.getInstance().gameState.playerTurnLogic.newTurnPhase(infos,Ecology.PHASE_INTERCEPTION,true);
 				return true; // interrupt ecology!
 			}
 			else

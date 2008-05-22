@@ -67,21 +67,20 @@ public class PlayerTurnLogic {
 	}
 	
 	
-	public void newTurn(Collection<PreEncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
+	public void newTurnPhase(Collection<PreEncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
 	{
 		System.out.println("-- newTurn "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
 
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
 			{
-				
 				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters);
 				core.preEncounterWindow.toggle();
 			}
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
-				//core.switchEncounterMode(true);
+				core.encounterWindow.setPageData(core.gameState.player, possibleEncounters);
 				encounter(possibleEncounters);
 			}
 		} else 
