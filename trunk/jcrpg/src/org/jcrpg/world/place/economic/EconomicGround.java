@@ -65,6 +65,7 @@ public class EconomicGround extends Economic {
 	
 	
 	public static HashMap<Integer, Cube> hmKindCubeOverride = new HashMap<Integer, Cube>();
+	public static HashMap<Integer, Cube> hmKindCubeOverride_FARVIEW = new HashMap<Integer, Cube>();
 	
 	static 
 	{
@@ -73,12 +74,14 @@ public class EconomicGround extends Economic {
 		hmKindCubeOverride.put(K_STEEP_WEST, new Cube(null,STEPS_WEST,0,0,0));
 		hmKindCubeOverride.put(K_STEEP_NORTH, new Cube(null,STEPS_NORTH,0,0,0));
 		hmKindCubeOverride.put(K_STEEP_SOUTH, new Cube(null,STEPS_SOUTH,0,0,0));
+
+		hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
 	}
 	
 
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
-		Cube c = hmKindCubeOverride.get(kind);
+		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
 		return c;
 	}
 

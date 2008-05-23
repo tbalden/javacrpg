@@ -25,10 +25,16 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
+import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.scene.Node;
@@ -48,6 +54,8 @@ public class EncounterWindow extends PagedInputWindow {
 	 */
 	Node page0 = new Node();
 
+	ListSelect memberSelect;
+	ListSelect skillSelect;
 	ListMultiSelect groupSelect;
 	TextButton leave;
 	TextButton ok;
@@ -56,7 +64,7 @@ public class EncounterWindow extends PagedInputWindow {
 	public EncounterWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.8f*core.getDisplay().getWidth(), 0.8f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
@@ -65,19 +73,29 @@ public class EncounterWindow extends PagedInputWindow {
 	    	//page1.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,Language.v("encounterWindow.header"),false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You have to choose who will act and what.",false);
+	    	new TextLabel("",this,page0, 0.23f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
+	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.3f, 0.06f,600f,"You have to choose who will act and what.",false);
 	    	 
 	    	{
-	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f, 0.27f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		memberSelect = new ListSelect("member", this,page0, 0.30f,0.15f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	}
+	    	addInput(0,memberSelect);
+	    	
+	    	{
+	    		skillSelect = new ListSelect("skill", this,page0, 0.70f,0.15f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	}
+	    	addInput(0,skillSelect);
+
+	    	{
+	    		groupSelect = new ListMultiSelect("group", this,page0, 0.30f, 0.18f,0.22f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 	    	
-	    	ok = new TextButton("ok",this,page0,0.56f, 0.22f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
-	    	new TextLabel("",this,page0, 0.56f, 0.32f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	ok = new TextButton("ok",this,page0,0.50f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"),"S");
+	    	new TextLabel("",this,page0, 0.60f, 0.34f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.38f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
-	    	leave = new TextButton("leave",this,page0,0.66f, 0.22f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"S");
+	    	leave = new TextButton("leave",this,page0,0.72f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"S");
 	    	addInput(0,leave);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
@@ -101,6 +119,87 @@ public class EncounterWindow extends PagedInputWindow {
 		this.encountered = encountered;
 	}
 
+	
+	@Override
+	public void setupPage() {
+		int listSize = 0;
+		for (PreEncounterInfo i:encountered)
+		{
+			if (!i.active) continue;
+			int fullSize = 0;
+			for (EntityFragment entityFragment:i.encountered.keySet())
+			{
+				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
+				for (int in:groupIds) {
+					int size = entityFragment.instance.getGroupSizes()[in];
+					fullSize+=size;
+				}
+			}
+			if (fullSize>0)
+				listSize++;
+		}
+		// groups
+		{
+			String[] ids = new String[listSize];
+			Object[] objects = new Object[listSize];
+			String[] texts = new String[listSize];
+			int count = 0;
+			System.out.println("ENC SIZE = "+listSize);
+			for (PreEncounterInfo i:encountered)
+			{
+				int size = 0;
+				String text = count+"/";
+				if (!i.active) continue;
+				int fullSize = 0;
+				for (EntityFragment fragment:i.encountered.keySet())
+				{
+					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+					size++;
+					int[] groupIds = i.encounteredGroupIds.get(fragment);
+					for (int in:groupIds) {
+						int size1 = fragment.instance.getGroupSizes()[in];
+						fullSize+=size1;
+					}				
+					text+=size+" "+fragment.instance.description.getClass().getSimpleName()+" ";
+				}
+				if (fullSize==0) continue;
+				ids[count] = ""+count;
+				texts[count] = text;
+				objects[count] = i;
+				count++;
+			}
+			groupSelect.reset();
+			groupSelect.ids = ids;
+			groupSelect.objects = objects;
+			groupSelect.texts = texts;
+			groupSelect.setUpdated(true);
+			groupSelect.activate();
+		}
+		// party memebers
+		{
+			String[] texts = new String[party.orderedParty.size()];
+			Object[] objects = new Object[party.orderedParty.size()];
+			String[] ids = new String[party.orderedParty.size()];
+			int counter = 0;
+			if (party!=null)
+			for (EntityMemberInstance i:party.orderedParty)
+			{
+				String n = ((MemberPerson)i.description).foreName;
+				objects[counter] = i;
+				texts[counter] = n;
+				ids[counter] = ""+counter;
+			}
+			memberSelect.reset();
+			memberSelect.ids = ids;
+			memberSelect.objects = objects;
+			memberSelect.texts = texts;
+			memberSelect.setUpdated(true);
+			memberSelect.activate();
+			//Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
+		}
+		
+		super.setupPage();
+	}	
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
 		// TODO Auto-generated method stub
