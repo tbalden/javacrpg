@@ -192,7 +192,7 @@ public class ListMultiSelect extends InputBase {
 					text = "...";
 					flag = null;
 				} else {
-					if (i==maxVisible)
+					if (i>=maxVisible)
 					{
 						continue; // we are at the "..." part we should continue instead of new element
 					}
