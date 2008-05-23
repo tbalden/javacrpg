@@ -61,7 +61,7 @@ public class GameStateContainer {
 
 	public Ecology ecology = null;
 	public PartyInstance player = null;
-	public PlayerTurnLogic playerTurnLogic = null;
+	public GameLogic gameLogic = null;
 	public CharacterCreationRules charCreationRules = null;
 
 	/**
@@ -129,10 +129,10 @@ public class GameStateContainer {
 		viewDirection = 0;
 	}
 	
-	public void setPlayer(PartyInstance player, PlayerTurnLogic playerTurnLogic)
+	public void setPlayer(PartyInstance player, GameLogic playerTurnLogic)
 	{
 		this.player = player;
-		this.playerTurnLogic = playerTurnLogic;
+		this.gameLogic = playerTurnLogic;
 	}
 	
 	public String getGameStateXml()

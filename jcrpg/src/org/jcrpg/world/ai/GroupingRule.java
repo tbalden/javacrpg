@@ -34,7 +34,7 @@ public class GroupingRule {
 	
 	public Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
 	
-	public Collection<EntityMemberInstance> getGroup(int groupId, EntityFragment fragment)
+	public ArrayList<EntityMemberInstance> getGroup(int groupId, EntityFragment fragment)
 	{
 		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();

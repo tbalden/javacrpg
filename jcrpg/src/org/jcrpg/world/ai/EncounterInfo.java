@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -26,7 +27,7 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
  * Class containing a possible encounter's data. 
  * @author illes
  */
-public class PreEncounterInfo {
+public class EncounterInfo {
 
 	public boolean active = false;
 	/**
@@ -46,20 +47,33 @@ public class PreEncounterInfo {
 	 */
 	public int[] ownGroupIds = null;
 	
+	//public  
 	
-	public PreEncounterInfo(EntityInstance subject) {
+	
+	public EncounterInfo(EntityInstance subject) {
 		super();
 		this.subject = subject;
 	}
 	
-	public PreEncounterInfo copy()
+	public EncounterInfo copy()
 	{
-		PreEncounterInfo r = new PreEncounterInfo(subject);
+		EncounterInfo r = new EncounterInfo(subject);
 		r.active = active;
 		r.encountered.putAll(encountered);
 		r.encounteredGroupIds.putAll(encounteredGroupIds);
 		r.ownGroupIds = ownGroupIds.clone();
 		return r;
+	}
+	
+	/**
+	 * Stores member instances for Player involved encounters.
+	 */
+	public HashMap<Integer, ArrayList<EntityMemberInstance>> generatedGroups;
+	
+	public void setGroupMemberInstances(int groupId, ArrayList<EntityMemberInstance> members)
+	{
+		if (generatedGroups == null) generatedGroups = new HashMap<Integer, ArrayList<EntityMemberInstance>>();
+		generatedGroups.put(groupId, members);
 	}
 	
 }

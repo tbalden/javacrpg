@@ -125,7 +125,7 @@ public class Ecology {
 	 * @param toFill PreEncounterInfo object to fill
 	 * @param fillOwn If this is true preEncoutnerInfo's ownGroupIds' are set, otherwise the ecounteredGroupIds are filled.
 	 */
-	public static void calcGroupsOfEncounter(EntityFragment self, EntityFragment target, int radiusRatio, PreEncounterInfo toFill, boolean fillOwn)
+	public static void calcGroupsOfEncounter(EntityFragment self, EntityFragment target, int radiusRatio, EncounterInfo toFill, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
 		int[] groupIds = target.instance.description.groupingRule.getGroupIds(target,target.instance, radiusRatio, rand);
@@ -146,13 +146,13 @@ public class Ecology {
 	 * To prevent creation of new PreEncounterInfo object instances they are stored
 	 * in this list for reuse on each getNearbyEncounters call. 
 	 */
-	static ArrayList<PreEncounterInfo> staticEncounterInfoInstances = new ArrayList<PreEncounterInfo>();
+	static ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	/**
 	 * Returns the possible nearby encounters for a given entity.
 	 * @param entity
 	 * @return
 	 */
-	public Collection<PreEncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
+	public Collection<EncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
 	{
 		int counter = 0;
 		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
@@ -176,11 +176,11 @@ public class Ecology {
 					Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
 					//System.out.println("## "+counter);
 				}
-				PreEncounterInfo pre = null;
+				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)
 				{
 					//System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
-					pre = new PreEncounterInfo(fragment.instance);
+					pre = new EncounterInfo(fragment.instance);
 					pre.encountered.put(targetFragment, r);
 					staticEncounterInfoInstances.add(pre);
 				} else
@@ -207,12 +207,12 @@ public class Ecology {
 		
 		
 		if (true==false) {
-			for (PreEncounterInfo info1:staticEncounterInfoInstances)
+			for (EncounterInfo info1:staticEncounterInfoInstances)
 			{
 				if (info1.encountered==null) continue;
 				int[][] r = info1.encountered.values().iterator().next();
 				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
-				for (PreEncounterInfo info2:staticEncounterInfoInstances)
+				for (EncounterInfo info2:staticEncounterInfoInstances)
 				{
 					if (info2.encountered==null) continue;
 					if (info2!=info1)
@@ -227,8 +227,8 @@ public class Ecology {
 					}
 				}
 			}
-			ArrayList<PreEncounterInfo> newEntities = new ArrayList<PreEncounterInfo>();
-			for (PreEncounterInfo targetEntity:staticEncounterInfoInstances)
+			ArrayList<EncounterInfo> newEntities = new ArrayList<EncounterInfo>();
+			for (EncounterInfo targetEntity:staticEncounterInfoInstances)
 			{
 				if (targetEntity.encountered==null) continue;
 				newEntities.add(targetEntity);

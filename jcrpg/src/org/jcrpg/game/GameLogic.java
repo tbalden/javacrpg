@@ -31,7 +31,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -42,10 +42,10 @@ import org.jcrpg.world.place.World;
  * @author pali
  *
  */
-public class PlayerTurnLogic {
+public class GameLogic {
 	
-	public HashSet<PreEncounterInfo> previousInfos = new HashSet<PreEncounterInfo>();
-	public HashSet<PreEncounterInfo> infos = new HashSet<PreEncounterInfo>();
+	public HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
+	public HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
 	
 	
 	public Collection<VisibleLifeForm> previousForms = new ArrayList<VisibleLifeForm>();
@@ -55,19 +55,21 @@ public class PlayerTurnLogic {
 	public Ecology ecology;
 	public EntityInstance player;
 	public Engine engine;
+	public EncounterLogic encounterLogic;
 	public transient J3DCore core;
 	
-	public PlayerTurnLogic(J3DCore core, Engine engine, World world, Ecology ecology, EntityInstance player)
+	public GameLogic(J3DCore core, Engine engine, World world, Ecology ecology, EntityInstance player)
 	{
 		this.core = core;
 		this.world = world;
 		this.ecology = ecology;
 		this.player = player;
 		this.engine = engine;
+		this.encounterLogic = new EncounterLogic(this);
 	}
 	
 	
-	public void newTurnPhase(Collection<PreEncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
+	public void newTurnPhase(ArrayList<EncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
 	{
 		System.out.println("-- newTurn "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
@@ -98,7 +100,7 @@ public class PlayerTurnLogic {
 	}
 	
 	
-	public boolean encounter(Collection<PreEncounterInfo> possibleEncounters) 
+	public boolean encounter(Collection<EncounterInfo> possibleEncounters) 
 	{
 		
 		previousInfos.clear();
@@ -113,7 +115,7 @@ public class PlayerTurnLogic {
 		playerFakeForm.worldZ = player.fragments.fragments.get(0).roamingBoundary.posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
-		for (PreEncounterInfo info:possibleEncounters)
+		for (EncounterInfo info:possibleEncounters)
 		{
 			if (!info.active) continue;
 			for (EntityFragment fragment:info.encountered.keySet()) {
@@ -129,7 +131,8 @@ public class PlayerTurnLogic {
 				for (int in:groupIds)
 				{
 					int size = fragment.instance.getGroupSizes()[in];
-					Collection<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
+					ArrayList<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
+					info.setGroupMemberInstances(in, members);
 					String types = "";
 					HashSet<String> typesSet = new HashSet<String>();
 					for (EntityMemberInstance mInst:members)
