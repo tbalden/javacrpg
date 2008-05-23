@@ -117,11 +117,11 @@ public class PreEncounterWindow extends PagedInputWindow {
 		{
 			if (!i.active) continue;
 			int fullSize = 0;
-			for (EntityFragment entityInstance:i.encountered.keySet())
+			for (EntityFragment entityFragment:i.encountered.keySet())
 			{
-				int[] groupIds = i.encounteredGroupIds.get(entityInstance);
+				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 				for (int in:groupIds) {
-					int size = entityInstance.instance.getGroupSizes()[in];
+					int size = entityFragment.instance.getGroupSizes()[in];
 					fullSize+=size;
 				}
 			}
