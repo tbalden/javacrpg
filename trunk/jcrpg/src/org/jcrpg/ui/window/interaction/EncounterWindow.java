@@ -18,8 +18,12 @@
 
 package org.jcrpg.ui.window.interaction;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
+import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
@@ -30,10 +34,12 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
-import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -91,11 +97,11 @@ public class EncounterWindow extends PagedInputWindow {
 	    	}
 	    	addInput(0,groupSelect);
 	    	
-	    	ok = new TextButton("ok",this,page0,0.50f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"),"S");
+	    	ok = new TextButton("ok",this,page0,0.50f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"));
 	    	new TextLabel("",this,page0, 0.60f, 0.34f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
 	    	new TextLabel("",this,page0, 0.60f, 0.38f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
-	    	leave = new TextButton("leave",this,page0,0.72f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"S");
+	    	leave = new TextButton("leave",this,page0,0.72f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"L");
 	    	addInput(0,leave);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
@@ -111,9 +117,9 @@ public class EncounterWindow extends PagedInputWindow {
 	}
 	
 	public PartyInstance party;
-	public Collection<PreEncounterInfo> encountered;
+	public ArrayList<EncounterInfo> encountered;
 	
-	public void setPageData(PartyInstance party, Collection<PreEncounterInfo> encountered)
+	public void setPageData(PartyInstance party, ArrayList<EncounterInfo> encountered)
 	{
 		this.party = party;
 		this.encountered = encountered;
@@ -123,7 +129,7 @@ public class EncounterWindow extends PagedInputWindow {
 	@Override
 	public void setupPage() {
 		int listSize = 0;
-		for (PreEncounterInfo i:encountered)
+		for (EncounterInfo i:encountered)
 		{
 			if (!i.active) continue;
 			int fullSize = 0;
@@ -145,7 +151,7 @@ public class EncounterWindow extends PagedInputWindow {
 			String[] texts = new String[listSize];
 			int count = 0;
 			System.out.println("ENC SIZE = "+listSize);
-			for (PreEncounterInfo i:encountered)
+			for (EncounterInfo i:encountered)
 			{
 				int size = 0;
 				String text = count+"/";
@@ -211,19 +217,89 @@ public class EncounterWindow extends PagedInputWindow {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public HashMap<EntityMemberInstance, SkillBase> hmMemberSelectedSkill = new HashMap<EntityMemberInstance, SkillBase>();
 
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		if (base==memberSelect)
+		{
+			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
+			
+			Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(EncounterSkill.class);
+			if (skills==null) skills = new HashSet<Class<? extends SkillBase>>();
+			String[] texts = new String[skills.size()];
+			Object[] objects = new Object[skills.size()];
+			String[] ids = new String[skills.size()];
+			
+			int counter_2 = 0;
+			int selected = 0;
+			for (Class<?extends SkillBase> skill:skills)
+			{
+				String text = Language.v("skills."+skill.getSimpleName())+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
+				texts[counter_2]=text;
+				ids[counter_2]=""+counter_2;
+				SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
+				objects[counter_2]=b;
+				System.out.println("--- "+skill);
+				if (hmMemberSelectedSkill.get(i)!=null && hmMemberSelectedSkill.get(i).getClass() == b.getClass())
+				{
+					System.out.println("### FOUND SKILL");
+					selected = counter_2;
+				}
+				counter_2++;
+			}
+			skillSelect.ids = ids;
+			skillSelect.texts = texts;
+			skillSelect.objects = objects;
+			skillSelect.setUpdated(true);
+			skillSelect.deactivate();
+			skillSelect.setSelected(selected);
+			return true;
+		} else
+		if (base==skillSelect)
+		{
+			hmMemberSelectedSkill.put((EntityMemberInstance)memberSelect.getSelectedObject(), (SkillBase)skillSelect.getSelectedObject());
+			return true;
+		}
+
 		return false;
 	}
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base==leave)
+		{
+			if (core.gameState.gameLogic.encounterLogic.checkLeaveEncounterPhase(party.theFragment, encountered))
+			{
+				toggle();
+				core.uiBase.hud.mainBox.addEntry("Your party is able to leave the encounter.");
+				core.gameState.engine.turnFinishedForPlayer();
+			} else
+			{
+				core.uiBase.hud.mainBox.addEntry("Your party couldn't leave the encounter.");
+			}
+			return true;
+		}
 		if (base==ok)
 		{
-			toggle();
-			core.gameState.playerTurnLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT, true);
+			//
+			//
+			
+			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
+			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
+			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
+			int result = core.gameState.gameLogic.encounterLogic.doEncounterTurn(i, s, encountered);
+			
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT || result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
+			{
+				toggle();
+				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT, true);
+			} else
+			{
+				core.uiBase.hud.mainBox.addEntry("Next encounter round...");
+			}
+			
 			return true;
 		}
 		return false;

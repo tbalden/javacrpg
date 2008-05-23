@@ -32,7 +32,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameStateContainer;
-import org.jcrpg.game.PlayerTurnLogic;
+import org.jcrpg.game.GameLogic;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -114,7 +114,7 @@ public class SaveLoadNewGame {
 			core.behaviorWindow.party = party;
 			core.behaviorWindow.updateToParty();
 			
-			PlayerTurnLogic logic = new PlayerTurnLogic(core,engine,world,ecology,party);
+			GameLogic logic = new GameLogic(core,engine,world,ecology,party);
 			gameState.setPlayer(party, logic);
 			gameState.setWorld(world);
 			gameState.setEcology(ecology);
@@ -181,7 +181,7 @@ public class SaveLoadNewGame {
 			Thread t = new Thread(gameState.engine);
 			t.start();
 			core.engineThread = t;
-			core.gameState.playerTurnLogic.core = core;
+			core.gameState.gameLogic.core = core;
 			if (core.sEngine!=null)
 				core.sEngine.reinit();
 			// ui elements update to loaded state

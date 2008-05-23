@@ -58,7 +58,7 @@ public class EntityMemberInstance {
 	 * The skill that the given instance is using for his behavior of living around at the current turn.
 	 */
 	public InterceptionSkill behaviorSkill = null;
-
+	
 	public EntityMemberInstance(EntityMember description, int numericId) {
 		super();
 		this.description = description;
@@ -71,5 +71,5 @@ public class EntityMemberInstance {
 	{
 		return numericIdSequence++;
 	}
-
+	
 }

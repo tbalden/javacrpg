@@ -19,6 +19,9 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+
 /**
  * Class registering roaming fragments of an EntityInstance
  * @author illes
@@ -28,6 +31,19 @@ public class EntityFragments {
 
 	
 	public EntityInstance instance;
+	
+	public class MemberAndSkill
+	{
+		public EntityMemberInstance member;
+		public Class<?extends SkillBase> skill;
+		public MemberAndSkill(EntityMemberInstance member,
+				Class<? extends SkillBase> skill) {
+			super();
+			this.member = member;
+			this.skill = skill;
+		}
+		
+	}
 	
 	public class EntityFragment
 	{
@@ -45,6 +61,11 @@ public class EntityFragments {
 			followingMembers.add(i);
 			parent.recalcBoundaries();
 		}
+		public SkillInstance getEncounterSkill(ArrayList<EncounterInfo> encountered)
+		{
+			return null;
+		}
+		
 	}
 	
 	public ArrayList<EntityFragment> fragments = new ArrayList<EntityFragment>();
@@ -98,4 +119,7 @@ public class EntityFragments {
 			f.instance = this.instance;
 		}
 	}
+	
+	
+	
 }

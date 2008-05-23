@@ -30,7 +30,7 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -172,7 +172,7 @@ public class BehaviorWindow extends PagedInputWindow {
 	}
 	
 	public PartyInstance party;
-	public Collection<PreEncounterInfo> possibleEncounters;
+	public Collection<EncounterInfo> possibleEncounters;
 	
 	@Override
 	public void setupPage() {

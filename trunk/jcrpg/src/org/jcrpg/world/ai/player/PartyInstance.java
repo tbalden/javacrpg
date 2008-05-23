@@ -27,7 +27,7 @@ import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
@@ -41,15 +41,15 @@ public class PartyInstance extends EntityInstance {
 	
 	public EntityFragment theFragment;
 	
-	ArrayList<PreEncounterInfo> infos = new ArrayList<PreEncounterInfo>();
+	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();
 	@Override
-	public boolean liveOneTurn(Collection<PreEncounterInfo> nearbyEntities) {
+	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities) {
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
 			infos.clear();
 			// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
 			int listSize = 0;
-			for (PreEncounterInfo i:nearbyEntities)
+			for (EncounterInfo i:nearbyEntities)
 			{
 				if (!i.active) continue;
 				int fullSize = 0;
@@ -72,7 +72,7 @@ public class PartyInstance extends EntityInstance {
 			}
 			if (listSize>0) // only if groups can be encountered should we trigger newturn
 			{
-				J3DCore.getInstance().gameState.playerTurnLogic.newTurnPhase(infos,Ecology.PHASE_INTERCEPTION,true);
+				J3DCore.getInstance().gameState.gameLogic.newTurnPhase(infos,Ecology.PHASE_INTERCEPTION,true);
 				return true; // interrupt ecology!
 			}
 			else

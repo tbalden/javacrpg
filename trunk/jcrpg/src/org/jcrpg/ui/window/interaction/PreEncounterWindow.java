@@ -18,7 +18,7 @@
 
 package org.jcrpg.ui.window.interaction;
 
-import java.util.Collection;
+import java.util.ArrayList;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -28,7 +28,7 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.PreEncounterInfo;
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -86,7 +86,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	}
 	
 	public PartyInstance party;
-	public Collection<PreEncounterInfo> possibleEncounters;
+	public ArrayList<EncounterInfo> possibleEncounters;
 	
 	/**
 	 * This function fills up the required data fields for displaying the lists and elements of the page.
@@ -94,7 +94,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	 * @param party
 	 * @param possibleEncounters
 	 */
-	public void setPageData(PartyInstance party, Collection<PreEncounterInfo> possibleEncounters)
+	public void setPageData(PartyInstance party, ArrayList<EncounterInfo> possibleEncounters)
 	{
 		this.party = party;
 		this.possibleEncounters = possibleEncounters;
@@ -113,7 +113,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	@Override
 	public void setupPage() {
 		int listSize = 0;
-		for (PreEncounterInfo i:possibleEncounters)
+		for (EncounterInfo i:possibleEncounters)
 		{
 			if (!i.active) continue;
 			int fullSize = 0;
@@ -133,7 +133,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 		String[] texts = new String[listSize];
 		int count = 0;
 		System.out.println("ENC SIZE = "+listSize);
-		for (PreEncounterInfo i:possibleEncounters)
+		for (EncounterInfo i:possibleEncounters)
 		{
 			int size = 0;
 			String text = count+"/";
@@ -199,17 +199,17 @@ public class PreEncounterWindow extends PagedInputWindow {
 			{
 				if (groupSelect.selectedItems[counter])
 				{
-					((PreEncounterInfo)i).active = true;
+					((EncounterInfo)i).active = true;
 					active++;
 				} else
 				{
-					((PreEncounterInfo)i).active = false;
+					((EncounterInfo)i).active = false;
 				}
 				counter++;
 			}
 			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
 			toggle();
-			core.gameState.playerTurnLogic.newTurnPhase(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
+			core.gameState.gameLogic.newTurnPhase(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

@@ -148,13 +148,13 @@ public class EntityInstance {
 	 * @param nearbyEntities
 	 * @return should return true if player interaction is needed, and ecology doTurn should be interrupted.
 	 */
-	public boolean liveOneTurn(Collection<PreEncounterInfo> nearbyEntities)
+	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities)
 	{
 		int counter = 0;
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
 			int actions = 0;
-			for (PreEncounterInfo info : nearbyEntities)
+			for (EncounterInfo info : nearbyEntities)
 			{
 				if (info.subject==null) continue;
 				counter++;
