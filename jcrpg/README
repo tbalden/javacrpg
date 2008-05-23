@@ -1,5 +1,5 @@
 Java Classic Role Playing Game
-------------------------------
+==============================
 
 m. Movement/Keyboard
 
@@ -42,8 +42,17 @@ r. Requirements
 - Processor around 1.6GHz (Single core will do it)
 
 
+How to install Java under ubuntu linux or debian linux?
+-------------------------------------------------------
+Type :
+# sudo apt-get install openjdk-6-jre
+
+This is tested and working under Ubuntu Hardy Heron.
+
+
 
 What to do if jcrpg is slow?
+----------------------------
 
 If you are testing JCRPG and it runs slow there are a few things you can check to improve performance.
 
@@ -68,6 +77,7 @@ Thirdly you may try to run it in lower resolutions - this can help a lot too.
 
 
 What is jcrpg?
+--------------
 
 Here stands the brief feature list of the Java Classic RPG framework and the reference game.
 
@@ -107,9 +117,13 @@ Features of the future:
 
 
 How to check out latest SVN development code and how to run it?
+---------------------------------------------------------------
 
-SVN is for subversion - a concurrent versioning system for developers. If you want to check it, you should have sun java + svn tool from subversion's homepage installed, plust java ant toolkit to compile it. If you have these installed type
+SVN is for subversion - a concurrent versions system for developers. 
+If you want to check it, you should have sun java + svn tool from 
+subversion's homepage installed, plus java ant toolkit to compile it. 
+If you have these installed type
 
 # svn co https://javacrpg.svn.sourceforge.net/svnroot/javacrpg javacrpg
 
-After go to root dir, and type ant. It should compile and start it.
+After go to root dir, and type 'ant'. It should compile and start it.
