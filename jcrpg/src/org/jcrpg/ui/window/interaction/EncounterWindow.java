@@ -49,6 +49,7 @@ public class EncounterWindow extends PagedInputWindow {
 	Node page0 = new Node();
 
 	ListMultiSelect groupSelect;
+	TextButton leave;
 	TextButton ok;
 	
 	
@@ -63,8 +64,8 @@ public class EncounterWindow extends PagedInputWindow {
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	//page1.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Encounter",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"Facing the inevitable.",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,Language.v("encounterWindow.header"),false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
 	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You have to choose who will act and what.",false);
 	    	 
 	    	{
@@ -72,10 +73,12 @@ public class EncounterWindow extends PagedInputWindow {
 	    	}
 	    	addInput(0,groupSelect);
 	    	
-	    	ok = new TextButton("ok",this,page0,0.66f, 0.22f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use Enter for selection.",false);
+	    	ok = new TextButton("ok",this,page0,0.56f, 0.22f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"),"S");
+	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
 	    	new TextLabel("",this,page0, 0.56f, 0.32f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
+	    	leave = new TextButton("leave",this,page0,0.66f, 0.22f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"S");
+	    	addInput(0,leave);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
 	    	//new ListSelect();
