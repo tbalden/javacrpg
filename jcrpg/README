@@ -34,9 +34,11 @@ MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less me
 
 r. Requirements
 - Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
+	Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu)
 - At least ~300-400 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
+	It's recommended to switch of 3D accelerated desktop effects, it can slow down jcrpg.
 - Processor around 1.6GHz (Single core will do it)
 
 
@@ -56,7 +58,10 @@ Firstly there's config.properties in the root directory of the game that can be 
     * RENDER_DISTANCE_FARVIEW - the higher this is the more memory and CPU/GPU it will consume rendering it. If using far view a sane value is used to be VIEW_DISTANCE/RENDER_DISTANCE/RENDER_DISTANCE_FARVIEW = 26/52/80. You will be able to see ~ 13 cubes distance detailed plus 27 cubes distance undetailed tiles magnified/simplified.
     * FARVIEW_ENABLED - set it to false, will help a great lot, cutting down the whole far view part
 
-Second you can have hogging problems if you set high detail values and Java runs with low memory parameters or your system has small free memory. If you plan to run on high settings you may consider edit jcrpg.bat or jcrpg.sh and modify the -Xmx parameter to a higher value. (Example: -Xmx200m.) I recommend you to have at least 300MB free memory or more for the current default configuration (dec 2007).
+Second you can have hogging problems if you set high detail values and Java runs with low memory parameters 
+or your system has small free memory. If you plan to run on high settings you may consider edit 
+jcrpg.bat or jcrpg.sh and modify the -Xmx parameter to a higher value. (Example: -Xmx200m.) 
+I recommend you to have at least 300MB free memory or more for the current default configuration (dec 2007).
 
 Thirdly you may try to run it in lower resolutions - this can help a lot too.
 
