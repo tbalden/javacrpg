@@ -18,9 +18,23 @@
 
 package org.jcrpg.world.ai.abs.skill.magical;
 
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Demonology extends SkillBase implements TurnActSkill {
+	
+	public class SummonDemon extends SkillActForm
+	{
+		public SummonDemon(SkillBase skill) {
+			super(skill);
+			skillRequirementLevel = 0;
+		}
+	}
+	
+	public Demonology()
+	{
+		actForms.add(new SummonDemon(this));
+	}
 
 }

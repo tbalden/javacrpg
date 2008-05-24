@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.ai.abs.skill;
 
+import java.util.ArrayList;
+
 /**
  * Entities may have this containing a skill with certain level.
  * @author pali
@@ -26,10 +28,38 @@ public class SkillInstance {
 
 	public Class <? extends SkillBase> skill;
 	public int level;
+	
+	public ArrayList<Class<? extends SkillActForm>> aquiredActForms = new ArrayList<Class<? extends SkillActForm>>();
+	
 	public SkillInstance(Class <? extends SkillBase> skill, int level) {
 		super();
 		this.skill = skill;
 		this.level = level;
+		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).actForms)
+		{
+			if (form.skillRequirementLevel<=level)
+			{
+				aquiredActForms.add(form.getClass());
+			}
+		}
+	}
+	
+	/**
+	 * Adds a skill act form if level is high enough.
+	 * @param f
+	 * @return true if level was high enough.
+	 */
+	public boolean addSkillActForm(Class <? extends SkillActForm> f)
+	{
+		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).actForms)
+		{
+			if (f == form.getClass() && form.skillRequirementLevel<=level)
+			{
+				aquiredActForms.add(form.getClass());
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public SkillInstance copy()

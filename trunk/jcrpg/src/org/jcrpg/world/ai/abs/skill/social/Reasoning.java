@@ -19,9 +19,23 @@
 package org.jcrpg.world.ai.abs.skill.social;
 
 import org.jcrpg.world.ai.abs.skill.EncounterSkill;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Reasoning extends SkillBase implements EncounterSkill, TurnActSkill {
+	
+	public class LogicalSolutions extends SkillActForm
+	{
+		public LogicalSolutions(SkillBase skill) {
+			super(skill);
+			skillRequirementLevel = 0;
+		}
+	}
+	
+	public Reasoning()
+	{
+		actForms.add(new LogicalSolutions(this));
+	}
 
 }
