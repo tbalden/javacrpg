@@ -25,6 +25,7 @@ import java.util.HashSet;
 
 import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -43,6 +44,7 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
@@ -179,7 +181,7 @@ public class EncounterWindow extends PagedInputWindow {
 			groupSelect.objects = objects;
 			groupSelect.texts = texts;
 			groupSelect.setUpdated(true);
-			groupSelect.activate();
+			groupSelect.deactivate();
 		}
 		// party memebers
 		{
@@ -274,6 +276,8 @@ public class EncounterWindow extends PagedInputWindow {
 			{
 				toggle();
 				core.uiBase.hud.mainBox.addEntry("Your party is able to leave the encounter.");
+				core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+				core.gameState.gameLogic.endPlayerEncounters();
 				core.gameState.engine.turnFinishedForPlayer();
 			} else
 			{
