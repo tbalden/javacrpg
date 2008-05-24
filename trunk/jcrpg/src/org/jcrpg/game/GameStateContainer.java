@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
@@ -36,8 +37,10 @@ import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.time.Time;
 
+import com.jme.renderer.ColorRGBA;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -241,13 +244,43 @@ public class GameStateContainer {
 			{
 				EntityFragment i = ((EntityFragment)o);
 				if (i==player.theFragment) continue;
-				System.out.println("I: "+i.instance.description);
+				//System.out.println("I: "+i.instance.description);
 				if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.theFragment.roamingBoundary,i.roamingBoundary)==null) continue;
 				map.put(i.instance.description.iconPic,i.instance.description.iconPic);
 			}
 		}
 		J3DCore.getInstance().uiBase.hud.entityOMeter.update(map.values());
 	}
+	
+	/**
+	 * Check if player has entered/left a population, write to log if so.
+	 */
+	public void checkEnterLeavePopulation()
+	{
+		Population p = world.economyContainer.getPopulationAt(viewPositionX, viewPositionY, viewPositionZ);
+		if (p==null)
+		{
+			p = world.economyContainer.getPopulationAt(viewPositionX, viewPositionY-1, viewPositionZ);
+		}
+		if (p!=null)
+		{
+			String name = p.town.foundationName+" ("+p.foundationName+")";
+			if (!lastPopulationName.equals(name)) {
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry("Entering town "+name, ColorRGBA.red));
+				lastPopulationName = name;
+			}
+		} else
+		{	if (lastPopulationName!=null && lastPopulationName.length()>0)
+			{
+			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Leaving town "+lastPopulationName);
+			}
+			lastPopulationName = "";
+		}
+	}
+	/**
+	 * Last population entered, left.
+	 */
+	String lastPopulationName = "";
 	
 	int environmentAudioCount = 0;
 	

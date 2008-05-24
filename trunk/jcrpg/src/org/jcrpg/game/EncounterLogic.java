@@ -65,7 +65,7 @@ public class EncounterLogic {
 	public int doEncounterTurn(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
 	{
 		// TODO skill use, and check tension levels if combat or social rivalry happens.
-		return ENCOUTNER_PHASE_CONTINUE;
+		return ENCOUTNER_PHASE_RESULT_COMBAT;
 	}
 	
 

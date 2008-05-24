@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.abs.skill;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,14 +86,27 @@ public class SkillContainer {
 		if (phase == Ecology.PHASE_INTERCEPTION)
 		{
 			return getSkillsOfType(InterceptionSkill.class);
-		}
+		} else
 		if (phase == Ecology.PHASE_ENCOUNTER)
 		{
 			return getSkillsOfType(EncounterSkill.class);
-		}
-		if (phase == Ecology.PHASE_TURNACT)
+		} else
+		if (phase == Ecology.PHASE_TURNACT_COMBAT)
 		{
 			return getSkillsOfType(TurnActSkill.class);
+		} else
+		if (phase == Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
+		{
+			Collection<Class<?extends SkillBase>> skills = getSkillsOfType(TurnActSkill.class);
+			Collection<Class<?extends SkillBase>> filtered = new ArrayList<Class<?extends SkillBase>>();
+			for (Class<?extends SkillBase> s:skills)
+			{
+				if (SkillGroups.groupedSkills.get(SkillGroups.GROUP_SOCIAL).contains(s))
+				{
+					filtered.add(s);
+				}
+			}
+			return filtered;
 		}
 		return null;
 		

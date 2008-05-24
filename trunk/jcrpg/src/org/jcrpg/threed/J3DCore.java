@@ -66,7 +66,6 @@ import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -1335,30 +1334,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		if (success)
 		{
 			gameState.updateEntityIcons();
-			Population p = gameState.world.economyContainer.getPopulationAt(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ);
-			if (p==null)
-			{
-				p = gameState.world.economyContainer.getPopulationAt(gameState.viewPositionX, gameState.viewPositionY-1, gameState.viewPositionZ);
-			}
-			if (p!=null)
-			{
-				String name = p.town.foundationName+" ("+p.foundationName+")";
-				if (!lastPopulationName.equals(name)) {
-					uiBase.hud.mainBox.addEntry(new TextEntry("Entering town "+name, ColorRGBA.red));
-					lastPopulationName = name;
-				}
-			} else
-			{	if (lastPopulationName!=null && lastPopulationName.length()>0)
-				{
-				uiBase.hud.mainBox.addEntry("Leaving town "+lastPopulationName);
-				}
-				lastPopulationName = "";
-			}
-			
+			gameState.checkEnterLeavePopulation();			
 		}
 		return success;
 	}
-	String lastPopulationName = "";
 	
 	/**
 	 * Tries to move in directions, and sets coords if successfull
