@@ -318,9 +318,9 @@ public class GameStateContainer {
 					EntityFragment i = ((EntityFragment)o);
 					{
 						if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.theFragment.roamingBoundary)==null) continue;
-						System.out.println("#_# Audio: "+((EntityInstance)o).id);
-						if (((EntityInstance)o).description.groupingRule.possibleMembers!=null);
-						for (GroupingMemberProps p:((EntityInstance)o).description.groupingRule.possibleMembers)
+						System.out.println("#_# Audio: "+i.instance.id);
+						if (i.instance.description.groupingRule.possibleMembers!=null)
+						for (GroupingMemberProps p:i.instance.description.groupingRule.possibleMembers)
 						{
 							if (p.memberType.audioDescription!=null)
 							{

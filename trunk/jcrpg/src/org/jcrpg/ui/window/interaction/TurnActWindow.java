@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.EncounterLogic;
+import org.jcrpg.game.GameLogic;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -33,6 +34,7 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -124,14 +126,18 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	String langPostfix = "";
 	
+	boolean combat = false;
+	
 	public void setPageData(int turnActType, PartyInstance party, ArrayList<EncounterInfo> encountered)
 	{
 		if (turnActType == EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
 		{
 			langPostfix = "combat";
+			combat = true;
 		} else
 		{
 			langPostfix = "social";
+			combat = false;
 		}
 		header.text = Language.v("turnActWindow.header."+langPostfix);
 		header.activate();
@@ -242,7 +248,7 @@ public class TurnActWindow extends PagedInputWindow {
 		{
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			
-			Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(EncounterSkill.class);
+			Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(combat?Ecology.PHASE_TURNACT_COMBAT:Ecology.PHASE_TURNACT_SOCIAL_RIVALRY);
 			if (skills==null) skills = new HashSet<Class<? extends SkillBase>>();
 			String[] texts = new String[skills.size()];
 			Object[] objects = new Object[skills.size()];
@@ -315,6 +321,13 @@ public class TurnActWindow extends PagedInputWindow {
 			} 
 			//else
 			{
+				if (combat)
+				{
+					core.uiBase.hud.mainBox.addEntry("All combat acts were done.");
+				} else
+				{
+					core.uiBase.hud.mainBox.addEntry("All social acts were done.");
+				}
 				core.uiBase.hud.mainBox.addEntry("Next turn comes...");
 			}
 			
