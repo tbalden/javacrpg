@@ -18,7 +18,12 @@
 
 package org.jcrpg.world.ai.abs.skill;
 
+import java.util.ArrayList;
+
 public class SkillBase {
+	
+
+	public ArrayList<SkillActForm> actForms = new ArrayList<SkillActForm>();
 	
 
 }

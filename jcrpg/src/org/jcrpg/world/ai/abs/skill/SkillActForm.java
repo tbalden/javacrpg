@@ -14,36 +14,24 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+package org.jcrpg.world.ai.abs.skill;
+
+/**
+ * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
+ * @author illes
+ *
  */
-
-package org.jcrpg.world.ai.abs.skill.martial;
-
-import org.jcrpg.world.ai.abs.skill.SkillActForm;
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-
-public class Wrestling extends SkillBase implements TurnActSkill  {
-	
-	public class KillerGrip extends SkillActForm
+public class SkillActForm
+{
+	public SkillBase skill;
+	public String id;
+	/**
+	 * Determines what skill level is needed for this act form.
+	 */
+	public int skillRequirementLevel = 0;
+	public SkillActForm(SkillBase skill)
 	{
-		public KillerGrip(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-		}
+		this.skill = skill;
 	}
-
-	public class Detain extends SkillActForm
-	{
-
-		public Detain(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-		}
-	}
-
-	public Wrestling()
-	{
-		actForms.add(new KillerGrip(this));
-	}
-
 }

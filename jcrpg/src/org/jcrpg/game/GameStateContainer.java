@@ -30,7 +30,6 @@ import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;

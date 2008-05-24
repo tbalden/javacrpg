@@ -38,6 +38,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.EncounterSkill;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -64,6 +65,7 @@ public class EncounterWindow extends PagedInputWindow {
 
 	ListSelect memberSelect;
 	ListSelect skillSelect;
+	ListSelect skillActFormSelect;
 	ListMultiSelect groupSelect;
 	TextButton leave;
 	TextButton ok;
@@ -93,9 +95,13 @@ public class EncounterWindow extends PagedInputWindow {
 	    		skillSelect = new ListSelect("skill", this,page0, 0.70f,0.15f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	}
 	    	addInput(0,skillSelect);
+	    	{
+	    		skillActFormSelect = new ListSelect("skillActForm", this,page0, 0.30f,0.22f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	}
+	    	addInput(0,skillActFormSelect);
 
 	    	{
-	    		groupSelect = new ListMultiSelect("group", this,page0, 0.30f, 0.18f,0.22f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		groupSelect = new ListMultiSelect("group", this,page0, 0.70f, 0.58f,0.22f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,groupSelect);
 	    	
@@ -234,22 +240,22 @@ public class EncounterWindow extends PagedInputWindow {
 			Object[] objects = new Object[skills.size()];
 			String[] ids = new String[skills.size()];
 			
-			int counter_2 = 0;
+			int counter = 0;
 			int selected = 0;
 			for (Class<?extends SkillBase> skill:skills)
 			{
 				String text = Language.v("skills."+skill.getSimpleName())+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
-				texts[counter_2]=text;
-				ids[counter_2]=""+counter_2;
+				texts[counter]=text;
+				ids[counter]=""+counter;
 				SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
-				objects[counter_2]=b;
+				objects[counter]=b;
 				System.out.println("--- "+skill);
 				if (hmMemberSelectedSkill.get(i)!=null && hmMemberSelectedSkill.get(i).getClass() == b.getClass())
 				{
 					System.out.println("### FOUND SKILL");
-					selected = counter_2;
+					selected = counter;
 				}
-				counter_2++;
+				counter++;
 			}
 			skillSelect.ids = ids;
 			skillSelect.texts = texts;
@@ -262,6 +268,28 @@ public class EncounterWindow extends PagedInputWindow {
 		if (base==skillSelect)
 		{
 			hmMemberSelectedSkill.put((EntityMemberInstance)memberSelect.getSelectedObject(), (SkillBase)skillSelect.getSelectedObject());
+			
+			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
+			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
+			SkillInstance skillInstance = i.description.commonSkills.skills.get(s.getClass());
+			ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+			String[] texts = new String[forms.size()];
+			Object[] objects = new Object[forms.size()];
+			String[] ids = new String[forms.size()];
+			int counter = 0;
+			for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+			{
+				ids[counter] = ""+counter;
+				texts[counter] = form.getSimpleName();
+				objects[counter] = form;				    
+				counter++;
+			}
+			skillActFormSelect.ids = ids;
+			skillActFormSelect.texts = texts;
+			skillActFormSelect.objects = objects;
+			skillActFormSelect.setUpdated(true);
+			skillActFormSelect.deactivate();
+			skillActFormSelect.setSelected(0);			
 			return true;
 		}
 
