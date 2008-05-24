@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.jcrpg.game.EncounterLogic;
+import org.jcrpg.game.EncounterRoundScreenplay;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -33,9 +33,8 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
-import org.jcrpg.world.ai.Ecology;
-import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -322,22 +321,11 @@ public class EncounterWindow extends PagedInputWindow {
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
-			int result = core.gameState.gameLogic.encounterLogic.doEncounterTurn(i, s, encountered);
+			EncounterRoundScreenplay screenplay = core.gameState.gameLogic.encounterLogic.doEncounterRound(i, s, encountered);
 			
-			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
-			{
-				toggle();
-				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT_COMBAT, true);
-			}
-			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
-			{
-				toggle();
-				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
-			}
-			else
-			{
-				core.uiBase.hud.mainBox.addEntry("Next encounter round...");
-			}
+			toggle();
+			
+			core.gameState.gameLogic.doVisibleEncounterPhaseRound(screenplay);
 			
 			return true;
 		}

@@ -271,6 +271,112 @@ public class GameLogic {
 			}
 		}
 	}
+
+	public int currentStep = 0;
+	public EncounterRoundScreenplay currentEncounterScreenplay = null;
+	public TurnActTurnScreenplay currentTurnActScreenplay = null;
+
+	/**
+	 * A method that starts a visual scene for the encounter round, being called back
+	 * from J3DCore simpleUpdate scheduled till the end of happenings.
+	 */
+	public void doVisibleEncounterPhaseRound(EncounterRoundScreenplay screenplay)
+	{
+		currentStep = 0;
+		currentEncounterScreenplay = screenplay;
+		playEncScreenplayStep();
+	}
+	
+	public void playEncScreenplayStep()
+	{
+		if (currentStep>=currentEncounterScreenplay.elements.size())
+		{
+			// ending screenplay..check result:			
+			int result = currentEncounterScreenplay.result;
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
+			{				
+				core.gameState.gameLogic.newTurnPhase(currentEncounterScreenplay.encountered, Ecology.PHASE_TURNACT_COMBAT, true);
+			} else
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
+			{
+				core.gameState.gameLogic.newTurnPhase(currentEncounterScreenplay.encountered, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
+			} else
+			if (result==EncounterLogic.ENCOUTNER_PHASE_CONTINUE)
+			{
+				core.uiBase.hud.mainBox.addEntry("Next encounter round...");
+				core.encounterWindow.toggle();
+				currentEncounterScreenplay = null; //no saving needed for that
+			}			
+		} else
+		{
+			ScreenplayElement e = currentEncounterScreenplay.elements.get(currentStep);
+			playScreenplayElement(e);
+			currentStep++;
+			//playEncScreenplayStep();
+		}
+	}
+	
+	ScreenplayElement played = null;
+	public long playStart = 0;
+	public boolean playing = false;
+	public void playScreenplayElement(ScreenplayElement e)
+	{
+		playing = true;
+		played = e;
+		playStart = System.currentTimeMillis();
+		if (played.type==ScreenplayElement.TYPE_PAUSE)
+		{
+			
+		}
+	}
+	
+	public void checkScreenPlayCallbackNeed()
+	{
+		if (playing)
+		{
+			if (played.maxTime>0 && played.maxTime<System.currentTimeMillis()-playStart)
+			{
+				if (played.parent instanceof EncounterRoundScreenplay)
+				{
+					playing = false;
+					played = null;
+					playEncScreenplayStep();
+				} else
+				{
+					playing = false;
+					played = null;
+					playTurnActScreenplayStep();
+				}
+			}
+		} 
+	}
+	
+
+	/**
+	 * A method that starts a visual scene for the turn act phase, being called back
+	 * from J3DCore simpleUpdate scheduled till the end of happenings.
+	 */
+	public void doVisibleTurnActPhaseTurn(TurnActTurnScreenplay screenplay)
+	{
+		currentStep = 0;
+		currentTurnActScreenplay = screenplay;
+		playTurnActScreenplayStep();
+	}
+	public void playTurnActScreenplayStep()
+	{
+		if (currentStep>=currentTurnActScreenplay.elements.size())
+		{
+			core.uiBase.hud.mainBox.addEntry("Next turn comes...");
+			core.turnActWindow.toggle();
+			currentTurnActScreenplay = null; //no saving needed for that
+		} else
+		{
+			ScreenplayElement e = currentTurnActScreenplay.elements.get(currentStep);
+			playScreenplayElement(e);
+			currentStep++;
+			//playEncScreenplayStep();
+		}
+	}
 	
 	static HashSet<Class<? extends SideSubType>> steepSides = new HashSet<Class<? extends SideSubType>>();
 	static {
