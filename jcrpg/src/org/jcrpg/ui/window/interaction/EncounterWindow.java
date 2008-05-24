@@ -202,6 +202,7 @@ public class EncounterWindow extends PagedInputWindow {
 				objects[counter] = i;
 				texts[counter] = n;
 				ids[counter] = ""+counter;
+				counter++;
 			}
 			memberSelect.reset();
 			memberSelect.ids = ids;

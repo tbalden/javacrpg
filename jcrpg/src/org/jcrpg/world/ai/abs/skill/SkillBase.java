@@ -22,8 +22,26 @@ import java.util.ArrayList;
 
 public class SkillBase {
 	
-
-	public ArrayList<SkillActForm> actForms = new ArrayList<SkillActForm>();
+	public static class NoActForm extends SkillActForm 
+	{
+		public NoActForm(SkillBase skill) {
+			super(skill);
+		}
+	}
 	
+	public static ArrayList<SkillActForm> noActFormList = new ArrayList<SkillActForm>();
+	public static SkillBase noActFormBase = new SkillBase();
+	static
+	{
+		noActFormList.add(new NoActForm(noActFormBase));
+	}
+
+	protected ArrayList<SkillActForm> actForms = new ArrayList<SkillActForm>();
+	
+	public ArrayList<SkillActForm> getActForms()
+	{
+		if (actForms.size()>0) return actForms;
+		return noActFormList;
+	}
 
 }

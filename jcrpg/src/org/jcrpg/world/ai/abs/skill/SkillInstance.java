@@ -35,7 +35,7 @@ public class SkillInstance {
 		super();
 		this.skill = skill;
 		this.level = level;
-		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).actForms)
+		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).getActForms())
 		{
 			if (form.skillRequirementLevel<=level)
 			{
