@@ -38,7 +38,7 @@ public class GroupingRule {
 	{
 		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
-		while (members.size()<fragment.size) {
+		while (members.size()<fragment.instance.getGroupSizes()[groupId]) {
 			for (GroupingMemberProps prop :possibleMembers)
 			{
 				for (int i=0; i<prop.maxNumberInAGroup; i++)
@@ -56,9 +56,9 @@ public class GroupingRule {
 							members.add(new EntityMemberInstance(prop.memberType,-1));
 						}
 					}
-					if (counter==fragment.size) break;
+					if (counter==fragment.instance.getGroupSizes()[groupId]) break;
 				}
-				if (counter==fragment.size) break;
+				if (counter==fragment.instance.getGroupSizes()[groupId]) break;
 			}
 		}
 		return members;

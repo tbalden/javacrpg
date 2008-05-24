@@ -20,6 +20,7 @@ package org.jcrpg.game;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -169,7 +170,7 @@ public class EncounterLogic {
 	}
 	TurnActTurnState turnActTurnState = null;
 	
-	public void doTurnActTurn(ArrayList<EncounterInfo> encountered)
+	public void doTurnActTurn(TurnActPlayerChoiceInfo info, ArrayList<EncounterInfo> encountered)
 	{
 		turnActTurnState = new TurnActTurnState();
 

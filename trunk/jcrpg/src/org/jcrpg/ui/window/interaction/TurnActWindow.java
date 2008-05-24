@@ -214,17 +214,18 @@ public class TurnActWindow extends PagedInputWindow {
 		for (EncounterInfo i:encountered)
 		{
 			if (!i.active) continue;
-			int fullSize = 0;
+			//int fullSize = 0;
 			for (EntityFragment entityFragment:i.encountered.keySet())
 			{
 				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 				for (int in:groupIds) {
 					int size = entityFragment.instance.getGroupSizes()[in];
-					fullSize+=size;
+					if (size>0) listSize++;
+					//fullSize+=size;
 				}
 			}
-			if (fullSize>0)
-				listSize++;
+			//if (fullSize>0)
+				//listSize++;
 		}
 		// groups
 		for (ListSelect groupSelect:groupSelectors)
@@ -239,23 +240,25 @@ public class TurnActWindow extends PagedInputWindow {
 				int size = 0;
 				String text = count+"/";
 				if (!i.active) continue;
-				int fullSize = 0;
 				for (EntityFragment fragment:i.encountered.keySet())
 				{
 					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+					int fullSize = 0;
 					size++;
 					int[] groupIds = i.encounteredGroupIds.get(fragment);
 					for (int in:groupIds) {
 						int size1 = fragment.instance.getGroupSizes()[in];
 						fullSize+=size1;
 					}				
-					text+=size+" "+fragment.instance.description.getClass().getSimpleName()+" ";
+					if (fullSize>0)
+					{
+						text=size+" ("+fullSize+") "+fragment.instance.description.getClass().getSimpleName();
+						ids[count] = ""+count;
+						texts[count] = text;
+						objects[count] = i;
+						count++;
+					}
 				}
-				if (fullSize==0) continue;
-				ids[count] = ""+count;
-				texts[count] = text;
-				objects[count] = i;
-				count++;
 			}
 			groupSelect.reset();
 			groupSelect.ids = ids;
@@ -317,7 +320,16 @@ public class TurnActWindow extends PagedInputWindow {
 
 		return false;
 	}
-
+	
+	public class TurnActPlayerChoiceInfo
+	{
+		HashMap<EntityMemberInstance, SkillBase> memberToSkill = new HashMap<EntityMemberInstance, SkillBase>();
+		HashMap<EntityMemberInstance, Class<?extends SkillActForm>> memberToSkillActForm = new HashMap<EntityMemberInstance, Class<? extends SkillActForm>>();
+		HashMap<EntityMemberInstance, EncounterInfo> memberToEncounterInfo = new HashMap<EntityMemberInstance, EncounterInfo>();
+	}
+	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==leave)
@@ -339,11 +351,30 @@ public class TurnActWindow extends PagedInputWindow {
 		{
 			//
 			//
+			int counter = 0;
+			info.memberToEncounterInfo.clear();
+			info.memberToSkill.clear();
+			info.memberToSkillActForm.clear();
+			for (ListSelect s:skillSelectors)
+			{
+				if (s.isEnabled()) {
+					EntityMemberInstance i = (EntityMemberInstance)s.subject;
+					SkillBase sb = null;
+					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
+					Class<?extends SkillActForm> f = null;
+					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
+					EncounterInfo ei = null;
+					ei = (EncounterInfo)groupSelectors.get(counter).getSelectedObject();
+					info.memberToSkill.put(i,sb);
+					info.memberToSkillActForm.put(i,f);
+					info.memberToEncounterInfo.put(i,ei);
+				}
+				counter++;
+			}
 			
 			core.uiBase.hud.mainBox.addEntry("Starting turn!");
 			toggle();
-			// TODO more parameters should be added - chosen skills etc.
-			core.gameState.gameLogic.encounterLogic.doTurnActTurn(encountered);
+			core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
 			
 			return true;
 		}
