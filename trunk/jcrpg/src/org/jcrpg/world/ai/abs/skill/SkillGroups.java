@@ -68,6 +68,7 @@ import org.jcrpg.world.ai.abs.skill.social.Diplomacy;
 import org.jcrpg.world.ai.abs.skill.social.Laws;
 import org.jcrpg.world.ai.abs.skill.social.Politics;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
+import org.jcrpg.world.ai.abs.skill.social.Trade;
 
 /**
  * Contains skill class types grouped in groupedSkills and one skill instance per class too in skillBaseInstances.
@@ -120,6 +121,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_SOCIAL, new Laws());
 		addSkillToGroup(GROUP_SOCIAL, new Cheating());
 		addSkillToGroup(GROUP_SOCIAL, new Reasoning());
+		addSkillToGroup(GROUP_SOCIAL, new Trade());
 
 		orderedGroups.add(GROUP_PHYSICAL);
 		addSkillToGroup(GROUP_PHYSICAL, new Agriculture());
