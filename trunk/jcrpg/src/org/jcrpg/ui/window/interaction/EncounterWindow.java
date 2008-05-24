@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.jcrpg.game.EncounterRoundScreenplay;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -321,11 +320,8 @@ public class EncounterWindow extends PagedInputWindow {
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
-			EncounterRoundScreenplay screenplay = core.gameState.gameLogic.encounterLogic.doEncounterRound(i, s, encountered);
-			
 			toggle();
-			
-			core.gameState.gameLogic.doVisibleEncounterPhaseRound(screenplay);
+			core.gameState.gameLogic.encounterLogic.doEncounterRound(i, s, encountered);
 			
 			return true;
 		}
