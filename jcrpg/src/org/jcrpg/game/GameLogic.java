@@ -88,9 +88,15 @@ public class GameLogic {
 				}
 			}
 			
-			if (startingPhase==Ecology.PHASE_TURNACT)
+			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
-				core.switchEncounterMode(true);
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounters);
+				core.turnActWindow.toggle();
+			}
+			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
+			{
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounters);
+				core.turnActWindow.toggle();
 			}
 		} else 
 		{

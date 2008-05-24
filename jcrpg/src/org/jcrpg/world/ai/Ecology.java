@@ -40,7 +40,8 @@ public class Ecology {
 	
 	public static int PHASE_INTERCEPTION = 0;
 	public static int PHASE_ENCOUNTER = 1;
-	public static int PHASE_TURNACT = 2;
+	public static int PHASE_TURNACT_SOCIAL_RIVALRY = 2;
+	public static int PHASE_TURNACT_COMBAT = 3;
 	
 	public HashMap<Integer, EntityInstance> beings = new HashMap<Integer, EntityInstance>();
 	public ArrayList<EntityInstance> orderedBeingList = new ArrayList<EntityInstance>();

@@ -295,11 +295,17 @@ public class EncounterWindow extends PagedInputWindow {
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
 			int result = core.gameState.gameLogic.encounterLogic.doEncounterTurn(i, s, encountered);
 			
-			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT || result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
 			{
 				toggle();
-				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT, true);
-			} else
+				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT_COMBAT, true);
+			}
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
+			{
+				toggle();
+				core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
+			}
+			else
 			{
 				core.uiBase.hud.mainBox.addEntry("Next encounter round...");
 			}
