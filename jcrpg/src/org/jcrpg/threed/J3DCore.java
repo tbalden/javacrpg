@@ -2250,7 +2250,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		
 		if (gameState.gameLogic!=null) {
-			gameState.gameLogic.checkScreenPlayCallbackNeed();
+			gameState.gameLogic.encounterLogic.checkEncounterCallbackNeed();
+			gameState.gameLogic.encounterLogic.checkTurnActCallbackNeed();
 		}
 
 		// time changed, updating lights, orbiters

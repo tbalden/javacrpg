@@ -20,6 +20,7 @@ package org.jcrpg.game;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -62,33 +63,163 @@ public class EncounterLogic {
 		return true;
 	}
 	
-	public EncounterRoundScreenplay doEncounterRound(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
+	// encounter state related
+	
+	public class EncounterRoundState {
+		public EntityMemberInstance initiatorSkillUser;
+		public SkillInstance initiatorSkill;
+		public ArrayList<EncounterInfo> encounters;
+		public int nextEventCount = 0;
+		//public int maxEventCount = 0;
+		public ArrayList<PlannedEncounterEvent> plan = new ArrayList<PlannedEncounterEvent>();
+		public boolean playing = false;
+		public long playStart = 0;
+		public long maxTime = 0;
+	}
+	public class PlannedEncounterEvent
 	{
-		EncounterRoundScreenplay screenplay = new EncounterRoundScreenplay();
-		screenplay.encountered = encounters;
+		public static final int TYPE_PAUSE = 1;
+		public int type = 0;
+		
+	}
+	EncounterRoundState encounterRoundState = null;
+	
+	public void doEncounterRound(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
+	{
+		encounterRoundState = new EncounterRoundState();
+		encounterRoundState.initiatorSkillUser = initiatorSkillUser;
+		encounterRoundState.initiatorSkill = initiatorSkill;
+		encounterRoundState.encounters = encounters;
+		
+		
+		// TODO do a preliminary skill usage plan into state with eventCount
+		
 		// TODO skill use, and check tension levels if combat or social rivalry happens.
 
-		ScreenplayElement e = new ScreenplayElement(screenplay);
-		e.type = ScreenplayElement.TYPE_PAUSE;
-		e.maxTime = 1000;
-		screenplay.elements.add(e);
-		screenplay.result = ENCOUTNER_PHASE_RESULT_COMBAT;
-		return screenplay;
-	}
-	
-	public TurnActTurnScreenplay doTurnActTurn(ArrayList<EncounterInfo> encountered)
-	{
-		TurnActTurnScreenplay screenplay = new TurnActTurnScreenplay();
-		screenplay.encountered = encountered;
-		// TODO skill use, and check tension levels if combat or social rivalry happens.
+		// demo pause
+		PlannedEncounterEvent p = new PlannedEncounterEvent();
+		p.type = PlannedEncounterEvent.TYPE_PAUSE;
+		encounterRoundState.plan.add(p);
 
-		//screenplay.result = ENCOUTNER_PHASE_RESULT_COMBAT;
-		ScreenplayElement e = new ScreenplayElement(screenplay);
-		e.type = ScreenplayElement.TYPE_PAUSE;
-		e.maxTime = 1000;
-		screenplay.elements.add(e);
-		return screenplay;
+		playEncStep();
+	}
+	public void playEncStep()
+	{
+		if (encounterRoundState.nextEventCount>=encounterRoundState.plan.size())
+		{
+			// ending screenplay..check result:			
+			int result = ENCOUTNER_PHASE_RESULT_COMBAT;
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
+			{				
+				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounters, Ecology.PHASE_TURNACT_COMBAT, true);
+			} else
+			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
+			{
+				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounters, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
+			} else
+			if (result==EncounterLogic.ENCOUTNER_PHASE_CONTINUE)
+			{
+				gameLogic.core.uiBase.hud.mainBox.addEntry("Next encounter round...");
+				gameLogic.core.encounterWindow.toggle();
+				encounterRoundState = null;
+			}			
+		} else
+		{
+			if (encounterRoundState.plan.get(encounterRoundState.nextEventCount).type == PlannedEncounterEvent.TYPE_PAUSE) 
+			{
+				encounterRoundState.playing = true;
+				encounterRoundState.playStart = System.currentTimeMillis();
+				encounterRoundState.maxTime = 1000;
+				encounterRoundState.nextEventCount++;
+			} else {
+				// unknown step type...
+				encounterRoundState.nextEventCount++;
+				playEncStep();
+			}
+		}
 	}
 	
+	public void checkEncounterCallbackNeed()
+	{
+		if (encounterRoundState!=null && encounterRoundState.playing)
+		{
+			if (encounterRoundState.maxTime>0 && encounterRoundState.maxTime<System.currentTimeMillis()-encounterRoundState.playStart)
+			{
+				encounterRoundState.playing = false;
+				playEncStep();
+			}
+		} 
+	}
+	
+
+	public class TurnActTurnState {
+		public ArrayList<EncounterInfo> encounters;
+		public int nextEventCount = 0;
+		//public int maxEventCount = 0;
+		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();
+		public boolean playing = false;
+		public long playStart = 0;
+		public long maxTime = 0;
+	}
+	public class PlannedTurnActEvent
+	{
+		public static final int TYPE_PAUSE = 1;
+		public int type = 0;
+		
+	}
+	TurnActTurnState turnActTurnState = null;
+	
+	public void doTurnActTurn(ArrayList<EncounterInfo> encountered)
+	{
+		turnActTurnState = new TurnActTurnState();
+
+		// TODO do a preliminary skill usage plan into state with eventCount, speed counts for initiative
+		
+		// TODO skill use
+
+		// demo pause
+		PlannedTurnActEvent p = new PlannedTurnActEvent();
+		p.type = PlannedEncounterEvent.TYPE_PAUSE;
+		turnActTurnState.plan.add(p);
+
+		playTurnActStep();
+	}
+
+	public void checkTurnActCallbackNeed()
+	{
+		if (turnActTurnState!=null && turnActTurnState.playing)
+		{
+			if (turnActTurnState.maxTime>0 && turnActTurnState.maxTime<System.currentTimeMillis()-turnActTurnState.playStart)
+			{
+				turnActTurnState.playing = false;
+				playTurnActStep();
+			}
+		} 
+	}
+
+	public void playTurnActStep()
+	{
+		if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
+		{
+			turnActTurnState = null;
+			gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
+			gameLogic.core.turnActWindow.toggle();			
+		} else
+		{
+			if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_PAUSE) 
+			{
+				turnActTurnState.playing = true;
+				turnActTurnState.playStart = System.currentTimeMillis();
+				turnActTurnState.maxTime = 1000;
+				turnActTurnState.nextEventCount++;
+			} else
+			{
+				// unknown step type...
+				turnActTurnState.nextEventCount++;
+				playTurnActStep();
+			}
+		}
+	}
+
 
 }
