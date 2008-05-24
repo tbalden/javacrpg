@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.EncounterLogic;
+import org.jcrpg.game.TurnActTurnScreenplay;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -340,6 +341,13 @@ public class TurnActWindow extends PagedInputWindow {
 			//
 			//
 			
+			core.uiBase.hud.mainBox.addEntry("Starting turn!");
+			TurnActTurnScreenplay screenplay = core.gameState.gameLogic.encounterLogic.doTurnActTurn(encountered);
+			
+			toggle();
+			
+			core.gameState.gameLogic.doVisibleTurnActPhaseTurn(screenplay);
+			
 			//EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			//SkillBase b = (SkillBase)skillSelect.getSelectedObject();
 			//SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
@@ -348,17 +356,6 @@ public class TurnActWindow extends PagedInputWindow {
 			//if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT || result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
 			{
 				//core.gameState.gameLogic.newTurnPhase(encountered, Ecology.PHASE_TURNACT, true);
-			} 
-			//else
-			{
-				if (combat)
-				{
-					core.uiBase.hud.mainBox.addEntry("All combat acts were done.");
-				} else
-				{
-					core.uiBase.hud.mainBox.addEntry("All social acts were done.");
-				}
-				core.uiBase.hud.mainBox.addEntry("Next turn comes...");
 			}
 			
 			return true;

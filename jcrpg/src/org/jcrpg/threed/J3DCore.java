@@ -2248,6 +2248,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
 			//dr.setDirection(cam.getDirection());
 		}
+		
+		if (gameState.gameLogic!=null) {
+			gameState.gameLogic.checkScreenPlayCallbackNeed();
+		}
 
 		// time changed, updating lights, orbiters
 		if (gameState.engine.timeChanged) 

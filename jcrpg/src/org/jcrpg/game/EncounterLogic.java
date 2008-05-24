@@ -62,10 +62,32 @@ public class EncounterLogic {
 		return true;
 	}
 	
-	public int doEncounterTurn(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
+	public EncounterRoundScreenplay doEncounterRound(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
 	{
+		EncounterRoundScreenplay screenplay = new EncounterRoundScreenplay();
+		screenplay.encountered = encounters;
 		// TODO skill use, and check tension levels if combat or social rivalry happens.
-		return ENCOUTNER_PHASE_RESULT_COMBAT;
+
+		ScreenplayElement e = new ScreenplayElement(screenplay);
+		e.type = ScreenplayElement.TYPE_PAUSE;
+		e.maxTime = 1000;
+		screenplay.elements.add(e);
+		screenplay.result = ENCOUTNER_PHASE_RESULT_COMBAT;
+		return screenplay;
+	}
+	
+	public TurnActTurnScreenplay doTurnActTurn(ArrayList<EncounterInfo> encountered)
+	{
+		TurnActTurnScreenplay screenplay = new TurnActTurnScreenplay();
+		screenplay.encountered = encountered;
+		// TODO skill use, and check tension levels if combat or social rivalry happens.
+
+		//screenplay.result = ENCOUTNER_PHASE_RESULT_COMBAT;
+		ScreenplayElement e = new ScreenplayElement(screenplay);
+		e.type = ScreenplayElement.TYPE_PAUSE;
+		e.maxTime = 1000;
+		screenplay.elements.add(e);
+		return screenplay;
 	}
 	
 
