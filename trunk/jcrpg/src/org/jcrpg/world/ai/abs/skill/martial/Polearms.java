@@ -22,10 +22,14 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 /**
- * Fighting with bites - like dog/wolf and such.
+ * Polearms.
  * @author pali
  *
  */
 public class Polearms extends SkillBase implements TurnActSkill  {
+	public Polearms()
+	{
+		needsInventoryItem = true;
+	}
 
 }

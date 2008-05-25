@@ -14,18 +14,35 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.object.combat.blade;
 
-package org.jcrpg.world.ai.abs.skill.martial;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.Weapon;
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-
-public class MediumBlades extends SkillBase implements TurnActSkill  {
+public class LongSword extends Obj implements Weapon {
 	
-	public MediumBlades()
+	public LongSword()
 	{
-		needsInventoryItem = true;
+		requirementSkillAndLevel = new SkillInstance(MediumBlades.class,0);
 	}
 
+	public float getAttackMultiplicator() {
+		return 1.1f;
+	}
+
+	public float getDefenseMultiplicator() {
+		return 0.9f;
+	}
+
+	public int getMaxDamage() {
+		return 10;
+	}
+
+	public int getSpeed() {
+		return 7;
+	}
+	
 }

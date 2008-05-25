@@ -27,5 +27,10 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class StaffsAndWands extends SkillBase implements TurnActSkill  {
+	
+	public StaffsAndWands()
+	{
+		needsInventoryItem = true;
+	}
 
 }

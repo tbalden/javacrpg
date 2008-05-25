@@ -23,11 +23,13 @@ import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
 
 public class Priest extends HumanoidProfessional{
 	public Priest()
 	{
 		super();
+		characterGenerationNewPartyObjects.add(QuarterStaff.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
 		addMajorSkill(CelestialMagic.class);

@@ -14,18 +14,31 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+package org.jcrpg.world.object;
+
+/**
+ * An instance of an object type.
+ * @author illes
+ *
  */
+public class ObjInstance {
 
-package org.jcrpg.world.ai.abs.skill.martial;
-
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-
-public class MediumBlades extends SkillBase implements TurnActSkill  {
-	
-	public MediumBlades()
+	public Obj description;
+	public int numericId = 0;
+	public ObjInstance(Obj description, long id)
 	{
-		needsInventoryItem = true;
+		this.description = description;
 	}
-
+	public ObjInstance(Obj description)
+	{
+		this(description,getNextObjInstanceId());
+	}
+	
+	public static long sequence = 0;
+	public static synchronized long getNextObjInstanceId()
+	{
+		return sequence++;
+	}
+	
 }
