@@ -43,6 +43,7 @@ import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.object.ObjInstance;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -74,6 +75,7 @@ public class TurnActWindow extends PagedInputWindow {
 	ArrayList<ListSelect> skillSelectors = new ArrayList<ListSelect>();
 	ArrayList<ListSelect> skillActFormSelectors = new ArrayList<ListSelect>();
 	ArrayList<ListSelect> groupSelectors = new ArrayList<ListSelect>();
+	ArrayList<ListSelect> inventorySelectors = new ArrayList<ListSelect>();
 
 	
 	public TurnActWindow (UIBase base) {
@@ -97,10 +99,12 @@ public class TurnActWindow extends PagedInputWindow {
 	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.38f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    		addInput(0,skillActFormSelectors.get(i));
 	    		addInput(0,groupSelectors.get(i));
+	    		addInput(0,inventorySelectors.get(i));
 	    	}
 	    	
 	    	
@@ -151,6 +155,7 @@ public class TurnActWindow extends PagedInputWindow {
 	}
 
 	
+	ArrayList<Class<?extends SkillBase>> tempFilteredSkills = new ArrayList<Class<? extends SkillBase>>();
 	public void updateToParty()
 	{
 		int counter = 0;
@@ -163,6 +168,19 @@ public class TurnActWindow extends PagedInputWindow {
 				select.subject = i;				
 				Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(combat?Ecology.PHASE_TURNACT_COMBAT:Ecology.PHASE_TURNACT_SOCIAL_RIVALRY);
 				if (skills==null) skills = new HashSet<Class<? extends SkillBase>>();
+				
+				// filtering unusable skills
+				tempFilteredSkills.clear();
+				for (Class<?extends SkillBase> skill:skills)
+				{
+					if (SkillGroups.skillBaseInstances.get(skill).needsInventoryItem)
+					{
+						if (!i.inventory.hasInInventoryForSkillAndLevel(i.description.getCommonSkills().skills.get(skill))) continue;
+					}
+					tempFilteredSkills.add(skill);
+				}
+				skills = tempFilteredSkills;
+				
 				String[] texts = new String[skills.size()];
 				Object[] objects = new Object[skills.size()];
 				String[] ids = new String[skills.size()];
@@ -293,31 +311,54 @@ public class TurnActWindow extends PagedInputWindow {
 			EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
 			int index = skillSelectors.indexOf(skillSelect);
 			ListSelect skillActFormSelect = skillActFormSelectors.get(index);			
+			ListSelect inventorySelect = inventorySelectors.get(index);
 			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
 			
 			SkillInstance skillInstance = i.description.commonSkills.skills.get(s.getClass());
-			ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
-			String[] texts = new String[forms.size()];
-			Object[] objects = new Object[forms.size()];
-			String[] ids = new String[forms.size()];
-			int counter = 0;
-			for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
 			{
-				ids[counter] = ""+counter;
-				texts[counter] = form.getSimpleName();
-				objects[counter] = form;				    
-				counter++;
+				ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+				String[] texts = new String[forms.size()];
+				Object[] objects = new Object[forms.size()];
+				String[] ids = new String[forms.size()];
+				int counter = 0;
+				for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+				{
+					ids[counter] = ""+counter;
+					texts[counter] = form.getSimpleName();
+					objects[counter] = form;				    
+					counter++;
+				}
+				skillActFormSelect.ids = ids;
+				skillActFormSelect.texts = texts;
+				skillActFormSelect.objects = objects;
+				skillActFormSelect.setUpdated(true);
+				skillActFormSelect.deactivate();
+				skillActFormSelect.setSelected(0);
 			}
-			skillActFormSelect.ids = ids;
-			skillActFormSelect.texts = texts;
-			skillActFormSelect.objects = objects;
-			skillActFormSelect.setUpdated(true);
-			skillActFormSelect.deactivate();
-			skillActFormSelect.setSelected(0);			
+			if (s.needsInventoryItem)
+			{
+				
+				ArrayList<ObjInstance> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
+				String[] texts = new String[objInstances.size()];
+				Object[] objects = new Object[objInstances.size()];
+				String[] ids = new String[objInstances.size()];
+				int counter = 0;
+				for (ObjInstance objInstance:objInstances)
+				{
+					ids[counter] = ""+counter;
+					texts[counter] = objInstance.description.getClass().getSimpleName();
+					objects[counter] = objInstance;				    
+					counter++;
+				}
+				inventorySelect.ids = ids;
+				inventorySelect.texts = texts;
+				inventorySelect.objects = objects;
+				inventorySelect.setUpdated(true);
+				inventorySelect.deactivate();
+				inventorySelect.setSelected(0);
+			}
 			return true;
-			
 		}
-
 		return false;
 	}
 	

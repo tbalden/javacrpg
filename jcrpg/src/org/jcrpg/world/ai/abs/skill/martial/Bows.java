@@ -27,5 +27,9 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class Bows extends SkillBase implements TurnActSkill  {
+	public Bows()
+	{
+		needsInventoryItem = true;
+	}
 
 }

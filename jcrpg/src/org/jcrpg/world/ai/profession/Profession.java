@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.object.Obj;
 
 /**
  * A being can learn a profession with certain attributes in a school.
@@ -46,6 +47,11 @@ public class Profession {
 	public SkillLearnModifier skillLearnModifier = new SkillLearnModifier();
 	public AttributeMinLevels attrMinLevels = new AttributeMinLevels();
 	public ArrayList<Class<? extends EntityMember>> forbiddenRaces = new ArrayList<Class<? extends EntityMember>>();
+	
+	/**
+	 * Objects that should be added on new party setup for the members to have in inventory.
+	 */
+	public ArrayList<Class<?extends Obj>> characterGenerationNewPartyObjects = new ArrayList<Class<? extends Obj>>();
 	
 	public int genderNeed = EntityDescription.GENDER_BOTH;
 	

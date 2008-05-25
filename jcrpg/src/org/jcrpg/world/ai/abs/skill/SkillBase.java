@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 public class SkillBase {
 	
+	public boolean needsInventoryItem = false;
+	
 	public static class NoActForm extends SkillActForm 
 	{
 		public NoActForm(SkillBase skill) {

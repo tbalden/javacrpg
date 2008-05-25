@@ -14,18 +14,20 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.object;
 
-package org.jcrpg.world.ai.abs.skill.martial;
+import java.util.HashMap;
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.object.combat.blade.LongSword;
 
-public class MediumBlades extends SkillBase implements TurnActSkill  {
+public class ObjList {
 	
-	public MediumBlades()
+	public static HashMap<Class<?extends Obj>,Obj> objects = new HashMap<Class<? extends Obj>, Obj>();
+	
+	static
 	{
-		needsInventoryItem = true;
+		objects.put(LongSword.class, new LongSword());
 	}
 
 }

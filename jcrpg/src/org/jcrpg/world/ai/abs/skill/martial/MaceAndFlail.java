@@ -27,5 +27,9 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class MaceAndFlail extends SkillBase  implements TurnActSkill {
+	public MaceAndFlail()
+	{
+		needsInventoryItem = true;
+	}
 
 }

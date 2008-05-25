@@ -16,8 +16,11 @@
  */
 package org.jcrpg.world.object;
 
-public class Obj {
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 
+public class Obj {
 	String id;
+	String icon;
+	public SkillInstance requirementSkillAndLevel  = null;
 	
 }

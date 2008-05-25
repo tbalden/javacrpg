@@ -14,18 +14,30 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.object;
 
-package org.jcrpg.world.ai.abs.skill.martial;
+public interface Weapon {
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-
-public class MediumBlades extends SkillBase implements TurnActSkill  {
+	/**
+	 * Value between 0 and 10. Bigger is quicker.
+	 * @return
+	 */
+	public int getSpeed();
+	/**
+	 * Value -> 5 can be deadly for a normal ape sized.
+	 * @return
+	 */
+	public int getMaxDamage();
+	/**
+	 * How much better it is usable for attack.
+	 * @return
+	 */
+	public float getAttackMultiplicator();
+	/**
+	 * How much better it is usable for defense.
+	 * @return
+	 */
+	public float getDefenseMultiplicator();
 	
-	public MediumBlades()
-	{
-		needsInventoryItem = true;
-	}
-
 }

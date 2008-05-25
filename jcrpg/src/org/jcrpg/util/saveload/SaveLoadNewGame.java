@@ -31,8 +31,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.jcrpg.game.CharacterCreationRules;
-import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.game.GameLogic;
+import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
@@ -46,6 +46,9 @@ import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.WorldParamsConfigLoader;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.ObjInstance;
+import org.jcrpg.world.object.ObjList;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
@@ -103,6 +106,10 @@ public class SaveLoadNewGame {
 			PartyInstance party = new PartyInstance(new Party(),world,ecology,ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
 			for (EntityMemberInstance m:partyMembers)
 			{
+				for (Class<?extends Obj> o:m.description.professions.get(0).characterGenerationNewPartyObjects)
+				{
+					m.inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
+				}
 				party.addPartyMember(m);
 			}
 			party.recalcBoundarySizes();

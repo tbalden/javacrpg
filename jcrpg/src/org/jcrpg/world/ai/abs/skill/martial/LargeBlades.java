@@ -22,5 +22,10 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class LargeBlades extends SkillBase implements TurnActSkill  {
+	
+	public LargeBlades()
+	{
+		needsInventoryItem = true;
+	}
 
 }

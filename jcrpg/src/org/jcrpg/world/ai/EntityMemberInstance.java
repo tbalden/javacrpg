@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
+import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.place.Economic;
 
 public class EntityMemberInstance {
@@ -71,5 +72,19 @@ public class EntityMemberInstance {
 	{
 		return numericIdSequence++;
 	}
+	
+	private ArrayList<InterceptionSkill> tempList = new ArrayList<InterceptionSkill>();
+	
+	public ArrayList<InterceptionSkill> getUsedInterceptionSkills()
+	{
+		tempList.clear();
+		tempList.add(behaviorSkill);
+		return tempList;
+	}
+
+	/**
+	 * The inventory.
+	 */
+	public EntityObjInventory inventory = new EntityObjInventory();
 	
 }

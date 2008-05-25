@@ -14,18 +14,35 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.object.combat.staffwand;
 
-package org.jcrpg.world.ai.abs.skill.martial;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.Weapon;
 
-import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-
-public class MediumBlades extends SkillBase implements TurnActSkill  {
+public class QuarterStaff extends Obj implements Weapon {
 	
-	public MediumBlades()
+	public QuarterStaff()
 	{
-		needsInventoryItem = true;
+		requirementSkillAndLevel = new SkillInstance(StaffsAndWands.class,0);
 	}
 
+	public float getAttackMultiplicator() {
+		return 0.8f;
+	}
+
+	public float getDefenseMultiplicator() {
+		return 1.2f;
+	}
+
+	public int getMaxDamage() {
+		return 8;
+	}
+
+	public int getSpeed() {
+		return 6;
+	}
+	
 }

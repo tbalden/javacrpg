@@ -21,6 +21,15 @@ package org.jcrpg.world.ai.abs.skill.physical;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
+/**
+ * Masking yourself into some other form for camouflage etc.
+ * @author illes
+ *
+ */
 public class Disguise extends SkillBase implements WorkSkill {
-
+	public Disguise()
+	{
+		needsInventoryItem = true;
+	}
+	
 }
