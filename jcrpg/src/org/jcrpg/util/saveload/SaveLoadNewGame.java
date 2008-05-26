@@ -110,6 +110,7 @@ public class SaveLoadNewGame {
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).characterGenerationNewPartyObjects)
 				{
 					m.inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
+					System.out.println("ADDING ITEM : "+o);
 				}
 				party.addPartyMember(m);
 			}

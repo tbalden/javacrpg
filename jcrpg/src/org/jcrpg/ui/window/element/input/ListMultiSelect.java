@@ -29,6 +29,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
@@ -39,6 +40,7 @@ public class ListMultiSelect extends InputBase {
 	public String[] ids;
 	public String[] texts;
 	public Object[] objects;
+	public SharedMesh[] icons;
 	public boolean[] selectedItems;
 	
 	public int selected = 0;
@@ -58,6 +60,10 @@ public class ListMultiSelect extends InputBase {
 	 */
 	public ArrayList<Node> textNodes = new ArrayList<Node>();
 	/**
+	 * The icon nodes visible currently.
+	 */
+	public ArrayList<Node> iconNodes = new ArrayList<Node>();
+	/**
 	 * Sign nodes visible currently.
 	 */
 	public ArrayList<Node> signNodes = new ArrayList<Node>(); 
@@ -67,13 +73,19 @@ public class ListMultiSelect extends InputBase {
 	
 	public float fontRatio = 400f;
 	public float dCenterSignX = 0;
+	public float dCenterIconX = 0;
 	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		this(id,w,parent,centerX,centerSignX, centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
 	}
 	
 	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,centerX,centerSignX, 0f, centerY,sizeX,sizeY,fontRatio,ids,texts,objects,null,normal, highlighted);
+	}
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerIconX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, SharedMesh[] icons, ColorRGBA normal, ColorRGBA highlighted) {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		dCenterSignX = w.core.getDisplay().getWidth()*(centerSignX);
+		dCenterIconX = w.core.getDisplay().getWidth()*(centerIconX);
+		this.icons = icons;
 		this.fontRatio = fontRatio;
 		this.ids = ids;
 		selectedItems = new boolean[ids.length];
@@ -182,6 +194,7 @@ public class ListMultiSelect extends InputBase {
 			return;
 		}
 		textNodes.clear();
+		iconNodes.clear();
 		int size = 0;
 		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
@@ -219,6 +232,23 @@ public class ListMultiSelect extends InputBase {
 					signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
 					signNodes.add(signNode);
 					baseNode.attachChild(signNode);
+				}
+				if (icons!=null && icons.length>0)
+				{
+					try {
+						SharedMesh m = icons[i+fromCount];
+						Node iconNode = new Node();
+						iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*i,0);
+						iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
+						iconNode.attachChild(m);
+						baseNode.attachChild(iconNode);
+						iconNodes.add(iconNode);
+						System.out.println("M = "+m.getName());
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
 				}
 				textNodes.add(slottextNode);
 				baseNode.attachChild(slottextNode);
