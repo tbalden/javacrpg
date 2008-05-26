@@ -64,6 +64,8 @@ import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
+import org.jcrpg.ui.window.player.CharacterSheetWindow;
+import org.jcrpg.ui.window.player.InventoryWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -2155,12 +2157,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		partySetup = new PartySetup(uiBase);
 		
 		behaviorWindow = new BehaviorWindow(uiBase);
+		inventoryWindow = new InventoryWindow(uiBase);
+		charSheetWindow = new CharacterSheetWindow(uiBase);
 		preEncounterWindow = new PreEncounterWindow(uiBase);
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 				
 		uiBase.addWindow("behaviorWindow", behaviorWindow);
-		uiBase.addWindow("mainMenu", mainMenu);			
+		uiBase.addWindow("inventoryWindow", inventoryWindow);
+		uiBase.addWindow("charSheetWindow", charSheetWindow);
+		uiBase.addWindow("mainMenu", mainMenu);	
 		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
 		
 		ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
@@ -2188,6 +2194,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public boolean encounterMode = false;
 	
 	public BehaviorWindow behaviorWindow = null;
+	public InventoryWindow inventoryWindow = null;
+	public CharacterSheetWindow charSheetWindow = null;
 	public PreEncounterWindow preEncounterWindow = null;
 	public EncounterWindow encounterWindow = null;
 	public TurnActWindow turnActWindow = null;

@@ -103,10 +103,11 @@ public class SaveLoadNewGame {
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
+			;
 			PartyInstance party = new PartyInstance(new Party(),world,ecology,ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
 			for (EntityMemberInstance m:partyMembers)
 			{
-				for (Class<?extends Obj> o:m.description.professions.get(0).characterGenerationNewPartyObjects)
+				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).characterGenerationNewPartyObjects)
 				{
 					m.inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
 				}

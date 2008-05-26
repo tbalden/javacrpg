@@ -18,8 +18,6 @@
 
 package org.jcrpg.ui.window.debug;
 
-import java.lang.management.MemoryUsage;
-
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.ModelLoader;
 import org.jcrpg.threed.ModelPool;

@@ -65,6 +65,11 @@ public class GameStateContainer {
 	public PartyInstance player = null;
 	public GameLogic gameLogic = null;
 	public CharacterCreationRules charCreationRules = null;
+	
+	public GameStateContainer()
+	{
+		charCreationRules = new CharacterCreationRules(null,null);
+	}
 
 	/**
 	 * If doing an engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!

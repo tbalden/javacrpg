@@ -40,7 +40,7 @@ public class EntityMember {
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public float[] scale = new float[]{1,1,1};
 	public AudioDescription audioDescription = null;
-	public ArrayList<Profession> professions = new ArrayList<Profession>();
+	public ArrayList<Class<? extends Profession>> professions = new ArrayList<Class<? extends Profession>>();
 	
 	public ArrayList<Class<? extends Profession>> forbiddenProfessions = new ArrayList<Class <? extends Profession>>();
 	
@@ -73,9 +73,9 @@ public class EntityMember {
 	
 	public void addProfessionInitially(Profession profession) {
 		if (forbiddenProfessions.contains(profession.getClass())) return;
-		if (professions.contains(profession))
+		if (professions.contains(profession.getClass()))
 			return;
-		professions.add(profession);
+		professions.add(profession.getClass());
 		for (Class<? extends SkillBase> skill : profession.additionalLearntSkills.keySet()) {
 			if (!commonSkills.skills.containsKey(skill)) {
 				commonSkills.addSkill(new SkillInstance(skill, profession.additionalLearntSkills.get(skill)));

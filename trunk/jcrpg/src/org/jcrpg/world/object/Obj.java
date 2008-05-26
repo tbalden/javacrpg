@@ -20,7 +20,7 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
 
 public class Obj {
 	String id;
-	String icon;
+	public String icon;
 	public SkillInstance requirementSkillAndLevel  = null;
 	
 }

@@ -400,7 +400,7 @@ public class PartySetup extends PagedInputWindow {
 										p = SaveLoadNewGame.loadCharacter(sF);
 										mpCache.put(sF.getAbsolutePath(), p);
 									}
-									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getClass().getSimpleName()+" - "+p.foreName+" "+p.surName;
+									data.charName = p.getClass().getSimpleName()+" "+p.professions.get(0).getSimpleName()+" - "+p.foreName+" "+p.surName;
 									while (true) {
 										if (dataList1.get(data.charName)!=null)
 										{
@@ -702,7 +702,7 @@ public class PartySetup extends PagedInputWindow {
 			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
 			if (skillPointsLeft>0) return true; // all skill points must be used
-			personWithGenderAndRace.professions.add(profession);
+			personWithGenderAndRace.professions.add(profession.getClass());
 			personWithGenderAndRace.setAttributes(attributeValues);
 			personWithGenderAndRace.setForeName(foreName.text);
 			personWithGenderAndRace.setSurName(surName.text);

@@ -1,0 +1,6 @@
+These files are supposed to be under free license like GPL, CC-BY, CC-BY-SA
+look up the links for info.
+
+dagger.png - http://search.freegamedev.net/artitems/view/177234, SCOURGE
+longsword.png - FGP : Common Media Project http://search.freegamedev.net/artitems/view/243342
+quarterstaff.png - http://search.freegamedev.net/artitems/view/121333
