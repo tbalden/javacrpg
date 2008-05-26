@@ -90,7 +90,7 @@ public class Characters {
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/800f);
 						
-						Node classtextNode = this.text.createText(p.professions.get(0).getClass().getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
+						Node classtextNode = this.text.createText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),false);
 						
 						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
 						

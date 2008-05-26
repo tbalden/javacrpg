@@ -102,12 +102,10 @@ public class PreEncounterWindow extends PagedInputWindow {
 	@Override
 	public void hide() {
 		super.hide();
-		lockLookAndMove(false);
 	}
 	@Override
 	public void show() {
 		super.show();
-		lockLookAndMove(true);
 	}
 	
 	@Override

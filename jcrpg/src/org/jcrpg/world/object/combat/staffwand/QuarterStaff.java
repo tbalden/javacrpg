@@ -26,6 +26,7 @@ public class QuarterStaff extends Obj implements Weapon {
 	
 	public QuarterStaff()
 	{
+		icon = "weapon/quarterstaff.png";
 		requirementSkillAndLevel = new SkillInstance(StaffsAndWands.class,0);
 	}
 

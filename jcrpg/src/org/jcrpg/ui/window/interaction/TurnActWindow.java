@@ -222,6 +222,8 @@ public class TurnActWindow extends PagedInputWindow {
 			mselect.detach();
 			select = skillActFormSelectors.get(i);
 			select.detach();
+			select = inventorySelectors.get(i);
+			select.detach();
 		}
 	}
 	
