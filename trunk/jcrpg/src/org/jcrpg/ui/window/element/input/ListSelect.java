@@ -108,7 +108,7 @@ public class ListSelect extends InputBase {
 	}
 	public Object getSelectedObject()
 	{
-		if (objects==null || objects.length<fromCount+selected) return null;
+		if (objects==null || objects.length<=fromCount+selected) return null;
 		return objects[fromCount+selected];
 	}
 	

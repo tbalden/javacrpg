@@ -19,8 +19,15 @@ package org.jcrpg.world.object;
 
 import java.util.HashMap;
 
+import org.jcrpg.world.object.combat.blade.Dagger;
 import org.jcrpg.world.object.combat.blade.LongSword;
+import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
 
+/**
+ * You must append this with new object types instances - otherwise objects are unusable / buggy in game.
+ * @author illes
+ *
+ */
 public class ObjList {
 	
 	public static HashMap<Class<?extends Obj>,Obj> objects = new HashMap<Class<? extends Obj>, Obj>();
@@ -28,6 +35,8 @@ public class ObjList {
 	static
 	{
 		objects.put(LongSword.class, new LongSword());
+		objects.put(QuarterStaff.class, new QuarterStaff());
+		objects.put(Dagger.class, new Dagger());
 	}
 
 }

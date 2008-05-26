@@ -25,7 +25,6 @@ import org.jcrpg.threed.J3DCore;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
-import com.jme.renderer.Renderer;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
@@ -35,17 +34,18 @@ public class UIImageCache {
 
 	public static HashMap<String, Quad> imageCache = new HashMap<String, Quad>();
 	
-	public static SharedMesh getImage(String filePath)
+	public static SharedMesh getImage(String filePath, boolean alpha, float sizeMul)
 	{
 		Quad q = imageCache.get(filePath);
 		if (q==null)
 		{
 			try {
 				File file = new File(filePath);
-				Quad hudQuad = new Quad(file.getName(), 1f, 1f);
-				hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				Quad quad = new Quad(file.getName(), 1f * sizeMul, 1f * sizeMul);
+				if (alpha) quad.setRenderState(J3DCore.getInstance().uiBase.hud.hudAS);
+				//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 	
-				hudQuad.setLocalTranslation(new Vector3f(0, 0, 0));
+				quad.setLocalTranslation(new Vector3f(0, 0, 0));
 	
 				Image hudImage = TextureManager.loadImage(file.toURI()
 						.toURL(), true);
@@ -56,15 +56,18 @@ public class UIImageCache {
 				texture.setImage(hudImage);
 	
 				state.setTexture(texture,0);
-				hudQuad.setRenderState(state);
+				quad.setRenderState(state);
 	
-				q = hudQuad;
+				q = quad;
+				imageCache.put(filePath, q);
 			} catch (Exception ex)
 			{
+				ex.printStackTrace();
 				q = new Quad();
 			}
 			
 		}
+		System.out.println("LOADED "+filePath);
 		return new SharedMesh(filePath+"Shared",q);
 	}
 	
