@@ -19,12 +19,14 @@
 package org.jcrpg.ui;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -184,6 +186,29 @@ public class Characters {
 	
 	public void updatePoints()
 	{
+		int counter =0;
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			float multiplierHealth = p.memberState.maxHealthPoint==0?0:p.memberState.healthPoint/p.memberState.maxHealthPoint; 
+			float multiplierStamina = p.memberState.maxStaminaPoint==0?0:p.memberState.staminaPoint/p.memberState.maxStaminaPoint;
+			float multiplierMorale = p.memberState.maxMoralePoint==0?0:p.memberState.moralePoint/p.memberState.maxMoralePoint;
+			float multiplierSanity = p.memberState.maxSanityPoint==0?0:p.memberState.sanityPoint/p.memberState.maxSanityPoint;
+			float multiplierMana = p.memberState.maxManaPoint==0?0:p.memberState.manaPoint/p.memberState.maxManaPoint;
+		
+			ArrayList<SharedMesh> m = bars.get(counter);
+			m.get(BAR_HEALTH).getLocalScale().setY(10*multiplierHealth);
+			m.get(BAR_HEALTH).updateRenderState();
+			m.get(BAR_STAMINA).getLocalScale().setY(10*multiplierStamina);
+			m.get(BAR_STAMINA).updateRenderState();
+			m.get(BAR_MORALE).getLocalScale().setY(10*multiplierMorale);
+			m.get(BAR_MORALE).updateRenderState();
+			m.get(BAR_SANITY).getLocalScale().setY(10*multiplierSanity);
+			m.get(BAR_SANITY).updateRenderState();
+			m.get(BAR_MANA).getLocalScale().setY(10*multiplierMana);
+			m.get(BAR_MANA).updateRenderState();
+			// TODO doesnt seem to work tihs update!
+		}
+		
 		
 	}
 	
@@ -191,6 +216,7 @@ public class Characters {
 	{ 
 		node.detachAllChildren();
 		addMembers(hud.core.gameState.player.orderedParty);
+		updatePoints();
 		node.updateRenderState();
 	}
 	
