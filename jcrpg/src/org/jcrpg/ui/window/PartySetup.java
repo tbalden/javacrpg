@@ -702,7 +702,7 @@ public class PartySetup extends PagedInputWindow {
 			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
 			if (skillPointsLeft>0) return true; // all skill points must be used
-			personWithGenderAndRace.professions.add(profession.getClass());
+			//personWithGenderAndRace.professions.add(profession.getClass());
 			personWithGenderAndRace.setAttributes(attributeValues);
 			personWithGenderAndRace.setForeName(foreName.text);
 			personWithGenderAndRace.setSurName(surName.text);

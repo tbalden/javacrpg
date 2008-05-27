@@ -23,6 +23,7 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -215,6 +216,17 @@ public class InventoryWindow extends PagedInputWindow {
 	}
 
 	
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		if (base==characterSelect)
+		{
+			characterSelect.deactivate();
+			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
+			return true;
+		}
+		return super.inputUsed(base, message);
+	}
+
 	@Override
 	public void hide() {
 		super.hide();
