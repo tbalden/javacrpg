@@ -30,10 +30,12 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.LightState;
 
 public class Characters {
 
 	public ArrayList<org.jcrpg.ui.window.element.Character> characterData = new ArrayList<org.jcrpg.ui.window.element.Character>();
+	
 
 	FontTT text;
 	
@@ -41,6 +43,7 @@ public class Characters {
 	HUD hud = null;
 	public Characters(HUD hud)
 	{
+		
 		this.hud = hud;
 		text = FontUtils.textVerdana;
 	}
@@ -57,11 +60,65 @@ public class Characters {
 		node.updateRenderState();
 	}
 	
+	public ArrayList<ArrayList<SharedMesh>> bars = new ArrayList<ArrayList<SharedMesh>>();
+	
+	public static final int BAR_HEALTH = 0; 
+	public static final int BAR_STAMINA = 1;
+	public static final int BAR_MORALE = 2;
+	public static final int BAR_SANITY = 3;
+	public static final int BAR_MANA = 4;
+	public static final int BAR_MAX= 4;
+	
+	public static ArrayList<Quad> pointQuads = new ArrayList<Quad>();
+	static 
+	{
+		Quad qH = new Quad("HEALTH",0.3f,4f);
+		qH.setLightCombineMode(LightState.OFF);
+		qH.setSolidColor(ColorRGBA.red);
+		pointQuads.add(qH);
+
+		qH = new Quad("STAMINA",0.3f,4f);
+		qH.setLightCombineMode(LightState.OFF);
+		qH.setSolidColor(ColorRGBA.yellow);
+		pointQuads.add(qH);
+
+		qH = new Quad("MORALE",0.3f,4f);
+		qH.setLightCombineMode(LightState.OFF);
+		qH.setSolidColor(ColorRGBA.brown);
+		pointQuads.add(qH);
+
+		qH = new Quad("SANITY",0.3f,4f);
+		qH.setLightCombineMode(LightState.OFF);
+		qH.setSolidColor(ColorRGBA.orange);
+		pointQuads.add(qH);
+
+		qH = new Quad("HEALTH",0.3f,4f);
+		qH.setLightCombineMode(LightState.OFF);
+		qH.setSolidColor(ColorRGBA.blue);
+		pointQuads.add(qH);
+
+	}
+	
+	public void addNextPointBars(float origoX, float origoY, MemberPerson p)
+	{
+		ArrayList<SharedMesh> barQuads = new ArrayList<SharedMesh>();
+		for (int i=0; i<=BAR_MAX; i++)
+		{
+			SharedMesh q = new SharedMesh("BAR_"+i,pointQuads.get(i));
+			q.setLocalTranslation(origoX+i*2.8f,origoY,0f);
+			node.attachChild(q);
+			q.setLocalScale(10);
+			barQuads.add(q);
+		}
+		bars.add(barQuads);
+	}
+	
 	public void addMembers(ArrayList<EntityMemberInstance> orderedParty)
 	{
 		try {
 			int counter = 0;
 			int sideYMul = 1, sideYMulFont = 1;
+			float sideYBars = 1;
 			float stepY = hud.core.getDisplay().getHeight()/6.6f;
 			float startY = hud.core.getDisplay().getHeight()*0.8f;
 			Quad frame  = null;
@@ -94,6 +151,8 @@ public class Characters {
 						
 						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
 						
+						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counter-1)-stepY*0.425f + hud.core.getDisplay().getWidth()/20 , p);
+						
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/800f);
 	
@@ -110,6 +169,7 @@ public class Characters {
 						counter = 0;
 						sideYMul = 19;
 						sideYMulFont = 46;
+						sideYBars = -0.4f;
 					}
 					
 				}
@@ -120,6 +180,11 @@ public class Characters {
 			ex.printStackTrace();
 		}
 	
+	}
+	
+	public void updatePoints()
+	{
+		
 	}
 	
 	public void update()

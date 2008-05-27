@@ -18,13 +18,19 @@
 package org.jcrpg.ui.window.player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.PictureSelect;
+import org.jcrpg.ui.window.element.input.ValueTuner;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -43,10 +49,23 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	
 	public ListSelect characterSelect;
 	
+	// character data
+	PictureSelect pictureSelect = null;
+	ListSelect professions = null;
+	ValueTuner level = null;
+	ValueTuner health = null;
+	ValueTuner stamina = null;
+	ValueTuner morale = null;
+	ValueTuner sanity = null;
+	ValueTuner mana = null;
+	HashMap<String, ValueTuner> attributeTuners = new HashMap<String, ValueTuner>();
+	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
+
+	
 	public CharacterSheetWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.8f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.75f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.10f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
@@ -55,6 +74,37 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Sheet",false);
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
+	    	
+	    	
+	    	int posY = 0;
+	    	for (String s: FantasyAttributes.attributeName)
+	    	{
+	    		String text = Language.v("fantasyattributes.short."+s);
+	    		System.out.println("TEXT" +text);
+	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		ValueTuner v = new ValueTuner(s,this,page0, 0.317f,0.2f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
+	    		attributeTuners.put(s, v);
+	    		//addInput(1,v);
+	    		posY++;
+	    	}
+
+	    	pictureSelect = new PictureSelect("picture_select", this, page0, 0.73f,0.2f,0.15f,0.2f,600f);
+	    	//addInput(1,pictureSelect);
+
+	    	posY = 0; 
+	    	for (String groupId : SkillGroups.orderedGroups)
+	    	{
+	    		String groupName = Language.v("skillgroups."+groupId);
+	    		new TextLabel(groupId+"_label",this,page0,0.149f,0.6f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		ArrayList<String> skillIds = new ArrayList<String>();
+	    		ArrayList<String> skillTexts = new ArrayList<String>();
+	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
+	    		ListSelect sel = new ListSelect("skillgroup", this,page0, 0.39f,0.6f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),skillObjects.toArray(new Object[0]),null,null);
+	    		posY++;
+	    		skillSelects.put(groupId, sel);
+	    		addInput(0,sel);
+	    	}
+	    	
 
 	    	addPage(0, page0);
 		} catch (Exception ex)
