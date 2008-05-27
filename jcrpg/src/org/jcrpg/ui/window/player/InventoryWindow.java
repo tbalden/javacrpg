@@ -60,7 +60,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public InventoryWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.8f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.75f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.10f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
