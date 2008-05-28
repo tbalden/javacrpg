@@ -40,6 +40,7 @@ public class EntityMember {
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public float[] scale = new float[]{1,1,1};
 	public AudioDescription audioDescription = null;
+	public Class<? extends Profession> currentProfession;
 	public ArrayList<Class<? extends Profession>> professions = new ArrayList<Class<? extends Profession>>();
 	
 	public ArrayList<Class<? extends Profession>> forbiddenProfessions = new ArrayList<Class <? extends Profession>>();
@@ -83,6 +84,7 @@ public class EntityMember {
 				commonSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
 			}
 		}
+		currentProfession = profession.getClass();
 
 	}
 

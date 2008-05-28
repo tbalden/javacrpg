@@ -37,7 +37,7 @@ public class EntityMemberState {
 	public int sanityPoint = DEFAULT_SANITY_POINT;
 	public int manaPoint = DEFAULT_MANA_POINT;
 	
-	public int memberLevel = 1;
+	public int level = 1;
 
 	
 	// courage
