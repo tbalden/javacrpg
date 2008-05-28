@@ -19,14 +19,12 @@
 package org.jcrpg.ui;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
-import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -45,7 +43,7 @@ public class Characters {
 	HUD hud = null;
 	public Characters(HUD hud)
 	{
-		
+		createBarQuads();
 		this.hud = hud;
 		text = FontUtils.textVerdana;
 	}
@@ -62,7 +60,7 @@ public class Characters {
 		node.updateRenderState();
 	}
 	
-	public ArrayList<ArrayList<SharedMesh>> bars = new ArrayList<ArrayList<SharedMesh>>();
+	public ArrayList<ArrayList<Quad>> bars = new ArrayList<ArrayList<Quad>>();
 	
 	public static final int BAR_HEALTH = 0; 
 	public static final int BAR_STAMINA = 1;
@@ -71,48 +69,15 @@ public class Characters {
 	public static final int BAR_MANA = 4;
 	public static final int BAR_MAX= 4;
 	
-	public static ArrayList<Quad> pointQuads = new ArrayList<Quad>();
-	static 
+	public ArrayList<ColorRGBA> pointQuadData = new ArrayList<ColorRGBA>();
+	public void createBarQuads()
 	{
-		Quad qH = new Quad("HEALTH",0.3f,4f);
-		qH.setLightCombineMode(LightState.OFF);
-		qH.setSolidColor(ColorRGBA.red);
-		pointQuads.add(qH);
+		pointQuadData.add(ColorRGBA.red);
+		pointQuadData.add(ColorRGBA.yellow);
+		pointQuadData.add(ColorRGBA.brown);
+		pointQuadData.add(ColorRGBA.orange);
+		pointQuadData.add(ColorRGBA.blue);
 
-		qH = new Quad("STAMINA",0.3f,4f);
-		qH.setLightCombineMode(LightState.OFF);
-		qH.setSolidColor(ColorRGBA.yellow);
-		pointQuads.add(qH);
-
-		qH = new Quad("MORALE",0.3f,4f);
-		qH.setLightCombineMode(LightState.OFF);
-		qH.setSolidColor(ColorRGBA.brown);
-		pointQuads.add(qH);
-
-		qH = new Quad("SANITY",0.3f,4f);
-		qH.setLightCombineMode(LightState.OFF);
-		qH.setSolidColor(ColorRGBA.orange);
-		pointQuads.add(qH);
-
-		qH = new Quad("HEALTH",0.3f,4f);
-		qH.setLightCombineMode(LightState.OFF);
-		qH.setSolidColor(ColorRGBA.blue);
-		pointQuads.add(qH);
-
-	}
-	
-	public void addNextPointBars(float origoX, float origoY, MemberPerson p)
-	{
-		ArrayList<SharedMesh> barQuads = new ArrayList<SharedMesh>();
-		for (int i=0; i<=BAR_MAX; i++)
-		{
-			SharedMesh q = new SharedMesh("BAR_"+i,pointQuads.get(i));
-			q.setLocalTranslation(origoX+i*2.8f,origoY,0f);
-			node.attachChild(q);
-			q.setLocalScale(10);
-			barQuads.add(q);
-		}
-		bars.add(barQuads);
 	}
 	
 	public void addMembers(ArrayList<EntityMemberInstance> orderedParty)
@@ -184,29 +149,54 @@ public class Characters {
 	
 	}
 	
+	public void addNextPointBars(float origoX, float origoY, MemberPerson p)
+	{
+		ArrayList<Quad> barQuads = new ArrayList<Quad>();
+		for (int i=0; i<=BAR_MAX; i++)
+		{
+			Quad q = new Quad("BAR_"+i,0.3f,4f);
+			q.setSolidColor(pointQuadData.get(i));
+			q.setLightCombineMode(LightState.OFF);
+			q.setLocalTranslation(origoX+i*2.8f,origoY,0f);
+			Node n = new Node();
+			n.attachChild(q);
+			//node.attachChild(n);
+			q.setLocalScale(10);
+			barQuads.add(q);
+		}
+		bars.add(barQuads);
+	}
+	
+
 	public void updatePoints()
 	{
+		if (hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
+		{
+			//System.out.println("############################__________________________ no possible update...");
+			return;
+		}
 		int counter =0;
+		
 		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
 		{
+			//System.out.println("UPDATE ____________ "+p);
 			float multiplierHealth = p.memberState.maxHealthPoint==0?0:p.memberState.healthPoint/p.memberState.maxHealthPoint; 
 			float multiplierStamina = p.memberState.maxStaminaPoint==0?0:p.memberState.staminaPoint/p.memberState.maxStaminaPoint;
 			float multiplierMorale = p.memberState.maxMoralePoint==0?0:p.memberState.moralePoint/p.memberState.maxMoralePoint;
 			float multiplierSanity = p.memberState.maxSanityPoint==0?0:p.memberState.sanityPoint/p.memberState.maxSanityPoint;
 			float multiplierMana = p.memberState.maxManaPoint==0?0:p.memberState.manaPoint/p.memberState.maxManaPoint;
 		
-			ArrayList<SharedMesh> m = bars.get(counter);
-			m.get(BAR_HEALTH).getLocalScale().setY(10*multiplierHealth);
-			m.get(BAR_HEALTH).updateRenderState();
-			m.get(BAR_STAMINA).getLocalScale().setY(10*multiplierStamina);
-			m.get(BAR_STAMINA).updateRenderState();
-			m.get(BAR_MORALE).getLocalScale().setY(10*multiplierMorale);
-			m.get(BAR_MORALE).updateRenderState();
-			m.get(BAR_SANITY).getLocalScale().setY(10*multiplierSanity);
-			m.get(BAR_SANITY).updateRenderState();
-			m.get(BAR_MANA).getLocalScale().setY(10*multiplierMana);
-			m.get(BAR_MANA).updateRenderState();
-			// TODO doesnt seem to work tihs update!
+			float[] mul = new float[] {multiplierHealth,multiplierStamina,multiplierMorale,multiplierSanity,multiplierMana};
+			
+			ArrayList<Quad> m = bars.get(counter);
+			for (int i=0; i<=BAR_MAX; i++)
+			{
+				//System.out.println(m.get(i));
+				node.attachChild(m.get(i));
+				m.get(i).setLocalScale(mul[i]*10f);
+				m.get(i).updateRenderState();
+			}
+			counter++;
 		}
 		
 		
@@ -222,6 +212,7 @@ public class Characters {
 	
 	public void show()
 	{
+		updatePoints();
 		hud.hudNode.attachChild(node);
 		node.updateRenderState();
 	}
