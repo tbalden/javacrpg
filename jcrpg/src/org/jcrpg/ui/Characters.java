@@ -82,6 +82,7 @@ public class Characters {
 	
 	public void addMembers(ArrayList<EntityMemberInstance> orderedParty)
 	{
+		bars.clear();
 		try {
 			int counter = 0;
 			int sideYMul = 1, sideYMulFont = 1;
@@ -154,7 +155,7 @@ public class Characters {
 		ArrayList<Quad> barQuads = new ArrayList<Quad>();
 		for (int i=0; i<=BAR_MAX; i++)
 		{
-			Quad q = new Quad("BAR_"+i,0.3f,4f);
+			Quad q = new Quad("BAR_"+i+p.foreName+p.surName,0.3f,4f);
 			q.setSolidColor(pointQuadData.get(i));
 			q.setLightCombineMode(LightState.OFF);
 			q.setLocalTranslation(origoX+i*2.8f,origoY,0f);
@@ -195,6 +196,7 @@ public class Characters {
 				node.attachChild(m.get(i));
 				m.get(i).setLocalScale(mul[i]*10f);
 				m.get(i).updateRenderState();
+				node.updateRenderState();
 			}
 			counter++;
 		}
