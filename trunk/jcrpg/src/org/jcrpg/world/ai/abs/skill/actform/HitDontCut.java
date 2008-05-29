@@ -25,8 +25,8 @@ public class HitDontCut extends SkillActForm {
 		super(skill);
 		atomicEffect = 0;
 		targetType = TARGETTYPE_LIVING_MEMBER;
-		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,(int)(7*multiplier));
-		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, (int)(3*multiplier));
+		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(7*multiplier));
+		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(3*multiplier));
 	}
 
 }
