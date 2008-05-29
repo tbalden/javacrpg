@@ -25,7 +25,6 @@ import org.jcrpg.threed.J3DCore;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;

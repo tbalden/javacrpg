@@ -21,21 +21,25 @@ package org.jcrpg.world.ai.profession.adventurer;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.martial.HammerAndAxe;
 import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.combat.blade.LongSword;
 
 public class Crusader extends HumanoidProfessional {
 
 	public Crusader()
 	{
 		super();
+		characterGenerationNewPartyObjects.add(LongSword.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);
 		addMajorSkill(LargeBlades.class);
 		addMinorSkill(Wrestling.class);
+		addMinorSkill(HammerAndAxe.class);
 		addMinorSkill(MediumBlades.class);
 		
 		addMinorSkill(CelestialMagic.class);

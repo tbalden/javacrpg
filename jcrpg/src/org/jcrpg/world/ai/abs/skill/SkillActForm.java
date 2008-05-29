@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.world.ai.abs.skill;
 
+import java.util.HashMap;
+
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
  * @author illes
@@ -26,6 +28,42 @@ public class SkillActForm
 {
 	public SkillBase skill;
 	public String id;
+	
+	/**
+	 * Describes what kind of effect does it have in it core: destructive or constructive, from
+	 *  negative -10 to positive +10.
+	 */
+	public int atomicEffect = 0;
+	
+	public static final int TARGETTYPE_NONE = -1;
+	public static final int TARGETTYPE_LIVING_MEMBER = 0;
+	public static final int TARGETTYPE_LIVING_FRAGMENT = 1;
+	public static final int TARGETTYPE_LIVING_ENTITY = 1;
+	public static final int TARGETTYPE_LIVING_ALL = 2;
+	
+	public static final int EFFECTED_POINT_HEALTH = 0;
+	public static final int EFFECTED_POINT_STAMINA = 1;
+	public static final int EFFECTED_POINT_MORALE = 2;
+	public static final int EFFECTED_POINT_SANITY = 3;
+	public static final int EFFECTED_POINT_MANA = 4;
+	
+	/**
+	 * What effect on target it has if any...
+	 */
+	public HashMap<Integer,Integer> effectTypesAndLevels = new HashMap<Integer, Integer>();
+	
+	/**
+	 * Using the skillform costs...
+	 */
+	public HashMap<Integer,Integer> usedPointsAndLevels = new HashMap<Integer, Integer>();
+	
+	
+	
+	/**
+	 * The effected target that can be chosen for the skill.
+	 */
+	public int targetType = TARGETTYPE_NONE;
+	
 	/**
 	 * Determines what skill level is needed for this act form.
 	 */

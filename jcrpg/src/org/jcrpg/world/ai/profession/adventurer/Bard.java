@@ -26,11 +26,13 @@ import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.combat.blade.Dagger;
 
 public class Bard extends HumanoidProfessional {
 	public Bard()
 	{
 		super();
+		characterGenerationNewPartyObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);

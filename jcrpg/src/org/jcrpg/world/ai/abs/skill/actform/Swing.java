@@ -14,43 +14,20 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package org.jcrpg.world.ai.abs.skill.martial;
+ */ 
+package org.jcrpg.world.ai.abs.skill.actform;
 
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Wrestling extends SkillBase implements TurnActSkill  {
-	
-	public class KillerGrip extends SkillActForm
-	{
-		public KillerGrip(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-			atomicEffect = -10;
-			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, 5);
-		}
+public class Swing extends SkillActForm
+{
+	public Swing(SkillBase skill, float multiplier) {
+		super(skill);
+		atomicEffect = (int)(-5*multiplier);
+		targetType = TARGETTYPE_LIVING_MEMBER;
+		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,(int)(5*multiplier));			
+		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,(int)(3*multiplier));
+		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, (int)(3*multiplier));
 	}
-
-	public class Detain extends SkillActForm
-	{
-
-		public Detain(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-			atomicEffect = 0;
-			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
-		}
-	}
-
-	public Wrestling()
-	{
-		actForms.add(new KillerGrip(this));
-		actForms.add(new Detain(this));
-	}
-
 }
