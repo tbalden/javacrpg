@@ -18,14 +18,31 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.skill.actform.Swing;
+import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 public class LargeBlades extends SkillBase implements TurnActSkill  {
-	
+	public class SliceInTwo extends SkillActForm
+	{
+
+		public SliceInTwo(SkillBase skill) {
+			super(skill);
+			skillRequirementLevel = 50;
+			atomicEffect = -10;
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,10);
+			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,10);
+		}
+	}
+
 	public LargeBlades()
 	{
 		needsInventoryItem = true;
+		actForms.add(new Thrust(this,1.5f));
+		actForms.add(new Swing(this,1.5f));
 	}
 
 }

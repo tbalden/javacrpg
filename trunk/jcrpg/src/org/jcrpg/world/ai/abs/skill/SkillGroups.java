@@ -29,6 +29,7 @@ import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.abs.skill.martial.Bows;
 import org.jcrpg.world.ai.abs.skill.martial.Crossbows;
+import org.jcrpg.world.ai.abs.skill.martial.HammerAndAxe;
 import org.jcrpg.world.ai.abs.skill.martial.HandsAndFeet;
 import org.jcrpg.world.ai.abs.skill.martial.LargeBlades;
 import org.jcrpg.world.ai.abs.skill.martial.MaceAndFlail;
@@ -113,6 +114,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_MARTIAL, new Throwing());
 		addSkillToGroup(GROUP_MARTIAL, new Polearms());
 		addSkillToGroup(GROUP_MARTIAL, new MaceAndFlail());
+		addSkillToGroup(GROUP_MARTIAL, new HammerAndAxe());
 		
 		orderedGroups.add(GROUP_SOCIAL);
 		addSkillToGroup(GROUP_SOCIAL, new Chatter());

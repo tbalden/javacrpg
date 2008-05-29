@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
@@ -27,5 +28,31 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class BiteFight extends SkillBase implements TurnActSkill {
+	
+	public class Tearing extends SkillActForm
+	{
+		public Tearing(SkillBase skill) {
+			super(skill);
+			atomicEffect = -2;
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, 3);
+		}
+	}
+	
+	public class PullingDown extends SkillActForm
+	{
+		public PullingDown(SkillBase skill) {
+			super(skill);
+			atomicEffect = 0;
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
+		}
+	}
+	
+	public BiteFight()
+	{
+		actForms.add(new Tearing(this));
+		actForms.add(new PullingDown(this));
+	}
 
 }

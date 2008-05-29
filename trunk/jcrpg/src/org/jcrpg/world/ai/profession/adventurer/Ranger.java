@@ -28,12 +28,14 @@ import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.combat.blade.LongSword;
 
 public class Ranger extends HumanoidProfessional {
 
 	public Ranger()
 	{
 		super();
+		characterGenerationNewPartyObjects.add(LongSword.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);

@@ -26,7 +26,6 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
-import org.jcrpg.ui.window.element.input.PictureSelect;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;

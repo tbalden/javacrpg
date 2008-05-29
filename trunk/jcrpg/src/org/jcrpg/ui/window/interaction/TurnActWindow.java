@@ -358,6 +358,12 @@ public class TurnActWindow extends PagedInputWindow {
 				inventorySelect.setUpdated(true);
 				inventorySelect.deactivate();
 				inventorySelect.setSelected(0);
+			} else
+			{
+				inventorySelect.ids = new String[0];
+				inventorySelect.texts = new String[0];
+				inventorySelect.setUpdated(true);
+				inventorySelect.deactivate();
 			}
 			return true;
 		}

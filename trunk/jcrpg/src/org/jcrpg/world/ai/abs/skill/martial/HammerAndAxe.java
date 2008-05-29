@@ -18,39 +18,19 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
-import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
-public class Wrestling extends SkillBase implements TurnActSkill  {
+/**
+ * Axe, hammer.
+ * @author pali
+ *
+ */
+public class HammerAndAxe extends SkillBase implements TurnActSkill  {
 	
-	public class KillerGrip extends SkillActForm
+	public HammerAndAxe()
 	{
-		public KillerGrip(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-			atomicEffect = -10;
-			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, 5);
-		}
-	}
-
-	public class Detain extends SkillActForm
-	{
-
-		public Detain(SkillBase skill) {
-			super(skill);
-			skillRequirementLevel = 0;
-			atomicEffect = 0;
-			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
-		}
-	}
-
-	public Wrestling()
-	{
-		actForms.add(new KillerGrip(this));
-		actForms.add(new Detain(this));
+		needsInventoryItem = true;
 	}
 
 }

@@ -28,12 +28,14 @@ import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.combat.blade.Dagger;
 
 public class Thief extends HumanoidProfessional {
 
 	public Thief()
 	{
 		super();
+		characterGenerationNewPartyObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 14);
 		addMajorSkill(LocksAndTraps.class);
