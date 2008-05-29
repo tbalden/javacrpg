@@ -72,7 +72,7 @@ public class InventoryWindow extends PagedInputWindow {
 	    	addInput(0,characterSelect);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.15f, 0.3f, 0.06f,600f,"Weapons",false);
-    		weapons = new ListMultiSelect("weapons", this,page0, 0.30f,0.18f,0.20f, 0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0], new SharedMesh[0], null,null);
+    		weapons = new ListMultiSelect("weapons", this,page0, 0.30f,0.18f,0.20f, 0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0], new Quad[0], null,null);
 	    	addInput(0,weapons);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.15f, 0.3f, 0.06f,600f,"Armors",false);
@@ -191,7 +191,7 @@ public class InventoryWindow extends PagedInputWindow {
 			String[] ids = new String[weaponCount];
 			Object[] objects = new Object[weaponCount];
 			String[] texts = new String[weaponCount];
-			SharedMesh[] icons = new SharedMesh[weaponCount];
+			Quad[] icons = new Quad[weaponCount];
 			int counter = 0;
 			for (ObjInstance weapon:tmpWeaponsList) {
 				ids[counter] = ""+counter;

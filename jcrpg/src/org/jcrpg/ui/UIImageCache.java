@@ -32,20 +32,15 @@ import com.jme.util.TextureManager;
 
 public class UIImageCache {
 
-	public static HashMap<String, Quad> imageCache = new HashMap<String, Quad>();
+	public static HashMap<String, TextureState> imageCache = new HashMap<String, TextureState>();
 	
-	public static SharedMesh getImage(String filePath, boolean alpha, float sizeMul)
+	public static Quad getImage(String filePath, boolean alpha, float sizeMul)
 	{
-		Quad q = imageCache.get(filePath);
+		TextureState q = imageCache.get(filePath);
 		if (q==null)
 		{
 			try {
 				File file = new File(filePath);
-				Quad quad = new Quad(file.getName(), 1f * sizeMul, 1f * sizeMul);
-				if (alpha) quad.setRenderState(J3DCore.getInstance().uiBase.hud.hudAS);
-				//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-	
-				quad.setLocalTranslation(new Vector3f(0, 0, 0));
 	
 				Image hudImage = TextureManager.loadImage(file.toURI()
 						.toURL(), true);
@@ -56,19 +51,26 @@ public class UIImageCache {
 				texture.setImage(hudImage);
 	
 				state.setTexture(texture,0);
-				quad.setRenderState(state);
+				
 	
-				q = quad;
+				q = state;
 				imageCache.put(filePath, q);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
-				q = new Quad();
+				q = null;//new Quad();
 			}
 			
 		}
+		Quad quad = new Quad(filePath, 1f * sizeMul, 1f * sizeMul);
+		if (alpha) quad.setRenderState(J3DCore.getInstance().uiBase.hud.hudAS);
+		quad.setRenderState(q);
+		quad.updateRenderState();
+		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+
+		quad.setLocalTranslation(new Vector3f(0, 0, 0));
 		System.out.println("LOADED "+filePath);
-		return new SharedMesh(filePath+"Shared",q);
+		return quad;
 	}
 	
 }

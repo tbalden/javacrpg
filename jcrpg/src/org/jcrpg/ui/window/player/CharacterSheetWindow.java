@@ -35,6 +35,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.ai.profession.Profession;
 
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
@@ -52,8 +53,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	public ListSelect characterSelect;
 	
 	// character data
-	PictureSelect pictureSelect = null;
-	SharedMesh currentPic = null;
+	Quad currentPic = null;
 	ListSelect professionSelect = null;
 
 	ValueTuner level = null;
@@ -75,7 +75,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 
-	    	pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
+	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Sheet",false);
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
@@ -247,12 +247,34 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		try {
 
 			if (currentPic!=null) currentPic.removeFromParent();
-			currentPic = UIImageCache.getImage(((MemberPerson)instance.description).getPicturePath(), false, 1f);
-			currentPic.setLocalTranslation(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0);
+			System.out.println("--- PIC: "+((MemberPerson)instance.description).getPicturePath());
+			currentPic = UIImageCache.getImage(((MemberPerson)instance.description).getPicturePath(), false, 75f);
+			currentPic.setLocalTranslation(1.6f*core.getDisplay().getWidth()/2,1.55f*core.getDisplay().getHeight()/2,0);
+			currentPic.setLocalScale(1f* (core.getDisplay().getWidth()/640f));
 			page0.attachChild(currentPic);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
+		}
+		
+		{
+			int counter = 0;
+			int profSelSize = instance.description.professions.size();
+			String[] ids = new String[profSelSize];
+			String[] texts = new String[profSelSize];
+			Object[] objects = new Object[profSelSize];
+			for (Class<?extends Profession> p:instance.description.professions)
+			{
+				ids[counter] = ""+counter;
+				texts[counter] = p.getSimpleName();
+				objects[counter] = p;
+				counter++;
+			}
+			professionSelect.ids = ids;
+			professionSelect.texts = texts;
+			professionSelect.objects = objects;
+			professionSelect.setUpdated(true);
+			professionSelect.deactivate();
 		}
     	
     	
