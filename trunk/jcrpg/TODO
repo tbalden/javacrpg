@@ -8,12 +8,17 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] inventory, character data sheet windows (F2,F3)
+[X] inventory, character data sheet windows (F2,F3)
+    [ ] perfection!
 
-[ ] leveling for chars/entityMembers, points for them, bars on UI
+[ ] leveling for chars/entityMembers, points for them, 
+    [X] bars on UI
 	[ ] EntityState, EntityMemberState further development
 
 [ ] turnAct, encounter phase EncounterLogic - big development needed, plus 3D view + J3DMovingEngine combination...
+
+    [ ] skill system: skill act forms for all skills, skill act form parameters!
+    further skill design, how it will work!
 
 [ ] entity ->
 	[X]

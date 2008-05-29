@@ -9,6 +9,8 @@ Up/Down for looking up and down.
 Left/Right for looking around.
 F1 World map
 F2 Party behavior window
+F3 Character Sheet window
+F4 Character's Inventory window
 F10 Main menu
 F11 debug infos (memory / 3d related)
 F12 Take a screenshot
@@ -96,18 +98,18 @@ Complete features:
 - UI widgets & detailed map system (partially)
 - Water system
 - Wildlife engine
-- Economy, populations
-- Strong skill system
+- Economy, populations (partially)
+- Strong skill system (partially)
 - 3D model animation
 - Save/Load of game
+- Civilization engine (group intelligence instead of personal)
+- Object system (partially)
+- Turn based combat (partially)
 
 Features of the future:
 
-- Civilization engine (group intelligence instead of personal)
-- Object system
 - Special NPCs for plots
 - Plot, scripting, quest system
-- Turn based combat
 - Character leveling
 - External map editor
 - Other tools
