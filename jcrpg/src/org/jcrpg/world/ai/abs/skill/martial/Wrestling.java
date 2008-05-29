@@ -31,7 +31,8 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 			skillRequirementLevel = 0;
 			atomicEffect = -10;
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, 5);
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -5);
+			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -3);
 		}
 	}
 
@@ -44,6 +45,7 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 			atomicEffect = 0;
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
+			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -4);
 		}
 	}
 

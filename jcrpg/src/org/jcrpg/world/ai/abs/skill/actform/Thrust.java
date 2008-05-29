@@ -26,9 +26,9 @@ public class Thrust extends SkillActForm
 		super(skill);
 		atomicEffect = (int)(-5*multiplier);
 		targetType = TARGETTYPE_LIVING_MEMBER;
-		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, (int)(5*multiplier));
-		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,(int)(1*multiplier));
-		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, (int)(2*multiplier));
+		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5*multiplier));
+		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(1*multiplier));
+		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(2*multiplier));
 	}
 }
 

@@ -35,8 +35,8 @@ public class MediumBlades extends SkillBase implements TurnActSkill  {
 			skillRequirementLevel = 50;
 			atomicEffect = -5;
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,5);
-			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, 5);
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-5);
+			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,-5);
 		}
 	}
 	

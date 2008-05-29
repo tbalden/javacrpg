@@ -33,8 +33,8 @@ public class LargeBlades extends SkillBase implements TurnActSkill  {
 			skillRequirementLevel = 50;
 			atomicEffect = -10;
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,10);
-			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,10);
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-10);
+			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,-10);
 		}
 	}
 
