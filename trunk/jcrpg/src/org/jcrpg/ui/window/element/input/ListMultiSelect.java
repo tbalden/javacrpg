@@ -40,7 +40,7 @@ public class ListMultiSelect extends InputBase {
 	public String[] ids;
 	public String[] texts;
 	public Object[] objects;
-	public SharedMesh[] icons;
+	public Quad[] icons;
 	public boolean[] selectedItems;
 	
 	public int selected = 0;
@@ -81,7 +81,7 @@ public class ListMultiSelect extends InputBase {
 	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
 		this(id,w,parent,centerX,centerSignX, 0f, centerY,sizeX,sizeY,fontRatio,ids,texts,objects,null,normal, highlighted);
 	}
-	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerIconX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, SharedMesh[] icons, ColorRGBA normal, ColorRGBA highlighted) {
+	public ListMultiSelect(String id, InputWindow w, Node parent, float centerX, float centerSignX, float centerIconX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, Quad[] icons, ColorRGBA normal, ColorRGBA highlighted) {
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		dCenterSignX = w.core.getDisplay().getWidth()*(centerSignX);
 		dCenterIconX = w.core.getDisplay().getWidth()*(centerIconX);
@@ -236,7 +236,7 @@ public class ListMultiSelect extends InputBase {
 				if (icons!=null && icons.length>0)
 				{
 					try {
-						SharedMesh m = icons[i+fromCount];
+						Quad m = icons[i+fromCount];
 						Node iconNode = new Node();
 						iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*i,0);
 						iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
