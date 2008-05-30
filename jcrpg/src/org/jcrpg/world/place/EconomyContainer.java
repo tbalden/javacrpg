@@ -221,6 +221,7 @@ public class EconomyContainer {
 	public Population getPopulationAt(int worldX, int worldY, int worldZ)
 	{
 		ArrayList<Object> list = treeLocator.getElements(worldX, worldY, worldZ);
+		if (list!=null)
 		for (Object l:list)
 		{
 			if (l instanceof Population)
