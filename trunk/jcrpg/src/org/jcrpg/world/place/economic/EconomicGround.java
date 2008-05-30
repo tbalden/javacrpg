@@ -59,6 +59,7 @@ public class EconomicGround extends Economic {
 		this.origoX = origoX;this.origoY = origoY;this.origoZ = origoZ;
 		this.sizeX = sizeX;this.sizeY = sizeY;this.sizeZ = sizeZ;
 		this.groundLevel = groundLevel;
+		this.worldGroundLevel = origoY;
 		boundaries = BoundaryUtils.createCubicBoundaries(1, sizeX, sizeY, sizeZ, origoX, origoY, origoZ);
 		boundaries.boundaryPlace = this;
 	}
@@ -99,14 +100,22 @@ public class EconomicGround extends Economic {
 	
 	@Override
 	public int getCubeKind(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		if (soilGeo!=null && soilGeo.getBoundaries().isInside(worldX, worldY, worldZ))
+		{
+			return soilGeo.getCubeKind(key, worldX,worldY,worldZ, farView);
+		}
 		return super.getCubeKindOutside(key, worldX, worldY, worldZ, farView);
 	}
 
 	@Override
 	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
 		// use the height defined by the geography here...
+		if (soilGeo.getBoundaries().isInside(worldX, soilGeo.worldGroundLevel, worldZ))
+		{
+			int[] values = soilGeo.calculateTransformedCoordinates(worldX, soilGeo.worldGroundLevel, worldZ);
+			return soilGeo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
+		}
 		int h = getPointHeightOutside(worldX, worldZ, farView);
-		System.out.println("getPointHeightInside FROM ECOGROUND "+h);
 		return h;
 	}
 

@@ -24,7 +24,6 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.world.climate.CubeClimateConditions;
-import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.time.Time;
 
 public abstract class Place {

@@ -17,8 +17,6 @@
 
 package org.jcrpg.world.place;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 
