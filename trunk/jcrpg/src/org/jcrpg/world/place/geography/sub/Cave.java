@@ -88,6 +88,7 @@ public class Cave extends Geography implements Surface {
 		this.density = density;
 		this.entranceSide = entranceSide;
 		this.levelSize = levelSize;
+		returnsGeoOutsideHeight = false;
 	}
 	
 	@Override
