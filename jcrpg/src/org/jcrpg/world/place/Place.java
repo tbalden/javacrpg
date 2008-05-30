@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.time.Time;
 
 public abstract class Place {
@@ -301,17 +302,29 @@ public abstract class Place {
 	 * @return the relative height.
 	 */
 	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
-	{
+	{	
+		Geography nonReturnerFallback = null;
 		for (Geography geo:((World)getRoot()).geographies.values())
 		{
-			if (this!=geo)
+			if (this!=geo && geo.returnsGeoOutsideHeight)
 			{
 				if (geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
 				{
 					int[] values = geo.calculateTransformedCoordinates(worldX, geo.worldGroundLevel, worldZ);
 					return geo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
 				}
+			} else
+			{
+				if (this!=geo && !geo.returnsGeoOutsideHeight && geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
+				{
+					nonReturnerFallback = geo;
+				}
 			}
+		}
+		if (nonReturnerFallback!=null)
+		{
+			int[] values = nonReturnerFallback.calculateTransformedCoordinates(worldX, nonReturnerFallback.worldGroundLevel, worldZ);
+			return nonReturnerFallback.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
 		}
 		return 0;
 	}

@@ -86,12 +86,12 @@
 			percentage-chance-of-appearance="5" food-chain-position="HERBIVORE"/>
 		
 		<population ref-animal-id="FOXFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="75" 
+			percentage-chance-of-appearance="25" 
 			food-chain-position="PRIMARY_CARNIVORE"
 			predator-range="5"
 			/>
 		<population ref-animal-id="WOLFPACK" ref-climat="Tropical"
-			percentage-chance-of-appearance="75"
+			percentage-chance-of-appearance="25"
 			food-chain-position="SECONDARY_CARNIVORE" predator-range="15"/>						
 	</populations>
 </ecology>

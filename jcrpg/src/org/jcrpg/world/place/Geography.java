@@ -51,6 +51,11 @@ public class Geography extends Place implements Surface {
 	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
 	
 	public int worldGroundLevel, worldHeight, blockSize, worldRealHeight;
+	
+	/**
+	 * Determines if this geography should be used in the first place for get outside geoheight call.
+	 */
+	public boolean returnsGeoOutsideHeight = true;
 
 	public static final String TYPE_GEO = "GEO";
 	public static final SideSubType SUBTYPE_STEEP = new Climbing(TYPE_GEO+"_GROUND_STEEP");
