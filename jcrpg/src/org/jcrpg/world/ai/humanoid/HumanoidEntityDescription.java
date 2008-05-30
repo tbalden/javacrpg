@@ -36,17 +36,19 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
 	{
 		
-		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(instance.domainBoundary.posX, instance.domainBoundary.posZ);
+		int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, world.magnification);
+		ArrayList<SurfaceHeightAndType[]> surfaces = world.getSurfaceData(coords[0],coords[1]);
 		if (surfaces.size()>0)
 		{
 			int count = 0;
 			while (surfaces.size()>count) {
 				Geography g = surfaces.get(count++)[0].self;
-				int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, g.blockSize);
+				//int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, g.blockSize);
 				System.out.println("g: "+g);
+				System.out.println("XY "+coords[0]+coords[1]);
 				ArrayList<Class<? extends Population>> list = economyTemplate.populationTypes.get(g.getClass());
 				if (list!=null && list.size()>0) {
-					
+					System.out.println("G: THIS");
 					// check if this is an occupied population zone.
 					Population pO = world.economyContainer.isOccupied(g, coords[0], coords[1]);
 					if (pO!=null) {
