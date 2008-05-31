@@ -8,6 +8,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] !!! PreEncounterWindow and EncounterWindow should be updated because now on
+	EncounterInfo contains a list of EntityInstance fragments of different EntityInstances!!
+	-> calculation of encounter point distance is now being done in Ecology, close encounters grouped together.
+
 [X] inventory, character data sheet windows (F2,F3)
     [ ] perfection!
 

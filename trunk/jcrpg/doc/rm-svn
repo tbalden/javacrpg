@@ -1,0 +1,1 @@
+ls -Ra1|grep :|grep svn

@@ -157,32 +157,48 @@ public class Ecology {
 	{
 		int counter = 0;
 		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
-		for (EntityInstance targetEntityInstance:beings.values())
+		for (EntityFragment fragment:entityInstance.fragments.fragments) 
 		{
-			// don't check for the identical entity, continue. 
-			if (targetEntityInstance==entityInstance) continue;
-
-			for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments)
-			for (EntityFragment fragment:entityInstance.fragments.fragments) {
-				// calculate the common area sizes.
+			HashMap<EntityFragment,int[][]> listOfCommonRadiusFragments = new HashMap<EntityFragment,int[][]>();
+			TreeLocator loc = new TreeLocator(entityInstance.world);
+			for (EntityInstance targetEntityInstance:beings.values())
+			{
+				// don't check for the identical entity, continue. 
+				if (targetEntityInstance==entityInstance) continue;
+	
+				for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments) {
+					if (!targetFragment.availableInThisTurn) continue; // if this fragment was part of an encounter then it shouldn't be reused again.
+						
+					// calculate the common area sizes.				
+					int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.roamingBoundary, targetFragment.roamingBoundary);
+					if (r==DistanceBasedBoundary.zero) continue; // no common part
+					if (targetFragment==J3DCore.getInstance().gameState.player.theFragment)
+					{
+						Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.instance.id);
+					}
+					if (fragment==J3DCore.getInstance().gameState.player.theFragment)
+					{
+						Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
+						//System.out.println("## "+counter);
+					}
+					
+					listOfCommonRadiusFragments.put(targetFragment, r);
+					loc.addElement(r[1][0], r[1][1], r[1][2], targetFragment);
+				}
 				
-				int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.roamingBoundary, targetFragment.roamingBoundary);
-				if (r==DistanceBasedBoundary.zero) continue; // no common part
-				if (targetFragment==J3DCore.getInstance().gameState.player.theFragment)
-				{
-					Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.instance.id);
-				}
-				if (fragment==J3DCore.getInstance().gameState.player.theFragment)
-				{
-					Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
-					//System.out.println("## "+counter);
-				}
+			}
+		
+			ArrayList<EntityFragment> usedUp = new ArrayList<EntityFragment>();
+			for (EntityFragment f:listOfCommonRadiusFragments.keySet())
+			{
+				if (usedUp.contains(f)) continue;
+				usedUp.add(f);
+				int[][] r = listOfCommonRadiusFragments.get(f);
 				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)
 				{
-					//System.out.println("New Static Encounter Info created (name, target, counter): "+entity.description+" "+entity.description+" "+counter);
-					pre = new EncounterInfo(fragment.instance);
-					pre.encountered.put(targetFragment, r);
+					pre = new EncounterInfo(fragment);
+					pre.encountered.put(f, r);
 					staticEncounterInfoInstances.add(pre);
 				} else
 				{
@@ -190,15 +206,37 @@ public class Ecology {
 					pre.subject = fragment.instance;
 					pre.encountered.clear();
 					pre.encounteredGroupIds.clear();
-					pre.encountered.put(targetFragment, r);
+					pre.encountered.put(f, r);
+				}
+				calcGroupsOfEncounter(fragment, f, r[0][1], pre, false);
+				// fill how many of the interceptor entity group intercepts the target
+				calcGroupsOfEncounter(f, fragment, r[0][0], pre, true);
+
+				ArrayList<Object> elements = loc.getElements(r[1][0], r[1][1], r[1][2]); // TODO this is only partial data!!
+				for (Object o:elements)
+				{
+					EntityFragment fT = ((EntityFragment)o);
+					if (fT==f) continue;
+					int[][] r2 = listOfCommonRadiusFragments.get(fT);
+					Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
+					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
+					if (v2.distance(v1)<10)
+					{
+						usedUp.add(fT);
+						pre.encountered.put(fT, r2);
+						calcGroupsOfEncounter(fragment, fT, r2[0][1], pre, false);
+						// fill how many of the interceptor entity group intercepts the target
+						calcGroupsOfEncounter(fT, fragment, r2[0][0], pre, true);
+					}						
+				}
+				for (EntityFragment fr:pre.encountered.keySet()) {
+					if (fr==J3DCore.getInstance().gameState.player.theFragment)
+						System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.instance.description.getClass()+" "+pre.encounteredGroupIds.get(fr).length);
 				}
 				counter++;
-				// fill how many of the target group is intercepted by the given entity
-				calcGroupsOfEncounter(fragment, targetFragment, r[0][1], pre, false);
-				// fill how many of the interceptor entity group intercepts the target
-				calcGroupsOfEncounter(targetFragment, fragment, r[0][0], pre, true);
 				pre.active = true;
 			}
+
 		}
 		for (int i=counter; i<staticEncounterInfoInstances.size(); i++)
 		{
@@ -206,44 +244,16 @@ public class Ecology {
 			staticEncounterInfoInstances.get(i).active = false;
 		}
 		
-		
-		if (true==false) {
-			for (EncounterInfo info1:staticEncounterInfoInstances)
-			{
-				if (info1.encountered==null) continue;
-				int[][] r = info1.encountered.values().iterator().next();
-				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
-				for (EncounterInfo info2:staticEncounterInfoInstances)
-				{
-					if (info2.encountered==null) continue;
-					if (info2!=info1)
-					{
-						int[][] r2 = info2.encountered.values().iterator().next();
-						Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
-						if (v2.distance(v1)<10)
-						{
-							info1.encountered.putAll(info2.encountered);
-							info2.encountered = null;
-						}
-					}
-				}
-			}
-			ArrayList<EncounterInfo> newEntities = new ArrayList<EncounterInfo>();
-			for (EncounterInfo targetEntity:staticEncounterInfoInstances)
-			{
-				if (targetEntity.encountered==null) continue;
-				newEntities.add(targetEntity);
-			}
-			return newEntities;
-		}
-		
-		
 		return staticEncounterInfoInstances;
 	}
 	
 	byte[] placeBitMap = new byte[] {1,2,4,8,16,32,64,(byte)128};
 	byte[] switchArray;	
 	int counterOfDoneTurnBeings = 0;
+	/**
+	 * this is set true if the turn iteration was interrupted by player interaction window,
+	 * and doTurn must continue the iteration when called again from j3dcore.
+	 */
 	boolean interrupted = false;
 	public void doTurn()
 	{
@@ -266,7 +276,12 @@ public class Ecology {
 				{
 					toRemove.add(i);
 					
-				}				
+				} else {			
+					for (EntityFragment f:i.fragments.fragments)
+					{
+						f.availableInThisTurn = true;
+					}
+				}
 			}
 			orderedBeingList.removeAll(toRemove);
 			beings.values().removeAll(toRemove);
@@ -277,7 +292,7 @@ public class Ecology {
 		} else
 		{
 			System.out.println("CONTINUING PLAYER INTERRUPTED ECOLOGY TURN...");
-			interrupted = false;
+			interrupted = false; // interrupted must be set false now.
 		}
 		for (int i=counterOfDoneTurnBeings; i<orderedBeingList.size(); i++)
 		{

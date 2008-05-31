@@ -34,6 +34,7 @@ public class EncounterInfo {
 	 * The initiator group that faces the encounter.
 	 */
 	public EntityInstance subject;
+	public EntityFragment subjectFragment;
 	/**
 	 * Encountered instances and their common radius ratios and middle point data.
 	 */
@@ -50,14 +51,15 @@ public class EncounterInfo {
 	//public  
 	
 	
-	public EncounterInfo(EntityInstance subject) {
+	public EncounterInfo(EntityFragment subjectFragment) {
 		super();
-		this.subject = subject;
+		this.subject = subjectFragment.instance;
+		this.subjectFragment = subjectFragment;
 	}
 	
 	public EncounterInfo copy()
 	{
-		EncounterInfo r = new EncounterInfo(subject);
+		EncounterInfo r = new EncounterInfo(subjectFragment);
 		r.active = active;
 		r.encountered.putAll(encountered);
 		r.encounteredGroupIds.putAll(encounteredGroupIds);

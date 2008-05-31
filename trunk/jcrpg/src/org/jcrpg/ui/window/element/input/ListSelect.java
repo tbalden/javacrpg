@@ -183,6 +183,8 @@ public class ListSelect extends InputBase {
 					text = texts[i+fromCount];
 				}
 				
+				if (text==null) text = "## null ##";
+				
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
