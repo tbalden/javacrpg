@@ -212,16 +212,22 @@ public class Ecology {
 				// fill how many of the interceptor entity group intercepts the target
 				calcGroupsOfEncounter(f, fragment, r[0][0], pre, true);
 
+				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
 				ArrayList<Object> elements = loc.getElements(r[1][0], r[1][1], r[1][2]); // TODO this is only partial data!!
+				if (elements!=null)
 				for (Object o:elements)
 				{
 					EntityFragment fT = ((EntityFragment)o);
 					if (fT==f) continue;
 					int[][] r2 = listOfCommonRadiusFragments.get(fT);
-					Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
 					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
-					if (v2.distance(v1)<10)
+					if (v2.distance(v1)<10f)
 					{
+						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
+						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
+						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						//System.out.println("DIFF 10 > "+v2.distance(v1));
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
 						calcGroupsOfEncounter(fragment, fT, r2[0][1], pre, false);

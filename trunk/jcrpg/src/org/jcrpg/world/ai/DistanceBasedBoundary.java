@@ -164,7 +164,7 @@ public class DistanceBasedBoundary extends Boundaries {
 		}
 		//System.out.println("CD: "+common_distance);
 		//  |        .    |    .  |  |
-		if (true==false) {
+		if (true) {
 			Vector3f normalizedDistDirVect = bigger.pv.subtract(smaller.pv).normalize();
 			float f = smaller.getRadiusInRealCubes() - ( dist/2 - bigger.getRadiusInRealCubes() );
 			Vector3f middle = smaller.pv.add( normalizedDistDirVect.mult(f) );
