@@ -155,7 +155,7 @@ public class EntityDescription {
 				return Hide.class;
 			}
 		}
-		return Indifference.class;
+		return Attack.class;//Indifference.class;
 	}
 
 	public PositionCalculus getPositionCalculus()

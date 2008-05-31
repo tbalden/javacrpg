@@ -191,7 +191,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==ok)
 		{
-			int counter = 0;
+			int counter = 0; // TODO use EncounterInfo internal list instead of encounterInfos selected...
 			int active = 0;
 			for (Object i:groupSelect.objects)
 			{

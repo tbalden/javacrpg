@@ -82,7 +82,7 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
-				core.encounterWindow.setPageData(core.gameState.player, possibleEncounters);
+				core.encounterWindow.setPageData(core.gameState.player, possibleEncounters,playerInitiated);
 				if (encounter(possibleEncounters)) {
 					core.encounterWindow.toggle();
 				}
@@ -90,12 +90,21 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounters);
+				if (!inEncounter)
+				{
+					encounter(possibleEncounters);
+				}
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounters, playerInitiated);
 				core.turnActWindow.toggle();
+				
 			}
 			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
 			{
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounters);
+				if (!inEncounter)
+				{
+					encounter(possibleEncounters);
+				}
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounters, playerInitiated);
 				core.turnActWindow.toggle();
 			}
 		} else 
@@ -106,9 +115,11 @@ public class GameLogic {
 	}
 	
 	
+	public boolean inEncounter = false;
+	
 	public boolean encounter(Collection<EncounterInfo> possibleEncounters) 
 	{
-		
+		inEncounter = true;
 		previousInfos.clear();
 		previousInfos.addAll(infos);
 		infos.clear();
@@ -185,8 +196,8 @@ public class GameLogic {
 	
 	public void endPlayerEncounters()
 	{
-		J3DCore.getInstance().mEngine.clearPreviousUnits();
-		
+		inEncounter = false;
+		J3DCore.getInstance().mEngine.clearPreviousUnits();		
 	}
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)

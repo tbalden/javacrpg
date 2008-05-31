@@ -124,11 +124,13 @@ public class EncounterWindow extends PagedInputWindow {
 	
 	public PartyInstance party;
 	public ArrayList<EncounterInfo> encountered;
+	public boolean playerInitiated = false;
 	
-	public void setPageData(PartyInstance party, ArrayList<EncounterInfo> encountered)
+	public void setPageData(PartyInstance party, ArrayList<EncounterInfo> encountered, boolean playerInitiated)
 	{
 		this.party = party;
 		this.encountered = encountered;
+		this.playerInitiated = playerInitiated;
 	}
 
 	
@@ -320,7 +322,7 @@ public class EncounterWindow extends PagedInputWindow {
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
-			toggle();
+			toggle(); // TODO use EncounterInfo internal list instead of encounterInfos selected...
 			core.gameState.gameLogic.encounterLogic.doEncounterRound(i, s, encountered);
 			
 			return true;

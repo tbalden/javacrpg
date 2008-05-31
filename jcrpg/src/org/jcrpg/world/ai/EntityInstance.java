@@ -18,12 +18,15 @@
 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -142,6 +145,7 @@ public class EntityInstance {
 		return groupSizes;
 	}
 	
+	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();
 	/**
 	 * Living a turn for this being.
 	 * @param ecology
@@ -152,18 +156,57 @@ public class EntityInstance {
 	{
 		int counter = 0;
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
+		//System.out.println()
+		System.out.println(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEntities.size());
 		if (nearbyEntities!=null && nearbyEntities.size()>0) {
 			int actions = 0;
 			for (EncounterInfo info : nearbyEntities)
 			{
 				if (info.subject==null) continue;
 				counter++;
-				EntityFragment instance = info.encountered.keySet().iterator().next();
-				if (instance.equals(J3DCore.getInstance().gameState.player.theFragment))
-					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+instance.instance.description.getClass().getSimpleName()+" - "+description.makeTurnChoice(instance.instance.description, instance.instance, instance).getSimpleName());
+				EntityFragment fragment = info.encountered.keySet().iterator().next();
+				if (info.encountered.keySet().contains(J3DCore.getInstance().gameState.player.theFragment)) {
+					fragment = J3DCore.getInstance().gameState.player.theFragment;
+					Class<?extends Choice> c = description.makeTurnChoice(fragment.instance.description, fragment.instance, fragment);
+					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+fragment.instance.description.getClass().getSimpleName()+" - "+c.getSimpleName());
+					if (c == Attack.class)
+					{
+						fragment.availableInThisTurn = false;
+						infos.clear();
+						// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
+						int listSize = 0;
+						EncounterInfo i = info; 
+						{
+							if (!i.active) continue;
+							int fullSize = 0;
+							for (EntityFragment entityFragment:i.encountered.keySet())
+							{
+								int[] groupIds = i.encounteredGroupIds.get(entityFragment);
+								if (groupIds.length==0) {
+									System.out.println("NO GROUPID IN ARRAY: "+entityFragment.instance.description+" - "+entityFragment.size);
+								}
+								for (int in:groupIds) {
+									int size = entityFragment.instance.getGroupSizes()[in];
+									if (size==0) System.out.println("SIZE ZERO: "+entityFragment.instance.description);
+									fullSize+=size;
+								}
+							}
+							if (fullSize>0) {
+								infos.add(i.copy());
+								listSize++;
+							}
+						}
+						if (listSize>0) // only if groups can be encountered should we trigger newturn
+						{
+							J3DCore.getInstance().gameState.gameLogic.newTurnPhase(infos,Ecology.PHASE_TURNACT_COMBAT,false);
+							return true; // interrupt ecology!
+						}
+						return false; // don't interrupt ecology
+					}
+				}
 				else
 				{
-					description.makeTurnChoice(instance.instance.description, instance.instance, instance);
+					description.makeTurnChoice(fragment.instance.description, fragment.instance, fragment);
 				}
 				actions++;
 				//if (numberOfActionsPerTurn==actions) break;

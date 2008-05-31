@@ -129,14 +129,16 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	public PartyInstance party;
 	public ArrayList<EncounterInfo> encountered;
+	public boolean playerInitiated = false;
 	public int turnActType;
 	
 	String langPostfix = "";
 	
 	boolean combat = false;
 	
-	public void setPageData(int turnActType, PartyInstance party, ArrayList<EncounterInfo> encountered)
+	public void setPageData(int turnActType, PartyInstance party, ArrayList<EncounterInfo> encountered, boolean playerInitiated)
 	{
+		this.playerInitiated = playerInitiated;
 		if (turnActType == EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
 		{
 			langPostfix = "combat";
