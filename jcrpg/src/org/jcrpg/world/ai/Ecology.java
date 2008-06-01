@@ -123,23 +123,24 @@ public class Ecology {
 	 * @param self the interceptor entity fragment.
 	 * @param target the encountered entity fragment.
 	 * @param radiusRatio the common radius.
-	 * @param toFill PreEncounterInfo object to fill
+	 * @param encounterInfo PreEncounterInfo object to fill
 	 * @param fillOwn If this is true preEncoutnerInfo's ownGroupIds' are set, otherwise the ecounteredGroupIds are filled.
 	 */
-	public static void calcGroupsOfEncounter(EntityFragment self, EntityFragment target, int radiusRatio, EncounterInfo toFill, boolean fillOwn)
+	public static void calcGroupsOfEncounter(EntityFragment self, EntityFragment target, int radiusRatio, EncounterInfo encounterInfo, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.roamingBoundary.posX, self.roamingBoundary.posY, self.roamingBoundary.posZ);
 		int[] groupIds = target.instance.description.groupingRule.getGroupIds(target,target.instance, radiusRatio, rand);
 		if (fillOwn)
 		{
-			toFill.ownGroupIds = groupIds;
+			encounterInfo.ownGroupIds = groupIds;
+			encounterInfo.encounteredGroupIds.put(target, groupIds);
 		} else
 		{
 			if (self == J3DCore.getInstance().gameState.player.theFragment) {
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.roamingBoundary.posX+" "+self.roamingBoundary.posZ);
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.instance.id);
 			}
-			toFill.encounteredGroupIds.put(target, groupIds);
+			encounterInfo.encounteredGroupIds.put(target, groupIds);
 		}
 	}
 	
@@ -208,6 +209,7 @@ public class Ecology {
 				if (staticEncounterInfoInstances.size()==counter)
 				{
 					pre = new EncounterInfo(fragment);
+					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
 					staticEncounterInfoInstances.add(pre);
 				} else
@@ -216,6 +218,7 @@ public class Ecology {
 					pre.subject = fragment.instance;
 					pre.encountered.clear();
 					pre.encounteredGroupIds.clear();
+					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
 				}
 				calcGroupsOfEncounter(fragment, f, r[0][1], pre, false);
