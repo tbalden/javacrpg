@@ -263,13 +263,10 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==ok)
 		{
-			int counter = 0; // TODO use EncounterInfo internal list instead of encounterInfos selected...
-			int active = 0;
 			EncounterInfo i = (EncounterInfo)encSelect.getSelectedObject();
 			i.active = true;
 			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>();
 			selectedEncounter.add(i);
-			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
 			toggle();
 			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
 			return true;
@@ -277,6 +274,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 		if (base==leave)
 		{
 			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>(); // selecting none
+			toggle();
 			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
