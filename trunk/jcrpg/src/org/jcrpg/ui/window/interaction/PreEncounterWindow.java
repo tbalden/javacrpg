@@ -127,6 +127,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			int fullSize = 0;
 			for (EntityFragment entityFragment:i.encountered.keySet())
 			{
+				if (entityFragment == party.theFragment) continue;
 				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 				for (int in:groupIds) {
 					int size = entityFragment.instance.getGroupSizes()[in];
@@ -149,6 +150,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			int fullSize = 0;
 			for (EntityFragment fragment:i.encountered.keySet())
 			{
+				if (fragment == party.theFragment) continue;
 				System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 				size++;
 				int[] groupIds = i.encounteredGroupIds.get(fragment);
@@ -192,6 +194,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			//int fullSize = 0;
 			for (EntityFragment entityFragment:i.encountered.keySet())
 			{
+				if (entityFragment == party.theFragment) continue;
 				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 				for (int in:groupIds) {
 					int size = entityFragment.instance.getGroupSizes()[in];
@@ -212,6 +215,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 					String text = count+"/";
 					for (EntityFragment fragment:i.encountered.keySet())
 					{
+						if (fragment == party.theFragment) continue;
 						System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 						int fullSize = 0;
 						size++;
