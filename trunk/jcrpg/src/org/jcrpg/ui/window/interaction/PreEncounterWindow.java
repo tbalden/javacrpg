@@ -24,7 +24,7 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
-import org.jcrpg.ui.window.element.input.ListMultiSelect;
+import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
@@ -47,32 +47,42 @@ public class PreEncounterWindow extends PagedInputWindow {
 	// selecting handled groups out of intercepted group, leaving non-interesting groups out of scope 
 	Node page0 = new Node();
 
-	ListMultiSelect groupSelect;
+	ListSelect encSelect;
+	ListSelect groupList;
 	TextButton ok;
+	TextButton leave;
 	
 	public PreEncounterWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.6f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.75f*core.getDisplay().getWidth(), 0.75f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Interception",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You sense nearby lifeforms.",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You may choose which of them to face.",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You sense nearby groups of lifeforms.",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You may face one of the encounters.",false);
 	    	
 	    	 
 	    	{
-	    		groupSelect = new ListMultiSelect("group", this,page0, 0.4f, 0.27f,0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		encSelect = new ListSelect("group", this,page0, 0.3f, 0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
-	    	addInput(0,groupSelect);
-	    	
-	    	ok = new TextButton("ok",this,page0,0.66f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use Enter for selection.",false);
+	    	addInput(0,encSelect);
+
+	    	{
+	    		groupList= new ListSelect("group", this,page0, 0.7f, 0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(0,groupList);
+
+	    	ok = new TextButton("ok",this,page0,0.45f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"),"S");
+	    	leave = new TextButton("leave",this,page0,0.68f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.leave"),"L");
+	    	new TextLabel("",this,page0, 0.56f, 0.28f, 0.3f, 0.06f,600f,"Use <> for selection.",false);
 	    	new TextLabel("",this,page0, 0.56f, 0.32f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	new TextLabel("",this,page0, 0.46f, 0.36f, 0.3f, 0.06f,600f,"The second list shows encounter's groups.",false);
 	    	addInput(0,ok);
+	    	addInput(0,leave);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
 	    	//new ListSelect();
@@ -148,18 +158,20 @@ public class PreEncounterWindow extends PagedInputWindow {
 				}				
 				text+=size+" "+fragment.instance.description.getClass().getSimpleName()+" ";
 			}
+			if (text.length()>23) text = text.substring(0,20)+"...";
 			if (fullSize==0) continue;
 			ids[count] = ""+count;
 			texts[count] = text;
 			objects[count] = i;
 			count++;
 		}
-		groupSelect.reset();
-		groupSelect.ids = ids;
-		groupSelect.objects = objects;
-		groupSelect.texts = texts;
-		groupSelect.setUpdated(true);
-		groupSelect.activate();
+		encSelect.reset();
+		encSelect.ids = ids;
+		encSelect.objects = objects;
+		encSelect.texts = texts;
+		encSelect.setUpdated(true);
+		encSelect.activate();
+		inputChanged(encSelect, "");
 		super.setupPage();
 	}
 
@@ -171,6 +183,62 @@ public class PreEncounterWindow extends PagedInputWindow {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
+		if (base==encSelect)
+		{
+			EncounterInfo i = (EncounterInfo)encSelect.getSelectedObject();
+
+			//if (!i.active) continue;
+			int listSize = 0;
+			//int fullSize = 0;
+			for (EntityFragment entityFragment:i.encountered.keySet())
+			{
+				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
+				for (int in:groupIds) {
+					int size = entityFragment.instance.getGroupSizes()[in];
+					if (size>0) listSize++;
+					//fullSize+=size;
+				}
+			}
+
+			// groups
+			{
+				String[] ids = new String[listSize];
+				Object[] objects = new Object[listSize];
+				String[] texts = new String[listSize];
+				int count = 0;
+				System.out.println("ENC SIZE = "+listSize);
+				{
+					int size = 0;
+					String text = count+"/";
+					for (EntityFragment fragment:i.encountered.keySet())
+					{
+						System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+						int fullSize = 0;
+						size++;
+						int[] groupIds = i.encounteredGroupIds.get(fragment);
+						for (int in:groupIds) {
+							int size1 = fragment.instance.getGroupSizes()[in];
+							fullSize+=size1;
+							text=size+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
+							ids[count] = ""+count;
+							texts[count] = text;
+							Object[] fragmentAndGroupId = new Object[2];
+							fragmentAndGroupId[0] = fragment;
+							fragmentAndGroupId[1] = in;
+							objects[count] = fragmentAndGroupId;
+							count++;
+						}				
+					}
+				}
+				groupList.reset();
+				groupList.ids = ids;
+				groupList.objects = objects;
+				groupList.texts = texts;
+				groupList.setUpdated(true);
+				groupList.activate();
+			}
+			
+		}
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -193,21 +261,19 @@ public class PreEncounterWindow extends PagedInputWindow {
 		{
 			int counter = 0; // TODO use EncounterInfo internal list instead of encounterInfos selected...
 			int active = 0;
-			for (Object i:groupSelect.objects)
-			{
-				if (groupSelect.selectedItems[counter])
-				{
-					((EncounterInfo)i).active = true;
-					active++;
-				} else
-				{
-					((EncounterInfo)i).active = false;
-				}
-				counter++;
-			}
+			EncounterInfo i = (EncounterInfo)encSelect.getSelectedObject();
+			i.active = true;
+			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>();
+			selectedEncounter.add(i);
 			System.out.println("POSSIBLE ENCOUNTERS : "+possibleEncounters.size()+" COUNTED = "+counter+" ACTIVE = "+active);
 			toggle();
-			core.gameState.gameLogic.newTurnPhase(possibleEncounters, Ecology.PHASE_ENCOUNTER, true);
+			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
+			return true;
+		}
+		if (base==leave)
+		{
+			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>(); // selecting none
+			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

@@ -140,17 +140,18 @@ public class EncounterWindow extends PagedInputWindow {
 		for (EncounterInfo i:encountered)
 		{
 			if (!i.active) continue;
-			int fullSize = 0;
+			//int fullSize = 0;
 			for (EntityFragment entityFragment:i.encountered.keySet())
 			{
 				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 				for (int in:groupIds) {
 					int size = entityFragment.instance.getGroupSizes()[in];
-					fullSize+=size;
+					if (size>0) listSize++;
+					//fullSize+=size;
 				}
 			}
-			if (fullSize>0)
-				listSize++;
+			//if (fullSize>0)
+				//listSize++;
 		}
 		// groups
 		{
@@ -161,26 +162,29 @@ public class EncounterWindow extends PagedInputWindow {
 			System.out.println("ENC SIZE = "+listSize);
 			for (EncounterInfo i:encountered)
 			{
-				int size = 0;
+				int fragmentCount = 0;
 				String text = count+"/";
 				if (!i.active) continue;
-				int fullSize = 0;
 				for (EntityFragment fragment:i.encountered.keySet())
 				{
 					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
-					size++;
+					int fullSize = 0;
+					fragmentCount++;
 					int[] groupIds = i.encounteredGroupIds.get(fragment);
 					for (int in:groupIds) {
 						int size1 = fragment.instance.getGroupSizes()[in];
+						if (size1<1) continue;
 						fullSize+=size1;
+						text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
+						ids[count] = ""+count;
+						texts[count] = text;
+						Object[] fragmentAndGroupId = new Object[2];
+						fragmentAndGroupId[0] = fragment;
+						fragmentAndGroupId[1] = in;
+						objects[count] = fragmentAndGroupId;
+						count++;
 					}				
-					text+=size+" "+fragment.instance.description.getClass().getSimpleName()+" ";
 				}
-				if (fullSize==0) continue;
-				ids[count] = ""+count;
-				texts[count] = text;
-				objects[count] = i;
-				count++;
 			}
 			groupSelect.reset();
 			groupSelect.ids = ids;

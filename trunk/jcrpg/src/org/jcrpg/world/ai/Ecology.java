@@ -155,6 +155,7 @@ public class Ecology {
 	 */
 	public Collection<EncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
 	{
+		int joinLimit = 10;
 		int counter = 0;
 		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
 		for (EntityFragment fragment:entityInstance.fragments.fragments) 
@@ -184,6 +185,15 @@ public class Ecology {
 					
 					listOfCommonRadiusFragments.put(targetFragment, r);
 					loc.addElement(r[1][0], r[1][1], r[1][2], targetFragment);
+					
+					loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2], targetFragment);
+					loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]+joinLimit, targetFragment);
+					loc.addElement(r[1][0], r[1][1], r[1][2]+joinLimit, targetFragment);
+					loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2], targetFragment);
+					loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]+joinLimit, targetFragment);
+					loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]-joinLimit, targetFragment);
+					loc.addElement(r[1][0], r[1][1], r[1][2]-joinLimit, targetFragment);
+					loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]-joinLimit, targetFragment);
 				}
 				
 			}
@@ -218,26 +228,36 @@ public class Ecology {
 				for (Object o:elements)
 				{
 					EntityFragment fT = ((EntityFragment)o);
-					if (fT==f) continue;
+					if (fT==f || usedUp.contains(fT)) continue;
 					int[][] r2 = listOfCommonRadiusFragments.get(fT);
 					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
-					if (v2.distance(v1)<10f)
+					if (v2.distance(v1)<joinLimit)
 					{
-						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
-						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
-						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
-						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						//System.out.println("DIFF 10 > "+v2.distance(v1));
+						System.out.println(" __ "+r[1][0]+" "+r[1][2]);
+						System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
+						System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						System.out.println("DIFF 10 > "+v2.distance(v1) + fT.instance.description.getClass());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
 						calcGroupsOfEncounter(fragment, fT, r2[0][1], pre, false);
 						// fill how many of the interceptor entity group intercepts the target
 						calcGroupsOfEncounter(fT, fragment, r2[0][0], pre, true);
-					}						
+					} else
+					{
+						System.out.println(" __ "+r[1][0]+" "+r[1][2]);
+						System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
+						System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						System.out.println("!! DIFF 10 < "+v2.distance(v1) + fT.instance.description.getClass());
+					}
 				}
 				for (EntityFragment fr:pre.encountered.keySet()) {
-					if (fr==J3DCore.getInstance().gameState.player.theFragment)
-						System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.instance.description.getClass()+" "+pre.encounteredGroupIds.get(fr).length);
+					//if (entityInstance == J3DCore.getInstance().gameState.player || fr==J3DCore.getInstance().gameState.player.theFragment)
+						System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.instance.description.getClass()+" "+pre.encounteredGroupIds.get(fr).length
+								+ fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
+								+ fr.roamingBoundary.posX+ " / "+fr.roamingBoundary.posZ
+						);
 				}
 				counter++;
 				pre.active = true;

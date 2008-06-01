@@ -259,27 +259,28 @@ public class TurnActWindow extends PagedInputWindow {
 			System.out.println("ENC SIZE = "+listSize);
 			for (EncounterInfo i:encountered)
 			{
-				int size = 0;
+				int fragmentCount = 0;
 				String text = count+"/";
 				if (!i.active) continue;
 				for (EntityFragment fragment:i.encountered.keySet())
 				{
 					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
 					int fullSize = 0;
-					size++;
+					fragmentCount++;
 					int[] groupIds = i.encounteredGroupIds.get(fragment);
 					for (int in:groupIds) {
 						int size1 = fragment.instance.getGroupSizes()[in];
+						if (size1<1) continue;
 						fullSize+=size1;
-					}				
-					if (fullSize>0)
-					{
-						text=size+" ("+fullSize+") "+fragment.instance.description.getClass().getSimpleName();
+						text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
 						ids[count] = ""+count;
 						texts[count] = text;
-						objects[count] = i;
+						Object[] fragmentAndGroupId = new Object[2];
+						fragmentAndGroupId[0] = fragment;
+						fragmentAndGroupId[1] = in;
+						objects[count] = fragmentAndGroupId;
 						count++;
-					}
+					}				
 				}
 			}
 			groupSelect.reset();
@@ -376,7 +377,7 @@ public class TurnActWindow extends PagedInputWindow {
 	{
 		HashMap<EntityMemberInstance, SkillBase> memberToSkill = new HashMap<EntityMemberInstance, SkillBase>();
 		HashMap<EntityMemberInstance, Class<?extends SkillActForm>> memberToSkillActForm = new HashMap<EntityMemberInstance, Class<? extends SkillActForm>>();
-		HashMap<EntityMemberInstance, EncounterInfo> memberToEncounterInfo = new HashMap<EntityMemberInstance, EncounterInfo>();
+		HashMap<EntityMemberInstance, Object[]> memberToFragmentAndGroupId = new HashMap<EntityMemberInstance, Object[]>();
 	}
 	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
 	
@@ -403,7 +404,7 @@ public class TurnActWindow extends PagedInputWindow {
 			//
 			//
 			int counter = 0;
-			info.memberToEncounterInfo.clear();
+			info.memberToFragmentAndGroupId.clear();
 			info.memberToSkill.clear();
 			info.memberToSkillActForm.clear();
 			for (ListSelect s:skillSelectors)
@@ -414,11 +415,11 @@ public class TurnActWindow extends PagedInputWindow {
 					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
 					Class<?extends SkillActForm> f = null;
 					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
-					EncounterInfo ei = null;
-					ei = (EncounterInfo)groupSelectors.get(counter).getSelectedObject();
+					Object[] fragmentAndGroupId = null;
+					fragmentAndGroupId = (Object[])groupSelectors.get(counter).getSelectedObject();
 					info.memberToSkill.put(i,sb);
 					info.memberToSkillActForm.put(i,f);
-					info.memberToEncounterInfo.put(i,ei);
+					info.memberToFragmentAndGroupId.put(i,fragmentAndGroupId);
 				}
 				counter++;
 			}
