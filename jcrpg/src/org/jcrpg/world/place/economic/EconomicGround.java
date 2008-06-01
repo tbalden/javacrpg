@@ -83,6 +83,11 @@ public class EconomicGround extends Economic {
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
+		if (c!=null) { 
+			if (kind>=6) c.canContain = false; else
+				c.canContain = true;
+		}
+			
 		return c;
 	}
 

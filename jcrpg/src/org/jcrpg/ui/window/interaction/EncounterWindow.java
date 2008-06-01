@@ -67,13 +67,14 @@ public class EncounterWindow extends PagedInputWindow {
 	ListMultiSelect groupSelect;
 	TextButton leave;
 	TextButton ok;
+	TextLabel description;
 	
 	
 	public EncounterWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.8f*core.getDisplay().getWidth(), 0.8f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.2f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.38f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
@@ -103,11 +104,12 @@ public class EncounterWindow extends PagedInputWindow {
 	    	}
 	    	addInput(0,groupSelect);
 	    	
-	    	ok = new TextButton("ok",this,page0,0.50f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"));
-	    	new TextLabel("",this,page0, 0.60f, 0.34f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
-	    	new TextLabel("",this,page0, 0.60f, 0.38f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	ok = new TextButton("ok",this,page0,0.50f, 0.49f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"));
+	    	description = new TextLabel("",this,page0, 0.20f, 0.54f, 0.4f, 0.06f,600f,"",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.54f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.58f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
-	    	leave = new TextButton("leave",this,page0,0.72f, 0.29f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"L");
+	    	leave = new TextButton("leave",this,page0,0.72f, 0.49f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"L");
 	    	addInput(0,leave);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
@@ -218,12 +220,25 @@ public class EncounterWindow extends PagedInputWindow {
 			memberSelect.activate();
 			//Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
 		}
-		
+		inputChanged(groupSelect, "");
 		super.setupPage();
 	}	
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
 		// TODO Auto-generated method stub
+		if (base == groupSelect)
+		{
+			Object[] fragmentAndGroupId = (Object[])groupSelect.getSelectedObject();
+			int groupId = (Integer)fragmentAndGroupId[1];
+			EntityFragment fragment = (EntityFragment)fragmentAndGroupId[0];
+			int size = fragment.instance.getGroupSizes()[groupId];
+			description.text = "Qual.:"+fragment.instance.entityState.currentLevelOfQuality;
+			description.text += " Relation: "+fragment.instance.relations.getRelationLevel(party);
+			description.text += " Size: "+size+"/"+fragment.size;
+			//description.setUpdated(true);
+			description.activate();
+			return true;
+		}
 		return false;
 	}
 

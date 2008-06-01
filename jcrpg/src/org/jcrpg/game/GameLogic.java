@@ -189,6 +189,7 @@ public class GameLogic {
 			return true;
 		} else
 		{
+			inEncounter = false;
 			core.gameState.engine.turnFinishedForPlayer();
 			return false;
 		}
