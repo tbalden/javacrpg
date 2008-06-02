@@ -165,7 +165,7 @@ public class EntityInstance {
 				if (info.subject==null) continue;
 				counter++;
 				EntityFragment fragment = info.encountered.keySet().iterator().next();
-				if (info.encountered.keySet().contains(J3DCore.getInstance().gameState.player.theFragment)) {
+				if (true==false && info.encountered.keySet().contains(J3DCore.getInstance().gameState.player.theFragment)) {
 					fragment = J3DCore.getInstance().gameState.player.theFragment;
 					Class<?extends Choice> c = description.makeTurnChoice(fragment.instance.description, fragment.instance, fragment);
 					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+fragment.instance.description.getClass().getSimpleName()+" - "+c.getSimpleName());
