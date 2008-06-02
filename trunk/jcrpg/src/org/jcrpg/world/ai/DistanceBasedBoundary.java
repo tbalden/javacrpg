@@ -166,9 +166,8 @@ public class DistanceBasedBoundary extends Boundaries {
 		//  |        .    |    .  |  |
 		if (true) {
 			Vector3f normalizedDistDirVect = bigger.pv.subtract(smaller.pv).normalize();
-			float f = smaller.getRadiusInRealCubes() - ( dist/2 - bigger.getRadiusInRealCubes() );
-			Vector3f middle = smaller.pv.add( normalizedDistDirVect.mult(f) );
-			
+			float f = (common_distance * 1f ) / 2f;
+			Vector3f middle = smaller.pv.add(normalizedDistDirVect.mult(smaller.getRadiusInRealCubes())).subtract( normalizedDistDirVect.mult(f) );
 			return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {(int)middle.x, (int)middle.y, (int)middle.z}};
 		}
 		return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {0, 0, 0}};
@@ -178,8 +177,8 @@ public class DistanceBasedBoundary extends Boundaries {
 	
 	public static void main(String[] args) throws Exception 
 	{
-		DistanceBasedBoundary d1 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),10,0,10,10);
-		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),23,0,10,5);
+		DistanceBasedBoundary d1 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),120,0,150,50);
+		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),163,0,120,6);
 		int[][] ratios = getCommonRadiusRatiosAndMiddlePoint(d1, d2);
 		System.out.println("RATIOS: "+ratios[0][0]+" "+ratios[0][1] + " "+ratios[1][0]+" "+ratios[1][1]+" "+ratios[1][2]);
 	}
