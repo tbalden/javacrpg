@@ -76,7 +76,7 @@ public class GameLogic {
 
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
 			{
-				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters);
+				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters.get(0));
 				core.preEncounterWindow.toggle();
 			}
 			

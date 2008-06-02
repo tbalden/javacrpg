@@ -181,6 +181,7 @@ public class Ecology {
 					if (fragment==J3DCore.getInstance().gameState.player.theFragment)
 					{
 						Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
+						System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.instance.id);
 						//System.out.println("## "+counter);
 					}
 					
@@ -226,7 +227,25 @@ public class Ecology {
 				calcGroupsOfEncounter(f, fragment, r[0][0], pre, true);
 
 				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
-				ArrayList<Object> elements = loc.getElements(r[1][0], r[1][1], r[1][2]); // TODO this is only partial data!!
+				ArrayList<Object> elements1 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]); // TODO this is only partial data!!
+				ArrayList<Object> elements2 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]+joinLimit);
+				ArrayList<Object> elements3 = loc.getElements(r[1][0], r[1][1], r[1][2]+joinLimit);
+				ArrayList<Object> elements4 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]-joinLimit);
+				ArrayList<Object> elements5 = loc.getElements(r[1][0], r[1][1], r[1][2]-joinLimit);
+				ArrayList<Object> elements6 = loc.getElements(r[1][0]-joinLimit, r[1][1], r[1][2]-joinLimit);
+				ArrayList<Object> elements7 = loc.getElements(r[1][0]-joinLimit, r[1][1], r[1][2]+joinLimit);
+				ArrayList<Object> elements8 = loc.getElements(r[1][0]-joinLimit, r[1][1], r[1][2]);
+				ArrayList<Object> elements9 = loc.getElements(r[1][0], r[1][1], r[1][2]);
+				ArrayList<Object> elements = new ArrayList<Object>();
+				if (elements1!=null) elements.addAll(elements1);
+				if (elements2!=null) elements.addAll(elements2);
+				if (elements3!=null) elements.addAll(elements3);
+				if (elements4!=null) elements.addAll(elements4);
+				if (elements5!=null) elements.addAll(elements5);
+				if (elements6!=null) elements.addAll(elements6);
+				if (elements7!=null) elements.addAll(elements7);
+				if (elements8!=null) elements.addAll(elements8);
+				if (elements9!=null) elements.addAll(elements9);
 				if (elements!=null)
 				for (Object o:elements)
 				{
@@ -258,8 +277,8 @@ public class Ecology {
 				for (EntityFragment fr:pre.encountered.keySet()) {
 					//if (entityInstance == J3DCore.getInstance().gameState.player || fr==J3DCore.getInstance().gameState.player.theFragment)
 						System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.instance.description.getClass()+" "+pre.encounteredGroupIds.get(fr).length
-								+ fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
-								+ fr.roamingBoundary.posX+ " / "+fr.roamingBoundary.posZ
+								+ " " + fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
+								+ " " +fr.roamingBoundary.posX+ " / "+fr.roamingBoundary.posZ + " "+r[1][0] +" / "+r[1][2]
 						);
 				}
 				counter++;
