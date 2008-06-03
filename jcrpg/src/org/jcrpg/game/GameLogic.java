@@ -69,21 +69,21 @@ public class GameLogic {
 	}
 	
 	
-	public void newTurnPhase(ArrayList<EncounterInfo> possibleEncounters, int startingPhase, boolean playerInitiated)
+	public void newTurnPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
 	{
 		System.out.println("-- newTurn "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
 
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
 			{
-				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounters.get(0));
+				core.preEncounterWindow.setPageData(core.gameState.player, possibleEncounter);
 				core.preEncounterWindow.toggle();
 			}
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
-				core.encounterWindow.setPageData(core.gameState.player, possibleEncounters,playerInitiated);
-				if (encounter(possibleEncounters)) {
+				core.encounterWindow.setPageData(core.gameState.player, possibleEncounter,playerInitiated);
+				if (encounter(possibleEncounter)) {
 					core.encounterWindow.toggle();
 				}
 			}
@@ -92,9 +92,9 @@ public class GameLogic {
 			{
 				if (!inEncounter)
 				{
-					encounter(possibleEncounters);
+					encounter(possibleEncounter);
 				}
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounters, playerInitiated);
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 				core.turnActWindow.toggle();
 				
 			}
@@ -102,28 +102,28 @@ public class GameLogic {
 			{
 				if (!inEncounter)
 				{
-					encounter(possibleEncounters);
+					encounter(possibleEncounter);
 				}
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounters, playerInitiated);
+				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
 				core.turnActWindow.toggle();
 			}
 		} else 
 		{
 			core.switchEncounterMode(true);
-			encounter(possibleEncounters);
+			encounter(possibleEncounter);
 		}
 	}
 	
 	
 	public boolean inEncounter = false;
 	
-	public boolean encounter(Collection<EncounterInfo> possibleEncounters) 
+	public boolean encounter(EncounterInfo possibleEncounter) 
 	{
 		inEncounter = true;
 		previousInfos.clear();
 		previousInfos.addAll(infos);
 		infos.clear();
-		infos.addAll(possibleEncounters);
+		infos.add(possibleEncounter);
 		previousForms.addAll(forms);
 		forms.clear();
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
@@ -132,52 +132,54 @@ public class GameLogic {
 		playerFakeForm.worldZ = player.fragments.fragments.get(0).roamingBoundary.posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
-		for (EncounterInfo info:possibleEncounters)
+		//for (EncounterInfo info:possibleEncounters)
 		{
-			if (!info.active) continue;
-			for (EntityFragment fragment:info.encountered.keySet()) {
-				if (fragment==player.fragments.fragments.get(0)) continue;
-				int[] groupIds = info.encounteredGroupIds.get(fragment);
-				if (groupIds.length>0)
-					ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.instance.description.getClass().getSimpleName());
-				else
-					ecology.callbackMessage("You seem to trespass a Domain : "+fragment.instance.description.getClass().getSimpleName());
-				System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.instance.description.getClass().getSimpleName());
-				boolean played = false;
-				if (groupIds !=null)
-				for (int in:groupIds)
-				{
-					int size = fragment.instance.getGroupSizes()[in];
-					ArrayList<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
-					info.setGroupMemberInstances(in, members);
-					String types = "";
-					HashSet<String> typesSet = new HashSet<String>();
-					for (EntityMemberInstance mInst:members)
+			EncounterInfo info = possibleEncounter;
+			if (info.active) {
+				for (EntityFragment fragment:info.encountered.keySet()) {
+					if (fragment==player.fragments.fragments.get(0)) continue;
+					int[] groupIds = info.encounteredGroupIds.get(fragment);
+					if (groupIds!=null && groupIds.length>0)
+						ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.instance.description.getClass().getSimpleName());
+					else
+						ecology.callbackMessage("You seem to trespass a Domain : "+fragment.instance.description.getClass().getSimpleName());
+					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.instance.description.getClass().getSimpleName());
+					boolean played = false;
+					if (groupIds !=null)
+					for (int in:groupIds)
 					{
-						typesSet.add(mInst.description.visibleTypeId);
-					}
-					for (String type:typesSet)
-					{
-						types+=","+type;
-						if (types.length()>30) break;
-					}
-					ecology.callbackMessage(""+size+" "+types);
-					for (EntityMemberInstance member:members)
-					{
-						if (!played) 
+						int size = fragment.instance.getGroupSizes()[in];
+						ArrayList<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
+						info.setGroupMemberInstances(in, members);
+						String types = "";
+						HashSet<String> typesSet = new HashSet<String>();
+						for (EntityMemberInstance mInst:members)
 						{
-							if (member.description.audioDescription!=null && member.description.audioDescription.ENCOUNTER!=null && member.description.audioDescription.ENCOUNTER.length>0) {
-								if (!playedAudios.contains(member.description.audioDescription.ENCOUNTER[0])) {
-									core.audioServer.playLoading(member.description.audioDescription.ENCOUNTER[0], "ai");
-									playedAudios.add(member.description.audioDescription.ENCOUNTER[0]);
-									played = true;
+							typesSet.add(mInst.description.visibleTypeId);
+						}
+						for (String type:typesSet)
+						{
+							types+=","+type;
+							if (types.length()>30) break;
+						}
+						ecology.callbackMessage(""+size+" "+types);
+						for (EntityMemberInstance member:members)
+						{
+							if (!played) 
+							{
+								if (member.description.audioDescription!=null && member.description.audioDescription.ENCOUNTER!=null && member.description.audioDescription.ENCOUNTER.length>0) {
+									if (!playedAudios.contains(member.description.audioDescription.ENCOUNTER[0])) {
+										core.audioServer.playLoading(member.description.audioDescription.ENCOUNTER[0], "ai");
+										playedAudios.add(member.description.audioDescription.ENCOUNTER[0]);
+										played = true;
+									}
 								}
 							}
+							VisibleLifeForm form = fragment.instance.getOne(member.description,member);
+							form.targetForm = playerFakeForm;
+							forms.add(form);
+							sizeOfAll++;
 						}
-						VisibleLifeForm form = fragment.instance.getOne(member.description,member);
-						form.targetForm = playerFakeForm;
-						forms.add(form);
-						sizeOfAll++;
 					}
 				}
 			}

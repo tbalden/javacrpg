@@ -132,7 +132,7 @@ public class Ecology {
 		int[] groupIds = target.instance.description.groupingRule.getGroupIds(target,target.instance, radiusRatio, rand);
 		if (fillOwn)
 		{
-			encounterInfo.ownGroupIds = groupIds;
+			encounterInfo.appendOwnGroupIds(self,groupIds);
 			encounterInfo.encounteredGroupIds.put(target, groupIds);
 		} else
 		{
@@ -169,8 +169,6 @@ public class Ecology {
 				if (targetEntityInstance==entityInstance) continue;
 	
 				for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments) {
-					if (!targetFragment.availableInThisTurn) continue; // if this fragment was part of an encounter then it shouldn't be reused again.
-						
 					// calculate the common area sizes.				
 					int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.roamingBoundary, targetFragment.roamingBoundary);
 					if (r==DistanceBasedBoundary.zero) continue; // no common part
@@ -217,7 +215,9 @@ public class Ecology {
 				{
 					pre = staticEncounterInfoInstances.get(counter);
 					pre.subject = fragment.instance;
+					pre.subjectFragment = fragment;
 					pre.encountered.clear();
+					pre.encounteredFragmentsAndOwnGroupIds.clear();
 					pre.encounteredGroupIds.clear();
 					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
@@ -255,10 +255,10 @@ public class Ecology {
 					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
 					if (v2.distance(v1)<joinLimit)
 					{
-						System.out.println(" __ "+r[1][0]+" "+r[1][2]);
-						System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
-						System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
-						System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
+						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
+						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
 						System.out.println("DIFF 10 > "+v2.distance(v1) + fT.instance.description.getClass());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
@@ -267,10 +267,10 @@ public class Ecology {
 						calcGroupsOfEncounter(fT, fragment, r2[0][0], pre, true);
 					} else
 					{
-						System.out.println(" __ "+r[1][0]+" "+r[1][2]);
-						System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
-						System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
-						System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
+						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
+						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
 						System.out.println("!! DIFF 10 < "+v2.distance(v1) + fT.instance.description.getClass());
 					}
 				}
@@ -324,11 +324,6 @@ public class Ecology {
 				{
 					toRemove.add(i);
 					
-				} else {			
-					for (EntityFragment f:i.fragments.fragments)
-					{
-						f.availableInThisTurn = true;
-					}
 				}
 			}
 			orderedBeingList.removeAll(toRemove);

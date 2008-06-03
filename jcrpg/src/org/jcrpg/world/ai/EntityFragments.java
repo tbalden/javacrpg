@@ -47,13 +47,6 @@ public class EntityFragments {
 	
 	public class EntityFragment
 	{
-		/**
-		 * Describes if this entity can be chosen to be a part of an encounter in the given turn by another entity,
-		 * as this can only happen once in a turn.
-		 * This doesn't affect it's own initiated encounter!
-		 */
-		public boolean availableInThisTurn = false;
-		
 		public EntityFragments parent;
 		public EntityInstance instance;
 		/**

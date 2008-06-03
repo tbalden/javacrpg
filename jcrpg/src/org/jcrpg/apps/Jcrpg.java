@@ -54,11 +54,11 @@ public class Jcrpg extends Formatter implements Filter  {
 	}
 	public boolean isLoggable(LogRecord record) {
 		if (record.getSourceClassName().equals("com.jme.scene.Node"))
-			return true;
+			return false;
 		if (record.getSourceClassName().equals("com.jme.renderer.lwjgl.LWJGLRenderer"))
-			return true;
+			return false;
 		if (record.getSourceClassName().startsWith("sun.awt"))
-			return true;
+			return false;
 		return true;
 	}
 

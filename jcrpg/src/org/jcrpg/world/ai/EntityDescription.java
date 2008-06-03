@@ -30,7 +30,6 @@ import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.choice.Hide;
-import org.jcrpg.world.ai.abs.choice.Indifference;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -139,8 +138,74 @@ public class EntityDescription {
 		return false;
 	}
 	
-	public Class <? extends Choice> makeTurnChoice(EntityDescription desc, EntityInstance instance, EntityFragment fragment)
+	HashMap<Integer, ArrayList<EntityFragment>> tmpMapRelation = new HashMap<Integer, ArrayList<EntityFragment>>();
+	HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EntityFragment>>();
+	
+	/**
+	 * Returns a map of Choices -> EntityFragments - reusing (!!) global tmpMap. Use the map only
+	 * before another call of this method, or copy it.
+	 * @param info
+	 * @return The map.
+	 */
+	HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> getBehaviorsAndFragments(EncounterInfo info)
 	{
+		tmpMapChoice.clear();
+		for (EntityFragment f:info.encountered.keySet())
+		{
+			Class<? extends Choice> b = makeTurnChoice(f);
+			ArrayList<EntityFragment> list = tmpMapChoice.get(b);
+			if (list==null)
+			{
+				list = new ArrayList<EntityFragment>();
+				tmpMapChoice.put(b, list);
+			}
+			list.add(f);
+		}
+		return tmpMapChoice;
+	}
+
+	HashMap<Integer, ArrayList<EntityFragment>> getRelationLevelsAndFragments(EntityInstance initiator, EncounterInfo info)
+	{
+		tmpMapRelation.clear();
+		for (EntityFragment f:info.encountered.keySet())
+		{
+			Integer level = initiator.relations.getRelationLevel(f.instance);
+			ArrayList<EntityFragment> list = tmpMapRelation.get(level);
+			if (list==null)
+			{
+				list = new ArrayList<EntityFragment>();
+				tmpMapRelation.put(level, list);
+			}
+			list.add(f);
+		}
+		return tmpMapRelation;
+	}
+	
+	public int getFullscaleEncounterRelationBalance(HashMap<Integer, ArrayList<EntityFragment>> map,EncounterInfo info)
+	{
+		int levelNeutral = EntityScaledRelationType.NEUTRAL;
+		int sumRelation = 0;
+		for (int i=EntityScaledRelationType.WORST_PERMANENT; i<=EntityScaledRelationType.BEST_PERMANENT; i++)
+		{
+			int lToZero = i-levelNeutral;
+			ArrayList<EntityFragment> fs = map.get(i);
+			int groupCount = 0;
+			if (fs!=null) 
+			{
+				for (EntityFragment f:fs) {
+					groupCount+=info.encounteredGroupIds.get(f).length * f.instance.entityState.currentLevelOfQuality;
+				}
+			}
+			
+			sumRelation += lToZero*groupCount;
+		}
+		return sumRelation;
+	}
+	
+	public Class <? extends Choice> makeTurnChoice(EntityFragment fragment)
+	{
+		EntityDescription desc = fragment.instance.description;
+		//EntityInstance instance = fragment.instance;
 		if (getBehaviors()!=null) 
 		{
 			if (getBehaviors().contains(Aggressive.class))
