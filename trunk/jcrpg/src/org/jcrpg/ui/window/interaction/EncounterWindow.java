@@ -125,10 +125,10 @@ public class EncounterWindow extends PagedInputWindow {
 	}
 	
 	public PartyInstance party;
-	public ArrayList<EncounterInfo> encountered;
+	public EncounterInfo encountered;
 	public boolean playerInitiated = false;
 	
-	public void setPageData(PartyInstance party, ArrayList<EncounterInfo> encountered, boolean playerInitiated)
+	public void setPageData(PartyInstance party, EncounterInfo encountered, boolean playerInitiated)
 	{
 		this.party = party;
 		this.encountered = encountered;
@@ -139,22 +139,23 @@ public class EncounterWindow extends PagedInputWindow {
 	@Override
 	public void setupPage() {
 		int listSize = 0;
-		for (EncounterInfo i:encountered)
 		{
-			if (!i.active) continue;
-			//int fullSize = 0;
-			for (EntityFragment entityFragment:i.encountered.keySet())
-			{
-				if (entityFragment == party.theFragment) continue;
-				int[] groupIds = i.encounteredGroupIds.get(entityFragment);
-				for (int in:groupIds) {
-					int size = entityFragment.instance.getGroupSizes()[in];
-					if (size>0) listSize++;
-					//fullSize+=size;
+			EncounterInfo i = encountered;
+			if (i.active) {
+				//int fullSize = 0;
+				for (EntityFragment entityFragment:i.encountered.keySet())
+				{
+					if (entityFragment == party.theFragment) continue;
+					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
+					for (int in:groupIds) {
+						int size = entityFragment.instance.getGroupSizes()[in];
+						if (size>0) listSize++;
+						//fullSize+=size;
+					}
 				}
+				//if (fullSize>0)
+					//listSize++;
 			}
-			//if (fullSize>0)
-				//listSize++;
 		}
 		// groups
 		{
@@ -163,31 +164,32 @@ public class EncounterWindow extends PagedInputWindow {
 			String[] texts = new String[listSize];
 			int count = 0;
 			System.out.println("ENC SIZE = "+listSize);
-			for (EncounterInfo i:encountered)
 			{
+				EncounterInfo i = encountered;
 				int fragmentCount = 0;
 				String text = count+"/";
-				if (!i.active) continue;
-				for (EntityFragment fragment:i.encountered.keySet())
-				{
-					if (fragment == party.theFragment) continue;
-					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
-					int fullSize = 0;
-					fragmentCount++;
-					int[] groupIds = i.encounteredGroupIds.get(fragment);
-					for (int in:groupIds) {
-						int size1 = fragment.instance.getGroupSizes()[in];
-						if (size1<1) continue;
-						fullSize+=size1;
-						text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
-						ids[count] = ""+count;
-						texts[count] = text;
-						Object[] fragmentAndGroupId = new Object[2];
-						fragmentAndGroupId[0] = fragment;
-						fragmentAndGroupId[1] = in;
-						objects[count] = fragmentAndGroupId;
-						count++;
-					}				
+				if (i.active) {
+					for (EntityFragment fragment:i.encountered.keySet())
+					{
+						if (fragment == party.theFragment) continue;
+						System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+						int fullSize = 0;
+						fragmentCount++;
+						int[] groupIds = i.encounteredGroupIds.get(fragment);
+						for (int in:groupIds) {
+							int size1 = fragment.instance.getGroupSizes()[in];
+							if (size1<1) continue;
+							fullSize+=size1;
+							text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
+							ids[count] = ""+count;
+							texts[count] = text;
+							Object[] fragmentAndGroupId = new Object[2];
+							fragmentAndGroupId[0] = fragment;
+							fragmentAndGroupId[1] = in;
+							objects[count] = fragmentAndGroupId;
+							count++;
+						}				
+					}
 				}
 			}
 			groupSelect.reset();

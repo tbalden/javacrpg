@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 public class EntityScaledRelationType {
+	
 	public static byte WORST_PERMANENT = 0;
 	public static byte WORST = 1;
 	public static byte NEUTRAL = 10;

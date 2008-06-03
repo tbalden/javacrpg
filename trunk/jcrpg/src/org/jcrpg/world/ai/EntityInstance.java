@@ -144,72 +144,47 @@ public class EntityInstance {
 		}
 		return groupSizes;
 	}
+
+	
 	
 	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();
 	/**
 	 * Living a turn for this being.
 	 * @param ecology
-	 * @param nearbyEntities
+	 * @param nearbyEncounters
 	 * @return should return true if player interaction is needed, and ecology doTurn should be interrupted.
 	 */
-	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities)
+	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEncounters)
 	{
 		int counter = 0;
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		//System.out.println()
-		System.out.println(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEntities.size());
-		if (nearbyEntities!=null && nearbyEntities.size()>0) {
-			int actions = 0;
-			for (EncounterInfo info : nearbyEntities)
+		System.out.println(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEncounters.size());
+		if (nearbyEncounters!=null && nearbyEncounters.size()>0) {
+			for (EncounterInfo info : nearbyEncounters)
 			{
 				if (info.subject==null) continue;
 				counter++;
-				EntityFragment fragment = info.encountered.keySet().iterator().next();
-				if (true==false && info.encountered.keySet().contains(J3DCore.getInstance().gameState.player.theFragment)) {
-					fragment = J3DCore.getInstance().gameState.player.theFragment;
-					Class<?extends Choice> c = description.makeTurnChoice(fragment.instance.description, fragment.instance, fragment);
-					ecology.callbackMessage(this.description.getClass().getSimpleName()+": "+fragment.instance.description.getClass().getSimpleName()+" - "+c.getSimpleName());
-					if (c == Attack.class)
-					{
-						fragment.availableInThisTurn = false;
-						infos.clear();
-						// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
-						int listSize = 0;
-						EncounterInfo i = info; 
-						{
-							if (!i.active) continue;
-							int fullSize = 0;
-							for (EntityFragment entityFragment:i.encountered.keySet())
-							{
-								int[] groupIds = i.encounteredGroupIds.get(entityFragment);
-								if (groupIds.length==0) {
-									System.out.println("NO GROUPID IN ARRAY: "+entityFragment.instance.description+" - "+entityFragment.size);
-								}
-								for (int in:groupIds) {
-									int size = entityFragment.instance.getGroupSizes()[in];
-									if (size==0) System.out.println("SIZE ZERO: "+entityFragment.instance.description);
-									fullSize+=size;
-								}
-							}
-							if (fullSize>0) {
-								infos.add(i.copy());
-								listSize++;
-							}
-						}
-						if (listSize>0) // only if groups can be encountered should we trigger newturn
-						{
-							J3DCore.getInstance().gameState.gameLogic.newTurnPhase(infos,Ecology.PHASE_TURNACT_COMBAT,false);
-							return true; // interrupt ecology!
-						}
-						return false; // don't interrupt ecology
-					}
-				}
-				else
+				
+				HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> choiceMap = description.getBehaviorsAndFragments(info);
+				HashMap<Integer, ArrayList<EntityFragment>> levelMap = description.getRelationLevelsAndFragments(this,info);
+				if (choiceMap.get(Attack.class)!=null && choiceMap.get(Attack.class).contains(J3DCore.getInstance().gameState.player.theFragment))
 				{
-					description.makeTurnChoice(fragment.instance.description, fragment.instance, fragment);
+					int level = description.getFullscaleEncounterRelationBalance(levelMap, info);
+					System.out.println("RELATION SUM LEVEL FOR FULLSCALE = "+level);
+					if (level>0)
+					{
+						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(info.copy(),Ecology.PHASE_TURNACT_COMBAT,false);
+						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a full scale encounter!");
+					} else
+					{
+						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(info.copyForFragmentAndGroupId(J3DCore.getInstance().gameState.player.theFragment),Ecology.PHASE_TURNACT_COMBAT,false);
+						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a single group encounter!");
+					}
+					return true;
 				}
-				actions++;
-				//if (numberOfActionsPerTurn==actions) break;
+				// TODO other mechanisms to happen, without UI
+				
 			}
 		}
 		//System.out.println("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+counter);

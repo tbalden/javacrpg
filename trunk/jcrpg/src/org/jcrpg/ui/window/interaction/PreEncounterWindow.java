@@ -18,8 +18,6 @@
 
 package org.jcrpg.ui.window.interaction;
 
-import java.util.ArrayList;
-
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
@@ -221,17 +219,15 @@ public class PreEncounterWindow extends PagedInputWindow {
 			}
 			
 			i.active = true;
-			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>();
-			selectedEncounter.add(i);
 			toggle();
-			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
+			core.gameState.gameLogic.newTurnPhase(i, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		if (base==leave)
 		{
-			ArrayList<EncounterInfo> selectedEncounter = new ArrayList<EncounterInfo>(); // selecting none
+			core.gameState.gameLogic.inEncounter = false;
+			core.gameState.engine.turnFinishedForPlayer();
 			toggle();
-			core.gameState.gameLogic.newTurnPhase(selectedEncounter, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		return false;

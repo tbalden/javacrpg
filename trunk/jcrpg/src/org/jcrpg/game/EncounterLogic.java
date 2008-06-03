@@ -18,7 +18,6 @@
 package org.jcrpg.game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
@@ -46,7 +45,7 @@ public class EncounterLogic {
 	 * @param possibleEncounters
 	 * @return true if can.
 	 */
-	public boolean checkLeaveEncounterPhase(EntityFragment fragment, Collection<EncounterInfo> encounters)
+	public boolean checkLeaveEncounterPhase(EntityFragment fragment, EncounterInfo encounters)
 	{
 		// TODO do check if instance can leave the encounter (forced to stay, or too much tension)
 		return true;
@@ -69,7 +68,7 @@ public class EncounterLogic {
 	public class EncounterRoundState {
 		public EntityMemberInstance initiatorSkillUser;
 		public SkillInstance initiatorSkill;
-		public ArrayList<EncounterInfo> encounters;
+		public EncounterInfo encounter;
 		public int nextEventCount = 0;
 		//public int maxEventCount = 0;
 		public ArrayList<PlannedEncounterEvent> plan = new ArrayList<PlannedEncounterEvent>();
@@ -85,12 +84,12 @@ public class EncounterLogic {
 	}
 	EncounterRoundState encounterRoundState = null;
 	
-	public void doEncounterRound(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, ArrayList<EncounterInfo> encounters)
+	public void doEncounterRound(EntityMemberInstance initiatorSkillUser, SkillInstance initiatorSkill, EncounterInfo encounter)
 	{
 		encounterRoundState = new EncounterRoundState();
 		encounterRoundState.initiatorSkillUser = initiatorSkillUser;
 		encounterRoundState.initiatorSkill = initiatorSkill;
-		encounterRoundState.encounters = encounters;
+		encounterRoundState.encounter = encounter;
 		
 		
 		// TODO do a preliminary skill usage plan into state with eventCount
@@ -112,11 +111,11 @@ public class EncounterLogic {
 			int result = ENCOUTNER_PHASE_RESULT_COMBAT;
 			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
 			{				
-				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounters, Ecology.PHASE_TURNACT_COMBAT, true);
+				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounter, Ecology.PHASE_TURNACT_COMBAT, true);
 			} else
 			if (result==EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY)
 			{
-				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounters, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
+				gameLogic.core.gameState.gameLogic.newTurnPhase(encounterRoundState.encounter, Ecology.PHASE_TURNACT_SOCIAL_RIVALRY, true);
 			} else
 			if (result==EncounterLogic.ENCOUTNER_PHASE_CONTINUE)
 			{
@@ -170,7 +169,7 @@ public class EncounterLogic {
 	}
 	TurnActTurnState turnActTurnState = null;
 	
-	public void doTurnActTurn(TurnActPlayerChoiceInfo info, ArrayList<EncounterInfo> encountered)
+	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
 	{
 		turnActTurnState = new TurnActTurnState();
 
