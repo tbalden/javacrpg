@@ -29,6 +29,7 @@ import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.humanoid.modifier.race.Catkind;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 
@@ -110,6 +111,10 @@ public class EntityInstance {
 		
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
+		
+		PersistentMemberInstance p = new PersistentMemberInstance(new Catkind(null,null),w,Ecology.getNextEntityId(),startX,startY,startZ);
+		fixMembers.put("1", p);
+		fragments.fragments.get(0).followingMembers.add(p);
 	}
 	
 	public void recalcBoundarySizes()
