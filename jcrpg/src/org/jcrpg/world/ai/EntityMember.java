@@ -20,6 +20,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -34,7 +35,7 @@ import org.jcrpg.world.ai.profession.Profession;
  * @author pali
  *
  */
-public class EntityMember {
+public class EntityMember extends DescriptionBase {
 	public String visibleTypeId;
 	public SkillContainer commonSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
@@ -97,6 +98,11 @@ public class EntityMember {
 	public int getRoamingSize()
 	{
 		return 1;
+	}
+	
+	public String getName()
+	{
+		return Language.v("member."+this.getClass().getSimpleName());
 	}
 	
 }

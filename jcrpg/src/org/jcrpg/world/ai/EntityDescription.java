@@ -43,7 +43,7 @@ import org.jcrpg.world.place.economic.Town;
  * @author pali
  *
  */
-public class EntityDescription {
+public class EntityDescription extends DescriptionBase {
 	
 	
 	public static final int GENDER_NEUTRAL = 0;
@@ -133,13 +133,13 @@ public class EntityDescription {
 		return skills.skills;
 	}
 	
-	public boolean isPrey(EntityDescription desc)
+	public boolean isPrey(DescriptionBase desc)
 	{
 		return false;
 	}
 	
-	HashMap<Integer, ArrayList<EntityFragment>> tmpMapRelation = new HashMap<Integer, ArrayList<EntityFragment>>();
-	HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EntityFragment>>();
+	HashMap<Integer, ArrayList<EncounterUnit>> tmpMapRelation = new HashMap<Integer, ArrayList<EncounterUnit>>();
+	HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EncounterUnit>>();
 	
 	/**
 	 * Returns a map of Choices -> EntityFragments - reusing (!!) global tmpMap. Use the map only
@@ -147,16 +147,16 @@ public class EntityDescription {
 	 * @param info
 	 * @return The map.
 	 */
-	HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> getBehaviorsAndFragments(EncounterInfo info)
+	HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> getBehaviorsAndFragments(EncounterInfo info)
 	{
 		tmpMapChoice.clear();
-		for (EntityFragment f:info.encountered.keySet())
+		for (EncounterUnit f:info.encountered.keySet())
 		{
 			Class<? extends Choice> b = makeTurnChoice(f);
-			ArrayList<EntityFragment> list = tmpMapChoice.get(b);
+			ArrayList<EncounterUnit> list = tmpMapChoice.get(b);
 			if (list==null)
 			{
-				list = new ArrayList<EntityFragment>();
+				list = new ArrayList<EncounterUnit>();
 				tmpMapChoice.put(b, list);
 			}
 			list.add(f);
@@ -164,16 +164,16 @@ public class EntityDescription {
 		return tmpMapChoice;
 	}
 
-	HashMap<Integer, ArrayList<EntityFragment>> getRelationLevelsAndFragments(EntityInstance initiator, EncounterInfo info)
+	HashMap<Integer, ArrayList<EncounterUnit>> getRelationLevelsAndFragments(EntityInstance initiator, EncounterInfo info)
 	{
 		tmpMapRelation.clear();
-		for (EntityFragment f:info.encountered.keySet())
+		for (EncounterUnit f:info.encountered.keySet())
 		{
-			Integer level = initiator.relations.getRelationLevel(f.instance);
-			ArrayList<EntityFragment> list = tmpMapRelation.get(level);
+			Integer level = initiator.relations.getRelationLevel(f);
+			ArrayList<EncounterUnit> list = tmpMapRelation.get(level);
 			if (list==null)
 			{
-				list = new ArrayList<EntityFragment>();
+				list = new ArrayList<EncounterUnit>();
 				tmpMapRelation.put(level, list);
 			}
 			list.add(f);
@@ -181,19 +181,19 @@ public class EntityDescription {
 		return tmpMapRelation;
 	}
 	
-	public int getFullscaleEncounterRelationBalance(HashMap<Integer, ArrayList<EntityFragment>> map,EncounterInfo info)
+	public int getFullscaleEncounterRelationBalance(HashMap<Integer, ArrayList<EncounterUnit>> map,EncounterInfo info)
 	{
 		int levelNeutral = EntityScaledRelationType.NEUTRAL;
 		int sumRelation = 0;
 		for (int i=EntityScaledRelationType.WORST_PERMANENT; i<=EntityScaledRelationType.BEST_PERMANENT; i++)
 		{
 			int lToZero = i-levelNeutral;
-			ArrayList<EntityFragment> fs = map.get(i);
+			ArrayList<EncounterUnit> fs = map.get(i);
 			int groupCount = 0;
 			if (fs!=null) 
 			{
-				for (EntityFragment f:fs) {
-					groupCount+=info.encounteredGroupIds.get(f).length * f.instance.entityState.currentLevelOfQuality;
+				for (EncounterUnit f:fs) {
+					groupCount+=info.encounteredGroupIds.get(f).length * f.getLevel();
 				}
 			}
 			
@@ -202,9 +202,9 @@ public class EntityDescription {
 		return sumRelation;
 	}
 	
-	public Class <? extends Choice> makeTurnChoice(EntityFragment fragment)
+	public Class <? extends Choice> makeTurnChoice(EncounterUnit fragment)
 	{
-		EntityDescription desc = fragment.instance.description;
+		DescriptionBase desc = fragment.getDescription();
 		//EntityInstance instance = fragment.instance;
 		if (getBehaviors()!=null) 
 		{

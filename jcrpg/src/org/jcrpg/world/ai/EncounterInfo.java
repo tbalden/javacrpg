@@ -40,22 +40,23 @@ public class EncounterInfo {
 	 * Never forget to append the subject's data to these, encountered entities need
 	 * this data for easy selection of initiator for acts.
 	 */
-	public HashMap<EntityFragment, int[][]> encountered = new HashMap<EntityFragment, int[][]>();
+	public HashMap<EncounterUnit, int[][]> encountered = new HashMap<EncounterUnit, int[][]>();
 	/**
 	 * encountered instances' subgroupIds facing the possible encounter.
 	 * Never forget to append the subject's data to these, encountered entities need
 	 * this data for easy selection of initiator for acts.
 	 */
-	public HashMap<EntityFragment, int[]> encounteredGroupIds = new HashMap<EntityFragment, int[]>();
+	public HashMap<EncounterUnit, int[]> encounteredGroupIds = new HashMap<EncounterUnit, int[]>();
 	/**
 	 * Own group ids for a given fragment.
 	 * You shouldn't put subject data into THIS one! all other hashmaps need subject data.
 	 */
-	public HashMap<EntityFragment, int[]> encounteredFragmentsAndOwnGroupIds = new HashMap<EntityFragment, int[]>();
+	public HashMap<EncounterUnit, int[]> encounteredUnitsAndOwnGroupIds = new HashMap<EncounterUnit, int[]>();
 	/**
 	 * The subgroups of the initiator group which face the encountered.  
 	 */
 	public ArrayList<Integer> ownGroupIds = new ArrayList<Integer>();
+	// TODO info for fixed memberInstances !!!
 	
 	//public  
 	
@@ -92,7 +93,7 @@ public class EncounterInfo {
 		// the initiator as target for its acts.
 		r.encountered.put(subjectFragment, encountered.get(subjectFragment));
 		r.encounteredGroupIds.put(subjectFragment, encounteredGroupIds.get(subjectFragment));
-		int[] gIds = encounteredFragmentsAndOwnGroupIds.get(f);
+		int[] gIds = encounteredUnitsAndOwnGroupIds.get(f);
 		for (int i=0; i<gIds.length; i++)
 		{
 			if (ownGroupIds.contains(gIds[i])) continue;
@@ -112,14 +113,14 @@ public class EncounterInfo {
 		generatedGroups.put(groupId, members);
 	}
 	
-	public void appendOwnGroupIds(EntityFragment target, int[] groupIds)
+	public void appendOwnGroupIds(EncounterUnit target, int[] groupIds)
 	{
 		for (int i=0; i<groupIds.length; i++)
 		{
 			if (ownGroupIds.contains(groupIds[i])) continue;
 			ownGroupIds.add(groupIds[i]);
 		}
-		encounteredFragmentsAndOwnGroupIds.put(target, groupIds);		
+		encounteredUnitsAndOwnGroupIds.put(target, groupIds);		
 	}
 	
 	

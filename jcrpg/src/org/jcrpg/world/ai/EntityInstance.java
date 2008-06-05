@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.choice.Attack;
@@ -94,7 +93,7 @@ public class EntityInstance {
 	 */
 	public EntityFragments fragments = new EntityFragments(this);
 
-	public HashMap<String, EntityMemberInstance> fixMembers = new HashMap<String, EntityMemberInstance>();
+	public HashMap<String, PersistentMemberInstance> fixMembers = new HashMap<String, PersistentMemberInstance>();
 	
 	public EntityInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers, int startX, int startY, int startZ) {
 		super();
@@ -166,8 +165,8 @@ public class EntityInstance {
 				if (info.subject==null) continue;
 				counter++;
 				
-				HashMap<Class<?extends Choice>, ArrayList<EntityFragment>> choiceMap = description.getBehaviorsAndFragments(info);
-				HashMap<Integer, ArrayList<EntityFragment>> levelMap = description.getRelationLevelsAndFragments(this,info);
+				HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> choiceMap = description.getBehaviorsAndFragments(info);
+				HashMap<Integer, ArrayList<EncounterUnit>> levelMap = description.getRelationLevelsAndFragments(this,info);
 				if (choiceMap.get(Attack.class)!=null && choiceMap.get(Attack.class).contains(J3DCore.getInstance().gameState.player.theFragment))
 				{
 					int level = description.getFullscaleEncounterRelationBalance(levelMap, info);
@@ -217,9 +216,9 @@ public class EntityInstance {
 	
 
 
-	public VisibleLifeForm getOne(EntityMember member, EntityMemberInstance instance)
+	public VisibleLifeForm getOne(EntityMemberInstance instance)
 	{
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),member,this,instance);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),instance.description,this,instance);
 	}
 	
 	public void setPosition(int[] coords)
@@ -252,6 +251,6 @@ public class EntityInstance {
 		fragments.merge(instance.fragments);
 		instance.merged = true;
 	}
-	
+
 	
 }

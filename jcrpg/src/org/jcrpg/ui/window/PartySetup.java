@@ -39,9 +39,11 @@ import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -63,7 +65,7 @@ public class PartySetup extends PagedInputWindow {
 	Node pageCreationSecond = new Node();
 
 	
-	ArrayList<EntityMemberInstance> charactersOfParty = new ArrayList<EntityMemberInstance>();
+	ArrayList<PersistentMemberInstance> charactersOfParty = new ArrayList<PersistentMemberInstance>();
 	
 	// party select
 	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
@@ -516,7 +518,7 @@ public class PartySetup extends PagedInputWindow {
 			{
 				if (i.description.equals(d.person)) return true; // no duplication
 			}
-			charactersOfParty.add(new EntityMemberInstance(d.person,EntityMemberInstance.getNextNumbericId()));
+			charactersOfParty.add(new PersistentMemberInstance(d.person,null,Ecology.getNextEntityId(),0,0,0));
 			core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
 			core.uiBase.hud.characters.show();
 			

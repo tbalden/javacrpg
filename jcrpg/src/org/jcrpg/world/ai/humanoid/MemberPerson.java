@@ -50,6 +50,13 @@ public class MemberPerson extends EntityMember {
 	public String foreName;
 	public String surName;
 	public String pictureId;
+	
+	@Override
+	public String getName()
+	{
+		return getForeName();
+	}
+	
 	public String getForeName() {
 		return foreName;
 	}

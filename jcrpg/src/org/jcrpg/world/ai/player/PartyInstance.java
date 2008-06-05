@@ -25,9 +25,10 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
@@ -53,15 +54,15 @@ public class PartyInstance extends EntityInstance {
 			{
 				if (!i.active) continue;
 				int fullSize = 0;
-				for (EntityFragment entityFragment:i.encountered.keySet())
+				for (EncounterUnit entityFragment:i.encountered.keySet())
 				{
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					if (groupIds.length==0) {
-						System.out.println("NO GROUPID IN ARRAY: "+entityFragment.instance.description+" - "+entityFragment.size);
+						System.out.println("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
 					}
 					for (int in:groupIds) {
-						int size = entityFragment.instance.getGroupSizes()[in];
-						if (size==0) System.out.println("SIZE ZERO: "+entityFragment.instance.description);
+						int size = entityFragment.getGroupSize(in);
+						if (size==0) System.out.println("SIZE ZERO: "+entityFragment.getDescription());
 						fullSize+=size;
 					}
 				}
@@ -85,7 +86,7 @@ public class PartyInstance extends EntityInstance {
 		return false;
 	}
 	
-	public ArrayList<EntityMemberInstance> orderedParty = new ArrayList<EntityMemberInstance>();
+	public ArrayList<PersistentMemberInstance> orderedParty = new ArrayList<PersistentMemberInstance>();
 	
 	public PartyInstance(EntityDescription description, World w, Ecology ecology, int numericId, String id, int numberOfMembers,
 			int startX, int startY, int startZ) {
@@ -93,7 +94,7 @@ public class PartyInstance extends EntityInstance {
 		theFragment = fragments.fragments.get(0);
 	}
 
-	public void addPartyMember(EntityMemberInstance m)
+	public void addPartyMember(PersistentMemberInstance m)
 	{
 		if (m.description instanceof MemberPerson) {
 			MemberPerson desc = (MemberPerson)m.description;
@@ -109,8 +110,9 @@ public class PartyInstance extends EntityInstance {
 	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
 		PartyMember member = new PartyMember(id,audio);
-		EntityMemberInstance mI = new EntityMemberInstance(member, EntityMemberInstance.getNextNumbericId());
+		PersistentMemberInstance mI = new PersistentMemberInstance(member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(id, mI);
+		theFragment.followingMembers.add(mI);
 		orderedParty.add(mI);
 		numberOfMembers++;
 	}
@@ -122,7 +124,7 @@ public class PartyInstance extends EntityInstance {
 	
 	public void addPartyMemberInstance(PartyMember m)
 	{
-		EntityMemberInstance mI = new EntityMemberInstance(m, EntityMemberInstance.getNextNumbericId());
+		PersistentMemberInstance mI = new PersistentMemberInstance(m, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(m.id, mI);
 		numberOfMembers++;
 	}

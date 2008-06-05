@@ -35,8 +35,8 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -237,13 +237,13 @@ public class TurnActWindow extends PagedInputWindow {
 			EncounterInfo i = encountered;
 			if (i.active) {
 				//int fullSize = 0;
-				for (EntityFragment entityFragment:i.encountered.keySet())
+				for (EncounterUnit entityFragment:i.encountered.keySet())
 				{
 					//if (entityFragment == party.theFragment) continue;
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					if (groupIds!=null)
 					for (int in:groupIds) {
-						int size = entityFragment.instance.getGroupSizes()[in];
+						int size = entityFragment.getGroupSize(in);
 						if (size>0) listSize++;
 						//fullSize+=size;
 					}
@@ -265,19 +265,19 @@ public class TurnActWindow extends PagedInputWindow {
 				int fragmentCount = 0;
 				String text = count+"/";
 				if (!i.active) continue;
-				for (EntityFragment fragment:i.encountered.keySet())
+				for (EncounterUnit fragment:i.encountered.keySet())
 				{
 					//if (fragment == party.theFragment) continue;
-					System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+					System.out.println(fragment.getName()+" _ "+i.encountered.size());
 					int fullSize = 0;
 					fragmentCount++;
 					int[] groupIds = i.encounteredGroupIds.get(fragment);
 					if (groupIds!=null)
 					for (int in:groupIds) {
-						int size1 = fragment.instance.getGroupSizes()[in];
+						int size1 = fragment.getGroupSize(in);
 						if (size1<1) continue;
 						fullSize+=size1;
-						text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
+						text=fragmentCount+" ("+size1+") "+fragment.getName() + " " + in;
 						ids[count] = ""+count;
 						texts[count] = text;
 						Object[] fragmentAndGroupId = new Object[2];
@@ -287,7 +287,7 @@ public class TurnActWindow extends PagedInputWindow {
 						count++;
 					} else
 					{
-						System.out.println("GROUPIDS NULL FOR "+fragment.instance.description);
+						System.out.println("GROUPIDS NULL FOR "+fragment.getDescription());
 					}
 				}
 			}

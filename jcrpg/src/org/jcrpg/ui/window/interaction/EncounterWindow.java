@@ -33,6 +33,7 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.EncounterSkill;
@@ -143,12 +144,12 @@ public class EncounterWindow extends PagedInputWindow {
 			EncounterInfo i = encountered;
 			if (i.active) {
 				//int fullSize = 0;
-				for (EntityFragment entityFragment:i.encountered.keySet())
+				for (EncounterUnit entityFragment:i.encountered.keySet())
 				{
 					if (entityFragment == party.theFragment) continue;
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					for (int in:groupIds) {
-						int size = entityFragment.instance.getGroupSizes()[in];
+						int size = entityFragment.getGroupSize(in);
 						if (size>0) listSize++;
 						//fullSize+=size;
 					}
@@ -169,18 +170,18 @@ public class EncounterWindow extends PagedInputWindow {
 				int fragmentCount = 0;
 				String text = count+"/";
 				if (i.active) {
-					for (EntityFragment fragment:i.encountered.keySet())
+					for (EncounterUnit fragment:i.encountered.keySet())
 					{
 						if (fragment == party.theFragment) continue;
-						System.out.println(fragment.instance.description.getClass().getSimpleName()+" _ "+i.encountered.size());
+						System.out.println(fragment.getName()+" _ "+i.encountered.size());
 						int fullSize = 0;
 						fragmentCount++;
 						int[] groupIds = i.encounteredGroupIds.get(fragment);
 						for (int in:groupIds) {
-							int size1 = fragment.instance.getGroupSizes()[in];
+							int size1 = fragment.getGroupSize(in);
 							if (size1<1) continue;
 							fullSize+=size1;
-							text=fragmentCount+" ("+size1+") "+fragment.instance.description.getClass().getSimpleName() + " " + in;
+							text=fragmentCount+" ("+size1+") "+fragment.getName() + " " + in;
 							ids[count] = ""+count;
 							texts[count] = text;
 							Object[] fragmentAndGroupId = new Object[2];
@@ -235,7 +236,7 @@ public class EncounterWindow extends PagedInputWindow {
 			EntityFragment fragment = (EntityFragment)fragmentAndGroupId[0];
 			int size = fragment.instance.getGroupSizes()[groupId];
 			description.text = "Qual.:"+fragment.instance.entityState.currentLevelOfQuality;
-			description.text += " Relation: "+fragment.instance.relations.getRelationLevel(party);
+			description.text += " Relation: "+fragment.getRelationLevel(party.theFragment);
 			description.text += " Size: "+size+"/"+fragment.size;
 			//description.setUpdated(true);
 			description.activate();
