@@ -1,0 +1,59 @@
+/*
+ *  This file is part of JavaCRPG.
+ *  Copyright (C) 2008 Illes Pal Zoltan
+ *
+ *  JavaCRPG is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  JavaCRPG is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+package org.jcrpg.world.ai;
+
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+
+/**
+ * A unit of an encounter field - can be an EntityInstance or a fixed PersistenEntityInstance right now.
+ * @author illes
+ *
+ */
+public interface EncounterUnit {
+	
+	/**
+	 * Get encounter intersectable boundary.
+	 * @return
+	 */
+	public DistanceBasedBoundary getEncounterBoundary();
+
+	/**
+	 * Get unique numericId.
+	 * @return
+	 */
+	public int getNumericId();
+	
+	public long getLevel();
+	
+	public DescriptionBase getDescription();
+	
+	public int[] getGroupIds(int radiusRatio, int randomSeed);
+	public ArrayList<EntityMemberInstance> getGroup(int groupId);
+	public int getGroupSize(int groupId);
+	
+	public VisibleLifeForm getOne(EntityMemberInstance member);
+	
+	public int getRelationLevel(EncounterUnit unit);
+	
+	public String getName();
+	
+	public int getSize();
+	
+}

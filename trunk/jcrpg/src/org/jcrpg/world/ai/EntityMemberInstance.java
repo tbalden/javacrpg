@@ -33,6 +33,7 @@ public class EntityMemberInstance {
 	 */
 	public EntityMember description = null;
 	
+	
 	/**
 	 * The existing relations' class of this member instance.
 	 */
@@ -59,18 +60,12 @@ public class EntityMemberInstance {
 	 * The skill that the given instance is using for his behavior of living around at the current turn.
 	 */
 	public InterceptionSkill behaviorSkill = null;
-	
+
 	public EntityMemberInstance(EntityMember description, int numericId) {
 		super();
 		this.description = description;
 		this.numericId = numericId;
-	}
-
-	public static int numericIdSequence = 0;
 	
-	public final static synchronized int getNextNumbericId()
-	{
-		return numericIdSequence++;
 	}
 	
 	private ArrayList<InterceptionSkill> tempList = new ArrayList<InterceptionSkill>();

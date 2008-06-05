@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 import com.jme.renderer.ColorRGBA;
@@ -53,7 +54,7 @@ public class Characters {
 		node.removeFromParent();
 	}
 	
-	public void updateForPartyCreation(ArrayList<EntityMemberInstance> orderedParty)
+	public void updateForPartyCreation(ArrayList<PersistentMemberInstance> orderedParty)
 	{
 		node.detachAllChildren();
 		addMembers(orderedParty);
@@ -80,7 +81,7 @@ public class Characters {
 
 	}
 	
-	public void addMembers(ArrayList<EntityMemberInstance> orderedParty)
+	public void addMembers(ArrayList<PersistentMemberInstance> orderedParty)
 	{
 		bars.clear();
 		try {

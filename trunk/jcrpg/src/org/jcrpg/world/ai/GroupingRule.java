@@ -84,9 +84,9 @@ public class GroupingRule {
 		return ret;
 	}
 	
-	public int[] getGroupIds(EntityFragment f, EntityInstance instance, int radiusRatio, int randomSeed)
+	public int[] getGroupIds(EntityFragment f, int radiusRatio, int randomSeed)
 	{
-		int numberOfGroups = (int)(instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
+		int numberOfGroups = (int)(f.instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
 		//System.out.println("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
 		if (numberOfGroups==0) numberOfGroups = 1;

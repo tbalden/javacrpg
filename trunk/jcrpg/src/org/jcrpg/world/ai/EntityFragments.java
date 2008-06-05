@@ -19,8 +19,10 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 /**
  * Class registering roaming fragments of an EntityInstance
@@ -45,7 +47,7 @@ public class EntityFragments {
 		
 	}
 	
-	public class EntityFragment
+	public class EntityFragment implements EncounterUnit 
 	{
 		public EntityFragments parent;
 		public EntityInstance instance;
@@ -65,6 +67,41 @@ public class EntityFragments {
 		{
 			return null;
 		}
+		public DistanceBasedBoundary getEncounterBoundary() {
+			return roamingBoundary;
+		}
+		public int getNumericId() {
+			return instance.numericId;
+		}
+		public long getLevel() {
+			return instance.entityState.currentLevelOfQuality;
+		}
+		public DescriptionBase getDescription() {
+			return instance.description;
+		}
+		public ArrayList<EntityMemberInstance> getGroup(int groupId) {
+			return instance.description.groupingRule.getGroup(groupId, this);
+		}
+		public int getGroupSize(int groupId) {
+			return instance.getGroupSizes()[groupId];
+		}
+		public VisibleLifeForm getOne(EntityMemberInstance member) {
+			return instance.getOne(member);
+		}
+		public int getRelationLevel(EncounterUnit unit) {
+			return instance.relations.getRelationLevel(unit);
+		}
+		public String getName()
+		{
+			return Language.v("entity."+instance.description.getClass().getSimpleName());
+		}
+		public int getSize() {
+			return size;
+		}
+		public int[] getGroupIds(int radiusRatio, int randomSeed) {
+			return instance.description.groupingRule.getGroupIds(this, radiusRatio, randomSeed);
+		}
+		
 		
 	}
 	

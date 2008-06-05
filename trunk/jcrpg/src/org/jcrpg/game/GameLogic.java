@@ -29,10 +29,10 @@ import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.EncounterInfo;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
@@ -136,20 +136,20 @@ public class GameLogic {
 		{
 			EncounterInfo info = possibleEncounter;
 			if (info.active) {
-				for (EntityFragment fragment:info.encountered.keySet()) {
+				for (EncounterUnit fragment:info.encountered.keySet()) {
 					if (fragment==player.fragments.fragments.get(0)) continue;
 					int[] groupIds = info.encounteredGroupIds.get(fragment);
 					if (groupIds!=null && groupIds.length>0)
-						ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.instance.description.getClass().getSimpleName());
+						ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.getDescription().getClass().getSimpleName());
 					else
-						ecology.callbackMessage("You seem to trespass a Domain : "+fragment.instance.description.getClass().getSimpleName());
-					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.instance.description.getClass().getSimpleName());
+						ecology.callbackMessage("You seem to trespass a Domain : "+fragment.getDescription().getClass().getSimpleName());
+					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.getDescription().getClass().getSimpleName());
 					boolean played = false;
 					if (groupIds !=null)
 					for (int in:groupIds)
 					{
-						int size = fragment.instance.getGroupSizes()[in];
-						ArrayList<EntityMemberInstance> members = fragment.instance.description.groupingRule.getGroup(in,fragment);
+						int size = fragment.getGroupSize(in);
+						ArrayList<EntityMemberInstance> members = fragment.getGroup(in);
 						info.setGroupMemberInstances(in, members);
 						String types = "";
 						HashSet<String> typesSet = new HashSet<String>();
@@ -175,7 +175,7 @@ public class GameLogic {
 									}
 								}
 							}
-							VisibleLifeForm form = fragment.instance.getOne(member.description,member);
+							VisibleLifeForm form = fragment.getOne(member);//fragment.instance.getOne(member.description,member);
 							form.targetForm = playerFakeForm;
 							forms.add(form);
 							sizeOfAll++;

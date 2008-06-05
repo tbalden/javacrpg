@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.fauna;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.DescriptionBase;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.PositionCalculus;
 import org.jcrpg.world.ai.position.NormalCalculus;
@@ -36,7 +37,7 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 
 	public static Class<? extends PositionCalculus> positionCalcType = NormalCalculus.class;
 
-	public ArrayList<Class <? extends EntityDescription>> foodEntities = new ArrayList<Class <? extends EntityDescription>>();
+	public ArrayList<Class <? extends DescriptionBase>> foodEntities = new ArrayList<Class <? extends DescriptionBase>>();
 	public ArrayList<Class <? extends ClimateBelt>> climates = new ArrayList<Class <? extends ClimateBelt>>();
 	public ArrayList<Condition> conditions = new ArrayList<Condition>();
 	public ArrayList<Class <? extends Geography>> geographies = new ArrayList<Class <? extends Geography>>();
@@ -53,7 +54,7 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 	
 	
 	
-	public ArrayList<Class <? extends EntityDescription>> getFoodEntities()
+	public ArrayList<Class <? extends DescriptionBase>> getFoodEntities()
 	{
 		return foodEntities;
 	}
@@ -72,7 +73,7 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 	}
 
 	@Override
-	public boolean isPrey(EntityDescription desc) {
+	public boolean isPrey(DescriptionBase desc) {
 		
 		if (getFoodEntities().contains(desc.getClass()))
 			return true;

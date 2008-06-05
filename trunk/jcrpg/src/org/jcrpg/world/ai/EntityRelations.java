@@ -29,9 +29,9 @@ public class EntityRelations
 {
 	public EntityScaledRelationType relations = new EntityScaledRelationType();
 	
-	public int getRelationLevel(EntityInstance i)
+	public int getRelationLevel(EncounterUnit i)
 	{
-		return relations.getRelationQuality(i.numericId);
+		return relations.getRelationQuality(i.getNumericId());
 	}
 	public void increaseRelationLevel(EntityInstance i, byte num)
 	{

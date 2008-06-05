@@ -35,9 +35,10 @@ import org.jcrpg.game.GameLogic;
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
-import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -65,7 +66,7 @@ public class SaveLoadNewGame {
 	public static final String saveDir = "./save";
 	public static final String charsDir = "./chars";
 	
-	public static void newGame(J3DCore core, Collection<EntityMemberInstance> partyMembers, CharacterCreationRules cCR) 
+	public static void newGame(J3DCore core, Collection<PersistentMemberInstance> partyMembers, CharacterCreationRules cCR) 
 	{
 		try {
 			
@@ -105,8 +106,9 @@ public class SaveLoadNewGame {
 			int wZ = world.realSizeZ/2+zDiff;
 			;
 			PartyInstance party = new PartyInstance(new Party(),world,ecology,ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
-			for (EntityMemberInstance m:partyMembers)
+			for (PersistentMemberInstance m:partyMembers)
 			{
+				m.roamingBoundary = new DistanceBasedBoundary(world,wX,wY,wZ,m.description.getRoamingSize());
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).characterGenerationNewPartyObjects)
 				{
 					m.inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
