@@ -141,6 +141,7 @@ public abstract class AbstractInfrastructure {
 		ArrayList<InfrastructureElementParameters> fixProperties = new ArrayList<InfrastructureElementParameters>();
 		for (EntityMemberInstance i:population.owner.fixMembers.values())
 		{
+			if (i.ownedInfrastructures!=null)
 			for (Class<?extends Economic> ecoClass:i.ownedInfrastructures)
 			{
 				InfrastructureElementParameters prop = new InfrastructureElementParameters();
