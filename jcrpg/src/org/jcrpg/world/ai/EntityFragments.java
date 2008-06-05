@@ -54,11 +54,11 @@ public class EntityFragments {
 		/**
 		 * those NPCs (or PCs) that join the fragment in its roaming.
 		 */
-		public ArrayList<EntityMemberInstance> followingMembers = new ArrayList<EntityMemberInstance>();
+		public ArrayList<PersistentMemberInstance> followingMembers = new ArrayList<PersistentMemberInstance>();
 		public int size;
 		public DistanceBasedBoundary roamingBoundary;
 		
-		public void addFollower(EntityMemberInstance i)
+		public void addFollower(PersistentMemberInstance i)
 		{
 			followingMembers.add(i);
 			parent.recalcBoundaries();
