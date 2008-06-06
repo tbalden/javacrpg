@@ -39,7 +39,7 @@ public class Engine implements Runnable {
 	/**
 	 * Tells if do environment's time has come. 
 	 */
-	public boolean doEnvironmentNeeded = false;
+	private boolean doEnvironmentNeeded = false;
 	
 	//Engine
 	
@@ -56,15 +56,15 @@ public class Engine implements Runnable {
 	public static int SECONDS_PER_ENVIRONMENT = 160; 
 	
 	
-	public boolean timeChanged = false;
-	public boolean turnCome = false;
-	public boolean economyUpdateCome = false;
-	public boolean doEconomyUpdate = false;
+	private boolean timeChanged = false;
+	private boolean turnCome = false;
+	private boolean economyUpdateCome = false;
+	private boolean doEconomyUpdate = false;
 	public int secondsLeftForTurn = SECONDS_PER_TURN;
 	public int secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
 	public int turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
 	
-	public boolean turnInterruptedByPlayerInteraction = false;
+	private boolean turnInterruptedByPlayerInteraction = false;
 	
 	public long numberOfTurn = 0;
 	
@@ -84,6 +84,7 @@ public class Engine implements Runnable {
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
+				System.out.println("### TICK-TACK ###");
 				worldMeanTime.tick(TICK_SECONDS);
 				secondsLeftForTurn-=TICK_SECONDS;
 				secondsLeftForEnvironment-=TICK_SECONDS+getTrueRandom().nextInt(TICK_SECONDS); // this is random
@@ -93,7 +94,7 @@ public class Engine implements Runnable {
 						Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
 						secondsLeftForTurn = SECONDS_PER_TURN;
 						turnsLeftForEconomyUpdate-=1;
-						pause = true;
+						setPause(true);
 						turnCome = true;
 						numberOfTurn++;
 						if (turnsLeftForEconomyUpdate<=0)
@@ -137,7 +138,7 @@ public class Engine implements Runnable {
 		return turnCome;
 	}
 	/**
-	 * Should be called when a turn processing is finished, sets pause off.
+	 * Should be called when a turn processing is finished.
 	 */
 	public void turnFinishedForAI()
 	{
@@ -158,23 +159,28 @@ public class Engine implements Runnable {
 	
 	public void turnFinishedForPlayer()
 	{
-		if (!economyUpdateCome) {
-			pause = false;
-			System.out.println("TURN ENDED, UNPAUSE.");
-		}
-		// continue with interrupted AI things...
+		// continue with interrupted AI things... (j3dcore doUpdate will call ecology.)
 		turnCome = true;
+	}
+	
+	public void ecologyTurnFinished()
+	{
+		if (!economyUpdateCome)
+		{
+			setPause(false);
+		}
 	}
 	
 	public void economyUpdateFinished()
 	{
-		pause = false;
+		setPause(false);
 		doEconomyUpdate = false;
 		economyUpdateCome = false;
 		System.out.println("TURN ENDED (Economy), UNPAUSE.");
 	}
 
 	public synchronized void setPause(boolean pause) {
+		System.out.println("---### PAUSE = "+pause);
 		this.pause = pause;
 	}
 
@@ -189,6 +195,10 @@ public class Engine implements Runnable {
 	public synchronized void setTimeChanged(boolean state) {
 		timeChanged = state;
 	}
+	public synchronized boolean hasTimeChanged()
+	{
+		return timeChanged;
+	}
 
 	/**
 	 * Current turn's number.
@@ -201,7 +211,29 @@ public class Engine implements Runnable {
 	public void setNumberOfTurn(long numberOfTurn) {
 		this.numberOfTurn = numberOfTurn;
 	}
-
 	
+	public boolean checkEconomyUpdateNeeded()
+	{
+		return doEconomyUpdate;
+	}
+
+	/**
+	 * Call this when ecology turn is still being calculated, but user interaction is being done,
+	 * and after it turn will continue.
+	 */
+	public void ecologyTurnInterruptedByPlayerInteraction()
+	{
+		turnInterruptedByPlayerInteraction = true;
+	}
+	
+	public boolean isEnvironmentUpdateNeeded()
+	{
+		return doEnvironmentNeeded;
+	}
+	
+	public void environemntUpdateDone()
+	{
+		doEnvironmentNeeded = false;
+	}
 
 }

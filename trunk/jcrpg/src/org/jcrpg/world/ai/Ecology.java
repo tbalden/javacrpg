@@ -161,7 +161,7 @@ public class Ecology {
 		if (fragment==J3DCore.getInstance().gameState.player.theFragment)
 		{
 			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
-			System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
+			//System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
 			//System.out.println("## "+counter);
 		}
 		
@@ -205,16 +205,16 @@ public class Ecology {
 					intersectTwoUnits(fragment, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
 					for (PersistentMemberInstance pmiTarget:targetFragment.followingMembers)
 					{
-						System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
+						//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 						intersectTwoUnits(fragment, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
 					}
 					for (PersistentMemberInstance pmi:fragment.followingMembers)
 					{
-						System.out.println("--- ###### "+pmi.getName()+pmi.getEncounterBoundary().posX+" "+pmi.getEncounterBoundary().posZ);
+						//System.out.println("--- ###### "+pmi.getName()+pmi.getEncounterBoundary().posX+" "+pmi.getEncounterBoundary().posZ);
 						intersectTwoUnits(pmi, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
 						for (PersistentMemberInstance pmiTarget:targetFragment.followingMembers)
 						{
-							System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
+							//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 							intersectTwoUnits(pmi, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
 						}
 					}
@@ -287,7 +287,7 @@ public class Ecology {
 						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
 						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
 						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						System.out.println("DIFF 10 > "+v2.distance(v1) + fT.getName());
+						//System.out.println("DIFF 10 > "+v2.distance(v1) + fT.getName());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
 						calcGroupsOfEncounter(fragment, fT, r2[0][1], pre, false);
@@ -299,7 +299,7 @@ public class Ecology {
 						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
 						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
 						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						System.out.println("!! DIFF 10 < "+v2.distance(v1) + fT.getName());
+						//System.out.println("!! DIFF 10 < "+v2.distance(v1) + fT.getName());
 					}
 				}
 				for (EncounterUnit fr:pre.encountered.keySet()) {
@@ -334,8 +334,6 @@ public class Ecology {
 	public void doTurn()
 	{
 		System.out.println("ALL ENTITIES IN ECOLOGY IN TURN NO. "+engine.numberOfTurn+" = "+beings.size());
-		J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
-		J3DCore.getInstance().updateDisplay(null);
 
 		long time = System.currentTimeMillis();
 		
@@ -345,6 +343,9 @@ public class Ecology {
 		 */			
 		if (!interrupted)
 		{
+			J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
+			J3DCore.getInstance().updateDisplay(null);
+
 			Collection<EntityInstance> toRemove = new HashSet<EntityInstance>();
 			for (EntityInstance i:orderedBeingList)
 			{
@@ -411,11 +412,14 @@ public class Ecology {
 		}
 		if (interrupted)
 		{
-			engine.turnInterruptedByPlayerInteraction = true;
+			engine.ecologyTurnInterruptedByPlayerInteraction();
+		} else
+		{
+			engine.ecologyTurnFinished();
+			J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
+			J3DCore.getInstance().updateDisplay(null);
 		}
 		Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
-		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
-		J3DCore.getInstance().updateDisplay(null);
 	}
 	
 	public void callbackMessage(String message)
