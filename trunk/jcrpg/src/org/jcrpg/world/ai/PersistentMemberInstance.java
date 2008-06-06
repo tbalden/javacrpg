@@ -34,7 +34,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 			int numericId, int startX, int startY, int startZ) {
 		super(description, numericId);
 		if (w!=null) {
-			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,description.getRoamingSize());
+			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,1);//TODO description.getRoamingSize());
 		}
 	}
 

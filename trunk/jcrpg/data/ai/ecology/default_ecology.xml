@@ -2,13 +2,15 @@
 	<bestiary>
 		<animal id="HUMANCOMMONERS"
 			implementation="org.jcrpg.world.ai.humanoid.group.human.HumanCommoners" />
+		<animal id="BOARMANTRIBE"
+			implementation="org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe" />
 		<animal id="GIANTCAVESPIDERS"
 			implementation="org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders" />
 		<animal id="BROWNBEARFAMILY"
 			implementation="org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily" />
 		<animal id="POLARBEARS"
 			implementation="org.jcrpg.world.ai.fauna.mammals.bear.PolarBears" />
-		<animal id="GORRILAHORDE"
+		<animal id="GORILLAHORDE"
 			implementation="org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde" />
 		<animal id="WOLFPACK"
 			implementation="org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack" />
@@ -54,6 +56,11 @@
 			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
 			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+
+     	<population ref-animal-id="BOARMANTRIBE" ref-climat="Tropical"
+			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+     	<population ref-animal-id="BOARMANTRIBE" ref-climat="Continental"
+			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
  
  
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Tropical"
@@ -68,8 +75,8 @@
     	<population ref-animal-id="BROWNBEARFAMILY" ref-climat="Continental"
 			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
 
-    	<population ref-animal-id="GORRILAHORDE" ref-climat="Tropical"
-			percentage-chance-of-appearance="5" min-in-group="10" food-chain-position="HERBIVORE"/>
+    	<population ref-animal-id="GORILLAHORDE" ref-climat="Tropical"
+			percentage-chance-of-appearance="10" min-in-group="10" food-chain-position="HERBIVORE"/>
 
     	<!-- sample FOOD CHAIN SAMPLE in Tropical Climate                                                             -->		
 		<population ref-animal-id="HERONS" ref-climat="Continental"

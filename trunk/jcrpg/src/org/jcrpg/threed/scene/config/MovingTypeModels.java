@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
+import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 
 /**
@@ -102,6 +103,17 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, HumanCommoners.humanFemale_unit);
 		counter++;
 
+		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_THUG.visibleTypeId,counter);
+		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_WORKER.visibleTypeId,counter);
+		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_ARCHER.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, BoarmanTribe.boarmanMale_unit);
+		counter++;
+
+		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_FEMALE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, BoarmanTribe.boarmanFemale_unit);
+		counter++;
+		
+		
 		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_MALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_FEMALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_CHILD.visibleTypeId,counter);
