@@ -34,7 +34,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 			int numericId, int startX, int startY, int startZ) {
 		super(description, numericId);
 		if (w!=null) {
-			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,1);//TODO description.getRoamingSize());
+			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,5);//TODO description.getRoamingSize());
 		}
 	}
 
@@ -54,9 +54,14 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return description;
 	}
 
+	public transient ArrayList<EntityMemberInstance> tmpList = null;
 	public ArrayList<EntityMemberInstance> getGroup(int groupId) {
-		// TODO Auto-generated method stub
-		return null;
+		if (tmpList==null)
+		{
+			 tmpList = new ArrayList<EntityMemberInstance>();
+			 tmpList.add(this);
+		}
+		return tmpList;
 	}
 
 	public int getGroupSize(int groupId) {
@@ -65,7 +70,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 
 	public VisibleLifeForm getOne(EntityMemberInstance member) {
 		// TODO Auto-generated method stub
-		return null;
+		return null;//
 	}
 
 	public int getRelationLevel(EncounterUnit unit) {
@@ -82,8 +87,12 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	}
 	
 	static final int[] groupId = new int[]{0};
-	public int[] getGroupIds(int radiusRatio, int randomSeed) {
+	public int[] getGroupIds(int posX, int posY, int posZ, int radiusRatio, int randomSeed) {
 		return groupId;
+	}
+
+	public ArrayList<EncounterUnit> getSubUnits(int posX, int posY, int posZ) {
+		return null;
 	}
 
 }

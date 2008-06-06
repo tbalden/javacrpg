@@ -47,16 +47,19 @@ public class EncounterInfo {
 	 * this data for easy selection of initiator for acts.
 	 */
 	public HashMap<EncounterUnit, int[]> encounteredGroupIds = new HashMap<EncounterUnit, int[]>();
+	public HashMap<EncounterUnit, ArrayList<EncounterUnit>> encounteredSubUnits = new HashMap<EncounterUnit, ArrayList<EncounterUnit>>();
 	/**
 	 * Own group ids for a given fragment.
 	 * You shouldn't put subject data into THIS one! all other hashmaps need subject data.
 	 */
 	public HashMap<EncounterUnit, int[]> encounteredUnitsAndOwnGroupIds = new HashMap<EncounterUnit, int[]>();
+	public HashMap<EncounterUnit, ArrayList<EncounterUnit>> encounteredUnitsAndOwnSubUnits = new HashMap<EncounterUnit, ArrayList<EncounterUnit>>();
 	/**
 	 * The subgroups of the initiator group which face the encountered.  
 	 */
 	public ArrayList<Integer> ownGroupIds = new ArrayList<Integer>();
-	// TODO info for fixed memberInstances !!!
+	
+	public ArrayList<EncounterUnit> ownSubUnits = new ArrayList<EncounterUnit>();
 	
 	//public  
 	
@@ -74,6 +77,8 @@ public class EncounterInfo {
 		r.encountered.putAll(encountered);
 		r.encounteredGroupIds.putAll(encounteredGroupIds);
 		r.ownGroupIds.addAll(ownGroupIds);
+		r.encounteredUnitsAndOwnSubUnits.putAll(encounteredUnitsAndOwnSubUnits);
+		r.ownSubUnits.addAll(ownSubUnits);
 		return r;
 	}
 	
@@ -121,6 +126,15 @@ public class EncounterInfo {
 			ownGroupIds.add(groupIds[i]);
 		}
 		encounteredUnitsAndOwnGroupIds.put(target, groupIds);		
+	}
+	public void appendOwnSubUnits(EncounterUnit target, ArrayList<EncounterUnit> subUnits)
+	{
+		for (EncounterUnit eu: subUnits)
+		{
+			if (ownSubUnits.contains(eu)) continue;
+			ownSubUnits.add(eu);
+		}
+		encounteredUnitsAndOwnSubUnits.put(target, subUnits);		
 	}
 	
 	

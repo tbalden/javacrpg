@@ -153,6 +153,7 @@ public class GameLogic {
 						info.setGroupMemberInstances(in, members);
 						String types = "";
 						HashSet<String> typesSet = new HashSet<String>();
+						if (members!=null)
 						for (EntityMemberInstance mInst:members)
 						{
 							typesSet.add(mInst.description.visibleTypeId);
@@ -163,6 +164,7 @@ public class GameLogic {
 							if (types.length()>30) break;
 						}
 						ecology.callbackMessage(""+size+" "+types);
+						if (members!=null)
 						for (EntityMemberInstance member:members)
 						{
 							if (!played) 
@@ -176,8 +178,10 @@ public class GameLogic {
 								}
 							}
 							VisibleLifeForm form = fragment.getOne(member);//fragment.instance.getOne(member.description,member);
-							form.targetForm = playerFakeForm;
-							forms.add(form);
+							if (form!=null) {
+								form.targetForm = playerFakeForm;
+								forms.add(form);
+							}
 							sizeOfAll++;
 						}
 					}
