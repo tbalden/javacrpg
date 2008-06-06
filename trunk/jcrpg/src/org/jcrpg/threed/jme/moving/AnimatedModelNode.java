@@ -101,8 +101,8 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	        if (animated) {
 	        	runningAnimator.fadeIn(.5f);
 	        	runningAnimator.setSpeed(0.2f+(float)(.15f*Math.random()));
-	        	runningAnimator.fadeOut(.5f, false);
-	        	bodyAnimationController.setActive(false);
+	        	//runningAnimator.fadeOut(.5f, false);
+	        	//bodyAnimationController.setActive(false);
 	        }
 	        attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
