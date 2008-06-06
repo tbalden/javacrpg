@@ -156,12 +156,12 @@ public class Ecology {
 		if (r==DistanceBasedBoundary.zero) return; // no common part
 		if (targetFragment==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.getNumericId());
+			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.getDescription().getClass().getSimpleName());
 		}
 		if (fragment==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getNumericId());
-			System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getNumericId());
+			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
+			System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
 			//System.out.println("## "+counter);
 		}
 		
@@ -221,6 +221,10 @@ public class Ecology {
 				}
 				
 			}
+			
+			// TODO still no luck with "attacking" PersistentMembers doesnt show up in the menu, only
+			// it's parent fragment! Also humans don't show up in the list, if memberinstance boundary size is
+			// set to 60!!
 		
 			ArrayList<EncounterUnit> usedUp = new ArrayList<EncounterUnit>();
 			for (EncounterUnit f:listOfCommonRadiusFragments.keySet())

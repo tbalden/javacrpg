@@ -78,8 +78,18 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			Animation runningAnimation = loadAnimation(animation);
 
 			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
-			SkeletalAnimationController bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-	        AnimationAnimator runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
+			boolean animated = false;
+			AnimationAnimator runningAnimator = null;
+			SkeletalAnimationController bodyAnimationController = null;
+			try {
+				bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
+				runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
+				animated = true;
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+	        
 	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
 	        bodyInstance.setLocalScale(0.2f);
@@ -88,10 +98,12 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			q.inverseLocal();
 	        bodyInstance.setLocalRotation(q);
 	        
-	        runningAnimator.fadeIn(.5f);
-	        runningAnimator.setSpeed(0.2f+(float)(.15f*Math.random()));
-	        //runningAnimator.fadeOut(.5f, false);
-	        //bodyAnimationController.setActive(false);
+	        if (animated) {
+	        	runningAnimator.fadeIn(.5f);
+	        	runningAnimator.setSpeed(0.2f+(float)(.15f*Math.random()));
+	        	runningAnimator.fadeOut(.5f, false);
+	        	bodyAnimationController.setActive(false);
+	        }
 	        attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
