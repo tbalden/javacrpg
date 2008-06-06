@@ -24,6 +24,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
+import com.jme.math.Vector3f;
+
 /**
  * Class registering roaming fragments of an EntityInstance
  * @author illes
@@ -98,12 +100,24 @@ public class EntityFragments {
 		public int getSize() {
 			return size;
 		}
-		public int[] getGroupIds(int radiusRatio, int randomSeed) {
+		public int[] getGroupIds(int posX, int posY, int posZ, int radiusRatio, int randomSeed) {
 			return instance.description.groupingRule.getGroupIds(this, radiusRatio, randomSeed);
 		}
-		
-		
+		public ArrayList<EncounterUnit> getSubUnits(int posX, int posY, int posZ) {
+			ArrayList<EncounterUnit> list = null;
+			for (PersistentMemberInstance pi:followingMembers) {
+				if (tmpVector==null) tmpVector = new Vector3f();
+				tmpVector.set(posX,posY,posZ);
+				if (pi.roamingBoundary.pv.distance(tmpVector)<6)
+				{
+					if (list==null) list = new ArrayList<EncounterUnit>();
+					list.add(pi);
+				}
+			}
+			return list;
+		}
 	}
+	public transient Vector3f tmpVector = new Vector3f();
 	
 	public ArrayList<EntityFragment> fragments = new ArrayList<EntityFragment>();
 	

@@ -126,14 +126,17 @@ public class Ecology {
 	 * @param encounterInfo PreEncounterInfo object to fill
 	 * @param fillOwn If this is true preEncoutnerInfo's ownGroupIds' are set, otherwise the ecounteredGroupIds are filled.
 	 */
-	public static void calcGroupsOfEncounter(EncounterUnit self, EncounterUnit target, int radiusRatio, EncounterInfo encounterInfo, boolean fillOwn)
+	public static void calcGroupsOfEncounter(EncounterUnit self, EncounterUnit target, int posX, int posY, int posZ, int radiusRatio, EncounterInfo encounterInfo, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.getEncounterBoundary().posX, self.getEncounterBoundary().posY, self.getEncounterBoundary().posZ);
-		int[] groupIds = target.getGroupIds(radiusRatio, rand);
+		int[] groupIds = target.getGroupIds(posX,posY,posZ,radiusRatio, rand);
+		ArrayList<EncounterUnit> units = target.getSubUnits(posX, posY, posZ);
 		if (fillOwn)
 		{
 			encounterInfo.appendOwnGroupIds(self,groupIds);
+			if (units!=null) encounterInfo.appendOwnSubUnits(target, units);
 			encounterInfo.encounteredGroupIds.put(target, groupIds);
+			if (units!=null) encounterInfo.encounteredSubUnits.put(target, units);
 		} else
 		{
 			if (self == J3DCore.getInstance().gameState.player.theFragment) {
@@ -141,6 +144,7 @@ public class Ecology {
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getNumericId());
 			}
 			encounterInfo.encounteredGroupIds.put(target, groupIds);
+			if (units!=null) encounterInfo.encounteredSubUnits.put(target, units);
 		}
 	}
 	
@@ -150,7 +154,7 @@ public class Ecology {
 	 */
 	static ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	
-	public void intersectTwoUnits(EncounterUnit fragment, EncounterUnit targetFragment,HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
+	public void intersectTwoUnits(EncounterUnit fragment, EncounterUnit targetFragment, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
 		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.getEncounterBoundary(), targetFragment.getEncounterBoundary());
 		if (r==DistanceBasedBoundary.zero) return; // no common part
@@ -250,9 +254,9 @@ public class Ecology {
 					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
 				}
-				calcGroupsOfEncounter(fragment, f, r[0][1], pre, false);
+				calcGroupsOfEncounter(fragment, f, r[1][0], r[1][1], r[1][2], r[0][1], pre, false);
 				// fill how many of the interceptor entity group intercepts the target
-				calcGroupsOfEncounter(f, fragment, r[0][0], pre, true);
+				calcGroupsOfEncounter(f, fragment, r[1][0], r[1][1], r[1][2], r[0][0], pre, true);
 
 				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
 				ArrayList<Object> elements1 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]); // TODO this is only partial data!!
@@ -290,9 +294,9 @@ public class Ecology {
 						//System.out.println("DIFF 10 > "+v2.distance(v1) + fT.getName());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
-						calcGroupsOfEncounter(fragment, fT, r2[0][1], pre, false);
+						calcGroupsOfEncounter(fragment, fT, r2[1][0], r2[1][1], r2[1][2], r2[0][1], pre, false);
 						// fill how many of the interceptor entity group intercepts the target
-						calcGroupsOfEncounter(fT, fragment, r2[0][0], pre, true);
+						calcGroupsOfEncounter(fT, fragment, r2[1][0], r2[1][1], r2[1][2], r2[0][0], pre, true);
 					} else
 					{
 						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
@@ -302,12 +306,13 @@ public class Ecology {
 						//System.out.println("!! DIFF 10 < "+v2.distance(v1) + fT.getName());
 					}
 				}
-				for (EncounterUnit fr:pre.encountered.keySet()) {
+				//for (EncounterUnit fr:pre.encountered.keySet()) 
+				{
 					//if (entityInstance == J3DCore.getInstance().gameState.player || fr==J3DCore.getInstance().gameState.player.theFragment)
-						System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.getDescription().getClass()+" "+pre.encounteredGroupIds.get(fr).length
-								+ " " + fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
-								+ " " +fr.getEncounterBoundary().posX+ " / "+fr.getEncounterBoundary().posZ + " "+r[1][0] +" / "+r[1][2]
-						);
+						//System.out.println("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.getDescription().getClass()+" "+pre.encounteredGroupIds.get(fr).length
+							//	+ " " + fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
+							//	+ " " +fr.getEncounterBoundary().posX+ " / "+fr.getEncounterBoundary().posZ + " "+r[1][0] +" / "+r[1][2]
+						//);
 				}
 				counter++;
 				pre.active = true;

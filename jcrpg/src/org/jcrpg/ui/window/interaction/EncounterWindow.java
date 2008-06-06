@@ -233,11 +233,11 @@ public class EncounterWindow extends PagedInputWindow {
 		{
 			Object[] fragmentAndGroupId = (Object[])groupSelect.getSelectedObject();
 			int groupId = (Integer)fragmentAndGroupId[1];
-			EntityFragment fragment = (EntityFragment)fragmentAndGroupId[0];
-			int size = fragment.instance.getGroupSizes()[groupId];
-			description.text = "Qual.:"+fragment.instance.entityState.currentLevelOfQuality;
+			EncounterUnit fragment = (EncounterUnit)fragmentAndGroupId[0];
+			int size = fragment.getGroupSize(groupId);
+			description.text = "Qual.:"+fragment.getLevel();
 			description.text += " Relation: "+fragment.getRelationLevel(party.theFragment);
-			description.text += " Size: "+size+"/"+fragment.size;
+			description.text += " Size: "+size+"/"+fragment.getSize();
 			//description.setUpdated(true);
 			description.activate();
 			return true;

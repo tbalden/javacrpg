@@ -247,6 +247,8 @@ public class TurnActWindow extends PagedInputWindow {
 						if (size>0) listSize++;
 						//fullSize+=size;
 					}
+					ArrayList<EncounterUnit> subUnits = i.encounteredSubUnits.get(entityFragment);
+					if (subUnits!=null) listSize+=subUnits.size();
 				}
 				//if (fullSize>0)
 					//listSize++;
@@ -280,14 +282,27 @@ public class TurnActWindow extends PagedInputWindow {
 						text=fragmentCount+" ("+size1+") "+fragment.getName() + " " + in;
 						ids[count] = ""+count;
 						texts[count] = text;
-						Object[] fragmentAndGroupId = new Object[2];
-						fragmentAndGroupId[0] = fragment;
-						fragmentAndGroupId[1] = in;
-						objects[count] = fragmentAndGroupId;
+						Object[] fragmentAndGroupIdOrSubunit = new Object[2];
+						fragmentAndGroupIdOrSubunit[0] = fragment;
+						fragmentAndGroupIdOrSubunit[1] = in;
+						objects[count] = fragmentAndGroupIdOrSubunit;
 						count++;
 					} else
 					{
 						System.out.println("GROUPIDS NULL FOR "+fragment.getDescription());
+					}
+					ArrayList<EncounterUnit> subUnits = i.encounteredSubUnits.get(fragment);
+					if (subUnits!=null) 
+					for (EncounterUnit u:subUnits)
+					{
+						text = ""+u.getName();
+						ids[count] = ""+count;
+						texts[count] = text;
+						Object[] fragmentAndGroupIdOrSubunit = new Object[2];
+						fragmentAndGroupIdOrSubunit[0] = fragment;
+						fragmentAndGroupIdOrSubunit[1] = u;
+						objects[count] = fragmentAndGroupIdOrSubunit;
+						count++;
 					}
 				}
 			}
@@ -423,11 +438,11 @@ public class TurnActWindow extends PagedInputWindow {
 					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
 					Class<?extends SkillActForm> f = null;
 					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
-					Object[] fragmentAndGroupId = null;
-					fragmentAndGroupId = (Object[])groupSelectors.get(counter).getSelectedObject();
+					Object[] fragmentAndGroupIdOrSubunit = null;
+					fragmentAndGroupIdOrSubunit = (Object[])groupSelectors.get(counter).getSelectedObject();
 					info.memberToSkill.put(i,sb);
 					info.memberToSkillActForm.put(i,f);
-					info.memberToFragmentAndGroupId.put(i,fragmentAndGroupId);
+					info.memberToFragmentAndGroupId.put(i,fragmentAndGroupIdOrSubunit);
 				}
 				counter++;
 			}

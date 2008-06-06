@@ -44,7 +44,10 @@ public interface EncounterUnit {
 	
 	public DescriptionBase getDescription();
 	
-	public int[] getGroupIds(int radiusRatio, int randomSeed);
+	public int[] getGroupIds(int posX, int posY, int posZ, int radiusRatio, int randomSeed);
+	public ArrayList<EncounterUnit> getSubUnits(int posX, int posY, int posZ);
+	//public ArrayList<EncounterUnit>
+	
 	public ArrayList<EntityMemberInstance> getGroup(int groupId);
 	public int getGroupSize(int groupId);
 	
