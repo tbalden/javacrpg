@@ -2266,7 +2266,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 
 		// time changed, updating lights, orbiters
-		if (gameState.engine.timeChanged) 
+		if (gameState.engine.hasTimeChanged()) 
 		{
 			gameState.engine.setTimeChanged(false);
 			updateTimeRelated();
@@ -2280,7 +2280,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			gameState.engine.turnFinishedForAI();
 			pause = false;
 		} else
-		if (gameState.engine.doEconomyUpdate)
+		if (gameState.engine.checkEconomyUpdateNeeded())
 		{
 			pause = true;
 			gameState.doEconomyUpdate();
@@ -2288,9 +2288,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		
 		// game-logic independent environmental update (sounds etc.)
-		if (gameState.engine.doEnvironmentNeeded)
+		if (gameState.engine.isEnvironmentUpdateNeeded())
 		{
-			gameState.engine.doEnvironmentNeeded = false;
+			gameState.engine.environemntUpdateDone();
 			gameState.doEnvironmental();
 		}
 		
