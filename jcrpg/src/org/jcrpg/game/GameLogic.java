@@ -136,20 +136,23 @@ public class GameLogic {
 		{
 			EncounterInfo info = possibleEncounter;
 			if (info.active) {
-				for (EncounterUnit fragment:info.encountered.keySet()) {
-					if (fragment==player.fragments.fragments.get(0)) continue;
-					int[] groupIds = info.encounteredGroupIds.get(fragment);
-					if (groupIds!=null && groupIds.length>0)
-						ecology.callbackMessage("Facing an *ENCOUNTER* : "+fragment.getDescription().getClass().getSimpleName());
+				for (EncounterUnit mainUnit:info.encountered.keySet()) {
+					if (mainUnit==player.fragments.fragments.get(0)) continue;
+					int[] groupIds = info.encounteredGroupIds.get(mainUnit);
+					ArrayList<EncounterUnit> unitList = info.encounteredSubUnits.get(mainUnit);
+					
+					if (groupIds!=null && groupIds.length>0 || unitList==null && unitList.size()>0)
+						ecology.callbackMessage("Facing an *ENCOUNTER* : "+mainUnit.getDescription().getClass().getSimpleName());
 					else
-						ecology.callbackMessage("You seem to trespass a Domain : "+fragment.getDescription().getClass().getSimpleName());
-					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+fragment.getDescription().getClass().getSimpleName());
+						ecology.callbackMessage("You seem to trespass a Domain : "+mainUnit.getDescription().getClass().getSimpleName());
+					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+mainUnit.getDescription().getClass().getSimpleName());
 					boolean played = false;
+					
 					if (groupIds !=null)
 					for (int in:groupIds)
 					{
-						int size = fragment.getGroupSize(in);
-						ArrayList<EntityMemberInstance> members = fragment.getGroup(in);
+						int size = mainUnit.getGroupSize(in);
+						ArrayList<EntityMemberInstance> members = mainUnit.getGroup(in);
 						info.setGroupMemberInstances(in, members);
 						String types = "";
 						HashSet<String> typesSet = new HashSet<String>();
@@ -177,12 +180,40 @@ public class GameLogic {
 									}
 								}
 							}
-							VisibleLifeForm form = fragment.getOne(member);//fragment.instance.getOne(member.description,member);
+							VisibleLifeForm form = mainUnit.getOne(member);//fragment.instance.getOne(member.description,member);
 							if (form!=null) {
 								form.targetForm = playerFakeForm;
 								forms.add(form);
 							}
 							sizeOfAll++;
+						}
+					}
+					
+					if (unitList!=null)
+					for (EncounterUnit u:unitList)
+					{
+						ArrayList<EntityMemberInstance> members = u.getGroup(0);
+						if (members!=null)
+						{
+							for (EntityMemberInstance member:members)
+							{
+								if (!played) 
+								{
+									if (member.description.audioDescription!=null && member.description.audioDescription.ENCOUNTER!=null && member.description.audioDescription.ENCOUNTER.length>0) {
+										if (!playedAudios.contains(member.description.audioDescription.ENCOUNTER[0])) {
+											core.audioServer.playLoading(member.description.audioDescription.ENCOUNTER[0], "ai");
+											playedAudios.add(member.description.audioDescription.ENCOUNTER[0]);
+											played = true;
+										}
+									}
+								}
+								VisibleLifeForm form = mainUnit.getOne(member);//fragment.instance.getOne(member.description,member);
+								if (form!=null) {
+									form.targetForm = playerFakeForm;
+									forms.add(form);
+								}
+								sizeOfAll++;
+							}
 						}
 					}
 				}

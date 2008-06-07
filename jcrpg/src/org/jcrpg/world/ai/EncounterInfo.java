@@ -76,8 +76,10 @@ public class EncounterInfo {
 		r.active = active;
 		r.encountered.putAll(encountered);
 		r.encounteredGroupIds.putAll(encounteredGroupIds);
-		r.ownGroupIds.addAll(ownGroupIds);
+		r.encounteredSubUnits.putAll(encounteredSubUnits);
+		r.encounteredUnitsAndOwnGroupIds.putAll(encounteredUnitsAndOwnGroupIds);
 		r.encounteredUnitsAndOwnSubUnits.putAll(encounteredUnitsAndOwnSubUnits);
+		r.ownGroupIds.addAll(ownGroupIds);
 		r.ownSubUnits.addAll(ownSubUnits);
 		return r;
 	}
@@ -97,6 +99,7 @@ public class EncounterInfo {
 		// copy data of self fragment too, it is necessary for making the encountered able to select
 		// the initiator as target for its acts.
 		r.encountered.put(subjectFragment, encountered.get(subjectFragment));
+		r.encounteredSubUnits.put(subjectFragment, encounteredSubUnits.get(subjectFragment));
 		r.encounteredGroupIds.put(subjectFragment, encounteredGroupIds.get(subjectFragment));
 		int[] gIds = encounteredUnitsAndOwnGroupIds.get(f);
 		for (int i=0; i<gIds.length; i++)
@@ -118,6 +121,8 @@ public class EncounterInfo {
 		generatedGroups.put(groupId, members);
 	}
 	
+	
+	
 	public void appendOwnGroupIds(EncounterUnit target, int[] groupIds)
 	{
 		for (int i=0; i<groupIds.length; i++)
@@ -138,4 +143,101 @@ public class EncounterInfo {
 	}
 	
 	
+	public int getGroupsAndSubUnitsCount(EncounterUnit filtered)
+	{
+		int allSize = 0;
+		for (EncounterUnit unit:encountered.keySet())
+		{
+			if (filtered!=null && unit == filtered) continue;
+			int[] groupIds = encounteredGroupIds.get(unit);
+			if (groupIds!=null)
+			for (int in:groupIds) {
+				int size = unit.getGroupSize(in);
+				if (size>0) allSize++;
+			}
+			ArrayList<EncounterUnit> subUnits = encounteredSubUnits.get(unit);
+			if (subUnits!=null)
+			{
+				allSize+=subUnits.size();
+			}
+		}
+		return allSize;
+	}
+	
+	public class EncounterUnitData
+	{
+		public boolean isGroupId = false;
+		public EncounterUnit subUnit;
+		public EncounterUnit parent;
+		public int groupId = -1;
+		public String name;
+		
+		public EncounterUnitData(EncounterUnit parent, EncounterUnit subUnit)
+		{
+			this.parent = parent;
+			isGroupId = false;
+			this.subUnit = subUnit;
+			name = parent.getName()+" : " + subUnit.getName();
+			
+		}
+		public EncounterUnitData(EncounterUnit parent, int groupId)
+		{
+			isGroupId = true;
+			this.parent = parent;
+			this.groupId = groupId;
+			int size1 = parent.getGroupSize(groupId);
+			name = size1+" "+parent.getName() + " " + groupId;			
+		}
+		
+	}
+	
+	public ArrayList<EncounterUnitData> getEncounterUnitDataList(EncounterUnit filtered)
+	{
+		
+		System.out.println(" + "+this);
+		for (EncounterUnit u:encounteredSubUnits.keySet())
+		{
+			ArrayList<EncounterUnit> u2  = encounteredSubUnits.get(u);
+			if (u2!=null)
+			for (EncounterUnit u3:u2)
+			{
+				System.out.println(subjectFragment.getName()+" : "+u.getName()+" : "+u3.getName());
+			}
+		}
+		
+		ArrayList<EncounterUnitData> list = new ArrayList<EncounterUnitData>();
+		for (EncounterUnit unit:encountered.keySet())
+		{
+			System.out.println("--"+unit.getName());
+			if (filtered!=null && unit == filtered) continue;
+			int[] groupIds = encounteredGroupIds.get(unit);
+			if (groupIds!=null)
+			for (int in:groupIds) {
+				int size = unit.getGroupSize(in);
+				if (size>0) 
+				{
+					list.add(new EncounterUnitData(unit,in));
+				}
+			}
+			ArrayList<EncounterUnit> subUnits = encounteredSubUnits.get(unit);
+			System.out.println(subUnits+" "+(subUnits==null?"":subUnits.size()));
+			if (subUnits!=null)
+			{
+				for (EncounterUnit u:subUnits)
+				{
+					EncounterUnit parent = unit;
+					if (unit instanceof PersistentMemberInstance)
+					{
+						if ( ((PersistentMemberInstance)unit).getParentFragment()!=null)
+							parent = ((PersistentMemberInstance)unit).getParentFragment();
+					}
+					list.add(new EncounterUnitData(parent,u));
+				}
+			}
+		}
+		return list;
+		
+	}
+	
 }
+

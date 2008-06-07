@@ -20,6 +20,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.place.World;
 
@@ -29,12 +30,14 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	 * Fixed members
 	 */
 	public DistanceBasedBoundary roamingBoundary = null;
+	
+	public EntityFragment parentFragment = null;
 
 	public PersistentMemberInstance(EntityMember description, World w,
 			int numericId, int startX, int startY, int startZ) {
 		super(description, numericId);
 		if (w!=null) {
-			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,5);//TODO description.getRoamingSize());
+			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,60);//TODO description.getRoamingSize());
 		}
 	}
 
@@ -69,13 +72,11 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	}
 
 	public VisibleLifeForm getOne(EntityMemberInstance member) {
-		// TODO Auto-generated method stub
-		return null;//
+		return new VisibleLifeForm(this.getClass().getName()+""+this,description,getParentFragment().instance,this);
 	}
 
 	public int getRelationLevel(EncounterUnit unit) {
-		// TODO Auto-generated method stub
-		return 0;
+		return getParentFragment()==null?0:getParentFragment().instance.relations.getRelationLevel(unit);
 	}
 
 	public String getName() {
@@ -91,8 +92,22 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return groupId;
 	}
 
+	public transient ArrayList<EncounterUnit> tmpList2 = null;
 	public ArrayList<EncounterUnit> getSubUnits(int posX, int posY, int posZ) {
-		return null;
+		if (tmpList2==null)
+		{
+			 tmpList2 = new ArrayList<EncounterUnit>();
+			 tmpList2.add(this);
+		}
+		return tmpList2;
+	}
+
+	public EntityFragment getParentFragment() {
+		return parentFragment;
+	}
+
+	public void setParentFragment(EntityFragment parentFragment) {
+		this.parentFragment = parentFragment;
 	}
 
 }

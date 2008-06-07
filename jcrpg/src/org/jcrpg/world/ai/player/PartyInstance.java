@@ -57,14 +57,17 @@ public class PartyInstance extends EntityInstance {
 				for (EncounterUnit entityFragment:i.encountered.keySet())
 				{
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
+					if (groupIds!=null)
 					if (groupIds.length==0) {
 						System.out.println("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
 					}
+					if (groupIds!=null)
 					for (int in:groupIds) {
 						int size = entityFragment.getGroupSize(in);
 						if (size==0) System.out.println("SIZE ZERO: "+entityFragment.getDescription());
 						fullSize+=size;
 					}
+					if (i.encounteredSubUnits.get(entityFragment)!=null) fullSize+=i.encounteredSubUnits.get(entityFragment).size();
 				}
 				if (fullSize>0) {
 					infos.add(i.copy());
@@ -100,7 +103,7 @@ public class PartyInstance extends EntityInstance {
 			MemberPerson desc = (MemberPerson)m.description;
 			fixMembers.put(desc.foreName+orderedParty.size(), m);
 			// add all memberinstances to the fragment's followers.
-			theFragment.followingMembers.add(m);
+			theFragment.addFollower(m);
 			orderedParty.add(m);
 			numberOfMembers++;
 		}
@@ -112,7 +115,7 @@ public class PartyInstance extends EntityInstance {
 		PartyMember member = new PartyMember(id,audio);
 		PersistentMemberInstance mI = new PersistentMemberInstance(member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(id, mI);
-		theFragment.followingMembers.add(mI);
+		theFragment.addFollower(mI);
 		orderedParty.add(mI);
 		numberOfMembers++;
 	}
