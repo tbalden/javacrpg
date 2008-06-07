@@ -53,6 +53,12 @@ public class EntityFragments {
 	{
 		public EntityFragments parent;
 		public EntityInstance instance;
+		
+		/**
+		 * Used for parties.
+		 */
+		public boolean alwaysIncludeFollowingMembers = false;
+		
 		/**
 		 * those NPCs (or PCs) that join the fragment in its roaming.
 		 */

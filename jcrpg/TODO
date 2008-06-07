@@ -9,12 +9,16 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 
-TODO encounter info should have methods for size,
+[ ] alwaysIncludeFollowingMembers - in entityFragment should be used up in the list of selectables in TurnActWindow etc....
+
+[ ] model viewer for md5, separate application
+
+
+[X] entityMember perfecting for encounter calc in ecology
+[X] TODO encounter info should have methods for size,
 	and getListOfUnits!! refactor, windows too
 	
-[ ] model viewer for md5, separate application
 	
-[ ] entityMember perfecting for encounter calc in ecology
 
 [X] engine is not pausing in some encounter windows!!!!
 

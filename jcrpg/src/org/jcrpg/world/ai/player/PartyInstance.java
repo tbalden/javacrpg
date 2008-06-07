@@ -95,6 +95,7 @@ public class PartyInstance extends EntityInstance {
 			int startX, int startY, int startZ) {
 		super(description, w, ecology, numericId, id, numberOfMembers, startX, startY, startZ);
 		theFragment = fragments.fragments.get(0);
+		theFragment.alwaysIncludeFollowingMembers = true;
 	}
 
 	public void addPartyMember(PersistentMemberInstance m)
