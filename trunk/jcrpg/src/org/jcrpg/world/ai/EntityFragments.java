@@ -56,7 +56,7 @@ public class EntityFragments {
 		/**
 		 * those NPCs (or PCs) that join the fragment in its roaming.
 		 */
-		public ArrayList<PersistentMemberInstance> followingMembers = new ArrayList<PersistentMemberInstance>();
+		private ArrayList<PersistentMemberInstance> followingMembers = new ArrayList<PersistentMemberInstance>();
 		public int size;
 		public DistanceBasedBoundary roamingBoundary;
 		
@@ -64,6 +64,7 @@ public class EntityFragments {
 		{
 			followingMembers.add(i);
 			parent.recalcBoundaries();
+			i.setParentFragment(this);
 		}
 		public SkillInstance getEncounterSkill(ArrayList<EncounterInfo> encountered)
 		{
@@ -115,6 +116,9 @@ public class EntityFragments {
 				}
 			}
 			return list;
+		}
+		public ArrayList<PersistentMemberInstance> getFollowingMembers() {
+			return followingMembers;
 		}
 	}
 	public transient Vector3f tmpVector = new Vector3f();

@@ -35,8 +35,8 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
-import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.EncounterInfo.EncounterUnitData;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -232,86 +232,28 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		int listSize = 0;
-		{
-			EncounterInfo i = encountered;
-			if (i.active) {
-				//int fullSize = 0;
-				for (EncounterUnit entityFragment:i.encountered.keySet())
-				{
-					//if (entityFragment == party.theFragment) continue;
-					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
-					if (groupIds!=null)
-					for (int in:groupIds) {
-						int size = entityFragment.getGroupSize(in);
-						if (size>0) listSize++;
-						//fullSize+=size;
-					}
-					ArrayList<EncounterUnit> subUnits = i.encounteredSubUnits.get(entityFragment);
-					if (subUnits!=null) listSize+=subUnits.size();
-				}
-				//if (fullSize>0)
-					//listSize++;
-			}
-		}
+		ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(null);
 		// groups
 		for (ListSelect groupSelect:groupSelectors)
 		{
-			String[] ids = new String[listSize];
-			Object[] objects = new Object[listSize];
-			String[] texts = new String[listSize];
+			String[] ids = new String[list.size()];
+			Object[] objects = new Object[list.size()];
+			String[] texts = new String[list.size()];
 			int count = 0;
-			System.out.println("ENC SIZE = "+listSize);
+			System.out.println("ENC SIZE = "+list.size());
+			for (EncounterUnitData data:list)
 			{
-				EncounterInfo i = encountered;
-				int fragmentCount = 0;
-				String text = count+"/";
-				if (!i.active) continue;
-				for (EncounterUnit fragment:i.encountered.keySet())
-				{
-					//if (fragment == party.theFragment) continue;
-					System.out.println(fragment.getName()+" _ "+i.encountered.size());
-					int fullSize = 0;
-					fragmentCount++;
-					int[] groupIds = i.encounteredGroupIds.get(fragment);
-					if (groupIds!=null)
-					for (int in:groupIds) {
-						int size1 = fragment.getGroupSize(in);
-						if (size1<1) continue;
-						fullSize+=size1;
-						text=fragmentCount+" ("+size1+") "+fragment.getName() + " " + in;
-						ids[count] = ""+count;
-						texts[count] = text;
-						Object[] fragmentAndGroupIdOrSubunit = new Object[2];
-						fragmentAndGroupIdOrSubunit[0] = fragment;
-						fragmentAndGroupIdOrSubunit[1] = in;
-						objects[count] = fragmentAndGroupIdOrSubunit;
-						count++;
-					} else
-					{
-						System.out.println("GROUPIDS NULL FOR "+fragment.getDescription());
-					}
-					ArrayList<EncounterUnit> subUnits = i.encounteredSubUnits.get(fragment);
-					if (subUnits!=null) 
-					for (EncounterUnit u:subUnits)
-					{
-						text = ""+u.getName();
-						ids[count] = ""+count;
-						texts[count] = text;
-						Object[] fragmentAndGroupIdOrSubunit = new Object[2];
-						fragmentAndGroupIdOrSubunit[0] = fragment;
-						fragmentAndGroupIdOrSubunit[1] = u;
-						objects[count] = fragmentAndGroupIdOrSubunit;
-						count++;
-					}
-				}
+				ids[count] = ""+count;
+				texts[count] = data.name;
+				objects[count] = data;
+				count++;
 			}
 			groupSelect.reset();
 			groupSelect.ids = ids;
 			groupSelect.objects = objects;
 			groupSelect.texts = texts;
 			groupSelect.setUpdated(true);
-			groupSelect.deactivate();
+			groupSelect.activate();
 		}
 		updateToParty();
 		
@@ -400,7 +342,7 @@ public class TurnActWindow extends PagedInputWindow {
 	{
 		HashMap<EntityMemberInstance, SkillBase> memberToSkill = new HashMap<EntityMemberInstance, SkillBase>();
 		HashMap<EntityMemberInstance, Class<?extends SkillActForm>> memberToSkillActForm = new HashMap<EntityMemberInstance, Class<? extends SkillActForm>>();
-		HashMap<EntityMemberInstance, Object[]> memberToFragmentAndGroupId = new HashMap<EntityMemberInstance, Object[]>();
+		HashMap<EntityMemberInstance, EncounterUnitData> memberToSubUnit = new HashMap<EntityMemberInstance, EncounterUnitData>();
 	}
 	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
 	
@@ -427,7 +369,7 @@ public class TurnActWindow extends PagedInputWindow {
 			//
 			//
 			int counter = 0;
-			info.memberToFragmentAndGroupId.clear();
+			info.memberToSubUnit.clear();
 			info.memberToSkill.clear();
 			info.memberToSkillActForm.clear();
 			for (ListSelect s:skillSelectors)
@@ -438,11 +380,11 @@ public class TurnActWindow extends PagedInputWindow {
 					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
 					Class<?extends SkillActForm> f = null;
 					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
-					Object[] fragmentAndGroupIdOrSubunit = null;
-					fragmentAndGroupIdOrSubunit = (Object[])groupSelectors.get(counter).getSelectedObject();
+					EncounterUnitData fragmentAndSubunit = null;
+					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 					info.memberToSkill.put(i,sb);
 					info.memberToSkillActForm.put(i,f);
-					info.memberToFragmentAndGroupId.put(i,fragmentAndGroupIdOrSubunit);
+					info.memberToSubUnit.put(i,fragmentAndSubunit);
 				}
 				counter++;
 			}

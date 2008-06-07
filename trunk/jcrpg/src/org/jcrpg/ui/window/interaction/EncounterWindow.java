@@ -35,7 +35,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.EncounterInfo.EncounterUnitData;
 import org.jcrpg.world.ai.abs.skill.EncounterSkill;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -139,66 +139,28 @@ public class EncounterWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		int listSize = 0;
-		{
-			EncounterInfo i = encountered;
-			if (i.active) {
-				//int fullSize = 0;
-				for (EncounterUnit entityFragment:i.encountered.keySet())
-				{
-					if (entityFragment == party.theFragment) continue;
-					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
-					for (int in:groupIds) {
-						int size = entityFragment.getGroupSize(in);
-						if (size>0) listSize++;
-						//fullSize+=size;
-					}
-				}
-				//if (fullSize>0)
-					//listSize++;
-			}
-		}
+		ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(party.theFragment);
+
 		// groups
 		{
-			String[] ids = new String[listSize];
-			Object[] objects = new Object[listSize];
-			String[] texts = new String[listSize];
+			String[] ids = new String[list.size()];
+			Object[] objects = new Object[list.size()];
+			String[] texts = new String[list.size()];
 			int count = 0;
-			System.out.println("ENC SIZE = "+listSize);
+			System.out.println("ENC SIZE = "+list.size());
+			for (EncounterUnitData data:list)
 			{
-				EncounterInfo i = encountered;
-				int fragmentCount = 0;
-				String text = count+"/";
-				if (i.active) {
-					for (EncounterUnit fragment:i.encountered.keySet())
-					{
-						if (fragment == party.theFragment) continue;
-						System.out.println(fragment.getName()+" _ "+i.encountered.size());
-						int fullSize = 0;
-						fragmentCount++;
-						int[] groupIds = i.encounteredGroupIds.get(fragment);
-						for (int in:groupIds) {
-							int size1 = fragment.getGroupSize(in);
-							if (size1<1) continue;
-							fullSize+=size1;
-							text=fragmentCount+" ("+size1+") "+fragment.getName() + " " + in;
-							ids[count] = ""+count;
-							texts[count] = text;
-							Object[] fragmentAndGroupId = new Object[2];
-							fragmentAndGroupId[0] = fragment;
-							fragmentAndGroupId[1] = in;
-							objects[count] = fragmentAndGroupId;
-							count++;
-						}				
-					}
-				}
+				ids[count] = ""+count;
+				texts[count] = data.name;
+				objects[count] = data;
+				count++;
 			}
 			groupSelect.reset();
 			groupSelect.ids = ids;
 			groupSelect.objects = objects;
 			groupSelect.texts = texts;
 			groupSelect.setUpdated(true);
-			groupSelect.deactivate();
+			groupSelect.activate();
 		}
 		// party memebers
 		{
@@ -231,10 +193,19 @@ public class EncounterWindow extends PagedInputWindow {
 		// TODO Auto-generated method stub
 		if (base == groupSelect)
 		{
-			Object[] fragmentAndGroupId = (Object[])groupSelect.getSelectedObject();
-			int groupId = (Integer)fragmentAndGroupId[1];
-			EncounterUnit fragment = (EncounterUnit)fragmentAndGroupId[0];
-			int size = fragment.getGroupSize(groupId);
+			EncounterUnitData data = (EncounterUnitData)groupSelect.getSelectedObject();
+			EncounterUnit fragment = data.parent;
+			int size = 1;
+			if (data.isGroupId) 
+			{
+				int groupId = data.groupId;
+				size = fragment.getGroupSize(groupId);
+			}	else
+			{
+				size = 1;
+				fragment = data.subUnit;
+			}
+			
 			description.text = "Qual.:"+fragment.getLevel();
 			description.text += " Relation: "+fragment.getRelationLevel(party.theFragment);
 			description.text += " Size: "+size+"/"+fragment.getSize();

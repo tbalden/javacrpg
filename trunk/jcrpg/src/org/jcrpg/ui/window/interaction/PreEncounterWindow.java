@@ -18,6 +18,8 @@
 
 package org.jcrpg.ui.window.interaction;
 
+import java.util.ArrayList;
+
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
@@ -28,7 +30,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.EncounterInfo.EncounterUnitData;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.scene.Node;
@@ -126,49 +128,21 @@ public class PreEncounterWindow extends PagedInputWindow {
 		EncounterInfo i = possibleGroups;
 
 		//if (!i.active) continue;
-		int listSize = 0;
-		//int fullSize = 0;
-		for (EncounterUnit entityFragment:i.encountered.keySet())
-		{
-			if (entityFragment == party.theFragment) continue;
-			int[] groupIds = i.encounteredGroupIds.get(entityFragment);
-			for (int in:groupIds) {
-				int size = entityFragment.getGroupSize(in);
-				if (size>0) listSize++;
-				//fullSize+=size;
-			}
-		}
+		ArrayList<EncounterUnitData> list = i.getEncounterUnitDataList(party.theFragment);
 
 		// groups
 		{
-			String[] ids = new String[listSize];
-			Object[] objects = new Object[listSize];
-			String[] texts = new String[listSize];
+			String[] ids = new String[list.size()];
+			Object[] objects = new Object[list.size()];
+			String[] texts = new String[list.size()];
 			int count = 0;
-			System.out.println("ENC SIZE = "+listSize);
+			System.out.println("ENC SIZE = "+list.size());
+			for (EncounterUnitData data:list)
 			{
-				int size = 0;
-				String text = count+"/";
-				for (EncounterUnit fragment:i.encountered.keySet())
-				{
-					if (fragment == party.theFragment) continue;
-					System.out.println(fragment.getName()+" _ "+i.encountered.size());
-					int fullSize = 0;
-					size++;
-					int[] groupIds = i.encounteredGroupIds.get(fragment);
-					for (int in:groupIds) {
-						int size1 = fragment.getGroupSize(in);
-						fullSize+=size1;
-						text=size+" ("+size1+") "+fragment.getName() + " " + in;
-						ids[count] = ""+count;
-						texts[count] = text;
-						Object[] fragmentAndGroupId = new Object[2];
-						fragmentAndGroupId[0] = fragment;
-						fragmentAndGroupId[1] = in;
-						objects[count] = fragmentAndGroupId;
-						count++;
-					}				
-				}
+				ids[count] = ""+count;
+				texts[count] = data.name;
+				objects[count] = data;
+				count++;
 			}
 			groupList.reset();
 			groupList.ids = ids;
@@ -211,12 +185,22 @@ public class PreEncounterWindow extends PagedInputWindow {
 				i = i.copy();
 				i.encountered.clear();
 				i.encounteredGroupIds.clear();
-				Object[] fragmentAndGroupId = (Object[])groupList.getSelectedObject();
-				EntityFragment fragment = (EntityFragment)fragmentAndGroupId[0];
-				int groupId = (Integer)fragmentAndGroupId[1];
-				int[][] r = possibleGroups.encountered.get(fragment);
-				i.encountered.put(fragment, r);
-				i.encounteredGroupIds.put(fragment, new int[]{groupId});
+				EncounterUnitData fragmentAndUnitData = (EncounterUnitData)groupList.getSelectedObject();
+				EncounterUnit fragment = (EncounterUnit)fragmentAndUnitData.parent;
+				if (fragmentAndUnitData.isGroupId) {
+					int groupId = fragmentAndUnitData.groupId;				
+					int[][] r = possibleGroups.encountered.get(fragment);
+					i.encountered.put(fragment, r);
+					i.encounteredGroupIds.put(fragment, new int[]{groupId});
+				} else
+				{
+					EncounterUnit subUnit = fragmentAndUnitData.subUnit;
+					int[][] r = possibleGroups.encountered.get(subUnit);
+					i.encountered.put(subUnit, r);
+					ArrayList<EncounterUnit> l = new ArrayList<EncounterUnit>();
+					l.add(subUnit);
+					i.encounteredSubUnits.put(fragment, l);
+				}
 			}
 			
 			i.active = true;

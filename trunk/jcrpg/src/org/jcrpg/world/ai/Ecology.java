@@ -129,13 +129,23 @@ public class Ecology {
 	public static void calcGroupsOfEncounter(EncounterUnit self, EncounterUnit target, int posX, int posY, int posZ, int radiusRatio, EncounterInfo encounterInfo, boolean fillOwn)
 	{
 		int rand = HashUtil.mix(self.getEncounterBoundary().posX, self.getEncounterBoundary().posY, self.getEncounterBoundary().posZ);
-		int[] groupIds = target.getGroupIds(posX,posY,posZ,radiusRatio, rand);
-		ArrayList<EncounterUnit> units = target.getSubUnits(posX, posY, posZ);
+		ArrayList<EncounterUnit> units = null;
+		int[] groupIds = null;
+		if (target instanceof PersistentMemberInstance)
+		{
+			System.out.println(fillOwn + "SELF = "+self.getName()+" TARGET = "+target.getName());
+			units = target.getSubUnits(posX, posY, posZ);
+			System.out.println(units==null?"0_":units.size());
+		} else 
+		{
+			groupIds = target.getGroupIds(posX,posY,posZ,radiusRatio, rand);
+			
+		}
 		if (fillOwn)
 		{
-			encounterInfo.appendOwnGroupIds(self,groupIds);
-			if (units!=null) encounterInfo.appendOwnSubUnits(target, units);
-			encounterInfo.encounteredGroupIds.put(target, groupIds);
+			if (groupIds!=null && groupIds.length>0) encounterInfo.appendOwnGroupIds(self,groupIds);
+			if (units!=null) encounterInfo.appendOwnSubUnits(self, units);
+			if (groupIds!=null && groupIds.length>0) encounterInfo.encounteredGroupIds.put(target, groupIds);
 			if (units!=null) encounterInfo.encounteredSubUnits.put(target, units);
 		} else
 		{
@@ -143,8 +153,12 @@ public class Ecology {
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.getEncounterBoundary().posX+" "+self.getEncounterBoundary().posZ);
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getNumericId());
 			}
-			encounterInfo.encounteredGroupIds.put(target, groupIds);
-			if (units!=null) encounterInfo.encounteredSubUnits.put(target, units);
+			if (groupIds!=null && groupIds.length>0) encounterInfo.encounteredGroupIds.put(target, groupIds);
+			if (units!=null) 
+			{
+				System.out.println("APPENDING "+self.getName()+" "+target.getName()+" - "+encounterInfo);
+				encounterInfo.encounteredSubUnits.put(target, units);
+			}
 		}
 	}
 	
@@ -207,16 +221,16 @@ public class Ecology {
 				for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments) {
 					// calculate the common area sizes.
 					intersectTwoUnits(fragment, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
-					for (PersistentMemberInstance pmiTarget:targetFragment.followingMembers)
+					for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
 					{
 						//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 						intersectTwoUnits(fragment, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
 					}
-					for (PersistentMemberInstance pmi:fragment.followingMembers)
+					for (PersistentMemberInstance pmi:fragment.getFollowingMembers())
 					{
 						//System.out.println("--- ###### "+pmi.getName()+pmi.getEncounterBoundary().posX+" "+pmi.getEncounterBoundary().posZ);
 						intersectTwoUnits(pmi, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
-						for (PersistentMemberInstance pmiTarget:targetFragment.followingMembers)
+						for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
 						{
 							//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 							intersectTwoUnits(pmi, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
@@ -250,6 +264,8 @@ public class Ecology {
 					pre.subjectFragment = fragment;
 					pre.encountered.clear();
 					pre.encounteredUnitsAndOwnGroupIds.clear();
+					pre.encounteredSubUnits.clear();
+					pre.encounteredUnitsAndOwnSubUnits.clear();
 					pre.encounteredGroupIds.clear();
 					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
@@ -278,6 +294,7 @@ public class Ecology {
 				if (elements7!=null) elements.addAll(elements7);
 				if (elements8!=null) elements.addAll(elements8);
 				if (elements9!=null) elements.addAll(elements9);
+				System.out.println("________________________");
 				if (elements!=null)
 				for (Object o:elements)
 				{
@@ -291,7 +308,7 @@ public class Ecology {
 						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
 						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
 						//System.out.println( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						//System.out.println("DIFF 10 > "+v2.distance(v1) + fT.getName());
+						System.out.println("DIFF 10 > "+v2.distance(v1) + fT.getName());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
 						calcGroupsOfEncounter(fragment, fT, r2[1][0], r2[1][1], r2[1][2], r2[0][1], pre, false);

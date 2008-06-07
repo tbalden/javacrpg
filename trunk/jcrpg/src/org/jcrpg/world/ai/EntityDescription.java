@@ -193,7 +193,19 @@ public class EntityDescription extends DescriptionBase {
 			if (fs!=null) 
 			{
 				for (EncounterUnit f:fs) {
-					groupCount+=info.encounteredGroupIds.get(f).length * f.getLevel();
+					if (info.encounteredGroupIds.get(f)!=null)
+					{
+						groupCount+=info.encounteredGroupIds.get(f).length * f.getLevel();
+					}
+					if (info.encounteredSubUnits.get(f)!=null)
+					{
+						int levelSum = 0;
+						for (EncounterUnit u:info.encounteredSubUnits.get(f))
+						{
+							levelSum+=u.getLevel();
+						}
+						groupCount+=levelSum;
+					}
 				}
 			}
 			
