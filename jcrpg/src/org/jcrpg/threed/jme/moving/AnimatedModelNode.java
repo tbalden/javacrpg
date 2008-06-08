@@ -68,8 +68,8 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	public ArrayList<String> animationNames;
 	public ArrayList<BoneAnimation> animations = new ArrayList<BoneAnimation>();
 	public SkinNode skinNode;
-	
-	public AnimatedModelNode(String fileName, String animation) 
+
+	public AnimatedModelNode(String fileName, String animation, float speed)
 	{
 		System.out.println("LOADING ANIMATED MODEL: "+fileName);
 		try {
@@ -100,7 +100,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	        
 	        if (animated) {
 	        	runningAnimator.fadeIn(.5f);
-	        	runningAnimator.setSpeed(0.2f+(float)(.15f*Math.random()));
+	        	runningAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
 	        	//runningAnimator.fadeOut(.5f, false);
 	        	//bodyAnimationController.setActive(false);
 	        }
@@ -113,6 +113,11 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			ex.printStackTrace();
 		}
 		
+	}
+
+	public AnimatedModelNode(String fileName, String animation) 
+	{
+		this(fileName,animation,10f);		
 	}
     @SuppressWarnings("unused")
 	private void stripTexturesAndMaterials(SceneElement sp) {
