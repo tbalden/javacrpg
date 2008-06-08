@@ -53,14 +53,14 @@
  
 
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Tropical"
-			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
-			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="20" min-in-group="30" food-chain-position="HERBIVORE"/>
 
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Tropical"
-			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="15" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Continental"
-			percentage-chance-of-appearance="20" min-in-group="60" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="15" min-in-group="30" food-chain-position="HERBIVORE"/>
  
  
      	<population ref-animal-id="GIANTCAVESPIDERS" ref-climat="Tropical"
@@ -93,12 +93,12 @@
 			percentage-chance-of-appearance="5" food-chain-position="HERBIVORE"/>
 		
 		<population ref-animal-id="FOXFAMILY" ref-climat="Tropical"
-			percentage-chance-of-appearance="25" 
+			percentage-chance-of-appearance="15" 
 			food-chain-position="PRIMARY_CARNIVORE"
 			predator-range="5"
 			/>
 		<population ref-animal-id="WOLFPACK" ref-climat="Tropical"
-			percentage-chance-of-appearance="25"
+			percentage-chance-of-appearance="15"
 			food-chain-position="SECONDARY_CARNIVORE" predator-range="15"/>						
 	</populations>
 </ecology>

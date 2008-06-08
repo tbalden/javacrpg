@@ -80,7 +80,7 @@ public class EntityFragments {
 			return roamingBoundary;
 		}
 		public int getNumericId() {
-			return instance.numericId;
+			return instance.getNumericId();
 		}
 		public long getLevel() {
 			return instance.entityState.currentLevelOfQuality;

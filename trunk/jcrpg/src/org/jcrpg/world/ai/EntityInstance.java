@@ -29,8 +29,11 @@ import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 
 public class EntityInstance {
 	
@@ -83,7 +86,7 @@ public class EntityInstance {
 	/**
 	 * Unique numeric id.
 	 */
-	public int numericId;
+	private int numericId;
 	public int numberOfMembers = 1;
 	public World world;
 	public Ecology ecology;
@@ -111,9 +114,14 @@ public class EntityInstance {
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 		
-		//PersistentMemberInstance p = new PersistentMemberInstance(new StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
-		//fixMembers.put("1", p);
-		//fragments.fragments.get(0).addFollower(p);
+		PersistentMemberInstance p = new PersistentMemberInstance(new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+		InfrastructureElementParameters i = new InfrastructureElementParameters();
+		i.owner = p;
+		i.type = House.class;
+		i.sizeY = 6;		
+		p.addOwnedInfrastructurePlan(i);
+		fixMembers.put("1", p);
+		fragments.fragments.get(0).addFollower(p);
 	}
 	
 	public void recalcBoundarySizes()
@@ -254,6 +262,10 @@ public class EntityInstance {
 		calculateGroupsAndPositions();
 		fragments.merge(instance.fragments);
 		instance.merged = true;
+	}
+
+	public int getNumericId() {
+		return numericId;
 	}
 
 	

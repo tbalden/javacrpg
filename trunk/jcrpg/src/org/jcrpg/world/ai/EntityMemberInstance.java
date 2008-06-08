@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
-import org.jcrpg.world.place.Economic;
 
 public class EntityMemberInstance {
 
@@ -40,16 +39,6 @@ public class EntityMemberInstance {
 	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
 	public int numericId = -1;
-	
-	/**
-	 * Those infrastructures (buildings) owned by this member in its home population.
-	 * Not the actual instances only Class types, because based on this list the buildProgram 
-	 * of the Infrastructure 
-	 * is modified only, so that in every sizeLevel state of the district the MemberInstance
-	 * will have its infrastructure.
-	 *
-	 */
-	public ArrayList<Class<? extends Economic>> ownedInfrastructures = null;
 	
 	/**
 	 * The different points and such of the memberInstance.

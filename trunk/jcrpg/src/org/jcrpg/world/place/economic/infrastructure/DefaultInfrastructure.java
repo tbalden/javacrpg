@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
+import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 
