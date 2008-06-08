@@ -47,7 +47,15 @@ public abstract class Population extends Economic{
 	public void clear()
 	{
 		((World)getRoot()).economyContainer.treeLocator.removeAllOfAnObject(this); // we should remove this from treelocator to avoid messing up surface levels of geo.
+		for (Residence r:residenceList)
+		{
+			r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+		}
 		residenceList.clear();
+		for (EconomicGround r:groundList)
+		{
+			r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+		}
 		groundList.clear();
 		boundaries.clear();
 		boundaries = new GroupedBoundaries((World)parent,this);

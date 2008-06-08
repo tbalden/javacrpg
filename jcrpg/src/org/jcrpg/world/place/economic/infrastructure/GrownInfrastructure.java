@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
+import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 
@@ -31,6 +32,8 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 		long seed = population.soilGeo.numericId+population.blockStartX+population.blockStartZ;
 		boolean[] occupiedBlocks = new boolean[maxBlocks];
 		blockUsed = 0;
+		
+		int usedUpFixedProperties = 0;
 		
 		for (int j=0; j<(sizeLevel/maxInhabitantPerBlock)+1; j++)
 		{
@@ -82,6 +85,11 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				} else
 				{
 					p.type = residenceTypes.get(0);
+					if (usedUpFixedProperties<fixProperties.size())
+					{
+						p.overwriteSelfWithPredifined(fixProperties.get(usedUpFixedProperties));
+						usedUpFixedProperties++;
+					}
 				}
 				list.add(p);
 				setOccupiedBlocks(occupiedBlocks,p);

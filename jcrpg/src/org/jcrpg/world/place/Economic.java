@@ -19,6 +19,7 @@ package org.jcrpg.world.place;
 
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 
 /**
  * Intelligently created like cities, outposts, agriculture
@@ -34,6 +35,10 @@ public class Economic extends Geography {
 
 	public Geography soilGeo = null;
 	public EntityInstance owner = null;
+	/**
+	 * if it is owned by a persistent member, this should be set to it.
+	 */
+	public PersistentMemberInstance ownerMember = null;
 	
 	public Economic(String id, Geography soilGeo, Place parent, PlaceLocator loc, DistanceBasedBoundary boundaries, EntityInstance owner) {
 		super(id, parent, loc);
@@ -67,6 +72,14 @@ public class Economic extends Geography {
 	{
 		// TODO
 		((World)parent.getRoot()).economyContainer.updateEconomy(origoX, origoX+sizeX, origoY, origoY+sizeY, origoZ, origoZ+sizeZ, this);
+	}
+
+	public PersistentMemberInstance getOwnerMember() {
+		return ownerMember;
+	}
+
+	public void setOwnerMember(PersistentMemberInstance ownerMember) {
+		this.ownerMember = ownerMember;
 	}
 	
 	

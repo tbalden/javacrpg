@@ -21,7 +21,7 @@ package org.jcrpg.world.place.economic;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -49,13 +49,6 @@ public abstract class AbstractInfrastructure {
 	
 	public int INHABITANTS_PER_UPDATE = -1;
 	
-	public class InfrastructureElementParameters
-	{
-		public int relOrigoX,relOrigoY,relOrigoZ;
-		public int sizeX, sizeY, sizeZ;
-		public Class<? extends Economic> type;
-		public EntityMemberInstance owner = null;
-	}
 	
 	public Population population;
 	
@@ -139,13 +132,11 @@ public abstract class AbstractInfrastructure {
 		
 		// collecting fix properties of fix NPCs of entityInstance
 		ArrayList<InfrastructureElementParameters> fixProperties = new ArrayList<InfrastructureElementParameters>();
-		for (EntityMemberInstance i:population.owner.fixMembers.values())
+		for (PersistentMemberInstance i:population.owner.fixMembers.values())
 		{
-			if (i.ownedInfrastructures!=null)
-			for (Class<?extends Economic> ecoClass:i.ownedInfrastructures)
+			if (i.getOwnedInfrastructures()!=null)
+			for (InfrastructureElementParameters prop:i.getOwnedInfrastructures())
 			{
-				InfrastructureElementParameters prop = new InfrastructureElementParameters();
-				prop.type = ecoClass;
 				prop.owner = i;
 				fixProperties.add(prop);
 			}
@@ -238,6 +229,11 @@ public abstract class AbstractInfrastructure {
 					param.sizeX, maximumHeight-minimumHeight+2, param.sizeZ, 
 					population.blockStartX+param.relOrigoX, minimumHeight, population.blockStartZ+param.relOrigoZ, 
 					0, population.owner.homeBoundary, population.owner);
+			// setting the owner member from the parameter
+			if (param.owner!=null) {
+				ground.setOwnerMember(param.owner);
+				param.owner.addGeneratedOwnInfrastructure(ground);
+			}
 			population.addEcoGround(ground);
 			System.out.println("ADDING ecoground "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
 		} else
@@ -257,6 +253,11 @@ public abstract class AbstractInfrastructure {
 					param.sizeX, param.sizeY, param.sizeZ, 
 					population.blockStartX+param.relOrigoX, minimumHeight, population.blockStartZ+param.relOrigoZ, 
 					0, population.owner.homeBoundary, population.owner);
+			// setting the owner member from the parameter
+			if (param.owner!=null) {
+				res.setOwnerMember(param.owner);
+				param.owner.addGeneratedOwnInfrastructure(res);
+			}
 			population.addResidence(res);
 			System.out.println("ADDING residence "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
 			

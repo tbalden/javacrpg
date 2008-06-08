@@ -104,7 +104,7 @@ public class Ecology {
 	
 	public void addEntity(EntityInstance entityInstance)
 	{
-		beings.put(entityInstance.numericId, entityInstance);
+		beings.put(entityInstance.getNumericId(), entityInstance);
 		orderedBeingList.add(entityInstance);
 		for (EntityFragment f:entityInstance.fragments.fragments) {
 			addToLocator(f);
@@ -312,7 +312,7 @@ public class Ecology {
 				if (elements8!=null) elements.addAll(elements8);
 				if (elements9!=null) elements.addAll(elements9);
 				
-				System.out.println("________________________ "+f.getName());
+				System.out.println(entityInstance.description.getClass().getSimpleName() + "#"+entityInstance.getNumericId()+" ________________________ "+f.getName());
 				if (elements!=null) // going through the nearby intersection point units...
 				for (Object o:elements)
 				{
@@ -361,6 +361,8 @@ public class Ecology {
 			}
 
 		}
+
+		// the remaining static encounter instances are set inactive...
 		for (int i=counter; i<staticEncounterInfoInstances.size(); i++)
 		{
 			staticEncounterInfoInstances.get(i).subject = null;

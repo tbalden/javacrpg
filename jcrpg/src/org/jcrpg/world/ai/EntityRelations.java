@@ -33,13 +33,13 @@ public class EntityRelations
 	{
 		return relations.getRelationQuality(i.getNumericId());
 	}
-	public void increaseRelationLevel(EntityInstance i, byte num)
+	public void increaseRelationLevel(EncounterUnit i, byte num)
 	{
-		relations.increase(i.numericId, num);
+		relations.increase(i.getNumericId(), num);
 	}
-	public void decreaseRelationLevel(EntityInstance i, byte num)
+	public void decreaseRelationLevel(EncounterUnit i, byte num)
 	{
-		relations.decrease(i.numericId, num);
+		relations.decrease(i.getNumericId(), num);
 	}
 	public void turnNeutralization()
 	{
