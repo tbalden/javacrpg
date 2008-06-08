@@ -221,11 +221,20 @@ public class Ecology {
 				for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments) {
 					// calculate the common area sizes.
 					intersectTwoUnits(fragment, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
-					for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
+					
+					if (!targetFragment.alwaysIncludeFollowingMembers)
 					{
-						//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
-						intersectTwoUnits(fragment, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
+						for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
+						{
+							//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
+							intersectTwoUnits(fragment, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
+						}
+					} else
+					{
+						// in this case the EncounterInfo.getEncounterUnitDataList will add all PersistenMemberInstance 
+						// to the list, so no intersection is needed.
 					}
+					
 					for (PersistentMemberInstance pmi:fragment.getFollowingMembers())
 					{
 						//System.out.println("--- ###### "+pmi.getName()+pmi.getEncounterBoundary().posX+" "+pmi.getEncounterBoundary().posZ);

@@ -201,6 +201,8 @@ public class PreEncounterWindow extends PagedInputWindow {
 					l.add(subUnit);
 					i.encounteredSubUnits.put(fragment, l);
 				}
+				int[][] r = possibleGroups.encountered.get(party.theFragment);
+				i.encountered.put(party.theFragment, r);
 			}
 			
 			i.active = true;

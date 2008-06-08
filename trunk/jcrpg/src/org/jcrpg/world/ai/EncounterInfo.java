@@ -160,6 +160,20 @@ public class EncounterInfo {
 			{
 				allSize+=subUnits.size();
 			}
+			if (unit instanceof EntityFragment)
+			{
+				if (((EntityFragment)unit).alwaysIncludeFollowingMembers)
+				{
+					ArrayList<PersistentMemberInstance> members = ((EntityFragment)unit).getFollowingMembers();
+					for (PersistentMemberInstance p:members)
+					{
+						if (!subUnits.contains(p))
+						{
+							allSize++;
+						}
+					}
+				}
+			}
 		}
 		return allSize;
 	}
@@ -232,6 +246,23 @@ public class EncounterInfo {
 							parent = ((PersistentMemberInstance)unit).getParentFragment();
 					}
 					list.add(new EncounterUnitData(parent,u));
+				}
+			}
+			if (unit instanceof EntityFragment)
+			{
+				if (((EntityFragment)unit).alwaysIncludeFollowingMembers)
+				{
+					ArrayList<PersistentMemberInstance> members = ((EntityFragment)unit).getFollowingMembers();
+					for (PersistentMemberInstance p:members)
+					{
+						if (subUnits==null || !subUnits.contains(p))
+						{
+							EncounterUnit parent = unit;
+							if ( ((PersistentMemberInstance)p).getParentFragment()!=null)
+								parent = ((PersistentMemberInstance)p).getParentFragment();
+							list.add(new EncounterUnitData(parent,p));
+						}
+					}
 				}
 			}
 		}
