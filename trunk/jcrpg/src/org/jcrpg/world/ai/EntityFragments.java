@@ -55,7 +55,7 @@ public class EntityFragments {
 		public EntityInstance instance;
 		
 		/**
-		 * Used for parties.
+		 * Used for parties, if this is set to true the EncounterInfo will alwass include the followingMembers in its encounterUnitData lists.
 		 */
 		public boolean alwaysIncludeFollowingMembers = false;
 		

@@ -133,14 +133,16 @@ public class Ecology {
 		int[] groupIds = null;
 		if (target instanceof PersistentMemberInstance)
 		{
+			// this is a subunit (member), not a group based entity, so we should get the subunits of the member.
 			System.out.println(fillOwn + "SELF = "+self.getName()+" TARGET = "+target.getName());
 			units = target.getSubUnits(posX, posY, posZ);
-			System.out.println(units==null?"0_":units.size());
 		} else 
 		{
-			groupIds = target.getGroupIds(posX,posY,posZ,radiusRatio, rand);
-			
+			// this is an entity so group ids are needed..
+			groupIds = target.getGroupIds(posX,posY,posZ,radiusRatio, rand);			
 		}
+		
+		// this is an own group filling call of this method, so we must fill 'own' data only 
 		if (fillOwn)
 		{
 			if (groupIds!=null && groupIds.length>0) encounterInfo.appendOwnGroupIds(self,groupIds);
@@ -149,14 +151,14 @@ public class Ecology {
 			if (units!=null) encounterInfo.encounteredSubUnits.put(target, units);
 		} else
 		{
+			// this is the target group filling call of this method, so we must fill the encountered data...
 			if (self == J3DCore.getInstance().gameState.player.theFragment) {
 				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.getEncounterBoundary().posX+" "+self.getEncounterBoundary().posZ);
-				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getNumericId());
+				Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getName());
 			}
 			if (groupIds!=null && groupIds.length>0) encounterInfo.encounteredGroupIds.put(target, groupIds);
 			if (units!=null) 
 			{
-				System.out.println("APPENDING "+self.getName()+" "+target.getName()+" - "+encounterInfo);
 				encounterInfo.encounteredSubUnits.put(target, units);
 			}
 		}
@@ -168,32 +170,32 @@ public class Ecology {
 	 */
 	static ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	
-	public void intersectTwoUnits(EncounterUnit fragment, EncounterUnit targetFragment, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
+	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
-		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(fragment.getEncounterBoundary(), targetFragment.getEncounterBoundary());
-		if (r==DistanceBasedBoundary.zero) return; // no common part
-		if (targetFragment==J3DCore.getInstance().gameState.player.theFragment)
+		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(initiatorUnit.getEncounterBoundary(), targetUnit.getEncounterBoundary());
+		if (r==DistanceBasedBoundary.zero) return; // no common part detected, return..
+		if (targetUnit==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetFragment.getDescription().getClass().getSimpleName());
+			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetUnit.getName());
 		}
-		if (fragment==J3DCore.getInstance().gameState.player.theFragment)
+		if (initiatorUnit==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
-			//System.out.println("Ecology.getNearbyEncounters(): Found player ecounter: "+targetFragment.getDescription().getClass().getSimpleName());
-			//System.out.println("## "+counter);
+			Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetUnit.getName());
 		}
 		
-		listOfCommonRadiusFragments.put(targetFragment, r);
-		loc.addElement(r[1][0], r[1][1], r[1][2], targetFragment);
+		// storing intersection numeric data for target
+		listOfCommonRadiusFragments.put(targetUnit, r);
 		
-		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2], targetFragment);
-		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]+joinLimit, targetFragment);
-		loc.addElement(r[1][0], r[1][1], r[1][2]+joinLimit, targetFragment);
-		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2], targetFragment);
-		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]+joinLimit, targetFragment);
-		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]-joinLimit, targetFragment);
-		loc.addElement(r[1][0], r[1][1], r[1][2]-joinLimit, targetFragment);
-		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]-joinLimit, targetFragment);
+		// filling tree locator with the targetFragment for helping intersection group determination later...
+		loc.addElement(r[1][0], r[1][1], r[1][2], targetUnit);		
+		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2], targetUnit);
+		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]+joinLimit, targetUnit);
+		loc.addElement(r[1][0], r[1][1], r[1][2]+joinLimit, targetUnit);
+		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2], targetUnit);
+		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]+joinLimit, targetUnit);
+		loc.addElement(r[1][0]-joinLimit, r[1][1], r[1][2]-joinLimit, targetUnit);
+		loc.addElement(r[1][0], r[1][1], r[1][2]-joinLimit, targetUnit);
+		loc.addElement(r[1][0]+joinLimit, r[1][1], r[1][2]-joinLimit, targetUnit);
 		
 	}
 	
@@ -204,55 +206,57 @@ public class Ecology {
 	 */
 	public Collection<EncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
 	{
-		// TODO info for fixed PersistentMemberInstances with help of EncounterUnit!!!
 		
-		int joinLimit = 10;
+		int joinLimit = 10; // the circle's radius that will group together intersection points of different EncounterUnits.
 		int counter = 0;
-		//ArrayList<PreEncounterInfo> entities = new ArrayList<PreEncounterInfo>();
+		
+		// going through entity's fragments looking for intersections with other instances' fragments and following members...
 		for (EntityFragment fragment:entityInstance.fragments.fragments) 
 		{
+			// the list that collects intersection data (for subunits or fragments as EncounterUnit and int[][] as intersection numeric data)
 			HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments = new HashMap<EncounterUnit,int[][]>();
+			// the locator to help grouping intersection points that will build up an EncounterInfo
 			TreeLocator loc = new TreeLocator(entityInstance.world);
+			
+			// all active beings are being iterated...
 			for (EntityInstance targetEntityInstance:beings.values())
 			{
 				// don't check for the identical entity, continue. 
 				if (targetEntityInstance==entityInstance) continue;
 	
+				// iterating through fragments...
 				for (EntityFragment targetFragment:targetEntityInstance.fragments.fragments) {
 					// calculate the common area sizes.
 					intersectTwoUnits(fragment, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
 					
+					// only calculate intersections if the targetfragment is not an automatic member including fragment...
 					if (!targetFragment.alwaysIncludeFollowingMembers)
 					{
 						for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
 						{
-							//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 							intersectTwoUnits(fragment, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
 						}
 					} else
 					{
-						// in this case the EncounterInfo.getEncounterUnitDataList will add all PersistenMemberInstance 
+						// ... in this case the EncounterInfo.getEncounterUnitDataList will add all PersistenMemberInstance 
 						// to the list, so no intersection is needed.
 					}
 					
+					// intersecting source fragment's following members with targetFragment, plus with target fragment's following members
 					for (PersistentMemberInstance pmi:fragment.getFollowingMembers())
 					{
-						//System.out.println("--- ###### "+pmi.getName()+pmi.getEncounterBoundary().posX+" "+pmi.getEncounterBoundary().posZ);
 						intersectTwoUnits(pmi, targetFragment, listOfCommonRadiusFragments, loc, joinLimit);
 						for (PersistentMemberInstance pmiTarget:targetFragment.getFollowingMembers())
 						{
-							//System.out.println("--- $$$$ ###### "+pmiTarget.getName()+pmiTarget.getEncounterBoundary().posX+" "+pmiTarget.getEncounterBoundary().posZ);
 							intersectTwoUnits(pmi, pmiTarget, listOfCommonRadiusFragments, loc, joinLimit);
 						}
 					}
 				}
 				
 			}
-			
-			// TODO still no luck with "attacking" PersistentMembers doesnt show up in the menu, only
-			// it's parent fragment! Also humans don't show up in the list, if memberinstance boundary size is
-			// set to 60!!
 		
+			// creating encounterInfos based on the collected intersection data...
+			
 			ArrayList<EncounterUnit> usedUp = new ArrayList<EncounterUnit>();
 			for (EncounterUnit f:listOfCommonRadiusFragments.keySet())
 			{
@@ -279,12 +283,15 @@ public class Ecology {
 					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
 				}
+				// add the base unit into the encounter info...				
 				calcGroupsOfEncounter(fragment, f, r[1][0], r[1][1], r[1][2], r[0][1], pre, false);
 				// fill how many of the interceptor entity group intercepts the target
 				calcGroupsOfEncounter(f, fragment, r[1][0], r[1][1], r[1][2], r[0][0], pre, true);
 
-				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]);
-				ArrayList<Object> elements1 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]); // TODO this is only partial data!!
+				Vector3f v1 = new Vector3f(r[1][0],r[1][1],r[1][2]); // this is the vector of intersection point to measure to the others distance.
+				
+				// looking for nearby intersection points in the treelocator...
+				ArrayList<Object> elements1 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]);
 				ArrayList<Object> elements2 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]+joinLimit);
 				ArrayList<Object> elements3 = loc.getElements(r[1][0], r[1][1], r[1][2]+joinLimit);
 				ArrayList<Object> elements4 = loc.getElements(r[1][0]+joinLimit, r[1][1], r[1][2]-joinLimit);
@@ -293,6 +300,7 @@ public class Ecology {
 				ArrayList<Object> elements7 = loc.getElements(r[1][0]-joinLimit, r[1][1], r[1][2]+joinLimit);
 				ArrayList<Object> elements8 = loc.getElements(r[1][0]-joinLimit, r[1][1], r[1][2]);
 				ArrayList<Object> elements9 = loc.getElements(r[1][0], r[1][1], r[1][2]);
+				// joining the found intersection units into one list.
 				ArrayList<Object> elements = new ArrayList<Object>();
 				if (elements1!=null) elements.addAll(elements1);
 				if (elements2!=null) elements.addAll(elements2);
@@ -303,16 +311,22 @@ public class Ecology {
 				if (elements7!=null) elements.addAll(elements7);
 				if (elements8!=null) elements.addAll(elements8);
 				if (elements9!=null) elements.addAll(elements9);
-				System.out.println("________________________");
-				if (elements!=null)
+				
+				System.out.println("________________________ "+f.getName());
+				if (elements!=null) // going through the nearby intersection point units...
 				for (Object o:elements)
 				{
 					EncounterUnit fT = ((EncounterUnit)o);
 					if (fT==f || usedUp.contains(fT)) continue;
 					int[][] r2 = listOfCommonRadiusFragments.get(fT);
-					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]);
-					if (v2.distance(v1)<joinLimit)
+					Vector3f v2 = new Vector3f(r2[1][0],r2[1][1],r2[1][2]); // the comparator vector for the intersection point
+					
+					// for the player merge all, for others intersection points must be inside the limit (joinLimit) (checking with the intersecion point
+					// vectors)
+					if (fragment == J3DCore.getInstance().gameState.player.theFragment || v2.distance(v1)<joinLimit) 
 					{
+						// joining the Encounter unit into the EncounterInfo
+						
 						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
 						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
 						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
@@ -325,6 +339,8 @@ public class Ecology {
 						calcGroupsOfEncounter(fT, fragment, r2[1][0], r2[1][1], r2[1][2], r2[0][0], pre, true);
 					} else
 					{
+						// not joining this, skipping.
+						
 						//System.out.println(" __ "+r[1][0]+" "+r[1][2]);
 						//System.out.println(" __ "+r2[1][0]+" "+r2[1][2]);
 						//System.out.println( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
