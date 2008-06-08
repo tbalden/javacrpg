@@ -37,7 +37,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 			int numericId, int startX, int startY, int startZ) {
 		super(description, numericId);
 		if (w!=null) {
-			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,60);//TODO description.getRoamingSize());
+			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,5);//TODO description.getRoamingSize());
 		}
 	}
 
@@ -80,7 +80,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	}
 
 	public String getName() {
-		return Language.v("member."+description.getClass().getSimpleName());
+		return Language.v("member."+description.getName());
 	}
 
 	public int getSize() {

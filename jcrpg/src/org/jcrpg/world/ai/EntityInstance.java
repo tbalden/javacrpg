@@ -29,8 +29,6 @@ import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
-import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 
@@ -113,9 +111,9 @@ public class EntityInstance {
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 		
-		PersistentMemberInstance p = new PersistentMemberInstance(new StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
-		fixMembers.put("1", p);
-		fragments.fragments.get(0).addFollower(p);
+		//PersistentMemberInstance p = new PersistentMemberInstance(new StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+		//fixMembers.put("1", p);
+		//fragments.fragments.get(0).addFollower(p);
 	}
 	
 	public void recalcBoundarySizes()
