@@ -31,7 +31,6 @@ import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
-import org.jcrpg.world.ai.humanoid.modifier.race.Catkind;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 
