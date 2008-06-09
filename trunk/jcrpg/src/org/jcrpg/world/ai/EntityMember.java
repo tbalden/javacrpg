@@ -102,7 +102,7 @@ public class EntityMember extends DescriptionBase {
 	
 	public String getName()
 	{
-		return Language.v("member."+this.getClass().getSimpleName());
+		return Language.v("member."+visibleTypeId);
 	}
 	
 }

@@ -19,7 +19,6 @@
 package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -32,36 +31,21 @@ public class GroupingRule {
 	 */
 	public int sizeDeviation = 1;
 	
-	public Collection<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
+	public ArrayList<GroupingMemberProps> possibleMembers = new ArrayList<GroupingMemberProps>();
 	
 	public ArrayList<EntityMemberInstance> getGroup(int groupId, EntityFragment fragment)
 	{
-		int counter = 0;
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
 		while (members.size()<fragment.instance.getGroupSizes()[groupId]) {
-			for (GroupingMemberProps prop :possibleMembers)
-			{
-				for (int i=0; i<prop.maxNumberInAGroup; i++)
-				{
-					if (i<prop.minNumberInAGroup)
-					{
-						counter++;
-						members.add(new EntityMemberInstance(prop.memberType,-1));		
-					} else
-					{
-						int rand = HashUtil.mixPercentage(fragment.instance.id.hashCode(), groupId, 0);
-						if (prop.likeness<rand)
-						{
-							counter++;
-							members.add(new EntityMemberInstance(prop.memberType,-1));
-						}
-					}
-					if (counter==fragment.instance.getGroupSizes()[groupId]) break;
-				}
-				if (counter==fragment.instance.getGroupSizes()[groupId]) break;
-			}
+			members.add(new EntityMemberInstance(fragment.instance.getGroupSizesAndTypes()[groupId].type,-1));
 		}
 		return members;
+	}
+	
+	public class GroupSizeAndType
+	{
+		public int size;
+		public EntityMember type;
 	}
 	
 	/**
@@ -69,17 +53,44 @@ public class GroupingRule {
 	 * @param instance
 	 * @return
 	 */
-	public int[] getGroupSizes(EntityInstance instance)
+	public GroupSizeAndType[] getGroupSizesAndTypes(EntityInstance instance)
 	{
 		int parts = instance.numberOfMembers/averageSize;
 		if (parts==0) parts = 1;
-		int[] ret = new int[parts];
+		GroupSizeAndType[] ret = new GroupSizeAndType[parts];
+		int count = 0;
+		int sumOfLikeness = 0;
+		for (GroupingMemberProps prop :possibleMembers)
+		{
+			sumOfLikeness+=prop.likeness;
+			count++;
+		}
 		for (int i=0; i<parts; i++)
 		{
-			int rand = HashUtil.mixPercentage(instance.id.hashCode(), i, 0);
+			int randFull = HashUtil.mix(instance.id.hashCode(), i, 0);
+			int rand = randFull%100;
 			int dev = ((int)(((rand/100f)*sizeDeviation))*2)-sizeDeviation;
-			ret[i] = averageSize+dev;
-			if (ret[i]==0) System.out.println("####### "+instance.description+" ZERO SIZE");
+			GroupSizeAndType gst = new GroupSizeAndType();
+			gst.size = averageSize+dev;
+			
+			if (possibleMembers.size()>0 && sumOfLikeness>0) {
+				int randGroupLikeness = randFull%sumOfLikeness;
+				int likenessCount = 0;
+				GroupingMemberProps selected = null;
+				for (GroupingMemberProps prop :possibleMembers)
+				{
+					selected = prop;
+					likenessCount+=prop.likeness;
+					if (likenessCount>=randGroupLikeness)
+					{
+						break;
+					}
+				}
+				System.out.println(instance.fragments.fragments.get(0).getName()+" : "+selected.memberType.getName());
+				gst.type = selected.memberType;
+			}
+			ret[i] = gst;
+			//if (ret[i]==0) System.out.println("####### "+instance.description+" ZERO SIZE");
 		}
 		return ret;
 	}
@@ -89,7 +100,8 @@ public class GroupingRule {
 		int numberOfGroups = (int)(f.instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
 		//System.out.println("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
-		if (numberOfGroups==0) numberOfGroups = 1;
+		if (numberOfGroups==0 || numberOfGroups==1) numberOfGroups = 2;
+		if (numberOfGroups>f.instance.getGroupSizes().length) numberOfGroups = f.instance.getGroupSizes().length;
 		int[] groupIds = new int[numberOfGroups];
 		for (int i=0; i<groupIds.length; i++)
 		{

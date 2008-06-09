@@ -80,7 +80,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		
-		setAverageGroupSizeAndDeviation(6, 2);
+		setAverageGroupSizeAndDeviation(3, 2);
 		
 		addGroupingRuleMember(HUMAN_MALE_ARTISAN);
 		addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE);
