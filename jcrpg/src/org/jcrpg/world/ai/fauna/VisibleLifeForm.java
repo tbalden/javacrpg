@@ -43,6 +43,11 @@ public class VisibleLifeForm {
 	public PersistentMemberInstance member;
 	public int groupId = -1;
 	
+	/**
+	 * size that should be visible as a billboarded quad number above the unit when forGroup=true.
+	 */
+	public int size = 1;
+	
 	public boolean forGroup = false;
 	
 	public boolean notRendered = false;
@@ -71,6 +76,7 @@ public class VisibleLifeForm {
 		this.entity = entity;
 		this.member = member;
 		forGroup = false;
+		size = 1;
 	}
 	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, int groupId) {
 		super();
@@ -79,5 +85,6 @@ public class VisibleLifeForm {
 		this.entity = entity;
 		this.groupId = groupId;
 		forGroup = true;
+		size = entity.getGroupSizes()[groupId];
 	}
 }
