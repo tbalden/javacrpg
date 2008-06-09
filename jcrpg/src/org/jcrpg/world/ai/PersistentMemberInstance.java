@@ -160,6 +160,10 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		this.parentFragment = parentFragment;
 	}
 
+	public EntityMember getGroupType(int groupId) {
+		return description;
+	}
+
 
 
 }

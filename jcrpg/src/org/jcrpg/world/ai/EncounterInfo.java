@@ -200,7 +200,8 @@ public class EncounterInfo {
 			this.parent = parent;
 			this.groupId = groupId;
 			int size1 = parent.getGroupSize(groupId);
-			name = size1+" "+parent.getName() + " " + groupId;			
+			EntityMember m = parent.getGroupType(groupId);
+			name = size1+" "+ (m==null?parent.getName():m.getName()) + " " + groupId;			
 		}
 		
 	}

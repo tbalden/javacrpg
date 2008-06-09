@@ -126,6 +126,9 @@ public class EntityFragments {
 		public ArrayList<PersistentMemberInstance> getFollowingMembers() {
 			return followingMembers;
 		}
+		public EntityMember getGroupType(int groupId) {
+			return instance.getGroupSizesAndTypes()[groupId].type;
+		}
 	}
 	public transient Vector3f tmpVector = new Vector3f();
 	

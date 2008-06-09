@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.GroupingRule.GroupSizeAndType;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.choice.Attack;
@@ -77,6 +78,7 @@ public class EntityInstance {
 
 	public static EntityMember NONE_TYPE = new EntityMember("NONE", null);
 
+	private transient GroupSizeAndType[] groupSizesAndTypes = null;
 	private transient int[] groupSizes = null;
 
 	/**
@@ -135,11 +137,20 @@ public class EntityInstance {
 		calcGroupSizes();
 	}
 
-	public int[] calcGroupSizes()
+	public GroupSizeAndType[] calcGroupSizes()
 	{
-		if (groupSizes==null)
-			groupSizes = description.groupingRule.getGroupSizes(this);
-		return groupSizes;
+		if (groupSizesAndTypes==null) 
+		{
+			groupSizesAndTypes = description.groupingRule.getGroupSizesAndTypes(this);
+			groupSizes = new int[groupSizesAndTypes.length];
+			int count = 0;
+			for (GroupSizeAndType t:groupSizesAndTypes)
+			{
+				groupSizes[count++] = t.size; 
+			}
+		}
+			
+		return groupSizesAndTypes;
 	}
 	public int[][] calcGroupPositions()
 	{
@@ -266,6 +277,10 @@ public class EntityInstance {
 
 	public int getNumericId() {
 		return numericId;
+	}
+
+	public GroupSizeAndType[] getGroupSizesAndTypes() {
+		return groupSizesAndTypes;
 	}
 
 	

@@ -49,6 +49,9 @@ public interface EncounterUnit {
 	//public ArrayList<EncounterUnit>
 	
 	public ArrayList<EntityMemberInstance> getGroup(int groupId);
+	
+	public EntityMember getGroupType(int groupId);
+	
 	public int getGroupSize(int groupId);
 	
 	public VisibleLifeForm getOne(EntityMemberInstance member);
