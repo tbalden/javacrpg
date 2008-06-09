@@ -21,7 +21,7 @@ package org.jcrpg.world.ai.fauna;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 
 /**
  * Different entities/groups when met visibly should show their appearance through this base class or its extension
@@ -40,7 +40,10 @@ public class VisibleLifeForm {
 	public EntityMember type;
 	
 	public EntityInstance entity;
-	public EntityMemberInstance member;
+	public PersistentMemberInstance member;
+	public int groupId = -1;
+	
+	public boolean forGroup = false;
 	
 	public boolean notRendered = false;
 	
@@ -61,11 +64,20 @@ public class VisibleLifeForm {
 	 */
 	public VisibleLifeForm targetForm = null;
 
-	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, EntityMemberInstance member) {
+	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, PersistentMemberInstance member) {
 		super();
 		this.uniqueId = uniqueId;
 		this.type = type;
 		this.entity = entity;
 		this.member = member;
+		forGroup = false;
+	}
+	public VisibleLifeForm(String uniqueId, EntityMember type, EntityInstance entity, int groupId) {
+		super();
+		this.uniqueId = uniqueId;
+		this.type = type;
+		this.entity = entity;
+		this.groupId = groupId;
+		forGroup = true;
 	}
 }

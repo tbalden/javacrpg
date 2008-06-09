@@ -83,7 +83,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		setAverageGroupSizeAndDeviation(3, 2);
 		
 		addGroupingRuleMember(HUMAN_MALE_ARTISAN);
-		addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE);
+		addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE,300,5,10);
 		addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		addGroupingRuleMember(HUMAN_MALE_SMITH);
 	}

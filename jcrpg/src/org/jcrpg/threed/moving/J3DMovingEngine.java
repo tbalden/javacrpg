@@ -29,7 +29,6 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.math.Quaternion;
@@ -82,8 +81,8 @@ public class J3DMovingEngine {
 			n[i].setLocalRotation(qC);
 			//System.out.println("- "+unit.id+" "+unit.form.member);
 			VisibleLifeForm form = unit.form;
-			EntityMemberInstance member = form.member;
-			EntityMember desc = member.description;
+			//EntityMemberInstance member = form.member;
+			EntityMember desc = form.type;
 			//System.out.println("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
 			float[] scale = desc.getScale();
 			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
@@ -209,7 +208,7 @@ public class J3DMovingEngine {
 						if (unit.toSteep)
 						{
 							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
-							float[] scale = unit.form.member.description.getScale();
+							float[] scale = unit.form.type.getScale();
 							// scaling for md5 needs substraction
 							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
 						}
@@ -275,7 +274,7 @@ public class J3DMovingEngine {
 						if (unit.toSteep)
 						{
 							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
-							float[] scale = unit.form.member.description.getScale();
+							float[] scale = unit.form.type.getScale();
 							// scaling for md5 needs substraction
 							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
 						}

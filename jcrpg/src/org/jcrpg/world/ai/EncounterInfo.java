@@ -111,10 +111,15 @@ public class EncounterInfo {
 	}
 	
 	/**
-	 * Stores member instances for Player involved encounters.
+	 * Stores transient member instances for Player involved encounters.
 	 */
-	public HashMap<Integer, ArrayList<EntityMemberInstance>> generatedGroups;
+	public transient HashMap<Integer, ArrayList<EntityMemberInstance>> generatedGroups;
 	
+	/**
+	 * Stores a set of generated members for a given groupId (transiently).
+	 * @param groupId
+	 * @param members
+	 */
 	public void setGroupMemberInstances(int groupId, ArrayList<EntityMemberInstance> members)
 	{
 		if (generatedGroups == null) generatedGroups = new HashMap<Integer, ArrayList<EntityMemberInstance>>();
@@ -201,7 +206,7 @@ public class EncounterInfo {
 			this.groupId = groupId;
 			int size1 = parent.getGroupSize(groupId);
 			EntityMember m = parent.getGroupType(groupId);
-			name = size1+" "+ (m==null?parent.getName():m.getName()) + " " + groupId;			
+			name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";			
 		}
 		
 	}

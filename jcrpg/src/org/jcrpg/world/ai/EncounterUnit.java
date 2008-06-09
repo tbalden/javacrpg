@@ -54,7 +54,7 @@ public interface EncounterUnit {
 	
 	public int getGroupSize(int groupId);
 	
-	public VisibleLifeForm getOne(EntityMemberInstance member);
+	public VisibleLifeForm getOne(int groupId);
 	
 	public int getRelationLevel(EncounterUnit unit);
 	
