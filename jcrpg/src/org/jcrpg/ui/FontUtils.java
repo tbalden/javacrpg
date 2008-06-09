@@ -25,5 +25,7 @@ import org.jcrpg.ui.text.FontTT;
 public class FontUtils {
 	public static Font fontVerdana = new Font("Verdana", Font.BOLD, 32);
 	public static FontTT textVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),64,0);
+	public static Font fontNonBoldVerdana = new Font("Verdana", Font.PLAIN, 32);
+	public static FontTT textNonBoldVerdana = new FontTT(fontVerdana.deriveFont(Font.PLAIN),64,0);
 
 }

@@ -26,6 +26,8 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
+import com.jme.scene.Node;
+
 /**
  * Class for rendered moving life forms with info about its movement/action states
  * @author illes
@@ -60,6 +62,20 @@ public class RenderedMovingUnit {
 	public boolean internal = false;
 	
 	public transient HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
+	
+	/**
+	 * billboard node for group size text
+	 */
+	public transient Node sizeTextNode = null;
+	/**
+	 * billboard node for membertype
+	 */
+	public transient Node memberTypeNameNode = null;
+	
+	/**
+	 * billboard circle node around units leg
+	 */
+	public transient Node circleNode = null;
 	
 	public RenderedMovingUnit(Model[] models) {
 		super();

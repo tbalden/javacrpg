@@ -28,12 +28,18 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.ui.FontUtils;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
+import com.jme.scene.SceneElement;
+import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 
 /**
  * Moving units 3d display part.
@@ -144,6 +150,65 @@ public class J3DMovingEngine {
 		renderToViewPort(0f);
 	}
 	
+	
+	public void getVisibleFormBillboardNodes(RenderedMovingUnit unit)
+	{
+		if (unit.form.forGroup) {
+			BillboardNode n = new BillboardNode("name");
+			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.size, 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+			n.attachChild(slottextNode);
+			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			slottextNode.setTextureCombineMode( TextureState.REPLACE );
+			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
+			s.setFunction(ZBufferState.CF_ALWAYS);
+			//slottextNode.setRenderState(s);
+			n.setRenderState(s);
+			
+			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
+			n.setLocalTranslation(new Vector3f(0.5f,0.1f,0));
+			n.setLocalScale(0.17f);
+			unit.sizeTextNode = n;
+		}
+		{		
+			BillboardNode n = new BillboardNode("name2");
+			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+(unit.form.forGroup?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+			n.attachChild(slottextNode);
+			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
+			s.setFunction(ZBufferState.CF_ALWAYS);
+			//slottextNode.setRenderState(s);
+			n.setRenderState(s);
+			
+			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
+			n.setLocalTranslation(new Vector3f(0.2f,0.3f,0));
+			n.setLocalScale(0.1f);
+			unit.memberTypeNameNode= n;
+		}
+		if (true==false)
+		{
+			// creating circle around the unit, currently unused
+			
+			Node n = new Node("name2");
+			//n.setAlignment(BillboardNode.AXIAL_Z);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText("o", 1, new ColorRGBA(0.3f,0.9f,0.3f,1f),new ColorRGBA(0.1f,0.6f,0.1f,1f),true);
+			n.attachChild(slottextNode);
+			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
+			s.setFunction(ZBufferState.CF_ALWAYS);
+			//slottextNode.setRenderState(s);
+			n.setRenderState(s);
+			n.setLocalRotation(J3DCore.qT);
+			
+			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
+			n.setLocalTranslation(new Vector3f(0.0f,0.05f,0));
+			n.setLocalScale(1.1f);
+			unit.circleNode = n;
+		}
+}
+	
+	
 	boolean firstRenderToViewPort = true;
 	/**
 	 * Set in view units visible / out of view units invisible on every movement of player or every new turn if no
@@ -161,6 +226,15 @@ public class J3DMovingEngine {
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
 					realPooledNode.setLocalScale(n.getLocalScale());
+					getVisibleFormBillboardNodes(unit);
+					if (unit.sizeTextNode!=null)
+					{
+						realPooledNode.attachChild(unit.sizeTextNode);	
+					}
+					realPooledNode.attachChild(unit.memberTypeNameNode);
+					//realPooledNode.attachChild(unit.circleNode);
+					
+					
 					if (unit.internal) {
 						core.intRootNode.attachChild((Node)realPooledNode);
 					} else 
