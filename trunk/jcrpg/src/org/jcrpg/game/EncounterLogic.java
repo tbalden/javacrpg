@@ -153,7 +153,7 @@ public class EncounterLogic {
 	
 
 	public class TurnActTurnState {
-		public ArrayList<EncounterInfo> encounters;
+		public EncounterInfo encounter;
 		public int nextEventCount = 0;
 		//public int maxEventCount = 0;
 		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();

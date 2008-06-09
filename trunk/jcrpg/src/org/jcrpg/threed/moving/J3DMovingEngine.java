@@ -30,6 +30,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.math.Quaternion;
@@ -171,9 +172,21 @@ public class J3DMovingEngine {
 			unit.sizeTextNode = n;
 		}
 		{		
+			
+			ColorRGBA c = new ColorRGBA(0.9f,0.9f,0.9f,1f);
+			int relation = unit.form.entity.relations.getRelationLevel(core.gameState.player.theFragment);
+			if (relation>EntityScaledRelationType.NEUTRAL)
+			{
+				c = ColorRGBA.green;
+			} else
+			if (relation<EntityScaledRelationType.NEUTRAL)
+			{
+				c = ColorRGBA.red;
+			}
+			
 			BillboardNode n = new BillboardNode("name2");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
-			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+(unit.form.forGroup?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+(unit.form.forGroup?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
 			n.attachChild(slottextNode);
 			slottextNode.setCullMode( SceneElement.CULL_NEVER );
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
