@@ -10,8 +10,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 
+[ ] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
+	[ ] encounter 3d models -> one model should represent a group!!
 
-[ ] model viewer for md5, separate application
+[X] model viewer for md5, separate application
 
 [X] owned infrastrucures are present now in a build of a population, and it is set as owned economic too...
  now 
