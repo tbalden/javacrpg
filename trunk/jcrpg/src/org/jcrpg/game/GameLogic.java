@@ -167,6 +167,7 @@ public class GameLogic {
 							if (types.length()>30) break;
 						}
 						ecology.callbackMessage(""+size+" "+types);
+						boolean generated = false;
 						if (members!=null)
 						for (EntityMemberInstance member:members)
 						{
@@ -180,12 +181,15 @@ public class GameLogic {
 									}
 								}
 							}
-							VisibleLifeForm form = mainUnit.getOne(member);//fragment.instance.getOne(member.description,member);
-							if (form!=null) {
-								form.targetForm = playerFakeForm;
-								forms.add(form);
+							if (!generated) {
+								VisibleLifeForm form = mainUnit.getOne(in);//fragment.instance.getOne(member.description,member);
+								if (form!=null) {
+									form.targetForm = playerFakeForm;
+									forms.add(form);
+									generated = true;
+								}
+								sizeOfAll++;
 							}
-							sizeOfAll++;
 						}
 					}
 					
@@ -195,6 +199,7 @@ public class GameLogic {
 						ArrayList<EntityMemberInstance> members = u.getGroup(0);
 						if (members!=null)
 						{
+							boolean generated = false;
 							for (EntityMemberInstance member:members)
 							{
 								if (!played) 
@@ -207,12 +212,15 @@ public class GameLogic {
 										}
 									}
 								}
-								VisibleLifeForm form = mainUnit.getOne(member);//fragment.instance.getOne(member.description,member);
-								if (form!=null) {
-									form.targetForm = playerFakeForm;
-									forms.add(form);
+								if (!generated) {
+									VisibleLifeForm form = mainUnit.getOne(0);//fragment.instance.getOne(member.description,member);
+									if (form!=null) {
+										form.targetForm = playerFakeForm;
+										forms.add(form);
+										generated = true;
+									}
+									sizeOfAll++;
 								}
-								sizeOfAll++;
 							}
 						}
 					}

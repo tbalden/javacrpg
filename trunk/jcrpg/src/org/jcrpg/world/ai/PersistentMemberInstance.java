@@ -121,7 +121,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return 1;
 	}
 
-	public VisibleLifeForm getOne(EntityMemberInstance member) {
+	public VisibleLifeForm getOne(int groupId) {
 		return new VisibleLifeForm(this.getClass().getName()+""+this,description,getParentFragment().instance,this);
 	}
 

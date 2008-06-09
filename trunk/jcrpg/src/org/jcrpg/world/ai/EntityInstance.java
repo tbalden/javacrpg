@@ -239,9 +239,9 @@ public class EntityInstance {
 	
 
 
-	public VisibleLifeForm getOne(EntityMemberInstance instance)
+	public VisibleLifeForm getOne(int groupId)
 	{
-		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),instance.description,this,instance);
+		return new VisibleLifeForm(this.getClass().getName()+nextVisibleSequence(),getGroupSizesAndTypes()[groupId].type,this,groupId);
 	}
 	
 	public void setPosition(int[] coords)

@@ -94,8 +94,8 @@ public class EntityFragments {
 		public int getGroupSize(int groupId) {
 			return instance.getGroupSizes()[groupId];
 		}
-		public VisibleLifeForm getOne(EntityMemberInstance member) {
-			return instance.getOne(member);
+		public VisibleLifeForm getOne(int groupId) {
+			return instance.getOne(groupId);
 		}
 		public int getRelationLevel(EncounterUnit unit) {
 			return instance.relations.getRelationLevel(unit);
