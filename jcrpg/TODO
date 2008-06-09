@@ -18,6 +18,11 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	An ordered placement list should be generated before starting the encounter for friendly units (1 to 3 lines)
 	and in front of this an enemy ordere placement list (1 to 3 lines), after that should be placed the
 	3d models and start the round. Movement -> how to animate? 
+	
+	Neutralized (mentally or physically)  friendly/enemy units should be removed from the act -
+	after that if someone is detained by player -> prison?payment for it for the player?
+	
+	A fight if won by neutralization should positively add to a relationship 
 
 [X] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
 	[X] encounter 3d models -> one model should represent a group!!
