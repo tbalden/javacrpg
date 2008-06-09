@@ -349,7 +349,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	/**
 	 * cube side rotation quaternion
 	 */
-	static Quaternion qN, qS, qW, qE, qT, qB, qTexture;
+	public static Quaternion qN, qS, qW, qE, qT, qB, qTexture;
 
 	/**
 	 * Horizontal Rotations 
