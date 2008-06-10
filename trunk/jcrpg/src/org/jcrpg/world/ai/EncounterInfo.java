@@ -90,7 +90,7 @@ public class EncounterInfo {
 	 * @param groupId GroupId.
 	 * @return new EncounterInfo.
 	 */
-	public EncounterInfo copyForFragmentAndGroupId(EntityFragment f)
+	public EncounterInfo copyForFragment(EntityFragment f)
 	{
 		EncounterInfo r = new EncounterInfo(subjectFragment);
 		r.active = active;
@@ -108,6 +108,26 @@ public class EncounterInfo {
 			r.ownGroupIds.add(gIds[i]); 
 		}
 		return r;
+	}
+	
+	/**
+	 * This should be used to filter out neutrals in a Turn Act phase.
+	 */
+	public void filterNeutralsForSubjectBeforeTurnAct()
+	{
+		ArrayList<EncounterUnit> keysToRemove = new ArrayList<EncounterUnit>();
+		for (EncounterUnit unit:encountered.keySet())
+		{
+			if (unit==subjectFragment) continue;
+			int level = unit.getRelationLevel(subjectFragment);
+			if (level==EntityScaledRelationType.NEUTRAL)
+			{
+				keysToRemove.add(unit);
+			}
+		}
+		encountered.keySet().removeAll(keysToRemove);
+		encounteredSubUnits.keySet().removeAll(keysToRemove);
+		encounteredGroupIds.keySet().removeAll(keysToRemove);
 	}
 	
 	/**
