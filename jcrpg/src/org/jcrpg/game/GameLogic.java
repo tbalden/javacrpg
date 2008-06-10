@@ -90,22 +90,26 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
-				if (!inEncounter)
-				{
-					encounter(possibleEncounter);
+				possibleEncounter.filterNeutralsForSubjectBeforeTurnAct();
+				endPlayerEncounters();
+				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
+				//if (!inEncounter)
+				if (encounter(possibleEncounter)) {
+					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
+					core.turnActWindow.toggle();
 				}
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
-				core.turnActWindow.toggle();
 				
 			}
 			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
 			{
-				if (!inEncounter)
-				{
-					encounter(possibleEncounter);
+				possibleEncounter.filterNeutralsForSubjectBeforeTurnAct();
+				endPlayerEncounters();
+				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
+				//if (!inEncounter)
+				if (encounter(possibleEncounter)) {
+					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
+					core.turnActWindow.toggle();
 				}
-				core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
-				core.turnActWindow.toggle();
 			}
 		} else 
 		{

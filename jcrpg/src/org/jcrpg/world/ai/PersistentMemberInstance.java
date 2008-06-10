@@ -57,6 +57,10 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	 */
 	protected transient ArrayList<Economic> generatedOwnInfrastructures = null;
 	
+	/**
+	 * The existing relations' class of this member instance.
+	 */
+	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
 	public PersistentMemberInstance(EntityMember description, World w,
 			int numericId, int startX, int startY, int startZ) {

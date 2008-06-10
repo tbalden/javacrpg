@@ -33,10 +33,6 @@ public class EntityMemberInstance {
 	public EntityMember description = null;
 	
 	
-	/**
-	 * The existing relations' class of this member instance.
-	 */
-	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
 	public int numericId = -1;
 	

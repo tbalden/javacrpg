@@ -196,11 +196,13 @@ public class EntityInstance {
 					System.out.println("RELATION SUM LEVEL FOR FULLSCALE = "+level);
 					if (level>0)
 					{
-						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(info.copy(),Ecology.PHASE_TURNACT_COMBAT,false);
+						EncounterInfo i = info.copy();						
+						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
 						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a full scale encounter!");
 					} else
 					{
-						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(info.copyForFragmentAndGroupId(J3DCore.getInstance().gameState.player.theFragment),Ecology.PHASE_TURNACT_COMBAT,false);
+						EncounterInfo i = info.copyForFragment(J3DCore.getInstance().gameState.player.theFragment);						
+						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
 						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a single group encounter!");
 					}
 					return true;
