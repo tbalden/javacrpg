@@ -40,6 +40,9 @@ public class PartyInstance extends EntityInstance {
 	public boolean noticeNeutral = false;
 	public boolean noticeHostile = true;
 	
+	/**
+	 * Parties fragment (only one).
+	 */
 	public EntityFragment theFragment;
 	
 	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();

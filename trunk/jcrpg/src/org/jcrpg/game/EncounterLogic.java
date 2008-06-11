@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
+import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -218,6 +219,15 @@ public class EncounterLogic {
 				turnActTurnState.nextEventCount++;
 				playTurnActStep();
 			}
+		}
+	}
+	
+	public void postLeaversMessage(ArrayList<EncounterUnit> units)
+	{
+		if (units!=null)
+		for (EncounterUnit unit:units)
+		{
+			gameLogic.core.uiBase.hud.mainBox.addEntry(unit.getName()+" leave(s).");
 		}
 	}
 

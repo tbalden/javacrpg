@@ -31,9 +31,9 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
-import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 
@@ -53,12 +53,12 @@ public class GameLogic {
 	
 	public World world;
 	public Ecology ecology;
-	public EntityInstance player;
+	public PartyInstance player;
 	public Engine engine;
 	public EncounterLogic encounterLogic;
 	public transient J3DCore core;
 	
-	public GameLogic(J3DCore core, Engine engine, World world, Ecology ecology, EntityInstance player)
+	public GameLogic(J3DCore core, Engine engine, World world, Ecology ecology, PartyInstance player)
 	{
 		this.core = core;
 		this.world = world;
@@ -90,10 +90,11 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
-				possibleEncounter.filterNeutralsForSubjectBeforeTurnAct();
-				endPlayerEncounters();
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
-				//if (!inEncounter)
+				encounterLogic.postLeaversMessage(possibleEncounter.filterNeutralsForSubjectBeforeTurnAct(true,player));
+				// removing Encounter Phase 3d visualforms
+				endPlayerEncounters();
+				// starting new visualization
 				if (encounter(possibleEncounter)) {
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 					core.turnActWindow.toggle();
@@ -102,10 +103,11 @@ public class GameLogic {
 			}
 			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
 			{
-				possibleEncounter.filterNeutralsForSubjectBeforeTurnAct();
-				endPlayerEncounters();
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
-				//if (!inEncounter)
+				encounterLogic.postLeaversMessage(possibleEncounter.filterNeutralsForSubjectBeforeTurnAct(true,player));
+				// removing Encounter Phase 3d visualforms // TODO clear out VisibleLifeForms from EncounterInfo etc.
+				endPlayerEncounters();
+				// starting new visualization
 				if (encounter(possibleEncounter)) {
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
 					core.turnActWindow.toggle();
@@ -131,9 +133,9 @@ public class GameLogic {
 		previousForms.addAll(forms);
 		forms.clear();
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
-		playerFakeForm.worldX = player.fragments.fragments.get(0).roamingBoundary.posX;
-		playerFakeForm.worldY = player.fragments.fragments.get(0).roamingBoundary.posY;
-		playerFakeForm.worldZ = player.fragments.fragments.get(0).roamingBoundary.posZ;
+		playerFakeForm.worldX = player.theFragment.getEncounterBoundary().posX;
+		playerFakeForm.worldY = player.theFragment.getEncounterBoundary().posY;
+		playerFakeForm.worldZ = player.theFragment.getEncounterBoundary().posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
 		//for (EncounterInfo info:possibleEncounters)
@@ -141,15 +143,15 @@ public class GameLogic {
 			EncounterInfo info = possibleEncounter;
 			if (info.active) {
 				for (EncounterUnit mainUnit:info.encountered.keySet()) {
-					if (mainUnit==player.fragments.fragments.get(0)) continue;
+					if (mainUnit==player.theFragment) continue;
 					int[] groupIds = info.encounteredGroupIds.get(mainUnit);
 					ArrayList<EncounterUnit> unitList = info.encounteredSubUnits.get(mainUnit);
 					
 					if (groupIds!=null && groupIds.length>0 || unitList==null && unitList.size()>0)
-						ecology.callbackMessage("Facing an *ENCOUNTER* : "+mainUnit.getDescription().getClass().getSimpleName());
+						ecology.callbackMessage("Facing an *ENCOUNTER* : "+mainUnit.getName());
 					else
-						ecology.callbackMessage("You seem to trespass a Domain : "+mainUnit.getDescription().getClass().getSimpleName());
-					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+mainUnit.getDescription().getClass().getSimpleName());
+						ecology.callbackMessage("You seem to trespass a Domain : "+mainUnit.getName());
+					System.out.println("GROUP ID = "+(groupIds!=null?groupIds.length:null)+" "+groupIds+" "+mainUnit.getName());
 					boolean played = false;
 					
 					if (groupIds !=null)

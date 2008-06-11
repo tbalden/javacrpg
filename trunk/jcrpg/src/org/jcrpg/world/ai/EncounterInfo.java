@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.player.PartyInstance;
 
 /**
  * Class containing a possible encounter's data. 
@@ -112,13 +113,16 @@ public class EncounterInfo {
 	
 	/**
 	 * This should be used to filter out neutrals in a Turn Act phase.
+	 * @param notThePlayer Tells if player should be left even if neutral
+	 * @param player the player entity. 
 	 */
-	public void filterNeutralsForSubjectBeforeTurnAct()
+	public ArrayList<EncounterUnit> filterNeutralsForSubjectBeforeTurnAct(boolean notThePlayer, PartyInstance player)
 	{
 		ArrayList<EncounterUnit> keysToRemove = new ArrayList<EncounterUnit>();
 		for (EncounterUnit unit:encountered.keySet())
 		{
 			if (unit==subjectFragment) continue;
+			if (notThePlayer && unit==player) continue;
 			int level = unit.getRelationLevel(subjectFragment);
 			if (level==EntityScaledRelationType.NEUTRAL)
 			{
@@ -128,6 +132,7 @@ public class EncounterInfo {
 		encountered.keySet().removeAll(keysToRemove);
 		encounteredSubUnits.keySet().removeAll(keysToRemove);
 		encounteredGroupIds.keySet().removeAll(keysToRemove);
+		return keysToRemove;
 	}
 	
 	/**
