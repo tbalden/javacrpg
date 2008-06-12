@@ -32,6 +32,8 @@
 
 package org.jcrpg.apps;
 
+import java.io.File;
+
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 
 import com.jme.app.SimpleGame;
@@ -43,6 +45,8 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
+import com.jme.util.resource.ResourceLocatorTool;
+import com.jme.util.resource.SimpleResourceLocator;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 
@@ -78,7 +82,9 @@ public class AnimatedModelViewer extends SimpleGame {
         cam.setLocation(new Vector3f(0.0f, 0.0f, 10.0f));
         cam.update();
         lightState.detachAll();
-        AnimatedModelNode n = new AnimatedModelNode(mesh,anim,1f);
+    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/models/fauna/gorilla").toURI());
+       ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
+      AnimatedModelNode n = new AnimatedModelNode(mesh,anim,1f);
         
         rootNode.attachChild(n);
 
