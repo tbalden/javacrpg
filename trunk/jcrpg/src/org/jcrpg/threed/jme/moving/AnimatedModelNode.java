@@ -48,6 +48,10 @@ import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.RenderState;
+import com.model.md5.JointAnimation;
+import com.model.md5.ModelNode;
+import com.model.md5.controller.JointController;
+import com.model.md5.importer.MD5Importer;
 
 /**
  * Animated model helper node for md5.
@@ -69,6 +73,24 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	public ArrayList<BoneAnimation> animations = new ArrayList<BoneAnimation>();
 	public SkinNode skinNode;
 
+	
+	public AnimatedModelNode(String fileName, String animation, float speed, boolean importer)
+	{
+	
+		try 
+		{
+			
+			MD5Importer.getInstance().load(new File(fileName).toURL(), fileName, new File(animation).toURL(), animation, JointController.RT_CYCLE);
+			ModelNode node = MD5Importer.getInstance().getModelNode();
+			JointAnimation anim = MD5Importer.getInstance().getAnimation();
+			this.attachChild(node);			
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 	public AnimatedModelNode(String fileName, String animation, float speed)
 	{
 		System.out.println("LOADING ANIMATED MODEL: "+fileName);
