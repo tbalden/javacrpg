@@ -20,7 +20,7 @@ package org.jcrpg.game.element;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.world.ai.EncounterUnit;
+import org.jcrpg.world.ai.EncounterUnitData;
 
 /**
  * Class for storing one sides' line-up in rows in a turn act phase.
@@ -29,8 +29,8 @@ import org.jcrpg.world.ai.EncounterUnit;
  */
 public class TurnActUnitLineup {
 
-	public ArrayList<ArrayList<EncounterUnit>> lines = new ArrayList<ArrayList<EncounterUnit>>();
+	public ArrayList<ArrayList<EncounterUnitData>> lines = new ArrayList<ArrayList<EncounterUnitData>>();
 	
-	public HashMap<EncounterUnit, Integer> unitToLineMap = new HashMap<EncounterUnit, Integer>();
+	public HashMap<EncounterUnitData, Integer> unitToLineMap = new HashMap<EncounterUnitData, Integer>();
 	
 }

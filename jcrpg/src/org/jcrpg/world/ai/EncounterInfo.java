@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -100,8 +101,10 @@ public class EncounterInfo {
 		// copy data of self fragment too, it is necessary for making the encountered able to select
 		// the initiator as target for its acts.
 		r.encountered.put(subjectFragment, encountered.get(subjectFragment));
-		r.encounteredSubUnits.put(subjectFragment, encounteredSubUnits.get(subjectFragment));
-		r.encounteredGroupIds.put(subjectFragment, encounteredGroupIds.get(subjectFragment));
+		if (encounteredSubUnits.get(subjectFragment)!=null)
+			r.encounteredSubUnits.put(subjectFragment, encounteredSubUnits.get(subjectFragment));
+		if (encounteredGroupIds.get(subjectFragment)!=null)
+			r.encounteredGroupIds.put(subjectFragment, encounteredGroupIds.get(subjectFragment));
 		int[] gIds = encounteredUnitsAndOwnGroupIds.get(f);
 		for (int i=0; i<gIds.length; i++)
 		{
@@ -122,16 +125,18 @@ public class EncounterInfo {
 		for (EncounterUnit unit:encountered.keySet())
 		{
 			if (unit==subjectFragment) continue;
-			if (notThePlayer && unit==player) continue;
+			if (notThePlayer && unit==player.theFragment || player.orderedParty.contains(unit)) continue;
 			int level = unit.getRelationLevel(subjectFragment);
 			if (level==EntityScaledRelationType.NEUTRAL)
 			{
+				System.out.println("REMOVING NEUTRAL: "+unit);
 				keysToRemove.add(unit);
 			}
 		}
 		encountered.keySet().removeAll(keysToRemove);
 		encounteredSubUnits.keySet().removeAll(keysToRemove);
 		encounteredGroupIds.keySet().removeAll(keysToRemove);
+		updateEncounterDataLists();
 		return keysToRemove;
 	}
 	
@@ -208,38 +213,76 @@ public class EncounterInfo {
 		return allSize;
 	}
 	
-	public class EncounterUnitData
+	ArrayList<EncounterUnitData> encounterUnitDataList = null;
+	ArrayList<EncounterUnitData> removedEncounterUnitDataList = null;
+	
+	TurnActUnitLineup turnActUnitLineup = null;
+	
+	public void updateEncounterDataLists()
 	{
-		public boolean isGroupId = false;
-		public EncounterUnit subUnit;
-		public EncounterUnit parent;
-		public int groupId = -1;
-		public String name;
-		
-		public EncounterUnitData(EncounterUnit parent, EncounterUnit subUnit)
+		if (encounterUnitDataList==null) 
 		{
-			this.parent = parent;
-			isGroupId = false;
-			this.subUnit = subUnit;
-			name = parent.getName()+" : " + subUnit.getName();
-			
-		}
-		public EncounterUnitData(EncounterUnit parent, int groupId)
+			initEncounterDataLists();
+		} else
 		{
-			isGroupId = true;
-			this.parent = parent;
-			this.groupId = groupId;
-			int size1 = parent.getGroupSize(groupId);
-			EntityMember m = parent.getGroupType(groupId);
-			name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";			
+			ArrayList<EncounterUnitData> toRemove = new ArrayList<EncounterUnitData>();
+			for (EncounterUnitData unitData:encounterUnitDataList)
+			{
+				EncounterUnit key = unitData.parent;
+				if (unitData.isGroupId)
+				{
+					// TODO group size check...
+					if (encountered.containsKey(key)) continue;
+					toRemove.add(unitData);
+					System.out.println("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
+				} else
+				{
+					if (key instanceof EntityFragment)
+					{
+						if (((EntityFragment)key).alwaysIncludeFollowingMembers)
+						{
+							if ( ((EntityFragment)key).getFollowingMembers().contains(unitData.subUnit) )
+							{
+								// always included following member shouldn't be removed.
+								if (((PersistentMemberInstance)unitData.subUnit).memberState.healthPoint<1)
+								{
+									// TODO what to do?
+								}
+								continue;
+							}
+						}
+					}
+					if (encounteredSubUnits.get(key)!=null && encounteredSubUnits.get(key).contains(unitData.subUnit)) continue;
+					for (EncounterUnit unitKey:encounteredSubUnits.keySet()) {
+						System.out.println("--- "+unitKey.getName());
+						if (encounteredSubUnits.get(unitKey)!=null)
+						for (EncounterUnit u:encounteredSubUnits.get(unitKey))
+						{
+							System.out.println("    "+u.getName());
+						}
+						
+					}
+					System.out.println("REMOVING ORPHAN: "+unitData.subUnit.getName()+" - "+unitData.parent.getName());
+					toRemove.add(unitData);
+				}
+			}
+			encounterUnitDataList.removeAll(toRemove);
+			removedEncounterUnitDataList.addAll(toRemove);
+			if (turnActUnitLineup!=null)
+			{
+				turnActUnitLineup.unitToLineMap.keySet().removeAll(toRemove);
+				for (ArrayList<EncounterUnitData> unitDataList:turnActUnitLineup.lines)
+				{
+					if (unitDataList!=null) unitDataList.removeAll(toRemove);
+				}
+			}
 		}
-		
 	}
 	
-	public ArrayList<EncounterUnitData> getEncounterUnitDataList(EncounterUnit filtered)
+	public void initEncounterDataLists()
 	{
-		
-		System.out.println(" + "+this);
+		encounterUnitDataList = new ArrayList<EncounterUnitData>();
+		removedEncounterUnitDataList = new ArrayList<EncounterUnitData>();
 		for (EncounterUnit u:encounteredSubUnits.keySet())
 		{
 			ArrayList<EncounterUnit> u2  = encounteredSubUnits.get(u);
@@ -250,11 +293,10 @@ public class EncounterInfo {
 			}
 		}
 		
-		ArrayList<EncounterUnitData> list = new ArrayList<EncounterUnitData>();
+		ArrayList<EncounterUnitData> list = encounterUnitDataList;
 		for (EncounterUnit unit:encountered.keySet())
 		{
 			System.out.println("--"+unit.getName());
-			if (filtered!=null && unit == filtered) continue;
 			int[] groupIds = encounteredGroupIds.get(unit);
 			if (groupIds!=null)
 			for (int in:groupIds) {
@@ -297,8 +339,27 @@ public class EncounterInfo {
 				}
 			}
 		}
-		return list;
-		
+	}
+	
+	
+	
+	
+	public ArrayList<EncounterUnitData> getEncounterUnitDataList(EncounterUnit filtered)
+	{
+		updateEncounterDataLists();
+		ArrayList<EncounterUnitData> filteredList = encounterUnitDataList;
+		if (filtered!=null) 
+		{
+			filteredList = new ArrayList<EncounterUnitData>();
+			for (EncounterUnitData unitData:encounterUnitDataList)
+			{
+				if (unitData.parent==filtered || !unitData.isGroupId && unitData.subUnit==filtered) 
+					continue;
+				filteredList.add(unitData);
+			}
+		}
+		System.out.println(" + "+this);
+		return filteredList;
 	}
 	
 }
