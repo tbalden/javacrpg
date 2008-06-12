@@ -30,7 +30,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
-import org.jcrpg.world.ai.EncounterInfo.EncounterUnitData;
+import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 import com.jme.scene.Node;
