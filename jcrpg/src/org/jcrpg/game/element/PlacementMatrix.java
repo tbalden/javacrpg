@@ -23,6 +23,12 @@ import org.jcrpg.world.ai.EncounterUnitData;
 
 /**
  * Abstract placement matrix.
+ * The arrays here contain up to 4 lines (0 to 3 front/middle/back/inactive) that can contain
+ * any number of UnitData objects in their lists. It will be displayed ahead (matrixAhead) or behind
+ * (matrixBehind), all of them ordered according firstly to line (0 -> 3) and secondly list order's
+ * order, so every unit will be placed in 3d, but place in 3d will depend on available (walkable) tile.
+ * So this is an abstract order not 3d, and all units should be displayed if possible at the given
+ * geography topology. First line units go first, second line units go next etc.
  * @author illes
  */
 @SuppressWarnings("unchecked")
