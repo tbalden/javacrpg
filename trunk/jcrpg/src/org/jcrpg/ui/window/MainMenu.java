@@ -155,10 +155,10 @@ public class MainMenu extends Window implements KeyListener {
 		if (name.equals(SAVE_GAME))
 		{
 			if (!core.coreFullyInitialized) return;
+			SaveLoadNewGame.saveGame(core);
 			toggle();
 			core.updateDisplay(null);
 			core.getUIRootNode().updateRenderState();
-			SaveLoadNewGame.saveGame(core);
 			core.audioServer.stopAndResumeOthers("main");
 			
 		} else
