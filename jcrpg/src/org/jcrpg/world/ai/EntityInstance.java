@@ -197,12 +197,12 @@ public class EntityInstance {
 					if (level>0)
 					{
 						EncounterInfo i = info.copy();						
-						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
+						J3DCore.getInstance().gameState.gameLogic.newEncounterPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
 						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a full scale encounter!");
 					} else
 					{
 						EncounterInfo i = info.copyForFragment(J3DCore.getInstance().gameState.player.theFragment);						
-						J3DCore.getInstance().gameState.gameLogic.newTurnPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
+						J3DCore.getInstance().gameState.gameLogic.newEncounterPhase(i,Ecology.PHASE_TURNACT_COMBAT,false);
 						ecology.callbackMessage(this.description.getClass().getSimpleName()+" initiates a single group encounter!");
 					}
 					return true;

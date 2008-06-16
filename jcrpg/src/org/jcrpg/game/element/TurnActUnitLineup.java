@@ -20,6 +20,7 @@ package org.jcrpg.game.element;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnitData;
 
 /**
@@ -32,5 +33,49 @@ public class TurnActUnitLineup {
 	public ArrayList<ArrayList<EncounterUnitData>> lines = new ArrayList<ArrayList<EncounterUnitData>>();
 	
 	public HashMap<EncounterUnitData, Integer> unitToLineMap = new HashMap<EncounterUnitData, Integer>();
+	
+	EncounterInfo info = null;
+	public TurnActUnitLineup(EncounterInfo info)
+	{
+		this.info = info;
+	}
+	
+	public static final int UNITS_PER_LINE = 3;
+	
+	public void addUnitPushing(EncounterUnitData unit, int line)
+	{
+		ArrayList<EncounterUnitData> l = lines.get(line);
+		if (l==null)
+		{
+			l = new ArrayList<EncounterUnitData>();
+		}
+		l.add(unit);
+		unitToLineMap.put(unit, line);
+		if (l.size()>UNITS_PER_LINE)
+		{
+			EncounterUnitData pushed = getUnitToPush(l);
+			l.remove(pushed);
+			unitToLineMap.keySet().remove(pushed);
+			addUnitPushing(pushed, line+1);
+		}
+	}
+	
+	public EncounterUnitData getUnitToPush(ArrayList<EncounterUnitData> list)
+	{
+		int worstPoint = 9999;
+		int worstUnitCount = 0;
+		int count = 0;
+		for (EncounterUnitData d:list) 
+		{
+			int priorityPoint = d.getEncPhasePriority(info);
+			if (priorityPoint<worstPoint)
+			{
+				worstPoint = priorityPoint;
+				worstUnitCount = count; 
+			}
+			count++;
+		}
+		return list.get(worstUnitCount);
+	}
 	
 }

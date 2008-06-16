@@ -168,6 +168,9 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return description;
 	}
 
+	public int getEncPhasePriority(EncounterInfo info) {
+		return memberState.level+2;
+	}
 
 
 }

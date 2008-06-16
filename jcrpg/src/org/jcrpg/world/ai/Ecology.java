@@ -266,7 +266,7 @@ public class Ecology {
 				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)
 				{
-					pre = new EncounterInfo(fragment);
+					pre = new EncounterInfo(fragment,null);
 					pre.encountered.put(fragment, r); // put self too
 					pre.encountered.put(f, r);
 					staticEncounterInfoInstances.add(pre);

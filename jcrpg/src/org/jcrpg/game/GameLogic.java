@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.SideSubType;
@@ -69,8 +70,9 @@ public class GameLogic {
 	}
 	
 	
-	public void newTurnPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
+	public void newEncounterPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
 	{
+		possibleEncounter.playerIfPresent = player.theFragment;
 		System.out.println("-- newTurn "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
 
@@ -82,6 +84,7 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_ENCOUNTER)
 			{
+				encounterLogic.fillInitEncounterPhaseLineup(possibleEncounter);
 				core.encounterWindow.setPageData(core.gameState.player, possibleEncounter,playerInitiated);
 				if (encounter(possibleEncounter)) {
 					core.encounterWindow.toggle();
@@ -90,6 +93,7 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
+				encounterLogic.fillInitTurnActPhaseLineup(possibleEncounter);
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
 				encounterLogic.postLeaversMessage(possibleEncounter.filterNeutralsForSubjectBeforeTurnAct(true,player));
 				// removing Encounter Phase 3d visualforms
@@ -103,6 +107,7 @@ public class GameLogic {
 			}
 			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
 			{
+				encounterLogic.fillInitTurnActPhaseLineup(possibleEncounter);
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
 				encounterLogic.postLeaversMessage(possibleEncounter.filterNeutralsForSubjectBeforeTurnAct(true,player));
 				// removing Encounter Phase 3d visualforms // TODO clear out VisibleLifeForms from EncounterInfo etc.
@@ -142,6 +147,11 @@ public class GameLogic {
 		{
 			EncounterInfo info = possibleEncounter;
 			if (info.active) {
+				
+				PlacementMatrix matrix = info.getInitialPlacementMatrix();
+				
+				// TODO use PlacementMatrix matrix to place scenario (colored OSD for different lines)...
+				
 				for (EncounterUnit mainUnit:info.encountered.keySet()) {
 					if (mainUnit==player.theFragment) continue;
 					int[] groupIds = info.encounteredGroupIds.get(mainUnit);

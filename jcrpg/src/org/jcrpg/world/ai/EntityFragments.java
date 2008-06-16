@@ -129,6 +129,9 @@ public class EntityFragments {
 		public EntityMember getGroupType(int groupId) {
 			return instance.getGroupSizesAndTypes()[groupId].type;
 		}
+		public int getEncPhasePriority(EncounterInfo info) {
+			return parent.instance.entityState.currentLevelOfQuality;
+		}
 	}
 	public transient Vector3f tmpVector = new Vector3f();
 	
