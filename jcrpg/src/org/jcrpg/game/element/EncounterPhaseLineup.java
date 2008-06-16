@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.game.element;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.jcrpg.world.ai.EncounterInfo;
@@ -29,7 +31,7 @@ import org.jcrpg.world.ai.EncounterUnitData;
  */
 public class EncounterPhaseLineup {
 
-	public TreeMap<Integer, EncounterUnitData> orderedList = new TreeMap<Integer, EncounterUnitData>();
+	public TreeMap<Integer, ArrayList<EncounterUnitData>> orderedList = new TreeMap<Integer, ArrayList<EncounterUnitData>>();
 	
 	private EncounterInfo info;
 	
@@ -39,7 +41,14 @@ public class EncounterPhaseLineup {
 	}
 	public void addUnit(EncounterUnitData unit, int priority)
 	{
-		orderedList.put(priority, unit);
+		System.out.println("########### ADDING UNIT: "+unit.parent.getName()+" - "+priority);
+		ArrayList<EncounterUnitData> list = orderedList.get(priority);
+		if (list==null)
+		{
+			list = new ArrayList<EncounterUnitData>();
+			orderedList.put(priority, list);
+		}
+		list.add(unit);
 	}
 	
 }

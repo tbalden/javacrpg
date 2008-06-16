@@ -366,7 +366,7 @@ public class EncounterInfo {
 				filteredList.add(unitData);
 			}
 		}
-		System.out.println(" + "+this);
+		System.out.println(" + "+this+ " "+filteredList.size());
 		return filteredList;
 	}
 
@@ -402,20 +402,27 @@ public class EncounterInfo {
 		phase = Ecology.PHASE_TURNACT_SOCIAL_RIVALRY;
 	}
 	
+	PlacementMatrix encounterMatrix = null;
+	PlacementMatrix turnActMatrix = null;
+	
 	/**
-	 * Return the startup placement matrix for pseudo visualization.
+	 * create the startup placement matrix for pseudo visualization.
 	 * @return
 	 */
-	public PlacementMatrix getInitialPlacementMatrix()
+	public void initPlacementMatrixForPhase()
 	{
 		PlacementMatrix m = new PlacementMatrix();
 		if (phase==Ecology.PHASE_ENCOUNTER)
 		{
+			System.out.println("getInitialPlacementMatrix PHASE_ENCOUNTER "+getEncounterPhaseLineup().orderedList.size());
 			// encounter phase, create common matrix (ahead).
-			for (EncounterUnitData d:getEncounterPhaseLineup().orderedList.values())
+			for (ArrayList<EncounterUnitData> dList:getEncounterPhaseLineup().orderedList.values())
 			{
-				m.addAhead(d, 0);
+				for (EncounterUnitData d:dList) {
+					m.addAhead(d, 0);
+				}				
 			}
+			encounterMatrix = m;
 		} 
 		else
 		if (phase==Ecology.PHASE_TURNACT_COMBAT || phase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
@@ -439,9 +446,35 @@ public class EncounterInfo {
 				}				
 				lineCount++;
 			}
-			
+			turnActMatrix = m;
+		}		
+	}
+
+	public PlacementMatrix getEncounterMatrix() {
+		return encounterMatrix;
+	}
+
+	public void setEncounterMatrix(PlacementMatrix encounterMatrix) {
+		this.encounterMatrix = encounterMatrix;
+	}
+
+	public PlacementMatrix getTurnActMatrix() {
+		return turnActMatrix;
+	}
+
+	public void setTurnActMatrix(PlacementMatrix turnActMatrix) {
+		this.turnActMatrix = turnActMatrix;
+	}
+	
+	public PlacementMatrix getCurrentPhaseMatrix()
+	{
+		if (phase==Ecology.PHASE_ENCOUNTER)
+		{
+			return encounterMatrix;
+		} else
+		{
+			return turnActMatrix;
 		}
-		return m;
 	}
 	
 }

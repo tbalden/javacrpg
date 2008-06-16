@@ -229,6 +229,7 @@ public class EncounterLogic {
 	{
 		EncounterPhaseLineup lineup = new EncounterPhaseLineup(info);
 		info.setEncounterPhaseLineup(lineup);
+		System.out.println("{ fillInitEncounterPhaseLineup }");
 		for (EncounterUnitData d:info.getEncounterUnitDataList(gameLogic.player.theFragment))
 		{
 			info.getEncounterPhaseLineup().addUnit(d,d.getEncPhasePriority(info));	
@@ -239,6 +240,7 @@ public class EncounterLogic {
 	{
 		TurnActUnitTopology topology = new TurnActUnitTopology(info);
 		info.setTopology(topology);
+		System.out.println("{ fillInitTurnActPhaseLineup }");
 		for (EncounterUnitData d:info.getEncounterUnitDataList(gameLogic.player.theFragment))
 		{
 			info.getTopology().addUnitPushing(d,0);	
