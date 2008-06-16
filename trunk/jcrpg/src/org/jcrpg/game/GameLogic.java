@@ -45,8 +45,8 @@ import org.jcrpg.world.place.World;
  */
 public class GameLogic {
 	
-	public HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
-	public HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
+	public transient HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
+	public transient HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
 	
 	
 	public Collection<VisibleLifeForm> previousForms = new ArrayList<VisibleLifeForm>();
@@ -135,9 +135,16 @@ public class GameLogic {
 	{
 		possibleEncounter.initPlacementMatrixForPhase();
 		inEncounter = true;
-		previousInfos.clear();
-		previousInfos.addAll(infos);
-		infos.clear();
+		if (previousInfos == null)
+		{
+			previousInfos = new HashSet<EncounterInfo>();
+			infos = new HashSet<EncounterInfo>();
+		} else 
+		{
+			previousInfos.clear();
+			previousInfos.addAll(infos);
+			infos.clear();
+		}
 		infos.add(possibleEncounter);
 		previousForms.addAll(forms);
 		forms.clear();
