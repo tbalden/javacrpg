@@ -57,6 +57,10 @@ public class TurnActUnitTopology {
 		{
 			getEnemyLineup().addUnitPushing(unit, line);
 		} else
+		if (level==EntityScaledRelationType.NEUTRAL) // TODO debug only remove this, no neutrals allowed
+		{
+			getEnemyLineup().addUnitPushing(unit, line);
+		}
 		if (level>EntityScaledRelationType.NEUTRAL)
 		{
 			getFriendlyLineup().addUnitPushing(unit, line);

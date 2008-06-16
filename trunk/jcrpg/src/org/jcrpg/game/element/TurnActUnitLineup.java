@@ -42,9 +42,21 @@ public class TurnActUnitLineup {
 	
 	public static final int UNITS_PER_LINE = 3;
 	
+	public ArrayList<EncounterUnitData> getList(int line)
+	{
+		if (lines.size()>line)
+		{
+		} else
+		for (int i=0; i<=line; i++)
+		{
+			lines.add(new ArrayList<EncounterUnitData>());
+		}
+		return lines.get(line);
+	}
+	
 	public void addUnitPushing(EncounterUnitData unit, int line)
 	{
-		ArrayList<EncounterUnitData> l = lines.get(line);
+		ArrayList<EncounterUnitData> l = getList(line);
 		if (l==null)
 		{
 			l = new ArrayList<EncounterUnitData>();

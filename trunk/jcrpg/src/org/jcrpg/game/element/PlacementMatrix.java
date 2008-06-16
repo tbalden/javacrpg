@@ -18,6 +18,7 @@
 package org.jcrpg.game.element;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.jcrpg.world.ai.EncounterUnitData;
 
@@ -37,17 +38,64 @@ public class PlacementMatrix {
 	/**
 	 * array of array - 4 sized Front Middle Back line and all other not in active lines units.
 	 */
-	public ArrayList<EncounterUnitData>[] matrixAhead = new ArrayList[4];
+	public class MatrixData implements Iterator<EncounterUnitData>
+	{
+		public ArrayList<EncounterUnitData>[] matrix = new ArrayList[4];
+		public int iLineCount = 0;
+		public int iLineListCount = 0;
+		
+		public void reset()
+		{
+			iLineCount = 0;
+			iLineListCount = 0;
+		}
+		
+		public boolean hasNext() {
+			System.out.println("iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+			if (matrix[iLineCount]==null) return false;
+			if (matrix[iLineCount]!=null && matrix[iLineCount].get(iLineListCount) == null) return false;
+			return true;
+		}
+		public EncounterUnitData next() {
+			EncounterUnitData d = matrix[iLineCount].get(iLineListCount);
+			d.currentLine = iLineCount;
+			if (matrix[iLineCount].size()>iLineListCount+1)
+			{
+				iLineListCount++;
+			} else
+			{
+				if (iLineCount==3)
+				{
+					System.out.println("## iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+					return null;
+					
+				} else
+				{
+					iLineCount++;
+				}
+			}
+			System.out.println("# iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+			return d;
+		}
+		public void remove() {
+			
+		}
+	}
+	
 	/**
 	 * array of array - 4 sized Front Middle Back line and all other not in active lines units.
 	 */
-	public ArrayList<EncounterUnitData>[] matrixBehind = new ArrayList[4];
+	public MatrixData matrixAhead = new MatrixData();
+	/**
+	 * array of array - 4 sized Front Middle Back line and all other not in active lines units.
+	 */
+	public MatrixData matrixBehind = new MatrixData();
 	
 	
 	EncounterUnitData getAhead(int count,int line)
 	{
 		try {
-			return matrixAhead[line].get(count);
+			return matrixAhead.matrix[line].get(count);
 		} catch (Exception e)
 		{
 			return null;
@@ -56,7 +104,7 @@ public class PlacementMatrix {
 	EncounterUnitData getBehind(int count,int line)
 	{
 		try {
-			return matrixAhead[line].get(count);
+			return matrixBehind.matrix[line].get(count);
 		} catch (Exception e)
 		{
 			return null;
@@ -65,22 +113,26 @@ public class PlacementMatrix {
 	
 	public void addAhead(EncounterUnitData data, int line)
 	{
-		ArrayList<EncounterUnitData> list = matrixAhead[line];
+		ArrayList<EncounterUnitData> list = matrixAhead.matrix[line];
 		if (list==null)
 		{
-			matrixAhead[line] = new ArrayList<EncounterUnitData>();
+			matrixAhead.matrix[line] = new ArrayList<EncounterUnitData>();
+			list = matrixAhead.matrix[line];
 		}
 		list.add(data);
+		System.out.println("####____ addAhead "+data.getUnit().getName()+" "+list.size()+ " , "+line);
 	}
 	
 	public void addBehind(EncounterUnitData data, int line)
 	{
-		ArrayList<EncounterUnitData> list = matrixBehind[line];
+		ArrayList<EncounterUnitData> list = matrixBehind.matrix[line];
 		if (list==null)
 		{
-			matrixBehind[line] = new ArrayList<EncounterUnitData>();
+			matrixBehind.matrix[line] = new ArrayList<EncounterUnitData>();
+			list = matrixBehind.matrix[line];
 		}
 		list.add(data);
 	}
+	
 	
 }

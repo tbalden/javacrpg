@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.fauna;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -46,11 +47,13 @@ public class VisibleLifeForm {
 	/**
 	 * size that should be visible as a billboarded quad number above the unit when forGroup=true.
 	 */
-	public int size = 1;
+	private int size = 1;
 	
-	public boolean forGroup = false;
+	private boolean forGroup = false;
 	
 	public boolean notRendered = false;
+	
+	public EncounterUnitData encounterUnitData = null;
 	
 	/**
 	 * Temporary render data for callbacks.
@@ -87,4 +90,36 @@ public class VisibleLifeForm {
 		forGroup = true;
 		size = entity.getGroupSizes()[groupId];
 	}
+	
+	public int getSize()
+	{
+		if (encounterUnitData!=null)
+		{
+			return encounterUnitData.getUnit().getSize();
+		} else
+		{
+			return size;
+		}
+	}
+
+	public boolean forGroup()
+	{
+		if (encounterUnitData!=null)
+		{
+			return encounterUnitData.isGroupId;
+		} else
+		{
+			return forGroup;
+		}
+	}
+	
+	public int getLineupLine()
+	{
+		if (encounterUnitData!=null)
+		{
+			return encounterUnitData.currentLine;
+		}
+		return 0;
+	}
+	
 }

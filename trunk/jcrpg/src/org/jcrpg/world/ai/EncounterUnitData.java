@@ -17,6 +17,10 @@
  */ 
 package org.jcrpg.world.ai;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+
 public class EncounterUnitData
 {
 	public boolean isGroupId = false;
@@ -24,6 +28,11 @@ public class EncounterUnitData
 	public EncounterUnit parent;
 	public int groupId = -1;
 	public String name;
+	public int currentLine = 0;
+	
+	public VisibleLifeForm visibleForm = null;
+	
+	public ArrayList<EntityMemberInstance> generatedMembers = new ArrayList<EntityMemberInstance>();
 	
 	public EncounterUnitData(EncounterUnit parent, EncounterUnit subUnit)
 	{
@@ -31,6 +40,7 @@ public class EncounterUnitData
 		isGroupId = false;
 		this.subUnit = subUnit;
 		name = parent.getName()+" : " + subUnit.getName();
+		groupId = 0;
 		
 	}
 	public EncounterUnitData(EncounterUnit parent, int groupId)
@@ -70,6 +80,22 @@ public class EncounterUnitData
 		return subUnit;
 	}
 	
+	public VisibleLifeForm setupVisibleLifeForm()
+	{
+		if (isGroupId)
+		{
+			if (parent.getGroupSize(groupId)==0) return null;
+			visibleForm = parent.getOne(groupId);
+			visibleForm.encounterUnitData = this;
+		} else
+		{
+			
+			visibleForm = subUnit.getOne(0);
+			visibleForm.encounterUnitData = this;
+		}
+		return visibleForm;
+	}
+	
 	public int getRelationLevel(EncounterUnitData unit)
 	{
 		return getUnit().getRelationLevel(unit.getUnit());
@@ -77,6 +103,11 @@ public class EncounterUnitData
 	public int getRelationLevel(EncounterUnit unit)
 	{
 		return getUnit().getRelationLevel(unit);
+	}
+	
+	public void appendNewMembers(ArrayList<EntityMemberInstance> members)
+	{
+		generatedMembers.addAll(members);
 	}
 	
 }

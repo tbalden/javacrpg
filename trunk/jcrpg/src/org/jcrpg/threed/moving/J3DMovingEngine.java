@@ -18,6 +18,7 @@
 
 package org.jcrpg.threed.moving;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -151,13 +152,22 @@ public class J3DMovingEngine {
 		renderToViewPort(0f);
 	}
 	
+	public static ArrayList<ColorRGBA> lineupColors = new ArrayList<ColorRGBA>();
+	static 
+	{
+		lineupColors.add(ColorRGBA.white);
+		lineupColors.add(ColorRGBA.lightGray);
+		lineupColors.add(ColorRGBA.darkGray);
+		lineupColors.add(ColorRGBA.black);
+	}
+	
 	
 	public void getVisibleFormBillboardNodes(RenderedMovingUnit unit)
 	{
-		if (unit.form.forGroup) {
+		if (unit.form.forGroup()) {
 			BillboardNode n = new BillboardNode("name");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
-			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.size, 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.getSize(), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
 			n.attachChild(slottextNode);
 			slottextNode.setCullMode( SceneElement.CULL_NEVER );
 			slottextNode.setTextureCombineMode( TextureState.REPLACE );
@@ -186,7 +196,7 @@ public class J3DMovingEngine {
 			
 			BillboardNode n = new BillboardNode("name2");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
-			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+(unit.form.forGroup?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
+			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
 			n.attachChild(slottextNode);
 			slottextNode.setCullMode( SceneElement.CULL_NEVER );
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
@@ -199,6 +209,8 @@ public class J3DMovingEngine {
 			n.setLocalScale(0.1f);
 			unit.memberTypeNameNode= n;
 		}
+
+		
 		if (true==false)
 		{
 			// creating circle around the unit, currently unused
