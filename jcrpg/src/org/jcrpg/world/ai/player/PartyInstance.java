@@ -45,12 +45,13 @@ public class PartyInstance extends EntityInstance {
 	 */
 	public EntityFragment theFragment;
 	
-	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();
+	transient ArrayList<EncounterInfo> tmpInfos = new ArrayList<EncounterInfo>();
 	@Override
 	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities) {
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
-			infos.clear();
+			if (tmpInfos==null) tmpInfos = new ArrayList<EncounterInfo>();
+			tmpInfos.clear();
 			// ! filtering actives -> statically used PreEncounterInfo instances need a copy for thread safe use!
 			int listSize = 0;
 			for (EncounterInfo i:nearbyEntities)
@@ -73,14 +74,14 @@ public class PartyInstance extends EntityInstance {
 					if (i.encounteredSubUnits.get(entityFragment)!=null) fullSize+=i.encounteredSubUnits.get(entityFragment).size();
 				}
 				if (fullSize>0) {
-					infos.add(i.copy());
+					tmpInfos.add(i.copy());
 					listSize++;
 				}
 			}
 			if (listSize>0) // only if groups can be encountered should we trigger newturn
 			{
 				// TODO only one encounter info should be checked all here...
-				J3DCore.getInstance().gameState.gameLogic.newEncounterPhase(infos.get(0),Ecology.PHASE_INTERCEPTION,true);
+				J3DCore.getInstance().gameState.gameLogic.newEncounterPhase(tmpInfos.get(0),Ecology.PHASE_INTERCEPTION,true);
 				return true; // interrupt ecology!
 			}
 			else

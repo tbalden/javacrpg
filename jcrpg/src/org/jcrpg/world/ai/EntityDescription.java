@@ -138,8 +138,14 @@ public class EntityDescription extends DescriptionBase {
 		return false;
 	}
 	
-	HashMap<Integer, ArrayList<EncounterUnit>> tmpMapRelation = new HashMap<Integer, ArrayList<EncounterUnit>>();
-	HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EncounterUnit>>();
+	transient HashMap<Integer, ArrayList<EncounterUnit>> tmpMapRelation = new HashMap<Integer, ArrayList<EncounterUnit>>();
+	transient HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EncounterUnit>>();
+	
+	private void initTransient()
+	{
+		tmpMapRelation = new HashMap<Integer, ArrayList<EncounterUnit>>();
+		tmpMapChoice = new HashMap<Class<? extends Choice>, ArrayList<EncounterUnit>>();
+	}
 	
 	/**
 	 * Returns a map of Choices -> EntityFragments - reusing (!!) global tmpMap. Use the map only
@@ -149,6 +155,7 @@ public class EntityDescription extends DescriptionBase {
 	 */
 	HashMap<Class<?extends Choice>, ArrayList<EncounterUnit>> getBehaviorsAndFragments(EncounterInfo info)
 	{
+		if (tmpMapChoice==null) initTransient();
 		tmpMapChoice.clear();
 		for (EncounterUnit f:info.encountered.keySet())
 		{
@@ -166,6 +173,7 @@ public class EntityDescription extends DescriptionBase {
 
 	HashMap<Integer, ArrayList<EncounterUnit>> getRelationLevelsAndFragments(EntityInstance initiator, EncounterInfo info)
 	{
+		if (tmpMapRelation==null) initTransient();
 		tmpMapRelation.clear();
 		for (EncounterUnit f:info.encountered.keySet())
 		{

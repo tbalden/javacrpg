@@ -57,6 +57,7 @@ public class Ecology {
 	
 	public void initTransient()
 	{
+		staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 		locators = new HashMap<World, TreeLocator>();
 	}
 	
@@ -168,7 +169,7 @@ public class Ecology {
 	 * To prevent creation of new PreEncounterInfo object instances they are stored
 	 * in this list for reuse on each getNearbyEncounters call. 
 	 */
-	static ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
+	static transient ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	
 	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
