@@ -8,9 +8,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] use PlacementMatrix matrix to place scenario (colored OSD for different lines)...
 
-
-[ ] when the Turn Act begins, (after the encounter phase) all should be decided which side the given
+	[ ] when the Turn Act begins, (after the encounter phase) all should be decided which side the given
 	entities will take part: enemy or friend - neutral should be removed.
 	Friendly units should be placed on left and right (also in ordered lines, so nearer can fight the front of the
 	enemy) - like a plus to the own units, facing face-2-face the

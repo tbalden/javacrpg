@@ -21,22 +21,34 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.game.element.TurnActUnitLineup;
+import org.jcrpg.game.element.EncounterPhaseLineup;
+import org.jcrpg.game.element.PlacementMatrix;
+import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 
 /**
- * Class containing a possible encounter's data. 
+ * Class containing a possible encounter's data with most of the subdata related to units
+ * lineups and such. Should be updated turn by turn! 
  * @author illes
  */
 public class EncounterInfo {
 
 	public boolean active = false;
+	
+	
 	/**
 	 * The initiator group that faces the encounter.
 	 */
 	public EntityInstance subject;
 	public EntityFragment subjectFragment;
+	
+	/**
+	 * If player is inside this should be always set to the player fragment,
+	 * because UI will rely on this field!
+	 */
+	public EntityFragment playerIfPresent = null;
+	
 	/**
 	 * Encountered instances and their common radius ratios and middle point data.
 	 * Never forget to append the subject's data to these, encountered entities need
@@ -66,15 +78,16 @@ public class EncounterInfo {
 	//public  
 	
 	
-	public EncounterInfo(EntityFragment subjectFragment) {
+	public EncounterInfo(EntityFragment subjectFragment,EntityFragment player) {
 		super();
 		this.subject = subjectFragment.instance;
 		this.subjectFragment = subjectFragment;
+		playerIfPresent = player;
 	}
 	
 	public EncounterInfo copy()
 	{
-		EncounterInfo r = new EncounterInfo(subjectFragment);
+		EncounterInfo r = new EncounterInfo(subjectFragment,playerIfPresent);
 		r.active = active;
 		r.encountered.putAll(encountered);
 		r.encounteredGroupIds.putAll(encounteredGroupIds);
@@ -94,7 +107,7 @@ public class EncounterInfo {
 	 */
 	public EncounterInfo copyForFragment(EntityFragment f)
 	{
-		EncounterInfo r = new EncounterInfo(subjectFragment);
+		EncounterInfo r = new EncounterInfo(subjectFragment,playerIfPresent);
 		r.active = active;
 		r.encountered.put(f, encountered.get(f));
 		r.encounteredGroupIds.put(f, encounteredGroupIds.get(f));
@@ -216,7 +229,9 @@ public class EncounterInfo {
 	ArrayList<EncounterUnitData> encounterUnitDataList = null;
 	ArrayList<EncounterUnitData> removedEncounterUnitDataList = null;
 	
-	TurnActUnitLineup turnActUnitLineup = null;
+	private EncounterPhaseLineup encounterPhaseLineup = null;	
+	
+	private TurnActUnitTopology topology = null; 
 	
 	public void updateEncounterDataLists()
 	{
@@ -268,13 +283,9 @@ public class EncounterInfo {
 			}
 			encounterUnitDataList.removeAll(toRemove);
 			removedEncounterUnitDataList.addAll(toRemove);
-			if (turnActUnitLineup!=null)
+			if (topology!=null)
 			{
-				turnActUnitLineup.unitToLineMap.keySet().removeAll(toRemove);
-				for (ArrayList<EncounterUnitData> unitDataList:turnActUnitLineup.lines)
-				{
-					if (unitDataList!=null) unitDataList.removeAll(toRemove);
-				}
+				topology.removeUnits(toRemove);
 			}
 		}
 	}
@@ -341,9 +352,6 @@ public class EncounterInfo {
 		}
 	}
 	
-	
-	
-	
 	public ArrayList<EncounterUnitData> getEncounterUnitDataList(EncounterUnit filtered)
 	{
 		updateEncounterDataLists();
@@ -360,6 +368,80 @@ public class EncounterInfo {
 		}
 		System.out.println(" + "+this);
 		return filteredList;
+	}
+
+	public EncounterPhaseLineup getEncounterPhaseLineup() {
+		return encounterPhaseLineup;
+	}
+
+	public void setEncounterPhaseLineup(EncounterPhaseLineup encounterPhaseLineup) {
+		this.encounterPhaseLineup = encounterPhaseLineup;
+	}
+
+	public TurnActUnitTopology getTopology() {
+		return topology;
+	}
+
+	public void setTopology(TurnActUnitTopology topology) {
+		this.topology = topology;
+	}
+	
+	private int phase = -1;
+	
+	
+	public void setEncounterPhaseStatus()
+	{
+		phase = Ecology.PHASE_ENCOUNTER;
+	}
+	public void setTurnActPhaseCombatStatus()
+	{
+		phase = Ecology.PHASE_TURNACT_COMBAT;
+	}
+	public void setTurnActPhaseSocialRivalryStatus()
+	{
+		phase = Ecology.PHASE_TURNACT_SOCIAL_RIVALRY;
+	}
+	
+	/**
+	 * Return the startup placement matrix for pseudo visualization.
+	 * @return
+	 */
+	public PlacementMatrix getInitialPlacementMatrix()
+	{
+		PlacementMatrix m = new PlacementMatrix();
+		if (phase==Ecology.PHASE_ENCOUNTER)
+		{
+			// encounter phase, create common matrix (ahead).
+			for (EncounterUnitData d:getEncounterPhaseLineup().orderedList.values())
+			{
+				m.addAhead(d, 0);
+			}
+		} 
+		else
+		if (phase==Ecology.PHASE_TURNACT_COMBAT || phase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
+		{
+			// turn act phase, create enemy (ahead) and friendly (behind) matrix.
+			int lineCount = 0;
+			for (ArrayList<EncounterUnitData> dList : getTopology().getEnemyLineup().lines)
+			{
+				int line = lineCount>3?4:lineCount;
+				for (EncounterUnitData d:dList) {
+					m.addAhead(d, line);
+				}				
+				lineCount++;
+			}
+			lineCount = 0;
+			for (ArrayList<EncounterUnitData> dList : getTopology().getFriendlyLineup().lines)
+			{
+				int line = lineCount>3?4:lineCount;
+				for (EncounterUnitData d:dList) {
+					m.addBehind(d, line);
+				}				
+				lineCount++;
+			}
+			
+		}
+		return m;
 	}
 	
 }

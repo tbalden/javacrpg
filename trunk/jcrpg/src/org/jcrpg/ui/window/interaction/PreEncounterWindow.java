@@ -207,7 +207,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			
 			i.active = true;
 			toggle();
-			core.gameState.gameLogic.newTurnPhase(i, Ecology.PHASE_ENCOUNTER, true);
+			core.gameState.gameLogic.newEncounterPhase(i, Ecology.PHASE_ENCOUNTER, true);
 			return true;
 		}
 		if (base==leave)

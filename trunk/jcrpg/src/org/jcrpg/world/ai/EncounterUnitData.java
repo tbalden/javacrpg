@@ -43,4 +43,40 @@ public class EncounterUnitData
 		name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";			
 	}
 	
+	/**
+	 * Returns hint for enc phase lineup.
+	 * @return
+	 */
+	public int getEncPhasePriority(EncounterInfo info)
+	{
+		return getUnit().getEncPhasePriority(info);
+	}
+	/**
+	 * Returns hint for enc phase lineup.
+	 * @return
+	 */
+	public int getTurnActPhasePriority(EncounterInfo info)
+	{
+		// TODO voting etc...
+		return getUnit().getEncPhasePriority(info);
+	}
+	
+	public EncounterUnit getUnit()
+	{
+		if (isGroupId)
+		{
+			return parent;
+		}
+		return subUnit;
+	}
+	
+	public int getRelationLevel(EncounterUnitData unit)
+	{
+		return getUnit().getRelationLevel(unit.getUnit());
+	}
+	public int getRelationLevel(EncounterUnit unit)
+	{
+		return getUnit().getRelationLevel(unit);
+	}
+	
 }

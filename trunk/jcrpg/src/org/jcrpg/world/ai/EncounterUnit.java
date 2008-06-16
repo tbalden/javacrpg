@@ -54,6 +54,8 @@ public interface EncounterUnit {
 	
 	public int getGroupSize(int groupId);
 	
+	public int getEncPhasePriority(EncounterInfo info);
+	
 	public VisibleLifeForm getOne(int groupId);
 	
 	public int getRelationLevel(EncounterUnit unit);
