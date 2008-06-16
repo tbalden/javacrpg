@@ -33,7 +33,7 @@ public class Crusader extends HumanoidProfessional {
 	public Crusader()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(LongSword.class);
+		generationNewInstanceObjects.add(LongSword.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);

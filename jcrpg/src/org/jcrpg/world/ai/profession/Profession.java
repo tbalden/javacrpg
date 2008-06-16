@@ -51,7 +51,7 @@ public class Profession {
 	/**
 	 * Objects that should be added on new party setup for the members to have in inventory.
 	 */
-	public ArrayList<Class<?extends Obj>> characterGenerationNewPartyObjects = new ArrayList<Class<? extends Obj>>();
+	public ArrayList<Class<?extends Obj>> generationNewInstanceObjects = new ArrayList<Class<? extends Obj>>();
 	
 	public int genderNeed = EntityDescription.GENDER_BOTH;
 	

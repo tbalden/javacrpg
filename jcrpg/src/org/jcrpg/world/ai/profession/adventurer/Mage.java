@@ -30,7 +30,7 @@ public class Mage extends HumanoidProfessional {
 	public Mage()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(QuarterStaff.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		addMajorSkill(Elementarism.class);

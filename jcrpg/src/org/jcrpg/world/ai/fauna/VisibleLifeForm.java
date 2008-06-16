@@ -95,7 +95,7 @@ public class VisibleLifeForm {
 	{
 		if (encounterUnitData!=null)
 		{
-			return encounterUnitData.getUnit().getSize();
+			return encounterUnitData.getSize();
 		} else
 		{
 			return size;

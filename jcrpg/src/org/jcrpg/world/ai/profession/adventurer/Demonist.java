@@ -29,7 +29,7 @@ public class Demonist extends HumanoidProfessional {
 	public Demonist()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);
 		addMajorSkill(Demonology.class);

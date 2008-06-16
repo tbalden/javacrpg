@@ -20,9 +20,14 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.ObjInstance;
+import org.jcrpg.world.object.ObjList;
 
 public class EntityMemberInstance {
 
@@ -50,6 +55,16 @@ public class EntityMemberInstance {
 		super();
 		this.description = description;
 		this.numericId = numericId;
+		try {
+			for (Class<?extends Obj> o:EntityMember.profInstances.get(description.professions.get(0)).generationNewInstanceObjects)
+			{
+				inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
+				System.out.println("ADDING ITEM : "+o);
+			}
+		} catch (Exception ex)
+		{
+			Jcrpg.LOGGER.fine(ex.toString());
+		}
 	
 	}
 	
@@ -66,5 +81,11 @@ public class EntityMemberInstance {
 	 * The inventory.
 	 */
 	public EntityObjInventory inventory = new EntityObjInventory();
+	
+	public TurnActMemberChoice makeTurnActChoice(EncounterUnitData selfData, EncounterInfo info)
+	{
+		return description.getTurnActMemberChoice(selfData, info, this);
+	}
+	
 	
 }

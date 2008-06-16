@@ -401,6 +401,10 @@ public class EncounterInfo {
 	{
 		phase = Ecology.PHASE_TURNACT_SOCIAL_RIVALRY;
 	}
+	public int getPhase()
+	{
+		return phase;
+	}
 	
 	PlacementMatrix encounterMatrix = null;
 	PlacementMatrix turnActMatrix = null;

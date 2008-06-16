@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.abs.skill.martial;
 
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 /**
  * Fighting with bites - like dog/wolf and such.
@@ -31,6 +32,7 @@ public class StaffsAndWands extends SkillBase implements TurnActSkill  {
 	public StaffsAndWands()
 	{
 		needsInventoryItem = true;
+		actForms.add(new Thrust(this,1f));
 	}
 
 }
