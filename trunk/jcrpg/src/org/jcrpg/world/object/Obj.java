@@ -16,11 +16,17 @@
  */
 package org.jcrpg.world.object;
 
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 
 public class Obj {
 	String id;
 	public String icon;
 	public SkillInstance requirementSkillAndLevel  = null;
+	
+	public String getName()
+	{
+		return Language.v("obj."+this.getClass().getSimpleName());
+	}
 	
 }

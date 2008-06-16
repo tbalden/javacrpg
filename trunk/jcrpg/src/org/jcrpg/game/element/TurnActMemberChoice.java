@@ -15,35 +15,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object;
+package org.jcrpg.game.element;
 
-/**
- * An instance of an object type.
- * @author illes
- *
- */
-public class ObjInstance {
+import org.jcrpg.world.ai.EncounterUnitData;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.ObjInstance;
 
-	public Obj description;
-	public int numericId = 0;
-	public ObjInstance(Obj description, long id)
-	{
-		this.description = description;
-	}
-	public ObjInstance(Obj description)
-	{
-		this(description,getNextObjInstanceId());
-	}
+public class TurnActMemberChoice {
 	
-	public String getName()
-	{
-		return description.getName();
-	}
-	
-	public static long sequence = 0;
-	public static synchronized long getNextObjInstanceId()
-	{
-		return sequence++;
-	}
-	
+	public SkillInstance skill;
+	public SkillActForm skillActForm;
+	public EncounterUnitData target;
+	public ObjInstance usedObject;
+
 }

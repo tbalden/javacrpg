@@ -92,6 +92,11 @@ public class SkillGroups {
 	public static HashMap<Class<? extends SkillBase>,String> skillsGroup = new HashMap<Class<? extends SkillBase>,String>();
 	public static ArrayList<String> orderedGroups = new ArrayList<String>();
 	public static HashMap<Class<? extends SkillBase>, SkillBase> skillBaseInstances = new HashMap<Class<? extends SkillBase>, SkillBase>();
+	
+	public static ArrayList<SkillActForm> negativeSkillActForms = new ArrayList<SkillActForm>();
+	public static ArrayList<SkillActForm> neutralSkillActForms = new ArrayList<SkillActForm>();
+	public static ArrayList<SkillActForm> positiveSkillActForms = new ArrayList<SkillActForm>();
+	
 	static {
 		
 		skillTypeInterfaces.add(InterceptionSkill.class);
@@ -181,6 +186,23 @@ public class SkillGroups {
 			skillBaseInstances.put(skill.getClass(), skill);
 			skillsGroup.put(skill.getClass(), group);
 		}
+		
+		for (SkillActForm form: skill.actForms)
+		{
+			if (form.atomicEffect<0)
+			{
+				negativeSkillActForms.add(form);
+			} else
+			if (form.atomicEffect==0)
+			{
+				neutralSkillActForms.add(form);
+			} else
+			if (form.atomicEffect>0)
+			{
+				positiveSkillActForms.add(form);
+			}
+		}
+		
 	}
 	
 }

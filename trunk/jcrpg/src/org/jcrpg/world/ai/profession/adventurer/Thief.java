@@ -35,7 +35,7 @@ public class Thief extends HumanoidProfessional {
 	public Thief()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 14);
 		addMajorSkill(LocksAndTraps.class);

@@ -37,9 +37,9 @@ public class Warrior extends HumanoidProfessional{
 	public Warrior()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(LongSword.class);
-		characterGenerationNewPartyObjects.add(Dagger.class);
-		characterGenerationNewPartyObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(LongSword.class);
+		generationNewInstanceObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(QuarterStaff.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 16);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONSTITUTION, 10);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 10);

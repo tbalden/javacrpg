@@ -29,7 +29,7 @@ public class Psionic extends HumanoidProfessional {
 	public Psionic()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 13);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 13);
 		addMajorSkill(Mentalism.class);

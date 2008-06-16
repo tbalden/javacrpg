@@ -343,6 +343,7 @@ public class TurnActWindow extends PagedInputWindow {
 		HashMap<EntityMemberInstance, SkillBase> memberToSkill = new HashMap<EntityMemberInstance, SkillBase>();
 		HashMap<EntityMemberInstance, Class<?extends SkillActForm>> memberToSkillActForm = new HashMap<EntityMemberInstance, Class<? extends SkillActForm>>();
 		HashMap<EntityMemberInstance, EncounterUnitData> memberToSubUnit = new HashMap<EntityMemberInstance, EncounterUnitData>();
+		HashMap<EntityMemberInstance, ObjInstance> memberToObject = new HashMap<EntityMemberInstance, ObjInstance>();
 	}
 	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
 	
@@ -378,6 +379,7 @@ public class TurnActWindow extends PagedInputWindow {
 					EntityMemberInstance i = (EntityMemberInstance)s.subject;
 					SkillBase sb = null;
 					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
+					ObjInstance obj = (ObjInstance)inventorySelectors.get(counter).getSelectedObject();
 					Class<?extends SkillActForm> f = null;
 					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
 					EncounterUnitData fragmentAndSubunit = null;
@@ -385,6 +387,7 @@ public class TurnActWindow extends PagedInputWindow {
 					info.memberToSkill.put(i,sb);
 					info.memberToSkillActForm.put(i,f);
 					info.memberToSubUnit.put(i,fragmentAndSubunit);
+					info.memberToObject.put(i,obj);
 				}
 				counter++;
 			}

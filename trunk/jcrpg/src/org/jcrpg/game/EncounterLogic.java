@@ -18,8 +18,10 @@
 package org.jcrpg.game;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import org.jcrpg.game.element.EncounterPhaseLineup;
+import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
@@ -176,6 +178,27 @@ public class EncounterLogic {
 	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
 	{
 		turnActTurnState = new TurnActTurnState();
+		
+		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
+		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
+		for (EncounterUnitData data:dataList)
+		{
+			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
+			for (EntityMemberInstance mi: instances)
+			{
+				TurnActMemberChoice c = mi.makeTurnActChoice(data, encountered);
+				String message = "";
+				if (c!=null) 
+				{
+					message = ""+mi.description.getName() + " -> "+c.target.getUnit().getName()+" : "+c.skillActForm.getClass().getSimpleName()+" "+(c.usedObject!=null?c.usedObject.getName():"")+".";
+				}
+				else 
+				{
+					message = ""+mi.description.getName() + " inactive.";
+				}
+				gameLogic.core.uiBase.hud.mainBox.addEntry(message);
+			}
+		}
 
 		// TODO do a preliminary skill usage plan into state with eventCount, speed counts for initiative
 		
@@ -241,10 +264,11 @@ public class EncounterLogic {
 		TurnActUnitTopology topology = new TurnActUnitTopology(info);
 		info.setTopology(topology);
 		System.out.println("{ fillInitTurnActPhaseLineup }");
-		for (EncounterUnitData d:info.getEncounterUnitDataList(gameLogic.player.theFragment))
+		for (EncounterUnitData d:info.getEncounterUnitDataList(null))
 		{
 			info.getTopology().addUnitPushing(d,0);	
 		}
+		
 		
 	}
 

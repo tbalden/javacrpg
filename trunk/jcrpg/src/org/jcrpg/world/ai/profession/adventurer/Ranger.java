@@ -35,7 +35,7 @@ public class Ranger extends HumanoidProfessional {
 	public Ranger()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(LongSword.class);
+		generationNewInstanceObjects.add(LongSword.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);

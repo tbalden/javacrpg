@@ -30,7 +30,7 @@ public class Alchemist extends HumanoidProfessional {
 	public Alchemist()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(QuarterStaff.class);
 		attrMinLevels.addLevel(FantasyAttributes.PSYCHE, 12);
 		attrMinLevels.addLevel(FantasyAttributes.CONCENTRATION, 14);
 		addMajorSkill(Alchemy.class);

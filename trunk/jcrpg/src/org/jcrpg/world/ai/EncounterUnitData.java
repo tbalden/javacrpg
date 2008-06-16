@@ -80,6 +80,17 @@ public class EncounterUnitData
 		return subUnit;
 	}
 	
+	public int getSize()
+	{
+		if (isGroupId)
+		{
+			return parent.getGroupSize(groupId);
+		} else
+		{
+			return subUnit.getGroupSize(0);
+		}
+	}
+	
 	public VisibleLifeForm setupVisibleLifeForm()
 	{
 		if (isGroupId)

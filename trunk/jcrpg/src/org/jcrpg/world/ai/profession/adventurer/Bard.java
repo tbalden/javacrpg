@@ -32,7 +32,7 @@ public class Bard extends HumanoidProfessional {
 	public Bard()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(Dagger.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);

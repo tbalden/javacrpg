@@ -29,7 +29,7 @@ public class Priest extends HumanoidProfessional{
 	public Priest()
 	{
 		super();
-		characterGenerationNewPartyObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(QuarterStaff.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 12);
 		addMajorSkill(CelestialMagic.class);
