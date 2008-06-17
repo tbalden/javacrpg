@@ -35,6 +35,7 @@ package org.jcrpg.apps;
 import java.io.File;
 
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 
 import com.jme.app.SimpleGame;
 import com.jme.image.Image;
@@ -84,7 +85,9 @@ public class AnimatedModelViewer extends SimpleGame {
         lightState.detachAll();
     	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/models/fauna/gorilla").toURI());
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
-      AnimatedModelNode n = new AnimatedModelNode(mesh,anim,1f);
+       MovingModelAnimDescription des = new MovingModelAnimDescription();
+       des.IDLE = new String[]{anim};
+      AnimatedModelNode n = new AnimatedModelNode(mesh,des,1f);
         
         rootNode.attachChild(n);
 
