@@ -219,7 +219,7 @@ public class GameLogic {
 			int i=0;
 			Cube c = null;
 			while (true) { 
-				if (i>15) {
+				if (i>10) {
 					form.worldX = core.gameState.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
 					form.worldY = core.gameState.viewPositionY;
 					form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);

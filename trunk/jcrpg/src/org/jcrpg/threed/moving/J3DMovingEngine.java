@@ -121,6 +121,18 @@ public class J3DMovingEngine {
 			{
 				PooledNode pooledRealNode = n.realNode;
 				n.realNode = null;
+				if (u.circleNode!=null)
+				{
+					u.circleNode.removeFromParent();
+				}
+				if (u.sizeTextNode!=null)
+				{
+					u.sizeTextNode.removeFromParent();
+				}
+				if (u.memberTypeNameNode!=null)
+				{
+					u.memberTypeNameNode.removeFromParent();
+				}
 				if (pooledRealNode!=null) {
 					Node realNode = (Node)pooledRealNode;
 					if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);

@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.fauna.mammals.gorilla;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
@@ -42,7 +43,12 @@ public class GorillaHorde extends AnimalEntityDescription {
 	public static MildAnimalFemale GORILLA_TYPE_FEMALE = new MildAnimalFemale("GORILLA_FEMALE",gorillaAudio);
 	public static WeakAnimalChild GORILLA_TYPE_CHILD = new WeakAnimalChild("GORILLA_CHILD",gorillaAudio);
 	
-	public static MovingModel gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
+	public static MovingModel gorilla = null;
+	static 
+	{
+		MovingModelAnimDescription desc = new MovingModelAnimDescription("./data/models/fauna/gorilla/gorilla_steady.md5anim");
+		gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh",desc,null,null,false);
+	}
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
 	
 	

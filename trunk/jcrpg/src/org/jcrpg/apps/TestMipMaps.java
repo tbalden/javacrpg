@@ -165,13 +165,13 @@ public class TestMipMaps extends SimpleGame {
                 "./jmetest/data/model/collada/");
         // this stream points to the model itself.
         
-        AnimatedModelNode node = new AnimatedModelNode("./data/models/fauna/gorilla.md5mesh", "./data/models/fauna/gorilla.md5anim");
+        //AnimatedModelNode node = new AnimatedModelNode("./data/models/fauna/gorilla.md5mesh", "./data/models/fauna/gorilla.md5anim");
         sn = null;
         //stripTexturesAndMaterials(node);
-        rootNode.attachChild(node);
+        //rootNode.attachChild(node);
         
-        cam.setLocation(node.getLocalTranslation().add(0.0f, 75.0f, 300.0f));
-		cam.lookAt(node.getLocalTranslation().add(0.0f, 50.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
+        //cam.setLocation(node.getLocalTranslation().add(0.0f, 75.0f, 300.0f));
+		//cam.lookAt(node.getLocalTranslation().add(0.0f, 50.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
 		
         
         if (true) return;

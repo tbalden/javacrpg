@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import md5reader.MD5AnimReader;
 import md5reader.MD5MeshReader;
@@ -35,10 +36,10 @@ import model.animation.SkeletalAnimationController;
 
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 
 import com.jme.animation.AnimationController;
 import com.jme.animation.Bone;
-import com.jme.animation.BoneAnimation;
 import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
@@ -48,10 +49,6 @@ import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.RenderState;
-import com.model.md5.JointAnimation;
-import com.model.md5.ModelNode;
-import com.model.md5.controller.JointController;
-import com.model.md5.importer.MD5Importer;
 
 /**
  * Animated model helper node for md5.
@@ -70,11 +67,15 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	public Node modelNode;
 	public Bone bone = null;
 	public ArrayList<String> animationNames;
-	public ArrayList<BoneAnimation> animations = new ArrayList<BoneAnimation>();
+	public HashMap<String,AnimationAnimator> animations = new HashMap<String,AnimationAnimator>();
+	public AnimationAnimator defaultAnimator = null; 
+	public AnimationAnimator currentAnimator = null;
 	public SkinNode skinNode;
 
+	public static HashMap<String,Animation> animationCache = new HashMap<String,Animation>(); 
+	public static HashMap<String,Integer> animationCacheUsage = new HashMap<String,Integer>();
 	
-	public AnimatedModelNode(String fileName, String animation, float speed, boolean importer)
+	/*public AnimatedModelNode(String fileName, String animation, float speed, boolean importer)
 	{
 	
 		try 
@@ -90,28 +91,47 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			ex.printStackTrace();
 		}
 		
-	}
-	public AnimatedModelNode(String fileName, String animation, float speed)
+	}*/
+	
+	SkeletalModelInstance bodyInstance;
+	SkeletalAnimationController bodyAnimationController = null;
+	
+	public void addAnimationAnimator(String name, Animation anim)
 	{
+		animations.put(name,bodyAnimationController.addAnimation(anim));
+	}
+	
+	public void changeToAnimation(String name)
+	{
+		if (currentAnimator!=null)
+		{
+			currentAnimator.fadeOut(0.5f, false);
+			animations.get(name).fadeIn(0.5f);
+			currentAnimator = animations.get(name);
+		}
+	}
+	
+	MovingModelAnimDescription animationDesc = null;
+	
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float speed)
+	{
+		this.animationDesc = animation;
+		boolean animated = animation!=null;
 		System.out.println("LOADING ANIMATED MODEL: "+fileName);
 		try {
 			Model bodyModel = loadModel(fileName);
-			
-			Animation runningAnimation = loadAnimation(animation);
+			bodyInstance = new SkeletalModelInstance(bodyModel);
+			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 
-			SkeletalModelInstance bodyInstance = new SkeletalModelInstance(bodyModel);
-			boolean animated = false;
-			AnimationAnimator runningAnimator = null;
-			SkeletalAnimationController bodyAnimationController = null;
-			try {
-				bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-				runningAnimator = bodyAnimationController.addAnimation(runningAnimation);
-				animated = true;
-			} catch (Exception ex)
-			{
-				ex.printStackTrace();
+			if (animated) {
+				for (String aName:animation.getAnimationNames())
+				{
+					Animation anim = loadAnimation(aName);
+					addAnimationAnimator(aName, anim);
+				}
+				defaultAnimator = animations.get(animation.IDLE[0]);
 			}
-	        
+
 	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
 	        bodyInstance.setLocalScale(0.2f);
@@ -119,14 +139,15 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			q.fromAngleNormalAxis(new Vector3f(1,0,0).normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(1,0,0).normalize());
 			q.inverseLocal();
 	        bodyInstance.setLocalRotation(q);
-	        
-	        if (animated) {
-	        	runningAnimator.fadeIn(.5f);
-	        	runningAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
-	        	//runningAnimator.fadeOut(.5f, false);
-	        	//bodyAnimationController.setActive(false);
-	        }
-	        attachChild(bodyInstance);
+
+        	if (animated)
+        	{
+        		defaultAnimator.fadeIn(.5f);
+        		defaultAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
+        		currentAnimator = defaultAnimator;
+        	}
+
+        	attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
 	        updateModelBound();
 	        
@@ -137,7 +158,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		
 	}
 
-	public AnimatedModelNode(String fileName, String animation) 
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation) 
 	{
 		this(fileName,animation,10f);		
 	}
@@ -177,7 +198,19 @@ public class AnimatedModelNode extends Node implements PooledNode {
         return reader.readModel(in);
     }
 
+    
+    private void increaseAnimationUsage(String path)
+    {
+    	if (animationCacheUsage.get(path)==null) {animationCacheUsage.put(path, 1);return;}
+    	animationCacheUsage.put(path,animationCacheUsage.get(path)+1);
+    	return;
+    }
     private Animation loadAnimation(String path) throws IOException {
+    	
+    	increaseAnimationUsage(path);
+    	
+    	if (animationCache.get(path)!=null) return animationCache.get(path);
+    	
     	InputStream in = new FileInputStream(new File(path));
 
         if (in == null) {
@@ -187,7 +220,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
         MD5AnimReader animReader = new MD5AnimReader();
 
         Animation animation = animReader.readAnimation(in);
-
+        animationCache.put(path, animation);
         return animation;
     }
 

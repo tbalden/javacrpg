@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.humanoid.group.boarman;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
@@ -52,11 +53,18 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	public static BoarmanMaleWorker BOARMAN_MALE_WORKER = new BoarmanMaleWorker("BOARMAN_MALE_WORKER",boarmanMaleAudio);
 	public static BoarmanFemale BOARMAN_FEMALE = new BoarmanFemale("BOARMAN_FEMALE",boarmanFemaleAudio);
 
-	public static MovingModel boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh","./data/models/humanoid/boarman/boarman.md5anim",null,null,false);
+	public static MovingModel boarmanMale = null;
 	public static RenderedMovingUnit boarmanMale_unit = new RenderedMovingUnit(new Model[]{boarmanMale});
 
-	public static MovingModel boarmanFemale = new MovingModel("./data/models/fauna/gorilla/boarman.md5mesh","./data/models/humanoid/boarman/boarman.md5anim",null,null,false);
+	public static MovingModel boarmanFemale = null;
 	public static RenderedMovingUnit boarmanFemale_unit = new RenderedMovingUnit(new Model[]{boarmanFemale});
+
+	static {
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+		desc.IDLE = new String[]{"./data/models/humanoid/boarman/boarman.md5anim"};		
+		boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh",desc,null,null,false);
+		boarmanFemale = boarmanMale;
+	}
 
 	public BoarmanTribe()
 	{
