@@ -101,11 +101,15 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		animations.put(name,bodyAnimationController.addAnimation(anim));
 	}
 	
+	
+	
 	public void changeToAnimation(String name)
 	{
 		if (currentAnimator!=null)
 		{
-			currentAnimator.fadeOut(0.5f, false);
+			currentAnimator.fadeOut(0.5f, true);
+			if (animations.get(name)==null)
+				name = MovingModelAnimDescription.ANIM_IDLE;
 			animations.get(name).fadeIn(0.5f);
 			currentAnimator = animations.get(name);
 		}
@@ -124,12 +128,14 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 
 			if (animated) {
-				for (String aName:animation.getAnimationNames())
+				HashMap<String, String> animationNames = animation.getAnimationNames();
+				for (String aName:animationNames.keySet())
 				{
-					Animation anim = loadAnimation(aName);
+					String aFile = animationNames.get(aName);
+					Animation anim = loadAnimation(aFile);
 					addAnimationAnimator(aName, anim);
 				}
-				defaultAnimator = animations.get(animation.IDLE[0]);
+				defaultAnimator = animations.get(MovingModelAnimDescription.ANIM_IDLE);
 			}
 
 	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);

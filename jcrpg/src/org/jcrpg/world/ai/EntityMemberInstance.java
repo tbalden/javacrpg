@@ -63,7 +63,7 @@ public class EntityMemberInstance {
 			}
 		} catch (Exception ex)
 		{
-			Jcrpg.LOGGER.fine(ex.toString());
+			//Jcrpg.LOGGER.fine(ex.toString());
 		}
 	
 	}

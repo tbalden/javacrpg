@@ -19,11 +19,34 @@
 package org.jcrpg.threed.scene.model.moving;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
+import java.util.HashMap;
 
 public class MovingModelAnimDescription {
+	
+	
+	public static String ANIM_IDLE = "ANIM_IDLE";
+	public static String ANIM_IDLE_1 = "ANIM_IDLE1";
+	public static String ANIM_IDLE_2 = "ANIM_IDLE2";
+	public static String ANIM_WALK = "ANIM_WALK";
+	public static String ANIM_ATTACK_UPPER = "ANIM_ATTACKU";
+	public static String ANIM_ATTACK_LOWER = "ANIM_ATTACKL";
+	public static String ANIM_DEFEND_UPPER = "ANIM_DEFENDU";
+	public static String ANIM_DEFEND_LOWER = "ANIM_DEFENDL";
+	public static String ANIM_THROW = "ANIM_THROW";
+	public static String ANIM_CAST = "ANIM_CAST";
+	public static String ANIM_FRIENDLY = "ANIM_FRIENDLY";
+	public static String ANIM_COMMUNICATE_NORMAL = "ANIM_COMM";
+	public static String ANIM_COMMUNICATE_PATIENT = "ANIM_CPATIENT";
+	public static String ANIM_COMMUNICATE_AGRESSIVE = "ANIM_CAGRESSIVE";
+	public static String ANIM_COMMUNICATE_HATRED = "ANIM_CHATRED";
+	public static String ANIM_PAIN = "ANIM_PAIN";
+	public static String ANIM_DEATH_NORMAL = "ANIM_DEATH";
+	public static String ANIM_DEATH_QUICK = "ANIM_DQUICK";
+	public static String ANIM_DEATH_SLOW = "ANIM_DSLOW";
 
-	public String[] IDLE = null;
+	public String IDLE = null;
+	public String IDLE_1 = null;
+	public String IDLE_2 = null;
 	public String WALK = null;
 	public String ATTACK_UPPER = null;
 	public String ATTACK_LOWER = null;
@@ -35,7 +58,7 @@ public class MovingModelAnimDescription {
 	public String COMMUNICATE_NORMAL = null;
 	public String COMMUNICATE_PATIENT = null;
 	public String COMMUNICATE_AGRESSIVE = null;
-	public String COMMUNICATE_HATERED = null;
+	public String COMMUNICATE_HATRED = null;
 	public String PAIN = null;
 	public String DEATH_NORMAL = null;
 	public String DEATH_QUICK = null;
@@ -45,41 +68,48 @@ public class MovingModelAnimDescription {
 	{
 		
 	}
-	public MovingModelAnimDescription(String IDLE0)
+	public MovingModelAnimDescription(String IDLE)
 	{
-		IDLE = new String[] {IDLE0};
+		this.IDLE = IDLE;
+	}
+	public MovingModelAnimDescription(String[] IDLE)
+	{
+		this.IDLE = IDLE[0];
+		if (IDLE.length>1) this.IDLE_1 = IDLE[1];
+		if (IDLE.length>2) this.IDLE_2 = IDLE[2];
 	}
 	
-	public HashSet<String> getAnimationNames()
+	public HashMap<String,String> getAnimationNames()
 	{
-		HashSet<String> r = new HashSet<String>();
-		if (IDLE!=null)
-		{
-			for (String s:IDLE)
-			{
-				if (s.charAt(0)!='.') s = "./data/models/"+s;
-				r.add(s);
-			}
-		}
+		HashMap<String,String> r = new HashMap<String,String>();
 		Field[] fields = this.getClass().getFields();
 		for (Field f:fields)
 		{
-			if (f.getClass()==String.class && f.isAccessible())
+			System.out.println("F: "+f.getName()+ " "+ f.getType() );
+			if (!f.getName().startsWith("ANIM_") && f.getType()==String.class)
 			{
 				try 
 				{
 					String v = (String)f.get(this);
+					System.out.println("= "+v);
 					if (v!=null)
 					{
 						if (v.charAt(0)!='.')
 							v = "./data/models/"+v;
-						r.add(v);
+						String key = (String)this.getClass().getField("ANIM_"+f.getName()).get(this);
+						System.out.println("__"+key+" : "+v);
+						r.put(key,v);
 					}
 				} catch (IllegalAccessException e)
 				{}
+				catch (NoSuchFieldException e2)
+				{
+					
+				}
 			}
 		}
 		return r;
 	}
+	
 	
 }
