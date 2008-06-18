@@ -62,9 +62,9 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	 */
 	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
-	public PersistentMemberInstance(EntityMember description, World w,
+	public PersistentMemberInstance(EntityInstance instance, EntityMember description, World w,
 			int numericId, int startX, int startY, int startZ) {
-		super(description, numericId);
+		super(instance, description, numericId);
 		if (w!=null) {
 			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,5);//TODO description.getRoamingSize());
 		}

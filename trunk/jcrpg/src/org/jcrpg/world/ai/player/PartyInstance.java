@@ -105,6 +105,7 @@ public class PartyInstance extends EntityInstance {
 	public void addPartyMember(PersistentMemberInstance m)
 	{
 		if (m.description instanceof MemberPerson) {
+			m.instance = this;
 			MemberPerson desc = (MemberPerson)m.description;
 			fixMembers.put(desc.foreName+orderedParty.size(), m);
 			// add all memberinstances to the fragment's followers.
@@ -118,7 +119,7 @@ public class PartyInstance extends EntityInstance {
 	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
 		PartyMember member = new PartyMember(id,audio);
-		PersistentMemberInstance mI = new PersistentMemberInstance(member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
+		PersistentMemberInstance mI = new PersistentMemberInstance(this,member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(id, mI);
 		theFragment.addFollower(mI);
 		orderedParty.add(mI);
@@ -132,7 +133,7 @@ public class PartyInstance extends EntityInstance {
 	
 	public void addPartyMemberInstance(PartyMember m)
 	{
-		PersistentMemberInstance mI = new PersistentMemberInstance(m, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
+		PersistentMemberInstance mI = new PersistentMemberInstance(this,m, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(m.id, mI);
 		numberOfMembers++;
 	}
