@@ -86,7 +86,7 @@ public class AnimatedModelViewer extends SimpleGame {
     	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/models/fauna/gorilla").toURI());
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
        MovingModelAnimDescription des = new MovingModelAnimDescription();
-       des.IDLE = new String[]{anim};
+       des.IDLE = anim;
       AnimatedModelNode n = new AnimatedModelNode(mesh,des,1f);
         
         rootNode.attachChild(n);

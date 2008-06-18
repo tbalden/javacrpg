@@ -28,6 +28,7 @@ import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.world.ai.EntityMember;
@@ -281,6 +282,7 @@ public class J3DMovingEngine {
 					realPooledNode.updateRenderState();
 					
 				}
+				unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
 			}
 	}
 	

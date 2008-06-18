@@ -18,12 +18,16 @@
 
 package org.jcrpg.threed.scene.moving;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.scene.Node;
@@ -160,6 +164,39 @@ public class RenderedMovingUnit {
 		worldZ = endCoordZ;
 		state = stateAfterMovement;
 		resetOrigo3DCoords();
+	}
+	
+	public void changeToAnimation(String animationType)
+	{
+		if (form.notRendered) return;
+		for (NodePlaceholder n:nodePlaceholders)
+		{
+			if (n.model instanceof MovingModel)
+			{
+				if (n.realNode instanceof AnimatedModelNode)
+				{
+					((AnimatedModelNode)(n.realNode)).changeToAnimation(animationType);
+				}				
+			}
+		}
+		
+	}
+	
+	public HashMap<NodePlaceholder,MovingModelAnimDescription> getMovingModelAnimationDescriptions()
+	{
+		if (form.notRendered) return null;
+		HashMap<NodePlaceholder,MovingModelAnimDescription> list = new HashMap<NodePlaceholder,MovingModelAnimDescription>();
+		for (NodePlaceholder n:nodePlaceholders)
+		{
+			if (n.model instanceof MovingModel)
+			{
+				if (((MovingModel)n.model).animation!=null)
+				{
+					list.put(n,((MovingModel)n.model).animation);
+				}
+			}
+		}
+		return list;
 	}
 	
 	
