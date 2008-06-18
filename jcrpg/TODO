@@ -8,7 +8,14 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] use PlacementMatrix matrix to place scenario (colored OSD for different lines)...
+
+[ ] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
+	
+[ ] initiating, collecting acts of members, and playing the plan in EncounterLogic
+	[ ] skill effects on points, skill success calculation
+
+[X] use PlacementMatrix matrix to place scenario 
+	[ ](colored OSD for different lines)...
 
 	[ ] when the Turn Act begins, (after the encounter phase) all should be decided which side the given
 	entities will take part: enemy or friend - neutral should be removed.
