@@ -103,6 +103,10 @@ public class J3DMovingEngine {
 			{
 				// scaling for md5 needs substraction
 				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,(1-scale[2])*0.4f,0).mult(J3DCore.CUBE_EDGE_SIZE));
+				if ((unit.models[0].type==Model.MOVINGMODEL)) {
+					float[] d = ((MovingModel)unit.models[0]).disposition;
+					n[i].getLocalTranslation().subtractLocal(d[0],d[1],d[2]);
+				}
 			}
 			if (unit.onSteep)
 			{
@@ -317,6 +321,13 @@ public class J3DMovingEngine {
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
+						} else
+						{
+							if ((unit.models[0].type==Model.MOVINGMODEL)) {
+								float[] d = ((MovingModel)unit.models[0]).disposition;
+								eY+=d[1];
+							}
+							
 						}
 						if (unit.toSteep)
 						{
@@ -383,6 +394,13 @@ public class J3DMovingEngine {
 						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
+						} else
+						{
+							if ((unit.models[0].type==Model.MOVINGMODEL)) {
+								float[] d = ((MovingModel)unit.models[0]).disposition;
+								eY+=d[1];
+							}
+
 						}
 						if (unit.toSteep)
 						{

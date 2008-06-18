@@ -87,7 +87,7 @@ public class AnimatedModelViewer extends SimpleGame {
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
        MovingModelAnimDescription des = new MovingModelAnimDescription();
        des.IDLE = anim;
-      AnimatedModelNode n = new AnimatedModelNode(mesh,des,1f);
+      AnimatedModelNode n = new AnimatedModelNode(mesh,des,new float[] {0,0,0},1f);
         
         rootNode.attachChild(n);
 

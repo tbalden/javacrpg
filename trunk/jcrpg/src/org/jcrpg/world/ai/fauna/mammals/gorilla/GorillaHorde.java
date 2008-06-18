@@ -50,6 +50,7 @@ public class GorillaHorde extends AnimalEntityDescription {
 		desc.WALK = "./data/models/fauna/gorilla/gorilla_steady.md5anim";
 		gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh",desc,null,null,false);
 	}
+	
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
 	
 	
