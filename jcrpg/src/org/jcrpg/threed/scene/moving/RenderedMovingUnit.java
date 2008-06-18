@@ -129,6 +129,7 @@ public class RenderedMovingUnit {
 	
 	public void startToMoveOneCube(float speed, int toX, int toY, int toZ, boolean fromSteep, boolean toSteep)
 	{
+		changeToAnimation(MovingModelAnimDescription.ANIM_WALK);
 		startCoordX = worldX;
 		startCoordY = worldY;
 		startCoordZ = worldZ;
@@ -159,6 +160,7 @@ public class RenderedMovingUnit {
 	
 	public void endMoveOneCube()
 	{
+		changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
 		worldX = endCoordX; // shrink to world TODO
 		worldY = endCoordY;
 		worldZ = endCoordZ;
