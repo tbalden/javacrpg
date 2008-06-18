@@ -196,7 +196,7 @@ public class EncounterLogic {
 				for (float s:speeds) {
 					while (orderedActors.get(s)!=null)
 					{
-						s+=0.000001f;
+						s+=0.0001f;
 					}
 					orderedActors.put(s, mi);
 				}

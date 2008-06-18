@@ -29,6 +29,8 @@ public class MovingModel extends SimpleModel {
 
 	public String[] additionalModels = null;
 	public MovingModelAnimDescription animation = null;
+	
+	public float[] disposition = new float[] {0,0,0};
 
 	public MovingModel(String modelName, MovingModelAnimDescription animation, String[] additionalModels, String textureName, boolean mipMap)
 	{

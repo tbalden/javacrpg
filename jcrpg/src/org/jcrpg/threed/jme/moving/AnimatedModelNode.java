@@ -67,6 +67,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	public Node modelNode;
 	public Bone bone = null;
 	public ArrayList<String> animationNames;
+	public HashMap<String,String> animationFileNames = new HashMap<String,String>();
 	public HashMap<String,AnimationAnimator> animations = new HashMap<String,AnimationAnimator>();
 	public AnimationAnimator defaultAnimator = null; 
 	public AnimationAnimator currentAnimator = null;
@@ -101,23 +102,29 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		animations.put(name,bodyAnimationController.addAnimation(anim));
 	}
 	
+	public void addAnimationAnimator(String name, AnimationAnimator anim)
+	{
+		animations.put(name,anim);
+	}
 	
 	
 	public void changeToAnimation(String name)
 	{
 		if (currentAnimator!=null)
 		{
-			currentAnimator.fadeOut(0.5f, true);
 			if (animations.get(name)==null)
 				name = MovingModelAnimDescription.ANIM_IDLE;
-			animations.get(name).fadeIn(0.5f);
-			currentAnimator = animations.get(name);
+			AnimationAnimator newAnimator = animations.get(name);
+			if (newAnimator==currentAnimator) return;
+			currentAnimator.fadeOut(0.5f, true);
+			newAnimator.fadeIn(0.5f);
+			currentAnimator = newAnimator;
 		}
 	}
 	
 	MovingModelAnimDescription animationDesc = null;
 	
-	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float speed)
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float[] disposition,float speed)
 	{
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
@@ -132,8 +139,17 @@ public class AnimatedModelNode extends Node implements PooledNode {
 				for (String aName:animationNames.keySet())
 				{
 					String aFile = animationNames.get(aName);
-					Animation anim = loadAnimation(aFile);
-					addAnimationAnimator(aName, anim);
+					String presentAnimForFile = animationFileNames.get(aFile);
+					if (presentAnimForFile!=null)
+					{
+						AnimationAnimator a = animations.get(presentAnimForFile);
+						addAnimationAnimator(aName, a);
+					} else
+					{
+						Animation anim = loadAnimation(aFile);
+						addAnimationAnimator(aName, anim);
+						animationFileNames.put(aFile, aName);
+					}
 				}
 				defaultAnimator = animations.get(MovingModelAnimDescription.ANIM_IDLE);
 			}
@@ -164,9 +180,9 @@ public class AnimatedModelNode extends Node implements PooledNode {
 		
 	}
 
-	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation) 
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float[] disposition) 
 	{
-		this(fileName,animation,10f);		
+		this(fileName,animation,disposition,1f);		
 	}
     @SuppressWarnings("unused")
 	private void stripTexturesAndMaterials(SceneElement sp) {
