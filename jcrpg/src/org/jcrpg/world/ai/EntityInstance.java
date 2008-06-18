@@ -116,7 +116,7 @@ public class EntityInstance {
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 		
-		PersistentMemberInstance p = new PersistentMemberInstance(new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+		PersistentMemberInstance p = new PersistentMemberInstance(this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
 		InfrastructureElementParameters i = new InfrastructureElementParameters();
 		i.owner = p;
 		i.type = House.class;

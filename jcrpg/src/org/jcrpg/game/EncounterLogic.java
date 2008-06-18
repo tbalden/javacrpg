@@ -18,11 +18,13 @@
 package org.jcrpg.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
+import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -181,23 +183,41 @@ public class EncounterLogic {
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
+		HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
 		for (EncounterUnitData data:dataList)
 		{
 			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
 			for (EntityMemberInstance mi: instances)
 			{
 				TurnActMemberChoice c = mi.makeTurnActChoice(data, encountered);
-				String message = "";
-				if (c!=null) 
-				{
-					message = ""+mi.description.getName() + " -> "+c.target.getUnit().getName()+" : "+c.skillActForm.getClass().getSimpleName()+" "+(c.usedObject!=null?c.usedObject.getName():"")+".";
+				memberChoices.put(mi, c);
+				if (c==null) c = new TurnActMemberChoice();
+				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed(0, mi, c.skill, c.skillActForm, c.usedObject);
+				for (float s:speeds) {
+					while (orderedActors.get(s)!=null)
+					{
+						s+=0.000001f;
+					}
+					orderedActors.put(s, mi);
 				}
-				else 
-				{
-					message = ""+mi.description.getName() + " inactive.";
-				}
-				gameLogic.core.uiBase.hud.mainBox.addEntry(message);
+								
 			}
+		}
+		for (Float miSpeed:orderedActors.keySet())
+		{
+			EntityMemberInstance mi = orderedActors.get(miSpeed);
+			TurnActMemberChoice c = memberChoices.get(mi);
+			String message = "";
+			if (c!=null) 
+			{
+				message = miSpeed.toString()+" "+mi.description.getName() + " -> "+c.target.getUnit().getName()+" : "+c.skillActForm.getClass().getSimpleName()+" "+(c.usedObject!=null?c.usedObject.getName():"")+".";
+				memberChoices.put(mi, c);
+			}
+			else 
+			{
+				message = miSpeed.toString()+" "+mi.description.getName() + " inactive.";
+			}
+			gameLogic.core.uiBase.hud.mainBox.addEntry(message);
 		}
 
 		// TODO do a preliminary skill usage plan into state with eventCount, speed counts for initiative

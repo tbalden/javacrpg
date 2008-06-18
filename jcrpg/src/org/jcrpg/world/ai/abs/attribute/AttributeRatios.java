@@ -41,7 +41,11 @@ public class AttributeRatios {
 	
 	public static int getAttribute(String attr, Attributes base, AttributeRatios modifier)
 	{
-		return (int)(base.attributes.get(attr)*modifier.attributeRatios.get(attr));
+		Float ratio = modifier.attributeRatios.get(attr);
+		if (ratio==null) ratio = 1f;
+		Integer attribute = base.attributes.get(attr);
+		if (attribute==null) attribute = 5; //TODO is this right?
+		return (int)(attribute*ratio);
 	}
 	
 	public static Attributes getAttributes(String attr, Attributes base, AttributeRatios modifier)
@@ -49,7 +53,7 @@ public class AttributeRatios {
 		FantasyAttributes ret = new FantasyAttributes();
 		for (String a:base.attributes.keySet())
 		{
-			ret.setAttribute(a, (int)(base.attributes.get(attr)*modifier.attributeRatios.get(attr)));
+			ret.setAttribute(a, getAttribute(attr,base,modifier));
 		}
 		return ret;
 	}

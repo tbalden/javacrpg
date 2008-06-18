@@ -20,7 +20,6 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
-import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
@@ -50,10 +49,13 @@ public class EntityMemberInstance {
 	 * The skill that the given instance is using for his behavior of living around at the current turn.
 	 */
 	public InterceptionSkill behaviorSkill = null;
+	
+	public EntityInstance instance = null;
 
-	public EntityMemberInstance(EntityMember description, int numericId) {
+	public EntityMemberInstance(EntityInstance instance, EntityMember description, int numericId) {
 		super();
 		this.description = description;
+		this.instance = instance;
 		this.numericId = numericId;
 		try {
 			for (Class<?extends Obj> o:EntityMember.profInstances.get(description.professions.get(0)).generationNewInstanceObjects)
@@ -85,6 +87,10 @@ public class EntityMemberInstance {
 	public TurnActMemberChoice makeTurnActChoice(EncounterUnitData selfData, EncounterInfo info)
 	{
 		return description.getTurnActMemberChoice(selfData, info, this);
+	}
+
+	public int getNumericId() {
+		return numericId;
 	}
 	
 	
