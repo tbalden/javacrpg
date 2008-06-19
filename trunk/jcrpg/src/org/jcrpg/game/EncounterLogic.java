@@ -25,6 +25,7 @@ import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -162,16 +163,25 @@ public class EncounterLogic {
 
 	public class TurnActTurnState {
 		public EncounterInfo encounter;
-		public int nextEventCount = 0;
+		public int nextEventCount = -1;
 		//public int maxEventCount = 0;
 		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();
 		public boolean playing = false;
 		public long playStart = 0;
 		public long maxTime = 0;
+		
+		public PlannedTurnActEvent getCurrentEvent()
+		{
+			return plan.get(nextEventCount);
+		}
+		
 	}
 	public class PlannedTurnActEvent
 	{
+		public TurnActMemberChoice choice = null;
 		public static final int TYPE_PAUSE = 1;
+		public static final int TYPE_MEMBER_CHOICE = 2;
+		public String initMessage = null;
 		public int type = 0;
 		
 	}
@@ -189,9 +199,11 @@ public class EncounterLogic {
 			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
 			for (EntityMemberInstance mi: instances)
 			{
+				mi.encounterData = data;
 				TurnActMemberChoice c = mi.makeTurnActChoice(data, encountered);
 				memberChoices.put(mi, c);
 				if (c==null) c = new TurnActMemberChoice();
+				c.member = mi;
 				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed(0, mi, c.skill, c.skillActForm, c.usedObject);
 				for (float s:speeds) {
 					while (orderedActors.get(s)!=null)
@@ -203,31 +215,33 @@ public class EncounterLogic {
 								
 			}
 		}
+		int step = 0;
 		for (Float miSpeed:orderedActors.keySet())
 		{
+			step++;
 			EntityMemberInstance mi = orderedActors.get(miSpeed);
 			TurnActMemberChoice c = memberChoices.get(mi);
 			String message = "";
 			if (c!=null) 
 			{
-				message = miSpeed.toString()+" "+mi.description.getName() + " -> "+c.target.getUnit().getName()+" : "+c.skillActForm.getClass().getSimpleName()+" "+(c.usedObject!=null?c.usedObject.getName():"")+".";
+				message = c.getInitMessage();
 				memberChoices.put(mi, c);
+				PlannedTurnActEvent p = new PlannedTurnActEvent();
+				p.type = PlannedTurnActEvent.TYPE_MEMBER_CHOICE;
+				p.choice = c;
+				p.initMessage = message;
+				turnActTurnState.plan.add(p);
 			}
 			else 
 			{
-				message = miSpeed.toString()+" "+mi.description.getName() + " inactive.";
+				PlannedTurnActEvent p = new PlannedTurnActEvent();
+				p.type = PlannedTurnActEvent.TYPE_PAUSE;
+				message = step+". "+mi.description.getName() + " inactive.";
+				p.initMessage = message;
+				turnActTurnState.plan.add(p);
+				
 			}
-			gameLogic.core.uiBase.hud.mainBox.addEntry(message);
 		}
-
-		// TODO do a preliminary skill usage plan into state with eventCount, speed counts for initiative
-		
-		// TODO skill use
-
-		// demo pause
-		PlannedTurnActEvent p = new PlannedTurnActEvent();
-		p.type = PlannedEncounterEvent.TYPE_PAUSE;
-		turnActTurnState.plan.add(p);
 
 		playTurnActStep();
 	}
@@ -239,6 +253,18 @@ public class EncounterLogic {
 			if (turnActTurnState.maxTime>0 && turnActTurnState.maxTime<System.currentTimeMillis()-turnActTurnState.playStart)
 			{
 				turnActTurnState.playing = false;
+				if (turnActTurnState.getCurrentEvent().type==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
+				{
+					TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+					if (choice.skillActForm!=null)
+					{
+						String anim = choice.skillActForm.animationType;
+						if (!choice.member.encounterData.visibleForm.notRendered) {
+							gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,MovingModelAnimDescription.ANIM_IDLE);
+						}
+					}
+
+				}
 				playTurnActStep();
 			}
 		} 
@@ -246,6 +272,7 @@ public class EncounterLogic {
 
 	public void playTurnActStep()
 	{
+		turnActTurnState.nextEventCount++;
 		if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 		{
 			turnActTurnState = null;
@@ -258,11 +285,27 @@ public class EncounterLogic {
 				turnActTurnState.playing = true;
 				turnActTurnState.playStart = System.currentTimeMillis();
 				turnActTurnState.maxTime = 1000;
-				turnActTurnState.nextEventCount++;
+			} else
+			if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
+			{
+				PlannedTurnActEvent event = turnActTurnState.plan.get(turnActTurnState.nextEventCount);
+				TurnActMemberChoice choice = event.choice;
+				gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
+				if (choice.skillActForm!=null)
+				{
+					String anim = choice.skillActForm.animationType;
+					if (!choice.member.encounterData.visibleForm.notRendered) {
+						gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,anim);
+					}
+				}
+				
+				turnActTurnState.playing = true;
+				turnActTurnState.playStart = System.currentTimeMillis();
+				turnActTurnState.maxTime = 1000;
 			} else
 			{
 				// unknown step type...
-				turnActTurnState.nextEventCount++;
+				
 				playTurnActStep();
 			}
 		}

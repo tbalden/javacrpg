@@ -36,7 +36,7 @@ public class EntityMemberInstance {
 	 */
 	public EntityMember description = null;
 	
-	
+	public transient EncounterUnitData encounterData = null;
 	
 	public int numericId = -1;
 	

@@ -19,6 +19,8 @@ package org.jcrpg.world.ai.abs.skill;
 
 import java.util.HashMap;
 
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
  * @author illes
@@ -34,6 +36,8 @@ public class SkillActForm
 	 *  negative -10 to positive +10.
 	 */
 	public int atomicEffect = 0;
+	
+	public String animationType = MovingModelAnimDescription.ANIM_IDLE;
 	
 	public static final int TARGETTYPE_NONE = -1;
 	public static final int TARGETTYPE_LIVING_MEMBER = 0;

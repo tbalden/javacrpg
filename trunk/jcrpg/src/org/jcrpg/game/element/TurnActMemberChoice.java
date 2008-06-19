@@ -18,15 +18,23 @@
 package org.jcrpg.game.element;
 
 import org.jcrpg.world.ai.EncounterUnitData;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.ObjInstance;
 
 public class TurnActMemberChoice {
 	
+	public EntityMemberInstance member;
+	
 	public SkillInstance skill;
 	public SkillActForm skillActForm;
 	public EncounterUnitData target;
 	public ObjInstance usedObject;
+	
+	public String getInitMessage()
+	{
+		return member.description.getName() + " -> "+target.getUnit().getName()+" : "+skillActForm.getClass().getSimpleName()+" "+(usedObject!=null?usedObject.getName():"")+".";
+	}
 
 }
