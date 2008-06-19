@@ -29,6 +29,8 @@ public abstract class Model {
 	
 	public byte type = MODEL;
 
+	public float[] disposition = new float[] {0,0,0};
+
 	public String id;
 	public boolean poolable = true;
 	/**

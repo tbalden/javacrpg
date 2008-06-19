@@ -29,8 +29,7 @@ public class MovingModel extends SimpleModel {
 
 	public String[] additionalModels = null;
 	public MovingModelAnimDescription animation = null;
-	
-	public float[] disposition = new float[] {0,0,0};
+		
 	
 	public boolean animatedModel = false;
 
