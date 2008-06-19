@@ -95,7 +95,7 @@ public class J3DMovingEngine {
 			//System.out.println("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
 			float[] scale = desc.getScale();
 			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
-			if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
+			if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
 			{
 				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
 				
@@ -318,7 +318,7 @@ public class J3DMovingEngine {
 						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
 						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 	
-						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
+						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 						} else
@@ -391,7 +391,7 @@ public class J3DMovingEngine {
 						int endCoordZCorrect = (origoZ-(unit.endCoordZ-origoZ));
 						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 						//float eZ = ( ((core.gameState.origoZ)*2) - unit.endCoordZ )*J3DCore.CUBE_EDGE_SIZE;
-						if ((unit.models[0].type==Model.MOVINGMODEL) && ((MovingModel)unit.models[0]).modelName.endsWith(".obj"))
+						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
 						{
 							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 						} else

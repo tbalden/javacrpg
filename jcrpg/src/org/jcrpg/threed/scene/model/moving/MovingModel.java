@@ -31,11 +31,14 @@ public class MovingModel extends SimpleModel {
 	public MovingModelAnimDescription animation = null;
 	
 	public float[] disposition = new float[] {0,0,0};
+	
+	public boolean animatedModel = false;
 
 	public MovingModel(String modelName, MovingModelAnimDescription animation, String[] additionalModels, String textureName, boolean mipMap)
 	{
 		super(modelName,textureName,mipMap);
 		type = MOVINGMODEL;
+		if (animation!=null) animatedModel = true;
 		this.animation = animation;
 		this.id = modelName+textureName+mipMap;
 		this.modelName = modelName;
