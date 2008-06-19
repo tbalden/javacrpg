@@ -99,7 +99,9 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	
 	public void addAnimationAnimator(String name, Animation anim)
 	{
-		animations.put(name,bodyAnimationController.addAnimation(anim));
+		AnimationAnimator animator = bodyAnimationController.addAnimation(anim);
+		animator.setWeight(0f);
+		animations.put(name,animator);
 	}
 	
 	public void addAnimationAnimator(String name, AnimationAnimator anim)
@@ -110,14 +112,18 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	
 	public void changeToAnimation(String name)
 	{
-		if (currentAnimator!=null)
+		//if (currentAnimator!=null)
 		{
 			if (animations.get(name)==null)
 				name = MovingModelAnimDescription.ANIM_IDLE;
 			AnimationAnimator newAnimator = animations.get(name);
 			if (newAnimator==currentAnimator) return;
-			currentAnimator.fadeOut(0.5f, true);
+			if (currentAnimator!=null) {
+				currentAnimator.fadeOut(0.5f, false);
+				currentAnimator.setWeight(0f);
+			}
 			newAnimator.fadeIn(0.5f);
+			newAnimator.setWeight(1f);
 			currentAnimator = newAnimator;
 		}
 	}
@@ -164,9 +170,10 @@ public class AnimatedModelNode extends Node implements PooledNode {
 
         	if (animated)
         	{
-        		defaultAnimator.fadeIn(.5f);
-        		defaultAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
-        		currentAnimator = defaultAnimator;
+        		changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+        		//defaultAnimator.fadeIn(.5f);
+        		//defaultAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
+        		//currentAnimator = defaultAnimator;
         	}
 
         	attachChild(bodyInstance);

@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.world.ai.abs.skill.actform;
 
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
@@ -24,6 +25,7 @@ public class Thrust extends SkillActForm
 {
 	public Thrust(SkillBase skill, float multiplier) {
 		super(skill);
+		animationType = MovingModelAnimDescription.ANIM_ATTACK_LOWER;
 		atomicEffect = (int)(-5*multiplier);
 		targetType = TARGETTYPE_LIVING_MEMBER;
 		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5*multiplier));

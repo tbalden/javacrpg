@@ -10,6 +10,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 [ ] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
+	----> don't count data, only in a turn act/encounter
+	Randomizing should help that you won't meet so often groups that its too much overwhelming the number
+	of encounters because of no 'positioned groups and group sizes'. So recalculated group sizes,
+	and make it more random that the intersection meets who and how much! 
 	
 [ ] initiating, collecting acts of members, and playing the plan in EncounterLogic
 	[ ] skill effects on points, skill success calculation

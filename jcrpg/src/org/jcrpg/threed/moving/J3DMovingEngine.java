@@ -104,7 +104,7 @@ public class J3DMovingEngine {
 				// scaling for md5 needs substraction
 				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,(1-scale[2])*0.4f,0).mult(J3DCore.CUBE_EDGE_SIZE));
 				float[] d = (unit.models[0]).disposition;
-				n[i].getLocalTranslation().subtractLocal(d[0],d[1],d[2]);
+				n[i].getLocalTranslation().addLocal(d[0],d[1],d[2]);
 			}
 			if (unit.onSteep)
 			{
@@ -354,22 +354,22 @@ public class J3DMovingEngine {
 						
 						if (unit.direction==0)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
 							unit.direction=1;
 						} else
 						if (unit.direction==1)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=2;
 						} else
 						if (unit.direction==2)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
 							unit.direction=3;
 						} else
 						if (unit.direction==3)
 						{
-							unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
+							//unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
 							unit.direction=0;
 						}
 						
@@ -447,6 +447,11 @@ public class J3DMovingEngine {
 				}
 			}
 		}
+	}
+	
+	public void setAnimationForRenderedUnit(VisibleLifeForm form, String anim)
+	{
+		form.unit.changeToAnimation(anim);
 	}
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form)
