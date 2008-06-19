@@ -215,7 +215,7 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof MovingModel) 
 			{
-				if ( ((MovingModel)objects[i]).modelName.endsWith(".md5mesh") )
+				if ( ((MovingModel)objects[i]).animatedModel )
 				{
 					// TODO this needs a total refactor!
 					PooledNode node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation, ((MovingModel)objects[i]).disposition);
