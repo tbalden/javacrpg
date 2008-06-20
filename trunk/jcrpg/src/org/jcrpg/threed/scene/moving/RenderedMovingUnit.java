@@ -173,12 +173,23 @@ public class RenderedMovingUnit {
 	{
 		if (form.notRendered) return false;
 		J3DMovingEngine.activeUnits.add(this);
-		form.targetForm = target;
+		if (target!=null)
+			form.targetForm = target;
 		state = anim;		
 		return true;
 	}
-	
-	public void attackFinished()
+
+	public boolean startPain(VisibleLifeForm target)
+	{
+		if (form.notRendered) return false;
+		J3DMovingEngine.activeUnits.add(this);
+		if (target!=null)
+			form.targetForm = target;
+		state = MovingModelAnimDescription.ANIM_PAIN;		
+		return true;
+	}
+
+	public void stateFinished()
 	{
 		state = stateAfterMovement;
 		changeToAnimation(state);

@@ -378,7 +378,7 @@ public class J3DMovingEngine {
 						}
 						
 					} else
-					if (unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_UPPER) || unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_LOWER))
+					if (unit.state.equals(MovingModelAnimDescription.ANIM_PAIN) || unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_UPPER) || unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_LOWER))
 					{
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
@@ -394,7 +394,7 @@ public class J3DMovingEngine {
 							{
 								System.out.println("---------------------");
 								unit.playingAnimation = null;
-								unit.attackFinished();
+								unit.stateFinished();
 								continue;
 							} else
 							{
