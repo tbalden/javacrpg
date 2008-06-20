@@ -25,7 +25,7 @@ import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
-import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.game.logic.Impact;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -296,12 +296,20 @@ public class EncounterLogic {
 							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
 							if (choice.skill!=null)
 							{
-								
+								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+1, choice);
+								if (impact.success)
+								{
+									gameLogic.core.uiBase.hud.mainBox.addEntry("HIT!");
+								} else
+								{
+									gameLogic.core.uiBase.hud.mainBox.addEntry("Miss.");
+								}
 								if (choice.usedObject!=null)
 								{
 									if (choice.usedObject.description instanceof Weapon)
 									{
-										if (true) // check hit
+										if (impact.success) // check hit
 										{
 											String sound = ((Weapon)choice.usedObject.description).getHitSound();
 											if (sound!=null)
@@ -318,12 +326,25 @@ public class EncounterLogic {
 											}
 											
 											
+										} else
+										{
+											String sound = ((Weapon)choice.usedObject.description).getMissSound();
+											if (sound!=null)
+											{
+												gameLogic.core.audioServer.playLoading(sound, "objects");
+											}
+											
 										}
 									}
 								}
-							}
-							if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
-								choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+								if (impact.success && choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+									choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+								}
+								if (impact.success)
+								{
+									choice.target.applyImpactUnit(impact.targetImpact);
+									// TODO evaluate death and such...
+								}
 							}
 						} else
 						{

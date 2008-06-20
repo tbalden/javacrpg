@@ -18,6 +18,7 @@
 package org.jcrpg.game.logic;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.game.logic.Impact.ImpactUnit;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
@@ -28,7 +29,56 @@ import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
 
 public class EvaluatorBase {
+	
 
+	
+	
+	
+
+	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice)
+	{
+		Impact i = new Impact();
+		if (choice.skillActForm!=null)
+		{
+			float level = choice.skill.level/100f;
+			float plus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0)/10f; // random factor
+			float result = level*plus;
+			System.out.println("EVAULATED RESULT = "+result);
+			boolean success = false;
+			if (result>0.2f)
+			{
+				success = true;
+			}
+			float impact = 0.5f;
+			if (choice.usedObject!=null)
+			{
+				if (choice.usedObject.description instanceof Weapon)
+				{
+					Weapon w = (Weapon)choice.usedObject.description;
+					w.getAttackMultiplicator();
+					impact = w.getMaxDamage()/10f;
+				}
+			}
+			if (success)
+			{
+				i.success = true;
+				ImpactUnit u = i.targetImpact;
+				for (Integer effectType:choice.skillActForm.effectTypesAndLevels.keySet())
+				{
+					u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
+					System.out.println("* EFFECT " + u.orderedImpactPoints[effectType]);
+				}
+			}
+			ImpactUnit u = i.actCost;
+			for (Integer effectType:choice.skillActForm.usedPointsAndLevels.keySet())
+			{
+				u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
+				System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
+			}
+		}
+		return i;
+	}
+	
 	public static float[] evaluateActFormTimesWithSpeed(int seed, TurnActMemberChoice choice)
 	{
 		return evaluateActFormTimesWithSpeed(seed, choice.member,choice.skill,choice.skillActForm,choice.usedObject);
