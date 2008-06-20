@@ -26,7 +26,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
  * @author illes
  *
  */
-public class SkillActForm
+public abstract class SkillActForm
 {
 	public SkillBase skill;
 	public String id;
@@ -76,4 +76,7 @@ public class SkillActForm
 	{
 		this.skill = skill;
 	}
+	
+	public abstract String getSound();
+	
 }

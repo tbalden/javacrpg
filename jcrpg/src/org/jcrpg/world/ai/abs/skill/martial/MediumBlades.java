@@ -38,6 +38,11 @@ public class MediumBlades extends SkillBase implements TurnActSkill  {
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-5);
 			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,-5);
 		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
 	}
 	
 	public MediumBlades()

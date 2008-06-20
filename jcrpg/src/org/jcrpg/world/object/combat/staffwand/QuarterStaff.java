@@ -45,5 +45,13 @@ public class QuarterStaff extends Obj implements Weapon {
 	public int getSpeed() {
 		return 6;
 	}
+
+	public String getHitSound() {		
+		return "weapon/wooden_hit";
+	}
+	
+	public String getMissSound() {		
+		return null;
+	}
 	
 }

@@ -44,6 +44,8 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	public static AudioDescription boarmanMaleAudio = new AudioDescription();
 	public static AudioDescription boarmanFemaleAudio = new AudioDescription();	
 	static {
+		boarmanMaleAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
+		boarmanMaleAudio.PAIN = new String[]{"boarman/boar_pain"};
 		//boarmanMaleAudio.ENVIRONMENTAL = new String[]{"human_env1", "human_env2"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}

@@ -36,6 +36,11 @@ public class LargeBlades extends SkillBase implements TurnActSkill  {
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-10);
 			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA,-10);
 		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
 	}
 
 	public LargeBlades()

@@ -30,4 +30,9 @@ public class Swing extends SkillActForm
 		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(3*multiplier));
 		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(3*multiplier));
 	}
+
+	@Override
+	public String getSound() {
+		return null;
+	}
 }
