@@ -21,6 +21,7 @@ package org.jcrpg.threed.moving;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -56,6 +57,9 @@ public class J3DMovingEngine {
 	MovingTypeModels movingTypeModels = null;
 	
 	HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
+	
+	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
+	
 	
 	public J3DMovingEngine(J3DCore core)
 	{
@@ -306,7 +310,7 @@ public class J3DMovingEngine {
 			{
 				if (n.realNode!=null)
 				{
-					if (unit.state.equals(RenderedMovingUnit.STATE_STANDING))
+					if (unit.state.equals(MovingModelAnimDescription.ANIM_IDLE))
 					{
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
@@ -374,7 +378,96 @@ public class J3DMovingEngine {
 						}
 						
 					} else
-					if (unit.state.equals(RenderedMovingUnit.STATE_WALKING))
+					if (unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_UPPER) || unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_LOWER))
+					{
+						
+						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
+						
+						if (unit.playingAnimation==null)
+						{
+							System.out.println("+++++++++++++++++");
+							unit.startPlayingAnimation(unit.state);
+							unit.playingAnimation = unit.state;
+						} else
+						{
+							if (unit.isFinishedPlaying())
+							{
+								System.out.println("---------------------");
+								unit.playingAnimation = null;
+								unit.attackFinished();
+								continue;
+							} else
+							{
+								//System.out.println("STILL PLAYING...");
+							}
+						}
+						
+						
+						float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+						float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+						int origoZ = core.gameState.origoZ;
+						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
+						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+	
+						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
+						{
+							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
+						}
+						float[] d = (unit.models[0]).disposition;
+						eY+=d[1];
+						
+						if (unit.toSteep)
+						{
+							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
+							float[] scale = unit.form.type.getScale();
+							// scaling for md5 needs substraction
+							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
+						}
+						
+						Vector3f cVec = new Vector3f(n.getLocalTranslation());
+						Vector3f eVec = new Vector3f(eX,eY,eZ);
+						//System.out.println("-- "+cVec +" "+eVec);
+						Vector3f mVec = eVec.subtract(cVec).normalize().mult(20f * 0.1f*timePerFrame);
+						//n.getLocalTranslation().addLocal(mVec);
+						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
+						//((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
+						Vector3f m = new Vector3f(mVec);
+						m.y=0;
+						Quaternion q = new Quaternion();
+						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
+						m.normalizeLocal();
+						if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
+						
+						Quaternion current = ((Node)n.realNode).getLocalRotation();
+						Quaternion between = new Quaternion(current);
+						between.slerp(q, 1f);
+						current.slerp(between, 0.1f);
+						
+						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
+						
+						if (unit.direction==0)
+						{
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ+1, false, false);
+							unit.direction=1;
+						} else
+						if (unit.direction==1)
+						{
+							//unit.startToMoveOneCube(20f, unit.worldX+1, unit.worldY, unit.worldZ, false, false);
+							unit.direction=2;
+						} else
+						if (unit.direction==2)
+						{
+							//unit.startToMoveOneCube(20f, unit.worldX, unit.worldY, unit.worldZ-1, false, false);
+							unit.direction=3;
+						} else
+						if (unit.direction==3)
+						{
+							//unit.startToMoveOneCube(20f, unit.worldX-1, unit.worldY, unit.worldZ, false, false);
+							unit.direction=0;
+						}
+						
+					} else
+					if (unit.state.equals(MovingModelAnimDescription.ANIM_WALK))
 					{
 						//float sX = (unit.startCoordX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
 						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;

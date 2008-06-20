@@ -24,6 +24,7 @@ import java.util.HashSet;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
+import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
@@ -38,14 +39,6 @@ import com.jme.scene.Node;
  */
 public class RenderedMovingUnit {
 	
-	public static final String STATE_STANDING = "S_STANDING";
-	public static final String STATE_WALKING = "S_WALKING";
-	public static final String STATE_TURNING = "S_TURNING";
-	public static final String STATE_RUNNING = "S_RUNNING";
-	public static final String STATE_FALLING = "S_FALLING"; // between stand and lay - falling :-)
-	public static final String STATE_LAYING = "S_LAYING";
-	public static final String STATE_ATTACK_1 = "S_ATTACK_1";
-	public static final String STATE_ATTACK_2 = "S_ATTACK_2";
 	
 	/**
 	 * The direction the unit is facing.
@@ -62,7 +55,7 @@ public class RenderedMovingUnit {
 	public Model[] models = null;
 	public VisibleLifeForm form = null;
 	
-	public String state = STATE_STANDING;
+	public String state = MovingModelAnimDescription.ANIM_IDLE;
 	public boolean internal = false;
 	
 	public transient HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
@@ -122,14 +115,15 @@ public class RenderedMovingUnit {
 	public float endPositionX, endPositionY, endPositionZ;
 	public int startCoordX, startCoordY, startCoordZ;
 	public int endCoordX, endCoordY, endCoordZ;
-	public String stateAfterMovement = STATE_STANDING;
+	public String stateAfterMovement = MovingModelAnimDescription.ANIM_IDLE;
 	
 	// TODO function with moveToDirection!
 	
+	//public void 
 	
-	public void startToMoveOneCube(float speed, int toX, int toY, int toZ, boolean fromSteep, boolean toSteep)
+	public boolean startToMoveOneCube(float speed, int toX, int toY, int toZ, boolean fromSteep, boolean toSteep)
 	{
-		changeToAnimation(MovingModelAnimDescription.ANIM_WALK);
+		if (form.notRendered) return false;	
 		startCoordX = worldX;
 		startCoordY = worldY;
 		startCoordZ = worldZ;
@@ -141,7 +135,12 @@ public class RenderedMovingUnit {
 		endCoordZ = toZ;
 		movingSpeed = speed;
 		this.toSteep = toSteep;
-		state = STATE_WALKING;
+		state = MovingModelAnimDescription.ANIM_WALK;
+		changeToAnimation(state);
+		
+		J3DMovingEngine.activeUnits.add(this);
+		return true;
+		
 	}
 	
 	public void turn(float speed, int afterDirection, int toX, int toY, int toZ)
@@ -151,7 +150,8 @@ public class RenderedMovingUnit {
 		endCoordZ = toZ;
 		movingSpeed = speed;
 		direction = afterDirection;
-		state = STATE_TURNING;
+		state = MovingModelAnimDescription.ANIM_TURN;
+		changeToAnimation(state);
 	}
 	public void endTurn()
 	{
@@ -160,13 +160,32 @@ public class RenderedMovingUnit {
 	
 	public void endMoveOneCube()
 	{
-		changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
 		worldX = endCoordX; // shrink to world TODO
 		worldY = endCoordY;
 		worldZ = endCoordZ;
 		state = stateAfterMovement;
+		changeToAnimation(state);
 		resetOrigo3DCoords();
+		J3DMovingEngine.activeUnits.remove(this);
 	}
+	
+	public boolean startAttack(VisibleLifeForm target, String anim)
+	{
+		if (form.notRendered) return false;
+		J3DMovingEngine.activeUnits.add(this);
+		form.targetForm = target;
+		state = anim;		
+		return true;
+	}
+	
+	public void attackFinished()
+	{
+		state = stateAfterMovement;
+		changeToAnimation(state);
+		J3DMovingEngine.activeUnits.remove(this);
+	}
+	
+	public String playingAnimation = null;
 	
 	public void changeToAnimation(String animationType)
 	{
@@ -178,6 +197,39 @@ public class RenderedMovingUnit {
 				if (n.realNode instanceof AnimatedModelNode)
 				{
 					((AnimatedModelNode)(n.realNode)).changeToAnimation(animationType);
+				}				
+			}
+		}
+		
+	}
+	
+	public boolean isFinishedPlaying()
+	{
+		if (form.notRendered) return true;
+		for (NodePlaceholder n:nodePlaceholders)
+		{
+			if (n.model instanceof MovingModel)
+			{
+				if (n.realNode instanceof AnimatedModelNode)
+				{
+					if (!((AnimatedModelNode)(n.realNode)).isFinishedPlaying()) return false;
+				}				
+			}
+		}
+		return true;
+		
+	}
+	
+	public void startPlayingAnimation(String animationType)
+	{
+		if (form.notRendered) return;
+		for (NodePlaceholder n:nodePlaceholders)
+		{
+			if (n.model instanceof MovingModel)
+			{
+				if (n.realNode instanceof AnimatedModelNode)
+				{
+					((AnimatedModelNode)(n.realNode)).playAnimation(animationType);
 				}				
 			}
 		}
