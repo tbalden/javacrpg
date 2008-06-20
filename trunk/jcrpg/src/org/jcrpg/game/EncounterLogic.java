@@ -248,65 +248,80 @@ public class EncounterLogic {
 
 	public void checkTurnActCallbackNeed()
 	{
-		if (turnActTurnState!=null && turnActTurnState.playing)
-		{
-			if (turnActTurnState.maxTime>0 && turnActTurnState.maxTime<System.currentTimeMillis()-turnActTurnState.playStart)
+		synchronized (mutex) { 
+			if (turnActTurnState!=null && turnActTurnState.playing)
 			{
-				turnActTurnState.playing = false;
-				if (turnActTurnState.getCurrentEvent().type==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
+				if (turnActTurnState.maxTime>0 && turnActTurnState.maxTime<System.currentTimeMillis()-turnActTurnState.playStart)
 				{
-					TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+					if (turnActTurnState.getCurrentEvent().type==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
+					{
+						TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+						if (choice.skillActForm!=null)
+						{
+							if (gameLogic.core.mEngine.activeUnits.size()>0) 
+							{
+								return;
+							}
+							
+							String anim = choice.skillActForm.animationType;
+							if (!choice.member.encounterData.visibleForm.notRendered) {
+								gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,MovingModelAnimDescription.ANIM_IDLE);
+							}
+						} else
+						{
+							System.out.println("NO SKILL ACT, NEXT PLAN STEP...");
+						}
+	
+					}
+					turnActTurnState.playing = false;
+					playTurnActStep();
+				}
+			}
+		}
+	}
+	public Object mutex = new Object();
+
+	public void playTurnActStep()
+	{
+		synchronized (mutex) {
+			System.out.println("playTurnActStep ");
+			turnActTurnState.nextEventCount++;
+			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
+			{
+				turnActTurnState = null;
+				gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
+				gameLogic.core.turnActWindow.toggle();			
+			} else
+			{
+				if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_PAUSE) 
+				{
+					turnActTurnState.maxTime = 1000;
+					turnActTurnState.playing = true;
+					turnActTurnState.playStart = System.currentTimeMillis();
+				} else
+				if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
+				{
+					PlannedTurnActEvent event = turnActTurnState.plan.get(turnActTurnState.nextEventCount);
+					TurnActMemberChoice choice = event.choice;
+					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					if (choice.skillActForm!=null)
 					{
 						String anim = choice.skillActForm.animationType;
 						if (!choice.member.encounterData.visibleForm.notRendered) {
-							gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,MovingModelAnimDescription.ANIM_IDLE);
+							
+							choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
 						}
 					}
-
-				}
-				playTurnActStep();
-			}
-		} 
-	}
-
-	public void playTurnActStep()
-	{
-		turnActTurnState.nextEventCount++;
-		if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
-		{
-			turnActTurnState = null;
-			gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
-			gameLogic.core.turnActWindow.toggle();			
-		} else
-		{
-			if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_PAUSE) 
-			{
-				turnActTurnState.playing = true;
-				turnActTurnState.playStart = System.currentTimeMillis();
-				turnActTurnState.maxTime = 1000;
-			} else
-			if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
-			{
-				PlannedTurnActEvent event = turnActTurnState.plan.get(turnActTurnState.nextEventCount);
-				TurnActMemberChoice choice = event.choice;
-				gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
-				if (choice.skillActForm!=null)
+					
+					turnActTurnState.maxTime = 1000;
+					turnActTurnState.playing = true;
+					turnActTurnState.playStart = System.currentTimeMillis();
+				} else
 				{
-					String anim = choice.skillActForm.animationType;
-					if (!choice.member.encounterData.visibleForm.notRendered) {
-						gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,anim);
-					}
+					// unknown step type...
+					
+					playTurnActStep();
 				}
-				
-				turnActTurnState.playing = true;
-				turnActTurnState.playStart = System.currentTimeMillis();
-				turnActTurnState.maxTime = 1000;
-			} else
-			{
-				// unknown step type...
-				
-				playTurnActStep();
 			}
 		}
 	}

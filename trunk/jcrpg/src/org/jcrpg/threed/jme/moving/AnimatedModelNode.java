@@ -32,6 +32,9 @@ import model.Model;
 import model.SkeletalModelInstance;
 import model.animation.Animation;
 import model.animation.AnimationAnimator;
+import model.animation.Animator;
+import model.animation.FixedLengthAnimator;
+import model.animation.IAnimationListener;
 import model.animation.SkeletalAnimationController;
 
 import org.jcrpg.threed.PooledNode;
@@ -55,7 +58,7 @@ import com.jme.scene.state.RenderState;
  * @author pali
  *
  */
-public class AnimatedModelNode extends Node implements PooledNode {
+public class AnimatedModelNode extends Node implements PooledNode, IAnimationListener {
 
 	/**
 	 * 
@@ -68,8 +71,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	public Bone bone = null;
 	public ArrayList<String> animationNames;
 	public HashMap<String,String> animationFileNames = new HashMap<String,String>();
-	public HashMap<String,AnimationAnimator> animations = new HashMap<String,AnimationAnimator>();
-	public AnimationAnimator defaultAnimator = null; 
+	public HashMap<String,Animation> animations = new HashMap<String,Animation>();
 	public AnimationAnimator currentAnimator = null;
 	public SkinNode skinNode;
 
@@ -97,34 +99,78 @@ public class AnimatedModelNode extends Node implements PooledNode {
 	SkeletalModelInstance bodyInstance;
 	SkeletalAnimationController bodyAnimationController = null;
 	
-	public void addAnimationAnimator(String name, Animation anim)
-	{
-		AnimationAnimator animator = bodyAnimationController.addAnimation(anim);
-		animator.setWeight(0f);
-		animations.put(name,animator);
-	}
-	
-	public void addAnimationAnimator(String name, AnimationAnimator anim)
+	public void addAnimation(String name, Animation anim)
 	{
 		animations.put(name,anim);
 	}
 	
 	
-	public void changeToAnimation(String name)
+	public boolean isFinishedPlaying()
+	{
+		if (playAnim!=null)
+		{
+			if (finishedPlaying)
+			{
+				System.out.println("FINISHED PLAYING.");
+				playAnim = null;
+				finishedPlaying = false;
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	
+	public AnimationAnimator playAnim = null;
+	public boolean finishedPlaying = false;
+	
+	public float playAnimation(String name)
+	{
+		Animation anim = animations.get(name);
+		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
+		if (currentAnimator!=null) {
+			//currentAnimator.fadeOut(0.5f, false);
+			currentAnimator.setWeight(0.01f);
+		}
+		newAnimator.setCycleType(FixedLengthAnimator.RT_ONCE);
+		newAnimator.setWeight(1f);
+		newAnimator.setTime(0);
+		System.out.println("STARTING PLAY... "+ newAnimator);
+		
+		playAnim = newAnimator;
+		//currentAnimator.fadeIn(currentAnimator.getMax()*2);
+		//currentAnimator = newAnimator;
+		return newAnimator.getMax();
+	}
+
+	
+	public float changeToAnimation(String name)
 	{
 		//if (currentAnimator!=null)
 		{
-			if (animations.get(name)==null)
+			while (animations.get(name)==null)
+			{
+				if (name.equals(MovingModelAnimDescription.ANIM_TURN))
+				{
+					name = MovingModelAnimDescription.ANIM_WALK;
+					continue;
+				}
 				name = MovingModelAnimDescription.ANIM_IDLE;
-			AnimationAnimator newAnimator = animations.get(name);
-			if (newAnimator==currentAnimator) return;
-			if (currentAnimator!=null) {
-				currentAnimator.fadeOut(0.5f, false);
-				currentAnimator.setWeight(0f);
+				break;
 			}
+			Animation anim = animations.get(name);
+			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
+			if (currentAnimator!=null) {
+				currentAnimator.fadeOut(0.01f, true);
+				
+			}
+			AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
+			newAnimator.setCycleType(FixedLengthAnimator.RT_WRAP);
 			newAnimator.fadeIn(0.5f);
 			newAnimator.setWeight(1f);
 			currentAnimator = newAnimator;
+			return newAnimator.getMax();
 		}
 	}
 	
@@ -139,6 +185,7 @@ public class AnimatedModelNode extends Node implements PooledNode {
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
+			bodyAnimationController.addListener(this);
 
 			if (animated) {
 				HashMap<String, String> animationNames = animation.getAnimationNames();
@@ -148,16 +195,16 @@ public class AnimatedModelNode extends Node implements PooledNode {
 					String presentAnimForFile = animationFileNames.get(aFile);
 					if (presentAnimForFile!=null)
 					{
-						AnimationAnimator a = animations.get(presentAnimForFile);
-						addAnimationAnimator(aName, a);
+						Animation a = animations.get(presentAnimForFile);
+						addAnimation(aName, a);
 					} else
 					{
 						Animation anim = loadAnimation(aFile);
-						addAnimationAnimator(aName, anim);
+						addAnimation(aName, anim);
 						animationFileNames.put(aFile, aName);
 					}
 				}
-				defaultAnimator = animations.get(MovingModelAnimDescription.ANIM_IDLE);
+				
 			}
 
 	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
@@ -260,6 +307,21 @@ public class AnimatedModelNode extends Node implements PooledNode {
 
 	public void setPooledContainer(PoolItemContainer cont) {
 		this.cont = cont;
+	}
+
+	public void notify(Animator animator, int type, Object userObject) {
+		System.out.println("notify! "+type+" A: "+animator+ " P: "+playAnim);
+		if (type==IAnimationListener.ANIMATION_CYCLE_ENDED)
+		{
+			System.out.println("FINISHED!");
+			if (animator == playAnim)
+			{
+				System.out.println("!PLAYING FINISHED!");
+				finishedPlaying = true;
+				//currentAnimator.setTime(currentAnimator.getMin());
+				currentAnimator.setWeight(1f);
+			}
+		}
 	}
 
 
