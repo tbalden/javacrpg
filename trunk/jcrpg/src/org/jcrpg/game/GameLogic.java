@@ -228,7 +228,9 @@ public class GameLogic {
 					form.notRendered = true;
 					found=false; break;
 				}
-				form.worldX = core.gameState.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
+				form.worldX = core.gameState.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+				//form.worldY = core.gameState.viewPositionY;
+				form.worldZ = core.gameState.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
 				ArrayList<SurfaceHeightAndType[] > data = core.gameState.world.getSurfaceData(form.worldX, form.worldZ);
 				if (data!=null)
 				{
@@ -242,8 +244,6 @@ public class GameLogic {
 							else continue;
 					}
 				}
-				//form.worldY = core.gameState.viewPositionY;
-				form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 				c = world.getCube(-1, form.worldX, form.worldY, form.worldZ, false);
 				if (c==null || !c.canContain) 
 				{

@@ -29,6 +29,11 @@ public class SkillBase {
 		public NoActForm(SkillBase skill) {
 			super(skill);
 		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
 	}
 	
 	public static ArrayList<SkillActForm> noActFormList = new ArrayList<SkillActForm>();

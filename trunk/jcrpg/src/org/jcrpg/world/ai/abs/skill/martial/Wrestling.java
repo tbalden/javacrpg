@@ -34,6 +34,11 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -5);
 			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -3);
 		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
 	}
 
 	public class Detain extends SkillActForm
@@ -46,6 +51,11 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
 			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -4);
+		}
+
+		@Override
+		public String getSound() {
+			return null;
 		}
 	}
 

@@ -29,4 +29,9 @@ public class HitDontCut extends SkillActForm {
 		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(3*multiplier));
 	}
 
+	@Override
+	public String getSound() {
+		return null;
+	}
+
 }

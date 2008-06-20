@@ -45,5 +45,12 @@ public class Dagger extends Obj implements Weapon {
 	public int getSpeed() {
 		return 10;
 	}
+
+	public String getHitSound() {
+		return "weapon/pierce";
+	}
+	public String getMissSound() {
+		return "weapon/clang";
+	}
 	
 }

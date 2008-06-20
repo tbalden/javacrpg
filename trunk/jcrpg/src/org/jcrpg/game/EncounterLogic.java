@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.Weapon;
 
 public class EncounterLogic {
 	
@@ -213,7 +214,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					orderedActors.put(s, mi);
+					//orderedActors.put(s, mi);
 				}
 								
 			}
@@ -247,6 +248,10 @@ public class EncounterLogic {
 				p.choice = c;
 				p.initMessage = message;
 				turnActTurnState.plan.add(p);
+				// adding a bit of pause
+				p = new PlannedTurnActEvent();
+				p.type = PlannedTurnActEvent.TYPE_PAUSE;
+				turnActTurnState.plan.add(p);
 			}
 			else 
 			{
@@ -255,8 +260,8 @@ public class EncounterLogic {
 				message = step+". "+mi.description.getName() + " inactive.";
 				p.initMessage = message;
 				turnActTurnState.plan.add(p);
-				
 			}
+			
 		}
 
 		playTurnActStep();
@@ -272,15 +277,38 @@ public class EncounterLogic {
 					if (turnActTurnState.getCurrentEvent().type==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
 					{
 						TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
-						if (choice.skillActForm!=null)
+						if (choice.skill!=null)
 						{
 							if (gameLogic.core.mEngine.activeUnits.size()>0) 
 							{
 								return;
 							}
 							
-							String anim = choice.skillActForm.animationType;
-							if (!choice.member.encounterData.visibleForm.notRendered) {
+							if (choice.usedObject!=null)
+							{
+								if (choice.usedObject.description instanceof Weapon)
+								{
+									if (true) // check hit
+									{
+										String sound = ((Weapon)choice.usedObject.description).getHitSound();
+										if (sound!=null)
+										{
+											gameLogic.core.audioServer.playLoading(sound, "objects");
+										}
+										sound = null;
+										try {sound = choice.target.generatedMembers.get(0).description.audioDescription.PAIN[0];}catch(Exception exx){
+											exx.printStackTrace();
+										}
+										if (sound!=null)
+										{
+											gameLogic.core.audioServer.playLoading(sound, "ai");
+										}
+										
+										
+									}
+								}
+							}
+							if (choice.member.encounterData.visibleForm!=null && !choice.member.encounterData.visibleForm.notRendered) {
 								gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,MovingModelAnimDescription.ANIM_IDLE);
 							}
 						} else
@@ -312,7 +340,7 @@ public class EncounterLogic {
 			{
 				if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_PAUSE) 
 				{
-					turnActTurnState.maxTime = 1000;
+					turnActTurnState.maxTime = 200;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 				} else
@@ -324,14 +352,18 @@ public class EncounterLogic {
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					if (choice.skillActForm!=null)
 					{
-						String anim = choice.skillActForm.animationType;
-						if (!choice.member.encounterData.visibleForm.notRendered) {
-							
+						String sound = choice.skillActForm.getSound();
+						if (sound!=null)
+						{
+							gameLogic.core.audioServer.playLoading(sound, "skills");
+						}
+						if (choice.member.encounterData.visibleForm!=null && !choice.member.encounterData.visibleForm.notRendered) {
+							String anim = choice.skillActForm.animationType;
 							choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
 						}
 					}
 					
-					turnActTurnState.maxTime = 1000;
+					turnActTurnState.maxTime = 400;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 				} else

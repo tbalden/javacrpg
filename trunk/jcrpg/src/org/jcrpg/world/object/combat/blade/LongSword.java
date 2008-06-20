@@ -45,5 +45,12 @@ public class LongSword extends Obj implements Weapon {
 	public int getSpeed() {
 		return 7;
 	}
+
+	public String getHitSound() {
+		return "weapon/pierce";
+	}
+	public String getMissSound() {
+		return "weapon/clang";
+	}
 	
 }

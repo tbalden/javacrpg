@@ -31,6 +31,11 @@ public class Reasoning extends SkillBase implements EncounterSkill, TurnActSkill
 			super(skill);
 			skillRequirementLevel = 0;
 		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
 	}
 	
 	public Reasoning()

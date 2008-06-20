@@ -32,5 +32,12 @@ public class Thrust extends SkillActForm
 		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(1*multiplier));
 		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(2*multiplier));
 	}
+
+	@Override
+	public String getSound() {
+		return "thrust";
+	}
+	
+	
 }
 

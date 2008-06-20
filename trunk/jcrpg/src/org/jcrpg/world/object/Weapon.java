@@ -40,4 +40,7 @@ public interface Weapon {
 	 */
 	public float getDefenseMultiplicator();
 	
+	public String getHitSound();
+	public String getMissSound();
+	
 }
