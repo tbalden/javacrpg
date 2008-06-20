@@ -94,6 +94,7 @@ public class GameLogic {
 			
 			if (startingPhase==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 			{
+				encounterLogic.currentTurnActTurn = 0;
 				possibleEncounter.setTurnActPhaseCombatStatus();
 				encounterLogic.fillInitTurnActPhaseLineup(possibleEncounter);
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");
@@ -109,6 +110,7 @@ public class GameLogic {
 			}
 			if (startingPhase==Ecology.PHASE_TURNACT_COMBAT)
 			{
+				encounterLogic.currentTurnActTurn = 0;
 				possibleEncounter.setTurnActPhaseCombatStatus();
 				encounterLogic.fillInitTurnActPhaseLineup(possibleEncounter);
 				core.uiBase.hud.mainBox.addEntry("Neutrals are leaving the Encounter...");

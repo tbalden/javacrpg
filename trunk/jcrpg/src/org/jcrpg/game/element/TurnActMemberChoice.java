@@ -23,13 +23,32 @@ import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.ObjInstance;
 
+/**
+ * A member's decision about what to do in a given turn act turn.
+ * @author illes
+ */
 public class TurnActMemberChoice {
 	
+	/**
+	 * The actor.
+	 */
 	public EntityMemberInstance member;
 	
+	/** 
+	 * Used skill.
+	 */
 	public SkillInstance skill;
+	/**
+	 * Act form.
+	 */
 	public SkillActForm skillActForm;
+	/**
+	 * Target unit.
+	 */
 	public EncounterUnitData target;
+	/**
+	 * Object used for act form.
+	 */
 	public ObjInstance usedObject;
 	
 	public String getInitMessage()

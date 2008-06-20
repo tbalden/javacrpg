@@ -187,9 +187,12 @@ public class EncounterLogic {
 	}
 	TurnActTurnState turnActTurnState = null;
 	
+	public int currentTurnActTurn = 0;
+	
 	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
 	{
 		turnActTurnState = new TurnActTurnState();
+		long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
@@ -204,7 +207,7 @@ public class EncounterLogic {
 				memberChoices.put(mi, c);
 				if (c==null) c = new TurnActMemberChoice();
 				c.member = mi;
-				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed(0, mi, c.skill, c.skillActForm, c.usedObject);
+				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, mi, c.skill, c.skillActForm, c.usedObject);
 				for (float s:speeds) {
 					while (orderedActors.get(s)!=null)
 					{
@@ -219,7 +222,7 @@ public class EncounterLogic {
 		{
 			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
 			memberChoices.put(playerChoice.member, playerChoice);
-			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed(0, playerChoice);
+			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, playerChoice);
 			for (float s:speeds) {
 				while (orderedActors.get(s)!=null)
 				{
@@ -301,6 +304,7 @@ public class EncounterLogic {
 			turnActTurnState.nextEventCount++;
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 			{
+				currentTurnActTurn++;
 				turnActTurnState = null;
 				gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
 				gameLogic.core.turnActWindow.toggle();			
@@ -316,6 +320,7 @@ public class EncounterLogic {
 				{
 					PlannedTurnActEvent event = turnActTurnState.plan.get(turnActTurnState.nextEventCount);
 					TurnActMemberChoice choice = event.choice;
+					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					if (choice.skillActForm!=null)
 					{

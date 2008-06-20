@@ -329,7 +329,12 @@ public class EncounterInfo {
 						if ( ((PersistentMemberInstance)unit).getParentFragment()!=null)
 							parent = ((PersistentMemberInstance)unit).getParentFragment();
 					}
-					list.add(new EncounterUnitData(parent,u));
+					EncounterUnitData data = new EncounterUnitData(parent,u);
+					list.add(data);
+					if (unit instanceof PersistentMemberInstance)
+					{
+						((PersistentMemberInstance)unit).encounterData = data;
+					}
 				}
 			}
 			if (unit instanceof EntityFragment)
@@ -344,7 +349,12 @@ public class EncounterInfo {
 							EncounterUnit parent = unit;
 							if ( ((PersistentMemberInstance)p).getParentFragment()!=null)
 								parent = ((PersistentMemberInstance)p).getParentFragment();
-							list.add(new EncounterUnitData(parent,p));
+							EncounterUnitData data = new EncounterUnitData(parent,p);
+							list.add(data);
+							if (p instanceof PersistentMemberInstance)
+							{
+								((PersistentMemberInstance)p).encounterData = data;
+							}
 						}
 					}
 				}
