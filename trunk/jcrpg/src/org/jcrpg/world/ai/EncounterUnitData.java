@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.game.logic.Impact.ImpactUnit;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 public class EncounterUnitData
@@ -132,6 +133,30 @@ public class EncounterUnitData
 		{
 			EntityMember m = parent.getGroupType(groupId);
 			name = generatedMembers.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
+		}
+	}
+	
+	public void applyImpactUnit(ImpactUnit unit)
+	{
+		if (isGroupId)
+		{
+			if (generatedMembers.size()>0)
+			{
+				int groupSize = unit.effectedGroupSize;
+				// TODO randomize selection of member.
+				for (int i=0; i<groupSize; i++) {
+					if (i<generatedMembers.size()) 
+					{
+						generatedMembers.get(i).applyImpactUnit(unit);
+					}
+				}
+			}
+		} else
+		{
+			if (subUnit instanceof EntityMemberInstance)
+			{
+				((EntityMemberInstance)subUnit).applyImpactUnit(unit);
+			}
 		}
 	}
 	

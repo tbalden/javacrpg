@@ -17,6 +17,10 @@
  */ 
 package org.jcrpg.world.ai.abs.state;
 
+import java.util.ArrayList;
+
+import org.jcrpg.game.logic.Impact.ImpactUnit;
+
 public class EntityMemberState {
 	
 	public static int DEFAULT_HEALTH_POINT = 10;
@@ -38,9 +42,41 @@ public class EntityMemberState {
 	public int manaPoint = DEFAULT_MANA_POINT;
 	
 	public int level = 1;
+	
+	public static final int ZERO_HEALTH = 0;
+	public static final int ZERO_STAMINA = 1;
+	public static final int ZERO_MORALE = 2;
+	public static final int ZERO_SANITY = 3;
+	public static final int ZERO_MANA = 4;
+	
+	/**
+	 * Applies impact unit and return zero reached point type list.
+	 * @param unit
+	 * @return
+	 */
+	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
+	{
+		healthPoint-=unit.healthPoint;
+		staminaPoint-=unit.staminaPoint;
+		moralePoint-=unit.moralePoint;
+		sanityPoint-=unit.sanityPoint;
+		manaPoint-=unit.manaPoint;
+		return getZeroPointTypes();
+	}
+	
+	public ArrayList<Integer> tmpZeroPointTypes = new ArrayList<Integer>();
+	public ArrayList<Integer> getZeroPointTypes()
+	{
+		tmpZeroPointTypes.clear();
+		if (healthPoint<=0) tmpZeroPointTypes.add(ZERO_HEALTH);
+		if (staminaPoint<=0) tmpZeroPointTypes.add(ZERO_STAMINA);
+		if (moralePoint<=0) tmpZeroPointTypes.add(ZERO_MORALE);
+		if (sanityPoint<=0) tmpZeroPointTypes.add(ZERO_SANITY);
+		if (manaPoint<=0) tmpZeroPointTypes.add(ZERO_MANA);
+		return tmpZeroPointTypes;
+	}
 
 	
-	// courage
 	
 
 }

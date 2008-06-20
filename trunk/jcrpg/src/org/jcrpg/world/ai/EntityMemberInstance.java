@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.game.logic.Impact.ImpactUnit;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
@@ -94,6 +95,16 @@ public class EntityMemberInstance {
 
 	public int getNumericId() {
 		return numericId;
+	}
+	
+	/**
+	 * Applies impact unit and return zero reached point type list.
+	 * @param unit
+	 * @return
+	 */
+	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
+	{
+		return memberState.applyImpactUnit(unit);
 	}
 	
 	
