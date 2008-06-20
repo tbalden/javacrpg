@@ -120,5 +120,20 @@ public class EncounterUnitData
 	{
 		generatedMembers.addAll(members);
 	}
+	public String getName() {
+		return name;
+	}
+	/**
+	 * Update name text upon new round in turn act phase.
+	 */
+	public void updateNameInTurnActPhase()
+	{
+		if (isGroupId)
+		{
+			EntityMember m = parent.getGroupType(groupId);
+			name = generatedMembers.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
+		}
+	}
+	
 	
 }
