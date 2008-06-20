@@ -215,6 +215,19 @@ public class EncounterLogic {
 								
 			}
 		}
+		for (TurnActMemberChoice playerChoice:info.getChoices())
+		{
+			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
+			memberChoices.put(playerChoice.member, playerChoice);
+			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed(0, playerChoice);
+			for (float s:speeds) {
+				while (orderedActors.get(s)!=null)
+				{
+					s+=0.0001f;
+				}
+				orderedActors.put(s, playerChoice.member);
+			}
+		}
 		int step = 0;
 		for (Float miSpeed:orderedActors.keySet())
 		{

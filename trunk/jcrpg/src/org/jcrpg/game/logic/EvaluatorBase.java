@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.game.logic;
 
+import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
@@ -27,6 +28,11 @@ import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
 
 public class EvaluatorBase {
+
+	public static float[] evaluateActFormTimesWithSpeed(int seed, TurnActMemberChoice choice)
+	{
+		return evaluateActFormTimesWithSpeed(seed, choice.member,choice.skill,choice.skillActForm,choice.usedObject);
+	}
 
 	/**
 	 * Returns all times of an act represented by it's speed time.

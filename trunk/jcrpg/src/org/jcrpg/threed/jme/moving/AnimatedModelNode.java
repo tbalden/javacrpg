@@ -111,7 +111,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		{
 			if (finishedPlaying)
 			{
-				System.out.println("FINISHED PLAYING.");
+				//System.out.println("FINISHED PLAYING.");
 				playAnim = null;
 				finishedPlaying = false;
 				return true;
@@ -136,7 +136,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		newAnimator.setCycleType(FixedLengthAnimator.RT_ONCE);
 		newAnimator.setWeight(1f);
 		newAnimator.setTime(0);
-		System.out.println("STARTING PLAY... "+ newAnimator);
+		//System.out.println("STARTING PLAY... "+ newAnimator);
 		
 		playAnim = newAnimator;
 		//currentAnimator.fadeIn(currentAnimator.getMax()*2);
@@ -310,13 +310,13 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	}
 
 	public void notify(Animator animator, int type, Object userObject) {
-		System.out.println("notify! "+type+" A: "+animator+ " P: "+playAnim);
+		//System.out.println("notify! "+type+" A: "+animator+ " P: "+playAnim);
 		if (type==IAnimationListener.ANIMATION_CYCLE_ENDED)
 		{
-			System.out.println("FINISHED!");
+			//System.out.println("FINISHED!");
 			if (animator == playAnim)
 			{
-				System.out.println("!PLAYING FINISHED!");
+				//System.out.println("!PLAYING FINISHED!");
 				finishedPlaying = true;
 				//currentAnimator.setTime(currentAnimator.getMin());
 				currentAnimator.setWeight(1f);

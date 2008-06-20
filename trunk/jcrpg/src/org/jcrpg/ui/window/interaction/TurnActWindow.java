@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.EncounterLogic;
+import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -340,10 +341,11 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	public class TurnActPlayerChoiceInfo
 	{
-		HashMap<EntityMemberInstance, SkillBase> memberToSkill = new HashMap<EntityMemberInstance, SkillBase>();
-		HashMap<EntityMemberInstance, Class<?extends SkillActForm>> memberToSkillActForm = new HashMap<EntityMemberInstance, Class<? extends SkillActForm>>();
-		HashMap<EntityMemberInstance, EncounterUnitData> memberToSubUnit = new HashMap<EntityMemberInstance, EncounterUnitData>();
-		HashMap<EntityMemberInstance, ObjInstance> memberToObject = new HashMap<EntityMemberInstance, ObjInstance>();
+		HashMap<EntityMemberInstance, TurnActMemberChoice> memberToChoice = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
+		public Collection<TurnActMemberChoice> getChoices()
+		{
+			return memberToChoice.values();
+		}
 	}
 	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
 	
@@ -370,9 +372,7 @@ public class TurnActWindow extends PagedInputWindow {
 			//
 			//
 			int counter = 0;
-			info.memberToSubUnit.clear();
-			info.memberToSkill.clear();
-			info.memberToSkillActForm.clear();
+			info.memberToChoice.clear();
 			for (ListSelect s:skillSelectors)
 			{
 				if (s.isEnabled()) {
@@ -384,10 +384,21 @@ public class TurnActWindow extends PagedInputWindow {
 					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
 					EncounterUnitData fragmentAndSubunit = null;
 					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
-					info.memberToSkill.put(i,sb);
-					info.memberToSkillActForm.put(i,f);
-					info.memberToSubUnit.put(i,fragmentAndSubunit);
-					info.memberToObject.put(i,obj);
+					TurnActMemberChoice choice = new TurnActMemberChoice();
+					choice.member = i;
+					choice.skill = i.description.commonSkills.skills.get(sb.getClass());
+					SkillActForm selectedForm = null;
+					for (SkillActForm formInst:sb.getActForms())
+					{
+						if (formInst.getClass()==f)
+						{
+							selectedForm = formInst;
+						}
+					}
+					choice.skillActForm = selectedForm;
+					choice.target = fragmentAndSubunit;
+					choice.usedObject = obj;
+					info.memberToChoice.put(i, choice);
 				}
 				counter++;
 			}
