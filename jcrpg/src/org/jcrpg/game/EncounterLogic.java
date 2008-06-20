@@ -182,8 +182,14 @@ public class EncounterLogic {
 		public TurnActMemberChoice choice = null;
 		public static final int TYPE_PAUSE = 1;
 		public static final int TYPE_MEMBER_CHOICE = 2;
+		
+		public static final int STATE_INIT = 0;
+		public static final int STATE_RESULT = 1;
+		
 		public String initMessage = null;
 		public int type = 0;
+		
+		public int internalState = STATE_INIT;
 		
 	}
 	TurnActTurnState turnActTurnState = null;
@@ -274,51 +280,70 @@ public class EncounterLogic {
 			{
 				if (turnActTurnState.maxTime>0 && turnActTurnState.maxTime<System.currentTimeMillis()-turnActTurnState.playStart)
 				{
-					if (turnActTurnState.getCurrentEvent().type==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
+					int eventType = turnActTurnState.getCurrentEvent().type;
+					if (eventType==PlannedTurnActEvent.TYPE_MEMBER_CHOICE)
 					{
-						TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
-						if (choice.skill!=null)
+						
+						if (turnActTurnState.getCurrentEvent().internalState==PlannedTurnActEvent.STATE_INIT)
 						{
 							if (gameLogic.core.mEngine.activeUnits.size()>0) 
 							{
 								return;
 							}
 							
-							if (choice.usedObject!=null)
+							turnActTurnState.getCurrentEvent().internalState++;
+							
+							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+							if (choice.skill!=null)
 							{
-								if (choice.usedObject.description instanceof Weapon)
+								
+								if (choice.usedObject!=null)
 								{
-									if (true) // check hit
+									if (choice.usedObject.description instanceof Weapon)
 									{
-										String sound = ((Weapon)choice.usedObject.description).getHitSound();
-										if (sound!=null)
+										if (true) // check hit
 										{
-											gameLogic.core.audioServer.playLoading(sound, "objects");
+											String sound = ((Weapon)choice.usedObject.description).getHitSound();
+											if (sound!=null)
+											{
+												gameLogic.core.audioServer.playLoading(sound, "objects");
+											}
+											sound = null;
+											try {sound = choice.target.generatedMembers.get(0).description.audioDescription.PAIN[0];}catch(Exception exx){
+												exx.printStackTrace();
+											}
+											if (sound!=null)
+											{
+												gameLogic.core.audioServer.playLoading(sound, "ai");
+											}
+											
+											
 										}
-										sound = null;
-										try {sound = choice.target.generatedMembers.get(0).description.audioDescription.PAIN[0];}catch(Exception exx){
-											exx.printStackTrace();
-										}
-										if (sound!=null)
-										{
-											gameLogic.core.audioServer.playLoading(sound, "ai");
-										}
-										
-										
 									}
 								}
 							}
-							if (choice.member.encounterData.visibleForm!=null && !choice.member.encounterData.visibleForm.notRendered) {
-								gameLogic.core.mEngine.setAnimationForRenderedUnit(choice.member.encounterData.visibleForm,MovingModelAnimDescription.ANIM_IDLE);
+							if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+								choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
 							}
 						} else
 						{
-							System.out.println("NO SKILL ACT, NEXT PLAN STEP...");
+							if (gameLogic.core.mEngine.activeUnits.size()>0) 
+							{
+								return;
+							}
+							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+							turnActTurnState.playing = false;
+							System.out.println("FINISHED RESULT INTERNAL STEP...");
+							playTurnActStep();
 						}
-	
 					}
-					turnActTurnState.playing = false;
-					playTurnActStep();
+					else
+					if (eventType==PlannedTurnActEvent.TYPE_PAUSE)
+					{
+						turnActTurnState.playing = false;
+						System.out.println("FINISHED PAUSE STEP...");
+						playTurnActStep();
+					}
 				}
 			}
 		}
@@ -338,15 +363,15 @@ public class EncounterLogic {
 				gameLogic.core.turnActWindow.toggle();			
 			} else
 			{
-				if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_PAUSE) 
+				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_PAUSE) 
 				{
 					turnActTurnState.maxTime = 200;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 				} else
-				if (turnActTurnState.plan.get(turnActTurnState.nextEventCount).type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
+				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
 				{
-					PlannedTurnActEvent event = turnActTurnState.plan.get(turnActTurnState.nextEventCount);
+					PlannedTurnActEvent event = turnActTurnState.getCurrentEvent();
 					TurnActMemberChoice choice = event.choice;
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
@@ -366,6 +391,7 @@ public class EncounterLogic {
 					turnActTurnState.maxTime = 400;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
+					System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
 				} else
 				{
 					// unknown step type...

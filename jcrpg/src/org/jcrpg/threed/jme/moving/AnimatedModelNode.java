@@ -128,6 +128,10 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	public float playAnimation(String name)
 	{
 		Animation anim = animations.get(name);
+		if (anim==null) {
+			finishedPlaying = true;
+			return 0;
+		}
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 		if (currentAnimator!=null) {
 			//currentAnimator.fadeOut(0.5f, false);
