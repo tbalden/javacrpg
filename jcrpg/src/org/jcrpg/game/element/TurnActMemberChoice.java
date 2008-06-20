@@ -34,7 +34,7 @@ public class TurnActMemberChoice {
 	
 	public String getInitMessage()
 	{
-		return member.description.getName() + " -> "+target.getUnit().getName()+" : "+skillActForm.getClass().getSimpleName()+" "+(usedObject!=null?usedObject.getName():"")+".";
+		return member.description.getName() + " -> "+(target!=null?target.getUnit().getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getName():"")+".";
 	}
 
 }
