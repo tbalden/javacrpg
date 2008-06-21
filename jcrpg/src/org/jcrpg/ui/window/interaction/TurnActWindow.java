@@ -396,7 +396,8 @@ public class TurnActWindow extends PagedInputWindow {
 						}
 					}
 					choice.skillActForm = selectedForm;
-					choice.target = fragmentAndSubunit;
+					choice.target = fragmentAndSubunit;					
+					choice.targetMember = fragmentAndSubunit.generatedMembers.get(0); // TODO randomize? 
 					choice.usedObject = obj;
 					info.memberToChoice.put(i, choice);
 				}

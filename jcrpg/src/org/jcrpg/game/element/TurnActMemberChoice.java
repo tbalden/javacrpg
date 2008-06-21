@@ -43,9 +43,14 @@ public class TurnActMemberChoice {
 	 */
 	public SkillActForm skillActForm;
 	/**
-	 * Target unit.
+	 * Target group/unit.
 	 */
 	public EncounterUnitData target;
+	/**
+	 * May be null if group target skillActForm.
+	 */
+	public EntityMemberInstance targetMember;
+	
 	/**
 	 * Object used for act form.
 	 */

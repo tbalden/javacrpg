@@ -19,7 +19,7 @@ package org.jcrpg.world.ai.abs.state;
 
 import java.util.ArrayList;
 
-import org.jcrpg.game.logic.Impact.ImpactUnit;
+import org.jcrpg.game.logic.ImpactUnit;
 
 public class EntityMemberState {
 	

@@ -166,6 +166,9 @@ public class EncounterLogic {
 		public EncounterInfo encounter;
 		public int nextEventCount = -1;
 		//public int maxEventCount = 0;
+		
+		public HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
+		
 		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();
 		public boolean playing = false;
 		public long playStart = 0;
@@ -203,7 +206,6 @@ public class EncounterLogic {
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
-		HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
 		for (EncounterUnitData data:dataList)
 		{
 			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
@@ -211,7 +213,7 @@ public class EncounterLogic {
 			{
 				mi.encounterData = data;
 				TurnActMemberChoice c = mi.makeTurnActChoice(data, encountered);
-				memberChoices.put(mi, c);
+				turnActTurnState.memberChoices.put(mi, c);
 				if (c==null) c = new TurnActMemberChoice();
 				c.member = mi;
 				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, mi, c.skill, c.skillActForm, c.usedObject);
@@ -228,7 +230,7 @@ public class EncounterLogic {
 		for (TurnActMemberChoice playerChoice:info.getChoices())
 		{
 			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
-			memberChoices.put(playerChoice.member, playerChoice);
+			turnActTurnState.memberChoices.put(playerChoice.member, playerChoice);
 			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, playerChoice);
 			for (float s:speeds) {
 				while (orderedActors.get(s)!=null)
@@ -243,12 +245,11 @@ public class EncounterLogic {
 		{
 			step++;
 			EntityMemberInstance mi = orderedActors.get(miSpeed);
-			TurnActMemberChoice c = memberChoices.get(mi);
+			TurnActMemberChoice c = turnActTurnState.memberChoices.get(mi);
 			String message = "";
 			if (c!=null) 
 			{
-				message = c.getInitMessage();
-				memberChoices.put(mi, c);
+				message = c.getInitMessage();				
 				PlannedTurnActEvent p = new PlannedTurnActEvent();
 				p.type = PlannedTurnActEvent.TYPE_MEMBER_CHOICE;
 				p.choice = c;
@@ -297,7 +298,7 @@ public class EncounterLogic {
 							if (choice.skill!=null)
 							{
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
-								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+1, choice);
+								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+1, choice, turnActTurnState);
 								if (impact.success)
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry("HIT!");
@@ -342,7 +343,7 @@ public class EncounterLogic {
 								}
 								if (impact.success)
 								{
-									choice.target.applyImpactUnit(impact.targetImpact);
+									choice.target.applyImpactUnit(impact);
 									// TODO evaluate death and such...
 								}
 							}
