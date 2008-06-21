@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="lib/lwjgl_fmod3.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.5.0_05"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jme/jme.jar" sourcepath="/s0/Install/jme/jme/src"/>
 	<classpathentry kind="lib" path="jme/jme-audio.jar"/>
 	<classpathentry kind="lib" path="jme/jme-awt.jar"/>
@@ -22,8 +22,9 @@
 	<classpathentry kind="lib" path="jme/jme-sound.jar"/>
 	<classpathentry kind="lib" path="jme/jme-terrain.jar"/>
 	<classpathentry kind="lib" path="jme/jme-xml.jar"/>
-	<classpathentry kind="lib" path="lib/md5r2.jar"/>
+	<classpathentry kind="lib" path="lib/md5r2.jar" sourcepath="/home/illes/other/jcrpg/md5reader2/src"/>
 	<classpathentry kind="lib" path="lib/xstream/xstream-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jmefonttt.jar"/>
+	<classpathentry kind="lib" path="lib/MD5Importer.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
