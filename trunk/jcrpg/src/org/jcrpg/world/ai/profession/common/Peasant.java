@@ -22,7 +22,7 @@ import org.jcrpg.world.ai.abs.skill.mental.Architecture;
 import org.jcrpg.world.ai.abs.skill.physical.Agriculture;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
 import org.jcrpg.world.ai.profession.HumanoidNormal;
-import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
+import org.jcrpg.world.object.combat.staffwand.Club;
 
 public class Peasant extends HumanoidNormal {
 
@@ -32,6 +32,6 @@ public class Peasant extends HumanoidNormal {
 		addMajorSkill(AnimalHandling.class);
 		addMajorSkill(Agriculture.class);
 		addMinorSkill(Architecture.class);
-		generationNewInstanceObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(Club.class);
 	}
 }

@@ -23,7 +23,7 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 /**
- * Fighting with bites - like dog/wolf and such.
+ * staffs/wands and clubs too.
  * @author pali
  *
  */
