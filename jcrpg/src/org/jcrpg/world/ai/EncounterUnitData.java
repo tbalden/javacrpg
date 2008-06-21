@@ -166,5 +166,20 @@ public class EncounterUnitData
 		}
 	}
 	
-	
+	public EntityMemberInstance getFirstLivingMember()
+	{
+		if (isGroupId)
+		{
+			if (generatedMembers.size()==0) return null;
+			return generatedMembers.get(0);
+		} else
+		{
+			if (subUnit instanceof EntityMemberInstance)
+			{
+				return (EntityMemberInstance)subUnit;
+			}
+		}
+		return null;
+		
+	}
 }

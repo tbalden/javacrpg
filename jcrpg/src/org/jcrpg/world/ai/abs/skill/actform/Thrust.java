@@ -18,6 +18,7 @@
 package org.jcrpg.world.ai.abs.skill.actform;
 
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
@@ -31,6 +32,8 @@ public class Thrust extends SkillActForm
 		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5*multiplier));
 		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(1*multiplier));
 		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(2*multiplier));
+		contraAttributes.add(FantasyAttributes.CONCENTRATION);
+		contraAttributes.add(FantasyAttributes.SPEED);
 	}
 
 	@Override
