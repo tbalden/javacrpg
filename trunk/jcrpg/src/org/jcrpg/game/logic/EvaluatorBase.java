@@ -17,8 +17,8 @@
  */ 
 package org.jcrpg.game.logic;
 
+import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
-import org.jcrpg.game.logic.Impact.ImpactUnit;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
@@ -35,11 +35,13 @@ public class EvaluatorBase {
 	
 	
 
-	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice)
+	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
 		Impact i = new Impact();
 		if (choice.skillActForm!=null)
 		{
+			//if (choice.skillActForm)
+			
 			float level = choice.skill.level/100f;
 			float plus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0)/10f; // random factor
 			float result = level*plus;
@@ -62,12 +64,14 @@ public class EvaluatorBase {
 			if (success)
 			{
 				i.success = true;
-				ImpactUnit u = i.targetImpact;
+				ImpactUnit u = new ImpactUnit();
 				for (Integer effectType:choice.skillActForm.effectTypesAndLevels.keySet())
 				{
 					u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
 					System.out.println("* EFFECT " + u.orderedImpactPoints[effectType]);
 				}
+				i.targetImpact.put(choice.targetMember, u);
+				// TODO calculate impact effect based on targetmember's skills / spell effects/ armore etc.
 			}
 			ImpactUnit u = i.actCost;
 			for (Integer effectType:choice.skillActForm.usedPointsAndLevels.keySet())

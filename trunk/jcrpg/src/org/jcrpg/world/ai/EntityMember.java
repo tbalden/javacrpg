@@ -121,10 +121,25 @@ public class EntityMember extends DescriptionBase {
 			TurnActMemberChoice choice = new TurnActMemberChoice();
 			ArrayList<EncounterUnitData> data = info.getTopology().getFriendlyLineup().getList(0);
 			
+			// TODO sophisticate this MUCH
 			if (data!=null && data.size()>0)
 			{
 				
 				choice.target = data.get(0);
+				if (data.get(0).isGroupId)
+				{
+					choice.targetMember = data.get(0).generatedMembers.get(0);
+				} else
+				{
+					EncounterUnit unit = data.get(0).getUnit();
+					if (unit instanceof EntityMemberInstance)
+					{
+						choice.targetMember = (EntityMemberInstance)unit;
+					} else
+					{
+						return null;
+					}
+				}
 				if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
 				{
 					for (Class<?extends SkillBase> sb:commonSkills.skills.keySet())
@@ -150,6 +165,10 @@ public class EntityMember extends DescriptionBase {
 							{
 								choice.skill = i;
 								choice.skillActForm = f;
+								if (f.targetType != SkillActForm.TARGETTYPE_LIVING_MEMBER)
+								{
+									choice.targetMember = null;
+								}
 								found = true;
 								break;
 							}

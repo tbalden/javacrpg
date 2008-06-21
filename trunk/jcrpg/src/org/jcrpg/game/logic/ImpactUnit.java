@@ -17,15 +17,22 @@
  */ 
 package org.jcrpg.game.logic;
 
-import java.util.HashMap;
-
-import org.jcrpg.world.ai.EntityMemberInstance;
-
-
-public class Impact
+public class ImpactUnit
 {
-	public boolean success = false;
-	public ImpactUnit actCost = new ImpactUnit();
-	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
-	public Impact(){}
+	
+	public int effectedGroupSize = 1;
+	
+	public Integer healthPoint = 0;
+	public Integer staminaPoint = 0;
+	public Integer manaPoint = 0;
+	public Integer sanityPoint = 0;
+	public Integer moralePoint = 0;
+	public Integer[] orderedImpactPoints = 
+	{
+			healthPoint,
+			staminaPoint,
+			moralePoint,
+			sanityPoint,
+			manaPoint
+	};
 }
