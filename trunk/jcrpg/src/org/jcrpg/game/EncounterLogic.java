@@ -222,7 +222,7 @@ public class EncounterLogic {
 				turnActTurnState.memberChoices.put(mi, c);
 				if (c==null) c = new TurnActMemberChoice();
 				c.member = mi;
-				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, mi, c.skill, c.skillActForm, c.usedObject);
+				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, mi, c.skill, c.skillActForm, c.usedObject);
 				for (float s:speeds) {
 					while (orderedActors.get(s)!=null)
 					{
@@ -237,7 +237,7 @@ public class EncounterLogic {
 		{
 			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
 			turnActTurnState.memberChoices.put(playerChoice.member, playerChoice);
-			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed, playerChoice);
+			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, playerChoice);
 			for (float s:speeds) {
 				while (orderedActors.get(s)!=null)
 				{
