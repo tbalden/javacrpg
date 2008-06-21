@@ -185,7 +185,7 @@ public class TurnActWindow extends PagedInputWindow {
 						if (!i.inventory.hasInInventoryForSkillAndLevel(i.description.getCommonSkills().skills.get(skill))) continue;
 					}
 					int level = i.description.getCommonSkills().getSkillLevel(skill,null);
-					tempFilteredSkills.put(level,skill);
+					tempFilteredSkills.put(10000-level,skill);
 				}
 				skills = tempFilteredSkills.values();
 				
