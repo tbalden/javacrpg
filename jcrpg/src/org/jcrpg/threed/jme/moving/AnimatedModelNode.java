@@ -134,12 +134,12 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		}
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 		if (currentAnimator!=null) {
-			//currentAnimator.fadeOut(0.5f, false);
-			currentAnimator.setWeight(0.01f);
+			currentAnimator.fadeTo(0.1f, 0.2f);
+			//currentAnimator.setWeight(0.01f);
 		}
 		newAnimator.setCycleType(FixedLengthAnimator.RT_ONCE);
-		newAnimator.setWeight(1f);
-		newAnimator.setTime(0);
+		newAnimator.fadeIn(0.2f);
+		//newAnimator.setTime(0);
 		//System.out.println("STARTING PLAY... "+ newAnimator);
 		
 		playAnim = newAnimator;
@@ -166,7 +166,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			Animation anim = animations.get(name);
 			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
 			if (currentAnimator!=null) {
-				currentAnimator.fadeOut(0.01f, true);
+				currentAnimator.fadeOut(0.1f,true);
 				
 			}
 			AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
@@ -222,9 +222,6 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
         	if (animated)
         	{
         		changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
-        		//defaultAnimator.fadeIn(.5f);
-        		//defaultAnimator.setSpeed(speed==10f?0.2f+(float)(.15f*Math.random()):speed);
-        		//currentAnimator = defaultAnimator;
         	}
 
         	attachChild(bodyInstance);
@@ -323,7 +320,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				//System.out.println("!PLAYING FINISHED!");
 				finishedPlaying = true;
 				//currentAnimator.setTime(currentAnimator.getMin());
-				currentAnimator.setWeight(1f);
+				currentAnimator.fadeIn(0.2f);
 			}
 		}
 	}

@@ -26,6 +26,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
@@ -195,6 +196,8 @@ public class EncounterLogic {
 		public String initMessage = null;
 		public int type = 0;
 		
+		public int minTime = 0;
+		
 		public int internalState = STATE_INIT;
 		
 	}
@@ -257,9 +260,11 @@ public class EncounterLogic {
 				p.type = PlannedTurnActEvent.TYPE_MEMBER_CHOICE;
 				p.choice = c;
 				p.initMessage = message;
+				p.minTime = 300;
 				turnActTurnState.plan.add(p);
 				// adding a bit of pause
 				p = new PlannedTurnActEvent();
+				p.minTime = 200;
 				p.type = PlannedTurnActEvent.TYPE_PAUSE;
 				turnActTurnState.plan.add(p);
 			}
@@ -267,6 +272,7 @@ public class EncounterLogic {
 			{
 				PlannedTurnActEvent p = new PlannedTurnActEvent();
 				p.type = PlannedTurnActEvent.TYPE_PAUSE;
+				p.minTime = 400;
 				message = step+". "+mi.description.getName() + " inactive.";
 				p.initMessage = message;
 				turnActTurnState.plan.add(p);
@@ -290,7 +296,7 @@ public class EncounterLogic {
 						
 						if (turnActTurnState.getCurrentEvent().internalState==PlannedTurnActEvent.STATE_INIT)
 						{
-							if (gameLogic.core.mEngine.activeUnits.size()>0) 
+							if (J3DMovingEngine.activeUnits.size()>0) 
 							{
 								return;
 							}
@@ -361,11 +367,11 @@ public class EncounterLogic {
 							}
 						} else
 						{
-							if (gameLogic.core.mEngine.activeUnits.size()>0) 
+							if (J3DMovingEngine.activeUnits.size()>0) 
 							{
 								return;
 							}
-							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+							//TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
 							turnActTurnState.playing = false;
 							System.out.println("FINISHED RESULT INTERNAL STEP...");
 							playTurnActStep();
@@ -399,7 +405,7 @@ public class EncounterLogic {
 			{
 				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_PAUSE) 
 				{
-					turnActTurnState.maxTime = 200;
+					turnActTurnState.maxTime = turnActTurnState.getCurrentEvent().minTime;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 				} else
@@ -411,6 +417,14 @@ public class EncounterLogic {
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					if (choice.skillActForm!=null)
 					{
+						if (choice.skillActForm.atomicEffect<0) {
+							String sound = null;
+							try {sound = choice.member.description.audioDescription.ATTACK[0];}catch(Exception exx){}
+							if (sound!=null)
+							{
+								gameLogic.core.audioServer.playLoading(sound, "skills");
+							}
+						}
 						String sound = choice.skillActForm.getSound();
 						if (sound!=null)
 						{
@@ -422,7 +436,7 @@ public class EncounterLogic {
 						}
 					}
 					
-					turnActTurnState.maxTime = 400;
+					turnActTurnState.maxTime = turnActTurnState.getCurrentEvent().minTime;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 					System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.game.element.TurnActMemberChoice;
@@ -38,6 +39,7 @@ import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -158,7 +160,7 @@ public class TurnActWindow extends PagedInputWindow {
 	}
 
 	
-	ArrayList<Class<?extends SkillBase>> tempFilteredSkills = new ArrayList<Class<? extends SkillBase>>();
+	TreeMap<Integer,Class<?extends SkillBase>> tempFilteredSkills = new TreeMap<Integer,Class<? extends SkillBase>>();
 	public void updateToParty()
 	{
 		int counter = 0;
@@ -176,13 +178,16 @@ public class TurnActWindow extends PagedInputWindow {
 				tempFilteredSkills.clear();
 				for (Class<?extends SkillBase> skill:skills)
 				{
-					if (SkillGroups.skillBaseInstances.get(skill).needsInventoryItem)
+					SkillBase base = SkillGroups.skillBaseInstances.get(skill);
+					if (base.getActForms()==SkillBase.noActFormList) continue;
+					if (base.needsInventoryItem)
 					{
 						if (!i.inventory.hasInInventoryForSkillAndLevel(i.description.getCommonSkills().skills.get(skill))) continue;
 					}
-					tempFilteredSkills.add(skill);
+					int level = i.description.getCommonSkills().getSkillLevel(skill,null);
+					tempFilteredSkills.put(level,skill);
 				}
-				skills = tempFilteredSkills;
+				skills = tempFilteredSkills.values();
 				
 				String[] texts = new String[skills.size()];
 				Object[] objects = new Object[skills.size()];
@@ -213,6 +218,7 @@ public class TurnActWindow extends PagedInputWindow {
 				select.setSelected(selected);
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
+				inputChanged(select, "");
 			}
 			counter++;
 		}
@@ -257,25 +263,25 @@ public class TurnActWindow extends PagedInputWindow {
 			groupSelect.activate();
 		}
 		updateToParty();
+		restoreSettings();
 		
 		super.setupPage();
 	}	
 	@Override
-	public boolean inputChanged(InputBase base, String message) {
-		// TODO Auto-generated method stub
+	public boolean inputLeft(InputBase base, String message) {
 		return false;
 	}
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	public HashMap<EntityMemberInstance, SkillBase> hmMemberSelectedSkill = new HashMap<EntityMemberInstance, SkillBase>();
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean inputLeft(InputBase base, String message) {
+	public boolean inputChanged(InputBase base, String message) {
 		if (skillSelectors.contains(base))
 		{
 			ListSelect skillSelect = (ListSelect)base;
@@ -305,6 +311,7 @@ public class TurnActWindow extends PagedInputWindow {
 				skillActFormSelect.setUpdated(true);
 				skillActFormSelect.deactivate();
 				skillActFormSelect.setSelected(0);
+				inputChanged(skillActFormSelect, "");
 			}
 			if (s.needsInventoryItem)
 			{
@@ -335,6 +342,70 @@ public class TurnActWindow extends PagedInputWindow {
 				inventorySelect.deactivate();
 			}
 			return true;
+		} else
+		if (skillActFormSelectors.contains(base))
+		{
+			ListSelect skillActFormSelect = (ListSelect)base;
+			Class<? extends SkillActForm> form = (Class<? extends SkillActForm>)skillActFormSelect.getSelectedObject();
+			int index = skillActFormSelectors.indexOf(skillActFormSelect);
+			ListSelect skillSelect = skillSelectors.get(index);
+			ListSelect groupSelect = groupSelectors.get(index);
+			//EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
+
+			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
+			
+			//SkillInstance skillInstance = i.description.commonSkills.skills.get(s.getClass());
+			SkillActForm formInstance = s.getActForm(form);
+			boolean friendly = true;
+			boolean groupTarget = false;
+			if (formInstance.atomicEffect<=0)
+			{
+				friendly = false;
+			}
+			if (formInstance.targetType!=SkillActForm.TARGETTYPE_LIVING_MEMBER)
+			{
+				groupTarget = true;
+			}
+			
+			ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(null);
+			ArrayList<EncounterUnitData> filteredList = new ArrayList<EncounterUnitData>();
+			for (EncounterUnitData unitData:list)
+			{
+				if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
+				int relation = party.theFragment.getRelationLevel(unitData.getUnit());
+				if (!friendly)
+				{
+					if (unitData.getUnit()==party.theFragment) continue;
+					if (relation>EntityScaledRelationType.NEUTRAL) continue;
+					if (unitData.parent == party.theFragment) continue;
+				} else
+				{
+					if (relation<=EntityScaledRelationType.NEUTRAL) 
+					{
+						if (unitData.getUnit()!=party.theFragment && unitData.parent != party.theFragment) continue; 
+					}
+				}
+				filteredList.add(unitData);
+			}
+			list = filteredList;
+			String[] ids = new String[list.size()];
+			Object[] objects = new Object[list.size()];
+			String[] texts = new String[list.size()];
+			int count = 0;
+			System.out.println("ENC SIZE = "+list.size());
+			for (EncounterUnitData data:list)
+			{
+				ids[count] = ""+count;
+				texts[count] = data.name;
+				objects[count] = data;
+				count++;
+			}
+			groupSelect.reset();
+			groupSelect.ids = ids;
+			groupSelect.objects = objects;
+			groupSelect.texts = texts;
+			groupSelect.setUpdated(true);
+			groupSelect.deactivate();
 		}
 		return false;
 	}
@@ -407,6 +478,7 @@ public class TurnActWindow extends PagedInputWindow {
 			core.uiBase.hud.mainBox.addEntry("Starting turn!");
 			toggle();
 			core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
+			storeSettings();
 			
 			return true;
 		}

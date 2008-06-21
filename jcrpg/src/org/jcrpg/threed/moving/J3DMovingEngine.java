@@ -98,6 +98,9 @@ public class J3DMovingEngine {
 			EntityMember desc = form.type;
 			//System.out.println("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
 			float[] scale = desc.getScale();
+			scale[0] *= n[i].model.scale[0];
+			scale[1] *= n[i].model.scale[1];
+			scale[2] *= n[i].model.scale[2];
 			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
 			if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
 			{

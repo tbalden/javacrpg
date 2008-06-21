@@ -46,6 +46,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	static {
 		boarmanMaleAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
 		boarmanMaleAudio.PAIN = new String[]{"boarman/boar_pain"};
+		boarmanMaleAudio.ATTACK = new String[]{"boarman/boarman_thug"};
 		//boarmanMaleAudio.ENVIRONMENTAL = new String[]{"human_env1", "human_env2"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
@@ -59,13 +60,14 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	public static MovingModel boarmanFemale = null;
 	static {
 		MovingModelAnimDescription desc = new MovingModelAnimDescription();
-		desc.IDLE = "./data/models/humanoid/boarman/boarman_idle.md5anim";		
-		desc.WALK = "./data/models/humanoid/boarman/boarman_idle.md5anim";
-		desc.ATTACK_LOWER = "./data/models/humanoid/boarman/boarman_walk.md5anim";
-		desc.ATTACK_UPPER = "./data/models/humanoid/boarman/boarman_walk.md5anim";
+		desc.IDLE = "./data/models/humanoid/boarman/boarman_idle_long.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/humanoid/boarman/boarman_idle.md5anim";
+		desc.WALK = "./data/models/humanoid/boarman/boarman_walk.md5anim";
+		desc.ATTACK_LOWER = "./data/models/humanoid/boarman/boarman_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/humanoid/boarman/boarman_attack.md5anim";
 		desc.PAIN = "./data/models/humanoid/boarman/boarman_walk.md5anim";
 		boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh",desc,null,null,false);
-		boarmanMale.disposition = new float[] {0,-0.5f,0};
+		boarmanMale.disposition = new float[] {0,-0.98f,0};
 		boarmanFemale = boarmanMale;
 	}
 	public static RenderedMovingUnit boarmanMale_unit = new RenderedMovingUnit(new Model[]{boarmanMale});
