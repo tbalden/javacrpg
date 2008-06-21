@@ -25,6 +25,7 @@ public class MovingModelAnimDescription {
 	
 	
 	public static String ANIM_IDLE = "ANIM_IDLE";
+	public static String ANIM_IDLE_COMBAT = "ANIM_IDLE_COMBAT";
 	public static String ANIM_WALK = "ANIM_WALK";
 	public static String ANIM_TURN = "ANIM_TURN";
 	public static String ANIM_ATTACK_UPPER = "ANIM_ATTACKU";
@@ -44,6 +45,7 @@ public class MovingModelAnimDescription {
 	public static String ANIM_DEATH_SLOW = "ANIM_DSLOW";
 
 	public String IDLE = null;
+	public String IDLE_COMBAT = null;
 	public String IDLE_1 = null;
 	public String IDLE_2 = null;
 	public String WALK = null;

@@ -30,6 +30,7 @@ public abstract class Model {
 	public byte type = MODEL;
 
 	public float[] disposition = new float[] {0,0,0};
+	public float[] scale = new float[] {1,1,1};
 
 	public String id;
 	public boolean poolable = true;

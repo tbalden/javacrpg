@@ -342,4 +342,19 @@ public class ListSelect extends InputBase {
 		setupDeactivated();
 	}
 	
+	Object storedState = null;
+	@Override
+	public void store()
+	{
+		storedState = getSelectedObject();
+		super.store();
+	}
+	public void restore()
+	{
+		if (storedState!=null)
+			setSelected(storedState);
+		if (!isStored()) return;
+		
+	}
+	
 }

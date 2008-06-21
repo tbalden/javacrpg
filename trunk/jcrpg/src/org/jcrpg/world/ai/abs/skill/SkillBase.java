@@ -50,5 +50,14 @@ public class SkillBase {
 		if (actForms.size()>0) return actForms;
 		return noActFormList;
 	}
+	public SkillActForm getActForm(Class<? extends SkillActForm> type)
+	{
+		for (SkillActForm form:actForms)
+		{
+			if (form.getClass()==type)
+				return form;
+		}
+		return null;
+	}
 
 }

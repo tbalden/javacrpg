@@ -122,6 +122,31 @@ public abstract class PagedInputWindow extends InputWindow {
 		inputs.add(input);
 		this.inputs.put(pageNumber, inputs);
 	}
+	
+	public void storeSettings()
+	{
+		for (int i=0; i<inputs.size(); i++)
+		{
+			ArrayList<InputBase> inputs = this.inputs.get(i);
+			for (InputBase b:inputs)
+			{
+				if (b.isEnabled())
+					b.store();
+			}
+		}
+	}
+	public void restoreSettings()
+	{
+		for (int i=0; i<inputs.size(); i++)
+		{
+			ArrayList<InputBase> inputs = this.inputs.get(i);
+			for (InputBase b:inputs)
+			{
+				if (b.isEnabled())
+					b.restore();
+			}
+		}
+	}
 
 
 }

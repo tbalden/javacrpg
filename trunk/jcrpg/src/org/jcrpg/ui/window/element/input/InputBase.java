@@ -130,4 +130,18 @@ public abstract class InputBase {
 	
 	public abstract void reset();
 	
+	boolean stored = false;
+	public boolean isStored()
+	{
+		return stored;
+	}
+	public void store()
+	{
+		stored = true;
+	}
+	public void restore()
+	{
+	}
+	
+	
 }
