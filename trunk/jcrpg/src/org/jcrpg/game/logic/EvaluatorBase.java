@@ -80,7 +80,7 @@ public class EvaluatorBase {
 
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
-		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+choice.skillActForm.getName());
+		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
 		Impact i = new Impact();
 		if (choice.skillActForm!=null)
 		{
