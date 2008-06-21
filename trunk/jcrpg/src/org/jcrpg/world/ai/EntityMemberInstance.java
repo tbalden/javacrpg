@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
@@ -105,6 +106,11 @@ public class EntityMemberInstance {
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
 		return memberState.applyImpactUnit(unit);
+	}
+	
+	public Attributes getAttributes()
+	{
+		return description.getAttributes(instance.description);
 	}
 	
 	

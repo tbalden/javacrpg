@@ -17,9 +17,11 @@
  */ 
 package org.jcrpg.world.ai.abs.skill;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.util.Language;
 
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
@@ -61,6 +63,10 @@ public abstract class SkillActForm
 	 */
 	public HashMap<Integer,Integer> usedPointsAndLevels = new HashMap<Integer, Integer>();
 	
+	/**
+	 * Attributes that strengthen defense against this skill.
+	 */
+	public ArrayList<String> contraAttributes = new ArrayList<String>();
 	
 	
 	/**
@@ -79,4 +85,8 @@ public abstract class SkillActForm
 	
 	public abstract String getSound();
 	
+	public String getName()
+	{
+		return Language.v("skillActForm."+this.getClass().getSimpleName());
+	}
 }

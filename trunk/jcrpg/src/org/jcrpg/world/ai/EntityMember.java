@@ -72,7 +72,8 @@ public class EntityMember extends DescriptionBase {
 		return commonSkills;
 	}
 	
-	public Attributes getAttributes(EntityDescription parent, String attr)
+	
+	public Attributes getAttributes(EntityDescription parent)
 	{
 		return Attributes.getAttributes(parent.attributes, commonAttributeRatios);
 	}
@@ -113,6 +114,7 @@ public class EntityMember extends DescriptionBase {
 	{
 		return Language.v("member."+visibleTypeId);
 	}
+		
 	
 	public TurnActMemberChoice getTurnActMemberChoice(EncounterUnitData selfData, EncounterInfo info, EntityMemberInstance instance)
 	{
@@ -123,23 +125,23 @@ public class EntityMember extends DescriptionBase {
 			
 			// TODO sophisticate this MUCH
 			if (data!=null && data.size()>0)
-			{
-				
-				choice.target = data.get(0);
-				if (data.get(0).isGroupId)
+			{	
+				boolean foundTarget = false;
+				for (EncounterUnitData unitData:data) 
 				{
-					choice.targetMember = data.get(0).generatedMembers.get(0);
-				} else
-				{
-					EncounterUnit unit = data.get(0).getUnit();
-					if (unit instanceof EntityMemberInstance)
+					choice.target = unitData;
+					if (selfData.getRelationLevel(choice.target)>EntityScaledRelationType.NEUTRAL) // TODO later >=
+						continue;			
+					
+					choice.targetMember = unitData.getFirstLivingMember();
+					if (choice.targetMember==null) continue;
+					else
 					{
-						choice.targetMember = (EntityMemberInstance)unit;
-					} else
-					{
-						return null;
+						foundTarget =true;
+						break;
 					}
 				}
+				if (!foundTarget) return null;
 				if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
 				{
 					for (Class<?extends SkillBase> sb:commonSkills.skills.keySet())

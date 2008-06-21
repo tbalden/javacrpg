@@ -22,6 +22,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -34,32 +35,80 @@ public class EvaluatorBase {
 	
 	
 	
+	private static int calculateContraAttributeValue(SkillActForm form, EntityMemberInstance defender)
+	{
+		int divider = form.contraAttributes.size();
+		if (divider == 0) return 50;
+		Attributes attributes = defender.getAttributes();
+		int sum = 0;
+		for (String attr:form.contraAttributes)
+		{
+			int i = attributes.getAttribute(attr);
+			sum+=i;
+		}
+		sum = sum / divider;
+		System.out.println("CONTRA ATTR VALUE = "+sum);
+		return sum;
+	}
+	
+	private static int calculateResultForSkillUse(int seed, TurnActMemberChoice choice, boolean defense)
+	{
+		float objMultiplicator = 1f;
+		if (choice.usedObject!=null)
+		{
+			if (choice.usedObject.description instanceof Weapon)
+			{
+				Weapon w = (Weapon)choice.usedObject.description;
+				if (defense)
+				{
+					objMultiplicator = w.getDefenseMultiplicator();
+				} else
+				{
+					objMultiplicator = w.getAttackMultiplicator();
+				}
+				//impact = w.getMaxDamage()/10f;
+			}
+		}
+		int level = choice.skill.level;
+		int result = level;
+		result = (int)(result * ( objMultiplicator ));
+		return result;
+		
+	}
+	
+	public static final int DEFENSE_BASE_VALUE = 20;
 
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
+		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+choice.skillActForm.getName());
 		Impact i = new Impact();
 		if (choice.skillActForm!=null)
 		{
 			//if (choice.skillActForm)
 			
-			float level = choice.skill.level/100f;
-			float plus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0)/10f; // random factor
-			float result = level*plus;
-			System.out.println("EVAULATED RESULT = "+result);
 			boolean success = false;
-			if (result>0.2f)
+			float impact = 0.5f;
+		
+			int result = calculateResultForSkillUse(seed, choice,false); 
+			int maxHundredPlus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0); // random factor
+			result+=maxHundredPlus;
+			
+			int contraResult = DEFENSE_BASE_VALUE; // default defense value
+			TurnActMemberChoice contraChoice = state.memberChoices.get(choice.targetMember);
+			if (contraChoice!=null && contraChoice.skillActForm!=null)
+			{
+				contraResult += calculateResultForSkillUse(seed, choice,true);
+			}
+			int contraMaxHundredPlus =
+				calculateContraAttributeValue(choice.skillActForm, choice.targetMember);
+				
+			//contraMaxHundredPlus+=HashUtil.mixPercentage(seed, choice.targetMember.getNumericId(),choice.targetMember.instance.getNumericId(), 0); // random factor
+			contraResult+=contraMaxHundredPlus;
+
+			System.out.println("EVAULATED RESULT = "+result + " ? "+contraResult);
+			if (result>contraResult)
 			{
 				success = true;
-			}
-			float impact = 0.5f;
-			if (choice.usedObject!=null)
-			{
-				if (choice.usedObject.description instanceof Weapon)
-				{
-					Weapon w = (Weapon)choice.usedObject.description;
-					w.getAttackMultiplicator();
-					impact = w.getMaxDamage()/10f;
-				}
 			}
 			if (success)
 			{

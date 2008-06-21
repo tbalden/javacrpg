@@ -26,6 +26,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -35,6 +36,8 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.Weapon;
+
+import com.jme.renderer.ColorRGBA;
 
 public class EncounterLogic {
 	
@@ -222,7 +225,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					//orderedActors.put(s, mi);
+					orderedActors.put(s, mi);
 				}
 								
 			}
@@ -298,10 +301,10 @@ public class EncounterLogic {
 							if (choice.skill!=null)
 							{
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
-								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+1, choice, turnActTurnState);
+								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
 								if (impact.success)
 								{
-									gameLogic.core.uiBase.hud.mainBox.addEntry("HIT!");
+									gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("HIT!",ColorRGBA.red));
 								} else
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry("Miss.");
@@ -317,15 +320,7 @@ public class EncounterLogic {
 											{
 												gameLogic.core.audioServer.playLoading(sound, "objects");
 											}
-											sound = null;
-											try {sound = choice.target.generatedMembers.get(0).description.audioDescription.PAIN[0];}catch(Exception exx){
-												exx.printStackTrace();
-											}
-											if (sound!=null)
-											{
-												gameLogic.core.audioServer.playLoading(sound, "ai");
-											}
-											
+											sound = null;											
 											
 										} else
 										{
@@ -338,11 +333,28 @@ public class EncounterLogic {
 										}
 									}
 								}
-								if (impact.success && choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
-									choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
-								}
-								if (impact.success)
-								{
+								if (impact.success) {
+									if (choice.skillActForm!=null)
+									{
+										String sound = null;
+										if (choice.skillActForm.atomicEffect<0)
+										{
+											try {sound = choice.target.getFirstLivingMember().description.audioDescription.PAIN[0];}catch(Exception exx){}
+										} else
+										if (choice.skillActForm.atomicEffect>0)
+										{
+											try {sound = choice.target.getFirstLivingMember().description.audioDescription.JOY[0];}catch(Exception exx){}
+										}
+										if (sound!=null)
+										{
+											gameLogic.core.audioServer.playLoading(sound, "ai");
+										}
+									}
+									if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+										if (choice.skillActForm!=null && choice.skillActForm.atomicEffect<0) {
+											choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+										}
+									}
 									choice.target.applyImpactUnit(impact);
 									// TODO evaluate death and such...
 								}

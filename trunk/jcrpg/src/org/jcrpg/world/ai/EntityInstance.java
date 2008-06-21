@@ -31,6 +31,7 @@ import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
@@ -116,14 +117,17 @@ public class EntityInstance {
 		skills.addSkills(description.getStartingSkills());
 		calculateGroupsAndPositions();
 		
-		PersistentMemberInstance p = new PersistentMemberInstance(this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
-		InfrastructureElementParameters i = new InfrastructureElementParameters();
-		i.owner = p;
-		i.type = House.class;
-		i.sizeY = 6;		
-		p.addOwnedInfrastructurePlan(i);
-		fixMembers.put("1", p);
-		fragments.fragments.get(0).addFollower(p);
+		if (!(this instanceof PartyInstance))
+		{
+			PersistentMemberInstance p = new PersistentMemberInstance(this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+			InfrastructureElementParameters i = new InfrastructureElementParameters();
+			i.owner = p;
+			i.type = House.class;
+			i.sizeY = 6;		
+			p.addOwnedInfrastructurePlan(i);
+			fixMembers.put("1", p);
+			fragments.fragments.get(0).addFollower(p);
+		}
 	}
 	
 	public void recalcBoundarySizes()

@@ -119,5 +119,10 @@ public class MemberPerson extends EntityMember {
 		MemberPerson m = (MemberPerson)xstream.fromXML(xml);
 		return m;
 	}
+
+	@Override
+	public Attributes getAttributes(EntityDescription parent) {
+		return attributes;
+	}
 	
 }

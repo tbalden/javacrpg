@@ -25,6 +25,7 @@ public class AudioDescription {
 	public String[] ATTACK = null;
 	public String[] FRIENDLY = null;
 	public String[] PAIN = null;
+	public String[] JOY = null;
 	public String[] DEATH = null;
 	public String[] ENVIRONMENTAL = null;
 	
