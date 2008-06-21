@@ -15,30 +15,43 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object;
+package org.jcrpg.world.object.combat.staffwand;
 
-import java.util.HashMap;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.Weapon;
 
-import org.jcrpg.world.object.combat.blade.Dagger;
-import org.jcrpg.world.object.combat.blade.LongSword;
-import org.jcrpg.world.object.combat.staffwand.Club;
-import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
-
-/**
- * You must append this with new object types instances - otherwise objects are unusable / buggy in game.
- * @author illes
- *
- */
-public class ObjList {
+public class Club extends Obj implements Weapon {
 	
-	public static HashMap<Class<?extends Obj>,Obj> objects = new HashMap<Class<? extends Obj>, Obj>();
-	
-	static
+	public Club()
 	{
-		objects.put(LongSword.class, new LongSword());
-		objects.put(QuarterStaff.class, new QuarterStaff());
-		objects.put(Dagger.class, new Dagger());
-		objects.put(Club.class, new Club());
+		icon = "weapon/quarterstaff.png";
+		requirementSkillAndLevel = new SkillInstance(StaffsAndWands.class,0);
 	}
 
+	public float getAttackMultiplicator() {
+		return 1.0f;
+	}
+
+	public float getDefenseMultiplicator() {
+		return 1.0f;
+	}
+
+	public int getMaxDamage() {
+		return 7;
+	}
+
+	public int getSpeed() {
+		return 7;
+	}
+
+	public String getHitSound() {		
+		return "weapon/wooden_hit";
+	}
+	
+	public String getMissSound() {		
+		return null;
+	}
+	
 }

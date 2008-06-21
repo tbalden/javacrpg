@@ -22,7 +22,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 /**
- * Fighting with bites - like dog/wolf and such.
+ * Mace, flail
  * @author pali
  *
  */
