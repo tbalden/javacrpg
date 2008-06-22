@@ -105,7 +105,12 @@ public class EntityMemberInstance {
 	 */
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
-		return memberState.applyImpactUnit(unit);
+		ArrayList<Integer> result = memberState.applyImpactUnit(unit);
+		if (result.contains(EntityMemberState.ZERO_HEALTH))
+		{
+			encounterData.generatedMembers.remove(this);
+		}
+		return result;
 	}
 	
 	public Attributes getAttributes()

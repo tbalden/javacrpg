@@ -117,7 +117,7 @@ public class EvaluatorBase {
 				for (Integer effectType:choice.skillActForm.effectTypesAndLevels.keySet())
 				{
 					u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
-					System.out.println("* EFFECT " + u.orderedImpactPoints[effectType]);
+					System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
 				}
 				i.targetImpact.put(choice.targetMember, u);
 				// TODO calculate impact effect based on targetmember's skills / spell effects/ armore etc.

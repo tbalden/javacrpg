@@ -247,6 +247,7 @@ public class EncounterInfo {
 				if (unitData.isGroupId)
 				{
 					// TODO group size check...
+					if (unitData.getSize()<1) toRemove.add(unitData);
 					if (encountered.containsKey(key)) continue;
 					toRemove.add(unitData);
 					System.out.println("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());

@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -34,6 +35,7 @@ import org.jcrpg.world.place.economic.InfrastructureElementParameters;
  *
  */
 public class PersistentMemberInstance extends EntityMemberInstance implements EncounterUnit {
+
 
 	/**
 	 * Fixed members have their own roaming boundary.
@@ -172,5 +174,11 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return memberState.level+2;
 	}
 
+	@Override
+	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit) {
+		ArrayList<Integer> result = memberState.applyImpactUnit(unit);
+		return result;
+		
+	}
 
 }

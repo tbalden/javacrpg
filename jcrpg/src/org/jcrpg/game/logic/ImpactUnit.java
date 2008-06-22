@@ -17,22 +17,41 @@
  */ 
 package org.jcrpg.game.logic;
 
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
+
 public class ImpactUnit
 {
 	
 	public int effectedGroupSize = 1;
 	
-	public Integer healthPoint = 0;
-	public Integer staminaPoint = 0;
-	public Integer manaPoint = 0;
-	public Integer sanityPoint = 0;
-	public Integer moralePoint = 0;
 	public Integer[] orderedImpactPoints = 
 	{
-			healthPoint,
-			staminaPoint,
-			moralePoint,
-			sanityPoint,
-			manaPoint
+			0,
+			0,
+			0,
+			0,
+			0
 	};
+	
+	public int getHealthPoint()
+	{
+		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_HEALTH];
+	}
+	public int getManaPoint()
+	{
+		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_MANA];
+	}
+	public int getMoralePoint()
+	{
+		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_MORALE];
+	}
+	public int getStaminaPoint()
+	{
+		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_STAMINA];
+	}
+	public int getSanityPoint()
+	{
+		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_SANITY];
+	}
 }
