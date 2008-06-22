@@ -133,8 +133,11 @@ public class EncounterUnitData
 	public void destroyed()
 	{
 		destroyed = true;
-		J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
 		// TODO gamelogic unit clear?
+	}
+	public void clearUnitOut()
+	{
+		J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
 	}
 	
 	/**
