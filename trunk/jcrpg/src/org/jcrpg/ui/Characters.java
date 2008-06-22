@@ -172,7 +172,7 @@ public class Characters {
 
 	public void updatePoints()
 	{
-		if (hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
+		if (hud.core.gameLost == true || hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
 		{
 			//System.out.println("############################__________________________ no possible update...");
 			return;

@@ -333,6 +333,7 @@ public class AudioServer implements Runnable {
 
 	public synchronized void playLoading(String id, String type)
 	{
+		if (id==null) return;
 		Channel c = getAvailableChannel();
 		Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)

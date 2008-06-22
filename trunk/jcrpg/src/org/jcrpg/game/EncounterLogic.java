@@ -29,6 +29,7 @@ import org.jcrpg.game.logic.Impact;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
@@ -212,7 +213,10 @@ public class EncounterLogic {
 		long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
+		
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
+		
+		// going through encountered units.
 		for (EncounterUnitData data:dataList)
 		{
 			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
@@ -230,7 +234,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					//orderedActors.put(s, mi);
+					orderedActors.put(s, mi);
 				}
 								
 			}
@@ -298,7 +302,7 @@ public class EncounterLogic {
 						
 						if (turnActTurnState.getCurrentEvent().internalState==PlannedTurnActEvent.STATE_INIT)
 						{
-							if (J3DMovingEngine.activeUnits.size()>0) 
+							if (J3DMovingEngine.isEnginePlaying()) 
 							{
 								return;
 							}
@@ -342,44 +346,48 @@ public class EncounterLogic {
 									}
 								}
 								if (impact.success) {
+									
+									choice.target.applyImpactUnit(impact);
+									
 									if (choice.skillActForm!=null)
 									{
 										String sound = null;
-										if (choice.skillActForm.atomicEffect<0)
+										if (!choice.target.destroyed && choice.isDestructive())
+										{											
+											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_PAIN);
+										}
+										if (!choice.target.destroyed && choice.isConstructive())
 										{
-											try {sound = choice.target.getFirstLivingMember().description.audioDescription.PAIN[0];}catch(Exception exx){}
-										} else
-										if (choice.skillActForm.atomicEffect>0)
+											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_JOY);
+										}
+										if (choice.target.destroyed)
 										{
-											try {sound = choice.target.getFirstLivingMember().description.audioDescription.JOY[0];}catch(Exception exx){}
+											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_DEATH);
 										}
 										if (sound!=null)
 										{
 											gameLogic.core.audioServer.playLoading(sound, "ai");
 										}
 									}
-									choice.target.applyImpactUnit(impact);
 									if (!choice.target.destroyed)
 									{
-										if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
-											if (choice.skillActForm!=null && choice.skillActForm.atomicEffect<0) {
+										if (choice.target.isRendered()) {
+											if (choice.isDestructive()) {
 												choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
 											}
 										}
 										choice.target.updateNameInTurnActPhase();
 									} else
 									{
-										if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+										if (choice.target.isRendered()) {
 											choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
 										}
 									}
-									// TODO sophisticate this with pain animation / death animation...
-									
 								}
 							}
 						} else
 						{
-							if (J3DMovingEngine.activeUnits.size()>0) 
+							if (J3DMovingEngine.isEnginePlaying()) 
 							{
 								return;
 							}
@@ -408,8 +416,64 @@ public class EncounterLogic {
 			}
 		}
 	}
+	
 	public Object mutex = new Object();
+	
+	/**
+	 * Tells if an encounter info is still with enemy members (except player of course) - so if it is finished winning.
+	 * or not.
+	 * @param encounter
+	 * @return
+	 */
+	public boolean isEncounterFinishedWinning(EncounterInfo encounter)
+	{
+		ArrayList<EncounterUnitData> list = turnActTurnState.encounter.getEncounterUnitDataList(gameLogic.player.theFragment);
+		if (list==null) return true;
+		for (EncounterUnitData data:list)
+		{
+			if (!data.friendly) return false; // there's still enemy...
+		}
+		return true; // no enemy left
+	}
+	
+	public boolean isEncounterFinisheLosing(EncounterInfo encounter)
+	{
+		for (EntityMemberInstance m:encounter.playerIfPresent.getFollowingMembers())
+		{
+			if (m.memberState.healthPoint>0)
+				// there's still someone alive, no losing yet.
+				return false;
+		}
+		// all dead, lost!
+		return true;
+	}
+	
+	/**
+	 * Finish encounter prevailing player...
+	 * @param encounter
+	 */
+	public void finishEncounterWin(EncounterInfo encounter)
+	{
+		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
+		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+		gameLogic.endPlayerEncounters();
+		gameLogic.core.gameState.engine.turnFinishedForPlayer();
+	}
 
+	public void finishEncounterLose(EncounterInfo encounter)
+	{
+		gameLogic.core.uiBase.hud.mainBox.addEntry("YOUR PARTY IS LOST!");
+		gameLogic.core.uiBase.hud.characters.hide();
+		gameLogic.ecology.gameLost();
+		gameLogic.core.gameLost = true;
+		//gameLogic.endPlayerEncounters();
+		gameLogic.core.mainMenu.toggle();
+		//gameLogic.core.gameState.engine.turnFinishedForPlayer();		
+	}
+
+	/**
+	 * Play next turn act plan step.
+	 */
 	public void playTurnActStep()
 	{
 		synchronized (mutex) {
@@ -418,15 +482,16 @@ public class EncounterLogic {
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 			{
 				currentTurnActTurn++;
-				ArrayList<EncounterUnitData> list = turnActTurnState.encounter.getEncounterUnitDataList(gameLogic.player.theFragment);
-				if (list==null || list.size()==0)
+				
+				if (isEncounterFinishedWinning(turnActTurnState.encounter))
 				{
-					gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
-					gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
-					gameLogic.endPlayerEncounters();
-					gameLogic.core.gameState.engine.turnFinishedForPlayer();
-					
-				} else {
+					finishEncounterWin(turnActTurnState.encounter);
+				} else
+				if (isEncounterFinisheLosing(turnActTurnState.encounter))
+				{
+					finishEncounterLose(turnActTurnState.encounter);
+				} else
+				{
 					gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
 					gameLogic.core.turnActWindow.toggle();
 				}
@@ -434,26 +499,33 @@ public class EncounterLogic {
 				
 			} else
 			{
-				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_PAUSE) 
+				PlannedTurnActEvent event = turnActTurnState.getCurrentEvent();
+				if (event.type == PlannedTurnActEvent.TYPE_PAUSE) 
 				{
+					
+					// PAUSE EVENT
+					
 					turnActTurnState.maxTime = turnActTurnState.getCurrentEvent().minTime;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
+					
 				} else
 				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_MEMBER_CHOICE) 
 				{
-					PlannedTurnActEvent event = turnActTurnState.getCurrentEvent();
+					
+					// MEMBER CHOICE EVENT
+					
 					TurnActMemberChoice choice = event.choice;
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
+					
 					if (choice.skillActForm!=null)
 					{
-						if (choice.skillActForm.atomicEffect<0) {
-							String sound = null;
-							try {sound = choice.member.description.audioDescription.ATTACK[0];}catch(Exception exx){}
+						if (choice.isDestructive()) {
+							String sound = choice.member.getSound(AudioDescription.T_ATTACK);
 							if (sound!=null)
 							{
-								gameLogic.core.audioServer.playLoading(sound, "skills");
+								gameLogic.core.audioServer.playLoading(sound, "ai");
 							}
 						}
 						String sound = choice.skillActForm.getSound();
@@ -461,13 +533,13 @@ public class EncounterLogic {
 						{
 							gameLogic.core.audioServer.playLoading(sound, "skills");
 						}
-						if (choice.member.encounterData.visibleForm!=null && !choice.member.encounterData.visibleForm.notRendered) {
+						if (choice.member.isRendered()) {
 							String anim = choice.skillActForm.animationType;
 							choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
 						}
 					}
 					
-					turnActTurnState.maxTime = turnActTurnState.getCurrentEvent().minTime;
+					turnActTurnState.maxTime = event.minTime;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
 					System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);

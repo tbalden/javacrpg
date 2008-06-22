@@ -121,13 +121,32 @@ public class EntityMember extends DescriptionBase {
 		if (info.playerIfPresent!=null)
 		{
 			TurnActMemberChoice choice = new TurnActMemberChoice();
-			ArrayList<EncounterUnitData> data = info.getTopology().getFriendlyLineup().getList(0);
+			
+			// list for destructive choices...
+			ArrayList<EncounterUnitData> enemyData = null;
+
+			// for healing and positive operation choices...
+			ArrayList<EncounterUnitData> friendlyData = null;
+			
+			if (!selfData.friendly)
+			{
+				// i'm an enemy of player...
+				
+				enemyData = info.getTopology().getFriendlyLineup().getList(0); // player friendly is my enemy
+				friendlyData = info.getTopology().getEnemyLineup().getList(0); // player enemy is my friend.
+			} else
+			{
+				// i'm a friend of player...
+				
+				enemyData = info.getTopology().getEnemyLineup().getList(0); // player enemy is my enemy
+				friendlyData = info.getTopology().getFriendlyLineup().getList(0); // player friend is my friend
+			}
 			
 			// TODO sophisticate this MUCH
-			if (data!=null && data.size()>0)
+			if (enemyData!=null && enemyData.size()>0)
 			{	
 				boolean foundTarget = false;
-				for (EncounterUnitData unitData:data) 
+				for (EncounterUnitData unitData:enemyData) 
 				{
 					choice.target = unitData;
 					if (selfData.getRelationLevel(choice.target)>EntityScaledRelationType.NEUTRAL) // TODO later >=
@@ -141,7 +160,9 @@ public class EntityMember extends DescriptionBase {
 						break;
 					}
 				}
+				// no target found.
 				if (!foundTarget) return null;
+				
 				if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
 				{
 					for (Class<?extends SkillBase> sb:commonSkills.skills.keySet())

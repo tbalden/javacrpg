@@ -1881,6 +1881,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * When a full game is started/loaded this should be true.
 	 */
 	public boolean coreFullyInitialized = false;
+	public boolean gameLost = false;
 	/**
 	 * A quad that is only used to add to an ortho ui node. Otherwise it is culled!
 	 */

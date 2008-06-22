@@ -311,7 +311,7 @@ public class TurnActWindow extends PagedInputWindow {
 				skillActFormSelect.setUpdated(true);
 				skillActFormSelect.deactivate();
 				skillActFormSelect.setSelected(0);
-				inputChanged(skillActFormSelect, "");
+				inputChanged(skillActFormSelect, "fake");
 			}
 			if (s.needsInventoryItem)
 			{
@@ -406,6 +406,7 @@ public class TurnActWindow extends PagedInputWindow {
 			groupSelect.texts = texts;
 			groupSelect.setUpdated(true);
 			groupSelect.deactivate();
+			if ("fake".equals(message)) skillSelect.activate();
 		}
 		return false;
 	}

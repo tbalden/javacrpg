@@ -170,7 +170,11 @@ public class EncounterInfo {
 	}
 	
 	
-	
+	/**
+	 * Appends to own group ids for a given met target unit.
+	 * @param target
+	 * @param groupIds
+	 */
 	public void appendOwnGroupIds(EncounterUnit target, int[] groupIds)
 	{
 		for (int i=0; i<groupIds.length; i++)
@@ -180,6 +184,11 @@ public class EncounterInfo {
 		}
 		encounteredUnitsAndOwnGroupIds.put(target, groupIds);		
 	}
+	/**
+	 * Appends to own sub units those that met a given target.
+	 * @param target
+	 * @param subUnits
+	 */
 	public void appendOwnSubUnits(EncounterUnit target, ArrayList<EncounterUnit> subUnits)
 	{
 		for (EncounterUnit eu: subUnits)
@@ -191,6 +200,11 @@ public class EncounterInfo {
 	}
 	
 	
+	/**
+	 * Returns all groups and subunits in a give encounter except groups and subunits belonging to filtered unit.
+	 * @param filtered
+	 * @return
+	 */
 	public int getGroupsAndSubUnitsCount(EncounterUnit filtered)
 	{
 		int allSize = 0;
@@ -233,6 +247,9 @@ public class EncounterInfo {
 	
 	private TurnActUnitTopology topology = null; 
 	
+	/**
+	 * Updates encounter data list, filtering out destroyed or leaving / orphan units.
+	 */
 	public void updateEncounterDataLists()
 	{
 		if (encounterUnitDataList==null) 
@@ -291,6 +308,9 @@ public class EncounterInfo {
 		}
 	}
 	
+	/**
+	 * initializes encounter unit data list and other lists.
+	 */
 	public void initEncounterDataLists()
 	{
 		encounterUnitDataList = new ArrayList<EncounterUnitData>();
@@ -363,6 +383,11 @@ public class EncounterInfo {
 		}
 	}
 	
+	/**
+	 * Updates and returns actualized encountered unit data list.
+	 * @param filtered
+	 * @return
+	 */
 	public ArrayList<EncounterUnitData> getEncounterUnitDataList(EncounterUnit filtered)
 	{
 		updateEncounterDataLists();
@@ -422,6 +447,7 @@ public class EncounterInfo {
 	
 	/**
 	 * create the startup placement matrix for pseudo visualization.
+	 * Based on phase fills up the placement matrix.
 	 * @return
 	 */
 	public void initPlacementMatrixForPhase()

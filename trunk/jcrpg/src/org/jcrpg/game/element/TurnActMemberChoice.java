@@ -56,9 +56,30 @@ public class TurnActMemberChoice {
 	 */
 	public ObjInstance usedObject;
 	
+	/**
+	 * Return init message for the time when choice execution is being started.
+	 * @return
+	 */
 	public String getInitMessage()
 	{
 		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getName():"")+".";
+	}
+	
+	/**
+	 * Tells if choice is with destruction will. 
+	 * @return
+	 */
+	public boolean isDestructive()
+	{
+		return skillActForm!=null && skillActForm.atomicEffect<0;	
+	}
+	/**
+	 * Tells if choice is with constructive will.
+	 * @return
+	 */
+	public boolean isConstructive()
+	{
+		return skillActForm!=null && skillActForm.atomicEffect>0;	
 	}
 
 }

@@ -68,7 +68,9 @@ public class SaveLoadNewGame {
 	
 	public static void newGame(J3DCore core, Collection<PersistentMemberInstance> partyMembers, CharacterCreationRules cCR) 
 	{
+		
 		try {
+			core.gameLost = false;	
 			
 			GameStateContainer gameState = new GameStateContainer();
 						
@@ -136,7 +138,6 @@ public class SaveLoadNewGame {
 			core.setGameState(gameState);
 			if (core.coreFullyInitialized)
 				core.sEngine.reinit();
-			
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -149,6 +150,11 @@ public class SaveLoadNewGame {
 		if (core.encounterMode) {
 			core.uiBase.hud.mainBox.addEntry("Cannot save while encounter.");
 			return;
+		}
+		if (core.gameLost)
+		{
+			core.uiBase.hud.mainBox.addEntry("Cannot save lost game.");
+			return;			
 		}
 		try {
 			Date d = new Date();
@@ -201,6 +207,7 @@ public class SaveLoadNewGame {
 			
 			
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
+			core.gameLost = false;
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();

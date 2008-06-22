@@ -60,6 +60,11 @@ public class J3DMovingEngine {
 	
 	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
 	
+	public static boolean isEnginePlaying()
+	{
+		return activeUnits.size()>0;
+	}
+	
 	
 	public J3DMovingEngine(J3DCore core)
 	{

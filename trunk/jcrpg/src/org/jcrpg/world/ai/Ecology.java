@@ -375,7 +375,7 @@ public class Ecology {
 	
 	byte[] placeBitMap = new byte[] {1,2,4,8,16,32,64,(byte)128};
 	byte[] switchArray;	
-	int counterOfDoneTurnBeings = 0;
+	int counterOfDoneTurnBeings = 0;	
 	/**
 	 * this is set true if the turn iteration was interrupted by player interaction window,
 	 * and doTurn must continue the iteration when called again from j3dcore.
@@ -481,6 +481,12 @@ public class Ecology {
 	public void clearAll()
 	{
 		beings.clear();
+	}
+	
+	public void gameLost()
+	{
+		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
+		J3DCore.getInstance().updateDisplay(null);		
 	}
 	
 }
