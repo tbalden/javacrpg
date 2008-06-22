@@ -188,6 +188,15 @@ public class RenderedMovingUnit {
 		state = MovingModelAnimDescription.ANIM_PAIN;		
 		return true;
 	}
+	public boolean startDeath(VisibleLifeForm target, String anim)
+	{
+		if (form.notRendered) return false;
+		J3DMovingEngine.activeUnits.add(this);
+		if (target!=null)
+			form.targetForm = target;
+		state = anim==null?MovingModelAnimDescription.ANIM_DEATH_NORMAL:anim;		
+		return true;
+	}
 
 	public void stateFinished()
 	{

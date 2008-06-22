@@ -230,7 +230,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					orderedActors.put(s, mi);
+					//orderedActors.put(s, mi);
 				}
 								
 			}
@@ -358,14 +358,21 @@ public class EncounterLogic {
 											gameLogic.core.audioServer.playLoading(sound, "ai");
 										}
 									}
-									if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
-										if (choice.skillActForm!=null && choice.skillActForm.atomicEffect<0) {
-											choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
-										}
-									}
 									choice.target.applyImpactUnit(impact);
 									if (!choice.target.destroyed)
+									{
+										if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+											if (choice.skillActForm!=null && choice.skillActForm.atomicEffect<0) {
+												choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+											}
+										}
 										choice.target.updateNameInTurnActPhase();
+									} else
+									{
+										if (choice.target.visibleForm!=null && !choice.target.visibleForm.notRendered) {
+											choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
+										}
+									}
 									// TODO sophisticate this with pain animation / death animation...
 									
 								}
@@ -376,7 +383,15 @@ public class EncounterLogic {
 							{
 								return;
 							}
-							//TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
+							if (choice.target!=null)
+							{
+								if (choice.target.destroyed)
+								{
+									choice.target.clearUnitOut();
+								}
+							}
+							
 							turnActTurnState.playing = false;
 							System.out.println("FINISHED RESULT INTERNAL STEP...");
 							playTurnActStep();

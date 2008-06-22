@@ -66,6 +66,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.ATTACK_LOWER = "./data/models/humanoid/boarman/boarman_attack.md5anim";
 		desc.ATTACK_UPPER = "./data/models/humanoid/boarman/boarman_attack.md5anim";
 		desc.PAIN = "./data/models/humanoid/boarman/boarman_walk.md5anim";
+		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/boarman_idle.md5anim";
 		boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh",desc,null,null,false);
 		boarmanMale.disposition = new float[] {0,-0.93f,0};
 		boarmanFemale = boarmanMale;
