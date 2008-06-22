@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.ai;
 
+import java.lang.reflect.Field;
+
 public class AudioDescription {
 
 	
@@ -28,5 +30,30 @@ public class AudioDescription {
 	public String[] JOY = null;
 	public String[] DEATH = null;
 	public String[] ENVIRONMENTAL = null;
+	
+	public static final String T_ENCOUNTER = "ENCOUNTER";
+	public static final String T_ATTACK = "ATTACK";
+	public static final String T_FRIENDLY = "FRIENDLY";
+	public static final String T_PAIN = "PAIN";
+	public static final String T_JOY = "JOY";
+	public static final String T_DEATH = "DEATH";
+	public static final String T_ENVIRONMENTAL = "ENVIRONMENTAL";
+	
+	public String getSound(String type)
+	{
+		String[] audio = null;
+		try {
+			Field f = this.getClass().getField(type);
+			audio = (String[])f.get(this);
+		} catch (Exception ex)
+		{			
+		}
+		
+		if (audio==null || audio.length==0) return null;
+		
+		int i = (int)Math.random()*100%audio.length;
+		return audio[i];		
+	}
+	
 	
 }

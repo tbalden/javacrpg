@@ -68,7 +68,7 @@ public class UIBase {
 		if (Window.windowCounter>0) {
 			Window w = windows.get(trigger);
 			if (w!=null)
-			if (core.coreFullyInitialized &&  // main menu shouldn't be toggled if not initialized
+			if (!core.gameLost && core.coreFullyInitialized &&  // main menu shouldn't be toggled if not initialized
 					w.equals(activeWindows.iterator().next())) 
 			{
 				w.toggle();

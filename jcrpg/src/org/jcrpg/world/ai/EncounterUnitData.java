@@ -33,6 +33,11 @@ public class EncounterUnitData
 	public String name;
 	public int currentLine = 0;
 	
+	/**
+	 * indicates if this unit is friendly for player or not.
+	 */
+	public boolean friendly = false; // TODO setting of this in encounterLogic
+	
 	public VisibleLifeForm visibleForm = null;
 	
 	public ArrayList<EntityMemberInstance> generatedMembers = null;
@@ -129,15 +134,27 @@ public class EncounterUnitData
 		return name;
 	}
 	
+	/**
+	 * If unit has no more living members, this will be true.
+	 */
 	public boolean destroyed = false;
+	/**
+	 * Unit is destroyed, set things for destroy.
+	 */
 	public void destroyed()
 	{
 		destroyed = true;
 		// TODO gamelogic unit clear?
 	}
+	
+	/**
+	 * Remove unit from encounter scenario.
+	 */
 	public void clearUnitOut()
 	{
-		J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
+		if (!visibleForm.notRendered) {
+			J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
+		}
 	}
 	
 	/**
@@ -150,7 +167,8 @@ public class EncounterUnitData
 			EntityMember m = parent.getGroupType(groupId);
 			name = generatedMembers.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
 		}
-		J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
+		if (isRendered())
+			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
 	}
 	
 	public void applyImpactUnit(Impact unit)
@@ -204,5 +222,11 @@ public class EncounterUnitData
 		}
 		return null;
 		
+	}
+	
+	public boolean isRendered()
+	{
+		if (visibleForm==null) return false;
+		return !visibleForm.notRendered;
 	}
 }

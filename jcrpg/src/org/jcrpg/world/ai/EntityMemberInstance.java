@@ -75,10 +75,15 @@ public class EntityMemberInstance {
 	
 	}
 	
-	private ArrayList<InterceptionSkill> tempList = new ArrayList<InterceptionSkill>();
+	private transient ArrayList<InterceptionSkill> tempList = new ArrayList<InterceptionSkill>();
 	
+	/**
+	 * Returns currently used interception skills of member.
+	 * @return
+	 */
 	public ArrayList<InterceptionSkill> getUsedInterceptionSkills()
 	{
+		if (tempList==null) tempList = new ArrayList<InterceptionSkill>();
 		tempList.clear();
 		tempList.add(behaviorSkill);
 		return tempList;
@@ -89,6 +94,12 @@ public class EntityMemberInstance {
 	 */
 	public EntityObjInventory inventory = new EntityObjInventory();
 	
+	/**
+	 * Decides what member wants to do in this turn, what skill, what target, object etc.
+	 * @param selfData
+	 * @param info
+	 * @return
+	 */
 	public TurnActMemberChoice makeTurnActChoice(EncounterUnitData selfData, EncounterInfo info)
 	{
 		return description.getTurnActMemberChoice(selfData, info, this);
@@ -113,9 +124,34 @@ public class EntityMemberInstance {
 		return result;
 	}
 	
+	/**
+	 * Get attributes of the member.
+	 * @return
+	 */
 	public Attributes getAttributes()
 	{
 		return description.getAttributes(instance.description);
+	}
+	
+	/**
+	 * Returns a random sound of a given type if available.
+	 * @param type
+	 * @return
+	 */
+	public String getSound(String type)
+	{
+		if (description.audioDescription==null) return null;
+		return description.audioDescription.getSound(type);
+	}
+	
+	/**
+	 * Tells if this member is currently rendered in 3d.
+	 * @return
+	 */
+	public boolean isRendered()
+	{
+		if (encounterData==null) return false;
+		return encounterData.isRendered();
 	}
 	
 	
