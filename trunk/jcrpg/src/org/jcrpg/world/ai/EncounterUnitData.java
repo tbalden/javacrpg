@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 public class EncounterUnitData
@@ -34,7 +35,7 @@ public class EncounterUnitData
 	
 	public VisibleLifeForm visibleForm = null;
 	
-	public ArrayList<EntityMemberInstance> generatedMembers = new ArrayList<EntityMemberInstance>();
+	public ArrayList<EntityMemberInstance> generatedMembers = null;
 	
 	public EncounterUnitData(EncounterUnit parent, EncounterUnit subUnit)
 	{
@@ -86,6 +87,7 @@ public class EncounterUnitData
 	{
 		if (isGroupId)
 		{
+			if (generatedMembers!=null) return generatedMembers.size();			 
 			return parent.getGroupSize(groupId);
 		} else
 		{
@@ -120,11 +122,21 @@ public class EncounterUnitData
 	
 	public void appendNewMembers(ArrayList<EntityMemberInstance> members)
 	{
+		if (generatedMembers==null) generatedMembers = new ArrayList<EntityMemberInstance>();
 		generatedMembers.addAll(members);
 	}
 	public String getName() {
 		return name;
 	}
+	
+	public boolean destroyed = false;
+	public void destroyed()
+	{
+		destroyed = true;
+		J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
+		// TODO gamelogic unit clear?
+	}
+	
 	/**
 	 * Update name text upon new round in turn act phase.
 	 */
@@ -135,12 +147,14 @@ public class EncounterUnitData
 			EntityMember m = parent.getGroupType(groupId);
 			name = generatedMembers.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
 		}
+		J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
 	}
 	
 	public void applyImpactUnit(Impact unit)
 	{
 		if (isGroupId)
 		{
+			if (generatedMembers!=null)
 			if (generatedMembers.size()>0)
 			{
 				int groupSize = generatedMembers.size();
@@ -154,6 +168,11 @@ public class EncounterUnitData
 							inst.applyImpactUnit(u);
 					}
 				}
+			}
+			if (generatedMembers!=null)
+			if (generatedMembers.size()==0)
+			{
+				destroyed();
 			}
 		} else
 		{
@@ -170,6 +189,7 @@ public class EncounterUnitData
 	{
 		if (isGroupId)
 		{
+			if (generatedMembers==null) return null;
 			if (generatedMembers.size()==0) return null;
 			return generatedMembers.get(0);
 		} else

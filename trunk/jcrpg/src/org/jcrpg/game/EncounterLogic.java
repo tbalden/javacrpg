@@ -208,6 +208,7 @@ public class EncounterLogic {
 	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
 	{
 		turnActTurnState = new TurnActTurnState();
+		turnActTurnState.encounter = encountered;
 		long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
@@ -215,6 +216,7 @@ public class EncounterLogic {
 		for (EncounterUnitData data:dataList)
 		{
 			ArrayList<EntityMemberInstance> instances = data.generatedMembers;
+			if (instances!=null)
 			for (EntityMemberInstance mi: instances)
 			{
 				mi.encounterData = data;
@@ -362,7 +364,10 @@ public class EncounterLogic {
 										}
 									}
 									choice.target.applyImpactUnit(impact);
-									// TODO evaluate death and such...
+									if (!choice.target.destroyed)
+										choice.target.updateNameInTurnActPhase();
+									// TODO sophisticate this with pain animation / death animation...
+									
 								}
 							}
 						} else
@@ -398,9 +403,20 @@ public class EncounterLogic {
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 			{
 				currentTurnActTurn++;
+				ArrayList<EncounterUnitData> list = turnActTurnState.encounter.getEncounterUnitDataList(gameLogic.player.theFragment);
+				if (list==null || list.size()==0)
+				{
+					gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
+					gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+					gameLogic.endPlayerEncounters();
+					gameLogic.core.gameState.engine.turnFinishedForPlayer();
+					
+				} else {
+					gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
+					gameLogic.core.turnActWindow.toggle();
+				}
 				turnActTurnState = null;
-				gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
-				gameLogic.core.turnActWindow.toggle();			
+				
 			} else
 			{
 				if (turnActTurnState.getCurrentEvent().type == PlannedTurnActEvent.TYPE_PAUSE) 

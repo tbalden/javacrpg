@@ -97,7 +97,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		
-		setAverageGroupSizeAndDeviation(6, 2);
+		setAverageGroupSizeAndDeviation(3, 2);
 		
 		addGroupingRuleMember(BOARMAN_MALE_THUG);
 	}

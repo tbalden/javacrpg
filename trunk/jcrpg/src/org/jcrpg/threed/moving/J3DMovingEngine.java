@@ -123,6 +123,52 @@ public class J3DMovingEngine {
 		}
 	}
 	
+	public void clearUnitTextNodes(RenderedMovingUnit u)
+	{
+		if (u.circleNode!=null)
+		{
+			u.circleNode.removeFromParent();
+		}
+		if (u.sizeTextNode!=null)
+		{
+			u.sizeTextNode.removeFromParent();
+		}
+		if (u.memberTypeNameNode!=null)
+		{
+			u.memberTypeNameNode.removeFromParent();
+		}
+	}
+	
+	public void clearUnit(RenderedMovingUnit u)
+	{
+		for (NodePlaceholder n:u.nodePlaceholders)
+		{
+			PooledNode pooledRealNode = n.realNode;
+			n.realNode = null;
+			if (u.circleNode!=null)
+			{
+				u.circleNode.removeFromParent();
+			}
+			if (u.sizeTextNode!=null)
+			{
+				u.sizeTextNode.removeFromParent();
+			}
+			if (u.memberTypeNameNode!=null)
+			{
+				u.memberTypeNameNode.removeFromParent();
+			}
+			if (pooledRealNode!=null) {
+				Node realNode = (Node)pooledRealNode;
+				if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+				realNode.removeFromParent();
+				core.modelPool.releaseNode(pooledRealNode);
+			}
+		}
+		units.remove(u);
+		activeUnits.remove(u);
+		
+	}
+	
 	public void clearPreviousUnits()
 	{
 		for (RenderedMovingUnit u:units.values())
@@ -253,7 +299,23 @@ public class J3DMovingEngine {
 			n.setLocalScale(1.1f);
 			unit.circleNode = n;
 		}
-}
+	}
+	
+	public void updateUnitTextNodes(RenderedMovingUnit unit)
+	{
+		clearUnitTextNodes(unit);
+		getVisibleFormBillboardNodes(unit);
+		NodePlaceholder n = unit.nodePlaceholders.iterator().next();
+		Node realPooledNode = (Node)n.realNode;
+		if (realPooledNode!=null) {
+			if (unit.sizeTextNode!=null)
+			{
+				realPooledNode.attachChild(unit.sizeTextNode);	
+			}
+			realPooledNode.attachChild(unit.memberTypeNameNode);
+		}
+		realPooledNode.updateRenderState();
+	}
 	
 	
 	boolean firstRenderToViewPort = true;
@@ -273,12 +335,6 @@ public class J3DMovingEngine {
 					realPooledNode.setLocalTranslation(n.getLocalTranslation());
 					realPooledNode.setLocalRotation(n.getLocalRotation());
 					realPooledNode.setLocalScale(n.getLocalScale());
-					getVisibleFormBillboardNodes(unit);
-					if (unit.sizeTextNode!=null)
-					{
-						realPooledNode.attachChild(unit.sizeTextNode);	
-					}
-					realPooledNode.attachChild(unit.memberTypeNameNode);
 					//realPooledNode.attachChild(unit.circleNode);
 					
 					
@@ -291,6 +347,7 @@ public class J3DMovingEngine {
 					realPooledNode.updateRenderState();
 					
 				}
+				updateUnitTextNodes(unit);
 				unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
 			}
 	}
