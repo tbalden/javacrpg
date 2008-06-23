@@ -8,20 +8,48 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] j3dmoving engine -> animation should be ended on time and regulated
+[?] list before next release:
+
+	LEVELING,
+	PROJECTILES/SPELLS with particel effects
+	MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
+	ENHANCE INVENTORY
+	
+
+[ ] !! leveling !! for chars/entityMembers, points for them, 
+    [X] bars on UI
+	[ ] EntityState, EntityMemberState further development
+
+[X] death /point effects for encounter members
+
+	[ ] make Enemy check two way , get the worst case of the two way relationship to determine
+	who is enemy who is friend!
+
+	[X] player death! -> 
+		[ ] set picture grayscale?
+		
+	[X] death animations
+	[X] players health bars etc.
+	
+
+[ ] particles, projectiles, boosting up spell tomes
+[ ] lock bug -> player can move in enc
+[ ] check wciow updates on glestanimals - animated ? 
+
+[X] j3dmoving engine -> animation should be ended on time and regulated
 	by j3dmoving engine - and EncounterLogic step should  call in j3dmoving if
 	the event is finished for the step in 3d or it can wait more before moving to next encounter plan step.
 	 (Interrupt possible later?) 
 
 
-[ ] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
+[-] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
 	----> don't count data, only in a turn act/encounter
 	Randomizing should help that you won't meet so often groups that its too much overwhelming the number
 	of encounters because of no 'positioned groups and group sizes'. So recalculated group sizes,
 	and make it more random that the intersection meets who and how much! 
 	
 [o] initiating, collecting acts of members, and playing the plan in EncounterLogic
-	[ ] skill effects on points, skill success calculation
+	[X] skill effects on points, skill success calculation
 
 [X] use PlacementMatrix matrix to place scenario 
 	[ ](colored OSD for different lines)...
@@ -68,9 +96,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [X] inventory, character data sheet windows (F2,F3)
     [ ] perfection!
 
-[ ] leveling for chars/entityMembers, points for them, 
-    [X] bars on UI
-	[ ] EntityState, EntityMemberState further development
 
 [ ] turnAct, encounter phase EncounterLogic - big development needed, plus 3D view + J3DMovingEngine combination...
 
