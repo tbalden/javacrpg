@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -62,6 +63,7 @@ public class Characters {
 	}
 	
 	public ArrayList<ArrayList<Quad>> bars = new ArrayList<ArrayList<Quad>>();
+	public ArrayList<ArrayList<Float>> barOrigoYPositions = new ArrayList<ArrayList<Float>>();
 	
 	public static final int BAR_HEALTH = 0; 
 	public static final int BAR_STAMINA = 1;
@@ -81,9 +83,12 @@ public class Characters {
 
 	}
 	
+	float barScreenRatio = 13f;
+	
 	public void addMembers(ArrayList<PersistentMemberInstance> orderedParty)
 	{
 		bars.clear();
+		barOrigoYPositions.clear();
 		try {
 			int counter = 0;
 			int sideYMul = 1, sideYMulFont = 1;
@@ -120,7 +125,7 @@ public class Characters {
 						
 						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.425f,0);
 						
-						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counter-1)-stepY*0.425f + hud.core.getDisplay().getWidth()/20 , p);
+						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counter-1)-stepY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
 						
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/800f);
@@ -154,49 +159,63 @@ public class Characters {
 	public void addNextPointBars(float origoX, float origoY, MemberPerson p)
 	{
 		ArrayList<Quad> barQuads = new ArrayList<Quad>();
+		ArrayList<Float> barPos = new ArrayList<Float>();
 		for (int i=0; i<=BAR_MAX; i++)
 		{
-			Quad q = new Quad("BAR_"+i+p.foreName+p.surName,0.3f,4f);
+			Quad q = new Quad("BAR_"+i+p.foreName+p.surName,hud.core.getDisplay().getWidth()/230f,hud.core.getDisplay().getHeight()/barScreenRatio);
 			q.setSolidColor(pointQuadData.get(i));
 			q.setLightCombineMode(LightState.OFF);
-			q.setLocalTranslation(origoX+i*2.8f,origoY,0f);
-			Node n = new Node();
-			n.attachChild(q);
-			//node.attachChild(n);
-			q.setLocalScale(10);
+			q.setLocalTranslation(origoX+i*hud.core.getDisplay().getWidth()/230f,origoY,0f);
+			q.setLocalScale(1f);
+			barPos.add(origoY);
 			barQuads.add(q);
 		}
 		bars.add(barQuads);
+		barOrigoYPositions.add(barPos);
 	}
 	
-
 	public void updatePoints()
+	{
+		updatePoints(null);
+	}
+	public void updatePoints(EntityMemberInstance member)
 	{
 		if (hud.core.gameLost == true || hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
 		{
 			//System.out.println("############################__________________________ no possible update...");
 			return;
 		}
-		int counter =0;
+		int counter = 0;
 		
+		if (bars.size()!=0)
 		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
 		{
+			if (member!=null && member!=p) {
+				counter++;
+				continue;
+			}
 			//System.out.println("UPDATE ____________ "+p);
-			float multiplierHealth = p.memberState.maxHealthPoint==0?0:p.memberState.healthPoint/p.memberState.maxHealthPoint; 
-			float multiplierStamina = p.memberState.maxStaminaPoint==0?0:p.memberState.staminaPoint/p.memberState.maxStaminaPoint;
-			float multiplierMorale = p.memberState.maxMoralePoint==0?0:p.memberState.moralePoint/p.memberState.maxMoralePoint;
-			float multiplierSanity = p.memberState.maxSanityPoint==0?0:p.memberState.sanityPoint/p.memberState.maxSanityPoint;
-			float multiplierMana = p.memberState.maxManaPoint==0?0:p.memberState.manaPoint/p.memberState.maxManaPoint;
+			float multiplierHealth = p.memberState.maxHealthPoint==0?0.0001f:Math.max(0f,p.memberState.healthPoint*1f)/p.memberState.maxHealthPoint; 
+			float multiplierStamina = p.memberState.maxStaminaPoint==0?0.0001f:Math.max(0f,p.memberState.staminaPoint*1f)/p.memberState.maxStaminaPoint;
+			float multiplierMorale = p.memberState.maxMoralePoint==0?0.0001f:Math.max(0f,p.memberState.moralePoint*1f)/p.memberState.maxMoralePoint;
+			float multiplierSanity = p.memberState.maxSanityPoint==0?0.0001f:Math.max(0f,p.memberState.sanityPoint*1f)/p.memberState.maxSanityPoint;
+			float multiplierMana = p.memberState.maxManaPoint==0?0.0001f:Math.max(0f,p.memberState.manaPoint*1f)/p.memberState.maxManaPoint;
 		
 			float[] mul = new float[] {multiplierHealth,multiplierStamina,multiplierMorale,multiplierSanity,multiplierMana};
 			
 			ArrayList<Quad> m = bars.get(counter);
+			ArrayList<Float> pos = barOrigoYPositions.get(counter);
 			for (int i=0; i<=BAR_MAX; i++)
 			{
 				//System.out.println(m.get(i));
-				node.attachChild(m.get(i));
-				m.get(i).setLocalScale(mul[i]*10f);
+				m.get(i).setLocalScale(new Vector3f(1f,mul[i]*1f,1f));
 				m.get(i).updateRenderState();
+				m.get(i).removeFromParent();
+				Float origoY = pos.get(i);
+				if (mul[i]!=0) {
+					m.get(i).getLocalTranslation().setY( origoY - ( (hud.core.getDisplay().getHeight()/(barScreenRatio*2f)) * (1f - mul[i]) ) );
+				}
+				node.attachChild(m.get(i));
 				node.updateRenderState();
 			}
 			counter++;

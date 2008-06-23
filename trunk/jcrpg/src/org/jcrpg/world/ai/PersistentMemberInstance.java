@@ -42,10 +42,6 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	 */
 	public DistanceBasedBoundary roamingBoundary = null;
 	
-	/**
-	 * The fragment with which the member is roaming.
-	 */
-	public EntityFragment parentFragment = null;
 
 	/**
 	 * Those infrastructures (buildings) owned by this member in its home population.
@@ -64,9 +60,9 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	 */
 	public EntityMemberRelations personalRelations = new EntityMemberRelations();
 	
-	public PersistentMemberInstance(EntityInstance instance, EntityMember description, World w,
+	public PersistentMemberInstance(EntityFragment parent, EntityInstance instance, EntityMember description, World w,
 			int numericId, int startX, int startY, int startZ) {
-		super(instance, description, numericId);
+		super(parent, instance, description, numericId);
 		if (w!=null) {
 			roamingBoundary = new DistanceBasedBoundary(w,startX,startY,startZ,5);//TODO description.getRoamingSize());
 		}
@@ -158,13 +154,6 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return tmpList2;
 	}
 
-	public EntityFragment getParentFragment() {
-		return parentFragment;
-	}
-
-	public void setParentFragment(EntityFragment parentFragment) {
-		this.parentFragment = parentFragment;
-	}
 
 	public EntityMember getGroupType(int groupId) {
 		return description;
@@ -177,6 +166,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	@Override
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit) {
 		ArrayList<Integer> result = memberState.applyImpactUnit(unit);
+		parentFragment.notifyImpactResult(this,result);
 		return result;
 		
 	}

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.GroupingRule.GroupSizeAndType;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -119,7 +120,7 @@ public class EntityInstance {
 		
 		if (!(this instanceof PartyInstance))
 		{
-			PersistentMemberInstance p = new PersistentMemberInstance(this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+			PersistentMemberInstance p = new PersistentMemberInstance(fragments.fragments.get(0),this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
 			InfrastructureElementParameters i = new InfrastructureElementParameters();
 			i.owner = p;
 			i.type = House.class;
@@ -289,5 +290,9 @@ public class EntityInstance {
 		return groupSizesAndTypes;
 	}
 
+	public void notifyImpactResult(EntityFragment fragment, EntityMemberInstance member, ArrayList<Integer> result)
+	{
+		
+	}
 	
 }

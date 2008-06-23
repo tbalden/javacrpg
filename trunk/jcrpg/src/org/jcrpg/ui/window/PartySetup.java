@@ -518,7 +518,7 @@ public class PartySetup extends PagedInputWindow {
 			{
 				if (i.description.equals(d.person)) return true; // no duplication
 			}
-			charactersOfParty.add(new PersistentMemberInstance(null,d.person,null,Ecology.getNextEntityId(),0,0,0));
+			charactersOfParty.add(new PersistentMemberInstance(null, null,d.person,null,Ecology.getNextEntityId(),0,0,0));
 			core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
 			core.uiBase.hud.characters.show();
 			

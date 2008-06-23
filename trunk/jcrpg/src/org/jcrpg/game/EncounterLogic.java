@@ -462,7 +462,8 @@ public class EncounterLogic {
 
 	public void finishEncounterLose(EncounterInfo encounter)
 	{
-		gameLogic.core.uiBase.hud.mainBox.addEntry("YOUR PARTY IS LOST!");
+		gameLogic.core.uiBase.hud.mainBox.addEntry("YOUR PARTY IS DEAD!");
+		gameLogic.core.uiBase.hud.mainBox.addEntry("Game Over.");
 		gameLogic.core.uiBase.hud.characters.hide();
 		gameLogic.ecology.gameLost();
 		gameLogic.core.gameLost = true;

@@ -25,6 +25,7 @@ import org.jcrpg.ui.meter.DirectionTimeMeter;
 import org.jcrpg.ui.meter.EntityOMeter;
 import org.jcrpg.ui.text.TextBox;
 import org.jcrpg.ui.text.TextEntry;
+import org.jcrpg.world.ai.EntityMemberInstance;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -147,6 +148,11 @@ public class HUD {
 	{
 		mapQuad.updateRenderState();
 		hudNode.updateRenderState();
+	}
+	
+	public void updateCharacterRelated(EntityMemberInstance instance)
+	{
+		characters.updatePoints(instance);
 	}
 	
 }

@@ -132,6 +132,12 @@ public class EntityFragments {
 		public int getEncPhasePriority(EncounterInfo info) {
 			return parent.instance.entityState.currentLevelOfQuality;
 		}
+		
+		public void notifyImpactResult(EntityMemberInstance member, ArrayList<Integer> result)
+		{
+			parent.instance.notifyImpactResult( this, member,  result);
+		}
+		
 	}
 	public transient Vector3f tmpVector = new Vector3f();
 	
