@@ -77,7 +77,28 @@ public class EntityMemberState {
 		return tmpZeroPointTypes;
 	}
 
+	public boolean isDead()
+	{
+		if (healthPoint<=0) return true;
+		return false;
+	}
+	public boolean isUnconsious()
+	{
+		if (staminaPoint<=0) return true;
+		return false;
+	}
+
+	public boolean isNeutralized()
+	{
+		if (moralePoint<=0) return true;
+		return false;
+	}
 	
+	public boolean isInsane()
+	{
+		if (sanityPoint<=0) return true;
+		return false;
+	}
 	
 
 }

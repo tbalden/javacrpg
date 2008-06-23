@@ -156,8 +156,12 @@ public class EntityMember extends DescriptionBase {
 					if (choice.targetMember==null) continue;
 					else
 					{
-						foundTarget =true;
-						break;
+						if (!choice.targetMember.memberState.isDead())
+						{
+							foundTarget = true;
+							break;
+						}
+						
 					}
 				}
 				// no target found.

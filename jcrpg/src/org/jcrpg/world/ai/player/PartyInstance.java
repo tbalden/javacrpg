@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
@@ -119,7 +120,7 @@ public class PartyInstance extends EntityInstance {
 	public void addPartyMemberInstance(String id, String foreName, String sureName, String picId, AudioDescription audio)
 	{
 		PartyMember member = new PartyMember(id,audio);
-		PersistentMemberInstance mI = new PersistentMemberInstance(this,member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
+		PersistentMemberInstance mI = new PersistentMemberInstance(theFragment, this,member, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(id, mI);
 		theFragment.addFollower(mI);
 		orderedParty.add(mI);
@@ -133,7 +134,7 @@ public class PartyInstance extends EntityInstance {
 	
 	public void addPartyMemberInstance(PartyMember m)
 	{
-		PersistentMemberInstance mI = new PersistentMemberInstance(this,m, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
+		PersistentMemberInstance mI = new PersistentMemberInstance(theFragment, this,m, world, Ecology.getNextEntityId(), theFragment.roamingBoundary.posX,theFragment.roamingBoundary.posY,theFragment.roamingBoundary.posZ);
 		fixMembers.put(m.id, mI);
 		numberOfMembers++;
 	}
@@ -141,6 +142,13 @@ public class PartyInstance extends EntityInstance {
 	{
 		fixMembers.remove(m.id);
 		numberOfMembers--;
+	}
+
+	@Override
+	public void notifyImpactResult(EntityFragment fragment,
+			EntityMemberInstance member, ArrayList<Integer> result) {
+		J3DCore.getInstance().uiBase.hud.updateCharacterRelated(member);
+		super.notifyImpactResult(fragment, member, result);
 	}
 	
 	

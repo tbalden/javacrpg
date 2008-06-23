@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
@@ -49,6 +50,10 @@ public class EntityMemberInstance {
 	 * The different points and such of the memberInstance.
 	 */
 	public EntityMemberState memberState = new EntityMemberState();
+	/**
+	 * The fragment with which the member is roaming.
+	 */
+	public EntityFragment parentFragment = null;
 	
 	/**
 	 * The skill that the given instance is using for his behavior of living around at the current turn.
@@ -57,9 +62,10 @@ public class EntityMemberInstance {
 	
 	public EntityInstance instance = null;
 
-	public EntityMemberInstance(EntityInstance instance, EntityMember description, int numericId) {
+	public EntityMemberInstance(EntityFragment parent, EntityInstance instance, EntityMember description, int numericId) {
 		super();
 		this.description = description;
+		this.parentFragment = parent;
 		this.instance = instance;
 		this.numericId = numericId;
 		try {
@@ -121,6 +127,7 @@ public class EntityMemberInstance {
 		{
 			encounterData.generatedMembers.remove(this);
 		}
+		if (parentFragment!=null) parentFragment.notifyImpactResult(this,result);
 		return result;
 	}
 	
@@ -154,5 +161,12 @@ public class EntityMemberInstance {
 		return encounterData.isRendered();
 	}
 	
-	
+	public EntityFragment getParentFragment() {
+		return parentFragment;
+	}
+
+	public void setParentFragment(EntityFragment parentFragment) {
+		this.parentFragment = parentFragment;
+	}
+
 }
