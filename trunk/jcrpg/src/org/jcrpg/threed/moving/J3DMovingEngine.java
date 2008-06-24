@@ -26,8 +26,10 @@ import java.util.HashSet;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.jme.program.EffectNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
@@ -59,10 +61,11 @@ public class J3DMovingEngine {
 	HashMap<String, RenderedMovingUnit> units = new HashMap<String, RenderedMovingUnit>();
 	
 	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
+	public static HashSet<EffectNode> activeEffectNodes = new HashSet<EffectNode>();
 	
 	public static boolean isEnginePlaying()
 	{
-		return activeUnits.size()>0;
+		return activeUnits.size()>0 || activeEffectNodes.size()>0;
 	}
 	
 	
@@ -73,6 +76,41 @@ public class J3DMovingEngine {
 	}
 	
 	boolean firstRender = false;
+	
+	public HashMap<EffectProgram, ArrayList<EffectNode>> effectNodes = new HashMap<EffectProgram, ArrayList<EffectNode>>();
+	
+	public void playEffectProgram(EffectProgram program, VisibleLifeForm source, VisibleLifeForm target)
+	{
+		
+		EffectNode eNode = program.get3DVisualization();
+		ArrayList<EffectNode> nodes = effectNodes.get(program);
+		if (nodes==null)
+		{
+			nodes = new ArrayList<EffectNode>();
+			effectNodes.put(program, nodes);
+		}
+		System.out.println("playEffectProgram"+eNode.getClass());
+		nodes.add(eNode);
+		eNode.sourceForm = source;
+		eNode.targetForm = target;
+		activeEffectNodes.add(eNode);
+		
+		
+	}
+	public void endEffectProgram(EffectProgram program, EffectNode node)
+	{
+		try
+		{
+			System.out.println("endEffectProgram"+node.getClass());
+			effectNodes.get(program).remove(node);
+			node.removeFromParent();
+			activeEffectNodes.remove(node);
+		} catch (Exception ex)
+		{
+			
+		}
+		
+	}
 	
 	
 	/**
@@ -385,6 +423,58 @@ public class J3DMovingEngine {
 		playerFakeForm.worldX = core.gameState.player.theFragment.roamingBoundary.posX;
 		playerFakeForm.worldY = core.gameState.player.theFragment.roamingBoundary.posY;
 		playerFakeForm.worldZ = core.gameState.player.theFragment.roamingBoundary.posZ;
+		
+		ArrayList<Object[]> toEnd = new ArrayList<Object[]>();
+		for (EffectProgram p:effectNodes.keySet())
+		{
+			ArrayList<EffectNode> nodes = effectNodes.get(p);
+			for (EffectNode n:nodes)
+			{
+				System.out.println("PLAYING "+n.getClass());
+				if (!n.startedPlaying)
+				{
+					n.startedPlaying = true;
+					VisibleLifeForm target = n.sourceForm==null?playerFakeForm:n.sourceForm;
+					float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+					float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+					int origoZ = core.gameState.origoZ;
+					int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
+					float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+					System.out.println("{"+eX+" "+eY+" "+eZ+"}");
+					n.setPosition(new Vector3f(eX,eY,eZ));
+					core.extRootNode.attachChild(n);
+					n.updateRenderState();
+				}
+				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
+				NodePlaceholder h = n.targetForm.unit.nodePlaceholders.iterator().next();
+				System.out.println("h : "+h.getLocalTranslation());
+				float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+				float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+				int origoZ = core.gameState.origoZ;
+				int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
+				float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+				Vector3f cVec = new Vector3f(n.currentPos);
+				Vector3f eVec = new Vector3f(eX,eY,eZ);
+				Vector3f mVec = eVec.subtract(cVec).normalize().mult(n.speed*10f * 0.1f*timePerFrame);
+				n.currentPos.addLocal(mVec);
+				System.out.println("[[{"+eX+" "+eY+" "+eZ+"}]]"+" "+n.currentPos);
+				n.setPosition(n.currentPos);
+				
+				
+				float dist = eVec.distance(n.currentPos);
+				System.out.println("######### "+dist);
+				
+				if (dist<0.1f)
+				{
+					toEnd.add(new Object[]{p,n});
+				}				
+			}
+			for (Object[] t:toEnd)
+			{
+				endEffectProgram((EffectProgram)t[0], (EffectNode)t[1]);
+			}
+		}
+		
 		for (RenderedMovingUnit unit: units.values())
 		{
 			for (NodePlaceholder n : unit.nodePlaceholders)
