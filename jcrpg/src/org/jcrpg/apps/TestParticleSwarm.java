@@ -130,7 +130,7 @@ public class TestParticleSwarm extends SimpleGame {
         ts.setTexture(
             TextureManager.loadTexture(
             TestParticleSystem.class.getClassLoader().getResource(
-            "jmetest/data/texture/flaresmall.jpg"),
+            "data/flaresmall.jpg"),
             Texture.MM_LINEAR_LINEAR,
             Texture.FM_LINEAR));
         ts.setEnabled(true);
