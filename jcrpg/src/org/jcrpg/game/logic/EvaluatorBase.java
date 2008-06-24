@@ -125,7 +125,7 @@ public class EvaluatorBase {
 			ImpactUnit u = i.actCost;
 			for (Integer effectType:choice.skillActForm.usedPointsAndLevels.keySet())
 			{
-				u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
+				u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.usedPointsAndLevels.get(effectType));
 				System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
 			}
 		}

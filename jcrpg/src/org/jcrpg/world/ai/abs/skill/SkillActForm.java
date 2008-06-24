@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.abs.skill;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.util.Language;
 
@@ -83,7 +84,20 @@ public abstract class SkillActForm
 		this.skill = skill;
 	}
 	
+	/**
+	 * Get sound of skillactform use.
+	 * @return
+	 */
 	public abstract String getSound();
+	
+	/**
+	 * Returns (3d) effect description for skill use.
+	 * @return
+	 */
+	public EffectProgram getEffectProgram()
+	{
+		return null;
+	}
 	
 	public String getName()
 	{

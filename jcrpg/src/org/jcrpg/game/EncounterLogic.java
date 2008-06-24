@@ -27,6 +27,7 @@ import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
 import org.jcrpg.threed.moving.J3DMovingEngine;
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.AudioDescription;
@@ -529,6 +530,18 @@ public class EncounterLogic {
 					
 					if (choice.skillActForm!=null)
 					{
+						EffectProgram eProgram = choice.skillActForm.getEffectProgram();
+						if (eProgram!=null)
+						{
+							try 
+							{
+								gameLogic.core.mEngine.playEffectProgram(eProgram, choice.member.encounterData.visibleForm, choice.target.visibleForm);
+							} catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
+						}
+						
 						if (choice.isDestructive()) {
 							String sound = choice.member.getSound(AudioDescription.T_ATTACK);
 							if (sound!=null)
