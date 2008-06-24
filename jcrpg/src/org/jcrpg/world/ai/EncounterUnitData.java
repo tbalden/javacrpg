@@ -42,12 +42,15 @@ public class EncounterUnitData
 	
 	public ArrayList<EntityMemberInstance> generatedMembers = null;
 	
+	public EntityMember description = null;
+	
 	public EncounterUnitData(EncounterUnit parent, EncounterUnit subUnit)
 	{
 		this.parent = parent;
 		isGroupId = false;
 		this.subUnit = subUnit;
 		name = parent.getName()+" : " + subUnit.getName();
+		if (subUnit.getDescription() instanceof EntityMember) description = (EntityMember)subUnit.getDescription();
 		groupId = 0;
 		
 	}
@@ -58,6 +61,7 @@ public class EncounterUnitData
 		this.groupId = groupId;
 		int size1 = parent.getGroupSize(groupId);
 		EntityMember m = parent.getGroupType(groupId);
+		description = m;
 		name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";			
 	}
 	
@@ -229,4 +233,15 @@ public class EncounterUnitData
 		if (visibleForm==null) return false;
 		return !visibleForm.notRendered;
 	}
+	
+	/**
+	 * Returns a random sound of a given type if available.
+	 * @param type
+	 * @return
+	 */
+	public String getSound(String type)
+	{
+		return description.getSound(type);
+	}
+	
 }
