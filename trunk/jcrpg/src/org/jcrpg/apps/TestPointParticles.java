@@ -89,8 +89,8 @@ public class TestPointParticles extends SimpleGame {
         pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
         pPoints.setOriginOffset(new Vector3f(0, 0, 0));
         pPoints.setInitialVelocity(.006f);
-        pPoints.setStartSize(2.5f);
-        pPoints.setEndSize(.5f);
+        pPoints.setStartSize(0.25f);
+        pPoints.setEndSize(.05f);
         pPoints.setMinimumLifeTime(1200f);
         pPoints.setMaximumLifeTime(1400f);
         pPoints.setStartColor(new ColorRGBA(1, 0, 0, 1));

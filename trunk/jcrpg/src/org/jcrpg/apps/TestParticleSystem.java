@@ -32,6 +32,8 @@
 
 package org.jcrpg.apps;
 
+import java.io.File;
+
 import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingSphere;
 import com.jme.image.Texture;
@@ -97,25 +99,26 @@ public class TestParticleSystem extends SimpleGame {
     as1.setEnabled(true);
 
     TextureState ts = display.getRenderer().createTextureState();
+    try {
     ts.setTexture(
-        TextureManager.loadTexture(
-        TestParticleSystem.class.getClassLoader().getResource(
-        "data/flaresmall.jpg"),
+        TextureManager.loadTexture(new File("data/flaresmall.jpg").toURL(),
         Texture.MM_LINEAR_LINEAR,
         Texture.FM_LINEAR));
+    } catch (Exception ex){}
     ts.setEnabled(true);
 
     pMesh = ParticleFactory.buildParticles("particles", 300);
     pMesh.setEmissionDirection(new Vector3f(0,1,0));
     pMesh.setInitialVelocity(.006f);
-    pMesh.setStartSize(2.5f);
-    pMesh.setEndSize(.5f);
+    pMesh.setStartSize(0.25f);
+    pMesh.setEndSize(.25f);
     pMesh.setMinimumLifeTime(1200f);
     pMesh.setMaximumLifeTime(1400f);
     pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
     pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
     pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
     pMesh.getParticleController().setControlFlow(false);
+    pMesh.setLocalScale(1f);
     pMesh.warmUp(60);
 
     rootNode.setRenderState(ts);

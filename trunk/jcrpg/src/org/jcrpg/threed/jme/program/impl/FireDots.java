@@ -17,27 +17,22 @@
  */ 
 package org.jcrpg.threed.jme.program.impl;
 
-import java.io.File;
-
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.program.EffectNode;
 
 import com.jme.bounding.BoundingSphere;
-import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Box;
 import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.util.TextureManager;
 import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jmex.effects.particles.ParticlePoints;
 
-public class FireArrow extends EffectNode {
+public class FireDots extends EffectNode {
 
-	  private ParticleMesh pMesh;
+	private ParticlePoints pPoints;
 	private Box debugBox;
 
 	/**
@@ -45,47 +40,37 @@ public class FireArrow extends EffectNode {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FireArrow()
+	public FireDots()
 	{
-		    AlphaState as1 = J3DCore.getInstance().getDisplay().getRenderer().createAlphaState();
-		    as1.setBlendEnabled(true);
-		    as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		    as1.setDstFunction(AlphaState.DB_ONE);
-		    as1.setTestEnabled(true);
-		    as1.setTestFunction(AlphaState.TF_GREATER);
-		    as1.setEnabled(true);
-	
-		    TextureState ts = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		    try {
-		    ts.setTexture(
-		        TextureManager.loadTexture(new File("data/flaresmall.jpg").toURL(),
-		        Texture.MM_LINEAR_LINEAR,
-		        Texture.FM_LINEAR));
-		    } catch (Exception ex){}
-		    ts.setEnabled(true);
-	
-		    pMesh = ParticleFactory.buildParticles("particles", 300);
-		    pMesh.setEmissionDirection(new Vector3f(0,1,0));
-		    pMesh.setInitialVelocity(.006f);
-		    pMesh.setStartSize(0.25f);
-		    pMesh.setEndSize(0.15f);
-		    pMesh.setMinimumLifeTime(1200f);
-		    pMesh.setMaximumLifeTime(1400f);
-		    pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
-		    pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
-		    pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-		    pMesh.getParticleController().setControlFlow(false);
-		    pMesh.warmUp(60);
-		    
-		    pMesh.setRenderState(as1);
-		    pMesh.setRenderState(ts);
-    
+	       pPoints = ParticleFactory.buildPointParticles("particles", 300);
+	        pPoints.setPointSize(5);
+	        pPoints.setAntialiased(true);
+	        pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
+	        pPoints.setOriginOffset(new Vector3f(0, 0, 0));
+	        pPoints.setInitialVelocity(.006f);
+	        pPoints.setStartSize(2.5f);
+	        pPoints.setEndSize(.5f);
+	        pPoints.setMinimumLifeTime(1200f);
+	        pPoints.setMaximumLifeTime(1400f);
+	        pPoints.setStartColor(new ColorRGBA(1, 0, 0, 1));
+	        pPoints.setEndColor(new ColorRGBA(0, 1, 0, 0));
+	        pPoints.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
+	        pPoints.getParticleController().setControlFlow(false);
+	        pPoints.warmUp(120);
+
+	        AlphaState as1 = J3DCore.getInstance().getDisplay().getRenderer().createAlphaState();
+	        as1.setBlendEnabled(true);
+	        as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	        as1.setDstFunction(AlphaState.DB_ONE);
+	        as1.setEnabled(true);
+	        this.setRenderState(as1);
+
 	        ZBufferState zstate = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 	        zstate.setEnabled(false);
-	        pMesh.setRenderState(zstate);
+	        pPoints.setRenderState(zstate);
 
-		    pMesh.setModelBound(new BoundingSphere());
-		    pMesh.updateModelBound();
+	        pPoints.setModelBound(new BoundingSphere());
+	        pPoints.updateModelBound();
 	        
 	        //debugBox = new Box("box",new Vector3f(1f,1f,1f),new Vector3f(1f,1f,1f));
 	        //debugBox.setModelBound(new BoundingBox());
@@ -93,7 +78,7 @@ public class FireArrow extends EffectNode {
 	        
 	        //this.attachChild(debugBox);
 
-	        this.attachChild(pMesh);
+	        this.attachChild(pPoints);
 	}
 
 
@@ -101,7 +86,7 @@ public class FireArrow extends EffectNode {
 	@Override
 	public void setPosition(Vector3f newPos) {
 		currentPos = newPos;
-		pMesh.setOriginOffset(currentPos);
+        pPoints.setOriginOffset(currentPos);
         //debugBox.setLocalTranslation(newPos);
 	}
 
