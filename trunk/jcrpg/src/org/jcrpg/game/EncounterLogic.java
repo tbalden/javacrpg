@@ -234,7 +234,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					orderedActors.put(s, mi);
+					//orderedActors.put(s, mi);
 				}
 								
 			}
@@ -354,15 +354,15 @@ public class EncounterLogic {
 										String sound = null;
 										if (!choice.target.destroyed && choice.isDestructive())
 										{											
-											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_PAIN);
+											sound = choice.target.getSound(AudioDescription.T_PAIN);
 										}
 										if (!choice.target.destroyed && choice.isConstructive())
 										{
-											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_JOY);
+											sound = choice.target.getSound(AudioDescription.T_JOY);
 										}
 										if (choice.target.destroyed)
 										{
-											sound = choice.target.getFirstLivingMember().getSound(AudioDescription.T_DEATH);
+											sound = choice.target.getSound(AudioDescription.T_DEATH);
 										}
 										if (sound!=null)
 										{
@@ -381,6 +381,13 @@ public class EncounterLogic {
 									{
 										if (choice.target.isRendered()) {
 											choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
+										}
+									}
+								} else
+								{
+									if (choice.target.isRendered()) {
+										if (choice.isDestructive()) {
+											choice.target.visibleForm.unit.startDefense(choice.member.encounterData.visibleForm,null);
 										}
 									}
 								}

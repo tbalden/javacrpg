@@ -178,6 +178,15 @@ public class RenderedMovingUnit {
 		state = anim;		
 		return true;
 	}
+	public boolean startDefense(VisibleLifeForm target, String anim)
+	{
+		if (form.notRendered) return false;
+		J3DMovingEngine.activeUnits.add(this);
+		if (target!=null)
+			form.targetForm = target;
+		state = anim==null?MovingModelAnimDescription.ANIM_DEFEND_UPPER:anim;		
+		return true;
+	}
 
 	public boolean startPain(VisibleLifeForm target)
 	{
@@ -194,7 +203,8 @@ public class RenderedMovingUnit {
 		J3DMovingEngine.activeUnits.add(this);
 		if (target!=null)
 			form.targetForm = target;
-		state = anim==null?MovingModelAnimDescription.ANIM_DEATH_NORMAL:anim;		
+		stateAfterMovement = MovingModelAnimDescription.ANIM_DEAD;
+		state = anim==null?MovingModelAnimDescription.ANIM_DEATH_NORMAL:anim;
 		return true;
 	}
 
@@ -242,6 +252,10 @@ public class RenderedMovingUnit {
 	
 	public void startPlayingAnimation(String animationType)
 	{
+		startPlayingAnimation(animationType,null);
+	}
+	public void startPlayingAnimation(String animationType,String afterAnim)
+	{
 		if (form.notRendered) return;
 		for (NodePlaceholder n:nodePlaceholders)
 		{
@@ -249,7 +263,7 @@ public class RenderedMovingUnit {
 			{
 				if (n.realNode instanceof AnimatedModelNode)
 				{
-					((AnimatedModelNode)(n.realNode)).playAnimation(animationType);
+					((AnimatedModelNode)(n.realNode)).playAnimation(animationType,afterAnim);
 				}				
 			}
 		}

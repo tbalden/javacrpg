@@ -18,5 +18,5 @@
 package org.jcrpg.world.ai;
 
 public abstract class DescriptionBase {
-
+	
 }

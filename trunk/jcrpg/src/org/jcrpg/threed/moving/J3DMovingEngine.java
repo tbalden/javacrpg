@@ -360,6 +360,22 @@ public class J3DMovingEngine {
 	int moveCount = 0;
 	
 	/**
+	 * No movement states.
+	 */
+	public static HashSet<String> simpleStates = new HashSet<String>();
+	static 
+	{
+		simpleStates.add(MovingModelAnimDescription.ANIM_DEATH_NORMAL);
+		simpleStates.add(MovingModelAnimDescription.ANIM_DEATH_QUICK);
+		simpleStates.add(MovingModelAnimDescription.ANIM_DEATH_SLOW);
+		simpleStates.add(MovingModelAnimDescription.ANIM_PAIN);
+		simpleStates.add(MovingModelAnimDescription.ANIM_ATTACK_UPPER);
+		simpleStates.add(MovingModelAnimDescription.ANIM_ATTACK_LOWER);
+		simpleStates.add(MovingModelAnimDescription.ANIM_DEFEND_UPPER);
+		simpleStates.add(MovingModelAnimDescription.ANIM_DEFEND_LOWER);
+	}
+	
+	/**
 	 * Updates moving units 3d embodiment in real time.
 	 * @param timePerFrame Value passed since last frame.
 	 */
@@ -443,19 +459,16 @@ public class J3DMovingEngine {
 						}
 						
 					} else
-					if (unit.state.equals(MovingModelAnimDescription.ANIM_DEATH_NORMAL) ||
-							unit.state.equals(MovingModelAnimDescription.ANIM_DEATH_QUICK) ||
-							unit.state.equals(MovingModelAnimDescription.ANIM_DEATH_SLOW) ||
-							unit.state.equals(MovingModelAnimDescription.ANIM_PAIN) || 
-							unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_UPPER) || unit.state.equals(MovingModelAnimDescription.ANIM_ATTACK_LOWER))
+					if (simpleStates.contains(unit.state))
 					{
+						// simple turn on target and do a single animation, no movement
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
 						
 						if (unit.playingAnimation==null)
 						{
 							System.out.println("+++++++++++++++++");
-							unit.startPlayingAnimation(unit.state);
+							unit.startPlayingAnimation(unit.state, unit.stateAfterMovement);
 							unit.playingAnimation = unit.state;
 						} else
 						{

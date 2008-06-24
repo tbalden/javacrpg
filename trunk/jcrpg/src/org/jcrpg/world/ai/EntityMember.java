@@ -213,4 +213,10 @@ public class EntityMember extends DescriptionBase {
 		return null;
 	}
 	
+	public String getSound(String type)
+	{
+		if (audioDescription==null) return null;
+		return audioDescription.getSound(type);
+	}
+	
 }

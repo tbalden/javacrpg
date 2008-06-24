@@ -43,6 +43,7 @@ public class MovingModelAnimDescription {
 	public static String ANIM_DEATH_NORMAL = "ANIM_DEATH";
 	public static String ANIM_DEATH_QUICK = "ANIM_DQUICK";
 	public static String ANIM_DEATH_SLOW = "ANIM_DSLOW";
+	public static String ANIM_DEAD = "ANIM_DEAD";
 
 	public String IDLE = null;
 	public String IDLE_COMBAT = null;
@@ -64,6 +65,7 @@ public class MovingModelAnimDescription {
 	public String DEATH_NORMAL = null;
 	public String DEATH_QUICK = null;
 	public String DEATH_SLOW = null;
+	public String DEAD = null;
 	
 	public MovingModelAnimDescription()
 	{

@@ -73,6 +73,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	public HashMap<String,String> animationFileNames = new HashMap<String,String>();
 	public HashMap<String,Animation> animations = new HashMap<String,Animation>();
 	public AnimationAnimator currentAnimator = null;
+	public String currentAnimatorName = null;
 	public SkinNode skinNode;
 
 	public static HashMap<String,Animation> animationCache = new HashMap<String,Animation>(); 
@@ -127,6 +128,10 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	
 	public float playAnimation(String name)
 	{
+		return playAnimation(name, null);
+	}
+	public float playAnimation(String name, String afterAnim)
+	{
 		Animation anim = animations.get(name);
 		if (anim==null) {
 			finishedPlaying = true;
@@ -134,17 +139,20 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		}
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 		if (currentAnimator!=null) {
-			currentAnimator.fadeTo(0.1f, 0.2f);
-			//currentAnimator.setWeight(0.01f);
+			if (afterAnim!=null && afterAnim!=currentAnimatorName) {
+				currentAnimator.fadeOut(0.1f,true);
+				Animation animAfter = animations.get(afterAnim);
+				AnimationAnimator newAnimatorAfter = bodyAnimationController.addAnimation(anim);
+				currentAnimator = newAnimatorAfter;
+				currentAnimatorName = afterAnim;
+			} 
+			currentAnimator.fadeTo(0.2f, 0.2f);
 		}
 		newAnimator.setCycleType(FixedLengthAnimator.RT_ONCE);
-		newAnimator.fadeIn(0.2f);
-		//newAnimator.setTime(0);
+		newAnimator.fadeIn(0.1f);
 		//System.out.println("STARTING PLAY... "+ newAnimator);
 		
 		playAnim = newAnimator;
-		//currentAnimator.fadeIn(currentAnimator.getMax()*2);
-		//currentAnimator = newAnimator;
 		return newAnimator.getMax();
 	}
 
@@ -163,17 +171,18 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				name = MovingModelAnimDescription.ANIM_IDLE;
 				break;
 			}
+			if (name.equals(currentAnimatorName)) return 0;
 			Animation anim = animations.get(name);
 			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
 			if (currentAnimator!=null) {
 				currentAnimator.fadeOut(0.1f,true);
-				
 			}
 			AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 			newAnimator.setCycleType(FixedLengthAnimator.RT_WRAP);
 			newAnimator.fadeIn(0.5f);
 			newAnimator.setWeight(1f);
 			currentAnimator = newAnimator;
+			currentAnimatorName = name;
 			return newAnimator.getMax();
 		}
 	}
