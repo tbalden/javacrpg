@@ -346,6 +346,7 @@ public class EncounterLogic {
 										}
 									}
 								}
+								choice.member.applyImpactUnit(impact.actCost);
 								if (impact.success) {
 									
 									choice.target.applyImpactUnit(impact);

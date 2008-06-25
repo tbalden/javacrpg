@@ -31,6 +31,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.GroupingMemberProps;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -352,7 +353,23 @@ public class GameStateContainer {
 			}
 			environmentAudioCount--;
 		}
-		
+	}
+	
+	public boolean levelingInProgress = false;
+	public void checkAndDoLeveling()
+	{
+		if (levelingInProgress) return;
+		for (PersistentMemberInstance i:player.orderedParty)
+		{
+			if (i.memberState.isDead()) continue;
+			if (i.memberState.checkLevelingAvailable())
+			{
+				J3DCore.getInstance().charLevelingWindow.setPageData(player, i);
+				J3DCore.getInstance().charLevelingWindow.toggle();
+				levelingInProgress = true;
+				break;
+			}
+		}
 	}
 	
 }

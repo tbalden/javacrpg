@@ -18,12 +18,11 @@
 package org.jcrpg.game.logic;
 
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
-import org.jcrpg.world.ai.abs.state.EntityMemberState;
 
 public class ImpactUnit
 {
 	
-	public int effectedGroupSize = 1;
+	public int experiencePoint = 1; // TODO
 	
 	public Integer[] orderedImpactPoints = 
 	{

@@ -167,6 +167,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit) {
 		ArrayList<Integer> result = memberState.applyImpactUnit(unit);
 		parentFragment.notifyImpactResult(this,result);
+		memberState.increaseExperience(unit.experiencePoint);
 		return result;
 		
 	}
