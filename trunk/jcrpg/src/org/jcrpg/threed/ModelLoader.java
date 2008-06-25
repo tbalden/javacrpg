@@ -65,6 +65,7 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
@@ -96,7 +97,20 @@ public class ModelLoader {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	    alphaStateBase = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+	    alphaStateBase.setBlendEnabled(true);
+	    alphaStateBase.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+	    alphaStateBase.setDstFunction(AlphaState.DB_ONE);
+	    alphaStateBase.setTestEnabled(true);
+	    alphaStateBase.setTestFunction(AlphaState.TF_GREATER);
+	    alphaStateBase.setEnabled(true);
+	    zBufferStateOff = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
+	    zBufferStateOff.setEnabled(false);
+	    
 	}
+	
+	public AlphaState alphaStateBase = null;
+	public ZBufferState zBufferStateOff = null;
 	
     
 	public static HashMap<String,Texture> textureCache = new HashMap<String,Texture>();
