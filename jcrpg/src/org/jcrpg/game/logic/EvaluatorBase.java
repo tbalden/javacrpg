@@ -24,6 +24,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.ObjInstance;
@@ -44,6 +45,22 @@ public class EvaluatorBase {
 		for (String attr:form.contraAttributes)
 		{
 			int i = attributes.getAttribute(attr);
+			sum+=i;
+		}
+		sum = sum / divider;
+		System.out.println("CONTRA ATTR VALUE = "+sum);
+		return sum;
+	}
+	
+	private static int calculateContraResistenceValue(SkillActForm form, EntityMemberInstance defender)
+	{
+		int divider = form.contraResistencies.size();
+		if (divider == 0) return 50;
+		Resistances attributes = defender.getResistances();
+		int sum = 0;
+		for (String resistance:form.contraResistencies)
+		{
+			int i = attributes.getResistance(resistance);
 			sum+=i;
 		}
 		sum = sum / divider;
@@ -100,7 +117,10 @@ public class EvaluatorBase {
 				contraResult += calculateResultForSkillUse(seed, choice,true);
 			}
 			int contraMaxHundredPlus =
-				calculateContraAttributeValue(choice.skillActForm, choice.targetMember);
+				(calculateContraAttributeValue(choice.skillActForm, choice.targetMember)
+				+
+				calculateContraResistenceValue(choice.skillActForm, choice.targetMember))/2
+				;
 				
 			//contraMaxHundredPlus+=HashUtil.mixPercentage(seed, choice.targetMember.getNumericId(),choice.targetMember.instance.getNumericId(), 0); // random factor
 			contraResult+=contraMaxHundredPlus;

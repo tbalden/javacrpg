@@ -25,6 +25,7 @@ import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -37,6 +38,7 @@ public class MemberPerson extends EntityMember {
 	public String pictureRoot = "human";
 	
 	public Attributes attributes = null;
+	public Resistances resistencies = null;
 	
 	public MemberPerson()
 	{
@@ -97,6 +99,7 @@ public class MemberPerson extends EntityMember {
 		copy.id = id;
 		copy.genderType = genderType;
 		copy.setAttributes(attributes);
+		
 		return copy;
 	}
 
@@ -106,6 +109,10 @@ public class MemberPerson extends EntityMember {
 
 	public void setAttributes(Attributes attributes) {
 		this.attributes = attributes;
+	}
+	
+	public void setResistances(Resistances resistencies) {
+		this.resistencies = resistencies;
 	}
 	
 	public void getXml(OutputStream output)
@@ -123,6 +130,10 @@ public class MemberPerson extends EntityMember {
 	@Override
 	public Attributes getAttributes(EntityDescription parent) {
 		return attributes;
+	}
+	@Override
+	public Resistances getResistances(EntityDescription parent) {
+		return resistencies;
 	}
 	
 }

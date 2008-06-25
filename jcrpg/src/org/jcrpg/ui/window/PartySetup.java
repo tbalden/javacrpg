@@ -45,6 +45,7 @@ import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
@@ -120,6 +121,7 @@ public class PartySetup extends PagedInputWindow {
 	public Profession profession = null;
 	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
 	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
+	public org.jcrpg.world.ai.abs.attribute.Resistances resistanceValues = null;
 	
 	public PartySetup(UIBase base) {
 		super(base);
@@ -656,6 +658,7 @@ public class PartySetup extends PagedInputWindow {
 			personWithGenderAndRace.addProfessionInitially(profession);
 
 			attributeValues = new FantasyAttributes();
+			
 			for (String id:attributeTuners.keySet())
 			{
 				ValueTuner v = attributeTuners.get(id);
@@ -711,6 +714,7 @@ public class PartySetup extends PagedInputWindow {
 			if (skillPointsLeft>0) return true; // all skill points must be used
 			//personWithGenderAndRace.professions.add(profession.getClass());
 			personWithGenderAndRace.setAttributes(attributeValues);
+			personWithGenderAndRace.setResistances(resistanceValues);
 			personWithGenderAndRace.setForeName(foreName.text);
 			personWithGenderAndRace.setSurName(surName.text);
 			personWithGenderAndRace.setPictureId(pictureSelect.getPictureId());
@@ -802,6 +806,17 @@ public class PartySetup extends PagedInputWindow {
 				v.value = attributeValues.attributes.get(id);
 				v.text = ""+v.value;
 				v.deactivate();
+			}
+
+			if (resistanceValues==null) resistanceValues = new FantasyResistances();
+			for (String id: FantasyResistances.resistanceName) {
+				if (race.commonResistenceRatios.resistanceRatios.get(id)!=null)
+				{
+					resistanceValues.setResistance(id, (int)(baseValue*race.commonResistenceRatios.resistanceRatios.get(id)));
+				} else
+				{
+					resistanceValues.setResistance(id, baseValue);
+				}
 			}
 		} else
 		if (base.equals(genderSelect))

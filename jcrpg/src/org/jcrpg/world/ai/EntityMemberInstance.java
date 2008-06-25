@@ -24,6 +24,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
@@ -139,7 +140,16 @@ public class EntityMemberInstance {
 	{
 		return description.getAttributes(instance.description);
 	}
-	
+
+	/**
+	 * Get resistances of the member.
+	 * @return
+	 */
+	public Resistances getResistances()
+	{
+		return description.getResistances(instance.description);
+	}
+
 	/**
 	 * Returns a random sound of a given type if available.
 	 * @param type

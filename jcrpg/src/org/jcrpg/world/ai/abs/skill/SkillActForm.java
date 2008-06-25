@@ -68,6 +68,10 @@ public abstract class SkillActForm
 	 * Attributes that strengthen defense against this skill.
 	 */
 	public ArrayList<String> contraAttributes = new ArrayList<String>();
+	/**
+	 * Resistencies that strengthen defense against this skill.
+	 */
+	public ArrayList<String> contraResistencies = new ArrayList<String>();
 	
 	
 	/**
