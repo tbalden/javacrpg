@@ -25,6 +25,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 public class Impact
 {
 	public boolean success = false;
+	public int experienceGain = 1; // TODO
 	public ImpactUnit actCost = new ImpactUnit();
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}

@@ -127,6 +127,9 @@ public class EntityMemberInstance {
 		if (result.contains(EntityMemberState.ZERO_HEALTH))
 		{
 			encounterData.generatedMembers.remove(this);
+		} else
+		{
+			memberState.increaseExperience(unit.experiencePoint);
 		}
 		if (parentFragment!=null) parentFragment.notifyImpactResult(this,result);
 		return result;

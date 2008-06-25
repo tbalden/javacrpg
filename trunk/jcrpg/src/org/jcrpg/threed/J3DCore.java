@@ -64,6 +64,7 @@ import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
+import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
 import org.jcrpg.ui.window.player.InventoryWindow;
 import org.jcrpg.util.Language;
@@ -1734,6 +1735,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public MainMenu mainMenu = null;
 	public LoadMenu loadMenu = null;
 	public PartySetup partySetup = null;
+	public CharacterLevelingWindow charLevelingWindow = null;
 	
 	public void createWorldMap()
 	{
@@ -2160,6 +2162,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		mainMenu = new MainMenu(uiBase);
 		loadMenu = new LoadMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
+		charLevelingWindow = new CharacterLevelingWindow(uiBase);
 		
 		behaviorWindow = new BehaviorWindow(uiBase);
 		inventoryWindow = new InventoryWindow(uiBase);
@@ -2173,12 +2176,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		uiBase.addWindow("charSheetWindow", charSheetWindow);
 		uiBase.addWindow("mainMenu", mainMenu);	
 		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
-		
-		ChoiceDescription yes = new ChoiceDescription("Y","yes","Yes");
-		ChoiceDescription no = new ChoiceDescription("N","yes","No");
-		ArrayList<ChoiceDescription> quitAnswers = new ArrayList<ChoiceDescription>();
-		quitAnswers.add(yes);quitAnswers.add(no);
-		uiBase.addWindow("quitQuestion", new PlayerChoiceWindow(uiBase,new TextEntry("Quit?", ColorRGBA.red),quitAnswers,"Quit",0.088f,0.088f,0.3f,0.1f));
 		
 		// shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
 		uiRootNode.attachChild(uiBase.hud.hudNode); 
@@ -2287,6 +2284,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			pause = true;
 			gameState.doEconomyUpdate();
 			pause = false;
+		} else
+		{
+			gameState.checkAndDoLeveling();
 		}
 		
 		// game-logic independent environmental update (sounds etc.)

@@ -42,6 +42,8 @@ public class EntityMemberState {
 	public int manaPoint = DEFAULT_MANA_POINT;
 	
 	public int level = 1;
+	public int experiencePoint = 0;
+	public static final int LEVELING_XP = 10; // the XP needed for new level of the member
 	
 	public static final int ZERO_HEALTH = 0;
 	public static final int ZERO_STAMINA = 1;
@@ -98,6 +100,21 @@ public class EntityMemberState {
 	{
 		if (sanityPoint<=0) return true;
 		return false;
+	}
+	
+	public boolean checkLevelingAvailable()
+	{
+		if (experiencePoint/LEVELING_XP!=level)
+		{
+			level++;
+			return true;
+		}
+		return false;
+	}
+	
+	public void increaseExperience(int value)
+	{
+		experiencePoint+=value;
 	}
 	
 
