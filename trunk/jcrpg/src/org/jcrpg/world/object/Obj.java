@@ -17,6 +17,8 @@
 package org.jcrpg.world.object;
 
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 
 public class Obj {
@@ -24,9 +26,20 @@ public class Obj {
 	public String icon;
 	public SkillInstance requirementSkillAndLevel  = null;
 	
+	public Attributes objectAttributeBonus = null;
+	public Resistances objectResistanceBonus = null;
+	
 	public String getName()
 	{
 		return Language.v("obj."+this.getClass().getSimpleName());
+	}
+
+	public Attributes getAttributeBonus() {
+		return objectAttributeBonus;
+	}
+
+	public Resistances getResistanceBonus() {
+		return objectResistanceBonus;
 	}
 	
 }
