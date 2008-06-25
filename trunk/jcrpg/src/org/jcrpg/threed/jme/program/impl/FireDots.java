@@ -24,7 +24,6 @@ import com.jme.bounding.BoundingSphere;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.shape.Box;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.ZBufferState;
 import com.jmex.effects.particles.ParticleFactory;
@@ -33,7 +32,7 @@ import com.jmex.effects.particles.ParticlePoints;
 public class FireDots extends EffectNode {
 
 	private ParticlePoints pPoints;
-	private Box debugBox;
+	//private Box debugBox;
 
 	/**
 	 * 

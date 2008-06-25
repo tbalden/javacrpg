@@ -26,6 +26,8 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
+import org.jcrpg.world.ai.abs.attribute.ResistanceRatios;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
@@ -45,6 +47,7 @@ public class EntityMember extends DescriptionBase {
 	public String visibleTypeId;
 	public SkillContainer commonSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
+	public ResistanceRatios commonResistenceRatios = new ResistanceRatios();
 	public float[] scale = new float[]{1,1,1};
 	public AudioDescription audioDescription = null;
 	public Class<? extends Profession> currentProfession;
@@ -76,6 +79,11 @@ public class EntityMember extends DescriptionBase {
 	public Attributes getAttributes(EntityDescription parent)
 	{
 		return Attributes.getAttributes(parent.attributes, commonAttributeRatios);
+	}
+	
+	public Resistances getResistances(EntityDescription parent)
+	{
+		return Resistances.getResistances(parent.resistances, commonResistenceRatios);
 	}
 
 	public float[] getScale() {
