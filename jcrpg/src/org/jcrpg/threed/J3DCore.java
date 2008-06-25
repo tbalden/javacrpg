@@ -311,7 +311,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public GameStateContainer gameState = null;
     
 	
-	public ModelLoader modelLoader = new ModelLoader(this);
+	public ModelLoader modelLoader;
 	public GeometryBatchHelper batchHelper = new GeometryBatchHelper(this);
 	public ModelPool modelPool = new ModelPool(this);
 	
@@ -1888,6 +1888,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	Quad quadToFixHUDCulling = null;
 	@Override
 	protected void simpleInitGame() {
+		modelLoader = new ModelLoader(this);
 		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
 		audioServer.init();

@@ -42,43 +42,38 @@ public class FireDots extends EffectNode {
 
 	public FireDots()
 	{
-	       pPoints = ParticleFactory.buildPointParticles("particles", 300);
-	        pPoints.setPointSize(5);
-	        pPoints.setAntialiased(true);
-	        pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
-	        pPoints.setOriginOffset(new Vector3f(0, 0, 0));
-	        pPoints.setInitialVelocity(.006f);
-	        pPoints.setStartSize(2.5f);
-	        pPoints.setEndSize(.5f);
-	        pPoints.setMinimumLifeTime(1200f);
-	        pPoints.setMaximumLifeTime(1400f);
-	        pPoints.setStartColor(new ColorRGBA(1, 0, 0, 1));
-	        pPoints.setEndColor(new ColorRGBA(0, 1, 0, 0));
-	        pPoints.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-	        pPoints.getParticleController().setControlFlow(false);
-	        pPoints.warmUp(120);
+		pPoints = ParticleFactory.buildPointParticles("particles", 300);
+		pPoints.setPointSize(5);
+		pPoints.setAntialiased(true);
+		pPoints.setEmissionDirection(new Vector3f(0, 1, 0));
+		pPoints.setOriginOffset(new Vector3f(0, 0, 0));
+		pPoints.setInitialVelocity(.006f);
+		pPoints.setStartSize(2.5f);
+		pPoints.setEndSize(.5f);
+		pPoints.setMinimumLifeTime(1200f);
+		pPoints.setMaximumLifeTime(1400f);
+		pPoints.setStartColor(new ColorRGBA(1, 0, 0, 1));
+		pPoints.setEndColor(new ColorRGBA(0, 1, 0, 0));
+		pPoints.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
+		pPoints.getParticleController().setControlFlow(false);
+		pPoints.warmUp(120);
 
-	        AlphaState as1 = J3DCore.getInstance().getDisplay().getRenderer().createAlphaState();
-	        as1.setBlendEnabled(true);
-	        as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-	        as1.setDstFunction(AlphaState.DB_ONE);
-	        as1.setEnabled(true);
-	        this.setRenderState(as1);
+		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
+		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 
-	        ZBufferState zstate = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
-	        zstate.setEnabled(false);
-	        pPoints.setRenderState(zstate);
+		this.setRenderState(as1);
+		pPoints.setRenderState(zstate);
 
-	        pPoints.setModelBound(new BoundingSphere());
-	        pPoints.updateModelBound();
-	        
-	        //debugBox = new Box("box",new Vector3f(1f,1f,1f),new Vector3f(1f,1f,1f));
-	        //debugBox.setModelBound(new BoundingBox());
-	        //debugBox.updateModelBound();
-	        
-	        //this.attachChild(debugBox);
+		pPoints.setModelBound(new BoundingSphere());
+		pPoints.updateModelBound();
 
-	        this.attachChild(pPoints);
+		//debugBox = new Box("box",new Vector3f(1f,1f,1f),new Vector3f(1f,1f,1f));
+		//debugBox.setModelBound(new BoundingBox());
+		//debugBox.updateModelBound();
+
+		//this.attachChild(debugBox);
+
+		this.attachChild(pPoints);
 	}
 
 
