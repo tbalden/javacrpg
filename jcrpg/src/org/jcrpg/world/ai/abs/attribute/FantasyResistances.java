@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.ai.abs.attribute;
 
+import org.jcrpg.game.GameLogicConstants;
+
 public class FantasyResistances extends Resistances {
 
 	public static String RESIST_PIERCE = "RESIST_PIERCE";
@@ -37,7 +39,7 @@ public class FantasyResistances extends Resistances {
 	{
 		for (String a:resistencyName)
 		{
-			resistances.put(a, 0);
+			resistances.put(a, GameLogicConstants.BASE_RESISTANCE_VALUE);
 		}
 	}
 	

@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
+import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 
 public class FantasyAttributes extends Attributes {
@@ -39,7 +40,7 @@ public class FantasyAttributes extends Attributes {
 
 	public FantasyAttributes() {
 		for (String a : attributeName) {
-			attributes.put(a, 0);
+			attributes.put(a, GameLogicConstants.BASE_ATTRIBUTE_VALUE);
 		}
 	}
 

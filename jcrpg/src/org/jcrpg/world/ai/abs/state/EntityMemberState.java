@@ -50,7 +50,7 @@ public class EntityMemberState {
 	public int manaPoint = DEFAULT_MANA_POINT;
 	
 	public int level = 1;
-	public int experiencePoint = 11;
+	public int experiencePoint = 0;
 	public static final int LEVELING_XP = 10; // the XP needed for new level of the member
 	
 	public static final int ZERO_HEALTH = 0;
@@ -136,6 +136,7 @@ public class EntityMemberState {
 		for (int i=ZERO_HEALTH; i<=ZERO_MANA; i++) {
 			float m = attributes.getAttributePointMultiplier(i);
 			int point = (int)(level * m);
+			System.out.println("MULTIPLIER "+i+" "+m+ " "+point);
 			if (i==ZERO_HEALTH)
 			{
 				if (finalize) {
@@ -182,6 +183,7 @@ public class EntityMemberState {
 	
 	public void maximizeAtStart()
 	{
+		System.out.println("MAX:"+maxHealthPoint+" "+maxStaminaPoint);
 		healthPoint = maxHealthPoint;
 		staminaPoint = maxStaminaPoint;
 		sanityPoint = maxSanityPoint;
