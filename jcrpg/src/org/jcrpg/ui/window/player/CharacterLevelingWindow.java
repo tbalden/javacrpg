@@ -95,7 +95,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	public CharacterLevelingWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.75f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.9f*core.getDisplay().getWidth(), 1.7f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.10f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
@@ -104,8 +104,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Leveling",false);
-    		characterName = new TextLabel("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,"",true);
-	    	addInput(0,characterName);
+    		characterName = new TextLabel("member", this,page0, 0.50f,0.11f,0.3f,0.06f,450f,"",true);
+	    	//addInput(0,characterName);
 	    	
 	    	professionSelect = new ListSelect("profession", this,page0, 0.55f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 
@@ -140,7 +140,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		posY++;
 	    	}
 
-	    	attrPointsLeftLabel = new TextLabel("",this,page0, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
+	    	attrPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.50f, 0.2f, 0.07f,500f,attrPointsLeft+" Attr. Points left.",false); 
 
 
 	    	//addInput(1,pictureSelect);
@@ -158,16 +158,16 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		skillSelects.put(groupId, sel);
 	    		addInput(0,sel);
 	    	}
-	    	skillPointsLeftLabel = new TextLabel("",this,page0, 0.23f, 0.7f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
+	    	skillPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.6f, 0.2f, 0.07f,500f,skillPointsLeft+" Skill Points left.",false); 
 	    	
-	    	skillText = new TextLabel("",this,page0, 0.6f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
-	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
+	    	skillText = new TextLabel("",this,page0, 0.61f, 0.65f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
+	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.7f,0.15f,0.04f,600f,0,0,100,1);
 	    	addInput(2,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);
 	    	
-	    	addInput(0,professionSelect);
+	    	//addInput(0,professionSelect); // TODO multi-profession?
 	    	
-	    	finishedButton = new TextButton("ready",this,page0, 0.70f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
+	    	finishedButton = new TextButton("ready",this,page0, 0.70f, 0.8f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	
 	    	addInput(0, finishedButton);
 
@@ -311,11 +311,13 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	public void hide() {
 		super.hide();
 		J3DCore.getInstance().gameState.levelingInProgress = false;
+		core.uiBase.hud.characters.show();
 	}
 	@Override
 	public void show() {
 		super.show();
 		updateToParty();
+		core.uiBase.hud.characters.hide();
 	}
 	
 }
