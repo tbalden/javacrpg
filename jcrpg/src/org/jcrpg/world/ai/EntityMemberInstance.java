@@ -81,7 +81,7 @@ public class EntityMemberInstance {
 			//Jcrpg.LOGGER.fine(ex.toString());
 		}
 		updateAfterLeveling();
-	
+		memberState.maximizeAtStart();
 	}
 	
 	private transient ArrayList<InterceptionSkill> tempList = new ArrayList<InterceptionSkill>();

@@ -116,6 +116,7 @@ public class SaveLoadNewGame {
 					m.inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
 					System.out.println("ADDING ITEM : "+o);
 				}
+				m.memberState.maximizeAtStart();
 				party.addPartyMember(m);
 			}
 			party.recalcBoundarySizes();
