@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.jcrpg.game.CharacterCreationRules;
+import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
@@ -99,18 +100,10 @@ public class PartySetup extends PagedInputWindow {
 	Class<? extends SkillBase> skillTuned = null; 
 	
 	/**
-	 * how many attribute points can be used by default.
-	 */
-	public static final int ATTRIBUTE_POINTS_TO_USE = 10;
-	/**
 	 * How many attribute points are left.
 	 */
 	int attrPointsLeft = 0;
 	
-	/**
-	 * how many attribute points can be used by default.
-	 */
-	public static final int SKILL_POINTS_TO_USE = 5;
 	/**
 	 * How many attribute points are left.
 	 */
@@ -632,8 +625,8 @@ public class PartySetup extends PagedInputWindow {
 			// ######### STARTING A NEW CHARACTER
 			base.deactivate();
 			resetForms();
-			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
-			skillPointsLeft = SKILL_POINTS_TO_USE;
+			attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE;
+			skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE;
 			attrPointsLeftLabel.text = attrPointsLeft + " points left.";
 			attrPointsLeftLabel.activate();
 			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
@@ -788,8 +781,8 @@ public class PartySetup extends PagedInputWindow {
 			
 
 			// attribute ratio
-			int baseValue = 10;
-			attrPointsLeft = ATTRIBUTE_POINTS_TO_USE;
+			int baseValue = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE;
 			if (attributeValues==null) attributeValues = new FantasyAttributes();
 			for (String id: FantasyAttributes.attributeName) {
 				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
@@ -807,7 +800,8 @@ public class PartySetup extends PagedInputWindow {
 				v.text = ""+v.value;
 				v.deactivate();
 			}
-
+			
+			baseValue = GameLogicConstants.BASE_RESISTANCE_VALUE;
 			if (resistanceValues==null) resistanceValues = new FantasyResistances();
 			for (String id: FantasyResistances.resistanceName) {
 				if (race.commonResistenceRatios.resistanceRatios.get(id)!=null)
