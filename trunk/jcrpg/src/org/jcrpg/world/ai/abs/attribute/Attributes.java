@@ -20,7 +20,9 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
-public class Attributes {
+import org.jcrpg.game.GameLogicConstants;
+
+public abstract class Attributes {
 
 	public HashMap<String, Integer> attributes = new HashMap<String, Integer>();
 	/**
@@ -41,7 +43,11 @@ public class Attributes {
 	
 	public static int getAttribute(String attr, Attributes base, Attributes modifier)
 	{
-		return base.attributes.get(attr)+modifier.attributes.get(attr);
+		Integer attrVal = base.attributes.get(attr);
+		if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+		Integer attrValPlus = modifier.attributes.get(attr);
+		if (attrValPlus==null) attrValPlus = 0;
+		return attrVal+attrValPlus;
 	}
 	
 	public static Attributes getAttributes(Attributes base, Attributes modifier)
@@ -49,7 +55,11 @@ public class Attributes {
 		FantasyAttributes ret = new FantasyAttributes();
 		for (String a:base.attributes.keySet())
 		{
-			ret.setAttribute(a, base.attributes.get(a)+modifier.attributes.get(a));
+			Integer attrVal = base.attributes.get(a);
+			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			Integer attrValPlus = modifier.attributes.get(a);
+			if (attrValPlus==null) attrValPlus = 0;
+			ret.setAttribute(a, attrVal+attrValPlus);
 		}
 		return ret;
 	}
@@ -58,8 +68,14 @@ public class Attributes {
 		FantasyAttributes ret = new FantasyAttributes();
 		for (String a:base.attributes.keySet())
 		{
-			ret.setAttribute(a, (int)(base.attributes.get(a)*modifier.attributeRatios.get(a)));
+			Float ratio = modifier.attributeRatios.get(a);
+			if (ratio==null) ratio = 1f;
+			Integer attrVal = base.attributes.get(a);
+			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			ret.setAttribute(a, (int)(attrVal*ratio));
 		}
 		return ret;
 	}
+	
+	public abstract float getAttributePointMultiplier(int pointType);
 }

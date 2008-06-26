@@ -80,6 +80,7 @@ public class EntityMemberInstance {
 		{
 			//Jcrpg.LOGGER.fine(ex.toString());
 		}
+		updateAfterLeveling();
 	
 	}
 	
@@ -142,7 +143,7 @@ public class EntityMemberInstance {
 	 */
 	public Attributes getAttributes()
 	{
-		return description.getAttributes(instance.description);
+		return description.getAttributes(instance!=null?instance.description:null);
 	}
 
 	/**
@@ -197,6 +198,7 @@ public class EntityMemberInstance {
 	public void updateAfterLeveling()
 	{
 		description.memberSkills.updateSkillActForms();
+		memberState.recalculateMaximums(this,true);
 	}
 
 }

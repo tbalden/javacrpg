@@ -27,6 +27,8 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.GroupingRule.GroupSizeAndType;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
@@ -62,8 +64,8 @@ public class EntityInstance {
 	 * Skills of the instance.
 	 */
 	public SkillContainer skills = new SkillContainer();
-	public Attributes attributes = new Attributes();	
-	public Resistances resistances = new Resistances();
+	public Attributes attributes = new FantasyAttributes();	
+	public Resistances resistances = new FantasyResistances();
 	
 	/**
 	 * currently dominated zone.

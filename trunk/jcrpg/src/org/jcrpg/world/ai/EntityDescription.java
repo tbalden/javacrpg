@@ -26,6 +26,8 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
@@ -54,8 +56,8 @@ public class EntityDescription extends DescriptionBase {
 	
 	public int genderType = GENDER_NEUTRAL;
 	public SkillContainer skills = new SkillContainer();
-	public Attributes attributes = new Attributes();
-	public Resistances resistances = new Resistances();
+	public Attributes attributes = new FantasyAttributes();
+	public Resistances resistances = new FantasyResistances();
 
 	public EconomyTemplate economyTemplate = new EconomyTemplate();
 
