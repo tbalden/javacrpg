@@ -18,6 +18,10 @@
 
 package org.jcrpg.world.ai.abs.attribute;
 
+import java.util.HashMap;
+
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
+
 public class FantasyAttributes extends Attributes {
 
 	public static String STRENGTH = "STRENGTH"; // your muscles
@@ -27,19 +31,42 @@ public class FantasyAttributes extends Attributes {
 	public static String PSYCHE = "PSYCHE"; // buildup of your mind
 	public static String PIETY = "PIETY"; // devotion to transcendental
 	public static String CHARISMA = "CHARISMA"; // for charming
-	public static String KARMA = "KARMA"; // bad karma gives affiliation to bad things
-	
-	public static String[] attributeName = new String[] {
-		STRENGTH,SPEED,CONCENTRATION,CONSTITUTION, PSYCHE, PIETY, CHARISMA, KARMA
-	};
-	
-	public FantasyAttributes()
-	{
-		for (String a:attributeName)
-		{
+	public static String KARMA = "KARMA"; // bad karma gives affiliation to
+											// bad things
+
+	public static String[] attributeName = new String[] { STRENGTH, SPEED,
+			CONCENTRATION, CONSTITUTION, PSYCHE, PIETY, CHARISMA, KARMA };
+
+	public FantasyAttributes() {
+		for (String a : attributeName) {
 			attributes.put(a, 0);
 		}
 	}
-	
-	
+
+	public static HashMap<Integer, String[]> attrPointMultipliers = new HashMap<Integer, String[]>();
+	static {
+		attrPointMultipliers.put(EntityMemberState.ZERO_HEALTH, new String[] {
+				STRENGTH, CONSTITUTION });
+		attrPointMultipliers.put(EntityMemberState.ZERO_MANA, new String[] {
+				PSYCHE, PIETY });
+		attrPointMultipliers.put(EntityMemberState.ZERO_MORALE, new String[] {
+				CHARISMA, KARMA });
+		attrPointMultipliers.put(EntityMemberState.ZERO_SANITY, new String[] {
+				PSYCHE, CONSTITUTION });
+		attrPointMultipliers.put(EntityMemberState.ZERO_STAMINA, new String[] {
+				STRENGTH, CONCENTRATION });
+	}
+
+	@Override
+	public float getAttributePointMultiplier(int pointType) {
+		String[] attrs = attrPointMultipliers.get(pointType);
+		int sum = 0;
+		int count = 0;
+		for (String attr : attrs) {
+			sum += getAttribute(attr);
+			count++;
+		}
+		return (sum*1f/count);
+	}
+
 }

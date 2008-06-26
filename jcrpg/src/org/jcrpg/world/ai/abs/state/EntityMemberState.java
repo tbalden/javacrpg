@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.abs.state;
 import java.util.ArrayList;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 
 public class EntityMemberState {
 	
@@ -115,6 +117,50 @@ public class EntityMemberState {
 	public void increaseExperience(int value)
 	{
 		experiencePoint+=value;
+	}
+	
+	/**
+	 * Recalculates maximum levels for an instance's attribute multipliers.
+	 * @param instance
+	 * @param finalize If finalize actual points are increased with the difference to new maximum.
+	 */
+	public void recalculateMaximums(EntityMemberInstance instance, boolean finalize)
+	{
+		Attributes attributes = instance.getAttributes();
+		for (int i=ZERO_HEALTH; i<=ZERO_MANA; i++) {
+			float m = attributes.getAttributePointMultiplier(i);
+			int point = (int)(level * m);
+			if (i==ZERO_HEALTH)
+			{
+				if (finalize)
+					healthPoint+= point-maxHealthPoint;
+				maxHealthPoint = point;
+			} else
+			if (i==ZERO_STAMINA)
+			{
+				if (finalize)
+					staminaPoint+= point-maxStaminaPoint;
+				maxStaminaPoint = point;
+			} else
+			if (i==ZERO_MORALE)
+			{
+				if (finalize)
+					moralePoint+= point-maxMoralePoint;
+				maxMoralePoint = point;
+			} else
+			if (i==ZERO_SANITY)
+			{
+				if (finalize)
+					sanityPoint+= point-maxSanityPoint;
+				maxSanityPoint = point;
+			} else
+			if (i==ZERO_MANA)
+			{
+				if (finalize)
+					manaPoint+= point-maxManaPoint;
+				maxManaPoint = point;
+			}
+		}
 	}
 	
 

@@ -294,19 +294,25 @@ public class CharacterLevelingWindow extends PagedInputWindow {
     	level.text = ""+instance.memberState.level;
     	level.deactivate();
 		
-		health.text = ""+instance.memberState.healthPoint+ "/"+instance.memberState.maxHealthPoint;
+    	updateAttributePoints();
+
+	}
+	
+	public void updateAttributePoints()
+	{
+		health.text = ""+member.memberState.healthPoint+ "/"+member.memberState.maxHealthPoint;
 		health.deactivate();
 
-		stamina.text = ""+instance.memberState.staminaPoint+ "/"+instance.memberState.maxStaminaPoint;
+		stamina.text = ""+member.memberState.staminaPoint+ "/"+member.memberState.maxStaminaPoint;
 		stamina.deactivate();
 
-		morale.text = ""+instance.memberState.moralePoint+ "/"+instance.memberState.maxMoralePoint;
+		morale.text = ""+member.memberState.moralePoint+ "/"+member.memberState.maxMoralePoint;
 		morale.deactivate();
 
-		sanity.text = ""+instance.memberState.sanityPoint+ "/"+instance.memberState.maxSanityPoint;
+		sanity.text = ""+member.memberState.sanityPoint+ "/"+member.memberState.maxSanityPoint;
 		sanity.deactivate();
 
-		mana.text = ""+instance.memberState.manaPoint+ "/"+instance.memberState.maxManaPoint;
+		mana.text = ""+member.memberState.manaPoint+ "/"+member.memberState.maxManaPoint;
 		mana.deactivate();
 
 	}
@@ -447,7 +453,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 							((MemberPerson)member.description).attributes.setAttribute(id, value);
 							System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 						}
-						//inputEntered(professionSelect, "fake");
+						member.memberState.recalculateMaximums(member,false);
+						updateAttributePoints();
 						return true;
 					}
 						
