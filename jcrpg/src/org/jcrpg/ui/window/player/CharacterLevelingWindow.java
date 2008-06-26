@@ -69,6 +69,28 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	
 	TextButton finishedButton = null;
 
+	TextLabel attrPointsLeftLabel = null;
+
+	TextLabel skillText;
+	ValueTuner skillValueTuner;
+	TextLabel skillPointsLeftLabel = null;
+	
+	// which skillgroup was used to enter modification ValueTuner
+	ListSelect skillGroupLeftLast = null;
+	Class<? extends SkillBase> skillTuned = null; 
+
+	/**
+	 * How many attribute points are left.
+	 */
+	int attrPointsLeft = 0;
+	
+	/**
+	 * How many attribute points are left.
+	 */
+	int skillPointsLeft = 0;
+
+	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
+	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
 	
 	public CharacterLevelingWindow(UIBase base) {
 		super(base);
@@ -118,6 +140,9 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		posY++;
 	    	}
 
+	    	attrPointsLeftLabel = new TextLabel("",this,page0, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
+
+
 	    	//addInput(1,pictureSelect);
 
 	    	posY = 0; 
@@ -133,10 +158,16 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		skillSelects.put(groupId, sel);
 	    		addInput(0,sel);
 	    	}
+	    	skillPointsLeftLabel = new TextLabel("",this,page0, 0.23f, 0.7f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
+	    	
+	    	skillText = new TextLabel("",this,page0, 0.6f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
+	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
+	    	addInput(2,skillValueTuner);
+	    	skillValueTuner.setEnabled(false);
 	    	
 	    	addInput(0,professionSelect);
 	    	
-	    	finishedButton = new TextButton("ready",this,page0, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
+	    	finishedButton = new TextButton("ready",this,page0, 0.70f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	
 	    	addInput(0, finishedButton);
 

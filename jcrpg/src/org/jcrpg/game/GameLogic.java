@@ -45,6 +45,8 @@ import org.jcrpg.world.place.World;
  */
 public class GameLogic {
 	
+	
+	
 	public transient HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
 	public transient HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
 	

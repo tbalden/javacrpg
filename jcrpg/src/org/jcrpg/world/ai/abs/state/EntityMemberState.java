@@ -42,7 +42,7 @@ public class EntityMemberState {
 	public int manaPoint = DEFAULT_MANA_POINT;
 	
 	public int level = 1;
-	public int experiencePoint = 0;
+	public int experiencePoint = 11;
 	public static final int LEVELING_XP = 10; // the XP needed for new level of the member
 	
 	public static final int ZERO_HEALTH = 0;
