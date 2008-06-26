@@ -69,8 +69,10 @@ public abstract class Attributes {
 		for (String a:base.attributes.keySet())
 		{
 			Float ratio = modifier.attributeRatios.get(a);
+			//System.out.println("RATIO = "+ratio);
 			if (ratio==null) ratio = 1f;
 			Integer attrVal = base.attributes.get(a);
+			//System.out.println("VAL = "+attrVal);
 			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
 			ret.setAttribute(a, (int)(attrVal*ratio));
 		}
