@@ -291,7 +291,7 @@ public class TurnActWindow extends PagedInputWindow {
 			ListSelect inventorySelect = inventorySelectors.get(index);
 			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
 			
-			SkillInstance skillInstance = i.description.commonSkills.skills.get(s.getClass());
+			SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
 			{
 				ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
 				String[] texts = new String[forms.size()];
@@ -458,7 +458,7 @@ public class TurnActWindow extends PagedInputWindow {
 					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 					TurnActMemberChoice choice = new TurnActMemberChoice();
 					choice.member = i;
-					choice.skill = i.description.commonSkills.skills.get(sb.getClass());
+					choice.skill = i.description.memberSkills.skills.get(sb.getClass());
 					SkillActForm selectedForm = null;
 					for (SkillActForm formInst:sb.getActForms())
 					{

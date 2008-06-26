@@ -38,7 +38,7 @@ public class MemberPerson extends EntityMember {
 	public String pictureRoot = "human";
 	
 	public Attributes attributes = null;
-	public Resistances resistencies = null;
+	public Resistances resistances = null;
 	
 	public MemberPerson()
 	{
@@ -112,7 +112,7 @@ public class MemberPerson extends EntityMember {
 	}
 	
 	public void setResistances(Resistances resistencies) {
-		this.resistencies = resistencies;
+		this.resistances = resistencies;
 	}
 	
 	public void getXml(OutputStream output)
@@ -133,7 +133,7 @@ public class MemberPerson extends EntityMember {
 	}
 	@Override
 	public Resistances getResistances(EntityDescription parent) {
-		return resistencies;
+		return resistances;
 	}
 	
 }

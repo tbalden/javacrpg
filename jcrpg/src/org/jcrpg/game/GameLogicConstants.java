@@ -22,10 +22,12 @@ public class GameLogicConstants {
 	 * how many attribute points can be used by default.
 	 */
 	public static final int ATTRIBUTE_POINTS_TO_USE = 10;
+	public static final int ATTRIBUTE_POINTS_TO_USE_ON_LEVELING = 2;
 	/**
 	 * how many attribute points can be used by default.
 	 */
 	public static final int SKILL_POINTS_TO_USE = 5;
+	public static final int SKILL_POINTS_TO_USE_ON_LEVELING = 3;
 	
 	/**
 	 * Base attribute value to use for initial ratio multiplication.

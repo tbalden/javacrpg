@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
@@ -180,6 +181,22 @@ public class EntityMemberInstance {
 
 	public void setParentFragment(EntityFragment parentFragment) {
 		this.parentFragment = parentFragment;
+	}
+	
+	public int getSkillLevel(Class<? extends SkillBase> skill)
+	{
+		return description.memberSkills.getSkillLevel(skill, null);
+	}
+	public void setSkillLevel(Class<? extends SkillBase> skill, int level)
+	{
+		description.memberSkills.setSkillValue(skill, level);
+	}
+	
+	
+	
+	public void updateAfterLeveling()
+	{
+		description.memberSkills.updateSkillActForms();
 	}
 
 }

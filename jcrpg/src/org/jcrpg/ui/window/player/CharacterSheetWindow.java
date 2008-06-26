@@ -217,13 +217,13 @@ public class CharacterSheetWindow extends PagedInputWindow {
     		int counter = 0;
     		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
     		{
-    			if (instance.description.commonSkills.skills.containsKey(skill)) {
-    				int level = instance.description.commonSkills.skills.get(skill).level;
+    			if (instance.description.memberSkills.skills.containsKey(skill)) {
+    				int level = instance.description.memberSkills.skills.get(skill).level;
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
 	    			int modifier = 1;
 	    			try {
-	    				modifier = core.gameState.charCreationRules.profInstances.get(instance.description.currentProfession).skillLearnModifier.multipliers.get(skill);
+	    				modifier = core.gameState.charCreationRules.profInstances.get(instance.description.currentProfession).skillLearnModifier.getMultiplier(skill);
 	    			} catch (Exception ex)
 	    			{}
 	    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;

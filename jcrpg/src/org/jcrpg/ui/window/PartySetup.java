@@ -523,7 +523,7 @@ public class PartySetup extends PagedInputWindow {
 			if (message.equals("enter")) {
 				// ############## SKILL VALUE SET, feed it back into listSelect
 				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
-				personWithGenderAndRace.commonSkills.setSkillValue(skill, skillValueTuner.value);
+				personWithGenderAndRace.memberSkills.setSkillValue(skill, skillValueTuner.value);
 				skillGroupLeftLast.setUpdated(true);
 				int id = 0;
 				for (Object o:skillGroupLeftLast.objects)
@@ -531,7 +531,7 @@ public class PartySetup extends PagedInputWindow {
 					if (o.equals(skillValueTuner.tunedObject))
 					{
 						// this is the id that's modified:
-						int modifier = profession.skillLearnModifier.multipliers.get(skill);
+						int modifier = profession.skillLearnModifier.getMultiplier(skill);
 						skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+" ("+modifier+"x): "+skillValueTuner.value;
 					}
 					id++;
@@ -573,12 +573,12 @@ public class PartySetup extends PagedInputWindow {
 			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
 			//System.out.println("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
-			skillValueTuner.value = personWithGenderAndRace.commonSkills.getSkillLevel(skill, null);
+			skillValueTuner.value = personWithGenderAndRace.memberSkills.getSkillLevel(skill, null);
 			skillValueTuner.setUpdated(true);
 			skillValueTuner.tunedObject = skill;
 			int modifier = 1;
 			try {
-				modifier = profession.skillLearnModifier.multipliers.get(skill);
+				modifier = profession.skillLearnModifier.getMultiplier(skill);
 			} catch (Exception ex)
 			{	
 			}
@@ -671,13 +671,13 @@ public class PartySetup extends PagedInputWindow {
 	    		int counter = 0;
 	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
-	    			if (personWithGenderAndRace.commonSkills.skills.containsKey(skill)) {
-	    				int level = personWithGenderAndRace.commonSkills.skills.get(skill).level;
+	    			if (personWithGenderAndRace.memberSkills.skills.containsKey(skill)) {
+	    				int level = personWithGenderAndRace.memberSkills.skills.get(skill).level;
 		    			String id = groupId+"."+counter;
 		    			String text = skill.getSimpleName();
 		    			int modifier = 1;
 		    			try {
-		    				modifier = profession.skillLearnModifier.multipliers.get(skill);
+		    				modifier = profession.skillLearnModifier.getMultiplier(skill);
 		    			} catch (Exception ex)
 		    			{	
 		    			}
@@ -828,7 +828,7 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(skillValueTuner))
 		{
-			personWithGenderAndRace.commonSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+			personWithGenderAndRace.memberSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
 			skillGroupLeftLast.setUpdated(true);
 			int id = 0;
 			for (Object o:skillGroupLeftLast.objects)
