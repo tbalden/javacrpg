@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.abs.skill;
 
 import java.util.ArrayList;
 
+import org.jcrpg.threed.J3DCore;
+
 /**
  * Entities may have this containing a skill with certain level.
  * @author pali
@@ -55,12 +57,32 @@ public class SkillInstance {
 		{
 			if (f == form.getClass() && form.skillRequirementLevel<=level)
 			{
-				aquiredActForms.add(form.getClass());
+				if (!aquiredActForms.contains(form.getClass()))
+					aquiredActForms.add(form.getClass());
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	public void updateAvailableActForms()
+	{
+		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).actForms)
+		{
+			if (form.skillRequirementLevel<=level)
+			{
+				if (!aquiredActForms.contains(form.getClass())) 
+				{
+					J3DCore.getInstance().uiBase.hud.mainBox.addEntry("New Skill Act Form: "+form.getName()+ " ("+SkillGroups.skillBaseInstances.get(skill).getName()+")");
+					aquiredActForms.add(form.getClass());
+				} else
+				{
+					//J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Already have Skill Act Form: "+form.getName());
+				}
+			}
+		}
+	}
+	
 	
 	public SkillInstance copy()
 	{

@@ -127,5 +127,23 @@ public class SkillContainer {
 		}
 		return skillTypeGroupedBases.get(type);
 	}
+	
+	public void updateSkillActForms()
+	{
+		for (SkillInstance i:skills.values())
+		{
+			i.updateAvailableActForms();
+		}
+	}
+	
+	public SkillContainer copy()
+	{
+		SkillContainer c = new SkillContainer();
+		for (SkillInstance s:skills.values())
+		{
+			c.addSkill(s);
+		}
+		return c;
+	}
 
 }

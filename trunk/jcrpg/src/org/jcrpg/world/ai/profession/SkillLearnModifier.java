@@ -27,6 +27,13 @@ public class SkillLearnModifier {
 	public static int MAJOR = 3;
 	public static int MINOR = 2;
 
-	public HashMap<Class <? extends SkillBase>, Integer> multipliers = new HashMap<Class<? extends SkillBase>, Integer>();	
+	protected HashMap<Class <? extends SkillBase>, Integer> multipliers = new HashMap<Class<? extends SkillBase>, Integer>();
+	
+	public int getMultiplier(Class<? extends SkillBase> skill)
+	{
+		Integer r = multipliers.get(skill);
+		if (r==null) return 1;
+		return r;
+	}
 	
 }

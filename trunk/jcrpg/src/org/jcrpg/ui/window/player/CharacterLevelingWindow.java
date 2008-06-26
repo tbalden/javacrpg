@@ -20,6 +20,7 @@ package org.jcrpg.ui.window.player;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
@@ -34,6 +35,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -89,7 +91,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	 */
 	int skillPointsLeft = 0;
 
-	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
+	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = new FantasyAttributes();
 	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
 	
 	public CharacterLevelingWindow(UIBase base) {
@@ -162,7 +164,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    	
 	    	skillText = new TextLabel("",this,page0, 0.61f, 0.65f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.7f,0.15f,0.04f,600f,0,0,100,1);
-	    	addInput(2,skillValueTuner);
+	    	addInput(0,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);
 	    	
 	    	//addInput(0,professionSelect); // TODO multi-profession?
@@ -181,11 +183,17 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 
 	public PartyInstance party = null;
 	public PersistentMemberInstance member = null;
+	public Profession profession = null;
+	public SkillContainer lowestSkillValues = null;
 	
 	public void setPageData(PartyInstance party, PersistentMemberInstance member)
 	{
 		this.party = party;
 		this.member = member;
+		profession = core.gameState.getCharCreationRules().profInstances.get(member.description.professions.get(0));
+		attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE_ON_LEVELING;
+		skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE_ON_LEVELING;
+		lowestSkillValues = member.description.memberSkills.copy();
 	}
 
 	public int lastUpdatedLivingPartySize = 0;
@@ -199,11 +207,17 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 
 	public void updateToMemberInstance(EntityMemberInstance instance)
 	{
+		attrPointsLeftLabel.text = attrPointsLeft + " points left.";
+		attrPointsLeftLabel.activate();
+		skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+		skillPointsLeftLabel.activate();
 		
 		for (String id: FantasyAttributes.attributeName) {
 			//System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = attributeTuners.get(id);
 			v.value = ((MemberPerson)instance.description).attributes.getAttribute(id);
+			attributeValues.setAttribute(id, ((MemberPerson)instance.description).attributes.getAttribute(id));
+			lowestAttrValues.setAttribute(id, ((MemberPerson)instance.description).attributes.getAttribute(id));
 			v.text = ""+v.value;
 			v.deactivate();
 		}
@@ -217,13 +231,13 @@ public class CharacterLevelingWindow extends PagedInputWindow {
     		int counter = 0;
     		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
     		{
-    			if (instance.description.commonSkills.skills.containsKey(skill)) {
-    				int level = instance.description.commonSkills.skills.get(skill).level;
+    			if (instance.description.memberSkills.skills.containsKey(skill)) {
+    				int level = instance.description.memberSkills.skills.get(skill).level;
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
 	    			int modifier = 1;
 	    			try {
-	    				modifier = core.gameState.charCreationRules.profInstances.get(instance.description.currentProfession).skillLearnModifier.multipliers.get(skill);
+	    				modifier = profession.skillLearnModifier.getMultiplier(skill);
 	    			} catch (Exception ex)
 	    			{}
 	    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;
@@ -298,11 +312,148 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	}
 	
 	@Override
+	public boolean inputLeft(InputBase base, String message)
+	{
+		if (base.equals(skillValueTuner))
+		{
+			member.description.memberSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+			skillGroupLeftLast.setUpdated(true);
+			int id = 0;
+			for (Object o:skillGroupLeftLast.objects)
+			{
+				if (o.equals(skillValueTuner.tunedObject))
+				{
+					// this is the id that's modified:
+					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+ ": "+skillValueTuner.value;
+				}
+				id++;
+			}
+		}
+		return true;		
+	}
+	
+	@Override
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==finishedButton)
 		{
-			toggle();
+			if (skillPointsLeft==0 && attrPointsLeft==0) {
+				member.updateAfterLeveling();
+				toggle();
+			}
 			return true;
+		}
+		if (base.equals(skillValueTuner))
+		{
+			if (message.equals("enter")) {
+				// ############## SKILL VALUE SET, feed it back into listSelect
+				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+				member.setSkillLevel(skill, skillValueTuner.value);
+				skillGroupLeftLast.setUpdated(true);
+				int id = 0;
+				for (Object o:skillGroupLeftLast.objects)
+				{
+					if (o.equals(skillValueTuner.tunedObject))
+					{
+						// this is the id that's modified:
+						int modifier = profession.skillLearnModifier.getMultiplier(skill);
+						skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+" ("+modifier+"x): "+skillValueTuner.value;
+					}
+					id++;
+				}
+				setSelected(skillGroupLeftLast);
+			} else 
+			{
+				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+				// ################ Tuning the skill level value, modifying pointsLeft textlabel
+				int val = lowestSkillValues.getSkillLevel(skill, null);
+				ValueTuner v = (ValueTuner)base;
+				if (v.value<val) return false; // minimum value shouldn't be crossed.
+				if (message.equals("lookLeft"))
+				{
+					skillPointsLeft++;
+				} else
+				if (message.equals("lookRight"))
+				{
+					skillPointsLeft--;
+				}
+				if (skillPointsLeft<0)
+				{
+					skillPointsLeft = 0;
+					return false;
+				} else
+				{
+					skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+					skillPointsLeftLabel.activate();
+					return true;
+				}
+			}
+		} else
+		if (skillSelects.values().contains(base))
+		{
+			//#################### MODIFYING A SKILL with skillValueTuner... 
+			ListSelect select = (ListSelect)base;
+			if (select.ids.length==0) return true;
+			skillGroupLeftLast = select;
+			//String id = select.ids[select.getSelection()];
+			Class<?extends SkillBase> skill = (Class<? extends SkillBase>)select.getSelectedObject();
+			skillTuned = skill;
+			//String group = id.substring(0,id.indexOf('.'));
+			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
+			//System.out.println("GROUP = "+group+ " - "+count);
+			skillValueTuner.setEnabled(true);
+			skillValueTuner.value = member.getSkillLevel(skill);
+			skillValueTuner.setUpdated(true);
+			skillValueTuner.tunedObject = skill;
+			int modifier = 1;
+			try {
+				modifier = profession.skillLearnModifier.getMultiplier(skill);
+			} catch (Exception ex)
+			{	
+			}
+			skillValueTuner.setStep(modifier);
+			skillText.text = Language.v("skills."+skill.getSimpleName())+" ("+modifier+"x):";
+			skillText.activate();
+			setSelected(skillValueTuner);
+		} else		
+		if (base instanceof ValueTuner) {
+			int count = 0;
+			for (ValueTuner v:attributeTuners.values())
+			{
+				if (base.equals(v))
+				{
+					int val = lowestAttrValues.getAttribute(v.id); // cannot go under original attributes for race
+					if (v.value<val) return false;
+					if (message.equals("lookLeft"))
+					{
+						attrPointsLeft++;
+					} else
+					if (message.equals("lookRight"))
+					{
+						attrPointsLeft--;
+					}
+					if (attrPointsLeft<0)
+					{
+						attrPointsLeft = 0;
+						return false;
+					} else
+					{
+						attrPointsLeftLabel.text = attrPointsLeft + " points left.";
+						attrPointsLeftLabel.activate();
+						for (String id:attributeTuners.keySet())
+						{
+							ValueTuner vTuner = attributeTuners.get(id);
+							int value = vTuner.getSelection();
+							attributeValues.setAttribute(id, value);
+							((MemberPerson)member.description).attributes.setAttribute(id, value);
+							System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+						}
+						//inputEntered(professionSelect, "fake");
+						return true;
+					}
+						
+				}
+				count++;
+			}
 		}
 		return super.inputUsed(base, message);
 	}

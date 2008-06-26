@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.abs.skill;
 
 import java.util.ArrayList;
 
+import org.jcrpg.util.Language;
+
 public class SkillBase {
 	
 	public boolean needsInventoryItem = false;
@@ -58,6 +60,11 @@ public class SkillBase {
 				return form;
 		}
 		return null;
+	}
+	
+	public String getName()
+	{
+		return Language.v("skills."+this.getClass().getSimpleName());
 	}
 
 }

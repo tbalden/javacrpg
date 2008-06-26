@@ -26,8 +26,8 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
-import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.attribute.ResistanceRatios;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
@@ -45,7 +45,7 @@ import org.jcrpg.world.object.ObjInstance;
  */
 public class EntityMember extends DescriptionBase {
 	public String visibleTypeId;
-	public SkillContainer commonSkills = new SkillContainer();
+	public SkillContainer memberSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public ResistanceRatios commonResistenceRatios = new ResistanceRatios();
 	public float[] scale = new float[]{1,1,1};
@@ -72,7 +72,7 @@ public class EntityMember extends DescriptionBase {
 	}
 
 	public SkillContainer getCommonSkills() {
-		return commonSkills;
+		return memberSkills;
 	}
 	
 	
@@ -97,10 +97,10 @@ public class EntityMember extends DescriptionBase {
 		profInstances.put(profession.getClass(), profession);
 		professions.add(profession.getClass());
 		for (Class<? extends SkillBase> skill : profession.additionalLearntSkills.keySet()) {
-			if (!commonSkills.skills.containsKey(skill)) {
-				commonSkills.addSkill(new SkillInstance(skill, profession.additionalLearntSkills.get(skill)));
+			if (!memberSkills.skills.containsKey(skill)) {
+				memberSkills.addSkill(new SkillInstance(skill, profession.additionalLearntSkills.get(skill)));
 			} else {
-				commonSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
+				memberSkills.skills.get(skill).increase(profession.additionalLearntSkills.get(skill));
 			}
 		}
 		currentProfession = profession.getClass();
@@ -177,17 +177,17 @@ public class EntityMember extends DescriptionBase {
 				
 				if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
 				{
-					for (Class<?extends SkillBase> sb:commonSkills.skills.keySet())
+					for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
 					{
 						System.out.println("--_ "+sb);
 					}
-					Collection<Class<?extends SkillBase>> skills = commonSkills.getSkillsOfType(info.getPhase());
+					Collection<Class<?extends SkillBase>> skills = memberSkills.getSkillsOfType(info.getPhase());
 					boolean found = false;
 					System.out.println("FOUND TURN ACT SKILLS: "+skills);
 					if (skills!=null)
 					for (Class<? extends SkillBase> s:skills)
 					{
-						SkillInstance i = commonSkills.skills.get(s);
+						SkillInstance i = memberSkills.skills.get(s);
 						SkillBase base = SkillGroups.skillBaseInstances.get(s);
 						if (base.needsInventoryItem)
 						{
