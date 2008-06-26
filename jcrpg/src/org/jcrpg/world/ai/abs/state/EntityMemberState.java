@@ -104,7 +104,7 @@ public class EntityMemberState {
 	
 	public boolean checkLevelingAvailable()
 	{
-		if (experiencePoint/LEVELING_XP!=level)
+		if (experiencePoint/LEVELING_XP!=level-1)
 		{
 			level++;
 			return true;

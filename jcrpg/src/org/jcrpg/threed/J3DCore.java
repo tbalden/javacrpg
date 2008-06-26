@@ -2285,6 +2285,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			gameState.doEconomyUpdate();
 			pause = false;
 		} else
+		if (!gameState.engine.isPause())
 		{
 			gameState.checkAndDoLeveling();
 		}

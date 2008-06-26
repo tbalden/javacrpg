@@ -359,6 +359,7 @@ public class GameStateContainer {
 	public void checkAndDoLeveling()
 	{
 		if (levelingInProgress) return;
+		if (player!=null && J3DCore.getInstance().coreFullyInitialized && !J3DCore.getInstance().gameLost)
 		for (PersistentMemberInstance i:player.orderedParty)
 		{
 			if (i.memberState.isDead()) continue;
