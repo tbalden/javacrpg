@@ -36,6 +36,12 @@ public class EntityMemberState {
 	public int maxMoralePoint = DEFAULT_MORALE_POINT;
 	public int maxSanityPoint = DEFAULT_SANITY_POINT;
 	public int maxManaPoint = DEFAULT_MANA_POINT;
+
+	public int origMaxHealthPoint = DEFAULT_HEALTH_POINT;
+	public int origMaxStaminaPoint = DEFAULT_STAMINA_POINT;
+	public int origMaxMoralePoint = DEFAULT_MORALE_POINT;
+	public int origMaxSanityPoint = DEFAULT_SANITY_POINT;
+	public int origMaxManaPoint = DEFAULT_MANA_POINT;
 	
 	public int healthPoint = DEFAULT_HEALTH_POINT;
 	public int staminaPoint = DEFAULT_STAMINA_POINT;
@@ -132,35 +138,55 @@ public class EntityMemberState {
 			int point = (int)(level * m);
 			if (i==ZERO_HEALTH)
 			{
-				if (finalize)
-					healthPoint+= point-maxHealthPoint;
+				if (finalize) {
+					healthPoint+= point-origMaxHealthPoint;
+					origMaxHealthPoint = point;
+				}
 				maxHealthPoint = point;
 			} else
 			if (i==ZERO_STAMINA)
 			{
-				if (finalize)
-					staminaPoint+= point-maxStaminaPoint;
+				if (finalize) {
+					staminaPoint+= point-origMaxStaminaPoint;
+					origMaxStaminaPoint = point;
+				}
 				maxStaminaPoint = point;
 			} else
 			if (i==ZERO_MORALE)
 			{
-				if (finalize)
-					moralePoint+= point-maxMoralePoint;
+				if (finalize) {
+					moralePoint+= point-origMaxMoralePoint;
+					origMaxMoralePoint = point;
+				}
 				maxMoralePoint = point;
 			} else
 			if (i==ZERO_SANITY)
 			{
-				if (finalize)
-					sanityPoint+= point-maxSanityPoint;
+				if (finalize) {
+					sanityPoint+= point-origMaxSanityPoint;
+					origMaxSanityPoint = point;
+					
+				}
 				maxSanityPoint = point;
 			} else
 			if (i==ZERO_MANA)
 			{
-				if (finalize)
-					manaPoint+= point-maxManaPoint;
+				if (finalize) {
+					manaPoint+= point-origMaxManaPoint;
+					origMaxManaPoint = point;
+				}
 				maxManaPoint = point;
 			}
 		}
+	}
+	
+	public void maximizeAtStart()
+	{
+		healthPoint = maxHealthPoint;
+		staminaPoint = maxStaminaPoint;
+		sanityPoint = maxSanityPoint;
+		moralePoint = maxMoralePoint;
+		manaPoint = maxManaPoint;
 	}
 	
 
