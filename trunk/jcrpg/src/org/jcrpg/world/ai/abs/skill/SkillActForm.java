@@ -23,6 +23,8 @@ import java.util.HashMap;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
 
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
@@ -107,4 +109,38 @@ public abstract class SkillActForm
 	{
 		return Language.v("skillActForm."+this.getClass().getSimpleName());
 	}
+	
+	public boolean canBeDoneByMember(EntityMemberInstance instance)
+	{
+		EntityMemberState state = instance.memberState;
+		Integer neededHealthPoint = usedPointsAndLevels.get(EFFECTED_POINT_HEALTH);
+		Integer neededStaminaPoint = usedPointsAndLevels.get(EFFECTED_POINT_STAMINA);
+		Integer neededSanityPoint = usedPointsAndLevels.get(EFFECTED_POINT_SANITY);
+		Integer neededMoralePoint = usedPointsAndLevels.get(EFFECTED_POINT_MORALE);
+		Integer neededManaPoint = usedPointsAndLevels.get(EFFECTED_POINT_MANA);
+		
+		if (neededHealthPoint!=null)
+		{
+			if (neededHealthPoint+state.healthPoint<0) return false;
+		}
+		if (neededStaminaPoint!=null)
+		{
+			if (neededStaminaPoint+state.staminaPoint<0) return false;
+		}
+		if (neededSanityPoint!=null)
+		{
+			if (neededSanityPoint+state.sanityPoint<0) return false;
+		}
+		if (neededMoralePoint!=null)
+		{
+			if (neededMoralePoint+state.moralePoint<0) return false;
+		}
+		if (neededManaPoint!=null)
+		{
+			if (neededManaPoint+state.manaPoint<0) return false;
+		}
+		
+		return true;
+	}
+	
 }

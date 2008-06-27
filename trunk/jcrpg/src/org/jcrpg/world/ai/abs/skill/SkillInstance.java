@@ -92,4 +92,6 @@ public class SkillInstance {
 	{
 		level+=value;
 	}
+	
+	
 }

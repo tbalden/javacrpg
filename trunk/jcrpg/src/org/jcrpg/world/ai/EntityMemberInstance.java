@@ -26,7 +26,10 @@ import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
@@ -199,6 +202,28 @@ public class EntityMemberInstance {
 	{
 		description.memberSkills.updateSkillActForms();
 		memberState.recalculateMaximums(this,true);
+	}
+	
+	public boolean isDead()
+	{
+		return memberState.isDead();
+	}
+	
+	public ArrayList<Class<? extends SkillActForm>> getDoableActForms(Class<? extends SkillBase> skill)
+	{
+		ArrayList<Class<? extends SkillActForm>> list = new ArrayList<Class<? extends SkillActForm>>();
+		SkillInstance i = description.memberSkills.skills.get(skill);
+		if (i!=null)
+		{
+			for (Class<? extends SkillActForm> form :i.aquiredActForms)
+			{
+				SkillBase b = SkillGroups.skillBaseInstances.get(i.skill);
+				if (b.getActForm(form).canBeDoneByMember(this)){
+					list.add(form);
+				}
+			}
+		}
+		return list;
 	}
 
 }

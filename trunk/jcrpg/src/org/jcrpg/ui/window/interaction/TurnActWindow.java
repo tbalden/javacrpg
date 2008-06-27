@@ -43,7 +43,6 @@ import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
-import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.ObjInstance;
@@ -334,14 +333,15 @@ public class TurnActWindow extends PagedInputWindow {
 			{
 				SkillBase s = (SkillBase)skillSelect.getSelectedObject();
 				
-				SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
+				//SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
 				{
-					ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+					ArrayList<Class<?extends SkillActForm>> forms = i.getDoableActForms(s.getClass());
+					//ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
 					String[] texts = new String[forms.size()];
 					Object[] objects = new Object[forms.size()];
 					String[] ids = new String[forms.size()];
 					int counter = 0;
-					for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+					for (Class<? extends SkillActForm> form:forms)
 					{
 						ids[counter] = ""+counter;
 						texts[counter] = form.getSimpleName();
@@ -355,7 +355,13 @@ public class TurnActWindow extends PagedInputWindow {
 					skillActFormSelect.deactivate();
 					skillActFormSelect.setSelected(0);
 					skillActFormSelect.setEnabled(true);
-					inputChanged(skillActFormSelect, "fake");
+					if (counter==0)
+					{
+						//skillActFormSelect.storedState = null;
+					} else
+					{
+						inputChanged(skillActFormSelect, "fake");
+					}
 				}
 				if (s.needsInventoryItem)
 				{
@@ -508,6 +514,10 @@ public class TurnActWindow extends PagedInputWindow {
 						ObjInstance obj = (ObjInstance)inventorySelectors.get(counter).getSelectedObject();
 						Class<?extends SkillActForm> f = null;
 						f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
+						
+						// check if act form is selected
+						if (f==null) return true; // without act form do not go further
+						
 						EncounterUnitData fragmentAndSubunit = null;
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 						

@@ -540,10 +540,23 @@ public class EncounterLogic {
 					// MEMBER CHOICE EVENT
 					
 					TurnActMemberChoice choice = event.choice;
-					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
-					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					
-					if (choice.doNothing)
+					// dead cannot do things...
+					if (choice.member.isDead()) playEncStep(); 
+					
+					// cannot do things on dead target... TODO necromancy override!
+					if (choice.target!=null && choice.target.isDead()) playEncStep(); 
+					
+					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
+					if (choice.doNothing || !choice.member.memberState.isExhausted()) {
+						gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
+					} else
+					{
+						gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
+						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " is exhausted & fails.");
+					}
+					
+					if (choice.doNothing || choice.member.memberState.isExhausted())
 					{
 						turnActTurnState.maxTime = event.minTime;
 						turnActTurnState.playing = true;

@@ -93,7 +93,7 @@ public class EntityMemberState {
 		if (healthPoint<=0) return true;
 		return false;
 	}
-	public boolean isUnconsious()
+	public boolean isExhausted()
 	{
 		if (staminaPoint<=0) return true;
 		return false;
