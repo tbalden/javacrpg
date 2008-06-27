@@ -160,7 +160,7 @@ public class ListMultiSelect extends InputBase {
 			return;			
 		}
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
@@ -212,7 +212,7 @@ public class ListMultiSelect extends InputBase {
 					text = texts[i+fromCount];
 				}
 				System.out.println("TEXT = "+i+" "+text+" max: "+maxCount);
-				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
@@ -225,7 +225,7 @@ public class ListMultiSelect extends InputBase {
 				}
 				if (flag!=null) 
 				{
-					Node signNode = FontUtils.textVerdana.createOutlinedText(flag, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+					Node signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 					signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*i,0);
 					signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 					signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);

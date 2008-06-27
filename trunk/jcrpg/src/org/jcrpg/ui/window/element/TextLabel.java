@@ -65,7 +65,7 @@ public class TextLabel extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -90,7 +90,7 @@ public class TextLabel extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, 9, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
