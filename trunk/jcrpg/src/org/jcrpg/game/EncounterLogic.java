@@ -36,6 +36,7 @@ import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.Weapon;
@@ -631,9 +632,29 @@ public class EncounterLogic {
 		TurnActUnitTopology topology = new TurnActUnitTopology(info);
 		info.setTopology(topology);
 		System.out.println("{ fillInitTurnActPhaseLineup }");
-		for (EncounterUnitData d:info.getEncounterUnitDataList(null))
+		for (EncounterUnitData unit:info.getEncounterUnitDataList(null))
 		{
-			info.getTopology().addUnitPushing(d,0);	
+			int level = unit.getRelationLevel(info.playerIfPresent);
+			if (level<EntityScaledRelationType.NEUTRAL)
+			{
+				unit.friendly = false;
+			} else
+			if (level==EntityScaledRelationType.NEUTRAL) // TODO debug only remove this, no neutrals allowed
+			{
+				if (unit.parent == info.playerIfPresent)
+				{
+					unit.friendly = true;
+				} else
+				{
+					unit.friendly = false;
+				}
+			}
+			if (level>EntityScaledRelationType.NEUTRAL)
+			{
+				unit.friendly = true;
+			}
+
+			info.getTopology().addUnitPushing(unit,0);	
 		}
 		
 		

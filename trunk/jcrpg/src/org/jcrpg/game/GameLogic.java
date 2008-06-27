@@ -122,6 +122,13 @@ public class GameLogic {
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
+					// if camping it should be finished
+					if (core.gameState.engine.isCamping())
+					{
+						core.gameState.engine.endCamping();
+						core.uiBase.hud.sr.setVisibility(false, "CAMPFIRE");
+						core.gameState.engine.campingFinished = false;
+					}
 					core.turnActWindow.toggle();
 				}
 			}

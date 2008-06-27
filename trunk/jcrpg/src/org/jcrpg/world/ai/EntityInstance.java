@@ -177,6 +177,29 @@ public class EntityInstance {
 	}
 
 	
+	public transient ArrayList<EntityFragment> tmpCamperList = new ArrayList<EntityFragment>();
+
+	public ArrayList<EntityFragment> decideCampingAndGetCamperFragments()
+	{
+		if (tmpCamperList==null) 
+		{
+			tmpCamperList = new ArrayList<EntityFragment>();
+		}
+		// TODO 
+		return tmpCamperList;
+	}
+	
+	
+	public ArrayList<EntityFragment> doReplenishAndGetCampers()
+	{
+		ArrayList<EntityFragment> camperFragments = decideCampingAndGetCamperFragments();
+		
+		for (EntityFragment f:camperFragments)
+		{
+			f.replenishInOneRound();
+		}
+		return camperFragments;		
+	}
 	
 	ArrayList<EncounterInfo> infos = new ArrayList<EncounterInfo>();
 	/**
@@ -188,6 +211,8 @@ public class EntityInstance {
 	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEncounters)
 	{
 		int counter = 0;
+		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers();
+		
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		//System.out.println()
 		System.out.println(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEncounters.size());
@@ -294,9 +319,23 @@ public class EntityInstance {
 		return groupSizesAndTypes;
 	}
 
+	/**
+	 * If an impact was applied for a member of this instance, this should be called for post processing the event.
+	 * @param fragment The fragment.
+	 * @param member The member.
+	 * @param result The results (what points decreased to 0) .
+	 */
 	public void notifyImpactResult(EntityFragment fragment, EntityMemberInstance member, ArrayList<Integer> result)
 	{
+		return;
 		
+	}
+	/**
+	 * This should be called by a sub fragment after camping replenish for a round was done.
+	 */
+	public void callbackAfterCampReplenish()
+	{
+		return;
 	}
 	
 }

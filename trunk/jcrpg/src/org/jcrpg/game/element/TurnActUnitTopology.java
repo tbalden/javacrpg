@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnitData;
-import org.jcrpg.world.ai.EntityScaledRelationType;
 
 /**
  * includes the two turn act phase lineups (friendly lineup, enemy lineup).
@@ -52,28 +51,12 @@ public class TurnActUnitTopology {
 	
 	public void addUnitPushing(EncounterUnitData unit, int line)
 	{
-		int level = unit.getRelationLevel(info.playerIfPresent);
-		if (level<EntityScaledRelationType.NEUTRAL)
+		if (unit.friendly)
 		{
-			unit.friendly = false;
-			getEnemyLineup().addUnitPushing(unit, line);
-		} else
-		if (level==EntityScaledRelationType.NEUTRAL) // TODO debug only remove this, no neutrals allowed
-		{
-			if (unit.parent == info.playerIfPresent)
-			{
-				unit.friendly = true;
-				getFriendlyLineup().addUnitPushing(unit, line);
-			} else
-			{
-				unit.friendly = false;
-				getEnemyLineup().addUnitPushing(unit, line);
-			}
-		}
-		if (level>EntityScaledRelationType.NEUTRAL)
-		{
-			unit.friendly = true;
 			getFriendlyLineup().addUnitPushing(unit, line);
+		} else
+		{
+			getEnemyLineup().addUnitPushing(unit, line);
 		}
 	}
 	

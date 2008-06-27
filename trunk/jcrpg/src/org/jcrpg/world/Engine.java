@@ -20,6 +20,7 @@ package org.jcrpg.world;
 import java.util.Random;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.time.Time;
 
 public class Engine implements Runnable {
@@ -48,6 +49,8 @@ public class Engine implements Runnable {
 	 */
 	public static int TICK_SECONDS = 10;
 	
+	public static int TICK_SECONDS_CAMPING = 50;
+	
 	public static int SECONDS_PER_TURN = 100;
 	/**
 	 * Tells around how many seconds (this is randomly calculated half part) till a new
@@ -60,6 +63,12 @@ public class Engine implements Runnable {
 	private boolean turnCome = false;
 	private boolean economyUpdateCome = false;
 	private boolean doEconomyUpdate = false;
+	
+	private boolean camping = false;
+	public boolean campingStarted = false;
+	public boolean campingFinished = false;
+	
+	
 	public int secondsLeftForTurn = SECONDS_PER_TURN;
 	public int secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
 	public int turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
@@ -85,9 +94,10 @@ public class Engine implements Runnable {
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
 				System.out.println("### TICK-TACK ###");
-				worldMeanTime.tick(TICK_SECONDS);
-				secondsLeftForTurn-=TICK_SECONDS;
-				secondsLeftForEnvironment-=TICK_SECONDS+getTrueRandom().nextInt(TICK_SECONDS); // this is random
+				int secondsPast = camping?TICK_SECONDS_CAMPING:TICK_SECONDS;
+				worldMeanTime.tick(secondsPast);
+				secondsLeftForTurn-=secondsPast;
+				secondsLeftForEnvironment-=secondsPast+getTrueRandom().nextInt(secondsPast); // this is random
 				if (secondsLeftForTurn<=0)
 				{
 					synchronized (mutex) {
@@ -110,7 +120,9 @@ public class Engine implements Runnable {
 					synchronized (mutex) {
 						Jcrpg.LOGGER.info("NEW ENVIRONMENT");
 						secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
-						doEnvironmentNeeded = true;
+						if (!camping) {
+							doEnvironmentNeeded = true;
+						}
 					}
 				}
 				setTimeChanged(true);
@@ -234,6 +246,25 @@ public class Engine implements Runnable {
 	public void environemntUpdateDone()
 	{
 		doEnvironmentNeeded = false;
+	}
+	
+	public void startCamping()
+	{
+		camping = true;
+		campingFinished = false;
+		J3DCore.getInstance().gameState.player.theFragment.fragmentState.isCamping = true;
+		campingStarted = true;
+	}
+	public void endCamping()
+	{
+		camping = false;
+		campingStarted = false;
+		J3DCore.getInstance().gameState.player.theFragment.fragmentState.isCamping = false;
+		campingFinished = true;
+	}
+	public boolean isCamping()
+	{
+		return camping;
 	}
 
 }
