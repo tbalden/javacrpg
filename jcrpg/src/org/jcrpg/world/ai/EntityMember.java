@@ -129,6 +129,7 @@ public class EntityMember extends DescriptionBase {
 		if (info.playerIfPresent!=null)
 		{
 			TurnActMemberChoice choice = new TurnActMemberChoice();
+			choice.member = instance;
 			
 			// list for destructive choices...
 			ArrayList<EncounterUnitData> enemyData = null;

@@ -227,8 +227,11 @@ public class EncounterLogic {
 				mi.encounterData = data;
 				TurnActMemberChoice c = mi.makeTurnActChoice(data, encountered);
 				turnActTurnState.memberChoices.put(mi, c);
-				if (c==null) c = new TurnActMemberChoice();
-				c.member = mi;
+				if (c==null) {
+					c = new TurnActMemberChoice();
+					c.member = mi;
+					c.doNothing = true;
+				}
 				if (!c.doNothing) {
 					float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, mi, c.skill, c.skillActForm, c.usedObject);
 					for (float s:speeds) {
