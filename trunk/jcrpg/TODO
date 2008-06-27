@@ -10,25 +10,41 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [?] list before next release:
 
-	X LEVELING,
+	[ ] projectiles with EffectProgram
+	
+	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
+
+	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
+	[ ] ENHANCE INVENTORY
+		
+	[ ] check combat with non animated -> sounds etc.
+
+	[ ] documenting points, attr, calculations, leveling
+
+	[X] SPELLS with particel effects
+
+	[X] replenish HEP,STP etc. - 
+		[X] normal mode Resting
+
+	[X] Camp button doesn't work together with CKeyMenu definition!!
+
+	[X] make Enemy check two way , get the worst case of the two way relationship to determine
+		who is enemy who is friend!
+
+	[X] LEVELING,
 		[X] HEP,STP,SAP,MOP,MAP increasing on leveling based on attributes and level!
-		[ ] hud.characters bars are not updating correctly?? or current points are wrong
-	PROJECTILES/SPELLS with particel effects
-	MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
-	ENHANCE INVENTORY
+		[X] hud.characters bars are not updating correctly?? or current points are wrong
 	
 
-[ ] !! leveling !! for chars/entityMembers, points for them, 
+[X] !! leveling !! for chars/entityMembers, points for them, 
     [X] bars on UI
-	[ ] EntityState, EntityMemberState further development
+	[X] EntityState, EntityMemberState further development
 
 [X] death /point effects for encounter members
 
-	[ ] make Enemy check two way , get the worst case of the two way relationship to determine
-	who is enemy who is friend!
 
 	[X] player death! -> 
-		[ ] set picture grayscale?
+		[X] set picture grayscale?
 		
 	[X] death animations
 	[X] players health bars etc.
