@@ -84,7 +84,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "A", KeyInput.KEY_A );
         if (!J3DCore.FREE_MOVEMENT)
         	keyboard.set( "B", KeyInput.KEY_B );
-        //keyboard.set( "C", KeyInput.KEY_C );
+        keyboard.set( "C", KeyInput.KEY_C );
         keyboard.set( "D", KeyInput.KEY_D );
         keyboard.set( "E", KeyInput.KEY_E );
         keyboard.set( "F", KeyInput.KEY_F );
@@ -135,7 +135,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         left.setLockAxis(new Vector3f(cam.getUp()));
         addAction( left, "turnLeft", true );
 
-        addAction( new CKeyCamp(this), "camp", false);
+        addAction( new CKeyCamp(this), "camp", true);
         
         // add these to menu too
  
@@ -150,7 +150,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "A", false);
         if (!J3DCore.FREE_MOVEMENT)
         	addAction( new CKeyMenu(this), "B", false);
-        //addAction( new CKeyMenu(this), "C", false);
+        addAction( new CKeyMenu(this), "C", false);
         addAction( new CKeyMenu(this), "D", false);
         addAction( new CKeyMenu(this), "E", false);
         addAction( new CKeyMenu(this), "F", false);

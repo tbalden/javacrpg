@@ -34,8 +34,17 @@ public class CKeyCamp extends KeyInputAction{
 		this.handler = handler;
 		core = handler.core;
 	}
+	
+	long lastPerformTime = 0;
+	
 	public void performAction(InputActionEvent evt) {
-		System.out.println("CAMP KEY");
+		if (lastPerformTime-System.currentTimeMillis()>-500)
+		{
+			return;
+		}
+		lastPerformTime = System.currentTimeMillis();
+		
+		System.out.println("### CAMP KEY");
 		if (!core.gameState.engine.isPause())
 		{
 			if (!core.gameState.engine.isCamping())
