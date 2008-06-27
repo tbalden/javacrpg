@@ -25,6 +25,8 @@ import com.jme.scene.Node;
 
 public abstract class InputBase {
 	
+	public static final int DEF_FONT_SIZE = 10;
+	
 	public float centerX, centerY;
 	public float sizeX, sizeY;
 	public float dCenterX, dCenterY;

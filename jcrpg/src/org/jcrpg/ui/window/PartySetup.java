@@ -131,13 +131,13 @@ public class PartySetup extends PagedInputWindow {
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
-	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.newChar"));
+	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.newChar"));
 	    	addInput(0,newChar);
-	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.rmChar"));
+	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.rmChar"));
 	    	addInput(0,rmChar);
-	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,400f,Language.v("partySetup.startGame"));
+	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.startGame"));
 	    	addInput(0,startGame);
-	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,400f,Language.v("partySetup.delChar"));
+	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,430f,Language.v("partySetup.delChar"));
 	    	addInput(0,delChar);
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
