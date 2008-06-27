@@ -85,8 +85,9 @@ public class ListSelect extends InputBase {
 		selected = counter%maxVisible;
 		deactivate();
 	}
-	public void setSelected(Object o)
+	public boolean setSelected(Object o)
 	{
+		boolean ret = false;
 		if (objects!=null)
 		{
 			int count = 0;
@@ -95,11 +96,13 @@ public class ListSelect extends InputBase {
 				if (oi.equals(o))
 				{
 					setSelected(count);
+					ret = true;
 				}
 				count++;
 			}
 		}
 		deactivate();
+		return ret;
 	}
 	
 	public int getSelection()
@@ -352,7 +355,13 @@ public class ListSelect extends InputBase {
 	public void restore()
 	{
 		if (storedState!=null)
-			setSelected(storedState);
+		{
+			if (objects.length==0) return;
+			if (setSelected(storedState)) 
+			{
+				w.inputChanged(this, "restore");
+			}
+		}
 		if (!isStored()) return;
 		
 	}

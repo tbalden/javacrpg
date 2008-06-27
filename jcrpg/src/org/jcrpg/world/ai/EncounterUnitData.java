@@ -244,4 +244,20 @@ public class EncounterUnitData
 		return description.getSound(type);
 	}
 	
+	public boolean isDead()
+	{
+		if (isGroupId)
+		{
+			if (generatedMembers==null || generatedMembers.size()==0)
+			{
+				return true;
+			}
+			return false;
+		} else
+		{
+			return ((EntityMemberInstance)subUnit).memberState.isDead();			
+		}
+		
+	}
+	
 }
