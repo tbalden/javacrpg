@@ -342,7 +342,7 @@ public class ListSelect extends InputBase {
 		setupDeactivated();
 	}
 	
-	Object storedState = null;
+	public Object storedState = null;
 	@Override
 	public void store()
 	{

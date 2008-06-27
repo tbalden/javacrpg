@@ -229,28 +229,42 @@ public class EncounterLogic {
 				turnActTurnState.memberChoices.put(mi, c);
 				if (c==null) c = new TurnActMemberChoice();
 				c.member = mi;
-				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, mi, c.skill, c.skillActForm, c.usedObject);
-				for (float s:speeds) {
-					while (orderedActors.get(s)!=null)
-					{
-						s+=0.0001f;
+				if (!c.doNothing) {
+					float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, mi, c.skill, c.skillActForm, c.usedObject);
+					for (float s:speeds) {
+						while (orderedActors.get(s)!=null)
+						{
+							s+=0.0001f;
+						}
+						//orderedActors.put(s, mi);
 					}
-					//orderedActors.put(s, mi);
+				} else
+				{
+					orderedActors.put(1000f, mi); // resters to the end of round
 				}
-								
 			}
 		}
 		for (TurnActMemberChoice playerChoice:info.getChoices())
 		{
 			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
 			turnActTurnState.memberChoices.put(playerChoice.member, playerChoice);
-			float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, playerChoice);
-			for (float s:speeds) {
+			if (!playerChoice.doNothing) {
+				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, playerChoice);
+				for (float s:speeds) {
+					while (orderedActors.get(s)!=null)
+					{
+						s+=0.0001f;
+					}
+					orderedActors.put(s, playerChoice.member);
+				}
+			} else
+			{
+				float s = 1000f;
 				while (orderedActors.get(s)!=null)
 				{
 					s+=0.0001f;
 				}
-				orderedActors.put(s, playerChoice.member);
+				orderedActors.put(s, playerChoice.member); // resters to the end of round
 			}
 		}
 		int step = 0;
@@ -529,6 +543,16 @@ public class EncounterLogic {
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					
+					if (choice.doNothing)
+					{
+						turnActTurnState.maxTime = event.minTime;
+						turnActTurnState.playing = true;
+						turnActTurnState.playStart = System.currentTimeMillis();
+						System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
+						choice.member.memberState.replenishInOneRound();
+						gameLogic.core.uiBase.hud.characters.updatePoints(choice.member);
+					}
+					else					
 					if (choice.skillActForm!=null)
 					{
 						EffectProgram eProgram = choice.skillActForm.getEffectProgram();

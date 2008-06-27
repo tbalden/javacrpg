@@ -34,6 +34,8 @@ public class TurnActMemberChoice {
 	 */
 	public EntityMemberInstance member;
 	
+	public boolean doNothing = false;
+	
 	/** 
 	 * Used skill.
 	 */
@@ -62,6 +64,7 @@ public class TurnActMemberChoice {
 	 */
 	public String getInitMessage()
 	{
+		if (doNothing) return member.description.getName() + " doing nothing."; 
 		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getName():"")+".";
 	}
 	
