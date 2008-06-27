@@ -49,10 +49,30 @@ public class EntityFragments {
 		
 	}
 	
+	
 	public class EntityFragment implements EncounterUnit 
 	{
 		public EntityFragments parent;
 		public EntityInstance instance;
+		
+		public class EntityFragmentState 
+		{
+			public boolean isCamping = false;
+		}
+		
+		public EntityFragmentState fragmentState = new EntityFragmentState();
+		
+		public void replenishInOneRound()
+		{
+			for (EntityMemberInstance i:followingMembers)
+			{
+				if (!i.isDead())
+				{
+					i.memberState.replenishInOneRound();
+				}
+			}
+			instance.callbackAfterCampReplenish();
+		}
 		
 		/**
 		 * Used for parties, if this is set to true the EncounterInfo will alwass include the followingMembers in its encounterUnitData lists.

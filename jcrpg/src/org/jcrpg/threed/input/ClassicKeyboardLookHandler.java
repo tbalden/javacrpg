@@ -31,6 +31,7 @@ import org.jcrpg.threed.input.action.CKeyRotateRightAction;
 import org.jcrpg.threed.input.action.CKeyStrafeLeftAction;
 import org.jcrpg.threed.input.action.CKeyStrafeRightAction;
 import org.jcrpg.threed.input.action.CKeyUpAction;
+import org.jcrpg.threed.input.menu.CKeyCamp;
 import org.jcrpg.threed.input.menu.CKeyMenu;
 
 import com.jme.input.InputHandler;
@@ -69,6 +70,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "turnRight", KeyInput.KEY_D );
         keyboard.set( "turnLeft", KeyInput.KEY_A );
         
+        keyboard.set( "camp", KeyInput.KEY_C );
         keyboard.set( "worldMap", KeyInput.KEY_F1 );
         keyboard.set( "behaviorWindow", KeyInput.KEY_F2 );
         keyboard.set( "charSheetWindow", KeyInput.KEY_F3 );
@@ -82,7 +84,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "A", KeyInput.KEY_A );
         if (!J3DCore.FREE_MOVEMENT)
         	keyboard.set( "B", KeyInput.KEY_B );
-        keyboard.set( "C", KeyInput.KEY_C );
+        //keyboard.set( "C", KeyInput.KEY_C );
         keyboard.set( "D", KeyInput.KEY_D );
         keyboard.set( "E", KeyInput.KEY_E );
         keyboard.set( "F", KeyInput.KEY_F );
@@ -91,7 +93,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "I", KeyInput.KEY_I );
         keyboard.set( "J", KeyInput.KEY_J );
         keyboard.set( "K", KeyInput.KEY_K );
-        if (!J3DCore.FREE_MOVEMENT)
+        if (!J3DCore.FREE_MOVEMENT) // if not debug set this
         	keyboard.set( "L", KeyInput.KEY_L );
         keyboard.set( "M", KeyInput.KEY_M );
         keyboard.set( "N", KeyInput.KEY_N );
@@ -100,7 +102,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "Q", KeyInput.KEY_Q );
         keyboard.set( "R", KeyInput.KEY_R );
         keyboard.set( "S", KeyInput.KEY_S );
-        if (!J3DCore.FREE_MOVEMENT)
+        if (!J3DCore.FREE_MOVEMENT) // if not debug set this
         	keyboard.set( "T", KeyInput.KEY_T );
         keyboard.set( "U", KeyInput.KEY_U );
         keyboard.set( "V", KeyInput.KEY_V );
@@ -133,6 +135,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         left.setLockAxis(new Vector3f(cam.getUp()));
         addAction( left, "turnLeft", true );
 
+        addAction( new CKeyCamp(this), "camp", false);
+        
         // add these to menu too
  
         addAction( new CKeyMenu(this), "worldMap", false);
@@ -146,7 +150,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "A", false);
         if (!J3DCore.FREE_MOVEMENT)
         	addAction( new CKeyMenu(this), "B", false);
-        addAction( new CKeyMenu(this), "C", false);
+        //addAction( new CKeyMenu(this), "C", false);
         addAction( new CKeyMenu(this), "D", false);
         addAction( new CKeyMenu(this), "E", false);
         addAction( new CKeyMenu(this), "F", false);

@@ -1317,6 +1317,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public boolean move(int[] from, int[] fromRel, int[] directions)
 	{
+		if (gameState.player.theFragment.fragmentState.isCamping) 
+		{
+			if (System.currentTimeMillis()-lastStepSoundTime>500) { // don't play sound too often
+				uiBase.hud.mainBox.addEntry("You can't move while camping!");
+				lastStepSoundTime = System.currentTimeMillis();
+			}
+			return false;
+		}
+		
 		boolean success = moveBase(from, fromRel, directions);
 		if (System.currentTimeMillis()-lastStepSoundTime>300) { // don't play sound too often
 			if (success)

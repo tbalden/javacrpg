@@ -49,6 +49,14 @@ public class PartyInstance extends EntityInstance {
 	transient ArrayList<EncounterInfo> tmpInfos = new ArrayList<EncounterInfo>();
 	@Override
 	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities) {
+		
+		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers();
+		
+		if (camperFragments.contains(theFragment))
+		{
+			return false;
+		}
+		
 		if (this.equals(J3DCore.getInstance().gameState.player))
 		{
 			if (tmpInfos==null) tmpInfos = new ArrayList<EncounterInfo>();
@@ -150,17 +158,25 @@ public class PartyInstance extends EntityInstance {
 		J3DCore.getInstance().uiBase.hud.updateCharacterRelated(member);
 		super.notifyImpactResult(fragment, member, result);
 	}
-	
-	public void replenishPartyInOneRound()
-	{
-		for (EntityMemberInstance i:orderedParty)
+
+	@Override
+	public ArrayList<EntityFragment> decideCampingAndGetCamperFragments() {
+		if (tmpCamperList==null) 
 		{
-			if (!i.isDead())
-			{
-				i.memberState.replenishInOneRound();
-			}
+			tmpCamperList = new ArrayList<EntityFragment>();
 		}
+		tmpCamperList.clear();
+		tmpCamperList.add(theFragment);
+		if (theFragment.fragmentState.isCamping) return tmpCamperList; 
+		return super.decideCampingAndGetCamperFragments();
 	}
+
+	@Override
+	public void callbackAfterCampReplenish() {
+		J3DCore.getInstance().uiBase.hud.characters.updatePoints();
+		super.callbackAfterCampReplenish();
+	}
+	
 	
 	
 }

@@ -18,6 +18,7 @@ package org.jcrpg.world.place.economic;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Economic;
@@ -49,12 +50,26 @@ public abstract class Population extends Economic{
 		((World)getRoot()).economyContainer.treeLocator.removeAllOfAnObject(this); // we should remove this from treelocator to avoid messing up surface levels of geo.
 		for (Residence r:residenceList)
 		{
-			r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()!=null)
+			{
+				r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+			}
+			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()==null)
+			{
+				Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
+			}
 		}
 		residenceList.clear();
 		for (EconomicGround r:groundList)
 		{
-			r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()!=null)
+			{
+				r.getOwnerMember().getGeneratedOwnInfrastructures().remove(r);
+			}
+			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()==null)
+			{
+				Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
+			}
 		}
 		groundList.clear();
 		boundaries.clear();
