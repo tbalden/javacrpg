@@ -164,13 +164,19 @@ public class EncounterWindow extends PagedInputWindow {
 		}
 		// party memebers
 		{
-			String[] texts = new String[party.orderedParty.size()];
-			Object[] objects = new Object[party.orderedParty.size()];
-			String[] ids = new String[party.orderedParty.size()];
+			int size = 0;
+			for (EntityMemberInstance i:party.orderedParty)
+			{
+				if (!i.isDead()) size++;
+			}
+			String[] texts = new String[size];
+			Object[] objects = new Object[size];
+			String[] ids = new String[size];
 			int counter = 0;
 			if (party!=null)
 			for (EntityMemberInstance i:party.orderedParty)
 			{
+				if (i.isDead()) continue;
 				String n = ((MemberPerson)i.description).foreName;
 				objects[counter] = i;
 				texts[counter] = n;

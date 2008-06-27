@@ -262,8 +262,7 @@ public class EncounterInfo {
 			{
 				EncounterUnit key = unitData.parent;
 				if (unitData.isGroupId)
-				{
-					// TODO group size check...
+				{					
 					if (unitData.getSize()<1) toRemove.add(unitData);
 					if (encountered.containsKey(key)) continue;
 					toRemove.add(unitData);
@@ -276,11 +275,11 @@ public class EncounterInfo {
 						{
 							if ( ((EntityFragment)key).getFollowingMembers().contains(unitData.subUnit) )
 							{
-								// always included following member shouldn't be removed.
-								if (((PersistentMemberInstance)unitData.subUnit).memberState.healthPoint<1)
+								if (unitData.isDead())
 								{
-									// TODO what to do?
+									toRemove.add(unitData);
 								}
+								// always included following member shouldn't be removed.
 								continue;
 							}
 						}
@@ -344,6 +343,7 @@ public class EncounterInfo {
 			{
 				for (EncounterUnit u:subUnits)
 				{
+					
 					EncounterUnit parent = unit;
 					if (unit instanceof PersistentMemberInstance)
 					{
@@ -351,10 +351,12 @@ public class EncounterInfo {
 							parent = ((PersistentMemberInstance)unit).getParentFragment();
 					}
 					EncounterUnitData data = new EncounterUnitData(parent,u);
-					list.add(data);
-					if (unit instanceof PersistentMemberInstance)
-					{
-						((PersistentMemberInstance)unit).encounterData = data;
+					if (!data.isDead()) {
+						list.add(data);
+						if (unit instanceof PersistentMemberInstance)
+						{
+							((PersistentMemberInstance)unit).encounterData = data;
+						}
 					}
 				}
 			}
@@ -371,10 +373,12 @@ public class EncounterInfo {
 							if ( ((PersistentMemberInstance)p).getParentFragment()!=null)
 								parent = ((PersistentMemberInstance)p).getParentFragment();
 							EncounterUnitData data = new EncounterUnitData(parent,p);
-							list.add(data);
-							if (p instanceof PersistentMemberInstance)
-							{
-								((PersistentMemberInstance)p).encounterData = data;
+							if (!data.isDead()) {
+								list.add(data);
+								if (p instanceof PersistentMemberInstance)
+								{
+									((PersistentMemberInstance)p).encounterData = data;
+								}
 							}
 						}
 					}

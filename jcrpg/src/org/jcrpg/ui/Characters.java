@@ -32,7 +32,9 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.RenderState;
 
 public class Characters {
 
@@ -43,8 +45,14 @@ public class Characters {
 	
 	Node node = new Node();
 	HUD hud = null;
+	ColorMaskState deadColor = null; 
 	public Characters(HUD hud)
 	{
+		deadColor = hud.base.core.getDisplay().getRenderer().createColorMaskState();
+		deadColor.setBlue(false);
+		deadColor.setGreen(false);
+		deadColor.setEnabled(true);
+		
 		createBarQuads();
 		this.hud = hud;
 		text = FontUtils.textVerdana;
@@ -83,12 +91,15 @@ public class Characters {
 
 	}
 	
+	public ArrayList<Quad> pictureQuads = new ArrayList<Quad>();
+	
 	float barScreenRatio = 13f;
 	
 	public void addMembers(ArrayList<PersistentMemberInstance> orderedParty)
 	{
 		bars.clear();
 		barOrigoYPositions.clear();
+		pictureQuads.clear();
 		try {
 			int counter = 0;
 			int sideYMul = 1, sideYMulFont = 1;
@@ -113,7 +124,7 @@ public class Characters {
 						sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counter,0);
 						
 						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
-						
+						pictureQuads.add(q);
 						Node nametextNode = this.text.createText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),false);
 						
 						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.37f,0);
@@ -200,6 +211,16 @@ public class Characters {
 			float multiplierMorale = p.memberState.maxMoralePoint==0?0.0001f:Math.max(0f,p.memberState.moralePoint*1f)/p.memberState.maxMoralePoint;
 			float multiplierSanity = p.memberState.maxSanityPoint==0?0.0001f:Math.max(0f,p.memberState.sanityPoint*1f)/p.memberState.maxSanityPoint;
 			float multiplierMana = p.memberState.maxManaPoint==0?0.0001f:Math.max(0f,p.memberState.manaPoint*1f)/p.memberState.maxManaPoint;
+			
+			if (p.isDead())
+			{
+				Quad q= pictureQuads.get(counter);				
+				q.setRenderState(deadColor);
+			} else
+			{
+				Quad q= pictureQuads.get(counter);
+				q.clearRenderState(RenderState.RS_COLORMASK_STATE);
+			}
 		
 			float[] mul = new float[] {multiplierHealth,multiplierStamina,multiplierMorale,multiplierSanity,multiplierMana};
 			
