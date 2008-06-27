@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.SkillBase.NoActForm;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
@@ -217,7 +218,8 @@ public class EntityMemberInstance {
 		{
 			for (Class<? extends SkillActForm> form :i.aquiredActForms)
 			{
-				SkillBase b = SkillGroups.skillBaseInstances.get(i.skill);
+				if (form == NoActForm.class) continue;
+				SkillBase b = SkillGroups.skillBaseInstances.get(i.skill);				
 				if (b.getActForm(form).canBeDoneByMember(this)){
 					list.add(form);
 				}
