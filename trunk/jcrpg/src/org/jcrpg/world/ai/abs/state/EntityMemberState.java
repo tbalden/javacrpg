@@ -19,6 +19,7 @@ package org.jcrpg.world.ai.abs.state;
 
 import java.util.ArrayList;
 
+import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -179,6 +180,22 @@ public class EntityMemberState {
 				maxManaPoint = point;
 			}
 		}
+	}
+	
+	public void replenishInOneRound()
+	{
+		int replenishHealthPoint = Math.max(1,maxHealthPoint/GameLogicConstants.REPLENISH_ROUNDS_SLOW);
+		int replenishStaminaPoint = Math.max(1,maxStaminaPoint/GameLogicConstants.REPLENISH_ROUNDS);
+		int replenishMoralePoint = Math.max(1,maxMoralePoint/GameLogicConstants.REPLENISH_ROUNDS);
+		int replenishSanityPoint = Math.max(1,maxSanityPoint/GameLogicConstants.REPLENISH_ROUNDS_SLOW);
+		int replenishManaPoint = Math.max(1,maxManaPoint/GameLogicConstants.REPLENISH_ROUNDS_SLOW);
+		
+		healthPoint = Math.min(healthPoint+replenishHealthPoint, maxHealthPoint);
+		staminaPoint = Math.min(staminaPoint+replenishStaminaPoint, maxStaminaPoint);
+		moralePoint = Math.min(moralePoint+replenishMoralePoint, maxMoralePoint);
+		sanityPoint = Math.min(sanityPoint+replenishSanityPoint, maxSanityPoint);
+		manaPoint = Math.min(manaPoint+replenishManaPoint, maxManaPoint);
+		
 	}
 	
 	public void maximizeAtStart()

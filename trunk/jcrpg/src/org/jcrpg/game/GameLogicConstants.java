@@ -29,6 +29,10 @@ public class GameLogicConstants {
 	public static final int SKILL_POINTS_TO_USE = 5;
 	public static final int SKILL_POINTS_TO_USE_ON_LEVELING = 3;
 	
+	
+	public static final int REPLENISH_ROUNDS = 10;
+	public static final int REPLENISH_ROUNDS_SLOW = 20;
+	
 	/**
 	 * Base attribute value to use for initial ratio multiplication.
 	 */

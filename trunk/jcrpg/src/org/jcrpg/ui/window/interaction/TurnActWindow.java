@@ -159,6 +159,7 @@ public class TurnActWindow extends PagedInputWindow {
 		this.encountered = encountered;
 	}
 
+	public static Object restSkillChoiceObject = new Object();
 	
 	TreeMap<Integer,Class<?extends SkillBase>> tempFilteredSkills = new TreeMap<Integer,Class<? extends SkillBase>>();
 	public void updateToParty()
@@ -189,9 +190,9 @@ public class TurnActWindow extends PagedInputWindow {
 				}
 				skills = tempFilteredSkills.values();
 				
-				String[] texts = new String[skills.size()];
-				Object[] objects = new Object[skills.size()];
-				String[] ids = new String[skills.size()];
+				String[] texts = new String[skills.size()+1];
+				Object[] objects = new Object[skills.size()+1];
+				String[] ids = new String[skills.size()+1];
 				
 				int counter_2 = 0;
 				int selected = 0;
@@ -210,6 +211,10 @@ public class TurnActWindow extends PagedInputWindow {
 					}
 					counter_2++;
 				}
+				ids[ids.length-1] = "Do Nothing";
+				texts[texts.length-1] = Language.v("turnActWindow.DoNothing");
+				objects[objects.length-1] = restSkillChoiceObject;
+				
 				select.ids = ids;
 				select.texts = texts;
 				select.objects = objects;
@@ -264,6 +269,14 @@ public class TurnActWindow extends PagedInputWindow {
 		}
 		updateToParty();
 		restoreSettings();
+		for (ListSelect skillSelect:skillSelectors)
+		{
+			// check if Do Nothing is restored -> call input changed to clear out things if so...
+			if (skillSelect.getSelectedObject()==restSkillChoiceObject)
+			{
+				inputChanged(skillSelect, "fake");
+			}
+		}
 		
 		super.setupPage();
 	}	
@@ -289,57 +302,90 @@ public class TurnActWindow extends PagedInputWindow {
 			int index = skillSelectors.indexOf(skillSelect);
 			ListSelect skillActFormSelect = skillActFormSelectors.get(index);			
 			ListSelect inventorySelect = inventorySelectors.get(index);
-			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
-			
-			SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
+			if (skillSelect.getSelectedObject()==restSkillChoiceObject) 
 			{
-				ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
-				String[] texts = new String[forms.size()];
-				Object[] objects = new Object[forms.size()];
-				String[] ids = new String[forms.size()];
-				int counter = 0;
-				for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
 				{
-					ids[counter] = ""+counter;
-					texts[counter] = form.getSimpleName();
-					objects[counter] = form;				    
-					counter++;
+					String[] texts = new String[0];
+					Object[] objects = new Object[0];
+					String[] ids = new String[0];
+					skillActFormSelect.ids = ids;
+					skillActFormSelect.texts = texts;
+					skillActFormSelect.objects = objects;
+					skillActFormSelect.setUpdated(true);
+					skillActFormSelect.deactivate();
+					skillActFormSelect.setSelected(0);
+					skillActFormSelect.storedState = null;
+					skillActFormSelect.setEnabled(false);
 				}
-				skillActFormSelect.ids = ids;
-				skillActFormSelect.texts = texts;
-				skillActFormSelect.objects = objects;
-				skillActFormSelect.setUpdated(true);
-				skillActFormSelect.deactivate();
-				skillActFormSelect.setSelected(0);
-				inputChanged(skillActFormSelect, "fake");
-			}
-			if (s.needsInventoryItem)
-			{
-				
-				ArrayList<ObjInstance> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
-				String[] texts = new String[objInstances.size()];
-				Object[] objects = new Object[objInstances.size()];
-				String[] ids = new String[objInstances.size()];
-				int counter = 0;
-				for (ObjInstance objInstance:objInstances)
 				{
-					ids[counter] = ""+counter;
-					texts[counter] = objInstance.description.getClass().getSimpleName();
-					objects[counter] = objInstance;				    
-					counter++;
+					String[] texts = new String[0];
+					Object[] objects = new Object[0];
+					String[] ids = new String[0];
+					inventorySelect.ids = ids;
+					inventorySelect.texts = texts;
+					inventorySelect.objects = objects;
+					inventorySelect.setUpdated(true);
+					inventorySelect.deactivate();
+					inventorySelect.setSelected(0);
+					inventorySelect.storedState = null;
+					inventorySelect.setEnabled(false);
 				}
-				inventorySelect.ids = ids;
-				inventorySelect.texts = texts;
-				inventorySelect.objects = objects;
-				inventorySelect.setUpdated(true);
-				inventorySelect.deactivate();
-				inventorySelect.setSelected(0);
 			} else
 			{
-				inventorySelect.ids = new String[0];
-				inventorySelect.texts = new String[0];
-				inventorySelect.setUpdated(true);
-				inventorySelect.deactivate();
+				SkillBase s = (SkillBase)skillSelect.getSelectedObject();
+				
+				SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
+				{
+					ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+					String[] texts = new String[forms.size()];
+					Object[] objects = new Object[forms.size()];
+					String[] ids = new String[forms.size()];
+					int counter = 0;
+					for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+					{
+						ids[counter] = ""+counter;
+						texts[counter] = form.getSimpleName();
+						objects[counter] = form;				    
+						counter++;
+					}
+					skillActFormSelect.ids = ids;
+					skillActFormSelect.texts = texts;
+					skillActFormSelect.objects = objects;
+					skillActFormSelect.setUpdated(true);
+					skillActFormSelect.deactivate();
+					skillActFormSelect.setSelected(0);
+					skillActFormSelect.setEnabled(true);
+					inputChanged(skillActFormSelect, "fake");
+				}
+				if (s.needsInventoryItem)
+				{
+					
+					ArrayList<ObjInstance> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
+					String[] texts = new String[objInstances.size()];
+					Object[] objects = new Object[objInstances.size()];
+					String[] ids = new String[objInstances.size()];
+					int counter = 0;
+					for (ObjInstance objInstance:objInstances)
+					{
+						ids[counter] = ""+counter;
+						texts[counter] = objInstance.description.getClass().getSimpleName();
+						objects[counter] = objInstance;				    
+						counter++;
+					}
+					inventorySelect.ids = ids;
+					inventorySelect.texts = texts;
+					inventorySelect.objects = objects;
+					inventorySelect.setUpdated(true);
+					inventorySelect.deactivate();
+					inventorySelect.setEnabled(true);
+					inventorySelect.setSelected(0);
+				} else
+				{
+					inventorySelect.ids = new String[0];
+					inventorySelect.texts = new String[0];
+					inventorySelect.setUpdated(true);
+					inventorySelect.deactivate();
+				}
 			}
 			return true;
 		} else
@@ -449,28 +495,36 @@ public class TurnActWindow extends PagedInputWindow {
 			{
 				if (s.isEnabled()) {
 					EntityMemberInstance i = (EntityMemberInstance)s.subject;
-					SkillBase sb = null;
-					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
-					ObjInstance obj = (ObjInstance)inventorySelectors.get(counter).getSelectedObject();
-					Class<?extends SkillActForm> f = null;
-					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
-					EncounterUnitData fragmentAndSubunit = null;
-					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 					TurnActMemberChoice choice = new TurnActMemberChoice();
 					choice.member = i;
-					choice.skill = i.description.memberSkills.skills.get(sb.getClass());
-					SkillActForm selectedForm = null;
-					for (SkillActForm formInst:sb.getActForms())
+					if (skillSelectors.get(counter).getSelectedObject()==restSkillChoiceObject)
 					{
-						if (formInst.getClass()==f)
+						choice.doNothing = true;
+					} else
+					{
+
+						SkillBase sb = null;
+						sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
+						ObjInstance obj = (ObjInstance)inventorySelectors.get(counter).getSelectedObject();
+						Class<?extends SkillActForm> f = null;
+						f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
+						EncounterUnitData fragmentAndSubunit = null;
+						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
+						
+						choice.skill = i.description.memberSkills.skills.get(sb.getClass());
+						SkillActForm selectedForm = null;
+						for (SkillActForm formInst:sb.getActForms())
 						{
-							selectedForm = formInst;
+							if (formInst.getClass()==f)
+							{
+								selectedForm = formInst;
+							}
 						}
+						choice.skillActForm = selectedForm;
+						choice.target = fragmentAndSubunit;					
+						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
+						choice.usedObject = obj;						
 					}
-					choice.skillActForm = selectedForm;
-					choice.target = fragmentAndSubunit;					
-					choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
-					choice.usedObject = obj;
 					info.memberToChoice.put(i, choice);
 				}
 				counter++;
