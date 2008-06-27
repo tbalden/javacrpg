@@ -236,7 +236,7 @@ public class EncounterLogic {
 						{
 							s+=0.0001f;
 						}
-						//orderedActors.put(s, mi);
+						orderedActors.put(s, mi);
 					}
 				} else
 				{
@@ -542,10 +542,10 @@ public class EncounterLogic {
 					TurnActMemberChoice choice = event.choice;
 					
 					// dead cannot do things...
-					if (choice.member.isDead()) playEncStep(); 
+					if (choice.member.isDead()) playTurnActStep(); 
 					
 					// cannot do things on dead target... TODO necromancy override!
-					if (choice.target!=null && choice.target.isDead()) playEncStep(); 
+					if (choice.target!=null && choice.target.isDead()) playTurnActStep(); 
 					
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					if (choice.doNothing || !choice.member.memberState.isExhausted()) {

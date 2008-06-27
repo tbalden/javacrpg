@@ -195,7 +195,8 @@ public class EntityMember extends DescriptionBase {
 							if (objects==null||objects.size()==0) continue;
 							choice.usedObject = objects.get(0);
 						}
-						for (SkillActForm f:base.getActForms()) {
+						for (Class<? extends SkillActForm> fDef:instance.getDoableActForms(s)) {
+							SkillActForm f = base.getActForm(fDef);
 							if (SkillGroups.negativeSkillActForms.contains(f))
 							{
 								choice.skill = i;
