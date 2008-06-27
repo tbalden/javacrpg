@@ -211,11 +211,16 @@ public class EntityMember extends DescriptionBase {
 						}
 						if (found) break;
 					}
-					if (!found) return null;
+					if (!found) 
+					{
+						choice.doNothing = true;
+						return choice;
+					}
 				}
 			} else
 			{
-				return null;
+				choice.doNothing = true;
+				return choice;
 			}
 			return choice;
 		}
