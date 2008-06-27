@@ -151,5 +151,16 @@ public class PartyInstance extends EntityInstance {
 		super.notifyImpactResult(fragment, member, result);
 	}
 	
+	public void replenishPartyInOneRound()
+	{
+		for (EntityMemberInstance i:orderedParty)
+		{
+			if (!i.isDead())
+			{
+				i.memberState.replenishInOneRound();
+			}
+		}
+	}
+	
 	
 }
