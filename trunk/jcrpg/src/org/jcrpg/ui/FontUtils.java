@@ -25,24 +25,27 @@ import java.io.FileInputStream;
 import org.jcrpg.ui.text.FontTT;
 
 public class FontUtils {
+	
+	public static final String GEN_FONT_PATH = "./data/font/free/vinque.ttf"; //"./data/font/free/Sebaldus-Gotisch.ttf"
+	
 	public static Font fontVerdana = new Font("Verdana", Font.BOLD, 32);
 	//public static Font f = new Font();
 	static {
 		try
 		{
 			//fontVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("./data/font/free/FetteTrumpDeutsch.ttf")));
-			fontVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("./data/font/free/Sebaldus-Gotisch.ttf")));
+			fontVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(GEN_FONT_PATH)));
 		} catch (Exception ex) {ex.printStackTrace();}
 	}
-	public static FontTT textVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),34,0);
+	public static FontTT textVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),44,0);
 	public static Font fontNonBoldVerdana = new Font("Verdana", Font.PLAIN, 32);
 	static {
 		try
 		{
 			//fontNonBoldVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("./data/font/free/FetteTrumpDeutsch.ttf")));
-			fontNonBoldVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("./data/font/free/Sebaldus-Gotisch.ttf")));
+			fontNonBoldVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(GEN_FONT_PATH)));
 		} catch (Exception ex) {ex.printStackTrace();}
 	}
-	public static FontTT textNonBoldVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),34,0);
+	public static FontTT textNonBoldVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),44,0);
 
 }
