@@ -42,7 +42,12 @@ public abstract class EffectNode extends Node {
 	
 	public void setPosition(Vector3f newPos,Quaternion angle)
 	{
-		if (modelNode!=null) modelNode.setLocalRotation(angle);
+		if (modelNode!=null && angle!=null) modelNode.setLocalRotation(angle);
+		if (modelNode!=null)
+		{
+			this.attachChild(modelNode);
+			modelNode.setLocalTranslation(newPos);
+		}
 	}
 	public Quaternion getAngle()
 	{
@@ -54,6 +59,7 @@ public abstract class EffectNode extends Node {
 	public void addModelObject(SimpleModel model)
 	{
 		modelNode = J3DCore.getInstance().modelLoader.loadNodeOriginal(model, false);
+		
 	}
 	
 	public Node getModelNode()

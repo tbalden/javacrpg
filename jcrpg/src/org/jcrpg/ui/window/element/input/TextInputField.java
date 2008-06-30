@@ -37,11 +37,13 @@ public class TextInputField extends InputBase {
 	public int maxLength = 20;
 	public boolean capsLock = true;
 	
+	public boolean numberOnly = false;
+	
 	public static final String defaultImage = "./data/ui/inputBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	public TextInputField(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
-			float sizeY, float textProportion, String text, int maxLength) {
+			float sizeY, float textProportion, String text, int maxLength, boolean numbersOnly) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = text;
 		this.maxLength = maxLength;
@@ -50,11 +52,22 @@ public class TextInputField extends InputBase {
 		if (listenedKeys.size()==0) addListened = true;
 		for (int i=0; i<chars.length(); i++)
 		{
-			w.base.addEventHandler(""+chars.charAt(i),w);
+			if (!numbersOnly)
+				w.base.addEventHandler(""+chars.charAt(i),w);
 			if (addListened) listenedKeys.add(""+chars.charAt(i));
 		}
-		w.base.addEventHandler("space", w);
+		
+		for (int i=0; i<numbers.length(); i++)
+		{
+			w.base.addEventHandler(""+numbers.charAt(i),w);
+			if (addListened) listenedKeys.add(""+numbers.charAt(i));
+		}
+		
+		if (!numbersOnly) {
+			w.base.addEventHandler("space", w);
+		}
 		if (addListened) listenedKeys.add("space");
+		
 		w.base.addEventHandler("back", w);
 		w.base.addEventHandler("lookLeft", w);
 		w.base.addEventHandler("lookRight", w);
@@ -66,7 +79,9 @@ public class TextInputField extends InputBase {
 	Node deactiveNode = null;
 	
 	String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	String numbers = "1234567890";
 	public static HashSet<String> listenedKeys = new HashSet<String>();
+	public static HashSet<String> numericKeys = new HashSet<String>();
 
 	@Override
 	public void activate() {

@@ -118,7 +118,7 @@ public class EvaluatorBase {
 			{
 				if (choice.usedObject.needsAttachmentDependencyForSkill())
 				{
-					dependencyObj = choice.usedObject.getAndRemoveNextDependency();
+					dependencyObj = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
 				}
 			}
 		

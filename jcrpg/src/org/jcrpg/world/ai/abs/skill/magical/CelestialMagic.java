@@ -23,7 +23,6 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-import org.jcrpg.world.object.ObjInstance;
 
 public class CelestialMagic extends SkillBase implements TurnActSkill {
 
@@ -47,7 +46,7 @@ public class CelestialMagic extends SkillBase implements TurnActSkill {
 		//EffectProgram p = new EffectProgram(FireArrow.class);
 		
 		@Override
-		public EffectProgram getEffectProgram(ObjInstance skillObject) {
+		public EffectProgram getEffectProgram() {
 			return null;
 		}
 		

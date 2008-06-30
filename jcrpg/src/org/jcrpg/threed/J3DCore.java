@@ -388,6 +388,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		dpWest = new Vector3f(-dirPostDelta, 0, 0),
 		dpTop = new Vector3f(0, dirPostDelta, 0),
 		dpBottom = new Vector3f(0, -dirPostDelta, 0);
+	/**
+	 * The plus to the center of cube where player stands, used by getCurrentLocation.
+	 */
 	public static final Vector3f[] directionPositions = new Vector3f[] {dpNorth, dpEast, dpSouth, dpWest,dpTop,dpBottom};
 
 	static 

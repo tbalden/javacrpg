@@ -137,6 +137,23 @@ public class ListMultiSelect extends InputBase {
 		return objects[fromCount+selected];
 	}
 	
+	/**
+	 * Get all selected objects of the multi-selection.
+	 * @return
+	 */
+	public ArrayList<Object> getMultiSelection()
+	{
+		ArrayList<Object> selection = new ArrayList<Object>();
+		for (int i=0; i<selectedItems.length; i++)
+		{
+			if (selectedItems[i])
+			{
+				selection.add(objects[i]);
+			}
+		}
+		return selection;
+	}
+	
 	public void setupDeactivated()
 	{
 		baseNode.removeFromParent();

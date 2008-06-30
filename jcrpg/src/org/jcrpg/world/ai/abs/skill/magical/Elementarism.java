@@ -25,7 +25,6 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
-import org.jcrpg.world.object.ObjInstance;
 
 public class Elementarism extends SkillBase implements TurnActSkill {
 
@@ -51,7 +50,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 		EffectProgram p = new EffectProgram(FireArrow.class);
 		
 		@Override
-		public EffectProgram getEffectProgram(ObjInstance skillObject) {
+		public EffectProgram getEffectProgram() {
 			return p;
 		}
 		

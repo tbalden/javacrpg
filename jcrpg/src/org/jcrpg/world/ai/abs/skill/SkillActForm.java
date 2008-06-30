@@ -25,7 +25,6 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
-import org.jcrpg.world.object.ObjInstance;
 
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
@@ -101,7 +100,7 @@ public abstract class SkillActForm
 	 * Returns (3d) effect description for skill use.
 	 * @return
 	 */
-	public EffectProgram getEffectProgram(ObjInstance skillObject)
+	public EffectProgram getEffectProgram()
 	{
 		return null;
 	}

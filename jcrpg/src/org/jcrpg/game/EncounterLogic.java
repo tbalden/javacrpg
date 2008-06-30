@@ -240,11 +240,11 @@ public class EncounterLogic {
 						{
 							s+=0.0001f;
 						}
-						orderedActors.put(s, mi);
+						//orderedActors.put(s, mi);
 					}
 				} else
 				{
-					orderedActors.put(1000f, mi); // resters to the end of round
+					//orderedActors.put(1000f, mi); // resters to the end of round
 				}
 			}
 		}
@@ -585,7 +585,7 @@ public class EncounterLogic {
 						{
 							if (choice.usedObject.needsAttachmentDependencyForSkill())
 							{
-								if (!choice.usedObject.hasAttachedDependencies())
+								if (!choice.usedObject.hasAttachedDependencies() || !choice.member.inventory.hasOneOfTypes(choice.usedObject.getAttachedDependencies()))
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " run out of ammunition.");
 									playTurnActStep();
@@ -594,7 +594,7 @@ public class EncounterLogic {
 							}
 						}
 						
-						EffectProgram eProgram = choice.skillActForm.getEffectProgram(choice.usedObject);
+						EffectProgram eProgram = choice.getEffectProgram();
 						if (eProgram!=null)
 						{
 							try 
