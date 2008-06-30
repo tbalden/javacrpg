@@ -29,6 +29,7 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.object.Ammunition;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
@@ -51,6 +52,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	public ListMultiSelect weapons;
 	public ListMultiSelect armors;
+	public ListMultiSelect ammunitions;
 	public ListMultiSelect potions;
 	public ListMultiSelect keys;
 	public ListMultiSelect books;
@@ -79,12 +81,12 @@ public class InventoryWindow extends PagedInputWindow {
     		armors = new ListMultiSelect("armors", this,page0, 0.70f,0.58f,0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,armors);
 
-	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
-    		potions = new ListMultiSelect("potions", this,page0, 0.30f,0.10f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Ammunitions",false);
+    		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.10f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,potions);
 
-	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Keys",false);
-    		keys = new ListMultiSelect("keys", this,page0, 0.70f,0.55f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
+	    	potions = new ListMultiSelect("keys", this,page0, 0.70f,0.55f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,keys);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.35f, 0.3f, 0.06f,600f,"Books",false);
@@ -95,10 +97,15 @@ public class InventoryWindow extends PagedInputWindow {
     		scrolls = new ListMultiSelect("scrolls", this,page0, 0.70f,0.55f,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,scrolls);
 
+	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Keys",false);
+    		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.10f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	addInput(0,keys);
+
 	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Other",false);
-    		other = new ListMultiSelect("others", this,page0, 0.30f,0.10f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		other = new ListMultiSelect("others", this,page0, 0.70f,0.55f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,other);
 
+	    	
 	    	addPage(0, page0);
 		} catch (Exception ex)
 		{	
@@ -170,28 +177,16 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	
 	public ArrayList<ObjInstance> tmpWeaponsList = new ArrayList<ObjInstance>();
+	public ArrayList<ObjInstance> tmpAmmunitionList = new ArrayList<ObjInstance>();
 	
-	public void updateToInventory(EntityObjInventory inventory)
+	
+	public void fillSelect(ListMultiSelect weapons, ArrayList<ObjInstance> tmpWeaponsList)
 	{
-		
-		int weaponCount = 0; tmpWeaponsList.clear();
-		// TODO other counts
-		
-		for (ObjInstance o:inventory.inventory)
 		{
-			if (o.description instanceof Weapon)
-			{
-				weaponCount++;
-				tmpWeaponsList.add(o);
-				System.out.println(o.description);
-			}
-		}
-
-		{
-			String[] ids = new String[weaponCount];
-			Object[] objects = new Object[weaponCount];
-			String[] texts = new String[weaponCount];
-			Quad[] icons = new Quad[weaponCount];
+			String[] ids = new String[tmpWeaponsList.size()];
+			Object[] objects = new Object[tmpWeaponsList.size()];
+			String[] texts = new String[tmpWeaponsList.size()];
+			Quad[] icons = new Quad[tmpWeaponsList.size()];
 			int counter = 0;
 			for (ObjInstance weapon:tmpWeaponsList) {
 				ids[counter] = ""+counter;
@@ -213,6 +208,38 @@ public class InventoryWindow extends PagedInputWindow {
 			weapons.setUpdated(true);
 			weapons.deactivate();
 		}
+		
+	}
+	
+	
+	public void updateToInventory(EntityObjInventory inventory)
+	{
+		
+		int weaponCount = 0; 
+		int ammunitionCount = 0;
+		tmpWeaponsList.clear();
+		tmpAmmunitionList.clear();
+		// TODO other counts
+		
+		for (ObjInstance o:inventory.inventory)
+		{
+			if (o.description instanceof Weapon)
+			{
+				weaponCount++;
+				tmpWeaponsList.add(o);
+				System.out.println("WEA: "+o.description);
+			} else
+			if (o.description instanceof Ammunition)
+			{
+				ammunitionCount++;
+				tmpAmmunitionList.add(o);
+				System.out.println("AMM: "+o.description);
+			}
+		}
+		
+		fillSelect(weapons, tmpWeaponsList);
+		fillSelect(ammunitions, tmpAmmunitionList);
+
 	}
 
 	

@@ -27,6 +27,7 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.Ammunition;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
 
@@ -68,7 +69,7 @@ public class EvaluatorBase {
 		return sum;
 	}
 	
-	private static int calculateResultForSkillUse(int seed, TurnActMemberChoice choice, boolean defense)
+	private static int calculateResultForSkillUse(int seed, TurnActMemberChoice choice, boolean defense, ObjInstance dependencyObj)
 	{
 		float objMultiplicator = 1f;
 		if (choice.usedObject!=null)
@@ -82,8 +83,14 @@ public class EvaluatorBase {
 				} else
 				{
 					objMultiplicator = w.getAttackMultiplicator();
+					if (dependencyObj!=null)
+					{
+						if (dependencyObj.description instanceof Ammunition)
+						{
+							objMultiplicator *= ((Ammunition)dependencyObj.description).getAttackMultiplier();
+						}
+					}
 				}
-				//impact = w.getMaxDamage()/10f;
 			}
 		}
 		int level = choice.skill.level;
@@ -105,21 +112,33 @@ public class EvaluatorBase {
 			
 			boolean success = false;
 			float impact = 0.5f;
+
+			ObjInstance dependencyObj = null;
+			if (choice.skillActForm.skill.needsInventoryItem)
+			{
+				if (choice.usedObject.needsAttachmentDependencyForSkill())
+				{
+					dependencyObj = choice.usedObject.getAndRemoveNextDependency();
+				}
+			}
 		
-			int result = calculateResultForSkillUse(seed, choice,false); 
+			// calculate attack...
+			int result = calculateResultForSkillUse(seed, choice,false,dependencyObj); 
 			int maxHundredPlus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0); // random factor
 			result+=maxHundredPlus;
 			
+			// calculate defense
 			int contraResult = DEFENSE_BASE_VALUE; // default defense value
 			TurnActMemberChoice contraChoice = state.memberChoices.get(choice.targetMember);
 			if (contraChoice!=null && contraChoice.skillActForm!=null)
 			{
-				contraResult += calculateResultForSkillUse(seed, choice,true);
+				contraResult += calculateResultForSkillUse(seed, choice,true,null);
 			}
 			int contraMaxHundredPlus =
-				(calculateContraAttributeValue(choice.skillActForm, choice.targetMember)
+				(
+						calculateContraAttributeValue(choice.skillActForm, choice.targetMember)/2
 				+
-				calculateContraResistenceValue(choice.skillActForm, choice.targetMember))/2
+						calculateContraResistenceValue(choice.skillActForm, choice.targetMember))/2
 				;
 				
 			//contraMaxHundredPlus+=HashUtil.mixPercentage(seed, choice.targetMember.getNumericId(),choice.targetMember.instance.getNumericId(), 0); // random factor
@@ -140,7 +159,8 @@ public class EvaluatorBase {
 					System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
 				}
 				i.targetImpact.put(choice.targetMember, u);
-				// TODO calculate impact effect based on targetmember's skills / spell effects/ armore etc.
+				// TODO calculate impact effect based on targetmember's skills / spell effects/ armor etc.
+				// calculate ammunition / weapon magical effects etc.
 			}
 			ImpactUnit u = i.actCost;
 			for (Integer effectType:choice.skillActForm.usedPointsAndLevels.keySet())

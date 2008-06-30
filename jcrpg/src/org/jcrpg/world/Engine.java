@@ -23,6 +23,12 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.time.Time;
 
+/**
+ * The core parallel thread for time related and state related things. Don not use this
+ * for modifying 3d things!
+ * @author illes
+ *
+ */
 public class Engine implements Runnable {
 
 		

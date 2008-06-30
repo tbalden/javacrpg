@@ -16,6 +16,7 @@
  */
 package org.jcrpg.world.object;
 
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
@@ -29,6 +30,8 @@ public class Obj {
 	public Attributes objectAttributeBonus = null;
 	public Resistances objectResistanceBonus = null;
 	
+	public SimpleModel effectProgramModel = null;
+	
 	public String getName()
 	{
 		return Language.v("obj."+this.getClass().getSimpleName());
@@ -40,6 +43,30 @@ public class Obj {
 
 	public Resistances getResistanceBonus() {
 		return objectResistanceBonus;
+	}
+	
+	public SimpleModel getEffectProgramModel()
+	{
+		return effectProgramModel;
+	}
+	
+	public boolean isAttacheable()
+	{
+		return false;
+	}
+	public Class getAttacheableToType()
+	{
+		return null;
+	}
+	
+	public boolean needsAttachmentDependencyForSkill()
+	{
+		return false;
+	}
+	
+	public Class getAttachmentDependencyType()
+	{
+		return null;
 	}
 	
 }

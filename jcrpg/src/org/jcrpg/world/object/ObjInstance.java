@@ -17,6 +17,10 @@
  */ 
 package org.jcrpg.world.object;
 
+import java.util.ArrayList;
+
+import org.jcrpg.apps.Jcrpg;
+
 /**
  * An instance of an object type.
  * @author illes
@@ -44,6 +48,94 @@ public class ObjInstance {
 	public static synchronized long getNextObjInstanceId()
 	{
 		return sequence++;
+	}
+
+	boolean attached = false;
+	
+	/**
+	 * Tells if this objInstance is attached to another objInstance or not.
+	 * @return is attached?
+	 */
+	public boolean isAttached()
+	{
+		return attached;
+	}
+	
+	public boolean isAttacheable()
+	{
+		return description.isAttacheable();
+	}
+	
+
+	
+	ArrayList<ObjInstance> attachedDependencies = null;
+	public ArrayList<ObjInstance> getAttachedDependencies()
+	{
+		return attachedDependencies;
+	}
+	
+	public boolean hasAttachedDependencies()
+	{
+		if (attachedDependencies==null || attachedDependencies.size()==0) return false;
+		return true;
+	}
+	
+	
+	public void addAttachedDependencies(ArrayList<ObjInstance> dependencies)
+	{
+		if (attachedDependencies==null)
+		{
+			attachedDependencies = new ArrayList<ObjInstance>();
+		}
+		for (ObjInstance i:dependencies)
+		{
+			if (attachedDependencies.contains(i)) continue;
+			if (i.description.getAttacheableToType()==description.getClass())
+			{
+				attachedDependencies.add(i);
+				i.attached = true;
+			}
+		}
+	}
+	
+	public void removeAttachedDependency(ObjInstance removed)
+	{
+		if (attachedDependencies!=null)
+		{
+			attachedDependencies.remove(removed);
+			removed.attached = false;
+		} else
+		{
+			Jcrpg.LOGGER.warning("TRYING TO REMOVE AN OBJECT DEPENDENCY FROM A NULL DEP LIST! "+this+" "+this.description);
+		}
+	}
+	
+	public void clearDependencies()
+	{
+		if (attachedDependencies!=null)
+		{
+			attachedDependencies.clear();
+		}
+	}
+	
+	public ObjInstance getAndRemoveNextDependency()
+	{
+		if (attachedDependencies!=null && attachedDependencies.size()>0)
+		{
+			ObjInstance r = attachedDependencies.remove(0);
+			r.attached = false;
+			return r;
+		}
+		return null;
+	}
+	
+	public boolean needsAttachmentDependencyForSkill()
+	{
+		return description.needsAttachmentDependencyForSkill();
+	}
+	public Class getAttacheableToTyoe()
+	{
+		return description.getAttacheableToType();
 	}
 	
 }

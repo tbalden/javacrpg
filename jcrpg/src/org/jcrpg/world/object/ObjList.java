@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 import org.jcrpg.world.object.combat.blade.Dagger;
 import org.jcrpg.world.object.combat.blade.LongSword;
+import org.jcrpg.world.object.combat.bow.ShortBow;
+import org.jcrpg.world.object.combat.bow.arrow.CrudeArrow;
 import org.jcrpg.world.object.combat.staffwand.Club;
 import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
 
@@ -39,6 +41,8 @@ public class ObjList {
 		objects.put(QuarterStaff.class, new QuarterStaff());
 		objects.put(Dagger.class, new Dagger());
 		objects.put(Club.class, new Club());
+		objects.put(ShortBow.class, new ShortBow());
+		objects.put(CrudeArrow.class, new CrudeArrow());
 	}
 
 }

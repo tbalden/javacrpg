@@ -413,13 +413,15 @@ public class J3DMovingEngine {
 		simpleStates.add(MovingModelAnimDescription.ANIM_DEFEND_LOWER);
 	}
 	
+	
+	
+	VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
 	/**
 	 * Updates moving units 3d embodiment in real time.
 	 * @param timePerFrame Value passed since last frame.
 	 */
 	public void updateScene(float timePerFrame)
 	{
-		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
 		playerFakeForm.worldX = core.gameState.player.theFragment.roamingBoundary.posX;
 		playerFakeForm.worldY = core.gameState.player.theFragment.roamingBoundary.posY;
 		playerFakeForm.worldZ = core.gameState.player.theFragment.roamingBoundary.posZ;
@@ -435,30 +437,24 @@ public class J3DMovingEngine {
 				{
 					n.startedPlaying = true;
 					VisibleLifeForm target = n.sourceForm==null?playerFakeForm:n.sourceForm;
-					float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-					float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-					int origoZ = core.gameState.origoZ;
-					int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-					float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
-					System.out.println("{"+eX+" "+eY+" "+eZ+"}");
-					n.setPosition(new Vector3f(eX,eY,eZ));
+					Vector3f pos = calculatePositionVector(null,target);
+					n.setPosition(pos, null);
 					core.extRootNode.attachChild(n);
 					n.updateRenderState();
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
-				NodePlaceholder h = n.targetForm.unit.nodePlaceholders.iterator().next();
-				System.out.println("h : "+h.getLocalTranslation());
-				float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-				float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-				int origoZ = core.gameState.origoZ;
-				int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-				float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 				Vector3f cVec = new Vector3f(n.currentPos);
-				Vector3f eVec = new Vector3f(eX,eY,eZ);
-				Vector3f mVec = eVec.subtract(cVec).normalize().mult(n.speed*10f * 0.1f*timePerFrame);
+				Vector3f[] rVectors = calculateNewPositionOfMovementAndEnd(cVec, target.unit, n.speed, timePerFrame);
+				Vector3f mVec = rVectors[0];
+				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
-				System.out.println("[[{"+eX+" "+eY+" "+eZ+"}]]"+" "+n.currentPos);
-				n.setPosition(n.currentPos);
+				System.out.println(n.currentPos);
+
+				Quaternion current = n.getAngle();
+				if (current!=null) {
+					current = calculateRotationForDispotionDirection(mVec, current);
+				}
+				n.setPosition(n.currentPos,current);
 				
 				
 				float dist = eVec.distance(n.currentPos);
@@ -485,45 +481,14 @@ public class J3DMovingEngine {
 					{
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
-						float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						int origoZ = core.gameState.origoZ;
-						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
-	
-						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
-						{
-							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						float[] d = (unit.models[0]).disposition;
-						eY+=d[1];
-						
-						if (unit.toSteep)
-						{
-							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
-							float[] scale = unit.form.type.getScale();
-							// scaling for md5 needs substraction
-							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
-						Vector3f eVec = new Vector3f(eX,eY,eZ);
-						//System.out.println("-- "+cVec +" "+eVec);
-						Vector3f mVec = eVec.subtract(cVec).normalize().mult(20f * 0.1f*timePerFrame);
-						//n.getLocalTranslation().addLocal(mVec);
-						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
-						//((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
-						Vector3f m = new Vector3f(mVec);
-						m.y=0;
-						Quaternion q = new Quaternion();
-						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
-						m.normalizeLocal();
-						if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
 						
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEnd(cVec, unit, 20f, timePerFrame);		
+						Vector3f eVec = rVectors[1];
+						Vector3f mVec = rVectors[0];
+
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						Quaternion between = new Quaternion(current);
-						between.slerp(q, 1f);
-						current.slerp(between, 0.1f);
+						current = calculateRotationForDispotionDirection(mVec, current);
 						
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						
@@ -575,45 +540,14 @@ public class J3DMovingEngine {
 						}
 						
 						
-						float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						int origoZ = core.gameState.origoZ;
-						int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
-	
-						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
-						{
-							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						float[] d = (unit.models[0]).disposition;
-						eY+=d[1];
-						
-						if (unit.toSteep)
-						{
-							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
-							float[] scale = unit.form.type.getScale();
-							// scaling for md5 needs substraction
-							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
-						Vector3f eVec = new Vector3f(eX,eY,eZ);
-						//System.out.println("-- "+cVec +" "+eVec);
-						Vector3f mVec = eVec.subtract(cVec).normalize().mult(20f * 0.1f*timePerFrame);
-						//n.getLocalTranslation().addLocal(mVec);
-						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
-						//((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
-						Vector3f m = new Vector3f(mVec);
-						m.y=0;
-						Quaternion q = new Quaternion();
-						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
-						m.normalizeLocal();
-						if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
+						
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEnd(cVec, unit, 20f, timePerFrame);		
+						Vector3f eVec = rVectors[1];
+						Vector3f mVec = rVectors[0];
 						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						Quaternion between = new Quaternion(current);
-						between.slerp(q, 1f);
-						current.slerp(between, 0.1f);
+						current = calculateRotationForDispotionDirection(mVec, current);
 						
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 						
@@ -641,65 +575,21 @@ public class J3DMovingEngine {
 					} else
 					if (unit.state.equals(MovingModelAnimDescription.ANIM_WALK))
 					{
-						//float sX = (unit.startCoordX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						//float sY = -(0.5f*J3DCore.CUBE_EDGE_SIZE)+(unit.startCoordY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						//float sZ = (unit.startCoordZ - (core.gameState.origoZ))*J3DCore.CUBE_EDGE_SIZE;
-						float eX = (unit.endCoordX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
-						float eY = (unit.endCoordY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
-						int origoZ = core.gameState.origoZ;
-						int endCoordZCorrect = (origoZ-(unit.endCoordZ-origoZ));
-						float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
-						//float eZ = ( ((core.gameState.origoZ)*2) - unit.endCoordZ )*J3DCore.CUBE_EDGE_SIZE;
-						if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
-						{
-							eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						float[] d = (unit.models[0]).disposition;
-						eY+=d[1];
-						
-						if (unit.toSteep)
-						{
-							eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
-							float[] scale = unit.form.type.getScale();
-							// scaling for md5 needs substraction
-							eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
-						}
-						/*float cX = unit.c3dX;
-						float cY = unit.c3dY;
-						float cZ = unit.c3dZ;*/
 						
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
-						//Vector3f sVec = new Vector3f(sX,sY,sZ);
-						Vector3f eVec = new Vector3f(eX,eY,eZ);
-						/*System.out.println("START: "+sVec.x+" "+sVec.y+" "+sVec.z);
-						System.out.println("END: "+eVec.x+" "+eVec.y+" "+eVec.z);
-						System.out.println("C: "+n.getLocalTranslation().x+" "+n.getLocalTranslation().y+" "+n.getLocalTranslation().z);*/
-						Vector3f mVec = eVec.subtract(cVec).normalize().mult(unit.movingSpeed * 0.1f*timePerFrame);
+
+						Vector3f[] rVectors = calculateNewPositionOfMovementAndEnd(cVec, unit, unit.movingSpeed, timePerFrame);		
+						Vector3f eVec = rVectors[1];
+						Vector3f mVec = rVectors[0];
+
 						n.getLocalTranslation().addLocal(mVec);
 						//System.out.println(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
-						Vector3f m = new Vector3f(mVec);
-						m.y=0;
-						Quaternion q = new Quaternion();
-						q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
-						//Matrix3f m3f = new Matrix3f();
-						//m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
 
-						//q.fromRotationMatrix(m3f);
-						//q.oppositeLocal();
-						//if (unit.direction== 0) 
-						//if (q.mult(mVec).x>0 && q.mult(mVec).z>0) q.oppositeLocal();
-						
-						// trick for quaternion fixing, opposite local if ...
-						m.normalizeLocal();
-						if (m.x>0 && m.z>-0.2f && m.z<0.2f) q.oppositeLocal();
-						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
-						Quaternion between = new Quaternion(current);
-						between.slerp(q, 1f);
-						current.slerp(between, 0.1f);
-						
+						current = calculateRotationForDispotionDirection(mVec, current);
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
+
 						float dist = eVec.distance(n.getLocalTranslation());
 						//System.out.println("######### "+dist);
 						
@@ -732,5 +622,96 @@ public class J3DMovingEngine {
 	{
 		units.clear();
 	}
+	
+	
+	// ======================= private part for 3d calculations... ==========================
+
+	
+	/**
+	 * Calculates position vector for VisibleLifeForm's position.
+	 * @param unit Unit - can be null.
+	 * @param target Cannot be null!
+	 * @return The position vector.
+	 */
+	private Vector3f calculatePositionVector(RenderedMovingUnit unit, VisibleLifeForm target)
+	{
+		float eX = (target.worldX - (core.gameState.origoX))*J3DCore.CUBE_EDGE_SIZE;
+		float eY = (target.worldY - (core.gameState.origoY))*J3DCore.CUBE_EDGE_SIZE;
+		int origoZ = core.gameState.origoZ;
+		int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
+		float eZ = ( endCoordZCorrect - (core.gameState.origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+		
+		if (unit!=null)
+		{
+			if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
+			{
+				eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
+			}
+			float[] d = (unit.models[0]).disposition;
+			eY+=d[1];
+			
+			if (unit.toSteep)
+			{
+				eY+=.5f*J3DCore.CUBE_EDGE_SIZE;
+				float[] scale = unit.form.type.getScale();
+				// scaling for md5 needs substraction
+				eY-=(1-scale[2])*0.4f*J3DCore.CUBE_EDGE_SIZE;
+			}
+		}
+		return new Vector3f(eX,eY,eZ);
+		
+	}
+	
+	/**
+	 * Calculates movement disposition for a given time passed based on current position end position and speed. 
+	 * @param cVec Current position vector ('world' position)
+	 * @param unit The target unit.
+	 * @param speed Speed of movement.
+	 * @param timePerFrame timePerFrame of 3d engine.
+	 * @return array of vector3f [disposition of movement vector, the end position to reach]  
+	 */
+	private Vector3f[] calculateNewPositionOfMovementAndEnd(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame)
+	{
+		VisibleLifeForm end = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
+		Vector3f eVec = calculatePositionVector(unit,end);
+		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame);
+	}
+	/**
+	 * Calculates movement disposition from a current pos to an end pos for a given speed.
+	 * @param cVec current pos
+	 * @param eVec end post
+	 * @param speed speed
+	 * @param timePerFrame timePerFrame of 3d engine.
+	 * @return array of vector3f [disposition of movement vector, the end position to reach]
+	 */
+	private Vector3f[] calculateNewPositionOfMovementAndEnd(Vector3f cVec, Vector3f eVec, float speed, float timePerFrame)
+	{
+		return new Vector3f[]{eVec.subtract(cVec).normalize().mult(speed*10f * 0.1f*timePerFrame),eVec};
+	}
+	
+	private Quaternion calculateRotationForDispotionDirection(Vector3f mVec,Quaternion current)
+	{
+		Vector3f m = new Vector3f(mVec);
+		m.y=0;
+		Quaternion q = new Quaternion();
+		q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
+		//Matrix3f m3f = new Matrix3f();
+		//m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
+
+		//q.fromRotationMatrix(m3f);
+		//q.oppositeLocal();
+		//if (unit.direction== 0) 
+		//if (q.mult(mVec).x>0 && q.mult(mVec).z>0) q.oppositeLocal();
+		
+		// trick for quaternion fixing, opposite local if ...
+		m.normalizeLocal();
+		if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
+		Quaternion between = new Quaternion(current);
+		between.slerp(q, 1f);
+		current.slerp(between, 0.1f);
+		return current;
+	}
+
+	// ================================================================================
 	
 }

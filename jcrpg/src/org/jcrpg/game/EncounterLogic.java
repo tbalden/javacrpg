@@ -546,10 +546,18 @@ public class EncounterLogic {
 					TurnActMemberChoice choice = event.choice;
 					
 					// dead cannot do things...
-					if (choice.member.isDead()) playTurnActStep(); 
+					if (choice.member.isDead()) 
+					{
+						playTurnActStep();
+						return;
+					}
 					
 					// cannot do things on dead target... TODO necromancy override!
-					if (choice.target!=null && choice.target.isDead()) playTurnActStep(); 
+					if (choice.target!=null && choice.target.isDead()) 
+					{
+						playTurnActStep();
+						return;
+					}
 					
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					if (choice.doNothing || !choice.member.memberState.isExhausted()) {
@@ -572,7 +580,21 @@ public class EncounterLogic {
 					else					
 					if (choice.skillActForm!=null)
 					{
-						EffectProgram eProgram = choice.skillActForm.getEffectProgram();
+						
+						if (choice.usedObject!=null)
+						{
+							if (choice.usedObject.needsAttachmentDependencyForSkill())
+							{
+								if (!choice.usedObject.hasAttachedDependencies())
+								{
+									gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " run out of ammunition.");
+									playTurnActStep();
+									return;
+								}
+							}
+						}
+						
+						EffectProgram eProgram = choice.skillActForm.getEffectProgram(choice.usedObject);
 						if (eProgram!=null)
 						{
 							try 

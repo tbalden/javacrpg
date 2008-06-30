@@ -22,6 +22,7 @@ import org.jcrpg.threed.jme.program.EffectNode;
 
 import com.jme.bounding.BoundingSphere;
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.AlphaState;
@@ -76,9 +77,10 @@ public class FireArrow extends EffectNode {
 	}
 
 	@Override
-	public void setPosition(Vector3f newPos) {
+	public void setPosition(Vector3f newPos, Quaternion newAngle) {
 		currentPos = newPos;
 		pMesh.setOriginOffset(currentPos);
+		super.setPosition(newPos,newAngle);
 		//debugBox.setLocalTranslation(newPos);
 	}
 
