@@ -17,8 +17,11 @@
  */ 
 package org.jcrpg.threed.jme.program;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 
@@ -35,7 +38,28 @@ public abstract class EffectNode extends Node {
 	
 	public Vector3f startingPos = new Vector3f(0,0,0);
 	
-	public abstract void setPosition(Vector3f newPos);
+	public Node modelNode = null;
+	
+	public void setPosition(Vector3f newPos,Quaternion angle)
+	{
+		if (modelNode!=null) modelNode.setLocalRotation(angle);
+	}
+	public Quaternion getAngle()
+	{
+		if (modelNode!=null) return modelNode.getLocalRotation();
+		return null;
+	}
+	
+	
+	public void addModelObject(SimpleModel model)
+	{
+		modelNode = J3DCore.getInstance().modelLoader.loadNodeOriginal(model, false);
+	}
+	
+	public Node getModelNode()
+	{
+		return modelNode;
+	}
 	
 	public VisibleLifeForm sourceForm = null;
 	public VisibleLifeForm targetForm = null;

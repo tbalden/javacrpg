@@ -29,6 +29,8 @@ import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 import org.jcrpg.world.object.combat.blade.LongSword;
+import org.jcrpg.world.object.combat.bow.ShortBow;
+import org.jcrpg.world.object.combat.bow.arrow.CrudeArrow;
 
 public class Ranger extends HumanoidProfessional {
 
@@ -36,6 +38,12 @@ public class Ranger extends HumanoidProfessional {
 	{
 		super();
 		generationNewInstanceObjects.add(LongSword.class);
+		generationNewInstanceObjects.add(ShortBow.class);
+		generationNewInstanceObjects.add(CrudeArrow.class);
+		generationNewInstanceObjects.add(CrudeArrow.class);
+		generationNewInstanceObjects.add(CrudeArrow.class);
+		generationNewInstanceObjects.add(CrudeArrow.class);
+		generationNewInstanceObjects.add(CrudeArrow.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.SPEED, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
