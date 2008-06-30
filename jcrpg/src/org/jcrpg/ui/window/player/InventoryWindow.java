@@ -18,6 +18,7 @@
 package org.jcrpg.ui.window.player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
@@ -31,6 +32,7 @@ import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.Ammunition;
 import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
 
@@ -83,11 +85,11 @@ public class InventoryWindow extends PagedInputWindow {
 
 	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Ammunitions",false);
     		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.10f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
-	    	addInput(0,potions);
+	    	addInput(0,ammunitions);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
 	    	potions = new ListMultiSelect("keys", this,page0, 0.70f,0.55f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
-	    	addInput(0,keys);
+	    	addInput(0,potions);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.35f, 0.3f, 0.06f,600f,"Books",false);
     		books = new ListMultiSelect("books", this,page0, 0.30f,0.10f,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
@@ -176,22 +178,22 @@ public class InventoryWindow extends PagedInputWindow {
 	}
 	
 	
-	public ArrayList<ObjInstance> tmpWeaponsList = new ArrayList<ObjInstance>();
-	public ArrayList<ObjInstance> tmpAmmunitionList = new ArrayList<ObjInstance>();
+	public ArrayList<InventoryListElement> tmpWeaponsList = new ArrayList<InventoryListElement>();
+	public ArrayList<InventoryListElement> tmpAmmunitionList = new ArrayList<InventoryListElement>();
 	
 	
-	public void fillSelect(ListMultiSelect weapons, ArrayList<ObjInstance> tmpWeaponsList)
+	public void fillSelect(ListMultiSelect weapons, ArrayList<InventoryListElement> list)
 	{
 		{
-			String[] ids = new String[tmpWeaponsList.size()];
-			Object[] objects = new Object[tmpWeaponsList.size()];
-			String[] texts = new String[tmpWeaponsList.size()];
-			Quad[] icons = new Quad[tmpWeaponsList.size()];
+			String[] ids = new String[list.size()];
+			Object[] objects = new Object[list.size()];
+			String[] texts = new String[list.size()];
+			Quad[] icons = new Quad[list.size()];
 			int counter = 0;
-			for (ObjInstance weapon:tmpWeaponsList) {
+			for (InventoryListElement weapon:list) {
 				ids[counter] = ""+counter;
 				objects[counter] = weapon;
-				texts[counter] = weapon.description.getClass().getSimpleName();
+				texts[counter] = weapon.description.getName() + " " + weapon.objects.size();
 				try {
 					icons[counter] = UIImageCache.getImage("./data/icons/objects/"+weapon.description.icon, true,15f);
 				} catch (Exception ex)
@@ -211,27 +213,51 @@ public class InventoryWindow extends PagedInputWindow {
 		
 	}
 	
-	
-	public void updateToInventory(EntityObjInventory inventory)
+	public class InventoryListElement
 	{
 		
-		int weaponCount = 0; 
-		int ammunitionCount = 0;
+		Obj description = null;
+		
+		public InventoryListElement(Obj description) 
+		{
+			this.description = description;
+		}
+		
+		ArrayList<ObjInstance> objects = new ArrayList<ObjInstance>();
+		
+	}
+	private HashMap<Obj, InventoryListElement> hmDescToElement = new HashMap<Obj, InventoryListElement>();
+	
+	
+	public void updateToInventory(EntityObjInventory inventory)
+	
+	{
+		hmDescToElement.clear();
+		
 		tmpWeaponsList.clear();
 		tmpAmmunitionList.clear();
-		// TODO other counts
 		
 		for (ObjInstance o:inventory.inventory)
 		{
+		
+			InventoryListElement list = hmDescToElement.get(o.description);
+			if (list==null)
+			{
+				list = new InventoryListElement(o.description);
+				hmDescToElement.put(o.description, list);
+			}
+			list.objects.add(o);
+		}
+		
+		for (InventoryListElement o:hmDescToElement.values())
+		{
 			if (o.description instanceof Weapon)
 			{
-				weaponCount++;
 				tmpWeaponsList.add(o);
 				System.out.println("WEA: "+o.description);
 			} else
 			if (o.description instanceof Ammunition)
 			{
-				ammunitionCount++;
 				tmpAmmunitionList.add(o);
 				System.out.println("AMM: "+o.description);
 			}
