@@ -96,7 +96,12 @@ public class TurnActMemberChoice {
 		}
 		
 		if (usedObject!=null) {
-			Obj i = member.inventory.getPossibleNextOneType(usedObject.getAttachedDependencies());
+			
+			Obj i = null;
+			if (usedObject.needsAttachmentDependencyForSkill())
+			{
+				i = member.inventory.getPossibleNextOneType(usedObject.getAttachedDependencies());
+			}
 			EffectProgram program3 = usedObject.description.getEffectProgram();
 			if (program3!=null) program = program3;
 			if (i!=null)

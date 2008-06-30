@@ -18,7 +18,6 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
-import org.jcrpg.threed.jme.program.impl.FireArrow;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -51,11 +50,11 @@ public class Bows extends SkillBase implements TurnActSkill  {
 			return null;
 		}
 		
-		EffectProgram p = new EffectProgram(FireArrow.class);
+		//EffectProgram p = new EffectProgram(FireArrow.class);
 
 		@Override
 		public EffectProgram getEffectProgram() {
-			return p;
+			return null;
 		}
 		
 		
