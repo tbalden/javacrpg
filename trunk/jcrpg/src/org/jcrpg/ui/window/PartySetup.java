@@ -231,10 +231,10 @@ public class PartySetup extends PagedInputWindow {
 	    	skillValueTuner.setEnabled(false);
 	    	
 	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,Language.v("partySetup.foreName")+":",false); 
-	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15);
+	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15,false);
 	    	addInput(2,foreName);
 	    	new TextLabel("",this,pageCreationSecond, 0.66f, 0.57f, 0.3f, 0.06f,600f,Language.v("partySetup.surName")+":",false); 
-	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15); 
+	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15,false); 
 	    	addInput(2,surName);
 
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));

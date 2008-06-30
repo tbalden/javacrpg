@@ -76,12 +76,89 @@ public class EntityObjInventory {
 			{
 				if (o.description.requirementSkillAndLevel.level<=skill.level)
 				{
-					objList.add(o);
+					if (o.needsAttachmentDependencyForSkill())
+					{
+						if (o.getAttachedDependencies()!=null)
+						{
+							if (hasOneOfTypes(o.getAttachedDependencies()))
+							{
+								objList.add(o);
+							}
+						}
+					} else
+					{
+						objList.add(o);
+					}
 				}
 			}
 		}
 		return objList;
-		
+	}
+	
+	/**
+	 * 
+	 * @param possibleTypesOrdered
+	 * @return if inventory contains one of the possible types then returns true.
+	 */
+	public boolean hasOneOfTypes(ArrayList<Obj> possibleTypesOrdered)
+	{
+		for (Obj type:possibleTypesOrdered)
+		{
+			for (ObjInstance i:inventory)
+			{
+				if (i.description == type)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Get one instance object of the ordered type list if inventory has one, and remove it.
+	 * Generally used for getting an ammunition out of the inventory.
+	 * @param possibleTypesOrdered
+	 * @return The object instance.
+	 */
+	public ObjInstance getOneInstanceOfTypesAndRemove(ArrayList<Obj> possibleTypesOrdered)
+	{
+		ObjInstance toRemove = null;
+		for (Obj type:possibleTypesOrdered)
+		{
+			for (ObjInstance i:inventory)
+			{
+				if (i.description == type)
+				{
+					toRemove = i;
+				}
+			}
+		}
+		if (toRemove!=null)
+		{
+			inventory.remove(toRemove);
+		}
+		return toRemove;
+	}
+
+	/**
+	 * Returns the first possible object instance which is of type in an ordered type list.
+	 * @param possibleTypesOrdered
+	 * @return
+	 */
+	public Obj getPossibleNextOneType(ArrayList<Obj> possibleTypesOrdered)
+	{
+		for (Obj type:possibleTypesOrdered)
+		{
+			for (ObjInstance i:inventory)
+			{
+				if (i.description == type)
+				{
+					return type;
+				}
+			}
+		}
+		return null;
 	}
 
 }

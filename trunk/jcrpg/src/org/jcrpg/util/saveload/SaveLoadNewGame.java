@@ -107,7 +107,7 @@ public class SaveLoadNewGame {
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
 			;
-			PartyInstance party = new PartyInstance(new Party(),world,ecology,ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
+			PartyInstance party = new PartyInstance(new Party(),world,ecology,Ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
 			for (PersistentMemberInstance m:partyMembers)
 			{
 				m.roamingBoundary = new DistanceBasedBoundary(world,wX,wY,wZ,m.description.getRoamingSize());

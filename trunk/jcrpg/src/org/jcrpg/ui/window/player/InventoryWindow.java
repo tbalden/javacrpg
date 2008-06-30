@@ -27,6 +27,9 @@ import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.ui.window.element.input.TextInputField;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -61,6 +64,12 @@ public class InventoryWindow extends PagedInputWindow {
 	public ListMultiSelect scrolls;
 	public ListMultiSelect other;
 	
+	public ListSelect toCharacterSelect;
+	public TextButton attach;
+	public TextInputField quantity;
+	
+	
+	
 	public InventoryWindow(UIBase base) {
 		super(base);
 		try {
@@ -84,7 +93,7 @@ public class InventoryWindow extends PagedInputWindow {
 	    	addInput(0,armors);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Ammunitions",false);
-    		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.10f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.18f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,ammunitions);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
@@ -100,12 +109,23 @@ public class InventoryWindow extends PagedInputWindow {
 	    	addInput(0,scrolls);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Keys",false);
-    		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.10f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.18f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,keys);
 
-	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Other",false);
+	    	new TextLabel("",this,page0, 0.70f, 0.45f, 0.3f, 0.06f,600f,"Other",false);
     		other = new ListMultiSelect("others", this,page0, 0.70f,0.55f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,other);
+	    	
+	    	new TextLabel("",this,page0, 0.3f, 0.70f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
+	    	quantity = new TextInputField("foreName",this,page0, 0.3f, 0.75f, 0.2f, 0.06f,600f,"",15,true);
+	    	addInput(0,quantity);
+
+	    	new TextLabel("",this,page0, 0.5f, 0.70f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
+    		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.75f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
+	    	addInput(0,toCharacterSelect);
+	    	
+	    	attach = new TextButton("attach",this,page0, 0.70f, 0.75f, 0.13f, 0.07f,600f,Language.v("inventory.attach"));
+	    	addInput(0,attach);
 
 	    	
 	    	addPage(0, page0);
@@ -131,9 +151,8 @@ public class InventoryWindow extends PagedInputWindow {
 		tmpFilteredMembers.clear();
 		for (EntityMemberInstance i : party.orderedParty)
 		{
-			if (i.memberState.healthPoint>=0)
+			if (!i.memberState.isDead())
 			{
-				// living, TODO tune to better state values
 				livingMembersCounter++;
 				if (i == characterSelect.getSelectedObject())
 				{
@@ -174,6 +193,41 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	public void updateToMemberInstance(EntityMemberInstance instance)
 	{
+		int livingMembersCounter = 0;
+		tmpFilteredMembers.clear();
+		for (EntityMemberInstance i : party.orderedParty)
+		{
+			if (!i.memberState.isDead())
+			{
+				if (i!=instance)
+				{
+					livingMembersCounter++;
+					tmpFilteredMembers.add(i);
+				}
+			}
+		}
+		if (livingMembersCounter!=lastUpdatedLivingPartySize)
+		{
+			String[] ids = new String[livingMembersCounter];
+			Object[] objects = new Object[livingMembersCounter];
+			String[] texts = new String[livingMembersCounter];
+			int counter = 0;
+			for (EntityMemberInstance i:tmpFilteredMembers)
+			{
+				ids[counter] = ""+counter;
+				objects[counter] = i;
+				texts[counter] = ((MemberPerson)i.description).getForeName();
+				counter++;
+			}
+			toCharacterSelect.reset();
+			toCharacterSelect.ids = ids;
+			toCharacterSelect.objects = objects;
+			toCharacterSelect.texts = texts;
+			toCharacterSelect.setUpdated(true);
+			toCharacterSelect.deactivate();
+		}
+		
+		
 		updateToInventory(instance.inventory);
 	}
 	
@@ -230,7 +284,6 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	
 	public void updateToInventory(EntityObjInventory inventory)
-	
 	{
 		hmDescToElement.clear();
 		
@@ -275,6 +328,49 @@ public class InventoryWindow extends PagedInputWindow {
 		{
 			characterSelect.deactivate();
 			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
+			return true;
+		}
+		else
+		if (base==attach)
+		{
+			ArrayList<Object> listWeapon = weapons.getMultiSelection();
+			ArrayList<Object> listAmmunition = ammunitions.getMultiSelection();
+			if (listWeapon.size()>=1)
+			{
+				if (listAmmunition.size()>0)
+				{
+					for (Object weaponsO:listWeapon)
+					{
+						InventoryListElement weapons = (InventoryListElement)weaponsO;
+						for (Object o:listAmmunition)
+						{
+							InventoryListElement ammunitions = (InventoryListElement)o;
+							for (ObjInstance wOI:weapons.objects)
+							{
+								for (ObjInstance aOI:ammunitions.objects)
+								{
+									if (aOI.description.isAttacheableAs(wOI.description.getAttachmentDependencyType()))
+									{
+										wOI.addAttachedDependency(aOI.description);
+										core.uiBase.hud.mainBox.addEntry("Attach "+aOI.description.getName()+" to "+wOI.description.getName());
+									}
+								}
+							}
+						}
+					}
+				} else
+				{
+					for (Object weaponsO:listWeapon)
+					{
+						InventoryListElement weapons = (InventoryListElement)weaponsO;
+						for (ObjInstance wOI:weapons.objects)
+						{
+							wOI.clearDependencies();
+							core.uiBase.hud.mainBox.addEntry("Clear attached for "+wOI.description.getName());
+						}
+					}
+				}
+			}
 			return true;
 		}
 		return super.inputUsed(base, message);

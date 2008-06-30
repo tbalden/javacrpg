@@ -17,10 +17,12 @@
  */ 
 package org.jcrpg.game.element;
 
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
 
 /**
@@ -83,6 +85,29 @@ public class TurnActMemberChoice {
 	public boolean isConstructive()
 	{
 		return skillActForm!=null && skillActForm.atomicEffect>0;	
+	}
+	
+	public EffectProgram getEffectProgram()
+	{
+		EffectProgram program = null;
+		if (skillActForm!=null)
+		{
+			program = skillActForm.getEffectProgram();
+		}
+		
+		if (usedObject!=null) {
+			Obj i = member.inventory.getPossibleNextOneType(usedObject.getAttachedDependencies());
+			EffectProgram program3 = usedObject.description.getEffectProgram();
+			if (program3!=null) program = program3;
+			if (i!=null)
+			{
+				EffectProgram program2 = i.getEffectProgram();
+				if (program2!=null) program = program2;
+			}
+			
+		}
+		return program;
+	
 	}
 
 }

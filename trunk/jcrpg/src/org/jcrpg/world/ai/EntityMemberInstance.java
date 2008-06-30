@@ -210,6 +210,11 @@ public class EntityMemberInstance {
 		return memberState.isDead();
 	}
 	
+	/**
+	 * Returns those skill act form of a skill that for the current state of member's points can be done.
+	 * @param skill
+	 * @return The list os skill act forms.
+	 */
 	public ArrayList<Class<? extends SkillActForm>> getDoableActForms(Class<? extends SkillBase> skill)
 	{
 		ArrayList<Class<? extends SkillActForm>> list = new ArrayList<Class<? extends SkillActForm>>();

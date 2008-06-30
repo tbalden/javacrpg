@@ -16,7 +16,7 @@
  */
 package org.jcrpg.world.object;
 
-import org.jcrpg.threed.scene.model.SimpleModel;
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
@@ -30,7 +30,7 @@ public class Obj {
 	public Attributes objectAttributeBonus = null;
 	public Resistances objectResistanceBonus = null;
 	
-	public SimpleModel effectProgramModel = null;
+	public EffectProgram effectProgram = null;
 	
 	public String getName()
 	{
@@ -45,9 +45,9 @@ public class Obj {
 		return objectResistanceBonus;
 	}
 	
-	public SimpleModel getEffectProgramModel()
+	public EffectProgram getEffectProgram()
 	{
-		return effectProgramModel;
+		return effectProgram;
 	}
 	
 	public boolean isAttacheable()
@@ -67,6 +67,31 @@ public class Obj {
 	public Class getAttachmentDependencyType()
 	{
 		return null;
+	}
+	
+	public boolean isAttacheableAs(Class c)
+	{
+		Class o = this.getClass();
+		if (o != c)
+		{
+			o = o.getSuperclass();
+			if (o==null) return false;
+			if (o!=null && o != c)
+			{
+				o = o.getSuperclass();
+				if (o==null) return false;
+				if (o!=null && o != c)
+				{
+					o = o.getSuperclass();
+					if (o==null) return false;
+					if (o!=null && o != c)
+					{
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 	
 }

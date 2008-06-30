@@ -68,8 +68,8 @@ public class ObjInstance {
 	
 
 	
-	ArrayList<ObjInstance> attachedDependencies = null;
-	public ArrayList<ObjInstance> getAttachedDependencies()
+	ArrayList<Obj> attachedDependencies = null;
+	public ArrayList<Obj> getAttachedDependencies()
 	{
 		return attachedDependencies;
 	}
@@ -81,29 +81,40 @@ public class ObjInstance {
 	}
 	
 	
-	public void addAttachedDependencies(ArrayList<ObjInstance> dependencies)
+	public void addAttachedDependency(Obj dependency)
 	{
 		if (attachedDependencies==null)
 		{
-			attachedDependencies = new ArrayList<ObjInstance>();
+			attachedDependencies = new ArrayList<Obj>();
 		}
-		for (ObjInstance i:dependencies)
+		if (!attachedDependencies.contains(dependency))
+		{
+			attachedDependencies.add(dependency);
+		}
+		
+	}
+	
+	public void addAttachedDependencies(ArrayList<Obj> dependencies)
+	{
+		if (attachedDependencies==null)
+		{
+			attachedDependencies = new ArrayList<Obj>();
+		}
+		for (Obj i:dependencies)
 		{
 			if (attachedDependencies.contains(i)) continue;
-			if (i.description.getAttacheableToType()==description.getClass())
+			if (i.getAttacheableToType()==description.getClass())
 			{
 				attachedDependencies.add(i);
-				i.attached = true;
 			}
 		}
 	}
 	
-	public void removeAttachedDependency(ObjInstance removed)
+	public void removeAttachedDependency(Obj removed)
 	{
 		if (attachedDependencies!=null)
 		{
 			attachedDependencies.remove(removed);
-			removed.attached = false;
 		} else
 		{
 			Jcrpg.LOGGER.warning("TRYING TO REMOVE AN OBJECT DEPENDENCY FROM A NULL DEP LIST! "+this+" "+this.description);
@@ -118,22 +129,12 @@ public class ObjInstance {
 		}
 	}
 	
-	public ObjInstance getAndRemoveNextDependency()
-	{
-		if (attachedDependencies!=null && attachedDependencies.size()>0)
-		{
-			ObjInstance r = attachedDependencies.remove(0);
-			r.attached = false;
-			return r;
-		}
-		return null;
-	}
 	
 	public boolean needsAttachmentDependencyForSkill()
 	{
 		return description.needsAttachmentDependencyForSkill();
 	}
-	public Class getAttacheableToTyoe()
+	public Class getAttacheableToType()
 	{
 		return description.getAttacheableToType();
 	}
