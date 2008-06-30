@@ -50,7 +50,19 @@ public class EntityObjInventory {
 			{
 				if (o.description.requirementSkillAndLevel.level<=skill.level)
 				{
-					return true;
+					if (o.needsAttachmentDependencyForSkill())
+					{
+						if (o.getAttachedDependencies()!=null)
+						{
+							if (hasOneOfTypes(o.getAttachedDependencies()))
+							{
+								return true;
+							}
+						}
+					} else
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -102,6 +114,8 @@ public class EntityObjInventory {
 	 */
 	public boolean hasOneOfTypes(ArrayList<Obj> possibleTypesOrdered)
 	{
+		if (possibleTypesOrdered==null) return false;
+
 		for (Obj type:possibleTypesOrdered)
 		{
 			for (ObjInstance i:inventory)
@@ -123,6 +137,9 @@ public class EntityObjInventory {
 	 */
 	public ObjInstance getOneInstanceOfTypesAndRemove(ArrayList<Obj> possibleTypesOrdered)
 	{
+		
+		if (possibleTypesOrdered==null) return null;
+		
 		ObjInstance toRemove = null;
 		for (Obj type:possibleTypesOrdered)
 		{
@@ -148,6 +165,8 @@ public class EntityObjInventory {
 	 */
 	public Obj getPossibleNextOneType(ArrayList<Obj> possibleTypesOrdered)
 	{
+		if (possibleTypesOrdered==null) return null;
+			
 		for (Obj type:possibleTypesOrdered)
 		{
 			for (ObjInstance i:inventory)

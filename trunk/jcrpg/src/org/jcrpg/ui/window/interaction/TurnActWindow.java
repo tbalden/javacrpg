@@ -517,6 +517,7 @@ public class TurnActWindow extends PagedInputWindow {
 						
 						// check if act form is selected
 						if (f==null) return true; // without act form do not go further
+						if (sb.needsInventoryItem && obj==null) return true; // no object for skill!
 						
 						EncounterUnitData fragmentAndSubunit = null;
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
