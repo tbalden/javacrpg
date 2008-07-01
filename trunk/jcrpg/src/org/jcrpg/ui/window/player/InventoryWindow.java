@@ -64,9 +64,15 @@ public class InventoryWindow extends PagedInputWindow {
 	public ListMultiSelect scrolls;
 	public ListMultiSelect other;
 	
+	public ArrayList<ListMultiSelect> selectors = new ArrayList<ListMultiSelect>();
+	
 	public ListSelect toCharacterSelect;
 	public TextButton attach;
 	public TextInputField quantity;
+	public TextButton give;
+	public TextButton drop;
+	
+	public EntityMemberInstance currentMember = null;
 	
 	
 	
@@ -116,19 +122,34 @@ public class InventoryWindow extends PagedInputWindow {
     		other = new ListMultiSelect("others", this,page0, 0.70f,0.55f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,other);
 	    	
-	    	new TextLabel("",this,page0, 0.3f, 0.70f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
-	    	quantity = new TextInputField("foreName",this,page0, 0.3f, 0.75f, 0.2f, 0.06f,600f,"",15,true);
+	    	new TextLabel("",this,page0, 0.15f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
+	    	quantity = new TextInputField("quantity",this,page0, 0.25f, 0.70f, 0.2f, 0.06f,600f,"",15,true);
 	    	addInput(0,quantity);
 
-	    	new TextLabel("",this,page0, 0.5f, 0.70f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
-    		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.75f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
+	    	new TextLabel("",this,page0, 0.40f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
+    		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 	    	
-	    	attach = new TextButton("attach",this,page0, 0.70f, 0.75f, 0.13f, 0.07f,600f,Language.v("inventory.attach"));
+	    	attach = new TextButton("attach",this,page0, 0.23f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.attach"));
 	    	addInput(0,attach);
 
+	    	give = new TextButton("give",this,page0, 0.38f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.give"));
+	    	addInput(0,give);
+
+	    	drop = new TextButton("drop",this,page0, 0.53f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.drop"));
+	    	addInput(0,drop);
 	    	
 	    	addPage(0, page0);
+	    	
+	    	selectors.add(weapons);
+	    	selectors.add(armors);
+	    	selectors.add(ammunitions);
+	    	selectors.add(potions);
+	    	selectors.add(books);
+	    	selectors.add(scrolls);
+	    	selectors.add(keys);
+	    	selectors.add(other);
+	    	
 		} catch (Exception ex)
 		{	
 			ex.printStackTrace();
@@ -226,7 +247,7 @@ public class InventoryWindow extends PagedInputWindow {
 			toCharacterSelect.setUpdated(true);
 			toCharacterSelect.deactivate();
 		}
-		
+		currentMember = instance;
 		
 		updateToInventory(instance.inventory);
 	}
@@ -372,8 +393,80 @@ public class InventoryWindow extends PagedInputWindow {
 				}
 			}
 			return true;
+		} else
+		if (base==drop)
+		{
+			
+			ArrayList<InventoryListElement> l = getAllSelection();
+			String vS = quantity.getValue();
+			int q = -1;
+			if (vS!=null && vS.length()>0)
+			{
+				try {
+					q = Integer.parseInt(vS);
+				} catch (Exception e){};
+			}
+			boolean useQuantity = q!=-1&&q!=0;
+			boolean updateNeeded = false;
+			for (InventoryListElement e:l)
+			{
+				int count = 0;
+				for (ObjInstance oI:e.objects)
+				{
+					if (useQuantity && count>q) break;
+					currentMember.inventory.equipped.remove(oI);
+					currentMember.inventory.inventory.remove(oI);
+					updateNeeded = true;
+				}
+			}
+			if (updateNeeded) updateToInventory(currentMember.inventory);
+		} else
+		if (base==give)
+		{
+			EntityMemberInstance toChar = (EntityMemberInstance)toCharacterSelect.getSelectedObject();
+			if (toChar==null || toChar.memberState.isDead() || toChar == currentMember) return true;
+			
+			
+			ArrayList<InventoryListElement> l = getAllSelection();
+			String vS = quantity.getValue();
+			int q = -1;
+			if (vS!=null && vS.length()>0)
+			{
+				try {
+					q = Integer.parseInt(vS);
+				} catch (Exception e){};
+			}
+			boolean useQuantity = q!=-1&&q!=0;
+			boolean updateNeeded = false;
+			for (InventoryListElement e:l)
+			{
+				int count = 0;
+				for (ObjInstance oI:e.objects)
+				{
+					if (useQuantity && count>q) break;
+					currentMember.inventory.equipped.remove(oI);
+					currentMember.inventory.inventory.remove(oI);
+					toChar.inventory.inventory.add(oI);
+					updateNeeded = true;
+				}
+			}
+			if (updateNeeded) updateToInventory(currentMember.inventory);
 		}
 		return super.inputUsed(base, message);
+	}
+	
+	public ArrayList<InventoryListElement> getAllSelection()
+	{
+		ArrayList<InventoryListElement> r = new ArrayList<InventoryListElement>();
+		for (ListMultiSelect s:selectors)
+		{
+			ArrayList<Object> l = s.getMultiSelection();
+			for (Object o:l)
+			{
+				r.add((InventoryListElement)o);
+			}
+		}
+		return r;
 	}
 
 	@Override

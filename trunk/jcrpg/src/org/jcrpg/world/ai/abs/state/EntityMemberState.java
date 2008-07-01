@@ -67,11 +67,11 @@ public class EntityMemberState {
 	 */
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
-		healthPoint+=unit.getHealthPoint();
-		staminaPoint+=unit.getStaminaPoint();
-		moralePoint+=unit.getMoralePoint();
-		sanityPoint+=unit.getSanityPoint();
-		manaPoint+=unit.getManaPoint();
+		healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
+		staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
+		moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
+		sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
+		manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
 		return getZeroPointTypes();
 	}
 	
