@@ -35,7 +35,9 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.Ammunition;
+import org.jcrpg.world.object.Armor;
 import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.Equippable;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
@@ -69,10 +71,13 @@ public class InventoryWindow extends PagedInputWindow {
 	public ListMultiSelect scrolls;
 	public ListMultiSelect other;
 	
+	public ListMultiSelect equipped;
+	
 	public ArrayList<ListMultiSelect> selectors = new ArrayList<ListMultiSelect>();
 	
 	public ListSelect toCharacterSelect;
 	public TextButton attach;
+	public TextButton equip;
 	public TextInputField quantity;
 	public TextButton give;
 	public TextButton drop;
@@ -106,33 +111,37 @@ public class InventoryWindow extends PagedInputWindow {
 	    	addInput(0,weapons);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.15f, 0.3f, 0.06f,600f,"Armors",false);
-    		armors = new ListMultiSelect("armors", this,page0, 0.70f,0.58f,0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		armors = new ListMultiSelect("armors", this,page0, 0.70f,0.58f,0.60f, 0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,armors);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Ammunitions",false);
-    		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.18f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.18f,0.20f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,ammunitions);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
-	    	potions = new ListMultiSelect("keys", this,page0, 0.70f,0.55f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	potions = new ListMultiSelect("keys", this,page0, 0.70f,0.58f,0.60f, 0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,potions);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.35f, 0.3f, 0.06f,600f,"Books",false);
-    		books = new ListMultiSelect("books", this,page0, 0.30f,0.10f,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		books = new ListMultiSelect("books", this,page0, 0.30f,0.18f,0.20f ,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,books);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.35f, 0.3f, 0.06f,600f,"Scrolls",false);
-    		scrolls = new ListMultiSelect("scrolls", this,page0, 0.70f,0.55f,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		scrolls = new ListMultiSelect("scrolls", this,page0, 0.70f,0.58f,0.60f, 0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,scrolls);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Keys",false);
-    		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.18f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.18f,0.20f ,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,keys);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.45f, 0.3f, 0.06f,600f,"Other",false);
-    		other = new ListMultiSelect("others", this,page0, 0.70f,0.55f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		other = new ListMultiSelect("others", this,page0, 0.70f,0.58f,0.60f, 0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
 	    	addInput(0,other);
-	    	
+
+	    	new TextLabel("",this,page0, 0.30f, 0.55f, 0.3f, 0.06f,600f,"Equipped",false);
+    		equipped = new ListMultiSelect("equipped", this,page0, 0.30f,0.18f,0.20f,0.60f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+	    	addInput(0,equipped);
+
 	    	body = new InventoryBody("body",this,page0,0.71f,0.69f, 0.3f, 0.06f, 700f);
 	    	
 	    	new TextLabel("",this,page0, 0.15f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
@@ -143,13 +152,16 @@ public class InventoryWindow extends PagedInputWindow {
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 	    	
-	    	attach = new TextButton("attach",this,page0, 0.23f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.attach"));
+	    	equip = new TextButton("equip",this,page0, 0.23f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"));
+	    	addInput(0,equip);
+	    	
+	    	attach = new TextButton("attach",this,page0, 0.33f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.attach"));
 	    	addInput(0,attach);
 
-	    	give = new TextButton("give",this,page0, 0.38f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.give"));
+	    	give = new TextButton("give",this,page0, 0.43f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.give"));
 	    	addInput(0,give);
 
-	    	drop = new TextButton("drop",this,page0, 0.53f, 0.78f, 0.13f, 0.07f,600f,Language.v("inventory.drop"));
+	    	drop = new TextButton("drop",this,page0, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.drop"));
 	    	addInput(0,drop);
 	    	
 	    	addPage(0, page0);
@@ -271,11 +283,8 @@ public class InventoryWindow extends PagedInputWindow {
 	}
 	
 	
-	public ArrayList<InventoryListElement> tmpWeaponsList = new ArrayList<InventoryListElement>();
-	public ArrayList<InventoryListElement> tmpAmmunitionList = new ArrayList<InventoryListElement>();
 	
-	
-	public void fillSelect(ListMultiSelect weapons, ArrayList<InventoryListElement> list)
+	public void fillSelect(ListMultiSelect selectList, ArrayList<InventoryListElement> list)
 	{
 		{
 			String[] ids = new String[list.size()];
@@ -295,13 +304,13 @@ public class InventoryWindow extends PagedInputWindow {
 				}
 				counter++;
 			}
-			weapons.reset();
-			weapons.ids = ids;
-			weapons.objects = objects;
-			weapons.texts = texts;
-			weapons.icons = icons;
-			weapons.setUpdated(true);
-			weapons.deactivate();
+			selectList.reset();
+			selectList.ids = ids;
+			selectList.objects = objects;
+			selectList.texts = texts;
+			selectList.icons = icons;
+			selectList.setUpdated(true);
+			selectList.deactivate();
 		}
 		
 	}
@@ -322,12 +331,30 @@ public class InventoryWindow extends PagedInputWindow {
 	private HashMap<Obj, InventoryListElement> hmDescToElement = new HashMap<Obj, InventoryListElement>();
 	
 	
+	public ArrayList<InventoryListElement> tmpWeaponsList = new ArrayList<InventoryListElement>();
+	public ArrayList<InventoryListElement> tmpAmmunitionList = new ArrayList<InventoryListElement>();
+	public ArrayList<InventoryListElement> tmpArmorList = new ArrayList<InventoryListElement>();
+	
+	public ArrayList<InventoryListElement> tmpEquippedList = new ArrayList<InventoryListElement>();
+	
+	
 	public void updateToInventory(EntityObjInventory inventory)
 	{
 		hmDescToElement.clear();
 		
 		tmpWeaponsList.clear();
 		tmpAmmunitionList.clear();
+		tmpArmorList.clear();
+		
+		tmpEquippedList.clear();
+
+		for (ObjInstance o:inventory.equipped)
+		{
+			InventoryListElement list = new InventoryListElement(o.description);
+			list.objects.add(o);
+			tmpEquippedList.add(list);
+		}
+		fillSelect(equipped, tmpEquippedList);
 		
 		for (ObjInstance o:inventory.inventory)
 		{
@@ -348,21 +375,50 @@ public class InventoryWindow extends PagedInputWindow {
 				tmpWeaponsList.add(o);
 				System.out.println("WEA: "+o.description);
 			} else
-			if (o.description instanceof Ammunition)
+				if (o.description instanceof Ammunition)
+				{
+					tmpAmmunitionList.add(o);
+					System.out.println("AMM: "+o.description);
+				}
+			if (o.description instanceof Armor)
 			{
-				tmpAmmunitionList.add(o);
-				System.out.println("AMM: "+o.description);
+				tmpArmorList.add(o);
+				System.out.println("ARM: "+o.description);
 			}
 		}
 		
 		fillSelect(weapons, tmpWeaponsList);
 		fillSelect(ammunitions, tmpAmmunitionList);
-
+		fillSelect(armors, tmpArmorList);
 	}
 
 	
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base==equip)
+		{
+			ArrayList<InventoryListElement> lists = getAllSelection();
+			for (InventoryListElement l:lists)
+			{
+				if (l.description instanceof Equippable)
+				{
+					System.out.println("EQUIPPING "+l.description.getName());
+					boolean success = currentMember.equip(l.objects.get(0));
+					System.out.println("-- "+success);
+				}
+			}
+			ArrayList<Object> equippedList = equipped.getMultiSelection();
+			for (Object l:equippedList)
+			{
+				for (ObjInstance i:((InventoryListElement)l).objects)
+				{
+					currentMember.unequip(i);
+				}
+			}
+			// TODO unequip selected...
+			updateToInventory(currentMember.inventory);
+			return true;
+		} else
 		if (base==characterSelect)
 		{
 			characterSelect.deactivate();
@@ -388,7 +444,7 @@ public class InventoryWindow extends PagedInputWindow {
 							{
 								for (ObjInstance aOI:ammunitions.objects)
 								{
-									if (aOI.description.isAttacheableAs(wOI.description.getAttachmentDependencyType()))
+									if (aOI.description.isIdentifiableAs(wOI.description.getAttachmentDependencyType()))
 									{
 										wOI.addAttachedDependency(aOI.description);
 										core.uiBase.hud.mainBox.addEntry("Attach "+aOI.description.getName()+" to "+wOI.description.getName());
