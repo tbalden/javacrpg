@@ -18,6 +18,7 @@
 package org.jcrpg.world.object;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -27,11 +28,11 @@ public class EntityObjInventory {
 	/**
 	 * Inventory.
 	 */
-	public ArrayList<ObjInstance> inventory = new ArrayList<ObjInstance>();
+	private ArrayList<ObjInstance> inventory = new ArrayList<ObjInstance>();
 	/**
 	 * Objects that are currently equipped.
 	 */
-	public ArrayList<ObjInstance> equipped = new ArrayList<ObjInstance>();
+	private ArrayList<ObjInstance> equipped = new ArrayList<ObjInstance>();
 	
 	public boolean hasInInventoryForSkillAndLevel(SkillInstance skill)
 	{
@@ -71,18 +72,21 @@ public class EntityObjInventory {
 		return false;
 	}
 	
-	public ArrayList<ObjInstance> getObjectsForSkillInInventory(SkillInstance skill)
+	public ArrayList<InventoryListElement> getObjectsForSkillInInventory(SkillInstance skill)
 	{
 		return getObjectsForSkill(inventory, skill);
 	}
-	public ArrayList<ObjInstance> getObjectsForSkillInEquipped(SkillInstance skill)
+	public ArrayList<InventoryListElement> getObjectsForSkillInEquipped(SkillInstance skill)
 	{
 		return getObjectsForSkill(equipped, skill);
 	}
 	
-	public ArrayList<ObjInstance> getObjectsForSkill(ArrayList<ObjInstance> list, SkillInstance skill)
+	
+	public ArrayList<InventoryListElement> getObjectsForSkill(ArrayList<ObjInstance> list, SkillInstance skill)
 	{
-		ArrayList<ObjInstance> objList = new ArrayList<ObjInstance>();
+		HashMap<Obj, InventoryListElement> gatherer = new HashMap<Obj, InventoryListElement>();
+		
+		ArrayList<InventoryListElement> objList = new ArrayList<InventoryListElement>();
 		for (ObjInstance o:list)
 		{
 			if (o.description.requirementSkillAndLevel==null) continue;
@@ -96,12 +100,26 @@ public class EntityObjInventory {
 						{
 							if (hasOneOfTypes(o.getAttachedDependencies()))
 							{
-								objList.add(o);
+								InventoryListElement l = gatherer.get(o.description);
+								if (l==null)
+								{
+									l = new InventoryListElement(this,o.description);
+									gatherer.put(o.description, l);
+									objList.add(l);
+								}
+								l.objects.add(o);
 							}
 						}
 					} else
 					{
-						objList.add(o);
+						InventoryListElement l = gatherer.get(o.description);
+						if (l==null)
+						{
+							l = new InventoryListElement(this,o.description);
+							gatherer.put(o.description, l);
+							objList.add(l);
+						}
+						l.objects.add(o);
 					}
 				}
 			}
@@ -155,7 +173,29 @@ public class EntityObjInventory {
 		}
 		if (toRemove!=null)
 		{
-			inventory.remove(toRemove);
+			if (toRemove.useOnce())
+				inventory.remove(toRemove);
+		}
+		return toRemove;
+	}
+
+	public ObjInstance getOneInstanceOfTypeAndRemove(Obj type)
+	{
+		
+		if (type==null) return null;
+		
+		ObjInstance toRemove = null;
+		for (ObjInstance i:inventory)
+		{
+			if (i.description == type)
+			{
+				toRemove = i;
+			}
+		}
+		if (toRemove!=null)
+		{
+			if (toRemove.useOnce())
+				inventory.remove(toRemove);
 		}
 		return toRemove;
 	}
@@ -241,6 +281,24 @@ public class EntityObjInventory {
 	public void getSumOfBonuses(BodyPart part)
 	{
 		// TODO summarize bonus objects for a part plus the general bonus (rings etc.)
+	}
+	
+	public void remove(ObjInstance object)
+	{
+		inventory.remove(object);
+		equipped.remove(object);
+	}
+	public void add(ObjInstance object)
+	{
+		if (inventory.contains(object)) return;
+		inventory.add(object);
+	}
+	
+	public ArrayList<ObjInstance> getInventory() {
+		return inventory;
+	}
+	public ArrayList<ObjInstance> getEquipped() {
+		return equipped;
 	}
 
 }

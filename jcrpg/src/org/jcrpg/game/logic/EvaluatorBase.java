@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.Ammunition;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
 
@@ -116,10 +117,11 @@ public class EvaluatorBase {
 			ObjInstance dependencyObj = null;
 			if (choice.skillActForm.skill.needsInventoryItem)
 			{
-				if (choice.usedObject.needsAttachmentDependencyForSkill())
+				if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 				{
 					dependencyObj = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
 				}
+				choice.member.inventory.getOneInstanceOfTypeAndRemove(choice.usedObject.description);
 			}
 		
 			// calculate attack...
@@ -186,7 +188,7 @@ public class EvaluatorBase {
 	 * @param obj
 	 * @return
 	 */
-	public static float[] evaluateActFormTimesWithSpeed(int seed, EntityMemberInstance instance, SkillInstance skill, SkillActForm form, ObjInstance obj)
+	public static float[] evaluateActFormTimesWithSpeed(int seed, EntityMemberInstance instance, SkillInstance skill, SkillActForm form, InventoryListElement obj)
 	{
 		
 		float speed = AttributeRatios.getAttribute(FantasyAttributes.SPEED, instance.instance.attributes, instance.description.commonAttributeRatios);

@@ -22,8 +22,8 @@ import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
-import org.jcrpg.world.object.ObjInstance;
 
 /**
  * A member's decision about what to do in a given turn act turn.
@@ -58,7 +58,7 @@ public class TurnActMemberChoice {
 	/**
 	 * Object used for act form.
 	 */
-	public ObjInstance usedObject;
+	public InventoryListElement usedObject;
 	
 	/**
 	 * Return init message for the time when choice execution is being started.
@@ -67,7 +67,7 @@ public class TurnActMemberChoice {
 	public String getInitMessage()
 	{
 		if (doNothing) return member.description.getName() + " doing nothing."; 
-		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getName():"")+".";
+		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getSingleName():"")+".";
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class TurnActMemberChoice {
 		if (usedObject!=null) {
 			
 			Obj i = null;
-			if (usedObject.needsAttachmentDependencyForSkill())
+			if (usedObject.description.needsAttachmentDependencyForSkill())
 			{
 				i = member.inventory.getPossibleNextOneType(usedObject.getAttachedDependencies());
 			}

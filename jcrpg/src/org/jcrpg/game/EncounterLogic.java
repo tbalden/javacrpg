@@ -585,7 +585,7 @@ public class EncounterLogic {
 						
 						if (choice.usedObject!=null)
 						{
-							if (choice.usedObject.needsAttachmentDependencyForSkill())
+							if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 							{
 								if (!choice.usedObject.hasAttachedDependencies() || !choice.member.inventory.hasOneOfTypes(choice.usedObject.getAttachedDependencies()))
 								{

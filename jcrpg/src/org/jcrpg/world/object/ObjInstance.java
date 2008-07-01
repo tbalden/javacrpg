@@ -29,7 +29,11 @@ import org.jcrpg.apps.Jcrpg;
 public class ObjInstance {
 
 	public Obj description;
+	
 	public int numericId = 0;
+	
+	public int numberOfTotalUses = 0;
+	
 	public ObjInstance(Obj description, long id)
 	{
 		this.description = description;
@@ -137,6 +141,18 @@ public class ObjInstance {
 	public Class getAttacheableToType()
 	{
 		return description.getAttacheableToType();
+	}
+	
+	/**
+	 * 
+	 * @return true if its all used up
+	 */
+	public boolean useOnce()
+	{
+		numberOfTotalUses++;
+		if (numberOfTotalUses==description.maxNumberOfUsage())
+			return true;
+		return false;
 	}
 	
 }

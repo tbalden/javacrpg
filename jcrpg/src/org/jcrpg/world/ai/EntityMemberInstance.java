@@ -77,7 +77,7 @@ public class EntityMemberInstance {
 		try {
 			for (Class<?extends Obj> o:EntityMember.profInstances.get(description.professions.get(0)).generationNewInstanceObjects)
 			{
-				inventory.inventory.add(new ObjInstance(ObjList.getInstance(o)));
+				inventory.add(new ObjInstance(ObjList.getInstance(o)));
 				System.out.println("ADDING ITEM : "+o);
 			}
 		} catch (Exception ex)

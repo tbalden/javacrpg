@@ -15,33 +15,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object.combat.bow.arrow;
+package org.jcrpg.world.object.combat.throwing;
 
-import org.jcrpg.threed.jme.program.impl.ArrowNoEffect;
-import org.jcrpg.threed.scene.model.SimpleModel;
-import org.jcrpg.threed.scene.model.effect.EffectProgram;
-import org.jcrpg.world.object.Ammunition;
-import org.jcrpg.world.object.combat.bow.Bow;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.Weapon;
 
-public abstract class Arrow extends Ammunition {
+public abstract class ThrowingWeapon extends Obj implements Weapon {
 
-	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
-	static EffectProgram effectProgram = new EffectProgram(ArrowNoEffect.class,effectProgramModel);
-	
-	public Arrow()
+
+	public ThrowingWeapon()
 	{
 		maxNumberOfUsage = 1;
 	}
 	
-	@Override
-	public EffectProgram getEffectProgram() {
-		
-		return effectProgram;
-	}
-
-	@Override
-	public Class getAttacheableToType() {
-		return Bow.class;
-	}
 
 }

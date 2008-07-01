@@ -45,7 +45,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
-import org.jcrpg.world.object.ObjInstance;
+import org.jcrpg.world.object.InventoryListElement;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -366,15 +366,15 @@ public class TurnActWindow extends PagedInputWindow {
 				if (s.needsInventoryItem)
 				{
 					
-					ArrayList<ObjInstance> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
+					ArrayList<InventoryListElement> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
 					String[] texts = new String[objInstances.size()];
 					Object[] objects = new Object[objInstances.size()];
 					String[] ids = new String[objInstances.size()];
 					int counter = 0;
-					for (ObjInstance objInstance:objInstances)
+					for (InventoryListElement objInstance:objInstances)
 					{
 						ids[counter] = ""+counter;
-						texts[counter] = objInstance.description.getClass().getSimpleName();
+						texts[counter] = objInstance.getName();
 						objects[counter] = objInstance;				    
 						counter++;
 					}
@@ -511,7 +511,7 @@ public class TurnActWindow extends PagedInputWindow {
 
 						SkillBase sb = null;
 						sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
-						ObjInstance obj = (ObjInstance)inventorySelectors.get(counter).getSelectedObject();
+						InventoryListElement obj = (InventoryListElement)inventorySelectors.get(counter).getSelectedObject();
 						Class<?extends SkillActForm> f = null;
 						f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
 						

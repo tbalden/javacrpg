@@ -113,7 +113,7 @@ public class SaveLoadNewGame {
 				m.roamingBoundary = new DistanceBasedBoundary(world,wX,wY,wZ,m.description.getRoamingSize());
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).generationNewInstanceObjects)
 				{
-					m.inventory.inventory.add(new ObjInstance(ObjList.getInstance(o)));
+					m.inventory.add(new ObjInstance(ObjList.getInstance(o)));
 					System.out.println("ADDING ITEM : "+o);
 				}
 				m.memberState.maximizeAtStart();

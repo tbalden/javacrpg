@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.profession.Profession;
@@ -61,6 +62,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	ValueTuner morale = null;
 	ValueTuner sanity = null;
 	ValueTuner mana = null;
+	ValueTuner xp = null;
 	HashMap<String, ValueTuner> attributeTuners = new HashMap<String, ValueTuner>();
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
 
@@ -100,6 +102,8 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	new TextLabel("mana",this,page0,0.45f,0.46f,0.15f,0.04f,600f, "Mana", false);
 	    	mana = new ValueTuner("mana",this,page0, 0.47f,0.49f,0.15f,0.04f,600f,10,0,100,1);
 
+	    	new TextLabel("xp",this,page0,0.61f,0.46f,0.15f,0.04f,600f, "XP", false);
+	    	xp = new ValueTuner("xp",this,page0, 0.63f,0.49f,0.15f,0.04f,600f,10,0,100,1);
 	    	
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
@@ -294,6 +298,9 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 		mana.text = ""+instance.memberState.manaPoint+ "/"+instance.memberState.maxManaPoint;
 		mana.deactivate();
+
+		xp.text = ""+instance.memberState.experiencePoint+ "/"+ instance.memberState.level * EntityMemberState.LEVELING_XP;
+		xp.deactivate();
 
 	}
 	

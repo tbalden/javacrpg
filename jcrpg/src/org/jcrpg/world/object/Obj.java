@@ -120,5 +120,11 @@ public class Obj {
 		return true;
 	}
 	
+	public int maxNumberOfUsage = 0; // 0 is endless
+	public int maxNumberOfUsage()
+	{
+		return maxNumberOfUsage;
+	}
+	
 	
 }
