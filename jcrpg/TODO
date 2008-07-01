@@ -8,20 +8,48 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+
+[ ] particle effect for models
+[ ] camera bigger view - switch off back rendered models (check cave)
+
+[ ] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
+
+[ ] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
+
+[ ] battle lines
+
+
+[ ] cursed weapons - how can they stick upon use?
+
+[ ] group based skill act forms...
+
+[ ] check wciow updates on glestanimals - animated ? 
+
+
 [?] list before next release:
 
-	[ ] projectiles with EffectProgram
+	[-] ENHANCE INVENTORY
+		[X] attach projectiles
+		[X] move to other characters, with quantity
+		[ ] describe attachments upon selection a bow...
+
+	[ ] fabrication of ammunition and such - fletcher, work Skill
+	
+	[ ] XP and impact calculation / resistances etc.
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 
 	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
-	[ ] ENHANCE INVENTORY
 		
 	[ ] check combat with non animated -> sounds etc.
 
 	[ ] documenting points, attr, calculations, leveling
 
-	[X] SPELLS with particel effects
+	[X] projectiles with EffectProgram
+
+	[X] arrow.blend from Zphr - use it instead of the tree! :)
+
+	[X] SPELLS with particle effects
 
 	[X] replenish HEP,STP etc. - 
 		[X] normal mode Resting
@@ -50,9 +78,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] players health bars etc.
 	
 
-[ ] particles, projectiles, boosting up spell tomes
-[ ] lock bug -> player can move in enc
-[ ] check wciow updates on glestanimals - animated ? 
+
+[X] particles, projectiles, boosting up spell tomes
+[X] lock bug -> player can move in enc
 
 [X] j3dmoving engine -> animation should be ended on time and regulated
 	by j3dmoving engine - and EncounterLogic step should  call in j3dmoving if
