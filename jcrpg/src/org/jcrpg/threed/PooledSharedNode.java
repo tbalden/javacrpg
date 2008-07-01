@@ -28,6 +28,11 @@ import com.jme.scene.SharedNode;
  *
  */
 public class PooledSharedNode extends SharedNode implements PooledNode {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public org.jcrpg.threed.ModelPool.PoolItemContainer cont;
 
     public PooledSharedNode(String name, Node target) {

@@ -23,6 +23,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
@@ -37,9 +38,9 @@ public class PolarBears extends AnimalEntityDescription {
 		bearAudio.ENCOUNTER = new String[]{"polarbear1"};
 	}
 	
-	public static StrongAnimalMale POLARBEAR_TYPE_MALE = new StrongAnimalMale("POLARBEAR_MALE",bearAudio);
-	public static MildAnimalFemale POLARBEAR_TYPE_FEMALE = new MildAnimalFemale("POLARBEAR_FEMALE",bearAudio);
-	public static WeakAnimalChild POLARBEAR_TYPE_CHILD = new WeakAnimalChild("POLARBEAR_CHILD",bearAudio);
+	public static StrongAnimalMale POLARBEAR_TYPE_MALE = new StrongAnimalMale("POLARBEAR_MALE",MammalBody.class,bearAudio);
+	public static MildAnimalFemale POLARBEAR_TYPE_FEMALE = new MildAnimalFemale("POLARBEAR_FEMALE",MammalBody.class,bearAudio);
+	public static WeakAnimalChild POLARBEAR_TYPE_CHILD = new WeakAnimalChild("POLARBEAR_CHILD",MammalBody.class,bearAudio);
 	
 	public static MovingModel polarbear = new MovingModel("models/fauna/polarbear_tex.obj",null,null,null,false);;//new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit polarbear_unit = new RenderedMovingUnit(new Model[]{polarbear});

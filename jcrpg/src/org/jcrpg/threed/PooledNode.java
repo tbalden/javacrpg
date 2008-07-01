@@ -19,9 +19,11 @@ package org.jcrpg.threed;
 
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 
-import com.jme.scene.Node;
-import com.jme.scene.SharedNode;
-
+/**
+ * Interface for pooling of model nodes.
+ * @author illes
+ *
+ */
 public interface PooledNode {
 
 	public PoolItemContainer getPooledContainer();

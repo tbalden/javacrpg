@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
+import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
@@ -39,8 +40,8 @@ public class Herons extends AnimalEntityDescription {
 		//audio.ENCOUNTER = new String[]{"redfox_1"};
 	}
 
-	public static NormalAnimalMale HERON_TYPE_MALE = new NormalAnimalMale("HERON_MALE",audio);
-	public static NormalAnimalFemale HERON_TYPE_FEMALE = new NormalAnimalFemale("HERON_FEMALE",audio);
+	public static NormalAnimalMale HERON_TYPE_MALE = new NormalAnimalMale("HERON_MALE",SinglePartBody.class, audio);
+	public static NormalAnimalFemale HERON_TYPE_FEMALE = new NormalAnimalFemale("HERON_FEMALE",SinglePartBody.class, audio); // TODO bird body type
 	//public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",audio);
 
 	public static MovingModel heron = new MovingModel("models/fauna/heron.obj",null,null,null,false);

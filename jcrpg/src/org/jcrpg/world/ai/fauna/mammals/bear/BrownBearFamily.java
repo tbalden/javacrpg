@@ -23,6 +23,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
@@ -38,9 +39,9 @@ public class BrownBearFamily extends AnimalEntityDescription {
 		bearAudio.ENVIRONMENTAL = new String[]{"brownbear_env1"};
 	}
 	
-	public static StrongAnimalMale BROWNBEAR_TYPE_MALE = new StrongAnimalMale("BROWNBEAR_MALE",bearAudio);
-	public static MildAnimalFemale BROWNBEAR_TYPE_FEMALE = new MildAnimalFemale("BROWNBEAR_FEMALE",bearAudio);
-	public static WeakAnimalChild BROWNBEAR_TYPE_CHILD = new WeakAnimalChild("BROWNBEAR_CHILD",bearAudio);
+	public static StrongAnimalMale BROWNBEAR_TYPE_MALE = new StrongAnimalMale("BROWNBEAR_MALE",MammalBody.class,bearAudio);
+	public static MildAnimalFemale BROWNBEAR_TYPE_FEMALE = new MildAnimalFemale("BROWNBEAR_FEMALE",MammalBody.class,bearAudio);
+	public static WeakAnimalChild BROWNBEAR_TYPE_CHILD = new WeakAnimalChild("BROWNBEAR_CHILD",MammalBody.class,bearAudio);
 	
 	public static MovingModel brownbear = new MovingModel("models/fauna/warbear_tex.obj",null,null,null,false);;//new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit brownbear_unit = new RenderedMovingUnit(new Model[]{brownbear});

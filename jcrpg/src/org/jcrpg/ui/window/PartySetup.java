@@ -50,7 +50,6 @@ import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
-import org.jcrpg.world.ai.player.PartyMember;
 import org.jcrpg.world.ai.profession.Profession;
 
 import com.jme.scene.Node;
@@ -70,7 +69,7 @@ public class PartySetup extends PagedInputWindow {
 	ArrayList<PersistentMemberInstance> charactersOfParty = new ArrayList<PersistentMemberInstance>();
 	
 	// party select
-	ArrayList<PartyMember> members = new ArrayList<PartyMember>();
+	//ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
 	TextButton newChar;
 	TextButton delChar;
@@ -728,10 +727,10 @@ public class PartySetup extends PagedInputWindow {
 			toggle();
 			core.clearCore();
 			
-			for (int i=0; i<6; i++)
+			/*for (int i=0; i<6; i++)
 			{
 				members.add(new PartyMember("_"+i,new AudioDescription()));
-			}			
+			}*/			
 			if (charCreationRule == null)
 			{
 				charCreationRule = new CharacterCreationRules(null,null);

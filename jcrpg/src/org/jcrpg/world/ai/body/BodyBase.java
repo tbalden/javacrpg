@@ -14,25 +14,29 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.ai.body;
 
-package org.jcrpg.world.ai.humanoid.modifier.race;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.body.HumanoidBody;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
+public abstract class BodyBase {
+	
+	public static HashMap<Class <? extends  BodyBase>, BodyBase> bodyBaseInstances = new HashMap<Class <? extends BodyBase>, BodyBase>();
 
-public class Human extends MemberPerson {
-
-	public Human(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, HumanoidBody.class, audio);
-		pictureRoot = "human";
+	static
+	{
+		bodyBaseInstances.put(SinglePartBody.class, new SinglePartBody());
+		bodyBaseInstances.put(MammalBody.class, new MammalBody());
+		bodyBaseInstances.put(HumanoidBody.class, new HumanoidBody());
 	}
 	
-	@Override
-	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
-		return super.copy(copy);
+	public ArrayList<BodyPart> bodyParts = new ArrayList<BodyPart>();
+	public String bodyImage = "default";
+	
+	public String getBodyImage()
+	{
+		return bodyImage;
 	}
 
 }

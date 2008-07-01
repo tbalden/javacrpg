@@ -20,12 +20,13 @@ package org.jcrpg.world.ai.humanoid.modifier.race;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.body.HumanoidBody;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 public class Catkind extends MemberPerson {
 
 	public Catkind(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
+		super(visibleTypeId, HumanoidBody.class, audio);
 		pictureRoot = "catkind";
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.SPEED, 1.2f);
 		//commonAttributeRatios.setAttributeRatio(FantasyAttributes.CONSTITUTION, 1f);

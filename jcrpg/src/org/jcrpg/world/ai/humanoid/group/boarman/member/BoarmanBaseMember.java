@@ -20,11 +20,12 @@ package org.jcrpg.world.ai.humanoid.group.boarman.member;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.body.HumanoidBody;
 
 public class BoarmanBaseMember extends EntityMember {
 
 	public BoarmanBaseMember(String visibleTypeId, AudioDescription audioDescription) {
-		super(visibleTypeId, audioDescription);
+		super(visibleTypeId, HumanoidBody.class, audioDescription);
 	}
 
 }

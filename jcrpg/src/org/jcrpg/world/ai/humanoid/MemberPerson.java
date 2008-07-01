@@ -26,6 +26,9 @@ import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
+import org.jcrpg.world.ai.body.BodyBase;
+import org.jcrpg.world.ai.body.SinglePartBody;
+import org.jcrpg.world.ai.body.part.SinglePart;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -42,11 +45,11 @@ public class MemberPerson extends EntityMember {
 	
 	public MemberPerson()
 	{
-		super(UNDEFINED_VISIBLE_TYPEID, null); 
+		super(UNDEFINED_VISIBLE_TYPEID, SinglePartBody.class, null); 
 	}
 	
-	public MemberPerson(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
+	public MemberPerson(String visibleTypeId, Class<? extends BodyBase> bodyType, AudioDescription audio) {
+		super(visibleTypeId, bodyType, audio);
 	}
 	public String id;
 	public String foreName;
@@ -91,7 +94,7 @@ public class MemberPerson extends EntityMember {
 	{
 		if (copy==null)
 		{
-			copy = new MemberPerson(visibleTypeId,audioDescription);
+			copy = new MemberPerson(visibleTypeId,bodyType,audioDescription);
 		}
 		copy.setForeName(foreName);
 		copy.setPictureId(pictureId);

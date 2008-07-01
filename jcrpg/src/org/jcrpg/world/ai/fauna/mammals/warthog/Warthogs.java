@@ -23,6 +23,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
@@ -36,8 +37,8 @@ public class Warthogs extends AnimalEntityDescription {
 		audio.ENCOUNTER = new String[]{"warthog_1"};
 	}
 
-	public static StrongAnimalMale WARTHOG_TYPE_MALE = new StrongAnimalMale("WARTHOG_MALE",audio);
-	public static MildAnimalFemale WARTHOG_TYPE_FEMALE = new MildAnimalFemale("WARTHOG_FEMALE",audio);
+	public static StrongAnimalMale WARTHOG_TYPE_MALE = new StrongAnimalMale("WARTHOG_MALE",MammalBody.class,audio);
+	public static MildAnimalFemale WARTHOG_TYPE_FEMALE = new MildAnimalFemale("WARTHOG_FEMALE",MammalBody.class,audio);
 
 	public static MovingModel wolf = new MovingModel("models/fauna/warthog_model.obj",null,null,null,false);
 	public static RenderedMovingUnit warthog_unit = new RenderedMovingUnit(new Model[]{wolf});

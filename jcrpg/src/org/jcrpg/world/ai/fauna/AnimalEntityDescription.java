@@ -48,12 +48,6 @@ public abstract class AnimalEntityDescription extends EntityDescription {
 		calcTypes.put(NormalCalculus.class, new NormalCalculus());
 	}
 	
-	public AnimalEntityDescription() {
-	}
-
-	
-	
-	
 	public ArrayList<Class <? extends DescriptionBase>> getFoodEntities()
 	{
 		return foodEntities;

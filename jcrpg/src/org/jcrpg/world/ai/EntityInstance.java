@@ -33,6 +33,8 @@ import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
+import org.jcrpg.world.ai.body.MammalBody;
+import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -82,7 +84,7 @@ public class EntityInstance {
 	public Economic homeEconomy = null;
 		
 
-	public static EntityMember NONE_TYPE = new EntityMember("NONE", null);
+	public static EntityMember NONE_TYPE = new EntityMember("NONE", SinglePartBody.class, null);
 
 	private transient GroupSizeAndType[] groupSizesAndTypes = null;
 	private transient int[] groupSizes = null;
@@ -124,7 +126,7 @@ public class EntityInstance {
 		
 		if (!(this instanceof PartyInstance))
 		{
-			PersistentMemberInstance p = new PersistentMemberInstance(fragments.fragments.get(0),this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
+			PersistentMemberInstance p = new PersistentMemberInstance(fragments.fragments.get(0),this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",MammalBody.class,GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
 			InfrastructureElementParameters i = new InfrastructureElementParameters();
 			i.owner = p;
 			i.type = House.class;

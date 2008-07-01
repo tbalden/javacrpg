@@ -21,12 +21,13 @@ package org.jcrpg.world.ai.fauna.modifier;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.body.BodyBase;
 
 public class StrongAnimalMale extends EntityMember {
 
 
-	public StrongAnimalMale(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
+	public StrongAnimalMale(String visibleTypeId,  Class<? extends BodyBase> bodyType, AudioDescription audio) {
+		super(visibleTypeId, bodyType, audio);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 1.7f);
 	}
 

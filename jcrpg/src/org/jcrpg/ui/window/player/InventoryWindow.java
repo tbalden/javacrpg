@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.PagedInputWindow;
+import org.jcrpg.ui.window.element.InventoryBody;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
@@ -52,6 +53,10 @@ public class InventoryWindow extends PagedInputWindow {
 
 	
 	Node page0 = new Node();
+
+	Node page1_details = new Node();
+
+	// page 0
 	
 	public ListSelect characterSelect;
 	
@@ -72,7 +77,11 @@ public class InventoryWindow extends PagedInputWindow {
 	public TextButton give;
 	public TextButton drop;
 	
+	public InventoryBody body;
+	
 	public EntityMemberInstance currentMember = null;
+	
+	// page 1
 	
 	
 	
@@ -84,6 +93,8 @@ public class InventoryWindow extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
+	    	sQuad = new SharedMesh("",hudQuad);
+	    	page1_details.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.42f, 0.058f, 0.3f, 0.06f,400f,"Inventory",false);
 
@@ -122,6 +133,8 @@ public class InventoryWindow extends PagedInputWindow {
     		other = new ListMultiSelect("others", this,page0, 0.70f,0.55f,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,other);
 	    	
+	    	body = new InventoryBody("body",this,page0,0.71f,0.69f, 0.3f, 0.06f, 700f);
+	    	
 	    	new TextLabel("",this,page0, 0.15f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
 	    	quantity = new TextInputField("quantity",this,page0, 0.25f, 0.70f, 0.2f, 0.06f,600f,"",15,true);
 	    	addInput(0,quantity);
@@ -140,6 +153,9 @@ public class InventoryWindow extends PagedInputWindow {
 	    	addInput(0,drop);
 	    	
 	    	addPage(0, page0);
+	    	
+	    	
+	    	addPage(1, page1_details);
 	    	
 	    	selectors.add(weapons);
 	    	selectors.add(armors);
@@ -175,7 +191,7 @@ public class InventoryWindow extends PagedInputWindow {
 			if (!i.memberState.isDead())
 			{
 				livingMembersCounter++;
-				if (i == characterSelect.getSelectedObject())
+				if (i == currentMember)
 				{
 					foundCurrent = true;
 				}
@@ -246,7 +262,9 @@ public class InventoryWindow extends PagedInputWindow {
 			toCharacterSelect.texts = texts;
 			toCharacterSelect.setUpdated(true);
 			toCharacterSelect.deactivate();
+			
 		}
+		body.updateToEntityMemberInstance(instance);
 		currentMember = instance;
 		
 		updateToInventory(instance.inventory);
