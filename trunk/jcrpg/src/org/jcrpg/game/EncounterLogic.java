@@ -485,6 +485,7 @@ public class EncounterLogic {
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
 		gameLogic.core.gameState.engine.turnFinishedForPlayer();
+		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
 	}
 
 	public void finishEncounterLose(EncounterInfo encounter)
@@ -495,6 +496,7 @@ public class EncounterLogic {
 		gameLogic.ecology.gameLost();
 		gameLogic.core.gameLost = true;
 		//gameLogic.endPlayerEncounters();
+		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
 		gameLogic.core.mainMenu.toggle();
 		//gameLogic.core.gameState.engine.turnFinishedForPlayer();		
 	}
