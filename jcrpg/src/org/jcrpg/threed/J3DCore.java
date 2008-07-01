@@ -40,6 +40,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
+import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
@@ -1320,10 +1321,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public boolean move(int[] from, int[] fromRel, int[] directions)
 	{
-		if (gameState.player.theFragment.fragmentState.isCamping) 
+		if (gameState.player.theFragment.fragmentState.isCamping || gameState.engine.isPause()) 
 		{
-			if (System.currentTimeMillis()-lastStepSoundTime>500) { // don't play sound too often
-				uiBase.hud.mainBox.addEntry("You can't move while camping!");
+			if (System.currentTimeMillis()-lastStepSoundTime>500) { // don't write message too often
+				if (gameState.player.theFragment.fragmentState.isCamping) {
+					uiBase.hud.mainBox.addEntry("You can't move while camping!");
+				} else
+				{
+					// do nothing
+				}
 				lastStepSoundTime = System.currentTimeMillis();
 			}
 			return false;
@@ -2419,5 +2425,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public InputHandler getInputHandler()
     {
     	return input;
+    }
+    
+    public ClassicKeyboardLookHandler getKeyboardHandler()
+    {
+    	return ((ClassicKeyboardLookHandler)getInputHandler().getFromAttachedHandlers(0));    	
     }
 }

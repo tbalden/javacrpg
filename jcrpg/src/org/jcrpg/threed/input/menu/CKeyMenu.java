@@ -37,7 +37,7 @@ public class CKeyMenu extends KeyInputAction{
 	public void performAction(InputActionEvent evt) {
 		handler.eventCatched = false;
 		String event = evt.getTriggerName();
-		if (!core.uiBase.handleWindowEvent(event))
+		if (handler.noToggleWindowByKey || !core.uiBase.handleWindowEvent(event))
 		{
 			core.uiBase.handleEvent(event);
 		}

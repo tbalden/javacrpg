@@ -90,7 +90,11 @@ public class GameLogic {
 				encounterLogic.fillInitEncounterPhaseLineup(possibleEncounter);
 				core.encounterWindow.setPageData(core.gameState.player, possibleEncounter,playerInitiated);
 				if (encounter(possibleEncounter)) {
+					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.encounterWindow.toggle();
+				} else
+				{
+					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 			}
 			
@@ -105,8 +109,12 @@ public class GameLogic {
 				endPlayerEncounters();
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
+					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 					core.turnActWindow.toggle();
+				} else
+				{
+					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 				
 			}
@@ -121,6 +129,7 @@ public class GameLogic {
 				endPlayerEncounters();
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
+					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
 					// if camping it should be finished
 					if (core.gameState.engine.isCamping())
@@ -130,6 +139,9 @@ public class GameLogic {
 						core.gameState.engine.campingFinished = false;
 					}
 					core.turnActWindow.toggle();
+				} else
+				{
+					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 			}
 		} else 
@@ -208,6 +220,7 @@ public class GameLogic {
 		} else
 		{
 			inEncounter = false;
+			core.getKeyboardHandler().noToggleWindowByKey=false;
 			core.gameState.engine.turnFinishedForPlayer();
 			return false;
 		}
@@ -215,6 +228,7 @@ public class GameLogic {
 	
 	public void endPlayerEncounters()
 	{
+		core.getKeyboardHandler().noToggleWindowByKey=false;
 		inEncounter = false;
 		J3DCore.getInstance().mEngine.clearPreviousUnits();		
 	}

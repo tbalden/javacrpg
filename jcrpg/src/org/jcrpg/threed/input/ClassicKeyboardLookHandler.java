@@ -212,6 +212,8 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         right.setLockAxis(new Vector3f(lock));
         left.setLockAxis(new Vector3f(lock));
     }
+    
+    public boolean noToggleWindowByKey = false;
 	
     public boolean lock = false;
     /**

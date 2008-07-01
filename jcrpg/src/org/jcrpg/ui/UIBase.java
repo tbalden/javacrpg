@@ -40,7 +40,7 @@ public class UIBase {
 	public UIBase(J3DCore core) throws Exception
 	{
 		this.core = core;
-		keyboardHandler = ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0));
+		keyboardHandler = core.getKeyboardHandler();
 		hud = new HUD(new HUDParams(),this, core);
 		core.audioServer.addTrack(InputBase.SOUND_INPUTSELECTED, "./data/audio/sound/ui/input_selected.ogg");
 	}
