@@ -23,6 +23,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
@@ -39,9 +40,9 @@ public class GiantCaveSpiders extends AnimalEntityDescription {
 		//gorillaAudio.ENVIRONMENTAL = new String[]{"gorilla_environment"};
 	}
 	
-	public static StrongAnimalMale GIANTCAVESPIDER_TYPE_MALE = new StrongAnimalMale("GIANTCAVESPIDER_MALE",spiderAudio);
-	public static MildAnimalFemale GIANTCAVESPIDER_TYPE_FEMALE = new MildAnimalFemale("GIANTCAVESPIDER_FEMALE",spiderAudio);
-	public static WeakAnimalChild GIANTCAVESPIDER_TYPE_CHILD = new WeakAnimalChild("GIANTCAVESPIDER_CHILD",spiderAudio);
+	public static StrongAnimalMale GIANTCAVESPIDER_TYPE_MALE = new StrongAnimalMale("GIANTCAVESPIDER_MALE",SinglePartBody.class, spiderAudio);
+	public static MildAnimalFemale GIANTCAVESPIDER_TYPE_FEMALE = new MildAnimalFemale("GIANTCAVESPIDER_FEMALE",SinglePartBody.class, spiderAudio);
+	public static WeakAnimalChild GIANTCAVESPIDER_TYPE_CHILD = new WeakAnimalChild("GIANTCAVESPIDER_CHILD",SinglePartBody.class, spiderAudio); // TODO insect body type
 	
 	public static MovingModel giantcavespider = new MovingModel("models/fauna/spider.obj",null,null,null,false);;//new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit giantcavespider_unit = new RenderedMovingUnit(new Model[]{giantcavespider});

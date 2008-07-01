@@ -24,6 +24,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale;
@@ -39,9 +40,9 @@ public class GorillaHorde extends AnimalEntityDescription {
 		gorillaAudio.ENVIRONMENTAL = new String[]{"gorilla_environment"};
 	}
 	
-	public static StrongAnimalMale GORILLA_TYPE_MALE = new StrongAnimalMale("GORILLA_MALE",gorillaAudio);
-	public static MildAnimalFemale GORILLA_TYPE_FEMALE = new MildAnimalFemale("GORILLA_FEMALE",gorillaAudio);
-	public static WeakAnimalChild GORILLA_TYPE_CHILD = new WeakAnimalChild("GORILLA_CHILD",gorillaAudio);
+	public static StrongAnimalMale GORILLA_TYPE_MALE = new StrongAnimalMale("GORILLA_MALE",MammalBody.class,gorillaAudio);
+	public static MildAnimalFemale GORILLA_TYPE_FEMALE = new MildAnimalFemale("GORILLA_FEMALE",MammalBody.class,gorillaAudio);
+	public static WeakAnimalChild GORILLA_TYPE_CHILD = new WeakAnimalChild("GORILLA_CHILD",MammalBody.class,gorillaAudio);
 	
 	public static MovingModel gorilla = null;
 	static 

@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.HandsAndFeet;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
@@ -41,9 +42,9 @@ public class DeerFamily extends AnimalEntityDescription {
 		//audio.ENCOUNTER = new String[]{"redfox_1"};
 	}
 
-	public static NormalAnimalMale DEER_TYPE_MALE = new NormalAnimalMale("DEER_MALE",audio);
-	public static NormalAnimalFemale DEER_TYPE_FEMALE = new NormalAnimalFemale("DEER_FEMALE",audio);
-	public static WeakAnimalChild DEER_TYPE_CHILD = new WeakAnimalChild("DEER_CHILD",audio);
+	public static NormalAnimalMale DEER_TYPE_MALE = new NormalAnimalMale("DEER_MALE",MammalBody.class,audio);
+	public static NormalAnimalFemale DEER_TYPE_FEMALE = new NormalAnimalFemale("DEER_FEMALE",MammalBody.class,audio);
+	public static WeakAnimalChild DEER_TYPE_CHILD = new WeakAnimalChild("DEER_CHILD",MammalBody.class,audio);
 
 	public static MovingModel deer = new MovingModel("models/fauna/deer.obj",null,null,null,false);
 	public static RenderedMovingUnit deer_unit = new RenderedMovingUnit(new Model[]{deer});

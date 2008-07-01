@@ -28,6 +28,11 @@ import com.jme.scene.lod.DiscreteLodNode;
  */
 public class PooledDiscreteLodNode extends DiscreteLodNode implements PooledNode{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public PoolItemContainer cont;
 	
 	public PooledDiscreteLodNode(String string, DistanceSwitchModel dsm) {

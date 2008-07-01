@@ -36,7 +36,12 @@ import java.nio.FloatBuffer;
  * @author Highnik
  */
 public class SkyDome extends Node {
-    public static final float INFINITY = 3.3e+38f;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public static final float INFINITY = 3.3e+38f;
     public static final float EPSILON  = 0.000001f;
     
     private Dome dome;

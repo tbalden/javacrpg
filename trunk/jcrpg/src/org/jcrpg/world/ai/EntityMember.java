@@ -33,6 +33,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.body.BodyBase;
+import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.profession.Profession;
 import org.jcrpg.world.object.ObjInstance;
@@ -52,6 +54,8 @@ public class EntityMember extends DescriptionBase {
 	public AudioDescription audioDescription = null;
 	public Class<? extends Profession> currentProfession;
 	
+	public Class<? extends BodyBase> bodyType = SinglePartBody.class;
+	
 	public static HashMap<Class<? extends Profession>, Profession> profInstances = new HashMap<Class<? extends Profession>, Profession>();
 	
 	public ArrayList<Class<? extends Profession>> professions = new ArrayList<Class<? extends Profession>>();	
@@ -61,10 +65,11 @@ public class EntityMember extends DescriptionBase {
 	
 	public int genderType = EntityDescription.GENDER_NEUTRAL;
 	
-	public EntityMember(String visibleTypeId, AudioDescription audioDescription) {
+	public EntityMember(String visibleTypeId, Class<? extends BodyBase> bodyType, AudioDescription audioDescription) {
 		super();
 		this.visibleTypeId = visibleTypeId;
 		this.audioDescription = audioDescription;
+		this.bodyType = bodyType;
 	}
 	
 	public AttributeRatios getCommonAttributes() {

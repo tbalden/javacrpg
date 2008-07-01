@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.humanoid.modifier.race;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.body.HumanoidBody;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.profession.adventurer.Mage;
 import org.jcrpg.world.ai.profession.adventurer.Psionic;
@@ -27,7 +28,7 @@ import org.jcrpg.world.ai.profession.adventurer.Psionic;
 public class Dwarf extends MemberPerson {
 
 	public Dwarf(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
+		super(visibleTypeId, HumanoidBody.class, audio);
 		pictureRoot = "dwarf";
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 1.1f);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.PIETY, 1.2f);

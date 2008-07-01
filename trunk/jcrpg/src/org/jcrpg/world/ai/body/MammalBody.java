@@ -14,25 +14,27 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.ai.body;
 
-package org.jcrpg.world.ai.humanoid.modifier.race;
+import org.jcrpg.world.ai.body.part.mammal.Back;
+import org.jcrpg.world.ai.body.part.mammal.Head;
+import org.jcrpg.world.ai.body.part.mammal.Leg;
+import org.jcrpg.world.ai.body.part.mammal.Neck;
+import org.jcrpg.world.ai.body.part.mammal.Torso;
+import org.jcrpg.world.ai.body.part.mammal.Waist;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.body.HumanoidBody;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
+public class MammalBody extends BodyBase {
 
-public class Human extends MemberPerson {
-
-	public Human(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, HumanoidBody.class, audio);
-		pictureRoot = "human";
+	public MammalBody()
+	{
+		bodyParts.add(new Leg());
+		bodyParts.add(new Waist());
+		bodyParts.add(new Torso());
+		bodyParts.add(new Back());
+		bodyParts.add(new Neck());
+		bodyParts.add(new Head());
+		bodyImage = "humanoidbody";
 	}
 	
-	@Override
-	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
-		return super.copy(copy);
-	}
-
 }

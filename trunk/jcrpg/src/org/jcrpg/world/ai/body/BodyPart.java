@@ -14,25 +14,31 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.ai.body;
 
-package org.jcrpg.world.ai.humanoid.modifier.race;
+import org.jcrpg.util.Language;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.body.HumanoidBody;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
-
-public class Human extends MemberPerson {
-
-	public Human(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, HumanoidBody.class, audio);
-		pictureRoot = "human";
+public abstract class BodyPart {
+	
+	
+	public int maxNumberOfObjToEquip = 1;
+	
+	
+	public String getName()
+	{
+		return Language.v("bodypart."+this.getClass().getSimpleName());
 	}
 	
-	@Override
-	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
-		return super.copy(copy);
+	/**
+	 * The value of placement inside the body image in 1/100.
+	 * @return
+	 */
+	public abstract float[] getPlacingRatioXY();
+	
+	public int getMaxNumberOfObjToEquip()
+	{
+		return maxNumberOfObjToEquip;
 	}
 
 }

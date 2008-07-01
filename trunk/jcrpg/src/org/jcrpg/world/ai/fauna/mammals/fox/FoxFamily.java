@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
@@ -41,9 +42,9 @@ public class FoxFamily extends AnimalEntityDescription {
 		audio.ENCOUNTER = new String[]{"redfox_1"};
 	}
 
-	public static NormalAnimalMale FOX_TYPE_MALE = new NormalAnimalMale("FOX_MALE",audio);
-	public static NormalAnimalFemale FOX_TYPE_FEMALE = new NormalAnimalFemale("FOX_FEMALE",audio);
-	public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",audio);
+	public static NormalAnimalMale FOX_TYPE_MALE = new NormalAnimalMale("FOX_MALE",MammalBody.class,audio);
+	public static NormalAnimalFemale FOX_TYPE_FEMALE = new NormalAnimalFemale("FOX_FEMALE",MammalBody.class,audio);
+	public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",MammalBody.class,audio);
 
 	public static MovingModel fox = new MovingModel("models/fauna/redfox.obj",null,null,null,false);
 	public static RenderedMovingUnit fox_unit = new RenderedMovingUnit(new Model[]{fox});

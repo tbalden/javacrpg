@@ -17,8 +17,6 @@
 
 package org.jcrpg.threed;
 
-import java.util.Stack;
-
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;

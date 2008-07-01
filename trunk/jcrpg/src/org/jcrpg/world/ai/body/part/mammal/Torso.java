@@ -14,25 +14,16 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
+package org.jcrpg.world.ai.body.part.mammal;
 
-package org.jcrpg.world.ai.humanoid.modifier.race;
+import org.jcrpg.world.ai.body.BodyPart;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.body.HumanoidBody;
-import org.jcrpg.world.ai.humanoid.MemberPerson;
-
-public class Human extends MemberPerson {
-
-	public Human(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, HumanoidBody.class, audio);
-		pictureRoot = "human";
-	}
-	
+public class Torso extends BodyPart {
+	static float[] ratio = {0.5f,0.5f};
 	@Override
-	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
-		return super.copy(copy);
+	public float[] getPlacingRatioXY() {
+		return ratio;
 	}
 
 }

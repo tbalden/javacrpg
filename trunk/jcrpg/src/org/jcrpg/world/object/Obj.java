@@ -21,6 +21,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.body.BodyPart;
 
 public class Obj {
 	String id;
@@ -92,6 +93,13 @@ public class Obj {
 			}
 		}
 		return true;
+	}
+	
+	public Class<? extends BodyPart> equippableBodyPart = null;
+	
+	public Class<? extends BodyPart> getEquippableBodyPart()
+	{
+		return equippableBodyPart;
 	}
 	
 }

@@ -20,21 +20,14 @@ package org.jcrpg.world.ai.fauna.modifier;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
-import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.body.BodyBase;
 
 public class NormalAnimalMale extends EntityMember {
 	
-	public static AttributeRatios commonAttributeRatios = new FantasyAttrRatios();
-	
-	static
-	{
+	public NormalAnimalMale(String visibleTypeId,  Class<? extends BodyBase> bodyType, AudioDescription audio) {
+		super(visibleTypeId, bodyType, audio);
 		commonAttributeRatios.setAttributeRatio(FantasyAttributes.STRENGTH, 1.1f);
-	}
-	
-	public NormalAnimalMale(String visibleTypeId, AudioDescription audio) {
-		super(visibleTypeId, audio);
 	}
 
 }
