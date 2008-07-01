@@ -40,14 +40,17 @@ public class ModelPool {
 	public J3DCore core;
 	
 	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP = 5; 
+	public static int POOL_NUMBER_OF_UNUSED_TO_KEEP_MOVING_MODEL = 1;
 	
 	public class PoolItemContainer {
+		public int numberOfUnusedToKeep = 5;
 		public String id;
 		public HashSet<PooledNode> used = new HashSet<PooledNode>();
 		public HashSet<PooledNode> notUsed = new HashSet<PooledNode>();
-		public PoolItemContainer(String id) {
+		public PoolItemContainer(String id, int toKeep) {
 			super();
 			this.id = id;
+			this.numberOfUnusedToKeep = toKeep;
 		}
 	}
 	
@@ -83,7 +86,7 @@ public class ModelPool {
 		PoolItemContainer cont = pool.get(key);
 		synchronized (pool) {
 			if (cont == null) {
-				cont = new PoolItemContainer(key);
+				cont = new PoolItemContainer(key,POOL_NUMBER_OF_UNUSED_TO_KEEP);
 				pool.put(key, cont);
 			} else {
 				if (cont.notUsed.iterator().hasNext()) {
@@ -127,7 +130,7 @@ public class ModelPool {
 		PoolItemContainer cont = pool.get(key);
 		synchronized (pool) {
 			if (cont == null) {
-				cont = new PoolItemContainer(key);
+				cont = new PoolItemContainer(key,POOL_NUMBER_OF_UNUSED_TO_KEEP_MOVING_MODEL);
 				pool.put(key, cont);
 			} else {
 				if (cont.notUsed.iterator().hasNext()) {
@@ -142,7 +145,7 @@ public class ModelPool {
 			// System.out.println("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
-			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP_MOVING_MODEL - (cont.used.size()+cont.notUsed.size());
 			if (model instanceof MovingModel) toCreate = 1;
 			if ( toCreate>0)
 			{
@@ -237,7 +240,7 @@ public class ModelPool {
 		ArrayList<PoolItemContainer> removedPoolCont = new ArrayList<PoolItemContainer>();
 		for (PoolItemContainer pic: pool.values())
 		{
-			int toDelete = pic.notUsed.size()-POOL_NUMBER_OF_UNUSED_TO_KEEP;
+			int toDelete = pic.notUsed.size()-pic.numberOfUnusedToKeep;
 			if (toDelete>0) {
 				removed.clear();
 				Iterator<PooledNode> it = pic.notUsed.iterator();
