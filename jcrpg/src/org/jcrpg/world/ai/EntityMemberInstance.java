@@ -77,7 +77,7 @@ public class EntityMemberInstance {
 		try {
 			for (Class<?extends Obj> o:EntityMember.profInstances.get(description.professions.get(0)).generationNewInstanceObjects)
 			{
-				inventory.inventory.add(new ObjInstance(ObjList.objects.get(o)));
+				inventory.inventory.add(new ObjInstance(ObjList.getInstance(o)));
 				System.out.println("ADDING ITEM : "+o);
 			}
 		} catch (Exception ex)
@@ -231,6 +231,26 @@ public class EntityMemberInstance {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * Tries to equip an item.
+	 * @param equipment
+	 * @return true if success.
+	 */
+	public boolean equip(ObjInstance equipment)
+	{
+		return inventory.equip(this, equipment);
+	}
+	
+	/**
+	 * Tries to unequip (if not cursed, it succeeds).
+	 * @param equipment
+	 * @return
+	 */
+	public boolean unequip(ObjInstance equipment)
+	{
+		return inventory.unequip(equipment);
 	}
 
 }

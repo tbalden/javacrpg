@@ -239,4 +239,9 @@ public class EntityMember extends DescriptionBase {
 		return audioDescription.getSound(type);
 	}
 	
+	public BodyBase getBodyType()
+	{
+		return BodyBase.bodyBaseInstances.get(bodyType);
+	}
+
 }

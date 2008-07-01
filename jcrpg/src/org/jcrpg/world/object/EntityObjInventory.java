@@ -19,7 +19,9 @@ package org.jcrpg.world.object;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.body.BodyPart;
 
 public class EntityObjInventory {
 	/**
@@ -178,6 +180,67 @@ public class EntityObjInventory {
 			}
 		}
 		return null;
+	}
+	
+	public boolean equip(EntityMemberInstance instance, ObjInstance equipment)
+	{
+		if (!inventory.contains(equipment)) return false;
+		
+		if (!(equipment.description instanceof Equippable)) return false;
+		
+		ArrayList<BodyPart> parts = instance.description.getBodyType().bodyParts;
+		
+		Class<? extends BodyPart> part = ((Equippable)equipment.description).getEquippableBodyPart();
+		System.out.println("P: "+part);
+		boolean found = false;
+		BodyPart bPart = null;
+		for (BodyPart p:parts)
+		{
+			if (p.getClass()==part) 
+			{
+				bPart = p;
+				found = true;
+			}
+		}
+		if (!found) return false;
+		
+		System.out.println("P: FOUND "+part);
+
+		int counterForEquipped = 0;
+		int maxEquipped = bPart.getMaxNumberOfObjToEquip();
+		for (ObjInstance eq:equipped)
+		{
+			if (((Equippable)eq.description).getEquippableBodyPart() == part)
+			{
+				counterForEquipped++;
+			}
+			if (counterForEquipped==maxEquipped) return false;
+		}
+		// TODO other checks! profession and such
+		
+		equipped.add(equipment);
+		
+		return true;
+	}
+	
+	public boolean unequip(ObjInstance object)
+	{
+		if (!equipped.contains(object)) return false;
+		if (object.description instanceof BonusObject)
+		{
+			if (((BonusObject)object.description).isCursed())
+			{
+				return false;
+			}
+		}
+		equipped.remove(object);
+		return true;
+	}
+	
+	// TODO 
+	public void getSumOfBonuses(BodyPart part)
+	{
+		// TODO summarize bonus objects for a part plus the general bonus (rings etc.)
 	}
 
 }

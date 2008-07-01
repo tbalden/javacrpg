@@ -19,6 +19,7 @@ package org.jcrpg.world.object;
 
 import java.util.HashMap;
 
+import org.jcrpg.world.object.armor.LeatherArmor;
 import org.jcrpg.world.object.combat.blade.Dagger;
 import org.jcrpg.world.object.combat.blade.LongSword;
 import org.jcrpg.world.object.combat.bow.ShortBow;
@@ -33,16 +34,45 @@ import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
  */
 public class ObjList {
 	
-	public static HashMap<Class<?extends Obj>,Obj> objects = new HashMap<Class<? extends Obj>, Obj>();
+	private static HashMap<Class<?extends Obj>,Obj> objects = new HashMap<Class<? extends Obj>, Obj>();
 	
 	static
 	{
+		// weapons
 		objects.put(LongSword.class, new LongSword());
 		objects.put(QuarterStaff.class, new QuarterStaff());
 		objects.put(Dagger.class, new Dagger());
 		objects.put(Club.class, new Club());
+		
+		// bows
 		objects.put(ShortBow.class, new ShortBow());
+		
+		// ammunitions
 		objects.put(CrudeArrow.class, new CrudeArrow());
+		
+		// armors
+		objects.put(LeatherArmor.class, new LeatherArmor());
+	}
+	
+	public static Obj getInstance(Class<? extends Obj> obj)
+	{
+		Obj o = objects.get(obj);
+		if (o==null)
+		{
+			try {
+				o = obj.newInstance();
+				objects.put(obj, o);
+			} catch (InstantiationException iex)
+			{
+				iex.printStackTrace();
+			}
+			catch (IllegalAccessException ex)
+			{
+				ex.printStackTrace();
+			}
+				
+		}
+		return o;	
 	}
 
 }
