@@ -25,7 +25,7 @@ import org.jcrpg.world.object.combat.bow.Bow;
 
 public abstract class Arrow extends Ammunition {
 
-	static SimpleModel effectProgramModel = new SimpleModel("models/tree/pine.3ds",null,false);
+	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
 	static EffectProgram effectProgram = new EffectProgram(ArrowNoEffect.class,effectProgramModel);
 	
 	@Override
