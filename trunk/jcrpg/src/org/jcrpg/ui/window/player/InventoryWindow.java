@@ -38,6 +38,7 @@ import org.jcrpg.world.object.Ammunition;
 import org.jcrpg.world.object.Armor;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Equippable;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
@@ -295,7 +296,7 @@ public class InventoryWindow extends PagedInputWindow {
 			for (InventoryListElement weapon:list) {
 				ids[counter] = ""+counter;
 				objects[counter] = weapon;
-				texts[counter] = weapon.description.getName() + " " + weapon.objects.size();
+				texts[counter] = weapon.getName();
 				try {
 					icons[counter] = UIImageCache.getImage("./data/icons/objects/"+weapon.description.icon, true,15f);
 				} catch (Exception ex)
@@ -315,19 +316,6 @@ public class InventoryWindow extends PagedInputWindow {
 		
 	}
 	
-	public class InventoryListElement
-	{
-		
-		Obj description = null;
-		
-		public InventoryListElement(Obj description) 
-		{
-			this.description = description;
-		}
-		
-		ArrayList<ObjInstance> objects = new ArrayList<ObjInstance>();
-		
-	}
 	private HashMap<Obj, InventoryListElement> hmDescToElement = new HashMap<Obj, InventoryListElement>();
 	
 	
@@ -348,21 +336,21 @@ public class InventoryWindow extends PagedInputWindow {
 		
 		tmpEquippedList.clear();
 
-		for (ObjInstance o:inventory.equipped)
+		for (ObjInstance o:inventory.getEquipped())
 		{
-			InventoryListElement list = new InventoryListElement(o.description);
+			InventoryListElement list = new InventoryListElement(currentMember.inventory,o.description);
 			list.objects.add(o);
 			tmpEquippedList.add(list);
 		}
 		fillSelect(equipped, tmpEquippedList);
 		
-		for (ObjInstance o:inventory.inventory)
+		for (ObjInstance o:inventory.getInventory())
 		{
 		
 			InventoryListElement list = hmDescToElement.get(o.description);
 			if (list==null)
 			{
-				list = new InventoryListElement(o.description);
+				list = new InventoryListElement(currentMember.inventory,o.description);
 				hmDescToElement.put(o.description, list);
 			}
 			list.objects.add(o);
@@ -488,8 +476,7 @@ public class InventoryWindow extends PagedInputWindow {
 				for (ObjInstance oI:e.objects)
 				{
 					if (useQuantity && count>q) break;
-					currentMember.inventory.equipped.remove(oI);
-					currentMember.inventory.inventory.remove(oI);
+					currentMember.inventory.remove(oI);
 					updateNeeded = true;
 				}
 			}
@@ -518,9 +505,8 @@ public class InventoryWindow extends PagedInputWindow {
 				for (ObjInstance oI:e.objects)
 				{
 					if (useQuantity && count>q) break;
-					currentMember.inventory.equipped.remove(oI);
-					currentMember.inventory.inventory.remove(oI);
-					toChar.inventory.inventory.add(oI);
+					currentMember.inventory.remove(oI);
+					toChar.inventory.add(oI);
 					updateNeeded = true;
 				}
 			}

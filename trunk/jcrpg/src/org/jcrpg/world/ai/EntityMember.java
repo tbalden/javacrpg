@@ -37,6 +37,7 @@ import org.jcrpg.world.ai.body.BodyBase;
 import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.profession.Profession;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
 
 
@@ -197,7 +198,7 @@ public class EntityMember extends DescriptionBase {
 						SkillBase base = SkillGroups.skillBaseInstances.get(s);
 						if (base.needsInventoryItem)
 						{
-							ArrayList<ObjInstance> objects =  instance.inventory.getObjectsForSkillInInventory(i);
+							ArrayList<InventoryListElement> objects =  instance.inventory.getObjectsForSkillInInventory(i);
 							if (objects==null||objects.size()==0) continue;
 							choice.usedObject = objects.get(0);
 						}

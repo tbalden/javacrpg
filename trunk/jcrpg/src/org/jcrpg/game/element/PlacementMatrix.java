@@ -72,6 +72,7 @@ public class PlacementMatrix {
 				} else
 				{
 					iLineCount++;
+					iLineListCount = 0;
 				}
 			}
 			System.out.println("# iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);

@@ -15,33 +15,53 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object.combat.bow.arrow;
+package org.jcrpg.world.object.combat.throwing;
 
 import org.jcrpg.threed.jme.program.impl.ArrowNoEffect;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
-import org.jcrpg.world.object.Ammunition;
-import org.jcrpg.world.object.combat.bow.Bow;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 
-public abstract class Arrow extends Ammunition {
+public class ThrowingKnife extends ThrowingWeapon {
 
 	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
 	static EffectProgram effectProgram = new EffectProgram(ArrowNoEffect.class,effectProgramModel);
 	
-	public Arrow()
-	{
-		maxNumberOfUsage = 1;
-	}
-	
 	@Override
 	public EffectProgram getEffectProgram() {
-		
 		return effectProgram;
 	}
 
-	@Override
-	public Class getAttacheableToType() {
-		return Bow.class;
+	public ThrowingKnife()
+	{
+		super();
+		requirementSkillAndLevel = new SkillInstance(Throwing.class,0);
+		
+	}
+
+	public float getAttackMultiplicator() {
+		return 1.5f;
+	}
+
+	public float getDefenseMultiplicator() {
+		return 0.5f;
+	}
+
+	public String getHitSound() {
+		return null;
+	}
+
+	public int getMaxDamage() {
+		return 4;
+	}
+
+	public String getMissSound() {
+		return null;
+	}
+
+	public int getSpeed() {
+		return 10;
 	}
 
 }
