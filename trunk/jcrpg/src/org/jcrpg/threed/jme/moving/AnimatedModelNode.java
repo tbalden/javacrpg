@@ -199,6 +199,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			bodyInstance = new SkeletalModelInstance(bodyModel);
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 			bodyAnimationController.addListener(this);
+			
 
 			if (animated) {
 				HashMap<String, String> animationNames = animation.getAnimationNames();
@@ -269,8 +270,13 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
             }
         }
     }
+    
+    public static HashMap<String, Model> cache = new HashMap<String, Model>();
 	
     private Model loadModel(String path) throws IOException {
+    	
+    	if (cache.get(path)!=null) return cache.get(path);
+    	
         InputStream in = new FileInputStream(new File(path));
 
         if (in == null) {
@@ -279,9 +285,9 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 
         MD5MeshReader reader = new MD5MeshReader();
 
-        //reader.setProperty(MD5MeshReader.CLASSLOADER, getClass().getClassLoader());
-
-        return reader.readModel(in);
+        Model m = reader.readModel(in);
+        cache.put(path, m);
+        return m;
     }
 
     

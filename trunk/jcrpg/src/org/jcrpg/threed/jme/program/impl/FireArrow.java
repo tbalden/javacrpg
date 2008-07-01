@@ -46,32 +46,36 @@ public class FireArrow extends EffectNode {
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader
 				.loadTextureStates(new String[] { "flaresmall.jpg" })[0];
+		
+		pMesh = cacheMesh.get(this.getClass());
+		
+		if (pMesh==null)
+		{
 
-		pMesh = ParticleFactory.buildParticles("particles", 300);
-		pMesh.setEmissionDirection(new Vector3f(0, 1, 0));
-		pMesh.setInitialVelocity(.006f);
-		pMesh.setStartSize(0.25f);
-		pMesh.setEndSize(0.15f);
-		pMesh.setMinimumLifeTime(1200f);
-		pMesh.setMaximumLifeTime(1400f);
-		pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
-		pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
-		pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-		pMesh.getParticleController().setControlFlow(false);
-		pMesh.warmUp(60);
-
-		pMesh.setRenderState(as1);
-		pMesh.setRenderState(ts);
-		pMesh.setRenderState(zstate);
-
-		pMesh.setModelBound(new BoundingSphere());
-		pMesh.updateModelBound();
-
-		//debugBox = new Box("box",new Vector3f(1f,1f,1f),new Vector3f(1f,1f,1f));
-		//debugBox.setModelBound(new BoundingBox());
-		//debugBox.updateModelBound();
-
-		//this.attachChild(debugBox);
+			pMesh = ParticleFactory.buildParticles("particles", 300);
+			pMesh.setEmissionDirection(new Vector3f(0, 1, 0));
+			pMesh.setInitialVelocity(.006f);
+			pMesh.setStartSize(0.25f);
+			pMesh.setEndSize(0.15f);
+			pMesh.setMinimumLifeTime(1200f);
+			pMesh.setMaximumLifeTime(1400f);
+			pMesh.setStartColor(new ColorRGBA(1, 0, 0, 1));
+			pMesh.setEndColor(new ColorRGBA(0, 1, 0, 0));
+			pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
+			pMesh.getParticleController().setControlFlow(false);
+			pMesh.warmUp(60);
+	
+			pMesh.setRenderState(as1);
+			pMesh.setRenderState(ts);
+			pMesh.setRenderState(zstate);
+	
+			pMesh.setModelBound(new BoundingSphere());
+			pMesh.updateModelBound();
+			cacheMesh.put(this.getClass(), pMesh);
+		} else
+		{
+			pMesh.setOriginOffset(new Vector3f(0,0,0));
+		}
 
 		this.attachChild(pMesh);
 	}
@@ -81,7 +85,12 @@ public class FireArrow extends EffectNode {
 		currentPos = newPos;
 		pMesh.setOriginOffset(currentPos);
 		super.setPosition(newPos,newAngle);
-		//debugBox.setLocalTranslation(newPos);
+	}
+	
+	@Override
+	public void clearUp()
+	{
+		pMesh.removeFromParent();
 	}
 
 }

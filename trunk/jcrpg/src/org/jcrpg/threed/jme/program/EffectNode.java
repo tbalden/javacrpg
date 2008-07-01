@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.threed.jme.program;
 
+import java.util.HashMap;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -24,8 +26,11 @@ import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jmex.effects.particles.ParticleMesh;
 
 public abstract class EffectNode extends Node {
+	
+	public static HashMap< Class<? extends EffectNode>, ParticleMesh> cacheMesh = new HashMap<Class<? extends EffectNode>, ParticleMesh>();
 
 	/**
 	 * serial version uid
@@ -71,5 +76,10 @@ public abstract class EffectNode extends Node {
 	public VisibleLifeForm targetForm = null;
 
 	public boolean startedPlaying = false;
+	
+	public void clearUp()
+	{
+		
+	}
 
 }
