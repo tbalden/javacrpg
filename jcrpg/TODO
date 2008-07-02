@@ -14,16 +14,23 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
 
-[ ] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
-
-[ ] battle lines
-
+[ ] battle lines - skill filtering based on target group lineup distance - member lineup distance
 
 [ ] cursed weapons - how can they stick upon use?
 
 [ ] group based skill act forms...
 
 [ ] check wciow updates on glestanimals - animated ? 
+
+[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
+	overall organization level should be increased -> organization level means tougher units on generation
+	 	some kind of randomization!
+
+[-] check memory consumption! SOMEWHERE IT LEAKS!!!
+	[-] PROBABLY PARTICLE EFFECT!!!
+	
+	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
+	[ ] some other thing is too...
 
 
 [?] list before next release:
@@ -32,18 +39,29 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[X] attach projectiles
 		[X] move to other characters, with quantity
 		[ ] describe attachments upon selection a bow...
+		
+	[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
+		- in combat only those equipped should be used. If used and cursed it should be the only one. others
+		should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
+		
+		[-] What about two handed fight?? --- ??? 
+			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
 
-	[ ] fabrication of ammunition and such - fletcher, work Skill
-	
-	[ ] XP and impact calculation / resistances etc.
+	[ ] evaluator base:	
+		[ ] calc bonus of equipped things in EntityObjInventory!
+		[ ] XP and impact calculation / resistances etc.
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 
 	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
+		[ ] fabrication of ammunition and such - fletcher, work Skill
 		
 	[ ] check combat with non animated -> sounds etc.
+	
 
 	[ ] documenting points, attr, calculations, leveling
+
+	[X] reorder party from char sheet window -> swap button
 
 	[X] projectiles with EffectProgram
 
@@ -63,6 +81,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[X] HEP,STP,SAP,MOP,MAP increasing on leveling based on attributes and level!
 		[X] hud.characters bars are not updating correctly?? or current points are wrong
 	
+
+[X] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
 
 [X] !! leveling !! for chars/entityMembers, points for them, 
     [X] bars on UI
