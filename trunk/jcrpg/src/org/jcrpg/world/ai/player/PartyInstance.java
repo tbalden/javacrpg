@@ -134,6 +134,16 @@ public class PartyInstance extends EntityInstance {
 	@Override
 	public void notifyImpactResult(EntityFragment fragment,
 			EntityMemberInstance member, ArrayList<Integer> result) {
+		if (member.isDead())
+		{
+			if (member instanceof PersistentMemberInstance)
+			{
+				orderedParty.remove((PersistentMemberInstance)member);
+				orderedParty.add((PersistentMemberInstance)member);
+				J3DCore.getInstance().uiBase.hud.characters.updateForPartyCreation(orderedParty);
+				J3DCore.getInstance().uiBase.hud.characters.updatePoints();
+			}
+		}
 		J3DCore.getInstance().uiBase.hud.updateCharacterRelated(member);
 		super.notifyImpactResult(fragment, member, result);
 	}

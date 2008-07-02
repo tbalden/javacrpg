@@ -68,6 +68,7 @@ import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
 import org.jcrpg.ui.window.player.InventoryWindow;
+import org.jcrpg.ui.window.player.PartyOrderWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -1754,6 +1755,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public LoadMenu loadMenu = null;
 	public PartySetup partySetup = null;
 	public CharacterLevelingWindow charLevelingWindow = null;
+	public PartyOrderWindow partyOrderWindow = null;
 	
 	public void createWorldMap()
 	{
@@ -2181,6 +2183,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		loadMenu = new LoadMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
 		charLevelingWindow = new CharacterLevelingWindow(uiBase);
+		partyOrderWindow = new PartyOrderWindow(uiBase);
 		
 		behaviorWindow = new BehaviorWindow(uiBase);
 		inventoryWindow = new InventoryWindow(uiBase);
@@ -2193,7 +2196,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		uiBase.addWindow("inventoryWindow", inventoryWindow);
 		uiBase.addWindow("charSheetWindow", charSheetWindow);
 		uiBase.addWindow("mainMenu", mainMenu);	
-		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));			
+		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));
+		uiBase.addWindow("partyOrderWindow", partyOrderWindow);
 		
 		// shadows not working because of this node -> the hudNode shall occupy only the lower part, Done, image cut.
 		uiRootNode.attachChild(uiBase.hud.hudNode); 
