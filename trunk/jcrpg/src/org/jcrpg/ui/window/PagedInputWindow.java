@@ -60,7 +60,7 @@ public abstract class PagedInputWindow extends InputWindow {
 		lockLookAndMove(true);		
 	}
 
-	int currentPage = 0;
+	public int currentPage = 0;
 	
 	public HashMap<Integer, ArrayList<InputBase>> inputs = new HashMap<Integer, ArrayList<InputBase>>();
 	public HashMap<Integer, Node> pageNodes = new HashMap<Integer, Node>();

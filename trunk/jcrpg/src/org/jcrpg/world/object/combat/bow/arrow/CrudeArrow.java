@@ -20,6 +20,12 @@ package org.jcrpg.world.object.combat.bow.arrow;
 import java.util.HashMap;
 
 public class CrudeArrow extends Arrow {
+	
+	public CrudeArrow()
+	{
+		super();
+		icon = "ammo/crudearrow.png";
+	}
 
 	@Override
 	public HashMap<String, Integer> getAmmunitionExtraDamage() {

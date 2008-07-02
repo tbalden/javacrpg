@@ -430,6 +430,7 @@ public class PartySetup extends PagedInputWindow {
 		}
 	}
 
+	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
 		if (key.equals("enter")) {

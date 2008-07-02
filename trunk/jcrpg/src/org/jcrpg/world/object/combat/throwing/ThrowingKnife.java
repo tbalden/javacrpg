@@ -36,6 +36,7 @@ public class ThrowingKnife extends ThrowingWeapon {
 	public ThrowingKnife()
 	{
 		super();
+		icon = "weapon/throwingknife.png"; 
 		requirementSkillAndLevel = new SkillInstance(Throwing.class,0);
 		
 	}

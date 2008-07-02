@@ -3,4 +3,6 @@ look up the links for info.
 
 dagger.png - http://search.freegamedev.net/artitems/view/177234, SCOURGE
 longsword.png - FGP : Common Media Project http://search.freegamedev.net/artitems/view/243342
-quarterstaff.png - http://search.freegamedev.net/artitems/view/121333
+quarterstaff.png - https://daimonin.svn.sourceforge.net/svnroot/daimonin/trunk/arch/items/weapon/hand_2h/impact/quaterstaff.101.png
+club.png, shortbow.png - crossfire GPL
+throwingknife.png - scourge GPL

@@ -89,6 +89,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	// page 1
 	
+	public TextLabel detailObjectName;
 	
 	
 	public InventoryWindow(UIBase base) {
@@ -99,6 +100,7 @@ public class InventoryWindow extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
+
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	page1_details.attachChild(sQuad);
 
@@ -153,13 +155,13 @@ public class InventoryWindow extends PagedInputWindow {
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 	    	
-	    	equip = new TextButton("equip",this,page0, 0.23f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"));
+	    	equip = new TextButton("equip",this,page0, 0.23f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"),"E");
 	    	addInput(0,equip);
 	    	
-	    	attach = new TextButton("attach",this,page0, 0.33f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.attach"));
+	    	attach = new TextButton("attach",this,page0, 0.33f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.attach"),"A");
 	    	addInput(0,attach);
 
-	    	give = new TextButton("give",this,page0, 0.43f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.give"));
+	    	give = new TextButton("give",this,page0, 0.43f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.give"),"G");
 	    	addInput(0,give);
 
 	    	drop = new TextButton("drop",this,page0, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.drop"));
@@ -167,6 +169,9 @@ public class InventoryWindow extends PagedInputWindow {
 	    	
 	    	addPage(0, page0);
 	    	
+	    	new TextLabel("",this,page1_details, 0.42f, 0.058f, 0.3f, 0.06f,400f,"Inventory",false);
+	    	
+	    	detailObjectName = new TextLabel("",this,page1_details, 0.30f, 0.15f, 0.3f, 0.06f,500f,"",false);
 	    	
 	    	addPage(1, page1_details);
 	    	
@@ -178,6 +183,8 @@ public class InventoryWindow extends PagedInputWindow {
 	    	selectors.add(scrolls);
 	    	selectors.add(keys);
 	    	selectors.add(other);
+	    	
+	    	base.addEventHandler("back", this);
 	    	
 		} catch (Exception ex)
 		{	
@@ -194,7 +201,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	public int lastUpdatedLivingPartySize = 0;
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
-	public void updateToParty()
+	private void updateToParty()
 	{
 		int livingMembersCounter = 0;
 		boolean foundCurrent = false;
@@ -241,7 +248,7 @@ public class InventoryWindow extends PagedInputWindow {
 		}
 	}
 	
-	public void updateToMemberInstance(EntityMemberInstance instance)
+	private void updateToMemberInstance(EntityMemberInstance instance)
 	{
 		int livingMembersCounter = 0;
 		tmpFilteredMembers.clear();
@@ -285,7 +292,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	
 	
-	public void fillSelect(ListMultiSelect selectList, ArrayList<InventoryListElement> list)
+	private void fillSelect(ListMultiSelect selectList, ArrayList<InventoryListElement> list)
 	{
 		{
 			String[] ids = new String[list.size()];
@@ -298,7 +305,7 @@ public class InventoryWindow extends PagedInputWindow {
 				objects[counter] = weapon;
 				texts[counter] = weapon.getName();
 				try {
-					icons[counter] = UIImageCache.getImage("./data/icons/objects/"+weapon.description.icon, true,15f);
+					icons[counter] = UIImageCache.getImage(weapon.description.getIconFilePath(), true,15f);
 				} catch (Exception ex)
 				{
 					ex.printStackTrace();
@@ -326,7 +333,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public ArrayList<InventoryListElement> tmpEquippedList = new ArrayList<InventoryListElement>();
 	
 	
-	public void updateToInventory(EntityObjInventory inventory)
+	private void updateToInventory(EntityObjInventory inventory)
 	{
 		body.updateToEntityMemberInstance(currentMember);
 		hmDescToElement.clear();
@@ -386,30 +393,42 @@ public class InventoryWindow extends PagedInputWindow {
 	public boolean inputUsed(InputBase base, String message) {
 		if (base==equip)
 		{
+			// equipping
+			
 			ArrayList<InventoryListElement> lists = getAllSelection();
+			// equipping selected items
 			for (InventoryListElement l:lists)
 			{
 				if (l.description instanceof Equippable)
 				{
-					System.out.println("EQUIPPING "+l.description.getName());
 					boolean success = currentMember.equip(l.objects.get(0));
-					System.out.println("-- "+success);
+					if (success)
+					{
+						core.uiBase.hud.mainBox.addEntry("Equipped "+l.getSingleName()+".");
+					}
 				}
 			}
+			// unequipping selected items
 			ArrayList<Object> equippedList = equipped.getMultiSelection();
 			for (Object l:equippedList)
 			{
 				for (ObjInstance i:((InventoryListElement)l).objects)
 				{
-					currentMember.unequip(i);
+					if (currentMember.unequip(i))
+					{
+						core.uiBase.hud.mainBox.addEntry("Unequipped "+i.description.getName()+".");
+					} else
+					{
+						core.uiBase.hud.mainBox.addEntry("Can't unequip "+i.description.getName()+".");
+					}
 				}
 			}
-			// TODO unequip selected...
 			updateToInventory(currentMember.inventory);
 			return true;
 		} else
 		if (base==characterSelect)
 		{
+			// updating to selected character
 			characterSelect.deactivate();
 			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
 			return true;
@@ -417,6 +436,7 @@ public class InventoryWindow extends PagedInputWindow {
 		else
 		if (base==attach)
 		{
+			// attaching ammunition to weapons, detach if no ammunition is selected.
 			ArrayList<Object> listWeapon = weapons.getMultiSelection();
 			ArrayList<Object> listAmmunition = ammunitions.getMultiSelection();
 			if (listWeapon.size()>=1)
@@ -512,11 +532,59 @@ public class InventoryWindow extends PagedInputWindow {
 				}
 			}
 			if (updateNeeded) updateToInventory(currentMember.inventory);
+		} else
+		if (selectors.contains(base) && "space".equals(message))
+		{
+			Object o = ((ListMultiSelect)base).getSelectedObject();
+			if (o!=null)
+			{
+				currentPage=1;
+				updateDetailPageToInvListElement((InventoryListElement)o);
+				setupPage();
+			}
 		}
 		return super.inputUsed(base, message);
 	}
 	
-	public ArrayList<InventoryListElement> getAllSelection()
+	Quad currentDetailQuad = null;
+	
+	/**
+	 * Updates detail page to a selected inventory element.
+	 * @param element
+	 */
+	private void updateDetailPageToInvListElement(InventoryListElement element)
+	{
+		if (currentDetailQuad!=null) currentDetailQuad.removeFromParent();
+		detailObjectName.text = element.getSingleName();
+		detailObjectName.activate();
+		
+		try {
+			currentDetailQuad = loadImageToQuad(element.description.getIconFilePath(), 0.17f*core.getDisplay().getWidth(), 0.20f*(core.getDisplay().getHeight()),
+				core.getDisplay().getWidth() / 2, 1.20f*core.getDisplay().getHeight() / 2);
+			page1_details.attachChild(currentDetailQuad);
+		} catch (Exception ex)
+		{
+			
+		}
+    			
+
+	}
+	
+	@Override
+	public boolean handleKey(String key) {
+		if (super.handleKey(key)) return true;
+		if (key.equals("back"))
+		{
+			if (currentPage==1)
+			{
+				currentPage=0;
+				setupPage();
+			}
+		}
+		return true;
+	}
+	
+	private ArrayList<InventoryListElement> getAllSelection()
 	{
 		ArrayList<InventoryListElement> r = new ArrayList<InventoryListElement>();
 		for (ListMultiSelect s:selectors)

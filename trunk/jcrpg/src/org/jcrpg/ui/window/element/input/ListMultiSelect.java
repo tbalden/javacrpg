@@ -100,6 +100,7 @@ public class ListMultiSelect extends InputBase {
 		w.base.addEventHandler("lookLeft", w);
 		w.base.addEventHandler("lookRight", w);
 		w.base.addEventHandler("enter", w);
+		w.base.addEventHandler("space", w);
 		parent.updateRenderState();
 	}
 
@@ -372,6 +373,11 @@ public class ListMultiSelect extends InputBase {
 				// move to the next item
 				handleKey("lookRight");
 			}
+			return true;
+		} else
+		if (key.equals("space"))
+		{
+			w.inputUsed(this, key);
 			return true;
 		}
 		return false;
