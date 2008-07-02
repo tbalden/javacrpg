@@ -20,6 +20,11 @@ package org.jcrpg.world.ai.body.part.mammal;
 import org.jcrpg.world.ai.body.BodyPart;
 
 public class Leg extends BodyPart {
+	
+	public Leg()
+	{
+		bodyPartSize = 15;
+	}
 
 	static float[] ratio = {0.5f,0.25f};
 	@Override

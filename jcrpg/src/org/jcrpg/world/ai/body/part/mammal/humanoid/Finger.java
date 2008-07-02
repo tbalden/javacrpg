@@ -24,6 +24,7 @@ public class Finger extends BodyPart {
 	public Finger()
 	{
 		maxNumberOfObjToEquip = 4;
+		bodyPartSize = 1;
 	}
 	
 	static float[] ratio = {0.8f,0.37f};
