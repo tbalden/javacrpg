@@ -322,7 +322,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	{
 		if (base.equals(skillValueTuner))
 		{
-			member.description.memberSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+			Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+			member.setSkillLevel(skill, skillValueTuner.value);
 			skillGroupLeftLast.setUpdated(true);
 			int id = 0;
 			for (Object o:skillGroupLeftLast.objects)
@@ -330,7 +331,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 				if (o.equals(skillValueTuner.tunedObject))
 				{
 					// this is the id that's modified:
-					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+ ": "+skillValueTuner.value;
+					int modifier = profession.skillLearnModifier.getMultiplier(skill);
+					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+" ("+modifier+"x): "+skillValueTuner.value;
 				}
 				id++;
 			}

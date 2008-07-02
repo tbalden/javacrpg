@@ -141,7 +141,7 @@ public class SkillContainer {
 		SkillContainer c = new SkillContainer();
 		for (SkillInstance s:skills.values())
 		{
-			c.addSkill(s);
+			c.addSkill(s.copy());
 		}
 		return c;
 	}
