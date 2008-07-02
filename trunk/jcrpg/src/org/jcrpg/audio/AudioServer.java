@@ -333,6 +333,7 @@ public class AudioServer implements Runnable {
 
 	public synchronized void playLoading(String id, String type)
 	{
+		if (!J3DCore.SOUND_ENABLED) return;
 		if (id==null) return;
 		Channel c = getAvailableChannel();
 		Jcrpg.LOGGER.info("Playing "+id);

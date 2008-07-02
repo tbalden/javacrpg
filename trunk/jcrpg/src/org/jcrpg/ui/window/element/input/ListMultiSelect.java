@@ -29,7 +29,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
 public class ListMultiSelect extends InputBase {
@@ -159,6 +158,7 @@ public class ListMultiSelect extends InputBase {
 		baseNode.removeFromParent();
 		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
+		freeTextNodes();
 		if (deactivatedNode==null) 
 		{
 			deactivatedNode = new Node();
@@ -181,6 +181,7 @@ public class ListMultiSelect extends InputBase {
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+		currentTextNodes.put(slottextNode,FontUtils.textVerdana);					
 		baseNode.attachChild(slottextNode);
 		baseNode.updateRenderState();
 	}
@@ -190,6 +191,7 @@ public class ListMultiSelect extends InputBase {
 		baseNode.removeFromParent();
 		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
+		freeTextNodes();
 		if (activatedNode==null) 
 		{
 			activatedNode = new Node();
@@ -233,6 +235,7 @@ public class ListMultiSelect extends InputBase {
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
 				if (i==selected)
 				{
 					colorizeOutlined(slottextNode, ColorRGBA.yellow);
@@ -247,6 +250,7 @@ public class ListMultiSelect extends InputBase {
 					signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 					signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
 					signNodes.add(signNode);
+					currentTextNodes.put(signNode,FontUtils.textVerdana);					
 					baseNode.attachChild(signNode);
 				}
 				if (icons!=null && icons.length>0)
@@ -313,17 +317,6 @@ public class ListMultiSelect extends InputBase {
 			}
 		}
 		return reloadNeeded;
-	}
-	
-	public void colorizeOutlined(Node textNode, ColorRGBA color)
-	{
-		int cc=0;
-		for (Spatial q: textNode.getChildren())
-		{
-			if (cc%2==1) ((Quad)q).setDefaultColor(color);
-			cc++;
-		}
-		
 	}
 	
 	public boolean handleKey(String key) {
