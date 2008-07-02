@@ -18,7 +18,6 @@
 
 package org.jcrpg.ui.window.element.input;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.ui.text.FontTT;
@@ -159,6 +158,18 @@ public abstract class InputBase {
 			for (Spatial q: textNode.getChildren())
 			{
 				if (cc%2==1) ((Quad)q).setDefaultColor(color);
+				cc++;
+			}
+		} catch (Exception ex) {}
+		
+	}
+	public void colorize(Node textNode, ColorRGBA color)
+	{
+		try {
+			int cc=0;
+			for (Spatial q: textNode.getChildren())
+			{
+				((Quad)q).setDefaultColor(color);
 				cc++;
 			}
 		} catch (Exception ex) {}

@@ -240,11 +240,11 @@ public class EncounterLogic {
 						{
 							s+=0.0001f;
 						}
-						//orderedActors.put(s, mi);
+						orderedActors.put(s, mi);
 					}
 				} else
 				{
-					//orderedActors.put(1000f, mi); // resters to the end of round
+					orderedActors.put(1000f, mi); // resters to the end of round
 				}
 			}
 		}

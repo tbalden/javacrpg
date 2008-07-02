@@ -139,7 +139,7 @@ public class ListSelect extends InputBase {
 			return;			
 		}
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+		Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
@@ -191,17 +191,17 @@ public class ListSelect extends InputBase {
 				
 				if (text==null) text = "## null ##";
 				
-				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),true);
+				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
 				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
 				if (i==selected && i!=maxVisible)
 				{
-					colorizeOutlined(slottextNode, ColorRGBA.yellow);
+					colorize(slottextNode, ColorRGBA.yellow);
 				} else
 				{
-					colorizeOutlined(slottextNode, ColorRGBA.gray);
+					colorize(slottextNode, ColorRGBA.gray);
 				}
 				textNodes.add(slottextNode);
 				baseNode.attachChild(slottextNode);
@@ -266,7 +266,7 @@ public class ListSelect extends InputBase {
 				int i=0;
 				for (Node n:textNodes)
 				{
-					colorizeOutlined(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
+					colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
 					i++;
 				}
 			}
@@ -287,7 +287,7 @@ public class ListSelect extends InputBase {
 				int i=0;
 				for (Node n:textNodes)
 				{
-					colorizeOutlined(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
+					colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
 					i++;
 				}
 			}

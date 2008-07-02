@@ -277,7 +277,7 @@ public class InventoryWindow extends PagedInputWindow {
 			toCharacterSelect.deactivate();
 			
 		}
-		body.updateToEntityMemberInstance(instance);
+		
 		currentMember = instance;
 		
 		updateToInventory(instance.inventory);
@@ -328,6 +328,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	public void updateToInventory(EntityObjInventory inventory)
 	{
+		body.updateToEntityMemberInstance(currentMember);
 		hmDescToElement.clear();
 		
 		tmpWeaponsList.clear();

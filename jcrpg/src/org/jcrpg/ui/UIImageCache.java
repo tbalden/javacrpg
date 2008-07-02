@@ -107,7 +107,7 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		System.out.println("LOADED "+filePath);
+		//System.out.println("LOADED "+filePath);
 		return quad;
 	}
 

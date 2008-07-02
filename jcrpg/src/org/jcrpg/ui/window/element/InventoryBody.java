@@ -24,6 +24,9 @@ import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.body.BodyBase;
 import org.jcrpg.world.ai.body.BodyPart;
+import org.jcrpg.world.object.Armor;
+import org.jcrpg.world.object.Equippable;
+import org.jcrpg.world.object.ObjInstance;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -67,7 +70,27 @@ public class InventoryBody extends InputBase {
 			float fullSizeX = w.core.getDisplay().getWidth()/5.5f;
 			float fullSizeY = w.core.getDisplay().getHeight()/4f;
 			
-			Node textNode = FontUtils.textVerdana.createOutlinedText(part.getName(), DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+			String txt = "0/0";
+			for (ObjInstance oI:instance.inventory.getEquipped())
+			{
+				System.out.println("- EQPD: "+oI.description.getName());
+				if (oI.description instanceof Equippable)
+				{
+					System.out.println("- EQPD: "+((Equippable)oI.description).getEquippableBodyPart());
+					if (((Equippable)oI.description).getEquippableBodyPart() == part.getClass())
+					{
+						if (oI.description instanceof Armor)
+						{
+							int defVal = ((Armor)oI.description).getDefenseValue();
+							int hpDecVal = ((Armor)oI.description).getHitPointImpactDecrease();
+							txt = defVal+"/"+hpDecVal;
+						}
+					}
+				}
+			}
+			
+			
+			Node textNode = FontUtils.textVerdana.createOutlinedText(txt, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 			textNode.setLocalTranslation(dCenterX - fullSizeX/2f + fullSizeX*ratio[0], dCenterY - fullSizeY/2f +fullSizeY*ratio[1], 0);
 			textNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			textNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);

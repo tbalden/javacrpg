@@ -102,6 +102,7 @@ public class Characters {
 		pictureQuads.clear();
 		try {
 			int counter = 0;
+			int counterPair = 0;
 			int sideYMul = 1, sideYMulFont = 1;
 			float sideYBars = 1;
 			float stepY = hud.core.getDisplay().getHeight()/6.6f;
@@ -121,22 +122,22 @@ public class Characters {
 					try 
 					{
 						SharedMesh sm = new SharedMesh("1",frame);
-						sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counter,0);
+						sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counterPair,0);
 						
-						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counter++);
+						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
 						Node nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 						
-						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.39f,0);
+						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-stepY*0.39f,0);
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
 						
 						Node classtextNode = this.text.createOutlinedText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 						
-						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counter-1)-stepY*0.515f,0);
+						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-stepY*0.515f,0);
 						
-						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counter-1)-stepY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
+						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-stepY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
 						
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
@@ -145,16 +146,22 @@ public class Characters {
 						node.attachChild(classtextNode);
 						node.attachChild(sm);
 						node.attachChild(q);
+						counter ++;
+						counterPair = counter / 2;
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
-					if (counter==3)
+					if (counter%2==1)
 					{
-						counter = 0;
 						sideYMul = 19;
 						sideYMulFont = 46;
 						sideYBars = -0.4f;
+					} else
+					{
+						sideYMul = 1;
+						sideYMulFont = 1;
+						sideYBars = 1;
 					}
 					
 				}
