@@ -20,6 +20,13 @@ package org.jcrpg.world.ai.body.part.mammal;
 import org.jcrpg.world.ai.body.BodyPart;
 
 public class Head extends BodyPart {
+	
+	public Head()
+	{
+		bodyPartSize = 5;
+		criticality = 30;
+	}
+	
 
 	static float[] ratio = {0.5f,0.9f};
 	@Override

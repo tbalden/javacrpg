@@ -20,6 +20,12 @@ package org.jcrpg.world.ai.body.part.mammal;
 import org.jcrpg.world.ai.body.BodyPart;
 
 public class Torso extends BodyPart {
+	
+	public Torso()
+	{
+		bodyPartSize = 20;
+	}
+	
 	static float[] ratio = {0.5f,0.5f};
 	@Override
 	public float[] getPlacingRatioXY() {

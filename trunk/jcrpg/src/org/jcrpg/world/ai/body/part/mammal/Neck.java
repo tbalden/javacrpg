@@ -21,6 +21,12 @@ import org.jcrpg.world.ai.body.BodyPart;
 
 public class Neck extends BodyPart {
 
+	public Neck()
+	{
+		bodyPartSize = 3;
+		criticality = 40;
+	}
+
 	static float[] ratio = {0.5f,0.8f};
 	@Override
 	public float[] getPlacingRatioXY() {

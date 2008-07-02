@@ -36,6 +36,37 @@ public abstract class BodyPart {
 	 */
 	public abstract float[] getPlacingRatioXY();
 	
+	
+	/**
+	 * 1-100 represents how critical is a hit on that body part. Override this in extensions' constructor.
+	 */
+	public int criticality = 10;
+	
+	/**
+	 * returns 1-100 represents how critical is a hit on that body part.
+	 * @return
+	 */
+	public int getCriticalityOfInjury()
+	{
+		return criticality;
+	}
+	
+	
+	/**
+	 * the body part size on a scale of 1-100 1 is fingers, 50 is a human body. Override this
+	 * in extension constructor.
+	 */
+	public int bodyPartSize = 10;
+	
+	/**
+	 * Returns the body part size on a scale of 1-100 1 is fingers, 50 is a human body.
+	 * @return
+	 */
+	public int getBodyPartSize()
+	{
+		return bodyPartSize;
+	}
+	
 	public int getMaxNumberOfObjToEquip()
 	{
 		return maxNumberOfObjToEquip;
