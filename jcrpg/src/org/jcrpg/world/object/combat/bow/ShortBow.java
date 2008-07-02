@@ -25,6 +25,8 @@ public class ShortBow extends Bow {
 	
 	public ShortBow()
 	{
+		super();
+		icon = "weapon/shortbow.png";
 		requirementSkillAndLevel = new SkillInstance(Bows.class,0);
 	}
 

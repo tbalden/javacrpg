@@ -204,13 +204,15 @@ public abstract class InputWindow extends Window implements KeyListener{
 			}
 		}
 		// button shortcut handling ...
-		for (InputBase i:inputs)
-		{
-			if (i instanceof TextButton)
+		if (inputs!=null) {
+			for (InputBase i:inputs)
 			{
-				if (((TextButton)i).shortCut!=null)
+				if (i instanceof TextButton)
 				{
-					if (((TextButton)i).shortCut.equals(key) && i.handleKey(key)) return true;
+					if (((TextButton)i).shortCut!=null)
+					{
+						if (((TextButton)i).shortCut.equals(key) && i.handleKey(key)) return true;
+					}
 				}
 			}
 		}

@@ -30,6 +30,12 @@ import org.jcrpg.world.object.Obj;
 
 public class LeatherArmor extends Obj implements Armor, Equippable {
 
+	public LeatherArmor()
+	{
+		super();
+		icon = "armor/torso_leather.png";
+	}
+	
 	public int getDefenseValue() {
 		return 10;
 	}

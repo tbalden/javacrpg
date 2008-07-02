@@ -26,7 +26,7 @@ public class Club extends Obj implements Weapon {
 	
 	public Club()
 	{
-		icon = "weapon/quarterstaff.png";
+		icon = "weapon/club.png";
 		requirementSkillAndLevel = new SkillInstance(StaffsAndWands.class,0);
 	}
 

@@ -126,5 +126,10 @@ public class Obj {
 		return maxNumberOfUsage;
 	}
 	
+	public String getIconFilePath()
+	{
+		return "./data/icons/objects/"+icon;
+	}
+	
 	
 }
