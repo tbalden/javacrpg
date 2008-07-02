@@ -71,5 +71,44 @@ public class UIImageCache {
 		System.out.println("LOADED "+filePath);
 		return quad;
 	}
+
+	public static Quad getImage(String filePath, boolean alpha, float sizeX, float sizeY)
+	{
+		TextureState q = imageCache.get(filePath);
+		if (q==null)
+		{
+			try {
+				File file = new File(filePath);
 	
+				Image hudImage = TextureManager.loadImage(file.toURI()
+						.toURL(), true);
+	
+				TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
+						.createTextureState();
+				Texture texture = new Texture();
+				texture.setImage(hudImage);
+	
+				state.setTexture(texture,0);
+				
+	
+				q = state;
+				imageCache.put(filePath, q);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+				q = null;//new Quad();
+			}
+			
+		}
+		Quad quad = new Quad(filePath, 1f * sizeX, 1f * sizeY);
+		if (alpha) quad.setRenderState(J3DCore.getInstance().uiBase.hud.hudAS);
+		quad.setRenderState(q);
+		quad.updateRenderState();
+		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+
+		quad.setLocalTranslation(new Vector3f(0, 0, 0));
+		System.out.println("LOADED "+filePath);
+		return quad;
+	}
+
 }

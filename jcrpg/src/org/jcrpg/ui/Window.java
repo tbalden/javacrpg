@@ -23,14 +23,10 @@ import java.io.File;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
-import com.jme.image.Image;
-import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 
 public abstract class Window {
 
@@ -77,25 +73,17 @@ public abstract class Window {
 			float posX, float posY) throws Exception {
 		return loadImageToQuad(new File(fileName), sizeX, sizeY, posX, posY);
 	}	
+	
+	
+	
 	public static Quad loadImageToQuad(File file, float sizeX, float sizeY,
 			float posX, float posY) throws Exception {
-		Quad hudQuad = new Quad(file.getName(), sizeX, sizeY);
+		
+		Quad hudQuad = UIImageCache.getImage(file.getPath(), true, sizeX, sizeY);
+	
 		hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		hudQuad.setLocalTranslation(new Vector3f(posX, posY, 0));
-
-		Image hudImage = TextureManager.loadImage(file.toURI()
-				.toURL(), true);
-		/*Image hudImage2 = TextureManager.loadImage(new File("./data/ui/white.png").toURI()
-				.toURL(), true);*/
-
-		TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
-				.createTextureState();
-		Texture texture = new Texture();
-		texture.setImage(hudImage);
-
-		state.setTexture(texture,0);
-		hudQuad.setRenderState(state);
 
 		return hudQuad;
 	}

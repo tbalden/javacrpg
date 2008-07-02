@@ -42,6 +42,7 @@ public class FireArrow extends EffectNode {
 	private static final long serialVersionUID = 1L;
 
 	public FireArrow() {
+		
 		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader
@@ -83,7 +84,8 @@ public class FireArrow extends EffectNode {
 	@Override
 	public void setPosition(Vector3f newPos, Quaternion newAngle) {
 		currentPos = newPos;
-		pMesh.setOriginOffset(currentPos);
+		if (pMesh!=null)
+			pMesh.setOriginOffset(currentPos);
 		super.setPosition(newPos,newAngle);
 	}
 	

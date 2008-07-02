@@ -18,9 +18,16 @@
 
 package org.jcrpg.ui.window.element.input;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+import com.jme.scene.shape.Quad;
 
 
 public abstract class InputBase {
@@ -143,6 +150,31 @@ public abstract class InputBase {
 	}
 	public void restore()
 	{
+	}
+	
+	public void colorizeOutlined(Node textNode, ColorRGBA color)
+	{
+		try {
+			int cc=0;
+			for (Spatial q: textNode.getChildren())
+			{
+				if (cc%2==1) ((Quad)q).setDefaultColor(color);
+				cc++;
+			}
+		} catch (Exception ex) {}
+		
+	}
+
+	public HashMap<Node,FontTT> currentTextNodes = new HashMap<Node,FontTT>();
+	
+	public void freeTextNodes()
+	{
+		for (Node n:currentTextNodes.keySet())
+		{
+			FontTT font = currentTextNodes.get(n);
+			font.moveFreedToCache(n);
+		}
+		currentTextNodes.clear();
 	}
 	
 	

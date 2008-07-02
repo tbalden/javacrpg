@@ -177,6 +177,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			if (currentAnimator!=null) {
 				currentAnimator.fadeOut(0.1f,true);
 			}
+			if (anim==null || bodyAnimationController==null) return 0;
 			AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 			newAnimator.setCycleType(FixedLengthAnimator.RT_WRAP);
 			newAnimator.fadeIn(0.5f);
@@ -194,6 +195,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
 		System.out.println("LOADING ANIMATED MODEL: "+fileName);
+		
 		try {
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);

@@ -59,6 +59,7 @@ public class TextButton extends InputBase {
 		baseNode.detachAllChildren();
 		if (activeNode==null ) {
 			activeNode = new Node();
+			//freeTextNodes();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
@@ -72,6 +73,7 @@ public class TextButton extends InputBase {
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 			activeNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(activeNode);
@@ -84,6 +86,7 @@ public class TextButton extends InputBase {
 		baseNode.detachAllChildren();
 		if (deactiveNode==null ) {
 			deactiveNode = new Node();
+			//freeTextNodes();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);
@@ -96,6 +99,7 @@ public class TextButton extends InputBase {
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 			deactiveNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(deactiveNode);

@@ -29,7 +29,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
 public class ListSelect extends InputBase {
@@ -115,11 +114,13 @@ public class ListSelect extends InputBase {
 		return objects[fromCount+selected];
 	}
 	
+	
 	public void setupDeactivated()
 	{
 		baseNode.removeFromParent();
 		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
+		freeTextNodes();
 		if (deactivatedNode==null) 
 		{
 			deactivatedNode = new Node();
@@ -142,6 +143,7 @@ public class ListSelect extends InputBase {
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+		currentTextNodes.put(slottextNode,FontUtils.textVerdana);
 		baseNode.attachChild(slottextNode);
 		baseNode.updateRenderState();
 	}
@@ -151,6 +153,7 @@ public class ListSelect extends InputBase {
 		baseNode.removeFromParent();
 		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
+		freeTextNodes();
 		if (activatedNode==null) 
 		{
 			activatedNode = new Node();
@@ -192,6 +195,7 @@ public class ListSelect extends InputBase {
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
 				if (i==selected && i!=maxVisible)
 				{
 					colorizeOutlined(slottextNode, ColorRGBA.yellow);
@@ -248,16 +252,6 @@ public class ListSelect extends InputBase {
 		return reloadNeeded;
 	}
 	
-	public void colorizeOutlined(Node textNode, ColorRGBA color)
-	{
-		int cc=0;
-		for (Spatial q: textNode.getChildren())
-		{
-			if (cc%2==1) ((Quad)q).setDefaultColor(color);
-			cc++;
-		}
-		
-	}
 	
 	public boolean handleKey(String key) {
 		if (!enabled) return false;

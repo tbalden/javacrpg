@@ -54,6 +54,7 @@ public class TextLabel extends InputBase {
 		baseNode.detachAllChildren();
 		//if (activeNode==null ) 
 		{
+			freeTextNodes();
 			activeNode = new Node();
 			if (useImage)
 			try {
@@ -69,6 +70,7 @@ public class TextLabel extends InputBase {
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+			currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 			activeNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(activeNode);
@@ -79,7 +81,9 @@ public class TextLabel extends InputBase {
 	@Override
 	public void deactivate() {
 		baseNode.detachAllChildren();
+		
 		if (deactiveNode==null ) {
+			freeTextNodes();
 			deactiveNode = new Node();
 			if (useImage)
 			try {
@@ -94,6 +98,7 @@ public class TextLabel extends InputBase {
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+			currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 			deactiveNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(deactiveNode);
