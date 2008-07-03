@@ -52,7 +52,9 @@ public abstract class Attributes {
 	
 	public static Attributes getAttributes(Attributes base, Attributes modifier)
 	{
-		FantasyAttributes ret = new FantasyAttributes();
+		Attributes ret = null;
+		try { ret = base.getClass().newInstance(); } catch (Exception ex) {}
+		
 		for (String a:base.attributes.keySet())
 		{
 			Integer attrVal = base.attributes.get(a);
@@ -65,14 +67,14 @@ public abstract class Attributes {
 	}
 	public static Attributes getAttributes(Attributes base, AttributeRatios modifier)
 	{
-		FantasyAttributes ret = new FantasyAttributes();
+		Attributes ret = null;
+		try { ret = base.getClass().newInstance(); } catch (Exception ex) {}
+		
 		for (String a:base.attributes.keySet())
 		{
 			Float ratio = modifier.attributeRatios.get(a);
-			//System.out.println("RATIO = "+ratio);
 			if (ratio==null) ratio = 1f;
 			Integer attrVal = base.attributes.get(a);
-			//System.out.println("VAL = "+attrVal);
 			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
 			ret.setAttribute(a, (int)(attrVal*ratio));
 		}
