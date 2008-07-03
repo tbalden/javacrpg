@@ -46,6 +46,7 @@ import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.InventoryListElement;
+import org.jcrpg.world.object.Obj;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
@@ -95,18 +96,18 @@ public class TurnActWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills to use.",false);
 	    	 
 
-	    	float sizeSelect = 0.1f;
+	    	float sizeSelect = 0.15f;
 	    	for (int i=0; i<6; i++)
 	    	{
 	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.38f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    		addInput(0,skillActFormSelectors.get(i));
-	    		addInput(0,groupSelectors.get(i));
 	    		addInput(0,inventorySelectors.get(i));
+	    		addInput(0,groupSelectors.get(i));
 	    	}
 	    	
 	    	
@@ -185,6 +186,10 @@ public class TurnActWindow extends PagedInputWindow {
 						if (!i.inventory.hasInInventoryForSkillAndLevel(i.description.getCommonSkills().skills.get(skill))) continue;
 					}
 					int level = i.description.getCommonSkills().getSkillLevel(skill,null);
+					while (tempFilteredSkills.get(10000-level)!=null)
+					{
+						level++;
+					}
 					tempFilteredSkills.put(10000-level,skill);
 				}
 				skills = tempFilteredSkills.values();
@@ -223,6 +228,7 @@ public class TurnActWindow extends PagedInputWindow {
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
 				inputChanged(select, "");
+				
 			}
 			counter++;
 		}
@@ -329,6 +335,7 @@ public class TurnActWindow extends PagedInputWindow {
 					inventorySelect.storedState = null;
 					inventorySelect.setEnabled(false);
 				}
+				base.activate();
 			} else
 			{
 				SkillBase s = (SkillBase)skillSelect.getSelectedObject();
@@ -385,13 +392,16 @@ public class TurnActWindow extends PagedInputWindow {
 					inventorySelect.deactivate();
 					inventorySelect.setEnabled(true);
 					inventorySelect.setSelected(0);
+					inputChanged(inventorySelect, "fake"); // update target list for object range...
 				} else
 				{
 					inventorySelect.ids = new String[0];
 					inventorySelect.texts = new String[0];
 					inventorySelect.setUpdated(true);
 					inventorySelect.deactivate();
+					inputChanged(inventorySelect, "fake"); // update target list for no object range...
 				}
+				base.activate();
 			}
 			return true;
 		} else
@@ -399,14 +409,30 @@ public class TurnActWindow extends PagedInputWindow {
 		{
 			ListSelect skillActFormSelect = (ListSelect)base;
 			Class<? extends SkillActForm> form = (Class<? extends SkillActForm>)skillActFormSelect.getSelectedObject();
+			if (form==null) return true;
 			int index = skillActFormSelectors.indexOf(skillActFormSelect);
 			ListSelect skillSelect = skillSelectors.get(index);
 			ListSelect groupSelect = groupSelectors.get(index);
+			ListSelect inventorySelect = inventorySelectors.get(index);
 			//EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
 
 			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
 			
-			//SkillInstance skillInstance = i.description.commonSkills.skills.get(s.getClass());
+			InventoryListElement objInstance = null;
+			int neededLineRange = Obj.NO_RANGE;
+			if (s.needsInventoryItem)
+			{
+				// get object's needed line range for checking it on target unit list's lineup distance
+				objInstance = (InventoryListElement)inventorySelect.getSelectedObject();
+				if (objInstance!=null)
+				{
+					neededLineRange = objInstance.description.getUseRangeInLineup();
+				} else
+				{
+					neededLineRange = 4;
+				}
+			}
+			
 			SkillActForm formInstance = s.getActForm(form);
 			boolean friendly = true;
 			boolean groupTarget = false;
@@ -423,6 +449,12 @@ public class TurnActWindow extends PagedInputWindow {
 			ArrayList<EncounterUnitData> filteredList = new ArrayList<EncounterUnitData>();
 			for (EncounterUnitData unitData:list)
 			{
+				if (neededLineRange!=Obj.NO_RANGE)
+				{
+					// line range filtering of units
+					if (unitData.currentLine>neededLineRange) continue;
+				}
+				
 				if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
 				int relation = party.theFragment.getRelationLevel(unitData.getUnit());
 				if (!friendly)
@@ -459,6 +491,15 @@ public class TurnActWindow extends PagedInputWindow {
 			groupSelect.setUpdated(true);
 			groupSelect.deactivate();
 			if ("fake".equals(message)) skillSelect.activate();
+			else
+				base.activate();
+		} else
+		if (inventorySelectors.contains(base))
+		{
+			int index = inventorySelectors.indexOf(base);
+			ListSelect skillActFormSelect = skillActFormSelectors.get(index);
+			inputChanged(skillActFormSelect, "inventory");
+			base.activate();
 		}
 		return false;
 	}

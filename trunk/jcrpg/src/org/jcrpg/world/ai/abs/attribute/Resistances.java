@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
+import org.jcrpg.game.GameLogicConstants;
+
 public abstract class Resistances {
 
 	public HashMap<String, Integer> resistances = new HashMap<String, Integer>();
@@ -46,19 +48,31 @@ public abstract class Resistances {
 	
 	public static Resistances getResistances(Resistances base, Resistances modifier)
 	{
-		FantasyResistances ret = new FantasyResistances();
+		Resistances ret = null;
+		try { ret = base.getClass().newInstance(); } catch (Exception ex) {}
+		
 		for (String a:base.resistances.keySet())
 		{
-			ret.setResistance(a, base.resistances.get(a)+modifier.resistances.get(a));
+			Integer attrVal = base.resistances.get(a);
+			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			Integer attrValPlus = modifier.resistances.get(a);
+			if (attrValPlus==null) attrValPlus = 0;
+			ret.setResistance(a, attrVal+attrValPlus);
 		}
 		return ret;
 	}
 	public static Resistances getResistances(Resistances base, ResistanceRatios modifier)
 	{
-		FantasyResistances ret = new FantasyResistances();
+		Resistances ret = null;
+		try { ret = base.getClass().newInstance(); } catch (Exception ex) {}
+		
 		for (String a:base.resistances.keySet())
 		{
-			ret.setResistance(a, (int)(base.resistances.get(a)*modifier.resistanceRatios.get(a)));
+			Float ratio = modifier.resistanceRatios.get(a);
+			if (ratio==null) ratio = 1f;
+			Integer attrVal = base.resistances.get(a);
+			if (attrVal==null) attrVal = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			ret.setResistance(a, (int)(attrVal*ratio));
 		}
 		return ret;
 	}
