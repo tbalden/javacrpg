@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
@@ -46,7 +47,9 @@ public class LargeBlades extends SkillBase implements TurnActSkill  {
 	public LargeBlades()
 	{
 		needsInventoryItem = true;
-		actForms.add(new Thrust(this,1.5f));
+		Thrust t = new Thrust(this,1.5f);
+		t.contraResistencies.add(FantasyResistances.RESIST_PIERCE);
+		actForms.add(t);
 		actForms.add(new Swing(this,1.5f));
 	}
 

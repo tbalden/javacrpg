@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.abs.attribute;
 import java.util.HashMap;
 
 import org.jcrpg.game.GameLogicConstants;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 
 public class FantasyAttributes extends Attributes {
@@ -39,8 +40,11 @@ public class FantasyAttributes extends Attributes {
 			CONCENTRATION, CONSTITUTION, PSYCHE, PIETY, CHARISMA, KARMA };
 
 	public FantasyAttributes() {
+		this(false);
+	}
+	public FantasyAttributes(boolean zero) {
 		for (String a : attributeName) {
-			attributes.put(a, GameLogicConstants.BASE_ATTRIBUTE_VALUE);
+			attributes.put(a, zero?0:GameLogicConstants.BASE_ATTRIBUTE_VALUE);
 		}
 	}
 
@@ -68,6 +72,10 @@ public class FantasyAttributes extends Attributes {
 			count++;
 		}
 		return (sum*1f/count);
+	}
+	@Override
+	public String getShortestName(String attr) {
+		return Language.v("fantasyattributes.shortest."+attr);
 	}
 
 }

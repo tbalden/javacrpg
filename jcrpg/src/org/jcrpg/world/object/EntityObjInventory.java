@@ -100,7 +100,10 @@ public class EntityObjInventory {
 						{
 							if (hasOneOfTypes(o.getAttachedDependencies()))
 							{
-								InventoryListElement l = gatherer.get(o.description);
+								InventoryListElement l = null;
+								if (o.description.isGroupable()) {
+									l = gatherer.get(o.description);
+								}
 								if (l==null)
 								{
 									l = new InventoryListElement(this,o.description);
@@ -112,7 +115,10 @@ public class EntityObjInventory {
 						}
 					} else
 					{
-						InventoryListElement l = gatherer.get(o.description);
+						InventoryListElement l = null;
+						if (o.description.isGroupable()) {
+							l = gatherer.get(o.description);
+						}
 						if (l==null)
 						{
 							l = new InventoryListElement(this,o.description);

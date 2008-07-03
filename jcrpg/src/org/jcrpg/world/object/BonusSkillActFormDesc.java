@@ -17,39 +17,31 @@
  */ 
 package org.jcrpg.world.object;
 
-import java.util.ArrayList;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 
-import org.jcrpg.world.ai.abs.attribute.Attributes;
-import org.jcrpg.world.ai.abs.attribute.Resistances;
+public class BonusSkillActFormDesc {
 
-/**
- * Describes a bonus object.
- * @author illes
- *
- */
-public interface BonusObject {
+	public SkillActForm form;
 	/**
-	 * Attribute bonus/malus.
-	 * @return
+	 * Level of the skill for the bonus skill act form use.
 	 */
-	public Attributes getAttributeValues();
-	/**
-	 * Resistance bonus/malus.
-	 * @return
-	 */
-	public Resistances getResistanceValues();
+	public int skillLevel = 0;
+	
+	public static int FREQUENCY_INSTANT = 0;
+	public static int FREQUENCY_MINUTE = 1;
+	public static int FREQUENCY_HOUR = 1;
+	public static int FREQUENCY_DAY = 2;
+	
+	public static int MAX_USE_UNLIMITED = 0;
 	
 	/**
-	 * Return what skill form does it do upon using it in turn act.
-	 * @return the skill act form list.
+	 * Max use of this bonus before exhaust.
 	 */
-	public ArrayList<BonusSkillActFormDesc> getSkillActFormBonusEffectTypes();
-	
+	public int maxUsePerReplenish = MAX_USE_UNLIMITED;
 	
 	/**
-	 * Tells if it can be un-equipped or not (cursed).
-	 * @return
+	 * Frequency type
 	 */
-	public boolean isCursed();
-
+	public int replenishFrequency = FREQUENCY_INSTANT;
+	
 }

@@ -20,7 +20,7 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
-public class Resistances {
+public abstract class Resistances {
 
 	public HashMap<String, Integer> resistances = new HashMap<String, Integer>();
 	/**
@@ -62,4 +62,6 @@ public class Resistances {
 		}
 		return ret;
 	}
+	
+	public abstract String getShortestName(String attr);
 }

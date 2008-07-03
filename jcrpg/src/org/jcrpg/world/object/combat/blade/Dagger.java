@@ -28,6 +28,7 @@ public class Dagger extends Obj implements Weapon {
 	{
 		icon = "weapon/dagger.png";
 		requirementSkillAndLevel = new SkillInstance(ShortBlades.class,0);
+		useRangeInLineup = 0;
 	}
 
 	public float getAttackMultiplicator() {

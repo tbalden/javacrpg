@@ -205,4 +205,12 @@ public class SkillGroups {
 		
 	}
 	
+	public static SkillActForm getSkillActFormInstance(Class<? extends SkillBase> skill, Class<? extends SkillActForm> form)
+	{
+		SkillBase base = skillBaseInstances.get(skill);
+		if (base!=null)
+			return base.getActForm(form);
+		return null;
+	}
+	
 }
