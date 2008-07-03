@@ -18,8 +18,11 @@
 package org.jcrpg.world.object;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.time.Time;
 
 /**
  * An instance of an object type.
@@ -142,6 +145,62 @@ public class ObjInstance {
 	{
 		return description.getAttachableToType();
 	}
+
+	HashMap<BonusSkillActFormDesc, ArrayList<Time>> lastUsedBonusFormTimes = null;
+	
+	/**
+	 * Returns the list of currently usable bonus skill act forms.
+	 * @return
+	 */
+	public ArrayList<BonusSkillActFormDesc> currentlyUsableBonusSkillActForms()
+	{
+		if (description instanceof BonusObject)
+		{
+			ArrayList<BonusSkillActFormDesc> ret = new ArrayList<BonusSkillActFormDesc>();
+			BonusObject b = ((BonusObject)description);
+			ArrayList<BonusSkillActFormDesc> list = b.getSkillActFormBonusEffectTypes();
+			for (BonusSkillActFormDesc desc:list)
+			{
+				boolean add = false;
+				if (lastUsedBonusFormTimes==null)
+				{
+					add = true;
+				} else
+				{
+					ArrayList<Time> t = lastUsedBonusFormTimes.get(desc);
+					if (t==null)
+					{
+						add = true;
+					} else
+					{
+						if (t.size()<desc.maxUsePerReplenish)
+						{
+							add = true;
+						} else
+						{
+							if (desc.maxUsePerReplenish==0)
+							{
+								t.remove(0);
+								add = true;
+							} else
+							{
+								if (desc.isUsableNow(t.get(0), J3DCore.getInstance().gameState.engine.getWorldMeanTime()))
+								{
+									t.remove(0);
+									add = true;
+								}
+							}
+							
+						}
+					}
+				}
+				if (add)
+					ret.add(desc);
+			}
+			return ret;
+		} 
+		return null;			
+	}
 	
 	/**
 	 * 
@@ -149,6 +208,25 @@ public class ObjInstance {
 	 */
 	public boolean useOnce()
 	{
+		if (description instanceof BonusObject)
+		{
+			// storing last use for currentlyUsable bonus skills.
+			if (lastUsedBonusFormTimes==null)
+			{
+				lastUsedBonusFormTimes = new HashMap<BonusSkillActFormDesc, ArrayList<Time>>(); 
+					
+			} 
+			for (BonusSkillActFormDesc d:currentlyUsableBonusSkillActForms())
+			{
+				ArrayList<Time> t = lastUsedBonusFormTimes.get(d);
+				if (t==null)
+				{
+					t = new ArrayList<Time>();
+					
+				}
+				t.add(new Time(J3DCore.getInstance().gameState.engine.getWorldMeanTime()));
+			}
+		}
 		numberOfTotalUses++;
 		if (numberOfTotalUses==description.maxNumberOfUsage())
 			return true;

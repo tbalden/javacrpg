@@ -662,9 +662,11 @@ public class InventoryWindow extends PagedInputWindow {
 			String[] texts = new String[bonusForms.size()];
 			
 			int count = 0;
+			ArrayList<BonusSkillActFormDesc> usableForms = element.objects.get(0).currentlyUsableBonusSkillActForms();
 			for (BonusSkillActFormDesc form:bonusForms)
 			{
 				String text = ""+form.form.getName()+" Replenish: "+form.replenishFrequency+" Level: "+form.skillLevel+" Use Times: "+form.maxUsePerReplenish;
+				if (usableForms.contains(form)) text+=" (R)";
 				texts[count] = text;
 				ids[count] = ""+count;
 				count++;
