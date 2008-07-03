@@ -48,6 +48,19 @@ public class Time {
 		maxSecond = time.maxSecond;
 		inverseSeasons = time.inverseSeasons;
 	}
+	public void setTime(Time time)
+	{
+		this.year = time.year;
+		this.day = time.day;
+		this.hour = time.hour;
+		this.minute = time.minute;
+		this.second = time.second;
+		maxDay = time.maxDay;
+		maxHour = time.maxHour;
+		maxMinute = time.maxMinute;
+		maxSecond = time.maxSecond;
+		inverseSeasons = time.inverseSeasons;
+	}
 
 	public float getCurrentDayPercent()
 	{
@@ -189,8 +202,21 @@ public class Time {
 				r.inverseSeasons = false;
 		}
 		return r;
-		
-		
+	}
+	
+	public int getTimeInInt()
+	{
+		int res = year*maxDay*maxHour*maxMinute*maxSecond;
+		res+=day*maxHour*maxMinute*maxSecond;
+		res+=hour*maxMinute*maxSecond;
+		res+=minute*maxSecond;
+		res+=second;
+		return res;
+	}
+	
+	public int diffSeconds(Time t)
+	{
+		return t.getTimeInInt()-getTimeInInt();
 	}
 
 }
