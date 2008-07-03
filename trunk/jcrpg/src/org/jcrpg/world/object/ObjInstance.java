@@ -107,7 +107,7 @@ public class ObjInstance {
 		for (Obj i:dependencies)
 		{
 			if (attachedDependencies.contains(i)) continue;
-			if (i.getAttacheableToType()==description.getClass())
+			if (i.getAttachableToType()==description.getClass())
 			{
 				attachedDependencies.add(i);
 			}
@@ -138,9 +138,9 @@ public class ObjInstance {
 	{
 		return description.needsAttachmentDependencyForSkill();
 	}
-	public Class getAttacheableToType()
+	public Class getAttachableToType()
 	{
-		return description.getAttacheableToType();
+		return description.getAttachableToType();
 	}
 	
 	/**

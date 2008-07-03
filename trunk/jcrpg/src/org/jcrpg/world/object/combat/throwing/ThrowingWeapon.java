@@ -25,6 +25,7 @@ public abstract class ThrowingWeapon extends Obj implements Weapon {
 
 	public ThrowingWeapon()
 	{
+		groupable = true;
 		maxNumberOfUsage = 1;
 	}
 	

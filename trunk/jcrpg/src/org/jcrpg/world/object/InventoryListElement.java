@@ -36,7 +36,10 @@ public class InventoryListElement
 	
 	public String getName()
 	{
-		return ""+description.getName()+" " +objects.size();
+		if (description.isGroupable()) {
+			return ""+description.getName()+" " +objects.size();
+		}
+		return getSingleName();
 	}
 
 	public String getSingleName()

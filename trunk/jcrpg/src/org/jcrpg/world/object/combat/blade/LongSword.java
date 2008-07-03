@@ -26,6 +26,7 @@ public class LongSword extends Obj implements Weapon {
 	
 	public LongSword()
 	{
+		useRangeInLineup = 1;
 		icon = "weapon/longsword.png";
 		requirementSkillAndLevel = new SkillInstance(MediumBlades.class,0);
 	}

@@ -30,6 +30,7 @@ public abstract class Arrow extends Ammunition {
 	
 	public Arrow()
 	{
+		groupable = true;
 		maxNumberOfUsage = 1;
 	}
 	
@@ -40,7 +41,7 @@ public abstract class Arrow extends Ammunition {
 	}
 
 	@Override
-	public Class getAttacheableToType() {
+	public Class getAttachableToType() {
 		return Bow.class;
 	}
 

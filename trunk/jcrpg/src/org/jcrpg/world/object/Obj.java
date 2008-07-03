@@ -62,7 +62,7 @@ public class Obj {
 	 * Returns the type class to witch this one can be attached.
 	 * @return
 	 */
-	public Class getAttacheableToType()
+	public Class getAttachableToType()
 	{
 		return null;
 	}
@@ -129,6 +129,33 @@ public class Obj {
 	public String getIconFilePath()
 	{
 		return "./data/icons/objects/"+icon;
+	}
+	
+	public static final int NO_RANGE = -1;
+	/**
+	 * what is the use range of the object when lineup is present. 0 is the first line.
+	 * 0 -> dagger, 1 -> sword, quarterstaff 2 -> long staff, pike, -1 -> bows, thrown
+	 */
+	protected int useRangeInLineup = NO_RANGE;
+	/**
+	 * @return get what is the use range of the object when lineup is present. 0 is the first line.
+	 */
+	public int getUseRangeInLineup()
+	{
+		return useRangeInLineup;
+	}
+	
+	/**
+	 * Tells if this is a group item, Override this in constructor.
+	 */
+	protected boolean groupable = false;
+	/**
+	 * 
+	 * @return If this object type should be grouped in lists and such, this returns true.
+	 */
+	public boolean isGroupable()
+	{
+		return groupable;
 	}
 	
 	

@@ -79,5 +79,13 @@ public abstract class Attributes {
 		return ret;
 	}
 	
+	/**
+	 * Returns how a given attribute point type influences max health point/mana point and such.
+	 * @param pointType
+	 * @return
+	 */
 	public abstract float getAttributePointMultiplier(int pointType);
+	
+	public abstract String getShortestName(String attr);
+	
 }

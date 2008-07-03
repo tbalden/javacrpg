@@ -19,9 +19,11 @@
 package org.jcrpg.world.ai.abs.skill.magical;
 
 import org.jcrpg.threed.jme.program.impl.FireArrow;
+import org.jcrpg.threed.jme.program.impl.IceArrow;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
@@ -40,6 +42,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
 			contraAttributes.add(FantasyAttributes.CONCENTRATION);
 			contraAttributes.add(FantasyAttributes.PSYCHE);
+			contraResistencies.add(FantasyResistances.RESIST_HEAT);
 		}
 
 		@Override
@@ -56,9 +59,39 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 		
 	}
 
+	public class IceBeam extends SkillActForm
+	{
+
+		public IceBeam(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = (int)(-5);
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5));
+			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
+			contraAttributes.add(FantasyAttributes.CONCENTRATION);
+			contraAttributes.add(FantasyAttributes.PSYCHE);
+			contraResistencies.add(FantasyResistances.RESIST_COLD);
+		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
+		
+		EffectProgram p = new EffectProgram(IceArrow.class);
+		
+		@Override
+		public EffectProgram getEffectProgram() {
+			return p;
+		}
+		
+	}
+	
 	public Elementarism()
 	{
 		actForms.add(new BurningSparks(this));
+		actForms.add(new IceBeam(this));
 	}
 	
 	
