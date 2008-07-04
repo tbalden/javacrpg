@@ -250,6 +250,14 @@ public class EntityObjInventory {
 		}
 		return toRemove;
 	}
+	
+	public void useOnceAndRemove(ObjInstance objInstance)
+	{
+		if (objInstance.useOnce())
+		{
+			inventory.remove(objInstance);
+		}
+	}
 
 	/**
 	 * Returns the first possible object instance which is of type in an ordered type list.

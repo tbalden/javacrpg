@@ -40,6 +40,7 @@ import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.Weapon;
 
 import com.jme.renderer.ColorRGBA;
@@ -339,6 +340,25 @@ public class EncounterLogic {
 							{
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
+								
+								if (impact.additionalEffectsToPlay!=null)
+								{
+									for (BonusSkillActFormDesc desc:impact.additionalEffectsToPlay)
+									{
+										EffectProgram ePB = desc.form.getEffectProgram();
+										if (ePB!=null)
+										{
+											try 
+											{
+												gameLogic.core.mEngine.playEffectProgram(ePB, choice.member.encounterData.visibleForm, choice.target.visibleForm);
+											} catch (Exception ex)
+											{
+												ex.printStackTrace();
+											}
+										}
+									}
+								}
+								
 								if (impact.success)
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("HIT!",ColorRGBA.red));

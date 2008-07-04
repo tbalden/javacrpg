@@ -68,6 +68,8 @@ public class WolfTooth extends Dagger implements BonusObject{
 			BonusSkillActFormDesc desc = new BonusSkillActFormDesc();
 			desc.form = SkillGroups.getSkillActFormInstance(Elementarism.class, Elementarism.IceBeam.class);
 			desc.skillLevel = 20;
+			desc.maxUsePerReplenish = 1;
+			desc.replenishFrequency = BonusSkillActFormDesc.FREQUENCY_MINUTE;
 			bonusActForms.add(desc);
 		}
 		return bonusActForms;

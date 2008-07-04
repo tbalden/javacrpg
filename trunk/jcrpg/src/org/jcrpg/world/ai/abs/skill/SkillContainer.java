@@ -87,6 +87,7 @@ public class SkillContainer {
 		TreeMap<Integer, Class<? extends SkillBase>> order = new TreeMap<Integer, Class<? extends SkillBase>>();
 		
 		Collection<Class<?extends SkillBase>> list = getSkillsOfType(Ecology.PHASE_TURNACT_COMBAT);
+		if (list!=null)
 		for (Class<?extends SkillBase> s:list)
 		{
 			SkillBase base = SkillGroups.skillBaseInstances.get(s);
