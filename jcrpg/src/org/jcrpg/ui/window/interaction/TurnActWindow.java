@@ -43,6 +43,7 @@ import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
+import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.InventoryListElement;
@@ -416,22 +417,37 @@ public class TurnActWindow extends PagedInputWindow {
 			ListSelect skillSelect = skillSelectors.get(index);
 			ListSelect groupSelect = groupSelectors.get(index);
 			ListSelect inventorySelect = inventorySelectors.get(index);
-			//EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
+			EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
 
 			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
 			
 			InventoryListElement objInstance = null;
-			int neededLineRange = Obj.NO_RANGE;
+			
+			// calculating LineUpd distance
+			int maxLineUpDistanceRange = Obj.NO_RANGE;
 			if (s.needsInventoryItem)
 			{
 				// get object's needed line range for checking it on target unit list's lineup distance
 				objInstance = (InventoryListElement)inventorySelect.getSelectedObject();
 				if (objInstance!=null)
 				{
-					neededLineRange = objInstance.description.getUseRangeInLineup();
+					maxLineUpDistanceRange = objInstance.description.getUseRangeInLineup();
 				} else
 				{
-					neededLineRange = 4;
+					maxLineUpDistanceRange = 5;
+				}
+			}
+			if (s instanceof TurnActSkill)
+			{
+				int skillLineRange = ((TurnActSkill)s).getUseRangeInLineup();
+				if (skillLineRange!=-1)
+				{
+					skillLineRange+=2; // +2 to let 3rd line reach enemy's 1st line.
+					if (maxLineUpDistanceRange>skillLineRange || maxLineUpDistanceRange == Obj.NO_RANGE)
+					{
+						// skill line range is smaller than object's max lineup distance range, replace maximum..
+						maxLineUpDistanceRange=skillLineRange;
+					}
 				}
 			}
 			
@@ -451,10 +467,13 @@ public class TurnActWindow extends PagedInputWindow {
 			ArrayList<EncounterUnitData> filteredList = new ArrayList<EncounterUnitData>();
 			for (EncounterUnitData unitData:list)
 			{
-				if (neededLineRange!=Obj.NO_RANGE)
+				if (maxLineUpDistanceRange!=Obj.NO_RANGE)
 				{
 					// line range filtering of units
-					if (unitData.currentLine>neededLineRange) continue;
+					if (i.encounterData.currentLine + unitData.currentLine>maxLineUpDistanceRange) 
+					{
+						continue;
+					}
 				}
 				
 				if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
@@ -564,6 +583,7 @@ public class TurnActWindow extends PagedInputWindow {
 						
 						EncounterUnitData fragmentAndSubunit = null;
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
+						if (fragmentAndSubunit == null) return true; // no target unit! 
 						
 						choice.skill = i.description.memberSkills.skills.get(sb.getClass());
 						SkillActForm selectedForm = null;

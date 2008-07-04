@@ -27,7 +27,10 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class HammerAndAxe extends SkillBase implements TurnActSkill  {
-	
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 	public HammerAndAxe()
 	{
 		needsInventoryItem = true;

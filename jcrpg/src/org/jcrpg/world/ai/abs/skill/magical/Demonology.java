@@ -23,7 +23,10 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Demonology extends SkillBase implements TurnActSkill {
-	
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 	public class SummonDemon extends SkillActForm
 	{
 		public SummonDemon(SkillBase skill) {

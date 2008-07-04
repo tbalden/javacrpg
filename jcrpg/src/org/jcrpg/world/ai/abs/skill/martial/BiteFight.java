@@ -28,7 +28,10 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class BiteFight extends SkillBase implements TurnActSkill {
-	
+	public int getUseRangeInLineup() {
+		return 0;
+	}
+
 	public class Tearing extends SkillActForm
 	{
 		public Tearing(SkillBase skill) {

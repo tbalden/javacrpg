@@ -72,17 +72,54 @@ public class EntityObjInventory {
 		return false;
 	}
 	
+	/**
+	 * Returns objects in inventory that are currently usable for the given skill instance - even checking needed attachments
+	 * if it's needed.
+	 * @param skill
+	 * @return
+	 */
 	public ArrayList<InventoryListElement> getObjectsForSkillInInventory(SkillInstance skill)
 	{
-		return getObjectsForSkill(inventory, skill);
+		return getObjectsForSkillInInventory(skill, -1);
 	}
+	/**
+	 * Returns objects filtering for skill/attachment and lineup too.
+	 * @param skill
+	 * @param targetLineUpDistance
+	 * @return
+	 */
+	public ArrayList<InventoryListElement> getObjectsForSkillInInventory(SkillInstance skill,int targetLineUpDistance)
+	{
+		return getObjectsForSkill(inventory, skill, targetLineUpDistance);
+	}
+	/**
+	 * Returns objects in equipped inventory that are currently usable for the given skill instance - even checking needed attachments
+	 * if it's needed.
+	 * @param skill
+	 * @return
+	 */
 	public ArrayList<InventoryListElement> getObjectsForSkillInEquipped(SkillInstance skill)
 	{
-		return getObjectsForSkill(equipped, skill);
+		return getObjectsForSkillInEquipped(skill, -1);
+	}
+	/**
+	 * Returns objects filtering for skill/attachment and lineup too.
+	 * @param skill
+	 * @param targetLineUpDistance
+	 * @return
+	 */
+	public ArrayList<InventoryListElement> getObjectsForSkillInEquipped(SkillInstance skill, int targetLineUpDistance)
+	{
+		return getObjectsForSkill(equipped, skill, targetLineUpDistance);
 	}
 	
-	
-	public ArrayList<InventoryListElement> getObjectsForSkill(ArrayList<ObjInstance> list, SkillInstance skill)
+	/**
+	 * Returns objects that are usable with the skill - checking attachment is present (if needed).
+	 * @param list
+	 * @param skill
+	 * @return
+	 */
+	private ArrayList<InventoryListElement> getObjectsForSkill(ArrayList<ObjInstance> list, SkillInstance skill, int targetLineUpDistance)
 	{
 		HashMap<Obj, InventoryListElement> gatherer = new HashMap<Obj, InventoryListElement>();
 		
@@ -94,6 +131,14 @@ public class EntityObjInventory {
 			{
 				if (o.description.requirementSkillAndLevel.level<=skill.level)
 				{
+					if (targetLineUpDistance>=0)
+					{
+						// checking lineup
+						if (o.description.getUseRangeInLineup()!=Obj.NO_RANGE &&
+								o.description.getUseRangeInLineup()<targetLineUpDistance)
+							continue;
+					}
+					
 					if (o.needsAttachmentDependencyForSkill())
 					{
 						if (o.getAttachedDependencies()!=null)

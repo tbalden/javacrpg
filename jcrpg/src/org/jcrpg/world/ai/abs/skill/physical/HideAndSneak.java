@@ -23,5 +23,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class HideAndSneak extends SkillBase implements InterceptionSkill, TurnActSkill{
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 
 }

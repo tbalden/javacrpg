@@ -26,6 +26,9 @@ import org.jcrpg.world.ai.abs.skill.actform.Swing;
 import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 public class MediumBlades extends SkillBase implements TurnActSkill  {
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 	
 	public class WhirlwindCut extends SkillActForm
 	{

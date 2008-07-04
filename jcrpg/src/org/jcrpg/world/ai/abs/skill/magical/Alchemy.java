@@ -24,4 +24,8 @@ import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
 public class Alchemy extends SkillBase implements TurnActSkill, WorkSkill {
 
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 }

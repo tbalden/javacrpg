@@ -23,7 +23,10 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 public class ShortBlades extends SkillBase implements TurnActSkill  {
-	
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 	public ShortBlades()
 	{
 		needsInventoryItem = true;

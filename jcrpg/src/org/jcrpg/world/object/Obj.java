@@ -142,7 +142,10 @@ public class Obj {
 	 */
 	public int getUseRangeInLineup()
 	{
-		return useRangeInLineup;
+		if (useRangeInLineup==NO_RANGE) return useRangeInLineup;
+		return useRangeInLineup+2; // +2 is for letting line 3rd attack enemy line 1st -> calculation
+		// is like 2 (your line) + 0 (enemy line) <= range, so adding +2 allows 3rd line to attack at least
+		// 1st enemy line.
 	}
 	
 	/**
@@ -157,6 +160,5 @@ public class Obj {
 	{
 		return groupable;
 	}
-	
 	
 }

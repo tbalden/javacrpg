@@ -23,5 +23,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Politics extends SkillBase implements EncounterSkill, TurnActSkill {
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 
 }
