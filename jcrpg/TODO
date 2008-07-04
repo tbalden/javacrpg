@@ -32,7 +32,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
 	[ ] some other thing is too...
 
-[ ] neutralization effect -> remove from combat
 
 [?] list before next release:
 
@@ -59,8 +58,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[ ] attribute plus addition to member attributes when using it for attack
 			
 		[ ] XP and impact calculation / resistances etc.
-		
+
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
+
+	[ ] neutralization act forms -- neutralization effect -> remove from combat
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 	
@@ -94,6 +95,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[X] HEP,STP,SAP,MOP,MAP increasing on leveling based on attributes and level!
 		[X] hud.characters bars are not updating correctly?? or current points are wrong
 	
+
+[X] combat idle anim!!
 
 [X] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
 

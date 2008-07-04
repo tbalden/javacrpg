@@ -34,6 +34,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.FontUtils;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -391,7 +392,13 @@ public class J3DMovingEngine {
 					
 				}
 				updateUnitTextNodes(unit);
-				unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+				if (unit.form.inEnncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
+				{
+					unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+				} else
+				{
+					unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+				}
 			}
 	}
 	
@@ -477,7 +484,7 @@ public class J3DMovingEngine {
 			{
 				if (n.realNode!=null)
 				{
-					if (unit.state.equals(MovingModelAnimDescription.ANIM_IDLE))
+					if (unit.state.equals(MovingModelAnimDescription.ANIM_IDLE) || unit.state.equals(MovingModelAnimDescription.ANIM_IDLE_COMBAT))
 					{
 						
 						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
@@ -523,7 +530,7 @@ public class J3DMovingEngine {
 						if (unit.playingAnimation==null)
 						{
 							System.out.println("+++++++++++++++++");
-							unit.startPlayingAnimation(unit.state, unit.stateAfterMovement);
+							unit.startPlayingAnimation(unit.state, unit.getIdleStateName());
 							unit.playingAnimation = unit.state;
 						} else
 						{
