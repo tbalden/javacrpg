@@ -84,7 +84,7 @@ public class TurnActWindow extends PagedInputWindow {
 	public TurnActWindow (UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.67f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
@@ -96,7 +96,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills to use.",false);
 	    	 
 
-	    	float sizeSelect = 0.15f;
+	    	float sizeSelect = 0.10f;
 	    	for (int i=0; i<6; i++)
 	    	{
 	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
@@ -167,8 +167,8 @@ public class TurnActWindow extends PagedInputWindow {
 		int counter = 0;
 		if (party!=null)
 		for (EntityMemberInstance i:party.orderedParty)
-		{
-			if (i!=null) {
+		{	
+			if (i!=null && !i.isDead()) {
 				ListSelect select = skillSelectors.get(counter);
 				select.reattach();
 				select.subject = i;				
@@ -227,10 +227,11 @@ public class TurnActWindow extends PagedInputWindow {
 				select.setSelected(selected);
 				memberNames.get(counter).text = ((MemberPerson)i.description).foreName;
 				memberNames.get(counter).activate();
+				memberNames.get(counter).reattach();
 				inputChanged(select, "");
 				
+				counter++;
 			}
-			counter++;
 		}
 		// unnecessary selects detach...
 		for (int i=counter; i<6; i++)
@@ -243,6 +244,7 @@ public class TurnActWindow extends PagedInputWindow {
 			select.detach();
 			select = inventorySelectors.get(i);
 			select.detach();
+			memberNames.get(i).detach();
 		}
 	}
 	
