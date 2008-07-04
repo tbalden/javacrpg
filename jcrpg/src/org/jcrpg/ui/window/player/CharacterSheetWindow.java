@@ -29,6 +29,7 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -57,6 +58,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	ListSelect professionSelect = null;
 
 	ValueTuner level = null;
+	ValueTuner killNeutDeath = null;
 	ValueTuner health = null;
 	ValueTuner stamina = null;
 	ValueTuner morale = null;
@@ -86,6 +88,8 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 	    	new TextLabel("level",this,page0,0.45f,0.25f,0.15f,0.04f,600f, "Level", false);
 	    	level = new ValueTuner("level",this,page0, 0.47f,0.28f,0.15f,0.04f,600f,10,0,100,1);
+	    	new TextLabel("kill",this,page0,0.57f,0.25f,0.15f,0.04f,600f, "Kill/Neut./Death", false);
+	    	killNeutDeath = new ValueTuner("level",this,page0, 0.63f,0.28f,0.15f,0.04f,1000f,10,0,100,1);
 
 	    	new TextLabel("health",this,page0,0.45f,0.31f,0.15f,0.04f,600f, "Health", false);
 	    	health = new ValueTuner("health",this,page0, 0.47f,0.34f,0.15f,0.04f,600f,10,0,100,1);
@@ -283,6 +287,9 @@ public class CharacterSheetWindow extends PagedInputWindow {
     	
     	level.text = ""+instance.memberState.level;
     	level.deactivate();
+    	PersistentMemberInstance pMI = ((PersistentMemberInstance)instance);
+    	killNeutDeath.text = ""+pMI.killCount+" / "+pMI.neutralizeCount+" / "+pMI.deathCount;
+    	killNeutDeath.deactivate();
 		
 		health.text = ""+instance.memberState.healthPoint+ "/"+instance.memberState.maxHealthPoint;
 		health.deactivate();

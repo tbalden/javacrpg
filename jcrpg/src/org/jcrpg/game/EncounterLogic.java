@@ -37,6 +37,7 @@ import org.jcrpg.world.ai.EncounterUnit;
 import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityScaledRelationType;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -393,7 +394,13 @@ public class EncounterLogic {
 								choice.member.applyImpactUnit(impact.actCost);
 								if (impact.success) {
 									
-									choice.target.applyImpactUnit(impact);
+									int[] counters = choice.target.applyImpactUnit(impact);
+									if (choice.member instanceof PersistentMemberInstance)
+									{
+										// increasing kill/neut. counters
+										((PersistentMemberInstance)choice.member).killCount+=counters[0];
+										((PersistentMemberInstance)choice.member).neutralizeCount+=counters[1];
+									}
 									
 									if (choice.skillActForm!=null)
 									{
@@ -425,6 +432,7 @@ public class EncounterLogic {
 										choice.target.updateNameInTurnActPhase();
 									} else
 									{
+										// destroyed...
 										if (choice.target.isRendered()) {
 											choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
 										}

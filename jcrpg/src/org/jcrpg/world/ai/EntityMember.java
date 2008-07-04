@@ -137,7 +137,7 @@ public class EntityMember extends DescriptionBase {
 	 */
 	public ArrayList<EncounterUnitData> orderUnitDataByEntityMemberIntelligence(ArrayList<EncounterUnitData> list)
 	{
-		if (true) return list;
+		//if (true) return list;
 		// this is a randomized order - quite primitive. :D
 		TreeMap<Integer, EncounterUnitData> order = new TreeMap<Integer, EncounterUnitData>();
 		for (EncounterUnitData data:list)
