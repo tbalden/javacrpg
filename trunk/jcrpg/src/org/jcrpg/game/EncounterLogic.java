@@ -39,6 +39,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.Weapon;
 
 import com.jme.renderer.ColorRGBA;
@@ -244,7 +245,12 @@ public class EncounterLogic {
 					}
 				} else
 				{
-					orderedActors.put(1000f, mi); // resters to the end of round
+					float s = 1000f;
+					while (orderedActors.get(s)!=null)
+					{
+						s+=0.0001f;
+					}
+					orderedActors.put(s, mi); // resters to the end of round
 				}
 			}
 		}
@@ -658,6 +664,7 @@ public class EncounterLogic {
 		System.out.println("{ fillInitTurnActPhaseLineup }");
 		for (EncounterUnitData unit:info.getEncounterUnitDataList(null))
 		{
+			int line = 0;
 			int level = unit.getRelationLevel(info.playerIfPresent);
 			if (level<EntityScaledRelationType.NEUTRAL)
 			{
@@ -668,6 +675,11 @@ public class EncounterLogic {
 				if (unit.parent == info.playerIfPresent)
 				{
 					unit.friendly = true;
+					unit.partyMember = true;
+					// looking up party member's index for calculation of line
+					PartyInstance party = (PartyInstance)((EntityFragment)unit.parent).instance;
+					int index = party.orderedParty.indexOf(unit.getFirstLivingMember());
+					line = index/2;
 				} else
 				{
 					unit.friendly = false;
@@ -677,8 +689,9 @@ public class EncounterLogic {
 			{
 				unit.friendly = true;
 			}
+			// TODO for player use orderedParty arraylist
 
-			info.getTopology().addUnitPushing(unit,0);	
+			info.getTopology().addUnitPushing(unit,line);	
 		}
 		
 		

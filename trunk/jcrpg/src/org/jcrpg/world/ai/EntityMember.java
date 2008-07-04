@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.Language;
@@ -38,7 +39,6 @@ import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.ai.profession.Profession;
 import org.jcrpg.world.object.InventoryListElement;
-import org.jcrpg.world.object.ObjInstance;
 
 
 /**
@@ -128,6 +128,28 @@ public class EntityMember extends DescriptionBase {
 	{
 		return Language.v("member."+visibleTypeId);
 	}
+	
+	/**
+	 * Orders the encountered in a wishlist of this member - who the member wants to do something first, sorting
+	 * by it's own intelligence. Override this if want to modify.
+	 * @param list
+	 * @return
+	 */
+	public ArrayList<EncounterUnitData> orderUnitDataByEntityMemberIntelligence(ArrayList<EncounterUnitData> list)
+	{
+		if (true) return list;
+		// this is a randomized order - quite primitive. :D
+		TreeMap<Integer, EncounterUnitData> order = new TreeMap<Integer, EncounterUnitData>();
+		for (EncounterUnitData data:list)
+		{
+			int point = (int)(Math.random()*10);
+			while (order.get(point)!=null) point++;
+			order.put(point, data);
+		}
+		ArrayList<EncounterUnitData> ret = new ArrayList<EncounterUnitData>();
+		ret.addAll(order.values());
+		return ret;
+	}
 		
 	
 	public TurnActMemberChoice getTurnActMemberChoice(EncounterUnitData selfData, EncounterInfo info, EntityMemberInstance instance)
@@ -147,14 +169,20 @@ public class EntityMember extends DescriptionBase {
 			{
 				// i'm an enemy of player...
 				
-				enemyData = info.getTopology().getFriendlyLineup().getList(0); // player friendly is my enemy
-				friendlyData = info.getTopology().getEnemyLineup().getList(0); // player enemy is my friend.
+				enemyData = info.getTopology().getFriendlyLineup().getAllUnits(); // player friendly is my enemy
+				enemyData.addAll(info.getTopology().getPartyLineup().getAllUnits());
+				enemyData = orderUnitDataByEntityMemberIntelligence(enemyData);
+				friendlyData = info.getTopology().getEnemyLineup().getAllUnits(); // player enemy is my friend.
+				friendlyData = orderUnitDataByEntityMemberIntelligence(friendlyData);
 			} else
 			{
 				// i'm a friend of player...
 				
-				enemyData = info.getTopology().getEnemyLineup().getList(0); // player enemy is my enemy
-				friendlyData = info.getTopology().getFriendlyLineup().getList(0); // player friend is my friend
+				enemyData = info.getTopology().getEnemyLineup().getAllUnits(); // player enemy is my enemy
+				enemyData = orderUnitDataByEntityMemberIntelligence(enemyData);
+				friendlyData = info.getTopology().getFriendlyLineup().getAllUnits(); // player friend is my friend
+				friendlyData = orderUnitDataByEntityMemberIntelligence(friendlyData);
+				friendlyData.addAll(info.getTopology().getPartyLineup().getAllUnits());
 			}
 			
 			// TODO sophisticate this MUCH
@@ -173,63 +201,54 @@ public class EntityMember extends DescriptionBase {
 					{
 						if (!choice.targetMember.memberState.isDead())
 						{
-							foundTarget = true;
-							break;
+							if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
+							{
+								for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
+								{
+									System.out.println("--_ "+sb);
+								}
+								int lineUpDistance = instance.encounterData.currentLine+choice.targetMember.encounterData.currentLine;
+								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
+								boolean found = false;
+								System.out.println("FOUND TURN ACT SKILLS: "+skills);
+								if (skills!=null)
+								for (Class<? extends SkillBase> s:skills)
+								{
+									SkillInstance i = memberSkills.skills.get(s);
+									SkillBase base = SkillGroups.skillBaseInstances.get(s);
+									if (base.needsInventoryItem)
+									{
+										ArrayList<InventoryListElement> objects =  instance.inventory.getObjectsForSkillInInventory(i,lineUpDistance);
+										if (objects==null||objects.size()==0) continue;
+										choice.usedObject = objects.get(0);
+									}
+									for (Class<? extends SkillActForm> fDef:instance.getDoableActForms(s)) {
+										SkillActForm f = base.getActForm(fDef);
+										if (SkillGroups.negativeSkillActForms.contains(f))
+										{
+											choice.skill = i;
+											choice.skillActForm = f;
+											if (f.targetType != SkillActForm.TARGETTYPE_LIVING_MEMBER)
+											{
+												choice.targetMember = null;
+											}
+											return choice;
+										}
+									}
+								}
+							}
 						}
-						
 					}
 				}
 				// no target found.
-				if (!foundTarget) return null;
+				choice.doNothing = true;
+				return choice;
 				
-				if (selfData.getRelationLevel(choice.target)<=EntityScaledRelationType.NEUTRAL)
-				{
-					for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
-					{
-						System.out.println("--_ "+sb);
-					}
-					Collection<Class<?extends SkillBase>> skills = memberSkills.getSkillsOfType(info.getPhase());
-					boolean found = false;
-					System.out.println("FOUND TURN ACT SKILLS: "+skills);
-					if (skills!=null)
-					for (Class<? extends SkillBase> s:skills)
-					{
-						SkillInstance i = memberSkills.skills.get(s);
-						SkillBase base = SkillGroups.skillBaseInstances.get(s);
-						if (base.needsInventoryItem)
-						{
-							ArrayList<InventoryListElement> objects =  instance.inventory.getObjectsForSkillInInventory(i);
-							if (objects==null||objects.size()==0) continue;
-							choice.usedObject = objects.get(0);
-						}
-						for (Class<? extends SkillActForm> fDef:instance.getDoableActForms(s)) {
-							SkillActForm f = base.getActForm(fDef);
-							if (SkillGroups.negativeSkillActForms.contains(f))
-							{
-								choice.skill = i;
-								choice.skillActForm = f;
-								if (f.targetType != SkillActForm.TARGETTYPE_LIVING_MEMBER)
-								{
-									choice.targetMember = null;
-								}
-								found = true;
-								break;
-							}
-						}
-						if (found) break;
-					}
-					if (!found) 
-					{
-						choice.doNothing = true;
-						return choice;
-					}
-				}
 			} else
 			{
 				choice.doNothing = true;
 				return choice;
 			}
-			return choice;
 		}
 		return null;
 	}

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 import org.jcrpg.world.ai.Ecology;
 
@@ -79,6 +80,46 @@ public class SkillContainer {
 		}
 		return (skills.get(skillType)!=null?skills.get(skillType).level:0)+(modifier.skills.get(skillType)!=null?modifier.skills.get(skillType).level:0);
 		
+	}
+
+	public Collection<Class<? extends SkillBase>> getTurnActSkillsOrderedBySkillLevel(int phase, SkillContainer modifier, int targetLineUpDistance)
+	{
+		TreeMap<Integer, Class<? extends SkillBase>> order = new TreeMap<Integer, Class<? extends SkillBase>>();
+		
+		Collection<Class<?extends SkillBase>> list = getSkillsOfType(Ecology.PHASE_TURNACT_COMBAT);
+		for (Class<?extends SkillBase> s:list)
+		{
+			SkillBase base = SkillGroups.skillBaseInstances.get(s);
+			if (base instanceof TurnActSkill)
+			{
+				int lineupLimit = ((TurnActSkill)base).getUseRangeInLineup();
+				if (targetLineUpDistance>lineupLimit+2) continue;
+			}
+			int level = 1000-getSkillLevel(s, modifier);
+			while (order.get(level)!=null)
+			{
+				level++;
+			}
+			order.put(level, s);
+		}
+		return order.values();
+	}
+
+	public Collection<Class<? extends SkillBase>> getSkillsOfTypeOrderedBySkillLevel(int phase,SkillContainer modifier)
+	{
+		TreeMap<Integer, Class<? extends SkillBase>> order = new TreeMap<Integer, Class<? extends SkillBase>>();
+		
+		Collection<Class<?extends SkillBase>> list = getSkillsOfType(phase);
+		for (Class<?extends SkillBase> s:list)
+		{
+			int level = 1000-getSkillLevel(s, modifier);
+			while (order.get(level)!=null)
+			{
+				level++;
+			}
+			order.put(level, s);
+		}
+		return order.values();
 	}
 	
 	public Collection<Class<? extends SkillBase>> getSkillsOfType(int phase)

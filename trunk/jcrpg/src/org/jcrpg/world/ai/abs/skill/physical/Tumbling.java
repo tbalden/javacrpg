@@ -23,5 +23,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Tumbling extends SkillBase implements TurnActSkill, HelperSkill {
+	public int getUseRangeInLineup() {
+		return 0;
+	}
 
 }

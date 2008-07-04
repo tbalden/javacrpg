@@ -23,7 +23,10 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Wrestling extends SkillBase implements TurnActSkill  {
-	
+	public int getUseRangeInLineup() {
+		return 0;
+	}
+
 	public class KillerGrip extends SkillActForm
 	{
 		public KillerGrip(SkillBase skill) {

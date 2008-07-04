@@ -40,7 +40,7 @@ public class TurnActUnitLineup {
 		this.info = info;
 	}
 	
-	public static final int UNITS_PER_LINE = 3;
+	public static final int UNITS_PER_LINE = 2;
 	
 	public ArrayList<EncounterUnitData> getList(int line)
 	{
@@ -54,6 +54,16 @@ public class TurnActUnitLineup {
 		return lines.get(line);
 	}
 	
+	public ArrayList<EncounterUnitData> getAllUnits()
+	{
+		ArrayList<EncounterUnitData> fullList = new ArrayList<EncounterUnitData>();
+		for (int i=0; i<=2; i++)
+		{
+			fullList.addAll(getList(i));
+		}
+		return fullList;
+	}
+	
 	public void addUnitPushing(EncounterUnitData unit, int line)
 	{
 		ArrayList<EncounterUnitData> l = getList(line);
@@ -62,6 +72,7 @@ public class TurnActUnitLineup {
 			l = new ArrayList<EncounterUnitData>();
 		}
 		l.add(unit);
+		unit.currentLine=line;
 		unitToLineMap.put(unit, line);
 		if (l.size()>UNITS_PER_LINE)
 		{

@@ -27,6 +27,9 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class Crossbows extends SkillBase implements TurnActSkill  {
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 	public Crossbows()
 	{
 		needsInventoryItem = true;

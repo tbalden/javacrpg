@@ -30,12 +30,14 @@ import org.jcrpg.world.ai.EncounterUnitData;
 public class TurnActUnitTopology {
 	
 	private TurnActUnitLineup friendlyLineup = null;
+	private TurnActUnitLineup partyLineup = null;
 	private TurnActUnitLineup enemyLineup = null;
 	
 	private EncounterInfo info;
 	
 	public TurnActUnitTopology(EncounterInfo info)
 	{
+		partyLineup = new TurnActUnitLineup(info);
 		friendlyLineup = new TurnActUnitLineup(info);
 		enemyLineup = new TurnActUnitLineup(info);
 		this.info = info;
@@ -44,6 +46,10 @@ public class TurnActUnitTopology {
 	public TurnActUnitLineup getFriendlyLineup() {
 		return friendlyLineup;
 	}
+	
+	public TurnActUnitLineup getPartyLineup() {
+		return partyLineup;
+	}
 
 	public TurnActUnitLineup getEnemyLineup() {
 		return enemyLineup;
@@ -51,6 +57,11 @@ public class TurnActUnitTopology {
 	
 	public void addUnitPushing(EncounterUnitData unit, int line)
 	{
+		if (unit.partyMember)
+		{
+			getPartyLineup().addUnitPushing(unit, line);
+			System.out.println("###### ADDING PARTY MEMBER TO LINE: "+line+" "+unit.getName());
+		} else
 		if (unit.friendly)
 		{
 			getFriendlyLineup().addUnitPushing(unit, line);

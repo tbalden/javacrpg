@@ -24,5 +24,7 @@ package org.jcrpg.world.ai.abs.skill;
  *
  */
 public interface TurnActSkill {
+	
+	public int getUseRangeInLineup();
 
 }

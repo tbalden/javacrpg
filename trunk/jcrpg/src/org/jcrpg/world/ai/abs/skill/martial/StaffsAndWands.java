@@ -28,7 +28,10 @@ import org.jcrpg.world.ai.abs.skill.actform.Thrust;
  *
  */
 public class StaffsAndWands extends SkillBase implements TurnActSkill  {
-	
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 	public StaffsAndWands()
 	{
 		needsInventoryItem = true;

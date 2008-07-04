@@ -30,7 +30,10 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class HandsAndFeet extends SkillBase  implements TurnActSkill {
-	
+	public int getUseRangeInLineup() {
+		return 0;
+	}
+
 	public class FirstKillLesson extends SkillActForm
 	{
 

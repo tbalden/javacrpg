@@ -36,7 +36,8 @@ public class EncounterUnitData
 	/**
 	 * indicates if this unit is friendly for player or not.
 	 */
-	public boolean friendly = false; // TODO setting of this in encounterLogic
+	public boolean friendly = false;
+	public boolean partyMember = false; 
 	
 	public VisibleLifeForm visibleForm = null;
 	

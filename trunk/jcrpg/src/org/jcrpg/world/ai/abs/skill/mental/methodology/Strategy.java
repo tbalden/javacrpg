@@ -22,5 +22,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Strategy extends SkillBase implements TurnActSkill {
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 
 }

@@ -24,7 +24,10 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Reasoning extends SkillBase implements EncounterSkill, TurnActSkill {
-	
+	public int getUseRangeInLineup() {
+		return -1;
+	}
+
 	public class LogicalSolutions extends SkillActForm
 	{
 		public LogicalSolutions(SkillBase skill) {

@@ -27,6 +27,9 @@ import org.jcrpg.world.ai.abs.skill.TurnActSkill;
  *
  */
 public class Polearms extends SkillBase implements TurnActSkill  {
+	public int getUseRangeInLineup() {
+		return -1;
+	}
 	public Polearms()
 	{
 		needsInventoryItem = true;
