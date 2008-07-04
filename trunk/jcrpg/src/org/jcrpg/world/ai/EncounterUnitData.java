@@ -176,8 +176,10 @@ public class EncounterUnitData
 			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
 	}
 	
-	public void applyImpactUnit(Impact unit)
+	public int[] applyImpactUnit(Impact unit)
 	{
+		int killCount = 0;
+		int neutralizeCount = 0;
 		if (isGroupId)
 		{
 			if (generatedMembers!=null)
@@ -191,7 +193,17 @@ public class EncounterUnitData
 						EntityMemberInstance inst = generatedMembers.get(i);
 						ImpactUnit u = unit.targetImpact.get(inst);
 						if (u!=null)
+						{
 							inst.applyImpactUnit(u);
+							if (inst.isDead())
+							{
+								killCount++;
+							}
+							if (inst.memberState.isNeutralized())
+							{
+								neutralizeCount++;
+							}
+						}
 					}
 				}
 			}
@@ -206,9 +218,20 @@ public class EncounterUnitData
 			{
 				ImpactUnit u = unit.targetImpact.get(subUnit);
 				if (u!=null)
+				{
 					((EntityMemberInstance)subUnit).applyImpactUnit(u);
+					if (((EntityMemberInstance)subUnit).isDead())
+					{
+						killCount++;
+					} else
+					if (((EntityMemberInstance)subUnit).memberState.isNeutralized())
+					{
+						neutralizeCount++;
+					}
+				}
 			}
 		}
+		return new int[]{killCount,neutralizeCount};
 	}
 	
 	public EntityMemberInstance getFirstLivingMember()

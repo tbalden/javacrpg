@@ -195,6 +195,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "3", false);
         addAction( new CKeyMenu(this), "4", false);
         addAction( new CKeyMenu(this), "5", false);
+        addAction( new CKeyMenu(this), "6", false);
         addAction( new CKeyMenu(this), "7", false);
         addAction( new CKeyMenu(this), "8", false);
         addAction( new CKeyMenu(this), "9", false);

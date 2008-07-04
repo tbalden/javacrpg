@@ -113,7 +113,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    	
 	    	
 	    	ok = new TextButton("ok",this,page0,0.24f, 0.77f, 0.18f, 0.06f,500f,Language.v("turnActWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.60f, 0.74f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.74f, 0.3f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
 	    	new TextLabel("",this,page0, 0.60f, 0.78f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
 	    	leave = new TextButton("leave",this,page0,0.46f, 0.77f, 0.18f, 0.06f,500f,Language.v("turnActWindow.leave"),"L");
@@ -129,6 +129,12 @@ public class TurnActWindow extends PagedInputWindow {
 			ex.printStackTrace();
 		}
 		base.addEventHandler("enter", this);
+		base.addEventHandler("1", this);
+		base.addEventHandler("2", this);
+		base.addEventHandler("3", this);
+		base.addEventHandler("4", this);
+		base.addEventHandler("5", this);
+		base.addEventHandler("6", this);
 	}
 	
 	public PartyInstance party;
@@ -138,7 +144,16 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	String langPostfix = "";
 	
+
+	/**
+	 * Indicates if this is a combat turn act phase or a social rivalry.
+	 */
 	boolean combat = false;
+	
+	/**
+	 * number of characters shown on page, updateToParty sets it.
+	 */
+	int numberOfChars = 0;
 	
 	public void setPageData(int turnActType, PartyInstance party, EncounterInfo encountered, boolean playerInitiated)
 	{
@@ -239,14 +254,17 @@ public class TurnActWindow extends PagedInputWindow {
 		{
 			ListSelect select = skillSelectors.get(i);
 			select.detach();
-			ListSelect mselect = groupSelectors.get(i);
-			mselect.detach();
+			select = groupSelectors.get(i);
+			select.detach();
 			select = skillActFormSelectors.get(i);
 			select.detach();
 			select = inventorySelectors.get(i);
 			select.detach();
 			memberNames.get(i).detach();
 		}
+		numberOfChars = counter;
+		// activate first skill selector.
+		//skillSelectors.get(0).activate();
 	}
 	
 	
@@ -284,6 +302,18 @@ public class TurnActWindow extends PagedInputWindow {
 			{
 				inputChanged(skillSelect, "fake");
 			}
+		}
+		// deactivating all
+		for (int i=0; i<numberOfChars; i++)
+		{
+			ListSelect select = skillSelectors.get(i);
+			select.deactivate();
+			select = groupSelectors.get(i);
+			select.deactivate();
+			select = skillActFormSelectors.get(i);
+			select.deactivate();
+			select = inventorySelectors.get(i);
+			select.deactivate();
 		}
 		
 		super.setupPage();
@@ -609,6 +639,21 @@ public class TurnActWindow extends PagedInputWindow {
 			core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
 			storeSettings();
 			
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean handleKey(String key) {
+		if (super.handleKey(key)) return true;
+		if ("123456".indexOf(key)!=-1)
+		{
+			int toChar = Integer.parseInt(key);
+			if (toChar<=numberOfChars)
+			{
+				setSelected(skillSelectors.get(toChar-1));
+			}
 			return true;
 		}
 		return false;

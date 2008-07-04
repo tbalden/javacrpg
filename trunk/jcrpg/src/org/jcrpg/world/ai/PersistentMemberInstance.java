@@ -56,6 +56,20 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 	protected transient ArrayList<Economic> generatedOwnInfrastructures = null;
 	
 	/**
+	 * Counting killings.
+	 */
+	public int killCount = 0;
+	/**
+	 * Counting neutralizations.
+	 */
+	public int neutralizeCount = 0;
+	
+	/**
+	 * Counting deaths of this being.
+	 */
+	public int deathCount = 0;
+	
+	/**
 	 * The existing relations' class of this member instance.
 	 */
 	public EntityMemberRelations personalRelations = new EntityMemberRelations();
@@ -165,7 +179,12 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 
 	@Override
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit) {
+		boolean before = memberState.isDead();
 		ArrayList<Integer> result = memberState.applyImpactUnit(unit);
+		if (memberState.isDead() && !before)
+		{
+			deathCount++;
+		}
 		parentFragment.notifyImpactResult(this,result);
 		memberState.increaseExperience(unit.experiencePoint);
 		return result;
