@@ -55,6 +55,8 @@ public class VisibleLifeForm {
 	
 	public EncounterUnitData encounterUnitData = null;
 	
+	public int inEnncounterPhase = 0;
+	
 	/**
 	 * Temporary render data for callbacks.
 	 */

@@ -235,7 +235,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 
         	if (animated)
         	{
-        		changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+        		//changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
         	}
 
         	attachChild(bodyInstance);
@@ -339,7 +339,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				//System.out.println("!PLAYING FINISHED!");
 				finishedPlaying = true;
 				//currentAnimator.setTime(currentAnimator.getMin());
-				currentAnimator.fadeIn(0.2f);
+				currentAnimator.fadeIn(0.5f);
 			}
 		}
 	}

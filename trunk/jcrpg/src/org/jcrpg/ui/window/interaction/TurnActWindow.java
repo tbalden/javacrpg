@@ -507,6 +507,7 @@ public class TurnActWindow extends PagedInputWindow {
 				}
 				
 				if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
+				if (!groupTarget && unitData.getUnit()==party.theFragment) continue; // party shouldn't be displayed in list for non group spells. (no other members than the chars.) 
 				int relation = party.theFragment.getRelationLevel(unitData.getUnit());
 				if (!friendly)
 				{

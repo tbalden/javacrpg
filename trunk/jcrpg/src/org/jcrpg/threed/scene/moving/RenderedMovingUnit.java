@@ -29,6 +29,7 @@ import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.scene.Node;
@@ -116,6 +117,15 @@ public class RenderedMovingUnit {
 	public int startCoordX, startCoordY, startCoordZ;
 	public int endCoordX, endCoordY, endCoordZ;
 	public String stateAfterMovement = MovingModelAnimDescription.ANIM_IDLE;
+	
+	public String getIdleStateName()
+	{
+		if (form!=null && form.inEnncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
+		{
+			return MovingModelAnimDescription.ANIM_IDLE_COMBAT;
+		}
+		return stateAfterMovement;
+	}
 	
 	// TODO function with moveToDirection!
 	
@@ -210,8 +220,12 @@ public class RenderedMovingUnit {
 
 	public void stateFinished()
 	{
-		state = stateAfterMovement;
-		changeToAnimation(state);
+		state = getIdleStateName();
+		if (!state.equals(MovingModelAnimDescription.ANIM_IDLE) && !state.equals(MovingModelAnimDescription.ANIM_IDLE_COMBAT))
+		{
+			// if not idle anim, we should change to it, otherwise idle animation should be already played. 
+			changeToAnimation(state);
+		}
 		J3DMovingEngine.activeUnits.remove(this);
 	}
 	

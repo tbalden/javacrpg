@@ -192,11 +192,13 @@ public class GameLogic {
 					ecology.callbackMessage("You seem to trespass a Domain : "+data.getUnit().getName());
 				} else
 				{
+					form.inEnncounterPhase = possibleEncounter.getPhase();
 					ecology.callbackMessage("Facing an *ENCOUNTER* : "+data.getUnit().getName());
 					ArrayList<EntityMemberInstance> members = data.getUnit().getGroup(data.groupId);
 					data.appendNewMembers(members);
 					if (data.isGroupId) info.setGroupMemberInstances(data.groupId, members);
 					form.targetForm = playerFakeForm;
+					
 					forms.add(form);
 					{
 						EntityMemberInstance member = members.get(0);
