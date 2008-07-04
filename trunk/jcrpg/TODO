@@ -38,41 +38,40 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] filtering turn act target groups based on weapon range!
 	[X] adding player characters to different lines based on party order 
 	[X] filtering AI targets too by weapon range :)
-	
 
 	[-] ENHANCE INVENTORY
 		[X] attach projectiles
 		[X] move to other characters, with quantity
 		[X] describe attachments upon selection a bow...
-		
-	[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
-		- in combat only those equipped should be used. If used and cursed it should be the only one. others
-		should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
+		[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
+			- in combat only those equipped should be used. If used and cursed it should be the only one. others
+			should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
 		
 		[-] What about two handed fight?? --- ??? 
 			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
 
-	[ ] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
-
 	[ ] evaluator base:	
 		[ ] calc bonus of equipped things in EntityObjInventory! 
 			
-		[ ] add bonus skill use -> [X] effect program triggering is complete, impact calc NEEDED!
-			[ ] attribute plus addition to member attributes when using it for attack
+		[ ] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
+			[X] effect program triggering is complete, impact calc NEEDED!
+		[ ] attribute plus addition to member attributes when using it for attack
 			
 		[ ] XP and impact calculation / resistances etc.
 		
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
+	
+	[ ] special Use skill form beside the Do Nothing - make object / group selection possible, no skill act form
+		[ ] add healing potions (with bonus skillActForms - MinorHeal) 
 
 	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
 		[ ] fabrication of ammunition and such - fletcher, work Skill
-		
-	[ ] check combat with non animated -> sounds etc.
-	
 
 	[ ] documenting points, attr, calculations, leveling
+
+	[X] check combat with non animated -> sounds etc.
 
 	[X] reorder party from char sheet window -> swap button
 
