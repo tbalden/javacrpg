@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.game.logic;
 
+import java.util.ArrayList;
+
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.util.HashUtil;
@@ -28,6 +30,7 @@ import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.object.Ammunition;
+import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
@@ -114,14 +117,31 @@ public class EvaluatorBase {
 			boolean success = false;
 			float impact = 0.5f;
 
+			ArrayList<BonusSkillActFormDesc> bonusActForms = new ArrayList<BonusSkillActFormDesc>();
+			ObjInstance objInstance = null;
 			ObjInstance dependencyObj = null;
 			if (choice.skillActForm.skill.needsInventoryItem)
 			{
 				if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 				{
 					dependencyObj = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
+					bonusActForms = dependencyObj.getLastUseBonusActForms();
 				}
-				choice.member.inventory.getOneInstanceOfTypeAndRemove(choice.usedObject.description);
+				if (choice.usedObject.description.isGroupable()) {
+					objInstance = choice.member.inventory.getOneInstanceOfTypeAndRemove(choice.usedObject.description);
+				} else
+				{
+					objInstance = choice.usedObject.objects.get(0);
+					choice.member.inventory.useOnceAndRemove(objInstance);
+				}
+				ArrayList<BonusSkillActFormDesc> objBonusList = objInstance.getLastUseBonusActForms();
+				if (objBonusList!=null)
+				{
+					if (bonusActForms!=null)
+						bonusActForms.addAll(objBonusList);
+					else
+						bonusActForms = objBonusList;
+				}
 			}
 		
 			// calculate attack...
@@ -170,6 +190,7 @@ public class EvaluatorBase {
 				u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.usedPointsAndLevels.get(effectType));
 				System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
 			}
+			i.additionalEffectsToPlay = bonusActForms;
 		}
 		return i;
 	}

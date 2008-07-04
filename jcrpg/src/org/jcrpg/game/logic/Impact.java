@@ -17,9 +17,11 @@
  */ 
 package org.jcrpg.game.logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.object.BonusSkillActFormDesc;
 
 
 public class Impact
@@ -27,6 +29,9 @@ public class Impact
 	public boolean success = false;
 	public int experienceGain = 1; // TODO
 	public ImpactUnit actCost = new ImpactUnit();
+	
+	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;
+	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
 }
