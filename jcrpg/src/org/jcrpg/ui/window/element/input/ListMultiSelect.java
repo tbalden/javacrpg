@@ -182,7 +182,35 @@ public class ListMultiSelect extends InputBase {
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-		currentTextNodes.put(slottextNode,FontUtils.textVerdana);					
+		currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+		String flag = (selectedItems[selected+fromCount]?"X ":"_ ");
+		if (flag!=null) 
+		{
+			Node signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+			signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*0,0);
+			signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+			signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+			currentTextNodes.put(signNode,FontUtils.textVerdana);					
+			baseNode.attachChild(signNode);
+		}
+		
+		if (icons!=null && icons.length>0)
+		{
+			try {
+				Quad m = icons[selected+fromCount];
+				Node iconNode = new Node();
+				iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*0,0);
+				iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
+				iconNode.attachChild(m);
+				baseNode.attachChild(iconNode);
+				System.out.println("M = "+m.getName());
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		
 		baseNode.attachChild(slottextNode);
 		baseNode.updateRenderState();
 	}

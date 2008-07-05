@@ -15,49 +15,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object.combat.blade.artifact;
+package org.jcrpg.world.object.magical.potion;
 
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.abs.attribute.Attributes;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
-import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
-import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.object.BonusObject;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
-import org.jcrpg.world.object.combat.blade.Dagger;
+import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.PotionAndKit;
 
-/**
- * +10 Strength, +10 Res Cold.
- * @author illes
- *
- */
-public class WolfTooth extends Dagger implements BonusObject{
+public class MinorHealingPotion extends Obj implements BonusObject, PotionAndKit {
 
-	static Attributes a = new FantasyAttributes(true);
-	static
+	public MinorHealingPotion()
 	{
-		a.setAttribute(FantasyAttributes.STRENGTH, 10);
+		icon = "potion/minorheal.png";
+		useRangeInLineup = 0;
+		maxNumberOfUsage = 1;
 	}
+	
 	public Attributes getAttributeValues() {
-		return a;
+		return null;
 	}
-	static Resistances r = new FantasyResistances(true);
-	static
-	{
-		r.setResistance(FantasyResistances.RESIST_COLD, 10);
-	}
-	
-	
 
 	public Resistances getResistanceValues() {
-		return r;
-	}
-
-	public boolean isCursed() {
-		return false;
+		return null;
 	}
 
 	public static transient ArrayList<BonusSkillActFormDesc> bonusActForms = null;
@@ -66,7 +51,7 @@ public class WolfTooth extends Dagger implements BonusObject{
 		{
 			bonusActForms = new ArrayList<BonusSkillActFormDesc>();
 			BonusSkillActFormDesc desc = new BonusSkillActFormDesc();
-			desc.form = SkillGroups.getSkillActFormInstance(Elementarism.class, Elementarism.IceBeam.class);
+			desc.form = SkillGroups.getSkillActFormInstance(CelestialMagic.class, CelestialMagic.MinorHeal.class);
 			desc.skillLevel = 20;
 			desc.maxUsePerReplenish = 1;
 			desc.replenishFrequency = BonusSkillActFormDesc.FREQUENCY_MINUTE;
@@ -75,8 +60,12 @@ public class WolfTooth extends Dagger implements BonusObject{
 		return bonusActForms;
 	}
 
+	public boolean isCursed() {
+		return false;
+	}
+
 	public boolean isDestructive() {
-		return true;
+		return false;
 	}
 
 }

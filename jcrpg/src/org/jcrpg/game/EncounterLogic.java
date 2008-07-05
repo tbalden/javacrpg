@@ -402,7 +402,7 @@ public class EncounterLogic {
 										((PersistentMemberInstance)choice.member).neutralizeCount+=counters[1];
 									}
 									
-									if (choice.skillActForm!=null)
+									if (choice.isWithImpact())
 									{
 										String sound = null;
 										if (!choice.target.destroyed && choice.isDestructive())

@@ -22,6 +22,7 @@ import org.jcrpg.world.ai.EncounterUnitData;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.object.BonusObject;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
 
@@ -37,6 +38,7 @@ public class TurnActMemberChoice {
 	public EntityMemberInstance member;
 	
 	public boolean doNothing = false;
+	public boolean doUse = false;
 	
 	/** 
 	 * Used skill.
@@ -67,7 +69,7 @@ public class TurnActMemberChoice {
 	public String getInitMessage()
 	{
 		if (doNothing) return member.description.getName() + " doing nothing."; 
-		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(skillActForm!=null?skillActForm.getClass().getSimpleName():"?")+" "+(usedObject!=null?usedObject.getSingleName():"")+".";
+		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(doUse?"uses":(skillActForm!=null?skillActForm.getClass().getSimpleName():"?"))+" "+(usedObject!=null?usedObject.getSingleName():"")+".";
 	}
 	
 	/**
@@ -76,7 +78,20 @@ public class TurnActMemberChoice {
 	 */
 	public boolean isDestructive()
 	{
-		return skillActForm!=null && skillActForm.atomicEffect<0;	
+		if (skillActForm!=null)
+		{
+			return skillActForm.atomicEffect<0;
+		} else
+		{
+			if (doUse && usedObject!=null)
+			{
+				if (usedObject.description instanceof BonusObject)
+				{
+					return ((BonusObject)usedObject.description).isDestructive();
+				}
+			}
+		}
+		return false;
 	}
 	/**
 	 * Tells if choice is with constructive will.
@@ -84,7 +99,20 @@ public class TurnActMemberChoice {
 	 */
 	public boolean isConstructive()
 	{
-		return skillActForm!=null && skillActForm.atomicEffect>0;	
+		if (skillActForm!=null)
+		{
+			return skillActForm.atomicEffect>0;
+		} else
+		{
+			if (doUse && usedObject!=null)
+			{
+				if (usedObject.description instanceof BonusObject)
+				{
+					return !((BonusObject)usedObject.description).isDestructive();
+				}
+			}
+		}
+		return false;
 	}
 	
 	public EffectProgram getEffectProgram()
@@ -113,6 +141,15 @@ public class TurnActMemberChoice {
 		}
 		return program;
 	
+	}
+	
+	/**
+	 * Tells if there should be an effect played on target after this choice done. (pain etc.)
+	 * @return
+	 */
+	public boolean isWithImpact()
+	{
+		return doUse && usedObject.description instanceof BonusObject||skillActForm!=null;
 	}
 
 }

@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
@@ -32,6 +33,7 @@ public class EncounterUnitData
 	public int groupId = -1;
 	public String name;
 	public int currentLine = 0;
+	public TurnActUnitLineup turnActLineup= null;
 	
 	/**
 	 * indicates if this unit is friendly for player or not.

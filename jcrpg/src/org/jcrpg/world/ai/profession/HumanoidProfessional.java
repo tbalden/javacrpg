@@ -41,11 +41,13 @@ import org.jcrpg.world.ai.abs.skill.social.Chatter;
 import org.jcrpg.world.ai.abs.skill.social.Cheating;
 import org.jcrpg.world.ai.abs.skill.social.Reasoning;
 import org.jcrpg.world.ai.abs.skill.social.Trade;
+import org.jcrpg.world.object.magical.potion.MinorHealingPotion;
 
 public class HumanoidProfessional extends Profession {
 
 	public HumanoidProfessional()
 	{
+		generationNewInstanceObjects.add(MinorHealingPotion.class);
 		addSkill(ShortBlades.class);
 		addSkill(MediumBlades.class);
 		addSkill(StaffsAndWands.class);

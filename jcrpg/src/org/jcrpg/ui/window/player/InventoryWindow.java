@@ -45,6 +45,7 @@ import org.jcrpg.world.object.Equippable;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
+import org.jcrpg.world.object.PotionAndKit;
 import org.jcrpg.world.object.Weapon;
 
 import com.jme.scene.Node;
@@ -82,6 +83,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	public ListSelect toCharacterSelect;
 	public TextButton attach;
+	public TextButton use;
 	public TextButton equip;
 	public TextInputField quantity;
 	public TextButton give;
@@ -165,7 +167,10 @@ public class InventoryWindow extends PagedInputWindow {
 	    	new TextLabel("",this,page0, 0.40f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
-	    	
+
+	    	use = new TextButton("use",this,page0, 0.13f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.use"),"U");
+	    	addInput(0,use);
+
 	    	equip = new TextButton("equip",this,page0, 0.23f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"),"E");
 	    	addInput(0,equip);
 	    	
@@ -353,6 +358,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public ArrayList<InventoryListElement> tmpWeaponsList = new ArrayList<InventoryListElement>();
 	public ArrayList<InventoryListElement> tmpAmmunitionList = new ArrayList<InventoryListElement>();
 	public ArrayList<InventoryListElement> tmpArmorList = new ArrayList<InventoryListElement>();
+	public ArrayList<InventoryListElement> tmpPotionList = new ArrayList<InventoryListElement>();
 	
 	public ArrayList<InventoryListElement> tmpEquippedList = new ArrayList<InventoryListElement>();
 	
@@ -366,6 +372,7 @@ public class InventoryWindow extends PagedInputWindow {
 		tmpWeaponsList.clear();
 		tmpAmmunitionList.clear();
 		tmpArmorList.clear();
+		tmpPotionList.clear();
 		
 		tmpEquippedList.clear();
 
@@ -406,21 +413,27 @@ public class InventoryWindow extends PagedInputWindow {
 				tmpWeaponsList.add(o);
 				System.out.println("WEA: "+o.description);
 			} else
-				if (o.description instanceof Ammunition)
-				{
-					tmpAmmunitionList.add(o);
-					System.out.println("AMM: "+o.description);
-				}
+			if (o.description instanceof Ammunition)
+			{
+				tmpAmmunitionList.add(o);
+				System.out.println("AMM: "+o.description);
+			} else
 			if (o.description instanceof Armor)
 			{
 				tmpArmorList.add(o);
 				System.out.println("ARM: "+o.description);
+			} else
+			if (o.description instanceof PotionAndKit)
+			{
+				tmpPotionList.add(o);
+				System.out.println("POT: "+o.description);
 			}
 		}
 		
 		fillSelect(weapons, tmpWeaponsList);
 		fillSelect(ammunitions, tmpAmmunitionList);
 		fillSelect(armors, tmpArmorList);
+		fillSelect(potions, tmpPotionList);
 	}
 	
 
@@ -616,7 +629,7 @@ public class InventoryWindow extends PagedInputWindow {
 		attachmentTypeName.activate();
 		
 		int range = element.description.getUseRangeInLineup();
-		String rangeTypeText = "Range: "+(range+1)+". line"; 
+		String rangeTypeText = "Range: "+(range-1)+". line"; 
 		if (range==Obj.NO_RANGE)
 		{
 			rangeTypeText = "Range: Unlimited";
@@ -645,31 +658,38 @@ public class InventoryWindow extends PagedInputWindow {
 			Attributes a = b.getAttributeValues();
 			Resistances r = b.getResistanceValues();
 			bonusText = "Artifact Bonus: ";
-			for (String attrName :a.attributes.keySet())
-			{
-				if (a.attributes.get(attrName)!=null && a.attributes.get(attrName)>0)
-				bonusText+=a.getShortestName(attrName)+" "+a.getAttribute(attrName)+" ";
+			if (a!=null) {
+				for (String attrName :a.attributes.keySet())
+				{
+					if (a.attributes.get(attrName)!=null && a.attributes.get(attrName)>0)
+					bonusText+=a.getShortestName(attrName)+" "+a.getAttribute(attrName)+" ";
+				}
 			}
-			for (String resName :r.resistances.keySet())
-			{
-				if (r.resistances.get(resName)!=null && r.resistances.get(resName)>0)
-				bonusText+=r.getShortestName(resName)+" "+r.getResistance(resName)+" ";
+			if (r!=null) {
+				for (String resName :r.resistances.keySet())
+				{
+					if (r.resistances.get(resName)!=null && r.resistances.get(resName)>0)
+					bonusText+=r.getShortestName(resName)+" "+r.getResistance(resName)+" ";
+				}
 			}
 			
 			ArrayList<BonusSkillActFormDesc> bonusForms = b.getSkillActFormBonusEffectTypes();
 
-			String[] ids = new String[bonusForms.size()];
-			String[] texts = new String[bonusForms.size()];
+			String[] ids = new String[bonusForms==null?0:bonusForms.size()];
+			String[] texts = new String[bonusForms==null?0:bonusForms.size()];
 			
 			int count = 0;
 			ArrayList<BonusSkillActFormDesc> usableForms = element.objects.get(0).currentlyUsableBonusSkillActForms();
-			for (BonusSkillActFormDesc form:bonusForms)
+			if (bonusForms!=null)
 			{
-				String text = ""+form.form.getName()+" Replenish: "+form.replenishFrequency+" Level: "+form.skillLevel+" Use Times: "+form.maxUsePerReplenish;
-				if (usableForms.contains(form)) text+=" (R)";
-				texts[count] = text;
-				ids[count] = ""+count;
-				count++;
+				for (BonusSkillActFormDesc form:bonusForms)
+				{
+					String text = ""+form.form.getName()+" Replenish: "+form.replenishFrequency+" Level: "+form.skillLevel+" Use Times: "+form.maxUsePerReplenish;
+					if (usableForms.contains(form)) text+=" (R)";
+					texts[count] = text;
+					ids[count] = ""+count;
+					count++;
+				}
 			}
 			bonusActFormList.reset();
 			bonusActFormList.ids = ids;

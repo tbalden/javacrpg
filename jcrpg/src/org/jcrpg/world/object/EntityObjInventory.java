@@ -353,6 +353,31 @@ public class EntityObjInventory {
 		inventory.add(object);
 	}
 	
+	public ArrayList<InventoryListElement> getInventoryList(boolean filterAttachments) {
+		HashMap<Obj, InventoryListElement> gatherer = new HashMap<Obj, InventoryListElement>();
+		
+		ArrayList<InventoryListElement> objList = new ArrayList<InventoryListElement>();
+		for (ObjInstance o:inventory)
+		{
+			if (filterAttachments && o.isAttacheable()) continue;
+			if (o instanceof Weapon) continue;
+			if (o instanceof Armor && !equipped.contains(o)) continue;
+			InventoryListElement l = null;
+			if (o.description.isGroupable()) {
+				l = gatherer.get(o.description);
+			}
+			if (l==null)
+			{
+				l = new InventoryListElement(this,o.description);
+				gatherer.put(o.description, l);
+				objList.add(l);
+			}
+			l.objects.add(o);
+		}
+		return objList;
+	}
+
+	
 	public ArrayList<ObjInstance> getInventory() {
 		return inventory;
 	}
