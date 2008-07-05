@@ -17,41 +17,6 @@
  */ 
 package org.jcrpg.world.object;
 
-import java.util.ArrayList;
-
-import org.jcrpg.world.ai.abs.attribute.Attributes;
-import org.jcrpg.world.ai.abs.attribute.Resistances;
-
-/**
- * Describes a bonus object.
- * @author illes
- *
- */
-public interface BonusObject {
-	/**
-	 * Attribute bonus/malus.
-	 * @return
-	 */
-	public Attributes getAttributeValues();
-	/**
-	 * Resistance bonus/malus.
-	 * @return
-	 */
-	public Resistances getResistanceValues();
-	
-	/**
-	 * Return what skill form does it do upon using it in turn act.
-	 * @return the skill act form list.
-	 */
-	public ArrayList<BonusSkillActFormDesc> getSkillActFormBonusEffectTypes();
-	
-	public boolean isDestructive();
-	
-	
-	/**
-	 * Tells if it can be un-equipped or not (cursed).
-	 * @return
-	 */
-	public boolean isCursed();
+public interface PotionAndKit {
 
 }

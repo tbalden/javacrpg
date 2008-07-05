@@ -105,15 +105,28 @@ public class EvaluatorBase {
 	}
 	
 	public static final int DEFENSE_BASE_VALUE = 20;
+	
+	public class EvaluatedSkillActFormData
+	{
+		public SkillActForm form;
+		public int level;
+		public Attributes sourceAttributes;
+		public Attributes sourceBonusAttributes;
+		public Attributes targetAttributes;
+		public Attributes targetBonusAttributes;
+		public Resistances targetResistances;
+		public Resistances targetBonusResistances;
+	}
 
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
 		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
 		Impact i = new Impact();
+		
+		
+		
 		if (choice.skillActForm!=null)
 		{
-			//if (choice.skillActForm)
-			
 			boolean success = false;
 			float impact = 0.5f;
 

@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -46,6 +47,8 @@ import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.object.BonusObject;
+import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
 
@@ -175,7 +178,8 @@ public class TurnActWindow extends PagedInputWindow {
 		this.encountered = encountered;
 	}
 
-	public static Object restSkillChoiceObject = new Object();
+	public static Object doNothingSkillChoiceObject = new Object();
+	public static Object doUseSkillChoiceObject = new Object();
 	
 	TreeMap<Integer,Class<?extends SkillBase>> tempFilteredSkills = new TreeMap<Integer,Class<? extends SkillBase>>();
 	public void updateToParty()
@@ -210,9 +214,9 @@ public class TurnActWindow extends PagedInputWindow {
 				}
 				skills = tempFilteredSkills.values();
 				
-				String[] texts = new String[skills.size()+1];
-				Object[] objects = new Object[skills.size()+1];
-				String[] ids = new String[skills.size()+1];
+				String[] texts = new String[skills.size()+2];
+				Object[] objects = new Object[skills.size()+2];
+				String[] ids = new String[skills.size()+2];
 				
 				int counter_2 = 0;
 				int selected = 0;
@@ -231,9 +235,13 @@ public class TurnActWindow extends PagedInputWindow {
 					}
 					counter_2++;
 				}
+				ids[ids.length-2] = "Do Use";
+				texts[texts.length-2] = Language.v("turnActWindow.Use");
+				objects[objects.length-2] = doUseSkillChoiceObject;
+
 				ids[ids.length-1] = "Do Nothing";
 				texts[texts.length-1] = Language.v("turnActWindow.DoNothing");
-				objects[objects.length-1] = restSkillChoiceObject;
+				objects[objects.length-1] = doNothingSkillChoiceObject;
 				
 				select.ids = ids;
 				select.texts = texts;
@@ -267,10 +275,11 @@ public class TurnActWindow extends PagedInputWindow {
 		//skillSelectors.get(0).activate();
 	}
 	
-	
+	ArrayList<EncounterUnitData> encounterUnitDataList = null; 
 	@Override
 	public void setupPage() {
-		ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(null);
+		encounterUnitDataList = encountered.getEncounterUnitDataList(null);
+		ArrayList<EncounterUnitData> list = encounterUnitDataList;
 		// groups
 		for (ListSelect groupSelect:groupSelectors)
 		{
@@ -298,7 +307,7 @@ public class TurnActWindow extends PagedInputWindow {
 		for (ListSelect skillSelect:skillSelectors)
 		{
 			// check if Do Nothing is restored -> call input changed to clear out things if so...
-			if (skillSelect.getSelectedObject()==restSkillChoiceObject)
+			if (skillSelect.getSelectedObject()==doNothingSkillChoiceObject || skillSelect.getSelectedObject()==doUseSkillChoiceObject)
 			{
 				inputChanged(skillSelect, "fake");
 			}
@@ -340,34 +349,59 @@ public class TurnActWindow extends PagedInputWindow {
 			int index = skillSelectors.indexOf(skillSelect);
 			ListSelect skillActFormSelect = skillActFormSelectors.get(index);			
 			ListSelect inventorySelect = inventorySelectors.get(index);
-			if (skillSelect.getSelectedObject()==restSkillChoiceObject) 
+			if (skillSelect.getSelectedObject()==doNothingSkillChoiceObject||skillSelect.getSelectedObject()==doUseSkillChoiceObject) 
 			{
+				// clear out skill act forms for Do Nothing or Use
+				String[] texts = new String[0];
+				Object[] objects = new Object[0];
+				String[] ids = new String[0];
+				skillActFormSelect.ids = ids;
+				skillActFormSelect.texts = texts;
+				skillActFormSelect.objects = objects;
+				skillActFormSelect.setUpdated(true);
+				skillActFormSelect.deactivate();
+				skillActFormSelect.setSelected(0);
+				skillActFormSelect.storedState = null;
+				skillActFormSelect.setEnabled(false);
+			}
+			
+			if (skillSelect.getSelectedObject()==doNothingSkillChoiceObject)
+			{
+				String[] texts = new String[0];
+				Object[] objects = new Object[0];
+				String[] ids = new String[0];
+				inventorySelect.ids = ids;
+				inventorySelect.texts = texts;
+				inventorySelect.objects = objects;
+				inventorySelect.setUpdated(true);
+				inventorySelect.deactivate();
+				inventorySelect.setSelected(0);
+				inventorySelect.storedState = null;
+				inventorySelect.setEnabled(false);
+				base.activate();
+			} else
+			if (skillSelect.getSelectedObject()==doUseSkillChoiceObject)
+			{
+				ArrayList<InventoryListElement> objInstances = i.inventory.getInventoryList(true);
+				String[] texts = new String[objInstances.size()];
+				Object[] objects = new Object[objInstances.size()];
+				String[] ids = new String[objInstances.size()];
+				int counter = 0;
+				for (InventoryListElement objInstance:objInstances)
 				{
-					String[] texts = new String[0];
-					Object[] objects = new Object[0];
-					String[] ids = new String[0];
-					skillActFormSelect.ids = ids;
-					skillActFormSelect.texts = texts;
-					skillActFormSelect.objects = objects;
-					skillActFormSelect.setUpdated(true);
-					skillActFormSelect.deactivate();
-					skillActFormSelect.setSelected(0);
-					skillActFormSelect.storedState = null;
-					skillActFormSelect.setEnabled(false);
+					ids[counter] = ""+counter;
+					texts[counter] = objInstance.getName();
+					objects[counter] = objInstance;				    
+					counter++;
 				}
-				{
-					String[] texts = new String[0];
-					Object[] objects = new Object[0];
-					String[] ids = new String[0];
-					inventorySelect.ids = ids;
-					inventorySelect.texts = texts;
-					inventorySelect.objects = objects;
-					inventorySelect.setUpdated(true);
-					inventorySelect.deactivate();
-					inventorySelect.setSelected(0);
-					inventorySelect.storedState = null;
-					inventorySelect.setEnabled(false);
-				}
+				inventorySelect.ids = ids;
+				inventorySelect.texts = texts;
+				inventorySelect.objects = objects;
+				inventorySelect.setUpdated(true);
+				inventorySelect.deactivate();
+				inventorySelect.setEnabled(true);
+				inventorySelect.setSelected(0);
+				inputChanged(inventorySelect, "fake"); // update target list for no object range...
 				base.activate();
 			} else
 			{
@@ -405,7 +439,7 @@ public class TurnActWindow extends PagedInputWindow {
 				}
 				if (s.needsInventoryItem)
 				{
-					
+					// filling available inventory for skill
 					ArrayList<InventoryListElement> objInstances = i.inventory.getObjectsForSkillInInventory(i.description.getCommonSkills().skills.get(s.getClass()));
 					String[] texts = new String[objInstances.size()];
 					Object[] objects = new Object[objInstances.size()];
@@ -493,55 +527,8 @@ public class TurnActWindow extends PagedInputWindow {
 				groupTarget = true;
 			}
 			
-			ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(null);
-			ArrayList<EncounterUnitData> filteredList = new ArrayList<EncounterUnitData>();
-			for (EncounterUnitData unitData:list)
-			{
-				if (maxLineUpDistanceRange!=Obj.NO_RANGE)
-				{
-					// line range filtering of units
-					if (i.encounterData.currentLine + unitData.currentLine>maxLineUpDistanceRange) 
-					{
-						continue;
-					}
-				}
-				
-				if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
-				if (!groupTarget && unitData.getUnit()==party.theFragment) continue; // party shouldn't be displayed in list for non group spells. (no other members than the chars.) 
-				int relation = party.theFragment.getRelationLevel(unitData.getUnit());
-				if (!friendly)
-				{
-					if (unitData.getUnit()==party.theFragment) continue;
-					if (relation>EntityScaledRelationType.NEUTRAL) continue;
-					if (unitData.parent == party.theFragment) continue;
-				} else
-				{
-					if (relation<=EntityScaledRelationType.NEUTRAL) 
-					{
-						if (unitData.getUnit()!=party.theFragment && unitData.parent != party.theFragment) continue; 
-					}
-				}
-				filteredList.add(unitData);
-			}
-			list = filteredList;
-			String[] ids = new String[list.size()];
-			Object[] objects = new Object[list.size()];
-			String[] texts = new String[list.size()];
-			int count = 0;
-			System.out.println("ENC SIZE = "+list.size());
-			for (EncounterUnitData data:list)
-			{
-				ids[count] = ""+count;
-				texts[count] = data.name;
-				objects[count] = data;
-				count++;
-			}
-			groupSelect.reset();
-			groupSelect.ids = ids;
-			groupSelect.objects = objects;
-			groupSelect.texts = texts;
-			groupSelect.setUpdated(true);
-			groupSelect.deactivate();
+			ArrayList<EncounterUnitData> list = encounterUnitDataList;
+			updateGroupSelect(groupSelect, list, i.encounterData.turnActLineup, i.encounterData.currentLine, maxLineUpDistanceRange, friendly, groupTarget);
 			if ("fake".equals(message)) skillSelect.activate();
 			else
 				base.activate();
@@ -549,12 +536,105 @@ public class TurnActWindow extends PagedInputWindow {
 		if (inventorySelectors.contains(base))
 		{
 			int index = inventorySelectors.indexOf(base);
-			ListSelect skillActFormSelect = skillActFormSelectors.get(index);
-			inputChanged(skillActFormSelect, "inventory");
+			ListSelect skillSelect = skillSelectors.get(index);
+			EntityMemberInstance i = (EntityMemberInstance)skillSelect.subject;
+			if (skillSelect.getSelectedObject()==doUseSkillChoiceObject)
+			{
+				ListSelect inventorySelect = inventorySelectors.get(index);
+				ListSelect groupSelect = groupSelectors.get(index);
+				InventoryListElement objInst = (InventoryListElement)inventorySelect.getSelectedObject();
+				int range = objInst.description.getUseRangeInLineup();
+				boolean friendly = true;
+				boolean groupTarget = false;
+				if (objInst.objects.get(0) instanceof BonusObject)
+				{
+					ArrayList<BonusSkillActFormDesc> bonusList = ((BonusObject)objInst.objects.get(0)).getSkillActFormBonusEffectTypes();
+					if (bonusList!=null && bonusList.size()>0) {
+						if (bonusList.get(0).form.atomicEffect>=0)
+						{
+							friendly = true;
+						} else
+						{
+							friendly = false;
+						}
+					}
+				}
+				updateGroupSelect(groupSelect, encounterUnitDataList, i.encounterData.turnActLineup, i.encounterData.currentLine, range, friendly, groupTarget);
+			} else
+			{
+				ListSelect skillActFormSelect = skillActFormSelectors.get(index);
+				inputChanged(skillActFormSelect, "inventory");
+			}
 			base.activate();
 		}
 		return false;
 	}
+	
+	/**
+	 * Updates group select based on provided information, filtering out unnecessary elements.
+	 * @param groupSelect The groupselector to update.
+	 * @param list List of possible encountered.
+	 * @param lineUpOfSource source member's lineup
+	 * @param maxLineUpDistanceRange max lineup range
+	 * @param friendly is this a friendly act
+	 * @param groupTarget is this a group targetted act
+	 */
+	private void updateGroupSelect(ListSelect groupSelect, ArrayList<EncounterUnitData> list, TurnActUnitLineup sourceLineup, int lineUpOfSource, int maxLineUpDistanceRange, boolean friendly, boolean groupTarget)
+	{
+		ArrayList<EncounterUnitData> filteredList = new ArrayList<EncounterUnitData>();
+		for (EncounterUnitData unitData:list)
+		{
+			if (unitData.turnActLineup==sourceLineup)
+			{
+				lineUpOfSource = 0; // overwrite line of source if in the same Lineup array.
+			}
+			if (maxLineUpDistanceRange!=Obj.NO_RANGE)
+			{
+				// line range filtering of units
+				if (lineUpOfSource + unitData.currentLine>maxLineUpDistanceRange) 
+				{
+					continue;
+				}
+			}
+			
+			if (groupTarget && !unitData.isGroupId) continue; // not a group, group target act form, continue.
+			if (!groupTarget && unitData.getUnit()==party.theFragment) continue; // party shouldn't be displayed in list for non group spells. (no other members than the chars.) 
+			int relation = party.theFragment.getRelationLevel(unitData.getUnit());
+			if (!friendly)
+			{
+				if (unitData.getUnit()==party.theFragment) continue;
+				if (relation>EntityScaledRelationType.NEUTRAL) continue;
+				if (unitData.parent == party.theFragment) continue;
+			} else
+			{
+				if (relation<=EntityScaledRelationType.NEUTRAL) 
+				{
+					if (unitData.getUnit()!=party.theFragment && unitData.parent != party.theFragment) continue; 
+				}
+			}
+			filteredList.add(unitData);
+		}
+		list = filteredList;
+		String[] ids = new String[list.size()];
+		Object[] objects = new Object[list.size()];
+		String[] texts = new String[list.size()];
+		int count = 0;
+		System.out.println("ENC SIZE = "+list.size());
+		for (EncounterUnitData data:list)
+		{
+			ids[count] = ""+count;
+			texts[count] = data.name;
+			objects[count] = data;
+			count++;
+		}
+		groupSelect.reset();
+		groupSelect.ids = ids;
+		groupSelect.objects = objects;
+		groupSelect.texts = texts;
+		groupSelect.setUpdated(true);
+		groupSelect.deactivate();
+	}
+	
 	
 	public class TurnActPlayerChoiceInfo
 	{
@@ -596,9 +676,19 @@ public class TurnActWindow extends PagedInputWindow {
 					EntityMemberInstance i = (EntityMemberInstance)s.subject;
 					TurnActMemberChoice choice = new TurnActMemberChoice();
 					choice.member = i;
-					if (skillSelectors.get(counter).getSelectedObject()==restSkillChoiceObject)
+					if (skillSelectors.get(counter).getSelectedObject()==doNothingSkillChoiceObject)
 					{
 						choice.doNothing = true;
+					} else
+					if (skillSelectors.get(counter).getSelectedObject()==doUseSkillChoiceObject)
+					{
+						choice.doUse = true;
+						InventoryListElement obj = (InventoryListElement)inventorySelectors.get(counter).getSelectedObject();
+						EncounterUnitData fragmentAndSubunit = null;
+						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
+						choice.target = fragmentAndSubunit;					
+						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
+						choice.usedObject = obj;						
 					} else
 					{
 

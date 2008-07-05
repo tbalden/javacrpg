@@ -73,6 +73,8 @@ public class TurnActUnitLineup {
 		}
 		l.add(unit);
 		unit.currentLine=line;
+		unit.turnActLineup = this;
+		
 		unitToLineMap.put(unit, line);
 		if (l.size()>UNITS_PER_LINE)
 		{
