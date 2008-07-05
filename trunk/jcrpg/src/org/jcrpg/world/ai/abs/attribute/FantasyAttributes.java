@@ -40,7 +40,7 @@ public class FantasyAttributes extends Attributes {
 			CONCENTRATION, CONSTITUTION, PSYCHE, PIETY, CHARISMA, KARMA };
 
 	public FantasyAttributes() {
-		this(false);
+		this(true);
 	}
 	public FantasyAttributes(boolean zero) {
 		for (String a : attributeName) {

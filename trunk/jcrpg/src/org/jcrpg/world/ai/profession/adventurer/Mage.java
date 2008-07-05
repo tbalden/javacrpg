@@ -24,6 +24,7 @@ import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.mental.MagicalLore;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
+import org.jcrpg.world.object.armor.artifact.CrockHide;
 import org.jcrpg.world.object.combat.blade.artifact.WolfTooth;
 import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
 
@@ -31,6 +32,7 @@ public class Mage extends HumanoidProfessional {
 	public Mage()
 	{
 		super();
+		generationNewInstanceObjects.add(CrockHide.class);
 		generationNewInstanceObjects.add(WolfTooth.class);
 		generationNewInstanceObjects.add(QuarterStaff.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 14);

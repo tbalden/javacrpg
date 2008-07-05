@@ -78,4 +78,45 @@ public abstract class Resistances {
 	}
 	
 	public abstract String getShortestName(String attr);
+	
+	public void appendResistances(Resistances resistances)
+	{
+		if (resistances==null) return;
+		for (String attr: resistances.resistances.keySet())
+		{
+			Integer base = this.resistances.get(attr);
+			if (base==null) base = 0;
+			Integer plus= resistances.resistances.get(attr);
+			if (plus==null) continue;
+			setResistance(attr, base+plus);
+		}
+	}
+
+	public void appendResistanceRatios(Resistances resistances)
+	{
+		if (resistances==null) return;
+		for (String attr: resistances.resRatios.keySet())
+		{
+			Float base = this.resRatios.get(attr);
+			if (base==null) base = 1f;
+			Float mul= resistances.resRatios.get(attr);
+			if (mul==null) continue;
+			resRatios.put(attr, base*mul);
+		}
+	}
+	
+	public Resistances copy()
+	{
+		Resistances copy = null; 
+		try {
+			copy = this.getClass().newInstance();
+			copy.appendResistances(this);
+			copy.appendResistanceRatios(this);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return copy;
+	}
+
 }

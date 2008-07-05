@@ -40,6 +40,12 @@ public interface BonusObject {
 	public Resistances getResistanceValues();
 	
 	/**
+	 * Tells that the bonus is only for a given body part - for an armor when it's attacked.
+	 * @return
+	 */
+	public boolean isBodyPartBonusOnly();
+	
+	/**
 	 * Return what skill form does it do upon using it in turn act.
 	 * @return the skill act form list.
 	 */

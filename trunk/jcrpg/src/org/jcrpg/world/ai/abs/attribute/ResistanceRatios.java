@@ -50,7 +50,7 @@ public class ResistanceRatios {
 	
 	public static Resistances getAttributes(String res, Resistances base, ResistanceRatios modifier)
 	{
-		FantasyResistances ret = new FantasyResistances();
+		FantasyResistances ret = new FantasyResistances(false);
 		for (String a:base.resistances.keySet())
 		{
 			ret.setResistance(a, getResistance(res,base,modifier));

@@ -90,4 +90,54 @@ public abstract class Attributes {
 	
 	public abstract String getShortestName(String attr);
 	
+	public void appendAttributes(Attributes attributes)
+	{
+		if (attributes==null) return;
+		for (String attr: attributes.attributes.keySet())
+		{
+			Integer base = this.attributes.get(attr);
+			if (base==null) base = 0;
+			Integer plus= attributes.attributes.get(attr);
+			if (plus==null) continue;
+			setAttribute(attr, base+plus);
+		}
+	}
+	public void appendAttributeRatios(Attributes attributes)
+	{
+		if (attributes==null) return;
+		for (String attr: attributes.attributeRatios.keySet())
+		{
+			Float base = this.attributeRatios.get(attr);
+			if (base==null) base = 1f;
+			Float mul= attributes.attributeRatios.get(attr);
+			if (mul==null) continue;
+			attributeRatios.put(attr, base*mul);
+		}
+	}
+	
+	public Attributes copy()
+	{
+		Attributes copy = null; 
+		try {
+			copy = this.getClass().newInstance();
+			copy.appendAttributes(this);
+			copy.appendAttributeRatios(this);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return copy;
+	}
+	
+	@Override
+	public String toString()
+	{
+		StringBuffer b = new StringBuffer("ATTRIBUTES - ");
+		for (String attr:attributes.keySet())
+		{
+			b.append(attr+": "+getAttribute(attr)+" ");
+		}
+		return b.toString();
+	}
+	
 }

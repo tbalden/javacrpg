@@ -112,7 +112,7 @@ public class PartySetup extends PagedInputWindow {
 	public MemberPerson personWithGenderAndRace = null;
 	public Profession profession = null;
 	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = null;
-	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
+	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes(false);
 	public org.jcrpg.world.ai.abs.attribute.Resistances resistanceValues = null;
 	
 	public PartySetup(UIBase base) {
@@ -650,7 +650,7 @@ public class PartySetup extends PagedInputWindow {
 			if (profession==null) return true;
 			personWithGenderAndRace.addProfessionInitially(profession);
 
-			attributeValues = new FantasyAttributes();
+			attributeValues = new FantasyAttributes(false);
 			
 			for (String id:attributeTuners.keySet())
 			{
@@ -783,7 +783,7 @@ public class PartySetup extends PagedInputWindow {
 			// attribute ratio
 			int baseValue = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
 			attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE;
-			if (attributeValues==null) attributeValues = new FantasyAttributes();
+			if (attributeValues==null) attributeValues = new FantasyAttributes(false);
 			for (String id: FantasyAttributes.attributeName) {
 				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
 				{
@@ -802,7 +802,7 @@ public class PartySetup extends PagedInputWindow {
 			}
 			
 			baseValue = GameLogicConstants.BASE_RESISTANCE_VALUE;
-			if (resistanceValues==null) resistanceValues = new FantasyResistances();
+			if (resistanceValues==null) resistanceValues = new FantasyResistances(false);
 			for (String id: FantasyResistances.resistanceName) {
 				if (race.commonResistenceRatios.resistanceRatios.get(id)!=null)
 				{

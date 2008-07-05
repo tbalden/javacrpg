@@ -105,7 +105,7 @@ public class EntityMemberInstance {
 	/**
 	 * The inventory.
 	 */
-	public EntityObjInventory inventory = new EntityObjInventory();
+	public EntityObjInventory inventory = new EntityObjInventory(this);
 	
 	/**
 	 * Decides what member wants to do in this turn, what skill, what target, object etc.
@@ -147,7 +147,20 @@ public class EntityMemberInstance {
 	 */
 	public Attributes getAttributes()
 	{
-		return description.getAttributes(instance!=null?instance.description:null);
+		// TODO add spell modifiers in effect later when we have them
+		
+		Attributes attributes = getAttributesVanilla();
+		System.out.println("Vanilla: "+attributes);
+		Attributes equipmentAttributes = inventory.getEquipmentAttributeValues(null);
+		attributes.appendAttributes(equipmentAttributes);
+		System.out.println("Equipment: "+equipmentAttributes);
+		return attributes;
+	}
+	/** Get original unbonused attributes. */
+	public Attributes getAttributesVanilla()
+	{
+		Attributes attributes = description.getAttributes(instance!=null?instance.description:null);
+		return attributes;
 	}
 
 	/**
@@ -156,7 +169,16 @@ public class EntityMemberInstance {
 	 */
 	public Resistances getResistances()
 	{
-		return description.getResistances(instance.description);
+		Resistances resistances = description.getResistances(instance.description).copy();
+		resistances.appendResistances(inventory.getEquipmentResistanceValues(null));
+		return resistances;
+	}
+	
+	/** Get original unbonused res. */
+	public Resistances getResistancesVanilla()
+	{
+		Resistances resistances = description.getResistances(instance.description);
+		return resistances;
 	}
 
 	/**
@@ -240,7 +262,7 @@ public class EntityMemberInstance {
 	 */
 	public boolean equip(ObjInstance equipment)
 	{
-		return inventory.equip(this, equipment);
+		return inventory.equip(equipment);
 	}
 	
 	/**

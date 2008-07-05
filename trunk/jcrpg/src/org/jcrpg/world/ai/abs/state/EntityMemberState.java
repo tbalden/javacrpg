@@ -180,6 +180,7 @@ public class EntityMemberState {
 				maxManaPoint = point;
 			}
 		}
+		shrinkToMax();
 	}
 	
 	public void replenishInOneRound()
@@ -208,5 +209,13 @@ public class EntityMemberState {
 		manaPoint = maxManaPoint;
 	}
 	
+	public void shrinkToMax()
+	{
+		healthPoint = Math.min(healthPoint,maxHealthPoint);
+		staminaPoint = Math.min(staminaPoint,maxStaminaPoint);
+		sanityPoint = Math.min(maxStaminaPoint,maxSanityPoint);
+		moralePoint = Math.min(moralePoint,maxMoralePoint);
+		manaPoint = Math.min(healthPoint,maxManaPoint);
+	}
 
 }

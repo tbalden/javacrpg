@@ -272,8 +272,12 @@ public class InventoryWindow extends PagedInputWindow {
 			characterSelect.setSelected(0);
 			characterSelect.setUpdated(true);
 			characterSelect.deactivate();
-			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
 		}
+		else
+		{
+			characterSelect.setSelected(currentMember);
+		}
+		updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
 	}
 	
 	private void updateToMemberInstance(EntityMemberInstance instance)

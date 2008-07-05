@@ -21,10 +21,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.body.BodyPart;
 
 public class EntityObjInventory {
+	
+	
+	EntityMemberInstance instance = null;
+	
+	public EntityObjInventory(EntityMemberInstance owner)
+	{
+		this.instance = owner;
+	}
+	
 	/**
 	 * Inventory.
 	 */
@@ -281,7 +292,7 @@ public class EntityObjInventory {
 		return null;
 	}
 	
-	public boolean equip(EntityMemberInstance instance, ObjInstance equipment)
+	public boolean equip(ObjInstance equipment)
 	{
 		if (!inventory.contains(equipment)) return false;
 		
@@ -318,7 +329,9 @@ public class EntityObjInventory {
 		// TODO other checks! profession and such
 		
 		equipped.add(equipment);
-		
+		// recalculate member state things if bonus object
+		if (equipment.description instanceof BonusObject)
+			instance.memberState.recalculateMaximums(instance, true);
 		return true;
 	}
 	
@@ -333,6 +346,9 @@ public class EntityObjInventory {
 			}
 		}
 		equipped.remove(object);
+		// recalculate member state things if bonus object
+		if (object.description instanceof BonusObject)
+			instance.memberState.recalculateMaximums(instance, true);
 		return true;
 	}
 	
@@ -383,6 +399,76 @@ public class EntityObjInventory {
 	}
 	public ArrayList<ObjInstance> getEquipped() {
 		return equipped;
+	}
+	
+	public Attributes getEquipmentAttributeValues(Class<? extends BodyPart> lookUp)
+	{
+		Attributes sum = null;
+		for (ObjInstance i:equipped)
+		{
+			System.out.println("check attr bonus I "+i.getName());
+			if (i.description instanceof BonusObject)
+			{
+				BonusObject bo = (BonusObject)i.description;
+				if (lookUp==null && bo.isBodyPartBonusOnly()) continue;
+				if (lookUp!=null)
+				{
+					if (!bo.isBodyPartBonusOnly()) continue;
+					if (i.description instanceof Equippable)
+					{
+						if (((Equippable)i.description).getEquippableBodyPart() != lookUp) 
+							continue;
+					} else
+					{
+						continue;
+					}
+				}
+				System.out.println(bo.getAttributeValues());
+				if (bo.getAttributeValues()!=null)
+				{
+					Attributes bonus = bo.getAttributeValues();
+					try {
+						if (sum == null) sum = bonus.getClass().newInstance();
+						sum.appendAttributes(bonus);
+					} catch (Exception ex) { ex.printStackTrace(); }
+				}
+			}
+		}
+		return sum;
+	}
+	
+	public Resistances getEquipmentResistanceValues(Class<? extends BodyPart> lookUp)
+	{
+		Resistances sum = null;
+		for (ObjInstance i:equipped)
+		{
+			if (i.description instanceof BonusObject)
+			{
+				BonusObject bo = (BonusObject)i.description;
+				if (lookUp==null && bo.isBodyPartBonusOnly()) continue;
+				if (lookUp!=null)
+				{
+					if (!bo.isBodyPartBonusOnly()) continue;
+					if (i.description instanceof Equippable)
+					{
+						if (((Equippable)i.description).getEquippableBodyPart() != lookUp) 
+							continue;
+					} else
+					{
+						continue;
+					}
+				}
+				if (bo.getAttributeValues()!=null)
+				{
+					Resistances bonus = bo.getResistanceValues();
+					try {
+						if (sum == null) sum = bonus.getClass().newInstance();
+						sum.appendResistances(bonus);
+					} catch (Exception ex) {}
+				}
+			}
+		}
+		return sum;
 	}
 
 }

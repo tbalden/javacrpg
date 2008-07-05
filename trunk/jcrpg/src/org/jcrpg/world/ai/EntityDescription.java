@@ -56,8 +56,8 @@ public class EntityDescription extends DescriptionBase {
 	
 	public int genderType = GENDER_NEUTRAL;
 	public SkillContainer skills = new SkillContainer();
-	public Attributes attributes = new FantasyAttributes();
-	public Resistances resistances = new FantasyResistances();
+	public Attributes attributes = new FantasyAttributes(false);
+	public Resistances resistances = new FantasyResistances(false);
 
 	public EconomyTemplate economyTemplate = new EconomyTemplate();
 

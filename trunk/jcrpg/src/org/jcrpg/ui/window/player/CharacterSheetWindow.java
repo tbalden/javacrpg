@@ -30,6 +30,7 @@ import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
@@ -154,6 +155,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		this.party = party;
 	}
 
+	public EntityMemberInstance currentMember = null;
 	public int lastUpdatedLivingPartySize = 0;
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
 	public void updateToParty()
@@ -169,6 +171,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 				livingMembersCounter++;
 				if (i == characterSelect.getSelectedObject())
 				{
+					currentMember = i;
 					foundCurrent = true;
 				}
 				tmpFilteredMembers.add(i);
@@ -200,19 +203,31 @@ public class CharacterSheetWindow extends PagedInputWindow {
 			characterSelect.setSelected(0);
 			characterSelect.setUpdated(true);
 			characterSelect.deactivate();
-			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
+		} else
+		{
+			characterSelect.setSelected(currentMember);
 		}
+		updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
 		
 	}
 
 	public void updateToMemberInstance(EntityMemberInstance instance)
 	{
 		
+		Attributes attr = (instance).getAttributes();
+		Attributes attrVanilla = (instance).getAttributesVanilla();
 		for (String id: FantasyAttributes.attributeName) {
 			//System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = attributeTuners.get(id);
-			v.value = ((MemberPerson)instance.description).attributes.getAttribute(id);
-			v.text = ""+v.value;
+			v.value = attr.getAttribute(id);
+			int vanilla = attrVanilla.getAttribute(id);
+			if (v.value!=vanilla)
+			{
+				v.text = ""+v.value+" ("+vanilla+")";
+			} else
+			{
+				v.text = ""+v.value;
+			}
 			v.deactivate();
 		}
 		
