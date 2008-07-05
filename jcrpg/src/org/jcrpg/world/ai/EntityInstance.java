@@ -66,8 +66,8 @@ public class EntityInstance {
 	 * Skills of the instance.
 	 */
 	public SkillContainer skills = new SkillContainer();
-	public Attributes attributes = new FantasyAttributes();	
-	public Resistances resistances = new FantasyResistances();
+	public Attributes attributes = new FantasyAttributes(false);	
+	public Resistances resistances = new FantasyResistances(false);
 	
 	/**
 	 * currently dominated zone.

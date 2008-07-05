@@ -91,8 +91,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	 */
 	int skillPointsLeft = 0;
 
-	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = new FantasyAttributes();
-	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes();
+	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = new FantasyAttributes(false);
+	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes(false);
 	
 	public CharacterLevelingWindow(UIBase base) {
 		super(base);

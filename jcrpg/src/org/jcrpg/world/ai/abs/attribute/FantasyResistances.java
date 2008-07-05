@@ -38,7 +38,7 @@ public class FantasyResistances extends Resistances {
 	
 	public FantasyResistances()
 	{
-		this(false);
+		this(true);
 	}
 	public FantasyResistances(boolean zero)
 	{

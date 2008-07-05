@@ -107,7 +107,7 @@ public class MemberPerson extends EntityMember {
 	}
 
 	public Attributes getAttributes() {
-		return attributes;
+		return attributes.copy();
 	}
 
 	public void setAttributes(Attributes attributes) {

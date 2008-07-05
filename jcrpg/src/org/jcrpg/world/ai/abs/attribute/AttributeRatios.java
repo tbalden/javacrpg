@@ -50,7 +50,8 @@ public class AttributeRatios {
 	
 	public static Attributes getAttributes(String attr, Attributes base, AttributeRatios modifier)
 	{
-		FantasyAttributes ret = new FantasyAttributes();
+		Attributes ret = null;
+		try {ret = base.getClass().newInstance();} catch (Exception ex){ex.printStackTrace();}
 		for (String a:base.attributes.keySet())
 		{
 			ret.setAttribute(a, getAttribute(attr,base,modifier));

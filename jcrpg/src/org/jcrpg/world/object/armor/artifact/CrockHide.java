@@ -15,49 +15,43 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.object.magical.potion;
+package org.jcrpg.world.object.armor.artifact;
 
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
-import org.jcrpg.world.ai.abs.skill.SkillGroups;
-import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.object.BonusObject;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
-import org.jcrpg.world.object.Obj;
-import org.jcrpg.world.object.PotionAndKit;
+import org.jcrpg.world.object.armor.LeatherArmor;
 
-public class MinorHealingPotion extends Obj implements BonusObject, PotionAndKit {
+public class CrockHide extends LeatherArmor implements BonusObject{
 
-	public MinorHealingPotion()
-	{
-		icon = "potion/minorheal.png";
-		useRangeInLineup = 0;
-		maxNumberOfUsage = 1;
+	public int getDefenseValue() {
+		return 15;
 	}
 	
+	static Attributes a = new FantasyAttributes(true);
+	static
+	{
+		a.setAttribute(FantasyAttributes.STRENGTH, 5);
+		a.setAttribute(FantasyAttributes.SPEED, 5);
+	}
 	public Attributes getAttributeValues() {
-		return null;
+		return a;
 	}
 
 	public Resistances getResistanceValues() {
 		return null;
 	}
 
-	public static transient ArrayList<BonusSkillActFormDesc> bonusActForms = null;
 	public ArrayList<BonusSkillActFormDesc> getSkillActFormBonusEffectTypes() {
-		if (bonusActForms==null)
-		{
-			bonusActForms = new ArrayList<BonusSkillActFormDesc>();
-			BonusSkillActFormDesc desc = new BonusSkillActFormDesc();
-			desc.form = SkillGroups.getSkillActFormInstance(CelestialMagic.class, CelestialMagic.MinorHeal.class);
-			desc.skillLevel = 20;
-			desc.maxUsePerReplenish = 1;
-			desc.replenishFrequency = BonusSkillActFormDesc.FREQUENCY_MINUTE;
-			bonusActForms.add(desc);
-		}
-		return bonusActForms;
+		return null;
+	}
+
+	public boolean isBodyPartBonusOnly() {
+		return false;
 	}
 
 	public boolean isCursed() {
@@ -65,10 +59,6 @@ public class MinorHealingPotion extends Obj implements BonusObject, PotionAndKit
 	}
 
 	public boolean isDestructive() {
-		return false;
-	}
-
-	public boolean isBodyPartBonusOnly() {
 		return false;
 	}
 

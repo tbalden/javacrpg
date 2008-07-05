@@ -49,17 +49,26 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		
 		[-] What about two handed fight?? --- ??? 
 			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
+			
+	[ ] equipped enhanced items should modify persistentMember's attributes/healthpoints... temporary values etc
+	should be programmed.
+	
+	[X] inv/char sheet window restore not correct
 
-	[ ] evaluator base:	
-		[ ] calc bonus of EQUIPPED (armors, rings) things in EntityObjInventory!
-		
+	[1] evaluator base:
+		[ ] use newly created gatherer classes in EvaluatorBase for calculating each impact for each skillActForm / target member
+			gather artifact bonus skills in the list beside the normal skill act form,
+			iterate through them for each targetMember in the other list.
 		[ ] hit body parts, criticals
+			[ ] XP and impact calculation / resistances etc.
+		
+		[X] calc bonus of EQUIPPED (armors, rings) things in EntityObjInventory!
+		
 			
-		[ ] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
+		[X] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
 			[X] effect program triggering is complete, impact calc NEEDED!
-		[ ] attribute plus addition to member attributes when using it for attack
+		[X] attribute plus addition to member attributes when using it for attack
 			
-		[ ] XP and impact calculation / resistances etc.
 
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
 

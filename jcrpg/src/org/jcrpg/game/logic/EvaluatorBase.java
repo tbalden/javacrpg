@@ -29,7 +29,9 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.body.BodyPart;
 import org.jcrpg.world.object.Ammunition;
+import org.jcrpg.world.object.BonusObject;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
@@ -106,18 +108,77 @@ public class EvaluatorBase {
 	
 	public static final int DEFENSE_BASE_VALUE = 20;
 	
-	public class EvaluatedSkillActFormData
+	public class EvaluatedSkillActFormSourceData
 	{
+		public EntityMemberInstance source;
 		public SkillActForm form;
-		public int level;
+		public int levelOfSkill;
+		
 		public Attributes sourceAttributes;
-		public Attributes sourceBonusAttributes;
-		public Attributes targetAttributes;
-		public Attributes targetBonusAttributes;
-		public Resistances targetResistances;
-		public Resistances targetBonusResistances;
+		
+		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, SkillActForm form)
+		{
+			this.source = choice.member;
+			this.form = form;
+			Attributes attributes = choice.member.getAttributes();
+			sourceAttributes = attributes;
+			levelOfSkill = choice.skill.level;
+			if (choice.usedObject!=null && choice.usedObject.description instanceof BonusObject)
+			{
+				BonusObject bo = (BonusObject)(choice.usedObject.description);
+				bo.getAttributeValues();
+				sourceAttributes.appendAttributes(bo.getAttributeValues());
+			}
+		}
+		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, BonusSkillActFormDesc form)
+		{
+			this.source = choice.member;
+			this.form = form.form;
+			levelOfSkill = form.skillLevel;
+			sourceAttributes = choice.member.getAttributesVanilla();
+			if (choice.usedObject!=null && choice.usedObject.description instanceof BonusObject)
+			{
+				BonusObject bo = (BonusObject)(choice.usedObject.description);
+				bo.getAttributeValues();
+				sourceAttributes.appendAttributes(bo.getAttributeValues());
+			}
+		}
+		
+		// TODO use and enhance this, summarizing all data for an evaluation.
 	}
+	public class EvaluatedSkillActFormTargetData
+	{
+		public EntityMemberInstance target;
+		public SkillActForm form;
+		public int levelOfSkill;
 
+		public Attributes targetAttributes;
+		public Resistances targetResistances;
+		
+		public EvaluatedSkillActFormTargetData(TurnActMemberChoice choice, BodyPart randomTargetBodyPart)
+		{
+			targetAttributes = choice.member.getAttributes();
+			targetResistances = choice.member.getResistances();
+			if (randomTargetBodyPart!=null) {
+				Attributes bonusAttributesForBodyPart = target.inventory.getEquipmentAttributeValues(randomTargetBodyPart.getClass());
+				Resistances bonusResistancesForBodyPart = target.inventory.getEquipmentResistanceValues(randomTargetBodyPart.getClass());
+				targetAttributes.appendAttributes(bonusAttributesForBodyPart);
+				targetResistances.appendResistances(bonusResistancesForBodyPart);
+			}
+			if (choice.usedObject!=null && choice.usedObject.description instanceof BonusObject)
+			{
+				BonusObject bo = (BonusObject)(choice.usedObject.description);
+				bo.getAttributeValues();
+				targetAttributes.appendAttributes(bo.getAttributeValues());
+				targetResistances.appendResistances(bo.getResistanceValues());
+			}
+			levelOfSkill = choice.skill.level;
+		}
+		
+		// TODO use and enhance this, summarizing all data for an evaluation.
+	}
+	
+	
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
 		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));

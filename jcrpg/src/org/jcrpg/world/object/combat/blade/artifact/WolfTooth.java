@@ -78,5 +78,9 @@ public class WolfTooth extends Dagger implements BonusObject{
 	public boolean isDestructive() {
 		return true;
 	}
+	
+	public boolean isBodyPartBonusOnly() {
+		return false;
+	}
 
 }
