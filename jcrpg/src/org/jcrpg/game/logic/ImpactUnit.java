@@ -53,4 +53,15 @@ public class ImpactUnit
 	{
 		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_SANITY];
 	}
+	
+	public void append(ImpactUnit unit)
+	{
+		int count = 0;
+		for (Integer i:unit.orderedImpactPoints)
+		{
+			orderedImpactPoints[count]+=i;
+			count++;
+		}
+		experiencePoint+=unit.experiencePoint;
+	}
 }

@@ -28,7 +28,6 @@ import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.body.BodyBase;
 import org.jcrpg.world.ai.body.SinglePartBody;
-import org.jcrpg.world.ai.body.part.SinglePart;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;

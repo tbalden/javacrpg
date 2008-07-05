@@ -34,4 +34,21 @@ public class Impact
 	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
+	
+	public void append(Impact impact, boolean experienceToo, boolean costToo)
+	{
+		if (experienceToo) this.experienceGain+=impact.experienceGain;
+		if (costToo) this.actCost.append(impact.actCost);
+		for (EntityMemberInstance i:impact.targetImpact.keySet())
+		{
+			ImpactUnit u = impact.targetImpact.get(i);
+			if (targetImpact.containsKey(i))
+			{
+				targetImpact.get(i).append(u);
+			} else
+			{
+				targetImpact.put(i, u);
+			}
+		}
+	}
 }

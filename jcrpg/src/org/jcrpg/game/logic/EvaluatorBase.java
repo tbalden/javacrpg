@@ -18,6 +18,7 @@
 package org.jcrpg.game.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
@@ -39,15 +40,11 @@ import org.jcrpg.world.object.Weapon;
 
 public class EvaluatorBase {
 	
-
 	
-	
-	
-	private static int calculateContraAttributeValue(SkillActForm form, EntityMemberInstance defender)
+	private static int calculateContraAttributePower(SkillActForm form, Attributes attributes)
 	{
 		int divider = form.contraAttributes.size();
 		if (divider == 0) return 50;
-		Attributes attributes = defender.getAttributes();
 		int sum = 0;
 		for (String attr:form.contraAttributes)
 		{
@@ -59,30 +56,31 @@ public class EvaluatorBase {
 		return sum;
 	}
 	
-	private static int calculateContraResistenceValue(SkillActForm form, EntityMemberInstance defender)
+	private static int calculateContraResistencePower(SkillActForm form, Resistances resistances)
 	{
 		int divider = form.contraResistencies.size();
 		if (divider == 0) return 50;
-		Resistances attributes = defender.getResistances();
+		
 		int sum = 0;
 		for (String resistance:form.contraResistencies)
 		{
-			int i = attributes.getResistance(resistance);
+			int i = resistances.getResistance(resistance);
 			sum+=i;
 		}
 		sum = sum / divider;
 		System.out.println("CONTRA ATTR VALUE = "+sum);
 		return sum;
 	}
+
 	
-	private static int calculateResultForSkillUse(int seed, TurnActMemberChoice choice, boolean defense, ObjInstance dependencyObj)
+	private static int calculatePowerForSkillUse( int level, boolean defense, ObjInstance usedObject, ObjInstance dependencyObj)
 	{
 		float objMultiplicator = 1f;
-		if (choice.usedObject!=null)
+		if (usedObject!=null)
 		{
-			if (choice.usedObject.description instanceof Weapon)
+			if (usedObject.description instanceof Weapon)
 			{
-				Weapon w = (Weapon)choice.usedObject.description;
+				Weapon w = (Weapon)usedObject.description;
 				if (defense)
 				{
 					objMultiplicator = w.getDefenseMultiplicator();
@@ -99,27 +97,174 @@ public class EvaluatorBase {
 				}
 			}
 		}
-		int level = choice.skill.level;
 		int result = level;
 		result = (int)(result * ( objMultiplicator ));
 		return result;
-		
 	}
 	
 	public static final int DEFENSE_BASE_VALUE = 20;
 	
-	public class EvaluatedSkillActFormSourceData
+	public static class EvaluatedData
+	{
+
+		int seed;
+		public EvaluatedData(int seed, TurnActTurnState state, TurnActMemberChoice choice, BonusSkillActFormDesc bonuseActForm, ObjInstance usedObjectInstance, ObjInstance dependencyObjectInstance)
+		{
+			this.seed = seed;
+			if (bonuseActForm!=null)
+			{
+				sourceData = new EvaluatedSkillActFormSourceData(choice,bonuseActForm,usedObjectInstance,dependencyObjectInstance);
+			} else
+			{
+				sourceData = new EvaluatedSkillActFormSourceData(choice,usedObjectInstance,dependencyObjectInstance);	
+			}
+			
+			targetData = new ArrayList<EvaluatedSkillActFormTargetData>();
+			ArrayList<EntityMemberInstance> targetMembers = new ArrayList<EntityMemberInstance>();
+			// collecting target members...
+			if (sourceData.needsGroup)
+			{
+				
+				if (choice.target.isGroupId)
+				{
+					if (choice.target.generatedMembers!=null)
+						targetMembers.addAll(choice.target.generatedMembers);
+				} else
+				{
+					if (choice.target.subUnit instanceof EntityMemberInstance)
+					{
+						targetMembers.add((EntityMemberInstance)choice.target.subUnit);
+					}
+				}
+			} else
+			{
+				if (choice.targetMember!=null)
+					targetMembers.add(choice.targetMember);
+			}
+			// creating target evaluation data
+			for (EntityMemberInstance i:targetMembers)
+			{
+				TurnActMemberChoice contraChoice = state.memberChoices.get(i);
+				if (contraChoice==null)
+				{
+					contraChoice = new TurnActMemberChoice();
+					contraChoice.member = i;
+				}
+				ObjInstance contraObjectInstance = null;
+				if (contraChoice.usedObject!=null)
+				{ 	// TODO probably better 'get object' usage?
+					contraObjectInstance = contraChoice.usedObject.objects.get(0);
+				}
+				// TODO body part calc
+				targetData.add(new EvaluatedSkillActFormTargetData(choice.skillActForm,contraChoice,null,contraObjectInstance));
+			}
+			
+		}
+		
+		public Impact evaluate()
+		{
+			
+			int sourcePower = sourceData.calculateSourcePower();
+			int maxHundredPlus = HashUtil.mixPercentage(seed, sourceData.source.getNumericId()+sourceData.source.instance.getNumericId(), 0); // random factor
+			sourcePower+=maxHundredPlus;
+			for (EvaluatedSkillActFormTargetData data:targetData) {
+				int targetPower = 50;
+				if (!sourceData.sourceChoice.isConstructive())
+				{
+					targetPower =  data.calculateTargetPower();
+				}
+				float impact = 0.5f;
+				SkillActForm skillActForm = sourceData.form;
+				Impact i = new Impact();
+				if (sourcePower>targetPower)
+				{
+					// success
+					i.success = true;
+					// calculate resistance impact decrease etc. TODO
+					ImpactUnit u = new ImpactUnit();
+					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
+					{
+						u.orderedImpactPoints[effectType] = (int)(impact * skillActForm.effectTypesAndLevels.get(effectType));
+						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
+					}
+					addTargetImpactUnit(data.target, u);
+				}
+				ImpactUnit u = new ImpactUnit();
+				for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
+				{
+					u.orderedImpactPoints[effectType] = (int)(impact * skillActForm.usedPointsAndLevels.get(effectType));
+					System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
+				}
+				// calculate XP TODO
+				i.actCost = u;
+				i.targetImpact = resultImpacts;
+				return i;
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * The source's skill act form use data
+		 */
+		public EvaluatedSkillActFormSourceData sourceData;
+		
+		/**
+		 * Target's defense related values for all targets.
+		 */
+		public ArrayList<EvaluatedSkillActFormTargetData> targetData = new ArrayList<EvaluatedSkillActFormTargetData>();
+		
+		
+		
+		/**
+		 * hashmap for storing impact units for targets.
+		 */
+		public HashMap<EntityMemberInstance, ImpactUnit> resultImpacts = new HashMap<EntityMemberInstance, ImpactUnit>();
+		
+		/**
+		 * Upon calculation this should be used if the act form use was successful.  
+		 * @param instance
+		 * @param unit
+		 */
+		public void addTargetImpactUnit(EntityMemberInstance instance, ImpactUnit unit)
+		{
+			ImpactUnit baseUnit = resultImpacts.get(instance);
+			if (baseUnit==null)
+			{
+				resultImpacts.put(instance, unit);
+			} else
+			{
+				baseUnit.append(unit);
+			}			
+		}
+	}
+	
+	public static class EvaluatedSkillActFormSourceData
 	{
 		public EntityMemberInstance source;
 		public SkillActForm form;
 		public int levelOfSkill;
+		public TurnActMemberChoice sourceChoice;
+
+		public boolean needsGroup = false;
 		
 		public Attributes sourceAttributes;
 		
-		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, SkillActForm form)
+		public ImpactUnit resultCost = new ImpactUnit();
+
+		ObjInstance objInstance = null;
+		ObjInstance dependencyObj = null;
+
+		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, ObjInstance usedObjectInstance, ObjInstance dependencyObjInstance)
 		{
+			this.sourceChoice = choice;
 			this.source = choice.member;
-			this.form = form;
+			this.form = choice.skillActForm;
+			this.objInstance = usedObjectInstance;
+			this.dependencyObj = dependencyObjInstance;
+			
+			if (form.targetType!=SkillActForm.TARGETTYPE_LIVING_MEMBER) needsGroup = true;
+			
 			Attributes attributes = choice.member.getAttributes();
 			sourceAttributes = attributes;
 			levelOfSkill = choice.skill.level;
@@ -130,10 +275,14 @@ public class EvaluatorBase {
 				sourceAttributes.appendAttributes(bo.getAttributeValues());
 			}
 		}
-		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, BonusSkillActFormDesc form)
+		public EvaluatedSkillActFormSourceData(TurnActMemberChoice choice, BonusSkillActFormDesc form, ObjInstance usedObjectInstance, ObjInstance dependencyObjInstance)
 		{
+			this.sourceChoice = choice;
 			this.source = choice.member;
 			this.form = form.form;
+			this.objInstance = usedObjectInstance;
+			this.dependencyObj = dependencyObjInstance;
+			
 			levelOfSkill = form.skillLevel;
 			sourceAttributes = choice.member.getAttributesVanilla();
 			if (choice.usedObject!=null && choice.usedObject.description instanceof BonusObject)
@@ -144,19 +293,37 @@ public class EvaluatorBase {
 			}
 		}
 		
-		// TODO use and enhance this, summarizing all data for an evaluation.
+		public void addCostImpactUnit(ImpactUnit unit)
+		{
+			resultCost.append(unit);
+		}
+		
+		public int calculateSourcePower()
+		{
+			return calculatePowerForSkillUse(levelOfSkill, false, objInstance, dependencyObj);
+		}
 	}
-	public class EvaluatedSkillActFormTargetData
+	
+	public static class EvaluatedSkillActFormTargetData
 	{
 		public EntityMemberInstance target;
 		public SkillActForm form;
+		public SkillActForm sourceForm;
 		public int levelOfSkill;
 
 		public Attributes targetAttributes;
 		public Resistances targetResistances;
-		
-		public EvaluatedSkillActFormTargetData(TurnActMemberChoice choice, BodyPart randomTargetBodyPart)
+
+		ObjInstance objInstance = null;
+		TurnActMemberChoice targetChoice = null;
+
+		public EvaluatedSkillActFormTargetData(SkillActForm sourceForm, TurnActMemberChoice choice, BodyPart randomTargetBodyPart, ObjInstance objInstance)
 		{
+			this.targetChoice = choice;
+			this.objInstance = objInstance;
+			this.target = choice.member;
+			this.form = choice.skillActForm;
+			this.sourceForm = sourceForm;
 			targetAttributes = choice.member.getAttributes();
 			targetResistances = choice.member.getResistances();
 			if (randomTargetBodyPart!=null) {
@@ -172,10 +339,38 @@ public class EvaluatorBase {
 				targetAttributes.appendAttributes(bo.getAttributeValues());
 				targetResistances.appendResistances(bo.getResistanceValues());
 			}
-			levelOfSkill = choice.skill.level;
+			levelOfSkill = choice.skill==null?0:choice.skill.level;
 		}
 		
-		// TODO use and enhance this, summarizing all data for an evaluation.
+		public int calculateTargetPower()
+		{
+			int base = DEFENSE_BASE_VALUE;
+			
+			if (form!=null)
+			{
+				base += calculatePowerForSkillUse(levelOfSkill, false, objInstance, null);	
+			} else
+			{
+				// using object, resting, double defense value.
+				if (targetChoice.doNothing) {
+					base += DEFENSE_BASE_VALUE;
+				} else
+				{
+					base += DEFENSE_BASE_VALUE/2;
+				}
+			}
+			
+			int contraMaxHundredPlus =
+				(
+						calculateContraAttributePower(sourceForm, targetAttributes)/2
+				+
+						calculateContraResistencePower(sourceForm, targetResistances))/2
+				;
+			
+			return base+contraMaxHundredPlus;
+			
+			
+		}
 	}
 	
 	
@@ -184,22 +379,19 @@ public class EvaluatorBase {
 		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
 		Impact i = new Impact();
 		
-		
-		
 		if (choice.skillActForm!=null)
 		{
-			boolean success = false;
-			float impact = 0.5f;
-
 			ArrayList<BonusSkillActFormDesc> bonusActForms = new ArrayList<BonusSkillActFormDesc>();
 			ObjInstance objInstance = null;
-			ObjInstance dependencyObj = null;
+			ObjInstance dependencyObjInstance = null;
 			if (choice.skillActForm.skill.needsInventoryItem)
 			{
 				if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 				{
-					dependencyObj = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
-					bonusActForms = dependencyObj.getLastUseBonusActForms();
+					dependencyObjInstance = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
+					ArrayList<BonusSkillActFormDesc> depBonusActForms = dependencyObjInstance.getLastUseBonusActForms();  
+					if (depBonusActForms!=null)
+						bonusActForms = depBonusActForms; 
 				}
 				if (choice.usedObject.description.isGroupable()) {
 					objInstance = choice.member.inventory.getOneInstanceOfTypeAndRemove(choice.usedObject.description);
@@ -217,54 +409,21 @@ public class EvaluatorBase {
 						bonusActForms = objBonusList;
 				}
 			}
-		
-			// calculate attack...
-			int result = calculateResultForSkillUse(seed, choice,false,dependencyObj); 
-			int maxHundredPlus = HashUtil.mixPercentage(seed, choice.member.getNumericId()+choice.member.instance.getNumericId(), 0); // random factor
-			result+=maxHundredPlus;
-			
-			// calculate defense
-			int contraResult = DEFENSE_BASE_VALUE; // default defense value
-			TurnActMemberChoice contraChoice = state.memberChoices.get(choice.targetMember);
-			if (contraChoice!=null && contraChoice.skillActForm!=null)
-			{
-				contraResult += calculateResultForSkillUse(seed, choice,true,null);
-			}
-			int contraMaxHundredPlus =
-				(
-						calculateContraAttributeValue(choice.skillActForm, choice.targetMember)/2
-				+
-						calculateContraResistenceValue(choice.skillActForm, choice.targetMember))/2
-				;
-				
-			//contraMaxHundredPlus+=HashUtil.mixPercentage(seed, choice.targetMember.getNumericId(),choice.targetMember.instance.getNumericId(), 0); // random factor
-			contraResult+=contraMaxHundredPlus;
 
-			System.out.println("EVAULATED RESULT = "+result + " ? "+contraResult);
-			if (result>contraResult)
+			// the simple act form
+			EvaluatedData evaluated = new EvaluatedData(seed,state,choice,null,objInstance,dependencyObjInstance);
+			Impact impact = evaluated.evaluate();
+			impact.additionalEffectsToPlay = bonusActForms;
+			if (bonusActForms!=null)
+			for (BonusSkillActFormDesc bonus:bonusActForms)
 			{
-				success = true;
+				EvaluatedData evaluatedBonus = new EvaluatedData(seed,state,choice,bonus,objInstance,dependencyObjInstance);
+				Impact plusImpact = evaluatedBonus.evaluate();
+				impact.append(plusImpact,false,false); // appending impacts but not XP and cost (this is artifact use, no such needed)!
 			}
-			if (success)
-			{
-				i.success = true;
-				ImpactUnit u = new ImpactUnit();
-				for (Integer effectType:choice.skillActForm.effectTypesAndLevels.keySet())
-				{
-					u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.effectTypesAndLevels.get(effectType));
-					System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
-				}
-				i.targetImpact.put(choice.targetMember, u);
-				// TODO calculate impact effect based on targetmember's skills / spell effects/ armor etc.
-				// calculate ammunition / weapon magical effects etc.
-			}
-			ImpactUnit u = i.actCost;
-			for (Integer effectType:choice.skillActForm.usedPointsAndLevels.keySet())
-			{
-				u.orderedImpactPoints[effectType] = (int)(impact * choice.skillActForm.usedPointsAndLevels.get(effectType));
-				System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
-			}
-			i.additionalEffectsToPlay = bonusActForms;
+
+			return impact;
+			
 		}
 		return i;
 	}

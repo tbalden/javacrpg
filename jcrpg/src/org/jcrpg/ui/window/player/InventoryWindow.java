@@ -168,19 +168,19 @@ public class InventoryWindow extends PagedInputWindow {
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 
-	    	use = new TextButton("use",this,page0, 0.13f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.use"),"U");
+	    	use = new TextButton("use",this,page0, 0.18f, 0.78f, 0.07f, 0.07f,600f,Language.v("inventory.use"),"U");
 	    	addInput(0,use);
 
-	    	equip = new TextButton("equip",this,page0, 0.23f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"),"E");
+	    	equip = new TextButton("equip",this,page0, 0.25f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.equip"),"E");
 	    	addInput(0,equip);
 	    	
-	    	attach = new TextButton("attach",this,page0, 0.33f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.attach"),"A");
+	    	attach = new TextButton("attach",this,page0, 0.35f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.attach"),"A");
 	    	addInput(0,attach);
 
-	    	give = new TextButton("give",this,page0, 0.43f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.give"),"G");
+	    	give = new TextButton("give",this,page0, 0.45f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.give"),"G");
 	    	addInput(0,give);
 
-	    	drop = new TextButton("drop",this,page0, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.drop"));
+	    	drop = new TextButton("drop",this,page0, 0.55f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.drop"));
 	    	addInput(0,drop);
 	    	
 	    	addPage(0, page0);
