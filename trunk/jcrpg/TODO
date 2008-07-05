@@ -8,6 +8,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] char sheet -> resistance values!
 
 [ ] particle effect for models
 [ ] camera bigger view - switch off back rendered models (check cave)
@@ -56,11 +57,13 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] inv/char sheet window restore not correct
 
 	[1] evaluator base:
-		[ ] use newly created gatherer classes in EvaluatorBase for calculating each impact for each skillActForm / target member
+		[ ] potion use is not working!!
+		[X] use newly created gatherer classes in EvaluatorBase for calculating each impact for each skillActForm / target member
 			gather artifact bonus skills in the list beside the normal skill act form,
 			iterate through them for each targetMember in the other list.
 		[ ] hit body parts, criticals
-			[ ] XP and impact calculation / resistances etc.
+			[ ] XP and impact calculation / resistances etc. decreasing impact
+			[ ] armors on body parts calculation upon impact
 		
 		[X] calc bonus of EQUIPPED (armors, rings) things in EntityObjInventory!
 		

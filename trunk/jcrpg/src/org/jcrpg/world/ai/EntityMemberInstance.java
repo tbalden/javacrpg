@@ -24,6 +24,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -32,6 +33,7 @@ import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.SkillBase.NoActForm;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
@@ -169,6 +171,13 @@ public class EntityMemberInstance {
 	 */
 	public Resistances getResistances()
 	{
+		Resistances base = description.getResistances(instance.description);
+		if (base==null) { // workaround for old characters, can be removed later TODO
+			if (description instanceof MemberPerson)
+			{
+				((MemberPerson)description).resistances = new FantasyResistances(false);
+			}
+		} // end workaround
 		Resistances resistances = description.getResistances(instance.description).copy();
 		resistances.appendResistances(inventory.getEquipmentResistanceValues(null));
 		return resistances;
