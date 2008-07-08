@@ -341,7 +341,7 @@ public class EncounterLogic {
 							{
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
-								
+								impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);
 								if (impact.additionalEffectsToPlay!=null)
 								{
 									for (BonusSkillActFormDesc desc:impact.additionalEffectsToPlay)
