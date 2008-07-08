@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
@@ -169,13 +170,18 @@ public class EvaluatorBase {
 			sourcePower+=maxHundredPlus;
 			for (EvaluatedSkillActFormTargetData data:targetData) {
 				int targetPower = 50;
+				float impact = 0.5f;
 				if (!sourceData.sourceChoice.isConstructive())
 				{
 					targetPower =  data.calculateTargetPower();
+					impact = (sourcePower-targetPower)/100f; 
+				} else
+				{
+					impact = 1f;
 				}
-				float impact = 0.5f;
 				SkillActForm skillActForm = sourceData.form;
 				Impact i = new Impact();
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Impact: "+impact+ " TP/SP: "+targetPower+" / "+sourcePower);
 				if (sourcePower>targetPower)
 				{
 					// success
