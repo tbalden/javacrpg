@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
