@@ -98,11 +98,12 @@ public class EvaluatorBase {
 				}
 			}
 		}
-		int result = level;
+		int result = level + ATTACK_BASE_VALUE;
 		result = (int)(result * ( objMultiplicator ));
 		return result;
 	}
 	
+	public static final int ATTACK_BASE_VALUE = 10;
 	public static final int DEFENSE_BASE_VALUE = 20;
 	
 	public static class EvaluatedData
@@ -170,7 +171,7 @@ public class EvaluatorBase {
 			sourcePower+=maxHundredPlus;
 			for (EvaluatedSkillActFormTargetData data:targetData) {
 				int targetPower = 50;
-				float impact = 0.5f;
+				float impact = 1f;
 				if (!sourceData.sourceChoice.isConstructive())
 				{
 					targetPower =  data.calculateTargetPower();
@@ -181,19 +182,25 @@ public class EvaluatorBase {
 				}
 				SkillActForm skillActForm = sourceData.form;
 				Impact i = new Impact();
-				J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Impact: "+impact+ " TP/SP: "+targetPower+" / "+sourcePower);
 				if (sourcePower>targetPower)
 				{
+					i.messages.add(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower);
 					// success
 					i.success = true;
 					// calculate resistance impact decrease etc. TODO
 					ImpactUnit u = new ImpactUnit();
+					String effectText = "";
 					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
 					{
 						u.orderedImpactPoints[effectType] = (int)(impact * skillActForm.effectTypesAndLevels.get(effectType));
+						effectText+=""+effectType+" = "+u.orderedImpactPoints[effectType]+" ";
 						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
 					}
+					i.messages.add("Effect: "+effectText);
 					addTargetImpactUnit(data.target, u);
+				} else
+				{
+					i.messages.add(data.target.description.getName() + ": Failure! Def/Att: "+targetPower+"/"+sourcePower);
 				}
 				ImpactUnit u = new ImpactUnit();
 				for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
@@ -385,12 +392,12 @@ public class EvaluatorBase {
 		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
 		Impact i = new Impact();
 		
-		if (choice.skillActForm!=null)
+		if (choice.doUse || choice.skillActForm!=null)
 		{
 			ArrayList<BonusSkillActFormDesc> bonusActForms = new ArrayList<BonusSkillActFormDesc>();
 			ObjInstance objInstance = null;
 			ObjInstance dependencyObjInstance = null;
-			if (choice.skillActForm.skill.needsInventoryItem)
+			if (choice.doUse || choice.skillActForm.skill.needsInventoryItem)
 			{
 				if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 				{
@@ -417,8 +424,12 @@ public class EvaluatorBase {
 			}
 
 			// the simple act form
-			EvaluatedData evaluated = new EvaluatedData(seed,state,choice,null,objInstance,dependencyObjInstance);
-			Impact impact = evaluated.evaluate();
+			Impact impact = new Impact();
+			if (!choice.doUse)
+			{
+				EvaluatedData evaluated = new EvaluatedData(seed,state,choice,null,objInstance,dependencyObjInstance);
+				impact = evaluated.evaluate();
+			}
 			impact.additionalEffectsToPlay = bonusActForms;
 			if (bonusActForms!=null)
 			for (BonusSkillActFormDesc bonus:bonusActForms)
@@ -426,6 +437,10 @@ public class EvaluatorBase {
 				EvaluatedData evaluatedBonus = new EvaluatedData(seed,state,choice,bonus,objInstance,dependencyObjInstance);
 				Impact plusImpact = evaluatedBonus.evaluate();
 				impact.append(plusImpact,false,false); // appending impacts but not XP and cost (this is artifact use, no such needed)!
+				if (choice.doUse && impact.success==false)
+				{
+					impact.success = plusImpact.success;
+				}
 			}
 
 			return impact;

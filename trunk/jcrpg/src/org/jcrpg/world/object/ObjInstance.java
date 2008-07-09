@@ -159,6 +159,7 @@ public class ObjInstance {
 			ArrayList<BonusSkillActFormDesc> ret = new ArrayList<BonusSkillActFormDesc>();
 			BonusObject b = ((BonusObject)description);
 			ArrayList<BonusSkillActFormDesc> list = b.getSkillActFormBonusEffectTypes();
+			if (list!=null)
 			for (BonusSkillActFormDesc desc:list)
 			{
 				boolean add = false;
