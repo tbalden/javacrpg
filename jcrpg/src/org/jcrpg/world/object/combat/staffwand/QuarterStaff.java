@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.world.object.combat.staffwand;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.StaffsAndWands;
 import org.jcrpg.world.object.Obj;
@@ -52,6 +53,9 @@ public class QuarterStaff extends Obj implements Weapon {
 	
 	public String getMissSound() {		
 		return null;
+	}
+	public String getDamageTypeResistance() {
+		return FantasyResistances.RESIST_BLUDGEON;
 	}
 	
 }

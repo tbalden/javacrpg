@@ -18,8 +18,11 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 public class Wrestling extends SkillBase implements TurnActSkill  {
@@ -52,7 +55,7 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 			skillRequirementLevel = 0;
 			atomicEffect = 0;
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, 5);
+			effectTypesAndLevels.put(EFFECTED_POINT_STAMINA, -5);
 			usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -4);
 		}
 
@@ -66,6 +69,10 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 	{
 		actForms.add(new KillerGrip(this));
 		actForms.add(new Detain(this));
+	}
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraCloseCombatSkills;
 	}
 
 }

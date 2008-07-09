@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.ui.text.TextBox;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
 
@@ -34,7 +35,7 @@ public class Impact
 	
 	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;
 	
-	public ArrayList<String> messages = new ArrayList<String>();
+	public ArrayList<TextEntry> messages = new ArrayList<TextEntry>();
 	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
@@ -63,4 +64,9 @@ public class Impact
 			//box.addEntry(i.encounterData.getName()+": HP "+targetImpact.get(i).getHealthPoint());
 		//}
 	}
+	
+	/**
+	 * Used upon application only, postprocessing.
+	 */
+	public ArrayList<TextEntry> applyMessages = new ArrayList<TextEntry>();
 }

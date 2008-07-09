@@ -18,10 +18,13 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import java.util.ArrayList;
+
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 /**
@@ -59,6 +62,11 @@ public class HandsAndFeet extends SkillBase  implements TurnActSkill {
 	public HandsAndFeet()
 	{
 		actForms.add(new FirstKillLesson(this));
+	}
+
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraCloseCombatSkills;
 	}
 
 }

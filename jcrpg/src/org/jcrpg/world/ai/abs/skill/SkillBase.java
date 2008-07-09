@@ -66,5 +66,11 @@ public class SkillBase {
 	{
 		return Language.v("skills."+this.getClass().getSimpleName());
 	}
+	
+	public static final ArrayList<Class<? extends SkillBase>> zeroLengthContra = new ArrayList<Class<? extends SkillBase>>();
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes()
+	{
+		return zeroLengthContra;
+	}
 
 }

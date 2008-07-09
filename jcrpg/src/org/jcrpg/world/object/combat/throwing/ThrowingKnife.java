@@ -20,6 +20,7 @@ package org.jcrpg.world.object.combat.throwing;
 import org.jcrpg.threed.jme.program.impl.ArrowNoEffect;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 
@@ -63,6 +64,9 @@ public class ThrowingKnife extends ThrowingWeapon {
 
 	public int getSpeed() {
 		return 10;
+	}
+	public String getDamageTypeResistance() {
+		return FantasyResistances.RESIST_PIERCE;
 	}
 
 }

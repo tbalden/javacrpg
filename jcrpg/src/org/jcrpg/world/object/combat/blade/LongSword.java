@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.world.object.combat.blade;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.object.Obj;
@@ -52,6 +53,9 @@ public class LongSword extends Obj implements Weapon {
 	}
 	public String getMissSound() {
 		return "weapon/clang";
+	}
+	public String getDamageTypeResistance() {
+		return FantasyResistances.RESIST_PIERCE;
 	}
 	
 }

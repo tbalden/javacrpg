@@ -43,4 +43,6 @@ public interface Weapon {
 	public String getHitSound();
 	public String getMissSound();
 	
+	public String getDamageTypeResistance();
+	
 }

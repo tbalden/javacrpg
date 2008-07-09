@@ -18,8 +18,11 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.abs.skill.actform.HitDontCut;
 import org.jcrpg.world.ai.abs.skill.actform.Swing;
@@ -55,6 +58,10 @@ public class MediumBlades extends SkillBase implements TurnActSkill  {
 		actForms.add(new Swing(this,1f));
 		actForms.add(new WhirlwindCut(this));
 		actForms.add(new HitDontCut(this,1f));
+	}
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraCloseCombatSkills;
 	}
 
 }

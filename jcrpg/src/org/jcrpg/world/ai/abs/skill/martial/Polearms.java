@@ -18,7 +18,10 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 
 /**
@@ -33,6 +36,10 @@ public class Polearms extends SkillBase implements TurnActSkill  {
 	public Polearms()
 	{
 		needsInventoryItem = true;
+	}
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraCloseCombatSkills;
 	}
 
 }

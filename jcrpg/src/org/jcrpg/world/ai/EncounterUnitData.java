@@ -23,7 +23,10 @@ import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+
+import com.jme.renderer.ColorRGBA;
 
 public class EncounterUnitData
 {
@@ -199,10 +202,12 @@ public class EncounterUnitData
 							inst.applyImpactUnit(u);
 							if (inst.isDead())
 							{
+								unit.applyMessages.add(new TextEntry(""+inst.description.getName()+" dies!",ColorRGBA.red));
 								killCount++;
 							}
 							if (inst.memberState.isNeutralized())
 							{
+								unit.applyMessages.add(new TextEntry(""+inst.description.getName()+" neutralized!",ColorRGBA.orange));
 								neutralizeCount++;
 							}
 						}
@@ -224,10 +229,12 @@ public class EncounterUnitData
 					((EntityMemberInstance)subUnit).applyImpactUnit(u);
 					if (((EntityMemberInstance)subUnit).isDead())
 					{
+						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" dies!",ColorRGBA.red));
 						killCount++;
 					} else
 					if (((EntityMemberInstance)subUnit).memberState.isNeutralized())
 					{
+						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" neutralized!",ColorRGBA.orange));
 						neutralizeCount++;
 					}
 				}
