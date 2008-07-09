@@ -41,7 +41,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 			animationType = MovingModelAnimDescription.ANIM_CAST;
 			atomicEffect = (int)(-5);
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5));
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(40));
 			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
 			contraAttributes.add(FantasyAttributes.CONCENTRATION);
 			contraAttributes.add(FantasyAttributes.PSYCHE);
@@ -70,7 +70,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 			animationType = MovingModelAnimDescription.ANIM_CAST;
 			atomicEffect = (int)(-5);
 			targetType = TARGETTYPE_LIVING_MEMBER;
-			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(5));
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(40));
 			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
 			contraAttributes.add(FantasyAttributes.CONCENTRATION);
 			contraAttributes.add(FantasyAttributes.PSYCHE);

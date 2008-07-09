@@ -36,41 +36,25 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [?] list before next release:
 
-	[X] filtering turn act target groups based on weapon range!
-	[X] adding player characters to different lines based on party order 
-	[X] filtering AI targets too by weapon range :)
-
-	[-] ENHANCE INVENTORY
-		[X] attach projectiles
-		[X] move to other characters, with quantity
-		[X] describe attachments upon selection a bow...
-		[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
-			- in combat only those equipped should be used. If used and cursed it should be the only one. others
-			should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
-		
-		[-] What about two handed fight?? --- ??? 
-			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
-			
-	[ ] equipped enhanced items should modify persistentMember's attributes/healthpoints... temporary values etc
-	should be programmed.
-	
-	[X] inv/char sheet window restore not correct
+	[ ] hp - bug -> boar doesnt die on big damages done!
 
 	[1] evaluator base:
-		[ ] potion use is not working!!
-		[X] use newly created gatherer classes in EvaluatorBase for calculating each impact for each skillActForm / target member
-			gather artifact bonus skills in the list beside the normal skill act form,
-			iterate through them for each targetMember in the other list.
+
 		[ ] hit body parts, criticals
 			[ ] XP and impact calculation / resistances etc. decreasing impact
 			[ ] armors on body parts calculation upon impact
+
+
+	[-] ENHANCE INVENTORY
+		[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
+			- in combat only those equipped should be used. If used and cursed it should be the only one. others
+			should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
+		[X] attach projectiles
+		[X] move to other characters, with quantity
+		[X] describe attachments upon selection a bow...
 		
-		[X] calc bonus of EQUIPPED (armors, rings) things in EntityObjInventory!
-		
-			
-		[X] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
-			[X] effect program triggering is complete, impact calc NEEDED!
-		[X] attribute plus addition to member attributes when using it for attack
+		[-] What about two handed fight?? --- ??? 
+			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
 			
 
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
@@ -86,6 +70,33 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[ ] fabrication of ammunition and such - fletcher, work Skill
 
 	[ ] documenting points, attr, calculations, leveling
+
+	[ ]	flying numbers for impact over units, billboard
+
+	[X] die messages
+	
+	[x] evaluation
+		[X] potion use is not working!!
+		[X] use newly created gatherer classes in EvaluatorBase for calculating each impact for each skillActForm / target member
+			gather artifact bonus skills in the list beside the normal skill act form,
+			iterate through them for each targetMember in the other list.
+		
+		[X] calc bonus of EQUIPPED (armors, rings) things in EntityObjInventory!
+		
+			
+		[X] artifact bonus skill in turn act phase -> triggering and visualizing them - WolfTooth
+			[X] effect program triggering is complete, impact calc NEEDED!
+		[X] attribute plus addition to member attributes when using it for attack
+
+	[X] filtering turn act target groups based on weapon range!
+	[X] adding player characters to different lines based on party order 
+	[X] filtering AI targets too by weapon range :)
+
+	[X] equipped enhanced items should modify persistentMember's attributes/healthpoints... temporary values etc
+		should be programmed.
+	
+	[X] inv/char sheet window restore not correct
+
 
 	[X] check combat with non animated -> sounds etc.
 

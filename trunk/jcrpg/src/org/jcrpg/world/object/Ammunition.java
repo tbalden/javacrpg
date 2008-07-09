@@ -19,6 +19,8 @@ package org.jcrpg.world.object;
 
 import java.util.HashMap;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
+
 public abstract class Ammunition extends Obj {
 
 	
@@ -31,6 +33,10 @@ public abstract class Ammunition extends Obj {
 	@Override
 	public boolean isAttacheable() {
 		return true;
+	}
+
+	public String getDamageTypeResistance() {
+		return FantasyResistances.RESIST_PIERCE;
 	}
 	
 	

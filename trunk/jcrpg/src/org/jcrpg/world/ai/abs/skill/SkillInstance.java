@@ -93,5 +93,10 @@ public class SkillInstance {
 		level+=value;
 	}
 	
+	public SkillBase getSkill()
+	{
+		return SkillGroups.skillBaseInstances.get(skill);
+	}
+	
 	
 }

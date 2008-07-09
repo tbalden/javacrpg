@@ -96,8 +96,21 @@ public class SkillGroups {
 	public static ArrayList<SkillActForm> negativeSkillActForms = new ArrayList<SkillActForm>();
 	public static ArrayList<SkillActForm> neutralSkillActForms = new ArrayList<SkillActForm>();
 	public static ArrayList<SkillActForm> positiveSkillActForms = new ArrayList<SkillActForm>();
-	
+
+	public static ArrayList<Class<? extends SkillBase>> contraCloseCombatSkills = new ArrayList<Class<? extends SkillBase>>();
+
 	static {
+		
+		contraCloseCombatSkills.add(HandsAndFeet.class);
+		contraCloseCombatSkills.add(StaffsAndWands.class);
+		contraCloseCombatSkills.add(ShortBlades.class);
+		contraCloseCombatSkills.add(MediumBlades.class);
+		contraCloseCombatSkills.add(LargeBlades.class);
+		contraCloseCombatSkills.add(Polearms.class);
+		contraCloseCombatSkills.add(MaceAndFlail.class);
+		contraCloseCombatSkills.add(HammerAndAxe.class);
+		contraCloseCombatSkills.add(BiteFight.class);
+		contraCloseCombatSkills.add(Wrestling.class);
 		
 		skillTypeInterfaces.add(InterceptionSkill.class);
 		skillTypeInterfaces.add(ObjectSkill.class);

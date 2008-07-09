@@ -18,9 +18,12 @@
 
 package org.jcrpg.world.ai.abs.skill.martial;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.abs.skill.actform.Swing;
 import org.jcrpg.world.ai.abs.skill.actform.Thrust;
@@ -54,6 +57,11 @@ public class LargeBlades extends SkillBase implements TurnActSkill  {
 		t.contraResistencies.add(FantasyResistances.RESIST_PIERCE);
 		actForms.add(t);
 		actForms.add(new Swing(this,1.5f));
+	}
+
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraCloseCombatSkills;
 	}
 
 }

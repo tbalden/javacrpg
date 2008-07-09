@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.world.object.combat.bow;
 
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.Bows;
 
@@ -52,6 +53,10 @@ public class ShortBow extends Bow {
 
 	public int getSpeed() {
 		return 5;
+	}
+
+	public String getDamageTypeResistance() {
+		return FantasyResistances.RESIST_PIERCE;
 	}
 
 }

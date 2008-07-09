@@ -360,7 +360,7 @@ public class EncounterLogic {
 									}
 								}
 								
-								for (String m:impact.messages)
+								for (TextEntry m:impact.messages)
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry(m);
 								}
@@ -399,6 +399,10 @@ public class EncounterLogic {
 								if (impact.success) {
 									
 									int[] counters = choice.target.applyImpactUnit(impact);
+									for (TextEntry m:impact.applyMessages)
+									{
+										gameLogic.core.uiBase.hud.mainBox.addEntry(m);
+									}
 									if (choice.member instanceof PersistentMemberInstance)
 									{
 										// increasing kill/neut. counters

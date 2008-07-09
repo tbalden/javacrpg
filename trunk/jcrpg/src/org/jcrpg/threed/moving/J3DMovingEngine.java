@@ -439,7 +439,7 @@ public class J3DMovingEngine {
 			ArrayList<EffectNode> nodes = effectNodes.get(p);
 			for (EffectNode n:nodes)
 			{
-				System.out.println("PLAYING "+n.getClass());
+				//System.out.println("PLAYING "+n.getClass());
 				if (!n.startedPlaying)
 				{
 					n.startedPlaying = true;
@@ -465,7 +465,7 @@ public class J3DMovingEngine {
 				
 				
 				float dist = eVec.distance(n.currentPos);
-				System.out.println("######### "+dist);
+				//System.out.println("######### "+dist);
 				
 				if (dist<0.1f)
 				{

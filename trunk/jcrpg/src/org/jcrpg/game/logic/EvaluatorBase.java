@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
@@ -37,6 +38,8 @@ import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.Weapon;
+
+import com.jme.renderer.ColorRGBA;
 
 public class EvaluatorBase {
 	
@@ -173,7 +176,16 @@ public class EvaluatorBase {
 				float impact = 1f;
 				if (!sourceData.sourceChoice.isConstructive())
 				{
-					targetPower =  data.calculateTargetPower();
+					if (sourceData.sourceChoice.skill!=null && data.targetChoice.skill!=null)
+					{
+						// if the target's skill is not a contra skill for attacker's skill, then levae level 0...
+						if (!sourceData.sourceChoice.skill.getSkill().getContraSkillTypes().contains(data.targetChoice.skill))
+						{
+							data.levelOfSkill = 0;
+						}
+					}
+					targetPower =  data.calculateTargetPower();	
+					
 					impact = (sourcePower-targetPower)/100f; 
 				} else
 				{
@@ -183,29 +195,46 @@ public class EvaluatorBase {
 				Impact i = new Impact();
 				if (sourcePower>targetPower)
 				{
-					i.messages.add(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower);
+					i.messages.add(new TextEntry(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.red));
 					// success
 					i.success = true;
 					// calculate resistance impact decrease etc. TODO
 					ImpactUnit u = new ImpactUnit();
 					String effectText = "";
+					HashMap<String, Integer> damages = sourceData.getPossibleDamagesPerResistance();
+					for (String key:damages.keySet())
+					{
+						System.out.println("## DAMAGE: "+key+" "+damages.get(key));
+					}
 					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
 					{
-						u.orderedImpactPoints[effectType] = (int)(impact * skillActForm.effectTypesAndLevels.get(effectType));
+						int baseDamage = 1; 
+						if (effectType == SkillActForm.EFFECTED_POINT_HEALTH)
+						{
+							if (damages.size()>0) baseDamage = 0;
+							for (Integer hpDamage:damages.values())
+							{
+								// TODO resistance string lookup, decrease
+								baseDamage+=hpDamage;
+							}
+							System.out.println("##!! BASEDAMAGE = "+baseDamage);
+						}
+						
+						u.orderedImpactPoints[effectType] = (int)(impact * (baseDamage * 1f) * (skillActForm.effectTypesAndLevels.get(effectType)/2f));
 						effectText+=""+effectType+" = "+u.orderedImpactPoints[effectType]+" ";
-						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]);
+						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]+" level "+(skillActForm.effectTypesAndLevels.get(effectType)*1f));
 					}
-					i.messages.add("Effect: "+effectText);
+					i.messages.add(new TextEntry("Effect: "+effectText,ColorRGBA.black));
 					addTargetImpactUnit(data.target, u);
 				} else
 				{
-					i.messages.add(data.target.description.getName() + ": Failure! Def/Att: "+targetPower+"/"+sourcePower);
+					i.messages.add(new TextEntry(data.target.description.getName() + ": Failure! Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.black));
 				}
 				ImpactUnit u = new ImpactUnit();
 				for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
 				{
-					u.orderedImpactPoints[effectType] = (int)(impact * skillActForm.usedPointsAndLevels.get(effectType));
-					System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
+					u.orderedImpactPoints[effectType] = (int)(skillActForm.usedPointsAndLevels.get(effectType));
+					//System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
 				}
 				// calculate XP TODO
 				i.actCost = u;
@@ -303,6 +332,46 @@ public class EvaluatorBase {
 				bo.getAttributeValues();
 				sourceAttributes.appendAttributes(bo.getAttributeValues());
 			}
+		}
+		
+		public HashMap<String, Integer> getPossibleDamagesPerResistance()
+		{
+			HashMap<String, Integer> ret = new HashMap<String, Integer>();
+			if (objInstance!=null)
+			{
+				if (objInstance.description instanceof Weapon)
+				{
+					Weapon w = (Weapon)objInstance.description;
+					ret.put(w.getDamageTypeResistance(),w.getMaxDamage());
+				}
+			}
+			if (dependencyObj!=null)
+			{
+				if (dependencyObj.description instanceof Ammunition)
+				{
+					Ammunition a = (Ammunition)(dependencyObj.description);
+					Integer res = ret.get(a.getDamageTypeResistance());
+					if (res!=null)
+					{
+						res *= a.getDamageMultiplier();
+						ret.put(a.getDamageTypeResistance(), res);
+					}
+					if (a.getAmmunitionExtraDamage()!=null)
+					{
+						for (String resType : a.getAmmunitionExtraDamage().keySet())
+						{
+							Integer i = a.getAmmunitionExtraDamage().get(resType);
+							Integer o = ret.get(resType);
+							if (o!=null)
+							{
+								i+=o;
+							}
+							ret.put(resType, i);
+						}
+					}
+				}
+			}
+			return ret;
 		}
 		
 		public void addCostImpactUnit(ImpactUnit unit)
