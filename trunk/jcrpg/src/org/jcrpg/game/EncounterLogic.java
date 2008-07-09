@@ -243,7 +243,7 @@ public class EncounterLogic {
 						{
 							s+=0.0001f;
 						}
-						//orderedActors.put(s, mi);
+						orderedActors.put(s, mi);
 					}
 				} else
 				{
@@ -252,7 +252,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					//orderedActors.put(s, mi); // resters to the end of round
+					orderedActors.put(s, mi); // resters to the end of round
 				}
 			}
 		}
