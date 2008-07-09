@@ -243,7 +243,7 @@ public class EncounterLogic {
 						{
 							s+=0.0001f;
 						}
-						orderedActors.put(s, mi);
+						//orderedActors.put(s, mi);
 					}
 				} else
 				{
@@ -252,7 +252,7 @@ public class EncounterLogic {
 					{
 						s+=0.0001f;
 					}
-					orderedActors.put(s, mi); // resters to the end of round
+					//orderedActors.put(s, mi); // resters to the end of round
 				}
 			}
 		}
@@ -293,11 +293,11 @@ public class EncounterLogic {
 				p.type = PlannedTurnActEvent.TYPE_MEMBER_CHOICE;
 				p.choice = c;
 				p.initMessage = message;
-				p.minTime = 300;
+				p.minTime = 600;
 				turnActTurnState.plan.add(p);
 				// adding a bit of pause
 				p = new PlannedTurnActEvent();
-				p.minTime = 200;
+				p.minTime = 800;
 				p.type = PlannedTurnActEvent.TYPE_PAUSE;
 				turnActTurnState.plan.add(p);
 			}
@@ -305,7 +305,7 @@ public class EncounterLogic {
 			{
 				PlannedTurnActEvent p = new PlannedTurnActEvent();
 				p.type = PlannedTurnActEvent.TYPE_PAUSE;
-				p.minTime = 400;
+				p.minTime = 1000;
 				message = step+". "+mi.description.getName() + " inactive.";
 				p.initMessage = message;
 				turnActTurnState.plan.add(p);
@@ -337,11 +337,11 @@ public class EncounterLogic {
 							turnActTurnState.getCurrentEvent().internalState++;
 							
 							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
-							if (choice.skill!=null)
+							if (!choice.doNothing && (choice.doUse || choice.skill!=null))
 							{
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
-								impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);
+								//impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);
 								if (impact.additionalEffectsToPlay!=null)
 								{
 									for (BonusSkillActFormDesc desc:impact.additionalEffectsToPlay)
@@ -360,6 +360,10 @@ public class EncounterLogic {
 									}
 								}
 								
+								for (String m:impact.messages)
+								{
+									gameLogic.core.uiBase.hud.mainBox.addEntry(m);
+								}
 								if (impact.success)
 								{
 									gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("HIT!",ColorRGBA.red));

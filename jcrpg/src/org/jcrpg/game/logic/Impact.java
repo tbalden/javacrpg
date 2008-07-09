@@ -27,11 +27,14 @@ import org.jcrpg.world.object.BonusSkillActFormDesc;
 
 public class Impact
 {
+	public boolean isConstructive = false;
 	public boolean success = false;
 	public int experienceGain = 1; // TODO
 	public ImpactUnit actCost = new ImpactUnit();
 	
 	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;
+	
+	public ArrayList<String> messages = new ArrayList<String>();
 	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
@@ -40,6 +43,7 @@ public class Impact
 	{
 		if (experienceToo) this.experienceGain+=impact.experienceGain;
 		if (costToo) this.actCost.append(impact.actCost);
+		messages.addAll(impact.messages);
 		for (EntityMemberInstance i:impact.targetImpact.keySet())
 		{
 			ImpactUnit u = impact.targetImpact.get(i);
@@ -55,8 +59,8 @@ public class Impact
 	
 	public void notifyUI(TextBox box)
 	{
-		for (EntityMemberInstance i:targetImpact.keySet()) {
-			box.addEntry(i.encounterData.getName()+": HP "+targetImpact.get(i).getHealthPoint());
-		}
+		//for (EntityMemberInstance i:targetImpact.keySet()) {
+			//box.addEntry(i.encounterData.getName()+": HP "+targetImpact.get(i).getHealthPoint());
+		//}
 	}
 }
