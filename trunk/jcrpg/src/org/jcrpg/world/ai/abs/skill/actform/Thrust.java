@@ -26,6 +26,7 @@ public class Thrust extends SkillActForm
 {
 	public Thrust(SkillBase skill, float multiplier) {
 		super(skill);
+		isBodyPartTargetted = true;
 		animationType = MovingModelAnimDescription.ANIM_ATTACK_LOWER;
 		atomicEffect = (int)(-5*multiplier);
 		targetType = TARGETTYPE_LIVING_MEMBER;

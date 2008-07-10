@@ -22,7 +22,7 @@ import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 /**
- * Fighting with bites - like dog/wolf and such.
+ * Helper skill for striking nerves.
  * @author pali
  *
  */

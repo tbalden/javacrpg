@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.skill.actform.Swing;
+import org.jcrpg.world.ai.abs.skill.actform.Thrust;
 
 /**
  * Axe, hammer.
@@ -37,6 +39,8 @@ public class HammerAndAxe extends SkillBase implements TurnActSkill  {
 	public HammerAndAxe()
 	{
 		needsInventoryItem = true;
+		actForms.add(new Thrust(this,1f));
+		actForms.add(new Swing(this,1f));
 	}
 	@Override
 	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {

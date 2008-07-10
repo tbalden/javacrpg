@@ -39,6 +39,7 @@ public class Bows extends SkillBase implements TurnActSkill  {
 
 		public AimedShot(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 0;
 			atomicEffect = -5;
 			targetType = TARGETTYPE_LIVING_MEMBER;

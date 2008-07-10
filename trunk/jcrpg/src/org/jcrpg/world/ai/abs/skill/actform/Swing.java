@@ -24,6 +24,7 @@ public class Swing extends SkillActForm
 {
 	public Swing(SkillBase skill, float multiplier) {
 		super(skill);
+		isBodyPartTargetted = true;
 		atomicEffect = (int)(-5*multiplier);
 		targetType = TARGETTYPE_LIVING_MEMBER;
 		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-(int)(5*multiplier));			

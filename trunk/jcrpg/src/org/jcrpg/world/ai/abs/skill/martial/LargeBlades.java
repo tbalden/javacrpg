@@ -37,6 +37,7 @@ public class LargeBlades extends SkillBase implements TurnActSkill  {
 
 		public SliceInTwo(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 50;
 			atomicEffect = -10;
 			targetType = TARGETTYPE_LIVING_MEMBER;

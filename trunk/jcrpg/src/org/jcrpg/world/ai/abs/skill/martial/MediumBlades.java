@@ -38,6 +38,7 @@ public class MediumBlades extends SkillBase implements TurnActSkill  {
 
 		public WhirlwindCut(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 50;
 			atomicEffect = -5;
 			targetType = TARGETTYPE_LIVING_MEMBER;

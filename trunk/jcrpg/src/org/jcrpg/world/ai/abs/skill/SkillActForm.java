@@ -38,11 +38,22 @@ public abstract class SkillActForm
 	
 	/**
 	 * Describes what kind of effect does it have in it core: destructive or constructive, from
-	 *  negative -10 to positive +10.
+	 * negative -10 to positive +10.Override this
+	 * in constructor.
 	 */
 	public int atomicEffect = 0;
 	
+	/**
+	 * What animation type should be used for animated model when this act form is being done. Override this
+	 * in constructor.
+	 */
 	public String animationType = MovingModelAnimDescription.ANIM_IDLE;
+	
+	/**
+	 * Tells if this is body part targeted act form. Override this
+	 * in constructor.
+	 */
+	protected boolean isBodyPartTargetted = false;
 	
 	public static final int TARGETTYPE_NONE = -1;
 	public static final int TARGETTYPE_LIVING_MEMBER = 0;
@@ -141,6 +152,14 @@ public abstract class SkillActForm
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * @return Tells if body part target is used for the skill.
+	 */
+	public boolean isBodyPartTargetted()
+	{
+		return isBodyPartTargetted;
 	}
 	
 }
