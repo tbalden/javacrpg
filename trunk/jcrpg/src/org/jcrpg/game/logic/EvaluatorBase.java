@@ -384,7 +384,7 @@ public class EvaluatorBase {
 					Integer res = ret.get(a.getDamageTypeResistance());
 					if (res!=null)
 					{
-						res *= a.getDamageMultiplier();
+						res = (int)(res*a.getDamageMultiplier());
 						ret.put(a.getDamageTypeResistance(), res);
 					}
 					if (a.getAmmunitionExtraDamage()!=null)
