@@ -455,7 +455,7 @@ public class J3DMovingEngine {
 				Vector3f mVec = rVectors[0];
 				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
-				System.out.println(n.currentPos);
+				//System.out.println(n.currentPos);
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {

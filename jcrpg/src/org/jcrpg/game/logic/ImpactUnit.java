@@ -64,4 +64,13 @@ public class ImpactUnit
 		}
 		experiencePoint+=unit.experiencePoint;
 	}
+	
+	public boolean isEffectiveSuccess()
+	{
+		for (Integer i:orderedImpactPoints)
+		{
+			if (i!=0) return true;
+		}
+		return false;
+	}
 }

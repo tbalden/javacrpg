@@ -34,6 +34,7 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 	{
 		public KillerGrip(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 0;
 			atomicEffect = -10;
 			targetType = TARGETTYPE_LIVING_MEMBER;

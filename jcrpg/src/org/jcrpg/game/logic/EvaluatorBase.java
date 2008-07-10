@@ -24,6 +24,7 @@ import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -33,6 +34,7 @@ import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.body.BodyPart;
 import org.jcrpg.world.object.Ammunition;
+import org.jcrpg.world.object.Armor;
 import org.jcrpg.world.object.BonusObject;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.InventoryListElement;
@@ -143,7 +145,17 @@ public class EvaluatorBase {
 			} else
 			{
 				if (choice.targetMember!=null)
-					targetMembers.add(choice.targetMember);
+				{
+					if (choice.targetMember.isDead() && choice.targetMember.encounterData.isGroupId)
+					{
+						// chose another one
+						choice.targetMember = choice.targetMember.encounterData.getFirstLivingMember();
+					}
+					if (!choice.targetMember.isDead())
+					{
+						targetMembers.add(choice.targetMember);
+					}
+				}
 			}
 			// creating target evaluation data
 			for (EntityMemberInstance i:targetMembers)
@@ -171,6 +183,8 @@ public class EvaluatorBase {
 			int sourcePower = sourceData.calculateSourcePower();
 			int maxHundredPlus = HashUtil.mixPercentage(seed, sourceData.source.getNumericId()+sourceData.source.instance.getNumericId(), 0); // random factor
 			sourcePower+=maxHundredPlus;
+			Impact i = new Impact();
+			SkillActForm skillActForm = sourceData.form;
 			for (EvaluatedSkillActFormTargetData data:targetData) {
 				int targetPower = 50;
 				float impact = 1f;
@@ -191,8 +205,6 @@ public class EvaluatorBase {
 				{
 					impact = 1f;
 				}
-				Impact i = new Impact();
-				SkillActForm skillActForm = sourceData.form;
 				if (skillActForm.isBodyPartTargetted())
 				{
 					i.messages.add(new TextEntry(data.target.description.getName() + ": "+data.randomTargetBodyPart.getName(), ColorRGBA.black));
@@ -201,7 +213,6 @@ public class EvaluatorBase {
 				{
 					i.messages.add(new TextEntry(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.red));
 					// success
-					i.success = true;
 					// calculate resistance impact decrease etc. TODO
 					ImpactUnit u = new ImpactUnit();
 					String effectText = "";
@@ -221,32 +232,48 @@ public class EvaluatorBase {
 								// TODO resistance string lookup, decrease
 								baseDamage+=hpDamage;
 							}
+							if (data.armor!=null)
+							{
+								baseDamage-=data.armor.getHitPointImpactDecrease();
+							}
+							if (baseDamage<0) baseDamage = 0;
 							System.out.println("##!! BASEDAMAGE = "+baseDamage);
 						}
-						
-						u.orderedImpactPoints[effectType] = (int)(impact * (baseDamage * 1f) * (skillActForm.effectTypesAndLevels.get(effectType)/2f));
-						effectText+=""+effectType+" = "+u.orderedImpactPoints[effectType]+" ";
+						float criticalHitMultiplicator = 1f;
+						if (data.randomTargetBodyPart!=null)
+						{
+							// critical multiplicator calculation
+							criticalHitMultiplicator = data.randomTargetBodyPart.getCriticalityOfInjury()/10f;
+							if (criticalHitMultiplicator>1.2f)
+								i.messages.add(new TextEntry("*CRITICAL HIT*",ColorRGBA.black));
+						}
+						u.orderedImpactPoints[effectType] = (int)(impact * (baseDamage * 1f) * (skillActForm.effectTypesAndLevels.get(effectType)/2f) * criticalHitMultiplicator);
+						effectText+=""+Language.v("effects.short."+effectType)+" = "+u.orderedImpactPoints[effectType]+" ";
 						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]+" level "+(skillActForm.effectTypesAndLevels.get(effectType)*1f));
 					}
 					i.messages.add(new TextEntry("Effect: "+effectText,ColorRGBA.black));
 					addTargetImpactUnit(data.target, u);
+					if (u.isEffectiveSuccess())
+					{
+						i.success = true;
+					}
 				} else
 				{
 					i.messages.add(new TextEntry(data.target.description.getName() + ": Failure! Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.black));
 				}
-				ImpactUnit u = new ImpactUnit();
-				for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
-				{
-					u.orderedImpactPoints[effectType] = (int)(skillActForm.usedPointsAndLevels.get(effectType));
-					//System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
-				}
 				// calculate XP TODO
-				i.actCost = u;
-				i.targetImpact = resultImpacts;
-				return i;
 			}
 			
-			return null;
+			
+			ImpactUnit cost = new ImpactUnit();
+			for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
+			{
+				cost.orderedImpactPoints[effectType] = (int)(skillActForm.usedPointsAndLevels.get(effectType));
+				//System.out.println("* SELF EFFECT " + u.orderedImpactPoints[effectType]);
+			}
+			i.actCost = cost;
+			i.targetImpact = resultImpacts;
+			return i;
 		}
 		
 		/**
@@ -411,6 +438,7 @@ public class EvaluatorBase {
 		ObjInstance objInstance = null;
 		TurnActMemberChoice targetChoice = null;
 		BodyPart randomTargetBodyPart;
+		Armor armor = null;
 
 		public EvaluatedSkillActFormTargetData(int seed, TurnActMemberChoice sourceChoice, TurnActMemberChoice choice, ObjInstance objInstance)
 		{
@@ -429,6 +457,7 @@ public class EvaluatorBase {
 			if (randomTargetBodyPart!=null) {
 				Attributes bonusAttributesForBodyPart = target.inventory.getEquipmentAttributeValues(randomTargetBodyPart.getClass());
 				Resistances bonusResistancesForBodyPart = target.inventory.getEquipmentResistanceValues(randomTargetBodyPart.getClass());
+				armor = target.inventory.getEquippedArmor(randomTargetBodyPart.getClass());
 				targetAttributes.appendAttributes(bonusAttributesForBodyPart);
 				targetResistances.appendResistances(bonusResistancesForBodyPart);
 			}
@@ -445,6 +474,11 @@ public class EvaluatorBase {
 		public int calculateTargetPower()
 		{
 			int base = DEFENSE_BASE_VALUE;
+			
+			if (armor!=null)
+			{
+				base+=armor.getDefenseValue();
+			}
 			
 			if (form!=null)
 			{

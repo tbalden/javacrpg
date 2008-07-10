@@ -57,7 +57,7 @@ public class EntityMemberInstance {
 	/**
 	 * The different points and such of the memberInstance.
 	 */
-	public EntityMemberState memberState = new EntityMemberState();
+	public EntityMemberState memberState = new EntityMemberState(this);
 	/**
 	 * The fragment with which the member is roaming.
 	 */
@@ -233,7 +233,7 @@ public class EntityMemberInstance {
 	public void updateAfterLeveling()
 	{
 		description.memberSkills.updateSkillActForms();
-		memberState.recalculateMaximums(this,true);
+		memberState.recalculateMaximums(true);
 	}
 	
 	public boolean isDead()

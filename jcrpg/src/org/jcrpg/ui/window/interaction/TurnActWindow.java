@@ -717,8 +717,14 @@ public class TurnActWindow extends PagedInputWindow {
 						}
 						choice.skillActForm = selectedForm;
 						choice.target = fragmentAndSubunit;					
-						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
-						choice.usedObject = obj;						
+						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize?
+						if (selectedForm!=null && selectedForm.skill.needsInventoryItem)
+						{
+							choice.usedObject = obj;
+						} else
+						{
+							choice.usedObject = null;
+						}
 					}
 					info.memberToChoice.put(i, choice);
 				}

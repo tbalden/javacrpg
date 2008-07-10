@@ -331,7 +331,7 @@ public class EntityObjInventory {
 		equipped.add(equipment);
 		// recalculate member state things if bonus object
 		if (equipment.description instanceof BonusObject)
-			instance.memberState.recalculateMaximums(instance, true);
+			instance.memberState.recalculateMaximums(true);
 		return true;
 	}
 	
@@ -348,7 +348,7 @@ public class EntityObjInventory {
 		equipped.remove(object);
 		// recalculate member state things if bonus object
 		if (object.description instanceof BonusObject)
-			instance.memberState.recalculateMaximums(instance, true);
+			instance.memberState.recalculateMaximums(true);
 		return true;
 	}
 	
@@ -399,6 +399,31 @@ public class EntityObjInventory {
 	}
 	public ArrayList<ObjInstance> getEquipped() {
 		return equipped;
+	}
+	
+	public Armor getEquippedArmor(Class<? extends BodyPart> lookUp)
+	{
+		for (ObjInstance i:equipped)
+		{
+			System.out.println("check attr bonus I "+i.getName());
+			if (i.description instanceof Armor)
+			{
+				Armor bo = (Armor)i.description;
+				if (lookUp!=null)
+				{
+					if (i.description instanceof Equippable)
+					{
+						if (((Equippable)i.description).getEquippableBodyPart() != lookUp) 
+							continue;
+					} else
+					{
+						return bo;
+					}
+				}
+			}
+		}
+		return null;
+		
 	}
 	
 	public Attributes getEquipmentAttributeValues(Class<? extends BodyPart> lookUp)
