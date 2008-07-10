@@ -60,6 +60,12 @@ public class EntityMemberState {
 	public static final int ZERO_SANITY = 3;
 	public static final int ZERO_MANA = 4;
 	
+	EntityMemberInstance instance;
+	public EntityMemberState(EntityMemberInstance i)
+	{
+		instance = i;
+	}
+	
 	/**
 	 * Applies impact unit and return zero reached point type list.
 	 * @param unit
@@ -67,7 +73,11 @@ public class EntityMemberState {
 	 */
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
+		System.out.println("applyImpactUnit "+instance.description.getName());
+		System.out.println("HEALTHPOINT BEFORE : "+healthPoint);
+		System.out.println("IMPACT : "+unit.getHealthPoint());
 		healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
+		System.out.println("HEALTHPOINT AFTER : "+healthPoint);
 		staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
 		moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
 		sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
@@ -83,8 +93,7 @@ public class EntityMemberState {
 		if (staminaPoint<=0) tmpZeroPointTypes.add(ZERO_STAMINA);
 		if (moralePoint<=0) tmpZeroPointTypes.add(ZERO_MORALE);
 		if (sanityPoint<=0) tmpZeroPointTypes.add(ZERO_SANITY);
-		if (manaPoint<=0) tmpZeroPointTypes.add(ZERO_MANA);
-		System.out.println("HEALTHPOINT: "+healthPoint);
+		if (manaPoint<=0) tmpZeroPointTypes.add(ZERO_MANA);		
 		return tmpZeroPointTypes;
 	}
 
@@ -128,10 +137,9 @@ public class EntityMemberState {
 	
 	/**
 	 * Recalculates maximum levels for an instance's attribute multipliers.
-	 * @param instance
 	 * @param finalize If finalize actual points are increased with the difference to new maximum.
 	 */
-	public void recalculateMaximums(EntityMemberInstance instance, boolean finalize)
+	public void recalculateMaximums(boolean finalize)
 	{
 		Attributes attributes = instance.getAttributes();
 		for (int i=ZERO_HEALTH; i<=ZERO_MANA; i++) {

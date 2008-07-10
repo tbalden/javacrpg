@@ -36,13 +36,16 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [?] list before next release:
 
-	[ ] hp - bug -> boar doesnt die on big damages done!
+	[X] hp - bug -> boar doesnt die on big damages done!
+		[X] check logs, something is wrong - double impact calculations and such -> impact hashmap reused???
 
 	[1] evaluator base:
 
-		[ ] hit body parts, criticals
-			[ ] XP and impact calculation / resistances etc. decreasing impact
-			[ ] armors on body parts calculation upon impact
+		[X] hit body parts, criticals
+			[ ] critical hit skills ? how use them (helper skills)
+			
+		[ ] XP and impact calculation / resistances etc. decreasing impact
+		[X] armors on body parts calculation upon impact
 
 
 	[-] ENHANCE INVENTORY

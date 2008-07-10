@@ -455,7 +455,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 							((MemberPerson)member.description).attributes.setAttribute(id, value);
 							System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 						}
-						member.memberState.recalculateMaximums(member,false);
+						member.memberState.recalculateMaximums(false);
 						updateAttributePoints();
 						return true;
 					}
