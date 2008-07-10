@@ -160,7 +160,7 @@ public class EvaluatorBase {
 					contraObjectInstance = contraChoice.usedObject.objects.get(0);
 				}
 				// TODO body part calc
-				targetData.add(new EvaluatedSkillActFormTargetData(choice.skillActForm,contraChoice,null,contraObjectInstance));
+				targetData.add(new EvaluatedSkillActFormTargetData(seed, choice,contraChoice,contraObjectInstance));
 			}
 			
 		}
@@ -191,8 +191,12 @@ public class EvaluatorBase {
 				{
 					impact = 1f;
 				}
-				SkillActForm skillActForm = sourceData.form;
 				Impact i = new Impact();
+				SkillActForm skillActForm = sourceData.form;
+				if (skillActForm.isBodyPartTargetted())
+				{
+					i.messages.add(new TextEntry(data.target.description.getName() + ": "+data.randomTargetBodyPart.getName(), ColorRGBA.black));
+				}
 				if (sourcePower>targetPower)
 				{
 					i.messages.add(new TextEntry(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.red));
@@ -383,6 +387,15 @@ public class EvaluatorBase {
 		{
 			return calculatePowerForSkillUse(levelOfSkill, false, objInstance, dependencyObj);
 		}
+		
+		public boolean isBodyPartTargetted()
+		{
+			if (sourceChoice!=null && sourceChoice.skillActForm!=null)
+			{
+				return sourceChoice.skillActForm.isBodyPartTargetted();
+			}
+			return false;
+		}
 	}
 	
 	public static class EvaluatedSkillActFormTargetData
@@ -397,16 +410,22 @@ public class EvaluatorBase {
 
 		ObjInstance objInstance = null;
 		TurnActMemberChoice targetChoice = null;
+		BodyPart randomTargetBodyPart;
 
-		public EvaluatedSkillActFormTargetData(SkillActForm sourceForm, TurnActMemberChoice choice, BodyPart randomTargetBodyPart, ObjInstance objInstance)
+		public EvaluatedSkillActFormTargetData(int seed, TurnActMemberChoice sourceChoice, TurnActMemberChoice choice, ObjInstance objInstance)
 		{
 			this.targetChoice = choice;
 			this.objInstance = objInstance;
 			this.target = choice.member;
 			this.form = choice.skillActForm;
-			this.sourceForm = sourceForm;
+			this.sourceForm = sourceChoice.skillActForm;
 			targetAttributes = choice.member.getAttributes();
 			targetResistances = choice.member.getResistances();
+			
+			if (sourceForm!=null && sourceForm.isBodyPartTargetted())
+			{
+				randomTargetBodyPart = getBodyPartTargetted(seed, 1); // TODO get critical body part targetting helper skill value
+			}
 			if (randomTargetBodyPart!=null) {
 				Attributes bonusAttributesForBodyPart = target.inventory.getEquipmentAttributeValues(randomTargetBodyPart.getClass());
 				Resistances bonusResistancesForBodyPart = target.inventory.getEquipmentResistanceValues(randomTargetBodyPart.getClass());
@@ -449,9 +468,13 @@ public class EvaluatorBase {
 				;
 			
 			return base+contraMaxHundredPlus;
-			
-			
 		}
+		
+		public BodyPart getBodyPartTargetted(int seed, int targettingCriticalLevel)
+		{
+			return target.description.getBodyType().getBodyPart(seed, target, targettingCriticalLevel);
+		}
+		
 	}
 	
 	

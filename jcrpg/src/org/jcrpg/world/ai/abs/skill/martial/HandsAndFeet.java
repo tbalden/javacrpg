@@ -42,6 +42,7 @@ public class HandsAndFeet extends SkillBase  implements TurnActSkill {
 
 		public FirstKillLesson(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 0;
 			animationType = MovingModelAnimDescription.ANIM_ATTACK_LOWER;
 			atomicEffect = (int)(-5);

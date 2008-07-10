@@ -21,6 +21,11 @@ package org.jcrpg.world.ai.abs.skill.physical;
 import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 
+/**
+ * 
+ * @author illes
+ *
+ */
 public class MartialTrance extends SkillBase implements HelperSkill{
 
 }

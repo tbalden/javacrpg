@@ -20,6 +20,9 @@ package org.jcrpg.world.ai.body;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EntityMemberInstance;
+
 public abstract class BodyBase {
 	
 	public static HashMap<Class <? extends  BodyBase>, BodyBase> bodyBaseInstances = new HashMap<Class <? extends BodyBase>, BodyBase>();
@@ -37,6 +40,27 @@ public abstract class BodyBase {
 	public String getBodyImage()
 	{
 		return bodyImage;
+	}
+	
+	public BodyPart getBodyPart(int seed, EntityMemberInstance forMember, int targettingCriticalLevel)
+	{
+		int sum = 0;
+		for (BodyPart p:bodyParts)
+		{
+			int size = (int)(p.getBodyPartSize() * Math.exp((p.getCriticalityOfInjury()/100f)*targettingCriticalLevel));
+			System.out.println("# BODY SIZE = "+size +" CRIT: "+targettingCriticalLevel);
+			sum+=size;
+		}
+		int random = HashUtil.mix(seed, forMember.getNumericId()+forMember.instance.getNumericId(), 1)%sum;
+		
+		sum = 0;
+		for (BodyPart p:bodyParts)
+		{
+			int size = (int)(p.getBodyPartSize() * Math.exp((p.getCriticalityOfInjury()/100f)*targettingCriticalLevel));
+			sum+=size;
+			if (random<sum) return p;
+		}
+		return null;
 	}
 
 }

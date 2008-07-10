@@ -23,6 +23,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 public class HitDontCut extends SkillActForm {
 	public HitDontCut(SkillBase skill, float multiplier) {
 		super(skill);
+		isBodyPartTargetted = true;
 		atomicEffect = 0;
 		targetType = TARGETTYPE_LIVING_MEMBER;
 		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(7*multiplier));

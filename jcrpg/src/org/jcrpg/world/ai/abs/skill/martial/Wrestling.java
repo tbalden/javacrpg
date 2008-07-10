@@ -52,6 +52,7 @@ public class Wrestling extends SkillBase implements TurnActSkill  {
 
 		public Detain(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			skillRequirementLevel = 0;
 			atomicEffect = 0;
 			targetType = TARGETTYPE_LIVING_MEMBER;

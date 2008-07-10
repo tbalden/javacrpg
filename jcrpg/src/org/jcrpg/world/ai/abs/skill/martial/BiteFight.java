@@ -39,6 +39,7 @@ public class BiteFight extends SkillBase implements TurnActSkill {
 	{
 		public Tearing(SkillBase skill) {
 			super(skill);
+			isBodyPartTargetted = true;
 			atomicEffect = -2;
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -3);
