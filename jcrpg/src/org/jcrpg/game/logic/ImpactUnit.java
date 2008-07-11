@@ -17,12 +17,17 @@
  */ 
 package org.jcrpg.game.logic;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 
 public class ImpactUnit
 {
 	
 	public int experiencePoint = 1; // TODO
+	
+	public ArrayList<StateEffect> stateEffects = new ArrayList<StateEffect>();
 	
 	public Integer[] orderedImpactPoints = 
 	{
@@ -54,13 +59,21 @@ public class ImpactUnit
 		return orderedImpactPoints[SkillActForm.EFFECTED_POINT_SANITY];
 	}
 	
-	public void append(ImpactUnit unit)
+	public void append(ImpactUnit unit, boolean experienceToo)
 	{
+		if (experienceToo)
+		{
+			experiencePoint+=unit.experiencePoint;
+		}
 		int count = 0;
 		for (Integer i:unit.orderedImpactPoints)
 		{
 			orderedImpactPoints[count]+=i;
 			count++;
+		}
+		for (StateEffect e:unit.stateEffects)
+		{
+			stateEffects.add(e);
 		}
 		experiencePoint+=unit.experiencePoint;
 	}
@@ -71,6 +84,7 @@ public class ImpactUnit
 		{
 			if (i!=0) return true;
 		}
+		if (stateEffects!=null && stateEffects.size()>0) return true;
 		return false;
 	}
 }

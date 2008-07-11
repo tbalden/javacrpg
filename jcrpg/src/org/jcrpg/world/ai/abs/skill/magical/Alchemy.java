@@ -18,11 +18,63 @@
 
 package org.jcrpg.world.ai.abs.skill.magical;
 
+import org.jcrpg.threed.jme.program.impl.FireArrow;
+import org.jcrpg.threed.jme.program.impl.FumeCloud;
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
 import org.jcrpg.world.ai.abs.skill.WorkSkill;
+import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
+import org.jcrpg.world.ai.abs.state.effect.Sleep;
 
 public class Alchemy extends SkillBase implements TurnActSkill, WorkSkill {
+
+	public class FumesOfTwilight extends SkillActForm
+	{
+
+		public FumesOfTwilight(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = (int)(-2);
+			targetType = TARGETTYPE_LIVING_GROUP;
+			
+			StateEffectInitParams sleepParam = new StateEffectInitParams();
+			sleepParam.baseDuration=2;
+			sleepParam.basePower=1;
+			sleepParam.durationType=StateEffect.DURATION_TYPE_TURN_ACT_ROUNDS;
+			sleepParam.type = Sleep.class;
+			stateEffectsAndLevels.add(sleepParam);
+			
+			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
+			proAttributes.add(FantasyAttributes.PSYCHE);
+			contraAttributes.add(FantasyAttributes.CONCENTRATION);
+			contraAttributes.add(FantasyAttributes.PSYCHE);
+			contraResistencies.add(FantasyResistances.RESIST_CHEMICAL);
+		}
+
+		@Override
+		public String getSound() {
+			return null;
+		}
+		
+		EffectProgram p = new EffectProgram(FumeCloud.class);
+		
+		@Override
+		public EffectProgram getEffectProgram() {
+			return p;
+		}
+		
+	}
+	
+	public Alchemy()
+	{
+		actForms.add(new FumesOfTwilight(this));
+	}
 
 	public int getUseRangeInLineup() {
 		return -1;

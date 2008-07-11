@@ -23,6 +23,8 @@ import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
+import org.jcrpg.world.time.Time;
 
 public class EntityMemberState {
 	
@@ -61,6 +63,9 @@ public class EntityMemberState {
 	public static final int ZERO_MANA = 4;
 	
 	EntityMemberInstance instance;
+	
+	private ArrayList<StateEffect> effects = new ArrayList<StateEffect>();
+	
 	public EntityMemberState(EntityMemberInstance i)
 	{
 		instance = i;
@@ -73,6 +78,7 @@ public class EntityMemberState {
 	 */
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
+		if (unit.getHealthPoint()<0) updateEffectsUponAttackImpact();
 		System.out.println("applyImpactUnit "+instance.description.getName());
 		System.out.println("HEALTHPOINT BEFORE : "+healthPoint);
 		System.out.println("IMPACT : "+unit.getHealthPoint());
@@ -82,6 +88,10 @@ public class EntityMemberState {
 		moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
 		sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
 		manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
+		for (StateEffect effect:unit.stateEffects)
+		{
+			addEffect(effect);
+		}
 		return getZeroPointTypes();
 	}
 	
@@ -225,5 +235,72 @@ public class EntityMemberState {
 		moralePoint = Math.min(moralePoint,maxMoralePoint);
 		manaPoint = Math.min(healthPoint,maxManaPoint);
 	}
+	
+	public void addEffect(StateEffect effect)
+	{
+		System.out.println("ADDING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+		effects.add(effect);
+	}
+	
+	
+	public void updateEffectsUponAttackImpact()
+	{
+		ArrayList<StateEffect> removable = new ArrayList<StateEffect>();
+		for (StateEffect effect:effects)
+		{
+			if (effect.updateBeingAttacked())
+			{
+				System.out.println("REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				removable.add(effect);
+			}
+		}
+		effects.removeAll(removable);
+		
+	}
+	
+	public void updateEffectsAfterSkillActForm(SkillActForm form, int powerLevel)
+	{
+		ArrayList<StateEffect> removable = new ArrayList<StateEffect>();
+		for (StateEffect effect:effects)
+		{
+			if (effect.updateEffect(form, powerLevel))
+			{
+				System.out.println("REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				removable.add(effect);
+			}
+		}
+		effects.removeAll(removable);
+	}
+	public void updateEffects(int seed, int round, Time time)
+	{
+		ArrayList<StateEffect> removable = new ArrayList<StateEffect>();
+		for (StateEffect effect:effects)
+		{
+			if (effect.update(seed, round, time))
+			{
+				System.out.println("REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				removable.add(effect);
+			}
+		}
+		effects.removeAll(removable);
+	}
+	
+	public boolean isItDoableWithEffects(SkillActForm form)
+	{
+		for (StateEffect e:effects)
+		{
+			if (!e.canDoActForm(form)) return false;
+		}
+		return true;
+	}
+	public String getBlockingEffectText(SkillActForm form)
+	{
+		for (StateEffect e:effects)
+		{
+			if (!e.canDoActForm(form)) return e.getInabilityText();
+		}
+		return "";
+	}
+	
 
 }

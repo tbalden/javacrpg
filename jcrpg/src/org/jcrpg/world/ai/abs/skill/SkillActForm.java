@@ -25,6 +25,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
 
 /**
  * Base class for act forms of a specific skill. Like spells, social acts, hide modes etc.
@@ -57,8 +58,8 @@ public abstract class SkillActForm
 	
 	public static final int TARGETTYPE_NONE = -1;
 	public static final int TARGETTYPE_LIVING_MEMBER = 0;
+	public static final int TARGETTYPE_LIVING_GROUP = 1;
 	public static final int TARGETTYPE_LIVING_FRAGMENT = 1;
-	public static final int TARGETTYPE_LIVING_ENTITY = 1;
 	public static final int TARGETTYPE_LIVING_ALL = 2;
 	
 	public static final int EFFECTED_POINT_HEALTH = 0;
@@ -76,7 +77,12 @@ public abstract class SkillActForm
 	 * Using the skillform costs...
 	 */
 	public HashMap<Integer,Integer> usedPointsAndLevels = new HashMap<Integer, Integer>();
-	
+
+	/**
+	 * Attributes that strengthen use of this skill.
+	 */
+	public ArrayList<String> proAttributes = new ArrayList<String>();
+
 	/**
 	 * Attributes that strengthen defense against this skill.
 	 */
@@ -86,6 +92,10 @@ public abstract class SkillActForm
 	 */
 	public ArrayList<String> contraResistencies = new ArrayList<String>();
 	
+	/**
+	 * Possible State effect list and power for act form.
+	 */
+	public ArrayList<StateEffectInitParams> stateEffectsAndLevels = new ArrayList<StateEffectInitParams>();
 	
 	/**
 	 * The effected target that can be chosen for the skill.
@@ -124,6 +134,9 @@ public abstract class SkillActForm
 	public boolean canBeDoneByMember(EntityMemberInstance instance)
 	{
 		EntityMemberState state = instance.memberState;
+		
+		if (!state.isItDoableWithEffects(this)) return false; // filtering off state effect based prohibited use
+		
 		Integer neededHealthPoint = usedPointsAndLevels.get(EFFECTED_POINT_HEALTH);
 		Integer neededStaminaPoint = usedPointsAndLevels.get(EFFECTED_POINT_STAMINA);
 		Integer neededSanityPoint = usedPointsAndLevels.get(EFFECTED_POINT_SANITY);

@@ -42,6 +42,7 @@ public abstract class BodyBase {
 		return bodyImage;
 	}
 	
+	
 	public BodyPart getBodyPart(int seed, EntityMemberInstance forMember, int targettingCriticalLevel)
 	{
 		int sum = 0;

@@ -25,11 +25,15 @@ public abstract class BodyPart {
 	public int maxNumberOfObjToEquip = 1;
 	
 	
+	
 	public String getName()
 	{
-		return Language.v("bodypart."+this.getClass().getSimpleName());
+		return Language.v("bodypart."+this.getClass().getName());
 	}
-	
+	public static String getName(Class<? extends BodyPart> clazz)
+	{
+		return Language.v("bodypart."+clazz.getName());
+	}
 	/**
 	 * The value of placement inside the body image in 1/100.
 	 * @return

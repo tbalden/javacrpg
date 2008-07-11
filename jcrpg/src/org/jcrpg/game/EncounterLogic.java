@@ -220,7 +220,11 @@ public class EncounterLogic {
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
-		
+		// going through encountered units, updating effects.
+		for (EncounterUnitData data:dataList)
+		{
+			data.updateMemberStateEffects((int)seed, gameLogic.core.gameState.engine.getWorldMeanTime().getTimeInRound()+currentTurnActTurn, gameLogic.core.gameState.engine.getWorldMeanTime());
+		}		
 		// going through encountered units.
 		for (EncounterUnitData data:dataList)
 		{
@@ -596,13 +600,26 @@ public class EncounterLogic {
 						return;
 					}
 					
+					// check state effects:
+					if (choice.skillActForm!=null)
+					{
+						if (!choice.member.memberState.isItDoableWithEffects(choice.skillActForm))
+						{
+							gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry(choice.member.description.getName() + " " + choice.member.memberState.getBlockingEffectText(choice.skillActForm),ColorRGBA.magenta));
+							playTurnActStep();
+							return;
+						}
+					}
+					
 					// cannot do things on dead target... TODO necromancy override!
 					if (choice.target!=null && choice.target.isDead()) 
 					{
 						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target lives no more.");
+						System.out.println("# NOT LIVING TARGET: "+choice.target.getName());
 						playTurnActStep();
 						return;
 					}
+					// TODO neutralized check
 					
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
 					if (choice.doNothing || !choice.member.memberState.isExhausted()) {

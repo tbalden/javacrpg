@@ -30,7 +30,6 @@ public class Impact
 {
 	public boolean isConstructive = false;
 	public boolean success = false;
-	public int experienceGain = 1;
 	public ImpactUnit actCost = new ImpactUnit();
 	
 	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;
@@ -42,15 +41,14 @@ public class Impact
 	
 	public void append(Impact impact, boolean experienceToo, boolean costToo)
 	{
-		if (experienceToo) this.experienceGain+=impact.experienceGain;
-		if (costToo) this.actCost.append(impact.actCost);
+		if (costToo) this.actCost.append(impact.actCost,experienceToo);
 		messages.addAll(impact.messages);
 		for (EntityMemberInstance i:impact.targetImpact.keySet())
 		{
 			ImpactUnit u = impact.targetImpact.get(i);
 			if (targetImpact.containsKey(i))
 			{
-				targetImpact.get(i).append(u);
+				targetImpact.get(i).append(u,experienceToo);
 			} else
 			{
 				targetImpact.put(i, u);
