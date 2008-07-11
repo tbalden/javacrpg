@@ -251,7 +251,10 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     		
     	}
     	//if (!secLock) {
+    	if (core.uiBase.activeWindows.size()==0) // only if now window is active, should we unlock.
+    	{
     		lock = false;
+    	}
     	//}
     }
     
