@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.time;
 
+import org.jcrpg.world.Engine;
 import org.jcrpg.world.place.World;
 
 public class Time {
@@ -29,6 +30,8 @@ public class Time {
 	public boolean inverseSeasons; 
 	
 	public int maxDay = 400, maxHour = 23, maxMinute = 59, maxSecond = 59;
+	
+	public static int roundSeconds = Engine.TICK_SECONDS;
 	
 	public Time()
 	{
@@ -202,6 +205,11 @@ public class Time {
 				r.inverseSeasons = false;
 		}
 		return r;
+	}
+	
+	public int getTimeInRound()
+	{
+		return getTimeInInt()/roundSeconds;
 	}
 	
 	public int getTimeInInt()

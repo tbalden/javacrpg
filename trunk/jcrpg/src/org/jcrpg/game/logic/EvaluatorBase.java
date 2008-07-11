@@ -33,6 +33,8 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
 import org.jcrpg.world.ai.body.BodyPart;
 import org.jcrpg.world.object.Ammunition;
 import org.jcrpg.world.object.Armor;
@@ -47,12 +49,12 @@ import com.jme.renderer.ColorRGBA;
 public class EvaluatorBase {
 	
 	
-	private static int calculateContraAttributePower(SkillActForm form, Attributes attributes)
+	private static int calculateAttributePower(ArrayList<String> names, Attributes attributes)
 	{
-		int divider = form.contraAttributes.size();
+		int divider = names.size();
 		if (divider == 0) return 50;
 		int sum = 0;
-		for (String attr:form.contraAttributes)
+		for (String attr:names)
 		{
 			int i = attributes.getAttribute(attr);
 			sum+=i;
@@ -62,13 +64,13 @@ public class EvaluatorBase {
 		return sum;
 	}
 	
-	private static int calculateContraResistencePower(SkillActForm form, Resistances resistances)
+	private static int calculateResistencePower(ArrayList<String> names, Resistances resistances)
 	{
-		int divider = form.contraResistencies.size();
+		int divider = names.size();
 		if (divider == 0) return 50;
 		
 		int sum = 0;
-		for (String resistance:form.contraResistencies)
+		for (String resistance:names)
 		{
 			int i = resistances.getResistance(resistance);
 			sum+=i;
@@ -118,9 +120,12 @@ public class EvaluatorBase {
 		
 		int XPmultiplier = 1;
 		
+		TurnActTurnState state = null;
+		
 		public EvaluatedData(int seed, TurnActTurnState state, TurnActMemberChoice choice, BonusSkillActFormDesc bonuseActForm, ObjInstance usedObjectInstance, ObjInstance dependencyObjectInstance)
 		{
 			this.seed = seed;
+			this.state = state;
 			if (bonuseActForm!=null)
 			{
 				sourceData = new EvaluatedSkillActFormSourceData(choice,bonuseActForm,usedObjectInstance,dependencyObjectInstance);
@@ -227,7 +232,22 @@ public class EvaluatorBase {
 					// calculate resistance impact decrease etc. TODO
 					ImpactUnit u = new ImpactUnit();
 					String effectText = "";
+
+					// gathering/instantiating state effects for skill act form
+					ArrayList<StateEffect> effects = new ArrayList<StateEffect>();
+					if (sourceData.form!=null)
+					{
+						for (StateEffectInitParams params:sourceData.form.stateEffectsAndLevels)
+						{
+							StateEffect e = params.getOne(J3DCore.getInstance().gameState.engine.getWorldMeanTime(), sourcePower-targetPower, 1, data.target);
+							i.messages.add(new TextEntry(data.target.description.getName() + " " + e.getSentenceText(),ColorRGBA.magenta));
+							effects.add(e);
+						}
+					}
+					u.stateEffects = effects;
+					
 					HashMap<String, Integer> damages = sourceData.getPossibleDamagesPerResistance();
+					
 					for (String key:damages.keySet())
 					{
 						System.out.println("## DAMAGE: "+key+" "+damages.get(key));
@@ -283,8 +303,9 @@ public class EvaluatorBase {
 			}
 			i.actCost = cost;
 			i.targetImpact = resultImpacts;
-			if (i.success) i.experienceGain = i.experienceGain * XPmultiplier;
-			i.messages.add(new TextEntry("XP Gain: "+i.experienceGain ,ColorRGBA.black));
+			// calculating XP for the full act (not per target!)
+			if (i.success) i.actCost.experiencePoint = i.actCost.experiencePoint * XPmultiplier;
+			i.messages.add(new TextEntry("XP Gain: "+i.actCost.experiencePoint ,ColorRGBA.black));
 			return i;
 		}
 		
@@ -318,7 +339,7 @@ public class EvaluatorBase {
 				resultImpacts.put(instance, unit);
 			} else
 			{
-				baseUnit.append(unit);
+				baseUnit.append(unit,true);
 			}			
 		}
 	}
@@ -419,12 +440,15 @@ public class EvaluatorBase {
 		
 		public void addCostImpactUnit(ImpactUnit unit)
 		{
-			resultCost.append(unit);
+			resultCost.append(unit,true);
 		}
 		
 		public int calculateSourcePower()
 		{
-			return calculatePowerForSkillUse(levelOfSkill, false, objInstance, dependencyObj);
+			int base = calculatePowerForSkillUse(levelOfSkill, false, objInstance, dependencyObj);
+			if (form!=null)
+				base += calculateAttributePower(form.proAttributes, sourceAttributes)/2;
+			return base;
 		}
 		
 		public boolean isBodyPartTargetted()
@@ -494,7 +518,7 @@ public class EvaluatorBase {
 			
 			if (form!=null)
 			{
-				base += calculatePowerForSkillUse(levelOfSkill, false, objInstance, null);	
+				base += calculatePowerForSkillUse(levelOfSkill, true, objInstance, null);	
 			} else
 			{
 				// using object, resting, double defense value.
@@ -508,9 +532,9 @@ public class EvaluatorBase {
 			
 			int contraMaxHundredPlus =
 				(
-						calculateContraAttributePower(sourceForm, targetAttributes)/2
+						calculateAttributePower(sourceForm.contraAttributes, targetAttributes)/2
 				+
-						calculateContraResistencePower(sourceForm, targetResistances))/2
+						calculateResistencePower(sourceForm.contraResistencies, targetResistances))/2
 				;
 			
 			return base+contraMaxHundredPlus;

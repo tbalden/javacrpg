@@ -15,25 +15,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.ai.abs.skill.actform;
+package org.jcrpg.world.ai.abs.state;
 
-import org.jcrpg.world.ai.abs.skill.SkillActForm;
-import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.time.Time;
 
-public class Swing extends SkillActForm
-{
-	public Swing(SkillBase skill, float multiplier) {
-		super(skill);
-		isBodyPartTargetted = true;
-		atomicEffect = (int)(-5*multiplier);
-		targetType = TARGETTYPE_LIVING_MEMBER;
-		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-(int)(2*multiplier));			
-		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(3*multiplier));
-		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(3*multiplier));
+public class StateEffectInitParams {
+	
+	public Class<? extends StateEffect> type;
+	public int basePower;
+	public int durationType;
+	public int baseDuration;
+	
+	public StateEffect getOne(Time worldMeanTime, int power, int durationMultiplier, EntityMemberInstance target)
+	{
+		StateEffect e = null;
+		try {
+			e = type.newInstance();
+			e.initStateEffect(worldMeanTime.getTimeInRound(), worldMeanTime, power, durationMultiplier, target.memberState);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return e;
 	}
 
-	@Override
-	public String getSound() {
-		return null;
-	}
 }

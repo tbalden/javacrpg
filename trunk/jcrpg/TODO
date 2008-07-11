@@ -31,13 +31,20 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] list before next release:
 ##
 
+	[ ] enemy sometimes cannot chose still living members -> unitData tells its dead!!
+
 	[1] evaluator base:
+	
 
 		[X] hit body parts, criticals
 			[ ] critical hit skills ? how use them (helper skills)
 			
-		[ ] XP and impact calculation / resistances etc. decreasing impact
+		[X] XP and impact calculation / 
+			[ ]resistances etc. decreasing impact
 		[X] armors on body parts calculation upon impact
+		[X] member state effects - poison, sleep, etc.
+			[X] add them when skill act form has such
+				[X] updating them by turn 
 
 
 	[-] ENHANCE INVENTORY

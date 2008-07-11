@@ -145,9 +145,12 @@ public class EntityMember extends DescriptionBase {
 			int point = (int)(Math.random()*10);
 			while (order.get(point)!=null) point++;
 			order.put(point, data);
+			System.out.println("??? ORDERED DATA "+data.getName());
 		}
 		ArrayList<EncounterUnitData> ret = new ArrayList<EncounterUnitData>();
 		ret.addAll(order.values());
+		System.out.println("INCOMING SIZE = "+list.size());
+		System.out.println("RET SIZE = "+ret.size());
 		return ret;
 	}
 		
@@ -188,9 +191,14 @@ public class EntityMember extends DescriptionBase {
 			// TODO sophisticate this MUCH
 			if (enemyData!=null && enemyData.size()>0)
 			{	
-				boolean foundTarget = false;
+				//boolean foundTarget = false;
 				for (EncounterUnitData unitData:enemyData) 
 				{
+					if (unitData.isDead()) 
+					{
+						System.out.println("## DEAD for choice : "+unitData.getName());
+						continue;
+					}
 					choice.target = unitData;
 					if (selfData.getRelationLevel(choice.target)>EntityScaledRelationType.NEUTRAL) // TODO later >=
 						continue;			
@@ -209,7 +217,7 @@ public class EntityMember extends DescriptionBase {
 								}
 								int lineUpDistance = instance.encounterData.currentLine+choice.targetMember.encounterData.currentLine;
 								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
-								boolean found = false;
+								//boolean found = false;
 								System.out.println("FOUND TURN ACT SKILLS: "+skills);
 								if (skills!=null)
 								for (Class<? extends SkillBase> s:skills)

@@ -34,6 +34,7 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
+import org.jcrpg.world.ai.body.BodyPart;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.Ammunition;
@@ -102,6 +103,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public TextLabel bonusDataText;
 	public TextLabel bonusDataTextActForm;
 	public ListSelect bonusActFormList;
+	public TextLabel equippableDataText;
 	
 	public TextButton back;
 	
@@ -197,7 +199,9 @@ public class InventoryWindow extends PagedInputWindow {
 	    	bonusDataTextActForm = new TextLabel("",this,page1_details, 0.20f, 0.70f, 0.3f, 0.06f,700f,"Bonus Skill Forms:",false);
 	    	bonusActFormList = new ListSelect("list",this,page1_details, 0.60f, 0.70f, 0.43f, 0.06f,700f,new String[0], new String[0], new Object[0], null,null);
 	    	addInput(1, bonusActFormList);
-	    	
+
+	    	equippableDataText = new TextLabel("",this,page1_details, 0.20f, 0.75f, 0.3f, 0.06f,700f,"",false);
+
 	    	back = new TextButton("drop",this,page1_details, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.back"));
 	    	addInput(1,back);
 	    	
@@ -704,6 +708,16 @@ public class InventoryWindow extends PagedInputWindow {
 		}
 		bonusDataText.text = bonusText;
 		bonusDataText.activate();
+		
+		String equippableText = "Not equippable.";
+		if (element.description instanceof Equippable)
+		{
+			Equippable eq = (Equippable)element.description;
+			equippableText ="Equippable: "+
+				BodyPart.getName(eq.getEquippableBodyPart());
+		}
+		equippableDataText.text = equippableText;
+		equippableDataText.activate();
 		
 		//String bonusSkillActFormText
 			

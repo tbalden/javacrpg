@@ -25,6 +25,7 @@ import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.time.Time;
 
 import com.jme.renderer.ColorRGBA;
 
@@ -242,7 +243,27 @@ public class EncounterUnitData
 		}
 		return new int[]{killCount,neutralizeCount};
 	}
-	
+
+	public ArrayList<EntityMemberInstance> getAllLivingMember()
+	{
+		if (isGroupId)
+		{
+			if (generatedMembers==null) return null;
+			if (generatedMembers.size()==0) return null;
+			return generatedMembers;
+		} else
+		{
+			if (subUnit instanceof EntityMemberInstance)
+			{
+				ArrayList<EntityMemberInstance> r = new ArrayList<EntityMemberInstance>();
+				if (!((EntityMemberInstance)subUnit).isDead())
+					r.add((EntityMemberInstance)subUnit);
+				return r;
+			}
+		}
+		return null;
+	}
+
 	public EntityMemberInstance getFirstLivingMember()
 	{
 		if (isGroupId)
@@ -258,7 +279,6 @@ public class EncounterUnitData
 			}
 		}
 		return null;
-		
 	}
 	
 	public boolean isRendered()
@@ -291,6 +311,16 @@ public class EncounterUnitData
 			return ((EntityMemberInstance)subUnit).memberState.isDead();			
 		}
 		
+	}
+	
+	public void updateMemberStateEffects(int seed, int round, Time time)
+	{
+		ArrayList<EntityMemberInstance> list = getAllLivingMember();
+		if (list!=null)
+		for (EntityMemberInstance i:list)
+		{
+			i.memberState.updateEffects(seed, round, time);
+		}
 	}
 	
 }

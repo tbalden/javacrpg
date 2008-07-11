@@ -43,6 +43,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(40));
 			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
+			proAttributes.add(FantasyAttributes.PSYCHE);
 			contraAttributes.add(FantasyAttributes.CONCENTRATION);
 			contraAttributes.add(FantasyAttributes.PSYCHE);
 			contraResistencies.add(FantasyResistances.RESIST_HEAT);
@@ -72,6 +73,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(40));
 			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
+			proAttributes.add(FantasyAttributes.PSYCHE);
 			contraAttributes.add(FantasyAttributes.CONCENTRATION);
 			contraAttributes.add(FantasyAttributes.PSYCHE);
 			contraResistencies.add(FantasyResistances.RESIST_COLD);

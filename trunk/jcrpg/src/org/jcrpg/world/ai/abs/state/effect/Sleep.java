@@ -15,25 +15,38 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-package org.jcrpg.world.ai.abs.skill.actform;
+package org.jcrpg.world.ai.abs.state.effect;
 
+import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
-import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 
-public class Swing extends SkillActForm
-{
-	public Swing(SkillBase skill, float multiplier) {
-		super(skill);
-		isBodyPartTargetted = true;
-		atomicEffect = (int)(-5*multiplier);
-		targetType = TARGETTYPE_LIVING_MEMBER;
-		effectTypesAndLevels.put(EFFECTED_POINT_HEALTH,-(int)(2*multiplier));			
-		effectTypesAndLevels.put(EFFECTED_POINT_STAMINA,-(int)(3*multiplier));
-		usedPointsAndLevels.put(EFFECTED_POINT_STAMINA, -(int)(3*multiplier));
+public class Sleep extends StateEffect {
+
+	public Sleep()
+	{
+		saverResistances.add(FantasyResistances.RESIST_MENTAL);
+	}
+	
+	@Override
+	public boolean updateBeingAttacked() {
+		return true;
 	}
 
 	@Override
-	public String getSound() {
+	public boolean canDoActForm(SkillActForm form) {
+		return false;
+	}
+
+	@Override
+	public ImpactUnit impactForTime() {
 		return null;
 	}
+
+	@Override
+	public ImpactUnit impactForTurn() {
+		return null;
+	}
+
 }
