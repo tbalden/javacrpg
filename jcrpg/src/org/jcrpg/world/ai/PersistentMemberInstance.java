@@ -115,7 +115,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return numericId;
 	}
 
-	public long getLevel() {
+	public int getLevel() {
 		return memberState.level;
 	}
 

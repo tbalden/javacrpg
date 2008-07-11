@@ -19,7 +19,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] cursed weapons - how can they stick upon use?
 
-[ ] group based skill act forms...
+[ ] group targetted skill act forms...
 
 [ ] check wciow updates on glestanimals - animated ? 
 
@@ -27,17 +27,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	overall organization level should be increased -> organization level means tougher units on generation
 	 	some kind of randomization!
 
-[-] check memory consumption! SOMEWHERE IT LEAKS!!!
-	[-] PROBABLY PARTICLE EFFECT!!!
-	
-	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
-	[ ] some other thing is too...
-
-
+##
 [?] list before next release:
-
-	[X] hp - bug -> boar doesnt die on big damages done!
-		[X] check logs, something is wrong - double impact calculations and such -> impact hashmap reused???
+##
 
 	[1] evaluator base:
 
@@ -49,7 +41,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 	[-] ENHANCE INVENTORY
-		[ ] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
+		[?] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
 			- in combat only those equipped should be used. If used and cursed it should be the only one. others
 			should be removed, and until unequip with spell, it shouldn't be allowed to add another weapon.	
 		[X] attach projectiles
@@ -66,15 +58,22 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 	
-	[ ] special Use skill form beside the Do Nothing - make object / group selection possible, no skill act form
-		[ ] add healing potions (with bonus skillActForms - MinorHeal) 
-
 	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
 		[ ] fabrication of ammunition and such - fletcher, work Skill
 
 	[ ] documenting points, attr, calculations, leveling
 
 	[ ]	flying numbers for impact over units, billboard
+
+
+	[X] special Use skill form beside the Do Nothing - make object / group selection possible, no skill act form
+		[X] add healing potions (with bonus skillActForms - MinorHeal) 
+
+	[X] you can turn around while in menu if moving just before the encounter begins!
+		[X] use some Window is active check rather!!
+
+	[X] hp - bug -> boar doesnt die on big damages done!
+		[X] check logs, something is wrong - double impact calculations and such -> impact hashmap reused???
 
 	[X] die messages
 	
@@ -122,7 +121,15 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[X] LEVELING,
 		[X] HEP,STP,SAP,MOP,MAP increasing on leveling based on attributes and level!
 		[X] hud.characters bars are not updating correctly?? or current points are wrong
+
+##
 	
+[-] check memory consumption! SOMEWHERE IT LEAKS!!!
+	[-] PROBABLY PARTICLE EFFECT!!!
+	
+	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
+	[-] some other thing is too...
+
 
 [X] combat idle anim!!
 

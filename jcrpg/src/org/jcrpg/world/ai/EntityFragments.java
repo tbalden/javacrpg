@@ -102,7 +102,7 @@ public class EntityFragments {
 		public int getNumericId() {
 			return instance.getNumericId();
 		}
-		public long getLevel() {
+		public int getLevel() {
 			return instance.entityState.currentLevelOfQuality;
 		}
 		public DescriptionBase getDescription() {

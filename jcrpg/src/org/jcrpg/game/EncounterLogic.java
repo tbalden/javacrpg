@@ -599,6 +599,7 @@ public class EncounterLogic {
 					// cannot do things on dead target... TODO necromancy override!
 					if (choice.target!=null && choice.target.isDead()) 
 					{
+						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target lives no more.");
 						playTurnActStep();
 						return;
 					}
