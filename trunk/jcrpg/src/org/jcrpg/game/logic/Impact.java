@@ -30,7 +30,7 @@ public class Impact
 {
 	public boolean isConstructive = false;
 	public boolean success = false;
-	public int experienceGain = 1; // TODO
+	public int experienceGain = 1;
 	public ImpactUnit actCost = new ImpactUnit();
 	
 	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;

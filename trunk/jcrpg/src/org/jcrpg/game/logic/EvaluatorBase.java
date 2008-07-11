@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
@@ -114,6 +115,9 @@ public class EvaluatorBase {
 	{
 
 		int seed;
+		
+		int XPmultiplier = 1;
+		
 		public EvaluatedData(int seed, TurnActTurnState state, TurnActMemberChoice choice, BonusSkillActFormDesc bonuseActForm, ObjInstance usedObjectInstance, ObjInstance dependencyObjectInstance)
 		{
 			this.seed = seed;
@@ -134,12 +138,16 @@ public class EvaluatorBase {
 				if (choice.target.isGroupId)
 				{
 					if (choice.target.generatedMembers!=null)
+					{
 						targetMembers.addAll(choice.target.generatedMembers);
+						XPmultiplier = choice.target.getUnit().getLevel();
+					}
 				} else
 				{
 					if (choice.target.subUnit instanceof EntityMemberInstance)
 					{
 						targetMembers.add((EntityMemberInstance)choice.target.subUnit);
+						XPmultiplier = ((EntityMemberInstance)choice.target.subUnit).memberState.level;
 					}
 				}
 			} else
@@ -154,6 +162,7 @@ public class EvaluatorBase {
 					if (!choice.targetMember.isDead())
 					{
 						targetMembers.add(choice.targetMember);
+						XPmultiplier = choice.targetMember.memberState.level;
 					}
 				}
 			}
@@ -180,9 +189,11 @@ public class EvaluatorBase {
 		public Impact evaluate()
 		{
 			
+			// calculating sourcePower
 			int sourcePower = sourceData.calculateSourcePower();
 			int maxHundredPlus = HashUtil.mixPercentage(seed, sourceData.source.getNumericId()+sourceData.source.instance.getNumericId(), 0); // random factor
 			sourcePower+=maxHundredPlus;
+			
 			Impact i = new Impact();
 			SkillActForm skillActForm = sourceData.form;
 			for (EvaluatedSkillActFormTargetData data:targetData) {
@@ -192,7 +203,7 @@ public class EvaluatorBase {
 				{
 					if (sourceData.sourceChoice.skill!=null && data.targetChoice.skill!=null)
 					{
-						// if the target's skill is not a contra skill for attacker's skill, then levae level 0...
+						// if the target's skill is not a contra skill for attacker's skill, then use level 0...
 						if (!sourceData.sourceChoice.skill.getSkill().getContraSkillTypes().contains(data.targetChoice.skill))
 						{
 							data.levelOfSkill = 0;
@@ -261,7 +272,6 @@ public class EvaluatorBase {
 				{
 					i.messages.add(new TextEntry(data.target.description.getName() + ": Failure! Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.black));
 				}
-				// calculate XP TODO
 			}
 			
 			
@@ -273,6 +283,8 @@ public class EvaluatorBase {
 			}
 			i.actCost = cost;
 			i.targetImpact = resultImpacts;
+			if (i.success) i.experienceGain = i.experienceGain * XPmultiplier;
+			i.messages.add(new TextEntry("XP Gain: "+i.experienceGain ,ColorRGBA.black));
 			return i;
 		}
 		
@@ -509,13 +521,13 @@ public class EvaluatorBase {
 			return target.description.getBodyType().getBodyPart(seed, target, targettingCriticalLevel);
 		}
 		
+		
 	}
 	
 	
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
 		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
-		Impact i = new Impact();
 		
 		if (choice.doUse || choice.skillActForm!=null)
 		{
@@ -571,6 +583,7 @@ public class EvaluatorBase {
 			return impact;
 			
 		}
+		Impact i = new Impact();
 		return i;
 	}
 	

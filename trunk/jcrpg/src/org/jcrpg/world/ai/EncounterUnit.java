@@ -40,7 +40,7 @@ public interface EncounterUnit {
 	 */
 	public int getNumericId();
 	
-	public long getLevel();
+	public int getLevel();
 	
 	public DescriptionBase getDescription();
 	
