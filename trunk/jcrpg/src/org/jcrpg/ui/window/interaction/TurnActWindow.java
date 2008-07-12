@@ -138,6 +138,10 @@ public class TurnActWindow extends PagedInputWindow {
 		base.addEventHandler("4", this);
 		base.addEventHandler("5", this);
 		base.addEventHandler("6", this);
+		base.addEventHandler("U", this); // for use
+		base.addEventHandler("N", this); // for do nothing
+		base.addEventHandler("T", this); // select top
+		base.addEventHandler("B", this); // select bottom
 	}
 	
 	public PartyInstance party;
@@ -744,6 +748,50 @@ public class TurnActWindow extends PagedInputWindow {
 	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
+		if ("T".equals(key))
+		{
+			// select top in select
+			InputBase base = getSelected();
+			if (base instanceof ListSelect)
+			{
+				ListSelect select = (ListSelect)base;
+				select.setSelected(0);
+				inputChanged(base, "");
+			}
+		} else
+		if ("B".equals(key))
+		{
+			// select bottomt in select
+			InputBase base = getSelected();
+			if (base instanceof ListSelect)
+			{
+				ListSelect select = (ListSelect)base;
+				select.setSelected(select.maxCount-1);
+				inputChanged(base, "");
+			}
+		} else
+		if ("U".equals(key))
+		{
+			InputBase base = getSelected();
+			if (skillSelectors.contains(base))
+			{
+				ListSelect skillSelect = (ListSelect)base;
+				skillSelect.setSelected(doUseSkillChoiceObject);
+				inputChanged(base, "");
+			}
+			return true;
+		} else
+		if ("N".equals(key))
+		{
+			InputBase base = getSelected();
+			if (skillSelectors.contains(base))
+			{
+				ListSelect skillSelect = (ListSelect)base;
+				skillSelect.setSelected(doNothingSkillChoiceObject);
+				inputChanged(base, "");
+			}
+			return true;
+		} else
 		if ("123456".indexOf(key)!=-1)
 		{
 			int toChar = Integer.parseInt(key);

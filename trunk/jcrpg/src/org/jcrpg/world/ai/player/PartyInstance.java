@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.effect.Sleep;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
 
@@ -51,9 +52,9 @@ public class PartyInstance extends EntityInstance {
 	
 	transient ArrayList<EncounterInfo> tmpInfos = new ArrayList<EncounterInfo>();
 	@Override
-	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEntities) {
+	public boolean liveOneTurn(int seed, Collection<EncounterInfo> nearbyEntities) {
 		
-		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers();
+		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
 		if (camperFragments.contains(theFragment))
 		{
@@ -196,6 +197,23 @@ public class PartyInstance extends EntityInstance {
 		super.callbackAfterCampReplenish();
 	}
 	
+	public String canMove()
+	{
+		for (EntityMemberInstance i:orderedParty)
+		{
+			if (!i.isDead())
+			{
+				for (StateEffect e:i.memberState.getStateEffects())
+				{
+					if (e instanceof Sleep)
+					{
+						return "Can't move while one member is sleeping.";
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	
 }
