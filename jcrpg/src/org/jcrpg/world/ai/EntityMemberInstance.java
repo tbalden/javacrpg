@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.SkillBase.NoActForm;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
@@ -143,9 +144,9 @@ public class EntityMemberInstance {
 		return result;
 	}
 	
-	public void notifyEffectChange()
+	public void notifyEffectChange(ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
 	{
-		if (parentFragment!=null) parentFragment.notifyImpactResult(this,new ArrayList<Integer>());
+		if (parentFragment!=null) parentFragment.notifyEffectChange(this,added,removed);
 	}
 	
 	/**

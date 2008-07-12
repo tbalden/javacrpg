@@ -47,6 +47,7 @@ public class Impact
 	 */
 	public ArrayList<String> soundsToPlay = new ArrayList<String>();
 	
+	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
 	
@@ -78,5 +79,8 @@ public class Impact
 	 * Used upon application only (when applyImpactUnit is called for effected units), postprocessing.
 	 */
 	public ArrayList<TextEntry> applyMessages = new ArrayList<TextEntry>();
+	
+	
+	
 	
 }

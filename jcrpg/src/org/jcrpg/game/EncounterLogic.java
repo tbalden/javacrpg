@@ -235,11 +235,13 @@ public class EncounterLogic {
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		
 		TreeMap<Float, EntityMemberInstance> orderedActors = new TreeMap<Float,EntityMemberInstance>();
+
 		// going through encountered units, updating effects.
 		for (EncounterUnitData data:dataList)
 		{
 			data.updateMemberStateEffects((int)seed, gameLogic.core.gameState.engine.getWorldMeanTime().getTimeInRound()+currentTurnActTurn, gameLogic.core.gameState.engine.getWorldMeanTime());
 		}		
+		
 		// going through encountered units.
 		for (EncounterUnitData data:dataList)
 		{

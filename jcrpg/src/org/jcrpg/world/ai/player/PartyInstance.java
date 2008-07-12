@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnit;
@@ -30,8 +31,11 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.place.World;
+
+import com.jme.renderer.ColorRGBA;
 
 public class PartyInstance extends EntityInstance {
 
@@ -130,6 +134,30 @@ public class PartyInstance extends EntityInstance {
 		numberOfMembers--;
 	}
 	
+	@Override
+	public void notifyEffectChange(EntityMemberInstance member, ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
+	{
+		if (added!=null)
+		{
+			for (StateEffect e:added)
+			{
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry(
+						member.description.getName()+" "+e.getAdditionText(), ColorRGBA.magenta
+						));
+			}
+		}
+		if (removed!=null)
+		{
+			for (StateEffect e:removed)
+			{
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry(
+						member.description.getName()+" "+e.getRemovalText(), ColorRGBA.magenta
+						));
+			}
+		}
+
+		J3DCore.getInstance().uiBase.hud.characters.updateEffectIcons(member);
+	}
 
 	@Override
 	public void notifyImpactResult(EntityFragment fragment,

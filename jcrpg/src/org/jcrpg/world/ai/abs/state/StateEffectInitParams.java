@@ -32,7 +32,7 @@ public class StateEffectInitParams {
 		StateEffect e = null;
 		try {
 			e = type.newInstance();
-			e.initStateEffect(worldMeanTime.getTimeInRound(), worldMeanTime, power, durationMultiplier, target.memberState);
+			e.initStateEffect(worldMeanTime.getTimeInRound(), worldMeanTime, baseDuration*durationMultiplier, power, durationMultiplier, target.memberState);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();

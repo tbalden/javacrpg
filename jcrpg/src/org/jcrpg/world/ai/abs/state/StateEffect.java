@@ -38,7 +38,6 @@ public abstract class StateEffect {
 
 	public static final int DURATION_TYPE_TURN_ACT_ROUNDS = 0;
 	public static final int DURATION_TYPE_NORMAL_TIME = 1;
-	public static final int DURATION_TYPE_BOTH = 2;
 	
 	public int durationType = DURATION_TYPE_TURN_ACT_ROUNDS;
 	
@@ -71,13 +70,15 @@ public abstract class StateEffect {
 		
 	}
 	
-	public void initStateEffect(int startRound, Time startTime, int powerLevel, int durationMultiplier, EntityMemberState targetState)
+	public void initStateEffect(int startRound, Time startTime, int duration, int powerLevel, int durationMultiplier, EntityMemberState targetState)
 	{
 		this.startRound = startRound;
 		this.startTime = startTime;
 		this.targetState = targetState;
 		this.powerLevel = powerLevel;
 		this.durationMultiplier = durationMultiplier;
+		
+		normalDuration = duration;
 		
 		effectAttributes = getBaseAttributes();
 		effectResistances = getBaseResistances();
@@ -89,21 +90,25 @@ public abstract class StateEffect {
 	{
 		ImpactUnit i = null; 
 		boolean ending = false;
-		if (durationType==DURATION_TYPE_TURN_ACT_ROUNDS || durationType==DURATION_TYPE_BOTH)
+		if (durationType==DURATION_TYPE_TURN_ACT_ROUNDS)
 		{
 			if (round!=lastUpdateRound) {
-				i = impactForTurn();
 				lastUpdateRound = round;
 				ending = updateEffect(seed);
 				if (round-startRound>normalDuration) ending = true;
+				if (!ending) i = impactForTurn();
 				if (i!=null)
 					targetState.applyImpactUnit(i);
 			}
 		}
-		if (durationType==DURATION_TYPE_NORMAL_TIME || durationType==DURATION_TYPE_BOTH)
+		if (durationType==DURATION_TYPE_NORMAL_TIME)
 		{
 			if (lastUpdateTime!=time.getTimeInInt()) {
-				ImpactUnit i2 = impactForTime();
+				ending = updateEffect(seed);
+				if (startTime.diffSeconds(time)>normalDuration) ending = true;
+				
+				ImpactUnit i2 = null;
+				if (!ending) i2 = impactForTime();
 				if (i!=null) 
 				{
 					i.append(i2,false);
@@ -111,8 +116,7 @@ public abstract class StateEffect {
 				{
 					i = i2;
 				}
-				ending = updateEffect(seed);
-				if (startTime.diffSeconds(time)>normalDuration) ending = true;
+				
 				if (i!=null)
 					targetState.applyImpactUnit(i);
 			}
@@ -143,7 +147,8 @@ public abstract class StateEffect {
 			sum+=r.getResistance(res);
 		}
 		sum = sum / divider;
-		int random = HashUtil.mixPercentage(1, 2, seed);
+		int random = HashUtil.mixPercentage(1, 2, seed+targetState.instance.getNumericId()+targetState.instance.instance.getNumericId());
+		System.out.println("EFFECT RESISTANCE => "+random+" < "+sum);
 		if (random<sum) return true;
 		return false;
 	}
@@ -213,7 +218,7 @@ public abstract class StateEffect {
 		return Language.v("stateEffect."+this.getClass().getSimpleName());
 	}
 
-	public String getSentenceText()
+	public String getAdditionText()
 	{
 		return Language.v("stateEffect.sentence."+this.getClass().getSimpleName());
 	}
@@ -222,7 +227,12 @@ public abstract class StateEffect {
 	{
 		return Language.v("stateEffect.inability."+this.getClass().getSimpleName());
 	}
-	
+
+	public String getRemovalText()
+	{
+		return Language.v("stateEffect.removal."+this.getClass().getSimpleName());
+	}
+
 	public Attributes getCurrentAttributes()
 	{
 		// TODO update them with power level
