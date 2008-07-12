@@ -30,7 +30,6 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.LightState;
@@ -91,6 +90,7 @@ public class Characters {
 
 	}
 	
+	public ArrayList<Quad> frameQuads = new ArrayList<Quad>();
 	public ArrayList<Quad> pictureQuads = new ArrayList<Quad>();
 	
 	float barScreenRatio = 13f;
@@ -100,6 +100,7 @@ public class Characters {
 		bars.clear();
 		barOrigoYPositions.clear();
 		pictureQuads.clear();
+		frameQuads.clear();
 		try {
 			int counter = 0;
 			int counterPair = 0;
@@ -107,13 +108,7 @@ public class Characters {
 			float sideYBars = 1;
 			float stepY = hud.core.getDisplay().getHeight()/6.6f;
 			float startY = hud.core.getDisplay().getHeight()*0.8f;
-			Quad frame  = null;
-			try {
-				frame = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
-			} catch (Exception ex)
-			{
-				
-			}
+
 			for (EntityMemberInstance i:orderedParty)
 			{
 				if (i.description instanceof MemberPerson)
@@ -121,8 +116,16 @@ public class Characters {
 					MemberPerson p = (MemberPerson)i.description;
 					try 
 					{
-						SharedMesh sm = new SharedMesh("1",frame);
-						sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counterPair,0);
+						//SharedMesh sm = new SharedMesh("1",frame);
+						Quad sm  = null;
+						try {
+							sm = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
+							sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counterPair,0);
+							frameQuads.add(sm);
+						} catch (Exception ex)
+						{
+							
+						}
 						
 						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
@@ -200,9 +203,9 @@ public class Characters {
 	{
 		if (hud.core.gameLost == true || hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
 		{
-			//System.out.println("############################__________________________ no possible update...");
 			return;
 		}
+
 		int counter = 0;
 		
 		if (bars.size()!=0)
@@ -228,6 +231,7 @@ public class Characters {
 				Quad q= pictureQuads.get(counter);
 				q.clearRenderState(RenderState.RS_COLORMASK_STATE);
 			}
+			highlightCharacter(p, false);
 		
 			float[] mul = new float[] {multiplierHealth,multiplierStamina,multiplierMorale,multiplierSanity,multiplierMana};
 			
@@ -248,8 +252,30 @@ public class Characters {
 			}
 			counter++;
 		}
-		
-		
+	}
+	
+	public void highlightCharacter(EntityMemberInstance member, boolean highlightOn)
+	{
+		System.out.println("//# HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
+		int counter = 0;
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			if (p==member)
+			{
+				Quad q= pictureQuads.get(counter);				
+				Quad fq= frameQuads.get(counter);
+				if (highlightOn)
+				{
+					q.setSolidColor(ColorRGBA.yellow);
+					fq.setSolidColor(ColorRGBA.red);
+				} else
+				{
+					q.setSolidColor(ColorRGBA.white);
+					fq.setSolidColor(ColorRGBA.white);
+				}
+			}
+			counter++;
+		}		
 	}
 	
 	public void update()

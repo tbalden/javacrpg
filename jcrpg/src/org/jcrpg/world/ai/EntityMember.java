@@ -200,6 +200,7 @@ public class EntityMember extends DescriptionBase {
 						continue;
 					}
 					choice.target = unitData;
+					
 					if (selfData.getRelationLevel(choice.target)>EntityScaledRelationType.NEUTRAL) // TODO later >=
 						continue;			
 					
@@ -239,6 +240,13 @@ public class EntityMember extends DescriptionBase {
 											if (f.targetType != SkillActForm.TARGETTYPE_LIVING_MEMBER)
 											{
 												choice.targetMember = null;
+											}
+											if (f.targetType!=SkillActForm.TARGETTYPE_LIVING_MEMBER)
+											{
+												if (unitData.parent == info.playerIfPresent)
+												{
+													choice.target = info.playerPartyUnitData;
+												}
 											}
 											return choice;
 										}

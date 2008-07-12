@@ -32,9 +32,20 @@ public class Impact
 	public boolean success = false;
 	public ImpactUnit actCost = new ImpactUnit();
 	
+	/**
+	 * Additional 3d effects that were generated and should be played in encounterLogic.
+	 */
 	public ArrayList<BonusSkillActFormDesc> additionalEffectsToPlay = null;
-	
+
+	/**
+	 * List of messages to display after calculations.
+	 */
 	public ArrayList<TextEntry> messages = new ArrayList<TextEntry>();
+	
+	/**
+	 * List of sounds related to impact pain/joy should be appended here. EncounterLogic will play them.
+	 */
+	public ArrayList<String> soundsToPlay = new ArrayList<String>();
 	
 	public HashMap<EntityMemberInstance, ImpactUnit> targetImpact = new HashMap<EntityMemberInstance, ImpactUnit>();
 	public Impact(){}
@@ -64,7 +75,8 @@ public class Impact
 	}
 	
 	/**
-	 * Used upon application only, postprocessing.
+	 * Used upon application only (when applyImpactUnit is called for effected units), postprocessing.
 	 */
 	public ArrayList<TextEntry> applyMessages = new ArrayList<TextEntry>();
+	
 }

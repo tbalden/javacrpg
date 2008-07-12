@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 /**
- * A unit of an encounter field - can be an EntityInstance or a fixed PersistenEntityInstance right now.
+ * A unit of an encounter field - can be an EntityFragment or a fixed PersistentMemberInstance right now.
  * @author illes
  *
  */

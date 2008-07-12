@@ -416,8 +416,15 @@ public class J3DMovingEngine {
 		simpleStates.add(MovingModelAnimDescription.ANIM_PAIN);
 		simpleStates.add(MovingModelAnimDescription.ANIM_ATTACK_UPPER);
 		simpleStates.add(MovingModelAnimDescription.ANIM_ATTACK_LOWER);
+		simpleStates.add(MovingModelAnimDescription.ANIM_CAST);
+		simpleStates.add(MovingModelAnimDescription.ANIM_THROW);
 		simpleStates.add(MovingModelAnimDescription.ANIM_DEFEND_UPPER);
 		simpleStates.add(MovingModelAnimDescription.ANIM_DEFEND_LOWER);
+		simpleStates.add(MovingModelAnimDescription.ANIM_COMMUNICATE_AGRESSIVE);
+		simpleStates.add(MovingModelAnimDescription.ANIM_COMMUNICATE_HATRED);
+		simpleStates.add(MovingModelAnimDescription.ANIM_COMMUNICATE_NORMAL);
+		simpleStates.add(MovingModelAnimDescription.ANIM_COMMUNICATE_PATIENT);
+		simpleStates.add(MovingModelAnimDescription.ANIM_FRIENDLY);
 	}
 	
 	
@@ -679,7 +686,7 @@ public class J3DMovingEngine {
 	 */
 	private Vector3f[] calculateNewPositionOfMovementAndEnd(Vector3f cVec, RenderedMovingUnit unit, float speed, float timePerFrame)
 	{
-		VisibleLifeForm end = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
+		VisibleLifeForm end = unit==null||unit.form==null||unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
 		Vector3f eVec = calculatePositionVector(unit,end);
 		return calculateNewPositionOfMovementAndEnd(cVec, eVec, speed, timePerFrame);
 	}

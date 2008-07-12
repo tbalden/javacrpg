@@ -177,6 +177,8 @@ public class EncounterLogic {
 		public int nextEventCount = -1;
 		//public int maxEventCount = 0;
 		
+		public Object currentActor = null;
+		
 		public HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
 		
 		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();
@@ -187,6 +189,19 @@ public class EncounterLogic {
 		public PlannedTurnActEvent getCurrentEvent()
 		{
 			return plan.get(nextEventCount);
+		}
+		
+		public void highlightActor(boolean on)
+		{
+			if (currentActor==null) return;
+			if (currentActor instanceof EntityMemberInstance)
+			{
+				EntityMemberInstance i = (EntityMemberInstance)currentActor;
+				if (i.parentFragment == gameLogic.core.gameState.player.theFragment)
+				{
+					gameLogic.core.uiBase.hud.characters.highlightCharacter(i, on);
+				}
+			}
 		}
 		
 	}
@@ -432,6 +447,15 @@ public class EncounterLogic {
 										if (sound!=null)
 										{
 											gameLogic.core.audioServer.playLoading(sound, "ai");
+										} else
+										{
+											// party group might be effected in this case, check for
+											// collected sounds in impact
+											if (impact.soundsToPlay!=null && impact.soundsToPlay.size()>0)
+											{
+												sound = impact.soundsToPlay.get(0);
+												gameLogic.core.audioServer.playLoading(sound, "ai");
+											}
 										}
 									}
 									if (!choice.target.destroyed)
@@ -513,7 +537,7 @@ public class EncounterLogic {
 	{
 		for (EntityMemberInstance m:encounter.playerIfPresent.getFollowingMembers())
 		{
-			if (m.memberState.healthPoint>0)
+			if (!m.isDead())
 				// there's still someone alive, no losing yet.
 				return false;
 		}
@@ -554,6 +578,11 @@ public class EncounterLogic {
 	{
 		synchronized (mutex) {
 			System.out.println("playTurnActStep ");
+			if (turnActTurnState!=null) 
+			{
+				turnActTurnState.highlightActor(false);
+				turnActTurnState.currentActor = null;
+			}
 			turnActTurnState.nextEventCount++;
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 			{
@@ -600,6 +629,9 @@ public class EncounterLogic {
 						return;
 					}
 					
+					turnActTurnState.currentActor = choice.member;
+					turnActTurnState.highlightActor(true);
+					
 					// check state effects:
 					if (choice.skillActForm!=null)
 					{
@@ -628,6 +660,8 @@ public class EncounterLogic {
 					{
 						gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " is exhausted & fails.");
+						playTurnActStep();
+						return;
 					}
 					
 					if (choice.doNothing || choice.member.memberState.isExhausted())
@@ -638,6 +672,8 @@ public class EncounterLogic {
 						System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
 						choice.member.memberState.replenishInOneRound();
 						gameLogic.core.uiBase.hud.characters.updatePoints(choice.member);
+						playTurnActStep();
+						return;
 					}
 					else					
 					if (choice.skillActForm!=null)
@@ -645,6 +681,7 @@ public class EncounterLogic {
 						
 						if (choice.usedObject!=null)
 						{
+							// ammunition check.
 							if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 							{
 								if (!choice.usedObject.hasAttachedDependencies() || !choice.member.inventory.hasOneOfTypes(choice.usedObject.getAttachedDependencies()))

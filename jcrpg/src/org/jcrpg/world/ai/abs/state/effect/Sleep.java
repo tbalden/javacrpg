@@ -49,4 +49,9 @@ public class Sleep extends StateEffect {
 		return null;
 	}
 
+	@Override
+	public String getIcon() {
+		return null;
+	}
+
 }

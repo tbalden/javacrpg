@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.game.element.TurnActUnitTopology;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 
@@ -48,6 +49,7 @@ public class EncounterInfo {
 	 * because UI will rely on this field!
 	 */
 	public EntityFragment playerIfPresent = null;
+	public EncounterUnitData playerPartyUnitData = null;
 	
 	/**
 	 * Encountered instances and their common radius ratios and middle point data.
@@ -334,7 +336,12 @@ public class EncounterInfo {
 				int size = unit.getGroupSize(in);
 				if (size>0) 
 				{
-					list.add(new EncounterUnitData(unit,in));
+					EncounterUnitData data = new EncounterUnitData(unit,in);
+					if (unit == J3DCore.getInstance().gameState.player.theFragment)
+					{
+						playerPartyUnitData = data; 
+					}
+					list.add(data);
 				}
 			}
 			ArrayList<EncounterUnit> subUnits = encounteredSubUnits.get(unit);
