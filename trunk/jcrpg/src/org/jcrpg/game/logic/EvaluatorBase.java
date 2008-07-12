@@ -241,7 +241,7 @@ public class EvaluatorBase {
 						for (StateEffectInitParams params:sourceData.form.stateEffectsAndLevels)
 						{
 							StateEffect e = params.getOne(J3DCore.getInstance().gameState.engine.getWorldMeanTime(), sourcePower-targetPower, 1, data.target);
-							i.messages.add(new TextEntry(data.target.description.getName() + " " + e.getSentenceText(),ColorRGBA.magenta));
+							i.messages.add(new TextEntry(data.target.description.getName() + " " + e.getAdditionText(),ColorRGBA.magenta));
 							effects.add(e);
 						}
 					}

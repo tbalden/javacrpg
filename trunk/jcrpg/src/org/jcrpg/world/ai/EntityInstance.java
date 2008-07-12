@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
@@ -332,6 +333,17 @@ public class EntityInstance {
 		return;
 		
 	}
+	
+	/**
+	 * Call this when addition or removal of state effect.
+	 * @param added
+	 * @param removed
+	 */
+	public void notifyEffectChange(EntityMemberInstance member,ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
+	{
+		return;
+	}
+	
 	/**
 	 * This should be called by a sub fragment after camping replenish for a round was done.
 	 */

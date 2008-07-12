@@ -39,7 +39,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[X] Characters.java -> add effect icon slots for portraits
 		[X] add effect dont work on group!!! check icons too 
 	
-		[ ] check duration/ is it okay under combat??buggy Resistance is too easy?? log something
+		[X] check duration/ is it okay under combat??buggy Resistance is too easy?? log something
 		[ ] remove with NORMAL Mode time too!
 
 	[1] evaluator base:

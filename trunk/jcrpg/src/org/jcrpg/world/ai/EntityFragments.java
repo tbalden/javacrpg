@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 import com.jme.math.Vector3f;
@@ -156,6 +157,10 @@ public class EntityFragments {
 		public void notifyImpactResult(EntityMemberInstance member, ArrayList<Integer> result)
 		{
 			parent.instance.notifyImpactResult( this, member,  result);
+		}
+		public void notifyEffectChange(EntityMemberInstance member,ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
+		{
+			parent.instance.notifyEffectChange(member,added,removed);
 		}
 		
 	}

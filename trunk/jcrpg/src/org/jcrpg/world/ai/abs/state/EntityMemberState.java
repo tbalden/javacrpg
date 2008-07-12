@@ -241,6 +241,9 @@ public class EntityMemberState {
 	{
 		System.out.println("ADDING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
 		effects.add(effect);
+		ArrayList<StateEffect> list = new ArrayList<StateEffect>();
+		list.add(effect);
+		callBackEffectChange(list,null);
 	}
 	
 	
@@ -256,12 +259,12 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
-		callBackEffectChange();
+		callBackEffectChange(null,removable);
 	}
 	
-	public void callBackEffectChange()
+	public void callBackEffectChange(ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
 	{
-		instance.notifyEffectChange();
+		instance.notifyEffectChange(added,removed);
 	}
 	
 	public void updateEffectsAfterSkillActForm(SkillActForm form, int powerLevel)
@@ -276,7 +279,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
-		callBackEffectChange();
+		callBackEffectChange(null,removable);
 	}
 	public void updateEffects(int seed, int round, Time time)
 	{
@@ -290,7 +293,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
-		callBackEffectChange();
+		callBackEffectChange(null,removable);
 	}
 	
 	public boolean isItDoableWithEffects(SkillActForm form)
