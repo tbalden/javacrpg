@@ -387,6 +387,8 @@ public class Ecology {
 
 		long time = System.currentTimeMillis();
 		
+		int seed = engine.getNumberOfTurn();
+		
 		/*
 		 * Every turn do a random order liveOneTurn for the beings of ecology with
 		 * helf of hashutil.
@@ -436,7 +438,7 @@ public class Ecology {
 				}
 			}
 			counterOfDoneTurnBeings++;
-			if (orderedBeingList.get(r).liveOneTurn(getNearbyEncounters(orderedBeingList.get(r))))
+			if (orderedBeingList.get(r).liveOneTurn(seed, getNearbyEncounters(orderedBeingList.get(r))))
 			{
 				
 				// updating tree locator for being...

@@ -182,6 +182,10 @@ public class EntityInstance {
 	
 	public transient ArrayList<EntityFragment> tmpCamperList = new ArrayList<EntityFragment>();
 
+	/**
+	 * The units that remain standing for resting in an ecology round.
+	 * @return
+	 */
 	public ArrayList<EntityFragment> decideCampingAndGetCamperFragments()
 	{
 		if (tmpCamperList==null) 
@@ -193,13 +197,13 @@ public class EntityInstance {
 	}
 	
 	
-	public ArrayList<EntityFragment> doReplenishAndGetCampers()
+	public ArrayList<EntityFragment> doReplenishAndGetCampers(int seed)
 	{
 		ArrayList<EntityFragment> camperFragments = decideCampingAndGetCamperFragments();
 		
 		for (EntityFragment f:camperFragments)
 		{
-			f.replenishInOneRound();
+			f.replenishInOneRound(seed);
 		}
 		return camperFragments;		
 	}
@@ -211,10 +215,11 @@ public class EntityInstance {
 	 * @param nearbyEncounters
 	 * @return should return true if player interaction is needed, and ecology doTurn should be interrupted.
 	 */
-	public boolean liveOneTurn(Collection<EncounterInfo> nearbyEncounters)
+	public boolean liveOneTurn(int seed, Collection<EncounterInfo> nearbyEncounters)
 	{
 		int counter = 0;
-		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers();
+		
+		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
 		//	System.out.println(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
 		//System.out.println()

@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -63,12 +64,13 @@ public class EntityFragments {
 		
 		public EntityFragmentState fragmentState = new EntityFragmentState();
 		
-		public void replenishInOneRound()
+		public void replenishInOneRound(int seed)
 		{
 			for (EntityMemberInstance i:followingMembers)
 			{
 				if (!i.isDead())
 				{
+					i.memberState.updateEffects(seed, J3DCore.getInstance().gameState.engine.getWorldMeanTime().getTimeInRound(), J3DCore.getInstance().gameState.engine.getWorldMeanTime());
 					i.memberState.replenishInOneRound();
 				}
 			}

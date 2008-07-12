@@ -81,7 +81,7 @@ public class Engine implements Runnable {
 	
 	private boolean turnInterruptedByPlayerInteraction = false;
 	
-	public long numberOfTurn = 0;
+	public int numberOfTurn = 0;
 	
 	public static Object mutex = new Object();
 	
@@ -222,11 +222,11 @@ public class Engine implements Runnable {
 	 * Current turn's number.
 	 * @return
 	 */
-	public long getNumberOfTurn() {
+	public int getNumberOfTurn() {
 		return numberOfTurn;
 	}
 
-	public void setNumberOfTurn(long numberOfTurn) {
+	public void setNumberOfTurn(int numberOfTurn) {
 		this.numberOfTurn = numberOfTurn;
 	}
 	

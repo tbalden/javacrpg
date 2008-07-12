@@ -85,6 +85,7 @@ public class EntityMemberState {
 		System.out.println("IMPACT : "+unit.getHealthPoint());
 		healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
 		System.out.println("HEALTHPOINT AFTER : "+healthPoint);
+		System.out.println("MANA IMPACT : "+unit.getManaPoint());
 		staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
 		moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
 		sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
@@ -234,7 +235,7 @@ public class EntityMemberState {
 		staminaPoint = Math.min(staminaPoint,maxStaminaPoint);
 		sanityPoint = Math.min(maxStaminaPoint,maxSanityPoint);
 		moralePoint = Math.min(moralePoint,maxMoralePoint);
-		manaPoint = Math.min(healthPoint,maxManaPoint);
+		manaPoint = Math.min(manaPoint,maxManaPoint);
 	}
 	
 	public void addEffect(StateEffect effect)
@@ -243,6 +244,7 @@ public class EntityMemberState {
 		effects.add(effect);
 		ArrayList<StateEffect> list = new ArrayList<StateEffect>();
 		list.add(effect);
+		recalculateMaximums(true);
 		callBackEffectChange(list,null);
 	}
 	
@@ -259,6 +261,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
+		recalculateMaximums(true);
 		callBackEffectChange(null,removable);
 	}
 	
@@ -279,6 +282,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
+		recalculateMaximums(true);
 		callBackEffectChange(null,removable);
 	}
 	public void updateEffects(int seed, int round, Time time)
@@ -293,6 +297,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
+		recalculateMaximums(true);
 		callBackEffectChange(null,removable);
 	}
 	
