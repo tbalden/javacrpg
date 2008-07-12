@@ -22,13 +22,15 @@ import java.util.ArrayList;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.time.Time;
 
 /**
- * A member's state created by a spell or skill like sleep/berserk/poisoned
+ * A member's state created by a spell or skill like sleep/berserk/poisoned.
+ * Override methods in extension, and fields in constructor - use impactForTurn/attributes/resistances/icon etc.
  * @author illes
  *
  */
@@ -61,12 +63,13 @@ public abstract class StateEffect {
 	 */
 	public ArrayList<String> saverResistances = new ArrayList<String>();
 	
+	public Attributes effectAttributes = null;
+	public Resistances effectResistances = null;
 	
 	public StateEffect()
 	{
 		
 	}
-	
 	
 	public void initStateEffect(int startRound, Time startTime, int powerLevel, int durationMultiplier, EntityMemberState targetState)
 	{
@@ -75,6 +78,10 @@ public abstract class StateEffect {
 		this.targetState = targetState;
 		this.powerLevel = powerLevel;
 		this.durationMultiplier = durationMultiplier;
+		
+		effectAttributes = getBaseAttributes();
+		effectResistances = getBaseResistances();
+		
 	}
 	
 	
@@ -169,16 +176,25 @@ public abstract class StateEffect {
 	public abstract boolean canDoActForm(SkillActForm form);
 	
 	/**
-	 * impact for a given turn.
+	 * Tells if Use object is doable with this.
+	 * @return
+	 */
+	public abstract boolean canDoUse();
+	
+	/**
+	 * impact for a given turn. With this you can add point modifications / turn like burning flames -> -HP.
 	 * @return
 	 */
 	public abstract ImpactUnit impactForTurn();
 	
 	/**
-	 * Impact for a new time period.
+	 * Impact for a new time period. With this you can add point modifications / time period, like burning flames -> -HP.
 	 * @return
 	 */
 	public abstract ImpactUnit impactForTime();
+	
+	public abstract org.jcrpg.world.ai.abs.attribute.Attributes getBaseAttributes();
+	public abstract Resistances getBaseResistances();
 	
 	/**
 	 * Path to icon image of effect.
@@ -186,6 +202,10 @@ public abstract class StateEffect {
 	 */
 	public abstract String getIcon();
 	
+	public String getIconFilePath()
+	{
+		return "./data/icons/states/"+getIcon();
+	}
 	
 	
 	public String getName()
@@ -201,6 +221,17 @@ public abstract class StateEffect {
 	public String getInabilityText()
 	{
 		return Language.v("stateEffect.inability."+this.getClass().getSimpleName());
+	}
+	
+	public Attributes getCurrentAttributes()
+	{
+		// TODO update them with power level
+		return effectAttributes;
+	}
+	public Resistances getCurrentResistances()
+	{
+		// TODO update them with power level
+		return effectResistances;
 	}
 
 }

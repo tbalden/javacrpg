@@ -20,10 +20,13 @@ package org.jcrpg.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
 import com.jme.math.Vector3f;
@@ -69,6 +72,9 @@ public class Characters {
 		node.updateRenderState();
 	}
 	
+	public ArrayList<Float> effectIconOrigoXPositions = new ArrayList<Float>();
+	public ArrayList<Float> effectIconOrigoYPositions = new ArrayList<Float>();
+	
 	public ArrayList<ArrayList<Quad>> bars = new ArrayList<ArrayList<Quad>>();
 	public ArrayList<ArrayList<Float>> barOrigoYPositions = new ArrayList<ArrayList<Float>>();
 	
@@ -101,12 +107,15 @@ public class Characters {
 		barOrigoYPositions.clear();
 		pictureQuads.clear();
 		frameQuads.clear();
+		effectIconOrigoXPositions.clear();
+		effectIconOrigoYPositions.clear();
 		try {
 			int counter = 0;
 			int counterPair = 0;
 			int sideYMul = 1, sideYMulFont = 1;
 			float sideYBars = 1;
-			float stepY = hud.core.getDisplay().getHeight()/6.6f;
+			float stepY = hud.core.getDisplay().getHeight()/5.0f;
+			float maxSizeY = hud.core.getDisplay().getHeight()/6.4f;
 			float startY = hud.core.getDisplay().getHeight()*0.8f;
 
 			for (EntityMemberInstance i:orderedParty)
@@ -127,20 +136,23 @@ public class Characters {
 							
 						}
 						
+						effectIconOrigoXPositions.add(new Float(sideYMul*hud.core.getDisplay().getWidth()/20 - hud.core.getDisplay().getWidth()/(13*2.2f) ));
+						effectIconOrigoYPositions.add(new Float(0.999f*startY-stepY*counterPair + hud.core.getDisplay().getHeight()/(10.3f*2.2f)));
+						
 						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
 						Node nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 						
-						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-stepY*0.39f,0);
+						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.39f,0);
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
 						
 						Node classtextNode = this.text.createOutlinedText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 						
-						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-stepY*0.515f,0);
+						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.515f,0);
 						
-						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-stepY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
+						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-maxSizeY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
 						
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
@@ -199,6 +211,68 @@ public class Characters {
 	{
 		updatePoints(null);
 	}
+	
+	private HashMap<EntityMemberInstance, HashSet<Quad>> membersAndEffectIcons = new HashMap<EntityMemberInstance, HashSet<Quad>>();	
+	
+	public void updateEffectIcons(EntityMemberInstance member)
+	{
+		if (hud.core.gameLost == true || hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 
+		{
+			return;
+		}
+		int counter = 0;
+		
+		//if (bars.size()!=0)
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			if (member!=null && member!=p) {
+				counter++;
+				continue;
+			}
+			
+			HashSet<String> iconsAlreadyAdded = new HashSet<String>();
+			
+			HashSet<Quad> quads = membersAndEffectIcons.get(p);
+			if (quads!=null)
+			{
+				for (Quad q:quads)
+				{
+					q.removeFromParent();
+				}
+				quads.clear();
+			} else
+			{
+				quads = new HashSet<Quad>();
+				membersAndEffectIcons.put(p, quads);
+			}
+			
+			float origoX = effectIconOrigoXPositions.get(counter);
+			float origoY = effectIconOrigoYPositions.get(counter);
+			
+			float iconSize = hud.core.getDisplay().getWidth()/60f;
+			float iconPlacing = iconSize*1.1f;
+			
+			int count = 0;
+			for (StateEffect effect:p.memberState.getStateEffects())
+			{
+				String file = effect.getIconFilePath();
+				if (iconsAlreadyAdded.contains(file)) continue;
+				Quad sm  = null;
+				try {
+					iconsAlreadyAdded.add(file);
+					sm = Window.loadImageToQuad(new File(file), iconSize, iconSize, origoX+ count*iconPlacing, origoY);
+					quads.add(sm);
+					node.attachChild(sm);
+					node.updateRenderState();
+				} catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				count++;
+			}
+		}		
+	}
+	
 	public void updatePoints(EntityMemberInstance member)
 	{
 		if (hud.core.gameLost == true || hud.core.gameState==null || hud.core.gameState.player==null || hud.core.gameState.player.orderedParty==null) 

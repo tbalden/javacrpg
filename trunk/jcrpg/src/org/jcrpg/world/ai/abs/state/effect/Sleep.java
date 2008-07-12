@@ -18,7 +18,9 @@
 package org.jcrpg.world.ai.abs.state.effect;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 
@@ -51,7 +53,22 @@ public class Sleep extends StateEffect {
 
 	@Override
 	public String getIcon() {
+		return "sleep.png";
+	}
+
+	@Override
+	public Attributes getBaseAttributes() {
 		return null;
+	}
+
+	@Override
+	public Resistances getBaseResistances() {
+		return null;
+	}
+
+	@Override
+	public boolean canDoUse() {
+		return false;
 	}
 
 }

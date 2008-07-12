@@ -190,15 +190,17 @@ public class EncounterUnitData
 		int neutralizeCount = 0;
 		if (isGroupId)
 		{
-			if (generatedMembers!=null)
-			if (generatedMembers.size()>0)
+			
+			ArrayList<EntityMemberInstance> livingMembers = getAllLivingMember();
+			if (livingMembers!=null)
+			if (livingMembers.size()>0)
 			{
-				int groupSize = generatedMembers.size();
+				int groupSize = livingMembers.size();
 				// TODO randomize selection of member.
 				for (int i=0; i<groupSize; i++) {
-					if (i<generatedMembers.size()) 
+					if (i<livingMembers.size()) 
 					{
-						EntityMemberInstance inst = generatedMembers.get(i);
+						EntityMemberInstance inst = livingMembers.get(i);
 						ImpactUnit u = unit.targetImpact.get(inst);
 						if (u!=null)
 						{
@@ -217,8 +219,8 @@ public class EncounterUnitData
 					}
 				}
 			}
-			if (generatedMembers!=null)
-			if (generatedMembers.size()==0)
+			if (livingMembers!=null)
+			if (livingMembers.size()==0)
 			{
 				destroyed();
 			}

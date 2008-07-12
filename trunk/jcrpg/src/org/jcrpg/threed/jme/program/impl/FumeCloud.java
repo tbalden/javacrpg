@@ -60,8 +60,8 @@ public class FumeCloud extends EffectNode {
 			pMesh.setEndSize(0.15f);
 			pMesh.setMinimumLifeTime(1200f);
 			pMesh.setMaximumLifeTime(1400f);
-			pMesh.setStartColor(new ColorRGBA(0.1f, 1f, 0, 1));
-			pMesh.setEndColor(new ColorRGBA(0, 1, 0.5f, 0));
+			pMesh.setStartColor(new ColorRGBA(0.1f, 0.6f, 0.2f, 1));
+			pMesh.setEndColor(new ColorRGBA(0, 0.3f, 0.2f, 0));
 			pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
 			pMesh.getParticleController().setControlFlow(true);
 			pMesh.warmUp(20);
