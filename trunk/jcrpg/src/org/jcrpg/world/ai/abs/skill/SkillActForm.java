@@ -48,7 +48,7 @@ public abstract class SkillActForm
 	 * What animation type should be used for animated model when this act form is being done. Override this
 	 * in constructor.
 	 */
-	public String animationType = MovingModelAnimDescription.ANIM_IDLE;
+	public String animationType = MovingModelAnimDescription.ANIM_ATTACK_UPPER;
 	
 	/**
 	 * Tells if this is body part targeted act form. Override this
@@ -100,7 +100,7 @@ public abstract class SkillActForm
 	/**
 	 * The effected target that can be chosen for the skill.
 	 */
-	public int targetType = TARGETTYPE_NONE;
+	public int targetType = TARGETTYPE_LIVING_MEMBER;
 	
 	/**
 	 * Determines what skill level is needed for this act form.

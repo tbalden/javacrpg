@@ -24,6 +24,7 @@ import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.time.Time;
 
@@ -176,7 +177,8 @@ public class EncounterUnitData
 		if (isGroupId)
 		{
 			EntityMember m = parent.getGroupType(groupId);
-			name = generatedMembers.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
+			ArrayList<EntityMemberInstance> list = getAllLivingMember();
+			name = list.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
 		}
 		if (isRendered())
 			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
@@ -248,9 +250,33 @@ public class EncounterUnitData
 	{
 		if (isGroupId)
 		{
-			if (generatedMembers==null) return null;
-			if (generatedMembers.size()==0) return null;
-			return generatedMembers;
+			ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
+			if (getUnit() instanceof EntityFragment)
+			{
+				EntityFragment f = (EntityFragment)getUnit();
+				if (f.alwaysIncludeFollowingMembers)
+				{
+					for (PersistentMemberInstance pmi:f.getFollowingMembers())
+					{
+						if (!pmi.isDead())
+						{
+							members.add(pmi);
+						}
+					}
+				}
+			}
+			
+			if (members.size()==0 && generatedMembers==null) return null;
+			if (members.size()==0 && generatedMembers.size()==0) return null;
+			if (members.size()!=0 && generatedMembers!=null)
+			{
+				members.addAll(generatedMembers);
+			} else
+			if (generatedMembers!=null)
+			{
+				members = generatedMembers;
+			}
+			return members;
 		} else
 		{
 			if (subUnit instanceof EntityMemberInstance)
@@ -266,18 +292,8 @@ public class EncounterUnitData
 
 	public EntityMemberInstance getFirstLivingMember()
 	{
-		if (isGroupId)
-		{
-			if (generatedMembers==null) return null;
-			if (generatedMembers.size()==0) return null;
-			return generatedMembers.get(0);
-		} else
-		{
-			if (subUnit instanceof EntityMemberInstance)
-			{
-				return (EntityMemberInstance)subUnit;
-			}
-		}
+		ArrayList<EntityMemberInstance> list = getAllLivingMember();
+		if (list!=null && list.size()>0) return list.get(0);
 		return null;
 	}
 	
@@ -294,23 +310,16 @@ public class EncounterUnitData
 	 */
 	public String getSound(String type)
 	{
-		return description.getSound(type);
+		if (description!=null)
+			return description.getSound(type);
+		return null;
 	}
 	
 	public boolean isDead()
 	{
-		if (isGroupId)
-		{
-			if (generatedMembers==null || generatedMembers.size()==0)
-			{
-				return true;
-			}
-			return false;
-		} else
-		{
-			return ((EntityMemberInstance)subUnit).memberState.isDead();			
-		}
-		
+		if (getAllLivingMember()==null || getAllLivingMember().size()<1)
+			return true;
+		return false;
 	}
 	
 	public void updateMemberStateEffects(int seed, int round, Time time)

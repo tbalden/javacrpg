@@ -31,16 +31,20 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] list before next release:
 ##
 
-	[ ] enemy sometimes cannot chose still living members -> unitData tells its dead!!
+	[ ] !! enemy sometimes cannot chose still living members -> unitData tells its dead!!
+		test with longer combat now
+
+	[ ] own unit effect icons + [ ] enemy unit effect icons too
+		[ ] StateEffect has getIcon -> add some icon images
+		[ ] Characters.java -> add effect icon slots for portraits 
 
 	[1] evaluator base:
-	
+
+			[ ] critical hit skills ? how use them (helper skills)
+			[ ]resistances etc. decreasing impact
 
 		[X] hit body parts, criticals
-			[ ] critical hit skills ? how use them (helper skills)
-			
 		[X] XP and impact calculation / 
-			[ ]resistances etc. decreasing impact
 		[X] armors on body parts calculation upon impact
 		[X] member state effects - poison, sleep, etc.
 			[X] add them when skill act form has such

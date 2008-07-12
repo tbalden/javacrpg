@@ -180,6 +180,12 @@ public abstract class StateEffect {
 	 */
 	public abstract ImpactUnit impactForTime();
 	
+	/**
+	 * Path to icon image of effect.
+	 * @return the path.
+	 */
+	public abstract String getIcon();
+	
 	
 	
 	public String getName()

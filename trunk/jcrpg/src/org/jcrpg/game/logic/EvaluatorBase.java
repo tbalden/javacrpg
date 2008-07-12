@@ -26,6 +26,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -142,9 +143,9 @@ public class EvaluatorBase {
 				
 				if (choice.target.isGroupId)
 				{
-					if (choice.target.generatedMembers!=null)
+					if (choice.target.getAllLivingMember()!=null)
 					{
-						targetMembers.addAll(choice.target.generatedMembers);
+						targetMembers.addAll(choice.target.getAllLivingMember());
 						XPmultiplier = choice.target.getUnit().getLevel();
 					}
 				} else
@@ -287,6 +288,20 @@ public class EvaluatorBase {
 					if (u.isEffectiveSuccess())
 					{
 						i.success = true;
+						if (sourceData.sourceChoice.isDestructive())
+						{
+							// gather sounds
+							String sound = data.target.getSound(AudioDescription.T_PAIN);
+							if (sound!=null)
+								i.soundsToPlay.add(sound);
+						} 
+						if (sourceData.sourceChoice.isConstructive())
+						{
+							// gather sounds
+							String sound = data.target.getSound(AudioDescription.T_JOY);
+							if (sound!=null)
+								i.soundsToPlay.add(sound);
+						}
 					}
 				} else
 				{

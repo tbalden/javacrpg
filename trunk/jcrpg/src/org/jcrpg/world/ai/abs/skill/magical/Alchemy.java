@@ -18,7 +18,6 @@
 
 package org.jcrpg.world.ai.abs.skill.magical;
 
-import org.jcrpg.threed.jme.program.impl.FireArrow;
 import org.jcrpg.threed.jme.program.impl.FumeCloud;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;

@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.profession.common;
 
+import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.mental.Architecture;
 import org.jcrpg.world.ai.abs.skill.physical.Agriculture;
 import org.jcrpg.world.ai.abs.skill.physical.AnimalHandling;
@@ -32,6 +33,7 @@ public class Peasant extends HumanoidNormal {
 		addMajorSkill(AnimalHandling.class);
 		addMajorSkill(Agriculture.class);
 		addMinorSkill(Architecture.class);
-		generationNewInstanceObjects.add(Club.class);
+		addMinorSkill(Alchemy.class);
+		//generationNewInstanceObjects.add(Club.class);
 	}
 }
