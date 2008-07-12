@@ -33,27 +33,33 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 [?] list before next release:
 ##
 
-
-	[X] own unit effect icons + 
-		[X] StateEffect has getIcon -> add some icon images
-		[X] Characters.java -> add effect icon slots for portraits
-		[X] add effect dont work on group!!! check icons too 
-	
-		[X] check duration/ is it okay under combat??buggy Resistance is too easy?? log something
-		[ ] remove with NORMAL Mode time too!
-
-	[1] evaluator base:
-
+	[X] evaluator base:
+			[X] resistances etc. decreasing impact - EvaluatorBase - .evaluate() part's end
 			[ ] critical hit skills ? how use them (helper skills)
-			[ ]resistances etc. decreasing impact
 
+	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
+
+	[ ] neutralization act forms -- neutralization effect -> remove from combat
+	
+	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
+	
+	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
+		[ ] protection spells, boost spells with effects
+		[ ] fabrication of ammunition and such - fletcher, work Skill
+
+	[ ] documenting points, attr, calculations, leveling
+
+	[ ]	flying numbers for impact over units, billboard
+	
+	
+
+	[X] Evaluator base
 		[X] hit body parts, criticals
 		[X] XP and impact calculation / 
 		[X] armors on body parts calculation upon impact
 		[X] member state effects - poison, sleep, etc.
 			[X] add them when skill act form has such
 				[X] updating them by turn 
-
 
 	[-] ENHANCE INVENTORY
 		[?] weapons - special 'filtering' equipping only should be added - no bodypart maximum dependency
@@ -67,18 +73,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 			[-] no such - maybe two handed weapon combos in One ObjInstance instead for two handed combat??
 			
 
-	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
-
-	[ ] neutralization act forms -- neutralization effect -> remove from combat
-	
-	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
-	
-	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
-		[ ] fabrication of ammunition and such - fletcher, work Skill
-
-	[ ] documenting points, attr, calculations, leveling
-
-	[ ]	flying numbers for impact over units, billboard
+	[X] own unit effect icons + 
+		[X] StateEffect has getIcon -> add some icon images
+		[X] Characters.java -> add effect icon slots for portraits
+		[X] add effect dont work on group!!! check icons too	
+		[X] check duration/ is it okay under combat??buggy Resistance is too easy?? log something
+		[X] remove with NORMAL Mode time too!
 
 	[X] !! enemy sometimes cannot chose still living members -> unitData tells its dead!!
 		test with longer combat now
