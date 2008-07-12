@@ -23,7 +23,10 @@ import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 
 public abstract class Ammunition extends Obj {
 
-	
+	/**
+	 * extra damage and resistance type for it.
+	 * @return
+	 */
 	public abstract HashMap<String, Integer> getAmmunitionExtraDamage();
 	
 	public abstract float getDamageMultiplier();

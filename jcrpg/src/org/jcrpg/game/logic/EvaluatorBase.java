@@ -122,6 +122,21 @@ public class EvaluatorBase {
 		int XPmultiplier = 1;
 		
 		TurnActTurnState state = null;
+
+		/**
+		 * The source's skill act form use data
+		 */
+		public EvaluatedSkillActFormSourceData sourceData;
+		
+		/**
+		 * Target's defense related values for all targets.
+		 */
+		public ArrayList<EvaluatedSkillActFormTargetData> targetData = new ArrayList<EvaluatedSkillActFormTargetData>();
+		
+		/**
+		 * hashmap for storing impact units for targets.
+		 */
+		public HashMap<EntityMemberInstance, ImpactUnit> resultImpacts = new HashMap<EntityMemberInstance, ImpactUnit>();
 		
 		public EvaluatedData(int seed, TurnActTurnState state, TurnActMemberChoice choice, BonusSkillActFormDesc bonuseActForm, ObjInstance usedObjectInstance, ObjInstance dependencyObjectInstance)
 		{
@@ -205,6 +220,12 @@ public class EvaluatorBase {
 			for (EvaluatedSkillActFormTargetData data:targetData) {
 				int targetPower = 50;
 				float impact = 1f;
+				HashMap<String, Integer> damages = sourceData.getPossibleDamagesPerResistance();
+				ArrayList<String> additionalContraResistances = new ArrayList<String>();
+				if (damages!=null)
+				{
+					additionalContraResistances.addAll(damages.keySet());
+				}
 				if (!sourceData.sourceChoice.isConstructive())
 				{
 					if (sourceData.sourceChoice.skill!=null && data.targetChoice.skill!=null)
@@ -215,7 +236,7 @@ public class EvaluatorBase {
 							data.levelOfSkill = 0;
 						}
 					}
-					targetPower =  data.calculateTargetPower();	
+					targetPower =  data.calculateTargetPower(additionalContraResistances);
 					
 					impact = (sourcePower-targetPower)/100f; 
 				} else
@@ -247,8 +268,6 @@ public class EvaluatorBase {
 					}
 					u.stateEffects = effects;
 					
-					HashMap<String, Integer> damages = sourceData.getPossibleDamagesPerResistance();
-					
 					for (String key:damages.keySet())
 					{
 						System.out.println("## DAMAGE: "+key+" "+damages.get(key));
@@ -256,6 +275,7 @@ public class EvaluatorBase {
 					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
 					{
 						int baseDamage = 1; 
+						float criticalHitMultiplicator = 1f;
 						if (effectType == SkillActForm.EFFECTED_POINT_HEALTH)
 						{
 							if (damages.size()>0) baseDamage = 0;
@@ -264,27 +284,35 @@ public class EvaluatorBase {
 								// TODO resistance string lookup, decrease
 								baseDamage+=hpDamage;
 							}
-							if (data.armor!=null)
+							if (baseDamage>0)
 							{
-								baseDamage-=data.armor.getHitPointImpactDecrease();
+								// negative hitpoint effect, check for armor...
+								if (data.armor!=null)
+								{
+									int decrease =data.armor.getHitPointImpactDecrease();
+									baseDamage-=decrease;
+								}
 							}
 							if (baseDamage<0) baseDamage = 0;
 							System.out.println("##!! BASEDAMAGE = "+baseDamage);
-						}
-						float criticalHitMultiplicator = 1f;
-						if (data.randomTargetBodyPart!=null)
-						{
-							// critical multiplicator calculation
-							criticalHitMultiplicator = data.randomTargetBodyPart.getCriticalityOfInjury()/10f;
-							if (criticalHitMultiplicator>1.2f)
-								i.messages.add(new TextEntry("*CRITICAL HIT*",ColorRGBA.black));
+							
+							if (data.randomTargetBodyPart!=null)
+							{
+								// critical multiplicator calculation
+								criticalHitMultiplicator = data.randomTargetBodyPart.getCriticalityOfInjury()/10f;
+								if (criticalHitMultiplicator>1.2f)
+									i.messages.add(new TextEntry("*CRITICAL BODYPART HIT*",ColorRGBA.black));
+							}
+							
 						}
 						u.orderedImpactPoints[effectType] = (int)(impact * (baseDamage * 1f) * (skillActForm.effectTypesAndLevels.get(effectType)/2f) * criticalHitMultiplicator);
 						effectText+=""+Language.v("effects.short."+effectType)+" = "+u.orderedImpactPoints[effectType]+" ";
-						System.out.println("* EFFECT " +impact+ " i " + effectType+ " t "+u.orderedImpactPoints[effectType]+" level "+(skillActForm.effectTypesAndLevels.get(effectType)*1f));
 					}
 					i.messages.add(new TextEntry("Effect: "+effectText,ColorRGBA.black));
+					
 					addTargetImpactUnit(data.target, u);
+					
+					// gather sounds
 					if (u.isEffectiveSuccess())
 					{
 						i.success = true;
@@ -316,6 +344,7 @@ public class EvaluatorBase {
 				cost.orderedImpactPoints[effectType] = (int)(skillActForm.usedPointsAndLevels.get(effectType));
 				System.out.println("* SELF EFFECT " + cost.orderedImpactPoints[effectType]);
 			}
+			
 			i.actCost = cost;
 			i.targetImpact = resultImpacts;
 			// calculating XP for the full act (not per target!)
@@ -324,22 +353,6 @@ public class EvaluatorBase {
 			return i;
 		}
 		
-		/**
-		 * The source's skill act form use data
-		 */
-		public EvaluatedSkillActFormSourceData sourceData;
-		
-		/**
-		 * Target's defense related values for all targets.
-		 */
-		public ArrayList<EvaluatedSkillActFormTargetData> targetData = new ArrayList<EvaluatedSkillActFormTargetData>();
-		
-		
-		
-		/**
-		 * hashmap for storing impact units for targets.
-		 */
-		public HashMap<EntityMemberInstance, ImpactUnit> resultImpacts = new HashMap<EntityMemberInstance, ImpactUnit>();
 		
 		/**
 		 * Upon calculation this should be used if the act form use was successful.  
@@ -522,7 +535,7 @@ public class EvaluatorBase {
 			levelOfSkill = choice.skill==null?0:choice.skill.level;
 		}
 		
-		public int calculateTargetPower()
+		public int calculateTargetPower(ArrayList<String> additionalContraResistances)
 		{
 			int base = DEFENSE_BASE_VALUE;
 			
@@ -545,11 +558,20 @@ public class EvaluatorBase {
 				}
 			}
 			
+			if (additionalContraResistances==null)
+			{
+				additionalContraResistances = sourceForm.contraResistencies;
+			}
+			else
+			{
+				additionalContraResistances.addAll(sourceForm.contraResistencies);
+			}
+			
 			int contraMaxHundredPlus =
 				(
 						calculateAttributePower(sourceForm.contraAttributes, targetAttributes)/2
 				+
-						calculateResistencePower(sourceForm.contraResistencies, targetResistances))/2
+						calculateResistencePower(additionalContraResistances, targetResistances))/2
 				;
 			
 			return base+contraMaxHundredPlus;
