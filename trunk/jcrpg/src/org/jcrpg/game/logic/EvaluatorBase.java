@@ -77,7 +77,7 @@ public class EvaluatorBase {
 			sum+=i;
 		}
 		sum = sum / divider;
-		System.out.println("CONTRA ATTR VALUE = "+sum);
+		System.out.println("CONTRA RES VALUE = "+sum);
 		return sum;
 	}
 
@@ -599,6 +599,7 @@ public class EvaluatorBase {
 			{
 				if (choice.usedObject.description.needsAttachmentDependencyForSkill())
 				{
+					// handling of dependency object and gathering of its bonuses
 					dependencyObjInstance = choice.member.inventory.getOneInstanceOfTypesAndRemove(choice.usedObject.getAttachedDependencies());
 					ArrayList<BonusSkillActFormDesc> depBonusActForms = dependencyObjInstance.getLastUseBonusActForms();  
 					if (depBonusActForms!=null)
@@ -611,7 +612,9 @@ public class EvaluatorBase {
 					objInstance = choice.usedObject.objects.get(0);
 					choice.member.inventory.useOnceAndRemove(objInstance);
 				}
+				// get object's bonus skill act form list...
 				ArrayList<BonusSkillActFormDesc> objBonusList = objInstance.getLastUseBonusActForms();
+				// merge dependency / used object bonus list...
 				if (objBonusList!=null)
 				{
 					if (bonusActForms!=null)
