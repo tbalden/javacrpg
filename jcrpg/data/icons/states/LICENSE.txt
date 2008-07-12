@@ -1,1 +1,1 @@
-paralyzed.png, sleep.png - from Daimonin project, GPL or other license -> http://www.daimonin.com/AboutUs.html
+physical_resistance.png, elemental_resistance.png, paralyzed.png, sleep.png - from Daimonin project, GPL or other license -> http://www.daimonin.com/AboutUs.html
