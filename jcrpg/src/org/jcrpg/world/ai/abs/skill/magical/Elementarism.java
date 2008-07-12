@@ -27,15 +27,53 @@ import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
+import org.jcrpg.world.ai.abs.state.effect.ElementalResistance;
 
 public class Elementarism extends SkillBase implements TurnActSkill {
 	public int getUseRangeInLineup() {
 		return -1;
 	}
+	public class ElementalShield extends SkillActForm
+	{
 
+		public ElementalShield(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = (int)(+5);
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			
+			StateEffectInitParams elResParam = new StateEffectInitParams();
+			elResParam.baseDuration=4;
+			elResParam.basePower=1;
+			elResParam.durationType=StateEffect.DURATION_TYPE_TURN_ACT_ROUNDS;
+			elResParam.type = ElementalResistance.class;
+			stateEffectsAndLevels.add(elResParam);
+			
+			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(8));
+			proAttributes.add(FantasyAttributes.PSYCHE);
+			proAttributes.add(FantasyAttributes.CONCENTRATION);
+		}
+		
+		@Override
+		public String getSound() {
+			return null;
+		}
+		
+		EffectProgram p = new EffectProgram(IceArrow.class);
+		
+		@Override
+		public EffectProgram getEffectProgram() {
+			return p;
+		}
+
+	}
+	
 	public class BurningSparks extends SkillActForm
 	{
 
+		
 		public BurningSparks(SkillBase skill) {
 			super(skill);
 			animationType = MovingModelAnimDescription.ANIM_CAST;
@@ -97,6 +135,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 	{
 		actForms.add(new BurningSparks(this));
 		actForms.add(new IceBeam(this));
+		actForms.add(new ElementalShield(this));
 	}
 	
 	

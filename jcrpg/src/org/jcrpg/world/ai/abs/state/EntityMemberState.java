@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -72,6 +73,8 @@ public class EntityMemberState {
 		instance = i;
 	}
 	
+	// set this to true if you want to prevent persistentMembers from point changes.
+	boolean cheatNPC = false;
 	/**
 	 * Applies impact unit and return zero reached point type list.
 	 * @param unit
@@ -80,16 +83,19 @@ public class EntityMemberState {
 	public ArrayList<Integer> applyImpactUnit(ImpactUnit unit)
 	{
 		if (unit.getHealthPoint()<0) updateEffectsUponAttackImpact();
-		System.out.println("applyImpactUnit "+instance.description.getName());
-		System.out.println("HEALTHPOINT BEFORE : "+healthPoint);
-		System.out.println("IMPACT : "+unit.getHealthPoint());
-		healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
-		System.out.println("HEALTHPOINT AFTER : "+healthPoint);
-		System.out.println("MANA IMPACT : "+unit.getManaPoint());
-		staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
-		moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
-		sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
-		manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
+		if (!cheatNPC || !(instance instanceof PersistentMemberInstance))
+		{
+			System.out.println("applyImpactUnit "+instance.description.getName());
+			System.out.println("HEALTHPOINT BEFORE : "+healthPoint);
+			System.out.println("IMPACT : "+unit.getHealthPoint());
+			healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
+			System.out.println("HEALTHPOINT AFTER : "+healthPoint);
+			System.out.println("MANA IMPACT : "+unit.getManaPoint());
+			staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
+			moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
+			sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
+			manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
+		}
 		for (StateEffect effect:unit.stateEffects)
 		{
 			addEffect(effect);

@@ -18,17 +18,58 @@
 
 package org.jcrpg.world.ai.abs.skill.magical;
 
+import org.jcrpg.threed.jme.program.impl.IceArrow;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
+import org.jcrpg.world.ai.abs.state.effect.PhysicalResistance;
 
 public class CelestialMagic extends SkillBase implements TurnActSkill {
 	public int getUseRangeInLineup() {
 		return -1;
 	}
 
+	public class ThickSkin extends SkillActForm
+	{
+
+		public ThickSkin(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = (int)(+5);
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			
+			StateEffectInitParams elResParam = new StateEffectInitParams();
+			elResParam.baseDuration=4;
+			elResParam.basePower=1;
+			elResParam.durationType=StateEffect.DURATION_TYPE_TURN_ACT_ROUNDS;
+			elResParam.type = PhysicalResistance.class;
+			stateEffectsAndLevels.add(elResParam);
+			
+			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(8));
+			proAttributes.add(FantasyAttributes.PSYCHE);
+			proAttributes.add(FantasyAttributes.PIETY);
+		}
+		
+		@Override
+		public String getSound() {
+			return null;
+		}
+		
+		EffectProgram p = new EffectProgram(IceArrow.class);
+		
+		@Override
+		public EffectProgram getEffectProgram() {
+			return p;
+		}
+
+	}
+
+	
 	public class MinorHeal extends SkillActForm
 	{
 
@@ -58,6 +99,7 @@ public class CelestialMagic extends SkillBase implements TurnActSkill {
 	public CelestialMagic()
 	{
 		actForms.add(new MinorHeal(this));
+		actForms.add(new ThickSkin(this));
 	}
 	
 }
