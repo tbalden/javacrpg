@@ -143,6 +143,11 @@ public class EntityMemberInstance {
 		return result;
 	}
 	
+	public void notifyEffectChange()
+	{
+		if (parentFragment!=null) parentFragment.notifyImpactResult(this,new ArrayList<Integer>());
+	}
+	
 	/**
 	 * Get attributes of the member.
 	 * @return
@@ -156,6 +161,12 @@ public class EntityMemberInstance {
 		Attributes equipmentAttributes = inventory.getEquipmentAttributeValues(null);
 		attributes.appendAttributes(equipmentAttributes);
 		System.out.println("Equipment: "+equipmentAttributes);
+		Attributes stateEffectAttributes = memberState.getStateEffectAttributesSum();
+		if (stateEffectAttributes!=null)
+		{
+			System.out.println("StateEffect: "+stateEffectAttributes);
+			attributes.appendAttributes(stateEffectAttributes);
+		}
 		return attributes;
 	}
 	/** Get original unbonused attributes. */
@@ -180,6 +191,11 @@ public class EntityMemberInstance {
 		} // end workaround
 		Resistances resistances = description.getResistances(instance.description).copy();
 		resistances.appendResistances(inventory.getEquipmentResistanceValues(null));
+		Resistances stateEffectResistances = memberState.getStateEffectResistancesSum();
+		if (stateEffectResistances!=null)
+		{
+			resistances.appendResistances(stateEffectResistances);
+		}
 		return resistances;
 	}
 	

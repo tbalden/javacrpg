@@ -23,6 +23,7 @@ import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.time.Time;
 
@@ -255,7 +256,12 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
-		
+		callBackEffectChange();
+	}
+	
+	public void callBackEffectChange()
+	{
+		instance.notifyEffectChange();
 	}
 	
 	public void updateEffectsAfterSkillActForm(SkillActForm form, int powerLevel)
@@ -270,6 +276,7 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
+		callBackEffectChange();
 	}
 	public void updateEffects(int seed, int round, Time time)
 	{
@@ -283,13 +290,20 @@ public class EntityMemberState {
 			}
 		}
 		effects.removeAll(removable);
+		callBackEffectChange();
 	}
 	
 	public boolean isItDoableWithEffects(SkillActForm form)
 	{
 		for (StateEffect e:effects)
 		{
-			if (!e.canDoActForm(form)) return false;
+			if (form==null)
+			{
+				if (!e.canDoUse()) return false;
+			} else
+			{
+				if (!e.canDoActForm(form)) return false;
+			}
 		}
 		return true;
 	}
@@ -297,9 +311,55 @@ public class EntityMemberState {
 	{
 		for (StateEffect e:effects)
 		{
-			if (!e.canDoActForm(form)) return e.getInabilityText();
+			if (form==null)
+			{
+				if (!e.canDoUse()) return e.getInabilityText();
+			} else
+			{
+				if (!e.canDoActForm(form)) return e.getInabilityText();
+			}
 		}
 		return "";
+	}
+	
+	public ArrayList<StateEffect> getStateEffects()
+	{
+		return effects;
+	}
+	
+	public Attributes getStateEffectAttributesSum()
+	{
+		Attributes a = null;
+		for (StateEffect e:effects)
+		{
+			Attributes c = e.getCurrentAttributes();
+			if (c==null) continue;
+			if (a==null)
+			{
+				a = c;
+			} else
+			{
+				a.appendAttributes(c);
+			}
+		}
+		return a;
+	}
+	public Resistances getStateEffectResistancesSum()
+	{
+		Resistances a = null;
+		for (StateEffect e:effects)
+		{
+			Resistances c = e.getCurrentResistances();
+			if (c==null) continue;
+			if (a==null)
+			{
+				a = c;
+			} else
+			{
+				a.appendResistances(c);
+			}
+		}
+		return a;
 	}
 	
 

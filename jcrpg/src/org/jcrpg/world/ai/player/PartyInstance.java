@@ -142,9 +142,11 @@ public class PartyInstance extends EntityInstance {
 				orderedParty.add((PersistentMemberInstance)member);
 				J3DCore.getInstance().uiBase.hud.characters.updateForPartyCreation(orderedParty);
 				J3DCore.getInstance().uiBase.hud.characters.updatePoints();
+				J3DCore.getInstance().uiBase.hud.characters.updateEffectIcons(null);
 			}
 		}
 		J3DCore.getInstance().uiBase.hud.updateCharacterRelated(member);
+		J3DCore.getInstance().uiBase.hud.characters.updateEffectIcons(member);
 		super.notifyImpactResult(fragment, member, result);
 	}
 

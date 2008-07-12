@@ -633,7 +633,7 @@ public class EncounterLogic {
 					turnActTurnState.highlightActor(true);
 					
 					// check state effects:
-					if (choice.skillActForm!=null)
+					if (choice.skillActForm!=null || choice.doUse)
 					{
 						if (!choice.member.memberState.isItDoableWithEffects(choice.skillActForm))
 						{
