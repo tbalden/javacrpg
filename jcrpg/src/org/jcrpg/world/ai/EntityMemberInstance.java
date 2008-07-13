@@ -29,6 +29,7 @@ import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.SkillBase.NoActForm;
@@ -300,5 +301,9 @@ public class EntityMemberInstance {
 	{
 		return inventory.unequip(equipment);
 	}
-
+	
+	public SkillContainer getSkills()
+	{
+		return description.memberSkills;
+	}
 }

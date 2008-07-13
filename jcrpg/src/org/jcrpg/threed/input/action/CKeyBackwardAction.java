@@ -47,7 +47,7 @@ public class CKeyBackwardAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        if (handler.core.moveBackward(handler.core.gameState.viewDirection)) {
+        if (handler.core.moveBackward(handler.core.gameState.getCurrentRenderPositions().viewDirection)) {
             if (!handler.core.rendering)
             {
             	new Thread(handler.core).start();
@@ -59,7 +59,7 @@ public class CKeyBackwardAction extends CKeyAction {
 	        camera.update();
             if (!handler.core.rendering)
             {
-            	handler.core.sEngine.renderToViewPort();
+            	handler.sEngine.renderToViewPort();
             }
        }
         handler.unlockHandling(true);

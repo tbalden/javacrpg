@@ -193,7 +193,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		profession = core.gameState.getCharCreationRules().profInstances.get(member.description.professions.get(0));
 		attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE_ON_LEVELING;
 		skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE_ON_LEVELING;
-		lowestSkillValues = member.description.memberSkills.copy();
+		lowestSkillValues = member.getSkills().copy();
 	}
 
 	public int lastUpdatedLivingPartySize = 0;
@@ -231,8 +231,8 @@ public class CharacterLevelingWindow extends PagedInputWindow {
     		int counter = 0;
     		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
     		{
-    			if (instance.description.memberSkills.skills.containsKey(skill)) {
-    				int level = instance.description.memberSkills.skills.get(skill).level;
+    			if (instance.getSkills().skills.containsKey(skill)) {
+    				int level = instance.getSkills().skills.get(skill).level;
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
 	    			int modifier = 1;

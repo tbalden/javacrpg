@@ -48,7 +48,7 @@ import org.jcrpg.world.object.InventoryListElement;
  */
 public class EntityMember extends DescriptionBase {
 	public String visibleTypeId;
-	public SkillContainer memberSkills = new SkillContainer();
+	protected SkillContainer memberSkills = new SkillContainer();
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public ResistanceRatios commonResistenceRatios = new ResistanceRatios();
 	public float[] scale = new float[]{1,1,1};
@@ -279,5 +279,10 @@ public class EntityMember extends DescriptionBase {
 	{
 		return BodyBase.bodyBaseInstances.get(bodyType);
 	}
-
+	
+	public SkillContainer getMemberSkills()
+	{
+		return memberSkills;
+	}
+	
 }

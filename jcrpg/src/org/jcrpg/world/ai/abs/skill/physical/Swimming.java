@@ -23,4 +23,9 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 
 public class Swimming extends SkillBase implements HelperSkill {
 
+	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

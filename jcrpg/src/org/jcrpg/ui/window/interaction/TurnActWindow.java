@@ -662,6 +662,7 @@ public class TurnActWindow extends PagedInputWindow {
 				core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 				core.gameState.gameLogic.endPlayerEncounters();
 				core.gameState.engine.turnFinishedForPlayer();
+				core.gameState.switchToEncounterScenario(false, null);
 			} else
 			{
 				core.uiBase.hud.mainBox.addEntry("Your party couldn't leave the encounter.");
@@ -710,7 +711,7 @@ public class TurnActWindow extends PagedInputWindow {
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 						if (fragmentAndSubunit == null) return true; // no target unit! 
 						
-						choice.skill = i.description.memberSkills.skills.get(sb.getClass());
+						choice.skill = i.getSkills().skills.get(sb.getClass());
 						SkillActForm selectedForm = null;
 						for (SkillActForm formInst:sb.getActForms())
 						{

@@ -31,16 +31,16 @@ public class CKeyRotateRightAction extends CKeyAction {
     	handler.lockHandling();
         if (handler.lookLeftRightPercent<0) {
         	// if looked away to left, bigger view needed
-        	if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE+0.6f);
+        	if (handler.sEngine.optimizeAngle) handler.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE+0.6f);
         } else
         {
-        	if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+        	if (handler.sEngine.optimizeAngle) handler.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
         }
-    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+    	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
     	Vector3f fromPos = J3DCore.getInstance().getCurrentLocation();
         handler.core.turnRight();
-        if (J3DCore.OPTIMIZED_RENDERING) handler.core.sEngine.render(handler.core.gameState.viewPositionX,handler.core.gameState.viewPositionY,handler.core.gameState.viewPositionZ,false);
-    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+        if (J3DCore.OPTIMIZED_RENDERING) handler.sEngine.render(handler.core.gameState.getCurrentRenderPositions().viewPositionX,handler.core.gameState.getCurrentRenderPositions().viewPositionY,handler.core.gameState.getCurrentRenderPositions().viewPositionZ,false);
+    	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
     	Vector3f toPos = J3DCore.getInstance().getCurrentLocation();
         float steps = J3DCore.MOVE_STEPS;
         turnDirectionAndMove(steps,from,toReach,fromPos,toPos,false);

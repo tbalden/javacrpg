@@ -58,7 +58,7 @@ import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
 import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
 import org.jcrpg.world.ai.abs.skill.physical.Prospecting;
 import org.jcrpg.world.ai.abs.skill.physical.SecureAndEscort;
-import org.jcrpg.world.ai.abs.skill.physical.StrikeNerves;
+import org.jcrpg.world.ai.abs.skill.physical.StrikeAccurate;
 import org.jcrpg.world.ai.abs.skill.physical.Survival;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.abs.skill.physical.Tumbling;
@@ -153,7 +153,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_PHYSICAL, new HideAndSneak());
 		addSkillToGroup(GROUP_PHYSICAL, new Tumbling());
 		addSkillToGroup(GROUP_PHYSICAL, new MartialTrance());
-		addSkillToGroup(GROUP_PHYSICAL, new StrikeNerves());
+		addSkillToGroup(GROUP_PHYSICAL, new StrikeAccurate());
 		addSkillToGroup(GROUP_PHYSICAL, new Disguise());
 		addSkillToGroup(GROUP_PHYSICAL, new AnimalHandling());
 		addSkillToGroup(GROUP_PHYSICAL, new Survival());

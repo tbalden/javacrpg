@@ -109,7 +109,7 @@ public class GeometryBatchHelper {
      * instances
      * @param farView tells if this item must be magnified for farview.
      */
-    public void addItem(boolean internal, Model m, NodePlaceholder place, boolean farView) {
+    public void addItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView) {
     	String key = getKey(internal, m, place, farView);
 
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
@@ -124,12 +124,12 @@ public class GeometryBatchHelper {
 	    		}
 	    		if (internal)
 	    		{
-	    			core.intRootNode.attachChild(batch.parent);
-	    			//core.intRootNode.updateRenderState();
+	    			sEngine.intRootNode.attachChild(batch.parent);
+	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			core.extRootNode.attachChild(batch.parent);
-	    			//core.extRootNode.updateRenderState();
+	    			sEngine.extRootNode.attachChild(batch.parent);
+	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
     			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
@@ -152,13 +152,13 @@ public class GeometryBatchHelper {
 	    		if (internal)
 	    		{
 	    			batch.setAnimated(false); // inside no wind
-	    			core.intRootNode.attachChild(batch.parent);
-	    			//core.intRootNode.updateRenderState();
+	    			sEngine.intRootNode.attachChild(batch.parent);
+	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
 	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation); // animate wind only outside
-	    			core.extRootNode.attachChild(batch.parent);
-	    			//core.extRootNode.updateRenderState();
+	    			sEngine.extRootNode.attachChild(batch.parent);
+	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
     			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes

@@ -240,8 +240,8 @@ public class CharacterSheetWindow extends PagedInputWindow {
     		int counter = 0;
     		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
     		{
-    			if (instance.description.memberSkills.skills.containsKey(skill)) {
-    				int level = instance.description.memberSkills.skills.get(skill).level;
+    			if (instance.getSkills().skills.containsKey(skill)) {
+    				int level = instance.getSkills().skills.get(skill).level;
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
 	    			int modifier = 1;

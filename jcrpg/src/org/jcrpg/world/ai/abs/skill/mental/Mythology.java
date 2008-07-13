@@ -28,4 +28,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  */
 public class Mythology extends SkillBase implements HelperSkill {
 
+	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
+		return false;
+	}
+
 }

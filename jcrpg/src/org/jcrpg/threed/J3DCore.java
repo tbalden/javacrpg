@@ -45,6 +45,7 @@ import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
+import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -319,6 +320,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public ModelPool modelPool = new ModelPool(this);
 	
 	public RenderedArea renderedArea = new RenderedArea();
+	public RenderedArea renderedEncounterArea = new RenderedArea();
 	
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
@@ -330,6 +332,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Node extRootNode;
 	/** internal all root */
 	public Node intRootNode; 
+
+	/** encounter mode all root */
+	public Node encounterRootNode;
+
 	/** skyroot */
 	//Node skyRootNode = new Node(); 
 	Sphere skySphere = null;
@@ -939,11 +945,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		//map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		
-		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(gameState.world, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ);
-		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false);
-		uiBase.hud.meter.updateQuad(gameState.viewDirection, localTime);
-		gameState.world.worldMap.update(gameState.viewPositionX/gameState.world.magnification, gameState.viewPositionY/gameState.world.magnification, gameState.viewPositionZ/gameState.world.magnification);
-		uiBase.hud.localMap.update(gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ,gameState.viewDirection);
+		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(gameState.world, gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY, gameState.getNormalPositions().viewPositionZ);
+		CubeClimateConditions conditions = gameState.world.climate.getCubeClimate(localTime, gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY, gameState.getNormalPositions().viewPositionZ, false);
+		uiBase.hud.meter.updateQuad(gameState.getNormalPositions().viewDirection, localTime);
+		gameState.world.worldMap.update(gameState.getNormalPositions().viewPositionX/gameState.world.magnification, gameState.getNormalPositions().viewPositionY/gameState.world.magnification, gameState.getNormalPositions().viewPositionZ/gameState.world.magnification);
+		uiBase.hud.localMap.update(gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY, gameState.getNormalPositions().viewPositionZ,gameState.getNormalPositions().viewDirection);
 		uiBase.hud.update();
 
 		/*
@@ -1075,7 +1081,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			skyParentNode.attachChild(skySphere);
 		}
-		if (gameState.insideArea)
+		if (gameState.getCurrentRenderPositions().insideArea)
 		{
 			skyParentNode.setCullMode(Node.CULL_ALWAYS);
 			skySphere.setCullMode(Node.CULL_ALWAYS);
@@ -1188,8 +1194,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public Vector3f getCurrentLocation()
 	{
-		Vector3f v = new Vector3f(gameState.relativeX*CUBE_EDGE_SIZE,gameState.relativeY*CUBE_EDGE_SIZE+0.11f+(gameState.onSteep?1.5f:0f),-1*gameState.relativeZ*CUBE_EDGE_SIZE);
-		Vector3f fromPos = J3DCore.directionPositions[gameState.viewDirection];
+		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.11f+(gameState.getCurrentRenderPositions().onSteep?1.5f:0f),-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
+		Vector3f fromPos = J3DCore.directionPositions[gameState.getCurrentRenderPositions().viewDirection];
 		v.addLocal(fromPos.negate());
 		return v;
 	}
@@ -1347,7 +1353,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (success)
 			{
 				try {
-					Side[] s = gameState.world.getCube(-1,gameState.viewPositionX, gameState.viewPositionY, gameState.viewPositionZ, false).getSide(BOTTOM);
+					Side[] s = gameState.world.getCube(-1,gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY, gameState.getNormalPositions().viewPositionZ, false).getSide(BOTTOM);
 					audioServer.play(s[0].subtype.audioStepType);				
 				} catch (Exception ex)
 				{
@@ -1361,7 +1367,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		if (success)
 		{
-			gameState.player.theFragment.roamingBoundary.setPosition(1, gameState.viewPositionX, gameState.viewPositionY,  gameState.viewPositionZ );
+			gameState.player.theFragment.roamingBoundary.setPosition(1, gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY,  gameState.getNormalPositions().viewPositionZ );
 			gameState.updateEntityIcons();
 			gameState.checkEnterLeavePopulation();			
 		}
@@ -1392,14 +1398,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				if (c.internalCube)
 				{
 					Jcrpg.LOGGER.info("Moved: INTERNAL");
-					gameState.insideArea = true;
+					gameState.getNormalPositions().insideArea = true;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(intRootNode);
 					groundParentNode.attachChild(extRootNode);
 				} else
 				{
 					Jcrpg.LOGGER.info("Moved: EXTERNAL");
-					gameState.insideArea = false;
+					gameState.getNormalPositions().insideArea = false;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(extRootNode);
 					groundParentNode.attachChild(intRootNode);
@@ -1429,7 +1435,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (sides!=null)
 			{
 				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable) && (!gameState.onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
+				if (hasSideOfInstance(sides, notPassable) && (!gameState.getNormalPositions().onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
 				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = gameState.world.getCube(-1,newCoords[0], newCoords[1], newCoords[2], false);
@@ -1463,10 +1469,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				// checking steep setting
 				Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
 				if (nextCubeSteepDirections!=null) {
-					gameState.onSteep = true;
+					gameState.getNormalPositions().onSteep = true;
 				} else
 				{
-					gameState.onSteep = false;
+					gameState.getNormalPositions().onSteep = false;
 				}
 			} else 
 			{
@@ -1490,7 +1496,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							if (hasSideOfInstance(sides, notWalkable)) return false;
 							newCoords[1] = newCoords[1]-(yMinus-1);
 							newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-							gameState.onSteep = true; // found steep
+							gameState.getNormalPositions().onSteep = true; // found steep
 							break;
 						} else
 						{
@@ -1507,7 +1513,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 								// yeah, a place to stand...
 								newCoords[1] = newCoords[1]-(yMinus-1);
 								newRelCoords[1] = newRelCoords[1]-(yMinus-1);
-								gameState.onSteep = false; // yeah, found
+								gameState.getNormalPositions().onSteep = false; // yeah, found
 								break;
 							}
 						}
@@ -1524,10 +1530,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 							Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(nextCube, climbers);
 							if (nextCubeSteepDirections!=null) 
 							{// check for climbers
-								gameState.onSteep = true;
+								gameState.getNormalPositions().onSteep = true;
 							} else
 							{
-								gameState.onSteep = false; // yeah, found
+								gameState.getNormalPositions().onSteep = false; // yeah, found
 							}
 							break;
 						}
@@ -1540,7 +1546,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 		} else 
 		{
-			gameState.onSteep = false;
+			gameState.getNormalPositions().onSteep = false;
 			//return;
 		}
 		gameState.setViewPosition(newCoords);
@@ -1550,14 +1556,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.internalCube)
 			{
 				Jcrpg.LOGGER.info("Moved: INTERNAL");
-				gameState.insideArea = true;
+				gameState.getNormalPositions().insideArea = true;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(intRootNode);
 				groundParentNode.attachChild(extRootNode);
 			} else
 			{
 				Jcrpg.LOGGER.info("Moved: EXTERNAL");
-				gameState.insideArea = false;
+				gameState.getNormalPositions().insideArea = false;
 				groundParentNode.detachAllChildren(); // workaround for culling
 				groundParentNode.attachChild(extRootNode);
 				groundParentNode.attachChild(intRootNode);
@@ -1568,11 +1574,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	boolean debugLeak = false;
 	public boolean moveForward(int direction) {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		if (debugLeak) {
-			gameState.viewPositionX+=40;
-			gameState.relativeX+=40;
+			gameState.getNormalPositions().viewPositionX+=40;
+			gameState.getNormalPositions().relativeX+=40;
 			return true;
 		} else
 		return move(coords,relCoords,new int[]{direction});
@@ -1583,8 +1589,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveLeft(int direction) {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		if (direction == NORTH) {
 			return move(coords,relCoords,new int[]{WEST});
 		} else if (direction == SOUTH) {
@@ -1601,8 +1607,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveRight(int direction) {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		if (direction == NORTH) {
 			return move(coords,relCoords,new int[]{EAST});
 		} else if (direction == SOUTH) {
@@ -1616,8 +1622,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	public boolean moveBackward(int direction) {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		return move(coords,relCoords,new int[]{oppositeDirections.get(new Integer(direction)).intValue()});
 	}
 
@@ -1627,26 +1633,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @param direction
 	 */
 	public boolean moveUp() {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		return move(coords,relCoords,new int[]{TOP});
 	}
 	public boolean moveDown() {
-		int[] coords = new int[]{gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ};
-		int[] relCoords = new int[]{gameState.relativeX,gameState.relativeY,gameState.relativeZ};
+		int[] coords = new int[]{gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ};
+		int[] relCoords = new int[]{gameState.getNormalPositions().relativeX,gameState.getNormalPositions().relativeY,gameState.getNormalPositions().relativeZ};
 		return move(coords,relCoords,new int[]{BOTTOM});
 	}
 	
 	
 	public void turnRight()
 	{
-		gameState.viewDirection++;
-		if (gameState.viewDirection==directions.length) gameState.viewDirection = 0;
+		gameState.getCurrentRenderPositions().viewDirection++;
+		if (gameState.getCurrentRenderPositions().viewDirection==directions.length) gameState.getCurrentRenderPositions().viewDirection = 0;
 	}
 	public void turnLeft()
 	{
-		gameState.viewDirection--;
-		if (gameState.viewDirection==-1) gameState.viewDirection = directions.length-1;        
+		gameState.getCurrentRenderPositions().viewDirection--;
+		if (gameState.getCurrentRenderPositions().viewDirection==-1) gameState.getCurrentRenderPositions().viewDirection = directions.length-1;        
 	}
 	
 	
@@ -1827,10 +1833,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		skySphere.updateRenderState();
 		
-		setCalculatedCameraLocation();
-        
-		cam.setDirection(J3DCore.directions[gameState.viewDirection]);			
-		cam.update();
 
 		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
 		fpsNode.getChild(0).setLocalScale(display.getWidth()/1000f);
@@ -1841,7 +1843,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         {
         	sEngine = new J3DStandingEngine(this);
         }
-		sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ,false);
+        if (eEngine == null) 
+        {
+        	eEngine = new J3DEncounterEngine(this);
+        }
+        gameState.switchToEncounterScenario(false,null);
+
+		setCalculatedCameraLocation();
+        
+		cam.setDirection(J3DCore.directions[gameState.getNormalPositions().viewDirection]);			
+		cam.update();
+        
+        sEngine.render(gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ,false);
 		sEngine.renderToViewPort();
 		if (!coreFullyInitialized)
 			sEngine.renderToViewPort(); // for correct culling, call it twice ;-)
@@ -1875,8 +1888,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			orbiters3D.clear();
 			orbitersLight3D.clear();
-			gameState.insideArea = false;
-			gameState.onSteep = false;
+			gameState.getNormalPositions().insideArea = false;
+			gameState.getNormalPositions().onSteep = false;
 			skyParentNode.detachAllChildren();
 			modelLoader.cleanAll();
 			modelPool.cleanAll();
@@ -1886,6 +1899,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			extRootNode.detachAllChildren();
 			intRootNode.detachAllChildren();
 			groundParentNode.detachAllChildren();
+			encounterRootNode.detachAllChildren();
 			//rootNode.detachAllChildren();
 			batchHelper.clearAll();
 			skySphere.removeFromParent();
@@ -1955,6 +1969,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		//extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
 		intRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode(cam);
+		
+		encounterRootNode = new Node();
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
 		/*groundParentNode.setModelBound(null);
@@ -2009,6 +2025,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		groundParentNode.attachChild(extRootNode);
 		groundParentNode.attachChild(skyParentNode);
 		rootNode.attachChild(groundParentNode);
+		rootNode.attachChild(encounterRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
@@ -2063,11 +2080,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
         intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
+        
+        encounterRootNode.setRenderState(fs_internal);
+        encounterRootNode.setRenderState(as);
+        encounterRootNode.setRenderState(extLightState);
  		
         // default light states
 		extRootNode.setRenderState(extLightState);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
+		
+		encounterRootNode.setRenderState(internalLightState);
 		
 		if (true==true && dr == null) {
 
@@ -2105,6 +2128,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//sPass.add(extRootNode);
 			sPass.add(extRootNode);
 	    	sPass.add(intRootNode);
+	    	sPass.add(encounterRootNode);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
 	    	//sPass.rTexture = false;
@@ -2211,6 +2235,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 	
 	public AudioServer audioServer =null;
+	public J3DEncounterEngine eEngine = null;
 	public J3DMovingEngine mEngine = null;
 	public J3DStandingEngine sEngine = null;
 	
@@ -2368,7 +2393,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			rendering = true;
 			renderResult = null;
 			long t0 = System.currentTimeMillis();
-			renderResult = sEngine.render(gameState.viewPositionX,gameState.viewPositionY,gameState.viewPositionZ,false);
+			renderResult = sEngine.render(gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ,false);
 			System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 			rendering = false;
 			renderFinished = true;
@@ -2441,4 +2466,5 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     {
     	return ((ClassicKeyboardLookHandler)getInputHandler().getFromAttachedHandlers(0));    	
     }
+    
 }

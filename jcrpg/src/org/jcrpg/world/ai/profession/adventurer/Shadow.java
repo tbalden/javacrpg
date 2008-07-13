@@ -24,7 +24,7 @@ import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.ShortBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
-import org.jcrpg.world.ai.abs.skill.physical.StrikeNerves;
+import org.jcrpg.world.ai.abs.skill.physical.StrikeAccurate;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 
 /**
@@ -45,7 +45,7 @@ public class Shadow extends HumanoidProfessional {
 		addMinorSkill(Throwing.class);
 		addMinorSkill(MediumBlades.class);
 		addMinorSkill(ShortBlades.class);
-		addMajorSkill(StrikeNerves.class);
+		addMajorSkill(StrikeAccurate.class);
 		addMinorSkill(MartialTrance.class);
 	}
 }

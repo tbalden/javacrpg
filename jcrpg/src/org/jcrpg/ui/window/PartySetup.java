@@ -523,7 +523,7 @@ public class PartySetup extends PagedInputWindow {
 			if (message.equals("enter")) {
 				// ############## SKILL VALUE SET, feed it back into listSelect
 				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
-				personWithGenderAndRace.memberSkills.setSkillValue(skill, skillValueTuner.value);
+				personWithGenderAndRace.getMemberSkills().setSkillValue(skill, skillValueTuner.value);
 				skillGroupLeftLast.setUpdated(true);
 				int id = 0;
 				for (Object o:skillGroupLeftLast.objects)
@@ -573,7 +573,7 @@ public class PartySetup extends PagedInputWindow {
 			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
 			//System.out.println("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
-			skillValueTuner.value = personWithGenderAndRace.memberSkills.getSkillLevel(skill, null);
+			skillValueTuner.value = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
 			skillValueTuner.setUpdated(true);
 			skillValueTuner.tunedObject = skill;
 			int modifier = 1;
@@ -671,8 +671,8 @@ public class PartySetup extends PagedInputWindow {
 	    		int counter = 0;
 	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
 	    		{
-	    			if (personWithGenderAndRace.memberSkills.skills.containsKey(skill)) {
-	    				int level = personWithGenderAndRace.memberSkills.skills.get(skill).level;
+	    			if (personWithGenderAndRace.getMemberSkills().skills.containsKey(skill)) {
+	    				int level = personWithGenderAndRace.getMemberSkills().skills.get(skill).level;
 		    			String id = groupId+"."+counter;
 		    			String text = skill.getSimpleName();
 		    			int modifier = 1;
@@ -828,7 +828,7 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(skillValueTuner))
 		{
-			personWithGenderAndRace.memberSkills.setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
+			personWithGenderAndRace.getMemberSkills().setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
 			skillGroupLeftLast.setUpdated(true);
 			int id = 0;
 			for (Object o:skillGroupLeftLast.objects)

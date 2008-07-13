@@ -45,11 +45,12 @@ public abstract class BodyBase {
 	
 	public BodyPart getBodyPart(int seed, EntityMemberInstance forMember, int targettingCriticalLevel)
 	{
+		targettingCriticalLevel++; // to make sure non-zero
 		int sum = 0;
 		for (BodyPart p:bodyParts)
 		{
 			int size = (int)(p.getBodyPartSize() * Math.exp((p.getCriticalityOfInjury()/100f)*targettingCriticalLevel));
-			System.out.println("# BODY SIZE = "+size +" CRIT: "+targettingCriticalLevel);
+			System.out.println("# BODY MODDED SIZE = "+size +" CRIT: "+targettingCriticalLevel);
 			sum+=size;
 		}
 		int random = HashUtil.mix(seed, forMember.getNumericId()+forMember.instance.getNumericId(), 1)%sum;

@@ -247,7 +247,17 @@ public class EntityMemberState {
 	public void addEffect(StateEffect effect)
 	{
 		System.out.println("ADDING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+		for (StateEffect old:effects)
+		{
+			if (old.getClass()==effect.getClass())
+			{
+				System.out.println("Replaced Effect");
+				effects.remove(old);
+				break;
+			}
+		}
 		effects.add(effect);
+		
 		ArrayList<StateEffect> list = new ArrayList<StateEffect>();
 		list.add(effect);
 		recalculateMaximums(true);

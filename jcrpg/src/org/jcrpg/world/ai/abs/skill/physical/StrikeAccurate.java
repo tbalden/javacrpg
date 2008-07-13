@@ -26,6 +26,11 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
  * @author pali
  *
  */
-public class StrikeNerves extends SkillBase implements HelperSkill {
+public class StrikeAccurate extends SkillBase implements HelperSkill {
+
+	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
+		if (tagWord.equals(TAG_CRITICAL_HIT)) return true;
+		return false;
+	}
 
 }

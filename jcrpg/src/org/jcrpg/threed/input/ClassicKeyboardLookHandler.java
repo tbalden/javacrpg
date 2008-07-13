@@ -33,6 +33,7 @@ import org.jcrpg.threed.input.action.CKeyStrafeRightAction;
 import org.jcrpg.threed.input.action.CKeyUpAction;
 import org.jcrpg.threed.input.menu.CKeyCamp;
 import org.jcrpg.threed.input.menu.CKeyMenu;
+import org.jcrpg.threed.standing.J3DStandingEngine;
 
 import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
@@ -45,6 +46,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     private CKeyRotateLeftAction left;
     
     public J3DCore core;
+    public J3DStandingEngine sEngine;
     
     public int lookUpDownPercent = 0;
     public int lookLeftRightPercent = 0;
@@ -256,6 +258,11 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     		lock = false;
     	}
     	//}
+    }
+    
+    public void setCurrentStandingEngine(J3DStandingEngine e)
+    {
+    	sEngine = e;
     }
     
 }

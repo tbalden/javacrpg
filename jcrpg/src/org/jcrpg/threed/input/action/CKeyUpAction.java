@@ -43,7 +43,7 @@ public class CKeyUpAction extends CKeyAction {
 	        //handler.core.render();
             if (!handler.core.rendering)
             {
-            	handler.core.sEngine.renderToViewPort();
+            	handler.sEngine.renderToViewPort();
             }
         }
         handler.unlockHandling(true);

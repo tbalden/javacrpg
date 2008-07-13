@@ -27,4 +27,9 @@ public class Tumbling extends SkillBase implements TurnActSkill, HelperSkill {
 		return 0;
 	}
 
+	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

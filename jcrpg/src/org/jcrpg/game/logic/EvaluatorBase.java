@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
+import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
@@ -516,7 +517,13 @@ public class EvaluatorBase {
 			
 			if (sourceForm!=null && sourceForm.isBodyPartTargetted())
 			{
-				randomTargetBodyPart = getBodyPartTargetted(seed, 1); // TODO get critical body part targetting helper skill value
+				int skillLevelForTargetting = 0;
+				SkillInstance helperInstance = sourceChoice.member.getSkills().getHighestLevelHelperSkill(sourceChoice.skill.skill, HelperSkill.TAG_CRITICAL_HIT);
+				if (helperInstance!=null)
+				{
+					skillLevelForTargetting = helperInstance.level;
+				}
+				randomTargetBodyPart = getBodyPartTargetted(seed, skillLevelForTargetting);
 			}
 			if (randomTargetBodyPart!=null) {
 				Attributes bonusAttributesForBodyPart = target.inventory.getEquipmentAttributeValues(randomTargetBodyPart.getClass());

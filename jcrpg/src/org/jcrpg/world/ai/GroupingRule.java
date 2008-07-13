@@ -37,7 +37,7 @@ public class GroupingRule {
 	{
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
 		while (members.size()<fragment.instance.getGroupSizes()[groupId]) {
-			members.add(new EntityMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1));
+			members.add(new GeneratedMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1, 1));
 		}
 		return members;
 	}

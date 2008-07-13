@@ -28,7 +28,7 @@ public class CKeyStrafeLeftAction extends CKeyAction {
     	handler.lockHandling();
         
         Vector3f from = handler.core.getCurrentLocation();
-        if (handler.core.moveLeft(handler.core.gameState.viewDirection)) {
+        if (handler.core.moveLeft(handler.core.gameState.getNormalPositions().viewDirection)) {
             if (!handler.core.rendering)
             {
             	new Thread(handler.core).start();
@@ -40,7 +40,7 @@ public class CKeyStrafeLeftAction extends CKeyAction {
 	        camera.update();
             if (!handler.core.rendering)
             {
-            	handler.core.sEngine.renderToViewPort();
+            	handler.sEngine.renderToViewPort();
             }
         }
 	    handler.unlockHandling(true);
