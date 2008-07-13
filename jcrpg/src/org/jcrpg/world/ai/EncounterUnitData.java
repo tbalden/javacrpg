@@ -178,7 +178,13 @@ public class EncounterUnitData
 		{
 			EntityMember m = parent.getGroupType(groupId);
 			ArrayList<EntityMemberInstance> list = getAllLivingMember();
-			name = list.size()+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";	
+			try
+			{
+				name = (list!=null?"0":list.size())+" "+ (m==null?(parent!=null?parent.getName():"????"):m.getName()) + " (" + groupId+ ")";
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 		if (isRendered())
 			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
