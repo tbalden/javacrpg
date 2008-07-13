@@ -42,7 +42,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	X in combat mode turning + zooming on active units
 	
 	[ ] light states -> external not so working
-	[ ] spell effects doesnt show 
+	[ ] spell effects doesnt show ---> only on STEEPS!!!!!
 		angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
 		second time after movement camera is not correctly positioned.
 

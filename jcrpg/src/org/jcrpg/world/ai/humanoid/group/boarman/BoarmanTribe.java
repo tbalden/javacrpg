@@ -53,10 +53,11 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	
 	public static BoarmanMaleThug BOARMAN_MALE_THUG = new BoarmanMaleThug("BOARMAN_MALE_THUG",boarmanMaleAudio);
 	public static BoarmanMaleArcher BOARMAN_MALE_ARCHER = new BoarmanMaleArcher("BOARMAN_MALE_ARCHER",boarmanMaleAudio);
-	public static BoarmanMaleWorker BOARMAN_MALE_WORKER = new BoarmanMaleWorker("BOARMAN_MALE_WORKER",boarmanMaleAudio);
+	public static BoarmanMaleWorker BOARMAN_MALE_MAGE = new BoarmanMaleWorker("BOARMAN_MALE_MAGE",boarmanMaleAudio);
 	public static BoarmanFemale BOARMAN_FEMALE = new BoarmanFemale("BOARMAN_FEMALE",boarmanFemaleAudio);
 
 	public static MovingModel boarmanMale = null;
+	public static MovingModel boarmanMaleMage = null;
 	public static MovingModel boarmanFemale = null;
 	static {
 		MovingModelAnimDescription desc = new MovingModelAnimDescription();
@@ -73,8 +74,26 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh",desc,null,null,false);
 		boarmanMale.disposition = new float[] {0,-0.93f,0};
 		boarmanFemale = boarmanMale;
+
+		desc = new MovingModelAnimDescription();
+		desc.IDLE = "./data/models/humanoid/boarman/mage/boarmage_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/humanoid/boarman/mage/boarmage_combatidle.md5anim";
+		desc.WALK = "./data/models/humanoid/boarman/mage/boarmage_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/humanoid/boarman/mage/boarmage_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/humanoid/boarman/mage/boarmage_attack.md5anim";
+		desc.CAST = "./data/models/humanoid/boarman/mage/boarmage_cast.md5anim";
+		desc.DEFEND_LOWER = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
+		desc.DEFEND_UPPER = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
+		desc.PAIN = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
+		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/mage/boarmage_death.md5anim";
+		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";
+		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
+		boarmanMaleMage.disposition = new float[] {0,-0.93f,0};
+	
 	}
 	public static RenderedMovingUnit boarmanMale_unit = new RenderedMovingUnit(new Model[]{boarmanMale});
+	
+	public static RenderedMovingUnit boarmanMaleMage_unit = new RenderedMovingUnit(new Model[]{boarmanMaleMage});
 
 	public static RenderedMovingUnit boarmanFemale_unit = new RenderedMovingUnit(new Model[]{boarmanFemale});
 
@@ -103,7 +122,8 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		
 		setAverageGroupSizeAndDeviation(3, 2);
 		
-		addGroupingRuleMember(BOARMAN_MALE_THUG);
+		//addGroupingRuleMember(BOARMAN_MALE_THUG);
+		addGroupingRuleMember(BOARMAN_MALE_MAGE);
 	}
 	
 

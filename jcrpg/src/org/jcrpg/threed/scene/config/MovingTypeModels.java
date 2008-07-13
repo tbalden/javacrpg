@@ -104,9 +104,12 @@ public class MovingTypeModels {
 		counter++;
 
 		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_THUG.visibleTypeId,counter);
-		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_WORKER.visibleTypeId,counter);
 		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_ARCHER.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, BoarmanTribe.boarmanMale_unit);
+		counter++;
+
+		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_MALE_MAGE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, BoarmanTribe.boarmanMaleMage_unit);
 		counter++;
 
 		hmMobIdToModelId.put(BoarmanTribe.BOARMAN_FEMALE.visibleTypeId,counter);
