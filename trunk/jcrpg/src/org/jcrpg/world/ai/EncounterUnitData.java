@@ -180,7 +180,7 @@ public class EncounterUnitData
 			ArrayList<EntityMemberInstance> list = getAllLivingMember();
 			try
 			{
-				name = (list!=null?"0":list.size())+" "+ (m==null?(parent!=null?parent.getName():"????"):m.getName()) + " (" + groupId+ ")";
+				name = (list==null?"0":list.size())+" "+ (m==null?(parent!=null?parent.getName():"????"):m.getName()) + " (" + groupId+ ")";
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
