@@ -419,6 +419,20 @@ public class EncounterLogic {
 									}
 								}
 								choice.member.applyImpactUnit(impact.actCost);
+								
+								if (choice.targetMember.encounterData.visibleForm!=null)
+								{
+									try 
+									{
+										Vector3f place = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
+										//Vector3f orig = gameLogic.core.getCamera().getLocation();
+										CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+									} catch (Exception ex)
+									{
+										ex.printStackTrace();
+									}
+								}
+								
 								if (impact.success) {
 									
 									int[] counters = choice.target.applyImpactUnit(impact);
@@ -641,14 +655,12 @@ public class EncounterLogic {
 						try 
 						{
 							Vector3f place = choice.member.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
-							
-							Vector3f orig = gameLogic.core.getCamera().getLocation();
+							//Vector3f orig = gameLogic.core.getCamera().getLocation();
 							CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
 						} catch (Exception ex)
 						{
 							ex.printStackTrace();
 						}
-						
 					}
 					
 					turnActTurnState.highlightActor(true);
