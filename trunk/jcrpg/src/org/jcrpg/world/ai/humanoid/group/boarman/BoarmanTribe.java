@@ -27,8 +27,8 @@ import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanFemale;
 import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleArcher;
+import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleMage;
 import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleThug;
-import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleWorker;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.EconomicGround;
@@ -53,7 +53,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	
 	public static BoarmanMaleThug BOARMAN_MALE_THUG = new BoarmanMaleThug("BOARMAN_MALE_THUG",boarmanMaleAudio);
 	public static BoarmanMaleArcher BOARMAN_MALE_ARCHER = new BoarmanMaleArcher("BOARMAN_MALE_ARCHER",boarmanMaleAudio);
-	public static BoarmanMaleWorker BOARMAN_MALE_MAGE = new BoarmanMaleWorker("BOARMAN_MALE_MAGE",boarmanMaleAudio);
+	public static BoarmanMaleMage BOARMAN_MALE_MAGE = new BoarmanMaleMage("BOARMAN_MALE_MAGE",boarmanMaleAudio);
 	public static BoarmanFemale BOARMAN_FEMALE = new BoarmanFemale("BOARMAN_FEMALE",boarmanFemaleAudio);
 
 	public static MovingModel boarmanMale = null;
@@ -122,7 +122,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		
 		setAverageGroupSizeAndDeviation(3, 2);
 		
-		//addGroupingRuleMember(BOARMAN_MALE_THUG);
+		addGroupingRuleMember(BOARMAN_MALE_THUG);
 		addGroupingRuleMember(BOARMAN_MALE_MAGE);
 	}
 	
