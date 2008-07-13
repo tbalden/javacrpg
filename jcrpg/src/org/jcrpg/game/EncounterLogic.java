@@ -26,6 +26,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.ui.text.TextEntry;
@@ -44,6 +45,7 @@ import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.Weapon;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 
 public class EncounterLogic {
@@ -633,6 +635,22 @@ public class EncounterLogic {
 					}
 					
 					turnActTurnState.currentActor = choice.member;
+					
+					if (choice.member.encounterData.visibleForm!=null)
+					{
+						try 
+						{
+							Vector3f place = choice.member.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
+							
+							Vector3f orig = gameLogic.core.getCamera().getLocation();
+							CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+						} catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
+						
+					}
+					
 					turnActTurnState.highlightActor(true);
 					
 					// check state effects:
