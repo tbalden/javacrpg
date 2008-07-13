@@ -334,7 +334,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Node intRootNode; 
 
 	/** encounter mode all root */
-	public Node encounterRootNode;
+	public Node encounterExtRootNode;
+	public Node encounterIntRootNode;
 
 	/** skyroot */
 	//Node skyRootNode = new Node(); 
@@ -1899,7 +1900,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			extRootNode.detachAllChildren();
 			intRootNode.detachAllChildren();
 			groundParentNode.detachAllChildren();
-			encounterRootNode.detachAllChildren();
+			encounterExtRootNode.detachAllChildren();
+			encounterIntRootNode.detachAllChildren();
 			//rootNode.detachAllChildren();
 			batchHelper.clearAll();
 			skySphere.removeFromParent();
@@ -1970,7 +1972,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// internal cubes' rootnode
 		intRootNode = FARVIEW_ENABLED?new Node():new ScenarioNode(cam);
 		
-		encounterRootNode = new Node();
+		encounterExtRootNode = new Node();
+		encounterIntRootNode = new Node();
 		//intRootNode.setModelBound(bigSphere);
 		//intRootNode.attachChild(new Node());
 		/*groundParentNode.setModelBound(null);
@@ -2025,7 +2028,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		groundParentNode.attachChild(extRootNode);
 		groundParentNode.attachChild(skyParentNode);
 		rootNode.attachChild(groundParentNode);
-		rootNode.attachChild(encounterRootNode);
+		rootNode.attachChild(encounterExtRootNode);
+		rootNode.attachChild(encounterIntRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
@@ -2081,16 +2085,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         intRootNode.setRenderState(fs_internal);
         intRootNode.setRenderState(as);
         
-        encounterRootNode.setRenderState(fs_internal);
-        encounterRootNode.setRenderState(as);
-        encounterRootNode.setRenderState(extLightState);
+        encounterExtRootNode.setRenderState(fs_external);
+        encounterExtRootNode.setRenderState(as);
+        
+        encounterIntRootNode.setRenderState(fs_internal);
+        encounterIntRootNode.setRenderState(as);
  		
         // default light states
+        encounterExtRootNode.setRenderState(extLightState);
+        encounterIntRootNode.setRenderState(internalLightState);
 		extRootNode.setRenderState(extLightState);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
 		
-		encounterRootNode.setRenderState(internalLightState);
 		
 		if (true==true && dr == null) {
 
@@ -2128,7 +2135,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//sPass.add(extRootNode);
 			sPass.add(extRootNode);
 	    	sPass.add(intRootNode);
-	    	sPass.add(encounterRootNode);
+	    	sPass.add(encounterExtRootNode);
+	    	sPass.add(encounterIntRootNode);
 	    	sPass.setRenderShadows(true);
 	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
 	    	//sPass.rTexture = false;
