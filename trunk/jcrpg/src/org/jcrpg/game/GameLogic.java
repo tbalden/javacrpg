@@ -71,6 +71,12 @@ public class GameLogic {
 		this.encounterLogic = new EncounterLogic(this);
 	}
 	
+	private void initEncounterVisualization()
+	{
+		core.gameState.switchToEncounterScenario(true, "debug");
+		placeVisibleForms(forms);
+		J3DCore.getInstance().mEngine.render(forms);
+	}
 	
 	public void newEncounterPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
 	{
@@ -90,10 +96,14 @@ public class GameLogic {
 				encounterLogic.fillInitEncounterPhaseLineup(possibleEncounter);
 				core.encounterWindow.setPageData(core.gameState.player, possibleEncounter,playerInitiated);
 				if (encounter(possibleEncounter)) {
+					
+					initEncounterVisualization();
+					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.encounterWindow.toggle();
 				} else
 				{
+					core.gameState.switchToEncounterScenario(false, "debug");
 					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 			}
@@ -109,11 +119,15 @@ public class GameLogic {
 				endPlayerEncounters();
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
+					
+					initEncounterVisualization();
+					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 					core.turnActWindow.toggle();
 				} else
 				{
+					core.gameState.switchToEncounterScenario(false, "debug");
 					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 				
@@ -129,6 +143,9 @@ public class GameLogic {
 				endPlayerEncounters();
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
+					
+					initEncounterVisualization();
+					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
 					// if camping it should be finished
@@ -141,6 +158,7 @@ public class GameLogic {
 					core.turnActWindow.toggle();
 				} else
 				{
+					core.gameState.switchToEncounterScenario(false, "debug");
 					core.getKeyboardHandler().noToggleWindowByKey=false;
 				}
 			}
@@ -172,9 +190,9 @@ public class GameLogic {
 		previousForms.addAll(forms);
 		forms.clear();
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
-		playerFakeForm.worldX = player.theFragment.getEncounterBoundary().posX;
-		playerFakeForm.worldY = player.theFragment.getEncounterBoundary().posY;
-		playerFakeForm.worldZ = player.theFragment.getEncounterBoundary().posZ;
+		playerFakeForm.worldX = core.gameState.getEncounterPositions().origoX;//player.theFragment.getEncounterBoundary().posX;
+		playerFakeForm.worldY = core.gameState.getEncounterPositions().origoY;//player.theFragment.getEncounterBoundary().posY;
+		playerFakeForm.worldZ = core.gameState.getEncounterPositions().origoZ;//player.theFragment.getEncounterBoundary().posZ;
 		HashSet<String> playedAudios = new HashSet<String>();
 		int sizeOfAll = 0;
 		EncounterInfo info = possibleEncounter;
@@ -216,8 +234,6 @@ public class GameLogic {
 			
 		}
 		if (sizeOfAll>0) {
-			placeVisibleForms(forms);
-			J3DCore.getInstance().mEngine.render(forms);
 			return true;
 		} else
 		{
@@ -237,7 +253,7 @@ public class GameLogic {
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)
 	{
-		int dir = core.gameState.viewDirection;
+		int dir = core.gameState.getEncounterPositions().viewDirection;
 		int[] trans = J3DCore.moveTranslations.get(dir);
 		HashSet<Integer> usedPositions = new HashSet<Integer>();
 		for (VisibleLifeForm form:forms)
@@ -247,29 +263,29 @@ public class GameLogic {
 			Cube c = null;
 			while (true) { 
 				if (i>10) {
-					form.worldX = core.gameState.viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
-					form.worldY = core.gameState.viewPositionY;
-					form.worldZ = core.gameState.viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
+					form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+2)*trans[0]+(((i%3)-1)*trans[2]);
+					form.worldY = core.gameState.getEncounterPositions().viewPositionY;
+					form.worldZ = core.gameState.getEncounterPositions().viewPositionZ+(i/3+2)*trans[2]+(((i%3)-1)*trans[0]);
 					form.notRendered = true;
 					found=false; break;
 				}
-				form.worldX = core.gameState.viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
+				form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+1)*trans[0]+(((i%3)-1)*trans[2]);
 				//form.worldY = core.gameState.viewPositionY;
-				form.worldZ = core.gameState.viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
-				ArrayList<SurfaceHeightAndType[] > data = core.gameState.world.getSurfaceData(form.worldX, form.worldZ);
+				form.worldZ = core.gameState.getEncounterPositions().viewPositionZ+(i/3+1)*trans[2]+(((i%3)-1)*trans[0]);
+				ArrayList<SurfaceHeightAndType[] > data = core.eEngine.world.getSurfaceData(form.worldX, form.worldZ);
 				if (data!=null)
 				{
 					for (SurfaceHeightAndType[] d:data)
 					{
 						// TODO multiple layers, choose the closest Y one
 						if (!d[0].canContain) continue;
-						if (Math.abs(d[0].surfaceY-core.gameState.viewPositionY)<3) {
+						if (Math.abs(d[0].surfaceY-core.gameState.getEncounterPositions().viewPositionY)<3) {
 							form.worldY = d[0].surfaceY;
 						}
 							else continue;
 					}
 				}
-				c = world.getCube(-1, form.worldX, form.worldY, form.worldZ, false);
+				c = core.eEngine.world.getCube(-1, form.worldX, form.worldY, form.worldZ, false);
 				if (c==null || !c.canContain) 
 				{
 					i++;

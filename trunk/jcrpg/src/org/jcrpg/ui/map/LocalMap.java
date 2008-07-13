@@ -142,7 +142,7 @@ public class LocalMap {
 		try {
 			staticLayerGraphics.setBackground(new Color(0,0,0,0));
 			staticLayerGraphics.clearRect(0, 0, staticLayerGraphics.getImage().getWidth(), staticLayerGraphics.getImage().getHeight());
-			int dir = J3DCore.getInstance().gameState.viewDirection;
+			int dir = J3DCore.getInstance().gameState.getNormalPositions().viewDirection;
 			if (dir == J3DCore.NORTH) {
 				centerYPlus = centerY + 1;
 				centerXPlus = centerX;
@@ -156,9 +156,9 @@ public class LocalMap {
 				centerYPlus = centerY;
 				centerXPlus = centerX - 1;
 			}
-			int wX = J3DCore.getInstance().gameState.viewPositionX-centerX;
-			int wY = J3DCore.getInstance().gameState.viewPositionY;
-			int wZ = J3DCore.getInstance().gameState.viewPositionZ-centerY;
+			int wX = J3DCore.getInstance().gameState.getNormalPositions().viewPositionX-centerX;
+			int wY = J3DCore.getInstance().gameState.getNormalPositions().viewPositionY;
+			int wZ = J3DCore.getInstance().gameState.getNormalPositions().viewPositionZ-centerY;
 			for (int z = 0; z<localMapSizeY;z++)
 			{
 				for (int x=0; x<localMapSizeX; x++)

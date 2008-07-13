@@ -24,5 +24,16 @@ package org.jcrpg.world.ai.abs.skill;
  *
  */
 public interface HelperSkill {
+	
+	public static final String TAG_CRITICAL_HIT = "CRITICAL_HIT";
+	
+	/**
+	 * Tells if this helper skill does help another skill for a given 'tag' (which tells what way
+	 * the help is needed).
+	 * @param skill
+	 * @param tagWord
+	 * @return
+	 */
+	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord);
 
 }

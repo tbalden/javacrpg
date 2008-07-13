@@ -558,6 +558,7 @@ public class EncounterLogic {
 		gameLogic.endPlayerEncounters();
 		gameLogic.core.gameState.engine.turnFinishedForPlayer();
 		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
+		gameLogic.core.gameState.switchToEncounterScenario(false, null);
 	}
 
 	public void finishEncounterLose(EncounterInfo encounter)

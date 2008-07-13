@@ -187,5 +187,28 @@ public class SkillContainer {
 		}
 		return c;
 	}
+	
+	public SkillInstance getHighestLevelHelperSkill(Class<? extends SkillBase> skill, String tagWord)
+	{
+		SkillInstance highestLevel = null;
+		for (Class<? extends SkillBase> s:getSkillsOfType(HelperSkill.class))
+		{
+			if (((HelperSkill)SkillGroups.skillBaseInstances.get(s)).helpsForTag(skill, tagWord))
+			{
+				SkillInstance i = skills.get(s);
+				if (highestLevel==null)
+				{
+					highestLevel = i;
+				} else
+				{
+					if (i.level>highestLevel.level)
+					{
+						highestLevel = i;
+					}
+				}
+			}
+		}
+		return highestLevel;
+	}
 
 }

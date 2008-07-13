@@ -25,7 +25,9 @@ import java.util.Collection;
 import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
@@ -46,18 +48,28 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class GameStateContainer {
 	
+	
+	public class ScenarioPositions
+	{
+		public int viewDirection = J3DCore.NORTH;
+		public int viewPositionX = 0;
+		public int viewPositionY = 0;
+		public int viewPositionZ = 0;
+		public int relativeX = 0, relativeY = 0, relativeZ = 0;
+		public int origoX = 0;
+		public int origoY = 0;
+		public int origoZ = 0;
+		public boolean onSteep = false;
+		public boolean insideArea = false;
+	}
+	
+	private ScenarioPositions normalPosition = new ScenarioPositions();
+	private ScenarioPositions encounterPosition = new ScenarioPositions();
+	
+	private J3DStandingEngine currentSEngine = null;
+	
 	public String gameId = "game1";
 	
-	public int viewDirection = J3DCore.NORTH;
-	public int viewPositionX = 0;
-	public int viewPositionY = 0;
-	public int viewPositionZ = 0;
-	public int relativeX = 0, relativeY = 0, relativeZ = 0;
-	public int origoX = 0;
-	public int origoY = 0;
-	public int origoZ = 0;
-	public boolean onSteep = false;
-	public boolean insideArea = false;
 
 	public Engine engine = null;
 	public World world = null;
@@ -69,6 +81,12 @@ public class GameStateContainer {
 	
 	public GameStateContainer()
 	{
+		encounterPosition.viewPositionX = 40;
+		encounterPosition.viewPositionZ = 40;
+		encounterPosition.origoX = 40;
+		encounterPosition.origoZ = 40;
+		encounterPosition.relativeX = 0;
+		encounterPosition.relativeZ = 0;
 		charCreationRules = new CharacterCreationRules(null,null);
 	}
 
@@ -95,24 +113,24 @@ public class GameStateContainer {
 	public void setViewPosition(int[] coords)
 	{
 		Jcrpg.LOGGER.info(" NEW VIEW POSITION = "+coords[0]+" - "+coords[1]+" - "+coords[2]);
-		viewPositionX = coords[0];
-		viewPositionY = coords[1];
-		viewPositionZ = coords[2];
+		normalPosition.viewPositionX = coords[0];
+		normalPosition.viewPositionY = coords[1];
+		normalPosition.viewPositionZ = coords[2];
 		player.setPosition(coords);
 	}
 	public void setRelativePosition(int[] coords)
 	{
-		relativeX = coords[0];
-		relativeY = coords[1];
-		relativeZ = coords[2];
+		normalPosition.relativeX = coords[0];
+		normalPosition.relativeY = coords[1];
+		normalPosition.relativeZ = coords[2];
 	}
 	
 	public void setViewPosition(int x,int y,int z)	
 	{
 		System.out.println("!!!!!!!!!! VIEW POS: "+y);
-		viewPositionX = x;
-		viewPositionY = y;
-		viewPositionZ = z;
+		normalPosition.viewPositionX = x;
+		normalPosition.viewPositionY = y;
+		normalPosition.viewPositionZ = z;
 		player.setPosition(new int[]{x,y,z});
 	}
 	
@@ -124,17 +142,17 @@ public class GameStateContainer {
 	 */
 	public void setOrigoRenderPosition(int x,int y,int z)
 	{
-		origoX = x;
-		origoY = y;
-		origoZ = z;
+		normalPosition.origoX = x;
+		normalPosition.origoY = y;
+		normalPosition.origoZ = z;
 	}
 	
 	public void resetRelativePosition()
 	{
-		relativeX = 0;
-		relativeY = 0;
-		relativeZ = 0;
-		viewDirection = 0;
+		normalPosition.relativeX = 0;
+		normalPosition.relativeY = 0;
+		normalPosition.relativeZ = 0;
+		normalPosition.viewDirection = 0;
 	}
 	
 	public void setPlayer(PartyInstance player, GameLogic playerTurnLogic)
@@ -191,25 +209,51 @@ public class GameStateContainer {
 	public void repositionPlayerToSurface()
 	{
 		// looking for surface...
-		ArrayList<SurfaceHeightAndType[]> list = world.getSurfaceData(viewPositionX,viewPositionZ);
-		int y = viewPositionY;
+		ArrayList<SurfaceHeightAndType[]> list = world.getSurfaceData(normalPosition.viewPositionX,normalPosition.viewPositionZ);
+		int y = normalPosition.viewPositionY;
 		int minDiff = 1000;
 		if (list!=null)
 		for (SurfaceHeightAndType[] st:list)
 		{
 			for (SurfaceHeightAndType s:st)
 			{
-				if (Math.abs((s.surfaceY-viewPositionY))<minDiff)
+				if (Math.abs((s.surfaceY-normalPosition.viewPositionY))<minDiff)
 				{
-					minDiff = Math.abs(s.surfaceY-viewPositionY);
+					minDiff = Math.abs(s.surfaceY-normalPosition.viewPositionY);
 					y = s.surfaceY;
 				}
 			}
 		}
-		relativeY += y-viewPositionY;
-		viewPositionY = y;
+		normalPosition.relativeY += y-normalPosition.viewPositionY;
+		normalPosition.viewPositionY = y;
+		Cube c = world.getCube(-1, normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ, false);
+		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) normalPosition.onSteep = true;
 	}
-	
+
+	public void positionPlayerToSurfaceEncounterMode()
+	{
+		// looking for surface...
+		ArrayList<SurfaceHeightAndType[]> list = J3DCore.getInstance().eEngine.world.getSurfaceData(encounterPosition.viewPositionX,encounterPosition.viewPositionZ);
+		int y = encounterPosition.viewPositionY;
+		int minDiff = 1000;
+		if (list!=null)
+		for (SurfaceHeightAndType[] st:list)
+		{
+			for (SurfaceHeightAndType s:st)
+			{
+				if (Math.abs((s.surfaceY-encounterPosition.viewPositionY))<minDiff)
+				{
+					minDiff = Math.abs(s.surfaceY-encounterPosition.viewPositionY);
+					y = s.surfaceY;
+				}
+			}
+		}
+		encounterPosition.relativeY += y-encounterPosition.viewPositionY;
+		encounterPosition.viewPositionY = y;
+		Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterPosition.viewPositionX, encounterPosition.viewPositionY, encounterPosition.viewPositionZ, false);
+		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) encounterPosition.onSteep = true;
+	}
+
 	/**
 	 * Big world update that changes the world structure.
 	 */
@@ -233,7 +277,31 @@ public class GameStateContainer {
 		engine.economyUpdateFinished();
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "ECONOMY");
 		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Constructions done.");
+	}
 	
+	public void switchToEncounterScenario(boolean on, String encWorldType)
+	{
+		if (on)
+		{
+			currentSEngine = J3DCore.getInstance().eEngine; 
+			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
+			currentRenderPositions = encounterPosition;
+			J3DCore.getInstance().eEngine.renderToEncounterWorld(encWorldType);
+			J3DCore.getInstance().sEngine.switchOn(false);
+			J3DCore.getInstance().eEngine.switchOn(true);
+			positionPlayerToSurfaceEncounterMode();
+			J3DCore.getInstance().setCalculatedCameraLocation();
+			J3DCore.getInstance().eEngine.renderToViewPort();
+						
+		} else
+		{
+			currentSEngine = J3DCore.getInstance().sEngine; 
+			J3DCore.getInstance().eEngine.switchOn(false);
+			currentRenderPositions = normalPosition;
+			J3DCore.getInstance().setCalculatedCameraLocation();
+			J3DCore.getInstance().sEngine.switchOn(true);
+			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
+		}
 	}
 	
 	/**
@@ -262,10 +330,10 @@ public class GameStateContainer {
 	 */
 	public void checkEnterLeavePopulation()
 	{
-		Population p = world.economyContainer.getPopulationAt(viewPositionX, viewPositionY, viewPositionZ);
+		Population p = world.economyContainer.getPopulationAt(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ);
 		if (p==null)
 		{
-			p = world.economyContainer.getPopulationAt(viewPositionX, viewPositionY-1, viewPositionZ);
+			p = world.economyContainer.getPopulationAt(normalPosition.viewPositionX, normalPosition.viewPositionY-1, normalPosition.viewPositionZ);
 		}
 		if (p!=null)
 		{
@@ -371,6 +439,25 @@ public class GameStateContainer {
 				break;
 			}
 		}
+	}
+	
+	private ScenarioPositions currentRenderPositions = null; 
+	public ScenarioPositions getCurrentRenderPositions()
+	{
+		return currentRenderPositions;
+	}
+
+	public ScenarioPositions getNormalPositions()
+	{
+		return normalPosition;
+	}
+	public ScenarioPositions getEncounterPositions()
+	{
+		return encounterPosition;
+	}
+	public J3DStandingEngine getCurrentStandingEngine()
+	{
+		return currentSEngine;
 	}
 	
 }

@@ -10,6 +10,11 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] char sheet -> resistance values!
 
+[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
+	overall organization level should be increased -> organization level means tougher units on generation
+	 	some kind of randomization!
+	[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
+
 [ ] particle effect for models
 [ ] camera bigger view - switch off back rendered models (check cave)
 
@@ -23,23 +28,34 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] check wciow updates on glestanimals - animated ? 
 
-[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
-	overall organization level should be increased -> organization level means tougher units on generation
-	 	some kind of randomization!
+
+[ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
 
 [ ] enemy unit effect icons too
+	[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
+	
+[ ] summoning spells	
+
+[X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
+	standed , generate a place with objects similar tile types etc.
+	X Add a new RootNode for that scenario and generate + switch to it.
+	X in combat mode turning + zooming on active units
+	
+	[ ] light states -> external not so working
+	[ ] spell effects doesnt show 
+		angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
+		second time after movement camera is not correctly positioned.
 
 ##
 [?] list before next release:
 ##
 
-	[X] evaluator base:
-			[X] resistances etc. decreasing impact - EvaluatorBase - .evaluate() part's end
-			[ ] critical hit skills ? how use them (helper skills)
-
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
 
 	[ ] neutralization act forms -- neutralization effect -> remove from combat
+
+	[ ] world generation - concentrate friendly groups - don't let enemies close at start,
+		tweak relation values against player? aggressivity should manipulate first sight relation to negative?
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 	
@@ -50,10 +66,14 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] documenting points, attr, calculations, leveling
 
 	[ ]	flying numbers for impact over units, billboard
+
+	[X] Helper Critical hit skills ? how use them (helper skills)
 	
-	
+	[X] don't add multiple state effects, use the latest when Positive spell, use the severer when negative
+		effect
 
 	[X] Evaluator base
+		[X] resistances etc. decreasing impact - EvaluatorBase - .evaluate() part's end
 		[X] hit body parts, criticals
 		[X] XP and impact calculation / 
 		[X] armors on body parts calculation upon impact

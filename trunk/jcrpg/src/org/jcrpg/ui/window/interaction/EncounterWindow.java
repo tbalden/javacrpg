@@ -273,7 +273,7 @@ public class EncounterWindow extends PagedInputWindow {
 			
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
-			SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
+			SkillInstance skillInstance = i.getSkills().skills.get(s.getClass());
 			ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
 			String[] texts = new String[forms.size()];
 			Object[] objects = new Object[forms.size()];

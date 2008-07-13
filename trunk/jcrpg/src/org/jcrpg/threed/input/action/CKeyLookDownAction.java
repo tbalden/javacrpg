@@ -39,7 +39,7 @@ public class CKeyLookDownAction extends CKeyAction {
 
 		if (handler.lookLeftRightPercent!=0)
 		{
-			handler.core.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
+			handler.sEngine.renderToViewPort(J3DCore.ROTATE_VIEW_ANGLE);
 		}
 		handler.lookUpDownPercent -= 8;
 		if (handler.lookUpDownPercent < -100)
@@ -49,13 +49,13 @@ public class CKeyLookDownAction extends CKeyAction {
 
 		camera.update();
 		if (renderToViewPort > 4) {
-			if (J3DCore.OPTIMIZE_ANGLES) handler.core.sEngine.renderToViewPort();
+			if (handler.sEngine.optimizeAngle) handler.sEngine.renderToViewPort();
 			renderToViewPort = 0;
 		} else {
 			renderToViewPort++;
 		}
 		handler.core
-				.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection]);
+				.updateDisplay(J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection]);
 		handler.unlockHandling(false);
 	}
 }

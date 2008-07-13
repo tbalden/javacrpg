@@ -261,7 +261,7 @@ public abstract class CKeyAction extends KeyInputAction{
     {
         Vector3f toReach = null;
         
-        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
         if (handler.lookUpDownPercent<0)
         	toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];//[handler.core.gameState.viewDirection];
         else
@@ -278,14 +278,14 @@ public abstract class CKeyAction extends KeyInputAction{
     {
         Vector3f toReach = null;
         
-        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
         if (handler.lookLeftRightPercent<0) {
-        	int vdN = handler.core.gameState.viewDirection-1;
+        	int vdN = handler.core.gameState.getCurrentRenderPositions().viewDirection-1;
         	if (vdN<0) vdN = 3;
         	toReach = J3DCore.turningDirectionsUnit[vdN];
         }
         else {
-        	int vdN = handler.core.gameState.viewDirection+1;
+        	int vdN = handler.core.gameState.getCurrentRenderPositions().viewDirection+1;
         	if (vdN>3) vdN = 0;
         	toReach = J3DCore.turningDirectionsUnit[vdN];
         }
@@ -297,7 +297,7 @@ public abstract class CKeyAction extends KeyInputAction{
     {
         Vector3f toReach = null;
         
-        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.viewDirection];
+        Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
         if (handler.lookUpDownPercent<0)
         	toReach = J3DCore.turningDirectionsUnit[J3DCore.BOTTOM];//[handler.core.gameState.viewDirection];
         else
@@ -306,12 +306,12 @@ public abstract class CKeyAction extends KeyInputAction{
         Vector3f toReachHor = null;
         
         if (handler.lookLeftRightPercent<0) {
-        	int vdN = handler.core.gameState.viewDirection-1;
+        	int vdN = handler.core.gameState.getCurrentRenderPositions().viewDirection-1;
         	if (vdN<0) vdN = 3;
         	toReachHor = J3DCore.turningDirectionsUnit[vdN];
         }
         else {
-        	int vdN = handler.core.gameState.viewDirection+1;
+        	int vdN = handler.core.gameState.getCurrentRenderPositions().viewDirection+1;
         	if (vdN>3) vdN = 0;
         	toReachHor = J3DCore.turningDirectionsUnit[vdN];
         }
