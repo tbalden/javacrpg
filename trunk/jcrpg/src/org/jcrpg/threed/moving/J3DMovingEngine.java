@@ -383,7 +383,7 @@ public class J3DMovingEngine {
 					
 					
 					//if (unit.internal) {
-						core.encounterRootNode.attachChild((Node)realPooledNode);
+						core.encounterExtRootNode.attachChild((Node)realPooledNode);
 					//} else 
 					{
 						//core.extRootNode.attachChild((Node)realPooledNode);
@@ -453,7 +453,7 @@ public class J3DMovingEngine {
 					VisibleLifeForm target = n.sourceForm==null?playerFakeForm:n.sourceForm;
 					Vector3f pos = calculatePositionVector(null,target);
 					n.setPosition(pos, null);
-					core.encounterRootNode.attachChild(n);
+					core.encounterExtRootNode.attachChild(n);
 					n.updateRenderState();
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;

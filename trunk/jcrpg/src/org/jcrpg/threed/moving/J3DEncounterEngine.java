@@ -38,8 +38,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	World debugWorld = null;
 	public J3DEncounterEngine(J3DCore core) {
 		super(core);
-		extRootNode = core.encounterRootNode;
-		intRootNode = core.encounterRootNode;
+		extRootNode = core.encounterExtRootNode;
+		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
 		optimizeAngle = false;
 		
@@ -50,7 +50,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			int wMag = 100;
 			int wX = 1;
 			int wY = 1;
-			int wZ = 1;
+			//int wZ = 1;
 			
 			// FLORA
 			baseWorld.setFloraContainer(new BaseFloraContainer());
@@ -95,8 +95,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	@Override
 	public void reinit() {
 		super.reinit();
-		extRootNode = core.encounterRootNode;
-		intRootNode = core.encounterRootNode;
+		extRootNode = core.encounterExtRootNode;
+		intRootNode = core.encounterExtRootNode;
 		renderedArea = core.renderedEncounterArea;
 	}
 	
