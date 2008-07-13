@@ -64,7 +64,7 @@ public class GameStateContainer {
 	}
 	
 	private ScenarioPositions normalPosition = new ScenarioPositions();
-	private ScenarioPositions encounterPosition = new ScenarioPositions();
+	private ScenarioPositions encounterModePosition = new ScenarioPositions();
 	
 	private J3DStandingEngine currentSEngine = null;
 	
@@ -81,12 +81,12 @@ public class GameStateContainer {
 	
 	public GameStateContainer()
 	{
-		encounterPosition.viewPositionX = 40;
-		encounterPosition.viewPositionZ = 40;
-		encounterPosition.origoX = 40;
-		encounterPosition.origoZ = 40;
-		encounterPosition.relativeX = 0;
-		encounterPosition.relativeZ = 0;
+		encounterModePosition.viewPositionX = 42;
+		encounterModePosition.viewPositionZ = 42;
+		encounterModePosition.origoX = 42;
+		encounterModePosition.origoZ = 42;
+		encounterModePosition.relativeX = 0;
+		encounterModePosition.relativeZ = 0;
 		charCreationRules = new CharacterCreationRules(null,null);
 	}
 
@@ -233,25 +233,25 @@ public class GameStateContainer {
 	public void positionPlayerToSurfaceEncounterMode()
 	{
 		// looking for surface...
-		ArrayList<SurfaceHeightAndType[]> list = J3DCore.getInstance().eEngine.world.getSurfaceData(encounterPosition.viewPositionX,encounterPosition.viewPositionZ);
-		int y = encounterPosition.viewPositionY;
+		ArrayList<SurfaceHeightAndType[]> list = J3DCore.getInstance().eEngine.world.getSurfaceData(encounterModePosition.viewPositionX,encounterModePosition.viewPositionZ);
+		int y = encounterModePosition.viewPositionY;
 		int minDiff = 1000;
 		if (list!=null)
 		for (SurfaceHeightAndType[] st:list)
 		{
 			for (SurfaceHeightAndType s:st)
 			{
-				if (Math.abs((s.surfaceY-encounterPosition.viewPositionY))<minDiff)
+				if (Math.abs((s.surfaceY-encounterModePosition.viewPositionY))<minDiff)
 				{
-					minDiff = Math.abs(s.surfaceY-encounterPosition.viewPositionY);
+					minDiff = Math.abs(s.surfaceY-encounterModePosition.viewPositionY);
 					y = s.surfaceY;
 				}
 			}
 		}
-		encounterPosition.relativeY += y-encounterPosition.viewPositionY;
-		encounterPosition.viewPositionY = y;
-		Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterPosition.viewPositionX, encounterPosition.viewPositionY, encounterPosition.viewPositionZ, false);
-		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) encounterPosition.onSteep = true;
+		encounterModePosition.relativeY += y-encounterModePosition.viewPositionY;
+		encounterModePosition.viewPositionY = y;
+		Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterModePosition.viewPositionX, encounterModePosition.viewPositionY, encounterModePosition.viewPositionZ, false);
+		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) encounterModePosition.onSteep = true;
 	}
 
 	/**
@@ -285,12 +285,15 @@ public class GameStateContainer {
 		{
 			currentSEngine = J3DCore.getInstance().eEngine; 
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
-			currentRenderPositions = encounterPosition;
+			currentRenderPositions = encounterModePosition;
 			J3DCore.getInstance().eEngine.renderToEncounterWorld(encWorldType);
 			J3DCore.getInstance().sEngine.switchOn(false);
 			J3DCore.getInstance().eEngine.switchOn(true);
 			positionPlayerToSurfaceEncounterMode();
 			J3DCore.getInstance().setCalculatedCameraLocation();
+			J3DCore.getInstance().getCamera().setDirection(J3DCore.directions[getEncounterPositions().viewDirection]);			
+			J3DCore.getInstance().getCamera().update();
+
 			J3DCore.getInstance().eEngine.renderToViewPort();
 						
 		} else
@@ -299,6 +302,8 @@ public class GameStateContainer {
 			J3DCore.getInstance().eEngine.switchOn(false);
 			currentRenderPositions = normalPosition;
 			J3DCore.getInstance().setCalculatedCameraLocation();
+			J3DCore.getInstance().getCamera().setDirection(J3DCore.directions[getNormalPositions().viewDirection]);			
+			J3DCore.getInstance().getCamera().update();
 			J3DCore.getInstance().sEngine.switchOn(true);
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 		}
@@ -453,7 +458,7 @@ public class GameStateContainer {
 	}
 	public ScenarioPositions getEncounterPositions()
 	{
-		return encounterPosition;
+		return encounterModePosition;
 	}
 	public J3DStandingEngine getCurrentStandingEngine()
 	{
