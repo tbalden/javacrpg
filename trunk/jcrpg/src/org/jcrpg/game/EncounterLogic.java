@@ -650,6 +650,7 @@ public class EncounterLogic {
 					
 					turnActTurnState.currentActor = choice.member;
 					
+					// setting the camera to actor...
 					if (choice.member.encounterData.visibleForm!=null)
 					{
 						try 
@@ -660,6 +661,21 @@ public class EncounterLogic {
 						} catch (Exception ex)
 						{
 							ex.printStackTrace();
+						}
+					} else
+					{
+						// no visible actor, set to target..
+						if (choice.targetMember!=null && choice.targetMember.encounterData.visibleForm!=null)
+						{
+							try 
+							{
+								Vector3f place = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
+								//Vector3f orig = gameLogic.core.getCamera().getLocation();
+								CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+							} catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
 					
