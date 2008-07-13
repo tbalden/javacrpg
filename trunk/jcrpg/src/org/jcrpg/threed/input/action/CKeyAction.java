@@ -163,7 +163,7 @@ public abstract class CKeyAction extends KeyInputAction{
 	 * @param y
 	 * @param z
 	 */
-    private void setCameraDirection(Camera camera,  float x,float y,float z)
+    public static void setCameraDirection(Camera camera,  float x,float y,float z)
     {
     	setCameraDirection(camera, null,x, y, z);
     }
@@ -177,7 +177,7 @@ public abstract class CKeyAction extends KeyInputAction{
      * @param y
      * @param z
      */
-    private void setCameraDirection(Camera camera, Vector3f internalDirection,
+    private static void setCameraDirection(Camera camera, Vector3f internalDirection,
 			float x, float y, float z) {
 		Matrix3f rotMat = new Matrix3f();
 		Vector3f dirOrigo = new Vector3f(0f, 0f, -1);

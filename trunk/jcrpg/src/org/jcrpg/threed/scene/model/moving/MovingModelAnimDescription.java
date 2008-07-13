@@ -33,6 +33,7 @@ public class MovingModelAnimDescription {
 	public static String ANIM_DEFEND_UPPER = "ANIM_DEFENDU";
 	public static String ANIM_DEFEND_LOWER = "ANIM_DEFENDL";
 	public static String ANIM_THROW = "ANIM_THROW";
+	public static String ANIM_SHOOT = "ANIM_SHOOT";
 	public static String ANIM_CAST = "ANIM_CAST";
 	public static String ANIM_FRIENDLY = "ANIM_FRIENDLY";
 	public static String ANIM_COMMUNICATE_NORMAL = "ANIM_COMM";
@@ -55,6 +56,7 @@ public class MovingModelAnimDescription {
 	public String DEFEND_UPPER = null;
 	public String DEFEND_LOWER = null;
 	public String THROW = null;
+	public String SHOOT = null;
 	public String CAST = null;
 	public String FRIENDLY = null;
 	public String COMMUNICATE_NORMAL = null;
