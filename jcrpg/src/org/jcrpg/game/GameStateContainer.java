@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
@@ -42,6 +43,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.time.Time;
 
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -291,10 +293,8 @@ public class GameStateContainer {
 			J3DCore.getInstance().eEngine.switchOn(true);
 			positionPlayerToSurfaceEncounterMode();
 			J3DCore.getInstance().setCalculatedCameraLocation();
-			J3DCore.getInstance().getCamera().setDirection(J3DCore.directions[getEncounterPositions().viewDirection]);			
-			J3DCore.getInstance().getCamera().update();
-
-			J3DCore.getInstance().updateTimeRelated();
+			Vector3f dir = J3DCore.directions[getEncounterPositions().viewDirection];
+			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().eEngine.renderToViewPort();
 						
 		} else
@@ -303,8 +303,8 @@ public class GameStateContainer {
 			J3DCore.getInstance().eEngine.switchOn(false);
 			currentRenderPositions = normalPosition;
 			J3DCore.getInstance().setCalculatedCameraLocation();
-			J3DCore.getInstance().getCamera().setDirection(J3DCore.directions[getNormalPositions().viewDirection]);			
-			J3DCore.getInstance().getCamera().update();
+			Vector3f dir = J3DCore.directions[getNormalPositions().viewDirection];
+			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().sEngine.switchOn(true);
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 		}

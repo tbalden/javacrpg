@@ -123,6 +123,7 @@ public class J3DStandingEngine {
 		uiBase.hud.sr.setVisibility(true, "LOAD");
 		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.getCurrentRenderPositions().viewPositionX+"/"+core.gameState.getCurrentRenderPositions().viewPositionZ+"...");
     	if (!J3DCore.CONTINUOUS_LOAD) core.updateDisplay(null);
+		//core.do3DPause(true);
 
 		/*lastRenderX = viewPositionX;
 		lastRenderY = viewPositionY;
@@ -174,6 +175,7 @@ public class J3DStandingEngine {
 
 		//TextureManager.clearCache();
 		//System.gc();
+		//core.do3DPause(false);
 		Jcrpg.LOGGER.info(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
 		uiBase.hud.sr.setVisibility(false, "LOAD");
 		uiBase.hud.mainBox.addEntry("Load Complete.");
