@@ -137,6 +137,7 @@ public class EntityMemberInstance {
 		if (result.contains(EntityMemberState.ZERO_HEALTH))
 		{
 			encounterData.generatedMembers.remove(this);
+			this.parentFragment.decreaseSize();
 		} else
 		{
 			memberState.increaseExperience(unit.experiencePoint);
@@ -306,4 +307,5 @@ public class EntityMemberInstance {
 	{
 		return description.memberSkills;
 	}
+	
 }

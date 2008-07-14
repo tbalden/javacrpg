@@ -164,8 +164,29 @@ public class EntityFragments {
 		{
 			parent.instance.notifyEffectChange(member,added,removed);
 		}
-		
+
+		public void decreaseSize()
+		{
+			size--;
+			if (size==0)
+			{
+				parent.fragmentDestroyed(this);
+			}
+			instance.numberOfMembers--;
+			instance.recalcBoundarySizes();
+		}
+
 	}
+	
+	public void fragmentDestroyed(EntityFragment f)
+	{
+		fragments.remove(f);
+		if (fragments.size()==0)
+		{
+			instance.mergedOrDestroyed = true;
+		}
+	}
+	
 	public transient Vector3f tmpVector = new Vector3f();
 	
 	public ArrayList<EntityFragment> fragments = new ArrayList<EntityFragment>();
@@ -185,7 +206,8 @@ public class EntityFragments {
 		f.roamingBoundary.radiusInRealCubes = instance.description.getRoamingSize(f);
 		fragments.add(f);
 	}
-	
+
+
 	public void recalcBoundaries()
 	{
 		for (EntityFragment f:fragments) {
