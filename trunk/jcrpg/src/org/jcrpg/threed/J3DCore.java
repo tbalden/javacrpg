@@ -2027,9 +2027,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		groundParentNode.attachChild(intRootNode);
 		groundParentNode.attachChild(extRootNode);
 		groundParentNode.attachChild(skyParentNode);
+
+		groundParentNode.attachChild(encounterExtRootNode);
+		groundParentNode.attachChild(encounterIntRootNode);
+		
 		rootNode.attachChild(groundParentNode);
-		rootNode.attachChild(encounterExtRootNode);
-		rootNode.attachChild(encounterIntRootNode);
 
         AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
 		as.setEnabled(true);
