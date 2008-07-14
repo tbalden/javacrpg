@@ -1009,8 +1009,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					vTotal[2]+=v[2];
 					ColorRGBA c = new ColorRGBA(v[0],v[1],v[2],0.6f);
 					
-					l[0].getLight().setDiffuse(c);//new ColorRGBA(1,1,1,1));
-					l[0].getLight().setAmbient(c);
+					l[0].getLight().setDiffuse(c);//c);//new ColorRGBA(1,1,1,1));
+					l[0].getLight().setAmbient(ColorRGBA.white);
 					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
 					extRootNode.setRenderState(extLightState);
