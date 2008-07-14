@@ -186,8 +186,11 @@ public class PartyInstance extends EntityInstance {
 			tmpCamperList = new ArrayList<EntityFragment>();
 		}
 		tmpCamperList.clear();
-		tmpCamperList.add(theFragment);
-		if (theFragment.fragmentState.isCamping) return tmpCamperList; 
+		if (theFragment.fragmentState.isCamping)
+		{
+			tmpCamperList.add(theFragment);
+			return tmpCamperList; 
+		}
 		return super.decideCampingAndGetCamperFragments();
 	}
 
