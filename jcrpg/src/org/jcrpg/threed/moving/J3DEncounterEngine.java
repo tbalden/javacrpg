@@ -36,7 +36,7 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 
 public class J3DEncounterEngine extends J3DStandingEngine {
 	
-	World fallbackWorld = null;
+	transient World fallbackWorld = null;
 	public J3DEncounterEngine(J3DCore core) {
 		super(core);
 		extRootNode = core.encounterExtRootNode;
@@ -45,7 +45,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		optimizeAngle = false;
 		
 	}
-	HashMap<String, World> encounterGroundWorlds = new HashMap<String, World>();
+	transient HashMap<String, World> encounterGroundWorlds = new HashMap<String, World>();
 	
 	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, String specialType) throws Exception
 	{
@@ -84,6 +84,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	public String lastType = "________";
 	public void renderToEncounterWorld(int worldX, int worldY, int worldZ, World realWorld, String specialType)
 	{
+		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
 		Cube c = realWorld.getCube(-1, worldX, worldY, worldZ, false);
 		CubeClimateConditions ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c.internalCube);
 		
@@ -118,6 +119,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterExtRootNode;
 		renderedArea = core.renderedEncounterArea;
+		lastType = "_______";
 	}
 	
 	

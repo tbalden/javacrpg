@@ -68,7 +68,7 @@ public class GameStateContainer {
 	private ScenarioPositions normalPosition = new ScenarioPositions();
 	private ScenarioPositions encounterModePosition = new ScenarioPositions();
 	
-	private J3DStandingEngine currentSEngine = null;
+	private transient J3DStandingEngine currentSEngine = null;
 	
 	public String gameId = "game1";
 	
@@ -312,7 +312,10 @@ public class GameStateContainer {
 			Vector3f dir = J3DCore.directions[getNormalPositions().viewDirection];
 			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().sEngine.switchOn(true);
-			J3DCore.getInstance().updateTimeRelated();
+			if (J3DCore.getInstance().coreFullyInitialized)
+			{
+				J3DCore.getInstance().updateTimeRelated();
+			}
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 		}
 	}
