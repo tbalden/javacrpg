@@ -90,7 +90,7 @@ public class Characters {
 	{
 		pointQuadData.add(ColorRGBA.red);
 		pointQuadData.add(ColorRGBA.yellow);
-		pointQuadData.add(ColorRGBA.brown);
+		pointQuadData.add(ColorRGBA.green);
 		pointQuadData.add(ColorRGBA.orange);
 		pointQuadData.add(ColorRGBA.blue);
 
