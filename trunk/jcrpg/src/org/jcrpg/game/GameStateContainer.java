@@ -84,9 +84,9 @@ public class GameStateContainer {
 	public GameStateContainer()
 	{
 		encounterModePosition.viewPositionX = 46;
-		encounterModePosition.viewPositionZ = 40;
+		encounterModePosition.viewPositionZ = 41;
 		encounterModePosition.origoX = 46;
-		encounterModePosition.origoZ = 40;
+		encounterModePosition.origoZ = 41;
 		encounterModePosition.relativeX = 0;
 		encounterModePosition.relativeZ = 0;
 		charCreationRules = new CharacterCreationRules(null,null);
@@ -312,6 +312,7 @@ public class GameStateContainer {
 			Vector3f dir = J3DCore.directions[getNormalPositions().viewDirection];
 			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().sEngine.switchOn(true);
+			J3DCore.getInstance().updateTimeRelated();
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().sEngine);
 		}
 	}
