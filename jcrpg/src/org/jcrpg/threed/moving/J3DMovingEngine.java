@@ -386,11 +386,11 @@ public class J3DMovingEngine {
 					//realPooledNode.attachChild(unit.circleNode);
 					
 					
-					//if (unit.internal) {
+					if (unit.internal) {
 						core.encounterExtRootNode.attachChild((Node)realPooledNode);
-					//} else 
+					} else 
 					{
-						//core.extRootNode.attachChild((Node)realPooledNode);
+						core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
 					realPooledNode.updateRenderState();
 					
@@ -499,11 +499,11 @@ public class J3DMovingEngine {
 					if (unit.state.equals(MovingModelAnimDescription.ANIM_IDLE) || unit.state.equals(MovingModelAnimDescription.ANIM_IDLE_COMBAT))
 					{
 						
-						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
+						//VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 						
 						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame);		
-						Vector3f eVec = rVectors[1];
+						//Vector3f eVec = rVectors[1];
 						Vector3f mVec = rVectors[0];
 
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
@@ -537,8 +537,6 @@ public class J3DMovingEngine {
 					{
 						// simple turn on target and do a single animation, no movement
 						
-						VisibleLifeForm target = unit.form.targetForm==null?playerFakeForm:unit.form.targetForm;
-						
 						if (unit.playingAnimation==null)
 						{
 							System.out.println("+++++++++++++++++");
@@ -562,7 +560,7 @@ public class J3DMovingEngine {
 						Vector3f cVec = new Vector3f(n.getLocalTranslation());
 						
 						Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnitTarget(cVec, unit, 20f, timePerFrame);		
-						Vector3f eVec = rVectors[1];
+						//Vector3f eVec = rVectors[1];
 						Vector3f mVec = rVectors[0];
 						
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
@@ -722,8 +720,8 @@ public class J3DMovingEngine {
 		
 		Matrix3f rotMat = new Matrix3f();
 		Vector3f dirOrigo = new Vector3f(0f, 0f, -1);
-		Vector3f left = new Vector3f(-1, 0, 0);
-		Vector3f up = new Vector3f(0, 1, 0);
+		//Vector3f left = new Vector3f(-1, 0, 0);
+		//Vector3f up = new Vector3f(0, 1, 0);
 
 
 		Vector3f dirNew = mVec;
