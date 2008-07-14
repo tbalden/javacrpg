@@ -483,7 +483,7 @@ public class EncounterInfo {
 			int lineCount = 0;
 			for (ArrayList<EncounterUnitData> dList : getTopology().getEnemyLineup().lines)
 			{
-				int line = lineCount>3?4:lineCount;
+				int line = lineCount>3?3:lineCount;
 				for (EncounterUnitData d:dList) {
 					m.addAhead(d, line);
 				}				
