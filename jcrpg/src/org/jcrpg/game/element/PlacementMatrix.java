@@ -114,6 +114,7 @@ public class PlacementMatrix {
 	
 	public void addAhead(EncounterUnitData data, int line)
 	{
+		if (line>3) line = 3;
 		ArrayList<EncounterUnitData> list = matrixAhead.matrix[line];
 		if (list==null)
 		{
@@ -126,6 +127,7 @@ public class PlacementMatrix {
 	
 	public void addBehind(EncounterUnitData data, int line)
 	{
+		if (line>3) line = 3;
 		ArrayList<EncounterUnitData> list = matrixBehind.matrix[line];
 		if (list==null)
 		{
