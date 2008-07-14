@@ -36,26 +36,36 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	
 [ ] summoning spells	
 
+
+
 [X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
 	standed , generate a place with objects similar tile types etc.
 	X Add a new RootNode for that scenario and generate + switch to it.
 	X in combat mode turning + zooming on active units
 	
-	[ ] light states -> external not so working
-	[ ] spell effects doesnt show ---> only on STEEPS!!!!!
-		angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
+	[X] light states -> external not so working
+	[X] spell effects doesnt show ---> only on STEEPS!!!!!
+	[x]	angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
 		second time after movement camera is not correctly positioned.
+	[X] sky not showing sometimes in Enc Mode - facing a given direction
+	[X] too quick anim at loads/start - a bit better now!
+	[X] turn camera on actor
+		[ ] real turn -> move it in background simpleUpdate?
+
+	[ ] clear out center of battle ground - modify height variation as a Constructor parameter for plain
+		- fix the seed for these generations somehow... now HashUtil's seed if changed battle ground may be bad!
+
+[ ] world generation - concentrate friendly groups - don't let enemies close at start,
+	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
 
 ##
 [?] list before next release:
 ##
 
+
 	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
 
 	[ ] neutralization act forms -- neutralization effect -> remove from combat
-
-	[ ] world generation - concentrate friendly groups - don't let enemies close at start,
-		tweak relation values against player? aggressivity should manipulate first sight relation to negative?
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
 	
@@ -66,6 +76,14 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] documenting points, attr, calculations, leveling
 
 	[ ]	flying numbers for impact over units, billboard
+
+	[X] fix Interception window is not showing any time ?? encInfo calc is wrong or what?
+
+	[X] adding different encounter grounds / climate
+
+
+	[X] fix units not facing PARTY!!!!
+		[X] spell direction isnt gOOD!!! -> it's not perfect but good
 
 	[X] Helper Critical hit skills ? how use them (helper skills)
 	
