@@ -46,7 +46,7 @@ import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 
 public class EntityInstance {
 	
-	public boolean merged = false;
+	public boolean mergedOrDestroyed = false;
 	
 	/**
 	 * The "genetic" heritage of the instance.
@@ -316,7 +316,7 @@ public class EntityInstance {
 		numberOfMembers+=instance.numberOfMembers;
 		calculateGroupsAndPositions();
 		fragments.merge(instance.fragments);
-		instance.merged = true;
+		instance.mergedOrDestroyed = true;
 	}
 
 	public int getNumericId() {

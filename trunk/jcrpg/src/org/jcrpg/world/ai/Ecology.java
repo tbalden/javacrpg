@@ -401,7 +401,7 @@ public class Ecology {
 			Collection<EntityInstance> toRemove = new HashSet<EntityInstance>();
 			for (EntityInstance i:orderedBeingList)
 			{
-				if (i.merged)
+				if (i.mergedOrDestroyed)
 				{
 					toRemove.add(i);
 					
