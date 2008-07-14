@@ -195,13 +195,16 @@ public class Characters {
 		ArrayList<Float> barPos = new ArrayList<Float>();
 		for (int i=0; i<=BAR_MAX; i++)
 		{
-			Quad q = new Quad("BAR_"+i+p.foreName+p.surName,hud.core.getDisplay().getWidth()/230f,hud.core.getDisplay().getHeight()/barScreenRatio);
-			q.setSolidColor(pointQuadData.get(i));
-			q.setLightCombineMode(LightState.OFF);
-			q.setLocalTranslation(origoX+i*hud.core.getDisplay().getWidth()/230f,origoY,0f);
-			q.setLocalScale(1f);
-			barPos.add(origoY);
-			barQuads.add(q);
+			try {
+				Quad q = Window.loadImageToQuad(new File("./data/ui/bar_meter.png"), hud.core.getDisplay().getWidth()/230f, hud.core.getDisplay().getHeight()/barScreenRatio, 0,0);
+				//Quad q = new Quad("BAR_"+i+p.foreName+p.surName,hud.core.getDisplay().getWidth()/230f,);
+				q.setSolidColor(pointQuadData.get(i));
+				q.setLightCombineMode(LightState.OFF);
+				q.setLocalTranslation(origoX+i*hud.core.getDisplay().getWidth()/230f,origoY,0f);
+				q.setLocalScale(1f);
+				barPos.add(origoY);
+				barQuads.add(q);
+			} catch (Exception ex){ex.printStackTrace();}
 		}
 		bars.add(barQuads);
 		barOrigoYPositions.add(barPos);
