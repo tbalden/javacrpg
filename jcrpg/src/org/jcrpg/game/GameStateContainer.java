@@ -294,6 +294,7 @@ public class GameStateContainer {
 			J3DCore.getInstance().getCamera().setDirection(J3DCore.directions[getEncounterPositions().viewDirection]);			
 			J3DCore.getInstance().getCamera().update();
 
+			J3DCore.getInstance().updateTimeRelated();
 			J3DCore.getInstance().eEngine.renderToViewPort();
 						
 		} else
