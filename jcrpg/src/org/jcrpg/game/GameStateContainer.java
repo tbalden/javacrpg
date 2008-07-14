@@ -285,16 +285,17 @@ public class GameStateContainer {
 	{
 		if (on)
 		{
+			encounterModePosition.viewDirection = J3DCore.NORTH;
 			currentSEngine = J3DCore.getInstance().eEngine; 
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
 			currentRenderPositions = encounterModePosition;
 			J3DCore.getInstance().eEngine.renderToEncounterWorld(encWorldType);
 			J3DCore.getInstance().sEngine.switchOn(false);
-			J3DCore.getInstance().eEngine.switchOn(true);
 			positionPlayerToSurfaceEncounterMode();
 			J3DCore.getInstance().setCalculatedCameraLocation();
 			Vector3f dir = J3DCore.directions[getEncounterPositions().viewDirection];
 			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
+			J3DCore.getInstance().eEngine.switchOn(true);
 			J3DCore.getInstance().eEngine.renderToViewPort();
 						
 		} else

@@ -1454,10 +1454,16 @@ public class J3DStandingEngine {
 	{
 		if (on)
 		{
+			core.getRootNode1().attachChild(extRootNode);
+			core.getRootNode1().attachChild(intRootNode);
+			core.getRootNode1().updateRenderState();
 			extRootNode.setCullMode(Node.CULL_DYNAMIC);
 			intRootNode.setCullMode(Node.CULL_DYNAMIC);
 		} else
 		{
+			extRootNode.removeFromParent();
+			intRootNode.removeFromParent();
+			core.getRootNode1().updateRenderState();
 			extRootNode.setCullMode(Node.CULL_ALWAYS);
 			intRootNode.setCullMode(Node.CULL_ALWAYS);
 		}
