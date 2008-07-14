@@ -42,7 +42,7 @@ public class IceArrow extends EffectNode {
 	private static final long serialVersionUID = 1L;
 
 	public IceArrow() {
-		
+		speed = 2;
 		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader

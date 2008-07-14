@@ -32,6 +32,7 @@ public class ArrowNoEffect extends EffectNode {
 	private static final long serialVersionUID = 1L;
 
 	public ArrowNoEffect() {
+		speed = 8;
 	}
 
 	@Override

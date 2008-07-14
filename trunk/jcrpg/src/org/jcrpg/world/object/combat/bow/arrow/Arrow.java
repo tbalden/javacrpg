@@ -27,7 +27,7 @@ public abstract class Arrow extends Ammunition {
 
 	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
 	static EffectProgram effectProgram = new EffectProgram(ArrowNoEffect.class,effectProgramModel);
-	
+
 	public Arrow()
 	{
 		groupable = true;
