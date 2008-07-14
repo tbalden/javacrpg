@@ -283,7 +283,7 @@ public class EntityDescription extends DescriptionBase {
 	 */
 	public int getRoamingSize(EntityFragment instance)
 	{
-		return instance.size;
+		return Math.max(1,(int)Math.sqrt(instance.size))*3;
 	}
 	
 	/**

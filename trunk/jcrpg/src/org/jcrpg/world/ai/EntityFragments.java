@@ -189,11 +189,14 @@ public class EntityFragments {
 	public void recalcBoundaries()
 	{
 		for (EntityFragment f:fragments) {
-			f.roamingBoundary.radiusInRealCubes = instance.description.getRoamingSize(f);
+			//f.roamingBoundary.radiusInRealCubes = f.size;//instance.description.getRoamingSize(f);
+			int sum = f.size; 
 			for (EntityMemberInstance m:f.followingMembers)
 			{
-				f.roamingBoundary.radiusInRealCubes+=m.description.getRoamingSize();
+				sum+=m.description.getRoamingSize();
 			}
+			sum = Math.max(1,(int)Math.sqrt(sum));
+			f.roamingBoundary.radiusInRealCubes=sum*3;
 		}
 	}
 	
