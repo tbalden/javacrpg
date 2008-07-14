@@ -39,6 +39,7 @@ import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityScaledRelationType;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
+import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -705,10 +706,23 @@ public class J3DMovingEngine {
 	
 	private Quaternion calculateRotationForDispotionDirection(Vector3f mVec,Quaternion current)
 	{
+		
+		Matrix3f rotMat = new Matrix3f();
+		Vector3f dirOrigo = new Vector3f(0f, 0f, -1);
+		Vector3f left = new Vector3f(-1, 0, 0);
+		Vector3f up = new Vector3f(0, 1, 0);
+
+
+		Vector3f dirNew = mVec;
+		dirNew.normalizeLocal();
+		rotMat.fromStartEndVectors(dirOrigo, dirNew);
+		
+		
 		Vector3f m = new Vector3f(mVec);
 		m.y=0;
 		Quaternion q = new Quaternion();
-		q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
+		q.fromRotationMatrix(rotMat);
+		//q.fromAngleNormalAxis( m.normalize().angleBetween(new Vector3f(0,0,1f).normalize()), new Vector3f(0f,-1f,0f).normalize() );
 		//Matrix3f m3f = new Matrix3f();
 		//m3f.fromStartEndVectors(new Vector3f(0,0,1f).normalize(), m.normalize());
 
@@ -719,7 +733,8 @@ public class J3DMovingEngine {
 		
 		// trick for quaternion fixing, opposite local if ...
 		m.normalizeLocal();
-		if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
+		q.oppositeLocal();
+		//if (m.x>0 && m.z>-0.4f && m.z<0.4f) q.oppositeLocal();
 		Quaternion between = new Quaternion(current);
 		between.slerp(q, 1f);
 		current.slerp(between, 0.1f);
