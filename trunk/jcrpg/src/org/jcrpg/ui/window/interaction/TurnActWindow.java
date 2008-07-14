@@ -422,7 +422,7 @@ public class TurnActWindow extends PagedInputWindow {
 					for (Class<? extends SkillActForm> form:forms)
 					{
 						ids[counter] = ""+counter;
-						texts[counter] = form.getSimpleName();
+						texts[counter] = SkillGroups.getSkillActFormInstance(s.getClass(), form).getName();
 						objects[counter] = form;				    
 						counter++;
 					}
