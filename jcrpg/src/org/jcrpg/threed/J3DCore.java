@@ -856,7 +856,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			
 	}
 	
-	LightState extLightState, skydomeLightState = null, internalLightState;
+	LightState extLightState, skydomeLightState = null, internalLightState, encounterIntLightState;
 	
 	/**
 	 * Creates the lights for a world orbiter
@@ -2017,6 +2017,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		lightState.detachAll();
 		extLightState = getDisplay().getRenderer().createLightState();
 		internalLightState = getDisplay().getRenderer().createLightState();
+		encounterIntLightState = getDisplay().getRenderer().createLightState();
 		skydomeLightState = getDisplay().getRenderer().createLightState();
 		
 		
@@ -2095,7 +2096,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
  		
         // default light states
         encounterExtRootNode.setRenderState(extLightState);
-        encounterIntRootNode.setRenderState(internalLightState);
+        encounterIntRootNode.setRenderState(encounterIntLightState);
 		extRootNode.setRenderState(extLightState);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
@@ -2114,6 +2115,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			//dr.setAngle(45);
 			dr.setShadowCaster(false);
 			internalLightState.attach(dr);
+			
+			PointLight dr2 = new PointLight();
+			dr2.setEnabled(true);
+			lp = 0.95f;
+			dr2.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
+			dr2.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
+			dr2.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
+			dr2.setQuadratic(1f);
+			dr2.setLinear(1f);
+			//dr.setAngle(45);
+			dr2.setShadowCaster(false);
+			encounterIntLightState.attach(dr2);
 		}
         
 		try 

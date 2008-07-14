@@ -128,7 +128,14 @@ public abstract class SkillActForm
 	
 	public String getName()
 	{
-		return Language.v("skillActForm."+this.getClass().getSimpleName());
+		int biggestPoint = 0;
+		for (Integer i:usedPointsAndLevels.values())
+		{
+			if (i<biggestPoint) biggestPoint = i;
+		}
+		biggestPoint *=-1;
+		return Language.v("skillActForm."+this.getClass().getSimpleName())+" ("+biggestPoint+" Pt.)";
+		
 	}
 	
 	public boolean canBeDoneByMember(EntityMemberInstance instance)
