@@ -2419,9 +2419,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
      * @see BaseSimpleGame#update(float interpolation)
      */
     protected final void update(float interpolation) {
-        super.update(interpolation);
 
         if ( !pause ) {
+            super.update(interpolation);
             /** Call simpleUpdate in any derived classes of SimpleGame. */
             simpleUpdate();
 

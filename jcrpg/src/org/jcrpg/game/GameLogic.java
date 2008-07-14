@@ -269,7 +269,7 @@ public class GameLogic {
 					form.notRendered = true;
 					found=false; break;
 				}
-				int distance = 1;
+				int distance = 2;
 				int startRow = -1;
 				form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+distance)*trans[0]+(((i%3)+startRow)*trans[2]);
 				//form.worldY = core.gameState.viewPositionY;
