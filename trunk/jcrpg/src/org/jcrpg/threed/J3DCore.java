@@ -2476,5 +2476,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     {
     	return ((ClassicKeyboardLookHandler)getInputHandler().getFromAttachedHandlers(0));    	
     }
+    public void do3DPause(boolean pause)
+    {
+    	if (!CONTINUOUS_LOAD)
+    	{
+    		this.pause = pause;
+    	}
+    }
     
 }
