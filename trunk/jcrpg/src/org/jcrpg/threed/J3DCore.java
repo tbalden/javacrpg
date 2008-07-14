@@ -2339,12 +2339,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			gameState.ecology.doTurn();
 			gameState.engine.turnFinishedForAI();
 			pause = false;
+			tpf = 0;
 		} else
 		if (gameState.engine.checkEconomyUpdateNeeded())
 		{
 			pause = true;
 			gameState.doEconomyUpdate();
 			pause = false;
+			tpf = 0;
 		} else
 		if (!gameState.engine.isPause())
 		{
