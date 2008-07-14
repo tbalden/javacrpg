@@ -215,7 +215,10 @@ public class EntityFragments {
 			int sum = f.size; 
 			for (EntityMemberInstance m:f.followingMembers)
 			{
-				sum+=m.description.getRoamingSize();
+				if (!m.isDead())
+				{
+					sum+=m.description.getRoamingSize();
+				}
 			}
 			sum = Math.max(1,(int)Math.sqrt(sum));
 			f.roamingBoundary.radiusInRealCubes=sum*3;
