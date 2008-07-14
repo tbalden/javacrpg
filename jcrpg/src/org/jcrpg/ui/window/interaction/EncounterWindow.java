@@ -309,6 +309,7 @@ public class EncounterWindow extends PagedInputWindow {
 				core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 				core.gameState.gameLogic.endPlayerEncounters();
 				core.gameState.engine.turnFinishedForPlayer();
+				core.gameState.switchToEncounterScenario(false, null);
 			} else
 			{
 				core.uiBase.hud.mainBox.addEntry("Your party couldn't leave the encounter.");
@@ -319,7 +320,6 @@ public class EncounterWindow extends PagedInputWindow {
 		{
 			//
 			//
-			
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
