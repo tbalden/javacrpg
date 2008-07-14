@@ -83,10 +83,10 @@ public class GameStateContainer {
 	
 	public GameStateContainer()
 	{
-		encounterModePosition.viewPositionX = 42;
-		encounterModePosition.viewPositionZ = 42;
-		encounterModePosition.origoX = 42;
-		encounterModePosition.origoZ = 42;
+		encounterModePosition.viewPositionX = 46;
+		encounterModePosition.viewPositionZ = 40;
+		encounterModePosition.origoX = 46;
+		encounterModePosition.origoZ = 40;
 		encounterModePosition.relativeX = 0;
 		encounterModePosition.relativeZ = 0;
 		charCreationRules = new CharacterCreationRules(null,null);
@@ -289,7 +289,12 @@ public class GameStateContainer {
 			currentSEngine = J3DCore.getInstance().eEngine; 
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
 			currentRenderPositions = encounterModePosition;
-			J3DCore.getInstance().eEngine.renderToEncounterWorld(encWorldType);
+			J3DCore.getInstance().eEngine.renderToEncounterWorld(
+					normalPosition.viewPositionX,
+					normalPosition.viewPositionY,
+					normalPosition.viewPositionZ,
+					world,
+					encWorldType);
 			J3DCore.getInstance().sEngine.switchOn(false);
 			positionPlayerToSurfaceEncounterMode();
 			J3DCore.getInstance().setCalculatedCameraLocation();
