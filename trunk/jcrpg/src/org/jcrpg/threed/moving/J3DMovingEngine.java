@@ -287,11 +287,12 @@ public class J3DMovingEngine {
 			slottextNode.setTextureCombineMode( TextureState.REPLACE );
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 			s.setFunction(ZBufferState.CF_ALWAYS);
+			//s.setEnabled(false);
 			//slottextNode.setRenderState(s);
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.5f,0.1f,0));
+			n.setLocalTranslation(new Vector3f(0.5f,0.1f,0.2f));
 			n.setLocalScale(0.17f);
 			unit.sizeTextNode = n;
 		}
@@ -316,10 +317,11 @@ public class J3DMovingEngine {
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 			s.setFunction(ZBufferState.CF_ALWAYS);
 			//slottextNode.setRenderState(s);
+			//s.setEnabled(false);
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.2f,0.3f,0));
+			n.setLocalTranslation(new Vector3f(0.2f,0.3f,0.2f));
 			n.setLocalScale(0.1f);
 			unit.memberTypeNameNode= n;
 		}
@@ -664,8 +666,11 @@ public class J3DMovingEngine {
 			{
 				eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 			}
-			float[] d = (unit.models[0]).disposition;
-			eY+=d[1];
+			if (!staticCalc)
+			{
+				float[] d = (unit.models[0]).disposition;
+				eY+=d[1];
+			}
 			
 			if (unit.toSteep || staticCalc && unit.onSteep)
 			{
