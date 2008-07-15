@@ -82,7 +82,7 @@ public class EncounterWindow extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	pageIntro.attachChild(sQuad);
-	    	introTitle = new TextLabel("",this,pageIntro, 0.35f, 0.40f, 0.3f, 0.06f,300f,Language.v("encounterWindow.intro"),false);
+	    	introTitle = new TextLabel("",this,pageIntro, 0.38f, 0.40f, 0.3f, 0.06f,300f,Language.v("encounterWindow.intro"),false);
 	    	new TextLabel("",this,pageIntro, 0.45f, 0.45f, 0.3f, 0.06f,500f,Language.v("encounterWindow.pressText"),false);
 	    	
 	    	addPage(1, pageIntro);
