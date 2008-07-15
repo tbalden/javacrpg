@@ -57,8 +57,6 @@ public class EntityMember extends DescriptionBase {
 	
 	public Class<? extends BodyBase> bodyType = SinglePartBody.class;
 	
-	public static HashMap<Class<? extends Profession>, Profession> profInstances = new HashMap<Class<? extends Profession>, Profession>();
-	
 	public ArrayList<Class<? extends Profession>> professions = new ArrayList<Class<? extends Profession>>();	
 	public ArrayList<Class<? extends Profession>> forbiddenProfessions = new ArrayList<Class <? extends Profession>>();
 	
@@ -100,7 +98,6 @@ public class EntityMember extends DescriptionBase {
 		if (forbiddenProfessions.contains(profession.getClass())) return;
 		if (professions.contains(profession.getClass()))
 			return;
-		profInstances.put(profession.getClass(), profession);
 		professions.add(profession.getClass());
 		for (Class<? extends SkillBase> skill : profession.additionalLearntSkills.keySet()) {
 			if (!memberSkills.skills.containsKey(skill)) {

@@ -515,7 +515,7 @@ public class PartySetup extends PagedInputWindow {
 			}
 			charactersOfParty.add(new PersistentMemberInstance(null, null,d.person,null,Ecology.getNextEntityId(),0,0,0));
 			core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
-			core.uiBase.hud.characters.show();
+			core.uiBase.hud.characters.showNoPointUpdate();
 			
 		} else
 		if (base.equals(skillValueTuner))
@@ -728,10 +728,6 @@ public class PartySetup extends PagedInputWindow {
 			toggle();
 			core.clearCore();
 			
-			/*for (int i=0; i<6; i++)
-			{
-				members.add(new PartyMember("_"+i,new AudioDescription()));
-			}*/			
 			if (charCreationRule == null)
 			{
 				charCreationRule = new CharacterCreationRules(null,null);

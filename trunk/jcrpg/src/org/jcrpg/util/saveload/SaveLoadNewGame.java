@@ -47,9 +47,6 @@ import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.generator.WorldParamsConfigLoader;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
-import org.jcrpg.world.object.Obj;
-import org.jcrpg.world.object.ObjInstance;
-import org.jcrpg.world.object.ObjList;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
@@ -111,11 +108,15 @@ public class SaveLoadNewGame {
 			for (PersistentMemberInstance m:partyMembers)
 			{
 				m.roamingBoundary = new DistanceBasedBoundary(world,wX,wY,wZ,m.description.getRoamingSize());
+				/*
+				
+				// this is done in EntityMemberInstance constructor currently when PartySetup creates it. commented out.
+				 
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).generationNewInstanceObjects)
 				{
 					m.inventory.add(new ObjInstance(ObjList.getInstance(o)));
 					System.out.println("ADDING ITEM : "+o);
-				}
+				}*/
 				m.memberState.maximizeAtStart();
 				party.addPartyMember(m);
 			}
