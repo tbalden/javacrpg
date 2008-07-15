@@ -16,11 +16,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
 
 [ ] particle effect for models
-[ ] camera bigger view - switch off back rendered models (check cave)
-
-[ ] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
-
-[X] battle lines - skill filtering based on target group lineup distance - member lineup distance
+[?] camera bigger view - switch off back rendered models (check cave)
 
 [ ] cursed weapons - how can they stick upon use?
 
@@ -30,12 +26,15 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 [ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
+	[ ] AI use of potions/objects too!
 
 [ ] enemy unit effect icons too
 	[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
 	
 [ ] summoning spells	
 
+[ ] natural Talent addProfessionWithFilter for EntityDescription - to filter out some spell forms a monster
+	doesnt have.
 
 
 [X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
@@ -54,6 +53,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 	[ ] clear out center of battle ground - modify height variation as a Constructor parameter for plain
 		- fix the seed for these generations somehow... now HashUtil's seed if changed battle ground may be bad!
+		
+	[ ] economics too!
 
 [ ] world generation - concentrate friendly groups - don't let enemies close at start,
 	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
@@ -63,8 +64,11 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 ##
 
 
-	[ ] killing in turn act should decrease the size of the fragment the group belonged to!
 
+	[ ] inventory details -> required skill and level for use!
+	
+	[ ] newly generated char receives double objects!! (copy used!)
+	
 	[ ] neutralization act forms -- neutralization effect -> remove from combat
 	
 	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
@@ -72,10 +76,17 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
 		[ ] protection spells, boost spells with effects
 		[ ] fabrication of ammunition and such - fletcher, work Skill
+		[X] bard bonus items - lute etc. 
 
 	[ ] documenting points, attr, calculations, leveling
+	
+	[ ] move logging to txt log , remove unneeded logs
 
 	[ ]	flying numbers for impact over units, billboard
+	
+
+	[X] killing in turn act should decrease the size of the fragment the group belonged to!
+		[X] persistent NPCs too
 
 	[X] fix Interception window is not showing any time ?? encInfo calc is wrong or what?
 
@@ -178,6 +189,10 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		[X] hud.characters bars are not updating correctly?? or current points are wrong
 
 ##
+
+[X] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
+
+[X] battle lines - skill filtering based on target group lineup distance - member lineup distance
 	
 [-] check memory consumption! SOMEWHERE IT LEAKS!!!
 	[-] PROBABLY PARTICLE EFFECT!!!
