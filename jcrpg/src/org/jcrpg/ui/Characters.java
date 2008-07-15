@@ -363,6 +363,15 @@ public class Characters {
 		node.updateRenderState();
 	}
 	
+	/**
+	 * Used when party creation. 
+	 */
+	public void showNoPointUpdate()
+	{
+		hud.hudNode.attachChild(node);
+		node.updateRenderState();
+	}
+
 	public void show()
 	{
 		updatePoints();

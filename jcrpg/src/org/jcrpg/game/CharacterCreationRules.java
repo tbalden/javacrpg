@@ -104,5 +104,20 @@ public class CharacterCreationRules {
 		profInstances.put(p.getClass(), p);
 	}
 	
+	public Profession getProfession(Class<? extends Profession> clazz)
+	{
+		Profession p = profInstances.get(clazz);
+		if (p==null)
+		{
+			try {
+				p = clazz.newInstance();
+				profInstances.put(clazz, p);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		return p;
+	}
 	
 }

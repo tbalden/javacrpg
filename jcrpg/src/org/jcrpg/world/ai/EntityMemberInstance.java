@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
@@ -79,7 +80,7 @@ public class EntityMemberInstance {
 		this.instance = instance;
 		this.numericId = numericId;
 		try {
-			for (Class<?extends Obj> o:EntityMember.profInstances.get(description.professions.get(0)).generationNewInstanceObjects)
+			for (Class<?extends Obj> o:J3DCore.getInstance().gameState.charCreationRules.getProfession(description.professions.get(0)).generationNewInstanceObjects)
 			{
 				inventory.add(new ObjInstance(ObjList.getInstance(o)));
 				System.out.println("ADDING ITEM : "+o);
