@@ -150,6 +150,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			groupList.texts = texts;
 			groupList.setUpdated(true);
 			groupList.activate();
+			groupList.deactivate();
 		}
 		super.setupPage();
 	}

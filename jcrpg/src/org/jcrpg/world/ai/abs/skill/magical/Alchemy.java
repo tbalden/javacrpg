@@ -58,7 +58,7 @@ public class Alchemy extends SkillBase implements TurnActSkill, WorkSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "chime";
 		}
 		
 		EffectProgram p = new EffectProgram(FumeCloud.class);

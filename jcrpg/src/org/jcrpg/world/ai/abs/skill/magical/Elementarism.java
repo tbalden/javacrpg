@@ -59,7 +59,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 		
 		@Override
 		public String getSound() {
-			return null;
+			return "heal"; // TODO better sound
 		}
 		
 		EffectProgram p = new EffectProgram(IceArrow.class);
@@ -90,7 +90,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "fireburn";
 		}
 		//SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
 
@@ -121,7 +121,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "icespell";
 		}
 		
 		EffectProgram p = new EffectProgram(IceArrow.class);

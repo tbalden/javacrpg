@@ -51,7 +51,7 @@ public class Bows extends SkillBase implements TurnActSkill  {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "arrow";
 		}
 		
 		//EffectProgram p = new EffectProgram(FireArrow.class);

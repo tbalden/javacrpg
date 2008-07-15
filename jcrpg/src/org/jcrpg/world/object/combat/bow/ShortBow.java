@@ -40,7 +40,7 @@ public class ShortBow extends Bow {
 	}
 
 	public String getHitSound() {
-		return null;
+		return "weapon/arrow_hit";
 	}
 
 	public int getMaxDamage() {

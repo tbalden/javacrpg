@@ -642,6 +642,7 @@ public class PartySetup extends PagedInputWindow {
 			// TODO audio selection
 			personWithGenderAndRace.audioDescription = new AudioDescription();
 			personWithGenderAndRace.audioDescription.PAIN = new String[]{"humanoid/humanoid_pain"};
+			personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_joy_male"};
 			personWithGenderAndRace.audioDescription.DEATH = new String[]{"humanoid/humanoid_death"};
 			
 			if (professionSelect.texts.length==0) return true;
