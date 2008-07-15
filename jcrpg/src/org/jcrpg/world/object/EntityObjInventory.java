@@ -189,6 +189,45 @@ public class EntityObjInventory {
 		return objList;
 	}
 	
+	public ArrayList<InventoryListElement> getUsableObjects()
+	{
+		HashMap<Obj, InventoryListElement> gatherer = new HashMap<Obj, InventoryListElement>();
+		ArrayList<InventoryListElement> objList = new ArrayList<InventoryListElement>();
+		for (ObjInstance o:inventory)
+		{
+			if (o.isAttacheable()) continue;
+			if (o.description instanceof Weapon) continue;
+			if (o.description instanceof Armor && !equipped.contains(o)) continue;
+			boolean add = false;
+			SkillInstance i = o.description.requirementSkillAndLevel;
+			if (i!=null)
+			{
+				if (instance.getSkillLevel(i.skill)>=i.level)
+				{
+					add = true;
+				}
+			} else
+			{
+				add = true;
+			}
+			if (add)
+			{
+				InventoryListElement l = null;
+				if (o.description.isGroupable()) {
+					l = gatherer.get(o.description);
+				}
+				if (l==null)
+				{
+					l = new InventoryListElement(this,o.description);
+					gatherer.put(o.description, l);
+					objList.add(l);
+				}
+				l.objects.add(o);
+			}
+		}
+		return objList;
+	}
+	
 	/**
 	 * 
 	 * @param possibleTypesOrdered
@@ -376,8 +415,8 @@ public class EntityObjInventory {
 		for (ObjInstance o:inventory)
 		{
 			if (filterAttachments && o.isAttacheable()) continue;
-			if (o instanceof Weapon) continue;
-			if (o instanceof Armor && !equipped.contains(o)) continue;
+			if (o.description instanceof Weapon) continue;
+			if (o.description instanceof Armor && !equipped.contains(o)) continue;
 			InventoryListElement l = null;
 			if (o.description.isGroupable()) {
 				l = gatherer.get(o.description);

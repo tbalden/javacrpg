@@ -22,23 +22,27 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.magical.Mentalism;
+import org.jcrpg.world.ai.abs.skill.mental.HigherMusic;
 import org.jcrpg.world.ai.abs.skill.mental.Mythology;
 import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 import org.jcrpg.world.object.combat.blade.Dagger;
+import org.jcrpg.world.object.magical.music.LuteOfDreams;
 
 public class Bard extends HumanoidProfessional {
 	public Bard()
 	{
 		super();
 		generationNewInstanceObjects.add(Dagger.class);
+		generationNewInstanceObjects.add(LuteOfDreams.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CHARISMA, 14);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONCENTRATION, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 10);
 		addMinorSkill(Alchemy.class);
 		addMinorSkill(Elementarism.class);
 		addMinorSkill(Mentalism.class);
+		addSkill(HigherMusic.class);
 		addMajorSkill(Mythology.class);
 		addMinorSkill(HideAndSneak.class);
 		addMinorSkill(LocksAndTraps.class);

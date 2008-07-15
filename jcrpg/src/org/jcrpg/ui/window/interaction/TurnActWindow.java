@@ -386,7 +386,7 @@ public class TurnActWindow extends PagedInputWindow {
 			} else
 			if (skillSelect.getSelectedObject()==doUseSkillChoiceObject)
 			{
-				ArrayList<InventoryListElement> objInstances = i.inventory.getInventoryList(true);
+				ArrayList<InventoryListElement> objInstances = i.inventory.getUsableObjects();
 				String[] texts = new String[objInstances.size()];
 				Object[] objects = new Object[objInstances.size()];
 				String[] ids = new String[objInstances.size()];
@@ -550,9 +550,9 @@ public class TurnActWindow extends PagedInputWindow {
 				int range = objInst.description.getUseRangeInLineup();
 				boolean friendly = true;
 				boolean groupTarget = false;
-				if (objInst.objects.get(0) instanceof BonusObject)
+				if (objInst.objects.get(0).description instanceof BonusObject)
 				{
-					ArrayList<BonusSkillActFormDesc> bonusList = ((BonusObject)objInst.objects.get(0)).getSkillActFormBonusEffectTypes();
+					ArrayList<BonusSkillActFormDesc> bonusList = ((BonusObject)objInst.objects.get(0).description).getSkillActFormBonusEffectTypes();
 					if (bonusList!=null && bonusList.size()>0) {
 						if (bonusList.get(0).form.atomicEffect>=0)
 						{

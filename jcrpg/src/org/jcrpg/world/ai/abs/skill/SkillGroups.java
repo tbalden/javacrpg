@@ -42,6 +42,7 @@ import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.abs.skill.mental.Architecture;
 import org.jcrpg.world.ai.abs.skill.mental.Ecology;
 import org.jcrpg.world.ai.abs.skill.mental.Herbalism;
+import org.jcrpg.world.ai.abs.skill.mental.HigherMusic;
 import org.jcrpg.world.ai.abs.skill.mental.Languages;
 import org.jcrpg.world.ai.abs.skill.mental.MagicalLore;
 import org.jcrpg.world.ai.abs.skill.mental.Mapmaking;
@@ -170,6 +171,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_MENTAL, new Ecology());
 		addSkillToGroup(GROUP_MENTAL, new MagicalLore());
 		addSkillToGroup(GROUP_MENTAL, new Mapmaking());
+		addSkillToGroup(GROUP_MENTAL, new HigherMusic());
 		
 		orderedGroups.add(GROUP_MAGICAL);
 		addSkillToGroup(GROUP_MAGICAL, new Demonology());

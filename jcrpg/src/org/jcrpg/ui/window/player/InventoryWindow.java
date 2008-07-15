@@ -367,6 +367,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public ArrayList<InventoryListElement> tmpAmmunitionList = new ArrayList<InventoryListElement>();
 	public ArrayList<InventoryListElement> tmpArmorList = new ArrayList<InventoryListElement>();
 	public ArrayList<InventoryListElement> tmpPotionList = new ArrayList<InventoryListElement>();
+	public ArrayList<InventoryListElement> tmpOtherList = new ArrayList<InventoryListElement>();
 	
 	public ArrayList<InventoryListElement> tmpEquippedList = new ArrayList<InventoryListElement>();
 	
@@ -381,6 +382,7 @@ public class InventoryWindow extends PagedInputWindow {
 		tmpAmmunitionList.clear();
 		tmpArmorList.clear();
 		tmpPotionList.clear();
+		tmpOtherList.clear();
 		
 		tmpEquippedList.clear();
 
@@ -435,6 +437,9 @@ public class InventoryWindow extends PagedInputWindow {
 			{
 				tmpPotionList.add(o);
 				System.out.println("POT: "+o.description);
+			} else
+			{
+				tmpOtherList.add(o);
 			}
 		}
 		
@@ -442,6 +447,7 @@ public class InventoryWindow extends PagedInputWindow {
 		fillSelect(ammunitions, tmpAmmunitionList);
 		fillSelect(armors, tmpArmorList);
 		fillSelect(potions, tmpPotionList);
+		fillSelect(other, tmpOtherList);
 	}
 	
 
