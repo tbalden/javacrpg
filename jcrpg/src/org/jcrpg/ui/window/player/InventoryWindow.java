@@ -104,6 +104,7 @@ public class InventoryWindow extends PagedInputWindow {
 	public TextLabel bonusDataTextActForm;
 	public ListSelect bonusActFormList;
 	public TextLabel equippableDataText;
+	public TextLabel requiredSkillDataText;
 	
 	public TextButton back;
 	
@@ -187,22 +188,25 @@ public class InventoryWindow extends PagedInputWindow {
 	    	
 	    	addPage(0, page0);
 	    	
+	    	// DETAILS PAGE
+	    	
 	    	new TextLabel("",this,page1_details, 0.42f, 0.058f, 0.3f, 0.06f,400f,"Inventory",false);
 	    	
 	    	detailObjectName = new TextLabel("",this,page1_details, 0.30f, 0.15f, 0.3f, 0.06f,500f,"",false);
-	    	attachmentTypeName = new TextLabel("",this,page1_details, 0.20f, 0.55f, 0.3f, 0.06f,700f,"",false);
-	    	rangeTypeName = new TextLabel("",this,page1_details, 0.60f, 0.55f, 0.3f, 0.06f,700f,"",false);
+	    	attachmentTypeName = new TextLabel("",this,page1_details, 0.20f, 0.40f, 0.3f, 0.06f,700f,"",false);
+	    	rangeTypeName = new TextLabel("",this,page1_details, 0.60f, 0.40f, 0.3f, 0.06f,700f,"",false);
 	    	
-	    	weaponOrArmorDataText = new TextLabel("",this,page1_details, 0.20f, 0.60f, 0.3f, 0.06f,700f,"",false);
-	    	bonusDataText = new TextLabel("",this,page1_details, 0.20f, 0.65f, 0.3f, 0.06f,700f,"",false);
+	    	weaponOrArmorDataText = new TextLabel("",this,page1_details, 0.20f, 0.45f, 0.3f, 0.06f,700f,"",false);
+	    	bonusDataText = new TextLabel("",this,page1_details, 0.20f, 0.50f, 0.3f, 0.06f,700f,"",false);
 	    	
-	    	bonusDataTextActForm = new TextLabel("",this,page1_details, 0.20f, 0.70f, 0.3f, 0.06f,700f,"Bonus Skill Forms:",false);
-	    	bonusActFormList = new ListSelect("list",this,page1_details, 0.60f, 0.70f, 0.43f, 0.06f,700f,new String[0], new String[0], new Object[0], null,null);
+	    	bonusDataTextActForm = new TextLabel("",this,page1_details, 0.20f, 0.55f, 0.3f, 0.06f,700f,"Bonus Forms:",false);
+	    	bonusActFormList = new ListSelect("list",this,page1_details, 0.57f, 0.55f, 0.50f, 0.06f,700f,new String[0], new String[0], new Object[0], null,null);
 	    	addInput(1, bonusActFormList);
 
-	    	equippableDataText = new TextLabel("",this,page1_details, 0.20f, 0.75f, 0.3f, 0.06f,700f,"",false);
-
-	    	back = new TextButton("drop",this,page1_details, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.back"));
+	    	equippableDataText = new TextLabel("",this,page1_details, 0.20f, 0.60f, 0.3f, 0.06f,700f,"",false);
+	    	requiredSkillDataText = new TextLabel("",this,page1_details, 0.20f, 0.65f, 0.3f, 0.06f,700f,"",false);
+	    	
+	    	back = new TextButton("back",this,page1_details, 0.53f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.back"));
 	    	addInput(1,back);
 	    	
 	    	addPage(1, page1_details);
@@ -725,13 +729,21 @@ public class InventoryWindow extends PagedInputWindow {
 		equippableDataText.text = equippableText;
 		equippableDataText.activate();
 		
+		String skillRequirement = "No skill required.";
+		if (element.description.requirementSkillAndLevel!=null)
+		{
+			skillRequirement="Skill req.:" + element.description.requirementSkillAndLevel.getSkill().getName()+" ("+element.description.requirementSkillAndLevel.level+")";
+		}
+		requiredSkillDataText.text = skillRequirement;
+		requiredSkillDataText.activate();
+		
 		//String bonusSkillActFormText
 			
 		//attachmentTypeName = element.description.getAttacheableToType()==null?
 		
 		try {
 			currentDetailQuad = loadImageToQuad(element.description.getIconFilePath(), 0.17f*core.getDisplay().getWidth(), 0.20f*(core.getDisplay().getHeight()),
-				core.getDisplay().getWidth() / 2, 1.20f*core.getDisplay().getHeight() / 2);
+				core.getDisplay().getWidth() / 2, 1.45f*core.getDisplay().getHeight() / 2);
 			page1_details.attachChild(currentDetailQuad);
 		} catch (Exception ex)
 		{
