@@ -91,13 +91,13 @@ public class TurnActWindow extends PagedInputWindow {
 		super(base);
 		
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/popups/encounter.png", 0.45f*core.getDisplay().getWidth(), 0.85f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/popups/encounter.png", 0.57f*core.getDisplay().getWidth(), 1.15f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	pageIntro.attachChild(sQuad);
-	    	introTitle = new TextLabel("",this,pageIntro, 0.4f, 0.26f, 0.3f, 0.06f,500f,Language.v("turnActWindow.intro"),false);
-	    	new TextLabel("",this,pageIntro, 0.45f, 0.31f, 0.3f, 0.06f,600f,Language.v("turnActWindow.pressText"),false);
+	    	introTitle = new TextLabel("",this,pageIntro, 0.42f, 0.19f, 0.3f, 0.06f,450f,Language.v("turnActWindow.intro"),false);
+	    	new TextLabel("",this,pageIntro, 0.49f, 0.22f, 0.3f, 0.06f,600f,Language.v("turnActWindow.pressText"),false);
 	    	
 	    	addPage(1, pageIntro);
 		} catch (Exception ex)
