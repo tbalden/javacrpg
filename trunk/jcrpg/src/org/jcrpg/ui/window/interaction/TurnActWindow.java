@@ -65,6 +65,8 @@ import com.jme.scene.shape.Quad;
  */
 public class TurnActWindow extends PagedInputWindow {
 
+	Node pageIntro = new Node();
+	TextLabel introTitle;
 	/**
 	 * Page where selecting what to do in a turn is being done.
 	 */
@@ -87,6 +89,22 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	public TurnActWindow (UIBase base) {
 		super(base);
+		
+		try {
+			Quad hudQuad = loadImageToQuad("./data/ui/popups/encounter.png", 0.45f*core.getDisplay().getWidth(), 0.85f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
+	    	hudQuad.setRenderState(base.hud.hudAS);
+	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	pageIntro.attachChild(sQuad);
+	    	introTitle = new TextLabel("",this,pageIntro, 0.4f, 0.26f, 0.3f, 0.06f,500f,Language.v("turnActWindow.intro"),false);
+	    	new TextLabel("",this,pageIntro, 0.45f, 0.31f, 0.3f, 0.06f,600f,Language.v("turnActWindow.pressText"),false);
+	    	
+	    	addPage(1, pageIntro);
+		} catch (Exception ex)
+		{
+			
+		}
+		
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.67f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
@@ -164,6 +182,8 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	public void setPageData(int turnActType, PartyInstance party, EncounterInfo encountered, boolean playerInitiated)
 	{
+		
+		currentPage = 1;
 		this.playerInitiated = playerInitiated;
 		if (turnActType == EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT)
 		{
@@ -174,6 +194,11 @@ public class TurnActWindow extends PagedInputWindow {
 			langPostfix = "social";
 			combat = false;
 		}
+		
+		party.turnActPhaseCounter++; // TODO do this not here
+		introTitle.text = Language.v("turnActWindow.intro."+langPostfix)+" "+party.turnActPhaseCounter;
+		introTitle.activate();
+
 		header.text = Language.v("turnActWindow.header."+langPostfix);
 		header.activate();
 		desc.text = Language.v("turnActWindow.desc."+langPostfix);
@@ -282,51 +307,55 @@ public class TurnActWindow extends PagedInputWindow {
 	ArrayList<EncounterUnitData> encounterUnitDataList = null; 
 	@Override
 	public void setupPage() {
-		encounterUnitDataList = encountered.getEncounterUnitDataList(null);
-		ArrayList<EncounterUnitData> list = encounterUnitDataList;
-		// groups
-		for (ListSelect groupSelect:groupSelectors)
+		
+		if (currentPage==0)
 		{
-			String[] ids = new String[list.size()];
-			Object[] objects = new Object[list.size()];
-			String[] texts = new String[list.size()];
-			int count = 0;
-			System.out.println("ENC SIZE = "+list.size());
-			for (EncounterUnitData data:list)
+			encounterUnitDataList = encountered.getEncounterUnitDataList(null);
+			ArrayList<EncounterUnitData> list = encounterUnitDataList;
+			// groups
+			for (ListSelect groupSelect:groupSelectors)
 			{
-				ids[count] = ""+count;
-				texts[count] = data.name;
-				objects[count] = data;
-				count++;
+				String[] ids = new String[list.size()];
+				Object[] objects = new Object[list.size()];
+				String[] texts = new String[list.size()];
+				int count = 0;
+				System.out.println("ENC SIZE = "+list.size());
+				for (EncounterUnitData data:list)
+				{
+					ids[count] = ""+count;
+					texts[count] = data.name;
+					objects[count] = data;
+					count++;
+				}
+				groupSelect.reset();
+				groupSelect.ids = ids;
+				groupSelect.objects = objects;
+				groupSelect.texts = texts;
+				groupSelect.setUpdated(true);
+				groupSelect.activate();
 			}
-			groupSelect.reset();
-			groupSelect.ids = ids;
-			groupSelect.objects = objects;
-			groupSelect.texts = texts;
-			groupSelect.setUpdated(true);
-			groupSelect.activate();
-		}
-		updateToParty();
-		restoreSettings();
-		for (ListSelect skillSelect:skillSelectors)
-		{
-			// check if Do Nothing is restored -> call input changed to clear out things if so...
-			if (skillSelect.getSelectedObject()==doNothingSkillChoiceObject || skillSelect.getSelectedObject()==doUseSkillChoiceObject)
+			updateToParty();
+			restoreSettings();
+			for (ListSelect skillSelect:skillSelectors)
 			{
-				inputChanged(skillSelect, "fake");
+				// check if Do Nothing is restored -> call input changed to clear out things if so...
+				if (skillSelect.getSelectedObject()==doNothingSkillChoiceObject || skillSelect.getSelectedObject()==doUseSkillChoiceObject)
+				{
+					inputChanged(skillSelect, "fake");
+				}
 			}
-		}
-		// deactivating all
-		for (int i=0; i<numberOfChars; i++)
-		{
-			ListSelect select = skillSelectors.get(i);
-			select.deactivate();
-			select = groupSelectors.get(i);
-			select.deactivate();
-			select = skillActFormSelectors.get(i);
-			select.deactivate();
-			select = inventorySelectors.get(i);
-			select.deactivate();
+			// deactivating all
+			for (int i=0; i<numberOfChars; i++)
+			{
+				ListSelect select = skillSelectors.get(i);
+				select.deactivate();
+				select = groupSelectors.get(i);
+				select.deactivate();
+				select = skillActFormSelectors.get(i);
+				select.deactivate();
+				select = inventorySelectors.get(i);
+				select.deactivate();
+			}
 		}
 		
 		super.setupPage();
@@ -749,6 +778,15 @@ public class TurnActWindow extends PagedInputWindow {
 	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
+		if ("enter".equals(key))
+		{
+			if (currentPage==1)
+			{
+				currentPage = 0;
+				setupPage();
+				return true;
+			}
+		}
 		if ("T".equals(key))
 		{
 			// select top in select

@@ -271,9 +271,19 @@ public class GameLogic {
 				}
 				int distance = 1;
 				int startRow = -1;
-				form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+distance)*trans[0]+(((i%3)+startRow)*trans[2]);
+				
+				// switching unit 1. to middle, and 2. to -1
+				int variantRow = i%3;
+				if (variantRow==0)
+				{
+					variantRow = 1;
+				} else
+				{
+					if (variantRow==1) variantRow = 0;
+				}
+				form.worldX = core.gameState.getEncounterPositions().viewPositionX+(i/3+distance)*trans[0]+((variantRow+startRow)*trans[2]);
 				//form.worldY = core.gameState.viewPositionY;
-				form.worldZ = core.gameState.getEncounterPositions().viewPositionZ+(i/3+distance)*trans[2]+(((i%3)+startRow)*trans[0]);
+				form.worldZ = core.gameState.getEncounterPositions().viewPositionZ+(i/3+distance)*trans[2]+((variantRow+startRow)*trans[0]);
 				ArrayList<SurfaceHeightAndType[] > data = core.eEngine.world.getSurfaceData(form.worldX, form.worldZ);
 				if (data!=null)
 				{

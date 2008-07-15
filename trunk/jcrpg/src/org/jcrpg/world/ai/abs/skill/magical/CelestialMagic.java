@@ -57,7 +57,7 @@ public class CelestialMagic extends SkillBase implements TurnActSkill {
 		
 		@Override
 		public String getSound() {
-			return null;
+			return "heal";
 		}
 		
 		EffectProgram p = new EffectProgram(IceArrow.class);
@@ -84,7 +84,7 @@ public class CelestialMagic extends SkillBase implements TurnActSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "heal";
 		}
 		
 		//EffectProgram p = new EffectProgram(FireArrow.class);

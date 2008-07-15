@@ -57,6 +57,8 @@ import com.jme.scene.shape.Quad;
  */
 public class EncounterWindow extends PagedInputWindow {
 
+	Node pageIntro = new Node();
+	TextLabel introTitle;
 	/**
 	 * Page where interaction with the encountered is going on, initiated.
 	 */
@@ -73,6 +75,22 @@ public class EncounterWindow extends PagedInputWindow {
 	
 	public EncounterWindow(UIBase base) {
 		super(base);
+		
+		try {
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.50f*core.getDisplay().getWidth(), 0.3f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
+	    	hudQuad.setRenderState(base.hud.hudAS);
+	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	pageIntro.attachChild(sQuad);
+	    	introTitle = new TextLabel("",this,pageIntro, 0.35f, 0.40f, 0.3f, 0.06f,300f,Language.v("encounterWindow.intro"),false);
+	    	new TextLabel("",this,pageIntro, 0.45f, 0.45f, 0.3f, 0.06f,500f,Language.v("encounterWindow.pressText"),false);
+	    	
+	    	addPage(1, pageIntro);
+		} catch (Exception ex)
+		{
+			
+		}
+		
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.2f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.38f*core.getDisplay().getHeight() / 2);
@@ -131,6 +149,11 @@ public class EncounterWindow extends PagedInputWindow {
 	
 	public void setPageData(PartyInstance party, EncounterInfo encountered, boolean playerInitiated)
 	{
+		currentPage = 1;
+		party.encounterCounter++; // TODO do this not here
+		introTitle.text = Language.v("encounterWindow.intro")+" "+party.encounterCounter;
+		introTitle.activate();
+
 		this.party = party;
 		this.encountered = encountered;
 		this.playerInitiated = playerInitiated;
@@ -139,59 +162,64 @@ public class EncounterWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(party.theFragment);
-
-		// groups
+		
+		if (currentPage==0)
 		{
-			String[] ids = new String[list.size()];
-			Object[] objects = new Object[list.size()];
-			String[] texts = new String[list.size()];
-			int count = 0;
-			System.out.println("ENC SIZE = "+list.size());
-			for (EncounterUnitData data:list)
+		
+			ArrayList<EncounterUnitData> list = encountered.getEncounterUnitDataList(party.theFragment);
+	
+			// groups
 			{
-				ids[count] = ""+count;
-				texts[count] = data.name;
-				objects[count] = data;
-				count++;
+				String[] ids = new String[list.size()];
+				Object[] objects = new Object[list.size()];
+				String[] texts = new String[list.size()];
+				int count = 0;
+				System.out.println("ENC SIZE = "+list.size());
+				for (EncounterUnitData data:list)
+				{
+					ids[count] = ""+count;
+					texts[count] = data.name;
+					objects[count] = data;
+					count++;
+				}
+				groupSelect.reset();
+				groupSelect.ids = ids;
+				groupSelect.objects = objects;
+				groupSelect.texts = texts;
+				groupSelect.setUpdated(true);
+				groupSelect.activate();
 			}
-			groupSelect.reset();
-			groupSelect.ids = ids;
-			groupSelect.objects = objects;
-			groupSelect.texts = texts;
-			groupSelect.setUpdated(true);
-			groupSelect.activate();
+			// party memebers
+			{
+				int size = 0;
+				for (EntityMemberInstance i:party.orderedParty)
+				{
+					if (!i.isDead()) size++;
+				}
+				String[] texts = new String[size];
+				Object[] objects = new Object[size];
+				String[] ids = new String[size];
+				int counter = 0;
+				if (party!=null)
+				for (EntityMemberInstance i:party.orderedParty)
+				{
+					if (i.isDead()) continue;
+					String n = ((MemberPerson)i.description).foreName;
+					objects[counter] = i;
+					texts[counter] = n;
+					ids[counter] = ""+counter;
+					counter++;
+				}
+				memberSelect.reset();
+				memberSelect.ids = ids;
+				memberSelect.objects = objects;
+				memberSelect.texts = texts;
+				memberSelect.setUpdated(true);
+				memberSelect.activate();
+				//Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
+			}
+			inputChanged(groupSelect, "");
 		}
-		// party memebers
-		{
-			int size = 0;
-			for (EntityMemberInstance i:party.orderedParty)
-			{
-				if (!i.isDead()) size++;
-			}
-			String[] texts = new String[size];
-			Object[] objects = new Object[size];
-			String[] ids = new String[size];
-			int counter = 0;
-			if (party!=null)
-			for (EntityMemberInstance i:party.orderedParty)
-			{
-				if (i.isDead()) continue;
-				String n = ((MemberPerson)i.description).foreName;
-				objects[counter] = i;
-				texts[counter] = n;
-				ids[counter] = ""+counter;
-				counter++;
-			}
-			memberSelect.reset();
-			memberSelect.ids = ids;
-			memberSelect.objects = objects;
-			memberSelect.texts = texts;
-			memberSelect.setUpdated(true);
-			memberSelect.activate();
-			//Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
-		}
-		inputChanged(groupSelect, "");
 		super.setupPage();
 	}	
 	@Override
@@ -331,4 +359,18 @@ public class EncounterWindow extends PagedInputWindow {
 		return false;
 	}
 
+	@Override
+	public boolean handleKey(String key) {
+		if (super.handleKey(key)) return true;
+		if ("enter".equals(key))
+		{
+			if (currentPage==1)
+			{
+				currentPage = 0;
+				setupPage();
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -40,6 +40,8 @@ import com.jme.renderer.ColorRGBA;
 
 public class PartyInstance extends EntityInstance {
 
+	public int encounterCounter=0;
+	public int turnActPhaseCounter=0;
 	
 	public boolean noticeFriendly = true;
 	public boolean noticeNeutral = false;
