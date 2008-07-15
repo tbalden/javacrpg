@@ -22,12 +22,12 @@ public class GameLogicConstants {
 	 * how many attribute points can be used by default.
 	 */
 	public static final int ATTRIBUTE_POINTS_TO_USE = 10;
-	public static final int ATTRIBUTE_POINTS_TO_USE_ON_LEVELING = 2;
+	public static final int ATTRIBUTE_POINTS_TO_USE_ON_LEVELING = 5;
 	/**
 	 * how many attribute points can be used by default.
 	 */
 	public static final int SKILL_POINTS_TO_USE = 5;
-	public static final int SKILL_POINTS_TO_USE_ON_LEVELING = 3;
+	public static final int SKILL_POINTS_TO_USE_ON_LEVELING = 5;
 	
 	
 	public static final int REPLENISH_ROUNDS = 10;
