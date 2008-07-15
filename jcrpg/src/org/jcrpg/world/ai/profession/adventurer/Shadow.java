@@ -45,7 +45,7 @@ public class Shadow extends HumanoidProfessional {
 		addMinorSkill(Throwing.class);
 		addMinorSkill(MediumBlades.class);
 		addMinorSkill(ShortBlades.class);
-		addMajorSkill(StrikeAccurate.class);
+		addMinorSkill(StrikeAccurate.class);
 		addMinorSkill(MartialTrance.class);
 	}
 }
