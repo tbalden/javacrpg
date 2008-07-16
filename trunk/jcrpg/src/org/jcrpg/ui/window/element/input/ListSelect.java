@@ -139,7 +139,7 @@ public class ListSelect extends InputBase {
 			return;			
 		}
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
+		Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
 		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
@@ -191,17 +191,17 @@ public class ListSelect extends InputBase {
 				
 				if (text==null) text = "## null ##";
 				
-				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
+				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
 				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
 				if (i==selected && i!=maxVisible)
 				{
-					colorize(slottextNode, ColorRGBA.yellow);
+					colorize(slottextNode, normalColor);
 				} else
 				{
-					colorize(slottextNode, ColorRGBA.gray);
+					colorize(slottextNode, disabledColor);
 				}
 				textNodes.add(slottextNode);
 				baseNode.attachChild(slottextNode);

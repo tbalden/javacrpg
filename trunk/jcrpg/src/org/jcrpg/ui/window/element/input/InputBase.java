@@ -49,6 +49,11 @@ public abstract class InputBase {
 	
 	public static final String SOUND_INPUTSELECTED = "input_selected";
 	
+	protected ColorRGBA normalColor = new ColorRGBA(0.9f,0.9f,0.1f,1f);
+	protected ColorRGBA outlineColor = new ColorRGBA(0.05f,0.05f,0.05f,1f);
+	protected ColorRGBA deactivatedColor = new ColorRGBA(0.5f,0.5f,0.1f,1f);
+	protected ColorRGBA disabledColor = ColorRGBA.gray;
+	
 	public InputBase(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX, float sizeY)
 	{
 		this.id = id;
