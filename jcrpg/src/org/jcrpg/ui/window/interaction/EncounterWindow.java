@@ -77,13 +77,13 @@ public class EncounterWindow extends PagedInputWindow {
 		super(base);
 		
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.50f*core.getDisplay().getWidth(), 0.3f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/popups/encounter.png", 0.6f*core.getDisplay().getWidth(), 1.2f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	pageIntro.attachChild(sQuad);
-	    	introTitle = new TextLabel("",this,pageIntro, 0.38f, 0.40f, 0.3f, 0.06f,300f,Language.v("encounterWindow.intro"),false);
-	    	new TextLabel("",this,pageIntro, 0.45f, 0.45f, 0.3f, 0.06f,500f,Language.v("encounterWindow.pressText"),false);
+	    	introTitle = new TextLabel("",this,pageIntro, 0.5f, 0.19f, 0.3f, 0.06f,450f,Language.v("encounterWindow.intro"),false,true,new ColorRGBA(0.1f,0.1f,0.7f,1f));
+	    	new TextLabel("",this,pageIntro, 0.5f, 0.22f, 0.3f, 0.06f,600f,Language.v("encounterWindow.pressText"),false,true,ColorRGBA.black);
 	    	
 	    	addPage(1, pageIntro);
 		} catch (Exception ex)

@@ -38,11 +38,24 @@ public class TextLabel extends InputBase {
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
 	public boolean useImage = false;
+	public boolean centered = false;
 	public TextLabel(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text, boolean useImage) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = text;
 		this.textProportion = textProportion;
+		this.useImage = useImage;
+		this.centered = useImage;
+		activate();
+	}
+	public TextLabel(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+			float sizeY, float textProportion, String text, boolean useImage, boolean centered, ColorRGBA normalColor) {
+		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
+		this.normalColor = normalColor;
+		this.text = text;
+		this.textProportion = textProportion;
+		this.useImage = useImage;
+		this.centered = centered;
 		activate();
 	}
 	
@@ -66,7 +79,7 @@ public class TextLabel extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, normalColor,outlineColor,centered);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -94,7 +107,7 @@ public class TextLabel extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),useImage);
+			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, deactivatedColor, outlineColor,centered);
 			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
