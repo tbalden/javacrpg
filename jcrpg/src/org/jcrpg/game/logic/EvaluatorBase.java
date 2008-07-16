@@ -176,12 +176,12 @@ public class EvaluatorBase {
 			{
 				if (choice.targetMember!=null)
 				{
-					if (choice.targetMember.isDead() && choice.targetMember.encounterData.isGroupId)
+					if (choice.targetMember.isNotPresent() && choice.targetMember.encounterData.isGroupId)
 					{
 						// chose another one
 						choice.targetMember = choice.targetMember.encounterData.getFirstLivingMember();
 					}
-					if (!choice.targetMember.isDead())
+					if (!choice.targetMember.isNotPresent())
 					{
 						targetMembers.add(choice.targetMember);
 						XPmultiplier = choice.targetMember.memberState.level;

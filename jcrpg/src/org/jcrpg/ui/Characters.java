@@ -48,13 +48,19 @@ public class Characters {
 	Node node = new Node();
 	HUD hud = null;
 	ColorMaskState deadColor = null; 
+	ColorMaskState neutralColor = null; 
 	public Characters(HUD hud)
 	{
 		deadColor = hud.base.core.getDisplay().getRenderer().createColorMaskState();
 		deadColor.setBlue(false);
 		deadColor.setGreen(false);
 		deadColor.setEnabled(true);
-		
+
+		neutralColor = hud.base.core.getDisplay().getRenderer().createColorMaskState();
+		neutralColor.setRed(false);
+		neutralColor.setBlue(false);
+		neutralColor.setEnabled(true);
+
 		createBarQuads();
 		this.hud = hud;
 		text = FontUtils.textVerdana;
@@ -303,6 +309,11 @@ public class Characters {
 			{
 				Quad q= pictureQuads.get(counter);				
 				q.setRenderState(deadColor);
+			} else
+			if (p.memberState.isNeutralized())
+			{
+				Quad q= pictureQuads.get(counter);				
+				q.setRenderState(neutralColor);
 			} else
 			{
 				Quad q= pictureQuads.get(counter);

@@ -74,7 +74,7 @@ public class EntityMemberState {
 	}
 	
 	// set this to true if you want to prevent persistentMembers from point changes.
-	boolean cheatNPC = false;
+	boolean cheatNPC = true;
 	/**
 	 * Applies impact unit and return zero reached point type list.
 	 * @param unit

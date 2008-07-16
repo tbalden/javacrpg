@@ -140,7 +140,7 @@ public class EncounterInfo {
 		for (EncounterUnit unit:encountered.keySet())
 		{
 			if (unit==subjectFragment) continue;
-			if (notThePlayer && unit==player.theFragment || player.orderedParty.contains(unit)) continue;
+			if (notThePlayer && (unit==player.theFragment || player.orderedParty.contains(unit))) continue;
 			int level = unit.getRelationLevel(subjectFragment);
 			if (level==EntityScaledRelationType.NEUTRAL)
 			{
