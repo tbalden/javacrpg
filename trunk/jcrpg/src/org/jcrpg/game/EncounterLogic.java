@@ -546,12 +546,25 @@ public class EncounterLogic {
 		if (list==null) return true;
 		for (EncounterUnitData data:list)
 		{
-			if (!data.friendly) return false; // there's still enemy...
+			if (!data.friendly && !data.isNeutralized()) return false; // there's still enemy...
 		}
 		return true; // no enemy left
 	}
 	
-	public boolean isEncounterFinisheLosing(EncounterInfo encounter)
+	public boolean isEncounterFinishedNeutralized(EncounterInfo encounter)
+	{
+		for (EntityMemberInstance m:encounter.playerIfPresent.getFollowingMembers())
+		{
+			if (!m.memberState.isNeutralized())
+				// there's still someone non-neutral, no end yet.
+				return false;
+		}
+		// all neutral, lost!
+		return true;
+	}
+	
+	
+	public boolean isEncounterFinishedLosing(EncounterInfo encounter)
 	{
 		for (EntityMemberInstance m:encounter.playerIfPresent.getFollowingMembers())
 		{
@@ -570,6 +583,20 @@ public class EncounterLogic {
 	public void finishEncounterWin(EncounterInfo encounter)
 	{
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
+		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+		gameLogic.endPlayerEncounters();
+		gameLogic.core.gameState.engine.turnFinishedForPlayer();
+		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
+		gameLogic.core.gameState.switchToEncounterScenario(false, null);
+	}
+
+	/**
+	 * Finish encounter neutralized player...
+	 * @param encounter
+	 */
+	public void finishEncounterNeutralized(EncounterInfo encounter)
+	{
+		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party run out of incentive!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
 		gameLogic.core.gameState.engine.turnFinishedForPlayer();
@@ -606,12 +633,20 @@ public class EncounterLogic {
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
 			{
 				currentTurnActTurn++;
+
+				// removing neutralized
+				ArrayList<EncounterUnit> leaving = turnActTurnState.encounter.filterNeutralsForSubjectBeforeTurnAct(true,(PartyInstance)turnActTurnState.encounter.playerIfPresent.instance);
+				postLeaversMessage(leaving);
 				
 				if (isEncounterFinishedWinning(turnActTurnState.encounter))
 				{
 					finishEncounterWin(turnActTurnState.encounter);
 				} else
-				if (isEncounterFinisheLosing(turnActTurnState.encounter))
+				if (isEncounterFinishedLosing(turnActTurnState.encounter))
+				{
+					finishEncounterNeutralized(turnActTurnState.encounter);
+				} else
+				if (isEncounterFinishedLosing(turnActTurnState.encounter))
 				{
 					finishEncounterLose(turnActTurnState.encounter);
 				} else
@@ -642,7 +677,7 @@ public class EncounterLogic {
 					TurnActMemberChoice choice = event.choice;
 					
 					// dead cannot do things...
-					if (choice.member.isDead()) 
+					if (choice.member.isDead() || choice.member.memberState.isNeutralized()) 
 					{
 						playTurnActStep();
 						return;
@@ -695,22 +730,35 @@ public class EncounterLogic {
 					// cannot do things on dead target... TODO necromancy override!
 					if (choice.target!=null && choice.target.isDead()) 
 					{
-						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target lives no more.");
+						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target is no more.");
 						System.out.println("# NOT LIVING TARGET: "+choice.target.getName());
 						playTurnActStep();
 						return;
 					}
-					// TODO neutralized check
+					if (choice.target!=null && choice.target.isNeutralized()) 
+					{
+						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target is leaving as neutral.");
+						System.out.println("# NOT LIVING TARGET: "+choice.target.getName());
+						playTurnActStep();
+						return;
+					}
 					
 					gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.encounterData.getName());
-					if (choice.doNothing || !choice.member.memberState.isExhausted()) {
+					if (choice.doNothing && !choice.member.memberState.isExhausted() && !choice.member.memberState.isNeutralized()) {
 						gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
 					} else
 					{
 						gameLogic.core.uiBase.hud.mainBox.addEntry(event.initMessage);
-						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " is exhausted & fails.");
-						playTurnActStep();
-						return;
+						if (choice.member.memberState.isExhausted())
+						{
+							gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " is exhausted & fails.");
+						}
+						if (choice.member.memberState.isNeutralized())
+						{
+							gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + " is watching neutrally.");
+							playTurnActStep();
+							return;
+						}
 					}
 					
 					if (choice.doNothing || choice.member.memberState.isExhausted())

@@ -140,6 +140,10 @@ public class EntityMemberInstance {
 			encounterData.generatedMembers.remove(this);
 			this.parentFragment.decreaseSize();
 		} else
+		if (memberState.isNeutralized())
+		{
+			encounterData.generatedMembers.remove(this);
+		} else
 		{
 			memberState.increaseExperience(unit.experiencePoint);
 		}
@@ -259,6 +263,10 @@ public class EntityMemberInstance {
 	public boolean isDead()
 	{
 		return memberState.isDead();
+	}
+	public boolean isNotPresent()
+	{
+		return memberState.isDead() || memberState.isNeutralized();
 	}
 	
 	/**

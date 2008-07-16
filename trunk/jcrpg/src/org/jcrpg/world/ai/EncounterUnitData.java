@@ -164,7 +164,7 @@ public class EncounterUnitData
 	 */
 	public void clearUnitOut()
 	{
-		if (!visibleForm.notRendered) {
+		if (visibleForm!=null && !visibleForm.notRendered) {
 			J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
 		}
 	}
@@ -225,8 +225,13 @@ public class EncounterUnitData
 					}
 				}
 			}
+			livingMembers = getAllNonNeutrals();
 			if (livingMembers!=null)
 			if (livingMembers.size()==0)
+			{
+				destroyed();
+			}
+			if (livingMembers==null)
 			{
 				destroyed();
 			}
@@ -242,16 +247,36 @@ public class EncounterUnitData
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" dies!",ColorRGBA.red));
 						killCount++;
+						destroyed();
 					} else
 					if (((EntityMemberInstance)subUnit).memberState.isNeutralized())
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" neutralized!",ColorRGBA.orange));
 						neutralizeCount++;
+						destroyed();
 					}
 				}
 			}
 		}
 		return new int[]{killCount,neutralizeCount};
+	}
+	
+	public ArrayList<EntityMemberInstance> getAllNonNeutrals()
+	{
+		ArrayList<EntityMemberInstance> removable = new ArrayList<EntityMemberInstance>();
+		ArrayList<EntityMemberInstance> list = getAllLivingMember();
+		if (list!=null)
+		{
+			for (EntityMemberInstance m:list)
+			{
+				if (m.memberState.isNeutralized())
+				{
+					removable.add(m);
+				}
+			}
+			list.removeAll(removable);
+		}
+		return list;
 	}
 
 	public ArrayList<EntityMemberInstance> getAllLivingMember()
@@ -300,7 +325,7 @@ public class EncounterUnitData
 
 	public EntityMemberInstance getFirstLivingMember()
 	{
-		ArrayList<EntityMemberInstance> list = getAllLivingMember();
+		ArrayList<EntityMemberInstance> list = getAllNonNeutrals();
 		if (list!=null && list.size()>0) return list.get(0);
 		return null;
 	}
@@ -325,7 +350,15 @@ public class EncounterUnitData
 	
 	public boolean isDead()
 	{
-		if (getAllLivingMember()==null || getAllLivingMember().size()<1)
+		ArrayList<EntityMemberInstance> list = getAllLivingMember();
+		if (list==null || list.size()<1)
+			return true;
+		return false;
+	}
+	public boolean isNeutralized()
+	{
+		ArrayList<EntityMemberInstance> list = getAllNonNeutrals();
+		if (list==null || list.size()<1)
 			return true;
 		return false;
 	}
