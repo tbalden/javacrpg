@@ -62,20 +62,16 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] use & cast in normal mode too
 
+[ ] try using md5importer - animation problems are unsolvable
+
 ##
 [?] list before next release:
 ##
 
-	[ ] char sheet
-		[X] viewing a character sheets / inventories while in encounter!
-		[ ] bigger character sheet
-		[X] resistances in character sheet
-		[ ] active effects on character sheet
-	
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
 	
 	[ ] MORE SKILLS: spell forms, 
-		[ ] social effects, neutralizing morale, sanity 
+		[ ] social effects, neutralizing morale, protecting Mental sanity 
 		[ ] protection spells, boost spells with effects
 		[ ] fabrication of ammunition and such - fletcher, work Skill
 		[ ] thief helper skill, disarm?
@@ -88,6 +84,12 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ]	flying numbers for impact over units, billboard
 		[ ] impact point number on the portrait of characters?
+
+	[X] char sheet
+		[X] viewing a character sheets / inventories while in encounter!
+		[X] bigger character sheet
+		[X] resistances in character sheet
+		[X] active effects on character sheet
 
 	[X] make leaving a TRY thing, encounter logic - checkLeaveTurnAct?? ---> NO, its done wizardry style, one
 		round with no acting and who still lives can leave.

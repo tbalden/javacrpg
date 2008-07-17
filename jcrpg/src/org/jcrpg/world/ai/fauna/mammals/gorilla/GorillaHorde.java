@@ -49,6 +49,12 @@ public class GorillaHorde extends AnimalEntityDescription {
 	{
 		MovingModelAnimDescription desc = new MovingModelAnimDescription(new String[]{"./data/models/fauna/gorilla/gorilla_steady.md5anim","./data/models/fauna/gorilla/gorilla.md5anim"});
 		desc.WALK = "./data/models/fauna/gorilla/gorilla_steady.md5anim";
+		desc.ATTACK_UPPER = "./data/models/fauna/gorilla/gorilla.md5anim";
+		desc.ATTACK_LOWER = "./data/models/fauna/gorilla/gorilla.md5anim";
+		desc.PAIN = "./data/models/fauna/gorilla/gorilla.md5anim";
+		desc.DEFEND_UPPER = "./data/models/fauna/gorilla/gorilla.md5anim";
+		desc.DEFEND_LOWER = "./data/models/fauna/gorilla/gorilla.md5anim";
+		desc.DEATH_NORMAL = "./data/models/fauna/gorilla/gorilla.md5anim";
 		gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh",desc,null,null,false);
 	}
 	

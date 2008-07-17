@@ -26,6 +26,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
@@ -449,12 +450,15 @@ public class EncounterLogic {
 								{
 									try 
 									{
-										Vector3f place = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
-										//Vector3f orig = gameLogic.core.getCamera().getLocation();
-										CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+										Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.targetMember.encounterData.visibleForm.unit,choice.targetMember.encounterData.visibleForm,true);
+										/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
+										Vector3f place = ph.getLocalTranslation();
+										place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
+										place.addLocal(0f,-0.9f,0f);*/
+										CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
 									} catch (Exception ex)
 									{
-										ex.printStackTrace();
+										//ex.printStackTrace();
 									}
 								}
 								
@@ -733,12 +737,15 @@ public class EncounterLogic {
 					{
 						try 
 						{
-							Vector3f place = choice.member.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
-							//Vector3f orig = gameLogic.core.getCamera().getLocation();
-							CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+							Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.member.encounterData.visibleForm.unit,choice.member.encounterData.visibleForm,true);
+							/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
+							Vector3f place = ph.getLocalTranslation();
+							place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
+							place.addLocal(0f,-0.9f,0f);*/
+							CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
 						} catch (Exception ex)
 						{
-							ex.printStackTrace();
+							//ex.printStackTrace();
 						}
 					} else
 					{
@@ -747,9 +754,12 @@ public class EncounterLogic {
 						{
 							try 
 							{
-								Vector3f place = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next().getLocalTranslation();
-								//Vector3f orig = gameLogic.core.getCamera().getLocation();
-								CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+1f, place.z);
+								Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.targetMember.encounterData.visibleForm.unit,choice.targetMember.encounterData.visibleForm,true);
+								/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
+								Vector3f place = ph.getLocalTranslation();
+								place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
+								place.addLocal(0f,-0.9f,0f);*/
+								CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
 							} catch (Exception ex)
 							{
 								ex.printStackTrace();
