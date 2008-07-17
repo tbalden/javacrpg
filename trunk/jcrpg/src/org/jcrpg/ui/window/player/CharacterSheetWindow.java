@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
+import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -32,9 +33,12 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
+import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
+import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.profession.Profession;
@@ -66,9 +70,13 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	ValueTuner sanity = null;
 	ValueTuner mana = null;
 	ValueTuner xp = null;
+	
+	ListSelect memberStateEffects = null;
+	
 	HashMap<String, ValueTuner> attributeTuners = new HashMap<String, ValueTuner>();
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
 
+	HashMap<String, ValueTuner> resistanceTuners = new HashMap<String, ValueTuner>();
 	
 	public CharacterSheetWindow(UIBase base) {
 		super(base);
@@ -109,7 +117,12 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 	    	new TextLabel("xp",this,page0,0.61f,0.46f,0.15f,0.04f,600f, "XP", false);
 	    	xp = new ValueTuner("xp",this,page0, 0.63f,0.49f,0.15f,0.04f,600f,10,0,100,1);
+
+	    	new TextLabel("membereffects",this,page0,0.40f,0.55f,0.15f,0.04f,600f, "States", false);
+	    	memberStateEffects = new ListSelect("stateeffects",this,page0, 0.61f,0.55f,0.3f,0.04f,600f,new String[0],new String[0],null,null);
+	    	addInput(0,memberStateEffects);
 	    	
+
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
@@ -118,6 +131,18 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.317f,0.2f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
+	    		//addInput(1,v);
+	    		posY++;
+	    	}
+
+	    	posY = 0;
+	    	for (String s: FantasyResistances.resistanceName)
+	    	{
+	    		String text = Language.v("fantasyresistances.shortest."+s);
+	    		System.out.println("TEXT" +text);
+	    		new TextLabel(s+"_label",this,page0,0.549f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.15f,0.04f,600f, text, false);
+	    		ValueTuner v = new ValueTuner(s,this,page0, 0.66f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.07f,0.04f,600f,10,0,100,1);
+	    		resistanceTuners.put(s, v);
 	    		//addInput(1,v);
 	    		posY++;
 	    	}
@@ -214,6 +239,26 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	public void updateToMemberInstance(EntityMemberInstance instance)
 	{
 		
+		//memberStateEffects
+		{
+			ArrayList<StateEffect> list = instance.memberState.getStateEffects();
+			String[] ids = new String[list.size()];
+			String[] texts = new String[list.size()];
+			int count = 0;
+			for (StateEffect state:list)
+			{
+				ids[count] = ""+count;
+				texts[count] = state.getName()+" "+state.getLeftDuration(core.gameState.engine.getWorldMeanTime().getTimeInRound(), core.gameState.engine.getWorldMeanTime());			
+				count++;
+			}
+			memberStateEffects.ids = ids;
+			memberStateEffects.texts = texts;
+			memberStateEffects.setSelected(0);
+			memberStateEffects.setUpdated(true);
+			memberStateEffects.deactivate();
+		}
+		
+		
 		Attributes attr = (instance).getAttributes();
 		Attributes attrVanilla = (instance).getAttributesVanilla();
 		for (String id: FantasyAttributes.attributeName) {
@@ -231,6 +276,23 @@ public class CharacterSheetWindow extends PagedInputWindow {
 			v.deactivate();
 		}
 		
+		Resistances res = (instance).getResistances();
+		Resistances resVanilla = (instance).getResistancesVanilla();
+		for (String id: FantasyResistances.resistanceName) {
+			//System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
+			ValueTuner v = resistanceTuners.get(id);
+			v.value = res.getResistance(id);
+			int vanilla = resVanilla.getResistance(id);
+			if (v.value!=vanilla)
+			{
+				v.text = ""+v.value+" ("+vanilla+")";
+			} else
+			{
+				v.text = ""+v.value;
+			}
+			v.deactivate();
+		}
+
 		
     	for (String groupId : SkillGroups.orderedGroups)
     	{
@@ -340,11 +402,15 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	@Override
 	public void hide() {
 		super.hide();
+		if (fallbackWindow!=null) fallbackWindow.toggle();
+		core.getKeyboardHandler().noToggleWindowByKey=true;
+		fallbackWindow = null;
 	}
 	@Override
 	public void show() {
 		super.show();
 		updateToParty();
 	}
-	
+
+	public InputWindow fallbackWindow = null;
 }

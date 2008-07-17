@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
+import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.InventoryBody;
 import org.jcrpg.ui.window.element.TextLabel;
@@ -458,7 +459,7 @@ public class InventoryWindow extends PagedInputWindow {
 	
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
-		if (base==equip)
+		if (base==equip && canDoActions)
 		{
 			// equipping
 			
@@ -501,7 +502,7 @@ public class InventoryWindow extends PagedInputWindow {
 			return true;
 		}
 		else
-		if (base==attach)
+		if (base==attach && canDoActions)
 		{
 			// attaching ammunition to weapons, detach if no ammunition is selected.
 			ArrayList<Object> listWeapon = weapons.getMultiSelection();
@@ -544,7 +545,7 @@ public class InventoryWindow extends PagedInputWindow {
 			}
 			return true;
 		} else
-		if (base==drop)
+		if (base==drop && canDoActions)
 		{
 			
 			ArrayList<InventoryListElement> l = getAllSelection();
@@ -570,7 +571,7 @@ public class InventoryWindow extends PagedInputWindow {
 			}
 			if (updateNeeded) updateToInventory(currentMember.inventory);
 		} else
-		if (base==give)
+		if (base==give && canDoActions)
 		{
 			EntityMemberInstance toChar = (EntityMemberInstance)toCharacterSelect.getSelectedObject();
 			if (toChar==null || toChar.memberState.isDead() || toChar == currentMember) return true;
@@ -783,11 +784,24 @@ public class InventoryWindow extends PagedInputWindow {
 	@Override
 	public void hide() {
 		super.hide();
+		if (fallbackWindow!=null) fallbackWindow.toggle();
+		// setting back these values.
+		core.getKeyboardHandler().noToggleWindowByKey=true;
+		fallbackWindow = null;
+		canDoActions = true;
 	}
 	@Override
 	public void show() {
 		super.show();
 		updateToParty();
 	}
+	/**
+	 * fallback window (for example in turn act, it should be turn act window)
+	 */
+	public InputWindow fallbackWindow = null;
+	/**
+	 * Determines if inventory actions can be done - in turn act window it should be set to false;
+	 */
+	public boolean canDoActions = true;
 	
 }

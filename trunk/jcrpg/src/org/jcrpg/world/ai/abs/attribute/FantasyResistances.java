@@ -32,7 +32,7 @@ public class FantasyResistances extends Resistances {
 	public static String RESIST_GOOD = "RESIST_GOOD";
 	public static String RESIST_EVIL = "RESIST_EVIL";	
 	
-	public static String[] resistencyName = new String[] {
+	public static String[] resistanceName = new String[] {
 		RESIST_PIERCE, RESIST_BLUDGEON, RESIST_COLD,RESIST_HEAT,RESIST_CHEMICAL,RESIST_MENTAL, RESIST_GOOD, RESIST_EVIL
 	};
 	
@@ -42,7 +42,7 @@ public class FantasyResistances extends Resistances {
 	}
 	public FantasyResistances(boolean zero)
 	{
-		for (String a:resistencyName)
+		for (String a:resistanceName)
 		{
 			resistances.put(a, zero?0:GameLogicConstants.BASE_RESISTANCE_VALUE);
 		}
