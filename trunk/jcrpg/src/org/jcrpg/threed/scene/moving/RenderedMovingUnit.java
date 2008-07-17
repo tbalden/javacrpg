@@ -21,6 +21,7 @@ package org.jcrpg.threed.scene.moving;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
@@ -301,6 +302,13 @@ public class RenderedMovingUnit {
 		return list;
 	}
 	
-	
+	/**
+	 * Draw flying impact points for 3d unit.
+	 * @param unit
+	 */
+	public void visualizeImpactPoints(ImpactUnit unit)
+	{
+		J3DCore.getInstance().mEngine.visualizeImpactPoints(this, unit);
+	}
 	
 }

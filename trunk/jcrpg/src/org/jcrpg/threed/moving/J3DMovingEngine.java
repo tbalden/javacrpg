@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
@@ -33,6 +34,7 @@ import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.ui.Characters;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMember;
@@ -64,6 +66,7 @@ public class J3DMovingEngine {
 	
 	public static HashSet<RenderedMovingUnit> activeUnits = new HashSet<RenderedMovingUnit>();
 	public static HashSet<EffectNode> activeEffectNodes = new HashSet<EffectNode>();
+	//public static HashSet<FlyingNode> activeFlyingNodes = new HashSet<FlyingNode>()
 	
 	public static boolean isEnginePlaying()
 	{
@@ -275,6 +278,94 @@ public class J3DMovingEngine {
 		lineupColors.add(ColorRGBA.black);
 	}
 	
+	ZBufferState zInFG = null;
+	public ZBufferState getZBuffInForegroundState()
+	{
+		if (zInFG==null)
+		{
+			zInFG = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
+			zInFG.setFunction(ZBufferState.CF_ALWAYS);
+		}
+		return zInFG;
+		
+	}
+	
+	public class FlyingNode extends Node
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		private float fliedDist= 0f;
+		private float maxDist = 1.5f;
+		private boolean flying = false;
+		
+		
+		@Override
+		public void updateGeometricState(float time, boolean initiator) {
+			if (flying && fliedDist<maxDist) {
+				localTranslation.addLocal(0f, 0.1f*time, 0f);
+				fliedDist+=1f*time;
+			} else
+			if (flying && fliedDist>=maxDist)
+			{
+				this.removeFromParent();
+				return;
+			}
+			super.updateGeometricState(time, initiator);
+		}
+		
+		public boolean isFinishedPlaying()
+		{
+			if (fliedDist>=maxDist)
+			{
+				return true;
+			}
+			return false;
+		}
+		public void startFlying()
+		{
+			flying = true;
+		}
+	}
+	
+	/**
+	 * Creates a flying node with numbers for not-0 impact points
+	 * @param unit
+	 * @return
+	 */
+	private FlyingNode getImpactPointsBillboardNode(ImpactUnit unit)
+	{
+		BillboardNode n = new BillboardNode("name");
+		n.setAlignment(BillboardNode.SCREEN_ALIGNED);
+		int counter = 0;
+		int addedCounter = 0;
+		for (Integer i:unit.orderedImpactPoints)
+		{
+			if (i!=null && i!=0)
+			{
+				ColorRGBA color = Characters.pointQuadData.get(counter);
+				Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+i, 1,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+				slottextNode.setLocalTranslation(0.1f*addedCounter, 0f, 0f);
+				ZBufferState state = getZBuffInForegroundState();
+				n.attachChild(slottextNode);
+				slottextNode.setCullMode( SceneElement.CULL_NEVER );
+				slottextNode.setTextureCombineMode( TextureState.REPLACE );
+				n.setRenderState(state);
+				addedCounter++;
+			}
+			counter++;
+		}
+		n.setLocalTranslation(new Vector3f(0.2f,1.9f,0.1f));
+		n.setLocalScale(0.17f);
+		FlyingNode fn = new FlyingNode();
+		fn.attachChild(n);
+		return fn;
+		
+	}
+	
 	
 	public void getVisibleFormBillboardNodes(RenderedMovingUnit unit)
 	{
@@ -363,6 +454,19 @@ public class J3DMovingEngine {
 			realPooledNode.attachChild(unit.memberTypeNameNode);
 		}
 		realPooledNode.updateRenderState();
+	}
+	
+	public void visualizeImpactPoints(RenderedMovingUnit unit, ImpactUnit impact)
+	{
+		FlyingNode node = getImpactPointsBillboardNode(impact);
+		NodePlaceholder n = unit.nodePlaceholders.iterator().next();
+		Node realPooledNode = (Node)n.realNode;
+		if (realPooledNode!=null) {
+			realPooledNode.attachChild(node);	
+		}
+		realPooledNode.updateRenderState();
+		node.startFlying();
+		
 	}
 	
 	

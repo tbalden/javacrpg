@@ -25,7 +25,7 @@ import org.jcrpg.world.ai.abs.state.StateEffect;
 public class ImpactUnit
 {
 	
-	public int experiencePoint = 1; // TODO
+	public int experiencePoint = 1; 
 	
 	public ArrayList<StateEffect> stateEffects = new ArrayList<StateEffect>();
 	
@@ -87,4 +87,7 @@ public class ImpactUnit
 		if (stateEffects!=null && stateEffects.size()>0) return true;
 		return false;
 	}
+	
+	
+	
 }

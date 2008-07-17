@@ -62,6 +62,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] use & cast in normal mode too
 
+[ ] different HUD for encounter mode!
+
 [ ] try using md5importer - animation problems are unsolvable
 
 ##
@@ -69,6 +71,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
+		[ ] during combat and such some kind of collecting in EncounterInfo for loot and such...qqqq
 	
 	[ ] MORE SKILLS: spell forms, 
 		[ ] social effects, neutralizing morale, protecting Mental sanity 
@@ -82,7 +85,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] move logging to txt log , remove unneeded logs
 
-	[ ]	flying numbers for impact over units, billboard
+	[X]	flying numbers for impact over units, billboard
 		[ ] impact point number on the portrait of characters?
 
 	[X] char sheet
