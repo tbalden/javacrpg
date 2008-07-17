@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.player;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.Ecology;
@@ -164,7 +165,7 @@ public class PartyInstance extends EntityInstance {
 
 	@Override
 	public void notifyImpactResult(EntityFragment fragment,
-			EntityMemberInstance member, ArrayList<Integer> result) {
+			EntityMemberInstance member, ArrayList<Integer> result, ImpactUnit unit) {
 		if (member.isDead())
 		{
 			if (member instanceof PersistentMemberInstance)
@@ -178,7 +179,8 @@ public class PartyInstance extends EntityInstance {
 		}
 		J3DCore.getInstance().uiBase.hud.updateCharacterRelated(member);
 		J3DCore.getInstance().uiBase.hud.characters.updateEffectIcons(member);
-		super.notifyImpactResult(fragment, member, result);
+		J3DCore.getInstance().uiBase.hud.characters.visualizeImpact(member, unit);
+		super.notifyImpactResult(fragment, member, result,unit);
 	}
 
 	@Override

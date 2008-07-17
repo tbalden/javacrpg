@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.GroupingRule.GroupSizeAndType;
@@ -333,7 +334,7 @@ public class EntityInstance {
 	 * @param member The member.
 	 * @param result The results (what points decreased to 0) .
 	 */
-	public void notifyImpactResult(EntityFragment fragment, EntityMemberInstance member, ArrayList<Integer> result)
+	public void notifyImpactResult(EntityFragment fragment, EntityMemberInstance member, ArrayList<Integer> result, ImpactUnit unit)
 	{
 		return;
 		

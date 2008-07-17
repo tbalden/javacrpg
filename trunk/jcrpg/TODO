@@ -86,7 +86,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] move logging to txt log , remove unneeded logs
 
 	[X]	flying numbers for impact over units, billboard
-		[ ] impact point number on the portrait of characters?
+		[X] impact point number on the portrait of characters?
 
 	[X] char sheet
 		[X] viewing a character sheets / inventories while in encounter!
