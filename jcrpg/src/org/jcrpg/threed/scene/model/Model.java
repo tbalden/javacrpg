@@ -30,6 +30,7 @@ public abstract class Model {
 	public byte type = MODEL;
 
 	public float[] disposition = new float[] {0,0,0};
+	public float genericScale = 1f;
 	public float[] scale = new float[] {1,1,1};
 
 	public String id;

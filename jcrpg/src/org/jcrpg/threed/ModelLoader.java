@@ -232,7 +232,7 @@ public class ModelLoader {
 				if ( ((MovingModel)objects[i]).animatedModel )
 				{
 					// TODO this needs a total refactor!
-					PooledNode node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation, ((MovingModel)objects[i]).disposition);
+					PooledNode node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation, ((MovingModel)objects[i]).genericScale, ((MovingModel)objects[i]).disposition);
 					
 					r[i] = node;
 				} else 

@@ -56,6 +56,7 @@ public class GorillaHorde extends AnimalEntityDescription {
 		desc.DEFEND_LOWER = "./data/models/fauna/gorilla/gorilla.md5anim";
 		desc.DEATH_NORMAL = "./data/models/fauna/gorilla/gorilla.md5anim";
 		gorilla = new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh",desc,null,null,false);
+		gorilla.genericScale = 0.8f;
 	}
 	
 	public static RenderedMovingUnit gorilla_unit = new RenderedMovingUnit(new Model[]{gorilla});
