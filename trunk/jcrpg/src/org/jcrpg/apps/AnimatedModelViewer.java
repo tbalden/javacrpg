@@ -36,6 +36,7 @@ import java.io.File;
 
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 
 import com.jme.app.SimpleGame;
 import com.jme.image.Image;
@@ -60,7 +61,53 @@ import com.jmex.effects.LensFlareFactory;
  */
 public class AnimatedModelViewer extends SimpleGame {
 
-    private LightNode lightNode;
+	
+	long time = System.currentTimeMillis();
+	int animCount = 0;
+    @Override
+	protected void simpleUpdate() {
+    	
+		super.simpleUpdate();
+		
+		if (time-System.currentTimeMillis()<-4000)
+		{
+			time = System.currentTimeMillis();
+			AnimatedModelNode n = this.n;
+			{
+				if (animCount==0)
+					n.playAnimation(MovingModelAnimDescription.ANIM_ATTACK_LOWER);
+				else 
+				if (animCount==1)
+						n.playAnimation(MovingModelAnimDescription.ANIM_DEFEND_UPPER);
+				if (animCount==2)
+					n.playAnimation(MovingModelAnimDescription.ANIM_PAIN);
+				if (animCount==3)
+					n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+				//n.playAnimation(MovingModelAnimDescription.ANIM_ATTACK_LOWER, MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+				animCount++;
+				animCount=animCount%4;
+			}
+			n = this.n2;
+			{
+				time = System.currentTimeMillis();
+				if (animCount==0)
+					n.playAnimation(MovingModelAnimDescription.ANIM_ATTACK_LOWER);
+				else 
+				if (animCount==1)
+						n.playAnimation(MovingModelAnimDescription.ANIM_DEFEND_UPPER);
+				if (animCount==2)
+					n.playAnimation(MovingModelAnimDescription.ANIM_PAIN);
+				if (animCount==3)
+					n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE);
+				//n.playAnimation(MovingModelAnimDescription.ANIM_ATTACK_LOWER, MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+				animCount++;
+				animCount=animCount%4;
+			}
+			}
+			
+	}
+
+	private LightNode lightNode;
     LensFlare flare;
 
     static String mesh = null;
@@ -75,7 +122,8 @@ public class AnimatedModelViewer extends SimpleGame {
         app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
         app.start();
     }
-
+    AnimatedModelNode n =null;
+    AnimatedModelNode n2 =null;
     protected void simpleInitGame() {
 
     	display.getRenderer().setBackgroundColor(ColorRGBA.lightGray);
@@ -87,9 +135,17 @@ public class AnimatedModelViewer extends SimpleGame {
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
        MovingModelAnimDescription des = new MovingModelAnimDescription();
        des.IDLE = anim;
-      AnimatedModelNode n = new AnimatedModelNode(mesh,des,new float[] {0,0,0},1f);
-        
+       
+       ;
+      n = new AnimatedModelNode(BoarmanTribe.boarmanMale.modelName,BoarmanTribe.boarmanMale.animation,1f,new float[] {0,0,0},1f);
+      n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+
+      n2 = new AnimatedModelNode(BoarmanTribe.boarmanMale.modelName,BoarmanTribe.boarmanMale.animation,1f,new float[] {0,0,0},1f);
+      n2.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+      n2.setLocalTranslation(new Vector3f(3f,0,0));
+
         rootNode.attachChild(n);
+        rootNode.attachChild(n2);
 
         PointLight dr = new PointLight();
         dr.setEnabled(true);

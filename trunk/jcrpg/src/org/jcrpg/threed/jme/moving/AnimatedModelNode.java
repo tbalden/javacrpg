@@ -85,9 +85,12 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		try 
 		{
 			
-			MD5Importer.getInstance().load(new File(fileName).toURL(), fileName, new File(animation).toURL(), animation, JointController.RT_CYCLE);
-			ModelNode node = MD5Importer.getInstance().getModelNode();
+			MD5Importer.getInstance().load(new File(fileName).toURL(), fileName, new File(animation).toURL(), animation, com.model.md5.controller.JointController.RT_CYCLE);
+			com.model.md5.ModelNode node = MD5Importer.getInstance().getModelNode();
 			JointAnimation anim = MD5Importer.getInstance().getAnimation();
+			//anim.addAnimation(animation)
+			//anim.s
+			
 			this.attachChild(node);			
 		}
 		catch (Exception ex)
@@ -207,7 +210,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	
 	MovingModelAnimDescription animationDesc = null;
 	
-	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float[] disposition,float speed)
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float scale, float[] disposition,float speed)
 	{
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
@@ -243,7 +246,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 
 	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
-	        bodyInstance.setLocalScale(0.2f);
+	        bodyInstance.setLocalScale(0.2f*scale);
 	        Quaternion q = new Quaternion();
 			q.fromAngleNormalAxis(new Vector3f(1,0,0).normalize().angleBetween(new Vector3f(0,0,1).normalize()), new Vector3f(1,0,0).normalize());
 			q.inverseLocal();
@@ -265,9 +268,9 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		
 	}
 
-	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float[] disposition) 
+	public AnimatedModelNode(String fileName, MovingModelAnimDescription animation, float scale,float[] disposition) 
 	{
-		this(fileName,animation,disposition,1f);		
+		this(fileName,animation,scale, disposition,1f);		
 	}
     @SuppressWarnings("unused")
 	private void stripTexturesAndMaterials(SceneElement sp) {
