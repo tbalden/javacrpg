@@ -837,7 +837,7 @@ public class TurnActWindow extends PagedInputWindow {
 				return true;
 			}
 		}
-		if ("T".equals(key))
+		if ("T".equals(key) && currentPage==0)
 		{
 			// select top in select
 			InputBase base = getSelected();
@@ -848,7 +848,7 @@ public class TurnActWindow extends PagedInputWindow {
 				inputChanged(base, "");
 			}
 		} else
-		if ("B".equals(key))
+		if ("B".equals(key) && currentPage==0)
 		{
 			// select bottomt in select
 			InputBase base = getSelected();
@@ -859,7 +859,7 @@ public class TurnActWindow extends PagedInputWindow {
 				inputChanged(base, "");
 			}
 		} else
-		if ("U".equals(key))
+		if ("U".equals(key) && currentPage==0)
 		{
 			InputBase base = getSelected();
 			if (skillSelectors.contains(base))
@@ -870,7 +870,7 @@ public class TurnActWindow extends PagedInputWindow {
 			}
 			return true;
 		} else
-		if ("N".equals(key))
+		if ("N".equals(key) && currentPage==0)
 		{
 			InputBase base = getSelected();
 			if (skillSelectors.contains(base))
@@ -881,7 +881,7 @@ public class TurnActWindow extends PagedInputWindow {
 			}
 			return true;
 		} else
-		if ("123456".indexOf(key)!=-1)
+		if ("123456".indexOf(key)!=-1 && currentPage==0)
 		{
 			int toChar = Integer.parseInt(key);
 			if (toChar<=numberOfChars)

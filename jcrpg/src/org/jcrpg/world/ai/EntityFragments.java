@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -156,9 +157,9 @@ public class EntityFragments {
 			return parent.instance.entityState.currentLevelOfQuality;
 		}
 		
-		public void notifyImpactResult(EntityMemberInstance member, ArrayList<Integer> result)
+		public void notifyImpactResult(EntityMemberInstance member, ArrayList<Integer> result, ImpactUnit unit)
 		{
-			parent.instance.notifyImpactResult( this, member,  result);
+			parent.instance.notifyImpactResult( this, member,  result, unit);
 		}
 		public void notifyEffectChange(EntityMemberInstance member,ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
 		{

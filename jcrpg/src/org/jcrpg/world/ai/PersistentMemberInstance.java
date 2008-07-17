@@ -185,7 +185,7 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		{
 			deathCount++;
 		}
-		parentFragment.notifyImpactResult(this,result);
+		parentFragment.notifyImpactResult(this,result, unit);
 		memberState.increaseExperience(unit.experiencePoint);
 		return result;
 		

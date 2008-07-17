@@ -147,7 +147,7 @@ public class EntityMemberInstance {
 		{
 			memberState.increaseExperience(unit.experiencePoint);
 		}
-		if (parentFragment!=null) parentFragment.notifyImpactResult(this,result);
+		if (parentFragment!=null) parentFragment.notifyImpactResult(this,result, unit);
 		return result;
 	}
 	

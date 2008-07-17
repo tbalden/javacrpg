@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -101,6 +102,7 @@ public class Characters {
 
 	}
 	
+	public ArrayList<Node> centerNode = new ArrayList<Node>();
 	public ArrayList<Quad> frameQuads = new ArrayList<Quad>();
 	public ArrayList<Quad> pictureQuads = new ArrayList<Quad>();
 	
@@ -114,6 +116,7 @@ public class Characters {
 		frameQuads.clear();
 		effectIconOrigoXPositions.clear();
 		effectIconOrigoYPositions.clear();
+		centerNode.clear();
 		try {
 			int counter = 0;
 			int counterPair = 0;
@@ -132,10 +135,15 @@ public class Characters {
 					{
 						//SharedMesh sm = new SharedMesh("1",frame);
 						Quad sm  = null;
+						Node center = null;
 						try {
 							sm = Window.loadImageToQuad(new File("./data/ui/portraitFrame.png"), 1.025f*hud.core.getDisplay().getWidth()/13, 1.037f*hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, 0.9988f*startY-stepY*counter);
 							sm.setLocalTranslation(sideYMul*hud.core.getDisplay().getWidth()/20, 0.999f*startY-stepY*counterPair,0);
 							frameQuads.add(sm);
+							Node n = new Node();
+							n.setLocalTranslation(sm.getLocalTranslation().clone());
+							centerNode.add(n);
+							center = n;
 						} catch (Exception ex)
 						{
 							
@@ -166,6 +174,7 @@ public class Characters {
 						node.attachChild(classtextNode);
 						node.attachChild(sm);
 						node.attachChild(q);
+						node.attachChild(center);
 						counter ++;
 						counterPair = counter / 2;
 					} catch (Exception ex)
@@ -388,4 +397,78 @@ public class Characters {
 		hud.hudNode.attachChild(node);
 		node.updateRenderState();
 	}
+	
+	public void visualizeImpact(EntityMemberInstance member, ImpactUnit u)
+	{
+		int count = 0;
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			if (p==member)
+			{
+				Node center = centerNode.get(count);
+				
+				Node n = new Node();
+				int counter = 0;
+				int addedCounter = 0;
+				for (Integer i:u.orderedImpactPoints)
+				{
+					if (i!=null && i!=0)
+					{
+						System.out.println("_#_#_#_ VISUALIZING "+member.description.getName()+" "+counter+" = "+i);
+						ColorRGBA color = Characters.pointQuadData.get(counter);
+						Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+i, 1,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+						slottextNode.setLocalTranslation(0,0,0);
+						slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						slottextNode.setLocalScale(hud.core.getDisplay().getWidth()/30f);
+						n.attachChild(slottextNode);
+						n.updateRenderState();
+						addedCounter++;
+					}
+					counter++;
+				}
+				n.setLocalTranslation(new Vector3f(0f,0f,0f));
+				//n.setLocalScale(0.17f);
+				TimedNode fn = new TimedNode();
+				fn.attachChild(n);
+				fn.updateRenderState();
+				center.attachChild(fn);	
+				center.updateRenderState();
+				fn.startCounting();
+				node.updateRenderState();
+				
+			}
+			count ++;
+		}
+	}
+	
+	public class TimedNode extends Node
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		private long startTime = System.currentTimeMillis();
+		private long maxTime = 900;
+		private boolean counting = false;
+		
+		
+		@Override
+		public void updateGeometricState(float time, boolean initiator) {
+			if (counting && maxTime<=System.currentTimeMillis()-startTime)
+			{
+				this.removeFromParent();
+				return;
+			}
+			super.updateGeometricState(time, initiator);
+		}
+		
+		public void startCounting()
+		{
+			startTime = System.currentTimeMillis();
+			counting = true;
+		}
+	}
+	
 }
