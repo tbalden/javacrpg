@@ -61,7 +61,6 @@ public class Characters {
 		neutralColor.setBlue(false);
 		neutralColor.setEnabled(true);
 
-		createBarQuads();
 		this.hud = hud;
 		text = FontUtils.textVerdana;
 	}
@@ -91,8 +90,8 @@ public class Characters {
 	public static final int BAR_MANA = 4;
 	public static final int BAR_MAX= 4;
 	
-	public ArrayList<ColorRGBA> pointQuadData = new ArrayList<ColorRGBA>();
-	public void createBarQuads()
+	public static ArrayList<ColorRGBA> pointQuadData = new ArrayList<ColorRGBA>();
+	static 
 	{
 		pointQuadData.add(ColorRGBA.red);
 		pointQuadData.add(ColorRGBA.yellow);

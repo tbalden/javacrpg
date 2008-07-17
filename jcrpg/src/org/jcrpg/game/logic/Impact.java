@@ -20,7 +20,6 @@ package org.jcrpg.game.logic;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.ui.text.TextBox;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
@@ -68,12 +67,6 @@ public class Impact
 		}
 	}
 	
-	public void notifyUI(TextBox box)
-	{
-		//for (EntityMemberInstance i:targetImpact.keySet()) {
-			//box.addEntry(i.encounterData.getName()+": HP "+targetImpact.get(i).getHealthPoint());
-		//}
-	}
 	
 	/**
 	 * Used upon application only (when applyImpactUnit is called for effected units), postprocessing.

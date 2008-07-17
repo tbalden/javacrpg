@@ -202,7 +202,6 @@ public class EncounterUnitData
 			if (livingMembers.size()>0)
 			{
 				int groupSize = livingMembers.size();
-				// TODO randomize selection of member.
 				for (int i=0; i<groupSize; i++) {
 					if (i<livingMembers.size()) 
 					{
@@ -211,6 +210,8 @@ public class EncounterUnitData
 						if (u!=null)
 						{
 							inst.applyImpactUnit(u);
+							visualizeImpactPoints(u);
+								
 							if (inst.isDead())
 							{
 								unit.applyMessages.add(new TextEntry(""+inst.description.getName()+" dies!",ColorRGBA.red));
@@ -243,6 +244,7 @@ public class EncounterUnitData
 				if (u!=null)
 				{
 					((EntityMemberInstance)subUnit).applyImpactUnit(u);
+					visualizeImpactPoints(u);
 					if (((EntityMemberInstance)subUnit).isDead())
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" dies!",ColorRGBA.red));
@@ -259,6 +261,17 @@ public class EncounterUnitData
 			}
 		}
 		return new int[]{killCount,neutralizeCount};
+	}
+	
+	private void visualizeImpactPoints(ImpactUnit u)
+	{
+		if (isRendered() && u.isEffectiveSuccess())
+		{
+			if (visibleForm.unit!=null)
+			{
+				visibleForm.unit.visualizeImpactPoints(u);
+			}
+		}
 	}
 	
 	public ArrayList<EntityMemberInstance> getAllNonNeutrals()
