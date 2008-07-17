@@ -28,7 +28,6 @@ import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -160,6 +159,8 @@ public class TurnActWindow extends PagedInputWindow {
 		base.addEventHandler("N", this); // for do nothing
 		base.addEventHandler("T", this); // select top
 		base.addEventHandler("B", this); // select bottom
+		base.addEventHandler("inventoryWindow", this);
+		base.addEventHandler("charSheetWindow", this);
 	}
 	
 	public PartyInstance party;
@@ -308,7 +309,7 @@ public class TurnActWindow extends PagedInputWindow {
 	@Override
 	public void setupPage() {
 		
-		if (currentPage==0)
+		if (currentPage==0 && !noNeedForRefreshPage)
 		{
 			encounterUnitDataList = encountered.getEncounterUnitDataList(null);
 			ArrayList<EncounterUnitData> list = encounterUnitDataList;
@@ -357,7 +358,7 @@ public class TurnActWindow extends PagedInputWindow {
 				select.deactivate();
 			}
 		}
-		
+		noNeedForRefreshPage = false;
 		super.setupPage();
 	}	
 	@Override
@@ -671,10 +672,15 @@ public class TurnActWindow extends PagedInputWindow {
 	
 	public class TurnActPlayerChoiceInfo
 	{
+		boolean doEscape = false;
 		HashMap<EntityMemberInstance, TurnActMemberChoice> memberToChoice = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
 		public Collection<TurnActMemberChoice> getChoices()
 		{
 			return memberToChoice.values();
+		}
+		public boolean isEscaping()
+		{
+			return doEscape;
 		}
 	}
 	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
@@ -687,11 +693,28 @@ public class TurnActWindow extends PagedInputWindow {
 			if (core.gameState.gameLogic.encounterLogic.checkLeaveEncounterPhase(party.theFragment, encountered))
 			{
 				toggle();
-				core.uiBase.hud.mainBox.addEntry("Your party is able to leave the encounter.");
+				core.uiBase.hud.mainBox.addEntry("Your party will try to leave the encounter.");
+				int counter = 0;
+				info.memberToChoice.clear();
+				for (ListSelect s:skillSelectors)
+				{
+					if (s.isEnabled()) {
+						EntityMemberInstance i = (EntityMemberInstance)s.subject;
+						TurnActMemberChoice choice = new TurnActMemberChoice();
+						choice.member = i;
+						choice.doNothing = true;
+						choice.doEscape = true;
+						info.memberToChoice.put(i, choice);
+					}
+					counter++;
+				}
+				info.doEscape = true;
+				core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
+				/*core.uiBase.hud.mainBox.addEntry("Your party is able to leave the encounter.");
 				core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 				core.gameState.gameLogic.endPlayerEncounters();
 				core.gameState.engine.turnFinishedForPlayer();
-				core.gameState.switchToEncounterScenario(false, null);
+				core.gameState.switchToEncounterScenario(false, null);*/
 			} else
 			{
 				core.uiBase.hud.mainBox.addEntry("Your party couldn't leave the encounter.");
@@ -775,9 +798,36 @@ public class TurnActWindow extends PagedInputWindow {
 		return false;
 	}
 	
+	public boolean noNeedForRefreshPage = false;
+	
 	@Override
 	public boolean handleKey(String key) {
 		if (super.handleKey(key)) return true;
+		if ("charSheetWindow".equals(key))
+		{
+			if (currentPage==0)
+			{
+				noNeedForRefreshPage = true;
+				core.charSheetWindow.fallbackWindow = this;
+				toggle();
+				core.getKeyboardHandler().noToggleWindowByKey=false;
+				core.charSheetWindow.toggle();
+				return true;
+			}
+		} else
+		if ("inventoryWindow".equals(key))
+		{
+			if (currentPage==0)
+			{
+				noNeedForRefreshPage = true;
+				core.inventoryWindow.fallbackWindow = this;
+				core.inventoryWindow.canDoActions = false;
+				toggle();
+				core.getKeyboardHandler().noToggleWindowByKey=false;
+				core.inventoryWindow.toggle();
+				return true;
+			}
+		} else
 		if ("enter".equals(key))
 		{
 			if (currentPage==1)

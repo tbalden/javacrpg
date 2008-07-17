@@ -60,31 +60,48 @@ public class EncounterLogic {
 	{
 		this.gameLogic = gameLogic;
 	}
-	
+
 	/**
 	 * Checks if the encounter can be left by a given fragment.
 	 * @param fragment
-	 * @param possibleEncounters
+	 * @param encounters
 	 * @return true if can.
 	 */
 	public boolean checkLeaveEncounterPhase(EntityFragment fragment, EncounterInfo encounters)
 	{
 		// TODO do check if instance can leave the encounter (forced to stay, or too much tension)
+		if (encounters.getPhase()==Ecology.PHASE_TURNACT_COMBAT)
+		{
+			//ArrayList<EncounterUnitData> list = encounters.getEncounterUnitDataList(fragment);
+			//long seed = getSeed(encounters);
+			// TODO
+			return true;
+		} else
+		if (encounters.getPhase()==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
+		{
+			return true;
+		}
 		return true;
 	}
 	
-	/**
-	 * Checks if a member can leave the encounter.
-	 * @param instance
-	 * @param possibleEncounters
-	 * @return true if can.
-	 */
-	public boolean checkLeaveEncounterPhase(EntityMemberInstance instance, ArrayList<EncounterInfo> encounters)
+	public long getSeed(EncounterInfo encounter)
 	{
-		// TODO do check if instance can leave the encounter (forced to stay, or too much tension)
-		return true;
+		long seed = -1;
+		if (encounter.getPhase()==Ecology.PHASE_TURNACT_COMBAT)
+		{
+			seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+		}
+		if (encounter.getPhase()==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
+		{
+			seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+		} else
+		{
+			seed = ((long)currentEncounterRound)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+		}
+		return seed;
 	}
 	
+
 	// encounter state related
 	
 	public class EncounterRoundState {
@@ -175,6 +192,7 @@ public class EncounterLogic {
 	
 
 	public class TurnActTurnState {
+		public TurnActPlayerChoiceInfo choiceInfo = null;
 		public EncounterInfo encounter;
 		public int nextEventCount = -1;
 		//public int maxEventCount = 0;
@@ -187,6 +205,12 @@ public class EncounterLogic {
 		public boolean playing = false;
 		public long playStart = 0;
 		public long maxTime = 0;
+		
+		public TurnActTurnState(EncounterInfo encounter, TurnActPlayerChoiceInfo info)
+		{
+			this.choiceInfo = info;
+			this.encounter = encounter;
+		}
 		
 		public PlannedTurnActEvent getCurrentEvent()
 		{
@@ -226,13 +250,14 @@ public class EncounterLogic {
 	}
 	TurnActTurnState turnActTurnState = null;
 	
+	public int currentEncounterRound = 0;
 	public int currentTurnActTurn = 0;
 	
 	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
 	{
-		turnActTurnState = new TurnActTurnState();
+		turnActTurnState = new TurnActTurnState(encountered,info);
 		turnActTurnState.encounter = encountered;
-		long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+		long seed = getSeed(encountered);
 		
 		ArrayList<EncounterUnitData> dataList = encountered.getEncounterUnitDataList(null);
 		
@@ -596,7 +621,23 @@ public class EncounterLogic {
 	 */
 	public void finishEncounterNeutralized(EncounterInfo encounter)
 	{
+		// TODO relationship settings?
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party run out of incentive!");
+		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
+		gameLogic.endPlayerEncounters();
+		gameLogic.core.gameState.engine.turnFinishedForPlayer();
+		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
+		gameLogic.core.gameState.switchToEncounterScenario(false, null);
+	}
+	
+	/**
+	 * Finish encounter escaping...
+	 * @param encounter
+	 */
+	public void finishEncounterEscaping(EncounterInfo encounter)
+	{
+		// TODO relationship settings?
+		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party run away!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
 		gameLogic.core.gameState.engine.turnFinishedForPlayer();
@@ -611,10 +652,8 @@ public class EncounterLogic {
 		gameLogic.core.uiBase.hud.characters.hide();
 		gameLogic.ecology.gameLost();
 		gameLogic.core.gameLost = true;
-		//gameLogic.endPlayerEncounters();
 		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
 		gameLogic.core.mainMenu.toggle();
-		//gameLogic.core.gameState.engine.turnFinishedForPlayer();		
 	}
 
 	/**
@@ -649,6 +688,10 @@ public class EncounterLogic {
 				if (isEncounterFinishedLosing(turnActTurnState.encounter))
 				{
 					finishEncounterLose(turnActTurnState.encounter);
+				} else
+				if (turnActTurnState.choiceInfo.isEscaping())
+				{
+					finishEncounterEscaping(turnActTurnState.encounter);
 				} else
 				{
 					gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");

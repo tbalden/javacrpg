@@ -39,6 +39,7 @@ public class TurnActMemberChoice {
 	
 	public boolean doNothing = false;
 	public boolean doUse = false;
+	public boolean doEscape = false;
 	
 	/** 
 	 * Used skill.
@@ -68,7 +69,14 @@ public class TurnActMemberChoice {
 	 */
 	public String getInitMessage()
 	{
-		if (doNothing) return member.description.getName() + " doing nothing."; 
+		if (doNothing)
+		{
+			if (doEscape)
+			{
+				return member.description.getName() + " trying to escape!";
+			}
+			return member.description.getName() + " doing nothing."; 
+		}
 		return member.description.getName() + " -> "+(targetMember!=null?targetMember.description.getName():target!=null?target.getName():"?")+" : "+(doUse?"uses":(skillActForm!=null?skillActForm.getClass().getSimpleName():"?"))+" "+(usedObject!=null?usedObject.getSingleName():"")+".";
 	}
 	

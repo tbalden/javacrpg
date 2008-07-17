@@ -85,6 +85,17 @@ public abstract class StateEffect {
 		
 	}
 	
+	public String getLeftDuration(int round, Time time)
+	{
+		if (durationType==DURATION_TYPE_TURN_ACT_ROUNDS)
+		{
+			return ""+(normalDuration-(round-startRound))+" t.";
+		} else
+		{
+			return ""+(normalDuration-startTime.diffSeconds(time))+" s."; 
+		}
+	}
+	
 	
 	public boolean update(int seed, int round, Time time)
 	{

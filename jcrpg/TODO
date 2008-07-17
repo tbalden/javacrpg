@@ -8,7 +8,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] char sheet -> resistance values!
 
 [ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
 	overall organization level should be increased -> organization level means tougher units on generation
@@ -20,10 +19,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] cursed weapons - how can they stick upon use?
 
-[ ] group targetted skill act forms...
-
 [ ] check wciow updates on glestanimals - animated ? 
-
 
 [ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
 	[ ] AI use of potions/objects too!
@@ -37,17 +33,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 	doesnt have.
 
 
-[X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
-	standed , generate a place with objects similar tile types etc.
-	X Add a new RootNode for that scenario and generate + switch to it.
-	X in combat mode turning + zooming on active units
-	
-	[X] light states -> external not so working
-	[X] spell effects doesnt show ---> only on STEEPS!!!!!
-	[x]	angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
-		second time after movement camera is not correctly positioned.
-	[X] sky not showing sometimes in Enc Mode - facing a given direction
-	[X] too quick anim at loads/start - a bit better now!
+[ ] Encounter Grounds
+	[ ] too quick anim at startup
+	[ ] flickering anim change...	
 	[X] turn camera on actor
 		[ ] real turn -> move it in background simpleUpdate?
 
@@ -56,8 +44,8 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		
 	[ ] economics too!
 
-
-[ ] world generation - concentrate friendly groups - don't let enemies close at start,
+[ ] world generation - 
+	concentrate friendly groups - don't let enemies close at start,
 	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
 
 [X] a bigger 'Encounter' UI element popup when loading an encounter...
@@ -66,27 +54,43 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 sanity point for Morale is like mana for hp, limiting social skills!
 
-[ ] NEUTRALIZED anim type use in EncLogic
+[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
+[ ] neutralization should make relation better
+    killing should make it worse with the group
+
+[ ] unit advance - moving around - tricky positioning/ A* movement??
+
+[ ] use & cast in normal mode too
 
 ##
 [?] list before next release:
 ##
+
+	[ ] char sheet
+		[X] viewing a character sheets / inventories while in encounter!
+		[ ] bigger character sheet
+		[X] resistances in character sheet
+		[ ] active effects on character sheet
 	
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
-
 	
-	[ ] make leaving a TRY thing, encounter logic - checkLeaveTurnAct??
-	
-	[ ] MORE SKILLS: spell forms, social effects, neutralizing morale, sanity
+	[ ] MORE SKILLS: spell forms, 
+		[ ] social effects, neutralizing morale, sanity 
 		[ ] protection spells, boost spells with effects
 		[ ] fabrication of ammunition and such - fletcher, work Skill
+		[ ] thief helper skill, disarm?
+
+	[ ] tuning down impacts a bit ;)
 
 	[ ] documenting points, attr, calculations, leveling
 	
 	[ ] move logging to txt log , remove unneeded logs
 
-
 	[ ]	flying numbers for impact over units, billboard
+		[ ] impact point number on the portrait of characters?
+
+	[X] make leaving a TRY thing, encounter logic - checkLeaveTurnAct?? ---> NO, its done wizardry style, one
+		round with no acting and who still lives can leave.
 
 	[X] neutralization act forms -- neutralization effect -> remove from combat
 	
@@ -202,53 +206,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 ##
 
-[X] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
-
-[X] battle lines - skill filtering based on target group lineup distance - member lineup distance
-	
-[-] check memory consumption! SOMEWHERE IT LEAKS!!!
-	[-] PROBABLY PARTICLE EFFECT!!!
-	
-	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
-	[-] some other thing is too...
-
-
-[X] combat idle anim!!
-
-[X] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
-
-[X] !! leveling !! for chars/entityMembers, points for them, 
-    [X] bars on UI
-	[X] EntityState, EntityMemberState further development
-
-[X] death /point effects for encounter members
-
-
-	[X] player death! -> 
-		[X] set picture grayscale?
-		
-	[X] death animations
-	[X] players health bars etc.
-	
-
-
-[X] particles, projectiles, boosting up spell tomes
-[X] lock bug -> player can move in enc
-
-[X] j3dmoving engine -> animation should be ended on time and regulated
-	by j3dmoving engine - and EncounterLogic step should  call in j3dmoving if
-	the event is finished for the step in 3d or it can wait more before moving to next encounter plan step.
-	 (Interrupt possible later?) 
-
-
-[-] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
-	----> don't count data, only in a turn act/encounter
-	Randomizing should help that you won't meet so often groups that its too much overwhelming the number
-	of encounters because of no 'positioned groups and group sizes'. So recalculated group sizes,
-	and make it more random that the intersection meets who and how much! 
-	
-[o] initiating, collecting acts of members, and playing the plan in EncounterLogic
-	[X] skill effects on points, skill success calculation
 
 [X] use PlacementMatrix matrix to place scenario 
 	[ ](colored OSD for different lines)...
@@ -277,23 +234,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [X] owned infrastrucures are present now in a build of a population, and it is set as owned economic too...
  now 
 	[ ] add "at home" state for PersistentEntities -> they should be found in one of their infrastructure, roaming boundary set to its position!
-
-[X] alwaysIncludeFollowingMembers - in entityFragment should be used up in the list of selectables in TurnActWindow etc....
-
-[X] entityMember perfecting for encounter calc in ecology
-[X] TODO encounter info should have methods for size,
-	and getListOfUnits!! refactor, windows too
-	
-	
-
-[X] engine is not pausing in some encounter windows!!!!
-
-[X] !!! PreEncounterWindow and EncounterWindow should be updated because now on
-	EncounterInfo contains a list of EntityInstance fragments of different EntityInstances!!
-	-> calculation of encounter point distance is now being done in Ecology, close encounters grouped together.
-
-[X] inventory, character data sheet windows (F2,F3)
-    [ ] perfection!
 
 
 [ ] turnAct, encounter phase EncounterLogic - big development needed, plus 3D view + J3DMovingEngine combination...
@@ -487,6 +427,85 @@ Other:
 [?] Lod modelling trees with billboard images captured in blender!
 
 -- ########## DONE ######################################################################################
+
+[X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
+	standed , generate a place with objects similar tile types etc.
+	[X] Add a new RootNode for that scenario and generate + switch to it.
+	[X] in combat mode turning + zooming on active units
+	
+	[X] light states -> external not so working
+	[X] spell effects doesnt show ---> only on STEEPS!!!!!
+	[x]	angle - looking back is not correct, some rendered parts not rendered, OPTIMIZE_ANGLE???
+		second time after movement camera is not correctly positioned.
+	[X] sky not showing sometimes in Enc Mode - facing a given direction
+	[X] too quick anim at loads/start - a bit better now!
+	
+
+
+[X] group targetted skill act forms...
+
+
+[X] ?switch to full angle rendering when starting a combat, and switch back after - better look around?
+
+[X] battle lines - skill filtering based on target group lineup distance - member lineup distance
+	
+[-] check memory consumption! SOMEWHERE IT LEAKS!!!
+	[-] PROBABLY PARTICLE EFFECT!!!
+	
+	[X] UI text is eating it away!!! --> CACHING?? better detaching? reuse
+	[-] some other thing is too...
+
+
+[X] combat idle anim!!
+
+[X] exception (index out of bounds) in PositionMatrix iterator getNext in certain cases!! try it more, it must be buggy
+
+[X] !! leveling !! for chars/entityMembers, points for them, 
+    [X] bars on UI
+	[X] EntityState, EntityMemberState further development
+
+[X] death /point effects for encounter members
+
+	[X] player death! -> 
+		[X] set picture grayscale?
+		
+	[X] death animations
+	[X] players health bars etc.
+
+[X] particles, projectiles, boosting up spell tomes
+[X] lock bug -> player can move in enc
+
+[X] j3dmoving engine -> animation should be ended on time and regulated
+	by j3dmoving engine - and EncounterLogic step should  call in j3dmoving if
+	the event is finished for the step in 3d or it can wait more before moving to next encounter plan step.
+	 (Interrupt possible later?) 
+
+
+[-] EntityInstance -> group size - dying group members? how to count it in the instance's group data??
+	----> don't count data, only in a turn act/encounter
+	Randomizing should help that you won't meet so often groups that its too much overwhelming the number
+	of encounters because of no 'positioned groups and group sizes'. So recalculated group sizes,
+	and make it more random that the intersection meets who and how much! 
+	
+[o] initiating, collecting acts of members, and playing the plan in EncounterLogic
+	[X] skill effects on points, skill success calculation
+
+[X] alwaysIncludeFollowingMembers - in entityFragment should be used up in the list of selectables in TurnActWindow etc....
+
+[X] entityMember perfecting for encounter calc in ecology
+[X] TODO encounter info should have methods for size,
+	and getListOfUnits!! refactor, windows too
+	
+[X] engine is not pausing in some encounter windows!!!!
+
+[X] !!! PreEncounterWindow and EncounterWindow should be updated because now on
+	EncounterInfo contains a list of EntityInstance fragments of different EntityInstances!!
+	-> calculation of encounter point distance is now being done in Ecology, close encounters grouped together.
+
+[X] inventory, character data sheet windows (F2,F3)
+    [X] perfection!
+
+
 
 [X] groups trespassed - icons - UI - EntityOMeter
 

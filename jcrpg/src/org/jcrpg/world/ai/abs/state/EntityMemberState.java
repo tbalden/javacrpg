@@ -74,7 +74,7 @@ public class EntityMemberState {
 	}
 	
 	// set this to true if you want to prevent persistentMembers from point changes.
-	boolean cheatNPC = true;
+	boolean cheatNPC = false;
 	/**
 	 * Applies impact unit and return zero reached point type list.
 	 * @param unit
@@ -91,9 +91,12 @@ public class EntityMemberState {
 			healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
 			System.out.println("HEALTHPOINT AFTER : "+healthPoint);
 			System.out.println("MANA IMPACT : "+unit.getManaPoint());
+			System.out.println("SANITY IMPACT : "+unit.getSanityPoint());
+			System.out.println("MORALE IMPACT : "+unit.getMoralePoint());
 			staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
 			moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
 			sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
+			System.out.println("SANITY POINT AFTER : "+sanityPoint);
 			manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
 		}
 		for (StateEffect effect:unit.stateEffects)
@@ -239,7 +242,7 @@ public class EntityMemberState {
 	{
 		healthPoint = Math.min(healthPoint,maxHealthPoint);
 		staminaPoint = Math.min(staminaPoint,maxStaminaPoint);
-		sanityPoint = Math.min(maxStaminaPoint,maxSanityPoint);
+		sanityPoint = Math.min(sanityPoint,maxSanityPoint);
 		moralePoint = Math.min(moralePoint,maxMoralePoint);
 		manaPoint = Math.min(manaPoint,maxManaPoint);
 	}
