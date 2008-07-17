@@ -20,6 +20,7 @@ package org.jcrpg.game.logic;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.EncounterLogic.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.threed.J3DCore;
@@ -586,6 +587,7 @@ public class EvaluatorBase {
 		
 		public BodyPart getBodyPartTargetted(int seed, int targettingCriticalLevel)
 		{
+			Jcrpg.LOGGER.fine("getBodyPartTargetted "+ target+" - "+target.description.getName()+" "+target.description.getBodyType());
 			return target.description.getBodyType().getBodyPart(seed, target, targettingCriticalLevel);
 		}
 		

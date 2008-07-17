@@ -292,7 +292,7 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.5f,0.1f,0.2f));
+			n.setLocalTranslation(new Vector3f(0.5f,0.20f,0.2f));
 			n.setLocalScale(0.17f);
 			unit.sizeTextNode = n;
 		}
@@ -321,7 +321,7 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.2f,0.3f,0.2f));
+			n.setLocalTranslation(new Vector3f(0.2f,0.37f,0.2f));
 			n.setLocalScale(0.1f);
 			unit.memberTypeNameNode= n;
 		}
@@ -650,7 +650,7 @@ public class J3DMovingEngine {
 	 * @param target Cannot be null!
 	 * @return The position vector.
 	 */
-	private Vector3f calculatePositionVector(RenderedMovingUnit unit, VisibleLifeForm target, boolean staticCalc)
+	public Vector3f calculatePositionVector(RenderedMovingUnit unit, VisibleLifeForm target, boolean staticCalc)
 	{
 		float eX = (target.worldX - (core.gameState.getEncounterPositions().origoX))*J3DCore.CUBE_EDGE_SIZE;
 		float eY = (target.worldY - (core.gameState.getEncounterPositions().origoY))*J3DCore.CUBE_EDGE_SIZE;
@@ -660,7 +660,7 @@ public class J3DMovingEngine {
 		
 		if (unit!=null)
 		{
-			if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
+			if (!staticCalc && (unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
 			{
 				eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
 			}
