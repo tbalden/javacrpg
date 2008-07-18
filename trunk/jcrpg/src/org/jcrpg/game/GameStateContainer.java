@@ -420,7 +420,7 @@ public class GameStateContainer {
 										for (String sound:p.memberType.audioDescription.ENVIRONMENTAL) {
 											if (Engine.getTrueRandom().nextInt(10)>6)
 											{
-												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You here faint sounds around.");
+												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hear faint sounds around.");
 												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Probably "+p.memberType.visibleTypeId+".");
 												J3DCore.getInstance().audioServer.playLoading(sound, "ai");
 												played = true; break;

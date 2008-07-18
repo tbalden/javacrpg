@@ -18,9 +18,13 @@
 
 package org.jcrpg.ui.meter;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.jcrpg.threed.jme.ui.ZoomingNode;
+import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.Window;
 
@@ -45,21 +49,44 @@ public class EntityOMeter {
 		iconSizeX = hud.core.getDisplay().getWidth()/15;
 	}
 	
+	private ArrayList<String> previousEntityPics = new ArrayList<String>();
+	private ArrayList<ZoomingNode> previousNodes = new ArrayList<ZoomingNode>();
 	public void update(Collection<String> entityPics)
 	{
-		hud.hudNode.detachChild(node);
-		node.detachAllChildren();
+		//hud.hudNode.detachChild(node);
+		//node.detachAllChildren();
+		ArrayList<ZoomingNode> newNodes = new ArrayList<ZoomingNode>();
 		int count = 0;
 		for (String p:entityPics)
 		{
-			Quad q = loadQuad(p);
-			if (q==null) continue;
-			if (++count>5) break;
-			SharedMesh sq = new SharedMesh(""+p,q);
-			//sq.setLocalScale(1,1,1);
-			sq.setLocalTranslation(new Vector3f(hud.core.getDisplay().getWidth()/1.9f+count*iconSizeX , hud.core.getDisplay().getHeight()/17,0));
-			node.attachChild(sq);
+			if (count>5) break;
+			ZoomingNode n = null;
+			if (previousEntityPics.contains(p)) 
+			{
+				int index = previousEntityPics.indexOf(p);
+				n = previousNodes.get(index);
+			} else
+			{
+				Quad q = loadQuad(p);
+				
+				if (q==null) continue;
+				
+				SharedMesh sq = new SharedMesh(""+p,q);
+				//sq.setLocalScale(1,1,1);
+				n = new ZoomingNode();
+				n.attachChild(sq);
+				node.attachChild(n);
+				n.startZoomCycle();
+			}
+			newNodes.add(n);
+			n.setLocalTranslation(new Vector3f(hud.core.getDisplay().getWidth()/1.7f+count*iconSizeX , hud.core.getDisplay().getHeight()/18,0));
+			count++;
 		}
+		previousNodes.removeAll(newNodes);
+		for (ZoomingNode n:previousNodes) {n.removeFromParent();}
+		previousEntityPics.clear();
+		previousEntityPics.addAll(entityPics);
+		previousNodes = newNodes;
 		hud.hudNode.attachChild(node);
 		node.updateRenderState();
 		hud.hudNode.updateRenderState();
@@ -73,7 +100,7 @@ public class EntityOMeter {
 		if (q==null)
 		{
 			try {
-				q = Window.loadImageToQuad("./data/icons/entities/"+pic+".png", hud.core.getDisplay().getWidth()/18, hud.core.getDisplay().getHeight()/14,0, 0);
+				q = Window.loadImageToZoomingQuad(new File("./data/icons/entities/"+pic+".png"), hud.core.getDisplay().getWidth()/18, hud.core.getDisplay().getHeight()/14,0, 0);
 				entityPics.put(pic, q);
 			} catch (Exception ex)
 			{
