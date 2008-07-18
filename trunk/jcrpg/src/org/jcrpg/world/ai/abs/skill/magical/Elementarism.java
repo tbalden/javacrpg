@@ -20,7 +20,6 @@ package org.jcrpg.world.ai.abs.skill.magical;
 
 import org.jcrpg.threed.jme.program.impl.FireArrow;
 import org.jcrpg.threed.jme.program.impl.IceArrow;
-import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
@@ -42,7 +41,7 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 		public ElementalShield(SkillBase skill) {
 			super(skill);
 			animationType = MovingModelAnimDescription.ANIM_CAST;
-			atomicEffect = (int)(+5);
+			atomicEffect = 5;
 			targetType = TARGETTYPE_LIVING_MEMBER;
 			
 			StateEffectInitParams elResParam = new StateEffectInitParams();

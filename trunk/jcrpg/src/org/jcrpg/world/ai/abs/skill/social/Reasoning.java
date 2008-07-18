@@ -33,13 +33,14 @@ public class Reasoning extends SkillBase implements EncounterSkill, TurnActSkill
 		public LogicalSolutions(SkillBase skill) {
 			super(skill);
 			skillRequirementLevel = 0;
+
 			effectTypesAndLevels.put(EFFECTED_POINT_MORALE, -40);
 			usedPointsAndLevels.put(EFFECTED_POINT_SANITY, -5);
 		}
 
 		@Override
 		public String getSound() {
-			return null;
+			return "reasoning";
 		}
 	}
 	

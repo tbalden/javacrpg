@@ -640,10 +640,19 @@ public class PartySetup extends PagedInputWindow {
 			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
 			// TODO audio selection
+			{
+				int i = genderSelect.getSelection();
+				int id = Integer.parseInt(genderSelect.ids[i]);
+				personWithGenderAndRace.genderType = id;
+			}
 			personWithGenderAndRace.audioDescription = new AudioDescription();
 			personWithGenderAndRace.audioDescription.PAIN = new String[]{"humanoid/humanoid_pain"};
 			personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_joy_male"};
 			personWithGenderAndRace.audioDescription.DEATH = new String[]{"humanoid/humanoid_death"};
+			if (personWithGenderAndRace.genderType==EntityDescription.GENDER_FEMALE)
+			{
+				personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_death_female"};
+			}
 			
 			if (professionSelect.texts.length==0) return true;
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));

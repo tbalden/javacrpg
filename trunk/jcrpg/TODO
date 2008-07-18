@@ -72,20 +72,21 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[X] death icon to portraits - add it to the centerNode, transparent
 		[ ] replace with Zphr's
+	[ ] walk/pain anim for Mage
 
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
 		[ ] during combat and such some kind of collecting in EncounterInfo for loot and such...qqqq
 	
 	[ ] MORE SKILLS: spell forms, 
-		[ ] social effects, neutralizing morale, protecting Mental sanity 
+		[X] social effects, neutralizing morale, 
+		[ ] protecting Mental sanity 
 		[ ] protection spells, boost spells with effects
 		[ ] fabrication of ammunition and such - fletcher, work Skill
 		[ ] thief helper skill, disarm?
+		[X] social helper skills - > Strategy
 
 	[ ] tuning down impacts a bit ;)
 	
-	[ ] encounter popup image too 
-		[ ] walk/pain anim for Mage
 
 	--
 
@@ -94,6 +95,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] move logging to txt log , remove unneeded logs
 
 
+	[X] encounter popup image too 
 
 	[X] add zooming effect for ecology icons on bottom for new ones
 	
