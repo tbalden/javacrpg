@@ -105,6 +105,7 @@ public class Characters {
 	}
 	
 	public ArrayList<Node> centerNode = new ArrayList<Node>();
+	public ArrayList<Node> deadlyNode = new ArrayList<Node>();
 	public ArrayList<Quad> frameQuads = new ArrayList<Quad>();
 	public ArrayList<ZoomingQuad> pictureQuads = new ArrayList<ZoomingQuad>();
 	
@@ -119,6 +120,7 @@ public class Characters {
 		effectIconOrigoXPositions.clear();
 		effectIconOrigoYPositions.clear();
 		centerNode.clear();
+		deadlyNode.clear();
 		try {
 			int counter = 0;
 			int counterPair = 0;
@@ -144,6 +146,9 @@ public class Characters {
 							frameQuads.add(sm);
 							Node n = new Node();
 							n.setLocalTranslation(sm.getLocalTranslation().clone());
+							Node dn = new Node();
+							n.attachChild(dn);
+							deadlyNode.add(dn);
 							centerNode.add(n);
 							center = n;
 						} catch (Exception ex)
@@ -319,11 +324,29 @@ public class Characters {
 			{
 				Quad q= pictureQuads.get(counter);				
 				q.setRenderState(deadColor);
+				try
+				{
+					Quad dead = Window.loadImageToQuad(new File("./data/ui/characters/skull.png"), hud.core.getDisplay().getWidth()/barScreenRatio, hud.core.getDisplay().getHeight()/barScreenRatio, 0,0);
+					Node n = deadlyNode.get(counter);
+					n.detachAllChildren();
+					n.attachChild(dead);
+				} catch (Exception ex)
+				{
+				}
 			} else
 			if (p.memberState.isNeutralized())
 			{
 				Quad q= pictureQuads.get(counter);				
 				q.setRenderState(neutralColor);
+				try
+				{
+					Quad dead = Window.loadImageToQuad(new File("./data/ui/characters/neutral.png"), hud.core.getDisplay().getWidth()/barScreenRatio, hud.core.getDisplay().getHeight()/barScreenRatio, 0,0);
+					Node n = deadlyNode.get(counter);
+					n.detachAllChildren();
+					n.attachChild(dead);
+				} catch (Exception ex)
+				{
+				}
 			} else
 			{
 				Quad q= pictureQuads.get(counter);

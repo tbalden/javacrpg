@@ -255,11 +255,15 @@ public class EntityMember extends DescriptionBase {
 				}
 				// no target found.
 				choice.doNothing = true;
+				choice.targetMember = null;
+				choice.target = null;
 				return choice;
 				
 			} else
 			{
 				choice.doNothing = true;
+				choice.targetMember = null;
+				choice.target = null;
 				return choice;
 			}
 		}

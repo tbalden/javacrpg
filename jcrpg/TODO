@@ -70,6 +70,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [?] list before next release:
 ##
 
+	[X] death icon to portraits - add it to the centerNode, transparent
+		[ ] replace with Zphr's
 
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
 		[ ] during combat and such some kind of collecting in EncounterInfo for loot and such...qqqq
@@ -90,6 +92,12 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] documenting points, attr, calculations, leveling
 	
 	[ ] move logging to txt log , remove unneeded logs
+
+
+
+	[X] add zooming effect for ecology icons on bottom for new ones
+	
+	[-] add zooming in turn act selection window when entering another character with 1/2/3/4?
 
 	[X] dying in combat -> brings up another fight
 
