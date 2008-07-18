@@ -22,6 +22,7 @@ import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
+import org.jcrpg.threed.jme.ui.ZoomingQuad;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
@@ -80,6 +81,18 @@ public abstract class Window {
 			float posX, float posY) throws Exception {
 		
 		Quad hudQuad = UIImageCache.getImage(file.getPath(), true, sizeX, sizeY);
+	
+		hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+
+		hudQuad.setLocalTranslation(new Vector3f(posX, posY, 0));
+
+		return hudQuad;
+	}
+
+	public static ZoomingQuad loadImageToZoomingQuad(File file, float sizeX, float sizeY,
+			float posX, float posY) throws Exception {
+		
+		ZoomingQuad hudQuad = UIImageCache.getImageZoomingQuad(file.getPath(), true, sizeX, sizeY);
 	
 		hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 

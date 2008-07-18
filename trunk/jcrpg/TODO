@@ -70,6 +70,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [?] list before next release:
 ##
 
+
 	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
 		[ ] during combat and such some kind of collecting in EncounterInfo for loot and such...qqqq
 	
@@ -80,10 +81,17 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] thief helper skill, disarm?
 
 	[ ] tuning down impacts a bit ;)
+	
+	[ ] encounter popup image too 
+		[ ] walk/pain anim for Mage
+
+	--
 
 	[ ] documenting points, attr, calculations, leveling
 	
 	[ ] move logging to txt log , remove unneeded logs
+
+	[X] dying in combat -> brings up another fight
 
 	[X]	flying numbers for impact over units, billboard
 		[X] impact point number on the portrait of characters?

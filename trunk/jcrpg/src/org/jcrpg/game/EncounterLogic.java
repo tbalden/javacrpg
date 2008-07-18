@@ -26,7 +26,6 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
-import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
@@ -199,6 +198,7 @@ public class EncounterLogic {
 		//public int maxEventCount = 0;
 		
 		public Object currentActor = null;
+		public Object currentTarget = null;
 		
 		public HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
 		
@@ -227,6 +227,18 @@ public class EncounterLogic {
 				if (i.parentFragment == gameLogic.core.gameState.player.theFragment)
 				{
 					gameLogic.core.uiBase.hud.characters.highlightCharacter(i, on);
+				}
+			}
+		}
+		public void highlightTarget(boolean on)
+		{
+			if (currentTarget==null) return;
+			if (currentTarget instanceof EntityMemberInstance)
+			{
+				EntityMemberInstance i = (EntityMemberInstance)currentTarget;
+				if (i.parentFragment == gameLogic.core.gameState.player.theFragment)
+				{
+					gameLogic.core.uiBase.hud.characters.targetCharacter(i, on);
 				}
 			}
 		}
@@ -669,8 +681,10 @@ public class EncounterLogic {
 			System.out.println("playTurnActStep ");
 			if (turnActTurnState!=null) 
 			{
+				turnActTurnState.highlightTarget(false);
 				turnActTurnState.highlightActor(false);
 				turnActTurnState.currentActor = null;
+				turnActTurnState.currentTarget = null;
 			}
 			turnActTurnState.nextEventCount++;
 			if (turnActTurnState.nextEventCount>=turnActTurnState.plan.size())
@@ -681,17 +695,17 @@ public class EncounterLogic {
 				ArrayList<EncounterUnit> leaving = turnActTurnState.encounter.filterNeutralsForSubjectBeforeTurnAct(true,(PartyInstance)turnActTurnState.encounter.playerIfPresent.instance);
 				postLeaversMessage(leaving);
 				
+				if (isEncounterFinishedLosing(turnActTurnState.encounter))
+				{
+					finishEncounterLose(turnActTurnState.encounter);
+				} else
 				if (isEncounterFinishedWinning(turnActTurnState.encounter))
 				{
 					finishEncounterWin(turnActTurnState.encounter);
 				} else
-				if (isEncounterFinishedLosing(turnActTurnState.encounter))
+				if (isEncounterFinishedNeutralized(turnActTurnState.encounter))
 				{
 					finishEncounterNeutralized(turnActTurnState.encounter);
-				} else
-				if (isEncounterFinishedLosing(turnActTurnState.encounter))
-				{
-					finishEncounterLose(turnActTurnState.encounter);
 				} else
 				if (turnActTurnState.choiceInfo.isEscaping())
 				{
@@ -731,6 +745,7 @@ public class EncounterLogic {
 					}
 					
 					turnActTurnState.currentActor = choice.member;
+					turnActTurnState.currentTarget = choice.targetMember;
 					
 					// setting the camera to actor...
 					if (choice.member.encounterData.visibleForm!=null)
@@ -768,6 +783,7 @@ public class EncounterLogic {
 					}
 					
 					turnActTurnState.highlightActor(true);
+					turnActTurnState.highlightTarget(true);
 					
 					// check state effects:
 					if (choice.skillActForm!=null || choice.doUse)
