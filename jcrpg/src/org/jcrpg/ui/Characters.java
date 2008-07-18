@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.jme.ui.TimedNode;
+import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -104,7 +106,7 @@ public class Characters {
 	
 	public ArrayList<Node> centerNode = new ArrayList<Node>();
 	public ArrayList<Quad> frameQuads = new ArrayList<Quad>();
-	public ArrayList<Quad> pictureQuads = new ArrayList<Quad>();
+	public ArrayList<ZoomingQuad> pictureQuads = new ArrayList<ZoomingQuad>();
 	
 	float barScreenRatio = 13f;
 	
@@ -152,7 +154,7 @@ public class Characters {
 						effectIconOrigoXPositions.add(new Float(sideYMul*hud.core.getDisplay().getWidth()/20 - hud.core.getDisplay().getWidth()/(13*2.2f) ));
 						effectIconOrigoYPositions.add(new Float(0.999f*startY-stepY*counterPair + hud.core.getDisplay().getHeight()/(10.3f*2.2f)));
 						
-						Quad q = Window.loadImageToQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
+						ZoomingQuad q = Window.loadImageToZoomingQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
 						Node nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
 						
@@ -358,12 +360,13 @@ public class Characters {
 		{
 			if (p==member)
 			{
-				Quad q= pictureQuads.get(counter);				
+				ZoomingQuad q= pictureQuads.get(counter);				
 				Quad fq= frameQuads.get(counter);
 				if (highlightOn)
 				{
-					q.setSolidColor(ColorRGBA.yellow);
+					q.setSolidColor(ColorRGBA.orange);
 					fq.setSolidColor(ColorRGBA.red);
+					q.startZoomCycle();
 				} else
 				{
 					q.setSolidColor(ColorRGBA.white);
@@ -374,6 +377,33 @@ public class Characters {
 		}		
 	}
 	
+	ColorRGBA targetColor = new ColorRGBA(0.9f,0.5f,0.5f,1f);
+
+	public void targetCharacter(EntityMemberInstance member, boolean highlightOn)
+	{
+		System.out.println("//# TARGET HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
+		int counter = 0;
+		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
+		{
+			if (p==member)
+			{
+				ZoomingQuad q= pictureQuads.get(counter);				
+				Quad fq= frameQuads.get(counter);
+				if (highlightOn)
+				{
+					q.setSolidColor(targetColor);
+					fq.setSolidColor(ColorRGBA.red);
+					q.startZoomCycle();
+				} else
+				{
+					q.setSolidColor(ColorRGBA.white);
+					fq.setSolidColor(ColorRGBA.white);
+				}
+			}
+			counter++;
+		}		
+	}
+
 	public void update()
 	{ 
 		node.detachAllChildren();
@@ -441,34 +471,5 @@ public class Characters {
 		}
 	}
 	
-	public class TimedNode extends Node
-	{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		private long startTime = System.currentTimeMillis();
-		private long maxTime = 900;
-		private boolean counting = false;
-		
-		
-		@Override
-		public void updateGeometricState(float time, boolean initiator) {
-			if (counting && maxTime<=System.currentTimeMillis()-startTime)
-			{
-				this.removeFromParent();
-				return;
-			}
-			super.updateGeometricState(time, initiator);
-		}
-		
-		public void startCounting()
-		{
-			startTime = System.currentTimeMillis();
-			counting = true;
-		}
-	}
 	
 }
