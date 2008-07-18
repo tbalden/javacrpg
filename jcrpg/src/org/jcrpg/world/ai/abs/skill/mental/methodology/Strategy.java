@@ -18,12 +18,49 @@
 
 package org.jcrpg.world.ai.abs.skill.mental.methodology;
 
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
+import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.abs.state.StateEffectInitParams;
+import org.jcrpg.world.ai.abs.state.effect.Haste;
 
 public class Strategy extends SkillBase implements TurnActSkill {
+	
+	public class QuickArrangement extends SkillActForm
+	{
+		public QuickArrangement(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = 5;
+			skillRequirementLevel = 0;
+			targetType = TARGETTYPE_LIVING_GROUP;
+			StateEffectInitParams quickParam = new StateEffectInitParams();
+			quickParam.baseDuration=2;
+			quickParam.basePower=1;
+			quickParam.durationType=StateEffect.DURATION_TYPE_TURN_ACT_ROUNDS;
+			quickParam.type = Haste.class;
+			stateEffectsAndLevels.add(quickParam);
+			
+			proAttributes.add(FantasyAttributes.PSYCHE);
+			usedPointsAndLevels.put(EFFECTED_POINT_SANITY, -5);
+		}
+
+		@Override
+		public String getSound() {
+			return "heal";
+		}
+	}
+	
 	public int getUseRangeInLineup() {
 		return -1;
+	}
+	
+	public Strategy()
+	{
+		actForms.add(new QuickArrangement(this));
 	}
 
 }
