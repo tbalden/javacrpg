@@ -90,7 +90,7 @@ public class TurnActWindow extends PagedInputWindow {
 		super(base);
 		
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/popups/encounter.png", 0.6f*core.getDisplay().getWidth(), 1.2f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/popups/turnact.png", 0.6f*core.getDisplay().getWidth(), 1.2f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
