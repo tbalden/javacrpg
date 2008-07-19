@@ -18,6 +18,11 @@
 
 package org.jcrpg.world.ai.abs.skill.magical;
 
+import org.jcrpg.threed.jme.program.impl.BlackFire;
+import org.jcrpg.threed.scene.model.effect.EffectProgram;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.TurnActSkill;
@@ -40,9 +45,43 @@ public class Demonology extends SkillBase implements TurnActSkill {
 		}
 	}
 	
+	
+	public class DemonBreath extends SkillActForm
+	{
+		
+		public DemonBreath(SkillBase skill) {
+			super(skill);
+			animationType = MovingModelAnimDescription.ANIM_CAST;
+			atomicEffect = (int)(-5);
+			targetType = TARGETTYPE_LIVING_MEMBER;
+			effectTypesAndLevels.put(EFFECTED_POINT_HEALTH, -(int)(20));
+			effectTypesAndLevels.put(EFFECTED_POINT_SANITY, -(int)(20));
+			usedPointsAndLevels.put(EFFECTED_POINT_MANA, -(int)(5));
+			proAttributes.add(FantasyAttributes.PSYCHE);
+			contraAttributes.add(FantasyAttributes.PIETY);
+			contraAttributes.add(FantasyAttributes.PSYCHE);
+			contraResistencies.add(FantasyResistances.RESIST_EVIL);
+		}
+
+		@Override
+		public String getSound() {
+			return "fireburn";
+		}
+		//SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
+
+		EffectProgram p = new EffectProgram(BlackFire.class);
+		
+		@Override
+		public EffectProgram getEffectProgram() {
+			return p;
+		}
+		
+	}
+	
 	public Demonology()
 	{
 		//actForms.add(new SummonDemon(this));
+		actForms.add(new DemonBreath(this));
 	}
 
 }
