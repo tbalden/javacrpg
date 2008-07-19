@@ -191,6 +191,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean CONTINUOUS_LOAD = false;
     
     public static boolean LOGGING = true;
+    public static boolean FPSCOUNTER = true;
 
     static Properties p = new Properties();
     static {
@@ -252,6 +253,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				Jcrpg.LOGGER.setLevel(Level.OFF);
 				LOGGING = false;
 			}
+			FPSCOUNTER = loadValue("FPSCOUNTER", false); 
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1717,7 +1719,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
     @Override
 	protected void updateInput() {
-		//fpsNode.detachAllChildren();
+    	if (!FPSCOUNTER)
+    		fpsNode.detachAllChildren();
     	if (!noInput)
     		super.updateInput();
 	}
@@ -1839,8 +1842,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere.updateRenderState();
 		
 
-		fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
-		fpsNode.getChild(0).setLocalScale(display.getWidth()/1000f);
+		if (fpsNode.getChildren()!=null && fpsNode.getChildren().size()>0)
+		{
+			fpsNode.getChild(0).setLocalTranslation(new Vector3f(0,display.getHeight()-20,0));
+			fpsNode.getChild(0).setLocalScale(display.getWidth()/1000f);
+		}
         
         updateDisplay(null);
 		
