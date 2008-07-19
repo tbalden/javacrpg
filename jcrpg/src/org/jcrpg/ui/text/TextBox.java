@@ -96,11 +96,20 @@ public class TextBox implements KeyListener {
 	ColorRGBA black = new ColorRGBA(0,0,0,1f);
 	public void addEntry(String entry)
 	{
-		boxFullTextEntries.add(new TextEntry(entry,black));
-		updateText();
+		addEntry(new TextEntry(entry,black));
 	}
+	
+	public int wrapLimit = 55; 
 	public void addEntry(TextEntry entry)
 	{
+		if (entry.text.length()>wrapLimit)
+		{
+			
+			addEntry(new TextEntry(entry.text.substring(0,wrapLimit),entry.color));
+			entry.text = entry.text.substring(wrapLimit);
+			addEntry(entry);
+			return;
+		}
 		boxFullTextEntries.add(entry);
 		updateText();
 	}

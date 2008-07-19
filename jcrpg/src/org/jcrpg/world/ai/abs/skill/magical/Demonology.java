@@ -42,7 +42,7 @@ public class Demonology extends SkillBase implements TurnActSkill {
 	
 	public Demonology()
 	{
-		actForms.add(new SummonDemon(this));
+		//actForms.add(new SummonDemon(this));
 	}
 
 }

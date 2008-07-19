@@ -72,7 +72,6 @@ public class Elementarism extends SkillBase implements TurnActSkill {
 	
 	public class BurningSparks extends SkillActForm
 	{
-
 		
 		public BurningSparks(SkillBase skill) {
 			super(skill);

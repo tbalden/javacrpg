@@ -28,6 +28,7 @@ import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitLineup;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -111,10 +112,20 @@ public class TurnActWindow extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 	    	//page1.attachChild(sQuad);
+
+	    	// sword and shield sign 
+			Quad shieldQuad = loadImageToQuad("./data/ui/windowicons/turnact_shield.png", 0.1f*core.getDisplay().getWidth(), 0.1f*(core.getDisplay().getHeight()), 
+					0.35f * core.getDisplay().getWidth() / 2f, 1.85f*core.getDisplay().getHeight() / 2);
+	    	shieldQuad.setRenderState(base.hud.hudAS);
+	    	SharedMesh shQuad1 = new SharedMesh("",shieldQuad);
+	    	SharedMesh shQuad2 = new SharedMesh("",shieldQuad);
+	    	shQuad2.setLocalTranslation(1.65f * core.getDisplay().getWidth() / 2f, 1.85f*core.getDisplay().getHeight() / 2,0);
+	    	page0.attachChild(shQuad1);
+	    	page0.attachChild(shQuad2);
 	    	
-	    	header = new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,Language.v("turnActWindow.header"),false);
-	    	desc = new TextLabel("",this,page0, 0.23f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
-	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills to use.",false);
+	    	header = new TextLabel("",this,page0, 0.50f, 0.044f, 0.3f, 0.06f,400f,Language.v("turnActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
+	    	desc = new TextLabel("",this,page0, 0.24f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
+	    	new TextLabel("",this,page0, 0.24f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
 	    	 
 
 	    	float sizeSelect = 0.10f;
@@ -122,7 +133,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    	{
 	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.25f, 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],new Object[0],new Quad[0],null,null));
 	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
@@ -404,9 +415,11 @@ public class TurnActWindow extends PagedInputWindow {
 				String[] texts = new String[0];
 				Object[] objects = new Object[0];
 				String[] ids = new String[0];
+				Quad[] icons = new Quad[0];
 				inventorySelect.ids = ids;
 				inventorySelect.texts = texts;
 				inventorySelect.objects = objects;
+				inventorySelect.icons = icons;
 				inventorySelect.setUpdated(true);
 				inventorySelect.deactivate();
 				inventorySelect.setSelected(0);
@@ -420,17 +433,25 @@ public class TurnActWindow extends PagedInputWindow {
 				String[] texts = new String[objInstances.size()];
 				Object[] objects = new Object[objInstances.size()];
 				String[] ids = new String[objInstances.size()];
+				Quad[] icons = new Quad[objInstances.size()];
 				int counter = 0;
 				for (InventoryListElement objInstance:objInstances)
 				{
 					ids[counter] = ""+counter;
 					texts[counter] = objInstance.getName();
-					objects[counter] = objInstance;				    
+					objects[counter] = objInstance;
+					try {
+						icons[counter] = UIImageCache.getImage(objInstance.description.getIconFilePath(), true,15f);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
 					counter++;
 				}
 				inventorySelect.ids = ids;
 				inventorySelect.texts = texts;
 				inventorySelect.objects = objects;
+				inventorySelect.icons = icons;
 				inventorySelect.setUpdated(true);
 				inventorySelect.deactivate();
 				inventorySelect.setEnabled(true);
@@ -491,17 +512,25 @@ public class TurnActWindow extends PagedInputWindow {
 					String[] texts = new String[objInstances.size()];
 					Object[] objects = new Object[objInstances.size()];
 					String[] ids = new String[objInstances.size()];
+					Quad[] icons = new Quad[objInstances.size()];
 					int counter = 0;
 					for (InventoryListElement objInstance:objInstances)
 					{
 						ids[counter] = ""+counter;
 						texts[counter] = objInstance.getName();
 						objects[counter] = objInstance;				    
+						try {
+							icons[counter] = UIImageCache.getImage(objInstance.description.getIconFilePath(), true,15f);
+						} catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
 						counter++;
 					}
 					inventorySelect.ids = ids;
 					inventorySelect.texts = texts;
 					inventorySelect.objects = objects;
+					inventorySelect.icons = icons;
 					inventorySelect.setUpdated(true);
 					inventorySelect.deactivate();
 					inventorySelect.setEnabled(true);
