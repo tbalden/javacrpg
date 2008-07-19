@@ -20,6 +20,7 @@ package org.jcrpg.threed.scene;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Boundaries;
@@ -177,15 +178,15 @@ public class RenderedArea {
 				}
 			}
 		}
-		System.out.println("Key calculation sumTime = "+sumTime_1);
-		System.out.println("World.getCube sumTime = "+sumTime);
-		System.out.println("World.getCube + cache sumTime = "+sumTime_2);
-		System.out.println("-- eco = "+world.perf_eco_t0);
-		System.out.println("-- geo = "+world.perf_geo_t0);
-		System.out.println("-- flo = "+world.perf_flora_t0);
-		System.out.println("-- cli = "+world.perf_climate_t0);
-		System.out.println("-- wat = "+world.perf_water_t0);
-		System.out.println("-- sur = "+world.perf_surface_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Key calculation sumTime = "+sumTime_1);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("World.getCube sumTime = "+sumTime);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("World.getCube + cache sumTime = "+sumTime_2);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- eco = "+world.perf_eco_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- geo = "+world.perf_geo_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- flo = "+world.perf_flora_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
 		
 		long t0 = System.currentTimeMillis();
 		
@@ -198,7 +199,7 @@ public class RenderedArea {
 		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
-		System.out.println("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
 		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable, (RenderedCube[])elements_FARVIEW.toArray(new RenderedCube[0]),removable_FARVIEW};
 		
 	}

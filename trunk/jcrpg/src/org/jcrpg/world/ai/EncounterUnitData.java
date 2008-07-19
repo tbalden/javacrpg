@@ -44,11 +44,16 @@ public class EncounterUnitData
 	 * indicates if this unit is friendly for player or not.
 	 */
 	public boolean friendly = false;
+	/**
+	 * indicates that it is a party member.
+	 */
 	public boolean partyMember = false; 
 	
 	public VisibleLifeForm visibleForm = null;
 	
 	public ArrayList<EntityMemberInstance> generatedMembers = null;
+	public ArrayList<EntityMemberInstance> deadMembers = new ArrayList<EntityMemberInstance>();
+	public ArrayList<EntityMemberInstance> neutralizedMembers = new ArrayList<EntityMemberInstance>();
 	
 	public EntityMember description = null;
 	
@@ -196,7 +201,6 @@ public class EncounterUnitData
 		int neutralizeCount = 0;
 		if (isGroupId)
 		{
-			
 			ArrayList<EntityMemberInstance> livingMembers = getAllLivingMember();
 			if (livingMembers!=null)
 			if (livingMembers.size()>0)
@@ -215,11 +219,13 @@ public class EncounterUnitData
 							if (inst.isDead())
 							{
 								unit.applyMessages.add(new TextEntry(""+inst.description.getName()+" dies!",ColorRGBA.red));
+								deadMembers.add(inst);
 								killCount++;
 							}
 							if (inst.memberState.isNeutralized())
 							{
 								unit.applyMessages.add(new TextEntry(""+inst.description.getName()+" neutralized!",ColorRGBA.orange));
+								neutralizedMembers.add(inst);
 								neutralizeCount++;
 							}
 						}
@@ -249,12 +255,14 @@ public class EncounterUnitData
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" dies!",ColorRGBA.red));
 						killCount++;
+						deadMembers.add((EntityMemberInstance)subUnit);
 						destroyed();
 					} else
 					if (((EntityMemberInstance)subUnit).memberState.isNeutralized())
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" neutralized!",ColorRGBA.orange));
 						neutralizeCount++;
+						neutralizedMembers.add((EntityMemberInstance)subUnit);
 						destroyed();
 					}
 				}
@@ -360,7 +368,7 @@ public class EncounterUnitData
 			return description.getSound(type);
 		return null;
 	}
-	
+
 	public boolean isDead()
 	{
 		ArrayList<EntityMemberInstance> list = getAllLivingMember();

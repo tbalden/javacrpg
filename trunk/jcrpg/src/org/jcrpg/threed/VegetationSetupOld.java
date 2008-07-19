@@ -72,7 +72,7 @@ public class VegetationSetupOld {
         vp.setEnabled(true);
         if (!vp.isSupported())
         {
-        	System.out.println("!!!!!!! NO VP !!!!!!!");
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!!!!!! NO VP !!!!!!!");
         }
         FragmentProgramState fp = core.getDisplay().getRenderer().createFragmentProgramState();
         try {

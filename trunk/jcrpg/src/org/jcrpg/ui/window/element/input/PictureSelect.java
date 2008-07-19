@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
 
@@ -80,12 +82,12 @@ public class PictureSelect extends InputBase {
 		picQuads.clear();
 		filesList.clear();
 		File f = new File(picturesPath);
-		System.out.println("# FILE: "+f.getAbsolutePath());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PicSelect # FILE: "+f.getAbsolutePath());
 		String[] files = f.list();
 		if (files!=null)
 		for (String file:files)
 		{
-			System.out.println("# FILE: "+file);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
 			if (file.endsWith(".png"))
 			if (!new File(f.getAbsolutePath()+"/"+file).isDirectory())
 			{

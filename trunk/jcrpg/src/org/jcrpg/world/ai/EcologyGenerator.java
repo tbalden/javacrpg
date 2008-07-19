@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
@@ -107,16 +108,17 @@ public class EcologyGenerator {
 	}
 
 	private void logCreationStats() {
-		LOGGER
+		if (J3DCore.LOGGING) LOGGER
 				.fine("-------------------------logCreationStats()----------------------------- ");
 
 		for (Class<? extends EntityDescription> vClass : entityCreationStats
 				.keySet()) {
+			if (J3DCore.LOGGING) 
 			LOGGER.fine("Entity " + vClass.getSimpleName() + ":"
 					+ entityCreationStats.get(vClass) + " groups.");
 
 		}
-		LOGGER
+		if (J3DCore.LOGGING) LOGGER
 				.fine("------------------------------------------------------------------------ ");
 	}
 

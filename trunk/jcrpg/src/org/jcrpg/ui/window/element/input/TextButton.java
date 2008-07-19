@@ -20,6 +20,8 @@ package org.jcrpg.ui.window.element.input;
 
 import java.io.File;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
@@ -115,7 +117,7 @@ public class TextButton extends InputBase {
 			w.inputUsed(this, key);
 			return true;
 		}
-		System.out.println("--- "+id+" "+key);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+id+" "+key);
 		return false;
 	}
 

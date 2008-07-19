@@ -20,6 +20,7 @@ package org.jcrpg.ui;
 import java.io.File;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
 
@@ -69,7 +70,7 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		System.out.println("LOADED "+filePath);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("UIImageCache LOADED "+filePath);
 		return quad;
 	}
 
@@ -108,7 +109,7 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		//System.out.println("LOADED "+filePath);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADED "+filePath);
 		return quad;
 	}
 
@@ -147,7 +148,7 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		//System.out.println("LOADED "+filePath);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADED "+filePath);
 		return quad;
 	}
 

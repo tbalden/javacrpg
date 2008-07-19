@@ -69,13 +69,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 [?] list before next release:
 ##
-
-	[X] death icon to portraits - add it to the centerNode, transparent
-		[ ] replace with Zphr's
-	[ ] walk/pain anim for Mage
-
-	[ ] after combat window -> loots transport to inventory, results, and such, with an OK button
-		[ ] during combat and such some kind of collecting in EncounterInfo for loot and such...qqqq
+	[ ] boarmen are not attacking sometime ?
 	
 	[ ] MORE SKILLS: spell forms, 
 		[X] social effects, neutralizing morale, 
@@ -87,13 +81,25 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] tuning down impacts a bit ;)
 	
+	[ ] walk/pain anim for Mage
+	[ ] neutralized icon on portrait
+	[ ] sword/shield for turn act?
 
-	--
+	-- QA/DOC
 
 	[ ] documenting points, attr, calculations, leveling
 	
-	[ ] move logging to txt log , remove unneeded logs
+	
+	--
+	[X] move logging to txt log , remove unneeded logs
+	
+	[X] death icon to portraits - add it to the centerNode, transparent
+		[X] replace with Zphr's
 
+	[X] after combat window -> loots transport to inventory, results, and such, with an OK button
+		[X] during combat and such some kind of collecting in EncounterInfo for loot and such...
+			It's done in EncounterUnitData - dead/neutralized members! RemovedList of encounterInfo contains it.
+		[X] add inventory listing, and selection of party member to who's inventory it should be added.
 
 	[X] encounter popup image too 
 

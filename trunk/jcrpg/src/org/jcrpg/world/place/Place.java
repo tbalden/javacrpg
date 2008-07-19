@@ -53,7 +53,7 @@ public abstract class Place {
 				for (int z= realZOrigo; z<realZEnd; z++)
 				{
 					int k = ((x)<< 16) + ((y) << 8) + ((z));
-					//System.out.println("ADDING "+id+" "+k);
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING "+id+" "+k);
 					keys.add(""+k);
 				}				
 			}

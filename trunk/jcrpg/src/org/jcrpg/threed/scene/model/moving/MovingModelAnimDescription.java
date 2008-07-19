@@ -21,6 +21,9 @@ package org.jcrpg.threed.scene.model.moving;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
+
 public class MovingModelAnimDescription {
 	
 	
@@ -92,19 +95,19 @@ public class MovingModelAnimDescription {
 		Field[] fields = this.getClass().getFields();
 		for (Field f:fields)
 		{
-			System.out.println("F: "+f.getName()+ " "+ f.getType() );
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+f.getName()+ " "+ f.getType() );
 			if (!f.getName().startsWith("ANIM_") && f.getType()==String.class)
 			{
 				try 
 				{
 					String v = (String)f.get(this);
-					System.out.println("= "+v);
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("= "+v);
 					if (v!=null)
 					{
 						if (v.charAt(0)!='.')
 							v = "./data/models/"+v;
 						String key = (String)this.getClass().getField("ANIM_"+f.getName()).get(this);
-						System.out.println("__"+key+" : "+v);
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("__"+key+" : "+v);
 						r.put(key,v);
 					}
 				} catch (IllegalAccessException e)

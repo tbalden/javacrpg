@@ -19,6 +19,6 @@ package org.jcrpg.ui;
 
 public class HUDParams {
 
-	public String image = "./data/ui/hud1.png"; 
+	public String image = "./data/ui/hud1_new.png"; 
 	
 }

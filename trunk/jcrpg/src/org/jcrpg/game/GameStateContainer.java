@@ -129,7 +129,7 @@ public class GameStateContainer {
 	
 	public void setViewPosition(int x,int y,int z)	
 	{
-		System.out.println("!!!!!!!!!! VIEW POS: "+y);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!!!!!!!!! VIEW POS: "+y);
 		normalPosition.viewPositionX = x;
 		normalPosition.viewPositionY = y;
 		normalPosition.viewPositionZ = z;
@@ -333,7 +333,7 @@ public class GameStateContainer {
 			{
 				EntityFragment i = ((EntityFragment)o);
 				if (i==player.theFragment) continue;
-				//System.out.println("I: "+i.instance.description);
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("I: "+i.instance.description);
 				if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.theFragment.roamingBoundary,i.roamingBoundary)==null) continue;
 				map.put(i.instance.description.iconPic,i.instance.description.iconPic);
 			}
@@ -407,7 +407,7 @@ public class GameStateContainer {
 					EntityFragment i = ((EntityFragment)o);
 					{
 						if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.theFragment.roamingBoundary)==null) continue;
-						System.out.println("#_# Audio: "+i.instance.id);
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_# Audio: "+i.instance.id);
 						if (i.instance.description.groupingRule.possibleMembers!=null)
 						for (GroupingMemberProps p:i.instance.description.groupingRule.possibleMembers)
 						{

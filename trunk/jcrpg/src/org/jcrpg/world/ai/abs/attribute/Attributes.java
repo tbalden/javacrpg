@@ -82,7 +82,7 @@ public abstract class Attributes {
 	}
 	
 	/**
-	 * Returns how a given attribute point type influences max health point/mana point and such.
+	 * Returns ratio how a given attribute set instance influences max point of pointType (health/mana etc.).
 	 * @param pointType
 	 * @return
 	 */

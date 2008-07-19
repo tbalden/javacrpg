@@ -19,7 +19,9 @@ package org.jcrpg.world.ai.abs.state;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -159,7 +161,7 @@ public abstract class StateEffect {
 		}
 		sum = sum / divider;
 		int random = HashUtil.mixPercentage(1, 2, seed+targetState.instance.getNumericId()+targetState.instance.instance.getNumericId());
-		System.out.println("EFFECT RESISTANCE => "+random+" < "+sum);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EFFECT RESISTANCE => "+random+" < "+sum);
 		if (random<sum) return true;
 		return false;
 	}

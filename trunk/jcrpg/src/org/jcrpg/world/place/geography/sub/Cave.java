@@ -260,7 +260,7 @@ public class Cave extends Geography implements Surface {
 		int per = HashUtil.mixPercentage(worldX, 0, worldZ);
 		if (per>=density)
 		{
-			//System.out.println(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
 			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
 			return cachedType;
 		}

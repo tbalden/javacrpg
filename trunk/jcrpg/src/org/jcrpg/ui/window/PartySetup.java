@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.ui.FontUtils;
@@ -167,7 +168,7 @@ public class PartySetup extends PagedInputWindow {
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
-	    		System.out.println("TEXT" +text);
+	    		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TEXT" +text);
 	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
@@ -366,13 +367,13 @@ public class PartySetup extends PagedInputWindow {
 	{
 		try {
 			File f = new File(SaveLoadNewGame.charsDir);
-			System.out.println("# FILE: "+f.getAbsolutePath());
+			Jcrpg.LOGGER.finest("# FILE: "+f.getAbsolutePath());
 			String[] files = f.list();
 			TreeMap<String, CharListData> dataList1 = new TreeMap<String, CharListData>();
 			if (files!=null)
 			for (String file:files)
 			{
-				System.out.println("# FILE: "+file);
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
 				if (new File(f.getAbsolutePath()+"/"+file).isDirectory())
 				{
 					CharListData data = new CharListData();
@@ -381,7 +382,7 @@ public class PartySetup extends PagedInputWindow {
 					String[] subFiles = dirFile.list();
 					for (String sFile:subFiles)
 					{
-						System.out.println("F: "+sFile);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+sFile);
 						File sF = new File(SaveLoadNewGame.charsDir+"/"+file+"/"+sFile);
 						if (sF.isFile())
 						{
@@ -571,7 +572,7 @@ public class PartySetup extends PagedInputWindow {
 			skillTuned = skill;
 			//String group = id.substring(0,id.indexOf('.'));
 			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
-			//System.out.println("GROUP = "+group+ " - "+count);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
 			skillValueTuner.setUpdated(true);
@@ -667,9 +668,9 @@ public class PartySetup extends PagedInputWindow {
 				ValueTuner v = attributeTuners.get(id);
 				int value = v.getSelection();
 				attributeValues.setAttribute(id, value);
-				System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+				Jcrpg.LOGGER.finer("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 			}
-			System.out.println("CHARACTER PERSON & PROFESSION : "+personWithGenderAndRace+" "+profession);
+			Jcrpg.LOGGER.finer("CHARACTER PERSON & PROFESSION : "+personWithGenderAndRace+" "+profession);
 			charInfo.text = Language.v("races."+personWithGenderAndRace.getClass().getSimpleName()) + " " + Language.v("professions."+profession.getClass().getSimpleName());
 			charInfo.activate();
 			
@@ -759,7 +760,7 @@ public class PartySetup extends PagedInputWindow {
 	public boolean inputLeft(InputBase base, String message) {
 		if (base.equals(raceSelect))
 		{
-			System.out.println("RACE SELECT LEFT");
+			Jcrpg.LOGGER.finer("RACE SELECT LEFT");
 			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
 			if (race.possibleGenders==EntityDescription.GENDER_BOTH)
 			{
@@ -800,7 +801,7 @@ public class PartySetup extends PagedInputWindow {
 					attributeValues.setAttribute(id, baseValue);
 					lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
 				}
-				System.out.println("ID = "+id+" = "+attributeValues.attributes.get(id));
+				Jcrpg.LOGGER.finer("ID = "+id+" = "+attributeValues.attributes.get(id));
 				ValueTuner v = attributeTuners.get(id);
 				v.value = attributeValues.attributes.get(id);
 				v.text = ""+v.value;
@@ -860,7 +861,7 @@ public class PartySetup extends PagedInputWindow {
 					ValueTuner v = attributeTuners.get(id);
 					int value = v.getSelection();
 					attributeValues.setAttribute(id, value);
-					System.out.println("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+					Jcrpg.LOGGER.finer("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 				}
 				ArrayList<String> ids = new ArrayList<String>();
 				ArrayList<String> texts = new ArrayList<String>();
@@ -921,7 +922,7 @@ public class PartySetup extends PagedInputWindow {
 			for (int i=0; i<=s; i++) {
 				d = it.next();
 			}
-			System.out.println(d.pic.getName());
+			Jcrpg.LOGGER.finer(d.pic.getName());
 			try {
 				Quad q = imgQuads.get(d.pic.getAbsolutePath());
 				if (q==null) 

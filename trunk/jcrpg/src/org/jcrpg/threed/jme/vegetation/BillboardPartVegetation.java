@@ -219,7 +219,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							for (Spatial s:spatials) {
 								 //if ((s.getType() & s.TRIMESH) != 0)
 								{
-									//System.out.println("SPATIAL: " + s.getName());
+									//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SPATIAL: " + s.getName());
 											//+ " " + sCounter++);
 									TriMesh q = (TriMesh) s;
 									int l = q.getName().length();
@@ -235,7 +235,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 										for (int bc = 0; bc < q.getBatchCount(); bc++) {
 											TriangleBatch b = q.getBatch(bc);
 											FloatBuffer fb = b.getVertexBuffer();
-											//System.out.println("BATCH!!"
+											//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("BATCH!!"
 												//	+ fb.capacity() + " " + bc);
 											int maxFIndex = fb.capacity();
 											int maxDoubleTri = maxFIndex / 18;
@@ -587,7 +587,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							for (Spatial s : c2) {
 								if ( (s.getType() & Node.TRIMESH)!=0)
 								{
-									// System.out.println("SPATIAL: "+s.getName()+"
+									// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SPATIAL: "+s.getName()+"
 									// "+sCounter++);
 									sCounter++;
 									TriMesh q = (TriMesh) s;

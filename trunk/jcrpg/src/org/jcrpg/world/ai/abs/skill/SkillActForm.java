@@ -126,6 +126,18 @@ public abstract class SkillActForm
 		return null;
 	}
 	
+	public Integer getBiggestUsedPoint()
+	{
+		int biggestPoint = 0;
+		for (Integer i:usedPointsAndLevels.values())
+		{
+			if (i<biggestPoint) biggestPoint = i;
+		}
+		biggestPoint *=-1;
+		return biggestPoint;
+	}
+	
+	
 	public String getName()
 	{
 		int biggestPoint = 0;

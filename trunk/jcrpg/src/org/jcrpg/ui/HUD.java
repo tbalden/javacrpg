@@ -97,10 +97,10 @@ public class HUD {
 
         // main hud image area
         
-        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/8));
+        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/6.0f));
         hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 
-        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/16,0));
+        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/12f,0));
  
         Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
 		
@@ -132,7 +132,7 @@ public class HUD {
         
         // main textbox
         
-        mainBox = new TextBox(this,"Main",0.088f,0.088f,0.3f,0.1f);
+        mainBox = new TextBox(this,"Main",0.088f,0.114f,0.3f,0.13f);
         mainBox.show();
         mainBox.addEntry(new TextEntry("JCRPG pre-alpha version",ColorRGBA.orange));
         base.addEventHandler("logUp", mainBox);

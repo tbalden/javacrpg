@@ -147,7 +147,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			long t0 = System.currentTimeMillis();
 			TriMesh quad = getModelMesh(placeholder.model);
-			//System.out.println("ADDING"+placeholder.model.id+quad.getName());
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			//quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));

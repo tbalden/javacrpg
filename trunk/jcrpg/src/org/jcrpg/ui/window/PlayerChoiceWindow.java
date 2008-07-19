@@ -20,6 +20,7 @@ package org.jcrpg.ui.window;
 
 import java.util.Collection;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
@@ -62,7 +63,7 @@ public class PlayerChoiceWindow extends Window implements KeyListener {
 
 	public boolean handleKey(String key) {
 		if (visible) {
-			System.out.println("KEY "+key);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("KEY "+key);
 			J3DCore.getInstance().switchEncounterMode(false);
 			return true;
 		} else return false;

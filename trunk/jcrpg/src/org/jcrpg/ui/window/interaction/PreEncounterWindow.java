@@ -20,6 +20,8 @@ package org.jcrpg.ui.window.interaction;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
@@ -136,7 +138,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			Object[] objects = new Object[list.size()];
 			String[] texts = new String[list.size()];
 			int count = 0;
-			System.out.println("ENC SIZE = "+list.size());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PreEncounterWindow ENC SIZE = "+list.size());
 			for (EncounterUnitData data:list)
 			{
 				ids[count] = ""+count;

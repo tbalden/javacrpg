@@ -115,7 +115,7 @@ public class SaveLoadNewGame {
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).generationNewInstanceObjects)
 				{
 					m.inventory.add(new ObjInstance(ObjList.getInstance(o)));
-					System.out.println("ADDING ITEM : "+o);
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING ITEM : "+o);
 				}*/
 				m.memberState.maximizeAtStart();
 				party.addPartyMember(m);
@@ -139,7 +139,10 @@ public class SaveLoadNewGame {
 			gameState.resetRelativePosition();
 			core.setGameState(gameState);
 			if (core.coreFullyInitialized)
+			{
 				core.sEngine.reinit();
+				core.eEngine.reinit();
+			}
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -203,6 +206,8 @@ public class SaveLoadNewGame {
 			core.gameState.gameLogic.core = core;
 			if (core.sEngine!=null)
 				core.sEngine.reinit();
+			if (core.eEngine!=null)
+				core.eEngine.reinit();
 			// ui elements update to loaded state
 			core.behaviorWindow.party = gameState.player;
 			core.behaviorWindow.updateToParty();

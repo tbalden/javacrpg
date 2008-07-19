@@ -86,11 +86,11 @@ public class GroupingRule {
 						break;
 					}
 				}
-				System.out.println(instance.fragments.fragments.get(0).getName()+" : "+selected.memberType.getName());
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(instance.fragments.fragments.get(0).getName()+" : "+selected.memberType.getName());
 				gst.type = selected.memberType;
 			}
 			ret[i] = gst;
-			//if (ret[i]==0) System.out.println("####### "+instance.description+" ZERO SIZE");
+			//if (ret[i]==0) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("####### "+instance.description+" ZERO SIZE");
 		}
 		return ret;
 	}
@@ -98,7 +98,7 @@ public class GroupingRule {
 	public int[] getGroupIds(EntityFragment f, int radiusRatio, int randomSeed)
 	{
 		int numberOfGroups = (int)(f.instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
-		//System.out.println("getGroupIds = "+instance.description+" "+numberOfGroups);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
 		if (numberOfGroups==0 || numberOfGroups==1) numberOfGroups = 2;
 		if (numberOfGroups>f.instance.getGroupSizes().length) numberOfGroups = f.instance.getGroupSizes().length;

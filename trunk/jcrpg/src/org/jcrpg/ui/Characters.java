@@ -313,7 +313,7 @@ public class Characters {
 				counter++;
 				continue;
 			}
-			//System.out.println("UPDATE ____________ "+p);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("UPDATE ____________ "+p);
 			float multiplierHealth = p.memberState.maxHealthPoint==0?0.0001f:Math.max(0f,p.memberState.healthPoint*1f)/p.memberState.maxHealthPoint; 
 			float multiplierStamina = p.memberState.maxStaminaPoint==0?0.0001f:Math.max(0f,p.memberState.staminaPoint*1f)/p.memberState.maxStaminaPoint;
 			float multiplierMorale = p.memberState.maxMoralePoint==0?0.0001f:Math.max(0f,p.memberState.moralePoint*1f)/p.memberState.maxMoralePoint;
@@ -360,7 +360,7 @@ public class Characters {
 			ArrayList<Float> pos = barOrigoYPositions.get(counter);
 			for (int i=0; i<=BAR_MAX; i++)
 			{
-				//System.out.println(m.get(i));
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(m.get(i));
 				m.get(i).setLocalScale(new Vector3f(1f,mul[i]*1f,1f));
 				m.get(i).updateRenderState();
 				m.get(i).removeFromParent();
@@ -377,7 +377,7 @@ public class Characters {
 	
 	public void highlightCharacter(EntityMemberInstance member, boolean highlightOn)
 	{
-		System.out.println("//# HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("//# HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
 		int counter = 0;
 		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
 		{
@@ -404,7 +404,7 @@ public class Characters {
 
 	public void targetCharacter(EntityMemberInstance member, boolean highlightOn)
 	{
-		System.out.println("//# TARGET HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("//# TARGET HIGHLIGHTING: "+member.description.getName()+" "+highlightOn);
 		int counter = 0;
 		for (EntityMemberInstance p:hud.core.gameState.player.orderedParty)
 		{
@@ -467,7 +467,7 @@ public class Characters {
 				{
 					if (i!=null && i!=0)
 					{
-						System.out.println("_#_#_#_ VISUALIZING "+member.description.getName()+" "+counter+" = "+i);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_#_#_#_ VISUALIZING "+member.description.getName()+" "+counter+" = "+i);
 						ColorRGBA color = Characters.pointQuadData.get(counter);
 						Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+i, 1,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
 						slottextNode.setLocalTranslation(0,0,0);

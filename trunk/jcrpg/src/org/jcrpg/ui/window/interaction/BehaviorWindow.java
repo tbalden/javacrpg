@@ -140,10 +140,10 @@ public class BehaviorWindow extends PagedInputWindow {
 					ids[counter_2]=""+counter_2;
 					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
 					objects[counter_2]=b;
-					System.out.println("--- "+skill);
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+skill);
 					if (i.behaviorSkill!=null && i.behaviorSkill.getClass() == b.getClass())
 					{
-						System.out.println("### FOUND SKILL");
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### FOUND SKILL");
 						selected = counter_2;
 					}
 					counter_2++;

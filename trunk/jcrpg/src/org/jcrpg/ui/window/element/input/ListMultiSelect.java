@@ -21,6 +21,8 @@ package org.jcrpg.ui.window.element.input;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
@@ -204,7 +206,7 @@ public class ListMultiSelect extends InputBase {
 				iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
 				iconNode.attachChild(m);
 				baseNode.attachChild(iconNode);
-				System.out.println("M = "+m.getName());
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListMultiSelect M = "+m.getName());
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -259,7 +261,7 @@ public class ListMultiSelect extends InputBase {
 					flag = (selectedItems[i+fromCount]?"X ":"_ ");
 					text = texts[i+fromCount];
 				}
-				System.out.println("TEXT = "+i+" "+text+" max: "+maxCount);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListMultiSelect TEXT = "+i+" "+text+" max: "+maxCount);
 				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
@@ -293,7 +295,7 @@ public class ListMultiSelect extends InputBase {
 						iconNode.attachChild(m);
 						baseNode.attachChild(iconNode);
 						iconNodes.add(iconNode);
-						System.out.println("M = "+m.getName());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListMultiSelect M = "+m.getName());
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();

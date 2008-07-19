@@ -21,6 +21,8 @@ package org.jcrpg.ui.window.element.input;
 import java.io.File;
 import java.util.HashSet;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
@@ -199,7 +201,7 @@ public class TextInputField extends InputBase {
 		if (listenedKeys.contains(key))
 		{
 			if (text.length()==maxLength) return true;
-			System.out.println("KEY PRESSED : "+key);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("KEY PRESSED : "+key);
 			String appended = key;
 			if (key.equals("space"))
 			{

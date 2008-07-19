@@ -31,7 +31,7 @@ public class CKeyLookRightAction extends CKeyAction {
 	 */
 	public synchronized void performAction(InputActionEvent evt) {
 		if (!performActionCheck(evt)) {
-			//System.out.println("locked...");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("locked...");
 			return;
 		}
 

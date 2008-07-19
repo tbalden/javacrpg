@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
@@ -319,7 +320,7 @@ public class EncounterLogic {
 		}
 		for (TurnActMemberChoice playerChoice:info.getChoices())
 		{
-			System.out.println("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
+			Jcrpg.LOGGER.finer("PLAYER CHOICE TIME... "+playerChoice.member.description.getName());
 			turnActTurnState.memberChoices.put(playerChoice.member, playerChoice);
 			if (!playerChoice.doNothing) {
 				float[] speeds = EvaluatorBase.evaluateActFormTimesWithSpeed((int)seed++, playerChoice);
@@ -557,7 +558,7 @@ public class EncounterLogic {
 							}
 							
 							turnActTurnState.playing = false;
-							System.out.println("FINISHED RESULT INTERNAL STEP...");
+							Jcrpg.LOGGER.finer("FINISHED RESULT INTERNAL STEP...");
 							playTurnActStep();
 						}
 					}
@@ -565,7 +566,7 @@ public class EncounterLogic {
 					if (eventType==PlannedTurnActEvent.TYPE_PAUSE)
 					{
 						turnActTurnState.playing = false;
-						System.out.println("FINISHED PAUSE STEP...");
+						Jcrpg.LOGGER.finer("FINISHED PAUSE STEP...");
 						playTurnActStep();
 					}
 				}
@@ -626,9 +627,10 @@ public class EncounterLogic {
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
-		gameLogic.core.gameState.engine.turnFinishedForPlayer();
 		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
 		gameLogic.core.gameState.switchToEncounterScenario(false, null);
+		gameLogic.core.postEncounterWindow.setPageData((PartyInstance)encounter.playerIfPresent.instance, encounter);
+		gameLogic.core.postEncounterWindow.toggle();
 	}
 
 	/**
@@ -678,7 +680,7 @@ public class EncounterLogic {
 	public void playTurnActStep()
 	{
 		synchronized (mutex) {
-			System.out.println("playTurnActStep ");
+			Jcrpg.LOGGER.finer("playTurnActStep ");
 			if (turnActTurnState!=null) 
 			{
 				turnActTurnState.highlightTarget(false);
@@ -800,14 +802,14 @@ public class EncounterLogic {
 					if (choice.target!=null && choice.target.isDead()) 
 					{
 						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target is no more.");
-						System.out.println("# NOT LIVING TARGET: "+choice.target.getName());
+						Jcrpg.LOGGER.finer("# NOT LIVING TARGET: "+choice.target.getName());
 						playTurnActStep();
 						return;
 					}
 					if (choice.target!=null && choice.target.isNeutralized()) 
 					{
 						gameLogic.core.uiBase.hud.mainBox.addEntry(choice.member.description.getName() + "'s target is leaving as neutral.");
-						System.out.println("# NOT LIVING TARGET: "+choice.target.getName());
+						Jcrpg.LOGGER.finer("# NOT LIVING TARGET: "+choice.target.getName());
 						playTurnActStep();
 						return;
 					}
@@ -835,7 +837,7 @@ public class EncounterLogic {
 						turnActTurnState.maxTime = event.minTime;
 						turnActTurnState.playing = true;
 						turnActTurnState.playStart = System.currentTimeMillis();
-						System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
+						Jcrpg.LOGGER.finer("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
 						choice.member.memberState.replenishInOneRound();
 						gameLogic.core.uiBase.hud.characters.updatePoints(choice.member);
 						playTurnActStep();
@@ -892,7 +894,7 @@ public class EncounterLogic {
 					turnActTurnState.maxTime = event.minTime;
 					turnActTurnState.playing = true;
 					turnActTurnState.playStart = System.currentTimeMillis();
-					System.out.println("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
+					Jcrpg.LOGGER.finer("### MEMBER_CHOICE "+turnActTurnState.nextEventCount);
 				} else
 				{
 					// unknown step type...
@@ -907,7 +909,7 @@ public class EncounterLogic {
 	{
 		EncounterPhaseLineup lineup = new EncounterPhaseLineup(info);
 		info.setEncounterPhaseLineup(lineup);
-		System.out.println("{ fillInitEncounterPhaseLineup }");
+		Jcrpg.LOGGER.finer("{ fillInitEncounterPhaseLineup }");
 		for (EncounterUnitData d:info.getEncounterUnitDataList(gameLogic.player.theFragment))
 		{
 			info.getEncounterPhaseLineup().addUnit(d,d.getEncPhasePriority(info));	
@@ -918,7 +920,7 @@ public class EncounterLogic {
 	{
 		TurnActUnitTopology topology = new TurnActUnitTopology(info);
 		info.setTopology(topology);
-		System.out.println("{ fillInitTurnActPhaseLineup }");
+		Jcrpg.LOGGER.finer("{ fillInitTurnActPhaseLineup }");
 		for (EncounterUnitData unit:info.getEncounterUnitDataList(null))
 		{
 			int line = 0;

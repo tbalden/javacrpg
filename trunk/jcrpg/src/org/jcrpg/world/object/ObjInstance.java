@@ -165,38 +165,38 @@ public class ObjInstance {
 				boolean add = false;
 				if (lastUsedBonusFormTimes==null)
 				{
-					System.out.println("#_#_#_#_#_#_$$$$ not used yet");
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_$$$$ not used yet");
 					add = true;
 				} else
 				{
 					ArrayList<Time> t = lastUsedBonusFormTimes.get(desc);
 					if (t==null)
 					{
-						System.out.println("#_#_#_#_#_#_$$$$ not used yet, no time");
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_$$$$ not used yet, no time");
 						add = true;
 					} else
 					{
 						if (t.size()<desc.maxUsePerReplenish)
 						{
-							System.out.println("#_#_#_#_#_#_$$$$ used but not over max use "+desc.maxUsePerReplenish);
+							if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_$$$$ used but not over max use "+desc.maxUsePerReplenish);
 							add = true;
 						} else
 						{
 							if (desc.maxUsePerReplenish==0)
 							{
-								System.out.println("#_#_#_#_#_#_$$$$ ## max use "+desc.maxUsePerReplenish);
+								if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_$$$$ ## max use "+desc.maxUsePerReplenish);
 								t.remove(0);
 								add = true;
 							} else
 							{
 								if (desc.isUsableNow(t.get(0), J3DCore.getInstance().gameState.engine.getWorldMeanTime()))
 								{
-									System.out.println("#_#_#_#_#_#_$$$$ CHECK COMPLETE, OVER TIME ## "+desc.maxUsePerReplenish);
+									if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_$$$$ CHECK COMPLETE, OVER TIME ## "+desc.maxUsePerReplenish);
 									t.remove(0);
 									add = true;
 								} else
 								{
-									System.out.println("#_#_#_#_#_#_---- FAILED< not adding");
+									if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_#_#_#_#_#_---- FAILED< not adding");
 								}
 							}
 							
