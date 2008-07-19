@@ -590,23 +590,26 @@ public class TurnActWindow extends PagedInputWindow {
 				ListSelect inventorySelect = inventorySelectors.get(index);
 				ListSelect groupSelect = groupSelectors.get(index);
 				InventoryListElement objInst = (InventoryListElement)inventorySelect.getSelectedObject();
-				int range = objInst.description.getUseRangeInLineup();
-				boolean friendly = true;
-				boolean groupTarget = false;
-				if (objInst.objects.get(0).description instanceof BonusObject)
+				if (objInst!=null)
 				{
-					ArrayList<BonusSkillActFormDesc> bonusList = ((BonusObject)objInst.objects.get(0).description).getSkillActFormBonusEffectTypes();
-					if (bonusList!=null && bonusList.size()>0) {
-						if (bonusList.get(0).form.atomicEffect>=0)
-						{
-							friendly = true;
-						} else
-						{
-							friendly = false;
+					int range = objInst.description.getUseRangeInLineup();
+					boolean friendly = true;
+					boolean groupTarget = false;
+					if (objInst.objects.get(0).description instanceof BonusObject)
+					{
+						ArrayList<BonusSkillActFormDesc> bonusList = ((BonusObject)objInst.objects.get(0).description).getSkillActFormBonusEffectTypes();
+						if (bonusList!=null && bonusList.size()>0) {
+							if (bonusList.get(0).form.atomicEffect>=0)
+							{
+								friendly = true;
+							} else
+							{
+								friendly = false;
+							}
 						}
 					}
+					updateGroupSelect(groupSelect, encounterUnitDataList, i.encounterData.turnActLineup, i.encounterData.currentLine, range, friendly, groupTarget);
 				}
-				updateGroupSelect(groupSelect, encounterUnitDataList, i.encounterData.turnActLineup, i.encounterData.currentLine, range, friendly, groupTarget);
 			} else
 			{
 				ListSelect skillActFormSelect = skillActFormSelectors.get(index);
