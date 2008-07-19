@@ -94,12 +94,12 @@ public class Engine implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("ENGINE STARTED");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENGINE STARTED");
 		while (!exit)
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
 			if (!pause) {
-				System.out.println("### TICK-TACK ###");
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### TICK-TACK ###");
 				int secondsPast = camping?TICK_SECONDS_CAMPING:TICK_SECONDS;
 				worldMeanTime.tick(secondsPast);
 				secondsLeftForTurn-=secondsPast;
@@ -134,12 +134,12 @@ public class Engine implements Runnable {
 				setTimeChanged(true);
 			}
 		}
-		System.out.println("ENGINE TERMINTATED");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENGINE TERMINTATED");
 	}
 	
 	public void exit()
 	{
-		System.out.println("ENGINE TERMINATING");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENGINE TERMINATING");
 		exit = true;
 	}
 
@@ -161,16 +161,16 @@ public class Engine implements Runnable {
 	public void turnFinishedForAI()
 	{
 		turnCome = false;
-		System.out.println("TURN COME DONE.");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TURN COME DONE.");
 		if (!turnInterruptedByPlayerInteraction)
 		{
-			 System.out.println("NO INTERRUPTION...");
+			 if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NO INTERRUPTION...");
 			 // no interruption happened, economy update can be done right now... because no turnFinishedForPlayer
 			 // will happen.
 			 if (economyUpdateCome) doEconomyUpdate = true;
 		} else
 		{
-			System.out.println("INTERRUPTION...");
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("INTERRUPTION...");
 			turnInterruptedByPlayerInteraction = false;
 		}
 	}
@@ -194,11 +194,11 @@ public class Engine implements Runnable {
 		setPause(false);
 		doEconomyUpdate = false;
 		economyUpdateCome = false;
-		System.out.println("TURN ENDED (Economy), UNPAUSE.");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TURN ENDED (Economy), UNPAUSE.");
 	}
 
 	public synchronized void setPause(boolean pause) {
-		System.out.println("---### PAUSE = "+pause);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---### PAUSE = "+pause);
 		this.pause = pause;
 	}
 

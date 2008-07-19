@@ -123,7 +123,7 @@ public class DistanceBasedBoundary extends Boundaries {
 	 */
 	public static int[][] getCommonRadiusRatiosAndMiddlePoint(DistanceBasedBoundary one, DistanceBasedBoundary two)
 	{
-		//System.out.println("o: "+one.getRadiusInRealCubes()+" "+two.getRadiusInRealCubes());
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("o: "+one.getRadiusInRealCubes()+" "+two.getRadiusInRealCubes());
 		DistanceBasedBoundary bigger, smaller;
 		if (one.getRadiusInRealCubes()>two.getRadiusInRealCubes())
 		{
@@ -141,20 +141,20 @@ public class DistanceBasedBoundary extends Boundaries {
 		if (dist> bigger.getRadiusInRealCubes()+smaller.getRadiusInRealCubes()) return zero;
 		if ( dist + smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
 		{
-			//System.out.println("smaller is fully inside");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("smaller is fully inside");
 			// smaller is fully inside
 			common_distance = (smaller.getRadiusInRealCubes()*2);
 			
 		} else
 		if (dist<=bigger.getRadiusInRealCubes() && dist+smaller.getRadiusInRealCubes()>bigger.getRadiusInRealCubes())
 		{
-			//System.out.println("smaller is more than half inside");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("smaller is more than half inside");
 			// smaller is more than half inside
 			common_distance = smaller.getRadiusInRealCubes() + (bigger.getRadiusInRealCubes()  - dist);
 		} else
 		if (dist-smaller.getRadiusInRealCubes()<=bigger.getRadiusInRealCubes())
 		{
-			//System.out.println("smaller is half or less inside");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("smaller is half or less inside");
 			// smaller is half or less inside
 			common_distance = smaller.getRadiusInRealCubes() - (dist - bigger.getRadiusInRealCubes());
 		} else
@@ -162,7 +162,7 @@ public class DistanceBasedBoundary extends Boundaries {
 			// no intersection
 			return zero;
 		}
-		//System.out.println("CD: "+common_distance);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CD: "+common_distance);
 		//  |        .    |    .  |  |
 		if (true) {
 			Vector3f normalizedDistDirVect = bigger.pv.subtract(smaller.pv).normalize();

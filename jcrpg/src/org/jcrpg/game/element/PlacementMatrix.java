@@ -20,6 +20,8 @@ package org.jcrpg.game.element;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EncounterUnitData;
 
 /**
@@ -51,7 +53,7 @@ public class PlacementMatrix {
 		}
 		
 		public boolean hasNext() {
-			System.out.println("iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PlacementMatrix.hasNext: iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
 			if (matrix[iLineCount]==null) return false;
 			if (matrix[iLineCount]!=null && matrix[iLineCount].get(iLineListCount) == null) return false;
 			return true;
@@ -66,7 +68,7 @@ public class PlacementMatrix {
 			{
 				if (iLineCount==3)
 				{
-					System.out.println("## iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("## iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
 					return null;
 					
 				} else
@@ -75,7 +77,7 @@ public class PlacementMatrix {
 					iLineListCount = 0;
 				}
 			}
-			System.out.println("# iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# iLenCount = "+iLineCount+" - iLineListCount = "+iLineListCount);
 			return d;
 		}
 		public void remove() {
@@ -122,7 +124,7 @@ public class PlacementMatrix {
 			list = matrixAhead.matrix[line];
 		}
 		list.add(data);
-		System.out.println("####____ addAhead "+data.getUnit().getName()+" "+list.size()+ " , "+line);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("####____ addAhead "+data.getUnit().getName()+" "+list.size()+ " , "+line);
 	}
 	
 	public void addBehind(EncounterUnitData data, int line)

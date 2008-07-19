@@ -21,6 +21,7 @@ package org.jcrpg.threed.scene.moving;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -102,7 +103,7 @@ public class RenderedMovingUnit {
 	}
 	public RenderedMovingUnit instantiate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		System.out.println(uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("RenderedMovingUnit.instantiate : "+uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
 		RenderedMovingUnit instance = new RenderedMovingUnit(uniqueId,worldX,worldY,worldZ,models);
 		instance.form = form;
 		instance.state = state;

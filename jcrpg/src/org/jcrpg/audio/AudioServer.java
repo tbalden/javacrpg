@@ -240,7 +240,7 @@ public class AudioServer implements Runnable {
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
-						Jcrpg.LOGGER.info("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -279,7 +279,7 @@ public class AudioServer implements Runnable {
 	public synchronized void playForced(String id)
 	{
 		Channel c = getAvailableChannel();
-		Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
 		if (c==null)
 		{
 			if (!J3DCore.SOUND_ENABLED) return;
@@ -309,7 +309,7 @@ public class AudioServer implements Runnable {
 	public synchronized void play(String id)
 	{
 		Channel c = getAvailableChannel();
-		Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -336,7 +336,7 @@ public class AudioServer implements Runnable {
 		if (!J3DCore.SOUND_ENABLED) return;
 		if (id==null) return;
 		Channel c = getAvailableChannel();
-		Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -360,13 +360,13 @@ public class AudioServer implements Runnable {
 	
 	public synchronized void pause(String id)
 	{
-		Jcrpg.LOGGER.info("Pausing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Pausing "+id);
 		pauseIdOnAllChannels(id);
 	}
 	
 	public synchronized  void stop(String id)
 	{
-		Jcrpg.LOGGER.info("Stopping "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Stopping "+id);
 		stopIdOnAllChannels(channels,id);
 	}
 
@@ -403,7 +403,7 @@ public class AudioServer implements Runnable {
 
 	public void run() {
 		if (!J3DCore.SOUND_ENABLED) return;
-		Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
 		Thread.currentThread().setPriority(10);
 		while (true)
 		{

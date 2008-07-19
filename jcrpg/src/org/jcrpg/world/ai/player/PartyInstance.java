@@ -21,6 +21,7 @@ package org.jcrpg.world.ai.player;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
@@ -79,12 +80,12 @@ public class PartyInstance extends EntityInstance {
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					if (groupIds!=null)
 					if (groupIds.length==0) {
-						System.out.println("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
 					}
 					if (groupIds!=null)
 					for (int in:groupIds) {
 						int size = entityFragment.getGroupSize(in);
-						if (size==0) System.out.println("SIZE ZERO: "+entityFragment.getDescription());
+						if (size==0) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SIZE ZERO: "+entityFragment.getDescription());
 						fullSize+=size;
 					}
 					if (i.encounteredSubUnits.get(entityFragment)!=null) fullSize+=i.encounteredSubUnits.get(entityFragment).size();

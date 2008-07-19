@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
@@ -125,7 +126,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
             vp.setEnabled(true);
             if (!vp.isSupported())
             {
-            	System.out.println("!!!!!!! NO VP !!!!!!!");
+            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO VP !!!!!!!");
             }
         }
         if (vertexShader && fp==null)
@@ -136,7 +137,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
             fp.setEnabled(true);
             if (!fp.isSupported())
             {
-            	System.out.println("!!!!!!! NO FP !!!!!!!");
+            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO FP !!!!!!!");
             }
             
         }

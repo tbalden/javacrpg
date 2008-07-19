@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.Model;
 
@@ -194,26 +195,26 @@ public class TestMipMaps extends SimpleGame {
         // we can then retrieve the skin from the importer as well as the
         // skeleton
         if (ColladaImporter.getSkinNodeNames()!=null) {
-        	System.out.println("!!!!!!!! "+ColladaImporter.getSkinNodeNames().size());
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!!!!!!! "+ColladaImporter.getSkinNodeNames().size());
         	sn = ColladaImporter.getSkinNode(ColladaImporter.getSkinNodeNames()
                     .get(0));
         }  else
         {
-        	System.out.println("SKIN NODES NULL");
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SKIN NODES NULL");
         }
-        System.out.println("GEOS: " +ColladaImporter.getGeometryNames().size());
+        if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("GEOS: " +ColladaImporter.getGeometryNames().size());
         Geometry g = ColladaImporter.getGeometry(ColladaImporter.getGeometryNames().get(0));
         //Node g = ColladaImporter.getModel();
         rootNode.attachChild(g);
         
         Bone skel = null;
         if (ColladaImporter.getSkeletonNames()!=null) {
-        	System.out.println("SKELETON NODES "+ColladaImporter.getSkeletonNames().size());
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SKELETON NODES "+ColladaImporter.getSkeletonNames().size());
         	ColladaImporter.getSkeleton(ColladaImporter
         			.getSkeletonNames().get(0));
         } else
         {
-        	System.out.println("SKELETON NODES NULL");
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SKELETON NODES NULL");
         }
         // clean up the importer as we are about to use it again.
         ColladaImporter.cleanUp();
@@ -224,9 +225,9 @@ public class TestMipMaps extends SimpleGame {
         // this file might contain multiple animations, (in our case it's one)
         ArrayList<String> animations = ColladaImporter.getControllerNames();
         if (animations!=null && animations.size()>0) {
-	        System.out.println("Number of animations: " + animations.size());
+	        if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("Number of animations: " + animations.size());
 	        for (int i = 0; i < animations.size(); i++) {
-	            System.out.println(animations.get(i));
+	            if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(animations.get(i));
 	        }
 	        
 	        // Obtain the animation from the file by name

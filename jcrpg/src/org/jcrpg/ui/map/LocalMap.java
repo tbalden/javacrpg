@@ -206,10 +206,10 @@ public class LocalMap {
 										colorsAdded++;
 										/*if (colorsAdded==2)
 										{
-											System.out.println(side.subtype.id);
-											System.out.println("C: "+c.cube);
-											System.out.println("C: "+neutralColorSum[GREEN]);
-											System.out.println("C: "+(neutralColorSum[GREEN]/colorsAdded));
+											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(side.subtype.id);
+											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("C: "+c.cube);
+											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("C: "+neutralColorSum[GREEN]);
+											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("C: "+(neutralColorSum[GREEN]/colorsAdded));
 										}*/
 									}
 								}
@@ -237,7 +237,7 @@ public class LocalMap {
 							}
 						} else
 						{
-							//System.out.println("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("WX "+(wX+x)+" - "+(wZ+z)+" "+c.cube);
 							paintPointAllSides(staticLayerGraphics, x, z, 255, 255, 255, 70);
 						}
 					}
@@ -245,7 +245,7 @@ public class LocalMap {
 			}
 			if (staticTexState==null) 
 			{
-				//System.out.println("NEW STATIC TEX STATE");
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 				staticLayerTex = new Texture();
 				staticLayerTex.setFilter( Texture.FM_LINEAR );

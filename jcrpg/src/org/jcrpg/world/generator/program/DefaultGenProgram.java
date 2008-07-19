@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
@@ -91,10 +93,10 @@ public class DefaultGenProgram extends GenProgram {
 		int climateSize = wZ/(climateSizeDivider*2);
 		
 		
-		System.out.println("WZ = "+wZ+" CLIZ = "+climateSize*(climateSizeDivider*2));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DefaultGenProgram.runProgram: WZ = "+wZ+" CLIZ = "+climateSize*(climateSizeDivider*2));
 		// calc the remaining size in the world
 		int diffAvailable = wZ-climateSize*(climateSizeDivider*2);
-		System.out.println("DIFF = "+diffAvailable);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DIFF = "+diffAvailable);
 		int mod = climateSizeDivider*2/diffAvailable;
 		int currentWorldZ = 0;
 		for (int j=0; j<2; j++) {
@@ -103,7 +105,7 @@ public class DefaultGenProgram extends GenProgram {
 			{
 				int count = orderAsc? i:params.climates.length-i-1;
 				String climateName = params.climates[count];
-				System.out.println("CLIMATE: "+climateName);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CLIMATE: "+climateName);
 				String className = generator.climateBeltMap.get(climateName);
 				Class<?> c = Class.forName(className);
 				Constructor<?> constructor = (Constructor<?>)c.getConstructors()[0];
@@ -148,7 +150,7 @@ public class DefaultGenProgram extends GenProgram {
 		
 		Geography foundation = instantiateGeography(params.foundationGeo, world);
 		world.addGeography(foundation);
-		System.out.println("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+gWX+" - "+gWZ+ " = "+gWX*gWZ);
 		
 		// collection normal geos
 		TreeMap<String , Geography> mainGeos = new TreeMap<String, Geography>();
@@ -207,7 +209,7 @@ public class DefaultGenProgram extends GenProgram {
 					if (limit>randomValue)
 					{
 						// here we go, found the geography sorted out...
-						//System.out.println(randomValue+"<"+limit+" "+g.ruleSet.geoTypeName);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(randomValue+"<"+limit+" "+g.ruleSet.geoTypeName);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag), z);
 						g.getBoundaries().addCube(gMag, x, world.getSeaLevel(gMag)-1, z);
 						break;
@@ -221,7 +223,7 @@ public class DefaultGenProgram extends GenProgram {
 		// Running programs for additional geos
 		for (Geography geo: additionalGeos.values())
 		{
-			System.out.println("ADDITIONAL GEO:"+geo.ruleSet.geoTypeName+" "+geo.ruleSet.genType);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDITIONAL GEO:"+geo.ruleSet.geoTypeName+" "+geo.ruleSet.genType);
 			// get algorithm type...
 			Class<? extends GenAlgoBase> algo = genAlgorithms.get(geo.getRuleSet().getGeneratorType());
 			if (algo==null) continue;

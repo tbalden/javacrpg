@@ -553,7 +553,7 @@ public class River extends Water implements FlowGeography {
 	public int bendStartSide(int worldX, int worldY, int worldZ,boolean leaveOne)
 	{
 		//boolean[] flows = flowDirections.getFlowDirections(worldX, worldY, worldZ);
-		//System.out.println("FDIRS = "+flows[0]+" "+flows[1]+" "+flows[2]+" "+flows[3]);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("FDIRS = "+flows[0]+" "+flows[1]+" "+flows[2]+" "+flows[3]);
 		
 		boolean riverBlockWest = boundaries.isInside(shrinkToWorld(((worldX-blockSize)/blockSize)*blockSize), worldY, worldZ);
 		boolean riverBlockEast = boundaries.isInside(shrinkToWorld(((worldX+blockSize)/blockSize)*blockSize), worldY, worldZ);
@@ -618,10 +618,10 @@ public class River extends Water implements FlowGeography {
 			endSide = SIDE_WEST;
 		} else
 		{
-			//System.out.println("NO RIVER AROUND AT ALL!" + worldX + " "+worldY+ " "+worldZ);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NO RIVER AROUND AT ALL!" + worldX + " "+worldY+ " "+worldZ);
 			return -1;
 		}
-		//System.out.println("- "+startSide+" -- "+endSide+" -- "+joinSide);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("- "+startSide+" -- "+endSide+" -- "+joinSide);
 		// 2 - 0 - 1 N S W
 		
 		int width = this.width+(leaveOne?1:0);
@@ -884,11 +884,11 @@ public class River extends Water implements FlowGeography {
 		int width2 = width-widthMod1+(leaveOne?1:0); // +1 if for leaving place for steeps
 		if (x>=checkX-width1 && x<=checkX+width2)
 		{
-			//System.out.println("RIVER WATER");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RIVER WATER");
 			return true;
 		}
 		
-		//System.out.println("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!RIVER WATER "+x + " >= "+checkX+"-"+width1+" && "+x + " <= "+checkX+"+"+width2+"  ");
 		return false;
 	
 	}

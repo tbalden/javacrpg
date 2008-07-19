@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.EncounterPhaseLineup;
 import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.game.element.TurnActUnitTopology;
@@ -144,7 +145,7 @@ public class EncounterInfo {
 			int level = unit.getRelationLevel(subjectFragment);
 			if (level==EntityScaledRelationType.NEUTRAL)
 			{
-				System.out.println("REMOVING NEUTRAL: "+unit);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING NEUTRAL: "+unit);
 				keysToRemove.add(unit);
 			}
 		}
@@ -268,7 +269,7 @@ public class EncounterInfo {
 					if (unitData.getSize()<1) toRemove.add(unitData);
 					if (encountered.containsKey(key)) continue;
 					toRemove.add(unitData);
-					System.out.println("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
 				} else
 				{
 					if (key instanceof EntityFragment)
@@ -277,7 +278,7 @@ public class EncounterInfo {
 						{
 							if ( ((EntityFragment)key).getFollowingMembers().contains(unitData.subUnit) )
 							{
-								if (unitData.isDead())
+								if (unitData.isDead() || unitData.isNeutralized())
 								{
 									toRemove.add(unitData);
 								}
@@ -288,15 +289,15 @@ public class EncounterInfo {
 					}
 					if (encounteredSubUnits.get(key)!=null && encounteredSubUnits.get(key).contains(unitData.subUnit)) continue;
 					for (EncounterUnit unitKey:encounteredSubUnits.keySet()) {
-						System.out.println("--- "+unitKey.getName());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("--- "+unitKey.getName());
 						if (encounteredSubUnits.get(unitKey)!=null)
 						for (EncounterUnit u:encounteredSubUnits.get(unitKey))
 						{
-							System.out.println("    "+u.getName());
+							if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("    "+u.getName());
 						}
 						
 					}
-					System.out.println("REMOVING ORPHAN: "+unitData.subUnit.getName()+" - "+unitData.parent.getName());
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+unitData.subUnit.getName()+" - "+unitData.parent.getName());
 					toRemove.add(unitData);
 				}
 			}
@@ -322,14 +323,14 @@ public class EncounterInfo {
 			if (u2!=null)
 			for (EncounterUnit u3:u2)
 			{
-				System.out.println(subjectFragment.getName()+" : "+u.getName()+" : "+u3.getName());
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(subjectFragment.getName()+" : "+u.getName()+" : "+u3.getName());
 			}
 		}
 		
 		ArrayList<EncounterUnitData> list = encounterUnitDataList;
 		for (EncounterUnit unit:encountered.keySet())
 		{
-			System.out.println("--"+unit.getName());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("--"+unit.getName());
 			int[] groupIds = encounteredGroupIds.get(unit);
 			if (groupIds!=null)
 			for (int in:groupIds) {
@@ -345,7 +346,7 @@ public class EncounterInfo {
 				}
 			}
 			ArrayList<EncounterUnit> subUnits = encounteredSubUnits.get(unit);
-			System.out.println(subUnits+" "+(subUnits==null?"":subUnits.size()));
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(subUnits+" "+(subUnits==null?"":subUnits.size()));
 			if (subUnits!=null)
 			{
 				for (EncounterUnit u:subUnits)
@@ -358,7 +359,7 @@ public class EncounterInfo {
 							parent = ((PersistentMemberInstance)unit).getParentFragment();
 					}
 					EncounterUnitData data = new EncounterUnitData(parent,u);
-					if (!data.isDead()) {
+					if (!data.isDead() && !data.isNeutralized()) {
 						list.add(data);
 						if (unit instanceof PersistentMemberInstance)
 						{
@@ -380,7 +381,7 @@ public class EncounterInfo {
 							if ( ((PersistentMemberInstance)p).getParentFragment()!=null)
 								parent = ((PersistentMemberInstance)p).getParentFragment();
 							EncounterUnitData data = new EncounterUnitData(parent,p);
-							if (!data.isDead()) {
+							if (!data.isDead() && !data.isNeutralized()) {
 								list.add(data);
 								if (p instanceof PersistentMemberInstance)
 								{
@@ -413,7 +414,7 @@ public class EncounterInfo {
 				filteredList.add(unitData);
 			}
 		}
-		System.out.println(" + "+this+ " "+filteredList.size());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" + "+this+ " "+filteredList.size());
 		return filteredList;
 	}
 
@@ -466,7 +467,7 @@ public class EncounterInfo {
 		PlacementMatrix m = new PlacementMatrix();
 		if (phase==Ecology.PHASE_ENCOUNTER)
 		{
-			System.out.println("getInitialPlacementMatrix PHASE_ENCOUNTER "+getEncounterPhaseLineup().orderedList.size());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EncounterInfo.initPlacementMatrix PHASE_ENCOUNTER "+getEncounterPhaseLineup().orderedList.size());
 			// encounter phase, create common matrix (ahead).
 			for (ArrayList<EncounterUnitData> dList:getEncounterPhaseLineup().orderedList.values())
 			{
@@ -527,6 +528,10 @@ public class EncounterInfo {
 		{
 			return turnActMatrix;
 		}
+	}
+
+	public ArrayList<EncounterUnitData> getRemovedEncounterUnitDataList() {
+		return removedEncounterUnitDataList;
 	}
 	
 }

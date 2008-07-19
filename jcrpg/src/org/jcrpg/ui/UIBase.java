@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -82,7 +83,7 @@ public class UIBase {
 	}
 	public void handleEvent(String key)
 	{
-		System.out.println("handleEvent "+key);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("uiBase: handleEvent "+key);
 		if (eventToElements.get(key)!=null)
 		{
 			HashSet<KeyListener> set = eventToElements.get(key);
@@ -97,7 +98,7 @@ public class UIBase {
 	}
 	public void addEventHandler(String key, KeyListener listener)
 	{
-		//System.out.println("################## "+listener+" --- "+key);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("################## "+listener+" --- "+key);
 		if (eventToElements.get(key)==null)
 		{
 			eventToElements.put(key, new HashSet<KeyListener>());

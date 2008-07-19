@@ -37,6 +37,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.jcrpg.threed.J3DCore;
+
 import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -102,8 +104,8 @@ public class TestDynamicSmoker extends SimpleGame {
       try {
           converter.convert( MSFile.openStream(), BO );
       } catch ( IOException e ) {
-          System.out.println( "IO problem writting the file!!!" );
-          System.out.println( e.getMessage() );
+          if (J3DCore.LOGGING) Jcrpg.LOGGER.finest( "IO problem writting the file!!!" );
+          if (J3DCore.LOGGING) Jcrpg.LOGGER.finest( e.getMessage() );
           System.exit( 0 );
       }
       camBox = null;
@@ -112,7 +114,7 @@ public class TestDynamicSmoker extends SimpleGame {
           camBox.setModelBound(new BoundingBox());
           camBox.updateModelBound();
       } catch ( IOException e ) {
-          System.out.println( "darn exceptions:" + e.getMessage() );
+          if (J3DCore.LOGGING) Jcrpg.LOGGER.finest( "darn exceptions:" + e.getMessage() );
       }
 
       camBox.setLocalScale( 5f );

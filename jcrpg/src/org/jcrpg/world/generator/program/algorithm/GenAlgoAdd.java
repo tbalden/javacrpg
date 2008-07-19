@@ -21,6 +21,8 @@ package org.jcrpg.world.generator.program.algorithm;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.generator.GenProgram;
 import org.jcrpg.world.generator.WorldParams;
@@ -106,7 +108,7 @@ public class GenAlgoAdd extends GenAlgoBase {
 				{
 					if (g.getBoundaries().isInside(x*gMag, g.worldGroundLevel, z*gMag))
 					{
-						System.out.println("AlgoAdd: ADDING GEO..."+x+" "+z);
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("AlgoAdd: ADDING GEO..."+x+" "+z);
 						for (int i=0; i<worldHeightsToAddTo.length; i++) 
 						{
 							try {

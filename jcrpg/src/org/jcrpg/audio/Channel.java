@@ -19,6 +19,7 @@
 package org.jcrpg.audio;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
@@ -54,7 +55,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void stopTrack()
 	{
-		Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
 		try {
 			track.stop();
 			playing = false;
@@ -68,7 +69,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void playTrack()
 	{
-		Jcrpg.LOGGER.info(channelId+" PLAY TRACK : "+soundId);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" PLAY TRACK : "+soundId);
 		if (track!=null && !track.isPlaying()) {
 			track.play();
 			if (track!=null)
@@ -93,12 +94,12 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackPaused(AudioTrack arg0) {
-		Jcrpg.LOGGER.info(channelId+" ##### PAUSED TRACK : "+soundId);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PAUSED TRACK : "+soundId);
 		paused = true;
 	}
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
-		Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
 		if (!arg0.isStreaming()) // Workaround for trackStopped not called when non-streaming audiotrack
 			trackStopped(arg0); else {
 			playing = true;
@@ -107,7 +108,7 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackStopped(AudioTrack arg0) {
-		Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
 		track.removeTrackStateListener(this);
 		if (this.track!=null && this.track.equals(track)) {
 			track = null;

@@ -20,6 +20,8 @@ package org.jcrpg.ui.text;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.KeyListener;
 
@@ -40,7 +42,7 @@ public class TextBox implements KeyListener {
 	
 	ArrayList<TextEntry> boxFullTextEntries = new ArrayList<TextEntry>();
 	
-	int maxLines = 8;
+	int maxLines = 10;
 	int fontSize = 12;
 	
 	int backFrom = 0;
@@ -117,7 +119,7 @@ public class TextBox implements KeyListener {
 		}
 		if (backFrom<0) backFrom = 0;
 		updateText();
-		System.out.println("--- BACKFROM = "+backFrom);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- BACKFROM = "+backFrom);
 		return true;
 	}
 	public void hide()

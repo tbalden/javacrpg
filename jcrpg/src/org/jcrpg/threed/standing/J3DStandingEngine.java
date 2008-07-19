@@ -114,7 +114,7 @@ public class J3DStandingEngine {
 	@SuppressWarnings("unchecked")
 	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender)
 	{
-		System.out.println("RENDERING...");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDERING...");
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
 		//modelLoader.setLockForSharedNodes(false);
@@ -135,14 +135,14 @@ public class J3DStandingEngine {
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
 		
-		Jcrpg.LOGGER.info("**** RENDER ****");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("**** RENDER ****");
 		
 
 		Time localTime = engine.getWorldMeanTime().getLocalTime(world, viewPositionX, viewPositionY, viewPositionZ);
 		CubeClimateConditions conditions = world.climate.getCubeClimate(localTime, viewPositionX, viewPositionY, viewPositionZ, false);
 		
 		
-		if (conditions!=null) Jcrpg.LOGGER.info("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
+		if (conditions!=null) if (J3DCore.LOGGING) Jcrpg.LOGGER.info("- "+conditions.getBelt()+" \n - "+ conditions.getSeason()+" \n"+ conditions.getDayTime());
 
 		
 		/*
@@ -152,7 +152,7 @@ public class J3DStandingEngine {
     	// get a specific part of the area to render
 		long time = System.currentTimeMillis();
 		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.getCurrentRenderPositions().viewDirection, J3DCore.FARVIEW_ENABLED,rerender);
-    	System.out.println("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
+    	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
@@ -176,7 +176,7 @@ public class J3DStandingEngine {
 		//TextureManager.clearCache();
 		//System.gc();
 		//core.do3DPause(false);
-		Jcrpg.LOGGER.info(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
 		uiBase.hud.sr.setVisibility(false, "LOAD");
 		uiBase.hud.mainBox.addEntry("Load Complete.");
 		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
@@ -197,9 +197,9 @@ public class J3DStandingEngine {
 		int removed = 0;
  		long timeS = System.currentTimeMillis();
 
- 		Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+ 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
-		Jcrpg.LOGGER.info("!!!! REMOVABLE CUBES = "+removableCubes.length);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("!!!! REMOVABLE CUBES = "+removableCubes.length);
     	for (RenderedCube c:removableCubes)
     	{
     		if (c==null) continue;
@@ -211,17 +211,17 @@ public class J3DStandingEngine {
     		}
     	}
     	
-    	Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+    	if (J3DCore.LOGGING) Jcrpg.LOGGER.info("1-RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 
-    	Jcrpg.LOGGER.info("getRenderedSpace size="+cubes.length);
+    	if (J3DCore.LOGGING) Jcrpg.LOGGER.info("getRenderedSpace size="+cubes.length);
 		
 		//HashMap<Long, RenderedCube> hmNewCubes = new HashMap<Long, RenderedCube>();
 
-		Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 		
 	    for (int i=0; i<cubes.length; i++)
 		{
-			//Jcrpg.LOGGER.info("CUBE "+i);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CUBE "+i);
 			RenderedCube c = cubes[i];
 			Long cubeKey = Boundaries.getKey(c.cube.x,c.cube.y,c.cube.z);
 			if (hmCurrentCubes.containsKey(cubeKey))
@@ -244,7 +244,7 @@ public class J3DStandingEngine {
 			// store it to new cubes hashmap
 			hmCurrentCubes.put(cubeKey,c);
 		}
-	    Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
+	    if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmCurrentCubes: "+hmCurrentCubes.keySet().size());
 	    for (RenderedCube cToDetach:detacheable)
 	    {
 			removed++;
@@ -257,7 +257,7 @@ public class J3DStandingEngine {
         		outOfFarViewPort.remove(cToDetach);
     		}
 	    }
-	    System.out.println("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
+	    if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RSTAT = N"+newly+" A"+already+" R"+removed+" -- time: "+(System.currentTimeMillis()-timeS));
 		return detacheable;
 	}
 
@@ -329,7 +329,7 @@ public class J3DStandingEngine {
 							qC.multLocal(J3DCore.steepRotations.get(cube.cube.steepDirection));
 						}catch (Exception ex)
 						{
-							Jcrpg.LOGGER.info(cube.cube + " --- "+cube.cube.steepDirection);
+							if (J3DCore.LOGGING) Jcrpg.LOGGER.info(cube.cube + " --- "+cube.cube.steepDirection);
 						}
 					} else 
 					{
@@ -429,28 +429,28 @@ public class J3DStandingEngine {
 			
 			/*
 			if (extRootNode!=null && extRootNode.getChildren()!=null) {
-				System.out.println("   -    "+ extRootNode.getChildren().size());
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("   -    "+ extRootNode.getChildren().size());
 				//if (true == false)
 				for (Spatial s:extRootNode.getChildren())
 				{
-					System.out.println("CM: "+s.getCullMode());
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CM: "+s.getCullMode());
 					if (true==false && s instanceof SharedNode)
 					{
 						Spatial s1 = ((SharedNode)s).getChild(0);
 						if (s1 instanceof TrimeshGeometryBatch)
 						{
-							//System.out.println(s1.getCullMode());
-							//System.out.println("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getCullMode());
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
 						} else
 						if (s1 instanceof ModelGeometryBatch)
 						{
 							//if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
-							//	System.out.println("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
+							//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
 							//;
 						} //else
-						//System.out.println(s1.getName()+ " "+s1);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getName()+ " "+s1);
 					} //else
-					//System.out.println(s.getName()+ " "+s);
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s.getName()+ " "+s);
 				}
 			}*/
 			
@@ -505,7 +505,7 @@ public class J3DStandingEngine {
 			    		}
 					}
 				}		
-				Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
 			} else
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > (J3DCore.RENDER_DISTANCE*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
@@ -513,7 +513,7 @@ public class J3DStandingEngine {
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = render(core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ,rerender);
-				System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 
 				for (int i=0; i<detacheable.length; i++)
 				// removing the unneeded.
@@ -596,7 +596,7 @@ public class J3DStandingEngine {
 					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 				}
 			}
-			Jcrpg.LOGGER.finer("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
 
 			float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
 			float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
@@ -653,7 +653,7 @@ public class J3DStandingEngine {
 						checked = true;
 					} else
 					{
-						//Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
 					}
 					//checked = true;
 					
@@ -670,7 +670,7 @@ public class J3DStandingEngine {
 							}
 							Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
 							float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-							//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 							if (angle<refAngle) {
 								found = true;
 							}
@@ -857,7 +857,7 @@ public class J3DStandingEngine {
 									{
 										/*if (n.model.type == Model.TEXTURESTATEVEGETATION)
 										{
-											System.out.println("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
+											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
 										}*/
 										long t0 = System.currentTimeMillis();
 										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
@@ -932,7 +932,7 @@ public class J3DStandingEngine {
 						checked = true;
 					} else
 					{
-						//Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
 					}
 					//checked = true;
 					
@@ -996,7 +996,7 @@ public class J3DStandingEngine {
 									// found one... checking for angle:								
 									Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
 									float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
-									//Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
+									//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 									if (angle<refAngle) {
 										// angle is good, we can enable foundFar for this cube
 										foundFar = true;
@@ -1172,17 +1172,17 @@ public class J3DStandingEngine {
 				}
 			}
 			
-			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
-			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
-			Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
 			
 			if (segmentCount==segments-1 || !segmented) {
 				
 				
-				Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 			    // handling possible occluders
 			    if (J3DCore.SHADOWS) {
-			    	Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
+			    	if (J3DCore.LOGGING) Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
 					for (NodePlaceholder psn : core.possibleOccluders) {
 						if (psn.realNode != null) {
 							Node n = (Node) psn.realNode;
@@ -1191,7 +1191,7 @@ public class J3DStandingEngine {
 							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
 								if (!core.sPass.containsOccluder(n))
 								{
-									Jcrpg.LOGGER.info("ADDING OCCLUDER: "+n.getName());
+									if (J3DCore.LOGGING) Jcrpg.LOGGER.info("ADDING OCCLUDER: "+n.getName());
 									core.sPass.addOccluder(n);
 									
 								}
@@ -1202,7 +1202,7 @@ public class J3DStandingEngine {
 					}
 			    }
 			    
-			    Jcrpg.LOGGER.info("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+			    if (J3DCore.LOGGING) Jcrpg.LOGGER.info("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
 			    sysTime = System.currentTimeMillis();
 			    
 			    
@@ -1230,9 +1230,9 @@ public class J3DStandingEngine {
 					core.batchHelper.lockAll();
 				}
 				
-				Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
-				Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-				Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 		
 			    if (cullVariationCounter%20==0) {
 					modelPool.cleanPools();
@@ -1252,8 +1252,8 @@ public class J3DStandingEngine {
 			
 			engine.setPause(storedPauseState);
 		}
-		//System.out.println("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
-		Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 	}
 	
 	
@@ -1330,7 +1330,7 @@ public class J3DStandingEngine {
 				}
 				
 			} else {
-				//Jcrpg.LOGGER.info("# TOP IS NULL!");
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("# TOP IS NULL!");
 			}
 			boolean render = true;
 			// Check if there is no same cube side type near in any direction, so we can safely put the Top objects on, no bending roofs are near...

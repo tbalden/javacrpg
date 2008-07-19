@@ -19,6 +19,8 @@ package org.jcrpg.apps;
 
 import java.io.File;
 
+import org.jcrpg.threed.J3DCore;
+
 import com.jme.app.SimpleGame;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
@@ -44,11 +46,11 @@ public class TestMemLeak extends SimpleGame {
 		org.lwjgl.input.Mouse.setGrabbed(false);   
 		try {
 			Node n = ModelLoader.loadModel(new File("./data/models/acacia_bb.3ds"));
-			System.out.println(".!.");
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(".!.");
 			for (int i=0; i<10000; i++)
 			{
 				//if (i%100==0) Thread.sleep(100);
-				System.out.println(".!.");
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(".!.");
 				SharedNode sn = new SharedNode("i"+i,n);
 				rootNode.attachChild(sn);
 				if (i%20==0) rootNode.detachAllChildren();

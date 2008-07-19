@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.sidetype.Climbing;
@@ -81,7 +82,7 @@ public class GameLogic {
 	public void newEncounterPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
 	{
 		possibleEncounter.playerIfPresent = player.theFragment;
-		System.out.println("-- newTurn "+startingPhase);
+		Jcrpg.LOGGER.finer("GameLogic.newEncounterPhase: "+startingPhase);
 		if (!J3DCore.DEMO_ENCOUTNER_MODE) {
 
 			if (startingPhase==Ecology.PHASE_INTERCEPTION)
@@ -229,7 +230,7 @@ public class GameLogic {
 					}
 					sizeOfAll++;
 				}
-				System.out.println("#_#_#_#_#_#_: "+data.parent.getName());
+				Jcrpg.LOGGER.finer("GameLogic.encounter: "+data.parent.getName());
 			}
 			
 		}
@@ -325,12 +326,12 @@ public class GameLogic {
 				}
 				if (water && c.waterCube && !usedPositions.contains(i))
 				{
-					//System.out.println("FOUND WATER"+c);
+					//Jcrpg.LOGGER.finer("FOUND WATER"+c);
 					break;
 				}
 				if (land && !c.waterCube && !usedPositions.contains(i)) 
 				{
-					//System.out.println("FOUND LAND "+c);
+					//Jcrpg.LOGGER.finer("FOUND LAND "+c);
 					break;
 				}
 				i++;

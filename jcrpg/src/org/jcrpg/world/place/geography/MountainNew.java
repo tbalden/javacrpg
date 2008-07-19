@@ -126,7 +126,7 @@ public class MountainNew extends Geography {
 		//int ret = Math.min(0,-Y/30); // valley
 		int ret = (int)(Math.max(0,Y*1d/(sizeX*(sizeZ/10)))*worldRealHeight); // mountain
 		ret+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/60;
-		//System.out.println("MOUNTAIN HEIGHT"+ret);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN HEIGHT"+ret);
 		return ret;
 
 	}

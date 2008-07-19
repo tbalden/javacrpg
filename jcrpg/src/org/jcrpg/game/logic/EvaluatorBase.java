@@ -63,7 +63,7 @@ public class EvaluatorBase {
 			sum+=i;
 		}
 		sum = sum / divider;
-		System.out.println("CONTRA ATTR VALUE = "+sum);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("CONTRA ATTR VALUE = "+sum);
 		return sum;
 	}
 	
@@ -79,7 +79,7 @@ public class EvaluatorBase {
 			sum+=i;
 		}
 		sum = sum / divider;
-		System.out.println("CONTRA RES VALUE = "+sum);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("CONTRA RES VALUE = "+sum);
 		return sum;
 	}
 
@@ -272,7 +272,7 @@ public class EvaluatorBase {
 					
 					for (String key:damages.keySet())
 					{
-						System.out.println("## DAMAGE: "+key+" "+damages.get(key));
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("## DAMAGE: "+key+" "+damages.get(key));
 					}
 					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
 					{
@@ -296,7 +296,7 @@ public class EvaluatorBase {
 								}
 							}
 							if (baseDamage<0) baseDamage = 0;
-							System.out.println("##!! BASEDAMAGE = "+baseDamage);
+							if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("##!! BASEDAMAGE = "+baseDamage);
 							
 							if (data.randomTargetBodyPart!=null)
 							{
@@ -344,7 +344,7 @@ public class EvaluatorBase {
 			for (Integer effectType:skillActForm.usedPointsAndLevels.keySet())
 			{
 				cost.orderedImpactPoints[effectType] = (int)(skillActForm.usedPointsAndLevels.get(effectType));
-				System.out.println("* SELF EFFECT " + cost.orderedImpactPoints[effectType]);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("* SELF EFFECT " + cost.orderedImpactPoints[effectType]);
 			}
 			
 			i.actCost = cost;
@@ -587,7 +587,7 @@ public class EvaluatorBase {
 		
 		public BodyPart getBodyPartTargetted(int seed, int targettingCriticalLevel)
 		{
-			Jcrpg.LOGGER.fine("getBodyPartTargetted "+ target+" - "+target.description.getName()+" "+target.description.getBodyType());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("getBodyPartTargetted "+ target+" - "+target.description.getName()+" "+target.description.getBodyType());
 			return target.description.getBodyType().getBodyPart(seed, target, targettingCriticalLevel);
 		}
 		
@@ -597,7 +597,7 @@ public class EvaluatorBase {
 	
 	public static Impact evaluateActFormSuccessImpact(int seed, TurnActMemberChoice choice, TurnActTurnState state)
 	{
-		System.out.println("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("evaluateActFormSuccessImpact "+choice.member.description.getName()+" "+(choice.skillActForm!=null?choice.skillActForm.getName():"?"));
 		
 		if (choice.doUse || choice.skillActForm!=null)
 		{

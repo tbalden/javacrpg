@@ -20,6 +20,8 @@ package org.jcrpg.ui.window.player;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.InputWindow;
@@ -341,12 +343,12 @@ public class InventoryWindow extends PagedInputWindow {
 			String[] texts = new String[list.size()];
 			Quad[] icons = new Quad[list.size()];
 			int counter = 0;
-			for (InventoryListElement weapon:list) {
+			for (InventoryListElement objEl:list) {
 				ids[counter] = ""+counter;
-				objects[counter] = weapon;
-				texts[counter] = weapon.getName();
+				objects[counter] = objEl;
+				texts[counter] = objEl.getName();
 				try {
-					icons[counter] = UIImageCache.getImage(weapon.description.getIconFilePath(), true,15f);
+					icons[counter] = UIImageCache.getImage(objEl.description.getIconFilePath(), true,15f);
 				} catch (Exception ex)
 				{
 					ex.printStackTrace();
@@ -426,22 +428,22 @@ public class InventoryWindow extends PagedInputWindow {
 			if (o.description instanceof Weapon)
 			{
 				tmpWeaponsList.add(o);
-				System.out.println("WEA: "+o.description);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow WEA: "+o.description);
 			} else
 			if (o.description instanceof Ammunition)
 			{
 				tmpAmmunitionList.add(o);
-				System.out.println("AMM: "+o.description);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow AMM: "+o.description);
 			} else
 			if (o.description instanceof Armor)
 			{
 				tmpArmorList.add(o);
-				System.out.println("ARM: "+o.description);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow ARM: "+o.description);
 			} else
 			if (o.description instanceof PotionAndKit)
 			{
 				tmpPotionList.add(o);
-				System.out.println("POT: "+o.description);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow POT: "+o.description);
 			} else
 			{
 				tmpOtherList.add(o);
@@ -784,11 +786,13 @@ public class InventoryWindow extends PagedInputWindow {
 	@Override
 	public void hide() {
 		super.hide();
-		if (fallbackWindow!=null) fallbackWindow.toggle();
-		// setting back these values.
-		core.getKeyboardHandler().noToggleWindowByKey=true;
-		fallbackWindow = null;
-		canDoActions = true;
+		if (fallbackWindow!=null) {
+			fallbackWindow.toggle();
+			// setting back these values.
+			core.getKeyboardHandler().noToggleWindowByKey=true;
+			fallbackWindow = null;
+			canDoActions = true;
+		}
 	}
 	@Override
 	public void show() {

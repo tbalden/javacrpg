@@ -20,10 +20,11 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
@@ -142,12 +143,12 @@ public class EntityMember extends DescriptionBase {
 			int point = (int)(Math.random()*10);
 			while (order.get(point)!=null) point++;
 			order.put(point, data);
-			System.out.println("??? ORDERED DATA "+data.getName());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("??? ORDERED DATA "+data.getName());
 		}
 		ArrayList<EncounterUnitData> ret = new ArrayList<EncounterUnitData>();
 		ret.addAll(order.values());
-		System.out.println("INCOMING SIZE = "+list.size());
-		System.out.println("RET SIZE = "+ret.size());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("INCOMING SIZE = "+list.size());
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RET SIZE = "+ret.size());
 		return ret;
 	}
 		
@@ -191,9 +192,9 @@ public class EntityMember extends DescriptionBase {
 				//boolean foundTarget = false;
 				for (EncounterUnitData unitData:enemyData) 
 				{
-					if (unitData.isDead()) 
+					if (unitData.isNeutralized()) 
 					{
-						System.out.println("## DEAD for choice : "+unitData.getName());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ## NOT (dead or neut) for choice : "+unitData.getName());
 						continue;
 					}
 					choice.target = unitData;
@@ -202,6 +203,7 @@ public class EntityMember extends DescriptionBase {
 						continue;			
 					
 					choice.targetMember = unitData.getFirstLivingMember();
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ====== "+(choice.targetMember==null?"NULL":choice.targetMember.description.getName()));
 					if (choice.targetMember==null) continue;
 					else
 					{
@@ -211,12 +213,12 @@ public class EntityMember extends DescriptionBase {
 							{
 								for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
 								{
-									System.out.println("--_ "+sb);
+									//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--_ "+sb);
 								}
 								int lineUpDistance = instance.encounterData.currentLine+choice.targetMember.encounterData.currentLine;
 								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
 								//boolean found = false;
-								System.out.println("FOUND TURN ACT SKILLS: "+skills);
+								if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("FOUND TURN ACT SKILLS: "+skills);
 								if (skills!=null)
 								for (Class<? extends SkillBase> s:skills)
 								{

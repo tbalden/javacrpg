@@ -21,6 +21,8 @@ package org.jcrpg.world.ai.abs.skill;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
@@ -186,7 +188,7 @@ public class SkillGroups {
 	{
 		if (!orderedGroups.contains(group)) 
 		{
-			System.out.println("WARNING! No such Skill Group!");
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("WARNING! No such Skill Group!");
 			return;
 		}
 		ArrayList<Class<? extends SkillBase>> list = groupedSkills.get(group);

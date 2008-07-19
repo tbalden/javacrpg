@@ -37,6 +37,8 @@ import model.animation.FixedLengthAnimator;
 import model.animation.IAnimationListener;
 import model.animation.SkeletalAnimationController;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
@@ -115,7 +117,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		{
 			if (finishedPlaying)
 			{
-				//System.out.println("FINISHED PLAYING.");
+				//Jcrpg.LOGGER.finest("FINISHED PLAYING.");
 				playAnim = null;
 				finishedPlaying = false;
 				return true;
@@ -140,10 +142,10 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			finishedPlaying = true;
 			return 0;
 		}
-		System.out.println("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
 		
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
-		System.out.println("P_____ CURRENT ANIM : "+currentAnimatorName);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
 		if (currentAnimator!=null) {
 			if (afterAnim!=null && afterAnim!=currentAnimatorName) {
 				currentAnimator.fadeOut(0.1f,true);
@@ -167,7 +169,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		newAnimator.setCycleType(FixedLengthAnimator.RT_ONCE);
 		newAnimator.fadeIn(0.2f);
 		newAnimator.setSpeed(0.8f+(float)(Math.random()/10f)-0.1f);
-		//System.out.println("STARTING PLAY... "+ newAnimator);
+		//Jcrpg.LOGGER.finest("STARTING PLAY... "+ newAnimator);
 		
 		playAnim = newAnimator;
 		return newAnimator.getMax();
@@ -188,8 +190,8 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				name = MovingModelAnimDescription.ANIM_IDLE;
 				break;
 			}
-			System.out.println("_____ CHANGE TO ANIM : "+name);
-			System.out.println("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM : "+name);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
 			if (name.equals(currentAnimatorName)) return 0;
 			Animation anim = animations.get(name);
 			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
@@ -214,7 +216,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	{
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
-		System.out.println("LOADING ANIMATED MODEL: "+fileName);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
 		
 		try {
 			Model bodyModel = loadModel(fileName);
@@ -349,13 +351,13 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	}
 
 	public void notify(Animator animator, int type, Object userObject) {
-		//System.out.println("notify! "+type+" A: "+animator+ " P: "+playAnim);
+		//Jcrpg.LOGGER.finest("notify! "+type+" A: "+animator+ " P: "+playAnim);
 		if (type==IAnimationListener.ANIMATION_CYCLE_ENDED)
 		{
-			//System.out.println("FINISHED!");
+			//Jcrpg.LOGGER.finest("FINISHED!");
 			if (animator == playAnim)
 			{
-				//System.out.println("!PLAYING FINISHED!");
+				//Jcrpg.LOGGER.finest("!PLAYING FINISHED!");
 				finishedPlaying = true;
 				//currentAnimator.setTime(currentAnimator.getMin());
 				currentAnimator.fadeIn(1f);

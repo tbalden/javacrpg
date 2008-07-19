@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.place.geography;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -82,7 +83,7 @@ public class Mountain extends Geography implements Surface{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.mountainRealSizeY = worldHeight - worldGroundLevel;
-		System.out.println("MOUNTAIN SIZE = "+mountainRealSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+mountainRealSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;

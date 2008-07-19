@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
@@ -93,13 +95,13 @@ public class LoadMenu extends Window implements KeyListener {
 	{
 		try {
 			File f = new File(SaveLoadNewGame.saveDir);
-			System.out.println("# FILE: "+f.getAbsolutePath());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LoadMenu # FILE: "+f.getAbsolutePath());
 			String[] files = f.list();
 			TreeMap<String, SaveSlotData> dataList1 = new TreeMap<String, SaveSlotData>();
 			if (files!=null)
 			for (String file:files)
 			{
-				System.out.println("# FILE: "+file);
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
 				if (new File(f.getAbsolutePath()+"/"+file).isDirectory())
 				{
 					SaveSlotData data = new SaveSlotData();
@@ -108,7 +110,7 @@ public class LoadMenu extends Window implements KeyListener {
 					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
 					for (String sFile:subFiles)
 					{
-						System.out.println("F: "+sFile);
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+sFile);
 						File sF = new File(SaveLoadNewGame.saveDir+"/"+file+"/"+sFile);
 						if (sF.isFile())
 						{
@@ -233,9 +235,9 @@ public class LoadMenu extends Window implements KeyListener {
 		core.clearCore();
 		base.hud.characters.hide();
 		SaveLoadNewGame.loadGame(core,data.gameData);
-		System.out.println("---------------------- LOADING GAME ----------------------------");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- LOADING GAME ----------------------------");
 		core.init3DGame();
-		System.out.println("---------------------- END LOADING GAME ------------------------");
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- END LOADING GAME ------------------------");
 		core.uiBase.hud.characters.update();
 		core.uiBase.hud.characters.show();
 		core.getUIRootNode().updateRenderState();

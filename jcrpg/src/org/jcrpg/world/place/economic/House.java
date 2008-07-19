@@ -226,7 +226,7 @@ public class House extends Residence {
 		c.x = worldX;
 		c.y = worldY;
 		c.z = worldZ;
-		//System.out.println("__ HOUSE CUBE");
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("__ HOUSE CUBE");
 		return c;
 		
 	}

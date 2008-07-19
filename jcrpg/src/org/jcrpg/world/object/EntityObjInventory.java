@@ -20,6 +20,8 @@ package org.jcrpg.world.object;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
@@ -340,7 +342,7 @@ public class EntityObjInventory {
 		ArrayList<BodyPart> parts = instance.description.getBodyType().bodyParts;
 		
 		Class<? extends BodyPart> part = ((Equippable)equipment.description).getEquippableBodyPart();
-		System.out.println("P: "+part);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityObjInventory.equip Part: "+part);
 		boolean found = false;
 		BodyPart bPart = null;
 		for (BodyPart p:parts)
@@ -353,7 +355,7 @@ public class EntityObjInventory {
 		}
 		if (!found) return false;
 		
-		System.out.println("P: FOUND "+part);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityObjInventory.equip Part: FOUND "+part);
 
 		int counterForEquipped = 0;
 		int maxEquipped = bPart.getMaxNumberOfObjToEquip();
@@ -400,7 +402,11 @@ public class EntityObjInventory {
 	public void remove(ObjInstance object)
 	{
 		inventory.remove(object);
-		equipped.remove(object);
+		if (equipped.contains(object))
+		{
+			unequip(object);
+			equipped.remove(object);
+		}
 	}
 	public void add(ObjInstance object)
 	{
@@ -408,15 +414,19 @@ public class EntityObjInventory {
 		inventory.add(object);
 	}
 	
-	public ArrayList<InventoryListElement> getInventoryList(boolean filterAttachments) {
+	public ArrayList<InventoryListElement> getInventoryListForUse(boolean filterAttachments) {
+		return getInventoryList(filterAttachments, true);
+	}
+
+	public ArrayList<InventoryListElement> getInventoryList(boolean filterAttachments, boolean filterWeaponArmor) {
 		HashMap<Obj, InventoryListElement> gatherer = new HashMap<Obj, InventoryListElement>();
 		
 		ArrayList<InventoryListElement> objList = new ArrayList<InventoryListElement>();
 		for (ObjInstance o:inventory)
 		{
 			if (filterAttachments && o.isAttacheable()) continue;
-			if (o.description instanceof Weapon) continue;
-			if (o.description instanceof Armor && !equipped.contains(o)) continue;
+			if (filterWeaponArmor && o.description instanceof Weapon) continue;
+			if (filterWeaponArmor && o.description instanceof Armor && !equipped.contains(o)) continue;
 			InventoryListElement l = null;
 			if (o.description.isGroupable()) {
 				l = gatherer.get(o.description);
@@ -431,7 +441,6 @@ public class EntityObjInventory {
 		}
 		return objList;
 	}
-
 	
 	public ArrayList<ObjInstance> getInventory() {
 		return inventory;
@@ -444,7 +453,7 @@ public class EntityObjInventory {
 	{
 		for (ObjInstance i:equipped)
 		{
-			System.out.println("check attr bonus I "+i.getName());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("check attr bonus I "+i.getName());
 			if (i.description instanceof Armor)
 			{
 				Armor bo = (Armor)i.description;
@@ -470,7 +479,7 @@ public class EntityObjInventory {
 		Attributes sum = null;
 		for (ObjInstance i:equipped)
 		{
-			System.out.println("check attr bonus I "+i.getName());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntObjInv getEquipmentAttributeValues: check attr bonus I "+i.getName());
 			if (i.description instanceof BonusObject)
 			{
 				BonusObject bo = (BonusObject)i.description;
@@ -487,7 +496,7 @@ public class EntityObjInventory {
 						continue;
 					}
 				}
-				System.out.println(bo.getAttributeValues());
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+bo.getAttributeValues());
 				if (bo.getAttributeValues()!=null)
 				{
 					Attributes bonus = bo.getAttributeValues();

@@ -1,6 +1,7 @@
 package org.jcrpg.threed.input.action;
 
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
@@ -36,7 +37,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
      */
     public synchronized void performAction(InputActionEvent evt) {
     	if (!performActionCheck(evt)){
-        	System.out.println("locked...");
+        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("locked...");
     		return;
     	}
     	

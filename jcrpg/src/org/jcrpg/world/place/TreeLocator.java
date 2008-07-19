@@ -99,8 +99,8 @@ public class TreeLocator extends PlaceLocator {
 			DEEPEST_LEVEL_GRANULATION_X /= 2;
 			DEEPEST_LEVEL_GRANULATION_Z /= 2;
 		}
-		System.out.println("### DEEPEST LEVEL X = "+DEEPEST_LEVEL_GRANULATION_X);
-		System.out.println("### DEEPEST LEVEL Z = "+DEEPEST_LEVEL_GRANULATION_Z);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### DEEPEST LEVEL X = "+DEEPEST_LEVEL_GRANULATION_X);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### DEEPEST LEVEL Z = "+DEEPEST_LEVEL_GRANULATION_Z);
 		
 	}
 	
@@ -115,7 +115,7 @@ public class TreeLocator extends PlaceLocator {
 	{
 		if (this.depth==MAX_DEPTH)
 		{
-			//System.out.println("RETURNING CONTENT "+content.size()+" - "+((Economic)content.get(0)).id);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RETURNING CONTENT "+content.size()+" - "+((Economic)content.get(0)).id);
 			if (content!=null) content.remove(o);
 		} else
 		{
@@ -126,7 +126,7 @@ public class TreeLocator extends PlaceLocator {
 					loc.removeElement(worldX, worldY, worldZ,o);
 				}
 			}
-			//System.out.println("RETURNING CONTENT NULL");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RETURNING CONTENT NULL");
 			return;
 		}
 	}
@@ -148,11 +148,11 @@ public class TreeLocator extends PlaceLocator {
 			}
 			/*if (o instanceof Boundaries && ((Boundaries)o).boundaryPlace!=null)
 			{
-				System.out.println("ADDING "+worldX+"/"+worldY+"/"+worldZ+" "+((Boundaries)o).boundaryPlace);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING "+worldX+"/"+worldY+"/"+worldZ+" "+((Boundaries)o).boundaryPlace);
 			}*/
 			if (!content.contains(o)) 
 			{
-				//System.out.println("ADDING CONTENT: "+o+" - "+worldX+" / "+worldY+" / "+worldZ);
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING CONTENT: "+o+" - "+worldX+" / "+worldY+" / "+worldZ);
 				content.add(o);
 			}
 		} else 
@@ -202,7 +202,7 @@ public class TreeLocator extends PlaceLocator {
 			{
 				newMinZ = middleZ+1;
 			}
-			//System.out.println("NEW RANGE: "+newMinX+"/"+newMaxX+" "+newMinY+"/"+newMaxY+" "+newMinZ+"/"+newMaxZ);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NEW RANGE: "+newMinX+"/"+newMaxX+" "+newMinY+"/"+newMaxY+" "+newMinZ+"/"+newMaxZ);
 			Range r = new Range(newMinX,newMaxX,newMinY,newMaxY,newMinZ,newMaxZ);
 			TreeLocator newLocator = new TreeLocator(r,depth+1);
 			newLocator.addElement(worldX, worldY, worldZ, o);
@@ -221,7 +221,7 @@ public class TreeLocator extends PlaceLocator {
 	{
 		if (this.depth==MAX_DEPTH)
 		{
-			//System.out.println("RETURNING CONTENT "+content.size()+" - "+((Economic)content.get(0)).id);
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RETURNING CONTENT "+content.size()+" - "+((Economic)content.get(0)).id);
 			return content;
 		} else
 		{
@@ -232,7 +232,7 @@ public class TreeLocator extends PlaceLocator {
 					return loc.getElements(worldX, worldY, worldZ);
 				}
 			}
-			//System.out.println("RETURNING CONTENT NULL");
+			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RETURNING CONTENT NULL");
 			return null;
 		}
 	}

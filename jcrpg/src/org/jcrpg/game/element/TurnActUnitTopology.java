@@ -19,6 +19,8 @@ package org.jcrpg.game.element;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EncounterUnitData;
 
@@ -60,7 +62,7 @@ public class TurnActUnitTopology {
 		if (unit.partyMember)
 		{
 			getPartyLineup().addUnitPushing(unit, line);
-			System.out.println("###### ADDING PARTY MEMBER TO LINE: "+line+" "+unit.getName());
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("TurnActUnitTopology.addUnitPushing ADDING PARTY MEMBER TO LINE: "+line+" "+unit.getName());
 		} else
 		if (unit.friendly)
 		{

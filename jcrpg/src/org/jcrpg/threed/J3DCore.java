@@ -64,6 +64,7 @@ import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
+import org.jcrpg.ui.window.interaction.PostEncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.ui.window.player.CharacterLevelingWindow;
@@ -188,6 +189,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean FARVIEW_ENABLED = false;
     
     public static boolean CONTINUOUS_LOAD = false;
+    
+    public static boolean LOGGING = true;
 
     static Properties p = new Properties();
     static {
@@ -247,6 +250,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (!loadValue("LOGGING", false))
 			{
 				Jcrpg.LOGGER.setLevel(Level.OFF);
+				LOGGING = false;
 			}
 
 		} catch (Exception ex) {
@@ -1007,7 +1011,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					vTotal[0]+=v[0];
 					vTotal[1]+=v[1];
 					vTotal[2]+=v[2];
-					ColorRGBA c = new ColorRGBA(v[0],v[1],v[2],0.6f);
+					ColorRGBA c = new ColorRGBA(v[0],v[1],v[2],0.3f);
 					
 					l[0].getLight().setDiffuse(c);//c);//new ColorRGBA(1,1,1,1));
 					l[0].getLight().setAmbient(ColorRGBA.white);
@@ -1386,7 +1390,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;
 		for (int i=0; i<directions.length; i++) {
-			Jcrpg.LOGGER.info("Moving dir: "+directions[i]);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.info("J3DCore.moveBase Moving dir: "+directions[i]);
 			newCoords = calcMovement(newCoords, directions[i],true); 
 			newRelCoords = calcMovement(newRelCoords, directions[i],false);
 		}
@@ -1398,14 +1402,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c!=null) {
 				if (c.internalCube)
 				{
-					Jcrpg.LOGGER.info("Moved: INTERNAL");
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Moved: INTERNAL");
 					gameState.getNormalPositions().insideArea = true;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(intRootNode);
 					groundParentNode.attachChild(extRootNode);
 				} else
 				{
-					Jcrpg.LOGGER.info("Moved: EXTERNAL");
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Moved: EXTERNAL");
 					gameState.getNormalPositions().insideArea = false;
 					groundParentNode.detachAllChildren(); // workaround for culling
 					groundParentNode.attachChild(extRootNode);
@@ -1435,15 +1439,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			Side[] sides = c.getSide(directions[0]);
 			if (sides!=null)
 			{
-				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
 				if (hasSideOfInstance(sides, notPassable) && (!gameState.getNormalPositions().onSteep || directions[0]==BOTTOM || directions[0]==TOP)) return false;
-				Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = gameState.world.getCube(-1,newCoords[0], newCoords[1], newCoords[2], false);
 			if (nextCube==null) Jcrpg.LOGGER.info("NEXT CUBE = NULL");
 				else 
 			{
-					Jcrpg.LOGGER.info("Next Cube = "+nextCube.toString());
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Next Cube = "+nextCube.toString());
 					sides = nextCube.getSide(oppositeDirections.get(new Integer(directions[0])).intValue());
 					if (sides!=null)
 					{
@@ -1483,7 +1487,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// cube below
 					nextCube = gameState.world.getCube(-1,newCoords[0], newCoords[1]-(yMinus++), newCoords[2], false);
-					Jcrpg.LOGGER.info("FALLING: "+nextCube);
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.info("FALLING: "+nextCube);
 					if (yMinus>10) break; /// i am faaaalling.. :)
 					if (nextCube==null) continue;
 
@@ -1912,7 +1916,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public void setFlare(boolean state)
 	{
-		System.out.println("TURNING LENSFLARE "+state);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TURNING LENSFLARE "+state);
 		for (LensFlare f:flares.keySet())
 		{
 			f.setIntensity(state?10f:0f);
@@ -2244,6 +2248,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		preEncounterWindow = new PreEncounterWindow(uiBase);
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
+		postEncounterWindow = new PostEncounterWindow(uiBase);
 				
 		uiBase.addWindow("behaviorWindow", behaviorWindow);
 		uiBase.addWindow("inventoryWindow", inventoryWindow);
@@ -2277,6 +2282,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public PreEncounterWindow preEncounterWindow = null;
 	public EncounterWindow encounterWindow = null;
 	public TurnActWindow turnActWindow = null;
+	public PostEncounterWindow postEncounterWindow = null;
 	
 	PlayerChoiceWindow pChoiceWindow = null;
 	
@@ -2419,7 +2425,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			renderResult = null;
 			long t0 = System.currentTimeMillis();
 			renderResult = sEngine.render(gameState.getNormalPositions().viewPositionX,gameState.getNormalPositions().viewPositionY,gameState.getNormalPositions().viewPositionZ,false);
-			System.out.println("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 			rendering = false;
 			renderFinished = true;
 		}

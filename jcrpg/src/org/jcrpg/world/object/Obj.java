@@ -161,4 +161,15 @@ public class Obj {
 		return groupable;
 	}
 	
+	/**
+	 * Return calculated absolute gold value of this object type.
+	 * @return Value.
+	 */
+	public int getGoldValue()
+	{
+		// TODO this fully...
+		if (this instanceof BonusObject) return 10;
+		return 1;
+	}
+	
 }

@@ -159,7 +159,7 @@ public class Geography extends Place implements Surface {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.worldRealHeight = worldHeight - worldGroundLevel;
-		System.out.println("MOUNTAIN SIZE = "+worldRealHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+worldRealHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
@@ -408,7 +408,7 @@ public class Geography extends Place implements Surface {
 							else
 							if (e.getBoundaries().isInside(worldX, e.origoY, worldZ))
 							{
-								//System.out.println("override: "+( ((Economic)o).origoY-worldGroundLevel ));
+								//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("override: "+( ((Economic)o).origoY-worldGroundLevel ));
 								return e.origoY-worldGroundLevel;
 							}
 						}						
@@ -547,7 +547,7 @@ public class Geography extends Place implements Surface {
 			Integer cachedKind = quickCubeKindCache.get(keyNew);
 			if (cachedKind!=null) 
 			{
-				//System.out.println("CUBE CACHE USED!");
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
 				return cachedKind;
 			}
 			int kind = getCubeKindNoCache(worldX, worldY, worldZ,  farView);
@@ -596,7 +596,7 @@ public class Geography extends Place implements Surface {
 		int K_STEEP_WEST = Geography.K_STEEP_WEST;
 		int K_STEEP_NORTH = Geography.K_STEEP_NORTH;
 		
-		//if (this instanceof Plain) System.out.println("-- RELY - "+relY+" - "+Y);
+		//if (this instanceof Plain) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("-- RELY - "+relY+" - "+Y);
 		int[][] eval = evaluate(Y, new int[]{YNorth,YEast,YSouth,YWest,YNorthEast, YSouthEast, YSouthWest, YNorthWest});
 		if (Y==relY) 
 		{

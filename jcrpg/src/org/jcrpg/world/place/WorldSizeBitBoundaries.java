@@ -18,6 +18,9 @@
 
 package org.jcrpg.world.place;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
+
 /**
  * Bit based boundary - positions are recorded as bits in a series of byte arrays.
  * @author pali
@@ -40,9 +43,9 @@ public class WorldSizeBitBoundaries extends Boundaries {
 		gWY = (wY*wMag)/gMag;
 		gWZ = (wZ*wMag)/gMag;
 		
-		//System.out.println(""+gWX+" "+gWY+" "+gWZ+" "+(int)((gWX*gWY*gWZ)/8));
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+gWX+" "+gWY+" "+gWZ+" "+(int)((gWX*gWY*gWZ)/8));
 		// negative int on too big world size!! add more byte arrays!
-		System.out.println("(gWX*gWY*gWZ)/8="+(gWX*gWY*gWZ)/8); // TODO mem calculation exception if too high: 1000 magnification / 10 geo magnification in a 100x100 world would eat 200MB!
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("WorldSizeBitBoundaries (gWX*gWY*gWZ)/8="+(gWX*gWY*gWZ)/8); // TODO mem calculation exception if too high: 1000 magnification / 10 geo magnification in a 100x100 world would eat 200MB!
 		bytes = new byte[(gWX*gWY*gWZ)/8];
 	}
 

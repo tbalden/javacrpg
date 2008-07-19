@@ -20,6 +20,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
@@ -83,7 +84,7 @@ public class EntityMemberInstance {
 			for (Class<?extends Obj> o:J3DCore.getInstance().gameState.charCreationRules.getProfession(description.professions.get(0)).generationNewInstanceObjects)
 			{
 				inventory.add(new ObjInstance(ObjList.getInstance(o)));
-				System.out.println("ADDING ITEM : "+o);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ADDING ITEM : "+o);
 			}
 		} catch (Exception ex)
 		{
@@ -165,14 +166,14 @@ public class EntityMemberInstance {
 		// TODO add spell modifiers in effect later when we have them
 		
 		Attributes attributes = getAttributesVanilla();
-		System.out.println("Vanilla: "+attributes);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Vanilla: "+attributes);
 		Attributes equipmentAttributes = inventory.getEquipmentAttributeValues(null);
 		attributes.appendAttributes(equipmentAttributes);
-		System.out.println("Equipment: "+equipmentAttributes);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Equipment: "+equipmentAttributes);
 		Attributes stateEffectAttributes = memberState.getStateEffectAttributesSum();
 		if (stateEffectAttributes!=null)
 		{
-			System.out.println("StateEffect: "+stateEffectAttributes);
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("StateEffect: "+stateEffectAttributes);
 			attributes.appendAttributes(stateEffectAttributes);
 		}
 		return attributes;

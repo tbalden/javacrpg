@@ -2,6 +2,8 @@ package org.jcrpg.world.place.economic.infrastructure;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
@@ -49,11 +51,11 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				shuffleCount = (shuffleCount+1)%fullShuffledBlocks.length;
 				if (shuffleCount == oldShuffleCount) {
 					blockCount=-1;
-					//System.out.println("!!! NO BLOCK FOUND FOR RESIDENCE...");
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!! NO BLOCK FOUND FOR RESIDENCE...");
 					break; // arrived to the beginning counter, no room found
 				}
 				if (isOccupiedBlock(occupiedBlocks,blockCount)) {
-					//System.out.println("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
 					blockCount = -1;
 					continue;
 				}
@@ -74,7 +76,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				
 			} else
 			{
-				System.out.println("NO BLOCK...");
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DefaultInfrastructure NO MORE BLOCK...");
 				break; // no free space found...
 			}
 			
@@ -85,14 +87,14 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	InfrastructureElementParameters mainStreet = null;
 	public void prepareBuildProgram(ArrayList<InfrastructureElementParameters> fixProperties, ArrayList<Class<?extends Residence>> residenceTypes, ArrayList<Class<?extends EconomicGround>> groundTypes)
 	{
-		//System.out.println("-- NUM ID = "+(population.blockStartX+population.blockStartZ+population.soilGeo.numericId));
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("-- NUM ID = "+(population.blockStartX+population.blockStartZ+population.soilGeo.numericId));
 		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks,6,2);
 		/*StringBuffer b = new StringBuffer();
 		for (int i=0; i<fullShuffledBlocks.length; i++)
 		{
 			b.append(fullShuffledBlocks[i]).append(", ");
 		}
-		System.out.println("SHUFFLED = "+b);*/
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SHUFFLED = "+b);*/
 		mainStreet = new InfrastructureElementParameters();
 		mainStreet.relOrigoX = 0;
 		mainStreet.relOrigoY = 0;

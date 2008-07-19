@@ -120,7 +120,7 @@ public class GroupedBoundaries extends Boundaries {
 				{
 					/*if (((Population)parent).soilGeo instanceof Cave)
 					{
-						System.out.println("!!!! NEAR CAVE POPULATION");
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!!! NEAR CAVE POPULATION");
 					}*/
 					return true;
 				}

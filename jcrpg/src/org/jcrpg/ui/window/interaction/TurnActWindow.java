@@ -257,10 +257,10 @@ public class TurnActWindow extends PagedInputWindow {
 					ids[counter_2]=""+counter_2;
 					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
 					objects[counter_2]=b;
-					System.out.println("--- "+skill);
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+skill);
 					if (i.behaviorSkill!=null && i.behaviorSkill.getClass() == b.getClass())
 					{
-						System.out.println("### FOUND SKILL");
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### FOUND SKILL");
 						selected = counter_2;
 					}
 					counter_2++;
@@ -320,7 +320,7 @@ public class TurnActWindow extends PagedInputWindow {
 				Object[] objects = new Object[list.size()];
 				String[] texts = new String[list.size()];
 				int count = 0;
-				System.out.println("ENC SIZE = "+list.size());
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
 				for (EncounterUnitData data:list)
 				{
 					ids[count] = ""+count;
@@ -444,7 +444,20 @@ public class TurnActWindow extends PagedInputWindow {
 				//SkillInstance skillInstance = i.description.memberSkills.skills.get(s.getClass());
 				{
 					ArrayList<Class<?extends SkillActForm>> forms = i.getDoableActForms(s.getClass());
-					//ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+					TreeMap<Integer, Class<?extends SkillActForm>> orderedForms = new TreeMap<Integer, Class<? extends SkillActForm>>();
+					for (Class<? extends SkillActForm> form:forms)
+					{
+						SkillActForm formInst = SkillGroups.getSkillActFormInstance(s.getClass(), form);
+						Integer point = formInst.getBiggestUsedPoint();
+						while (orderedForms.get(point)!=null)
+						{
+							point++;
+						}
+						orderedForms.put(point, form);
+					}
+					forms.clear();
+					forms.addAll(orderedForms.values());
+					
 					String[] texts = new String[forms.size()];
 					Object[] objects = new Object[forms.size()];
 					String[] ids = new String[forms.size()];
@@ -653,7 +666,7 @@ public class TurnActWindow extends PagedInputWindow {
 		Object[] objects = new Object[list.size()];
 		String[] texts = new String[list.size()];
 		int count = 0;
-		System.out.println("ENC SIZE = "+list.size());
+		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
 		for (EncounterUnitData data:list)
 		{
 			ids[count] = ""+count;
