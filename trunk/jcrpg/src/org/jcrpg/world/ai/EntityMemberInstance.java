@@ -284,9 +284,16 @@ public class EntityMemberInstance {
 			for (Class<? extends SkillActForm> form :i.aquiredActForms)
 			{
 				if (form == NoActForm.class) continue;
-				SkillBase b = SkillGroups.skillBaseInstances.get(i.skill);				
-				if (b.getActForm(form).canBeDoneByMember(this)){
-					list.add(form);
+				SkillBase b = SkillGroups.skillBaseInstances.get(i.skill);
+				SkillActForm formInstance = b.getActForm(form);
+				if (formInstance!=null)
+				{
+					if (formInstance.canBeDoneByMember(this)){
+						list.add(form);
+					}
+				} else
+				{
+					// this act form was removed from game
 				}
 			}
 		}

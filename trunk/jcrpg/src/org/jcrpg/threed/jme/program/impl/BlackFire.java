@@ -31,7 +31,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
-public class FumeCloud extends EffectNode {
+public class BlackFire extends EffectNode {
 
 	private ParticleMesh pMesh;
 	//private Box debugBox;
@@ -41,8 +41,8 @@ public class FumeCloud extends EffectNode {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FumeCloud() {
-		speed = 0.8f;
+	public BlackFire() {
+		speed = 2;
 		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader
@@ -55,16 +55,16 @@ public class FumeCloud extends EffectNode {
 
 			pMesh = ParticleFactory.buildParticles("particles", 300);
 			pMesh.setEmissionDirection(new Vector3f(0, 1, 0));
-			pMesh.setInitialVelocity(.001f);
+			pMesh.setInitialVelocity(.002f);
 			pMesh.setStartSize(0.25f);
 			pMesh.setEndSize(0.15f);
 			pMesh.setMinimumLifeTime(1200f);
 			pMesh.setMaximumLifeTime(1400f);
-			pMesh.setStartColor(new ColorRGBA(0.1f, 0.6f, 0.2f, 1));
-			pMesh.setEndColor(new ColorRGBA(0, 0.3f, 0.2f, 0));
+			pMesh.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 1));
+			pMesh.setEndColor(new ColorRGBA(0.3f, 0.1f, 0.1f, 0.5f));
 			pMesh.setMaximumAngle(360f * FastMath.DEG_TO_RAD);
-			pMesh.getParticleController().setControlFlow(true);
-			pMesh.warmUp(20);
+			pMesh.getParticleController().setControlFlow(false);
+			pMesh.warmUp(60);
 	
 			pMesh.setRenderState(as1);
 			pMesh.setRenderState(ts);
