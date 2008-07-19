@@ -46,7 +46,7 @@ public class SystemRelated {
 		int y = 0;
 		for (String quString:quadIds)
 		{
-			Quad q = new Quad("Q_"+quString,hud.core.getDisplay().getWidth()/19,hud.core.getDisplay().getHeight()/15);
+			Quad q = new Quad("Q_"+quString,hud.core.getDisplay().getWidth()/18,hud.core.getDisplay().getHeight()/14);
 			Image baseImage = TextureManager.loadImage(new File(images[y]).toURI().toURL(),true);
 			Texture base_tex = new Texture();
 			base_tex.setImage(baseImage);			
@@ -56,7 +56,7 @@ public class SystemRelated {
 			q.setCullMode(Quad.CULL_ALWAYS);
 			q.setRenderState(hud.hudAS);
 	        q.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        q.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/40)*2+(y*(hud.core.getDisplay().getWidth()/18)),hud.core.getDisplay().getHeight()-(1*(hud.core.getDisplay().getHeight()/36))*2,0));
+	        q.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/40)*2+(y*(hud.core.getDisplay().getWidth()/17)),hud.core.getDisplay().getHeight()-(1*(hud.core.getDisplay().getHeight()/36))*2,0));
 	        q.setLightCombineMode(LightState.OFF);
 	        q.updateRenderState();
 	        hmQuad.put(quString, q);
