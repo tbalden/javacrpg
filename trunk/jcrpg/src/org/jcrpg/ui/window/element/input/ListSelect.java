@@ -21,6 +21,8 @@ package org.jcrpg.ui.window.element.input;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
@@ -38,6 +40,7 @@ public class ListSelect extends InputBase {
 	public String[] ids;
 	public String[] texts;
 	public Object[] objects;
+	public Quad[] icons;
 	
 	public int selected = 0;
 	public int fromCount = 0;
@@ -50,8 +53,14 @@ public class ListSelect extends InputBase {
 	
 	public Node deactivatedNode = null;
 	public Node activatedNode = null;
+
+	public float dCenterIconX = 0;
 	
 	public ArrayList<Node> textNodes = new ArrayList<Node>(); 
+	/**
+	 * The icon nodes visible currently.
+	 */
+	public ArrayList<Node> iconNodes = new ArrayList<Node>();
 
 	public static final String defaultImage = "./data/ui/inputBase.png";
 	public String bgImage = defaultImage;
@@ -61,13 +70,19 @@ public class ListSelect extends InputBase {
 	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		this(id,w,parent,centerX,centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
 	}
-	
 	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,centerX,0f,centerY,sizeX,sizeY,fontRatio,ids,texts,objects,new Quad[0],normal,highlighted);
+	}
+	
+	public ListSelect(String id, InputWindow w, Node parent, float centerX, float iconX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, Object[] objects, Quad[] icons, ColorRGBA normal, ColorRGBA highlighted) 
+	{
 		super(id, w, parent, centerX, centerY, sizeX, sizeY);
 		this.fontRatio = fontRatio;
 		this.ids = ids;
 		this.texts = texts;
 		this.objects = objects;
+		this.icons = icons;
+		dCenterIconX = w.core.getDisplay().getWidth()*(iconX);
 		maxCount = ids.length;		
 		this.normal = normal;
 		this.highlighted = highlighted;
@@ -144,6 +159,24 @@ public class ListSelect extends InputBase {
 		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
 		currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+		
+		if (icons!=null && icons.length>0)
+		{
+			try {
+				Quad m = icons[selected+fromCount];
+				Node iconNode = new Node();
+				iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*0,0);
+				iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
+				iconNode.attachChild(m);
+				baseNode.attachChild(iconNode);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		
 		baseNode.attachChild(slottextNode);
 		baseNode.updateRenderState();
 	}
@@ -174,6 +207,7 @@ public class ListSelect extends InputBase {
 			return;
 		}
 		textNodes.clear();
+		iconNodes.clear();
 		int size = 0;
 		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
@@ -202,6 +236,23 @@ public class ListSelect extends InputBase {
 				} else
 				{
 					colorize(slottextNode, disabledColor);
+				}
+				if (icons!=null && icons.length>0)
+				{
+					try {
+						Quad m = icons[i+fromCount];
+						Node iconNode = new Node();
+						iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*i,0);
+						iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
+						iconNode.attachChild(m);
+						baseNode.attachChild(iconNode);
+						iconNodes.add(iconNode);
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
 				}
 				textNodes.add(slottextNode);
 				baseNode.attachChild(slottextNode);

@@ -66,6 +66,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] try using md5importer - animation problems are unsolvable
 
+[ ] protection form Good Evil? addition of such things against physical combat form damages??
+
 ##
 [?] list before next release:
 ##
@@ -86,6 +88,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] sword/shield for turn act?
 
 	-- QA/DOC
+	
+	[ ] upgrade wikipedia with information - especially Download page, Install informations
 
 	[ ] documenting points, attr, calculations, leveling
 	
