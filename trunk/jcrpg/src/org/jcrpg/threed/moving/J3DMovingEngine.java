@@ -565,7 +565,7 @@ public class J3DMovingEngine {
 					Vector3f pos = calculatePositionVector(null,target,true);
 					n.setPosition(pos, null);
 					core.encounterExtRootNode.attachChild(n);
-					n.updateRenderState();
+					core.getRootNode1().updateRenderState();
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
 				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
