@@ -50,7 +50,7 @@ public class BlackFire extends EffectNode {
 		
 		pMesh = cacheMesh.get(this.getClass());
 		
-		this.attachChild(getLightNode());
+		this.attachChild(getLightNode(new ColorRGBA(0.9f, 0.8f, 0.8f, 1)));
 		
 		if (pMesh==null)
 		{
