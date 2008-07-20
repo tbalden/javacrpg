@@ -92,10 +92,6 @@ public class FireArrow extends EffectNode {
 		{
 			pMesh.setOriginOffset(currentPos);
 		}
-		if (light!=null)
-		{
-			light.setLocalTranslation(currentPos);
-		}
 		super.setPosition(newPos,newAngle);
 	}
 	

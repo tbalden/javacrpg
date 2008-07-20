@@ -60,6 +60,11 @@ public abstract class EffectNode extends Node {
 			this.attachChild(modelNode);
 			modelNode.setLocalTranslation(newPos);
 		}
+		if (light!=null && light.getLight().isEnabled())
+		{
+			light.setLocalTranslation(currentPos);
+		}
+		
 	}
 	public Quaternion getAngle()
 	{
@@ -100,7 +105,9 @@ public abstract class EffectNode extends Node {
 			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
 			light = new LightNode("light",ls);
 			PointLight pointLight = new PointLight();
-			pointLight.setAttenuate(false);
+			pointLight.setAttenuate(true);
+			pointLight.setConstant(1f);
+			pointLight.setQuadratic(0.2f);
 			light.setLight(pointLight);
 			pointLight.setEnabled(true);
 			light.setTarget(J3DCore.getInstance().getRootNode1());		

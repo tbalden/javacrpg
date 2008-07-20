@@ -36,7 +36,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 
 [ ] Encounter grounds mode
-	[ ] unit advance - moving around - tricky positioning/ A* movement??
+	[ ] WALK unit advance - moving around - tricky positioning/ A* movement??
 	[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
 	[ ] neutralization should make relation better
 	    killing should make it worse with the group
