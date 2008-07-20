@@ -108,13 +108,13 @@ public class EvaluatorBase {
 				}
 			}
 		}
-		int result = level + ATTACK_BASE_VALUE;
+		int result = level;// + ATTACK_BASE_VALUE;
 		result = (int)(result * ( objMultiplicator ));
 		return result;
 	}
 	
-	public static final int ATTACK_BASE_VALUE = 10;
-	public static final int DEFENSE_BASE_VALUE = 20;
+	//public static final int ATTACK_BASE_VALUE = 0;
+	public static final int DEFENSE_BASE_VALUE = 50;
 	
 	public static class EvaluatedData
 	{
@@ -203,7 +203,6 @@ public class EvaluatorBase {
 				{ 	// TODO probably better 'get object' usage?
 					contraObjectInstance = contraChoice.usedObject.objects.get(0);
 				}
-				// TODO body part calc
 				targetData.add(new EvaluatedSkillActFormTargetData(seed, choice,contraChoice,contraObjectInstance));
 			}
 			
@@ -475,6 +474,14 @@ public class EvaluatorBase {
 		
 		public int calculateSourcePower()
 		{
+			// ATTACK POINT = 
+			//
+			//    (SKILL TYPE POWER) +
+			//      ( PRO ATTRIBUTES AVERAGE ) / 2 )      + Random 0-100
+			//
+			// (0 - 100) + (0 - 50) = 0-150  ->  0 - 250
+			
+
 			int base = calculatePowerForSkillUse(levelOfSkill, false, objInstance, dependencyObj);
 			if (form!=null)
 				base += calculateAttributePower(form.proAttributes, sourceAttributes)/2;
@@ -545,6 +552,14 @@ public class EvaluatorBase {
 		
 		public int calculateTargetPower(ArrayList<String> additionalContraResistances)
 		{
+			
+			// DEFENSE POINT = 
+			//
+			//    BASE VALUE (50) + ARMOR VALUE + (CONTRA SKILL TYPE POWER / 2) +
+			//      ( CONTRA ATTRIBUTES AVERAGE ) / 2 )+ ( CONTRA RESISTANCES AVERAGE / 2 )
+			//
+			//    50 + (0 - 100) + (0 - 50) + (0 - 50) + (0 - 50) = 50 - 250
+			
 			int base = DEFENSE_BASE_VALUE;
 			
 			if (armor!=null)
@@ -554,17 +569,8 @@ public class EvaluatorBase {
 			
 			if (form!=null)
 			{
-				base += calculatePowerForSkillUse(levelOfSkill, true, objInstance, null);	
+				base += calculatePowerForSkillUse(levelOfSkill, true, objInstance, null) / 2;	
 			} else
-			{
-				// using object, resting, double defense value.
-				if (targetChoice.doNothing) {
-					base += DEFENSE_BASE_VALUE;
-				} else
-				{
-					base += DEFENSE_BASE_VALUE/2;
-				}
-			}
 			
 			if (additionalContraResistances==null)
 			{

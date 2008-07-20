@@ -215,7 +215,7 @@ public class EntityMember extends DescriptionBase {
 								{
 									//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--_ "+sb);
 								}
-								int lineUpDistance = instance.encounterData.currentLine+choice.targetMember.encounterData.currentLine;
+								int lineUpDistance = instance.encounterData.getCurrentLine()+choice.targetMember.encounterData.getCurrentLine();
 								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
 								//boolean found = false;
 								if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("FOUND TURN ACT SKILLS: "+skills);

@@ -122,8 +122,8 @@ public class PartySetup extends PagedInputWindow {
 		try {
 	    	
 			// page selection -----------------------------------------------
-			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.61f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.13f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
@@ -647,7 +647,7 @@ public class PartySetup extends PagedInputWindow {
 				personWithGenderAndRace.genderType = id;
 			}
 			personWithGenderAndRace.audioDescription = new AudioDescription();
-			personWithGenderAndRace.audioDescription.PAIN = new String[]{"humanoid/humanoid_pain"};
+			personWithGenderAndRace.audioDescription.PAIN = new String[]{"humanoid/humanoid_pain_1","humanoid/humanoid_pain_2"};
 			personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_joy_male"};
 			personWithGenderAndRace.audioDescription.DEATH = new String[]{"humanoid/humanoid_death"};
 			if (personWithGenderAndRace.genderType==EntityDescription.GENDER_FEMALE)

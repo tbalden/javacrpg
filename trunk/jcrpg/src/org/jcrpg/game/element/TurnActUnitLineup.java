@@ -35,12 +35,14 @@ public class TurnActUnitLineup {
 	public HashMap<EncounterUnitData, Integer> unitToLineMap = new HashMap<EncounterUnitData, Integer>();
 	
 	EncounterInfo info = null;
-	public TurnActUnitLineup(EncounterInfo info)
+	int unitsPerLine = 2;
+	public TurnActUnitLineup(EncounterInfo info, int unitsPerLine)
 	{
 		this.info = info;
+		this.unitsPerLine = unitsPerLine;
 	}
 	
-	public static final int UNITS_PER_LINE = 2;
+	//public static final int UNITS_PER_LINE = 2;
 	
 	public ArrayList<EncounterUnitData> getList(int line)
 	{
@@ -72,11 +74,11 @@ public class TurnActUnitLineup {
 			l = new ArrayList<EncounterUnitData>();
 		}
 		l.add(unit);
-		unit.currentLine=line;
+		unit.setCurrentLine(line);
 		unit.turnActLineup = this;
 		
 		unitToLineMap.put(unit, line);
-		if (l.size()>UNITS_PER_LINE)
+		if (l.size()>unitsPerLine)
 		{
 			EncounterUnitData pushed = getUnitToPush(l);
 			l.remove(pushed);

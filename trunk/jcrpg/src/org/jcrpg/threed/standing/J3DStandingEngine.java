@@ -409,6 +409,7 @@ public class J3DStandingEngine {
 	 */
 	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
 	
+	protected int fragmentedViewDivider = 4;
 	
 	/**
 	 * Set this to true if you want a full rerender of the surroundings, renderedArea won't use it's cache and will return you all previous cubes to remove.
@@ -619,7 +620,7 @@ public class J3DStandingEngine {
 						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
 					}
 	
-					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
+					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/fragmentedViewDivider : J3DCore.VIEW_DISTANCE/2);
 					boolean checked = false;
 					int distX = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionX-c.cube.x);
 					int distY = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionY-c.cube.y);

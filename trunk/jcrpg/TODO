@@ -21,19 +21,30 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] check wciow updates on glestanimals - animated ? 
 
-[ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
-	[ ] AI use of potions/objects too!
-
-[ ] enemy unit effect icons too
-	[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
-	
-[ ] summoning spells	
 
 [ ] natural Talent addProfessionWithFilter for EntityDescription - to filter out some spell forms a monster
 	doesnt have.
 
 
-[ ] Encounter Grounds
+[ ] world generation - 
+	concentrate friendly groups - don't let enemies close at start,
+	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
+
+
+
+sanity point for Morale is like mana for hp, limiting social skills!
+
+
+[ ] Encounter grounds mode
+	[ ] unit advance - moving around - tricky positioning/ A* movement??
+	[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
+	[ ] neutralization should make relation better
+	    killing should make it worse with the group
+	[ ] different HUD for encounter mode!
+	[ ] protection form Good Evil? addition of alignment against physical combat form damages??
+	[X] a bigger 'Encounter' UI element popup when loading an encounter...
+		[ ]light effect -> pull down lights, and then pull up on encounter grounds
+
 	[ ] too quick anim at startup
 	[ ] flickering anim change...	
 	[X] turn camera on actor
@@ -44,29 +55,19 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		
 	[ ] economics too!
 
-[ ] world generation - 
-	concentrate friendly groups - don't let enemies close at start,
-	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
-
-[X] a bigger 'Encounter' UI element popup when loading an encounter...
-	[ ]light effect -> pull down lights, and then pull up on encounter grounds
-
-
-sanity point for Morale is like mana for hp, limiting social skills!
-
-[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
-[ ] neutralization should make relation better
-    killing should make it worse with the group
-
-[ ] unit advance - moving around - tricky positioning/ A* movement??
+	[ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
+		[ ] AI use of potions/objects too!
+	
+	[ ] enemy unit effect icons too
+		[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
+		
+	[ ] summoning spells	
 
 [ ] use & cast in normal mode too
 
-[ ] different HUD for encounter mode!
 
 [ ] try using md5importer - animation problems are unsolvable
 
-[ ] protection form Good Evil? addition of alignment against physical combat form damages??
 
 ##
 [?] list before next release:
@@ -80,21 +81,33 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] fabrication of ammunition and such - fletcher, work Skill
 		[ ] thief helper skill, disarm?
 		[X] social helper skills - > Strategy
-
-	[ ] tuning down impacts a bit ;)
 	
 	[ ] walk/pain anim for Mage
 	[ ] neutralized icon on portrait
-	[ ] sword/shield for turn act?
+	[X] sword/shield for turn act?
+		[ ] + axe?
 
 	-- QA/DOC
 	
-	[ ] upgrade wikipedia with information - especially Download page, Install informations
 
 	[ ] documenting points, attr, calculations, leveling
 	
 	
 	--
+	[X] 'randomization' for generated units - using -1 as numeric id is not too good
+	
+	[X] upgrade wikipedia with information - especially Download page, Install informations
+
+	[X] camera from above of party when 2nd line
+	
+	[X] geo calc f --- cave for encounter grounds
+		[X] internal area UpdatTimeRelated when in Cave -> somehow add it to ScenarioCoordinates?
+	
+
+	[X] defense should be base 50 + used skill act forms / 2
+	
+	[X] tuning down impacts a bit ;)
+
 	[X] move logging to txt log , remove unneeded logs
 	
 	[X] death icon to portraits - add it to the centerNode, transparent

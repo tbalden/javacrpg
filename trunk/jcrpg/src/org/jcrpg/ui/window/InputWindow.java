@@ -145,6 +145,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 	public boolean handleKey(String key) {
 		if (key.equals("lookDown"))
 		{
+			if (inputs==null) return true;
 			int orig = selectedInput;
 			while (true)
 			{
@@ -172,6 +173,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 		} else
 		if (key.equals("lookUp"))
 		{
+			if (inputs==null) return true;
 			int orig = selectedInput;
 			while (true)
 			{
