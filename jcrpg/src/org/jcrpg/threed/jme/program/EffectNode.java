@@ -23,15 +23,21 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
+import com.jme.light.LightNode;
+import com.jme.light.PointLight;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.state.LightState;
+import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleMesh;
 
 public abstract class EffectNode extends Node {
 	
 	public static HashMap< Class<? extends EffectNode>, ParticleMesh> cacheMesh = new HashMap<Class<? extends EffectNode>, ParticleMesh>();
 
+	public static LightNode light = null;
+	
 	/**
 	 * serial version uid
 	 */
@@ -79,7 +85,28 @@ public abstract class EffectNode extends Node {
 	
 	public void clearUp()
 	{
-		
+		if (light!=null) 
+		{
+			light.removeFromParent();
+			light.getLight().setEnabled(false);
+		}
+	}
+	
+	public static LightNode getLightNode()
+	{
+		if (light==null)
+		{
+			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
+			light = new LightNode("light",ls);
+			PointLight pointLight = new PointLight();
+			pointLight.setAttenuate(false);
+			light.setLight(pointLight);
+			pointLight.setEnabled(true);
+			light.setTarget(J3DCore.getInstance().getRootNode1());		
+		}
+		light.removeFromParent();
+		light.getLight().setEnabled(true);
+		return light;
 	}
 
 }

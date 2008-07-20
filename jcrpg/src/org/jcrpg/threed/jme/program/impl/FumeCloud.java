@@ -50,6 +50,8 @@ public class FumeCloud extends EffectNode {
 		
 		pMesh = cacheMesh.get(this.getClass());
 		
+		this.attachChild(getLightNode());
+		
 		if (pMesh==null)
 		{
 
@@ -93,6 +95,7 @@ public class FumeCloud extends EffectNode {
 	public void clearUp()
 	{
 		pMesh.removeFromParent();
+		super.clearUp();
 	}
 
 }

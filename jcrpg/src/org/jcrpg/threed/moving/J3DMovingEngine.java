@@ -111,6 +111,7 @@ public class J3DMovingEngine {
 			effectNodes.get(program).remove(node);
 			node.startedPlaying = false;
 			node.removeFromParent();
+			node.clearUp();
 			activeEffectNodes.remove(node);
 		} catch (Exception ex)
 		{
