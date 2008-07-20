@@ -27,6 +27,7 @@ import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.state.LightState;
 import com.jme.system.DisplaySystem;
@@ -92,7 +93,7 @@ public abstract class EffectNode extends Node {
 		}
 	}
 	
-	public static LightNode getLightNode()
+	public static LightNode getLightNode(ColorRGBA color)
 	{
 		if (light==null)
 		{
@@ -105,6 +106,7 @@ public abstract class EffectNode extends Node {
 			light.setTarget(J3DCore.getInstance().getRootNode1());		
 		}
 		light.removeFromParent();
+		light.getLight().setAmbient(color);
 		light.getLight().setEnabled(true);
 		return light;
 	}

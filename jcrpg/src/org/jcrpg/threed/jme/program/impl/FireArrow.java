@@ -51,7 +51,7 @@ public class FireArrow extends EffectNode {
 		
 		pMesh = cacheMesh.get(this.getClass());
 
-		this.attachChild(getLightNode());
+		this.attachChild(getLightNode(new ColorRGBA(1, 0.5f, 0.5f, 1)));
 
 		if (pMesh==null)
 		{
