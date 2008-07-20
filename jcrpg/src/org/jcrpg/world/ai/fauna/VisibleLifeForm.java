@@ -119,7 +119,7 @@ public class VisibleLifeForm {
 	{
 		if (encounterUnitData!=null)
 		{
-			return encounterUnitData.currentLine;
+			return encounterUnitData.getCurrentLine();
 		}
 		return 0;
 	}

@@ -37,7 +37,7 @@ public class EncounterUnitData
 	public EncounterUnit parent;
 	public int groupId = -1;
 	public String name;
-	public int currentLine = 0;
+	private int currentLine = 0;
 	public TurnActUnitLineup turnActLineup= null;
 	
 	/**
@@ -75,7 +75,7 @@ public class EncounterUnitData
 		int size1 = parent.getGroupSize(groupId);
 		EntityMember m = parent.getGroupType(groupId);
 		description = m;
-		name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ")";			
+		name = size1+" "+ (m==null?parent.getName():m.getName()) + " (" + groupId+ ") " + currentLine;			
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class EncounterUnitData
 			ArrayList<EntityMemberInstance> list = getAllLivingMember();
 			try
 			{
-				name = (list==null?"0":list.size())+" "+ (m==null?(parent!=null?parent.getName():"????"):m.getName()) + " (" + groupId+ ")";
+				name = (list==null?"0":list.size())+" "+ (m==null?(parent!=null?parent.getName():"????"):m.getName()) + " (" + groupId+ ")"+ " "+ (currentLine+1);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -392,6 +392,13 @@ public class EncounterUnitData
 		{
 			i.memberState.updateEffects(seed, round, time);
 		}
+	}
+	public int getCurrentLine() {
+		return currentLine;
+	}
+	public void setCurrentLine(int currentLine) {
+		this.currentLine = currentLine;
+		updateNameInTurnActPhase();
 	}
 	
 }

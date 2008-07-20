@@ -39,9 +39,9 @@ public class TurnActUnitTopology {
 	
 	public TurnActUnitTopology(EncounterInfo info)
 	{
-		partyLineup = new TurnActUnitLineup(info);
-		friendlyLineup = new TurnActUnitLineup(info);
-		enemyLineup = new TurnActUnitLineup(info);
+		partyLineup = new TurnActUnitLineup(info,2);
+		friendlyLineup = new TurnActUnitLineup(info,3);
+		enemyLineup = new TurnActUnitLineup(info,3);
 		this.info = info;
 	}
 

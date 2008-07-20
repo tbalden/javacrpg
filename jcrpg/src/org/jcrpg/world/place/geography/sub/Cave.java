@@ -79,6 +79,11 @@ public class Cave extends Geography implements Surface {
 	
 	
 	public int density,entranceSide, levelSize;
+	
+	/**
+	 * If you want an all internal cubed cave set this to true - used for encoutner ground.
+	 */
+	public boolean alwaysInsideCubesForEncounterGround = false;
 
 	public Cave(String id, Place parent, PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int density, int entranceSide, int levelSize, boolean fillBoundaries ) throws Exception{
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
@@ -105,7 +110,7 @@ public class Cave extends Geography implements Surface {
 			c.overwrite = true;
 		}
 		if (c.overwritePower!=2)
-			c.internalCube = true; // except entrance all is inside
+			c.internalCube = true||alwaysInsideCubesForEncounterGround; // except entrance all is inside
 		return c;
 	}
 	

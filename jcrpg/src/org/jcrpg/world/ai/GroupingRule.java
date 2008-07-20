@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -36,8 +37,10 @@ public class GroupingRule {
 	public ArrayList<EntityMemberInstance> getGroup(int groupId, EntityFragment fragment)
 	{
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
+		int i=0;
 		while (members.size()<fragment.instance.getGroupSizes()[groupId]) {
-			members.add(new GeneratedMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1, 1));
+			members.add(new GeneratedMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1+i+groupId*100, 1));
+			i++;
 		}
 		return members;
 	}
@@ -100,12 +103,20 @@ public class GroupingRule {
 		int numberOfGroups = (int)(f.instance.getGroupSizes().length * 1f * radiusRatio/100f)+1;
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
-		if (numberOfGroups==0 || numberOfGroups==1) numberOfGroups = 2;
+		if (numberOfGroups==0 || numberOfGroups==1 ) numberOfGroups = 1;
 		if (numberOfGroups>f.instance.getGroupSizes().length) numberOfGroups = f.instance.getGroupSizes().length;
 		int[] groupIds = new int[numberOfGroups];
+		HashSet<Integer> used = new HashSet<Integer>();
 		for (int i=0; i<groupIds.length; i++)
 		{
-			groupIds[i] = i; // TODO non-sequential version
+			Integer gId = HashUtil.mix(randomSeed,i,0)%f.instance.getGroupSizes().length;
+			while (used.contains(gId))
+			{
+				gId++;
+				gId%=f.instance.getGroupSizes().length;
+			}
+			groupIds[i] = gId; 
+			used.add(gId);
 		}
 		return groupIds;
 	}

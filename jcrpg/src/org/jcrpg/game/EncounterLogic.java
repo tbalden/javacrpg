@@ -27,6 +27,7 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
@@ -377,6 +378,29 @@ public class EncounterLogic {
 
 		playTurnActStep();
 	}
+	
+	private void turnCameraToUnit(EncounterUnitData data)
+	{
+		try 
+		{
+			float deltaY = 0;
+			if (data.getCurrentLine()>=1)
+			{
+				gameLogic.core.getCamera().getLocation().y = gameLogic.core.getCurrentLocation().y+1.5f;
+				deltaY = -1f;
+			}
+			Vector3f place = gameLogic.core.mEngine.calculatePositionVector(data.visibleForm.unit, data.visibleForm,true);
+			CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+deltaY, place.z);
+		} catch (Exception ex)
+		{
+		}
+	}
+	private void resetCamera()
+	{
+		gameLogic.core.setCalculatedCameraLocation();
+		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
+		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
+	}
 
 	public void checkTurnActCallbackNeed()
 	{
@@ -395,6 +419,8 @@ public class EncounterLogic {
 							{
 								return;
 							}
+							
+							resetCamera();
 							
 							turnActTurnState.getCurrentEvent().internalState++;
 							
@@ -461,18 +487,7 @@ public class EncounterLogic {
 								
 								if (choice.targetMember.encounterData.visibleForm!=null)
 								{
-									try 
-									{
-										Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.targetMember.encounterData.visibleForm.unit,choice.targetMember.encounterData.visibleForm,true);
-										/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
-										Vector3f place = ph.getLocalTranslation();
-										place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
-										place.addLocal(0f,-0.9f,0f);*/
-										CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
-									} catch (Exception ex)
-									{
-										//ex.printStackTrace();
-									}
+									turnCameraToUnit(choice.targetMember.encounterData);
 								}
 								
 								if (impact.success) {
@@ -752,35 +767,13 @@ public class EncounterLogic {
 					// setting the camera to actor...
 					if (choice.member.encounterData.visibleForm!=null)
 					{
-						try 
-						{
-							Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.member.encounterData.visibleForm.unit,choice.member.encounterData.visibleForm,true);
-							/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
-							Vector3f place = ph.getLocalTranslation();
-							place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
-							place.addLocal(0f,-0.9f,0f);*/
-							CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
-						} catch (Exception ex)
-						{
-							//ex.printStackTrace();
-						}
+						turnCameraToUnit(choice.member.encounterData);
 					} else
 					{
 						// no visible actor, set to target..
 						if (choice.targetMember!=null && choice.targetMember.encounterData.visibleForm!=null)
 						{
-							try 
-							{
-								Vector3f place = gameLogic.core.mEngine.calculatePositionVector(choice.targetMember.encounterData.visibleForm.unit,choice.targetMember.encounterData.visibleForm,true);
-								/*NodePlaceholder ph = choice.targetMember.encounterData.visibleForm.unit.nodePlaceholders.iterator().next();
-								Vector3f place = ph.getLocalTranslation();
-								place = place.add(ph.model.disposition[0],ph.model.disposition[1],ph.model.disposition[2]);
-								place.addLocal(0f,-0.9f,0f);*/
-								CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
-							} catch (Exception ex)
-							{
-								ex.printStackTrace();
-							}
+							turnCameraToUnit(choice.targetMember.encounterData);
 						}
 					}
 					

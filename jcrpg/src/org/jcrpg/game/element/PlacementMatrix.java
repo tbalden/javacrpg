@@ -60,7 +60,7 @@ public class PlacementMatrix {
 		}
 		public EncounterUnitData next() {
 			EncounterUnitData d = matrix[iLineCount].get(iLineListCount);
-			d.currentLine = iLineCount;
+			d.setCurrentLine( iLineCount );
 			if (matrix[iLineCount].size()>iLineListCount+1)
 			{
 				iLineListCount++;

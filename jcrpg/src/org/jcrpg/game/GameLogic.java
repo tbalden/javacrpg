@@ -311,8 +311,8 @@ public class GameLogic {
 				boolean land = form.entity.description.isLandDweller();
 				boolean water = form.entity.description.isWaterDweller();
 				boolean air = form.entity.description.isAirDweller();
-				boolean indoor = form.entity.description.isIndoorDweller();
-				boolean outdoor= form.entity.description.isOutdoorDweller();
+				boolean indoor = true;//form.entity.description.isIndoorDweller();
+				boolean outdoor= true;//form.entity.description.isOutdoorDweller();
 				if (air && !usedPositions.contains(i)) break;
 				if (c.internalCube && !indoor)
 				{

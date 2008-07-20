@@ -295,6 +295,17 @@ public class GameStateContainer {
 					normalPosition.viewPositionZ,
 					world,
 					encWorldType);
+			Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterModePosition.viewPositionX,
+					encounterModePosition.viewPositionY,
+					encounterModePosition.viewPositionZ,
+					false);
+			if (c.internalCube)
+			{
+				encounterModePosition.insideArea = true;
+			} else
+			{
+				encounterModePosition.insideArea = false;
+			}
 			J3DCore.getInstance().sEngine.switchOn(false);
 			positionPlayerToSurfaceEncounterMode();
 			J3DCore.getInstance().setCalculatedCameraLocation();
@@ -302,6 +313,7 @@ public class GameStateContainer {
 			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().eEngine.switchOn(true);
 			J3DCore.getInstance().eEngine.renderToViewPort();
+			J3DCore.getInstance().updateTimeRelated();
 						
 		} else
 		{

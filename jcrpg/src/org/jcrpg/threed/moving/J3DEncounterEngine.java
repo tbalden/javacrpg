@@ -18,6 +18,7 @@
 package org.jcrpg.threed.moving;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
@@ -28,8 +29,11 @@ import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.BoundaryUtils;
+import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Plain;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
@@ -43,11 +47,12 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
 		optimizeAngle = false;
+		fragmentedViewDivider = 2;
 		
 	}
 	transient HashMap<String, World> encounterGroundWorlds = new HashMap<String, World>();
 	
-	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, String specialType) throws Exception
+	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, Geography geo, String specialType) throws Exception
 	{
 		World baseWorld = new World("encounterGround",null,100,1,1,1);
 		baseWorld.engine = core.gameState.engine;
@@ -74,8 +79,16 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, 1, 0, 0, 0));
 		climate.belts.put(belt.id, belt);
 		
-		Plain plain = new Plain("plain1",baseWorld,null,0,100,1,1,1,0,0,0,true);
-		baseWorld.addGeography(plain);
+		if (geo.getClass() == Cave.class)
+		{
+			Cave cave = new Cave("cave1",baseWorld,null,0,2,100,1,1,1,0,0,0,0,0,2,true);
+			cave.alwaysInsideCubesForEncounterGround = true;
+			baseWorld.addGeography(cave);
+		} else
+		{
+			Plain plain = new Plain("plain1",baseWorld,null,0,100,1,1,1,0,0,0,true);
+			baseWorld.addGeography(plain);
+		}
 		encounterGroundWorlds.put("BASE", baseWorld);
 		fallbackWorld = baseWorld;
 		return baseWorld;
@@ -85,10 +98,36 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	public void renderToEncounterWorld(int worldX, int worldY, int worldZ, World realWorld, String specialType)
 	{
 		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
+		ArrayList<SurfaceHeightAndType[]> list = realWorld.getSurfaceData(worldX, worldZ);
+		Geography geo = null;
+		for (SurfaceHeightAndType[] subList : list)
+		{
+			if (subList.length>0)
+			{
+				for (SurfaceHeightAndType surface:subList)
+				{
+					if (surface.surfaceY == worldY)
+					{
+						if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
+						{
+							geo = surface.self;
+						}
+						
+						break;
+					}
+				}
+			}
+		}
+		// TODO economic dependency
+		
 		Cube c = realWorld.getCube(-1, worldX, worldY, worldZ, false);
 		CubeClimateConditions ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c.internalCube);
 		
-		String type = ccc.getPartialBeltLevelKey()+"__"+specialType; 
+		String type = ccc.getPartialBeltLevelKey()+"__"+specialType;
+		if (geo!=null)
+		{
+			type+=geo.getClass().getSimpleName();
+		}
 		
 		if (type == null && lastType == null || type.equals(lastType)) return;
 		lastType = type;
@@ -97,7 +136,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		if (w==null)
 		{ 
 			try {
-				w = getEncounterGroundWorld(c, ccc, specialType);
+				w = getEncounterGroundWorld(c, ccc, geo, specialType);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();

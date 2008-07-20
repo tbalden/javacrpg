@@ -335,6 +335,7 @@ public class TurnActWindow extends PagedInputWindow {
 				for (EncounterUnitData data:list)
 				{
 					ids[count] = ""+count;
+					data.updateNameInTurnActPhase();
 					texts[count] = data.name;
 					objects[count] = data;
 					count++;
@@ -604,7 +605,7 @@ public class TurnActWindow extends PagedInputWindow {
 			}
 			
 			ArrayList<EncounterUnitData> list = encounterUnitDataList;
-			updateGroupSelect(groupSelect, list, i.encounterData.turnActLineup, i.encounterData.currentLine, maxLineUpDistanceRange, friendly, groupTarget);
+			updateGroupSelect(groupSelect, list, i.encounterData.turnActLineup, i.encounterData.getCurrentLine(), maxLineUpDistanceRange, friendly, groupTarget);
 			if ("fake".equals(message)) skillSelect.activate();
 			else
 				base.activate();
@@ -637,7 +638,7 @@ public class TurnActWindow extends PagedInputWindow {
 							}
 						}
 					}
-					updateGroupSelect(groupSelect, encounterUnitDataList, i.encounterData.turnActLineup, i.encounterData.currentLine, range, friendly, groupTarget);
+					updateGroupSelect(groupSelect, encounterUnitDataList, i.encounterData.turnActLineup, i.encounterData.getCurrentLine(), range, friendly, groupTarget);
 				}
 			} else
 			{
@@ -670,7 +671,7 @@ public class TurnActWindow extends PagedInputWindow {
 			if (maxLineUpDistanceRange!=Obj.NO_RANGE)
 			{
 				// line range filtering of units
-				if (lineUpOfSource + unitData.currentLine>maxLineUpDistanceRange) 
+				if (lineUpOfSource + unitData.getCurrentLine()>maxLineUpDistanceRange) 
 				{
 					continue;
 				}
@@ -702,6 +703,7 @@ public class TurnActWindow extends PagedInputWindow {
 		for (EncounterUnitData data:list)
 		{
 			ids[count] = ""+count;
+			data.updateNameInTurnActPhase();
 			texts[count] = data.name;
 			objects[count] = data;
 			count++;
