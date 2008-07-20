@@ -34,6 +34,7 @@ import com.jmex.effects.particles.ParticleMesh;
 public class FireArrow extends EffectNode {
 
 	private ParticleMesh pMesh;
+	
 	//private Box debugBox;
 
 	/**
@@ -49,10 +50,13 @@ public class FireArrow extends EffectNode {
 				.loadTextureStates(new String[] { "flaresmall.jpg" })[0];
 		
 		pMesh = cacheMesh.get(this.getClass());
-		
+
+		this.attachChild(getLightNode());
+
 		if (pMesh==null)
 		{
-
+			
+			
 			pMesh = ParticleFactory.buildParticles("particles", 300);
 			pMesh.setEmissionDirection(new Vector3f(0, 1, 0));
 			pMesh.setInitialVelocity(.006f);
@@ -85,7 +89,13 @@ public class FireArrow extends EffectNode {
 	public void setPosition(Vector3f newPos, Quaternion newAngle) {
 		currentPos = newPos;
 		if (pMesh!=null)
+		{
 			pMesh.setOriginOffset(currentPos);
+		}
+		if (light!=null)
+		{
+			light.setLocalTranslation(currentPos);
+		}
 		super.setPosition(newPos,newAngle);
 	}
 	
@@ -93,6 +103,7 @@ public class FireArrow extends EffectNode {
 	public void clearUp()
 	{
 		pMesh.removeFromParent();
+		super.clearUp();
 	}
 
 }
