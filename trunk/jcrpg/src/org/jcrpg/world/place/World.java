@@ -34,6 +34,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.time.Time;
 
@@ -432,6 +433,93 @@ public class World extends Place {
 	}
 	
 	public int lossFactor = 1000;
+	
+	
+	public class WorldTypeDesc
+	{
+		public Geography g;
+		public int surfaceY;
+		public Population population;
+		public Economic detailedEconomic;
+		public Water w;
+	}
+	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ)
+	{
+		Geography geo = null;
+		Geography backupGeo = null;
+		int closestDiffToY = 999999;
+		int backupClosestDiffToY = 999999;
+		int surfaceY = 9999999;
+		int backupSurfaceY = 9999999;
+		ArrayList<SurfaceHeightAndType[]> list = getSurfaceData(worldX, worldZ);
+		for (SurfaceHeightAndType[] subList : list)
+		{
+			if (subList.length>0)
+			{
+				for (SurfaceHeightAndType surface:subList)
+				{
+					if (worldY-surface.surfaceY>0 && worldY-surface.surfaceY<closestDiffToY)
+					{
+						if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
+						{
+							closestDiffToY = worldY-surface.surfaceY;
+							surfaceY = surface.surfaceY;
+							geo = surface.self;
+						}
+						
+					} else
+					{
+						if (Math.abs(worldY-surface.surfaceY)<backupClosestDiffToY)
+						{
+							if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
+							{
+								backupClosestDiffToY = worldY-surface.surfaceY;
+								backupSurfaceY = surface.surfaceY;
+								backupGeo = surface.self;
+							}
+						}
+					}
+				}
+			}
+		}
+		WorldTypeDesc desc = new WorldTypeDesc();
+		if (geo!=null)
+		{
+			desc.g = geo;
+			desc.surfaceY = surfaceY;
+			
+		} else
+		{
+			desc.g = backupGeo;
+			desc.surfaceY = backupSurfaceY;
+		}
+		
+		Population population = economyContainer.getPopulationAt(worldX, worldY, worldZ);
+		if (population==null)
+		{
+			population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ);
+		}
+		desc.population = population;
+		if (population!=null)
+			desc.detailedEconomic = population.getEconomicAtPosition(-1, worldX, worldY, worldZ, false);
+		
+		for (Water w:waters.values())
+		{
+			try {
+				if (w.getBoundaries().isInside(worldX, worldY, worldZ) && w.isAlgorithmicallyInside(worldX, worldY, worldZ) && w.isWaterPoint(worldX, worldY, worldZ, false))
+				{
+					desc.w = w;
+					break;
+				}
+			} catch (Exception ex)
+			{
+				
+			}
+		}
+		
+		return desc;
+		
+	}
 	
 	
 	public void addGeography(Geography g)

@@ -30,6 +30,7 @@ import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.place.TreeLocator;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.World.WorldTypeDesc;
 
 import com.jme.math.Vector3f;
 
@@ -171,10 +172,63 @@ public class Ecology {
 	 */
 	static transient ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	
+	public boolean isReachableWorldType(WorldTypeDesc sourceDesc, WorldTypeDesc location)
+	{
+		if (sourceDesc.g!=null && sourceDesc.g.placeNeedsToBeEnteredForEncounter)
+		{
+			if (sourceDesc.g!=location.g) return false;
+		}
+		if (location.g!=null && location.g.placeNeedsToBeEnteredForEncounter)
+		{
+			if (location.g!=sourceDesc.g) return false;
+		}
+		
+		if (sourceDesc.population!=null && sourceDesc.population.placeNeedsToBeEnteredForEncounter)
+		{
+			if (sourceDesc.population!=location.population) return false;
+		}
+		if (location.population!=null && location.population.placeNeedsToBeEnteredForEncounter)
+		{
+			if (location.population!=sourceDesc.population) return false;
+		}
+		
+		if (sourceDesc.detailedEconomic!=null && sourceDesc.detailedEconomic.placeNeedsToBeEnteredForEncounter)
+		{
+			if (sourceDesc.detailedEconomic!=location.detailedEconomic) return false;
+		}
+		if (location.detailedEconomic!=null && location.detailedEconomic.placeNeedsToBeEnteredForEncounter)
+		{
+			if (location.detailedEconomic!=sourceDesc.detailedEconomic) return false;
+		}
+		
+		return true;
+	}
+	
+	public WorldTypeDesc getUnitStandingWorldTypeDesc(EncounterUnit unit)
+	{
+		int worldX = unit.getEncounterBoundary().posX;
+		int worldY = unit.getEncounterBoundary().posY;
+		int worldZ = unit.getEncounterBoundary().posZ;
+		return unit.getFragment().instance.world.getWorldDescAtPosition(worldX, worldY, worldZ);
+	}
+	
 	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
 		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(initiatorUnit.getEncounterBoundary(), targetUnit.getEncounterBoundary());
 		if (r==DistanceBasedBoundary.zero) return; // no common part detected, return..
+
+		// matching geography/economic things now...
+		int wX = r[1][0];
+		int wY = r[1][0];
+		int wZ = r[1][0];
+		World w = initiatorUnit.getFragment().instance.world;
+		if (targetUnit.getFragment().instance.world!=w) return;
+		WorldTypeDesc desc = w.getWorldDescAtPosition(wX, wY, wZ);
+		if (!isReachableWorldType(desc, getUnitStandingWorldTypeDesc(initiatorUnit))) return;
+		if (!isReachableWorldType(desc, getUnitStandingWorldTypeDesc(targetUnit))) return;
+		
+		// both units can reach the area , we can go on... 
+		
 		if (targetUnit==J3DCore.getInstance().gameState.player.theFragment)
 		{
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetUnit.getName());
