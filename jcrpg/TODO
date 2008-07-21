@@ -87,8 +87,10 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] modify md5reader2 to support not just tga from ResourceLocator as well!
 		[X] add kobold to caves - 
 		
-		[ ] !! make a geography check INSIDE areas and outside areas -> Cave/Economy inside
+		[X] !! make a geography check INSIDE areas and outside areas -> Cave/Economy inside
 		-> you shouldn't encounter inside/outside.
+		[ ] it's done but boarman attack not in their town??? and outside they attack - it should be otherwise
+		
 		
 	
 	[ ] boarmen are not attacking sometime ?

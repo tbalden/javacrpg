@@ -191,4 +191,8 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		
 	}
 
+	public EntityFragment getFragment() {
+		return parentFragment;
+	}
+
 }

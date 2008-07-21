@@ -19,6 +19,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 
 /**
@@ -41,6 +42,8 @@ public interface EncounterUnit {
 	public int getNumericId();
 	
 	public int getLevel();
+	
+	public EntityFragment getFragment();
 	
 	public DescriptionBase getDescription();
 	

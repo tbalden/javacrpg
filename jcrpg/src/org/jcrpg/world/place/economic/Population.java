@@ -44,6 +44,7 @@ public abstract class Population extends Economic{
 	public Population()
 	{
 		super(null, null, null, null,null,null);
+		placeNeedsToBeEnteredForEncounter = true;
 	}
 	
 	public void clear()
@@ -95,6 +96,7 @@ public abstract class Population extends Economic{
 		this.blockStartX = blockStartX;
 		this.blockStartZ = blockStartZ;
 		boundaries = new GroupedBoundaries(parent,this);
+		placeNeedsToBeEnteredForEncounter = true;
 	}
 	
 	/**
@@ -175,7 +177,40 @@ public abstract class Population extends Economic{
 		// no cube here...
 		return null;
 	}
-	
+
+	/**
+	 * Returns an economic if there is one in the population in the given position.
+	 * @param key
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param farView
+	 * @return
+	 */
+	public Economic getEconomicAtPosition(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		// going through the possible residences...
+		for (Economic e:residenceList)
+		{
+			// if inside..
+			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				// return cube.
+				return e;
+			}
+		}
+		for (Economic e:groundList)
+		{
+			// if inside..
+			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				// return cube.
+				return e;
+			}
+		}
+		// no cube here...
+		return null;
+	}
+
 	
 	
 	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ);

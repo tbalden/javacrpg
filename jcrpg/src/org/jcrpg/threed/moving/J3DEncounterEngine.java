@@ -18,7 +18,6 @@
 package org.jcrpg.threed.moving;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
@@ -30,8 +29,8 @@ import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
-import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -98,27 +97,12 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	public void renderToEncounterWorld(int worldX, int worldY, int worldZ, World realWorld, String specialType)
 	{
 		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
-		ArrayList<SurfaceHeightAndType[]> list = realWorld.getSurfaceData(worldX, worldZ);
-		Geography geo = null;
-		for (SurfaceHeightAndType[] subList : list)
-		{
-			if (subList.length>0)
-			{
-				for (SurfaceHeightAndType surface:subList)
-				{
-					if (surface.surfaceY == worldY)
-					{
-						if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
-						{
-							geo = surface.self;
-						}
-						
-						break;
-					}
-				}
-			}
-		}
+		
+		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ);
+		Geography geo = desc.g;
+		
 		// TODO economic dependency
+		//Economic eco = desc.detailedEconomic;
 		
 		Cube c = realWorld.getCube(-1, worldX, worldY, worldZ, false);
 		CubeClimateConditions ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c.internalCube);

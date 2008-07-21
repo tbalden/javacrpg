@@ -78,7 +78,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		boarmanFemale = boarmanMale;
 
 		desc = new MovingModelAnimDescription();
-		/*desc.IDLE = "./data/models/humanoid/boarman/mage/boarmage_idle.md5anim";		
+		desc.IDLE = "./data/models/humanoid/boarman/mage/boarmage_idle.md5anim";		
 		desc.IDLE_COMBAT = "./data/models/humanoid/boarman/mage/boarmage_combatidle.md5anim";
 		desc.WALK = "./data/models/humanoid/boarman/mage/boarmage_idle.md5anim";
 		desc.ATTACK_LOWER = "./data/models/humanoid/boarman/mage/boarmage_attack.md5anim";
@@ -88,9 +88,8 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.DEFEND_UPPER = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
 		desc.PAIN = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
 		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/mage/boarmage_death.md5anim";
-		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";*/
-//		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
-		boarmanMaleMage = new MovingModel("./data/models/humanoid/kobold/kobold.md5mesh",desc,null,null,false);
+		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";
+		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
 		boarmanMaleMage.disposition = new float[] {0,-0.93f,0};
 	
 	}

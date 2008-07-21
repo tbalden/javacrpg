@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.time.Time;
 
 /**
@@ -192,6 +193,8 @@ public class EcologyGenerator {
 					CubeClimateConditions ccc = pWorld.getCubeClimateConditions(
 							new Time(), posX, wY, posZ, false);
 					Class<? extends ClimateBelt> beltClass = ccc.belt.getClass();
+					
+
 					if (beltClass.equals(population.getClimatBeltClass())) {
 						int rollPresent = HashUtil.mixPercentage(posX, wY, posZ + population.getGenerationHashInt()
 								);
@@ -214,16 +217,23 @@ public class EcologyGenerator {
 										+  population.getGenerationHashInt(), posZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
+							
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ);
+							if (wDesc.g==null)
+							{
+								continue;
+							}
+							
 							EntityInstance entity = new EntityInstance(desc,
 									pWorld, pEcology, id, entityId,
-									numberInTheGroup, posX, wY, posZ);
+									numberInTheGroup, posX, wDesc.surfaceY, posZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
-									posX, wY, posZ);
+									posX, wDesc.surfaceY, posZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
 							entity.description.setupNewInstance(entity, pWorld, pEcology);
-							LOGGER.finest("addEntity " + entityId + " (" + posX
-									+ "," + wY + "," + posZ + ") nb="
+							LOGGER.finest("addEntity Herbivore " + entityId + " (" + posX
+									+ "," + wDesc.surfaceY + "," + posZ + ") nb="
 									+ numberInTheGroup);
 							population.incrementsNumberOfGroupsInWorld();
 							addCreationStat(population.getEntityClass());
@@ -283,16 +293,22 @@ public class EcologyGenerator {
 										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ);
+							if (wDesc.g==null)
+							{
+								continue;
+							}
+							
 							EntityInstance entity = new EntityInstance(desc,
 									pWorld, pEcology, id, entityId,
-									numberInTheGroup, wX, wY, wZ);
+									numberInTheGroup, wX, wDesc.surfaceY, wZ);
 							PositionInTheWorld pitw = new PositionInTheWorld(
-									wX, wY, wZ);
+									wX, wDesc.surfaceY, wZ);
 							results.put(pitw, entity);
 							pEcology.addEntity(entity);
 							entity.description.setupNewInstance(entity, pWorld, pEcology);
-							LOGGER.finest("addEntity " + entityId + " (" + wX
-									+ "," + wY + "," + wZ + ") nb="
+							LOGGER.finest("addEntity NotInFoodChain" + entityId + " (" + wX
+									+ "," +  wDesc.surfaceY + "," + wZ + ") nb="
 									+ numberInTheGroup);
 							population.incrementsNumberOfGroupsInWorld();
 							addCreationStat(population.getEntityClass());

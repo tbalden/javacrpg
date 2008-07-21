@@ -176,6 +176,9 @@ public class EntityFragments {
 			instance.numberOfMembers--;
 			instance.recalcBoundarySizes();
 		}
+		public EntityFragment getFragment() {
+			return this;
+		}
 
 	}
 	
