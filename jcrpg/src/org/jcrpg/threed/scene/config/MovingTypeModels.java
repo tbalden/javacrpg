@@ -32,6 +32,7 @@ import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
+import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -116,6 +117,9 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, BoarmanTribe.boarmanFemale_unit);
 		counter++;
 		
+		hmMobIdToModelId.put(KoboldHorde.KOBOLD_MALE_MINER.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, KoboldHorde.koboldMaleMiner_unit);
+		counter++;
 		
 		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_MALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(DeerFamily.DEER_TYPE_FEMALE.visibleTypeId,counter);

@@ -122,7 +122,7 @@ public class RenderedMovingUnit {
 	
 	public String getIdleStateName()
 	{
-		if (form!=null && stateAfterMovement == MovingModelAnimDescription.ANIM_IDLE && form.inEnncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
+		if (form!=null && stateAfterMovement == MovingModelAnimDescription.ANIM_IDLE && form.inEncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
 		{
 			return MovingModelAnimDescription.ANIM_IDLE_COMBAT;
 		}
