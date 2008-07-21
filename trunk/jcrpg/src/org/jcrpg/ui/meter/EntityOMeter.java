@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.jcrpg.threed.jme.ui.ZoomingNode;
-import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.Window;
 
@@ -79,7 +78,7 @@ public class EntityOMeter {
 				n.startZoomCycle();
 			}
 			newNodes.add(n);
-			n.setLocalTranslation(new Vector3f(hud.core.getDisplay().getWidth()/1.7f+count*iconSizeX , hud.core.getDisplay().getHeight()/18,0));
+			n.setLocalTranslation(new Vector3f(hud.core.getDisplay().getWidth()/1.66f+count*iconSizeX , hud.core.getDisplay().getHeight()/16.6f,0));
 			count++;
 		}
 		previousNodes.removeAll(newNodes);
