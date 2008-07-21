@@ -31,6 +31,10 @@ import org.jcrpg.world.ai.abs.skill.SkillActForm;
 import org.jcrpg.world.time.Time;
 
 public class EntityMemberState {
+
+	// set this to true if you want to prevent persistentMembers from point changes.
+	boolean cheatNPC = false;
+
 	
 	public static int DEFAULT_HEALTH_POINT = 10;
 	public static int DEFAULT_STAMINA_POINT = 10;
@@ -75,8 +79,6 @@ public class EntityMemberState {
 		instance = i;
 	}
 	
-	// set this to true if you want to prevent persistentMembers from point changes.
-	boolean cheatNPC = true;
 	/**
 	 * Applies impact unit and return zero reached point type list.
 	 * @param unit
