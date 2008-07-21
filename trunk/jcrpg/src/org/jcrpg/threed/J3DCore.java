@@ -20,6 +20,7 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2509,6 +2510,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     	{
     		this.pause = pause;
     	}
+    }
+
+    
+    @Override
+    public void setDialogBehaviour(int behaviour) {
+        URL url = null;
+        try {
+            url = AbstractGame.class.getResource("./data/ui/settings.png");
+        } catch (Exception e) {
+            Jcrpg.LOGGER.warning(""+e);
+        }
+        if ( url != null ) {
+            setDialogBehaviour( behaviour, url );
+        }
+        else {
+            setDialogBehaviour( behaviour, "./data/ui/settings.png" );
+        }
     }
     
 }
