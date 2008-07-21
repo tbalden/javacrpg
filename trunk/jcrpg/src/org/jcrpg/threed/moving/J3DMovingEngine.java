@@ -503,7 +503,7 @@ public class J3DMovingEngine {
 					
 				}
 				updateUnitTextNodes(unit);
-				if (unit.form.inEnncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
+				if (unit.form.inEncounterPhase==Ecology.PHASE_TURNACT_COMBAT)
 				{
 					unit.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
 				} else

@@ -9,11 +9,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 
-[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
-	overall organization level should be increased -> organization level means tougher units on generation
-	 	some kind of randomization!
-	[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
-
 [ ] particle effect for models
 [?] camera bigger view - switch off back rendered models (check cave)
 
@@ -21,21 +16,24 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 [ ] check wciow updates on glestanimals - animated ? 
 
-
 [ ] natural Talent addProfessionWithFilter for EntityDescription - to filter out some spell forms a monster
 	doesnt have.
 
-
-[ ] world generation - 
-	concentrate friendly groups - don't let enemies close at start,
-	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
-
-
-
 sanity point for Morale is like mana for hp, limiting social skills!
 
+[ ] try using md5importer - animation problems are unsolvable
+
+[ ] recovery saves for combat phase - on crash useful -> saving gameState in combat somehow.
+
+## list before next-next:
+
+[ ] use & cast in normal mode too
 
 [ ] Encounter grounds mode
+	
+	[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
+		-- in combat mode too. only filtered objects will appear as choice in TurnActWindow
+		
 	[ ] WALK unit advance - moving around - tricky positioning/ A* movement??
 	[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
 	[ ] neutralization should make relation better
@@ -44,6 +42,10 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] protection form Good Evil? addition of alignment against physical combat form damages??
 	[X] a bigger 'Encounter' UI element popup when loading an encounter...
 		[ ]light effect -> pull down lights, and then pull up on encounter grounds
+
+	[ ] more SKILLS
+		[ ] fabrication of ammunition and such - fletcher, work Skill
+		[ ] thief helper skill, disarm?
 
 	[ ] too quick anim at startup
 	[ ] flickering anim change...	
@@ -61,25 +63,40 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] enemy unit effect icons too
 		[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
 		
-	[ ] summoning spells	
+	[ ] summoning spells
+	
 
-[ ] use & cast in normal mode too
+[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
+	overall organization level should be increased -> organization level means tougher units on generation
+	 	some kind of randomization!
+	[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
 
+[ ] world generation - 
+	concentrate friendly groups - don't let enemies close at start,
+	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
 
-[ ] try using md5importer - animation problems are unsolvable
+[ ] more sounds
+[ ] better portraits
+[ ] 2d item arts
 
 
 ##
 [?] list before next release:
 ##
+
+	[X] modify md5reader2 to support not just tga from ResourceLocator as well!
+		[X] add kobold to caves - 
+		
+		[ ] !! make a geography check INSIDE areas and outside areas -> Cave/Economy inside
+		-> you shouldn't encounter inside/outside.
+		
+	
 	[ ] boarmen are not attacking sometime ?
 	
 	[ ] MORE SKILLS: spell forms, 
 		[X] social effects, neutralizing morale, 
 		[ ] protecting Mental sanity 
 		[ ] protection spells, boost spells with effects
-		[ ] fabrication of ammunition and such - fletcher, work Skill
-		[ ] thief helper skill, disarm?
 		[X] social helper skills - > Strategy
 	
 	[ ] walk/pain anim for Mage
@@ -88,15 +105,14 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] + axe?
 
 	-- QA/DOC
-	
 
-	[ ] documenting points, attr, calculations, leveling
-	
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
 	
 	--
 	[X] 'randomization' for generated units - using -1 as numeric id is not too good
 	
-	[X] upgrade wikipedia with information - especially Download page, Install informations
+	[X] upgrade wiki with information - especially Download page, Install informations
 
 	[X] camera from above of party when 2nd line
 	

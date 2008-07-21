@@ -211,7 +211,7 @@ public class GameLogic {
 					ecology.callbackMessage("You seem to trespass a Domain : "+data.getUnit().getName());
 				} else
 				{
-					form.inEnncounterPhase = possibleEncounter.getPhase();
+					form.inEncounterPhase = possibleEncounter.getPhase();
 					ecology.callbackMessage("Facing an *ENCOUNTER* : "+data.getUnit().getName());
 					ArrayList<EntityMemberInstance> members = data.getUnit().getGroup(data.groupId);
 					data.appendNewMembers(members);
