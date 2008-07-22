@@ -37,7 +37,6 @@ import org.jcrpg.world.place.economic.SimpleDistrict;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.MountainNew;
 import org.jcrpg.world.place.geography.Plain;
-import org.jcrpg.world.place.geography.sub.Cave;
 
 public class BoarmanTribe extends HumanoidEntityDescription {
 

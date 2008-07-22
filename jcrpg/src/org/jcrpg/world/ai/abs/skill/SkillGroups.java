@@ -58,6 +58,7 @@ import org.jcrpg.world.ai.abs.skill.physical.Disguise;
 import org.jcrpg.world.ai.abs.skill.physical.HideAndSneak;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
 import org.jcrpg.world.ai.abs.skill.physical.MartialTrance;
+import org.jcrpg.world.ai.abs.skill.physical.Metalcraft;
 import org.jcrpg.world.ai.abs.skill.physical.PickPocket;
 import org.jcrpg.world.ai.abs.skill.physical.Prospecting;
 import org.jcrpg.world.ai.abs.skill.physical.SecureAndEscort;
@@ -162,6 +163,7 @@ public class SkillGroups {
 		addSkillToGroup(GROUP_PHYSICAL, new Survival());
 		addSkillToGroup(GROUP_PHYSICAL, new Prospecting());
 		addSkillToGroup(GROUP_PHYSICAL, new SecureAndEscort());
+		addSkillToGroup(GROUP_PHYSICAL, new Metalcraft());
 		
 		orderedGroups.add(GROUP_MENTAL);
 		addSkillToGroup(GROUP_MENTAL, new Architecture());

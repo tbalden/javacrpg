@@ -27,64 +27,95 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 ## list before next-next:
 
-[ ] use & cast in normal mode too
-
-[ ] replace the whole ecology generation from XML with class based parameters
-
-[ ] Encounter grounds mode
+	[ ] use & cast in normal mode too
 	
-	[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
-		-- in combat mode too. only filtered objects will appear as choice in TurnActWindow
-		
-	[ ] WALK unit advance - moving around - tricky positioning/ A* movement??
-	[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
-	[ ] neutralization should make relation better
-	    killing should make it worse with the group
-	[ ] different HUD for encounter mode!
-	[ ] protection form Good Evil? addition of alignment against physical combat form damages??
-	[X] a bigger 'Encounter' UI element popup when loading an encounter...
-		[ ]light effect -> pull down lights, and then pull up on encounter grounds
-
-	[ ] more SKILLS
-		[ ] fabrication of ammunition and such - fletcher, work Skill
-		[ ] thief helper skill, disarm?
-
-	[ ] too quick anim at startup
-	[ ] flickering anim change...	
-	[X] turn camera on actor
-		[ ] real turn -> move it in background simpleUpdate?
-
-	[ ] clear out center of battle ground - modify height variation as a Constructor parameter for plain
-		- fix the seed for these generations somehow... now HashUtil's seed if changed battle ground may be bad!
-		
-	[ ] economics too!
-
-	[ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
-		[ ] AI use of potions/objects too!
+	[ ] replace the whole ecology generation from XML with class based parameters
 	
-	[ ] enemy unit effect icons too
-		[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
+	[ ] Encounter grounds mode
 		
-	[ ] summoning spells
+		[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
+			-- in combat mode too. only filtered objects will appear as choice in TurnActWindow
+			
+		[ ] WALK unit advance - moving around - tricky positioning/ A* movement??
+		[ ] NEUTRALIZED anim type use in EncLogic, turning model backwards in j3dmoving
+		[ ] neutralization should make relation better
+		    killing should make it worse with the group
+		[ ] different HUD for encounter mode!
+		[ ] protection form Good Evil? addition of alignment against physical combat form damages??
+		[X] a bigger 'Encounter' UI element popup when loading an encounter...
+			[ ]light effect -> pull down lights, and then pull up on encounter grounds
 	
+		[ ] more SKILLS
+			[ ] fabrication of ammunition and such - fletcher, work Skill
+			[ ] thief helper skill, disarm?
+	
+		[ ] too quick anim at startup
+		[ ] flickering anim change...	
+		[X] turn camera on actor
+			[ ] real turn -> move it in background simpleUpdate?
+	
+		[ ] clear out center of battle ground - modify height variation as a Constructor parameter for plain
+			- fix the seed for these generations somehow... now HashUtil's seed if changed battle ground may be bad!
+			
+		[ ] economics too!
+	
+		[ ] skill act form choice AI more complex -> choose different skills, and use positive forms too on friendly units.
+			[ ] AI use of potions/objects too!
+		
+		[ ] enemy unit effect icons too
+			[ ] Confuse effect -> EvaluatorBase or EncounterLogic should mix up attacked units
+			
+		[ ] summoning spells
+		
+	
+	[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
+		overall organization level should be increased -> organization level means tougher units on generation
+		 	some kind of randomization!
+		[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
+	
+	[ ] world generation - 
+		concentrate friendly groups - don't let enemies close at start,
+		tweak relation values against player? aggressivity should manipulate first sight relation to negative?
+	
+	[ ] more sounds
+	[ ] better portraits
+	[ ] 2d item arts
 
-[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
-	overall organization level should be increased -> organization level means tougher units on generation
-	 	some kind of randomization!
-	[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
-
-[ ] world generation - 
-	concentrate friendly groups - don't let enemies close at start,
-	tweak relation values against player? aggressivity should manipulate first sight relation to negative?
-
-[ ] more sounds
-[ ] better portraits
-[ ] 2d item arts
-
-
+	[ ] walk anim for Mage
+	
+	[ ] aggressivity factor for default relationship
+	
+	[ ] gold system
+	
 ##
 [?] list before next release:
 ##
+	[ ] naming in languages Entities
+			
+	[ ] secondary lock remains ??
+	
+	[ ] boarmen are not attacking sometime ??
+	
+	[ ] MORE SKILLS: spell forms, 
+		[X] social effects, neutralizing morale, 
+		[ ] protecting Mental sanity 
+		[ ] protection spells, boost spells with effects
+		[X] social helper skills - > Strategy
+	
+	[ ] economic update icon
+	[ ] kobold pose
+	[ ] pain anim for Mage
+	
+
+	-- QA/DOC
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
+	
+	--
+	[-] neutralized icon on portrait
+	[X] sword/shield for turn act?
+		[-] + axe?
 
 	[X] modify md5reader2 to support not just tga from ResourceLocator as well!
 		[X] add kobold to caves - 
@@ -95,30 +126,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 			[X] world generation - make it better
 				[X] geography check too!
 
-		[ ] aggressivity factor for default relationship
-			
-	[ ] secondary lock remains
-		
-	
-	[ ] boarmen are not attacking sometime ?
-	
-	[ ] MORE SKILLS: spell forms, 
-		[X] social effects, neutralizing morale, 
-		[ ] protecting Mental sanity 
-		[ ] protection spells, boost spells with effects
-		[X] social helper skills - > Strategy
-	
-	[ ] walk/pain anim for Mage
-	[ ] neutralized icon on portrait
-	[X] sword/shield for turn act?
-		[ ] + axe?
-
-	-- QA/DOC
-
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
-	
-	--
 	[X] 'randomization' for generated units - using -1 as numeric id is not too good
 	
 	[X] upgrade wiki with information - especially Download page, Install informations

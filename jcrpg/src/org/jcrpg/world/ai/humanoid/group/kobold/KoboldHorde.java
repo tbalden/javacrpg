@@ -68,11 +68,9 @@ public class KoboldHorde extends HumanoidEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		
-		setAverageGroupSizeAndDeviation(5, 2);
+		setAverageGroupSizeAndDeviation(4, 2);
 		
 		addGroupingRuleMember(KOBOLD_MALE_MINER);
 	}
-	
-
 	
 }
