@@ -37,8 +37,6 @@ public class SkillInstance {
 		super();
 		this.skill = skill;
 		this.level = level;
-		System.out.println("SKILL"+this.skill);
-		System.out.println("BASE"+SkillGroups.skillBaseInstances.get(skill));
 		for (SkillActForm form:SkillGroups.skillBaseInstances.get(skill).getActForms())
 		{
 			if (form.skillRequirementLevel<=level)
