@@ -16,18 +16,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.ai.humanoid.group.kobold.member;
+package org.jcrpg.world.ai.profession.common;
 
-import org.jcrpg.world.ai.AudioDescription;
-import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.profession.common.Miner;
+import org.jcrpg.world.ai.abs.skill.martial.HammerAndAxe;
+import org.jcrpg.world.ai.abs.skill.mental.Architecture;
+import org.jcrpg.world.ai.abs.skill.physical.Metalcraft;
+import org.jcrpg.world.ai.profession.HumanoidNormal;
+import org.jcrpg.world.object.combat.hammeraxe.PickAxe;
 
-public class KoboldMaleMiner extends KoboldBaseMember {
+public class Miner extends HumanoidNormal {
 
-	public KoboldMaleMiner(String visibleTypeId, AudioDescription audioDescription) {
-		super(visibleTypeId, audioDescription);
-		addProfessionInitially(new Miner());
-		genderType = EntityDescription.GENDER_MALE;
+	public Miner()
+	{
+		super();
+		addMinorSkill(HammerAndAxe.class);
+		addMajorSkill(Metalcraft.class);
+		addMinorSkill(Architecture.class);
+		generationNewInstanceObjects.add(PickAxe.class);
 	}
-
 }

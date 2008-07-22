@@ -219,7 +219,7 @@ public class EvaluatorBase {
 			Impact i = new Impact();
 			SkillActForm skillActForm = sourceData.form;
 			for (EvaluatedSkillActFormTargetData data:targetData) {
-				int targetPower = 50;
+				int targetPower = DEFENSE_BASE_VALUE;
 				float impact = 1f;
 				HashMap<String, Integer> damages = sourceData.getPossibleDamagesPerResistance();
 				ArrayList<String> additionalContraResistances = new ArrayList<String>();
@@ -271,7 +271,7 @@ public class EvaluatorBase {
 					
 					for (String key:damages.keySet())
 					{
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("## DAMAGE: "+key+" "+damages.get(key));
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EvaluatorBase.evaluate: ## DAMAGE: "+key+" "+damages.get(key));
 					}
 					for (Integer effectType:skillActForm.effectTypesAndLevels.keySet())
 					{

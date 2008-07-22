@@ -109,6 +109,7 @@ public class EcologyGeneratorConfigLoader {
 				String implemetation = attributes
 						.getNamedItem("implementation").getNodeValue();
 
+				System.out.println(implemetation);
 				try {
 					bestiary.put(id, (Class<? extends EntityDescription>) Class
 							.forName(implemetation));

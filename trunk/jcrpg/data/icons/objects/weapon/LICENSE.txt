@@ -6,3 +6,9 @@ longsword.png - FGP : Common Media Project http://search.freegamedev.net/artitem
 quarterstaff.png - https://daimonin.svn.sourceforge.net/svnroot/daimonin/trunk/arch/items/weapon/hand_2h/impact/quaterstaff.101.png
 club.png, shortbow.png - crossfire GPL
 throwingknife.png - scourge GPL
+
+
+
+pickaxe.png: Copyright 2004 Jenn Hartnoll - licensed under the GNU GPL version 2 as published by
+the Free Software Foundation, copyrighted by the owners credited above. 
+http://search.freegamedev.net/artitems/view/169958
