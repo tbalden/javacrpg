@@ -225,5 +225,13 @@ public abstract class Population extends Economic{
 		// TODO
 		return false;
 	}
+
+	public Town getTown() {
+		return town;
+	}
+
+	public void setTown(Town town) {
+		this.town = town;
+	}
 	
 }

@@ -26,6 +26,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.place.economic.Population;
 
 import com.jme.math.Vector3f;
 
@@ -58,6 +59,12 @@ public class EntityFragments {
 		public EntityFragments parent;
 		public EntityInstance instance;
 		
+		/**
+		 * The population which the fragment entered. If null, it's not in a population currently.
+		 * If a population is updated and fragment is fallen of, next round this should be set 0.? TODO
+		 */
+		public Population enteredPopulation = null;
+		
 		public class EntityFragmentState 
 		{
 			public boolean isCamping = false;
@@ -76,6 +83,24 @@ public class EntityFragments {
 				}
 			}
 			instance.callbackAfterCampReplenish();
+		}
+		
+		/**
+		 * move the fragment, and followers to a coordinate.
+		 * @param worldX
+		 * @param worldY
+		 * @param worldZ
+		 */
+		public void roamTo(int worldX, int worldY, int worldZ)
+		{
+			this.roamingBoundary.setPosition(1, worldX, worldY, worldZ);
+			if (alwaysIncludeFollowingMembers)
+			{
+				for (PersistentMemberInstance i:followingMembers)
+				{
+					i.roamTo(worldX,worldY,worldZ);
+				}
+			}
 		}
 		
 		/**

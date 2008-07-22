@@ -58,6 +58,8 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 							// the instance is given the possibility to join...
 							// TODO decision if instance wants or not..
 							pO.owner.merge(instance);
+							// TODO enteredPopulation shouldn't be set here
+							instance.fragments.fragments.get(0).enteredPopulation = pO;
 							break;
 						}
 					} else {
@@ -70,6 +72,8 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						namePopulation(pI);
 						world.economyContainer.checkDistrictToTownIntegration(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
+						// TODO enteredPopulation shouldn't be set here
+						instance.fragments.fragments.get(0).enteredPopulation = pI;
 						break;
 					}
 				}

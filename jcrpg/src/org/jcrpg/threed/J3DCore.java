@@ -1375,7 +1375,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 		if (success)
 		{
-			gameState.player.theFragment.roamingBoundary.setPosition(1, gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY,  gameState.getNormalPositions().viewPositionZ );
+			gameState.player.theFragment.roamTo(gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY,  gameState.getNormalPositions().viewPositionZ );
 			gameState.updateEntityIcons();
 			gameState.checkEnterLeavePopulation();			
 		}

@@ -218,7 +218,7 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							
-							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ);
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false);
 							if (wDesc.g==null)
 							{
 								continue;
@@ -293,11 +293,12 @@ public class EcologyGenerator {
 										+ population.getGenerationHashInt(), wZ);
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
-							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ);
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false);
 							if (wDesc.g==null)
 							{
 								continue;
 							}
+							// TODO geography positioning - kobold cave!!
 							
 							EntityInstance entity = new EntityInstance(desc,
 									pWorld, pEcology, id, entityId,

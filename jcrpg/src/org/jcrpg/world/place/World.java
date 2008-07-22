@@ -443,7 +443,7 @@ public class World extends Place {
 		public Economic detailedEconomic;
 		public Water w;
 	}
-	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ)
+	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation)
 	{
 		Geography geo = null;
 		Geography backupGeo = null;
@@ -458,9 +458,9 @@ public class World extends Place {
 			{
 				for (SurfaceHeightAndType surface:subList)
 				{
-					if (worldY-surface.surfaceY>0 && worldY-surface.surfaceY<closestDiffToY)
+					if (worldY-surface.surfaceY>=0 && worldY-surface.surfaceY<closestDiffToY)
 					{
-						if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
+						if (surface.self.getCube(-1, worldX, surface.surfaceY, worldZ, false)!=null)
 						{
 							closestDiffToY = worldY-surface.surfaceY;
 							surfaceY = surface.surfaceY;
@@ -471,7 +471,7 @@ public class World extends Place {
 					{
 						if (Math.abs(worldY-surface.surfaceY)<backupClosestDiffToY)
 						{
-							if (surface.self.getCube(-1, worldX, worldY, worldZ, false)!=null)
+							if (surface.self.getCube(-1, worldX, surface.surfaceY, worldZ, false)!=null)
 							{
 								backupClosestDiffToY = worldY-surface.surfaceY;
 								backupSurfaceY = surface.surfaceY;
@@ -498,6 +498,26 @@ public class World extends Place {
 		if (population==null)
 		{
 			population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ);
+			// if scan around, get some more probes if no population found yet.
+			if (scanAroundForPopulation)
+			{
+				if (population==null)
+				{
+					population = economyContainer.getPopulationAt(worldX+1, desc.surfaceY, worldZ);
+				}
+				if (population==null)
+				{
+					population = economyContainer.getPopulationAt(worldX-1, desc.surfaceY, worldZ);
+				}
+				if (population==null)
+				{
+					population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ+1);
+				}
+				if (population==null)
+				{
+					population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ-1);
+				}
+			}
 		}
 		desc.population = population;
 		if (population!=null)

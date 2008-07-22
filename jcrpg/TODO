@@ -89,8 +89,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		
 		[X] !! make a geography check INSIDE areas and outside areas -> Cave/Economy inside
 		-> you shouldn't encounter inside/outside.
-		[ ] it's done but boarman attack not in their town??? and outside they attack - it should be otherwise
-		
+		[X] it's done but boarman attack not in their town??? and outside they attack - it should be otherwise
+			[ ] world generation - make it better
+			[ ] aggressivity factor for default relationship
+			
+	[ ] secondary lock remains
 		
 	
 	[ ] boarmen are not attacking sometime ?

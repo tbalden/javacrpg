@@ -98,7 +98,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	{
 		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
 		
-		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ);
+		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ,false);
 		Geography geo = desc.g;
 		
 		// TODO economic dependency
