@@ -33,6 +33,7 @@ import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.time.Time;
@@ -218,7 +219,12 @@ public class EcologyGenerator {
 								numberInTheGroup += ((ecart * rollNb) / 100);
 							}
 							
-							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false);
+							ArrayList<Class<? extends Geography>> filter = null;
+							if (desc instanceof AnimalEntityDescription)
+							{
+								filter = ((AnimalEntityDescription)desc).geographies;
+							}
+							WorldTypeDesc wDesc = pWorld.getWorldDescAtPosition(wX, wY, wZ,false,filter);
 							if (wDesc.g==null)
 							{
 								continue;
