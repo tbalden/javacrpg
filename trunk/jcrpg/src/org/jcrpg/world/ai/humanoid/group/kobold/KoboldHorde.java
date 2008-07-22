@@ -58,16 +58,7 @@ public class KoboldHorde extends HumanoidEntityDescription {
 
 	public KoboldHorde()
 	{
-		//iconPic = "kobold";
-		/*economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
-		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
-		economyTemplate.addPopulationType(MountainNew.class, SimpleDistrict.class);
-		economyTemplate.addResidenceType(Plain.class, House.class);
-		economyTemplate.addResidenceType(Forest.class, House.class);
-		economyTemplate.addResidenceType(MountainNew.class, House.class);
-		economyTemplate.addEcoGroundType(Plain.class, EconomicGround.class);
-		economyTemplate.addEcoGroundType(Forest.class, EconomicGround.class);
-		economyTemplate.addEcoGroundType(MountainNew.class, EconomicGround.class);*/
+		iconPic = "kobold";
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Cave.class);
