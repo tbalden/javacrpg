@@ -40,6 +40,7 @@ import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.time.Time;
 
@@ -339,6 +340,7 @@ public class GameStateContainer {
 	{
 		TreeMap<String, String> map = new TreeMap<String, String>();
 		Collection<Object> list = ecology.getEntities(player.world, player.fragments.fragments.get(0).roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
+		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
 		if (list!=null)
 		{
 			for (Object o:list)
@@ -347,6 +349,8 @@ public class GameStateContainer {
 				if (i==player.theFragment) continue;
 				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("I: "+i.instance.description);
 				if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.theFragment.roamingBoundary,i.roamingBoundary)==null) continue;
+				WorldTypeDesc desc = ecology.getEntityFragmentWorldTypeDesc(i);
+				if (!ecology.isReachableWorldType(desc, playerDesc)) continue;
 				map.put(i.instance.description.iconPic,i.instance.description.iconPic);
 			}
 		}
@@ -366,6 +370,7 @@ public class GameStateContainer {
 		if (p!=null)
 		{
 			String name = p.town.foundationName+" ("+p.foundationName+")";
+			if (p.owner!=null) name+=" "+p.owner.description.getName();
 			if (!lastPopulationName.equals(name)) {
 				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry("Entering town "+name, ColorRGBA.red));
 				lastPopulationName = name;

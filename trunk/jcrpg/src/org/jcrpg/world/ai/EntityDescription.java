@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Behavior;
 import org.jcrpg.world.ai.abs.Choice;
@@ -369,6 +370,11 @@ public class EntityDescription extends DescriptionBase {
 	{
 		long seed = p.blockStartX+p.blockStartZ+p.numericId+p.soilGeo.numericId;
 		p.foundationName = nameThing(seed);
+	}
+	
+	public String getName()
+	{
+		return Language.v("entity."+this.getClass().getSimpleName());
 	}
 
 }

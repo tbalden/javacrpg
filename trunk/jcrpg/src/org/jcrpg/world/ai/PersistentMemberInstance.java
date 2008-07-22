@@ -195,4 +195,8 @@ public class PersistentMemberInstance extends EntityMemberInstance implements En
 		return parentFragment;
 	}
 
+	public void roamTo(int worldX, int worldY, int worldZ)
+	{
+		this.roamingBoundary.setPosition(1, worldX, worldY, worldZ);
+	}
 }

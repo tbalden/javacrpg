@@ -172,36 +172,81 @@ public class Ecology {
 	 */
 	static transient ArrayList<EncounterInfo> staticEncounterInfoInstances = new ArrayList<EncounterInfo>();
 	
-	public boolean isReachableWorldType(WorldTypeDesc sourceDesc, WorldTypeDesc location)
+	public boolean isReachableWorldType(WorldTypeDesc sourceDesc, WorldTypeDesc encounterlocation)
 	{
+		if (playerDebug)
+		{
+			System.out.println("sourceDesc LOCATION: "+sourceDesc.g+" / "+sourceDesc.surfaceY+" : "+(sourceDesc.population==null?sourceDesc.population:sourceDesc.population.foundationName));
+			System.out.println("ENCOUNTER LOCATION: "+encounterlocation.g+" / "+encounterlocation.surfaceY+" : "+(encounterlocation.population==null?encounterlocation.population:encounterlocation.population.foundationName));
+			
+		}
 		if (sourceDesc.g!=null && sourceDesc.g.placeNeedsToBeEnteredForEncounter)
 		{
-			if (sourceDesc.g!=location.g) return false;
+			if (sourceDesc.g!=encounterlocation.g) 
+			{
+				if (playerDebug)System.out.println("g _1");
+				return false;
+			}
 		}
-		if (location.g!=null && location.g.placeNeedsToBeEnteredForEncounter)
+		if (encounterlocation.g!=null && encounterlocation.g.placeNeedsToBeEnteredForEncounter)
 		{
-			if (location.g!=sourceDesc.g) return false;
+			if (encounterlocation.g!=sourceDesc.g) 
+			{
+				if (playerDebug)System.out.println("g _2");
+				return false;
+			}
 		}
 		
 		if (sourceDesc.population!=null && sourceDesc.population.placeNeedsToBeEnteredForEncounter)
 		{
-			if (sourceDesc.population!=location.population) return false;
+			if (sourceDesc.population!=encounterlocation.population) 
+			{
+				if (playerDebug)System.out.println("p _3");
+				return false;
+			}
+				
 		}
-		if (location.population!=null && location.population.placeNeedsToBeEnteredForEncounter)
+		if (encounterlocation.population!=null && encounterlocation.population.placeNeedsToBeEnteredForEncounter)
 		{
-			if (location.population!=sourceDesc.population) return false;
+			if (encounterlocation.population!=sourceDesc.population) 			
+			{
+				if (playerDebug)System.out.println("p _4");
+				return false;
+			}
+
 		}
 		
 		if (sourceDesc.detailedEconomic!=null && sourceDesc.detailedEconomic.placeNeedsToBeEnteredForEncounter)
 		{
-			if (sourceDesc.detailedEconomic!=location.detailedEconomic) return false;
+			if (sourceDesc.detailedEconomic!=encounterlocation.detailedEconomic) 
+			{
+				if (playerDebug)System.out.println("d _5");
+				return false;
+			}
+
 		}
-		if (location.detailedEconomic!=null && location.detailedEconomic.placeNeedsToBeEnteredForEncounter)
+		if (encounterlocation.detailedEconomic!=null && encounterlocation.detailedEconomic.placeNeedsToBeEnteredForEncounter)
 		{
-			if (location.detailedEconomic!=sourceDesc.detailedEconomic) return false;
+			if (encounterlocation.detailedEconomic!=sourceDesc.detailedEconomic)
+			{
+				if (playerDebug)System.out.println("d _6");
+				return false;
+			}
+				
 		}
 		
 		return true;
+	}
+	
+	public WorldTypeDesc getEntityFragmentWorldTypeDesc(EntityFragment fragment)
+	{
+		int worldX = fragment.getEncounterBoundary().posX;
+		int worldY = fragment.getEncounterBoundary().posY;
+		int worldZ = fragment.getEncounterBoundary().posZ;
+		WorldTypeDesc desc =  fragment.instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false);
+		if (fragment.enteredPopulation!=null)
+			desc.population = fragment.enteredPopulation;
+		return desc;
 	}
 	
 	public WorldTypeDesc getUnitStandingWorldTypeDesc(EncounterUnit unit)
@@ -209,23 +254,55 @@ public class Ecology {
 		int worldX = unit.getEncounterBoundary().posX;
 		int worldY = unit.getEncounterBoundary().posY;
 		int worldZ = unit.getEncounterBoundary().posZ;
-		return unit.getFragment().instance.world.getWorldDescAtPosition(worldX, worldY, worldZ);
+		WorldTypeDesc desc =  unit.getFragment().instance.world.getWorldDescAtPosition(worldX, worldY, worldZ,false);
+		if (unit.getFragment().enteredPopulation!=null)
+			desc.population = unit.getFragment().enteredPopulation;
+		if (playerDebug)
+			System.out.println("UNIT DESC: "+unit.getName()+" -- "+(desc.population==null?"null":desc.population.foundationName)+" : "+worldX+"/"+worldY+"/"+worldZ);
+
+		return desc;
 	}
-	
+	boolean playerDebug = false;
 	public void intersectTwoUnits(EncounterUnit initiatorUnit, EncounterUnit targetUnit, HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments, TreeLocator loc, int joinLimit)
 	{
 		int[][] r = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(initiatorUnit.getEncounterBoundary(), targetUnit.getEncounterBoundary());
 		if (r==DistanceBasedBoundary.zero) return; // no common part detected, return..
 
+		playerDebug = false;
 		// matching geography/economic things now...
 		int wX = r[1][0];
-		int wY = r[1][0];
-		int wZ = r[1][0];
+		int wY = r[1][1];
+		int wZ = r[1][2];
+		if (initiatorUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
+		if (targetUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
+		if (playerDebug)
+		{
+			System.out.println("######### initiator "+initiatorUnit.getName() + " target "+targetUnit.getName());
+		}
+		
 		World w = initiatorUnit.getFragment().instance.world;
 		if (targetUnit.getFragment().instance.world!=w) return;
-		WorldTypeDesc desc = w.getWorldDescAtPosition(wX, wY, wZ);
-		if (!isReachableWorldType(desc, getUnitStandingWorldTypeDesc(initiatorUnit))) return;
-		if (!isReachableWorldType(desc, getUnitStandingWorldTypeDesc(targetUnit))) return;
+		WorldTypeDesc desc = w.getWorldDescAtPosition(wX, wY, wZ, true);
+		if (playerDebug)
+		{
+			System.out.println("Encounter LOC: "+desc.g+" / "+(desc.population!=null?desc.population.foundationName:"null")+" "+desc.surfaceY+" -- "+wX+"/"+wY+"/"+wZ);
+		}
+		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(initiatorUnit),desc)) 
+		{
+			if (playerDebug)
+			{
+				System.out.println("NOT REACHABLE FOR initiator "+initiatorUnit.getName());
+			}
+			return;
+		}
+		if (!isReachableWorldType(getUnitStandingWorldTypeDesc(targetUnit),desc)) 
+		{
+			if (playerDebug)
+			{
+				System.out.println("NOT REACHABLE FOR target "+targetUnit.getName());
+			}
+			return;
+		}
 		
 		// both units can reach the area , we can go on... 
 		
