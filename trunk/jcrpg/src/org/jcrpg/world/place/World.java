@@ -445,6 +445,19 @@ public class World extends Place {
 	}
 	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation)
 	{
+		return getWorldDescAtPosition(worldX, worldY, worldZ, scanAroundForPopulation, null);
+	}
+	/**
+	 * Return a description of the point, filtering for geographies if its list is not null.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @param scanAroundForPopulation
+	 * @param filter
+	 * @return
+	 */
+	public WorldTypeDesc getWorldDescAtPosition(int worldX, int worldY, int worldZ, boolean scanAroundForPopulation, ArrayList<Class<?extends Geography>> filter)
+	{
 		Geography geo = null;
 		Geography backupGeo = null;
 		int closestDiffToY = 999999;
@@ -458,6 +471,7 @@ public class World extends Place {
 			{
 				for (SurfaceHeightAndType surface:subList)
 				{
+					if (filter!=null && !filter.contains(surface.self.getClass())) continue;
 					if (worldY-surface.surfaceY>=0 && worldY-surface.surfaceY<closestDiffToY)
 					{
 						if (surface.self.getCube(-1, worldX, surface.surfaceY, worldZ, false)!=null)
@@ -473,7 +487,7 @@ public class World extends Place {
 						{
 							if (surface.self.getCube(-1, worldX, surface.surfaceY, worldZ, false)!=null)
 							{
-								backupClosestDiffToY = worldY-surface.surfaceY;
+								backupClosestDiffToY = Math.abs(worldY-surface.surfaceY);
 								backupSurfaceY = surface.surfaceY;
 								backupGeo = surface.self;
 							}
@@ -490,6 +504,8 @@ public class World extends Place {
 			
 		} else
 		{
+			if (backupGeo==null) return desc; // no geo found here, return
+			
 			desc.g = backupGeo;
 			desc.surfaceY = backupSurfaceY;
 		}

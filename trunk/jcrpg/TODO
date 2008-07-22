@@ -29,6 +29,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] use & cast in normal mode too
 
+[ ] replace the whole ecology generation from XML with class based parameters
+
 [ ] Encounter grounds mode
 	
 	[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
@@ -90,8 +92,10 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[X] !! make a geography check INSIDE areas and outside areas -> Cave/Economy inside
 		-> you shouldn't encounter inside/outside.
 		[X] it's done but boarman attack not in their town??? and outside they attack - it should be otherwise
-			[ ] world generation - make it better
-			[ ] aggressivity factor for default relationship
+			[X] world generation - make it better
+				[X] geography check too!
+
+		[ ] aggressivity factor for default relationship
 			
 	[ ] secondary lock remains
 		

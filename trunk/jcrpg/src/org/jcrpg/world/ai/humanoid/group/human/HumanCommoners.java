@@ -74,7 +74,8 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		climates.add(Continental.class);
 		geographies.add(Forest.class);
 		geographies.add(Plain.class);
-		geographies.add(Cave.class);
+		geographies.add(MountainNew.class);
+		//geographies.add(Cave.class);
 		
 		behaviors.add(Peaceful.class);
 		genderType = GENDER_BOTH;
