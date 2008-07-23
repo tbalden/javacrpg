@@ -94,9 +94,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 
 	[X] populatePopulation -> domain size largened for the size of population, position the fragment in the middle
-		- owner pMIs positioned at owned infrastructure!
-	[ ] use CharacterSheetWindow in PartySetup to view a given character!
-		[ ] using fallbackWindow...
+		[ ] - owner pMIs positioned at owned infrastructure!
 	
 	[ ] boarmen are not attacking sometime ??
 	
@@ -117,6 +115,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] use CharacterSheetWindow in PartySetup to view a given character!
+		[X] using fallbackWindow...
+
 	[-] j3dmoving engine UpdateScene ? does it call something updateGeometry -> quick anim problem
 
 	[X] name generation for geographies -> per Geo Size block add a random name? with dialect parameters (as seed of generation) :D

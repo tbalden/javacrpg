@@ -51,6 +51,8 @@ import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.player.Party;
+import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.ai.profession.Profession;
 
 import com.jme.scene.Node;
@@ -72,6 +74,8 @@ public class PartySetup extends PagedInputWindow {
 	// party select
 	//ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
+	TextButton addChar;
+	TextButton viewChar;
 	TextButton newChar;
 	TextButton delChar;
 	TextButton rmChar;
@@ -131,6 +135,10 @@ public class PartySetup extends PagedInputWindow {
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addInput(0,addCharSelect);
 	    	
+	    	viewChar = new TextButton("view_char",this,pageMemberSelection, 0.23f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.viewChar"));
+	    	addInput(0,viewChar);
+	    	addChar = new TextButton("add_char",this,pageMemberSelection, 0.50f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.addChar"));
+	    	addInput(0,addChar);
 	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.newChar"));
 	    	addInput(0,newChar);
 	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.rmChar"));
@@ -141,11 +149,13 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(0,delChar);
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.80f, 0.2f, 0.07f,500f,"Create / Add at least one character to your party.",false);
 	    	
 	    	// page char creation 1 -------------------------------------------
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	pageCreationFirst.attachChild(sQuad);
-	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
 
 	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 
@@ -195,9 +205,9 @@ public class PartySetup extends PagedInputWindow {
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,700f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,700f,"While tuning skill press Enter to set selected value for skill.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,700f,"Leave no points unused to be able finish.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,650f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,650f,"After tuning the skill level press Enter to set selected value for skill.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,650f,"Leave no points unused to be able to finish.",false);
 
 	    	posY = 0; 
 	    	for (String groupId : SkillGroups.orderedGroups)
@@ -267,15 +277,24 @@ public class PartySetup extends PagedInputWindow {
 
 	@Override
 	public void show() {
-		currentPage = 0;
-		charactersOfParty.clear();
-		core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
-		core.uiBase.hud.characters.show();
-		
-		setupPage();
-		changePage(0);
-		core.getUIRootNode().attachChild(windowNode);
-		core.getUIRootNode().updateRenderState();
+		if (!noNeedForRefreshPage)
+		{
+			currentPage = 0;
+			charactersOfParty.clear();
+			core.uiBase.hud.characters.updateForPartyCreation(charactersOfParty);
+			core.uiBase.hud.characters.show();
+			
+			setupPage();
+			changePage(0);
+			core.getUIRootNode().attachChild(windowNode);
+			core.getUIRootNode().updateRenderState();
+		} else
+		{
+			setupPage();
+			core.getUIRootNode().attachChild(windowNode);
+			core.getUIRootNode().updateRenderState();
+			noNeedForRefreshPage = false;
+		}
 		lockLookAndMove(true);
 	}
 	
@@ -283,7 +302,7 @@ public class PartySetup extends PagedInputWindow {
 	@Override
 	public void setupPage()
 	{
-		if (currentPage==0)
+		if (currentPage==0 && !noNeedForRefreshPage)
 		{
 			windowNode.detachAllChildren();
 			windowNode.attachChild(pageMemberSelection);
@@ -355,6 +374,7 @@ public class PartySetup extends PagedInputWindow {
 			windowNode.attachChild(pageCreationSecond);
 			
 		}
+		noNeedForRefreshPage = false;
 		super.setupPage();
 		
 	}
@@ -460,10 +480,28 @@ public class PartySetup extends PagedInputWindow {
 		}
 		return true;
 	}
+	
+	public boolean noNeedForRefreshPage = false;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base.equals(viewChar))
+		{
+			CharListData d = (CharListData)addCharSelect.getSelectedObject();
+			PartyInstance pi = new PartyInstance(new Party(),null,null,-1,"_",6,1,1,1);
+			pi.orderedParty.add(new PersistentMemberInstance(pi.theFragment, pi,d.person,null,Ecology.getNextEntityId(),0,0,0));
+			core.charSheetWindow.setPageData(pi);
+			core.charSheetWindow.fallbackWindow = this;
+			core.charSheetWindow.noToggleWindowByKeySettingAfterFallbackWindowUse = false;
+			noNeedForRefreshPage = true;
+			toggle();
+			core.getKeyboardHandler().noToggleWindowByKey=false;
+			core.charSheetWindow.toggle();
+			return true;
+			
+		}
+		else
 		if (base.equals(delChar))
 		{
 			CharListData d = (CharListData)addCharSelect.getSelectedObject();
@@ -499,7 +537,7 @@ public class PartySetup extends PagedInputWindow {
 				count++;
 			}
 		} else
-		if (base.equals(addCharSelect))
+		if (base.equals(addCharSelect) || base.equals(addChar))
 		{
 			// ############# ADDING Char
 			if (charactersOfParty.size()==6) return true;

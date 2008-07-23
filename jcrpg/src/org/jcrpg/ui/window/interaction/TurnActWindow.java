@@ -856,6 +856,7 @@ public class TurnActWindow extends PagedInputWindow {
 			{
 				noNeedForRefreshPage = true;
 				core.charSheetWindow.fallbackWindow = this;
+				core.charSheetWindow.noToggleWindowByKeySettingAfterFallbackWindowUse = true;
 				toggle();
 				core.getKeyboardHandler().noToggleWindowByKey=false;
 				core.charSheetWindow.toggle();
