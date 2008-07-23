@@ -51,7 +51,7 @@ public class AudioDescription {
 		
 		if (audio==null || audio.length==0) return null;
 		
-		int i = (int)Math.random()*100%audio.length;
+		int i = ((int)(Math.random()*100d))%audio.length;
 		return audio[i];		
 	}
 	

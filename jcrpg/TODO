@@ -93,6 +93,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] populatePopulation -> domain size largened for the size of population, position the fragment in the middle
 		- owner pMIs positioned at owned infrastructure!
+
+	[ ] use CharacterSheetWindow in PartySetup to view a given character!
+		[ ] using fallbackWindow...
 	
 	[ ] boarmen are not attacking sometime ??
 	

@@ -17,21 +17,13 @@
  */ 
 package org.jcrpg.world.ai.dialect;
 
-import org.jcrpg.util.HashUtil;
 
 public class DialectTool {
 
 	
-	public static String getName(Dialect dialect, String namedType, int seed)
+	public static String getName(Dialect dialect, String namedType, int seed, Class type, Object instance)
 	{
-		String name = "";
-		int i=0;
-		while (true) {
-			int r = HashUtil.mixPer1000((int)seed,i++,namedType.hashCode(),0);
-			r = r%dialect.syllables.size();
-			name+=dialect.syllables.get(r);
-			if (i>5 || i>2 && HashUtil.mixPer1000((int)seed,i,0,0)>500) break;
-		}
+		String name = dialect.getName(seed, namedType,type, instance);
 		return name.substring(0,1).toUpperCase()+name.substring(1);
 	}
 	
