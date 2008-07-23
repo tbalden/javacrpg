@@ -34,6 +34,7 @@ public abstract class Population extends Economic{
 	public transient ArrayList<EconomicGround> groundList = new ArrayList<EconomicGround>();
 	
 	public int blockStartX,blockStartZ;
+	public int centerX,centerZ;
 	
 	public Town town = null;
 	
@@ -91,10 +92,12 @@ public abstract class Population extends Economic{
 	}
 	
 	
-	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ) {
+	public Population(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ, int centerX, int centerZ) {
 		super(id, soilGeo, parent, loc,null,owner);
 		this.blockStartX = blockStartX;
 		this.blockStartZ = blockStartZ;
+		this.centerX = centerX;
+		this.centerZ = centerZ;
 		boundaries = new GroupedBoundaries(parent,this);
 		placeNeedsToBeEnteredForEncounter = true;
 	}
@@ -187,7 +190,7 @@ public abstract class Population extends Economic{
 	 * @param farView
 	 * @return
 	 */
-	public Economic getEconomicAtPosition(long key, int worldX, int worldY, int worldZ, boolean farView) {
+	public Economic getSubEconomicAtPosition(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		// going through the possible residences...
 		for (Economic e:residenceList)
 		{
@@ -210,10 +213,9 @@ public abstract class Population extends Economic{
 		// no cube here...
 		return null;
 	}
-
 	
 	
-	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ);
+	public abstract Population getInstance(String id,Geography soilGeo, World parent, PlaceLocator loc, EntityInstance owner, int blockStartX, int blockStartZ,int centerX, int centerZ);
 
 	/**
 	 * If this returns true, population cannot be any bigger, an entity instance must part 

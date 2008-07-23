@@ -537,7 +537,7 @@ public class World extends Place {
 		}
 		desc.population = population;
 		if (population!=null)
-			desc.detailedEconomic = population.getEconomicAtPosition(-1, worldX, worldY, worldZ, false);
+			desc.detailedEconomic = population.getSubEconomicAtPosition(-1, worldX, worldY, worldZ, false);
 		
 		for (Water w:waters.values())
 		{

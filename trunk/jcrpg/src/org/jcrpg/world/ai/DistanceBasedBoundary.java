@@ -168,7 +168,7 @@ public class DistanceBasedBoundary extends Boundaries {
 			Vector3f normalizedDistDirVect = bigger.pv.subtract(smaller.pv).normalize();
 			float f = (common_distance * 1f ) / 2f;
 			Vector3f middle = smaller.pv.add(normalizedDistDirVect.mult(smaller.getRadiusInRealCubes())).subtract( normalizedDistDirVect.mult(f) );
-			return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {(int)middle.x, (int)middle.y, (int)middle.z}};
+			return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {(int)middle.x, two.posY+((one.posY-two.posY)/2), (int)middle.z}};
 		}
 		return new int[][]{ {common_distance*50 /  one.getRadiusInRealCubes(), common_distance*50 /  two.getRadiusInRealCubes()}, {0, 0, 0}};
 		

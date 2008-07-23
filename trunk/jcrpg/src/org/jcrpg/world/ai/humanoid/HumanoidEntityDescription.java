@@ -59,21 +59,21 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 							// TODO decision if instance wants or not..
 							pO.owner.merge(instance);
 							// TODO enteredPopulation shouldn't be set here
-							instance.fragments.fragments.get(0).enteredPopulation = pO;
+							instance.fragments.fragments.get(0).populatePopulation(pO);
 							break;
 						}
 					} else {
 						// okay, here we can settle the population for this group...
 						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
 						Class<? extends Population> p = list.get(0);
-						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3]);
+						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3],coords[0],coords[1]);
 						pI.update();
 						world.economyContainer.addPopulation(pI);
 						namePopulation(pI);
 						world.economyContainer.checkDistrictToTownIntegration(pI);
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
 						// TODO enteredPopulation shouldn't be set here
-						instance.fragments.fragments.get(0).enteredPopulation = pI;
+						instance.fragments.fragments.get(0).populatePopulation(pI);
 						break;
 					}
 				}

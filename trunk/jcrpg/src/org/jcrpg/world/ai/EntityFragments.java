@@ -26,6 +26,8 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.place.SurfaceHeightAndType;
+import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.place.economic.Population;
 
 import com.jme.math.Vector3f;
@@ -58,6 +60,8 @@ public class EntityFragments {
 	{
 		public EntityFragments parent;
 		public EntityInstance instance;
+		
+		public boolean settledAtHome = false;
 		
 		/**
 		 * The population which the fragment entered. If null, it's not in a population currently.
@@ -101,6 +105,33 @@ public class EntityFragments {
 					i.roamTo(worldX,worldY,worldZ);
 				}
 			}
+		}
+		
+		public void populatePopulation(Population population)
+		{
+			// TODO
+			if (instance.homeEconomy==population)
+			{
+				enteredPopulation = population;
+				// TODO surfaceY
+				int surfaceY = 0;
+				SurfaceHeightAndType[] data = population.soilGeo.getPointSurfaceData(population.centerX, population.centerZ, false);
+				for (SurfaceHeightAndType dataI:data)
+				{
+					surfaceY = dataI.surfaceY;
+				}
+				WorldTypeDesc desc = instance.world.getWorldDescAtPosition(population.centerX, surfaceY, population.centerZ, false);
+				roamTo(population.centerX,surfaceY,population.centerZ); 
+				instance.recalcBoundarySizes();
+				// TODO following members to their infrastructures
+				
+			}
+		}
+		public void leavePopulation(int worldX, int worldY, int worldZ)
+		{
+			enteredPopulation = null;
+			roamTo(worldX, worldY, worldZ);
+			instance.recalcBoundarySizes();
 		}
 		
 		/**
@@ -240,17 +271,23 @@ public class EntityFragments {
 	public void recalcBoundaries()
 	{
 		for (EntityFragment f:fragments) {
-			//f.roamingBoundary.radiusInRealCubes = f.size;//instance.description.getRoamingSize(f);
-			int sum = f.size; 
-			for (EntityMemberInstance m:f.followingMembers)
+			if (f.settledAtHome)
 			{
-				if (!m.isDead())
+				f.roamingBoundary.radiusInRealCubes=instance.world.magnification/2;
+			} else
+			{
+				//f.roamingBoundary.radiusInRealCubes = f.size;//instance.description.getRoamingSize(f);
+				int sum = f.size;
+				for (EntityMemberInstance m:f.followingMembers)
 				{
-					sum+=m.description.getRoamingSize();
+					if (!m.isDead())
+					{
+						sum+=m.description.getRoamingSize();
+					}
 				}
+				sum = Math.max(1,(int)Math.sqrt(sum));
+				f.roamingBoundary.radiusInRealCubes=sum*3;
 			}
-			sum = Math.max(1,(int)Math.sqrt(sum));
-			f.roamingBoundary.radiusInRealCubes=sum*3;
 		}
 	}
 	
