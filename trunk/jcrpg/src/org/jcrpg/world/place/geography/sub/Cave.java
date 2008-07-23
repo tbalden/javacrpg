@@ -95,6 +95,7 @@ public class Cave extends Geography implements Surface {
 		this.levelSize = levelSize;
 		returnsGeoOutsideHeight = false;
 		placeNeedsToBeEnteredForEncounter = true;
+		audioDescriptor.ENVIRONMENTAL = new String[] {"cave_drip1","cave_drip2","cave_drip3","cave_wind1"};
 	}
 	
 	@Override

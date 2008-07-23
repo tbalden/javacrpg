@@ -342,21 +342,21 @@ public class EntityDescription extends DescriptionBase {
 	public ArrayList<String> syllables = new ArrayList<String>();
 	
 	
-	private String nameThing(long seed)
+	private String nameThing(long seed, Class thing, Object instance)
 	{
-		return DialectTool.getName(naturalDialect, "eco", (int)seed);
+		return DialectTool.getName(naturalDialect, "eco", (int)seed,thing, instance);
 	}
 	
 	public void nameTown(Town t)
 	{
 		long seed = t.subPopulations.get(0).blockStartX+t.subPopulations.get(0).blockStartZ+t.subPopulations.get(0).numericId;
-		t.foundationName = nameThing(seed);
+		t.foundationName = nameThing(seed,t.getClass(), t);
 	}
 
 	public void namePopulation(Population p)
 	{
 		long seed = p.blockStartX+p.blockStartZ+p.numericId+p.soilGeo.numericId;
-		p.foundationName = nameThing(seed);
+		p.foundationName = nameThing(seed,p.getClass(), p);
 	}
 	
 	public String getName()

@@ -62,7 +62,7 @@ public class Engine implements Runnable {
 	 * Tells around how many seconds (this is randomly calculated half part) till a new
 	 * do environment should be executed (sounds and such only, not gameplay events!)  
 	 */
-	public static int SECONDS_PER_ENVIRONMENT = 160; 
+	public static int SECONDS_PER_ENVIRONMENT = 50; 
 	
 	
 	private boolean timeChanged = false;

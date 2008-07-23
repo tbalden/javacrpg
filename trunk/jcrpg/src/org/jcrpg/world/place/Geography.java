@@ -42,6 +42,7 @@ public class Geography extends Place implements Surface {
 		
 	public GeneratedPartRuleSet ruleSet = new GeneratedPartRuleSet(this.getClass().getSimpleName());
 	
+	
 	/**
 	 * Population height offset.
 	 */
@@ -730,6 +731,6 @@ public class Geography extends Place implements Surface {
 	{
 		int x = worldX/blockSize;
 		int z = worldZ/blockSize;
-		return DialectTool.getName(dialect, this.getClass().getSimpleName(), (int)(x+z+numericId));
+		return DialectTool.getName(dialect, this.getClass().getSimpleName(), (int)(x+z+numericId), this.getClass(), this);
 	}
 }

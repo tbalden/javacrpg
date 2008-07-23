@@ -31,6 +31,7 @@ import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.GroupingMemberProps;
@@ -423,16 +424,28 @@ public class GameStateContainer {
 	{
 		if (environmentAudioCount==0)
 		{
-			// climate related sounds
-			CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
-			if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null && c.getBelt().audioDescriptor.ENVIRONMENTAL!=null)
+			// geo related sounds
+			WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+			boolean played = false;
+			if (desc.g!=null)
 			{
-				for (String audio : c.getBelt().audioDescriptor.ENVIRONMENTAL)
+				String sound = desc.g.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+				if (sound!=null)
 				{
-					if (Engine.getTrueRandom().nextInt(10)>3) 
+					J3DCore.getInstance().audioServer.playLoading(sound, "geo");
+					played = true;
+				}
+			}
+			// climate related sounds
+			if (!played)
+			{
+				CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
+				if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null)
+				{
+					String sound = c.getBelt().audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+					if (sound!=null)
 					{
-						J3DCore.getInstance().audioServer.playLoading(audio, "climate");
-						break;
+						J3DCore.getInstance().audioServer.playLoading(sound, "climate");
 					}
 				}
 			}
