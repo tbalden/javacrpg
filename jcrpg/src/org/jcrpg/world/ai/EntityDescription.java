@@ -21,7 +21,6 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Behavior;
@@ -37,6 +36,8 @@ import org.jcrpg.world.ai.abs.choice.Hide;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.dialect.Dialect;
+import org.jcrpg.world.ai.dialect.DialectTool;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.Population;
@@ -61,6 +62,11 @@ public class EntityDescription extends DescriptionBase {
 	public Resistances resistances = new FantasyResistances(false);
 
 	public EconomyTemplate economyTemplate = new EconomyTemplate();
+	
+	/**
+	 * Base dialect for naming things.
+	 */
+	public Dialect naturalDialect = new Dialect();
 
 	/**
 	 * Tells how to divide the non-specific masses of an Entity into EntityMembers.
@@ -338,26 +344,7 @@ public class EntityDescription extends DescriptionBase {
 	
 	private String nameThing(long seed)
 	{
-		// TODO replace this with race dependent...
-		if (syllables.size()==0) {
-			syllables.add("aw");
-			syllables.add("sho");
-			syllables.add("mig");
-			syllables.add("tra");
-			syllables.add("wam");
-			syllables.add("prah");
-			syllables.add("bu");
-		}
-		String name = "";
-		int i=0;
-		while (true) {
-			int r = HashUtil.mixPer1000((int)seed,i++,0,0);
-			r = r%syllables.size();
-			name+=syllables.get(r);
-			if (i>5 || i>2 && HashUtil.mixPer1000((int)seed,i,0,0)>500) break;
-		}
-		return name.substring(0,1).toUpperCase()+name.substring(1);
-		
+		return DialectTool.getName(naturalDialect, "eco", (int)seed);
 	}
 	
 	public void nameTown(Town t)

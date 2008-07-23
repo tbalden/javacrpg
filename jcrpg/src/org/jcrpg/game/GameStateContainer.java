@@ -38,6 +38,7 @@ import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.climate.CubeClimateConditions;
+import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.World.WorldTypeDesc;
@@ -358,35 +359,60 @@ public class GameStateContainer {
 	}
 	
 	/**
+	 * Last population entered, left.
+	 */
+	String lastPopulationName = "";
+	/**
+	 * Last geo entered, left.
+	 */
+	String lastGeographyName = "";
+	
+	/**
 	 * Check if player has entered/left a population, write to log if so.
 	 */
-	public void checkEnterLeavePopulation()
+	public void checkEnterLeave()
 	{
-		Population p = world.economyContainer.getPopulationAt(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ);
-		if (p==null)
+		WorldTypeDesc desc = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ,false);
+		if (desc.population==null)
 		{
-			p = world.economyContainer.getPopulationAt(normalPosition.viewPositionX, normalPosition.viewPositionY-1, normalPosition.viewPositionZ);
+			desc.population = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY-1, normalPosition.viewPositionZ,false).population;
 		}
+		
+		Population p = desc.population;
 		if (p!=null)
 		{
 			String name = p.town.foundationName+" ("+p.foundationName+")";
 			if (p.owner!=null) name+=" "+p.owner.description.getName();
 			if (!lastPopulationName.equals(name)) {
 				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry("Entering town "+name, ColorRGBA.red));
+				gameLogic.core.uiBase.hud.startFloatingOSDText("Entering town "+p.town.foundationName, ColorRGBA.yellow);
 				lastPopulationName = name;
 			}
 		} else
 		{	if (lastPopulationName!=null && lastPopulationName.length()>0)
 			{
-			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Leaving town "+lastPopulationName);
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Leaving town "+lastPopulationName);
 			}
 			lastPopulationName = "";
 		}
+
+		Geography g = desc.g;
+		if (g!=null)
+		{
+			String name = g.getName(player.description.naturalDialect,normalPosition.viewPositionX,normalPosition.viewPositionZ);
+			if (!lastGeographyName.equals(name)) {
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(new TextEntry("Entering "+name, ColorRGBA.red));
+				gameLogic.core.uiBase.hud.startFloatingOSDText("Entering "+name, ColorRGBA.white);
+				lastGeographyName = name;
+			}
+		} else
+		{	if (lastGeographyName!=null && lastGeographyName.length()>0)
+			{
+			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Leaving "+lastGeographyName);
+			}
+			lastGeographyName = "";
+		}
 	}
-	/**
-	 * Last population entered, left.
-	 */
-	String lastPopulationName = "";
 	
 	int environmentAudioCount = 0;
 	

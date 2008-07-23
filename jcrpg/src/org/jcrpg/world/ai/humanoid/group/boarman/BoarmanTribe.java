@@ -35,7 +35,7 @@ import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.SimpleDistrict;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.MountainNew;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 
 public class BoarmanTribe extends HumanoidEntityDescription {
@@ -104,18 +104,18 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		iconPic = "boarman";
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
-		economyTemplate.addPopulationType(MountainNew.class, SimpleDistrict.class);
+		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);
 		economyTemplate.addResidenceType(Plain.class, House.class);
 		economyTemplate.addResidenceType(Forest.class, House.class);
-		economyTemplate.addResidenceType(MountainNew.class, House.class);
+		economyTemplate.addResidenceType(Mountain.class, House.class);
 		economyTemplate.addEcoGroundType(Plain.class, EconomicGround.class);
 		economyTemplate.addEcoGroundType(Forest.class, EconomicGround.class);
-		economyTemplate.addEcoGroundType(MountainNew.class, EconomicGround.class);
+		economyTemplate.addEcoGroundType(Mountain.class, EconomicGround.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);
 		geographies.add(Plain.class);
-		geographies.add(MountainNew.class);
+		geographies.add(Mountain.class);
 		//geographies.add(Cave.class);
 		
 		behaviors.add(Peaceful.class);

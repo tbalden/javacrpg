@@ -28,6 +28,8 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.dialect.Dialect;
+import org.jcrpg.world.ai.dialect.DialectTool;
 import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
@@ -719,4 +721,15 @@ public class Geography extends Place implements Surface {
 		return ruleSet;
 	}
 	
+	public String getName(Dialect dialect,int worldX, int worldZ)
+	{
+		return this.getClass().getSimpleName()+" of "+ getCoreName(dialect, worldX, worldZ);
+	}
+	
+	public String getCoreName(Dialect dialect,int worldX, int worldZ)
+	{
+		int x = worldX/blockSize;
+		int z = worldZ/blockSize;
+		return DialectTool.getName(dialect, this.getClass().getSimpleName(), (int)(x+z+numericId));
+	}
 }

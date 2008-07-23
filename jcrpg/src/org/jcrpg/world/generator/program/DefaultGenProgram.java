@@ -42,7 +42,7 @@ import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.MountainNew;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -299,7 +299,7 @@ public class DefaultGenProgram extends GenProgram {
 		}
 		if (geoClass.equals("Mountain"))
 		{
-			r = factory.createGeography(MountainNew.class);
+			r = factory.createGeography(Mountain.class);
 		}
 		if (geoClass.equals("River"))
 		{
