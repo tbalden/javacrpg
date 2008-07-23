@@ -23,6 +23,7 @@ import org.jcrpg.world.ai.abs.skill.mental.Architecture;
 import org.jcrpg.world.ai.abs.skill.physical.Metalcraft;
 import org.jcrpg.world.ai.profession.HumanoidNormal;
 import org.jcrpg.world.object.combat.hammeraxe.PickAxe;
+import org.jcrpg.world.object.magical.potion.MinorHealingPotion;
 
 public class Miner extends HumanoidNormal {
 
@@ -33,5 +34,6 @@ public class Miner extends HumanoidNormal {
 		addMajorSkill(Metalcraft.class);
 		addMinorSkill(Architecture.class);
 		generationNewInstanceObjects.add(PickAxe.class);
+		generationNewInstanceObjects.add(MinorHealingPotion.class);
 	}
 }
