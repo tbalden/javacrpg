@@ -85,7 +85,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.CAST = "./data/models/humanoid/boarman/mage/boarmage_cast.md5anim";
 		desc.DEFEND_LOWER = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
 		desc.DEFEND_UPPER = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
-		desc.PAIN = "./data/models/humanoid/boarman/mage/boarmage_defense.md5anim";
+		desc.PAIN = "./data/models/humanoid/boarman/mage/boarmage_pain.md5anim";
 		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/mage/boarmage_death.md5anim";
 		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";
 		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
