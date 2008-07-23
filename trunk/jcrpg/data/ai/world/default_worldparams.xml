@@ -17,7 +17,7 @@
 	<!-- reference list of Geography used in world generation -->
 	<geos-ref>
 		<geo id="Mountain"
-			implementation="org.jcrpg.world.place.geography.MoutainNew" />
+			implementation="org.jcrpg.world.place.geography.Moutain" />
 		<geo id="Plain"
 			implementation="org.jcrpg.world.place.geography.Plain" />
 		<geo id="Forest"

@@ -29,6 +29,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
+import org.jcrpg.threed.jme.ui.FlyingNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
@@ -292,46 +293,7 @@ public class J3DMovingEngine {
 		
 	}
 	
-	public class FlyingNode extends Node
-	{
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		private float fliedDist= 0f;
-		private float maxDist = 1.5f;
-		private boolean flying = false;
-		
-		
-		@Override
-		public void updateGeometricState(float time, boolean initiator) {
-			if (flying && fliedDist<maxDist) {
-				localTranslation.addLocal(0f, 0.1f*time, 0f);
-				fliedDist+=1f*time;
-			} else
-			if (flying && fliedDist>=maxDist)
-			{
-				this.removeFromParent();
-				return;
-			}
-			super.updateGeometricState(time, initiator);
-		}
-		
-		public boolean isFinishedPlaying()
-		{
-			if (fliedDist>=maxDist)
-			{
-				return true;
-			}
-			return false;
-		}
-		public void startFlying()
-		{
-			flying = true;
-		}
-	}
 	
 	/**
 	 * Creates a flying node with numbers for not-0 impact points

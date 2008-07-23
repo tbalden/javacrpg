@@ -23,7 +23,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.MountainNew;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.water.Ocean;
@@ -59,9 +59,9 @@ public class DefaultClassFactory extends ClassFactory{
 			Cave p = new Cave("BIGCAVE",world,null,world.getSeaLevel(1)+1,world.getSeaLevel(1)+3,gMag, gWX, 2, gWZ, 0, world.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
 			r = p;
 		} else
-		if (type == MountainNew.class)
+		if (type == Mountain.class)
 		{
-			MountainNew p = new MountainNew("MOUNTAINS",world,null,world.getSeaLevel(1),world.getSeaLevel(1)+5*(int)(Math.sqrt(gMag)*program.params.heightRatio)/10 ,gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, false);
+			Mountain p = new Mountain("MOUNTAINS",world,null,world.getSeaLevel(1),world.getSeaLevel(1)+5*(int)(Math.sqrt(gMag)*program.params.heightRatio)/10 ,gMag, gWX, gWY, gWZ, 0, world.getSeaLevel(gMag)-1, 0, false);
 			r = p;
 		}
 			

@@ -20,6 +20,7 @@ package org.jcrpg.ui;
 import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.jme.ui.FlyingNode;
 import org.jcrpg.ui.map.LocalMap;
 import org.jcrpg.ui.meter.DirectionTimeMeter;
 import org.jcrpg.ui.meter.EntityOMeter;
@@ -37,6 +38,7 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 
 public class HUD {
@@ -153,6 +155,28 @@ public class HUD {
 	public void updateCharacterRelated(EntityMemberInstance instance)
 	{
 		characters.updatePoints(instance);
+	}
+	FlyingNode lastOSDText = null;
+	public void startFloatingOSDText(String text, ColorRGBA color)
+	{
+		float y = DisplaySystem.getDisplaySystem().getHeight()/1.6f;
+		if (lastOSDText!=null) 
+		{
+			if (!lastOSDText.isFinishedPlaying())
+			{
+				y = y*0.9f;
+			}
+		}
+		FlyingNode node = new FlyingNode();
+		lastOSDText = node;
+		node.setLocalTranslation(DisplaySystem.getDisplaySystem().getWidth()/2f,y,0f);
+		Node n = FontUtils.textNonBoldVerdana.createOutlinedText(text, 19,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+		n.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		n.setLocalScale(core.getDisplay().getWidth()/600f);		
+		node.attachChild(n);
+		hudNode.attachChild(node);
+		hudNode.updateRenderState();
+		node.startFlying(8f,3.0f);
 	}
 	
 }

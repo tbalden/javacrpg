@@ -89,7 +89,7 @@ public class Cave extends Geography implements Surface {
 		super(id, parent, loc,worldGroundLevel,worldHeight,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		ruleSet.presentWhereBaseExists = false;
 		ruleSet.genType = GenAlgoAdd.GEN_TYPE_NAME;
-		ruleSet.genParams = new Object[] { new GenAlgoAddParams(new String[]{"MountainNew"}, 100, new int[]{0}) };
+		ruleSet.genParams = new Object[] { new GenAlgoAddParams(new String[]{"Mountain"}, 100, new int[]{0}) };
 		this.density = density;
 		this.entranceSide = entranceSide;
 		this.levelSize = levelSize;

@@ -28,7 +28,7 @@ import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.kobold.member.KoboldMaleMiner;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
-import org.jcrpg.world.place.geography.MountainNew;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.sub.Cave;
 
 public class KoboldHorde extends HumanoidEntityDescription {
@@ -62,7 +62,7 @@ public class KoboldHorde extends HumanoidEntityDescription {
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Cave.class);
-		geographies.add(MountainNew.class);
+		geographies.add(Mountain.class);
 		
 		behaviors.add(Aggressive.class);
 		genderType = GENDER_BOTH;

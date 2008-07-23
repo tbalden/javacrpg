@@ -61,7 +61,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.MountainNew;
+import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.water.Lake;
@@ -115,15 +115,15 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_EXTERNAL_DOOR.id, new Integer(5));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_WINDOW.id, new Integer(6));
 		hmCubeSideSubTypeToRenderedSideId.put(House.SUBTYPE_WALL.id, new Integer(1));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_STEEP.id, 41); 
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_ROCK_SIDE.id, new Integer(35));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_INTERSECT.id, new Integer(27));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_CORNER.id, new Integer(40));
-		hmCubeSideSubTypeToRenderedSideId.put(MountainNew.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_STEEP.id, 41); 
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_ROCK_SIDE.id, new Integer(35));
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_INTERSECT.id, new Integer(27));
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_CORNER.id, new Integer(40));
+		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side

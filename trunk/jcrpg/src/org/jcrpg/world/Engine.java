@@ -98,7 +98,7 @@ public class Engine implements Runnable {
 		while (!exit)
 		{
 			try{Thread.sleep(1000);}catch (Exception ex){}
-			if (!pause) {
+			if (!pause && !outOfGameSystemPause) {
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### TICK-TACK ###");
 				int secondsPast = camping?TICK_SECONDS_CAMPING:TICK_SECONDS;
 				worldMeanTime.tick(secondsPast);
@@ -200,6 +200,21 @@ public class Engine implements Runnable {
 	public synchronized void setPause(boolean pause) {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---### PAUSE = "+pause);
 		this.pause = pause;
+	}
+	
+	private boolean outOfGameSystemPause = false;
+	
+	public synchronized boolean isOutOfGameSystemPause()
+	{
+		return outOfGameSystemPause;
+	}
+	public synchronized void pauseForRendering()
+	{
+		outOfGameSystemPause = true;
+	}
+	public synchronized void unpauseAfterRendering()
+	{
+		outOfGameSystemPause = false;
 	}
 
 	public Time getWorldMeanTime() {

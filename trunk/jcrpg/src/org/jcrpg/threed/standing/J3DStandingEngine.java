@@ -457,7 +457,7 @@ public class J3DStandingEngine {
 			
 			
 			boolean storedPauseState = engine.isPause();
-			engine.setPause(true);
+			engine.pauseForRendering();
 			
 			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.unlockAll();
 			
@@ -1251,7 +1251,7 @@ public class J3DStandingEngine {
 			    core.updateTimeRelated();
 			}
 			
-			engine.setPause(storedPauseState);
+			engine.unpauseAfterRendering();
 		}
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
