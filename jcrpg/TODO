@@ -90,8 +90,15 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 [?] list before next release:
 ##
-	[ ] naming in languages Entities
-			
+
+	[ ] j3dmoving engine UpdateScene ? does it call something updateGeometry -> quick anim problem
+	[ ] populatePopulation -> domain size largened for the size of population, position the fragment in the middle
+		- owner pMIs positioned at owned infrastructure!
+
+	[ ] name generation for geographies -> per Geo Size block add a random name? with dialect parameters (as seed of generation) :D
+		[ ] visualize it when entering it on TextLog
+		[ ] OSD for Entering Areas
+	
 	[ ] secondary lock remains ??
 	
 	[ ] boarmen are not attacking sometime ??
@@ -113,6 +120,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] naming in languages Entities
+			
 	[-] neutralized icon on portrait
 	[X] sword/shield for turn act?
 		[-] + axe?
