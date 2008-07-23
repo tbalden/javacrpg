@@ -218,6 +218,9 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         left.setLockAxis(new Vector3f(lock));
     }
     
+    /**
+     * If this is true, windows shouldn't be toggled by window-toggle-key, only by program code.
+     */
     public boolean noToggleWindowByKey = false;
 	
     public boolean lock = false;

@@ -90,6 +90,9 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Sheet",false);
+	    	
+	    	new TextLabel("",this,page0, 0.57f, 0.80f, 0.3f, 0.06f,600f,"Press F3 or Backspace to leave.",false);
+	    	
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
 	    	
@@ -166,6 +169,8 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	addInput(0,professionSelect);
 
 	    	addPage(0, page0);
+	    	
+	    	base.addEventHandler("back", this);
 		} catch (Exception ex)
 		{	
 			ex.printStackTrace();
@@ -400,12 +405,23 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	}
 	
 	@Override
+	public boolean handleKey(String key)
+	{
+		if (key.equals("back"))
+		{
+			toggle();
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public void hide() {
 		super.hide();
 		if (fallbackWindow!=null) 
 		{
 			fallbackWindow.toggle();
-			core.getKeyboardHandler().noToggleWindowByKey=true;
+			core.getKeyboardHandler().noToggleWindowByKey=noToggleWindowByKeySettingAfterFallbackWindowUse;
 			fallbackWindow = null;
 		}
 	}
@@ -416,4 +432,5 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	}
 
 	public InputWindow fallbackWindow = null;
+	public boolean noToggleWindowByKeySettingAfterFallbackWindowUse = false;
 }
