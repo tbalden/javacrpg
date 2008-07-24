@@ -26,8 +26,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
-import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.economic.Population;
 
 import com.jme.math.Vector3f;
@@ -69,13 +68,25 @@ public class EntityFragments {
 		 */
 		public Population enteredPopulation = null;
 		
+		/**
+		 * All additional stateful data of the fragment.
+		 * @author illes
+		 *
+		 */
 		public class EntityFragmentState 
 		{
 			public boolean isCamping = false;
 		}
 		
+		/**
+		 * The state description of the fragment.
+		 */
 		public EntityFragmentState fragmentState = new EntityFragmentState();
 		
+		/**
+		 * Replenishing in a round - following non-dead members are resting now, state effects updated.
+		 * @param seed the random seed used for saving a bad state effect.
+		 */
 		public void replenishInOneRound(int seed)
 		{
 			for (EntityMemberInstance i:followingMembers)
@@ -107,28 +118,48 @@ public class EntityFragments {
 			}
 		}
 		
+		/**
+		 * The fragment enters its owned population and settles down now,
+		 * following members (persistent NPCs) return to their owned infrastructures.
+		 * @param population
+		 */
 		public void populatePopulation(Population population)
 		{
-			// TODO
 			if (instance.homeEconomy==population)
 			{
+				settledAtHome = true;
+				ArrayList<int[]> settleList = population.getPossibleSettlePlaces();
+				if (settleList==null || settleList.size()==0) return;
 				enteredPopulation = population;
-				// TODO surfaceY
-				int surfaceY = 0;
-				SurfaceHeightAndType[] data = population.soilGeo.getPointSurfaceData(population.centerX, population.centerZ, false);
-				for (SurfaceHeightAndType dataI:data)
-				{
-					surfaceY = dataI.surfaceY;
-				}
-				WorldTypeDesc desc = instance.world.getWorldDescAtPosition(population.centerX, surfaceY, population.centerZ, false);
-				roamTo(population.centerX,surfaceY,population.centerZ); 
-				instance.recalcBoundarySizes();
-				// TODO following members to their infrastructures
 				
+				roamTo(settleList.get(0)[0],settleList.get(0)[1],settleList.get(0)[2]); 
+				instance.recalcBoundarySizes();
+				for (PersistentMemberInstance pMI:followingMembers)
+				{
+					ArrayList<Economic> list = pMI.getGeneratedOwnInfrastructures();
+					if (list!=null && list.size()>0)
+					{
+						for (Economic e:list)
+						{
+							ArrayList<int[]> pP = e.getPossibleSettlePlaces();
+							if (pP==null || pP.size()==0) continue;
+							pMI.roamTo(pP.get(0)[0], pP.get(0)[1], pP.get(0)[2]);
+							//System.out.println("pMI SETTLE "+pMI.getName()+" "+e.getClass().getSimpleName()+" "+ pP.get(0)[0]+","+ pP.get(0)[1] +","+ pP.get(0)[2] );
+						}
+					}
+				}
 			}
 		}
+		
+		/**
+		 * Settled down fragment leaves town in a given direction specified by coordinates.
+		 * @param worldX
+		 * @param worldY
+		 * @param worldZ
+		 */
 		public void leavePopulation(int worldX, int worldY, int worldZ)
 		{
+			settledAtHome = false;
 			enteredPopulation = null;
 			roamTo(worldX, worldY, worldZ);
 			instance.recalcBoundarySizes();

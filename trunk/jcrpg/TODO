@@ -90,23 +90,20 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] town center infrastrucre?? - EntityFragment populatePopulation helping?
 
 	[ ] boarmen are not attacking sometime ??
+
+	[ ] MORE SKILLS: spell forms, 
+		[X] social effects, neutralizing morale, 
+		[ ] protecting Mental sanity 
+		[ ] protection spells, boost spells with effects
+		[X] social helper skills - > Strategy
 	
 ##
 [?] list before next release:
 ##
 
 
-	[X] populatePopulation -> domain size largened for the size of population, position the fragment in the middle
-		[ ] - owner pMIs positioned at owned infrastructure!
-
-	[ ] tune resistance things? tune more impact!!
-		[ ] resistance remove from DEFENSE - use it in impact tuning with a roll??	
+	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 	
-	[ ] MORE SKILLS: spell forms, 
-		[X] social effects, neutralizing morale, 
-		[ ] protecting Mental sanity 
-		[ ] protection spells, boost spells with effects
-		[X] social helper skills - > Strategy
 	
 	[ ] economic update icon
 
@@ -116,6 +113,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] tune resistance things? tune more impact!!
+		[X] resistance remove from DEFENSE - use it in impact tuning with a roll??
+			
 	[X] J3dEncounter - > Economic -> put in something from the population's roads?
 	
 	[X] kobold pose

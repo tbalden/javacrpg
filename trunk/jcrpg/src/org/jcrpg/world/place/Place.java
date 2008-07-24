@@ -341,6 +341,11 @@ public abstract class Place {
 		
 	}
 	
+	/**
+	 * This determines if Geography's own height is overwritten by this Place's height. Used especially with
+	 * economic things like house,ecoGround.
+	 * @return
+	 */
 	public boolean overrideGeoHeight()
 	{
 		return false;

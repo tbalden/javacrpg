@@ -49,6 +49,10 @@ import org.jcrpg.world.object.Weapon;
 
 import com.jme.renderer.ColorRGBA;
 
+/**
+ * The class for evaluation of turn act things - success failure, impact.
+ * @author illes
+ */
 public class EvaluatorBase {
 	
 	
@@ -237,9 +241,28 @@ public class EvaluatorBase {
 							data.levelOfSkill = 0;
 						}
 					}
-					targetPower =  data.calculateTargetPower(additionalContraResistances);
+					int[] targetPowerAndRes =  data.calculateTargetPowerAndResistance(additionalContraResistances);
+					targetPower = targetPowerAndRes[0];
+					int targetRes = targetPowerAndRes[1];
 					
-					impact = (sourcePower-targetPower)/100f; 
+					int resistanceRoll = HashUtil.mixPer1000(seed, data.target.getNumericId()+data.target.instance.getNumericId(), 0)%120; // random factor
+					
+					float resistanceMul = 1f;
+					if (targetRes<resistanceRoll)
+					{
+					} else
+					{
+						int diff = targetRes-resistanceRoll;
+						resistanceMul = diff*1f/(targetRes+1);
+					}
+					
+					impact = (sourcePower-targetPower)/100f * resistanceMul;
+					String resString = ""+resistanceMul;
+					if (resString.length()>4)
+					{
+						resString = resString.substring(0,4);
+					}
+					i.messages.add(new TextEntry(data.target.description.getName() + ": Resistance Mul ("+targetRes+" ? "+resistanceRoll+") "+resString,ColorRGBA.darkGray) );
 				} else
 				{
 					impact = 1f;
@@ -250,7 +273,13 @@ public class EvaluatorBase {
 				}
 				if (sourcePower>targetPower)
 				{
-					i.messages.add(new TextEntry(data.target.description.getName() + ": Success! Impact: "+impact+ " Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.red));
+					String impactString = ""+impact;
+					if (impactString.length()>4)
+					{
+						impactString = impactString.substring(0,4);
+					}
+					
+					i.messages.add(new TextEntry(data.target.description.getName() + ": Success! Impact: "+impactString+ " Def/Att: "+targetPower+"/"+sourcePower,ColorRGBA.red));
 					// success
 					// calculate resistance impact decrease etc. TODO
 					ImpactUnit u = new ImpactUnit();
@@ -550,7 +579,7 @@ public class EvaluatorBase {
 			levelOfSkill = choice.skill==null?0:choice.skill.level;
 		}
 		
-		public int calculateTargetPower(ArrayList<String> additionalContraResistances)
+		public int[] calculateTargetPowerAndResistance(ArrayList<String> additionalContraResistances)
 		{
 			
 			// DEFENSE POINT = 
@@ -583,12 +612,10 @@ public class EvaluatorBase {
 			
 			int contraMaxHundredPlus =
 				(
-						calculateAttributePower(sourceForm.contraAttributes, targetAttributes)/2
-				+
-						calculateResistencePower(additionalContraResistances, targetResistances))/2
+						calculateAttributePower(sourceForm.contraAttributes, targetAttributes))
 				;
 			
-			return base+contraMaxHundredPlus;
+			return new int[]{base+contraMaxHundredPlus,	calculateResistencePower(additionalContraResistances, targetResistances)};
 		}
 		
 		public BodyPart getBodyPartTargetted(int seed, int targettingCriticalLevel)

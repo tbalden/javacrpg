@@ -17,6 +17,8 @@
 
 package org.jcrpg.world.place;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -80,6 +82,15 @@ public class Economic extends Geography {
 
 	public void setOwnerMember(PersistentMemberInstance ownerMember) {
 		this.ownerMember = ownerMember;
+	}
+	
+	/**
+	 * Returns coordinates for places where a unit can settle in a given economy.
+	 * @return
+	 */
+	public ArrayList<int[]> getPossibleSettlePlaces()
+	{
+		return null;
 	}
 	
 	

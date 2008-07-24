@@ -17,6 +17,8 @@
 
 package org.jcrpg.world.place.economic;
 
+import java.util.ArrayList;
+
 import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -242,6 +244,16 @@ public class House extends Residence {
 			System.exit(1);
 			return null;
 		}
-		
 	}
+
+	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
+
+	@Override
+	public ArrayList<int[]> getPossibleSettlePlaces() {
+		tmpSettlePlaces.clear();
+		tmpSettlePlaces.add(new int[]{origoX+sizeX/2, origoY, origoZ+sizeZ/2});
+		return tmpSettlePlaces;
+	}
+	
+	
 }
