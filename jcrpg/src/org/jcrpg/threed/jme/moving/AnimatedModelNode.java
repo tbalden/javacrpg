@@ -222,7 +222,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-			bodyAnimationController.setSkipRate(0.05f);
+			//bodyAnimationController.setSkipRate(0.05f);
 			bodyAnimationController.addListener(this);
 			
 
