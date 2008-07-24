@@ -670,6 +670,8 @@ public class PartySetup extends PagedInputWindow {
 			attrPointsLeftLabel.activate();
 			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
 			skillPointsLeftLabel.activate();
+			skillValueTuner.setEnabled(false);
+			skillValueTuner.value = 0;
 			currentPage=1;
 			setupPage();
 		}

@@ -96,17 +96,14 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] protecting Mental sanity 
 		[ ] protection spells, boost spells with effects
 		[X] social helper skills - > Strategy
+
+	[ ] texture state cacheing into md5reader2?
 	
 ##
 [?] list before next release:
 ##
 
-	[ ] char creation bug - a used value tuner keeps VALUE cheating!
-
-	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar - moving up too much , and facing wrong place
-	
-	
-	[ ] economic update icon
+	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
 	-- QA/DOC
 
@@ -114,6 +111,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] economic update icon
+
+	[X] char creation bug - a used value tuner keeps VALUE cheating!
+
+
 	[X] tune resistance things? tune more impact!!
 		[X] resistance remove from DEFENSE - use it in impact tuning with a roll??
 			
