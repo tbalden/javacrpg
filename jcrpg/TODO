@@ -88,15 +88,19 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] gold system
 
 	[ ] town center infrastrucre?? - EntityFragment populatePopulation helping?
+
+	[ ] boarmen are not attacking sometime ??
 	
 ##
 [?] list before next release:
 ##
 
+
 	[X] populatePopulation -> domain size largened for the size of population, position the fragment in the middle
 		[ ] - owner pMIs positioned at owned infrastructure!
-	
-	[ ] boarmen are not attacking sometime ??
+
+	[ ] tune resistance things? tune more impact!!
+		[ ] resistance remove from DEFENSE - use it in impact tuning with a roll??	
 	
 	[ ] MORE SKILLS: spell forms, 
 		[X] social effects, neutralizing morale, 
@@ -105,9 +109,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[X] social helper skills - > Strategy
 	
 	[ ] economic update icon
-	[ ] kobold pose
-	[ ] pain anim for Mage
-	
 
 	-- QA/DOC
 
@@ -115,6 +116,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] J3dEncounter - > Economic -> put in something from the population's roads?
+	
+	[X] kobold pose
+	[X] pain anim for Mage
+	
 	[X] use CharacterSheetWindow in PartySetup to view a given character!
 		[X] using fallbackWindow...
 

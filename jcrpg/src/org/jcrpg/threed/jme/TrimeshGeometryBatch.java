@@ -442,7 +442,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 			
 			if (vertexShader) {
-				if (core.extRootNode.equals(parent.getParent()) || core.extRootNode.equals(parent.getParent().getParent())|| parent.getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent()) || parent.getParent().getParent().getParent()!=null && core.extRootNode.equals(parent.getParent().getParent().getParent().getParent())) {
+				if (!internal) {
 					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 				} else
 				{
@@ -503,17 +503,30 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public boolean isAnimated() {
 		return animated;
 	}
+	
+	public boolean internal = false;
 
-	public void setAnimated(boolean animated) {
+	public void setAnimated(boolean animated, boolean internal) {
 		this.animated = animated;
+		this.internal = internal;
 		vertexShader=animated;
 		if (animated)  {
-        	this.setRenderState(core.fs_external);
+			if (!internal) {
+				this.setRenderState(core.fs_external);
+			} else
+			{
+				this.setRenderState(core.fs_internal);
+			}
         	this.setRenderState(vp);
         	this.setRenderState(fp);
 		} else
 		{
-        	this.setRenderState(core.fs_external);
+			if (!internal) {
+				this.setRenderState(core.fs_external);
+			} else
+			{
+				this.setRenderState(core.fs_internal);
+			}
         	this.clearRenderState(VertexProgramState.RS_VERTEX_PROGRAM);
         	this.clearRenderState(VertexProgramState.RS_FRAGMENT_PROGRAM);
 		}

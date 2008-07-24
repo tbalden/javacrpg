@@ -273,8 +273,8 @@ public class Ecology {
 		int wX = r[1][0];
 		int wY = r[1][1];
 		int wZ = r[1][2];
-		if (initiatorUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
-		if (targetUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
+		//if (initiatorUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
+		//if (targetUnit.getFragment()==J3DCore.getInstance().gameState.player.theFragment) playerDebug = true;
 		if (playerDebug)
 		{
 			System.out.println("######### initiator "+initiatorUnit.getName() + " target "+targetUnit.getName());
