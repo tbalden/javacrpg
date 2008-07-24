@@ -1,5 +1,7 @@
 Java Classic Role Playing Game
 ==============================
+http://javacrpg.sf.net
+(c) by Illes Pal Zoltan 2007-2008, Licensed under GPLv3
 
 m. Movement/Keyboard
 
@@ -7,18 +9,21 @@ W/S/A/D for turning, moving.
 Q/E for strafe.
 Up/Down for looking up and down.
 Left/Right for looking around.
+
 F1 World map
-F2 Party behavior window
+F2 Party behavior window (no effect of the settings here currently)
 F3 Character Sheet window
 F4 Character's Inventory window
+F5 Party Order window
+
 F10 Main menu
+
 F11 debug infos (memory / 3d related)
 F12 Take a screenshot
-Press Y to exit encounters
 
-ESC to exit the demo or through the main menu.
+ESC to exit the demo or choose Quit through the main menu.
 
-Use main menu for Save/Load your gamestate.
+Use main menu for Save/Load your game.
 
 c. Configuration
 
@@ -37,7 +42,7 @@ MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less me
 r. Requirements
 - Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
 	Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu)
-- At least ~300-400 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
+- At least ~400-500 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
 	It's recommended to switch of 3D accelerated desktop effects, it can slow down jcrpg.
@@ -105,12 +110,12 @@ Complete features:
 - Civilization engine (group intelligence instead of personal)
 - Object system (partially)
 - Turn based combat (partially)
+- Character leveling
 
 Features of the future:
 
 - Special NPCs for plots
 - Plot, scripting, quest system
-- Character leveling
 - External map editor
 - Other tools
 - The reference game
