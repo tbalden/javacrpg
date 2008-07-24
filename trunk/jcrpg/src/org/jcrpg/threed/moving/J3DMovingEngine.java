@@ -348,7 +348,7 @@ public class J3DMovingEngine {
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
 			n.setLocalTranslation(new Vector3f(0.5f,0.20f,0.2f));
-			n.setLocalScale(0.17f);
+			n.setLocalScale(0.095f);
 			unit.sizeTextNode = n;
 		}
 		{		
@@ -376,8 +376,8 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.2f,0.37f,0.2f));
-			n.setLocalScale(0.1f);
+			n.setLocalTranslation(new Vector3f(0.3f,0.34f,0.2f));
+			n.setLocalScale(0.067f);
 			unit.memberTypeNameNode= n;
 		}
 

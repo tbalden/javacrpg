@@ -31,6 +31,8 @@ import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.World.WorldTypeDesc;
+import org.jcrpg.world.place.economic.EconomicGround;
+import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -51,7 +53,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	}
 	transient HashMap<String, World> encounterGroundWorlds = new HashMap<String, World>();
 	
-	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, Geography geo, String specialType) throws Exception
+	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, Geography geo, EconomicGround ground, Residence house, String specialType) throws Exception
 	{
 		World baseWorld = new World("encounterGround",null,100,1,1,1);
 		baseWorld.engine = core.gameState.engine;
@@ -88,6 +90,20 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			Plain plain = new Plain("plain1",baseWorld,null,0,100,1,1,1,0,0,0,true);
 			baseWorld.addGeography(plain);
 		}
+		if (ground!=null)
+		{
+			EconomicGround g = ground.getInstance("enc", geo, baseWorld, null, 6, 10, 8, 44, 0, 38, 0, null, null);
+			baseWorld.economyContainer.addGround(g);
+		}
+		if (house!=null)
+		{
+			Residence r = house.getInstance("enc", geo, baseWorld, null, 4, 2, 4, 40, 0, 45, 0, null, null);
+			Residence r2 = house.getInstance("enc", geo, baseWorld, null, 4, 1, 5, 50, 0, 44, 0, null, null);
+			Residence r3 = house.getInstance("enc", geo, baseWorld, null, 4, 1, 4, 45, 0, 46, 0, null, null);
+			baseWorld.economyContainer.addPopulation(r);
+			baseWorld.economyContainer.addPopulation(r2);
+			baseWorld.economyContainer.addPopulation(r3);
+		}
 		encounterGroundWorlds.put("BASE", baseWorld);
 		fallbackWorld = baseWorld;
 		return baseWorld;
@@ -101,8 +117,6 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		WorldTypeDesc desc = realWorld.getWorldDescAtPosition(worldX,worldY,worldZ,false);
 		Geography geo = desc.g;
 		
-		// TODO economic dependency
-		//Economic eco = desc.detailedEconomic;
 		
 		Cube c = realWorld.getCube(-1, worldX, worldY, worldZ, false);
 		CubeClimateConditions ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c.internalCube);
@@ -112,6 +126,26 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		{
 			type+=geo.getClass().getSimpleName();
 		}
+		EconomicGround ground = null; // TODO sophisticate this with population type specified ground rather then used
+		Residence residence = null;
+		if (desc.population!=null)
+		{
+			
+			try{
+				ground = desc.population.groundList.get(0);
+				type+=desc.population.groundList.get(0).getClass();
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			try{
+				residence = desc.population.residenceList.get(0);
+				type+=desc.population.residenceList.get(0).getClass();
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
 		
 		if (type == null && lastType == null || type.equals(lastType)) return;
 		lastType = type;
@@ -120,7 +154,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		if (w==null)
 		{ 
 			try {
-				w = getEncounterGroundWorld(c, ccc, geo, specialType);
+				w = getEncounterGroundWorld(c, ccc, geo, ground, residence, specialType);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();

@@ -151,12 +151,12 @@ public class GeometryBatchHelper {
 	    		batch.key = key;
 	    		if (internal)
 	    		{
-	    			batch.setAnimated(false); // inside no wind
+	    			batch.setAnimated(false,internal); // inside no wind
 	    			sEngine.intRootNode.attachChild(batch.parent);
 	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation); // animate wind only outside
+	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
 	    			sEngine.extRootNode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}

@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Town;
 
@@ -126,6 +127,16 @@ public class EconomyContainer {
 	
 	
 	public void addPopulation(Economic e)
+	{
+		treeLocator.addEconomic(e);
+		economics.put(e.id, e);
+	}
+	
+	/**
+	 * Use it in encounter mode only! It adds the ground to the locator and the list of economics.
+	 * @param e
+	 */
+	public void addGround(EconomicGround e)
 	{
 		treeLocator.addEconomic(e);
 		economics.put(e.id, e);
