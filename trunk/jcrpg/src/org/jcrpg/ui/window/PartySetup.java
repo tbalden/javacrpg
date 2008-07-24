@@ -690,7 +690,9 @@ public class PartySetup extends PagedInputWindow {
 			personWithGenderAndRace.audioDescription.DEATH = new String[]{"humanoid/humanoid_death"};
 			if (personWithGenderAndRace.genderType==EntityDescription.GENDER_FEMALE)
 			{
-				personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_death_female"};
+				personWithGenderAndRace.audioDescription.PAIN = new String[]{"humanoid/humanoid_pain_female1","humanoid/humanoid_pain_female2"};
+				personWithGenderAndRace.audioDescription.JOY = new String[]{"humanoid/humanoid_joy_female1","humanoid/humanoid_joy_female2"};
+				personWithGenderAndRace.audioDescription.DEATH = new String[]{"humanoid/humanoid_death_female"};
 			}
 			
 			if (professionSelect.texts.length==0) return true;
