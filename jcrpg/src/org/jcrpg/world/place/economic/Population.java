@@ -26,6 +26,7 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 
 public abstract class Population extends Economic{
@@ -235,5 +236,21 @@ public abstract class Population extends Economic{
 	public void setTown(Town town) {
 		this.town = town;
 	}
+
+	private ArrayList<int[]> tmpSettlePlaces = new ArrayList<int[]>();
+	@Override
+	public ArrayList<int[]> getPossibleSettlePlaces() {
+		tmpSettlePlaces.clear();
+		SurfaceHeightAndType[] data =  soilGeo.getPointSurfaceData(centerX, centerZ, false);
+		int surfaceY = worldGroundLevel;
+		for (SurfaceHeightAndType dataI:data)
+		{
+			surfaceY = dataI.surfaceY;
+		}
+		tmpSettlePlaces.add(new int[]{centerX,surfaceY,centerZ});
+		return tmpSettlePlaces;
+	}
+	
+	
 	
 }
