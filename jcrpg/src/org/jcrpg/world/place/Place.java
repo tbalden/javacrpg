@@ -305,7 +305,7 @@ public abstract class Place {
 	 * @param worldZ
 	 * @return the relative height.
 	 */
-	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
+	public int[] getPointHeightOutside(int worldX, int worldZ, boolean farView)
 	{	
 		Geography nonReturnerFallback = null;
 		for (Geography geo:((World)getRoot()).geographies.values())
@@ -330,7 +330,7 @@ public abstract class Place {
 			int[] values = nonReturnerFallback.calculateTransformedCoordinates(worldX, nonReturnerFallback.worldGroundLevel, worldZ);
 			return nonReturnerFallback.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
 		}
-		return 0;
+		return new int[]{0,0};
 	}
 	
 	/**

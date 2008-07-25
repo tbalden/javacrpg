@@ -29,7 +29,11 @@ public class Cube extends ChangingImpl {
 
 	public String climateId;
 	public int geoCubeKind = Geography.K_UNDEFINED;
-	public boolean canContain = false; 
+	public boolean canContain = false;
+	
+	public float[] cornerHeights = null;
+	public float middleHeight = 0;
+	             
 	/**
 	 * Tells if this cubes (if is an economic cube) needs further climate and water rendering onto it.
 	 */
@@ -204,7 +208,8 @@ public class Cube extends ChangingImpl {
 			this.sides[i] = merged;
 		}
 		fillSideFields();
-		
+		if (c2.cornerHeights!=null) cornerHeights = c2.cornerHeights;
+		middleHeight = c2.middleHeight>0?c2.middleHeight:middleHeight;
 		onlyIfOverlaps = newOnlyIfOverlaps;
 		overwritePower = newOverwritePower;
 		steepDirection = newSteepDirection;
@@ -311,6 +316,9 @@ public class Cube extends ChangingImpl {
 			}
 			this.sides[i] = merged;
 		}
+		if (c1.cornerHeights!=null) this.cornerHeights = c1.cornerHeights;
+		if (c2.cornerHeights!=null) this.cornerHeights = c2.cornerHeights;
+		middleHeight = c1.middleHeight>0?c1.middleHeight:c2.middleHeight;
 		fillSideFields();
 		
 	}
@@ -389,6 +397,8 @@ public class Cube extends ChangingImpl {
 		c.geoCubeKind = geoCubeKind;
 		c.canContain = canContain;
 		c.needsFurtherMerge = needsFurtherMerge;
+		c.cornerHeights = cornerHeights;
+		c.middleHeight = middleHeight;
 		return c;
 	}
 	

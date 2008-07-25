@@ -42,6 +42,8 @@ public abstract class Model {
 	
 	public boolean farViewEnabled = false;
 	
+	public boolean elevateOnSteep = false;
+	
 	/**
 	 * Tells if the model is rotable on steep. Default value should be false. 
 	 * Override it for quad grasses/ground plane.

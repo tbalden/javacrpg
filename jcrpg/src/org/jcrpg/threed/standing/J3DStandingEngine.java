@@ -36,7 +36,9 @@ import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.side.RenderedClimateDependentSide;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
 import org.jcrpg.threed.scene.side.RenderedHashAlteredSide;
@@ -314,11 +316,24 @@ public class J3DStandingEngine {
 				// horizontal rotation
 				qC.multLocal(hQ);
 			} 
+
+			// the necessary local translation : half cube up
+			//System.out.println("MH: "+cube.cube.middleHeight);
+			if (!(n[i].model instanceof SimpleModel) || !((SimpleModel)n[i].model).generatedGroundModel)
+			{
+				if (n[i].model.elevateOnSteep)
+				{
+					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.1f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
+					n[i].setLocalTranslation(newTrans);
+				}
+			}
 			
 			// steep rotation part...
 			if (n[i].getUserData("rotateOnSteep")!=null) {
 				// model loader did set a rotateOnSteep object, which means, that node can be rotated on a steep,
 				// so let's do it if we are on a steep...
+
+				
 				if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
 					// yes, this is a steep:
@@ -335,9 +350,6 @@ public class J3DStandingEngine {
 					{
 						qC = J3DCore.steepRotations_special.get(cube.cube.steepDirection);
 					}
-					// the necessary local translation : half cube up
-					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE/2)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
-					n[i].setLocalTranslation(newTrans);
 
 					// square root 2 is the scaling for that side, so we will set it depending on N-S or E-W steep direction
 					if (cube.cube.steepDirection==J3DCore.NORTH||cube.cube.steepDirection==J3DCore.SOUTH)

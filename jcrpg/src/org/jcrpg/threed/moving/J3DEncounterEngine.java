@@ -74,13 +74,17 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		Climate climate = new Climate("climate",baseWorld);
 		baseWorld.setClimate(climate);
 		
-		Class beltClass = ccc.getBelt().getClass();
-		Constructor<?> constructor = (Constructor<?>)beltClass.getConstructors()[0];
-		ClimateBelt belt = (ClimateBelt)constructor.newInstance("encWorld "+beltClass,climate);
-		belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, 1, 0, 0, 0));
-		climate.belts.put(belt.id, belt);
-		
-		if (geo.getClass() == Cave.class)
+		try {
+			Class beltClass = ccc.getBelt().getClass();
+			Constructor<?> constructor = (Constructor<?>)beltClass.getConstructors()[0];
+			ClimateBelt belt = (ClimateBelt)constructor.newInstance("encWorld "+beltClass,climate);
+			belt.setBoundaries(BoundaryUtils.createCubicBoundaries(wMag, wX, wY, 1, 0, 0, 0));
+			climate.belts.put(belt.id, belt);
+		} catch (Exception ex)
+		{
+			
+		}
+		if (geo!=null && geo.getClass() == Cave.class)
 		{
 			Cave cave = new Cave("cave1",baseWorld,null,0,2,100,1,1,1,0,0,0,0,0,2,true);
 			cave.alwaysInsideCubesForEncounterGround = true;
@@ -119,7 +123,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		
 		
 		Cube c = realWorld.getCube(-1, worldX, worldY, worldZ, false);
-		CubeClimateConditions ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c.internalCube);
+		CubeClimateConditions ccc = null;
+		ccc = realWorld.getCubeClimateConditions(world.engine.getWorldMeanTime(), worldX, worldY, worldZ, c!=null?c.internalCube:false);
 		
 		String type = ccc.getPartialBeltLevelKey()+"__"+specialType;
 		if (geo!=null)
