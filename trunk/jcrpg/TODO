@@ -102,7 +102,22 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 [?] list before next release:
 ##
+	[X] some bad walking near the cave entrance at the mountains side - it was invis. ROCK needed
+	
+	[ ] refactor grass vegetation level generation
+	
+	[ ] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
+		maybe override can then be removed for economics ->
 
+	[ ] refactor:
+			Override corner height averaging for Economics, and who wants it overridden -> it
+				has to be done
+
+	[X] ##refactor GROUND rendering -> define internal fragment levels for point height calc! which can 
+		modify the ground types -> Return a new Ground Cube type parametered for special model loading -
+		the special model loading should use TerrainBlock with random parameters and the internal level
+		--! getPointHeightDetailedMatrix !! it will return a 4x4 map of height for each corner of the tile side
+		
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
 	-- QA/DOC

@@ -43,6 +43,7 @@ import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
+import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -378,7 +379,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * Steep Rotations 
 	 */
 	static Quaternion steepN, steepS, steepW, steepE;
-	static Quaternion steepN_noRot, steepS_noRot, steepW_noRot, steepE_noRot;
+	
+	static QuaternionBuggy steepN_noRot, steepS_noRot, steepW_noRot, steepE_noRot;
 	
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3, TOP = 4, BOTTOM = 5;
 
@@ -529,13 +531,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	static
 	{
 		// steep rotations with special in-one-step rotation
-		steepE_noRot = new Quaternion();
+		steepE_noRot = new QuaternionBuggy();
 		steepE_noRot.fromAngles(new float[]{FastMath.PI/2,0,3*FastMath.PI/4});
-		steepW_noRot = new Quaternion();
+		steepW_noRot = new QuaternionBuggy();
 		steepW_noRot.fromAngles(new float[]{-FastMath.PI/2,0,FastMath.PI/4});
-		steepS_noRot = new Quaternion();
+		steepS_noRot = new QuaternionBuggy();
 		steepS_noRot.fromAngles(new float[]{0,FastMath.PI/4,FastMath.PI/2});
-		steepN_noRot = new Quaternion();
+		steepN_noRot = new QuaternionBuggy();
 		steepN_noRot.fromAngles(new float[]{0,-3*FastMath.PI/4,-FastMath.PI/2});
 
 		steepRotations_special.put(new Integer(NORTH), steepN_noRot);
@@ -1202,7 +1204,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public Vector3f getCurrentLocation()
 	{
-		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.11f+(gameState.getCurrentRenderPositions().onSteep?1.5f:0f),-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
+		float middleHeight = 0;
+		try
+		{
+			middleHeight = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false).middleHeight;
+		} catch (Exception ex){}; 
+		float bonus = (gameState.getCurrentRenderPositions().onSteep?1.5f:0f);
+		if (middleHeight>0)
+		{
+			bonus = CUBE_EDGE_SIZE*middleHeight;
+		}
+		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.11f+bonus,-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
 		Vector3f fromPos = J3DCore.directionPositions[gameState.getCurrentRenderPositions().viewDirection];
 		v.addLocal(fromPos.negate());
 		return v;

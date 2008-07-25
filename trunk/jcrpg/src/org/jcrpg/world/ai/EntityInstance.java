@@ -221,6 +221,8 @@ public class EntityInstance {
 	{
 		int counter = 0;
 		
+		if (true==true) return false;
+		
 		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
 		//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);

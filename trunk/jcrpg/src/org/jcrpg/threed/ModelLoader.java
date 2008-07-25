@@ -78,11 +78,14 @@ public class ModelLoader {
 
 	J3DCore core = null;
 	
-	String TEXDIR = "low/"; 
+	String TEXDIR = "low/";
+	
+	public GeoTileLoader geoTileLoader = null;
 	
 	public ModelLoader(J3DCore core)
 	{
 		this.core = core;
+		geoTileLoader = new GeoTileLoader(this);
 		
 	    try {
     		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"mid/":"high/");
@@ -247,12 +250,19 @@ public class ModelLoader {
 			} else
 			if (objects[i] instanceof SimpleModel) 
 				{
-					PooledSharedNode node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					PooledNode node = null; 
+					if (((SimpleModel)objects[i]).generatedGroundModel)
+					{
+						node = geoTileLoader.loadNode((SimpleModel)objects[i],rc);
+					} else
+					{
+						node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);
+					}
 					if (fakeLoadForCacheMaint) continue;
 					
 			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
 					r[i] = node;
-					node.setName(((SimpleModel)objects[i]).modelName+i);
+					//node.setName(((SimpleModel)objects[i]).modelName+i);
 			} else
 			// ** LODModel **
 			if (objects[i] instanceof LODModel)

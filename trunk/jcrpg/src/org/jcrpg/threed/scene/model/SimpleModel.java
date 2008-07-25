@@ -25,6 +25,8 @@ public class SimpleModel extends Model {
 	public int xGeomBatchSize = -1;
 	public int yGeomBatchSize = -1;
 	
+	public boolean generatedGroundModel = false;
+	
 	
 	public SimpleModel(String modelName, String textureName)
 	{

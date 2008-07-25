@@ -125,14 +125,15 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_CORNER.id, new Integer(40));
 		hmCubeSideSubTypeToRenderedSideId.put(Mountain.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		
-		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_STEEP.id, 41); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
+		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_STEEP.id, EMPTY_SIDE); // TODO create element for this !!! // no 3d object, flora ground will be rendered rotated!
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_INTERSECT_EMPTY.id, EMPTY_SIDE); // No 3d object, it is just climbing side
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_ROCK_BLOCK.id, EMPTY_SIDE);//new Integer(13));
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_ROCK_BLOCK_VISIBLE.id, new Integer(13));//13));
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_ROCK_SIDE.id, new Integer(35));
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_GROUND.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
-		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_INTERSECT.id, new Integer(27));
-		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_CORNER.id, new Integer(40));
+		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_GROUND_HELPER.id, EMPTY_SIDE); // no 3d object, flora ground will be rendered
+		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_INTERSECT.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_CORNER.id, EMPTY_SIDE);
 		hmCubeSideSubTypeToRenderedSideId.put(Geography.SUBTYPE_INTERSECT_BLOCK.id, EMPTY_SIDE);
 		
 		hmCubeSideSubTypeToRenderedSideId.put(OakTree.SUBTYPE_TREE.id, new Integer(9));
@@ -444,7 +445,7 @@ public class SideTypeModels {
 		int yCommon = 1;
 		
 		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true; qm_grass.farViewEnabled = true;
-		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.rotateOnSteep = true; sm_grass.yGeomBatchSize = yCommon; sm_grass.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass.farViewEnabled = true;
+		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.generatedGroundModel = true; sm_grass.rotateOnSteep = false; sm_grass.yGeomBatchSize = yCommon; sm_grass.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass.farViewEnabled = true;
 		SimpleModel sm_grass_2 = new SimpleModel("models/ground/ground_2.obj","grass2.jpg"); sm_grass_2.rotateOnSteep = true; sm_grass_2.yGeomBatchSize = yCommon; sm_grass_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_2.farViewEnabled = true;
 		SimpleModel sm_grass_3 = new SimpleModel("models/ground/ground_3.obj","grass2.jpg"); sm_grass_3.rotateOnSteep = true; sm_grass_3.yGeomBatchSize = yCommon; sm_grass_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_3.farViewEnabled = true;
 		SimpleModel sm_grass_steep = new SimpleModel("models/ground/ground_steep_1.obj","grass2.jpg"); sm_grass_steep.rotateOnSteep = true; sm_grass_steep.yGeomBatchSize = yCommon; sm_grass_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_steep.noSpecialSteepRotation = false; sm_grass_steep.farViewEnabled = true;
@@ -474,7 +475,7 @@ public class SideTypeModels {
 		QuadModel qm_house_wood = new QuadModel("grndwnot.jpg"); qm_house_wood.rotateOnSteep = true; qm_house_wood.rotateOnSteep = true; qm_house_wood.farViewEnabled = true;
 
 		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true; qm_desert.farViewEnabled = true;
-		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = true; sm_desert.yGeomBatchSize = yCommon; sm_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert.farViewEnabled = true;
+		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = false; sm_desert.generatedGroundModel = true; sm_desert.yGeomBatchSize = yCommon; sm_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert.farViewEnabled = true;
 		SimpleModel sm_desert_2 = new SimpleModel("models/ground/ground_2.obj","sand2.jpg"); sm_desert_2.rotateOnSteep = true; sm_desert_2.yGeomBatchSize = yCommon; sm_desert_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_2.farViewEnabled = true;
 		SimpleModel sm_desert_3 = new SimpleModel("models/ground/ground_3.obj","sand2.jpg"); sm_desert_3.rotateOnSteep = true; sm_desert_3.yGeomBatchSize = yCommon; sm_desert_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_3.farViewEnabled = true;
 		SimpleModel sm_desert_steep = new SimpleModel("models/ground/ground_steep_1.obj","sand2.jpg"); sm_desert_steep.rotateOnSteep = true; sm_desert_steep.yGeomBatchSize = yCommon; sm_desert_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep.noSpecialSteepRotation = false; sm_desert_steep.farViewEnabled = true;
@@ -482,7 +483,7 @@ public class SideTypeModels {
 		SimpleModel sm_desert_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","sand2.jpg"); sm_desert_steep_3.rotateOnSteep = true; sm_desert_steep_3.yGeomBatchSize = yCommon; sm_desert_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep_3.noSpecialSteepRotation = false; sm_desert_steep_3.farViewEnabled = true;
 		
 		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true; qm_arctic.farViewEnabled = true;
-		SimpleModel sm_arctic = new SimpleModel("models/ground/ground_1.obj","snow1.jpg"); sm_arctic.rotateOnSteep = true; sm_arctic.yGeomBatchSize = yCommon; sm_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic.farViewEnabled = true;
+		SimpleModel sm_arctic = new SimpleModel("models/ground/ground_1.obj","snow1.jpg"); sm_arctic.rotateOnSteep = false; sm_arctic.generatedGroundModel = true; sm_arctic.yGeomBatchSize = yCommon; sm_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic.farViewEnabled = true;
 		SimpleModel sm_arctic_2 = new SimpleModel("models/ground/ground_2.obj","snow1.jpg"); sm_arctic_2.rotateOnSteep = true; sm_arctic_2.yGeomBatchSize = yCommon; sm_arctic_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_2.farViewEnabled = true;
 		SimpleModel sm_arctic_3 = new SimpleModel("models/ground/ground_3.obj","snow1.jpg"); sm_arctic_3.rotateOnSteep = true; sm_arctic_3.yGeomBatchSize = yCommon; sm_arctic_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_3.farViewEnabled = true;
 		SimpleModel sm_arctic_steep = new SimpleModel("models/ground/ground_steep_1.obj","snow1.jpg"); sm_arctic_steep.rotateOnSteep = true; sm_arctic_steep.yGeomBatchSize = yCommon; sm_arctic_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep.noSpecialSteepRotation = false; sm_arctic_steep.farViewEnabled = true;
@@ -490,12 +491,12 @@ public class SideTypeModels {
 		SimpleModel sm_arctic_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","snow1.jpg"); sm_arctic_steep_3.rotateOnSteep = true; sm_arctic_steep_3.yGeomBatchSize = yCommon; sm_arctic_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep_3.noSpecialSteepRotation = false; sm_arctic_steep_3.farViewEnabled = true;
 		
 		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true; qm_jungle.farViewEnabled = true;
-		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = true; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
-		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = true; sm_jungle_2.yGeomBatchSize = yCommon; sm_jungle_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_2.farViewEnabled = true;
-		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = true; sm_jungle_3.yGeomBatchSize = yCommon; sm_jungle_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_3.farViewEnabled = true;
-		SimpleModel sm_jungle_steep = new SimpleModel("models/ground/ground_steep_1.obj","jungle.jpg"); sm_jungle_steep.rotateOnSteep = true; sm_jungle_steep.yGeomBatchSize = yCommon; sm_jungle_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep.noSpecialSteepRotation = false; sm_jungle_steep.farViewEnabled = true;
-		SimpleModel sm_jungle_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","jungle.jpg"); sm_jungle_steep_2.rotateOnSteep = true; sm_jungle_steep_2.yGeomBatchSize = yCommon; sm_jungle_steep_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep_2.noSpecialSteepRotation = false; sm_jungle_steep_2.farViewEnabled = true;
-		SimpleModel sm_jungle_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","jungle.jpg"); sm_jungle_steep_3.rotateOnSteep = true; sm_jungle_steep_3.yGeomBatchSize = yCommon; sm_jungle_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep_3.noSpecialSteepRotation = false; sm_jungle_steep_3.farViewEnabled = true;
+		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = false; sm_jungle.generatedGroundModel = true; sm_jungle.rotateOnSteep = false; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
+		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = false; sm_jungle_2.generatedGroundModel = true; sm_jungle_2.rotateOnSteep = false; sm_jungle_2.yGeomBatchSize = yCommon; sm_jungle_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_2.farViewEnabled = true;
+		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = false; sm_jungle_3.generatedGroundModel = true; sm_jungle_3.rotateOnSteep = false; sm_jungle_3.yGeomBatchSize = yCommon; sm_jungle_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_3.farViewEnabled = true;
+		SimpleModel sm_jungle_steep = new SimpleModel("models/ground/ground_steep_1.obj","jungle.jpg"); sm_jungle_steep.rotateOnSteep = false; sm_jungle_steep.generatedGroundModel = true; sm_jungle_steep.yGeomBatchSize = yCommon; sm_jungle_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep.noSpecialSteepRotation = false; sm_jungle_steep.farViewEnabled = true;
+		SimpleModel sm_jungle_steep_2 = new SimpleModel("models/ground/ground_steep_2.obj","jungle.jpg"); sm_jungle_steep_2.rotateOnSteep = false; sm_jungle_steep.generatedGroundModel = true; sm_jungle_steep_2.yGeomBatchSize = yCommon; sm_jungle_steep_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep_2.noSpecialSteepRotation = false; sm_jungle_steep_2.farViewEnabled = true;
+		SimpleModel sm_jungle_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","jungle.jpg"); sm_jungle_steep_3.rotateOnSteep = false; sm_jungle_steep.generatedGroundModel = true; sm_jungle_steep_3.yGeomBatchSize = yCommon; sm_jungle_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_steep_3.noSpecialSteepRotation = false; sm_jungle_steep_3.farViewEnabled = true;
 
 		SimpleModel sm_female = new SimpleModel("models/fauna/fem.obj",null); sm_female.rotateOnSteep = true;
 		sm_female.cullNone = true; sm_female.batchEnabled = false;
@@ -513,13 +514,17 @@ public class SideTypeModels {
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
 			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{tsm_cont_grass,tsm_cont_grass_flower}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+			{
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
+				//hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{tsm_cont_grass,tsm_cont_grass_flower}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+			}
 			else
 				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
 		} else
 		{
 			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
+				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
+				//hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
 			else
 				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
 		}
@@ -531,14 +536,16 @@ public class SideTypeModels {
 		//hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
 		if (BUMPED_GROUND) 
 		{
-			hm3dTypeRenderedSide.put(new Integer(16), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_desert,sm_desert_2,sm_desert_3,sm_desert_3,sm_desert_3}},new Model[][]{{sm_desert_steep,sm_desert_steep_2,sm_desert_steep_3,sm_desert_steep_3}}));
+			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
+			//hm3dTypeRenderedSide.put(new Integer(16), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_desert,sm_desert_2,sm_desert_3,sm_desert_3,sm_desert_3}},new Model[][]{{sm_desert_steep,sm_desert_steep_2,sm_desert_steep_3,sm_desert_steep_3}}));
 		} else
 		{
 			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
 		}
 		if (BUMPED_GROUND) 
 		{
-			hm3dTypeRenderedSide.put(new Integer(17), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_arctic,sm_arctic_2,sm_arctic_3,sm_arctic_3,sm_arctic_3}},new Model[][]{{sm_arctic_steep,sm_arctic_steep_2,sm_arctic_steep_3,sm_arctic_steep_3}}));
+			hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
+			//hm3dTypeRenderedSide.put(new Integer(17), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_arctic,sm_arctic_2,sm_arctic_3,sm_arctic_3,sm_arctic_3}},new Model[][]{{sm_arctic_steep,sm_arctic_steep_2,sm_arctic_steep_3,sm_arctic_steep_3}}));
 		} else
 		{
 			hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
@@ -549,14 +556,18 @@ public class SideTypeModels {
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
 			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{tsm_jung_grass, tsm_jung_grass_flower}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
+			{
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
+				//hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{tsm_jung_grass, tsm_jung_grass_flower}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));				
+			}				
 			else
 				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
 		}
 		else 
 		{
 			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
+				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
+				//hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
 			else
 				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
 		}

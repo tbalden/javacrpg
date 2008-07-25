@@ -22,9 +22,11 @@ public class BillboardModel extends SimpleModel {
 
 	public BillboardModel(String modelName, String textureName) {
 		super(modelName, textureName,false);
+		elevateOnSteep = true;
 	}
 	public BillboardModel(String modelName, String textureName,boolean mipMap) {
 		super(modelName, textureName,mipMap);
+		elevateOnSteep = true;
 	}
 
 }

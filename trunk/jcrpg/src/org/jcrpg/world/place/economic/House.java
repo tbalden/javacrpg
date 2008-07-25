@@ -81,7 +81,7 @@ public class House extends Residence {
 	static Side[][] INTERNAL_STEPS_SOUTH = new Side[][] { null, null, STAIRS,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_WEST = new Side[][] { null, null, null,STAIRS,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_EAST = new Side[][] { null, STAIRS, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
-	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_GEO,SUBTYPE_GROUND)} };
 	
 	
 	//public int sizeX, sizeY, sizeZ;

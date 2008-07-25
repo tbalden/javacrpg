@@ -49,10 +49,10 @@ public class EconomicGround extends Economic {
 	}
 	static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
 
-	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK,BLOCK };
-	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,BLOCK };
-	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,BLOCK };
-	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,BLOCK };
+	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND };
+	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,GROUND };
+	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,GROUND };
+	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND };
 
 	public EconomicGround(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
@@ -104,7 +104,7 @@ public class EconomicGround extends Economic {
 	
 	
 	@Override
-	public int getCubeKind(long key, int worldX, int worldY, int worldZ, boolean farView) {
+	public float[] getCubeKind(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		if (soilGeo!=null && soilGeo.getBoundaries().isInside(worldX, worldY, worldZ))
 		{
 			return soilGeo.getCubeKind(key, worldX,worldY,worldZ, farView);
@@ -113,15 +113,14 @@ public class EconomicGround extends Economic {
 	}
 
 	@Override
-	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
+	protected int[] getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
 		// use the height defined by the geography here...
 		if (soilGeo.getBoundaries().isInside(worldX, soilGeo.worldGroundLevel, worldZ))
 		{
 			int[] values = soilGeo.calculateTransformedCoordinates(worldX, soilGeo.worldGroundLevel, worldZ);
 			return soilGeo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
 		}
-		int h = getPointHeightOutside(worldX, worldZ, farView);
-		return h;
+		return getPointHeightOutside(worldX, worldZ, farView);
 	}
 
 	public EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)

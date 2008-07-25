@@ -20,11 +20,13 @@ package org.jcrpg.threed.jme;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
+import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
@@ -47,7 +49,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	// TODO create a cache cleaning way!!! in GeometryBatchHelper maybe, check if the model is used at all...
 	// till then it fastens up thing much, so keep it!
 	public  static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
-	private TriMesh getModelMesh(Model m)
+	private TriMesh getModelMesh(Model m,NodePlaceholder n)
 	{
 		if (m.type == Model.QUADMODEL) {
 			TriMesh mesh = cache.get(m);
@@ -59,12 +61,19 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		if (m.type == Model.SIMPLEMODEL)
 		{
-			TriMesh mesh = cache.get(m);
-			if (cache.get(m)==null){
-				mesh = (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)m, false).getChild(0);
-				cache.put(m, mesh);
+			if (((SimpleModel)m).generatedGroundModel)
+			{
+				GeoTileLoader loader = core.modelLoader.geoTileLoader;
+				return loader.loadNodeOriginal((SimpleModel)m, n.cube);
+			} else
+			{
+				TriMesh mesh = cache.get(m);
+				if (cache.get(m)==null){
+					mesh = (TriMesh)core.modelLoader.loadNodeOriginal((SimpleModel)m, false).getChild(0);
+					cache.put(m, mesh);
+				}
+				return mesh;
 			}
-			return mesh; 	
 		} else
 		{
 			return nullmesh;
@@ -76,7 +85,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder) {
 		model = m;
 		this.core = core;
-		TriMesh mesh = getModelMesh(m);
+		TriMesh mesh = getModelMesh(m,placeHolder);
 
 		Node parentOrig = sharedParentCache.get(m.id);
 		if (parentOrig==null)
@@ -95,14 +104,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		parent.updateModelBound();
 	}
 	
-	public String getModelKey(Model model)
+	public String getModelKey(Model model, RenderedCube c)
 	{
 		String key = "-";
 		if (model.type == Model.SIMPLEMODEL) 
 		{
 			if (((SimpleModel)model).textureName!=null) 
 			{				
-				key = ((SimpleModel)model).id;
+				key = ((SimpleModel)model).id+((SimpleModel)model).generatedGroundModel+  ( ((SimpleModel)model).generatedGroundModel? (c.cube.cornerHeights!=null?c.cube.cornerHeights.hashCode():"___") : "");
 			}
 		} else
 		{
@@ -114,7 +123,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public void addItem(NodePlaceholder placeholder)
 	{
 		
-		String key = getModelKey(placeholder.model);
+		String key = getModelKey(placeholder.model, placeholder.cube);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 		if (vSet==null)
@@ -127,7 +136,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			long t0 = System.currentTimeMillis();
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = nVSet.iterator().next();
 			instance.getAttributes().setTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
-			instance.getAttributes().setRotation(placeholder.getLocalRotation());
+			if (!(placeholder.model instanceof SimpleModel) || placeholder.model instanceof SimpleModel && !((SimpleModel)placeholder.model).generatedGroundModel)
+			{
+				instance.getAttributes().setRotation(placeholder.getLocalRotation());
+			} else
+			{
+				instance.getAttributes().getTranslation().addLocal(new Vector3f(-1f,0,-1f));
+			}
+
 			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
 			if (placeholder.farView)
 			{
@@ -146,12 +162,19 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			long t0 = System.currentTimeMillis();
-			TriMesh quad = getModelMesh(placeholder.model);
+			TriMesh quad = getModelMesh(placeholder.model,placeholder);
 			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			//quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
-			quad.setLocalRotation(placeholder.getLocalRotation());
+			if (!(placeholder.model instanceof SimpleModel) || placeholder.model instanceof SimpleModel && !((SimpleModel)placeholder.model).generatedGroundModel)
+			{
+				quad.setLocalRotation(placeholder.getLocalRotation());
+			} else
+			{
+				quad.getLocalTranslation().addLocal(new Vector3f(-1f,0,-1f));
+			}
+			
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
@@ -181,7 +204,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
-			String key = getModelKey(placeholder.model);
+			String key = getModelKey(placeholder.model,placeholder.cube);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 			if (nVSet==null)
