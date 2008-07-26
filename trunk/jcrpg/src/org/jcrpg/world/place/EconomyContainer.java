@@ -25,9 +25,12 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.flora.FloraCube;
+import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Town;
+import org.jcrpg.world.time.Time;
 
 public class EconomyContainer {
 
@@ -39,9 +42,10 @@ public class EconomyContainer {
 	 * Virtual container for groups of Populations that build up Towns
 	 */
 	public ArrayList<Town> towns = new ArrayList<Town>();
-	
+	public World w;
 	public EconomyContainer(World w)
 	{
+		this.w = w;
 		treeLocator = new TreeLocator(w);
 		economics = new TreeMap<String, Economic>();
 	}
@@ -55,7 +59,7 @@ public class EconomyContainer {
 	 * @param farView
 	 * @return economic's cube, or null.
 	 */
-	public Cube getEconomicCube(long key, int worldX, int worldY, int worldZ,boolean farView)
+	public Cube getEconomicCube(long key, int worldX, int worldY, int worldZ,boolean farView, Time time)
 	{
 		ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
 		if (economicsList!=null) 
@@ -65,7 +69,15 @@ public class EconomyContainer {
 			{
 				Economic eco = (Economic)o;
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
-					return eco.getCube(key, worldX, worldY, worldZ, farView);
+					Cube c = eco.getCube(key, worldX, worldY, worldZ, farView);
+					if (c!=null && c.canContainFlora)
+					{
+						CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
+						Cube floraCube = eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false);
+						if (floraCube!=null)
+							c.merge(floraCube, worldX, worldY, worldZ, c.steepDirection);
+					}
+					return c;
 				}
 			} 
 		}

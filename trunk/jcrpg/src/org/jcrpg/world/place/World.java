@@ -196,9 +196,13 @@ public class World extends Place {
 		{
 			long t0 = System.currentTimeMillis();
 				
-			Cube ecoCube = economyContainer.getEconomicCube(key, worldX, worldY, worldZ, farView);
+			Cube ecoCube = economyContainer.getEconomicCube(key, worldX, worldY, worldZ, farView, localTime);
 			perf_eco_t0+=System.currentTimeMillis()-t0;
-			if (ecoCube!=null) return ecoCube;
+			if (ecoCube!=null) 
+			{
+				
+				return ecoCube;
+			}
 			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;
@@ -237,7 +241,7 @@ public class World extends Place {
 									perf_climate_t0+=System.currentTimeMillis()-t0;
 									geoCube.climateId = conditions.belt.STATIC_ID;
 									// setting canContain for the geoCube, this is a surface cube.
-									geoCube.canContain = true;
+									geoCube.canContainFlora = true;
 									Cube floraCube = null;
 									t0 = System.currentTimeMillis();
 									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);

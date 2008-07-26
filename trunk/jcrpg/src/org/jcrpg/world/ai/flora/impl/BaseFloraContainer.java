@@ -33,8 +33,8 @@ public class BaseFloraContainer extends FloraContainer{
 		hmPlaceToGenerator.put(Forest.class,new ForestFloraGenerator());
 		hmPlaceToGenerator.put(Plain.class,new PlainFloraGenerator());
 		hmPlaceToGenerator.put(Mountain.class,new MountainFloraGenerator());
-		hmPlaceToGenerator.put(EconomicGround.class,new PlainFloraGenerator());
-		hmPlaceToGenerator.put(House.class,new PlainFloraGenerator());
+		hmPlaceToGenerator.put(EconomicGround.class,new EconomicFloraGenerator());
+		hmPlaceToGenerator.put(House.class,new EconomicFloraGenerator());
 	}
 	
 }

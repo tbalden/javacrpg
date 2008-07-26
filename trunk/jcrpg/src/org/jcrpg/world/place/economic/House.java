@@ -160,7 +160,7 @@ public class House extends Residence {
 				{
 					s = y==groundLevel?WINDOW_GROUND_NORTH:WINDOW_NORTH; 
 				}
-				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel,y==groundLevel));
 			}
 			for (int x=1; x<sizeX-1; x++)
 			{
@@ -170,7 +170,7 @@ public class House extends Residence {
 				{
 					s = y==groundLevel?WINDOW_GROUND_SOUTH:WINDOW_SOUTH; 
 				}
-				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel,y==groundLevel));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
@@ -180,7 +180,7 @@ public class House extends Residence {
 				{
 					s = y==groundLevel?WINDOW_GROUND_EAST:WINDOW_EAST; 
 				}
-				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel,y==groundLevel));
 			}
 			for (int z=1; z<sizeZ-1; z++)
 			{
@@ -190,14 +190,14 @@ public class House extends Residence {
 				{
 					s = y==groundLevel?WINDOW_GROUND_WEST:WINDOW_WEST; 
 				}
-				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel));
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel,y==groundLevel));
 			}
 		}
-		addStoredCube(0, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true));
-		addStoredCube(sizeX-1, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true));
-		addStoredCube(0, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true));
-		addStoredCube(sizeX-1, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true));
-		addStoredCube(sizeX-1,groundLevel,1,new Cube(this,DOOR_GROUND_WEST,0,0,0,true));
+		addStoredCube(0, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true,true));
+		addStoredCube(sizeX-1, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true,true));
+		addStoredCube(0, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true,true));
+		addStoredCube(sizeX-1, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true,true));
+		addStoredCube(sizeX-1,groundLevel,1,new Cube(this,DOOR_GROUND_WEST,0,0,0,true,true));
 		storeParameteredArea();
 		
 	}
@@ -228,11 +228,22 @@ public class House extends Residence {
 		c.x = worldX;
 		c.y = worldY;
 		c.z = worldZ;
+		
+		if (o.canContainFlora) {
+			float[] kind =super.getCubeKind(key, worldX, worldY, worldZ, farView);		
+			if (kind!=null) {
+				c.cornerHeights=kind;
+				c.middleHeight = (kind[0]+kind[1]+kind[2]+kind[3])/4f;
+			}
+		}
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("__ HOUSE CUBE");
 		return c;
 		
 	}
 	
+	
+	
+
 	@Override
 	public Residence getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 	{

@@ -29,7 +29,8 @@ public class Cube extends ChangingImpl {
 
 	public String climateId;
 	public int geoCubeKind = Geography.K_UNDEFINED;
-	public boolean canContain = false;
+	public boolean canContainFlora = false;
+	public boolean canHoldUnit = false;
 	
 	public float[] cornerHeights = null;
 	public float middleHeight = 0;
@@ -140,13 +141,22 @@ public class Cube extends ChangingImpl {
 		this.y = y;
 		this.z = z;
 		boolean newOnlyIfOverlaps = false;
-		if (this.canContain || c2.canContain)
+		if (this.canContainFlora || c2.canContainFlora)
 		{
-			this.canContain = true;
+			this.canContainFlora = true;
 		} else
 		{
-			this.canContain = false;
+			this.canContainFlora = false;
 		}
+
+		if (this.canHoldUnit || c2.canHoldUnit)
+		{
+			this.canHoldUnit = true;
+		} else
+		{
+			this.canHoldUnit = false;
+		}
+
 		if (this.overwrite || c2.overwrite) 
 		{
 			this.overwrite = true;
@@ -209,7 +219,7 @@ public class Cube extends ChangingImpl {
 		}
 		fillSideFields();
 		if (c2.cornerHeights!=null) cornerHeights = c2.cornerHeights;
-		middleHeight = c2.middleHeight>0?c2.middleHeight:middleHeight;
+		middleHeight = c2.middleHeight!=0?c2.middleHeight:middleHeight;
 		onlyIfOverlaps = newOnlyIfOverlaps;
 		overwritePower = newOverwritePower;
 		steepDirection = newSteepDirection;
@@ -250,13 +260,21 @@ public class Cube extends ChangingImpl {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		if (c1.canContain || c2.canContain)
+		if (c1.canContainFlora || c2.canContainFlora)
 		{
-			this.canContain = true;
+			this.canContainFlora = true;
 		} else
 		{
-			this.canContain = false;
+			this.canContainFlora = false;
 		}
+		if (c1.canHoldUnit || c2.canHoldUnit)
+		{
+			this.canHoldUnit = true;
+		} else
+		{
+			this.canHoldUnit = false;
+		}
+
 		if (c1.overwrite || c2.overwrite) 
 		{
 			this.overwrite = true;
@@ -318,14 +336,19 @@ public class Cube extends ChangingImpl {
 		}
 		if (c1.cornerHeights!=null) this.cornerHeights = c1.cornerHeights;
 		if (c2.cornerHeights!=null) this.cornerHeights = c2.cornerHeights;
-		middleHeight = c1.middleHeight>0?c1.middleHeight:c2.middleHeight;
+		middleHeight = c1.middleHeight!=0?c1.middleHeight:c2.middleHeight;
 		fillSideFields();
 		
 	}
 	
-	public Cube(Place parent, Side[][] sides, int x, int y, int z, boolean canContain) {
+	public Cube(Place parent, Side[][] sides, int x, int y, int z, boolean canHoldUnit) {
 		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
-		this.canContain = canContain;
+		this.canHoldUnit = canHoldUnit;
+	}
+	public Cube(Place parent, Side[][] sides, int x, int y, int z, boolean canHoldUnit,boolean canContainFlora) {
+		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
+		this.canHoldUnit = canHoldUnit;
+		this.canContainFlora =  canContainFlora;
 	}
 	public Cube(Place parent, Side[][] sides, int x, int y, int z) {
 		this(parent,sides,x,y,z,SurfaceHeightAndType.NOT_STEEP);
@@ -374,7 +397,7 @@ public class Cube extends ChangingImpl {
 		{
 			r+=sides[s][i]==null?"-":"S("+s+")"+sides[s][i].type+sides[s][i].subtype.getClass().getSimpleName()+" "+sides[s][i].subtype.id+" - ";
 		}
-		return "Cube: "+ x+" "+y+" "+z+" "+r+" -- "+overwritePower+" - "+onlyIfOverlaps+" cc: "+canContain;
+		return "Cube: "+ x+" "+y+" "+z+" "+r+" -- "+overwritePower+" - "+onlyIfOverlaps+" cc: "+canContainFlora;
 	}
 	
 	public Cube getNeighbour(int direction)
@@ -395,10 +418,11 @@ public class Cube extends ChangingImpl {
 		c.onlyIfOverlaps = onlyIfOverlaps;
 		c.climateId = climateId;
 		c.geoCubeKind = geoCubeKind;
-		c.canContain = canContain;
+		c.canContainFlora = canContainFlora;
 		c.needsFurtherMerge = needsFurtherMerge;
 		c.cornerHeights = cornerHeights;
 		c.middleHeight = middleHeight;
+		c.canHoldUnit = canHoldUnit;
 		return c;
 	}
 	

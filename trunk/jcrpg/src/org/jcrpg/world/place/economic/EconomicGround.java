@@ -70,13 +70,23 @@ public class EconomicGround extends Economic {
 	
 	static 
 	{
+		Cube ground = new Cube(null,House.EXTERNAL,0,0,0);
+		ground.canContainFlora = true;
 		hmKindCubeOverride.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
-		hmKindCubeOverride.put(K_STEEP_EAST, new Cube(null,STEPS_EAST,0,0,0));
-		hmKindCubeOverride.put(K_STEEP_WEST, new Cube(null,STEPS_WEST,0,0,0));
-		hmKindCubeOverride.put(K_STEEP_NORTH, new Cube(null,STEPS_NORTH,0,0,0));
-		hmKindCubeOverride.put(K_STEEP_SOUTH, new Cube(null,STEPS_SOUTH,0,0,0));
+		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0);
+		stepsEast.canContainFlora = true;
+		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
+		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0);
+		stepWest.canContainFlora = true;
+		hmKindCubeOverride.put(K_STEEP_WEST, stepWest);
+		Cube stepNorth = new Cube(null,STEPS_NORTH,0,0,0);
+		stepNorth.canContainFlora = true;
+		hmKindCubeOverride.put(K_STEEP_NORTH, stepNorth);
+		Cube stepSouth = new Cube(null,STEPS_SOUTH,0,0,0);
+		stepSouth.canContainFlora = true;
+		hmKindCubeOverride.put(K_STEEP_SOUTH, stepSouth);
 
-		hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
+		//hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
 	}
 	
 
@@ -84,8 +94,8 @@ public class EconomicGround extends Economic {
 	public Cube getCubeObject(int kind, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
 		if (c!=null) { 
-			if (kind>=6) c.canContain = false; else
-				c.canContain = true;
+			if (kind>=6) c.canContainFlora = false; else
+				c.canContainFlora = true;
 		}
 			
 		return c;

@@ -299,7 +299,7 @@ public class GameLogic {
 					}
 				}
 				c = core.eEngine.world.getCube(-1, form.worldX, form.worldY, form.worldZ, false);
-				if (c==null || !c.canContain) 
+				if (c==null || !c.canHoldUnit) 
 				{
 					i++;
 					continue;

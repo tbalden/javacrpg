@@ -78,6 +78,7 @@ public class GeoTileLoader {
 	{
 		
 		float[] cornerHeights = rCube.cube.cornerHeights;
+		if (cornerHeights==null) cornerHeights = new float[9];
 		int[] map = new int[4];
 		for (int i=0; i<4; i++)
 		{

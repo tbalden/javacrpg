@@ -649,10 +649,10 @@ public class Geography extends Place implements Surface {
 		int YWest = aYWest[0]/FARVIEW_GAP;
 		int YEast = aYEast[0]/FARVIEW_GAP;
 
-		if (aY[1]==0)
+		//if (aY[1]==0)
 		{
 			
-			if (aYNorth[1]==1)
+			/*if (aYNorth[1]==1)
 			{
 				tmpCornerHeightsAndKind[0] = YNorth - Y;
 			}
@@ -667,9 +667,9 @@ public class Geography extends Place implements Surface {
 			if (aYWest[1]==1)
 			{
 				tmpCornerHeightsAndKind[3] = YWest- Y;
-			}
+			}*/
 			
-			if (aYNorthEast[1]==1)
+			/*if (aYNorthEast[1]==1)
 			{
 				// override detected...
 				hNE = YNorthEast - Y;
@@ -700,8 +700,12 @@ public class Geography extends Place implements Surface {
 			} else
 			{
 				hSE = ((Y + YSouth + YSouthEast + YEast)/4f) - Y;
-			}
+			}*/
 			//System.out.println(" "+hNE+" "+hNW+" "+hSW+" "+hSE);
+			hNE = ((Y + YNorth + YNorthEast + YEast)/4f) - Y;
+			hNW = ((Y + YNorth + YNorthWest + YWest)/4f) - Y;
+			hSW = ((Y + YSouth + YSouthWest + YWest)/4f) - Y;
+			hSE = ((Y + YSouth + YSouthEast + YEast)/4f) - Y;
 		}
 	
 		tmpCornerHeightsAndKind[0] = hNW;
