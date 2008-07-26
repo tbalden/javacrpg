@@ -105,11 +105,15 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] some bad walking near the cave entrance at the mountains side - it was invis. ROCK needed
 	
 	[ ] refactor grass vegetation level generation
+		[ ] it should be done by picking level from Ground block ?? ordered rendering in renderToViewPort 
+		
+	[ ] cave entrance height ??
 	
-	[ ] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
+	[X] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
 		maybe override can then be removed for economics ->
+		[ ] add new pavement by Zphr, with logs below it
 
-	[ ] refactor:
+	[X] refactor:
 			Override corner height averaging for Economics, and who wants it overridden -> it
 				has to be done
 
