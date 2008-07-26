@@ -102,16 +102,21 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 [?] list before next release:
 ##
-	[X] some bad walking near the cave entrance at the mountains side - it was invis. ROCK needed
-	
 	[ ] refactor grass vegetation level generation
 		[ ] it should be done by picking level from Ground block ?? ordered rendering in renderToViewPort 
 		
-	[ ] cave entrance height ??
-	
+	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
+
 	[X] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
 		maybe override can then be removed for economics ->
 		[ ] add new pavement by Zphr, with logs below it
+		
+	[X] setting normals on surface of thing -> pseudo joining from neighbors
+			- override TerrainBlock - buildNormals -> use Cube data transformed instead of vertex height data
+			-> TiledTerrainBlock -> a plus heightmap row/col added by the RenderedArea's cached cubes cornerheight data
+	
+	[X] some bad walking near the cave entrance at the mountains side - it was invis. ROCK needed
+	
 
 	[X] refactor:
 			Override corner height averaging for Economics, and who wants it overridden -> it

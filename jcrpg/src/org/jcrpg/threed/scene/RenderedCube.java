@@ -21,9 +21,11 @@ import java.util.ArrayList;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.world.place.World;
 
 public class RenderedCube {
 
+	
 	public RenderedCube(Cube c, int x, int y, int z)
 	{
 		cube = c;
@@ -34,6 +36,7 @@ public class RenderedCube {
 	public boolean farview = false;
 	public Cube cube;
 	public int renderedX, renderedY, renderedZ;
+	public World world;
 	public ArrayList<NodePlaceholder> hsRenderedNodes = new ArrayList<NodePlaceholder>();
 	
 }

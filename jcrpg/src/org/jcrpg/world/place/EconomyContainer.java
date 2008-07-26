@@ -25,7 +25,6 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
@@ -73,7 +72,7 @@ public class EconomyContainer {
 					if (c!=null && c.canContainFlora)
 					{
 						CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
-						Cube floraCube = eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false);
+						Cube floraCube = c.internalEconomicUnitForFloraQuery==null?eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false):c.internalEconomicUnitForFloraQuery.getFloraCube(worldX, worldY, worldZ, ccc, time, false);
 						if (floraCube!=null)
 							c.merge(floraCube, worldX, worldY, worldZ, c.steepDirection);
 					}

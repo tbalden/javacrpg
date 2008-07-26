@@ -124,7 +124,7 @@ public class House extends Residence {
 							if (sizeY-1!=y)
 							if (x == 1 && z == 2)
 							{
-								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_SOUTH,x,y,z,true));
+								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_SOUTH,x,y,z,true,y==groundLevel));
 								continue;
 							}
 							if (y > 0 && x == 2 && z == 2)
@@ -136,7 +136,7 @@ public class House extends Residence {
 							if (sizeY-1!=y)
 							if (x == 2 && z == 2)
 							{
-								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_NORTH,x,y,z,true));
+								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_NORTH,x,y,z,true,y==groundLevel));
 							}
 							if (y > 0 && x == 1 && z == 2)
 							{
@@ -145,7 +145,7 @@ public class House extends Residence {
 							}
 						}
 					}
-					addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z,true));
+					addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z,true,y==groundLevel));
 					
 				}
 				

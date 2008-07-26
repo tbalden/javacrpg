@@ -64,7 +64,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (((SimpleModel)m).generatedGroundModel)
 			{
 				GeoTileLoader loader = core.modelLoader.geoTileLoader;
-				return loader.loadNodeOriginal((SimpleModel)m, n.cube);
+				return loader.loadNodeOriginal(n,(SimpleModel)m, n.cube);
 			} else
 			{
 				TriMesh mesh = cache.get(m);
