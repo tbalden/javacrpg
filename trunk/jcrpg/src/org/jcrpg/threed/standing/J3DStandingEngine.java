@@ -408,7 +408,7 @@ public class J3DStandingEngine {
 	}
 	public void renderToViewPort(int segmentCount, int segments)
 	{
-		renderToViewPort(optimizeAngle?1.1f:3.14f, true, segmentCount, segments);
+		renderToViewPort(optimizeAngle?1.1f:.14f, true, segmentCount, segments);
 	}
 	public void renderToViewPort(float refAngle)
 	{

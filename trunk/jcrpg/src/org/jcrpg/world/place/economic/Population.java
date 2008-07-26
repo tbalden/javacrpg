@@ -166,7 +166,10 @@ public abstract class Population extends Economic{
 			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
 			{
 				// return cube.
-				return e.getCube(key, worldX, worldY, worldZ, farView);
+				Cube c = e.getCube(key, worldX, worldY, worldZ, farView);
+				if (c!=null)
+					c.internalEconomicUnitForFloraQuery = e;
+				return c;
 			}
 		}
 		for (Economic e:groundList)
@@ -175,7 +178,10 @@ public abstract class Population extends Economic{
 			if (e.getBoundaries().isInside(worldX, worldY, worldZ))
 			{
 				// return cube.
-				return e.getCube(key, worldX, worldY, worldZ, farView);
+				Cube c = e.getCube(key, worldX, worldY, worldZ, farView);
+				if (c!=null)
+					c.internalEconomicUnitForFloraQuery = e;
+				return c;
 			}
 		}
 		// no cube here...

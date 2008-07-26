@@ -130,6 +130,7 @@ public class RenderedArea {
 							if (cube!=null)
 							{
 								c = new RenderedCube(cube,x1,y1,z1);
+								c.world = world;
 								// gather newly rendered cubes
 								elements.add(c);
 							}
@@ -162,6 +163,7 @@ public class RenderedArea {
 								if (cube!=null)
 								{
 									c = new RenderedCube(cube,x1,y1,z1);
+									c.world = world;
 									c.farview = true;
 									// gather newly rendered cubes
 									elements_FARVIEW.add(c);

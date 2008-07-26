@@ -114,7 +114,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	}
 	
 	public String lastType = "________";
-	public void renderToEncounterWorld(int worldX, int worldY, int worldZ, World realWorld, String specialType)
+	public boolean renderToEncounterWorld(int worldX, int worldY, int worldZ, World realWorld, String specialType)
 	{
 		if (encounterGroundWorlds==null) encounterGroundWorlds = new HashMap<String, World>();
 		
@@ -152,7 +152,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			}
 		}
 		
-		if (type == null && lastType == null || type.equals(lastType)) return;
+		if (type == null && lastType == null || type.equals(lastType)) return true;
 		lastType = type;
 		
 		World w = encounterGroundWorlds.get(type);
@@ -169,9 +169,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		}
 		
 		world = w;
-		rerender = true;
-		renderToViewPort();
-		rerender = false;
+		return false;
 		//re
 	}
 

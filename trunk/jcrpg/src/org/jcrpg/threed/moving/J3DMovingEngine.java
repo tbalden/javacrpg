@@ -416,8 +416,8 @@ public class J3DMovingEngine {
 				realPooledNode.attachChild(unit.sizeTextNode);	
 			}
 			realPooledNode.attachChild(unit.memberTypeNameNode);
+			realPooledNode.updateRenderState();
 		}
-		realPooledNode.updateRenderState();
 	}
 	
 	public void visualizeImpactPoints(RenderedMovingUnit unit, ImpactUnit impact)

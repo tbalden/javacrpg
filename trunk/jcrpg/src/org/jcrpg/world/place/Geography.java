@@ -493,7 +493,23 @@ public class Geography extends Place implements Surface {
 	{
 		return new int[]{0,0};
 	}
-	
+
+	/**
+	 * corner randomizer function.
+	 * @param x
+	 * @param z
+	 * @param sizeX
+	 * @param sizeZ
+	 * @param worldX
+	 * @param worldZ
+	 * @param farView
+	 * @return
+	 */
+	private final float getPointCornerSlightDisplaceFactor(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
+	{
+		return -(HashUtil.mixPer1000(worldZ, worldX, 1)/4000f)/(farView?J3DCore.FARVIEW_GAP:1f);
+	}
+
 	
 	int s_lastWorldX = -9999, s_lastWorldZ = -9999;
 	SurfaceHeightAndType[] s_lastType = null; 
@@ -607,6 +623,7 @@ public class Geography extends Place implements Surface {
 	
 	
 	
+	
 	private float[] getCubeKindNoCache(int worldX, int worldY, int worldZ, boolean farView)
 	{
 		float[] tmpCornerHeightsAndKind = new float[9]; 
@@ -639,6 +656,21 @@ public class Geography extends Place implements Surface {
 		int[] aYSouthWest = getPointHeight(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP), farView);
 		int[] aYWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView);
 		int[] aYEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView);
+
+		//float rYNorthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
+		//float rYNorthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
+		//float rYSouthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP), farView);
+		//float rYSouthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP), farView);
+
+		float rY = getPointCornerSlightDisplaceFactor(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
+		float rYNorth = getPointCornerSlightDisplaceFactor(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView);
+		float rYNorthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
+		float rYNorthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
+		float rYSouth = getPointCornerSlightDisplaceFactor(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP), farView);
+		float rYSouthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP), farView);
+		float rYSouthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ-FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ-FARVIEW_GAP), farView);
+		float rYWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView);
+		float rYEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView);
 
 		int YNorth = aYNorth[0]/FARVIEW_GAP;
 		int YNorthEast = aYNorthEast[0]/FARVIEW_GAP;
@@ -702,12 +734,28 @@ public class Geography extends Place implements Surface {
 				hSE = ((Y + YSouth + YSouthEast + YEast)/4f) - Y;
 			}*/
 			//System.out.println(" "+hNE+" "+hNW+" "+hSW+" "+hSE);
-			hNE = ((Y + YNorth + YNorthEast + YEast)/4f) - Y;
-			hNW = ((Y + YNorth + YNorthWest + YWest)/4f) - Y;
-			hSW = ((Y + YSouth + YSouthWest + YWest)/4f) - Y;
-			hSE = ((Y + YSouth + YSouthEast + YEast)/4f) - Y;
+			hNE = ((Y + rY + YNorth + rYNorth + YNorthEast + rYNorthEast + YEast + rYEast)/4f) - Y;
+			hNW = ((Y + rY + YNorth + rYNorth + YNorthWest + rYNorthWest + YWest + rYWest)/4f) - Y;
+			hSW = ((Y + rY + YSouth + rYSouth + YSouthWest + rYSouthWest + YWest + rYWest)/4f) - Y;
+			hSE = ((Y + rY + YSouth + rYSouth + YSouthEast + rYSouthEast + YEast + rYEast)/4f) - Y;
 		}
+		
 	
+		/*
+		 *
+		 * 
+	   # # #
+		X X
+	   # # #
+		X X
+	   # # #
+		 # # # #
+		  X X X
+		 # # # # 
+		  X X X
+		 # # # # 
+		 */
+		
 		tmpCornerHeightsAndKind[0] = hNW;
 		tmpCornerHeightsAndKind[1] = hNE;
 		tmpCornerHeightsAndKind[2] = hSW;

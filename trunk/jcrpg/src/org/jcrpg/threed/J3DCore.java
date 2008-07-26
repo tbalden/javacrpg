@@ -1208,8 +1208,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		boolean cubeH = false;
 		try
 		{
-			middleHeight = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false).middleHeight;
-			cubeH = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false).cornerHeights!=null;
+			Cube c = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false); 
+			middleHeight = c.middleHeight;
+			cubeH = c.cornerHeights!=null;
 		} catch (Exception ex){}; 
 		float bonus = (gameState.getCurrentRenderPositions().onSteep?1.5f:0f);
 		if (cubeH)

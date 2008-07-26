@@ -19,6 +19,8 @@ package org.jcrpg.threed;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
+import org.jcrpg.threed.jme.TiledTerrainBlock;
+import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
@@ -73,8 +75,28 @@ public class GeoTileLoader {
 		ext.updateRenderState();
 		return ext;
 	}
+
+	public boolean checkHeightOpposite(float[] cornerHeights, float[] opp, float oppDeltaY)
+	{
+		//System.out.println(oppDeltaY+ " : "+cornerHeights[1]+" OPP0 == "+(opp[0]+oppDeltaY));
+		//System.out.println(oppDeltaY+ " : "+cornerHeights[3]+" OPP2 == "+(opp[2]+oppDeltaY));
+		if (Math.abs(cornerHeights[1]-(opp[0]+oppDeltaY))>0.1f) return false;
+		//if (Math.abs(cornerHeights[3]-(opp[2]+oppDeltaY))>0.1f) return false;
+		return true;
+		
+	}
+	public boolean checkHeightAdj(float[] cornerHeights, float[] adj, float adjDeltaY)
+	{
+		//System.out.println(adjDeltaY+ " : "+cornerHeights[2]+" ADJ0 == "+(adj[0]+adjDeltaY));
+		//System.out.println(adjDeltaY+ " : "+cornerHeights[3]+" ADJ1 == "+(adj[1]+adjDeltaY));
+		if (Math.abs(cornerHeights[2]-(adj[0]+adjDeltaY))>0.1f) return false;
+		//if (Math.abs(cornerHeights[3]-(adj[1]+adjDeltaY))>0.1f) return false;
+		return true;
+		
+	}
 	
-	public TerrainBlock loadNodeOriginal(SimpleModel model, RenderedCube rCube)
+	
+	public TiledTerrainBlock loadNodeOriginal(NodePlaceholder nodePlaceholder, SimpleModel model, RenderedCube rCube)
 	{
 		
 		float[] cornerHeights = rCube.cube.cornerHeights;
@@ -82,17 +104,149 @@ public class GeoTileLoader {
 		int[] map = new int[4];
 		for (int i=0; i<4; i++)
 		{
-			int h = (int)(cornerHeights[i%4]*10000f);
+			int h = (int)(cornerHeights[i%4]*1000000f);
 			map[i] = h;
 		}
 		
+		/*
 		float northOverrideDiff = cornerHeights[4];
 		float southOverrideDiff = cornerHeights[6];
 		float eastOverrideDiff = cornerHeights[5];
 		float westOverrideDiff = cornerHeights[7];
+		*/
 		
+		RenderedArea cache = J3DCore.getInstance().gameState.getCurrentStandingEngine().renderedArea;
+		int worldX = nodePlaceholder.cube.cube.x;
+		int worldY = nodePlaceholder.cube.cube.y;
+		int worldZ = nodePlaceholder.cube.cube.z;
 		
-		TerrainBlock block = new TerrainBlock("1",2,new Vector3f(2,0.00020f,2),map,new Vector3f(0f,0,0f),false);
+		//NW NE -> EAST OPPOSITE : NW (NE-1)!
+		
+		//SW SE -> EAST OPPOSITE : SW (SE-3)!
+		
+		// SOUTH ADJACENT
+		// NW NE
+		// (SW-2)! (SE-3)!
+		
+		int oppositeXDir = +1; // WEST -> EAST		
+		float oppDeltaY = 0f;
+		boolean oppositeGood = true;
+		RenderedCube opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY, worldZ);
+		if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
+		{
+			opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+1, worldZ);
+			oppDeltaY=1f;
+			if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
+			{
+				opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-1, worldZ);
+				oppDeltaY=-1f;
+				if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
+				{
+					opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+2, worldZ);
+					oppDeltaY=2f;
+					if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
+					{
+						opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-2, worldZ);
+						oppDeltaY=-2f;
+						if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
+						{
+							oppositeGood = false;
+						}
+					} 
+				}
+			}
+		}
+
+		int adjacentZDir = -1; // NORTH -> SOUTH		
+		float adjDeltaY = 0f;
+		boolean adjacentGood = true;
+		RenderedCube adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY, worldZ+adjacentZDir);
+		if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null || !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
+		{
+			adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+1, worldZ+adjacentZDir);
+			adjDeltaY=1f;
+			if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
+			{
+				adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-1, worldZ+adjacentZDir);
+				adjDeltaY=-1f;
+				if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null || !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
+				{
+					adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+2, worldZ+adjacentZDir);
+					adjDeltaY=2f;
+					if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
+					{
+						adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-2, worldZ+adjacentZDir);
+						adjDeltaY=-2f;
+						if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
+						{
+							adjacentGood = false;
+						}
+					} 
+				}
+			}
+		} 
+		
+		int[] bigMap = new int[9];
+		for (int row = 0; row<3; row++ )
+		{
+			for (int col = 0; col<3; col++)
+			{
+				if (col <2 && row<2)
+				{
+					bigMap[row*3+col] = map[row*2+col]; 
+				} else
+				{
+					if (row ==0)
+					{
+						if (oppositeGood)
+						{
+							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[1]+oppDeltaY)*1000000f);
+						} else
+						{
+							//System.out.println("NO OPP");
+						}
+					} else
+					if (row ==1)
+					{
+						if (oppositeGood)
+						{
+							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[3]+oppDeltaY)*1000000f);
+						}
+						else
+						{
+							//System.out.println("NO OPP");
+						}
+					} else
+					if (row == 2)
+					{
+						if (col==0)
+						{
+							if (adjacentGood)
+							{
+								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[2]+adjDeltaY)*1000000f);
+							}
+							else
+							{
+								//System.out.println("NO ADJ");
+							}
+						} else
+						if (col==1)
+						{
+							if (adjacentGood)
+							{
+								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[3]+adjDeltaY)*1000000f);
+							}
+							else
+							{
+								//System.out.println("NO ADJ");
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		TiledTerrainBlock block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),map,bigMap,new Vector3f(0f,0,0f),false);
 		
 		SimpleModel o = model;
 		Spatial spatial = block;

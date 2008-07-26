@@ -20,6 +20,7 @@ package org.jcrpg.space;
 
 import org.jcrpg.abs.change.ChangingImpl;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -425,5 +426,11 @@ public class Cube extends ChangingImpl {
 		c.canHoldUnit = canHoldUnit;
 		return c;
 	}
+	
+	
+	/**
+	 * This is used only in Population to return sub economic type in cube.
+	 */
+	public Economic internalEconomicUnitForFloraQuery = null;
 	
 }
