@@ -202,7 +202,7 @@ public class GeometryBatchHelper {
 					{
 						// NORTH - SOUTH -> Z
 						// WEST _ EAST -> X
-						zPerc = ((j*1f)/quadQuantity);
+/*						zPerc = ((j*1f)/quadQuantity);
 						xPerc = 1f-((k*1f)/quadQuantity);
 						heightPercent = 
 							(
@@ -211,8 +211,8 @@ public class GeometryBatchHelper {
 							( SW * ((     xPerc  + 1f - zPerc) / 2f) ) +
 							( SE * ((1f - xPerc  + 1f - zPerc) / 2f) )
 							)
-							;
-						tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,heightPercent,variationCutter);
+							;*/
+						tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,cornerHeights,variationCutter);
 						
 					}
 					else
