@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
+import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
@@ -50,6 +52,7 @@ public class GeometryBatchHelper {
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
 	
+	
 	/**
 	 * Returns Grouping key for batch objects. The key unifies a group of nodes into a batch.
 	 * @param internal
@@ -70,7 +73,16 @@ public class GeometryBatchHelper {
     		SimpleModel sm = (SimpleModel)m;
     		if (sm.textureName!=null)
     		{
-    			key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    			if (sm.generatedGroundModel)
+    			{
+    				key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    				if (place.neighborCubeData==null)
+    					place.neighborCubeData = GeoTileLoader.getNeighborCubes(place);
+    				key+=place.neighborCubeData.getTextureKeyPartForBatch();
+    			} else
+    			{
+    				key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    			}
     		}
     		if (sm.xGeomBatchSize==-1) 
     		{
