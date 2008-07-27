@@ -516,7 +516,7 @@ public class TiledTerrainBlock extends AreaClodMesh {
         Vector3f point = new Vector3f();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                point.set(x * stepScale.x, helperHeightMap[x + (y * size)]
+                point.set(x * stepScale.x, heightMap[x + (y * size)]
                         * stepScale.y, y * stepScale.z);
                 BufferUtils.setInBuffer(point, batch.getVertexBuffer(),
                         (x + (y * size)));

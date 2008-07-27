@@ -35,7 +35,9 @@ import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.scene.side.RenderedTopSide;
 import org.jcrpg.world.ai.flora.ground.Grass;
+import org.jcrpg.world.ai.flora.ground.GrassEco;
 import org.jcrpg.world.ai.flora.ground.JungleGround;
+import org.jcrpg.world.ai.flora.ground.JungleGroundEco;
 import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
@@ -144,9 +146,11 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(CoconutTree.SUBTYPE_TREE.id, new Integer(15));
 		hmCubeSideSubTypeToRenderedSideId.put(Acacia.SUBTYPE_TREE.id, new Integer(20));
 		hmCubeSideSubTypeToRenderedSideId.put(Grass.SUBTYPE_GRASS.id, new Integer(2));
+		hmCubeSideSubTypeToRenderedSideId.put(GrassEco.SUBTYPE_GRASS.id, new Integer(48));
 		hmCubeSideSubTypeToRenderedSideId.put(Sand.SUBTYPE_SAND.id, new Integer(16));
 		hmCubeSideSubTypeToRenderedSideId.put(Snow.SUBTYPE_SNOW.id, new Integer(17));
 		hmCubeSideSubTypeToRenderedSideId.put(JungleGround.SUBTYPE_GROUND.id, new Integer(22));
+		hmCubeSideSubTypeToRenderedSideId.put(JungleGroundEco.SUBTYPE_GROUND.id, new Integer(49));
 		hmCubeSideSubTypeToRenderedSideId.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmCubeSideSubTypeToRenderedSideId.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(24));//new Integer(24)); TODO quad model
 		hmCubeSideSubTypeToRenderedSideId.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
@@ -513,64 +517,35 @@ public class SideTypeModels {
 		
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
-			if (BUMPED_GROUND)
-			{
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
-				//hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{tsm_cont_grass,tsm_cont_grass_flower}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
-			}
-			else
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass,tsm_cont_grass,tsm_cont_grass_flower}));//lod_cont_grass_1}));
 		} else
 		{
-			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
-				//hm3dTypeRenderedSide.put(new Integer(2), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_grass,sm_grass_2,sm_grass_3,sm_grass_3,sm_grass_3}}, new Model[][]{{sm_grass_steep,sm_grass_steep_2,sm_grass_steep_3,sm_grass_steep_3}}));//lod_cont_grass_1}));
-			else
-				hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{qm_grass}));
+			hm3dTypeRenderedSide.put(new Integer(2), new RenderedSide(new Model[]{sm_grass}));
 		}
+		// eco grass with no plants on it
+		hm3dTypeRenderedSide.put(new Integer(48), new RenderedSide(new Model[]{sm_grass}));
 		
 		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
 		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog,sm_gorilla,sm_fox}}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
 		//hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
-		if (BUMPED_GROUND) 
-		{
-			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
-			//hm3dTypeRenderedSide.put(new Integer(16), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_desert,sm_desert_2,sm_desert_3,sm_desert_3,sm_desert_3}},new Model[][]{{sm_desert_steep,sm_desert_steep_2,sm_desert_steep_3,sm_desert_steep_3}}));
-		} else
-		{
-			hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{qm_desert}));
-		}
-		if (BUMPED_GROUND) 
-		{
-			hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
-			//hm3dTypeRenderedSide.put(new Integer(17), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_arctic,sm_arctic_2,sm_arctic_3,sm_arctic_3,sm_arctic_3}},new Model[][]{{sm_arctic_steep,sm_arctic_steep_2,sm_arctic_steep_3,sm_arctic_steep_3}}));
-		} else
-		{
-			hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{qm_arctic}));
-		}
+
+		hm3dTypeRenderedSide.put(new Integer(16), new RenderedSide(new Model[]{sm_desert}));
+		hm3dTypeRenderedSide.put(new Integer(17), new RenderedSide(new Model[]{sm_arctic}));
 		hm3dTypeRenderedSide.put(new Integer(21), new RenderedSide(new Model[]{sm_grass}));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{qm_rock_no_rot}));
 		
 		if (RENDER_GRASS_DISTANCE>0) 
 		{
-			if (BUMPED_GROUND)
-			{
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
-				//hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{tsm_jung_grass, tsm_jung_grass_flower}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));				
-			}				
-			else
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
 		}
 		else 
 		{
-			if (BUMPED_GROUND)
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle,tsm_jung_grass, tsm_jung_grass_flower}));
-				//hm3dTypeRenderedSide.put(new Integer(22), new RenderedHashAlteredSide(new Model[]{}, new Model[][]{{sm_jungle,sm_jungle_2,sm_jungle_3,sm_jungle_3,sm_jungle_3}},new Model[][]{{sm_jungle_steep,sm_jungle_steep_2,sm_jungle_steep_3,sm_jungle_steep_3}}));//lod_cont_grass_1}));
-			else
-				hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{qm_jungle}));
+			hm3dTypeRenderedSide.put(new Integer(22), new RenderedSide(new Model[]{sm_jungle}));
 		}
+		// eco jungleground - no plants
+		hm3dTypeRenderedSide.put(new Integer(49), new RenderedSide(new Model[]{sm_jungle}));
 		
 		hm3dTypeRenderedSide.put(new Integer(8), new RenderedSide("sides/fence.3ds",null));
 		
@@ -703,7 +678,7 @@ public class SideTypeModels {
 		//sm_extsteps.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(47), new RenderedSide(new Model[]{sm_extsteps}));
 		
-// NEXT ID = 48
+// NEXT ID = 50
 		
 	}
 	

@@ -242,6 +242,7 @@ public class World extends Place {
 									geoCube.climateId = conditions.belt.STATIC_ID;
 									// setting canContain for the geoCube, this is a surface cube.
 									geoCube.canContainFlora = true;
+									geoCube.canHoldUnit= true;
 									Cube floraCube = null;
 									t0 = System.currentTimeMillis();
 									floraCube = geo.getFloraCube(worldX, worldY, worldZ, conditions, localTime, geoCube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);

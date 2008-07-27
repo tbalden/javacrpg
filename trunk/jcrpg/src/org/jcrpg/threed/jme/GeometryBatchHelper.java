@@ -169,6 +169,24 @@ public class GeometryBatchHelper {
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
     		boolean sparse = true;
     		int counter = 0;
+			float variationCutter = 160f;
+			float NW = 0;
+			float NE = 0;
+			float SW = 0;
+			float SE = 0;
+			float xPerc = 0;
+			float zPerc = 0;
+			float heightPercent;
+			float[] cornerHeights = null;
+			if (place.cube.cube.cornerHeights!=null)
+			{	
+				cornerHeights = place.cube.cube.cornerHeights;
+				NW = place.cube.cube.cornerHeights[0];
+				NE = place.cube.cube.cornerHeights[1];
+				SW = place.cube.cube.cornerHeights[2];
+				SE = place.cube.cube.cornerHeights[3];
+				
+			}
     		for (int k=0; k<quadQuantity; k++)
     		{
     			if (sparse && counter>0) {
@@ -180,32 +198,54 @@ public class GeometryBatchHelper {
     				}
     				counter++;
     				TriMesh tri;
-    				if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
+					if (cornerHeights!=null)
+					{
+						// NORTH - SOUTH -> Z
+						// WEST _ EAST -> X
+						zPerc = ((j*1f)/quadQuantity);
+						xPerc = 1f-((k*1f)/quadQuantity);
+						heightPercent = 
+							(
+							( NW * ((     xPerc  +      zPerc) / 2f) ) +
+							( NE * ((1f - xPerc  +      zPerc) / 2f) ) +
+							( SW * ((     xPerc  + 1f - zPerc) / 2f) ) +
+							( SE * ((1f - xPerc  + 1f - zPerc) / 2f) )
+							)
+							;
+						tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,heightPercent,variationCutter);
+						
+					}
+					else
+					if (place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP) 
     				{
     					tri = VegetationSetup.getVegTrimesh(internal,place,place.cube, core, (TextureStateVegetationModel)m, k, j,0f, 100f);
     				} else
     				{
-    					float heightPercent = 0;
-    					float variationCutter = 160f;
-    					if (place.cube.cube.steepDirection==J3DCore.SOUTH)
+    					heightPercent = 0;
+    					variationCutter = 160f;	
+
     					{
-    						heightPercent = (j*1f)/quadQuantity;
-    						
+    					
+	    					if (place.cube.cube.steepDirection==J3DCore.SOUTH)
+	    					{
+	    						heightPercent = (j*1f)/quadQuantity;
+	    						
+	    					}
+	    					if (place.cube.cube.steepDirection==J3DCore.NORTH)
+	    					{
+	    						heightPercent = ((quadQuantity-j)*1f)/quadQuantity;
+	    					}
+	    					if (place.cube.cube.steepDirection==J3DCore.WEST)
+	    					{
+	    						heightPercent = (k*1f)/quadQuantity;
+	    					}
+	    					if (place.cube.cube.steepDirection==J3DCore.EAST)
+	    					{
+	    						heightPercent = ((quadQuantity-k)*1f)/quadQuantity;
+	    					}
+	    					heightPercent*=0.9;
+	    					tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
     					}
-    					if (place.cube.cube.steepDirection==J3DCore.NORTH)
-    					{
-    						heightPercent = ((quadQuantity-j)*1f)/quadQuantity;
-    					}
-    					if (place.cube.cube.steepDirection==J3DCore.WEST)
-    					{
-    						heightPercent = (k*1f)/quadQuantity;
-    					}
-    					if (place.cube.cube.steepDirection==J3DCore.EAST)
-    					{
-    						heightPercent = ((quadQuantity-k)*1f)/quadQuantity;
-    					}
-    					heightPercent*=0.9;
-    					tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
     				}
     	    		batch.addItem(place,tri);
     	    		

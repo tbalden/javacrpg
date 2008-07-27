@@ -277,6 +277,16 @@ public class Cave extends Geography implements Surface {
 		}
 		return cachedNonType;
 	}
+
+	@Override
+	protected int[] getPointHeightInside(int x, int z, int sizeX, int sizeZ,
+			int worldX, int worldZ, boolean farView) {
+		// TODO Auto-generated method stub
+		return new int[]{4,0};
+		//super.getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
+	}
+	
+	
 	
 
 }

@@ -136,9 +136,6 @@ public class VegetationSetup {
 
 		// find height
 		float height = 0.f;//tb.getHeight(x, z);
-		if (Float.isNaN(height)) {
-			height = 0.f;
-		}
 		height+=heightDiff;
 		
 		// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
