@@ -102,14 +102,35 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 [?] list before next release:
 ##
-	[ ] refactor grass vegetation level generation
-		[ ] it should be done by picking level from Ground block ?? ordered rendering in renderToViewPort 
+
+	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
+
+	-- TILING THINGS:
+	
+	[ ] find a good solution for terrain transition --> use GLSL shader of momokofan??
+		http://www.jmonkeyengine.com/jmeforum/index.php?topic=6870.0
 		
+	
+	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
+
 	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
+	
+	[ ] camera positioning -> override middle height if it's specified by the cube
+	
+	-- QA/DOC
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
+	
+	--
 
 	[X] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
 		maybe override can then be removed for economics ->
 		[ ] add new pavement by Zphr, with logs below it
+
+	[X] refactor grass vegetation level generation
+		[-] it should be done by picking level from Ground block ?? ordered rendering in renderToViewPort
+			--> done by using cornerheights data in GeometryBatchHelper 
 		
 	[X] setting normals on surface of thing -> pseudo joining from neighbors
 			- override TerrainBlock - buildNormals -> use Cube data transformed instead of vertex height data
@@ -127,13 +148,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		the special model loading should use TerrainBlock with random parameters and the internal level
 		--! getPointHeightDetailedMatrix !! it will return a 4x4 map of height for each corner of the tile side
 		
-	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
-	-- QA/DOC
-
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
-	
 	--
 	[X] economic update icon
 

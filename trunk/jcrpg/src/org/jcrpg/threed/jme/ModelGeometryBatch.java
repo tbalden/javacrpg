@@ -64,7 +64,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (((SimpleModel)m).generatedGroundModel)
 			{
 				GeoTileLoader loader = core.modelLoader.geoTileLoader;
-				return loader.loadNodeOriginal(n,(SimpleModel)m, n.cube);
+				return loader.loadNodeOriginal(n);
 			} else
 			{
 				TriMesh mesh = cache.get(m);
@@ -87,7 +87,9 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		this.core = core;
 		TriMesh mesh = getModelMesh(m,placeHolder);
 
-		Node parentOrig = sharedParentCache.get(m.id);
+		String parentKey = m.id;
+		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
+		Node parentOrig = sharedParentCache.get(parentKey);
 		if (parentOrig==null)
 		{
 			parentOrig = new Node();
@@ -96,7 +98,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
 			}
-			sharedParentCache.put(m.id,parentOrig);
+			sharedParentCache.put(parentKey,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.setLocalTranslation(placeHolder.getLocalTranslation());
@@ -110,7 +112,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		if (model.type == Model.SIMPLEMODEL) 
 		{
 			if (((SimpleModel)model).textureName!=null) 
-			{				
+			{
+				
 				key = ((SimpleModel)model).id+((SimpleModel)model).generatedGroundModel+  ( ((SimpleModel)model).generatedGroundModel? (c.cube.cornerHeights!=null?c.cube.cornerHeights.hashCode():"___") : "");
 			}
 		} else

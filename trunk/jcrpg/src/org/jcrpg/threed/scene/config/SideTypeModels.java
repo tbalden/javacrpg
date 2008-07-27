@@ -318,6 +318,7 @@ public class SideTypeModels {
 		jungletrees_mult.shadowCaster = true; jungletrees_mult.useClodMesh = true; jungletrees_mult.cullNone = true;
 		SimpleModel cactus = new SimpleModel("sides/cactus.obj",null,MIPMAP_TREES);
 		cactus.shadowCaster = true; cactus.useClodMesh = false; cactus.cullNone = true;
+		cactus.elevateOnSteep = true;
 		SimpleModel bush1 = new SimpleModel("models/bush/bush1.3ds",null,MIPMAP_TREES);
 		bush1.shadowCaster = true; bush1.useClodMesh = true;
 		SimpleModel fern1 = new SimpleModel("models/bush/fern.3ds",null,MIPMAP_TREES);

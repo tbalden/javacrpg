@@ -19,6 +19,7 @@ package org.jcrpg.threed;
 
 import java.util.HashMap;
 
+import org.jcrpg.threed.GeoTileLoader.NeighborCubeData;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
@@ -41,6 +42,12 @@ public class NodePlaceholder {
 	public Quaternion horizontalRotation;
 	public Vector3f localScale, localTranslation;
 	public HashMap<String, Savable> userData = new HashMap<String, Savable>();
+
+	/**
+	 * For ground generation it's used only - filled by GeometryBatchHelper getKey(.
+	 */
+	public NeighborCubeData neighborCubeData = null;
+	
 	
 	public Quaternion getLocalRotation() {
 		
