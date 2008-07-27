@@ -143,7 +143,134 @@ public class VegetationSetup {
 		translation.addLocal(place.getLocalTranslation());
 
 		// find scale
-		float scaleValue = 1.0f+(HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (100/150f/2f);
+		float scaleValue = 1.0f+(HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (50/150f);
+		Vector3f scale = new Vector3f(scaleValue, scaleValue,
+				scaleValue);
+
+		// find rotation
+		Vector3f normalY = new Vector3f(0,0,1f);//tb.getSurfaceNormal(x, z, null);
+		if (normalY == null) {
+			normalY = Vector3f.UNIT_Y;
+		}
+		Vector3f normalX = normalY.cross(Vector3f.UNIT_X);
+		Vector3f normalZ = normalY.cross(normalX);
+		normalX = normalY.cross(normalZ);
+		Vector3f look = core.getCamera().getDirection().negate();
+		Vector3f left1 = core.getCamera().getLeft().negate();
+		Quaternion orient = new Quaternion();
+		orient.fromAxes(left1, core.getCamera().getUp(), look);
+		//Quaternion rotation = new Quaternion();
+		//rotation.fromAxes(normalX, normalY, normalZ);
+		TriMesh tri = (TriMesh)quads[0].getChild(0);
+		tri.setLocalRotation(orient);
+		tri.setLocalTranslation(translation);
+		tri.setLocalScale(scale);
+		//if (steepDirection==SurfaceHeightAndType.NOT_STEEP)
+		{
+			//rotation.multLocal(new Quaternion(new float[]{0, HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)*3.6f ,0}));
+		}
+		return tri;
+		 
+	}
+
+	
+	/**
+	 * Returns a vegetation TriMesh, rotated, translated in worldspace, to be usable with TrimeshGeometryBatch as
+	 * added item.
+	 * @param c cube for world coords
+	 * @param core Core
+	 * @param tm model
+	 * @param k relative coordinate X inside the cube
+	 * @param j relative coordinate Y inside the cube
+	 * @param heightDiff percentage of height in a Cube for the given trimesh. (0f-1f)
+	 * @param variationCutter the bigger this value the lass random deviation in position. (100f default)
+	 * @return
+	 */
+	public static TriMesh getVegTrimesh(boolean internal, NodePlaceholder place, RenderedCube c, J3DCore core,TextureStateVegetationModel tm, int k, int j, float[] cornerHeights, float variationCutter)
+	{
+		TextureState[] ts = core.modelLoader.loadTextureStates(tm.textureNames);
+		Node[] quads = quadCache.get(tm.getKey()+internal);
+		if (quads==null) 
+		{
+			Jcrpg.LOGGER.warning("New veg quad :"+tm.getKey()+internal);
+			quads = new Node[ts.length];
+			for (int i=0; i<ts.length; i++){
+				Node n = new Node();
+				//if (steepDirection==SurfaceHeightAndType.NOT_STEEP) 
+				{
+	
+					//Box quad = new Box("grassQuad",new Vector3f(),tm.quadSizeX,tm.quadSizeY,tm.quadSizeY);
+					Quad quad = new Quad("grassQuad",tm.quadSizeX,tm.quadSizeY);
+					//quad.setLightCombineMode(LightState.INHERIT);
+					quad.setModelBound(new BoundingBox());
+					//quad.setDefaultColor(ColorRGBA.green);
+					quad.updateModelBound();
+					
+					Texture t1 = ts[i].getTexture();
+					t1.setApply(Texture.AM_MODULATE);
+					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
+					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
+					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
+					t1.setCombineScaleRGB(1.0f);
+					quad.setRenderState(ts[i]);
+					quad.setRenderState(as);
+					if (!internal) {
+						quad.setLightCombineMode(LightState.OFF);
+						quad.setSolidColor(new ColorRGBA(1,1,1,1));
+						J3DCore.hmSolidColorSpatials.put(quad,quad);
+					}
+					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+					.createMaterialState();
+					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+					quad.setRenderState(ms);
+					
+					n.attachChild(quad);
+	
+					if (J3DCore.DOUBLE_GRASS) {
+						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
+						n.attachChild(sQ);
+					}
+				} 
+				quads[i] = n;
+			}
+			quadCache.put(tm.getKey()+internal, quads);
+		}
+		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
+		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
+		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
+		x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
+		z = Math.min(z, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
+		x = Math.max(x,  + quadSeparation/4f);
+		z = Math.max(z,  + quadSeparation/4f);
+
+		
+		float NW = place.cube.cube.cornerHeights[0];
+		float NE = place.cube.cube.cornerHeights[1];
+		float SW = place.cube.cube.cornerHeights[2];
+		float SE = place.cube.cube.cornerHeights[3];
+		float zPerc = ((z*1f)/J3DCore.CUBE_EDGE_SIZE);
+		float xPerc = 1f-((k*1f)/J3DCore.CUBE_EDGE_SIZE);
+		float heightPercent = 
+			(
+			( NW * ((     xPerc  +      zPerc) / 2f) ) +
+			( NE * ((1f - xPerc  +      zPerc) / 2f) ) +
+			( SW * ((     xPerc  + 1f - zPerc) / 2f) ) +
+			( SE * ((1f - xPerc  + 1f - zPerc) / 2f) )
+			)
+			;
+		
+		// find height
+		float height = 0.f;//tb.getHeight(x, z);
+		height+=heightPercent;
+		
+		// adding CUBE_EDGE_SIZE halfs, and half of the quad to height, to display properly
+		Vector3f translation = new Vector3f(x - J3DCore.CUBE_EDGE_SIZE/2, height + tm.quadSizeY/2,-z + J3DCore.CUBE_EDGE_SIZE/2);
+		translation.addLocal(place.getLocalTranslation());
+
+		// find scale
+		float scaleValue = 1.0f+(HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z, (int)j)/150f) - (50/150f);
 		Vector3f scale = new Vector3f(scaleValue, scaleValue,
 				scaleValue);
 

@@ -323,7 +323,7 @@ public class J3DStandingEngine {
 			{
 				if (n[i].model.elevateOnSteep)
 				{
-					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.1f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
+					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.15f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
 					n[i].setLocalTranslation(newTrans);
 				}
 			}
