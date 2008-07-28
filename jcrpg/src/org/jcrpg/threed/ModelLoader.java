@@ -150,17 +150,17 @@ public class ModelLoader {
 	 * @param horRotated
 	 * @return
 	 */
-    protected PooledNode loadObject(RenderedCube rc, Model object, boolean horRotated)
+    protected PooledNode loadObject(NodePlaceholder node, RenderedCube rc, Model object, boolean horRotated)
     {
-		return loadObjects(rc, new Model[]{object}, horRotated, false)[0];
+		return loadObjects(node, rc, new Model[]{object}, horRotated, false)[0];
     }    
-    protected PooledNode loadObject(RenderedMovingUnit rmu, Model object, boolean horRotated)
+    protected PooledNode loadObject(NodePlaceholder node, RenderedMovingUnit rmu, Model object, boolean horRotated)
     {
-		return loadObjects(null, rmu, new Model[]{object}, horRotated, false)[0];
+		return loadObjects(node, null, rmu, new Model[]{object}, horRotated, false)[0];
     }    
-	protected PooledNode[] loadObjects(RenderedCube rc, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
+	protected PooledNode[] loadObjects(NodePlaceholder node, RenderedCube rc, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
 	{
-		return loadObjects(rc, null, objects, horRotated, false);
+		return loadObjects(node, rc, null, objects, horRotated, false);
 	}
 	/**
 	 * Loading a set of models into JME nodes.
@@ -168,7 +168,7 @@ public class ModelLoader {
 	 * @param fakeLoadForCacheMaint Do not really load or create JME node, only call ModelLoader for cache maintenance.
 	 * @return
 	 */
-	protected PooledNode[] loadObjects(RenderedCube rc, RenderedMovingUnit rmu, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
+	protected PooledNode[] loadObjects(NodePlaceholder place, RenderedCube rc, RenderedMovingUnit rmu, Model[] objects, boolean horRotated, boolean fakeLoadForCacheMaint)
     {
 		
 		//GeometryBatchCreator cr = new GeometryBatchCreator();
@@ -253,7 +253,8 @@ public class ModelLoader {
 					PooledNode node = null; 
 					if (((SimpleModel)objects[i]).generatedGroundModel)
 					{
-						node = geoTileLoader.loadNode((SimpleModel)objects[i],rc);
+						if (!fakeLoadForCacheMaint)
+							node = geoTileLoader.loadNode(place);
 					} else
 					{
 						node = loadNode((SimpleModel)objects[i],fakeLoadForCacheMaint);

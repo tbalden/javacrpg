@@ -28,6 +28,7 @@ import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.LODModel;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -82,6 +83,10 @@ public class ModelPool {
 		}
 		
 		String key = model.id+(rotated)+rc.cube.internalCube;
+		if (place.model.type==Model.SIMPLEMODEL && ((SimpleModel)place.model).generatedGroundModel && place.neighborCubeData!=null && place.neighborCubeData.getTextureKeyPartForBatch()!=null)
+		{
+			key+=place.cube.cube.cornerHeights.hashCode();
+		}
 		
 		PoolItemContainer cont = pool.get(key);
 		synchronized (pool) {
@@ -97,7 +102,7 @@ public class ModelPool {
 					return n;
 				}
 			}
-			PooledNode n = core.modelLoader.loadObject(rc, model, rotated);
+			PooledNode n = core.modelLoader.loadObject(place,rc, model, rotated);
 			// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
@@ -107,7 +112,7 @@ public class ModelPool {
 			{
 				for (int i=0; i<toCreate; i++)
 				{
-					PooledNode unused = core.modelLoader.loadObject(rc, model, rotated);
+					PooledNode unused = core.modelLoader.loadObject(place,rc, model, rotated);
 					unused.setPooledContainer(cont);
 					cont.notUsed.add(unused);
 				}
@@ -141,7 +146,7 @@ public class ModelPool {
 					return n;
 				}
 			}
-			PooledNode n = core.modelLoader.loadObject(rmu, model, rotated);
+			PooledNode n = core.modelLoader.loadObject(place,rmu, model, rotated);
 			// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
@@ -151,7 +156,7 @@ public class ModelPool {
 			{
 				for (int i=0; i<toCreate; i++)
 				{
-					PooledNode unused = core.modelLoader.loadObject(rmu, model, rotated);
+					PooledNode unused = core.modelLoader.loadObject(place,rmu, model, rotated);
 					unused.setPooledContainer(cont);
 					cont.notUsed.add(unused);
 				}

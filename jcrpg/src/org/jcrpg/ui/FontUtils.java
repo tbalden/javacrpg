@@ -37,7 +37,7 @@ public class FontUtils {
 			fontVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(GEN_FONT_PATH)));
 		} catch (Exception ex) {ex.printStackTrace();}
 	}
-	public static FontTT textVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),44,0);
+	public static FontTT textVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),30,0);
 	public static Font fontNonBoldVerdana = new Font("Verdana", Font.PLAIN, 32);
 	static {
 		try
@@ -46,6 +46,6 @@ public class FontUtils {
 			fontNonBoldVerdana = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(GEN_FONT_PATH)));
 		} catch (Exception ex) {ex.printStackTrace();}
 	}
-	public static FontTT textNonBoldVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),44,0);
+	public static FontTT textNonBoldVerdana = new FontTT(fontVerdana.deriveFont(Font.BOLD),30,0);
 
 }

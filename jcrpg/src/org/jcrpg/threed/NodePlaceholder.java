@@ -47,6 +47,7 @@ public class NodePlaceholder {
 	 * For ground generation it's used only - filled by GeometryBatchHelper getKey(.
 	 */
 	public NeighborCubeData neighborCubeData = null;
+
 	
 	
 	public Quaternion getLocalRotation() {

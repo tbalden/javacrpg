@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.ModelLoader;
 import org.jcrpg.threed.ModelPool;
@@ -36,7 +37,6 @@ import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
-import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.side.RenderedClimateDependentSide;
@@ -302,6 +302,13 @@ public class J3DStandingEngine {
 				needsFarviewScale = false;
 			}
 			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
+			
+			boolean groundTileModel = true;
+			if (!(n[i].model instanceof SimpleModel) || !((SimpleModel)n[i].model).generatedGroundModel)
+			{
+				groundTileModel = false;
+			} 
+
 			Quaternion q = (Quaternion)f[0];
 			Quaternion qC = null;
 			if (n[i].model.noSpecialSteepRotation) {
@@ -310,16 +317,16 @@ public class J3DStandingEngine {
 			{
 				qC = new Quaternion();
 			}
-			if (hQ!=null)
+			if (!groundTileModel && hQ!=null)
 			{
 				n[i].horizontalRotation = hQReal;
 				// horizontal rotation
 				qC.multLocal(hQ);
 			} 
-
+			
 			// the necessary local translation : half cube up
 			//System.out.println("MH: "+cube.cube.middleHeight);
-			if (!(n[i].model instanceof SimpleModel) || !((SimpleModel)n[i].model).generatedGroundModel)
+			if (!groundTileModel)
 			{
 				if (n[i].model.elevateOnSteep)
 				{
@@ -334,7 +341,7 @@ public class J3DStandingEngine {
 				// so let's do it if we are on a steep...
 
 				
-				if (cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
+				if (!groundTileModel && cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP)
 				{
 					// yes, this is a steep:
 					
@@ -377,7 +384,13 @@ public class J3DStandingEngine {
 				n[i].setLocalScale(needsFarviewScale?scale*J3DCore.FARVIEW_GAP:scale);
 			}
 			
-			n[i].setLocalRotation(qC);
+			if (!groundTileModel)
+			{
+				n[i].setLocalRotation(qC);
+			} else
+			{
+				n[i].setLocalRotation(new Quaternion());
+			}
 
 			cube.hsRenderedNodes.add((NodePlaceholder)n[i]);
 			liveNodes++;
@@ -472,6 +485,8 @@ public class J3DStandingEngine {
 			engine.pauseForRendering();
 			
 			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.unlockAll();
+
+			boolean overrideBatch = true;
 			
 			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
@@ -494,14 +509,32 @@ public class J3DStandingEngine {
 			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 			    	    	{
 			    	    		NodePlaceholder n = itNode.next();
+			    	    		overrideBatch = true;
 			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 			    					 )
 			    				{
-			    					if (n!=null && n.batchInstance!=null)
-			    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-			    				} else 
+			    					
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+
+			    					if (!overrideBatch)
+			    					{
+				    					if (n!=null && n.batchInstance!=null)
+				    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			    					}
+			    				} 
+			    				if (overrideBatch)
 			    				{ 
 									PooledNode pooledRealNode = n.realNode;
 									
@@ -537,15 +570,32 @@ public class J3DStandingEngine {
 	    	    		outOfViewPort.remove(c);
 		    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
 		    	    	{
+		    	    		overrideBatch = true;
 		    	    		NodePlaceholder n = itNode.next();
 		    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 		    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 		    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 		    					 )
 		    				{
-		    					if (n!=null && n.batchInstance!=null)
-		    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-		    				} else 
+		    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+		    					{
+		    						if (n.neighborCubeData==null)
+		    						{
+		    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+		    						}
+		    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+		    					} else
+		    					{
+		    						overrideBatch = false;
+		    					}
+
+		    					if (!overrideBatch)
+		        				{
+			    					if (n!=null && n.batchInstance!=null)
+			    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+		        				}
+		    				} 
+		    				if (overrideBatch)
 		    				{ 
 								PooledNode pooledRealNode = n.realNode;
 								
@@ -705,17 +755,34 @@ public class J3DStandingEngine {
 								for (NodePlaceholder n : c.hsRenderedNodes)
 								{
 									if (!n.model.farViewEnabled) continue;
+									overrideBatch = true;
 									if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 											(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 													|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 										 )
 									{
-										if (n!=null) {
-											long t0 = System.currentTimeMillis();
-											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
-											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+				    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+				    					{
+				    						if (n.neighborCubeData==null)
+				    						{
+				    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+				    						}
+				    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+				    					} else
+				    					{
+				    						overrideBatch = false;
+				    					}
+				    					
+										if (!overrideBatch)
+										{
+											if (n!=null) {
+												long t0 = System.currentTimeMillis();
+												core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
+												sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+											}
 										}
-									} else 
+									}
+									if (overrideBatch)
 									{
 										PooledNode pooledRealNode = n.realNode;
 										
@@ -736,19 +803,35 @@ public class J3DStandingEngine {
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{
 								n.farView = false;
+								overrideBatch = true;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 										//(n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									) 
 								{
-									if (n.batchInstance==null) 
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+									if (!overrideBatch)
 									{
-										long t0 = System.currentTimeMillis();
-										core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, false);
-										sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+										if (n.batchInstance==null) 
+										{
+											long t0 = System.currentTimeMillis();
+											core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, false);
+											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+										}
 									}
-								} else 
+								} 
+								if (overrideBatch)
 								{
 									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
 									if (realPooledNode==null) continue;
@@ -782,6 +865,10 @@ public class J3DStandingEngine {
 								
 									// set data from placeholder
 									realPooledNode.setLocalTranslation(n.getLocalTranslation());
+									if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
+									{
+										realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE)));
+									}
 									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
 									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 									if (realPooledNode.getChildren()!=null)
@@ -861,22 +948,39 @@ public class J3DStandingEngine {
 							inFarViewPort.remove(c);
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{
+								overrideBatch = true;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									 )
 								{
-									if (n!=null)
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+			    					
+									if (!overrideBatch)
 									{
-										/*if (n.model.type == Model.TEXTURESTATEVEGETATION)
+										if (n!=null)
 										{
-											if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
-										}*/
-										long t0 = System.currentTimeMillis();
-										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-										sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+											/*if (n.model.type == Model.TEXTURESTATEVEGETATION)
+											{
+												if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
+											}*/
+											long t0 = System.currentTimeMillis();
+											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
+										}
 									}
-								} else 
+								}
+								if (overrideBatch)
 								{
 									PooledNode pooledRealNode = n.realNode;
 									
@@ -895,7 +999,8 @@ public class J3DStandingEngine {
 					}
 				}
 			}
-			
+
+			Vector3f blendedGeoTileDisplacement = new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP),0,-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP));
 			if (J3DCore.FARVIEW_ENABLED)
 			for (int cc = fromCubeCount_FARVIEW; cc<toCubeCount_FARVIEW; cc++)
 			{
@@ -977,9 +1082,14 @@ public class J3DStandingEngine {
 					} 
 					for (NodePlaceholder n : c.hsRenderedNodes)
 					{
+						Vector3f t = n.getLocalTranslation();
+						/*if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
+						{
+							t = t.add(blendedGeoTileDisplacement);
+						}*/
 						if (checked && !farviewGapFiller)
 						{
-							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+							float dist = t.distanceSquared(core.getCamera().getLocation());
 	
 							if (dist<minAngleCalc) {
 								break;
@@ -988,7 +1098,7 @@ public class J3DStandingEngine {
 						{
 							// check if farview enabled
 							if (!J3DCore.FARVIEW_ENABLED || fragmentViewDist) break;
-							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+							float dist = t.distanceSquared(core.getCamera().getLocation());
 							if (dist>maxFarViewDist)
 							{
 								// out of far view
@@ -1007,7 +1117,7 @@ public class J3DStandingEngine {
 										//break;
 									//}
 									// found one... checking for angle:								
-									Vector3f relative = n.getLocalTranslation().subtract(core.getCamera().getLocation()).normalize();
+									Vector3f relative = t.subtract(core.getCamera().getLocation()).normalize();
 									float angle = core.getCamera().getDirection().normalize().angleBetween(relative);
 									//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("RELATIVE = "+relative+ " - ANGLE = "+angle);
 									if (angle<refAngle) {
@@ -1042,15 +1152,31 @@ public class J3DStandingEngine {
 							{
 								if (!n.model.farViewEnabled) continue;
 								n.farView = true;
+								overrideBatch = true;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									) 
 								{
 									
-									if (n.batchInstance==null)
-										core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, true);
-								} else 
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+									if (!overrideBatch)
+									{
+										if (n.batchInstance==null)
+											core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, true);
+									}
+								} 
+								if (overrideBatch)
 								{
 									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
 									if (realPooledNode==null) continue;
@@ -1082,6 +1208,11 @@ public class J3DStandingEngine {
 								
 									// set data from placeholder
 									realPooledNode.setLocalTranslation(n.getLocalTranslation());
+									if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
+									{
+										realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(blendedGeoTileDisplacement));
+									}
+
 									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
 									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 									for (Spatial s:realPooledNode.getChildren()) {
@@ -1158,18 +1289,47 @@ public class J3DStandingEngine {
 							inFarViewPort.remove(c);
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{
+								overrideBatch = true;
+								boolean geoOverride = false;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									 )
 								{
-									if (n!=null)
-										core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-								} else 
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    						//if (overrideBatch)
+			    						{
+			    							//geoOverride = true;
+			    							//System.out.println("REMOVING FARVIEW BLENDED ONE");
+			    						}
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+			    					if (!overrideBatch)
+			    					{
+										if (n!=null)
+											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			    					}
+								}
+								if (overrideBatch)
 								{
 									PooledNode pooledRealNode = n.realNode;
 									
 									n.realNode = null;
+									/*if (geoOverride)
+									{
+										if (pooledRealNode!=null)
+										{
+											System.out.println("REMOVING REAL"+pooledRealNode);
+										}
+									}*/
 									if (pooledRealNode!=null) {
 										Node realNode = (Node)pooledRealNode;
 										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);

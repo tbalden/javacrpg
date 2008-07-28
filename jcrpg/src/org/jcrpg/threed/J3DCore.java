@@ -252,7 +252,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0, 100);
 			if (!loadValue("LOGGING", false))
 			{
-				Jcrpg.LOGGER.setLevel(Level.OFF);
+				if (Jcrpg.LOGGER!=null)
+					Jcrpg.LOGGER.setLevel(Level.OFF);
 				LOGGING = false;
 			}
 			FPSCOUNTER = loadValue("FPSCOUNTER", false); 
@@ -2168,6 +2169,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		RenderPass rootPass = new RenderPass();
 		pManager.add(rootPass);
 
+		
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
 			Jcrpg.LOGGER.info("SHADOWS!");
