@@ -20,9 +20,9 @@ package org.jcrpg.threed.jme;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.threed.GeoTileLoader.TiledTerrainBlockAndPassNode;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
@@ -63,8 +63,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			if (((SimpleModel)m).generatedGroundModel)
 			{
-				GeoTileLoader loader = core.modelLoader.geoTileLoader;
-				return loader.loadNodeOriginal(n);
+				System.out.println("THIS SHOULDNT RUN!!!");
+				return nullmesh;
+				//GeoTileLoader loader = core.modelLoader.geoTileLoader;
+				//return loader.loadNodeOriginal(n);
 			} else
 			{
 				TriMesh mesh = cache.get(m);
@@ -79,31 +81,70 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			return nullmesh;
 		}
 	}
+	
+	private TiledTerrainBlockAndPassNode getTiledBlockData(Model m,NodePlaceholder n,boolean splatNodeNeeded)
+	{
+		return core.modelLoader.geoTileLoader.loadNodeOriginal(n,splatNodeNeeded);
+	}
 
 	public static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
 	
 	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder) {
 		model = m;
 		this.core = core;
-		TriMesh mesh = getModelMesh(m,placeHolder);
+		TriMesh mesh = null;
+		TiledTerrainBlockAndPassNode data = null;
+		if (m.type == Model.SIMPLEMODEL && ((SimpleModel)m).generatedGroundModel)
+		{
+			data = getTiledBlockData(m,placeHolder,true);
+			mesh = data.block;
+		} else
+		{
+			mesh = getModelMesh(m,placeHolder);
+		}
+		 
 
 		String parentKey = m.id;
 		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
 		Node parentOrig = sharedParentCache.get(parentKey);
 		if (parentOrig==null)
 		{
-			parentOrig = new Node();
-			parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
-			if (m.type == Model.SIMPLEMODEL) {
-				//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
-				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+			if (data==null || data.passNode==null)
+			{
+				parentOrig = new Node();
+				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
+				if (m.type == Model.SIMPLEMODEL) {
+					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+				}
+				sharedParentCache.put(parentKey,parentOrig);
+			} else
+			{
+				System.out.println("PASSNODE...");
+				parentOrig = new Node();
+				//parentOrig = data.passNode;//.attachChild(parentOrig);
+				parentOrig.attachChild(data.passNode);
+				this.copyTextureCoords(0, 0, 1, 1);
+				data.passNode.attachChild(this);
+				this.updateRenderState();
+				//parentOrig.setRenderState(data.passNode.getRenderState(RenderState.RS_TEXTURE));
+				if (m.type == Model.SIMPLEMODEL) {
+					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+					//parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+				}
+				//sharedParentCache.put(parentKey,parentOrig);
 			}
-			sharedParentCache.put(parentKey,parentOrig);
 		}
-		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
-		parent.setLocalTranslation(placeHolder.getLocalTranslation());
-		parent.attachChild(this);
-		parent.updateModelBound();
+		if (data==null || data.passNode==null)
+		{
+			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+			parent.setLocalTranslation(placeHolder.getLocalTranslation());
+			parent.attachChild(this);
+			parent.updateModelBound();
+		} else
+		{
+			parent = parentOrig;
+		}
 	}
 	
 	public String getModelKey(Model model, RenderedCube c)
@@ -165,7 +206,17 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			long t0 = System.currentTimeMillis();
-			TriMesh quad = getModelMesh(placeholder.model,placeholder);
+			TriMesh quad = null;
+			TiledTerrainBlockAndPassNode data = null;
+			if (placeholder.model.type == Model.SIMPLEMODEL && ((SimpleModel)placeholder.model).generatedGroundModel)
+			{
+				data = getTiledBlockData(placeholder.model,placeholder,false);
+				quad = data.block;
+			} else
+			{
+				quad = getModelMesh(placeholder.model,placeholder);
+			}
+			
 			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			//quad.setLocalTranslation(placeholder.getLocalTranslation());

@@ -213,6 +213,16 @@ public class RenderedArea {
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
 		return worldCubeCache.get(key);
 	}
+	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ,boolean farview)
+	{
+		worldX = world.shrinkToWorld(worldX);
+		worldZ = world.shrinkToWorld(worldZ);
+		long key = Boundaries.getKey(worldX, worldY, worldZ);
+		if (farview)
+			return worldCubeCache_FARVIEW.get(key);
+		return worldCubeCache.get(key);
+		
+	}
 	
 	/**
 	 * big update is being done, clear out all cached cubes.

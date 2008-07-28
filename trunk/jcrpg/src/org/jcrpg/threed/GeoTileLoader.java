@@ -18,6 +18,7 @@
 package org.jcrpg.threed;
 
 import java.net.URL;
+import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
@@ -29,21 +30,37 @@ import org.jcrpg.threed.scene.model.SimpleModel;
 import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.PassNode;
+import com.jme.scene.PassNodeState;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.resource.ResourceLocatorTool;
-import com.jmex.terrain.TerrainBlock;
-import com.jmex.terrain.util.ProceduralSplatTextureGenerator;
 
 public class GeoTileLoader {
-
+	AlphaState as2; 
+	AlphaState as;
 	ModelLoader l = null;
 	public GeoTileLoader(ModelLoader l)
 	{
 		this.l = l;
+        as = l.core.getDisplay().getRenderer().createAlphaState();
+        as.setBlendEnabled(true);
+        as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+        as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        as.setTestEnabled(true);
+        as.setTestFunction(AlphaState.TF_GREATER);
+        as.setEnabled(true);
+        // alpha used for blending the lightmap
+        as2 = l.core.getDisplay().getRenderer().createAlphaState();
+        as2.setBlendEnabled(true);
+        as2.setSrcFunction(AlphaState.SB_DST_COLOR);
+        as2.setDstFunction(AlphaState.DB_SRC_COLOR);
+        as2.setTestEnabled(true);
+        as2.setTestFunction(AlphaState.TF_GREATER);
+        as2.setEnabled(true);
 	}
 	
 	public class TerrainBlockExt extends Node implements PooledNode
@@ -63,29 +80,43 @@ public class GeoTileLoader {
 		
 	}
 	
-	public TerrainBlockExt loadNode(SimpleModel model, RenderedCube rCube)
+	public class PooledPassNode extends PassNode implements PooledNode
 	{
-		TerrainBlockExt ext = new TerrainBlockExt();
-		TerrainBlock block = new TerrainBlock();
-		float[] cornerHeights = rCube.cube.cornerHeights;
-		block.setSize(2);
-		int[] map = new int[4];
-		for (int i=0; i<4; i++)
-		{
-			int h = (int)cornerHeights[i]*10;
-			map[i] = h;
+
+		public PooledPassNode() {
+			super();
 		}
-		block.setHeightMap(map);
-		block.updateFromHeightMap();
-		ext.attachChild(block);
-		ext.updateRenderState();
-		return ext;
+
+		public PooledPassNode(String arg0) {
+			super(arg0);
+		}
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		PoolItemContainer pic;
+		public PoolItemContainer getPooledContainer() {
+			
+			return pic;
+		}
+
+		public void setPooledContainer(PoolItemContainer cont) {
+			pic = cont;			
+		}
+		
+	}
+	
+	public PooledNode loadNode(NodePlaceholder nodePlaceholder)
+	{
+		TiledTerrainBlockAndPassNode block = loadNodeOriginal(nodePlaceholder, true);
+		block.passNode.attachChild(block.block);
+		return (PooledNode)block.passNode;
 	}
 
 	public static boolean checkHeightOpposite(float[] cornerHeights, float[] opp, float oppDeltaY)
 	{
-		//System.out.println(oppDeltaY+ " : "+cornerHeights[1]+" OPP0 == "+(opp[0]+oppDeltaY));
-		//System.out.println(oppDeltaY+ " : "+cornerHeights[3]+" OPP2 == "+(opp[2]+oppDeltaY));
 		if (Math.abs(cornerHeights[1]-(opp[0]+oppDeltaY))>0.1f) return false;
 		//if (Math.abs(cornerHeights[3]-(opp[2]+oppDeltaY))>0.1f) return false;
 		return true;
@@ -93,8 +124,6 @@ public class GeoTileLoader {
 	}
 	public static boolean checkHeightAdj(float[] cornerHeights, float[] adj, float adjDeltaY)
 	{
-		//System.out.println(adjDeltaY+ " : "+cornerHeights[2]+" ADJ0 == "+(adj[0]+adjDeltaY));
-		//System.out.println(adjDeltaY+ " : "+cornerHeights[3]+" ADJ1 == "+(adj[1]+adjDeltaY));
 		if (Math.abs(cornerHeights[2]-(adj[0]+adjDeltaY))>0.1f) return false;
 		//if (Math.abs(cornerHeights[3]-(adj[1]+adjDeltaY))>0.1f) return false;
 		return true;
@@ -102,8 +131,6 @@ public class GeoTileLoader {
 	}
 	public static boolean checkHeightOppAdj(float[] cornerHeights, float[] adj, float adjDeltaY)
 	{
-		//System.out.println(adjDeltaY+ " : "+cornerHeights[2]+" ADJ0 == "+(adj[0]+adjDeltaY));
-		//System.out.println(adjDeltaY+ " : "+cornerHeights[3]+" ADJ1 == "+(adj[1]+adjDeltaY));
 		if (Math.abs(cornerHeights[3]-(adj[0]+adjDeltaY))>0.1f) return false;
 		return true;
 		
@@ -125,26 +152,28 @@ public class GeoTileLoader {
 		// NW NE
 		// (SW-2)! (SE-3)!
 		
-		int oppositeXDir = +1; // WEST -> EAST		
+		int yGap = (nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1);
+		
+		int oppositeXDir = +1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST		
 		float oppDeltaY = 0f;
 		//boolean oppositeGood = true;
-		RenderedCube opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY, worldZ);
+		RenderedCube opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY, worldZ, nodePlaceholder.farView);
 		if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
 		{
-			opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+1, worldZ);
-			oppDeltaY=1f;
+			opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+1*yGap, worldZ, nodePlaceholder.farView);
+			oppDeltaY=1f*yGap;
 			if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
 			{
-				opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-1, worldZ);
-				oppDeltaY=-1f;
+				opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-1*yGap, worldZ, nodePlaceholder.farView);
+				oppDeltaY=-1f*yGap;
 				if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
 				{
-					opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+2, worldZ);
+					opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY+2*yGap, worldZ, nodePlaceholder.farView);
 					oppDeltaY=2f;
 					if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
 					{
-						opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-2, worldZ);
-						oppDeltaY=-2f;
+						opposite = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppositeXDir, worldY-2*yGap, worldZ, nodePlaceholder.farView);
+						oppDeltaY=-2f*yGap;
 						if (opposite==null || opposite.cube==null || opposite.cube.cornerHeights==null || !checkHeightOpposite(cornerHeights, opposite.cube.cornerHeights, oppDeltaY))
 						{
 							//oppositeGood = false;
@@ -155,26 +184,26 @@ public class GeoTileLoader {
 			}
 		}
 
-		int adjacentZDir = -1; // NORTH -> SOUTH		
+		int adjacentZDir = -1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // NORTH -> SOUTH		
 		float adjDeltaY = 0f;
 		//boolean adjacentGood = true;
-		RenderedCube adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY, worldZ+adjacentZDir);
+		RenderedCube adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY, worldZ+adjacentZDir, nodePlaceholder.farView);
 		if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null || !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
 		{
-			adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+1, worldZ+adjacentZDir);
-			adjDeltaY=1f;
+			adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+yGap, worldZ+adjacentZDir, nodePlaceholder.farView);
+			adjDeltaY=yGap;
 			if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
 			{
-				adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-1, worldZ+adjacentZDir);
-				adjDeltaY=-1f;
+				adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-yGap, worldZ+adjacentZDir, nodePlaceholder.farView);
+				adjDeltaY=-yGap;
 				if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null || !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
 				{
-					adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+2, worldZ+adjacentZDir);
-					adjDeltaY=2f;
+					adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY+2*yGap, worldZ+adjacentZDir, nodePlaceholder.farView);
+					adjDeltaY=2*yGap;
 					if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
 					{
-						adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-2, worldZ+adjacentZDir);
-						adjDeltaY=-2f;
+						adjacent = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX, worldY-2*yGap, worldZ+adjacentZDir, nodePlaceholder.farView);
+						adjDeltaY=-2*yGap;
 						if (adjacent==null || adjacent.cube==null || adjacent.cube.cornerHeights==null|| !checkHeightAdj(cornerHeights, adjacent.cube.cornerHeights, adjDeltaY))
 						{
 							//adjacentGood = false;
@@ -186,28 +215,28 @@ public class GeoTileLoader {
 		} 
 
 		
-		int oppAdjXDir = +1; // WEST -> EAST		
-		int oppAdjZDir = -1; // WEST -> EAST
+		int oppAdjXDir = +1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST		
+		int oppAdjZDir = -1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST
 		float oppAdjDeltaY = 0f;
 		//boolean oppAdjGood = true;
-		RenderedCube oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY, worldZ+oppAdjZDir);
-		if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppDeltaY))
+		RenderedCube oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY, worldZ+oppAdjZDir, nodePlaceholder.farView);
+		if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 		{
-			oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+1, worldZ+oppAdjZDir);
-			oppAdjDeltaY=1f;
-			if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppDeltaY))
+			oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+			oppAdjDeltaY=yGap;
+			if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 			{
-				oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-1, worldZ+oppAdjZDir);
-				oppAdjDeltaY=-1f;
-				if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppDeltaY))
+				oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+				oppAdjDeltaY=-yGap;
+				if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 				{
-					oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+2, worldZ+oppAdjZDir);
-					oppAdjDeltaY=2f;
-					if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppDeltaY))
+					oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+					oppAdjDeltaY=2*yGap;
+					if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 					{
-						oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-2, worldZ+oppAdjZDir);
-						oppAdjDeltaY=-2f;
-						if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppDeltaY))
+						oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+						oppAdjDeltaY=-2*yGap;
+						if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 						{
 							//oppAdjGood = false;
 							oppAdj = null;
@@ -260,15 +289,21 @@ public class GeoTileLoader {
 			this.opposite = opposite;
 			this.adjacent = adjacent;
 			this.oppAdj = oppAdj;
-			String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
-			oppositeGroundTexture = getGeneratedGeoTileTextureNameFromCube(opposite);
-			adjacentGroundTexture = getGeneratedGeoTileTextureNameFromCube(adjacent);
-			oppAdjGroundTexture = getGeneratedGeoTileTextureNameFromCube(oppAdj);
-			if (oppAdjGroundTexture!=null && !originalTexture.equals(oppAdjGroundTexture) || 
-					oppositeGroundTexture!=null && !originalTexture.equals(oppositeGroundTexture) || 
-					adjacentGroundTexture!=null && !originalTexture.equals(adjacentGroundTexture) )
+			if (!original.farview)
 			{
-				textureKeyPart=oppositeGroundTexture+adjacentGroundTexture+oppAdjGroundTexture;
+				// TODO with farview the generated ground tiles are not correctly removed from
+				// scenario. This 'if' above can be removed if solution found...
+				// Seems like they are wrongly positioned, generated in farview???
+				String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
+				oppositeGroundTexture = getGeneratedGeoTileTextureNameFromCube(opposite);
+				adjacentGroundTexture = getGeneratedGeoTileTextureNameFromCube(adjacent);
+				oppAdjGroundTexture = getGeneratedGeoTileTextureNameFromCube(oppAdj);
+				if (oppAdjGroundTexture!=null && !originalTexture.equals(oppAdjGroundTexture) || 
+						oppositeGroundTexture!=null && !originalTexture.equals(oppositeGroundTexture) || 
+						adjacentGroundTexture!=null && !originalTexture.equals(adjacentGroundTexture) )
+				{
+					textureKeyPart=oppositeGroundTexture+adjacentGroundTexture+oppAdjGroundTexture;
+				}
 			}
 			this.oppositeDeltaY = oppositeDeltaY;
 			this.adjacentDeltaY = adjacentDeltaY;
@@ -282,8 +317,20 @@ public class GeoTileLoader {
 		
 	}
 	
+	public class TiledTerrainBlockAndPassNode
+	{
+		public TiledTerrainBlock block;
+		public PassNode passNode;
+		public TiledTerrainBlockAndPassNode(TiledTerrainBlock block,
+				PassNode passNode) {
+			super();
+			this.block = block;
+			this.passNode = passNode;
+		}
+		
+	}
 	
-	public TiledTerrainBlock loadNodeOriginal(NodePlaceholder nodePlaceholder)
+	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
 	{
 
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
@@ -384,10 +431,11 @@ public class GeoTileLoader {
 		SimpleModel o = model;
 		Spatial spatial = block;
 		
+		PassNode splattingPassNode = null;
 		
 		if (o.textureName!=null)
 		{
-			//if (data.getTextureKeyPartForBatch()==null)
+			if (data.getTextureKeyPartForBatch()==null)
 			{
 			
 				Texture texture = (Texture)ModelLoader.textureCache.get(o.textureName);
@@ -407,45 +455,100 @@ public class GeoTileLoader {
 				
 	            ts.setEnabled(true);
 	            spatial.setRenderState(ts);
-			}/* else
+			} else
+			if (splatNodeNeeded)
 			{
-				String textureName = o.textureName+"_BASEBLENDED.png"; // TODO simplemodel should contain the name in a new String field!!
-				
-				String textureNameAdj = data.adjacentGroundTexture+"_ADJBLENDED.png";
-				
-				String textureNameOpp = data.oppositeGroundTexture+"_OPPBLENDED.png";
-				
-				String textureNameAdjOpp = data.oppAdjGroundTexture+"_OPPADJBLENDED.png";
+				splattingPassNode = new PooledPassNode("SplatPassNode");
+				//l.core.gameState.getCurrentStandingEngine().extRootNode
+			    TextureState ts1 = createSplatTextureState(
+			                o.textureName, null);
+	
+			       //TextureState ts1 = createSplatTextureState(
+			         //       "./data/test/baserock.jpg", null);
 
-				Texture texture = loadTexture(textureName);
-				Texture textureAdj = loadTexture(textureNameAdj);
-				Texture textureOpp = loadTexture(textureNameOpp);
-				Texture textureAdjOpp = loadTexture(textureNameAdjOpp);
-				
-				TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
-				int textureUnit = 0;
-				if (texture!=null) 
-					ts.setTexture(texture, textureUnit++);
-				if (textureAdj!=null) 
-					ts.setTexture(textureAdj, textureUnit++);
-				if (textureOpp!=null) 
-					ts.setTexture(textureOpp, textureUnit++);
-				if (textureAdjOpp!=null) 
-					ts.setTexture(textureAdjOpp, textureUnit++);
-				ts.setEnabled(true);
-	            spatial.setRenderState(ts);
-	            AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
-	            as.setEnabled(false);
-	            spatial.setRenderState(as);
+			        //TextureState ts2 = createSplatTextureState(
+			          //      "darkrock.jpg",
+			            //    "darkrockalpha.png");
+
+			        //TextureState ts3 = createSplatTextureState(
+			          //      "deadgrass.jpg",
+			            //    "deadalpha.png");
+
+			        //TextureState ts4 = createSplatTextureState(
+			          //      "nicegrass.jpg",
+			            //    "grassalpha.png");
+
+		        TextureState tsOpp = null;
+		        
+		        if (oppositeTexture!=null && !oppositeTexture.equals(o.textureName)) {
+			        tsOpp = createSplatTextureState(
+			                oppositeTexture,
+			                "blendAlphaAdj1.png");
+		        }
+		        TextureState tsAdj = null;
+		        
+		        if (adjacentTexture!=null && !adjacentTexture.equals(o.textureName)) {
+		        	tsAdj = createSplatTextureState(
+			        		adjacentTexture,
+			                "blendAlphaOpp1.png");
+		        }
+		        TextureState tsOppAdj = null;
+		        
+		        if (oppAdjTexture!=null && !oppAdjTexture.equals(o.textureName)) {
+		        	tsOppAdj = createSplatTextureState(
+			        		oppAdjTexture,
+			                "blendAlphaOppAdj1.png");
+		        }
+			        //TextureState ts6 = createLightmapTextureState("./data/test/lightmap.jpg");
+
+
+			        PassNodeState passNodeState = new PassNodeState();
+			        passNodeState.setPassState(ts1);
+			        splattingPassNode.addPass(passNodeState);
+			        
+			        if (tsOpp!=null)
+			        {
+				        passNodeState = new PassNodeState();
+				        passNodeState.setPassState(tsOpp);
+				        passNodeState.setPassState(as);
+				        splattingPassNode.addPass(passNodeState);
+			        }
+			        if (tsAdj!=null)
+			        {
+				        passNodeState = new PassNodeState();
+				        passNodeState.setPassState(tsAdj);
+				        passNodeState.setPassState(as);
+				        splattingPassNode.addPass(passNodeState);
+			        }
+			        if (tsOppAdj!=null)
+			        {
+				        passNodeState = new PassNodeState();
+				        passNodeState.setPassState(tsOppAdj);
+				        passNodeState.setPassState(as);
+				        splattingPassNode.addPass(passNodeState);
+			        }
+
+			        /*passNodeState = new PassNodeState();
+			        passNodeState.setPassState(ts6);
+			        passNodeState.setPassState(as2);
+			        splattingPassNode.addPass(passNodeState);*/
+			        // //////////////////// PASS STUFF END
+
+			        // lock some things to increase the performance
+			        splattingPassNode.lockBounds();
+			        splattingPassNode.lockTransforms();
+			        splattingPassNode.lockShadows();
+
+			        block.copyTextureCoords(0, 0, 1, 1);
 			}
-			*/
+			
 		} else 
 		{
 			Jcrpg.LOGGER.info(o.modelName);
 			//setTextures(node,o.mipMap);
 		}
 		
-		return block;
+		return new TiledTerrainBlockAndPassNode(block,splattingPassNode);//splattingPassNode);
 	}
 	
 	public Texture loadTexture(String textureName)
@@ -466,6 +569,62 @@ public class GeoTileLoader {
 		}
 		return texture;
 	}
+	
+	public HashMap<String, TextureState> stateCache = new HashMap<String, TextureState>();
+	public HashMap<String, Texture> alphaTextureCache = new HashMap<String, Texture>();
+	public HashMap<String, Texture> splatTextureCache = new HashMap<String, Texture>();
+	
+    private TextureState createSplatTextureState(String texture, String alpha) {
+    	String key = texture+alpha;
+		TextureState state = stateCache.get(key);
+		if (state == null)
+		{
+	        TextureState ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
+	
+	    	Texture t0 = splatTextureCache.get(texture);
+	    	if (t0==null)
+	    	{
+		        URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, texture);
+		        t0 = TextureManager.loadTexture(u,
+		                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+		        t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		        t0.setApply(Texture.AM_MODULATE);
+		        t0.setScale(new Vector3f(1f, 1f, 1.0f));
+		        splatTextureCache.put(texture, t0);
+	    	} 
+	        ts.setTexture(t0, 0);
+	
+	        if (alpha != null) {
+	            addAlphaSplat(ts, alpha);
+	        }
+	        state = ts;
+	        stateCache.put(key, state);
+		}
+
+        return state;
+    }
+
+    private void addAlphaSplat(TextureState ts, String alpha) {
+    	Texture t1 = alphaTextureCache.get(alpha);
+    	if (t1==null)
+    	{
+        	URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, alpha);
+        	if (u!=null)
+        	{
+        		
+    	        t1 = TextureManager.loadTexture(u, Texture.MM_LINEAR_LINEAR,
+    	                Texture.FM_LINEAR);
+    	        t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
+    	        t1.setApply(Texture.AM_COMBINE);
+    	        t1.setCombineFuncRGB(Texture.ACF_REPLACE);
+    	        t1.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
+    	        t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+    	        t1.setCombineFuncAlpha(Texture.ACF_REPLACE);
+        	}
+        	alphaTextureCache.put(alpha, t1);
+    	}
+        ts.setTexture(t1, ts.getNumberOfSetTextures());
+    }
 	
 }
 

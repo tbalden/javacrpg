@@ -53,6 +53,9 @@ package org.jcrpg.threed.jme;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
+import org.jcrpg.threed.PooledNode;
+import org.jcrpg.threed.ModelPool.PoolItemContainer;
+
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
@@ -88,7 +91,7 @@ import com.jme.util.geom.BufferUtils;
  * @author Mark Powell
  * @version $Id: TerrainBlock.java,v 1.30 2006/11/19 16:09:53 renanse Exp $
  */
-public class TiledTerrainBlock extends AreaClodMesh {
+public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
 
     private static final long serialVersionUID = 1L;
 
@@ -926,4 +929,15 @@ public class TiledTerrainBlock extends AreaClodMesh {
         heightMap = capsule.readIntArray("heightMap", null);
         oldHeightMap = capsule.readIntArray("oldHeightMap", null);
     }
+    
+    PoolItemContainer pic;
+
+	public PoolItemContainer getPooledContainer() {
+		return pic;
+	}
+
+	public void setPooledContainer(PoolItemContainer cont) {
+		pic = cont;
+		
+	}
 }

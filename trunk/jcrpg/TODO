@@ -107,13 +107,17 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	-- TILING THINGS:
 	
-	[ ] find a good solution for terrain transition --> use GLSL shader of momokofan??
+	[X] find a good solution for terrain transition --> use GLSL shader of momokofan??
 		http://www.jmonkeyengine.com/jmeforum/index.php?topic=6870.0
+		
+		[ ] fix edges color not fitting WHY??
 		
 	
 	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
 
 	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
+	
+	[ ] Check Zphr's new house model tiles!! 
 	
 	[ ] camera positioning -> override middle height if it's specified by the cube
 	
