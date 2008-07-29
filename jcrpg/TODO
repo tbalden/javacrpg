@@ -112,7 +112,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] find a good solution for terrain transition --> use GLSL shader of momokofan??
 		http://www.jmonkeyengine.com/jmeforum/index.php?topic=6870.0
 		
-		[ ] fix edges color not fitting WHY?? - maybe alpha texture is wrong, try with original,
+		[X] fix edges color not fitting WHY?? - maybe alpha texture is wrong, try with original,
 			try with non-gimp PNG
 
 		[X] make caching work for them
@@ -123,16 +123,18 @@ sanity point for Morale is like mana for hp, limiting social skills!
 				Use SimpleModel.getId(place) to generate different cache key for that
 				and add a getTexture(place) - use cornerheights
 		[X] edges are not blended correctly! - maybe caching problem!
+		
+		[ ] add some 'randmoness' in gimp to edges of alpha mask
 	
 	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
 
 	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
 	
 	[ ] Check Zphr's new house model tiles!!
-		[X] add froudns, steps
+		[X] add grounds, steps
 		[ ] add new house 
 	
-	[ ] camera positioning -> override middle height if it's specified by the cube
+	[X] camera positioning -> override middle height if it's specified by the cube
 	
 	-- QA/DOC
 

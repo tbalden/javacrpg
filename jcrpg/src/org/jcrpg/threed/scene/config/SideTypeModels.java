@@ -170,6 +170,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(Anethum.SUBTYPE_ANETHUM.id, new Integer(45));
 		
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
+		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
 
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -683,12 +684,17 @@ public class SideTypeModels {
 		sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
 		SimpleModel sm_extsteps = new SimpleModel("models/external/House_01_steps_wooden.obj",null);
+		sm_extsteps.elevateOnSteep = true;
 		//sm_extsteps.disposition = new float[] {0,-1f,0};
 		//sm_extsteps.batchEnabled = false;
 		//sm_extsteps.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(47), new RenderedSide(new Model[]{sm_extsteps}));
-		
-// NEXT ID = 50
+
+		SimpleModel sm_ecostreet = new SimpleModel("models/ground/ground_1.obj","stone.jpg"); sm_ecostreet.rotateOnSteep = false; sm_ecostreet.generatedGroundModel = true; sm_ecostreet.rotateOnSteep = false; sm_ecostreet.yGeomBatchSize = yCommon; sm_ecostreet.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_ecostreet.farViewEnabled = true;
+		hm3dTypeRenderedSide.put(new Integer(50), new RenderedSide(new Model[]{sm_ecostreet}));
+		//sm_ecostreet.steepTextureName = "hillside.png";
+
+// NEXT ID = 51
 		
 	}
 	

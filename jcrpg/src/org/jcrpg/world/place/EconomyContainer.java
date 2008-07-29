@@ -72,7 +72,7 @@ public class EconomyContainer {
 					if (c!=null && c.canContainFlora)
 					{
 						CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
-						Cube floraCube = c.internalEconomicUnitForFloraQuery==null?eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false):c.internalEconomicUnitForFloraQuery.getFloraCube(worldX, worldY, worldZ, ccc, time, false);
+						Cube floraCube = c.internalEconomicUnitForFloraQuery==null?(eco.needsFlora?eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null):(c.internalEconomicUnitForFloraQuery.needsFlora?c.internalEconomicUnitForFloraQuery.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null);
 						if (floraCube!=null)
 							c.merge(floraCube, worldX, worldY, worldZ, c.steepDirection);
 					}

@@ -24,6 +24,7 @@ import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
+import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
@@ -43,16 +44,20 @@ public class EconomicGround extends Economic {
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
 	
 	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
+	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
 	static
 	{
 		SUBTYPE_STAIRS.audioStepType = AudioServer.STEP_STONE;
 	}
 	static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
+	static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
 
-	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND };
-	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,GROUND };
-	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,GROUND };
-	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND };
+	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, ECOGROUND};
+	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,ECOGROUND };
+	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,ECOGROUND };
+	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,ECOGROUND};
+
+	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)} };
 
 	public EconomicGround(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
@@ -62,6 +67,7 @@ public class EconomicGround extends Economic {
 		this.worldGroundLevel = origoY;
 		boundaries = BoundaryUtils.createCubicBoundaries(1, sizeX, sizeY, sizeZ, origoX, origoY, origoZ);
 		boundaries.boundaryPlace = this;
+		needsFlora = false;
 	}
 	
 	
@@ -70,7 +76,7 @@ public class EconomicGround extends Economic {
 	
 	static 
 	{
-		Cube ground = new Cube(null,House.EXTERNAL,0,0,0,true,true);
+		Cube ground = new Cube(null,EXTERNAL,0,0,0,true,true);
 		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
 		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
 		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
@@ -99,6 +105,7 @@ public class EconomicGround extends Economic {
 	public EconomicGround()
 	{
 		super(null,null,null,null,null,null);
+		needsFlora = false;
 	}
 
 	@Override
