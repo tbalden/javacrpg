@@ -17,6 +17,8 @@
 
 package org.jcrpg.threed.scene.model;
 
+import org.jcrpg.threed.NodePlaceholder;
+
 public abstract class Model {
 	
 	public static final byte MODEL = 0;
@@ -68,4 +70,9 @@ public abstract class Model {
 	 * Tells GeometryBatchHelper if this model is to be shown not depending on distance
 	 */
 	public boolean alwaysRenderBatch = false;
+	
+	public String getId(NodePlaceholder place)
+	{
+		return id;
+	}
 }

@@ -643,6 +643,11 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			}
 		}
 	}
+
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

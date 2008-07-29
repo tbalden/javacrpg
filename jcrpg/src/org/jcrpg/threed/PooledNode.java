@@ -28,4 +28,6 @@ public interface PooledNode {
 
 	public PoolItemContainer getPooledContainer();
 	public void setPooledContainer(PoolItemContainer cont);
+	
+	public void update(NodePlaceholder place);
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
@@ -481,6 +482,11 @@ public class BillboardPartVegetationOld extends Node implements PooledNode {
 				}
 			}
 		}
+	}
+
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -47,5 +47,10 @@ public class PooledDiscreteLodNode extends DiscreteLodNode implements PooledNode
 		this.cont = cont;
 	}
 
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }
