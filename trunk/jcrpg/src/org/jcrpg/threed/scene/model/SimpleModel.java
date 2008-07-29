@@ -23,12 +23,14 @@ import org.jcrpg.threed.NodePlaceholder;
 public class SimpleModel extends Model {
 
 	public String modelName, textureName;
+	public String steepTextureName = null;
 	public boolean mipMap = true;
 	public int xGeomBatchSize = -1;
 	public int yGeomBatchSize = -1;
 	
 	public boolean generatedGroundModel = false;
 	
+	public String steepId = null;
 	
 	public SimpleModel(String modelName, String textureName)
 	{
@@ -47,16 +49,39 @@ public class SimpleModel extends Model {
 		this.mipMap = mipMap;
 		
 	}
+	
+	public float steepRatio = 0.6f;
+	
 	@Override
 	public String getId(NodePlaceholder place) {
 		
-		if (!generatedGroundModel)
+		if (!generatedGroundModel || steepTextureName==null)
 		{
 			return super.getId(place);
 		}
-		// TODO height value dependent texture!
-		return super.getId(place);
+		if (place.cube.cube.angleRatio>steepRatio)
+		{
+			if (steepId==null)
+			{
+				this.steepId = modelName+mipMap+steepTextureName;
+			}
+			return steepId;
+		}
+		return id;
 	}
 	
+	public String getTexture(NodePlaceholder place)
+	{
+		if (!generatedGroundModel || steepTextureName==null)
+		{
+			return textureName;
+		}
+		if (place.cube.cube.angleRatio>steepRatio)
+		{
+			//System.out.println("AR: "+place.cube.cube.angleRatio+" "+steepTextureName);
+			return steepTextureName;
+		}
+		return textureName;
+	}
 	
 }

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import org.jcrpg.threed.GeoTileLoader.NeighborCubeData;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 
 import com.jme.math.Quaternion;
@@ -48,7 +49,20 @@ public class NodePlaceholder {
 	 */
 	public NeighborCubeData neighborCubeData = null;
 
-	
+	boolean checkedGeneratedGround = false;
+	public NeighborCubeData getNeighborCubeData()
+	{
+		if (checkedGeneratedGround)
+		{
+			return neighborCubeData;
+		}
+		if (neighborCubeData==null && model.type==Model.SIMPLEMODEL && ((SimpleModel)model).generatedGroundModel)
+		{
+			neighborCubeData = GeoTileLoader.getNeighborCubes(this);
+			checkedGeneratedGround = true;
+		}
+		return neighborCubeData;
+	}
 	
 	public Quaternion getLocalRotation() {
 		

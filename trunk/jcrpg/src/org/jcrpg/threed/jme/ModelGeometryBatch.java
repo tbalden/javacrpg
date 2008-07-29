@@ -26,7 +26,6 @@ import org.jcrpg.threed.GeoTileLoader.TiledTerrainBlockAndPassNode;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
-import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
@@ -104,7 +103,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		 
 
-		String parentKey = m.id;
+		String parentKey = m.getId(placeHolder);
 		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
 		Node parentOrig = sharedParentCache.get(parentKey);
 		if (parentOrig==null)
@@ -147,15 +146,15 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 	}
 	
-	public String getModelKey(Model model, RenderedCube c)
+	public String getModelKey(NodePlaceholder place)
 	{
 		String key = "-";
 		if (model.type == Model.SIMPLEMODEL) 
 		{
-			if (((SimpleModel)model).textureName!=null) 
+			if (((SimpleModel)place.model).getTexture(place)!=null) 
 			{
 				
-				key = ((SimpleModel)model).id+((SimpleModel)model).generatedGroundModel+  ( ((SimpleModel)model).generatedGroundModel? (c.cube.cornerHeights!=null?c.cube.cornerHeights.hashCode():"___") : "");
+				key = ((SimpleModel)place.model).getId(place)+((SimpleModel)model).generatedGroundModel+  ( ((SimpleModel)model).generatedGroundModel? (place.cube.cube.cornerHeights!=null?place.cube.cube.cornerHeights.hashCode():"___") : "");
 			}
 		} else
 		{
@@ -167,7 +166,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public void addItem(NodePlaceholder placeholder)
 	{
 		
-		String key = getModelKey(placeholder.model, placeholder.cube);
+		String key = getModelKey(placeholder);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 		if (vSet==null)
@@ -258,7 +257,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
-			String key = getModelKey(placeholder.model,placeholder.cube);
+			String key = getModelKey(placeholder);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 			if (nVSet==null)
