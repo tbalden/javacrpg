@@ -99,6 +99,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] texture state cacheing into md5reader2?
 	
+	[ ] climate level system?
+	
 ##
 [?] list before next release:
 ##
@@ -109,24 +111,26 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[X] find a good solution for terrain transition --> use GLSL shader of momokofan??
 		http://www.jmonkeyengine.com/jmeforum/index.php?topic=6870.0
+		
+		[ ] fix edges color not fitting WHY?? - maybe alpha texture is wrong, try with original,
+			try with non-gimp PNG
+
 		[X] make caching work for them
-		
-		[ ] fix edges color not fitting WHY??
-		
 		[X] add extra texture names in SimpleModel for different height ratios,
 				add simpleModel function to get Height based texture name or default one
 				-> blending based on steepness - rocky side.
 				
 				Use SimpleModel.getId(place) to generate different cache key for that
 				and add a getTexture(place) - use cornerheights
-	
-			[ ] edges are not blended correctly! - maybe caching problem!
+		[X] edges are not blended correctly! - maybe caching problem!
 	
 	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
 
 	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
 	
-	[ ] Check Zphr's new house model tiles!! 
+	[ ] Check Zphr's new house model tiles!!
+		[X] add froudns, steps
+		[ ] add new house 
 	
 	[ ] camera positioning -> override middle height if it's specified by the cube
 	

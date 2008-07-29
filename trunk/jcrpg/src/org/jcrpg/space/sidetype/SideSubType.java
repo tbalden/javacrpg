@@ -25,10 +25,17 @@ public class SideSubType {
 	public String audioStepType = AudioServer.STEP_SOIL;
 	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
 	public boolean colorOverwrite = false;
+	
+	public boolean overrideGeneratedTileMiddleHeight = false;
 
 	public SideSubType(String id) {
 		super();
 		this.id = id;
+	}
+	public SideSubType(String id,boolean overrideGeneratedTileMiddleHeight) {
+		super();
+		this.id = id;
+		this.overrideGeneratedTileMiddleHeight = overrideGeneratedTileMiddleHeight;
 	}
 	public SideSubType(String id, byte[] color) {
 		super();

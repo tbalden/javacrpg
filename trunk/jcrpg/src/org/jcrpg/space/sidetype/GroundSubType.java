@@ -21,6 +21,9 @@ public class GroundSubType extends SideSubType {
 	public GroundSubType(String id) {
 		super(id);
 	}
+	public GroundSubType(String id, boolean overrideGeneratedTileMiddleHeight) {
+		super(id,overrideGeneratedTileMiddleHeight);
+	}
 
 	public GroundSubType(String id, byte[] color) {
 		super(id, color);

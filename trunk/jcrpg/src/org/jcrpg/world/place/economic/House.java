@@ -36,13 +36,13 @@ public class House extends Residence {
 
 	public static final String TYPE_HOUSE = "HOUSE";
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_HOUSE+"_WALL");
-	public static final SideSubType SUBTYPE_INTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_INTERNAL_GROUND");
-	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND");
-	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new NotPassable(TYPE_HOUSE+"_INTERNAL_CEILING");
+	public static final SideSubType SUBTYPE_INTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_INTERNAL_GROUND",true);
+	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND",true);
+	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new NotPassable(TYPE_HOUSE+"_INTERNAL_CEILING",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_HOUSE+"_EXTERNAL_DOOR");
 	public static final SideSubType SUBTYPE_WINDOW = new NotPassable(TYPE_HOUSE+"_WINDOW");
 	public static final SideSubType SUBTYPE_BOOKCASE = new NotPassable(TYPE_HOUSE+"_BK");
-	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_HOUSE+"_STAIRS");
+	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_HOUSE+"_STAIRS",true);
 
 	static
 	{

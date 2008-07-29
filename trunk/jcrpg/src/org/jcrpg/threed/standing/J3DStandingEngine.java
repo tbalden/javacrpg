@@ -301,7 +301,7 @@ public class J3DStandingEngine {
 			if (n[i].model.type == Model.PARTLYBILLBOARDMODEL) {
 				needsFarviewScale = false;
 			}
-			n[i].setLocalTranslation(new Vector3f(cX,cY,cZ));
+			n[i].setLocalTranslation(new Vector3f(cX+n[i].model.disposition[0],cY+n[i].model.disposition[1],cZ+n[i].model.disposition[2]));
 			
 			boolean groundTileModel = true;
 			if (!(n[i].model instanceof SimpleModel) || !((SimpleModel)n[i].model).generatedGroundModel)
