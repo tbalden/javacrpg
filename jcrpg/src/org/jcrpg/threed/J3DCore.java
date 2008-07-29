@@ -1206,15 +1206,30 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Vector3f getCurrentLocation()
 	{
 		float middleHeight = 0;
-		boolean cubeH = false;
+		boolean cubeMiddleHeight = false;
 		try
 		{
-			Cube c = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false); 
+			Cube c = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false);
 			middleHeight = c.middleHeight;
-			cubeH = c.cornerHeights!=null;
+			cubeMiddleHeight = c.cornerHeights!=null;
+			if (c.sides!=null)
+			for (Side[] sides: c.sides)
+			{
+				if (sides!=null)
+				for (Side s:sides)
+				{
+					if (s!=null)
+					if (s.subtype.overrideGeneratedTileMiddleHeight)
+					{
+						cubeMiddleHeight = false;
+						break;
+					}
+				}
+			}
 		} catch (Exception ex){}; 
 		float bonus = (gameState.getCurrentRenderPositions().onSteep?1.5f:0f);
-		if (cubeH)
+		float middleHeightBonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
+		if (cubeMiddleHeight || middleHeightBonus>bonus)
 		{
 			bonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
 		}

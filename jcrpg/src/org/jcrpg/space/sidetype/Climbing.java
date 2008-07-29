@@ -21,6 +21,9 @@ public class Climbing extends SideSubType {
 	public Climbing(String id) {
 		super(id);
 	}
+	public Climbing(String id, boolean overrideGeneratedTileMiddleHeight) {
+		super(id,overrideGeneratedTileMiddleHeight);
+	}
 
 	public Climbing(String id, byte[] color) {
 		super(id, color);

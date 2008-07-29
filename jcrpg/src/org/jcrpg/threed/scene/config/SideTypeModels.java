@@ -529,7 +529,12 @@ public class SideTypeModels {
 		// eco grass with no plants on it
 		hm3dTypeRenderedSide.put(new Integer(48), new RenderedSide(new Model[]{sm_grass}));
 		
-		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{qm_road_stone}));
+		
+		SimpleModel sm_external_ground_house_1 = new SimpleModel("models/external/House_01_externalgr.obj",null);
+		sm_external_ground_house_1.disposition = new float[]{0,-1f,0};
+		//sm_jungle.rotateOnSteep = false; sm_jungle.generatedGroundModel = true; sm_jungle.rotateOnSteep = false; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
+		sm_external_ground_house_1.rotateOnSteep = false;
+		hm3dTypeRenderedSide.put(new Integer(3), new RenderedSide(new Model[]{sm_external_ground_house_1}));//qm_road_stone}));
 		//hm3dTypeRenderedSide.put(new Integer(3), new RenderedHashAlteredSide(new Model[]{qm_road_stone}, new Model[][]{{sm_wolf,sm_warthog,sm_gorilla,sm_fox}}));
 		hm3dTypeRenderedSide.put(new Integer(29), new RenderedSide(new Model[]{qm_house_wood}));
 		hm3dTypeRenderedSide.put(new Integer(4), new RenderedSide("sides/ceiling_pattern1.3ds",null));
@@ -677,8 +682,9 @@ public class SideTypeModels {
 		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
 		sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
-		SimpleModel sm_extsteps = new SimpleModel("models/external/ext_steps.obj",null);
-		sm_extsteps.batchEnabled = false;
+		SimpleModel sm_extsteps = new SimpleModel("models/external/House_01_steps_wooden.obj",null);
+		//sm_extsteps.disposition = new float[] {0,-1f,0};
+		//sm_extsteps.batchEnabled = false;
 		//sm_extsteps.farViewEnabled = true;
 		hm3dTypeRenderedSide.put(new Integer(47), new RenderedSide(new Model[]{sm_extsteps}));
 		

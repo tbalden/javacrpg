@@ -42,7 +42,7 @@ public class EconomicGround extends Economic {
 
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
 	
-	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS");
+	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
 	static
 	{
 		SUBTYPE_STAIRS.audioStepType = AudioServer.STEP_STONE;
