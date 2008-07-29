@@ -17,6 +17,8 @@
 
 package org.jcrpg.threed.scene.model;
 
+import org.jcrpg.threed.NodePlaceholder;
+
 
 public class SimpleModel extends Model {
 
@@ -45,4 +47,16 @@ public class SimpleModel extends Model {
 		this.mipMap = mipMap;
 		
 	}
+	@Override
+	public String getId(NodePlaceholder place) {
+		
+		if (!generatedGroundModel)
+		{
+			return super.getId(place);
+		}
+		// TODO height value dependent texture!
+		return super.getId(place);
+	}
+	
+	
 }

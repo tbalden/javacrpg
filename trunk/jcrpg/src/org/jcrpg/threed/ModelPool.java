@@ -85,7 +85,7 @@ public class ModelPool {
 		String key = model.id+(rotated)+rc.cube.internalCube;
 		if (place.model.type==Model.SIMPLEMODEL && ((SimpleModel)place.model).generatedGroundModel && place.neighborCubeData!=null && place.neighborCubeData.getTextureKeyPartForBatch()!=null)
 		{
-			key+=place.cube.cube.cornerHeights.hashCode();
+			key+=place.neighborCubeData.getTextureKeyPartForBatch();
 		}
 		
 		PoolItemContainer cont = pool.get(key);
@@ -97,6 +97,7 @@ public class ModelPool {
 				if (cont.notUsed.iterator().hasNext()) {
 					// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("++ FROM POOL MODEL!"+model.id);
 					PooledNode n = cont.notUsed.iterator().next();
+					n.update(place);
 					cont.notUsed.remove(n);
 					cont.used.add(n);
 					return n;

@@ -18,6 +18,7 @@
 
 package org.jcrpg.threed.jme;
 
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 
@@ -47,6 +48,11 @@ public class PooledImposterNode extends ImposterNode implements PooledNode {
 
 	public void setPooledContainer(PoolItemContainer cont) {
 		this.cont = cont;
+	}
+
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -77,18 +77,26 @@ public class GeoTileLoader {
 		public void setPooledContainer(PoolItemContainer cont) {
 			pic = cont;
 		}
+
+		public void update(NodePlaceholder place) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	
 	public class PooledPassNode extends PassNode implements PooledNode
 	{
 
-		public PooledPassNode() {
+		TiledTerrainBlock block;
+		public PooledPassNode(TiledTerrainBlock block) {
 			super();
+			this.block = block;
 		}
 
-		public PooledPassNode(String arg0) {
+		public PooledPassNode(String arg0,TiledTerrainBlock block) {
 			super(arg0);
+			this.block = block;
 		}
 
 		/**
@@ -104,6 +112,16 @@ public class GeoTileLoader {
 
 		public void setPooledContainer(PoolItemContainer cont) {
 			pic = cont;			
+		}
+
+		public void update(NodePlaceholder place) {
+			if (place.neighborCubeData==null)
+			{
+				place.neighborCubeData = getNeighborCubes(place);
+			}
+			int[][] maps = getHeightMaps(place);
+			block.setHeightMaps(maps);
+			block.updateFromHeightMap();			
 		}
 		
 	}
@@ -330,9 +348,8 @@ public class GeoTileLoader {
 		
 	}
 	
-	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
+	public int[][] getHeightMaps(NodePlaceholder nodePlaceholder)
 	{
-
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
 		float[] cornerHeights = rCube.cube.cornerHeights;
@@ -419,8 +436,19 @@ public class GeoTileLoader {
 				}
 			}
 		}
+		return new int[][]{map,bigMap};
 		
-		TiledTerrainBlock block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),map,bigMap,new Vector3f(0f,0,0f),false);
+	}
+	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
+	{
+
+		NeighborCubeData data = nodePlaceholder.neighborCubeData;//getNeighborCubes(nodePlaceholder);
+		
+		int[][] heightMaps = getHeightMaps(nodePlaceholder);
+		
+		TiledTerrainBlock block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+		SimpleModel model = (SimpleModel)nodePlaceholder.model;
+		RenderedCube rCube = nodePlaceholder.cube;
 		
 		
 		String oppositeTexture = data.oppositeGroundTexture;
@@ -458,7 +486,7 @@ public class GeoTileLoader {
 			} else
 			if (splatNodeNeeded)
 			{
-				splattingPassNode = new PooledPassNode("SplatPassNode");
+				splattingPassNode = new PooledPassNode("SplatPassNode",block);
 				//l.core.gameState.getCurrentStandingEngine().extRootNode
 			    TextureState ts1 = createSplatTextureState(
 			                o.textureName, null);

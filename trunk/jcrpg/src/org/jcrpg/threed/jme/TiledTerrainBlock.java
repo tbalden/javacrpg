@@ -53,6 +53,7 @@ package org.jcrpg.threed.jme;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 
@@ -803,6 +804,10 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     public void setHeightMap(int[] heightMap) {
         this.heightMap = heightMap;
     }
+    public void setHeightMaps(int[][] heightMaps) {
+        this.heightMap = heightMaps[0];
+        this.helperHeightMap = heightMaps[1];
+    }
 
     /**
      * Updates the block's vertices and normals from the current height map
@@ -822,6 +827,16 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
                         (x + (y * size)));
             }
         }
+        
+        for (int x = 0; x < helperSize; x++) {
+            for (int y = 0; y < helperSize; y++) {
+                point.set(x * stepScale.x, helperHeightMap[x + (y * helperSize)]
+                        * stepScale.y, y * stepScale.z);
+                BufferUtils.setInBuffer(point, helperBatch.getVertexBuffer(),
+                        (x + (y * helperSize)));
+            }
+        }
+        
         buildNormals();
 
         if (batch.getVBOInfo() != null) {
@@ -938,6 +953,11 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
 
 	public void setPooledContainer(PoolItemContainer cont) {
 		pic = cont;
+		
+	}
+
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
 		
 	}
 }

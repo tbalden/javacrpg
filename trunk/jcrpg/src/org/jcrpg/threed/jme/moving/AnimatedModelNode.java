@@ -39,6 +39,7 @@ import model.animation.SkeletalAnimationController;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
@@ -364,6 +365,12 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				animator.fadeOut(0.6f, true);
 			}
 		}
+	}
+
+
+	public void update(NodePlaceholder place) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
