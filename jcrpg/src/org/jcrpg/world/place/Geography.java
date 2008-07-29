@@ -274,6 +274,7 @@ public class Geography extends Place implements Surface {
 		c.z = worldZ;
 		c.cornerHeights = kind;
 		c.middleHeight = (kind[0]+kind[1]+kind[2]+kind[3])/4f;
+		c.angleRatio = Math.max( Math.abs(kind[0]-kind[2]) , Math.max( Math.abs(kind[1]-kind[3]) , Math.max( Math.abs(kind[0]-kind[1]) , Math.abs(kind[2]-kind[3]))));
 		c.geoCubeKind = (int)kind[4];
 		return c;
 	}

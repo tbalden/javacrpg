@@ -113,12 +113,14 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		
 		[ ] fix edges color not fitting WHY??
 		
-		[ ] add extra texture names in SimpleModel for different height ratios,
+		[X] add extra texture names in SimpleModel for different height ratios,
 				add simpleModel function to get Height based texture name or default one
 				-> blending based on steepness - rocky side.
 				
 				Use SimpleModel.getId(place) to generate different cache key for that
 				and add a getTexture(place) - use cornerheights
+	
+			[ ] edges are not blended correctly! - maybe caching problem!
 	
 	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
 

@@ -35,6 +35,7 @@ public class Cube extends ChangingImpl {
 	
 	public float[] cornerHeights = null;
 	public float middleHeight = 0;
+	public float angleRatio = 0;
 	             
 	/**
 	 * Tells if this cubes (if is an economic cube) needs further climate and water rendering onto it.
@@ -221,6 +222,7 @@ public class Cube extends ChangingImpl {
 		fillSideFields();
 		if (c2.cornerHeights!=null) cornerHeights = c2.cornerHeights;
 		middleHeight = c2.middleHeight!=0?c2.middleHeight:middleHeight;
+		angleRatio = Math.max(c2.angleRatio,angleRatio);
 		onlyIfOverlaps = newOnlyIfOverlaps;
 		overwritePower = newOverwritePower;
 		steepDirection = newSteepDirection;
@@ -338,6 +340,7 @@ public class Cube extends ChangingImpl {
 		if (c1.cornerHeights!=null) this.cornerHeights = c1.cornerHeights;
 		if (c2.cornerHeights!=null) this.cornerHeights = c2.cornerHeights;
 		middleHeight = c1.middleHeight!=0?c1.middleHeight:c2.middleHeight;
+		angleRatio = Math.max(c2.angleRatio,c1.angleRatio);
 		fillSideFields();
 		
 	}
@@ -424,6 +427,7 @@ public class Cube extends ChangingImpl {
 		c.cornerHeights = cornerHeights;
 		c.middleHeight = middleHeight;
 		c.canHoldUnit = canHoldUnit;
+		c.angleRatio = angleRatio;
 		return c;
 	}
 	

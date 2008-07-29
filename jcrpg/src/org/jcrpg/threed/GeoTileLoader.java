@@ -277,6 +277,7 @@ public class GeoTileLoader {
 		public float adjacentDeltaY;
 		public float oppAdjDeltaY;
 		
+		public String ownGroundTexture = null;
 		public String adjacentGroundTexture = null;
 		public String oppositeGroundTexture = null;
 		public String oppAdjGroundTexture = null;
@@ -291,7 +292,7 @@ public class GeoTileLoader {
 					SimpleModel sm = (SimpleModel)n.model;
 					if (sm.generatedGroundModel)
 					{
-						return sm.textureName;
+						return sm.getTexture(n);
 					}
 				}
 			}
@@ -313,6 +314,7 @@ public class GeoTileLoader {
 				// scenario. This 'if' above can be removed if solution found...
 				// Seems like they are wrongly positioned, generated in farview???
 				String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
+				ownGroundTexture = originalTexture;
 				oppositeGroundTexture = getGeneratedGeoTileTextureNameFromCube(opposite);
 				adjacentGroundTexture = getGeneratedGeoTileTextureNameFromCube(adjacent);
 				oppAdjGroundTexture = getGeneratedGeoTileTextureNameFromCube(oppAdj);
@@ -450,7 +452,7 @@ public class GeoTileLoader {
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
 		
-		
+		String ownTexture = data.ownGroundTexture;
 		String oppositeTexture = data.oppositeGroundTexture;
 		String adjacentTexture = data.adjacentGroundTexture;
 		String oppAdjTexture = data.oppAdjGroundTexture;
@@ -461,21 +463,21 @@ public class GeoTileLoader {
 		
 		PassNode splattingPassNode = null;
 		
-		if (o.textureName!=null)
+		if (ownTexture!=null)
 		{
 			if (data.getTextureKeyPartForBatch()==null)
 			{
 			
-				Texture texture = (Texture)ModelLoader.textureCache.get(o.textureName);
+				Texture texture = (Texture)ModelLoader.textureCache.get(ownTexture);
 				
 				if (texture==null) {
-					texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+o.textureName,Texture.MM_LINEAR,
+					texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+ownTexture,Texture.MM_LINEAR,
 		                    Texture.FM_LINEAR);
 	
 					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 					texture.setApply(Texture.AM_MODULATE);
 					texture.setRotation(J3DCore.qTexture);
-					ModelLoader.textureCache.put(o.textureName, texture);
+					ModelLoader.textureCache.put(ownTexture, texture);
 				}
 	
 				TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
@@ -489,40 +491,25 @@ public class GeoTileLoader {
 				splattingPassNode = new PooledPassNode("SplatPassNode",block);
 				//l.core.gameState.getCurrentStandingEngine().extRootNode
 			    TextureState ts1 = createSplatTextureState(
-			                o.textureName, null);
-	
-			       //TextureState ts1 = createSplatTextureState(
-			         //       "./data/test/baserock.jpg", null);
-
-			        //TextureState ts2 = createSplatTextureState(
-			          //      "darkrock.jpg",
-			            //    "darkrockalpha.png");
-
-			        //TextureState ts3 = createSplatTextureState(
-			          //      "deadgrass.jpg",
-			            //    "deadalpha.png");
-
-			        //TextureState ts4 = createSplatTextureState(
-			          //      "nicegrass.jpg",
-			            //    "grassalpha.png");
+			    		ownTexture, null);
 
 		        TextureState tsOpp = null;
 		        
-		        if (oppositeTexture!=null && !oppositeTexture.equals(o.textureName)) {
+		        if (oppositeTexture!=null && !oppositeTexture.equals(ownTexture)) {
 			        tsOpp = createSplatTextureState(
 			                oppositeTexture,
 			                "blendAlphaAdj1.png");
 		        }
 		        TextureState tsAdj = null;
 		        
-		        if (adjacentTexture!=null && !adjacentTexture.equals(o.textureName)) {
+		        if (adjacentTexture!=null && !adjacentTexture.equals(ownTexture)) {
 		        	tsAdj = createSplatTextureState(
 			        		adjacentTexture,
 			                "blendAlphaOpp1.png");
 		        }
 		        TextureState tsOppAdj = null;
 		        
-		        if (oppAdjTexture!=null && !oppAdjTexture.equals(o.textureName)) {
+		        if (oppAdjTexture!=null && !oppAdjTexture.equals(ownTexture)) {
 		        	tsOppAdj = createSplatTextureState(
 			        		oppAdjTexture,
 			                "blendAlphaOppAdj1.png");

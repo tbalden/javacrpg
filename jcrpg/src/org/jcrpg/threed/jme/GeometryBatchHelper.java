@@ -75,13 +75,13 @@ public class GeometryBatchHelper {
     		{
     			if (sm.generatedGroundModel)
     			{
-    				key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    				key = m.type+sm.getTexture(place)+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     				if (place.neighborCubeData==null)
     					place.neighborCubeData = GeoTileLoader.getNeighborCubes(place);
     				key+=place.neighborCubeData.getTextureKeyPartForBatch();
     			} else
     			{
-    				key = m.type+sm.textureName+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    				key = m.type+sm.getTexture(place)+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
     			}
     		}
     		if (sm.xGeomBatchSize==-1) 
