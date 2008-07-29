@@ -498,14 +498,14 @@ public class GeoTileLoader {
 		        if (oppositeTexture!=null && !oppositeTexture.equals(ownTexture)) {
 			        tsOpp = createSplatTextureState(
 			                oppositeTexture,
-			                "blendAlphaAdj1.png");
+			                "blendAlphaAdj1a.png");
 		        }
 		        TextureState tsAdj = null;
 		        
 		        if (adjacentTexture!=null && !adjacentTexture.equals(ownTexture)) {
 		        	tsAdj = createSplatTextureState(
 			        		adjacentTexture,
-			                "blendAlphaOpp1.png");
+			                "blendAlphaOpp1a.png");
 		        }
 		        TextureState tsOppAdj = null;
 		        
@@ -554,7 +554,7 @@ public class GeoTileLoader {
 			        splattingPassNode.lockTransforms();
 			        splattingPassNode.lockShadows();
 
-			        block.copyTextureCoords(0, 0, 1, 1);
+			        block.copyTextureCoords(0, 0, 1, 0.999f);
 			}
 			
 		} else 
@@ -602,9 +602,9 @@ public class GeoTileLoader {
 		        URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, texture);
 		        t0 = TextureManager.loadTexture(u,
 		                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		        t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		        //t0.setWrap(Texture.WM_CLAMP_S_CLAMP_T);//WM_WRAP_S_WRAP_T);
 		        t0.setApply(Texture.AM_MODULATE);
-		        t0.setScale(new Vector3f(1f, 1f, 1.0f));
+		        //t0.setScale(new Vector3f(1f, 1f, 1.0f));
 		        splatTextureCache.put(texture, t0);
 	    	} 
 	        ts.setTexture(t0, 0);
@@ -629,7 +629,7 @@ public class GeoTileLoader {
         		
     	        t1 = TextureManager.loadTexture(u, Texture.MM_LINEAR_LINEAR,
     	                Texture.FM_LINEAR);
-    	        t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
+    	        //t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
     	        t1.setApply(Texture.AM_COMBINE);
     	        t1.setCombineFuncRGB(Texture.ACF_REPLACE);
     	        t1.setCombineSrc0RGB(Texture.ACS_PREVIOUS);

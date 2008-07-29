@@ -143,8 +143,10 @@ public class AnimatedModelViewer extends SimplePassGame{
         lightState.detachAll();
     	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/models/fauna/gorilla").toURI());
     	SimpleResourceLocator loc2 = new SimpleResourceLocator( new File("./data/textures/common").toURI());
+    	SimpleResourceLocator loc3 = new SimpleResourceLocator( new File("./data/textures/low").toURI());
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc1);
        ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc2);
+       ResourceLocatorTool.addResourceLocator(ResourceLocatorTool.TYPE_TEXTURE, loc3);
        MovingModelAnimDescription des = new MovingModelAnimDescription();
        des.IDLE = anim;
        
@@ -247,8 +249,8 @@ public class AnimatedModelViewer extends SimplePassGame{
                 "grassalpha.png");
 
         TextureState ts5 = createSplatTextureState(
-                "road.jpg",
-                "blendAlphaOppAdj1.png");
+                "sand2.jpg",
+                "blendAlphaOpp1.png");
        // TextureState ts6 = createLightmapTextureState("./data/test/lightmap.jpg");
 
 

@@ -34,6 +34,8 @@ public class Economic extends Geography {
 	public boolean overrideGeoHeight() {
 		return true;
 	}
+	
+	public boolean needsFlora = true;
 
 	public Geography soilGeo = null;
 	public EntityInstance owner = null;
