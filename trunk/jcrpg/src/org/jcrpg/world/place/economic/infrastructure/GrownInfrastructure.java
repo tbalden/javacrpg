@@ -78,7 +78,7 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				p.relOrigoY = 0;
 				p.relOrigoZ = lastStreetBlockZ*BUILDING_BLOCK_SIZE;
 				p.sizeX = BUILDING_BLOCK_SIZE;
-				p.sizeY = (blockUsed%5)/2+1;
+				p.sizeY = (blockUsed%5)/4+1;
 				p.sizeZ = BUILDING_BLOCK_SIZE;
 				if (blockUsed%2==0) {
 					p.type = groundTypes.get(0);

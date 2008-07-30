@@ -109,6 +109,34 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	-- TILING THINGS:
 	
+
+	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
+	
+	[ ] Check Zphr's new house model tiles!!
+		[X] add grounds, steps
+		[ ] add new house 
+
+	
+	[-] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
+
+	[-] add some 'randmoness' in gimp to edges of alpha mask
+	
+	[X] camera positioning -> override middle height if it's specified by the cube
+	
+	-- QA/DOC
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
+	
+	--
+	[-] rewrite the whole geo -> tile thing to a heighmap based alpha splatted TerrainBlock thing!
+		- loading should get through the geographies of zones, getting all the surface height
+		and genTile types (texture types). It should then generate an alphamask for a texture splatting.
+		Each texture type should have an own alphamask generated.
+		??? - you will need a good image creator for that
+		
+	
+
 	[X] find a good solution for terrain transition --> use GLSL shader of momokofan??
 		http://www.jmonkeyengine.com/jmeforum/index.php?topic=6870.0
 		
@@ -123,25 +151,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 				Use SimpleModel.getId(place) to generate different cache key for that
 				and add a getTexture(place) - use cornerheights
 		[X] edges are not blended correctly! - maybe caching problem!
-		
-		[ ] add some 'randmoness' in gimp to edges of alpha mask
-	
-	[ ] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
-
-	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
-	
-	[ ] Check Zphr's new house model tiles!!
-		[X] add grounds, steps
-		[ ] add new house 
-	
-	[X] camera positioning -> override middle height if it's specified by the cube
-	
-	-- QA/DOC
-
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
-	
-	--
 
 	[X] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
 		maybe override can then be removed for economics ->

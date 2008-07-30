@@ -69,6 +69,11 @@ public class EconomyContainer {
 				Economic eco = (Economic)o;
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
 					Cube c = eco.getCube(key, worldX, worldY, worldZ, farView);
+					/*if (c!=null && c.internalEconomicUnitForFloraQuery!=null && c.internalEconomicUnitForFloraQuery instanceof EconomicGround)
+					{
+						System.out.println(c.canContainFlora);
+					}*/
+						
 					if (c!=null && c.canContainFlora)
 					{
 						CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);

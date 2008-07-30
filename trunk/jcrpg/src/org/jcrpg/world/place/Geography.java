@@ -53,7 +53,7 @@ public class Geography extends Place implements Surface {
 	 */
 	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
 	
-	public int worldGroundLevel, worldHeight, blockSize, worldRealHeight;
+	public int worldGroundLevel, worldHeight, blockSize, worldRelHeight;
 	
 	/**
 	 * Determines if this geography should be used in the first place for get outside geoheight call.
@@ -189,11 +189,11 @@ public class Geography extends Place implements Surface {
 	}
 	public Geography(String id, Place parent,PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id,parent, loc);
-		worldRealHeight = worldHeight - worldGroundLevel;
+		worldRelHeight = worldHeight - worldGroundLevel;
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.worldRealHeight = worldHeight - worldGroundLevel;
+		this.worldRelHeight = worldHeight - worldGroundLevel;
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+worldRealHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
@@ -557,7 +557,7 @@ public class Geography extends Place implements Surface {
 	public int[] calculateTransformedCoordinates(int worldX, int worldY, int worldZ)
 	{
 		// 0 realSizeX, 1 realsizeY, 2 realSizeZ, 3 relX, 4 relY, 5 relZ 
-		return new int[]{blockSize,worldRealHeight,blockSize,worldX%blockSize,worldY-worldGroundLevel,worldZ%blockSize};
+		return new int[]{blockSize,worldRelHeight,blockSize,worldX%blockSize,worldY-worldGroundLevel,worldZ%blockSize};
 	}
 
 	/**

@@ -231,35 +231,39 @@ public class GeoTileLoader {
 				}
 			}
 		} 
-
-		
-		int oppAdjXDir = +1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST		
-		int oppAdjZDir = -1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST
+		RenderedCube oppAdj = null;
 		float oppAdjDeltaY = 0f;
-		//boolean oppAdjGood = true;
-		RenderedCube oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY, worldZ+oppAdjZDir, nodePlaceholder.farView);
-		if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
+		if (J3DCore.TEXTURE_SPLATTING)
 		{
-			oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
-			oppAdjDeltaY=yGap;
+			
+			int oppAdjXDir = +1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST		
+			int oppAdjZDir = -1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST
+			
+			//boolean oppAdjGood = true;
+			oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY, worldZ+oppAdjZDir, nodePlaceholder.farView);
 			if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 			{
-				oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
-				oppAdjDeltaY=-yGap;
+				oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+				oppAdjDeltaY=yGap;
 				if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 				{
-					oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
-					oppAdjDeltaY=2*yGap;
+					oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+					oppAdjDeltaY=-yGap;
 					if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 					{
-						oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
-						oppAdjDeltaY=-2*yGap;
+						oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY+2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+						oppAdjDeltaY=2*yGap;
 						if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
 						{
-							//oppAdjGood = false;
-							oppAdj = null;
-						}
-					} 
+							oppAdj = cache.getCubeAtPosition(nodePlaceholder.cube.world, worldX+oppAdjXDir, worldY-2*yGap, worldZ+oppAdjZDir, nodePlaceholder.farView);
+							oppAdjDeltaY=-2*yGap;
+							if (oppAdj==null || oppAdj.cube==null || oppAdj.cube.cornerHeights==null || !checkHeightOppAdj(cornerHeights, oppAdj.cube.cornerHeights, oppAdjDeltaY))
+							{
+								//oppAdjGood = false;
+								oppAdj = null;
+							}
+						} 
+					}
 				}
 			}
 		}
@@ -308,13 +312,13 @@ public class GeoTileLoader {
 			this.opposite = opposite;
 			this.adjacent = adjacent;
 			this.oppAdj = oppAdj;
-			if (!original.farview)
+			String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
+			ownGroundTexture = originalTexture;
+			if (J3DCore.TEXTURE_SPLATTING && !original.farview)
 			{
 				// TODO with farview the generated ground tiles are not correctly removed from
 				// scenario. This 'if' above can be removed if solution found...
 				// Seems like they are wrongly positioned, generated in farview???
-				String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
-				ownGroundTexture = originalTexture;
 				oppositeGroundTexture = getGeneratedGeoTileTextureNameFromCube(opposite);
 				adjacentGroundTexture = getGeneratedGeoTileTextureNameFromCube(adjacent);
 				oppAdjGroundTexture = getGeneratedGeoTileTextureNameFromCube(oppAdj);
@@ -332,6 +336,7 @@ public class GeoTileLoader {
 		
 		public String getTextureKeyPartForBatch()
 		{
+			
 			return textureKeyPart;
 		}
 		

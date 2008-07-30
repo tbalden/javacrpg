@@ -44,7 +44,7 @@ public abstract class AbstractInfrastructure {
 	public int maxBlocks = 0;
 	public int maxBlocksOneDim = 0;
 		
-	public int maxInhabitantPerBlock = 4;
+	public int maxInhabitantPerBlock = 6;
 	public int maxLevelsOfBuildings = 3;
 	
 	public int BUILDING_BLOCK_SIZE = 4;

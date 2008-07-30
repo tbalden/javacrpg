@@ -34,6 +34,7 @@ package org.jcrpg.apps;
 
 import java.io.File;
 
+import org.jcrpg.threed.jme.TextureCreator;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
@@ -236,7 +237,7 @@ public class AnimatedModelViewer extends SimplePassGame{
         TextureState ts1 = createSplatTextureState(
                 "jungle.jpg", null);
 
-        TextureState ts2 = createSplatTextureState(
+        /*TextureState ts2 = createSplatTextureState(
                 "darkrock.jpg",
                 "darkrockalpha.png");
 
@@ -247,7 +248,7 @@ public class AnimatedModelViewer extends SimplePassGame{
         TextureState ts4 = createSplatTextureState(
                 "nicegrass.jpg",
                 "grassalpha.png");
-
+*/
         TextureState ts5 = createSplatTextureState(
                 "sand2.jpg",
                 "blendAlphaOpp1.png");
@@ -262,11 +263,9 @@ public class AnimatedModelViewer extends SimplePassGame{
         TerrainBlock page = new TerrainBlock("Terrain", 2, terrainScale 
                 , new int[2*2], new Vector3f(),false);
         page.getLocalTranslation().set(0, -9.5f, 0);
-        page.setDetailTexture(1, 1);
-
-        Box b = new Box("",new Vector3f(),1,1,1);
-        b.copyTextureCoords(0, 0, 1, 1);
-        q.copyTextureCoords(0, 0, 1, 1);
+        //q.setRenderState(as);
+        //page.setRenderState(as);
+        //page.setDetailTexture(1, 1);
         
         splattingPassNode.attachChild(page);
 
@@ -292,10 +291,13 @@ public class AnimatedModelViewer extends SimplePassGame{
         passNodeState.setPassState(as);
         splattingPassNode.addPass(passNodeState);
 */
-        passNodeState = new PassNodeState();
-        passNodeState.setPassState(ts5);
-        passNodeState.setPassState(as);
-        splattingPassNode.addPass(passNodeState);
+        if (true==true)
+        {
+	        passNodeState = new PassNodeState();
+	        passNodeState.setPassState(ts5);
+	        passNodeState.setPassState(as);
+	        splattingPassNode.addPass(passNodeState);
+        }
 
         //splattingPassNode.set
         //passNodeState = new PassNodeState();
@@ -310,10 +312,19 @@ public class AnimatedModelViewer extends SimplePassGame{
         //splattingPassNode.lockShadows();
 
         //splatTerrain = splattingPassNode;
-        q.updateRenderState();
+
+        page.updateRenderState();
         splattingPassNode.setLocalTranslation(new Vector3f(3f,0,0));
-        
+        //rootNode.attachChild(page);
         rootNode.attachChild(splattingPassNode);
+        
+        //page.setLocalTranslation(new Vector3f(3f,3,0));
+        //page.setRenderState(ts1);
+        q.setRenderState(ts1);
+        page.updateRenderState();
+        q.updateRenderState();
+        //rootNode.attachChild(q);
+        
         rootNode.updateRenderState();
         rootNode.attachChild(lightNode);
         RenderPass rootPass = new RenderPass();
@@ -339,14 +350,15 @@ public class AnimatedModelViewer extends SimplePassGame{
   
     private TextureState createSplatTextureState(String texture, String alpha) {
         TextureState ts = display.getRenderer().createTextureState();
-
-        Texture t0 = TextureManager.loadTexture(texture,
-                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-        t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
-        t0.setApply(Texture.AM_MODULATE);
-        t0.setScale(new Vector3f(1.f,1.f, 1.0f));
+        boolean[][] data = new boolean[50][50];
+        Texture t0 = TextureCreator.newAlphaMaskTexture(data);
+        //Texture t0 = TextureManager.loadTexture(texture,
+          //   Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+        //t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
+        //t0.setApply(Texture.AM_MODULATE);
+        //t0.setScale(new Vector3f(1.f,1.f, 1.0f));
         ts.setTexture(t0, 0);
-
+        ts.apply();
         if (alpha != null) {
             addAlphaSplat(ts, alpha);
         }
@@ -355,9 +367,14 @@ public class AnimatedModelViewer extends SimplePassGame{
     }
 
     private void addAlphaSplat(TextureState ts, String alpha) {
-        Texture t1 = TextureManager.loadTexture(alpha, Texture.MM_LINEAR_LINEAR,
-                Texture.FM_LINEAR);
-        //t1.setScale(new Vector3f(10.f,10.f, 1.0f));
+    	boolean[][] data = new boolean[256][256];
+    	data[3][3] = true;
+        Texture t1 = TextureCreator.newAlphaMaskTexture(data);
+        	
+        	
+        	//TextureManager.loadTexture(alpha, Texture.MM_LINEAR_LINEAR,
+              //  Texture.FM_LINEAR);
+        //t1.setScale(new Vector3f(1110.01f,1110.01f, 1110.01f));
         t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
         t1.setApply(Texture.AM_COMBINE);
         t1.setCombineFuncRGB(Texture.ACF_REPLACE);
@@ -365,6 +382,7 @@ public class AnimatedModelViewer extends SimplePassGame{
         t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
         t1.setCombineFuncAlpha(Texture.ACF_REPLACE);
         ts.setTexture(t1, ts.getNumberOfSetTextures());
+        ts.apply();
     }
 
 
