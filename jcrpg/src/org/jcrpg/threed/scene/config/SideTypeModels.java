@@ -419,22 +419,34 @@ public class SideTypeModels {
 		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
 		//SimpleModel entrance_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		
+		SimpleModel wall_door_wall_wooden = new SimpleModel("models/external/House_01_door.obj", null);
+		wall_door_wall_wooden.shadowCaster = true;
+		wall_door_wall_wooden.cullNone = true;
+		SimpleModel wall_wooden = new SimpleModel("models/external/House_01_wall.obj", null);
+		wall_wooden.shadowCaster = true;
+		wall_wooden.cullNone = true;
+		SimpleModel wall_window_wooden = new SimpleModel("models/external/House_01_window.obj", null);
+		wall_window_wooden.shadowCaster = true;
+		wall_window_wooden.cullNone = true;
 		hm3dTypeRenderedSide.put(new Integer(1), new RenderedContinuousSide(
-				new SimpleModel[]{wall_thick},
+				new SimpleModel[]{wall_wooden},
 				new SimpleModel[]{roof_side},
 				new SimpleModel[]{roof_corner},
 				new SimpleModel[]{roof_opp},
 				new SimpleModel[]{roof_non}
 				));
+		
 		hm3dTypeRenderedSide.put(new Integer(5), new RenderedContinuousSide(
-				new SimpleModel[]{wall_door,wall_door_wall},
+				//new SimpleModel[]{wall_door,wall_door_wall},
+				new SimpleModel[]{wall_door_wall_wooden},
 				new SimpleModel[]{roof_side},
 				new SimpleModel[]{roof_corner},
 				new SimpleModel[]{roof_opp},
 				new SimpleModel[]{roof_non}
 				));
 		hm3dTypeRenderedSide.put(new Integer(6), new RenderedContinuousSide(
-				new SimpleModel[]{wall_window,new SimpleModel("sides/window1.3ds", null)},
+				//new SimpleModel[]{wall_window,new SimpleModel("sides/window1.3ds", null)},
+				new SimpleModel[]{wall_window_wooden},				
 				new SimpleModel[]{roof_side},
 				new SimpleModel[]{roof_corner},
 				new SimpleModel[]{roof_opp},

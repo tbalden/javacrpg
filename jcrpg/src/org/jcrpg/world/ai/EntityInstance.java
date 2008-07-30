@@ -133,7 +133,7 @@ public class EntityInstance {
 			InfrastructureElementParameters i = new InfrastructureElementParameters();
 			i.owner = p;
 			i.type = House.class;
-			i.sizeY = 6;		
+			i.sizeY = 3;
 			p.addOwnedInfrastructurePlan(i);
 			fixMembers.put("1", p);
 			fragments.fragments.get(0).addFollower(p);

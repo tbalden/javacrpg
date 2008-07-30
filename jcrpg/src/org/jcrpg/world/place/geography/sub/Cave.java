@@ -79,6 +79,7 @@ public class Cave extends Geography implements Surface {
 	
 	
 	public int density,entranceSide, levelSize;
+	public int maxLevels = 1;
 	
 	/**
 	 * If you want an all internal cubed cave set this to true - used for encoutner ground.
@@ -121,7 +122,7 @@ public class Cave extends Geography implements Surface {
 
 	private Cube getCubeBase(long key, int worldX, int worldY, int worldZ, boolean farView)
 	{
-		if (worldY>=worldHeight) return null;
+		if (worldY>=worldHeight || worldY>=worldGroundLevel+maxLevels*levelSize) return null;
 
 		
 		
@@ -212,8 +213,14 @@ public class Cave extends Geography implements Surface {
 			
 		}
 		
+
+		int cubesBelowGeoLevel = 1;
+		if ((relZ>realSizeZ-(+6) || relZ<(+6)) || (relX>realSizeX-(6) || relX<(+6)))
+		{
+			cubesBelowGeoLevel = 0;
+		}
 		
-		if (height+((World)getRoot()).worldGroundLevel<=worldY)
+		if (height+((World)getRoot()).worldGroundLevel-cubesBelowGeoLevel<=worldY)
 		{
 			return null;
 		}
@@ -230,7 +237,7 @@ public class Cave extends Geography implements Surface {
 			return c;
 		}
 		Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
-		if (worldRealHeight>1) {
+		if (worldRelHeight>1) {
 			if (relY%levelSize==0)
 				c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
 			else if (relY%levelSize==levelSize-1)
