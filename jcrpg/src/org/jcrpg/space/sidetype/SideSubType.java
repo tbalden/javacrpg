@@ -19,13 +19,34 @@ package org.jcrpg.space.sidetype;
 
 import org.jcrpg.audio.AudioServer;
 
+/**
+ * The side's sub element types like wall, ground etc. Other more detailed types
+ * are extending this, like GroundType, NotPassable, Climbing, StickingOut.
+ * @author illes
+ */
 public class SideSubType {
 
+	/**
+	 * Unique id for model mapping and such.
+	 */
 	public String id;
+	/**
+	 * Sound for walking.
+	 */
 	public String audioStepType = AudioServer.STEP_SOIL;
+	/**
+	 * Color on map.
+	 */
 	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
+	/**
+	 * Tells if this side's color is overwriting other colors on minimap.
+	 */
 	public boolean colorOverwrite = false;
 	
+	/**
+	 * Tells if this side is present middle height for camera positioning should be not used -
+	 * instead use the fix height of Steep or Ground.
+	 */
 	public boolean overrideGeneratedTileMiddleHeight = false;
 
 	public SideSubType(String id) {

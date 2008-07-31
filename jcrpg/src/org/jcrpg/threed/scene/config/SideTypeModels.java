@@ -62,6 +62,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
@@ -172,6 +173,20 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
 
+		
+		// WOODEN HOUSE
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_STAIRS.id, new Integer(46));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_INTERNAL_CEILING.id, new Integer(7));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_BOOKCASE.id, new Integer(28));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));		
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_WALL.id, new Integer(51));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_EXTERNAL_DOOR.id, new Integer(52));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_WINDOW.id, new Integer(53));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_CORNER.id, new Integer(54));
+		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_STRAIGHT.id, new Integer(55));
+
+		
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.shadowCaster = true;
@@ -706,7 +721,31 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(50), new RenderedSide(new Model[]{sm_ecostreet}));
 		//sm_ecostreet.steepTextureName = "hillside.png";
 
-// NEXT ID = 51
+		hm3dTypeRenderedSide.put(new Integer(51), new RenderedSide(
+				new SimpleModel[]{wall_wooden}
+				));		
+		hm3dTypeRenderedSide.put(new Integer(52), new RenderedSide(
+				new SimpleModel[]{wall_door_wall_wooden}
+				));
+		hm3dTypeRenderedSide.put(new Integer(53), new RenderedSide(
+				new SimpleModel[]{wall_window_wooden}
+				));
+		SimpleModel roof_corner_wooden = new SimpleModel("models/external/House_01_roof_corner.obj", null);
+		roof_corner_wooden.shadowCaster = true;
+		roof_corner_wooden.cullNone = true;
+		roof_corner_wooden.rotateAndLocate = true;
+		SimpleModel roof_straight_wooden = new SimpleModel("models/external/House_01_roof_straight.obj", null);
+		roof_straight_wooden.shadowCaster = true;
+		roof_straight_wooden.cullNone = true;
+		hm3dTypeRenderedSide.put(new Integer(54), new RenderedSide(
+				new SimpleModel[]{roof_corner_wooden}
+				));
+		hm3dTypeRenderedSide.put(new Integer(55), new RenderedSide(
+				new SimpleModel[]{roof_straight_wooden}
+				));
+
+		// NEXT ID = 
+		// 56
 		
 	}
 	

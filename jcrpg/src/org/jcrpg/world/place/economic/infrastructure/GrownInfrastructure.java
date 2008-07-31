@@ -3,6 +3,7 @@ package org.jcrpg.world.place.economic.infrastructure;
 import java.util.ArrayList;
 
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -85,6 +86,10 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				} else
 				{
 					p.type = residenceTypes.get(0);
+					if (p.sizeY<((Residence)EconomyTemplate.economicBase.get(p.type)).getMinimumHeight())
+					{
+						p.sizeY = ((Residence)EconomyTemplate.economicBase.get(p.type)).getMinimumHeight();
+					}
 					if (usedUpFixedProperties<fixProperties.size())
 					{
 						p.overwriteSelfWithPredifined(fixProperties.get(usedUpFixedProperties));

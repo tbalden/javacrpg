@@ -47,7 +47,12 @@ public class EconomicGround extends Economic {
 	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
 	static
 	{
+		SUBTYPE_STREETGROUND.audioStepType = AudioServer.STEP_STONE;
+		SUBTYPE_STREETGROUND.colorOverwrite = true;
+		SUBTYPE_STREETGROUND.colorBytes = new byte[] {(byte)150,(byte)150,(byte)150};
 		SUBTYPE_STAIRS.audioStepType = AudioServer.STEP_STONE;
+		SUBTYPE_STAIRS.colorOverwrite = true;
+		SUBTYPE_STAIRS.colorBytes = new byte[] {(byte)150,(byte)50,(byte)50};
 	}
 	static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
 	static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};

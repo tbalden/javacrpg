@@ -72,6 +72,9 @@ public abstract class Model {
 	 */
 	public boolean alwaysRenderBatch = false;
 	
+	/** Use disposition + rotation instead of just rotation for putting node into its side place.*/
+	public boolean rotateAndLocate = false; 
+	
 	public String getId(NodePlaceholder place)
 	{
 		return id;

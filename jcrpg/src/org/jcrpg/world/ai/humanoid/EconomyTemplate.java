@@ -28,6 +28,7 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.SimpleDistrict;
+import org.jcrpg.world.place.economic.WoodenHouse;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.
@@ -42,6 +43,7 @@ public class EconomyTemplate {
 	{
 		economicBase.put(SimpleDistrict.class, new SimpleDistrict());
 		economicBase.put(House.class, new House());
+		economicBase.put(WoodenHouse.class, new WoodenHouse());
 		economicBase.put(EconomicGround.class, new EconomicGround());
 	}
 	

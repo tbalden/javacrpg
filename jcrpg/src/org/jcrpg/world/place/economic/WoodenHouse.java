@@ -32,13 +32,17 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 
-public class House extends Residence {
+public class WoodenHouse extends Residence {
 
-	public static final String TYPE_HOUSE = "HOUSE";
+	public static final String TYPE_HOUSE = "WOODEN_HOUSE";
 	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_HOUSE+"_WALL");
 	public static final SideSubType SUBTYPE_INTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_INTERNAL_GROUND",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND",true);
 	public static final SideSubType SUBTYPE_INTERNAL_CEILING = new NotPassable(TYPE_HOUSE+"_INTERNAL_CEILING",true);
+	
+	public static final SideSubType SUBTYPE_ROOF_CORNER = new NotPassable(TYPE_HOUSE+"_ROOF_CORNER",true);
+	public static final SideSubType SUBTYPE_ROOF_STRAIGHT = new NotPassable(TYPE_HOUSE+"_ROOF_STRAIGHT",true);
+	
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_HOUSE+"_EXTERNAL_DOOR");
 	public static final SideSubType SUBTYPE_WINDOW = new NotPassable(TYPE_HOUSE+"_WINDOW");
 	public static final SideSubType SUBTYPE_BOOKCASE = new NotPassable(TYPE_HOUSE+"_BK");
@@ -57,6 +61,8 @@ public class House extends Residence {
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
 	static Side[] WINDOW = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_WINDOW)};
 	static Side[] STAIRS = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_STAIRS)};
+	static Side[] ROOF_CORNER = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_ROOF_CORNER)};
+	static Side[] ROOF_STRAIGHT = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_ROOF_STRAIGHT)};
 	
 	static Side[][] WALL_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null, null,null,null,null };
 	static Side[][] WALL_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,null };
@@ -81,20 +87,33 @@ public class House extends Residence {
 	static Side[][] WINDOW_GROUND_WEST = new Side[][] { null, null,null,WINDOW, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	
 	static Side[][] INTERNAL = new Side[][] { null, null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_CEILING)},{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
+	static Side[][] INTERNAL_NO_CEILING = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_NORTH = new Side[][] { STAIRS, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_SOUTH = new Side[][] { null, null, STAIRS,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_WEST = new Side[][] { null, null, null,STAIRS,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_EAST = new Side[][] { null, STAIRS, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_GEO,SUBTYPE_GROUND)} };
+
+	static Side[][] ROOF_CORNER_NORTH = new Side[][] { ROOF_CORNER, null, null,null,null,null };
+	static Side[][] ROOF_CORNER_EAST = new Side[][] { null, ROOF_CORNER, null,null,null,null };
+	static Side[][] ROOF_CORNER_SOUTH = new Side[][] { null, null,ROOF_CORNER, null,null,null };
+	static Side[][] ROOF_CORNER_WEST = new Side[][] { null, null,null,ROOF_CORNER, null,null };
+	static Side[][] ROOF_STRAIGHT_NORTH = new Side[][] { ROOF_STRAIGHT, null, null,null,null,null };
+	static Side[][] ROOF_STRAIGHT_EAST = new Side[][] { null, ROOF_STRAIGHT, null,null,null,null };
+	static Side[][] ROOF_STRAIGHT_SOUTH = new Side[][] { null, null,ROOF_STRAIGHT, null,null,null };
+	static Side[][] ROOF_STRAIGHT_WEST = new Side[][] { null, null,null,ROOF_STRAIGHT, null,null };
+
 	
 	
 	//public int sizeX, sizeY, sizeZ;
 	//public int origoX, origoY, origoZ;
 	
-	public House()
+	public WoodenHouse()
 	{
 		super();
 	}
+	
+	 
 	
 	/**
 	 * Simple Stone House
@@ -108,7 +127,7 @@ public class House extends Residence {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public House(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
+	public WoodenHouse(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
 		super(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<getMinimumHeight()) throw new Exception("House below minimum size"+getParameteredKey());
@@ -116,7 +135,7 @@ public class House extends Residence {
 		
 		if (searchLoadParameteredArea()) return;
 		
-		for (int y= 0; y<sizeY; y++)
+		for (int y= 0; y<sizeY-1; y++)
 		{
 			for (int x= 1; x<sizeX-1; x++)
 			{
@@ -125,7 +144,7 @@ public class House extends Residence {
 					
 					{
 						if (y%2==0) {
-							if (sizeY-1!=y)
+							if (sizeY-2!=y) // if we are not on top level of house...
 							if (x == 1 && z == 2)
 							{
 								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_SOUTH,x,y,z,true,y==groundLevel));
@@ -137,7 +156,7 @@ public class House extends Residence {
 							}
 						} else
 						{
-							if (sizeY-1!=y)
+							if (sizeY-2!=y) // if we are not on top level of house...
 							if (x == 2 && z == 2)
 							{
 								addStoredCube(x, y, z, new Cube(this,INTERNAL_STEPS_NORTH,x,y,z,true,y==groundLevel));
@@ -149,13 +168,19 @@ public class House extends Residence {
 							}
 						}
 					}
-					addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z,true,y==groundLevel));
+					if (sizeY-2!=y) // if we are not on top level of house...
+					{
+						addStoredCube(x, y, z, new Cube(this,INTERNAL,x,y,z,true,y==groundLevel));
+					} else
+					{
+						addStoredCube(x, y, z, new Cube(this,INTERNAL_NO_CEILING,x,y,z,true,y==groundLevel));
+					}
 					
 				}
 				
 			}
 		}
-		for (int y=0; y<sizeY; y++) {
+		for (int y=0; y<sizeY-1; y++) {
 			for (int x=1; x<sizeX-1; x++)
 			{
 				int z = 0;
@@ -197,6 +222,37 @@ public class House extends Residence {
 				addStoredCube(x, y, z, new Cube(this,s,x,y,z,y==groundLevel,y==groundLevel));
 			}
 		}
+
+		{
+			int y = sizeY-1;
+			for (int x=1; x<sizeX-1; x++)
+			{
+				int z = 0;
+				Side[][] s = x==1?ROOF_CORNER_NORTH:x==sizeX-2?ROOF_CORNER_WEST:ROOF_STRAIGHT_NORTH;
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,false,false));
+			}
+			for (int x=1; x<sizeX-1; x++)
+			{
+				int z = sizeZ-1;
+				Side[][] s = x==1?ROOF_CORNER_EAST:x==sizeX-2?ROOF_CORNER_SOUTH:ROOF_STRAIGHT_SOUTH;
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,false,false));
+			}
+			for (int z=1; z<sizeZ-1; z++)
+			{
+				int x = 0;
+				if (z==1 || z==sizeZ-2) continue; 
+				Side[][] s = ROOF_STRAIGHT_EAST; 
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,false,false));
+			}
+			for (int z=1; z<sizeZ-1; z++)
+			{
+				int x = sizeX-1;
+				if (z==1 || z==sizeZ-2) continue; 
+				Side[][] s = ROOF_STRAIGHT_WEST; 
+				addStoredCube(x, y, z, new Cube(this,s,x,y,z,false,false));
+			}
+		}
+		
 		addStoredCube(0, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true,true));
 		addStoredCube(sizeX-1, groundLevel, 0, new Cube(this,EXTERNAL,0,0,0,true,true));
 		addStoredCube(0, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true,true));
@@ -252,7 +308,7 @@ public class House extends Residence {
 	public Residence getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 	{
 		try {
-			return new House(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
+			return new WoodenHouse(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -270,9 +326,11 @@ public class House extends Residence {
 		return tmpSettlePlaces;
 	}
 
+
+
 	@Override
 	public int getMinimumHeight() {
-		return 1;
+		return 2;
 	}
 	
 	
