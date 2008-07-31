@@ -322,7 +322,26 @@ public class J3DStandingEngine {
 				n[i].horizontalRotation = hQReal;
 				// horizontal rotation
 				qC.multLocal(hQ);
-			} 
+			}
+			
+			if (n[i].model.rotateAndLocate)
+			{
+				// a very special positioning, working with the qN,qS etc. rotation quaternions
+				// and rotateAndLocate set to true, with centered exported models - the rotation point
+				// of the exported model must be the middle of the model which corresponds to
+				// the middle point of the side to which we are rotating. Check house_01's roof model.
+				if (direction==0 || direction==3)
+				{
+					Vector3f newTrans = n[i].getLocalTranslation().add(0,0,-2f);
+					n[i].setLocalTranslation(newTrans);
+				}
+				if (direction==1 || direction==2)
+				{
+					Vector3f newTrans = n[i].getLocalTranslation().add(0,0,+2f);
+					n[i].setLocalTranslation(newTrans);
+				}
+			}
+			
 			
 			// the necessary local translation : half cube up
 			//System.out.println("MH: "+cube.cube.middleHeight);
@@ -681,7 +700,7 @@ public class J3DStandingEngine {
 					if (c.cube!=null) {
 						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
 					}
-	
+					
 					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/fragmentedViewDivider : J3DCore.VIEW_DISTANCE/2);
 					boolean checked = false;
 					int distX = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionX-c.cube.x);
@@ -1015,8 +1034,9 @@ public class J3DStandingEngine {
 					if (c.cube!=null) {
 						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
 					}
+					//if (fragmentViewDist) continue;
 	
-					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/4 : J3DCore.VIEW_DISTANCE/2);
+					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/fragmentedViewDivider : J3DCore.VIEW_DISTANCE/2); // /4
 					boolean checked = false;
 					int distX = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionX-c.cube.x);
 					int distY = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionY-c.cube.y);

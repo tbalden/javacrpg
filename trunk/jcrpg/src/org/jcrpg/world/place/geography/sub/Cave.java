@@ -113,7 +113,7 @@ public class Cave extends Geography implements Surface {
 			c.overwrite = true;
 		}
 		if (c.overwritePower!=2)
-			c.internalCube = true||alwaysInsideCubesForEncounterGround; // except entrance all is inside
+			c.internalCube = true; // except entrance all is inside
 		return c;
 	}
 	

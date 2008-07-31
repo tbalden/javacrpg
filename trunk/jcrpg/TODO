@@ -112,12 +112,12 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] add choice for DETAILS settings at startup???
 
 	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
-	
-	[ ] Check Zphr's new house model tiles!!
-		[X] add grounds, steps
-		[ ] add new house 
 
 	[ ] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
+
+	[X] Check Zphr's new house model tiles!!
+		[X] add grounds, steps
+		[X] add new house 
 	
 	[-] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
 

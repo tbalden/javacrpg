@@ -28,6 +28,8 @@ import org.jcrpg.world.place.PlaceLocator;
 
 public abstract class Residence extends Economic {
 
+	
+	
 	public Residence(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
 		this.origoX = origoX;this.origoY = origoY;this.origoZ = origoZ;
@@ -44,6 +46,6 @@ public abstract class Residence extends Economic {
 	
 	public abstract Residence getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner);
 	
-	
+	public abstract int getMinimumHeight();
 
 }

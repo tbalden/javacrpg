@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -69,8 +70,13 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				baseResidence.relOrigoZ = BUILDING_BLOCK_SIZE*(coord[1]);
 				baseResidence.sizeX = BUILDING_BLOCK_SIZE;
 				baseResidence.sizeY = 1;
+				
 				baseResidence.sizeZ = BUILDING_BLOCK_SIZE;
 				baseResidence.type = residenceTypes.get(0);
+				if (baseResidence.sizeY<((Residence)EconomyTemplate.economicBase.get(baseResidence.type)).getMinimumHeight())
+				{
+					baseResidence.sizeY = ((Residence)EconomyTemplate.economicBase.get(baseResidence.type)).getMinimumHeight();
+				}
 				list.add(baseResidence);
 				setOccupiedBlocks(occupiedBlocks,baseResidence);
 				
