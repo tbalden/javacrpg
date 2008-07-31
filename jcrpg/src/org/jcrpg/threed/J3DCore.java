@@ -2184,8 +2184,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 
 		RenderPass rootPass = new RenderPass();
+		//rootPass.add(rootNode);
 		pManager.add(rootPass);
-
+		
 		
 		if (SHADOWS) {
 			sPass = new ShadowedRenderPass();
@@ -2218,9 +2219,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	           BLOOM_EFFECT = false;
 	       } else {
 	    	   Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
-	           bloomRenderPass.add(rootNode);
+	           //bloomRenderPass.add(groundParentNode);
 	           bloomRenderPass.setUseCurrentScene(true);
-	           bloomRenderPass.setBlurIntensityMultiplier(1f);
+	           bloomRenderPass.setBlurIntensityMultiplier(0.6f);
+	           bloomRenderPass.setBlurSize(0.01f);
+	           //bloomRenderPass.setExposureCutoff(0.1f);
+	           //bloomRenderPass.setExposurePow(8f);
 	           pManager.add(bloomRenderPass);
 	       }
 		}
@@ -2231,6 +2235,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		waterEffectRenderPass.setBinormal( new Vector3f( 0.0f, 1.0f, 0.0f ));
 		//waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add( waterEffectRenderPass );
+
 	
 		waterEffectRenderPass.setReflectedScene(groundParentNode);
 		cam.update();
