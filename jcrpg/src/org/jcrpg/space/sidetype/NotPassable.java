@@ -25,7 +25,9 @@ public class NotPassable extends SideSubType {
 
 	public NotPassable(String id) {
 		super(id);
-		// TODO Auto-generated constructor stub
+	}
+	public NotPassable(String id, byte[] color) {
+		super(id,color);
 	}
 	public NotPassable(String id, boolean overrideGeneratedTileMiddleHeight) {
 		super(id,overrideGeneratedTileMiddleHeight);

@@ -22,6 +22,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Place;
@@ -40,11 +41,13 @@ public class Ocean extends Water {
 
 	public static final String TYPE_OCEAN = "OCEAN";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_OCEAN+"_WATER",WATER_COLOR);
+	public static final SideSubType SUBTYPE_WATER_SHALLOW = new SideSubType(TYPE_OCEAN+"_WATER",WATER_COLOR);
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_OCEAN+"_ROCKSIDE");
 	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_OCEAN+"_ROCKBOTTOM");
 	public static final Swimming SUBTYPE_WATER_EMPTY = new Swimming(TYPE_OCEAN+"_WATER_EMPTY",WATER_COLOR);
 
-	static Side[] WATER = {new Side(TYPE_OCEAN,SUBTYPE_WATER)};
+	public static Side SHALLOW_WATER_SIDE = new Side(TYPE_OCEAN,SUBTYPE_WATER_SHALLOW);
+	public static Side[] WATER = {new Side(TYPE_OCEAN,SUBTYPE_WATER)};
 	static Side[] ROCKSIDE = {new Side(TYPE_OCEAN,SUBTYPE_ROCKSIDE)};
 	static Side[] ROCKBOTTOM = {new Side(TYPE_OCEAN,SUBTYPE_ROCKBOTTOM)};
 	static Side[] WATER_EMPTY = {new Side(TYPE_OCEAN,SUBTYPE_WATER_EMPTY)};

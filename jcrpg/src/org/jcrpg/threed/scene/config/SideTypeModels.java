@@ -172,6 +172,7 @@ public class SideTypeModels {
 		
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
+		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_EXTERNAL_WOODEN_GROUND.id, new Integer(56));
 
 		
 		// WOODEN HOUSE
@@ -749,8 +750,16 @@ public class SideTypeModels {
 				new SimpleModel[]{roof_straight_wooden}
 				));
 
+		SimpleModel sm_external_ground_above_water = new SimpleModel("models/external/House_01_externalgr.obj",null);
+		sm_external_ground_above_water.disposition = new float[]{0,-0.7f,0};
+		//sm_jungle.rotateOnSteep = false; sm_jungle.generatedGroundModel = true; sm_jungle.rotateOnSteep = false; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
+		sm_external_ground_above_water.rotateOnSteep = false;
+		hm3dTypeRenderedSide.put(new Integer(56), new RenderedSide(
+				new SimpleModel[]{sm_external_ground_above_water}
+				));
+
 		// NEXT ID = 
-		// 56
+		// 57
 		
 	}
 	

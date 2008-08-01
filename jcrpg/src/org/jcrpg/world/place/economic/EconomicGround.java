@@ -33,6 +33,10 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.Water;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.water.Ocean;
+import org.jcrpg.world.place.water.River;
 
 /**
  * Base class for roads and such.
@@ -45,6 +49,8 @@ public class EconomicGround extends Economic {
 	
 	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
 	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
+	public static final SideSubType SUBTYPE_EXTERNAL_WOODEN_GROUND = new GroundSubType(TYPE_ECOGROUND+"_EXTERNAL_GROUND",true);
+	
 	static
 	{
 		SUBTYPE_STREETGROUND.audioStepType = AudioServer.STEP_STONE;
@@ -56,6 +62,7 @@ public class EconomicGround extends Economic {
 	}
 	public static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
 	public static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
+	
 
 	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND};
 	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,GROUND};
@@ -63,6 +70,7 @@ public class EconomicGround extends Economic {
 	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND};
 
 	public static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,ECOGROUND };
+	public static Side[][] EXTERNAL_WATER_WOODEN_GROUND = new Side[][] { null, null, null,null,null,{Ocean.SHALLOW_WATER_SIDE,new Side(TYPE_ECOGROUND,SUBTYPE_EXTERNAL_WOODEN_GROUND)}};
 
 	public EconomicGround(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
@@ -83,6 +91,8 @@ public class EconomicGround extends Economic {
 	{
 		Cube ground = new Cube(null,EXTERNAL,0,0,0,true,false);
 		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
+		Cube waterGround = new Cube(null,EXTERNAL_WATER_WOODEN_GROUND,0,0,0,true,false);
+		hmKindCubeOverride.put(K_WATER_GROUND, waterGround );		
 		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
 		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
 		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0,true,true);
@@ -122,11 +132,31 @@ public class EconomicGround extends Economic {
 	
 	@Override
 	public float[] getCubeKind(long key, int worldX, int worldY, int worldZ, boolean farView) {
+		// let's check for waters here...
+		boolean water = false;
+		for (Water geo:((World)getRoot()).waters.values())
+		{
+			{
+				if (geo.getBoundaries().isInside(worldX, geo.worldGroundLevel, worldZ))
+				{
+					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) water = true;
+				}
+			}
+		}
+		float[] retKind = null;
 		if (soilGeo!=null && soilGeo.getBoundaries().isInside(worldX, worldY, worldZ))
 		{
-			return soilGeo.getCubeKind(key, worldX,worldY,worldZ, farView);
+			retKind = soilGeo.getCubeKind(key, worldX,worldY,worldZ, farView);
+		} else
+		{
+			retKind = super.getCubeKindOutside(key, worldX, worldY, worldZ, farView);
 		}
-		return super.getCubeKindOutside(key, worldX, worldY, worldZ, farView);
+		if (water && retKind[4]==K_NORMAL_GROUND)
+		{
+			retKind[4] = K_WATER_GROUND;
+		}
+		return retKind;
+		
 	}
 
 	@Override
