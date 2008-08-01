@@ -130,7 +130,7 @@ public class EconomicGround extends Economic {
 	}
 
 	@Override
-	protected int[] getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
+	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
 		// use the height defined by the geography here...
 		if (soilGeo.getBoundaries().isInside(worldX, soilGeo.worldGroundLevel, worldZ))
 		{
