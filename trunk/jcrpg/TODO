@@ -87,6 +87,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] gold system
 
+
 	[ ] town center infrastrucre?? - EntityFragment populatePopulation helping?
 
 	[ ] boarmen are not attacking sometime ??
@@ -111,14 +112,18 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	-- TILING THINGS:
 	
-	[ ] add choice for DETAILS settings at startup???
+	[ ] use new rotationAndLocate for HashRotatedSide, reexport bushes -> when rendering to viewport
+		check geo tile corners of the cube and calculate a new height elevation!		
 
-	[ ] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
-
-	[ ] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
+	[X] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
+		[ ] use new models
+			[X] under entrance block
+			[ ] behind entrance double entrance replacement??
+	[X] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
 
 	
 	-- QA/DOC
+	[ ] add choice for DETAILS settings at startup???
 
 	[ ] documenting points, attr - (how it works related to points), calculations, leveling
 		[ ] documenting skill act forms (later completed)
