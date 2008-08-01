@@ -124,6 +124,7 @@ public class Geography extends Place implements Surface {
 	public static final int K_ROCK_BLOCK = 4, K_NORMAL_GROUND = 5;
 	public static final int K_INTERSECT_NORTH = 6, K_INTERSECT_EAST = 7, K_INTERSECT_SOUTH = 8, K_INTERSECT_WEST = 9;
 	public static final int K_CORNER_SOUTH = 10, K_CORNER_NORTH = 11, K_CORNER_WEST = 12, K_CORNER_EAST = 13;
+	public static final int K_WATER_GROUND = 14;
 
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int NORTH_EAST = 4, SOUTH_EAST = 5, SOUTH_WEST = 6, NORTH_WEST = 7;

@@ -57,6 +57,7 @@ public class House extends Residence {
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
 	static Side[] WINDOW = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_WINDOW)};
 	static Side[] STAIRS = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_STAIRS)};
+	public static Side EXTERNAL_GROUND_SIDE = new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND);
 	
 	static Side[][] WALL_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null, null,null,null,null };
 	static Side[][] WALL_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,null };
