@@ -645,6 +645,32 @@ public class GeoTileLoader {
     	}
         ts.setTexture(t1, ts.getNumberOfSetTextures());
     }
+
+    public static final float getHeight(Vector3f displacementFromCenter, NodePlaceholder place)
+    {
+    	float x = (displacementFromCenter.x + J3DCore.CUBE_EDGE_SIZE/2f)/J3DCore.CUBE_EDGE_SIZE;
+    	float z = -(displacementFromCenter.z - J3DCore.CUBE_EDGE_SIZE/2f)/J3DCore.CUBE_EDGE_SIZE;
+    	return getHeight(x, z, place);
+    }
+
+    public static final float getHeight(float xPerc, float zPerc, NodePlaceholder place)
+    {
+		float NW = place.cube.cube.cornerHeights[0];
+		float NE = place.cube.cube.cornerHeights[1];
+		float SW = place.cube.cube.cornerHeights[2];
+		float SE = place.cube.cube.cornerHeights[3];
+		float heightPercent = 
+			(
+			( NW * ((     xPerc  +      zPerc) / 2f) ) +
+			( NE * ((1f - xPerc  +      zPerc) / 2f) ) +
+			( SW * ((     xPerc  + 1f - zPerc) / 2f) ) +
+			( SE * ((1f - xPerc  + 1f - zPerc) / 2f) )
+			)
+			;
+		return heightPercent;
+
+    }
 	
 }
+
 

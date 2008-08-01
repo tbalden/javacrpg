@@ -251,7 +251,7 @@ public class VegetationSetup {
 		float SW = place.cube.cube.cornerHeights[2];
 		float SE = place.cube.cube.cornerHeights[3];
 		float zPerc = ((z*1f)/J3DCore.CUBE_EDGE_SIZE);
-		float xPerc = 1f-((k*1f)/J3DCore.CUBE_EDGE_SIZE);
+		float xPerc = 1f-((x*1f)/J3DCore.CUBE_EDGE_SIZE);
 		float heightPercent = 
 			(
 			( NW * ((     xPerc  +      zPerc) / 2f) ) +

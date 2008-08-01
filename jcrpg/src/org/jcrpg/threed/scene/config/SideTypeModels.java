@@ -209,6 +209,9 @@ public class SideTypeModels {
 		acacia_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		bush.dislocationRate = 0.4f;
+		bush.rotateAndLocate = true;
+		bush.elevateOnSteep = true;
 		bush.quadXSizeMultiplier = 3.8f;
 		bush.quadYSizeMultiplier = 3.2f;
 		bush.shadowCaster = true;
@@ -308,6 +311,8 @@ public class SideTypeModels {
 		coconut_lowest_2.cullNone = true;
 
 		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("pbm_jungle_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
+		jungle_bush.dislocationRate = 0.4f;
+		jungle_bush.rotateAndLocate = true;
 		jungle_bush.quadXSizeMultiplier = 2f;
 		jungle_bush.quadYSizeMultiplier = 2f;
 		jungle_bush.shadowCaster = true;

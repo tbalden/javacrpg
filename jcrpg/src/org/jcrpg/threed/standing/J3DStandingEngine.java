@@ -330,14 +330,32 @@ public class J3DStandingEngine {
 				// and rotateAndLocate set to true, with centered exported models - the rotation point
 				// of the exported model must be the middle of the model which corresponds to
 				// the middle point of the side to which we are rotating. Check house_01's roof model.
-				if (direction==0 || direction==3)
+				Vector3f newTrans = null;
+				Vector3f dislocation = null;
+				int tmpDir = direction;
+				if (direction==5)
 				{
-					Vector3f newTrans = n[i].getLocalTranslation().add(0,0,-2f);
-					n[i].setLocalTranslation(newTrans);
+					tmpDir = horizontalRotation;
 				}
-				if (direction==1 || direction==2)
+				if (tmpDir==0 || tmpDir==3)
 				{
-					Vector3f newTrans = n[i].getLocalTranslation().add(0,0,+2f);
+					dislocation = new Vector3f(0,0,-2f*n[i].model.dislocationRate);
+					newTrans = n[i].getLocalTranslation().add(0,0,-2f*n[i].model.dislocationRate);
+				}
+				if (tmpDir==1 || tmpDir==2)
+				{
+					dislocation = new Vector3f(0,0,+2f*n[i].model.dislocationRate);
+					newTrans = n[i].getLocalTranslation().add(0,0,+2f*n[i].model.dislocationRate);
+				}
+				//System.out.println("ROT & LOC:"+n[i].model.id+ " "+tmpDir+" "+newTrans);
+				if (newTrans!=null)
+				{
+					if (n[i].model.elevateOnSteep)
+					{
+						float height = GeoTileLoader.getHeight(dislocation, n[i]);
+						//System.out.println("H:"+height);
+						newTrans.y += height - 0.1f;
+					}
 					n[i].setLocalTranslation(newTrans);
 				}
 			}
@@ -347,7 +365,7 @@ public class J3DStandingEngine {
 			//System.out.println("MH: "+cube.cube.middleHeight);
 			if (!groundTileModel)
 			{
-				if (n[i].model.elevateOnSteep)
+				if (n[i].model.elevateOnSteep && !n[i].model.rotateAndLocate)
 				{
 					Vector3f newTrans = n[i].getLocalTranslation().add(0f,(J3DCore.CUBE_EDGE_SIZE*cube.cube.middleHeight - J3DCore.CUBE_EDGE_SIZE * 0.25f)*(cube.farview?J3DCore.FARVIEW_GAP:1),0f);
 					n[i].setLocalTranslation(newTrans);
