@@ -33,7 +33,7 @@ import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.SimpleDistrict;
-import org.jcrpg.world.place.economic.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;

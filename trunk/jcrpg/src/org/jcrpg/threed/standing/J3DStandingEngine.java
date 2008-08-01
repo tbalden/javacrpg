@@ -460,6 +460,10 @@ public class J3DStandingEngine {
 	 */
 	public boolean rerender = false;
 	/**
+	 * Tells if before rerender all previous nodes should be removed.
+	 */
+	public boolean rerenderWithRemove = false;
+	/**
 	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
 	 * @param refAngle
 	 * @param segmented
@@ -575,6 +579,62 @@ public class J3DStandingEngine {
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE-1)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
+				if (rerenderWithRemove)
+				{
+					HashSet<RenderedCube> fullInview = new HashSet<RenderedCube>();
+					fullInview.addAll(inViewPort);
+					fullInview.addAll(inFarViewPort);
+					for (RenderedCube c:fullInview)
+					{
+						if (c!=null) {
+		    	    		inViewPort.remove(c);
+		    	    		inFarViewPort.remove(c);
+		    	    		outOfViewPort.remove(c);
+			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+			    	    	{
+			    	    		overrideBatch = true;
+			    	    		NodePlaceholder n = itNode.next();
+			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+			    					 )
+			    				{
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+
+			    					if (!overrideBatch)
+			        				{
+				    					if (n!=null && n.batchInstance!=null)
+				    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			        				}
+			    				} 
+			    				if (overrideBatch)
+			    				{ 
+									PooledNode pooledRealNode = n.realNode;
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+			    				}
+			    				n.farView = false;
+			    	    	}
+			    		}
+					}
+				}
+				
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = render(core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ,rerender);

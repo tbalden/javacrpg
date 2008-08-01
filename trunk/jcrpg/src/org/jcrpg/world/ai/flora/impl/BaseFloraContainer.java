@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.flora.impl;
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.ground.EncounterGround;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
@@ -35,6 +36,7 @@ public class BaseFloraContainer extends FloraContainer{
 		hmPlaceToGenerator.put(Mountain.class,new MountainFloraGenerator());
 		hmPlaceToGenerator.put(EconomicGround.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(House.class,new EconomicFloraGenerator());
+		hmPlaceToGenerator.put(EncounterGround.class,new EconomicFloraGenerator());
 	}
 	
 }
