@@ -28,7 +28,7 @@ import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.SimpleDistrict;
-import org.jcrpg.world.place.economic.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.

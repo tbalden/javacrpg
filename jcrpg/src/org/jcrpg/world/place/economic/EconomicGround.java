@@ -54,15 +54,15 @@ public class EconomicGround extends Economic {
 		SUBTYPE_STAIRS.colorOverwrite = true;
 		SUBTYPE_STAIRS.colorBytes = new byte[] {(byte)150,(byte)50,(byte)50};
 	}
-	static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
-	static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
+	public static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
+	public static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
 
 	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND};
 	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,GROUND};
 	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,GROUND};
 	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND};
 
-	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,ECOGROUND };
+	public static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,ECOGROUND };
 
 	public EconomicGround(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)  throws Exception {
 		super(id,soilGeo,parent, loc, homeBoundaries, owner);
@@ -81,7 +81,7 @@ public class EconomicGround extends Economic {
 	
 	static 
 	{
-		Cube ground = new Cube(null,EXTERNAL,0,0,0,true,false); // TODO this doesnt work
+		Cube ground = new Cube(null,EXTERNAL,0,0,0,true,false);
 		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
 		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
 		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
@@ -110,7 +110,7 @@ public class EconomicGround extends Economic {
 	public EconomicGround()
 	{
 		super(null,null,null,null,null,null);
-		needsFlora = false;
+		//needsFlora = false;
 	}
 
 	@Override

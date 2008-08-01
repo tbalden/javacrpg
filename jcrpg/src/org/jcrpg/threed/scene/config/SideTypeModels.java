@@ -62,7 +62,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
-import org.jcrpg.world.place.economic.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;

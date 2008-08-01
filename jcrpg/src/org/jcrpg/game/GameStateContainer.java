@@ -319,10 +319,15 @@ public class GameStateContainer {
 			J3DCore.getInstance().eEngine.switchOn(true);
 			if (!renderNotNeeded)
 			{
+				//J3DCore.getInstance().eEngine.intRootNode.detachAllChildren();
+				//J3DCore.getInstance().eEngine.extRootNode.detachAllChildren();
+				//J3DCore.getInstance().groundParentNode.updateRenderState();
 				J3DCore.getInstance().eEngine.rerender = true;
 				J3DCore.getInstance().eEngine.renderToViewPort();
 				J3DCore.getInstance().eEngine.rerender = false;
 			}
+			J3DCore.getInstance().eEngine.renderToViewPort();
+			J3DCore.getInstance().groundParentNode.updateRenderState();
 			J3DCore.getInstance().eEngine.renderToViewPort();
 			J3DCore.getInstance().updateTimeRelated();
 						

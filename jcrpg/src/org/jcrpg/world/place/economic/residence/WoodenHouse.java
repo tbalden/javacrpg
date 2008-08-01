@@ -15,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.world.place.economic;
+package org.jcrpg.world.place.economic.residence;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,7 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.economic.Residence;
 
 public class WoodenHouse extends Residence {
 

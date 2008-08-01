@@ -33,6 +33,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Residence;
+import org.jcrpg.world.place.economic.ground.EncounterGround;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -47,6 +48,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
+		rerenderWithRemove = true;
 		optimizeAngle = false;
 		fragmentedViewDivider = 2;
 		
@@ -97,6 +99,10 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		if (ground!=null)
 		{
 			EconomicGround g = ground.getInstance("enc", geo, baseWorld, null, 6, 10, 8, 44, 0, 38, 0, null, null);
+			baseWorld.economyContainer.addGround(g);
+		} else
+		{
+			EconomicGround g = new EncounterGround("enc", geo, baseWorld, null, 6, 10, 8, 44, 0, 38, 0, null, null);
 			baseWorld.economyContainer.addGround(g);
 		}
 		if (house!=null)
@@ -152,7 +158,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			}
 		}
 		
-		if (type == null && lastType == null || type.equals(lastType)) return true;
+		if (type.equals(lastType)) return true; // no need for rerender
 		lastType = type;
 		
 		World w = encounterGroundWorlds.get(type);
@@ -179,6 +185,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterExtRootNode;
 		renderedArea = core.renderedEncounterArea;
+		rerenderWithRemove = true;
 		lastType = "_______";
 	}
 	

@@ -45,7 +45,7 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
-import org.jcrpg.world.place.economic.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
 public class EntityInstance {
 	

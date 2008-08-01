@@ -106,7 +106,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
-
+	
+	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
+	
 	-- TILING THINGS:
 	
 	[ ] add choice for DETAILS settings at startup???
@@ -115,6 +117,13 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
 
+	
+	-- QA/DOC
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
+	
+	--
 	[X] Check Zphr's new house model tiles!!
 		[X] add grounds, steps
 		[X] add new house 
@@ -125,12 +134,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[X] camera positioning -> override middle height if it's specified by the cube
 	
-	-- QA/DOC
+	[X] add a non-flora grass only ground to the encounters - if no ecoground present
+		- fix eco-ground of town overridden by grass??
+		EncounterGround extends 
 
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
 	
-	--
 	[-] rewrite the whole geo -> tile thing to a heighmap based alpha splatted TerrainBlock thing!
 		- loading should get through the geographies of zones, getting all the surface height
 		and genTile types (texture types). It should then generate an alphamask for a texture splatting.
