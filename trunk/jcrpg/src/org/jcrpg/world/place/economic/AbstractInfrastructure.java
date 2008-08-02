@@ -51,6 +51,8 @@ public abstract class AbstractInfrastructure {
 	
 	public int INHABITANTS_PER_UPDATE = -1;
 	
+	public boolean[] unavailableBlocks = null; 
+	
 	
 	public Population population;
 	
@@ -63,6 +65,7 @@ public abstract class AbstractInfrastructure {
 		maxBlocks = (maxSize/BUILDING_BLOCK_SIZE)*(maxSize/BUILDING_BLOCK_SIZE);
 		maxBlocksOneDim = maxSize/BUILDING_BLOCK_SIZE;
 		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock;
+		unavailableBlocks = new boolean[maxBlocks];
 	}
 	
 	/**
@@ -119,6 +122,22 @@ public abstract class AbstractInfrastructure {
 	}
 	
 	/**
+	 * this function will create a matrix of unavailable blocks in the given population soilGeo,
+	 * checking for water etc. with the help of the population's block checkers.
+	 */
+	public void createUnavailableBlocksArray()
+	{
+		for (InfrastructureBlockChecker c:population.getBlockCheckers())
+		{
+			boolean[] nonGoodBlocks = c.getAvailableBlocks(this);
+			for (int i=0; i<nonGoodBlocks.length;i++)
+			{
+				unavailableBlocks[i]=unavailableBlocks[i]||nonGoodBlocks[i];
+			}
+		}
+	}
+	
+	/**
 	 * the program generation.
 	 */
 	public void buildProgram()
@@ -131,6 +150,7 @@ public abstract class AbstractInfrastructure {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: ground: "+groundTypes);
 		// base parts
 		
+		createUnavailableBlocksArray();
 		
 		// collecting fix properties of fix NPCs of entityInstance
 		ArrayList<InfrastructureElementParameters> fixProperties = new ArrayList<InfrastructureElementParameters>();
@@ -308,7 +328,7 @@ public abstract class AbstractInfrastructure {
 	 */
 	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int count)
 	{
-		return occupiedBlocks[count];
+		return unavailableBlocks[count] || occupiedBlocks[count];
 	}
 	/**
 	 * Tells if a block is occupied at x,z.

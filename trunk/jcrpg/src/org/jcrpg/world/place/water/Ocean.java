@@ -34,7 +34,8 @@ import org.jcrpg.world.place.World;
 import com.jme.math.Vector3f;
 
 /**
- * Ocean - one earth like foundation water geography.
+ * Ocean - one earth like foundation water geography. It's with normal boundaries, with maximum magnification,
+ * boundaries won't tell if it is a waterpoint, you must use isWaterPoint to know it.
  * @author illes
  */
 public class Ocean extends Water {
@@ -69,16 +70,11 @@ public class Ocean extends Water {
 	public int density;
 	
 	int centerX, centerZ, realSizeX, realSizeZ;
-	Vector3f center = new Vector3f();
 
 	public Ocean(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
 		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,true);
-		centerX = sizeX*magnification/2;
-		centerZ = sizeZ*magnification/2;
 		realSizeX = sizeX*magnification;
 		realSizeZ = sizeZ*magnification;
-		
-		center.set(centerX, centerZ, 0);
 		
 		//setBoundaries(BoundaryUtils.createCubicBoundaries(magnification, sizeX, sizeY, sizeZ, origoX, origoY, origoZ));
 		this.noWaterPercentage = noWaterPercentage;

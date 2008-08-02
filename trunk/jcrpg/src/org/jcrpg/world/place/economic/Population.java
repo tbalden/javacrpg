@@ -257,6 +257,12 @@ public abstract class Population extends Economic{
 		return tmpSettlePlaces;
 	}
 	
+	/**
+	 * Gets Build availability checkers.
+	 * @return the list of checkers.
+	 */
+	public abstract ArrayList<InfrastructureBlockChecker> getBlockCheckers();
+	
 	
 	
 }
