@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
+import org.jcrpg.world.place.economic.InfrastructureBlockChecker;
+import org.jcrpg.world.place.economic.checker.WaterChecker;
 
 /**
  * Intelligently created like cities, outposts, agriculture
@@ -35,6 +37,9 @@ public class Economic extends Geography {
 		return true;
 	}
 	
+	/**
+	 * Tells if the given economic needs flora cube addition when generating cubes in EconomyContainer.
+	 */
 	public boolean needsFlora = true;
 
 	public Geography soilGeo = null;
@@ -52,11 +57,13 @@ public class Economic extends Geography {
 	
 	public int getNumberOfInhabitants()
 	{
+		if (owner==null) return 0;
 		return owner.numberOfMembers;
 	}
 	
 	public DistanceBasedBoundary getOwnerHomeBoundary()
 	{
+		if (owner==null) return null;
 		return owner.homeBoundary;
 	}
 
@@ -78,10 +85,18 @@ public class Economic extends Geography {
 		((World)parent.getRoot()).economyContainer.updateEconomy(origoX, origoX+sizeX, origoY, origoY+sizeY, origoZ, origoZ+sizeZ, this);
 	}
 
+	/**
+	 * 
+	 * @return The owner (NPC or PC) of infrastructure.
+	 */
 	public PersistentMemberInstance getOwnerMember() {
 		return ownerMember;
 	}
 
+	/**
+	 * Sets the person (NPC or PC) who owns this economic.
+	 * @param ownerMember
+	 */
 	public void setOwnerMember(PersistentMemberInstance ownerMember) {
 		this.ownerMember = ownerMember;
 	}
@@ -94,6 +109,24 @@ public class Economic extends Geography {
 	{
 		return null;
 	}
+	
+	public static final ArrayList<Class <? extends InfrastructureBlockChecker>> STANDARD_WATER_CHECKER_LIST = new ArrayList<Class<? extends InfrastructureBlockChecker>>();
+	static 
+	{
+		STANDARD_WATER_CHECKER_LIST.add(WaterChecker.class);
+	}
+	
+	/**
+	 * Gets a list of block availability checkers for infrastructure generation. This should return
+	 * the filtering checkers that filter out such population blocks that would be unsuitable for
+	 * this economic class.
+	 * @return The list.
+	 */
+	public ArrayList<Class <? extends InfrastructureBlockChecker>> getGenerationBlockAvailabilityCheckers()
+	{
+		return STANDARD_WATER_CHECKER_LIST;
+	}
+	
 	
 	
 

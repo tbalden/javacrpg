@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -42,10 +43,22 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 			int delta = 0;
 			
 			boolean found = false;
+			
+			Class<? extends Economic> type = null;
+			if (blockUsed%2==0) {
+				type = groundTypes.get(0);
+			} else
+			{
+				type = residenceTypes.get(0);
+			}		
+			Economic ecoBase = ((Economic)EconomyTemplate.economicBase.get(type));
+			
+			
+			
 			while (true){
 				int r = HashUtil.mixPercentage((int)seed, j+(delta++), j+1, j+2);
 				int [] coords = getRandomCoordinates(r, lastStreetBlockX, lastStreetBlockZ);
-				if (isOccupiedBlock(occupiedBlocks, coords[0], coords[1]))
+				if (isOccupiedBlock(occupiedBlocks, coords[0], coords[1],ecoBase.getGenerationBlockAvailabilityCheckers()))
 				{
 					if (delta>10)
 					{
@@ -65,7 +78,7 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				{
 					lastStreetBlockX = (lastStreetBlockX+1)%maxBlocksOneDim;
 					lastStreetBlockZ = (lastStreetBlockZ+1)%maxBlocksOneDim;
-					if (!isOccupiedBlock(occupiedBlocks, lastStreetBlockX,lastStreetBlockZ))
+					if (!isOccupiedBlock(occupiedBlocks, lastStreetBlockX,lastStreetBlockZ,ecoBase.getGenerationBlockAvailabilityCheckers()))
 					{
 						break;
 					}
@@ -82,13 +95,13 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				p.sizeY = (blockUsed%5)/4+1;
 				p.sizeZ = BUILDING_BLOCK_SIZE;
 				if (blockUsed%2==0) {
-					p.type = groundTypes.get(0);
+					p.type = type;
 				} else
 				{
-					p.type = residenceTypes.get(0);
-					if (p.sizeY<((Residence)EconomyTemplate.economicBase.get(p.type)).getMinimumHeight())
+					p.type = type;
+					if (p.sizeY<((Residence)ecoBase).getMinimumHeight())
 					{
-						p.sizeY = ((Residence)EconomyTemplate.economicBase.get(p.type)).getMinimumHeight();
+						p.sizeY = ((Residence)ecoBase).getMinimumHeight();
 					}
 					if (usedUpFixedProperties<fixProperties.size())
 					{
