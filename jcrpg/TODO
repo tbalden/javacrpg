@@ -101,7 +101,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] texture state cacheing into md5reader2?
 	
 	[ ] climate level system?
-	
+	[ ] city walls? around whole districts if it's enough advanced!!
 ##
 [?] list before next release:
 ##
@@ -128,6 +128,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] continental problem with encouter ground in city
+
 	[X] water edge at economic's overwrite looks really bad
 	
 			[X] water edge at house is bad too

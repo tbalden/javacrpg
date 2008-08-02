@@ -100,6 +100,11 @@ public class SaveLoadNewGame {
 			int xDiff = -24;
 			int yDiff = 8;
 			int zDiff = -60;
+			if (true==false)
+				{xDiff = +15;
+				yDiff = 2;
+				zDiff = +60;
+				}
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;

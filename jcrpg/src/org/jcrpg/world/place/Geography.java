@@ -20,6 +20,7 @@ package org.jcrpg.world.place;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -34,7 +35,6 @@ import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.generator.GeneratedPartRuleSet;
-import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
@@ -135,7 +135,7 @@ public class Geography extends Place implements Surface {
 
 
 	
-	public static HashMap<Long, float[]> quickCubeKindCache = new HashMap<Long, float[]>();
+	public HashMap<Long, float[]> quickCubeKindCache = new HashMap<Long, float[]>();
 	
 	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();
 	public static HashMap<Integer, Cube> hmKindCube_FARVIEW = new HashMap<Integer, Cube>();
@@ -191,12 +191,11 @@ public class Geography extends Place implements Surface {
 	}
 	public Geography(String id, Place parent,PlaceLocator loc,int worldGroundLevel, int worldHeight, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id,parent, loc);
-		worldRelHeight = worldHeight - worldGroundLevel;
 		this.magnification = magnification;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.worldRelHeight = worldHeight - worldGroundLevel;
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+worldRealHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("" + this.getClass()+" "+worldGroundLevel+" "+ "SIZE = "+worldRelHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
@@ -260,7 +259,7 @@ public class Geography extends Place implements Surface {
 		}
 		if (c!=null)
 			c.needsFurtherMerge = true; // this is normal geography cube - if economy is using Geography as base class this will help economic cube to render further
-			// if not a real economic cube (world.getCube will interpret this.
+			// if not a real economic cube (world.getCube will interpret this).
 		return c;
 	}
 
@@ -467,22 +466,6 @@ public class Geography extends Place implements Surface {
 				}
 			}
 		}
-		// let's check for Caves here...
-		for (Geography geo:((World)getRoot()).geographies.values())
-		{
-			if (this!=geo)
-			{
-				if (geo instanceof Cave && geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
-				{
-					
-					if (((Cave)geo).getCube(-1, worldX, worldY-1, worldZ, farView)!=null) 
-						{
-						System.out.println("CAVE OVERRIDE");
-						return 4;
-						}
-				}
-			}
-		}
 		return null;
 	}
 
@@ -574,7 +557,7 @@ public class Geography extends Place implements Surface {
 	 */
 	public int[] calculateTransformedCoordinates(int worldX, int worldY, int worldZ)
 	{
-		// 0 realSizeX, 1 realsizeY, 2 realSizeZ, 3 relX, 4 relY, 5 relZ 
+		// 0 realSizeX, 1 realsizeY, 2 realSizeZ, 3 relX, 4 relY, 5 relZ
 		return new int[]{blockSize,worldRelHeight,blockSize,worldX%blockSize,worldY-worldGroundLevel,worldZ%blockSize};
 	}
 
@@ -698,6 +681,9 @@ public class Geography extends Place implements Surface {
 			hSE = ((Y + rY + YSouth + rYSouth + YSouthEast + rYSouthEast + YEast + rYEast)/4f) - Y;
 
 		}
+		//if (this instanceof EconomicGround)
+		{
+		} 
 		
 	
 		/*

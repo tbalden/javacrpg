@@ -36,7 +36,6 @@ import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.water.Ocean;
-import org.jcrpg.world.place.water.River;
 
 /**
  * Base class for roads and such.
@@ -109,11 +108,6 @@ public class EconomicGround extends Economic {
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
-		if (c!=null) { 
-			if (kind>=6) c.canContainFlora = false; //else
-				//c.canContainFlora = true;
-		}
-			
 		return c;
 	}
 
