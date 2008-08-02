@@ -6,6 +6,7 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -47,6 +48,10 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 		{
 			int blockCount = -1;
 			int oldShuffleCount = shuffleCount;
+			Class<? extends Economic> type = null;
+			type = residenceTypes.get(0);
+			Economic ecoBase = ((Economic)EconomyTemplate.economicBase.get(type));
+			
 			while (true) {
 				blockCount = fullShuffledBlocks[shuffleCount];
 				shuffleCount = (shuffleCount+1)%fullShuffledBlocks.length;
@@ -55,7 +60,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!! NO BLOCK FOUND FOR RESIDENCE...");
 					break; // arrived to the beginning counter, no room found
 				}
-				if (isOccupiedBlock(occupiedBlocks,blockCount)) {
+				if (isOccupiedBlock(occupiedBlocks,blockCount,ecoBase.getGenerationBlockAvailabilityCheckers())) {
 					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
 					blockCount = -1;
 					continue;

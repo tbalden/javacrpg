@@ -51,7 +51,6 @@ public abstract class AbstractInfrastructure {
 	
 	public int INHABITANTS_PER_UPDATE = -1;
 	
-	public boolean[] unavailableBlocks = null; 
 	
 	
 	public Population population;
@@ -65,7 +64,6 @@ public abstract class AbstractInfrastructure {
 		maxBlocks = (maxSize/BUILDING_BLOCK_SIZE)*(maxSize/BUILDING_BLOCK_SIZE);
 		maxBlocksOneDim = maxSize/BUILDING_BLOCK_SIZE;
 		INHABITANTS_PER_UPDATE=maxInhabitantPerBlock;
-		unavailableBlocks = new boolean[maxBlocks];
 	}
 	
 	/**
@@ -121,6 +119,9 @@ public abstract class AbstractInfrastructure {
 		return (size/(INHABITANTS_PER_UPDATE))*INHABITANTS_PER_UPDATE;
 	}
 	
+	
+	public HashMap<Class <? extends InfrastructureBlockChecker>, boolean[]> checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
+	
 	/**
 	 * this function will create a matrix of unavailable blocks in the given population soilGeo,
 	 * checking for water etc. with the help of the population's block checkers.
@@ -130,10 +131,7 @@ public abstract class AbstractInfrastructure {
 		for (InfrastructureBlockChecker c:population.getBlockCheckers())
 		{
 			boolean[] nonGoodBlocks = c.getAvailableBlocks(this);
-			for (int i=0; i<nonGoodBlocks.length;i++)
-			{
-				unavailableBlocks[i]=unavailableBlocks[i]||nonGoodBlocks[i];
-			}
+			checkerToUnavailableBlocksMap.put(c.getClass(), nonGoodBlocks);
 		}
 	}
 	
@@ -326,9 +324,16 @@ public abstract class AbstractInfrastructure {
 	 * @param count
 	 * @return
 	 */
-	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int count)
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int count, ArrayList<Class <? extends InfrastructureBlockChecker>> additionalCheckers)
 	{
-		return unavailableBlocks[count] || occupiedBlocks[count];
+		if (additionalCheckers!=null)
+		{
+			for (Class<? extends InfrastructureBlockChecker> c:additionalCheckers){
+				boolean[] noBlocks = checkerToUnavailableBlocksMap.get(c);
+				if (noBlocks!=null && noBlocks[count]) return true;
+			}
+		}
+		return occupiedBlocks[count];
 	}
 	/**
 	 * Tells if a block is occupied at x,z.
@@ -337,9 +342,9 @@ public abstract class AbstractInfrastructure {
 	 * @param z
 	 * @return
 	 */
-	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int x, int z)
+	public boolean isOccupiedBlock(boolean[] occupiedBlocks,int x, int z,ArrayList<Class <? extends InfrastructureBlockChecker>> additionalCheckers)
 	{
-		return isOccupiedBlock(occupiedBlocks,x+z*maxBlocksOneDim);
+		return isOccupiedBlock(occupiedBlocks,x+z*maxBlocksOneDim,additionalCheckers);
 	}
 	
 }
