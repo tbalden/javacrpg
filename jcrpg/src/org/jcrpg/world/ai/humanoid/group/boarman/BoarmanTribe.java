@@ -47,7 +47,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		boarmanMaleAudio.PAIN = new String[]{"boarman/boar_pain"};
 		boarmanMaleAudio.DEATH= new String[]{"boarman/boarman_thug"};
 		boarmanMaleAudio.ATTACK = new String[]{"boarman/boarman_thug"};
-		//boarmanMaleAudio.ENVIRONMENTAL = new String[]{"human_env1", "human_env2"};
+		boarmanMaleAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_thug"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	

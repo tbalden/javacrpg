@@ -115,18 +115,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
 		[X] use new models
 			[X] under entrance block
+			
 			[ ] behind entrance double entrance replacement?? - doesn't work yet, check Cave code
 				REFACTOR the whole code with some better entrance part and better cube sides that
 				hide the mountain at entrance too
 			
-	[X] water edge at economic's overwrite looks really bad
-		[ ] water edge at house is bad too
-			
-	[X] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
-
-	[X] use new rotationAndLocate for HashRotatedSide, reexport bushes -> when rendering to viewport
-		check geo tile corners of the cube and calculate a new height elevation!		
-
 	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???
@@ -135,6 +128,17 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] water edge at economic's overwrite looks really bad
+	
+			[X] water edge at house is bad too
+			[X] wooden ground + normal ground edge with water gap again....
+			
+	[X] use OR remove HEIGHT override arrays - removal is good - not creating arrays unnecessarily 
+
+	[X] use new rotationAndLocate for HashRotatedSide, reexport bushes -> when rendering to viewport
+		check geo tile corners of the cube and calculate a new height elevation!		
+
+
 	[X] Check Zphr's new house model tiles!!
 		[X] add grounds, steps
 		[X] add new house 
