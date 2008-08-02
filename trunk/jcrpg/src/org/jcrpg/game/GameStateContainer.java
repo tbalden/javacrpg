@@ -302,12 +302,15 @@ public class GameStateContainer {
 					encounterModePosition.viewPositionY,
 					encounterModePosition.viewPositionZ,
 					false);
-			if (c.internalCube)
+			if (c!=null)
 			{
-				encounterModePosition.insideArea = true;
-			} else
-			{
-				encounterModePosition.insideArea = false;
+				if (c.internalCube)
+				{
+					encounterModePosition.insideArea = true;
+				} else
+				{
+					encounterModePosition.insideArea = false;
+				}
 			}
 			J3DCore.getInstance().sEngine.switchOn(false);
 			positionPlayerToSurfaceEncounterMode();

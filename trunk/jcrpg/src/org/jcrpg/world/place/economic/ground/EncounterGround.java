@@ -78,11 +78,6 @@ public class EncounterGround extends EconomicGround {
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
-		if (c!=null) { 
-			if (kind>=6) c.canContainFlora = false; //else
-				//c.canContainFlora = true;
-		}
-			
 		return c;
 	}
 

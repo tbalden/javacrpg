@@ -57,7 +57,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	
 	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, Geography geo, EconomicGround ground, Residence house, String specialType) throws Exception
 	{
-		World baseWorld = new World("encounterGround",null,100,1,1,1);
+		World baseWorld = new World("encounterGround",null,120,1,1,1);
 		baseWorld.engine = core.gameState.engine;
 		int wMag = 100;
 		int wX = 1;
@@ -86,24 +86,29 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		{
 			
 		}
+		Geography newGeo = null;
 		if (geo!=null && geo.getClass() == Cave.class)
 		{
-			Cave cave = new Cave("cave1",baseWorld,null,0,2,100,1,1,1,0,0,0,0,0,2,true);
+			Cave cave = new Cave("cave1",baseWorld,null,0,2,40,2,1,2,0,0,0,0,0,2,true);
 			cave.alwaysInsideCubesForEncounterGround = true;
+			newGeo = cave;
 			baseWorld.addGeography(cave);
 		} else
 		{
-			Plain plain = new Plain("plain1",baseWorld,null,0,100,1,1,1,0,0,0,true);
+			Plain plain = new Plain("plain1",baseWorld,null,0,40,2,1,2,0,0,0,true);
+			newGeo = plain;
 			baseWorld.addGeography(plain);
 		}
 		if (ground!=null)
 		{
-			EconomicGround g = ground.getInstance("enc", geo, baseWorld, null, 6, 10, 8, 44, 0, 38, 0, null, null);
+			EconomicGround g = ground.getInstance("enc", newGeo, baseWorld, null, 6, 10, 10, 44, 0, 36, 0, null, null);
 			baseWorld.economyContainer.addGround(g);
+			//System.out.println("ADDING POPULATION'S OWN GROUND "+g.getClass());
 		} else
 		{
-			EconomicGround g = new EncounterGround("enc", geo, baseWorld, null, 6, 10, 8, 44, 0, 38, 0, null, null);
+			EconomicGround g = new EncounterGround("enc", newGeo, baseWorld, null, 6, 10, 10, 44, 0, 36, 0, null, null);
 			baseWorld.economyContainer.addGround(g);
+			//System.out.println("ADDING ENCOUTNER GROUND "+g.getClass());
 		}
 		if (house!=null)
 		{
