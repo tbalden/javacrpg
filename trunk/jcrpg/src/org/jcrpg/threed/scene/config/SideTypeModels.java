@@ -695,11 +695,11 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(39), new RenderedSide(new Model[]{sm_water_rock_side}));
 
 		// climate dependent
-		SimpleModel sm_rock_downside = new SimpleModel("models/ground/ground_farview.obj",null); sm_rock_downside.farViewEnabled = true;
-		SimpleModel sm_rock_downside_desert = new SimpleModel("models/ground/ground_farview.obj","sand2.jpg"); sm_rock_downside_desert.farViewEnabled = true;
-		SimpleModel sm_rock_downside_continental = new SimpleModel("models/ground/ground_farview.obj","grass2.jpg"); sm_rock_downside_continental.farViewEnabled = true;
-		SimpleModel sm_rock_downside_arctic = new SimpleModel("models/ground/ground_farview.obj","snow1.jpg"); sm_rock_downside_arctic.farViewEnabled = true;
-		SimpleModel sm_rock_downside_tropical = new SimpleModel("models/ground/ground_farview.obj","jungle.jpg"); sm_rock_downside_tropical.farViewEnabled = true;
+		SimpleModel sm_rock_downside = new SimpleModel("models/ground/ground_under.obj",null); sm_rock_downside.farViewEnabled = true;
+		SimpleModel sm_rock_downside_desert = new SimpleModel("models/ground/ground_under.obj","sand2.jpg"); sm_rock_downside_desert.farViewEnabled = true;
+		SimpleModel sm_rock_downside_continental = new SimpleModel("models/ground/ground_under.obj","grass2.jpg"); sm_rock_downside_continental.farViewEnabled = true;
+		SimpleModel sm_rock_downside_arctic = new SimpleModel("models/ground/ground_under.obj","snow1.jpg"); sm_rock_downside_arctic.farViewEnabled = true;
+		SimpleModel sm_rock_downside_tropical = new SimpleModel("models/ground/ground_under.obj","jungle.jpg"); sm_rock_downside_tropical.farViewEnabled = true;
 		dependentModels = new HashMap<String, Model[]>();
 		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_rock_downside_desert});
 		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_rock_downside_continental});
