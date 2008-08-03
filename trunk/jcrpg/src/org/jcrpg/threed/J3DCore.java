@@ -183,7 +183,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean DETAILED_TREES = true;
     public static boolean DETAILED_TREE_FOLIAGE = true;
     public static boolean LOD_VEGETATION = false;
-    public static boolean BUMPED_GROUND = false;
     public static boolean WATER_SHADER = false;
     public static boolean WATER_DETAILED = false;
     
@@ -244,7 +243,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			DETAILED_TREES = loadValue("DETAILED_TREES", false);
 			DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
 			ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
-			BUMPED_GROUND = loadValue("BUMPED_GROUND", false);
 			WATER_SHADER = loadValue("WATER_SHADER", false);
 			WATER_DETAILED = loadValue("WATER_DETAILED", false);
 			
@@ -615,7 +613,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		language = new Language("en");
 
-		new SideTypeModels().fillMap(hmCubeSideSubTypeToRenderedSideId, hm3dTypeRenderedSide, MIPMAP_TREES, DETAILED_TREES, BUMPED_GROUND, RENDER_GRASS_DISTANCE, LOD_VEGETATION);
+		new SideTypeModels().fillMap(hmCubeSideSubTypeToRenderedSideId, hm3dTypeRenderedSide, MIPMAP_TREES, DETAILED_TREES, RENDER_GRASS_DISTANCE, LOD_VEGETATION);
 		
 	}
 
@@ -1209,9 +1207,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	{
 		float middleHeight = 0;
 		boolean cubeMiddleHeight = false;
+		Cube c = null;
 		try
 		{
-			Cube c = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false);
+			c = gameState.world.getCube(-1, gameState.getCurrentRenderPositions().viewPositionX, gameState.getCurrentRenderPositions().viewPositionY, gameState.getCurrentRenderPositions().viewPositionZ, false);
 			middleHeight = c.middleHeight;
 			cubeMiddleHeight = c.cornerHeights!=null;
 			if (c.sides!=null)
@@ -1231,11 +1230,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		} catch (Exception ex){}; 
 		float bonus = (gameState.getCurrentRenderPositions().onSteep?1.5f:0f);
 		float middleHeightBonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
-		if (cubeMiddleHeight || middleHeightBonus>bonus)
+		if (cubeMiddleHeight || middleHeightBonus>bonus && !c.internalCube)
 		{
 			bonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
+			System.out.println("MIDDLE HEIGHT "+bonus);			
 		}
-		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.11f+bonus,-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
+		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.09f+bonus,-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
 		Vector3f fromPos = J3DCore.directionPositions[gameState.getCurrentRenderPositions().viewDirection];
 		v.addLocal(fromPos.negate());
 		return v;

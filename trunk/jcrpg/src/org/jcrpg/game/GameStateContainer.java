@@ -493,7 +493,7 @@ public class GameStateContainer {
 											if (Engine.getTrueRandom().nextInt(10)>6)
 											{
 												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hear faint sounds around.");
-												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Probably "+p.memberType.visibleTypeId+".");
+												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Probably "+p.memberType.getName()+".");
 												J3DCore.getInstance().audioServer.playLoading(sound, "ai");
 												played = true; break;
 											}

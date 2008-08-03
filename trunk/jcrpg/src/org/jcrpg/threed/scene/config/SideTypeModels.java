@@ -87,7 +87,7 @@ public class SideTypeModels {
 		
 	}
 	
-	public void fillMap(HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId, HashMap<Integer,RenderedSide> hm3dTypeRenderedSide, boolean MIPMAP_TREES, boolean DETAILED_TREES, boolean BUMPED_GROUND, float RENDER_GRASS_DISTANCE, boolean LOD_VEGETATION)
+	public void fillMap(HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId, HashMap<Integer,RenderedSide> hm3dTypeRenderedSide, boolean MIPMAP_TREES, boolean DETAILED_TREES, float RENDER_GRASS_DISTANCE, boolean LOD_VEGETATION)
 	{
 		// area subtype to 3d type mapping
 		hmCubeSideSubTypeToRenderedSideId.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);

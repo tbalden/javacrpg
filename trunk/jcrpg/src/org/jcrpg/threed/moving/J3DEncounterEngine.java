@@ -106,9 +106,12 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			//System.out.println("ADDING POPULATION'S OWN GROUND "+g.getClass());
 		} else
 		{
-			EconomicGround g = new EncounterGround("enc", newGeo, baseWorld, null, 6, 10, 10, 44, 0, 36, 0, null, null);
-			baseWorld.economyContainer.addGround(g);
-			//System.out.println("ADDING ENCOUTNER GROUND "+g.getClass());
+			if (newGeo instanceof Plain)
+			{
+				EconomicGround g = new EncounterGround("enc", newGeo, baseWorld, null, 6, 10, 10, 44, 0, 36, 0, null, null);
+				baseWorld.economyContainer.addGround(g);
+				//System.out.println("ADDING ENCOUTNER GROUND "+g.getClass());
+			}
 		}
 		if (house!=null)
 		{

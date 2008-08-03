@@ -102,6 +102,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] climate level system?
 	[ ] city walls? around whole districts if it's enough advanced!!
+	
+	[ ] add labirynth monster Population?? ;)
+		[ ] add undead castle population?? ;)
+	
+	[ ] add treasure chests
 ##
 [?] list before next release:
 ##
@@ -116,9 +121,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[X] use new models
 			[X] under entrance block
 			
-			[ ] behind entrance double entrance replacement?? - doesn't work yet, check Cave code
+			[X] behind entrance double entrance replacement?? - doesn't work yet, check Cave code
 				REFACTOR the whole code with some better entrance part and better cube sides that
 				hide the mountain at entrance too
+				
+			[ ] solve that cave only begins after a while inside the mountain
 			
 	
 	-- QA/DOC
