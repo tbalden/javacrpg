@@ -142,20 +142,86 @@ public class Cave extends Geography implements Surface {
 		}
 		int height = getPointHeightOutside(worldX, worldZ, farView);
 		int FARVIEW_GAP = 1;
-
+		int inTheCaveHeight = height+((World)getRoot()).worldGroundLevel - worldGroundLevel;
 		
 		boolean entranceOverwrite = false;
 		int tmpWorldX = 0;
 		int tmpWorldZ = 0;
-		for (int i=-1; i<2; i++)
+		
+		
+		for (int i=-4; i<5; i++)
 		{
+			// TODO a better measuring if we are deep enough in the mountain under the ground level,
+			// checking till we get +2 under the ground on the entrance level.
 			tmpWorldX = worldX+i;
 			tmpWorldZ = worldZ+i;
 			int tmpHeightX = getPointHeightOutside(tmpWorldX, worldZ, farView);
 			int tmpHeightZ = getPointHeightOutside(worldX, tmpWorldZ, farView);
+			if (Math.abs(i)==1)
+			{
+				// looking for unnecessary ground block to replace with cave ground ---------------------------------------------------------------------------------------------------------------------------------
+				if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel+1 && tmpHeightX+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
+				{
+					Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+					int kind = (int)getCubeKindOutside(-1, tmpWorldX, worldY, worldZ, farView)[4];
+					if ((kind==K_STEEP_WEST || kind==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+					{
+						c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+						c.overwritePower = 2;
+					}
+					if (c!=null)
+					{
+						return inTheCaveHeight>=0?c:null;
+					}
+				}
+				if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel+1 && tmpHeightX+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1+1)
+				{
+					Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+					int kind = (int)getCubeKindOutside(-1, tmpWorldX, worldY, worldZ, farView)[4];
+					if ((kind==K_STEEP_WEST || kind==K_STEEP_EAST) && (relX<realSizeX&& relX>0))
+					{
+						c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+						c.overwritePower = 2;
+					}
+					if (c!=null)
+					{
+						return inTheCaveHeight>=0?c:null;
+					}
+				}
+				if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel+1 && tmpHeightZ+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
+				{
+					int kind = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ, farView)[4];
+					Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+					if ((kind==K_STEEP_NORTH||kind==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+					{
+						c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+						c.overwritePower = 2;
+					}
+					if (c!=null)
+					{
+						return inTheCaveHeight>=0?c:null;
+					}
+				}
+				if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel+1 && tmpHeightZ+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1+1)
+				{
+					int kind = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ, farView)[4];
+					Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
+					if ((kind==K_STEEP_NORTH||kind==K_STEEP_SOUTH) && (relZ<realSizeZ&& relZ>0))
+					{
+						c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
+						c.overwritePower = 2;
+					}
+					if (c!=null)
+					{
+						return inTheCaveHeight>=0?c:null;
+					}
+				}
+			}
+			
+			// looking for Cave Entrance ---------------------------------------------------------------------------------------------------------------------------------
 			if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && tmpHeightX+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 			{
-				int kind = (int)getCubeKindOutside(key, tmpWorldX, worldY, worldZ, farView)[4];
+				int kind = (int)getCubeKindOutside(-1, tmpWorldX, worldY, worldZ, farView)[4];
 				int kindNext = (int)getCubeKindOutside(-1, tmpWorldX+1, worldY, worldZ, farView)[4];
 				int kindPrev = (int)getCubeKindOutside(-1, tmpWorldX-1, worldY, worldZ, farView)[4];
 				Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
@@ -172,12 +238,15 @@ public class Cave extends Geography implements Surface {
 				{
 					entranceOverwrite = true;
 				}
+				//System.out.println("ENTRANCE EAST for "+i+" "+c);
 				if (c!=null)
-					return c;
+				{
+					return inTheCaveHeight>=0?c:null;
+				}
 			}
 			if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && tmpHeightX+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
 			{
-				int kind = (int)getCubeKindOutside(key, tmpWorldX, worldY, worldZ, farView)[4];
+				int kind = (int)getCubeKindOutside(-1, tmpWorldX, worldY, worldZ, farView)[4];
 				int kindNext = (int)getCubeKindOutside(-1, tmpWorldX+1, worldY, worldZ, farView)[4];
 				int kindPrev = (int)getCubeKindOutside(-1, tmpWorldX-1, worldY, worldZ, farView)[4];
 				Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
@@ -194,12 +263,15 @@ public class Cave extends Geography implements Surface {
 				{
 					entranceOverwrite = true;
 				}
+				//System.out.println("ENTRANCE EAST for "+i+" "+c);
 				if (c!=null)
-					return c;
+				{
+					return inTheCaveHeight>=0?c:null;
+				}
 			}
 			if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && tmpHeightZ+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel)
 			{
-				int kind = (int)getCubeKindOutside(key, worldX, worldY, tmpWorldZ, farView)[4];
+				int kind = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ, farView)[4];
 				int kindNext = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ+1, farView)[4];
 				int kindPrev = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ-1, farView)[4];
 				Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
@@ -216,12 +288,15 @@ public class Cave extends Geography implements Surface {
 				{
 					entranceOverwrite = true;
 				}
+				//System.out.println("ENTRANCE NORTH for "+i+" "+c);
 				if (c!=null)
-					return c;
+				{
+					return inTheCaveHeight>=0?c:null;
+				}
 			}
 			if ((relX%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel && tmpHeightZ+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)
 			{
-				int kind = (int)getCubeKindOutside(key, worldX, worldY, tmpWorldZ, farView)[4];
+				int kind = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ, farView)[4];
 				int kindNext = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ+1, farView)[4];
 				int kindPrev = (int)getCubeKindOutside(-1, worldX, worldY, tmpWorldZ-1, farView)[4];
 				Cube c = null;//new Cube(this,EMPTY,worldX,worldY,worldZ);
@@ -238,18 +313,22 @@ public class Cave extends Geography implements Surface {
 				{
 					entranceOverwrite = true;
 				}
+				//System.out.println("ENTRANCE NORTH for "+i+" "+c);
 				if (c!=null)
-					return c;
+				{
+					return inTheCaveHeight>=0?c:null;
+				}
 				
 			}
 		}
 		
 
-		if (height+((World)getRoot()).worldGroundLevel<=worldY)
+		// only calculate if 1 cube below the normal surface ground
+		if (height+((World)getRoot()).worldGroundLevel<=worldY+1)
 		{
 			return null;
 		}
-		int inTheCaveHeight = height+((World)getRoot()).worldGroundLevel - worldGroundLevel;
+		
 		
 		int per = HashUtil.mixPercentage(worldX, relY/levelSize, worldZ);
 		if ((relZ%ENTRANCE_DISTANCE==2 || relX%ENTRANCE_DISTANCE==2) && relY==ENTRANCE_LEVEL) {
@@ -262,7 +341,7 @@ public class Cave extends Geography implements Surface {
 			// internal space to 0 too!
 			return c;
 		}
-		boolean ceiling = false;
+		boolean ceiling = true;
 		Cube c = new Cube(this,CAVE_GROUND_CEILING,worldX,worldY,worldZ);
 		if (worldRelHeight>1) {
 			if (relY%levelSize==0)
@@ -273,7 +352,7 @@ public class Cave extends Geography implements Surface {
 					ceiling = true;
 				} else
 				{
-					
+					ceiling = false;
 					c = new Cube(this,CAVE_GROUND,worldX,worldY,worldZ);
 					
 				}
@@ -285,30 +364,31 @@ public class Cave extends Geography implements Surface {
 			}
 			else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
 		}
-		if (!entranceOverwrite) {
+		//if (entranceOverwrite) 
+		{
 			// not entrance port, no overwrite
 			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
 			if (ceiling)
 			{
-				if (relY==inTheCaveHeight-1 || relY==inTheCaveHeight-2 && relY>0)
+				if ((relY==inTheCaveHeight || relY==inTheCaveHeight-1 || relY==inTheCaveHeight-2))
 				{
 					int YNorth = getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
 					int YSouth = getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
 					int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
 					int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP+((World)getRoot()).worldGroundLevel - worldGroundLevel;
-					if (YEast<inTheCaveHeight)
+					if (YEast<inTheCaveHeight || inTheCaveHeight==0)
 					{
 						c.merge(new Cube(this,CAVE_EAST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
-					if (YSouth<inTheCaveHeight)
+					if (YSouth<inTheCaveHeight || inTheCaveHeight==0)
 					{
 						c.merge(new Cube(this,CAVE_SOUTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
-					if (YWest<inTheCaveHeight)
+					if (YWest<inTheCaveHeight || inTheCaveHeight==0)
 					{
 						c.merge(new Cube(this,CAVE_WEST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
-					if (YNorth<inTheCaveHeight)
+					if (YNorth<inTheCaveHeight || inTheCaveHeight==0)
 					{
 						c.merge(new Cube(this,CAVE_NORTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
@@ -319,11 +399,11 @@ public class Cave extends Geography implements Surface {
 					c.overwritePower = 1;
 				}
 			}
-		} else
-		{
+		}// else
+		//{
 			// this is entrance part!
-			c.overwritePower = 2;
-		}
+			//c.overwritePower = 2;
+		//}
 		return c;
 
 	}

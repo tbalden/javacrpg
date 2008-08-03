@@ -125,7 +125,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 				REFACTOR the whole code with some better entrance part and better cube sides that
 				hide the mountain at entrance too
 				
-			[ ] solve that cave only begins after a while inside the mountain
+			[X] solve that cave only begins after a while inside the mountain
 			
 	
 	-- QA/DOC
