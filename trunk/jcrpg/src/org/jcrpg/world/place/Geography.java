@@ -35,6 +35,7 @@ import org.jcrpg.world.ai.flora.FloraCube;
 import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.generator.GeneratedPartRuleSet;
+import org.jcrpg.world.place.water.Ocean;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
@@ -460,9 +461,31 @@ public class Geography extends Place implements Surface {
 		{
 			if (this!=geo)
 			{
-				if (geo instanceof River && geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
+				if (geo.boundaries.isInside(worldX, geo.worldGroundLevel, worldZ))
 				{
-					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) return 0f;
+					if (geo instanceof Ocean)
+					{
+						//if (geo.isAlgorithmicallyInside(worldX, geo.worldGroundLevel, worldZ))
+						{
+							
+							for (int x=-1; x<2; x++)
+							{
+								for (int z=-1; z<2; z++)
+								{
+									if (geo.isWaterPoint(worldX+x, geo.worldGroundLevel, worldZ+z, farView))
+									{
+										return -1f;
+									}
+									
+								}
+							}
+							
+						}
+					} else
+					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) 
+					{
+						return -1f;
+					}
 				}
 			}
 		}
@@ -487,12 +510,23 @@ public class Geography extends Place implements Surface {
 			lastHeight = getPointHeightOutside(worldX, worldZ, farView);
 		} else
 		{
+			if (x<0) x= blockSize+x; else
+			if (x>blockSize)
+			{
+				x = x%blockSize;
+			}
+			if (z<0) z= blockSize+z; else
+			if (z>blockSize)
+			{
+				z = z%blockSize;
+			}
 			lastHeight = getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
 		}
 		return lastHeight;
 	}
 	protected float getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
+		if (x==0 || x==blockSize-1 || x==blockSize || z==0 || z==blockSize-1 || z==blockSize ) System.out.println(this+" DEFAULT HEIGHT"+" "+x+" "+z);
 		return 0;
 	}
 
@@ -660,7 +694,7 @@ public class Geography extends Place implements Surface {
 		float YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView)/FFARVIEW_GAP;
 		float YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView)/FFARVIEW_GAP;
 
-		/*float rY = getPointCornerSlightDisplaceFactor(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
+		float rY = getPointCornerSlightDisplaceFactor(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
 		float rYNorth = getPointCornerSlightDisplaceFactor(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView);
 		float rYNorthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
 		float rYNorthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
@@ -670,18 +704,18 @@ public class Geography extends Place implements Surface {
 		float rYWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView);
 		float rYEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView);
 
-		rY= rYNorth = rYNorthEast = rYNorthWest = rYSouth = rYSouthWest = rYSouthEast = rYWest = rYEast = 0f;
+		//rY= rYNorth = rYNorthEast = rYNorthWest = rYSouth = rYSouthWest = rYSouthEast = rYWest = rYEast = 0f;
 		
 		{
 			hNE = ((Y + rY + YNorth + rYNorth + YNorthEast + rYNorthEast + YEast + rYEast)/4f) - iY;
 			hNW = ((Y + rY + YNorth + rYNorth + YNorthWest + rYNorthWest + YWest + rYWest)/4f) - iY;
 			hSW = ((Y + rY + YSouth + rYSouth + YSouthWest + rYSouthWest + YWest + rYWest)/4f) - iY;
 			hSE = ((Y + rY + YSouth + rYSouth + YSouthEast + rYSouthEast + YEast + rYEast)/4f) - iY;
-		}*/
-		hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY;
+		}
+		/*hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY;
 		hNW = ((Y + YNorth + + YNorthWest + + YWest)/4f) - iY;
 		hSW = ((Y + YSouth + + YSouthWest + + YWest)/4f) - iY;
-		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY;
+		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY;*/
 	
 		/*
 		 *

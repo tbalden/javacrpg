@@ -100,7 +100,13 @@ public class Mountain extends Geography {
 		Float overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
 		if (overrideHeight!=null) return overrideHeight;
 		int Y = 0;
-		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
+		if (x<0 || z<0 || x>=sizeX || z>=sizeZ)
+		{
+			x = x % blockSize;
+			z = z % blockSize;
+		}
+			//return getPointHeightOutside(worldX, worldZ, farView);
+		
 		{
 			int x1 = sizeX / 2;
 			int z1 = sizeZ / 2;
