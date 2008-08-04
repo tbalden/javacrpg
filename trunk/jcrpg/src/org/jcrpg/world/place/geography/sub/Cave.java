@@ -114,7 +114,11 @@ public class Cave extends Geography implements Surface {
 			c.overwrite = true;
 		}
 		if (c.overwritePower!=2)
+		{
 			c.internalCube = true; // except entrance all is inside
+			c.internalLight = true;
+		}
+		
 		return c;
 	}
 	
@@ -241,6 +245,7 @@ public class Cave extends Geography implements Surface {
 				//System.out.println("ENTRANCE EAST for "+i+" "+c);
 				if (c!=null)
 				{
+					c.internalLight = true;
 					return inTheCaveHeight>=0?c:null;
 				}
 			}
@@ -364,7 +369,6 @@ public class Cave extends Geography implements Surface {
 			}
 			else c = new Cube(this,new Side[][]{null,null,null,null,null,null},worldX,worldY,worldZ);
 		}
-		//if (entranceOverwrite) 
 		{
 			// not entrance port, no overwrite
 			c.overwritePower = 0; // this should overwrite only empty spaces, other geos should set their empty
@@ -399,11 +403,7 @@ public class Cave extends Geography implements Surface {
 					c.overwritePower = 1;
 				}
 			}
-		}// else
-		//{
-			// this is entrance part!
-			//c.overwritePower = 2;
-		//}
+		}
 		return c;
 
 	}

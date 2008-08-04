@@ -66,6 +66,7 @@ public class GameStateContainer {
 		public int origoZ = 0;
 		public boolean onSteep = false;
 		public boolean insideArea = false;
+		public boolean internalLight = false;
 	}
 	
 	private ScenarioPositions normalPosition = new ScenarioPositions();
@@ -307,10 +308,12 @@ public class GameStateContainer {
 				if (c.internalCube)
 				{
 					encounterModePosition.insideArea = true;
+				
 				} else
 				{
 					encounterModePosition.insideArea = false;
 				}
+				encounterModePosition.internalLight = c.internalLight;
 			}
 			J3DCore.getInstance().sEngine.switchOn(false);
 			positionPlayerToSurfaceEncounterMode();

@@ -69,6 +69,11 @@ public class Cube extends ChangingImpl {
 	 * If true it is a cube of an internal part.
 	 */
 	public boolean internalCube = false;
+	/**
+	 * Tells if light environment can be internal - used for transition cubes,
+	 * where you are still outside but light should be turned down.
+	 */
+	public boolean internalLight = false;
 	
 	/**
 	 * If true it is underwater.
@@ -177,6 +182,17 @@ public class Cube extends ChangingImpl {
 		}
 		int newOverwritePower = Math.max(this.overwritePower, c2.overwritePower);
 
+		// light thing
+		if (this.overwrite && this.internalLight || c2.overwrite && c2.internalLight)
+		{
+			internalLight = true;
+		} else
+		if (!this.overwrite && !c2.internalCube)
+		{
+			internalLight = false;
+		}
+		
+		
 		for (int i=0; i<sides.length; i++)
 		{
 			Side[] sides1 = this.sides[i];
@@ -293,6 +309,15 @@ public class Cube extends ChangingImpl {
 		if (!c1.overwrite && !c2.internalCube)
 		{
 			internalCube = false;
+		}
+		// light...
+		if (c1.overwrite && c1.internalLight || c2.overwrite && c2.internalLight)
+		{
+			internalLight = true;
+		} else
+		if (!c1.overwrite && !c2.internalLight)
+		{
+			internalLight = false;
 		}
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
 
@@ -417,6 +442,7 @@ public class Cube extends ChangingImpl {
 	{
 		Cube c = new Cube(newParent,sides,x,y,z,steepDirection);
 		c.internalCube = internalCube;
+		c.internalLight = internalLight;
 		c.overwrite = overwrite;
 		c.overwritePower = overwritePower;
 		c.onlyIfOverlaps = onlyIfOverlaps;
