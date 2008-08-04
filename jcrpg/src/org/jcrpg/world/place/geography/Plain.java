@@ -41,16 +41,30 @@ public class Plain extends Geography {
 	SurfaceHeightAndType[] cachedType = null;
 	
 	@Override
-	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
+	protected float getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
-		Integer overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
+		Float overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
 		if (overrideHeight!=null) return overrideHeight;
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
-		int Y = 0;
-		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/50);
+		float Y = 0;
+		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/50f);
+		
+		// adding some hill thing...
+		int x1 = sizeX / 8;
+		int z1 = sizeZ / 8;
+		
+		int x2 = x%(blockSize/4)-(sizeX/8)*3;
+		int z2 = z%(blockSize/4)-(sizeZ/8)*3;
+		
+		int r = sizeX / 8;
+		
+		float sY = Math.max(0, r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) ))*5;
+		sY/=60f;
+		Y+=sY;
+		
 		//Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/8, worldZ/8, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/8, worldX/8, 0)+20)/20), 0)))+30)%100)/50);
 		//int ret = Math.min(0,-Y/30); // valley
-		int ret = Math.max(0,Y); // mountain
+		float ret = Math.max(0,Y); // mountain
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PLAIN H: "+ret);
 		return ret;
 

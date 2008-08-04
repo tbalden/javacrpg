@@ -177,6 +177,8 @@ public class DistanceBasedBoundary extends Boundaries {
 	
 	public static void main(String[] args) throws Exception 
 	{
+		System.out.println((int)0.86f+" "+(int)0.99f);
+		if (true) return;
 		DistanceBasedBoundary d1 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),120,0,150,50);
 		DistanceBasedBoundary d2 = new DistanceBasedBoundary(new World("id",null,100,100,100,100),163,0,120,6);
 		int[][] ratios = getCommonRadiusRatiosAndMiddlePoint(d1, d2);
