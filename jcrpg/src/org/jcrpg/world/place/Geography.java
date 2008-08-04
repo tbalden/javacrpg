@@ -36,7 +36,6 @@ import org.jcrpg.world.ai.flora.FloraDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.generator.GeneratedPartRuleSet;
 import org.jcrpg.world.place.water.Ocean;
-import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
 
 public class Geography extends Place implements Surface {
@@ -465,7 +464,8 @@ public class Geography extends Place implements Surface {
 				{
 					if (geo instanceof Ocean)
 					{
-						//if (geo.isAlgorithmicallyInside(worldX, geo.worldGroundLevel, worldZ))
+						// LOOKING AROUD FOR WATER'S NEAR, if so we must return -1 to 
+						// make ground sloppy and suitable for water neighbor cube...
 						{
 							
 							for (int x=-1; x<2; x++)
@@ -484,6 +484,7 @@ public class Geography extends Place implements Surface {
 					} else
 					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) 
 					{
+						// return -1 for sloppy ground around it and for river level.
 						return -1f;
 					}
 				}
