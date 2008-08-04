@@ -144,7 +144,7 @@ public class Cave extends Geography implements Surface {
 		{
 			return null;		
 		}
-		int height = getPointHeightOutside(worldX, worldZ, farView);
+		int height = (int)getPointHeightOutside(worldX, worldZ, farView);
 		int FARVIEW_GAP = 1;
 		int inTheCaveHeight = height+((World)getRoot()).worldGroundLevel - worldGroundLevel;
 		
@@ -159,8 +159,8 @@ public class Cave extends Geography implements Surface {
 			// checking till we get +2 under the ground on the entrance level.
 			tmpWorldX = worldX+i;
 			tmpWorldZ = worldZ+i;
-			int tmpHeightX = getPointHeightOutside(tmpWorldX, worldZ, farView);
-			int tmpHeightZ = getPointHeightOutside(worldX, tmpWorldZ, farView);
+			int tmpHeightX = (int)getPointHeightOutside(tmpWorldX, worldZ, farView);
+			int tmpHeightZ = (int)getPointHeightOutside(worldX, tmpWorldZ, farView);
 			if (Math.abs(i)==1)
 			{
 				// looking for unnecessary ground block to replace with cave ground ---------------------------------------------------------------------------------------------------------------------------------
@@ -376,10 +376,10 @@ public class Cave extends Geography implements Surface {
 			{
 				if ((relY==inTheCaveHeight || relY==inTheCaveHeight-1 || relY==inTheCaveHeight-2))
 				{
-					int YNorth = getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
-					int YSouth = getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
-					int YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
-					int YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP+((World)getRoot()).worldGroundLevel - worldGroundLevel;
+					int YNorth = (int)getPointHeight(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
+					int YSouth = (int)getPointHeight(relX, relZ-FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ-FARVIEW_GAP), farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
+					int YWest = (int)getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP +((World)getRoot()).worldGroundLevel - worldGroundLevel;
+					int YEast = (int)getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView)/FARVIEW_GAP+((World)getRoot()).worldGroundLevel - worldGroundLevel;
 					if (YEast<inTheCaveHeight || inTheCaveHeight==0)
 					{
 						c.merge(new Cube(this,CAVE_EAST,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);

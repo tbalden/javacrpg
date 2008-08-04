@@ -98,7 +98,7 @@ public class SaveLoadNewGame {
 			Ecology ecology = eGen.generateEcology(world);
 			
 			int xDiff = -24;
-			int yDiff = 8;
+			int yDiff = 7;
 			int zDiff = -60;
 			if (true==false)
 				{xDiff = +15;

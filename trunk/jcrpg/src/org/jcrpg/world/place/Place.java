@@ -305,7 +305,7 @@ public abstract class Place {
 	 * @param worldZ
 	 * @return the relative height.
 	 */
-	public int getPointHeightOutside(int worldX, int worldZ, boolean farView)
+	public float getPointHeightOutside(int worldX, int worldZ, boolean farView)
 	{	
 		Geography nonReturnerFallback = null;
 		for (Geography geo:((World)getRoot()).geographies.values())

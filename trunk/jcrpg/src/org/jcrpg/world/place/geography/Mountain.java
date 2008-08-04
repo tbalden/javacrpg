@@ -95,9 +95,9 @@ public class Mountain extends Geography {
 	}
 
 	@Override
-	protected int getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
+	protected float getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
-		Integer overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
+		Float overrideHeight = overrideHeightForException(worldX, 0, worldZ, farView);
 		if (overrideHeight!=null) return overrideHeight;
 		int Y = 0;
 		if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
@@ -124,9 +124,10 @@ public class Mountain extends Geography {
 			Y += Math.max(0, r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) ))*5;
 		}
 		//int ret = Math.min(0,-Y/30); // valley
-		int ret = (int)(Math.max(0,Y*1d/(sizeX*(sizeZ/10)))*worldRelHeight); // mountain
-		ret+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/60;
+		float ret = (Math.max(0,Y*1f/(sizeX*(sizeZ/10f)))*(worldRelHeight*1f)); // mountain
+		ret+=((HashUtil.mixPercentage(worldX/3, worldZ/3, 0))-50)/60f;
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN HEIGHT"+ret);
+		//System.out.println("___ "+ret);
 		return ret;
 	}
 	

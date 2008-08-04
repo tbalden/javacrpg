@@ -206,7 +206,7 @@ public class Ocean extends Water {
 				{
 					for (int dz=-1; dz<=1; dz++)
 					{
-						int Y = getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz), farView);
+						int Y = (int)getPointHeightOutside(shrinkToWorld(x+dx),shrinkToWorld(z+dz), farView);
 						if (Y>0)
 							return false;
 					}

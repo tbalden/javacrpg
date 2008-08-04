@@ -122,6 +122,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[+] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
+
 	[X] make a better model for under cave entrance -> rock under a separate type now!
 		what it should look alike?
 
@@ -152,8 +154,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[X] add grounds, steps
 		[X] add new house 
 	
-	[-] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
-
 	[-] add some 'randmoness' in gimp to edges of alpha mask
 	
 	[X] camera positioning -> override middle height if it's specified by the cube
