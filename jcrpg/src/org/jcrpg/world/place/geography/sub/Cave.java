@@ -153,7 +153,7 @@ public class Cave extends Geography implements Surface {
 		int tmpWorldZ = 0;
 		
 		
-		for (int i=-4; i<5; i++)
+		for (int i=-5; i<6; i++)
 		{
 			// TODO a better measuring if we are deep enough in the mountain under the ground level,
 			// checking till we get +2 under the ground on the entrance level.

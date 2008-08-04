@@ -73,6 +73,7 @@ public class Ocean extends Water {
 
 	public Ocean(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int depth, int noWaterPercentage, int density) throws Exception {
 		super(id,parent,loc,worldGroundLevel,depth,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,true);
+		this.worldGroundLevel--;
 		realSizeX = sizeX*magnification;
 		realSizeZ = sizeZ*magnification;
 		
@@ -90,6 +91,7 @@ public class Ocean extends Water {
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
 			SurfaceHeightAndType surface, boolean farView) {
 		
+		if (!isWaterPoint(x, y, z, farView)) return geoCube;
 		if (y/(farView?J3DCore.FARVIEW_GAP:1)==worldGroundLevel/(farView?J3DCore.FARVIEW_GAP:1) && !noWaterInTheBed) 
 		{
 			Cube c = new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
@@ -202,7 +204,7 @@ public class Ocean extends Water {
 				if (!coasting) return true; // just a magnified bigmap view detail is required, return now!
 
 				// let's see if there is overlapping geography with non 0 height neigbor cube -> no water there!
-				for (int dx=-1; dx<=1; dx++)
+				/*for (int dx=-1; dx<=1; dx++)
 				{
 					for (int dz=-1; dz<=1; dz++)
 					{
@@ -210,7 +212,7 @@ public class Ocean extends Water {
 						if (Y>0)
 							return false;
 					}
-				}
+				}*/
 				//int cY = getPointHeightOutside(shrinkToWorld(x),shrinkToWorld(z));
 				//if (cY<=0 && y<=worldGroundLevel) return true;
 				

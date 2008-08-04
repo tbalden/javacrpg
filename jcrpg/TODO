@@ -107,6 +107,10 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] add undead castle population?? ;)
 	
 	[ ] add treasure chests
+	
+	[ ] COSAT slope:
+	 lower height point geo tile override height ->
+		and water tile + in getWaterCube
 ##
 [?] list before next release:
 ##
@@ -115,6 +119,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
+	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???
 
@@ -122,7 +127,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] stitching problem mountain!
+		some kind of /calcRelative pos/ problem!!! sizes wrong??
+
 	[+] add back Float to pointHeight!! use it for corners height calc, more random thing it will be!
+		[X] add some detailed functions for forest/plain too
 
 	[X] make a better model for under cave entrance -> rock under a separate type now!
 		what it should look alike?

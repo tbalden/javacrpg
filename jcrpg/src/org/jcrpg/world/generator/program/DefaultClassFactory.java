@@ -56,7 +56,7 @@ public class DefaultClassFactory extends ClassFactory{
 		} else
 		if (type == Cave.class)
 		{
-			Cave p = new Cave("BIGCAVE",world,null,world.getSeaLevel(1)+1,world.getSeaLevel(1)+3,gMag, gWX, 2, gWZ, 0, world.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
+			Cave p = new Cave("BIGCAVE",world,null,world.getSeaLevel(1)+2,world.getSeaLevel(1)+4,gMag, gWX, 2, gWZ, 0, world.getSeaLevel(gMag), 0, 30,Cave.LIMIT_WEST|Cave.LIMIT_SOUTH|Cave.LIMIT_NORTH|Cave.LIMIT_EAST,2,false);
 			r = p;
 		} else
 		if (type == Mountain.class)

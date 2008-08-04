@@ -330,6 +330,7 @@ public abstract class Place {
 			int[] values = nonReturnerFallback.calculateTransformedCoordinates(worldX, nonReturnerFallback.worldGroundLevel, worldZ);
 			return nonReturnerFallback.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
 		}
+		System.out.println("NO POINT GEO OUTSIDE");
 		return 0;
 	}
 	
