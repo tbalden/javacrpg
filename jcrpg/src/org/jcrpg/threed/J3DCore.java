@@ -1092,7 +1092,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			skyParentNode.attachChild(skySphere);
 		}
-		if (gameState.getCurrentRenderPositions().insideArea)
+		if (gameState.getCurrentRenderPositions().internalLight)
 		{
 			skyParentNode.setCullMode(Node.CULL_ALWAYS);
 			skySphere.setCullMode(Node.CULL_ALWAYS);
@@ -1451,6 +1451,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					groundParentNode.attachChild(extRootNode);
 					groundParentNode.attachChild(intRootNode);
 				}
+				gameState.getNormalPositions().internalLight = c.internalLight;
+				
 			}
 			return true;
 			
@@ -1609,6 +1611,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				groundParentNode.attachChild(extRootNode);
 				groundParentNode.attachChild(intRootNode);
 			}
+			gameState.getNormalPositions().internalLight = c.internalLight;
 		}
 		return true;
 	}
@@ -1934,6 +1937,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			orbiters3D.clear();
 			orbitersLight3D.clear();
 			gameState.getNormalPositions().insideArea = false;
+			gameState.getNormalPositions().internalLight = false;
 			gameState.getNormalPositions().onSteep = false;
 			skyParentNode.detachAllChildren();
 			modelLoader.cleanAll();
