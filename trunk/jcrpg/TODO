@@ -112,11 +112,19 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
-	
+
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
-	-- TILING THINGS:
+	-- QA/DOC
+	[ ] add choice for DETAILS settings at startup???
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
 	
+	--
+	[X] make a better model for under cave entrance -> rock under a separate type now!
+		what it should look alike?
+
 	[X] cave entrance height ?? - CAVE should override pointheight at entrance by +1 !!
 		[X] use new models
 			[X] under entrance block
@@ -127,14 +135,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 				
 			[X] solve that cave only begins after a while inside the mountain
 			
-	
-	-- QA/DOC
-	[ ] add choice for DETAILS settings at startup???
-
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
-	
-	--
 	[X] continental problem with encouter ground in city
 
 	[X] water edge at economic's overwrite looks really bad
