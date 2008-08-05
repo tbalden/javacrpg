@@ -17,6 +17,8 @@
 
 package org.jcrpg.world.place;
 
+import org.jcrpg.space.Cube;
+
 /**
  * Interface for places that provide a surface for water/living etc.
  * @author pali
@@ -24,6 +26,6 @@ package org.jcrpg.world.place;
  */
 public interface Surface {
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView);
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, Cube currentCube, boolean farView);
 	
 }

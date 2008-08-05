@@ -38,6 +38,8 @@ import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.time.Time;
 
+import com.jmex.effects.water.HeightGenerator;
+
 public class World extends Place {
 
 	public Engine engine;
@@ -135,14 +137,14 @@ public class World extends Place {
 			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
 			{
 				long t0 = 0;
-				t0 = System.currentTimeMillis();
-				Cube geoCube = geo.getCube(-1, worldX, worldY, worldZ, false);
-				perf_geo_t0+=System.currentTimeMillis()-t0;
-				collectCubes(geoCube,false);
+				//t0 = System.currentTimeMillis();
+				//Cube geoCube = geo.getCube(-1, worldX, worldY, worldZ, false);
+				//perf_geo_t0+=System.currentTimeMillis()-t0;
+				//collectCubes(geoCube,false);
 				if (geo instanceof Surface)
 				{
 					t0 = System.currentTimeMillis();
-					SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, false);
+					SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, null, false);
 					if (surf!=null && surf.length>0)
 						list.add(surf);
 				}
@@ -225,7 +227,7 @@ public class World extends Place {
 					if (geo instanceof Surface)
 					{
 						t0 = System.currentTimeMillis();
-						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, farView);
+						SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, geoCube, farView);
 						perf_surface_t0+=System.currentTimeMillis()-t0;
 						for (int surfCount = 0; surfCount<surf.length; surfCount++) {
 							if (surf!=null && surf[surfCount].canContain) {

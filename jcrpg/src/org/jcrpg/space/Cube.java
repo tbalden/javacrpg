@@ -36,6 +36,10 @@ public class Cube extends ChangingImpl {
 	public float[] cornerHeights = null;
 	public float middleHeight = 0;
 	public float angleRatio = 0;
+	
+	public static int UNDEFINED_HEIGHT = -999999;
+	public float pointHeightFloat = -999999;
+	public int pointHeightInt = -999999;
 	             
 	/**
 	 * Tells if this cubes (if is an economic cube) needs further climate and water rendering onto it.
@@ -85,6 +89,12 @@ public class Cube extends ChangingImpl {
 	public int x,y,z;
 	
 	public Place parent;
+	
+	public Cube(float height)
+	{
+		pointHeightFloat = height;
+		pointHeightInt = (int)height;
+	}
 
 	public Cube(Place parent, Side[] sides, int x, int y, int z, int steepDir) {
 		steepDirection = steepDir;
@@ -450,10 +460,12 @@ public class Cube extends ChangingImpl {
 		c.geoCubeKind = geoCubeKind;
 		c.canContainFlora = canContainFlora;
 		c.needsFurtherMerge = needsFurtherMerge;
-		c.cornerHeights = cornerHeights;
+		c.cornerHeights = cornerHeights!=null?cornerHeights.clone():null;
 		c.middleHeight = middleHeight;
 		c.canHoldUnit = canHoldUnit;
 		c.angleRatio = angleRatio;
+		c.pointHeightFloat = pointHeightFloat;
+		c.pointHeightInt = pointHeightInt;
 		return c;
 	}
 	
