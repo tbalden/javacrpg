@@ -418,6 +418,10 @@ public class J3DStandingEngine {
 				}
 			} else
 			{				
+				if (n[i].model.genericScale!=1f)
+				{
+					scale*=n[i].model.genericScale;
+				}
 				n[i].setLocalScale(needsFarviewScale?scale*J3DCore.FARVIEW_GAP:scale);
 			}
 			

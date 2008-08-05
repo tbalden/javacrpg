@@ -193,14 +193,10 @@ public class Cube extends ChangingImpl {
 		int newOverwritePower = Math.max(this.overwritePower, c2.overwritePower);
 
 		// light thing
-		if (this.overwrite && this.internalLight || c2.overwrite && c2.internalLight)
+		if (this.internalLight || c2.internalLight)
 		{
 			internalLight = true;
-		} else
-		if (!this.overwrite && !c2.internalCube)
-		{
-			internalLight = false;
-		}
+		} 
 		
 		
 		for (int i=0; i<sides.length; i++)
@@ -321,14 +317,11 @@ public class Cube extends ChangingImpl {
 			internalCube = false;
 		}
 		// light...
-		if (c1.overwrite && c1.internalLight || c2.overwrite && c2.internalLight)
+		if (c1.internalLight || c2.internalLight)
 		{
 			internalLight = true;
-		} else
-		if (!c1.overwrite && !c2.internalLight)
-		{
-			internalLight = false;
 		}
+		
 		this.overwritePower = Math.max(c1.overwritePower, c2.overwritePower);
 
 		for (int i=0; i<sides.length; i++)

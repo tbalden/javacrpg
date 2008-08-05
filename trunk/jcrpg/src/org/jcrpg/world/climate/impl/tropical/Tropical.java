@@ -37,7 +37,7 @@ public class Tropical extends ClimateBelt {
 		beltConditionsExternal.add(new Warm(50));
 		beltConditionsExternal.add(new Rain(50));
 		colorBytes = new byte[] { (byte)40,(byte)140,(byte)40 };
-		audioDescriptor.ENVIRONMENTAL = new String[]{"tropical_1","tropical_2"};
+		audioDescriptor.ENVIRONMENTAL = new String[]{"tropical_1","tropical_2","tropical_bird1","cricket"};
 	}
 
 	

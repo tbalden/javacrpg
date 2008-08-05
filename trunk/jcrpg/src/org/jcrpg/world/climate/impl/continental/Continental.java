@@ -30,7 +30,7 @@ public class Continental extends ClimateBelt {
 		super(id, parent);
 		STATIC_ID = CONTINENTAL_ID;
 		colorBytes = new byte[] { (byte)40,(byte)200,(byte)100 };
-		audioDescriptor.ENVIRONMENTAL = new String[]{"forest_1","forest_2","forest_cont_1"};
+		audioDescriptor.ENVIRONMENTAL = new String[]{"forest_1","forest_2","forest_cont_1","cricket"};
 	}
 	
 	static Spring spring = new Spring();
