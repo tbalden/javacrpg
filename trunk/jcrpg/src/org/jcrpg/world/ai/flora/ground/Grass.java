@@ -27,6 +27,10 @@ public class Grass extends Ground {
 
 	public static final String TYPE_GRASS = "GRASS";
 	public static final SideSubType SUBTYPE_GRASS = new GroundSubType(TYPE_GRASS+"_GRASS",new byte[] { (byte)40,(byte)200,(byte)100 });
+	static 
+	{
+		//SUBTYPE_GRASS.continuousSoundType = "grass_life";
+	}
 	
 	static Side[][] GRASS = new Side[][] { null, null, null,null,null,{new Side(TYPE_GRASS,SUBTYPE_GRASS)} };
 	

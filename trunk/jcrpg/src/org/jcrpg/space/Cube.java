@@ -18,6 +18,9 @@
 
 package org.jcrpg.space;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.jcrpg.abs.change.ChangingImpl;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Economic;
@@ -467,5 +470,36 @@ public class Cube extends ChangingImpl {
 	 * This is used only in Population to return sub economic type in cube.
 	 */
 	public Economic internalEconomicUnitForFloraQuery = null;
+	
+	
+	public HashSet<String> sounds = null;
+	public boolean soundsChecked = false;
+	public HashSet<String> getContinuousSounds()
+	{
+		if (soundsChecked) return sounds;
+		soundsChecked = true;
+		if (sides!=null)
+		for (Side[] side:sides)
+		{
+			if (side!=null)
+			{
+				for (Side s:side)
+				{
+					if (s!=null)
+					{
+						if (s.subtype!=null)
+						{
+							if (s.subtype.continuousSoundType!=null)
+							{
+								if (sounds==null) sounds = new HashSet<String>();
+								sounds.add(s.subtype.continuousSoundType);
+							}
+						}
+					}
+				}
+			}
+		}
+		return sounds;
+	}
 	
 }

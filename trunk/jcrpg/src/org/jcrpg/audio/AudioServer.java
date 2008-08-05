@@ -207,6 +207,18 @@ public class AudioServer implements Runnable {
 		}
 		return false;
 	}
+
+	public boolean isSoundPlaying(String id)
+	{
+		for (Channel c:channels)
+		{
+			if (!c.isAvailable() && c.soundId.equals(id))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public void playOnlyThisMusic(String id)
 	{
@@ -357,6 +369,41 @@ public class AudioServer implements Runnable {
 			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
+	
+	public synchronized void stopContinuous(String id, String type)
+	{
+		
+	}
+
+	public synchronized void playContinuousLoading(String id, String type)
+	{
+		if (!J3DCore.SOUND_ENABLED) return;
+		if (id==null) return;
+		if (isSoundPlaying(id)) return;
+		Channel c = getAvailableChannel();
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			}
+			track.setLooping(true);
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+			}
+			c.setTrack(id, track);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(v, v);
+			}
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+		}
+	}
+	
 	
 	public synchronized void pause(String id)
 	{
