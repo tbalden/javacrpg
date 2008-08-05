@@ -1234,7 +1234,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		{
 			bonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
 		}
-		if (c!=null) System.out.println("C:"+c);
+		//if (c!=null) System.out.println("C:"+c);
 		Vector3f v = new Vector3f(gameState.getCurrentRenderPositions().relativeX*CUBE_EDGE_SIZE,gameState.getCurrentRenderPositions().relativeY*CUBE_EDGE_SIZE+0.11f+bonus,-1*gameState.getCurrentRenderPositions().relativeZ*CUBE_EDGE_SIZE);
 		Vector3f fromPos = J3DCore.directionPositions[gameState.getCurrentRenderPositions().viewDirection];
 		v.addLocal(fromPos.negate());

@@ -34,6 +34,12 @@ public class SideSubType {
 	 * Sound for walking.
 	 */
 	public String audioStepType = AudioServer.STEP_SOIL;
+	
+	/**
+	 * Sound that is played if player is near it.
+	 */
+	public String continuousSoundType = null;
+	
 	/**
 	 * Color on map.
 	 */

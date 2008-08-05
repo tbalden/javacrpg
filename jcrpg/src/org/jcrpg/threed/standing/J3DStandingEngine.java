@@ -469,6 +469,9 @@ public class J3DStandingEngine {
 		renderToViewPort(refAngle, false, 0,0);
 	}
 	
+	public HashMap<String, Float> continuousSoundsAndDistance = new HashMap<String, Float>();
+	public HashMap<String, Float> previousContinuousSoundsAndDistance = new HashMap<String, Float>();
+	
 	/**
 	 * list to store the newly rendered nodes during renderToViewPort for special processing: 
 	 * first render with CULL_NEVER then update it to CULL_INHERIT, plus updateRenderState call.
@@ -737,6 +740,8 @@ public class J3DStandingEngine {
 					alCurrentCubes_FARVIEW.clear();
 					alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
 				}
+				previousContinuousSoundsAndDistance = continuousSoundsAndDistance;
+				continuousSoundsAndDistance = new HashMap<String, Float>();
 			}
 			int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
 			int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
@@ -812,7 +817,7 @@ public class J3DStandingEngine {
 					
 					// checking the view distance of the cube from viewpoint
 					if (distX<=checkDistCube && distY<=checkDistCube && distZ<=checkDistCube)
-					{
+						{
 						// inside view dist...
 						checked = true;
 					} else
@@ -820,13 +825,12 @@ public class J3DStandingEngine {
 						//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("DIST X,Z: "+distX+" "+distZ);
 					}
 					//checked = true;
-					
-					
+					float dist = 0;
 					for (NodePlaceholder n : c.hsRenderedNodes)
 					{
 						if (checked)
 						{
-							float dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+							dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
 	
 							if (dist<minAngleCalc) {
 								found = true;
@@ -839,6 +843,27 @@ public class J3DStandingEngine {
 								found = true;
 							}
 							break;
+						}
+					}
+					if (found)
+					{
+						HashSet<String> sounds = c.cube.getContinuousSounds();
+						if (sounds!=null)
+						{
+							for (String s:sounds)
+							{
+								Float f = continuousSoundsAndDistance.get(s);
+								if (f==null)
+								{
+									continuousSoundsAndDistance.put(s, dist);
+								} else
+								{
+									if (f>dist)
+									{
+										continuousSoundsAndDistance.put(s, dist);
+									}
+								}
+							}
 						}
 					}
 					
@@ -1497,6 +1522,34 @@ public class J3DStandingEngine {
 				}
 				
 				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				
+				if (continuousSoundsAndDistance.size()>0)
+				{
+					for (String key:continuousSoundsAndDistance.keySet())
+					{
+						float dist = continuousSoundsAndDistance.get(key);
+						if (previousContinuousSoundsAndDistance.containsKey(key))
+						{
+							// set volume
+							previousContinuousSoundsAndDistance.remove(key);
+						} else
+						{
+							// play it newly
+							core.audioServer.playContinuousLoading(key, "continuous");
+						}
+						System.out.println("SOUND: "+key);
+						
+					}
+				}
+				if (previousContinuousSoundsAndDistance.size()>0)
+				{
+					// stop playing
+					for (String key:previousContinuousSoundsAndDistance.keySet())
+					{
+						core.audioServer.stop(key);
+						System.out.println("STOP SOUND: "+key);
+					}
+				}
 				
 				// update geometry batches...
 				if (J3DCore.GEOMETRY_BATCH) 

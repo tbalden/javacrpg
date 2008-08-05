@@ -40,6 +40,10 @@ public class River extends Water implements FlowGeography {
 
 	public static final String TYPE_RIVER = "RIVER";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_RIVER+"_WATER",WATER_COLOR);
+	static 
+	{
+		SUBTYPE_WATER.continuousSoundType = "rushing_stream";
+	}
 	public static final Climbing SUBTYPE_WATERFALL = new Climbing(TYPE_RIVER+"_WATERFALL",WATER_COLOR);
 	public static final SideSubType SUBTYPE_INTERSECT = new Climbing(TYPE_RIVER+"_WATERFALL_INTERSECT");
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_RIVER+"_ROCKSIDE");

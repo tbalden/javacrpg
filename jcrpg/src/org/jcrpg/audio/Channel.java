@@ -100,6 +100,7 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
+		if (!arg0.isLooping())
 		if (!arg0.isStreaming()) // Workaround for trackStopped not called when non-streaming audiotrack
 			trackStopped(arg0); else {
 			playing = true;
