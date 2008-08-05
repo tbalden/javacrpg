@@ -119,7 +119,7 @@ public class EconomicGround extends Economic {
 
 	@Override
 	public boolean overrideGeoHeight() {
-		return true;
+		return false;
 	}
 
 	

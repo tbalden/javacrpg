@@ -100,7 +100,7 @@ public class SaveLoadNewGame {
 			int xDiff = -24;
 			int yDiff = 7;
 			int zDiff = -60;
-			//if (true==false)
+			if (true==false)
 				{xDiff = +75;
 				yDiff = 2;
 				zDiff = +60;
