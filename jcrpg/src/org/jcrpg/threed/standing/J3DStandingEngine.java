@@ -599,7 +599,7 @@ public class J3DStandingEngine {
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
 			} else
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE-1)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
+			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				if (rerenderWithRemove)
 				{

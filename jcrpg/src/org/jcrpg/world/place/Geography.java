@@ -872,6 +872,18 @@ public class Geography extends Place implements Surface {
 					tmpCornerHeightsAndKind[4] = K_CORNER_NORTH;
 					return tmpCornerHeightsAndKind;
 				}
+
+				if (eval[P_LESSER][NORTH]==1 && eval[P_LESSER][SOUTH]==1)
+				{
+					tmpCornerHeightsAndKind[4] = K_CORNER_SOUTH;
+					return tmpCornerHeightsAndKind;
+				}
+				if (eval[P_LESSER][EAST]==1 && eval[P_LESSER][WEST]==1)
+				{
+					tmpCornerHeightsAndKind[4] = K_CORNER_EAST;
+					return tmpCornerHeightsAndKind;
+				}
+			
 			}
 
 			
