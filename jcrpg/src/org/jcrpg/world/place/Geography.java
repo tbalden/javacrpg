@@ -746,10 +746,10 @@ public class Geography extends Place implements Surface {
 			hSW = ((Y + rY + YSouth + rYSouth + YSouthWest + rYSouthWest + YWest + rYWest)/4f) - iY;
 			hSE = ((Y + rY + YSouth + rYSouth + YSouthEast + rYSouthEast + YEast + rYEast)/4f) - iY;
 		}*/
-		hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY;
-		hNW = ((Y + YNorth + + YNorthWest + + YWest)/4f) - iY;
-		hSW = ((Y + YSouth + + YSouthWest + + YWest)/4f) - iY;
-		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY;
+		hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY -0.1f;
+		hNW = ((Y + YNorth + + YNorthWest + + YWest)/4f) - iY -0.1f;
+		hSW = ((Y + YSouth + + YSouthWest + + YWest)/4f) - iY -0.1f;
+		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY -0.1f;
 	
 		/*
 		 *

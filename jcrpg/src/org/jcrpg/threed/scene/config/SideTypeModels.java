@@ -190,6 +190,7 @@ public class SideTypeModels {
 		
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
+		cherry.genericScale=1.5f;
 		cherry.shadowCaster = true;
 		PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
@@ -200,6 +201,7 @@ public class SideTypeModels {
 		cherry_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		acacia.genericScale=1.4f;
 		acacia.shadowCaster = true;
 		PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
@@ -210,11 +212,12 @@ public class SideTypeModels {
 		acacia_lowest_2.windAnimation = false;
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		bush.genericScale=1.3f;
 		bush.dislocationRate = 0.4f;
 		bush.rotateAndLocate = true;
 		bush.elevateOnSteep = true;
-		bush.quadXSizeMultiplier = 3.8f;
-		bush.quadYSizeMultiplier = 3.2f;
+		bush.quadXSizeMultiplier = 4.8f;
+		bush.quadYSizeMultiplier = 4.2f;
 		bush.shadowCaster = true;
 		PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		bush_low.quadXSizeMultiplier = 3.3f;
@@ -312,6 +315,7 @@ public class SideTypeModels {
 		coconut_lowest_2.cullNone = true;
 
 		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("pbm_jungle_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
+		bush.genericScale=1.3f;
 		jungle_bush.dislocationRate = 0.4f;
 		jungle_bush.rotateAndLocate = true;
 		jungle_bush.quadXSizeMultiplier = 2f;
@@ -386,8 +390,8 @@ public class SideTypeModels {
 		tsm_cave_mushroom.alwaysRenderBatch = true;
 
 		
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.55f,0.4f,3,0.7f);
-		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower_2.png"},0.7f,0.4f,2,1.0f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.65f,0.5f,4,0.6f);
+		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower_2.png"},0.65f,0.5f,3,0.7f);
 		//,"grass1_flower.png","grass1_flower_2.png"
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;

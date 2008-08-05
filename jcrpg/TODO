@@ -119,7 +119,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
-	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???
 
@@ -127,6 +126,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] water reflection level??
+	[X] is the continental grass still okay??? all kind of continental grass is there?
+
 	[X] stitching problem mountain!
 		some kind of /calcRelative pos/ problem!!! sizes wrong??
 

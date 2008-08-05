@@ -161,7 +161,7 @@ public class Cave extends Geography implements Surface {
 			tmpWorldZ = worldZ+i;
 			int tmpHeightX = (int)getPointHeightOutside(tmpWorldX, worldZ, farView);
 			int tmpHeightZ = (int)getPointHeightOutside(worldX, tmpWorldZ, farView);
-			if (Math.abs(i)==1)
+			if (Math.abs(i)==1 && true==false)
 			{
 				// looking for unnecessary ground block to replace with cave ground ---------------------------------------------------------------------------------------------------------------------------------
 				if ((relZ%ENTRANCE_DISTANCE==2) && worldY==ENTRANCE_LEVEL+worldGroundLevel+1 && tmpHeightX+((World)getRoot()).worldGroundLevel==ENTRANCE_LEVEL+worldGroundLevel+1)

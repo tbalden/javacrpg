@@ -476,11 +476,14 @@ public class GameStateContainer {
 			Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 			if (list!=null)
 			{
+				WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
 				boolean played = false;
 				for (Object o:list)
 				{
 					EntityFragment i = ((EntityFragment)o);
 					{
+						WorldTypeDesc desc = ecology.getEntityFragmentWorldTypeDesc(i);
+						if (!ecology.isReachableWorldType(desc, playerDesc)) continue;
 						if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(i.roamingBoundary, player.theFragment.roamingBoundary)==null) continue;
 						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("#_# Audio: "+i.instance.id);
 						if (i.instance.description.groupingRule.possibleMembers!=null)

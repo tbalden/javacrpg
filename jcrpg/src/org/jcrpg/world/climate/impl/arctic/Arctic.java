@@ -44,7 +44,7 @@ public class Arctic extends ClimateBelt {
 		super(id, parent);
 		STATIC_ID = ARCTIC_ID;
 		colorBytes = new byte[] { (byte)240,(byte)240,(byte)240 };
-		// TODO Auto-generated constructor stub
+		audioDescriptor.ENVIRONMENTAL = new String[]{"","","forest_2"};
 	}
 
 	@Override
