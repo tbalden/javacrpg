@@ -1230,7 +1230,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		} catch (Exception ex){}; 
 		float bonus = (gameState.getCurrentRenderPositions().onSteep?1.5f:0f);
 		float middleHeightBonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
-		System.out.println("C: "+c);
 		if (cubeMiddleHeight || middleHeightBonus>bonus && (c==null || !c.internalCube && !c.internalLight))
 		{
 			bonus = CUBE_EDGE_SIZE*(middleHeight+0.2f);
