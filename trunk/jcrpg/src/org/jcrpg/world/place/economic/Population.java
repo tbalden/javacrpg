@@ -247,7 +247,7 @@ public abstract class Population extends Economic{
 	@Override
 	public ArrayList<int[]> getPossibleSettlePlaces() {
 		tmpSettlePlaces.clear();
-		SurfaceHeightAndType[] data =  soilGeo.getPointSurfaceData(centerX, centerZ, false);
+		SurfaceHeightAndType[] data =  soilGeo.getPointSurfaceData(centerX, centerZ, null,false);
 		int surfaceY = worldGroundLevel;
 		for (SurfaceHeightAndType dataI:data)
 		{

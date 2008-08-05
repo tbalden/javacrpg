@@ -18,31 +18,22 @@
 
 package org.jcrpg.world.place.geography;
 
-import java.util.HashMap;
-
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
-import org.jcrpg.world.place.geography.forest.Bushes;
-import org.jcrpg.world.place.geography.forest.Clearing;
 
 public class Forest extends Geography {
 
 	public static final String TYPE_FOREST = "FOREST";
 	public static final SideSubType SUBTYPE_FOREST = new SideSubType(TYPE_FOREST+"_FOREST");
 
-	public HashMap<String, Clearing>clearings;
-	public HashMap<String, Bushes>bushes;
-	
 	
 	public Forest(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc,worldGroundLevel,worldGroundLevel,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
 		colorBytes = new byte[] {(byte)70,(byte)115,(byte)70};
-		clearings = new HashMap<String, Clearing>();
-		bushes = new HashMap<String, Bushes>();
 	}
 
 	static Side[][] FOREST = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };

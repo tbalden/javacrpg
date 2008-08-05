@@ -189,6 +189,16 @@ public class RenderedArea {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
+
+		System.out.println("Key calculation sumTime = "+sumTime_1);
+		System.out.println("World.getCube sumTime = "+sumTime);
+		System.out.println("World.getCube + cache sumTime = "+sumTime_2);
+		System.out.println("-- eco = "+world.perf_eco_t0);
+		System.out.println("-- geo = "+world.perf_geo_t0);
+		System.out.println("-- flo = "+world.perf_flora_t0);
+		System.out.println("-- cli = "+world.perf_climate_t0);
+		System.out.println("-- wat = "+world.perf_water_t0);
+		System.out.println("-- sur = "+world.perf_surface_t0);
 		
 		long t0 = System.currentTimeMillis();
 		

@@ -411,8 +411,17 @@ public class Cave extends Geography implements Surface {
 	SurfaceHeightAndType[] cachedType = null;
 	SurfaceHeightAndType[] cachedNonType = null;
 	
+	int s_lastWorldX = -9999, s_lastWorldZ = -9999;
+	SurfaceHeightAndType[] s_lastType = null; 
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView ) {
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, Cube preCube, boolean farView ) {
+		if (s_lastWorldX==worldX && s_lastWorldZ==worldZ)
+		{
+			return s_lastType;
+		} else
+		{
+			s_lastWorldX = worldX; s_lastWorldZ = worldZ;
+		}
 		// TODO !!!this is not complete enough for a multilevel cave!!! we should iterate through all possible levels
 		// adding to wGLevel + levelSize * level and gather surfaces 
 		if (getCubeBase(-1, worldX, worldGroundLevel, worldZ, farView)==null)
@@ -421,6 +430,7 @@ public class Cave extends Geography implements Surface {
 			{
 				cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
 			}
+			s_lastType = cachedNonType;
 			return cachedNonType;
 		}
 		int per = HashUtil.mixPercentage(worldX, 0, worldZ);
@@ -428,12 +438,16 @@ public class Cave extends Geography implements Surface {
 		{
 			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
 			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
+			
+			s_lastType = cachedNonType;
 			return cachedType;
 		}
 		if (cachedNonType==null)
 		{
 			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
+			s_lastType = cachedNonType;
 		}
+		s_lastType = cachedNonType;
 		return cachedNonType;
 	}
 

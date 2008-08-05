@@ -263,12 +263,11 @@ public class Geography extends Place implements Surface {
 		return c;
 	}
 
-	
 	@Override
 	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		float[] kind = getCubeKind(key, worldX, worldY, worldZ, farView);
 		Cube c = getCubeObject((int)kind[4], farView);
-		if (c==null) return null;
+		if (c==null) return c;
 		c = c.copy(this);
 		c.x = worldX;
 		c.y = worldY;
@@ -277,6 +276,8 @@ public class Geography extends Place implements Surface {
 		c.middleHeight = (kind[0]+kind[1]+kind[2]+kind[3])/4f;
 		c.angleRatio = Math.max( Math.abs(kind[0]-kind[2]) , Math.max( Math.abs(kind[1]-kind[3]) , Math.max( Math.abs(kind[0]-kind[1]) , Math.abs(kind[2]-kind[3]))));
 		c.geoCubeKind = (int)kind[4];
+		c.pointHeightFloat = kind[9];
+		c.pointHeightInt = (int)kind[9];
 		return c;
 	}
 	
@@ -482,6 +483,7 @@ public class Geography extends Place implements Surface {
 							
 						}
 					} else
+				
 					if (geo.isWaterPoint(worldX, geo.worldGroundLevel, worldZ, farView)) 
 					{
 						// return -1 for sloppy ground around it and for river level.
@@ -496,19 +498,40 @@ public class Geography extends Place implements Surface {
 	
 	
 	
-	int lastWorldX = -9999, lastWorldZ = -9999; 
-	float lastHeight;
+	public HashMap<Long, Float> quickCubeHeightCache = new HashMap<Long, Float>();
+
 	
 	public float getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
-		if (lastWorldX==worldX && lastWorldZ==worldZ)
+		if (numericId!=0) 
 		{
-			return lastHeight;
+			Long keyNew = numericId*(farView?2:1);
+			keyNew += Boundaries.getKey(worldX, 0, worldZ);
+			Float cachedKind = quickCubeHeightCache.get(keyNew);
+			if (cachedKind!=null) 
+			{
+				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
+				return cachedKind;
+			}
+			Float kind = getPointHeightNoCache(x,z,sizeX,sizeZ,worldX,worldZ,farView);
+			if (quickCubeHeightCache.size()>20)
+			{
+				quickCubeHeightCache.clear();
+			}
+			quickCubeHeightCache.put(keyNew, kind);
+			return kind;
+		} else
+		{
+			// no right unique numbericId, use no cache 
+			return getPointHeightNoCache(x,z,sizeX,sizeZ,worldX,worldZ,farView);
 		}
-		lastWorldX = worldX; lastWorldZ = worldZ;
+	}
+	
+	public float getPointHeightNoCache(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
+	{
 		if (!boundaries.isInside(worldX, worldGroundLevel, worldZ))
 		{
-			lastHeight = getPointHeightOutside(worldX, worldZ, farView);
+			return getPointHeightOutside(worldX, worldZ, farView);
 		} else
 		{
 			if (x<0) x= blockSize+x; else
@@ -521,13 +544,13 @@ public class Geography extends Place implements Surface {
 			{
 				z = z%blockSize;
 			}
-			lastHeight = getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
+			return getPointHeightInside(x, z, sizeX, sizeZ, worldX, worldZ, farView);
 		}
-		return lastHeight;
 	}
+	
 	protected float getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
-		if (x==0 || x==blockSize-1 || x==blockSize || z==0 || z==blockSize-1 || z==blockSize ) System.out.println(this+" DEFAULT HEIGHT"+" "+x+" "+z);
+		//if (x==0 || x==blockSize-1 || x==blockSize || z==0 || z==blockSize-1 || z==blockSize ) System.out.println(this+" DEFAULT HEIGHT"+" "+x+" "+z);
 		return 0;
 	}
 
@@ -551,7 +574,7 @@ public class Geography extends Place implements Surface {
 	int s_lastWorldX = -9999, s_lastWorldZ = -9999;
 	SurfaceHeightAndType[] s_lastType = null; 
 	
-	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, boolean farView) {
+	public SurfaceHeightAndType[] getPointSurfaceData(int worldX, int worldZ, Cube preCube, boolean farView) {
 		if (s_lastWorldX==worldX && s_lastWorldZ==worldZ)
 		{
 			return s_lastType;
@@ -560,7 +583,6 @@ public class Geography extends Place implements Surface {
 			s_lastWorldX = worldX; s_lastWorldZ = worldZ;
 		}
 		int[] values = calculateTransformedCoordinates(worldX, worldGroundLevel, worldZ);
-		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = values[0];
 		//int realSizeY = values[1];
 		int realSizeZ = values[2];
@@ -568,7 +590,14 @@ public class Geography extends Place implements Surface {
 		//int relY = values[4];
 		int relZ = values[5];
 
-		int Y = (int)getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
+		int Y = 0;
+		if (preCube!=null && preCube.pointHeightInt!=Cube.UNDEFINED_HEIGHT)
+		{
+			Y = preCube.pointHeightInt;
+		} else
+		{
+			Y = (int)getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
+		}
 		float[] kindArray = getCubeKind(-1, worldX, Y, worldZ,  farView);
 		int kind = (int)kindArray[4];
 		if (kind>=0 && kind<=4)
@@ -645,7 +674,7 @@ public class Geography extends Place implements Surface {
 				return cachedKind;
 			}
 			float[] kind = getCubeKindNoCache(worldX, worldY, worldZ,  farView);
-			if (quickCubeKindCache.size()>5)
+			if (quickCubeKindCache.size()>60)
 			{
 				quickCubeKindCache.clear();
 			}
@@ -663,7 +692,10 @@ public class Geography extends Place implements Surface {
 	
 	private float[] getCubeKindNoCache(int worldX, int worldY, int worldZ, boolean farView)
 	{
-		float[] tmpCornerHeightsAndKind = new float[9]; 
+		// 0,1,2,3 - corner heights
+		// 4 - cube kind, 5-6-7-8 override switch,
+		// 9 - point height
+		float[] tmpCornerHeightsAndKind = new float[10]; 
 		int[] values = calculateTransformedCoordinates(worldX, worldY, worldZ);
 		//int[] blockUsedSize = getBlocksGenericSize(blockSize, worldX, worldZ);
 		int realSizeX = values[0];
@@ -679,6 +711,7 @@ public class Geography extends Place implements Surface {
 
 		float Y = getPointHeight(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView)/FFARVIEW_GAP;
 		int iY = (int)Y;
+		tmpCornerHeightsAndKind[9] = Y; // setting point height for cube
 		relY /= FARVIEW_GAP;
 		
 		float hNE = 0f;
@@ -695,7 +728,7 @@ public class Geography extends Place implements Surface {
 		float YWest = getPointHeight(relX-FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),worldZ, farView)/FFARVIEW_GAP;
 		float YEast = getPointHeight(relX+FARVIEW_GAP, relZ, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),worldZ, farView)/FFARVIEW_GAP;
 
-		float rY = getPointCornerSlightDisplaceFactor(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
+		/*float rY = getPointCornerSlightDisplaceFactor(relX, relZ, realSizeX, realSizeZ,worldX,worldZ, farView);
 		float rYNorth = getPointCornerSlightDisplaceFactor(relX, relZ+FARVIEW_GAP, realSizeX, realSizeZ,worldX,shrinkToWorld(worldZ+FARVIEW_GAP), farView);
 		float rYNorthEast = getPointCornerSlightDisplaceFactor(relX+FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX+FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
 		float rYNorthWest = getPointCornerSlightDisplaceFactor(relX-FARVIEW_GAP, relZ+FARVIEW_GAP, realSizeX, realSizeZ,shrinkToWorld(worldX-FARVIEW_GAP),shrinkToWorld(worldZ+FARVIEW_GAP), farView);
@@ -712,11 +745,11 @@ public class Geography extends Place implements Surface {
 			hNW = ((Y + rY + YNorth + rYNorth + YNorthWest + rYNorthWest + YWest + rYWest)/4f) - iY;
 			hSW = ((Y + rY + YSouth + rYSouth + YSouthWest + rYSouthWest + YWest + rYWest)/4f) - iY;
 			hSE = ((Y + rY + YSouth + rYSouth + YSouthEast + rYSouthEast + YEast + rYEast)/4f) - iY;
-		}
-		/*hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY;
+		}*/
+		hNE = ((Y + YNorth + + YNorthEast + + YEast)/4f) - iY;
 		hNW = ((Y + YNorth + + YNorthWest + + YWest)/4f) - iY;
 		hSW = ((Y + YSouth + + YSouthWest + + YWest)/4f) - iY;
-		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY;*/
+		hSE = ((Y + YSouth + + YSouthEast + + YEast)/4f) - iY;
 	
 		/*
 		 *

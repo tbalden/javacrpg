@@ -18,6 +18,8 @@
 
 package org.jcrpg.world.place.water;
 
+import java.util.HashMap;
+
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
@@ -25,6 +27,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -168,6 +171,7 @@ public class Ocean extends Water {
 	public boolean isAlgorithmicallyInside(int worldX, int worldY, int worldZ) {
 		return isWaterPointSpecial(worldX, worldY, worldZ, false,false);
 	}
+	
 
 	public boolean isWaterPointSpecial(int x, int y, int z, boolean coasting, boolean farView)
 	{
@@ -550,8 +554,28 @@ public class Ocean extends Water {
 		
 	}
 	
+	//private HashMap<Long, Boolean> tmpWaterPointCache = new HashMap<Long, Boolean>();
+	
 	@Override
 	public boolean isWaterPoint(int x, int y, int z, boolean farView) {
+		
+		/*Boolean r = null;
+		if (!farView)
+		{
+			long keyNew = Boundaries.getKey(x, y, z);
+			r = tmpWaterPointCache.get(keyNew);
+			if (tmpWaterPointCache.size()>100)
+			{
+				tmpWaterPointCache.clear();
+			}
+			if (r==null)
+			{
+				r = isWaterPointSpecial(x, y, z, true, farView); 
+				tmpWaterPointCache.put(keyNew, r);
+			}
+			return r;
+		}*/
+		
 		return isWaterPointSpecial(x, y, z, true, farView);
 	}
 
