@@ -468,9 +468,13 @@ public class J3DStandingEngine {
 	{
 		renderToViewPort(refAngle, false, 0,0);
 	}
-	
-	public HashMap<String, Float> continuousSoundsAndDistance = new HashMap<String, Float>();
-	public HashMap<String, Float> previousContinuousSoundsAndDistance = new HashMap<String, Float>();
+
+	/**
+	 * Environment's looping sounds. Static field to make stopping it available for all instances
+	 * (encounterEngine too).
+	 */
+	public static HashMap<String, Float> continuousSoundsAndDistance = new HashMap<String, Float>();
+	public static HashMap<String, Float> previousContinuousSoundsAndDistance = new HashMap<String, Float>();
 	
 	/**
 	 * list to store the newly rendered nodes during renderToViewPort for special processing: 
@@ -845,7 +849,7 @@ public class J3DStandingEngine {
 							break;
 						}
 					}
-					if (found)
+					if (checked)
 					{
 						HashSet<String> sounds = c.cube.getContinuousSounds();
 						if (sounds!=null)
@@ -1535,9 +1539,9 @@ public class J3DStandingEngine {
 						} else
 						{
 							// play it newly
-							core.audioServer.playContinuousLoading(key, "continuous");
 						}
-						System.out.println("SOUND: "+key);
+						core.audioServer.playContinuousLoading(key, "continuous",Math.min(1f,1f/(dist+0.5f)*10f));
+						//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
 						
 					}
 				}
@@ -1546,8 +1550,8 @@ public class J3DStandingEngine {
 					// stop playing
 					for (String key:previousContinuousSoundsAndDistance.keySet())
 					{
-						core.audioServer.stop(key);
-						System.out.println("STOP SOUND: "+key);
+						core.audioServer.fadeOut(key);
+						//System.out.println("STOP SOUND: "+key);
 					}
 				}
 				

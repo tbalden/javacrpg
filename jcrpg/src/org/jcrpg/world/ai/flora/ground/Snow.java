@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.ai.flora.ground;
 
+import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
@@ -29,7 +30,11 @@ public class Snow extends Ground {
 	public static final SideSubType SUBTYPE_SNOW = new GroundSubType(TYPE_SNOW+"_SNOW",new byte[] { (byte)240,(byte)240,(byte)240 });
 	
 	static Side[][] SNOW = new Side[][] { null, null, null,null,null,{new Side(TYPE_SNOW,SUBTYPE_SNOW)} };
-	
+	static 
+	{
+		SUBTYPE_SNOW.continuousSoundType = "arctic_wind";
+		SUBTYPE_SNOW.audioStepType = AudioServer.STEP_SNOW;
+	}	
 	public Snow()
 	{
 		super();

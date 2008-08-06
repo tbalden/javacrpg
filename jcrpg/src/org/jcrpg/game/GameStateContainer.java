@@ -441,6 +441,7 @@ public class GameStateContainer {
 	 */
 	public void doEnvironmental()
 	{
+		//if (true) return;
 		if (environmentAudioCount==0)
 		{
 			// geo related sounds
