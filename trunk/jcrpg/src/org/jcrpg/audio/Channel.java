@@ -75,8 +75,27 @@ public class Channel implements TrackStateListener{
 			if (track!=null)
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
-				track.fadeIn(v, v);
+				track.fadeIn(0.5f, v);
 			}
+		}
+	}
+
+	public synchronized void fadeTrack(float volume)
+	{
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" FADE TRACK : "+soundId);
+		if (track!=null && track.isPlaying()) {
+			//track.play();
+			if (track!=null)
+				track.fadeIn(0.5f, volume);
+		}
+	}
+	public synchronized void fadeOutTrack()
+	{
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" FADE OUT TRACK : "+soundId);
+		if (track!=null && track.isPlaying()) {
+			//track.play();
+			if (track!=null)
+				track.fadeOut(0.5f);
 		}
 	}
 	
@@ -86,7 +105,14 @@ public class Channel implements TrackStateListener{
 	}
 	
 	public synchronized void trackFinishedFade(AudioTrack arg0) {
-		Jcrpg.LOGGER.info(channelId+" ##### FINISHED FADE TRACK : "+soundId);
+		Jcrpg.LOGGER.info(channelId+" ##### FINISHED FADE TRACK : "+soundId+ " "+arg0.getTargetVolume());
+		if (arg0.getTargetVolume()==0f)
+		{
+			arg0.stop();
+		} else
+		{
+			arg0.setVolume(arg0.getTargetVolume());
+		}
 		//playing = false;
 		//paused = false;
 		//track = null;
@@ -100,9 +126,9 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
-		if (!arg0.isLooping())
-		if (!arg0.isStreaming()) // Workaround for trackStopped not called when non-streaming audiotrack
-			trackStopped(arg0); else {
+		if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
+			trackStopped(arg0); else 
+		{
 			playing = true;
 			paused = false;
 		}
@@ -118,7 +144,7 @@ public class Channel implements TrackStateListener{
 			playing = false;
 		}
 	}
-
+	
 	
 	
 }

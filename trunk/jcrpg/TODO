@@ -124,8 +124,10 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] add continuous sound sources like water - renderToViewPort should collect them by cube basis -
 		hashset - play them continuously
 		
-		[ ] fix not cutting out if you don't see a node
-		[ ] add more sounds -> grass etc. 
+		[X] fix not cutting out if you don't see a node
+		[X] add more sounds -> grass etc.
+		
+		[ ] snow sound didn't work 
 	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???

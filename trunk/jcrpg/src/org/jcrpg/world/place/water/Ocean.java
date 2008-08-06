@@ -18,8 +18,6 @@
 
 package org.jcrpg.world.place.water;
 
-import java.util.HashMap;
-
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
@@ -27,7 +25,6 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -45,6 +42,10 @@ public class Ocean extends Water {
 
 	public static final String TYPE_OCEAN = "OCEAN";
 	public static final Swimming SUBTYPE_WATER = new Swimming(TYPE_OCEAN+"_WATER",WATER_COLOR);
+	static 
+	{
+		SUBTYPE_WATER.continuousSoundType = "seashore";
+	}
 	public static final SideSubType SUBTYPE_WATER_SHALLOW = new SideSubType(TYPE_OCEAN+"_WATER",WATER_COLOR);
 	public static final NotPassable SUBTYPE_ROCKSIDE = new NotPassable(TYPE_OCEAN+"_ROCKSIDE");
 	public static final GroundSubType SUBTYPE_ROCKBOTTOM = new GroundSubType(TYPE_OCEAN+"_ROCKBOTTOM");

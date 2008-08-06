@@ -53,7 +53,7 @@ public class AudioServer implements Runnable {
 	public int MAX_MUSIC = 2;
 	
 	public static final String[] stepTypes = new String[] {
-		STEP_SOIL, STEP_STONE, STEP_NO_WAY
+		STEP_SOIL, STEP_STONE, STEP_NO_WAY, STEP_SNOW
 	};
 	
 	
@@ -111,7 +111,7 @@ public class AudioServer implements Runnable {
 		{
 			try {
 				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), false);
-				mainTheme.setType(TrackType.POSITIONAL);
+				mainTheme.setType(TrackType.ENVIRONMENT);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
 				mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
@@ -186,6 +186,14 @@ public class AudioServer implements Runnable {
 				c.stopTrack();
 		}
 	}
+	public synchronized void fadeOutIdOnAllChannels(ArrayList<Channel> channels, String id)
+	{
+		for (Channel c:channels)
+		{
+			if (c.soundId!=null && c.soundId.equals(id))
+				c.fadeOutTrack();
+		}
+	}
 	public synchronized void pauseIdOnAllChannels(String id)
 	{
 		for (Channel c:channels)
@@ -218,6 +226,22 @@ public class AudioServer implements Runnable {
 			}
 		}
 		return false;
+	}
+	public boolean setSoundPlayingVolume(String id,float volume)
+	{
+		boolean b = false;
+		for (Channel c:channels)
+		{
+			if (!c.isAvailable() && c.soundId.equals(id))
+			{
+				//c.track.setLooping(true);
+				c.track.setVolume(volume);
+				c.track.setTargetVolume(volume);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("setSoundPlayingVolume SETTING VOLUME: "+c.soundId+" "+volume+" -- "+c.track.getVolume());
+				b = true;
+			}
+		}
+		return b;
 	}
 	
 	public void playOnlyThisMusic(String id)
@@ -252,7 +276,7 @@ public class AudioServer implements Runnable {
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
+						if (J3DCore.LOGGING) Jcrpg.LOGGER.info("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -291,7 +315,7 @@ public class AudioServer implements Runnable {
 	public synchronized void playForced(String id)
 	{
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("playForced Playing "+id);
 		if (c==null)
 		{
 			if (!J3DCore.SOUND_ENABLED) return;
@@ -375,13 +399,15 @@ public class AudioServer implements Runnable {
 		
 	}
 
-	public synchronized void playContinuousLoading(String id, String type)
+	public synchronized void playContinuousLoading(String id, String type, float volume)
 	{
 		if (!J3DCore.SOUND_ENABLED) return;
 		if (id==null) return;
-		if (isSoundPlaying(id)) return;
+		if (setSoundPlayingVolume(id,volume)) {
+			return;
+		}
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("playContinuousLoading Playing "+id);		
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -393,11 +419,12 @@ public class AudioServer implements Runnable {
 				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
+			track.setTargetVolume(volume);
+			track.setVolume(volume);
 			c.playTrack();
-			if (track.getType().equals(TrackType.MUSIC)) {
-				float v = track.getVolume();
-				track.fadeIn(v, v);
-			}
+			//float v = track.getVolume();
+			track.setVolume(volume);
+			//track.fadeIn(0.2f, volume);
 		} catch (NullPointerException npex)
 		{
 			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
@@ -416,6 +443,11 @@ public class AudioServer implements Runnable {
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Stopping "+id);
 		stopIdOnAllChannels(channels,id);
 	}
+	public synchronized  void fadeOut(String id)
+	{
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Fadingout "+id);
+		fadeOutIdOnAllChannels(channels,id);
+	}
 
 	public synchronized AudioTrack addTrack(String id, String file)
 	{
@@ -424,7 +456,7 @@ public class AudioServer implements Runnable {
 		AudioTrack mainTheme = null;
 		try {
 			mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), false);
-			mainTheme.setType(TrackType.POSITIONAL);
+			mainTheme.setType(TrackType.ENVIRONMENT);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
 			mainTheme.setVolume(1f);
@@ -457,11 +489,6 @@ public class AudioServer implements Runnable {
 			AudioSystem.getSystem().update();
 			try{Thread.sleep(60);}catch (Exception ex){}
 		}
-
 	}
-
-	
-	
-	
 	
 }

@@ -29,6 +29,10 @@ public class JungleGround extends Ground {
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_JUNGLE+"_GROUND", new byte[]{40,(byte)140,40});
 	
 	static Side[][] JUNGLEGROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_JUNGLE,SUBTYPE_GROUND)} };
+	static 
+	{
+		SUBTYPE_GROUND.continuousSoundType = "junglehills";
+	}	
 	
 	public JungleGround()
 	{
