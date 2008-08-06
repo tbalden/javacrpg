@@ -121,13 +121,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] normal problems - rendered area edges
 	
-	[X] add continuous sound sources like water - renderToViewPort should collect them by cube basis -
-		hashset - play them continuously
-		
-		[X] fix not cutting out if you don't see a node
-		[X] add more sounds -> grass etc.
-		
-		[ ] snow sound didn't work 
+	[ ] reexport models of house by Zphr
 	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???
@@ -136,6 +130,14 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] add continuous sound sources like water - renderToViewPort should collect them by cube basis -
+		hashset - play them continuously
+		
+		[X] fix not cutting out if you don't see a node
+		[X] add more sounds -> grass etc.
+		[X] snow sound didn't work 
+		[X] continuous town sounds
+		
 	[X] water reflection level??
 	[X] is the continental grass still okay??? all kind of continental grass is there?
 

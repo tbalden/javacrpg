@@ -18,7 +18,6 @@
 
 package org.jcrpg.space;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.jcrpg.abs.change.ChangingImpl;

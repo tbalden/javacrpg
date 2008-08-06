@@ -533,7 +533,7 @@ public class J3DStandingEngine {
 			}*/
 			
 			
-			boolean storedPauseState = engine.isPause();
+			//boolean storedPauseState = engine.isPause();
 			engine.pauseForRendering();
 			
 			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.unlockAll();
@@ -849,7 +849,7 @@ public class J3DStandingEngine {
 							break;
 						}
 					}
-					if (checked)
+					if (checked && J3DCore.SOUND_ENABLED)
 					{
 						HashSet<String> sounds = c.cube.getContinuousSounds();
 						if (sounds!=null)
@@ -1421,7 +1421,6 @@ public class J3DStandingEngine {
 							for (NodePlaceholder n : c.hsRenderedNodes)
 							{
 								overrideBatch = true;
-								boolean geoOverride = false;
 								if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
 										(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
@@ -1434,11 +1433,6 @@ public class J3DStandingEngine {
 			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
 			    						}
 			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
-			    						//if (overrideBatch)
-			    						{
-			    							//geoOverride = true;
-			    							//System.out.println("REMOVING FARVIEW BLENDED ONE");
-			    						}
 			    					} else
 			    					{
 			    						overrideBatch = false;
@@ -1526,39 +1520,43 @@ public class J3DStandingEngine {
 				}
 				
 				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
-				
-				if (continuousSoundsAndDistance.size()>0)
+
+				if (J3DCore.SOUND_ENABLED)
 				{
-					for (String key:continuousSoundsAndDistance.keySet())
+					// continuous environment sounds playing/stopping part...
+					if (continuousSoundsAndDistance.size()>0)
 					{
-						float dist = continuousSoundsAndDistance.get(key);
-						if (previousContinuousSoundsAndDistance.containsKey(key))
+						for (String key:continuousSoundsAndDistance.keySet())
 						{
-							// set volume
-							previousContinuousSoundsAndDistance.remove(key);
-						} else
-						{
-							// play it newly
+							float dist = continuousSoundsAndDistance.get(key);
+							if (previousContinuousSoundsAndDistance.containsKey(key))
+							{
+								// set volume
+								previousContinuousSoundsAndDistance.remove(key);
+							} else
+							{
+								// play it newly
+							}
+							float power = Math.min(1f,1f/(dist+0.5f)*10f);
+							if (power>0.05f)
+							{
+								core.audioServer.playContinuousLoading(key, "continuous",power);
+							} else
+							{
+								previousContinuousSoundsAndDistance.put(key, 0f);
+							}
+							//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
+							
 						}
-						float power = Math.min(1f,1f/(dist+0.5f)*10f);
-						if (power>0.05f)
-						{
-							core.audioServer.playContinuousLoading(key, "continuous",power);
-						} else
-						{
-							previousContinuousSoundsAndDistance.put(key, 0f);
-						}
-						//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
-						
 					}
-				}
-				if (previousContinuousSoundsAndDistance.size()>0)
-				{
-					// stop playing
-					for (String key:previousContinuousSoundsAndDistance.keySet())
+					if (previousContinuousSoundsAndDistance.size()>0)
 					{
-						core.audioServer.fadeOut(key);
-						//System.out.println("STOP SOUND: "+key);
+						// stop playing
+						for (String key:previousContinuousSoundsAndDistance.keySet())
+						{
+							core.audioServer.fadeOut(key);
+							//System.out.println("STOP SOUND: "+key);
+						}
 					}
 				}
 				
