@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -48,6 +49,8 @@ import org.lwjgl.opengl.GLContext;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.math.FastMath;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.DistanceSwitchModel;
@@ -55,6 +58,7 @@ import com.jme.scene.Geometry;
 import com.jme.scene.ImposterNode;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -122,6 +126,7 @@ public class ModelLoader {
     public static HashMap<String,Node> sharedNodeCache = new HashMap<String, Node>();
     public static HashMap<String,TextureState> textureStateCache = new HashMap<String,TextureState>();
     public static HashMap<String,BillboardPartVegetation> sharedBBNodeCache = new HashMap<String, BillboardPartVegetation>();
+    public static HashMap<String,Node> sharedBBNodeCache2 = new HashMap<String, Node>();
     
     
     
@@ -162,6 +167,101 @@ public class ModelLoader {
 	{
 		return loadObjects(node, rc, null, objects, horRotated, false);
 	}
+	
+	public class BillboardNodePooled extends BillboardNode implements PooledNode
+	{
+
+
+		public BillboardNodePooled() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
+		public BillboardNodePooled(String name) {
+			super(name);
+			// TODO Auto-generated constructor stub
+		}
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		PoolItemContainer pic;
+		public PoolItemContainer getPooledContainer() {
+			// TODO Auto-generated method stub
+			return pic;
+		}
+
+		public void setPooledContainer(PoolItemContainer cont) {
+			pic = cont;
+			
+		}
+
+		public void update(NodePlaceholder place) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	
+	public HashMap<String, Quad> vegetationImposedCache = new HashMap<String, Quad>();
+	
+	protected BillboardNodePooled loadToImposterNode(String key, Node bbOrig)
+	{
+		Quad q = vegetationImposedCache.get(key);
+		
+		if (q==null)
+		{
+		
+			bbOrig.setModelBound(new BoundingBox());
+			bbOrig.updateModelBound();
+			bbOrig.updateRenderState();
+			bbOrig.updateGeometricState(0, true);
+			BoundingBox bound = (BoundingBox) bbOrig.getWorldBound();
+		    float size = bound.xExtent;
+		    if (bound.yExtent > size) size = bound.yExtent;
+		    if (bound.zExtent > size) size = bound.zExtent;
+		    final float sizeFaktor = 1.1f;
+		    // We should make the size of the quad a little larger that the real scene
+		    size *= 3 * sizeFaktor; 
+			
+			ImposterNode iNode = new ImposterNode("1",5, 1024, 1024);
+			iNode.attachChild(bbOrig);
+			
+			iNode.setLocalTranslation(bound.getCenter().clone());
+		      // We must update the world data explicitly to update the quads world
+		      // bounds. The texture rendering camera will aim at it's position
+		      iNode.updateWorldData(0);		
+			final float TEXTURE_CAM_DISTANCE = 100; // just a decision
+		    iNode.setCameraDistance(TEXTURE_CAM_DISTANCE);
+		    Camera textureCam = iNode.getTextureRenderer().getCamera();
+		    // Setup the cam frustrum that it matches the size of the object
+		    float viewAngle = FastMath.atan(size / TEXTURE_CAM_DISTANCE)
+		        * FastMath.RAD_TO_DEG;
+		    textureCam.setFrustumPerspective(viewAngle, 1, 1, TEXTURE_CAM_DISTANCE * 2);		
+		    //iNode.updateCamera(bound.getCenter().add(0,0,-1)); // just provide a direction
+		      iNode.updateScene(0);
+		      iNode.renderTexture();
+		      
+		      // Forget (and possibly reuse) the imposer and just use the quad
+		      q = iNode.getStandIn();
+		      vegetationImposedCache.put(key, q);
+		}
+		SharedMesh sm = new SharedMesh("q",q);
+	      BillboardNodePooled bNode = new BillboardNodePooled("billboard");
+	      bNode.setAlignment(BillboardNode.SCREEN_ALIGNED); // just any alignment
+	      bNode.attachChild(sm);
+	      bNode.setModelBound(new BoundingBox());
+	      bNode.updateModelBound();
+	      bNode.updateRenderState();
+	      // Now we can move the billboard anywhere we want
+	      //bNode.setLocalTranslation(bound.getCenter().add(position));
+
+	     return bNode;
+	}
+	
 	/**
 	 * Loading a set of models into JME nodes.
 	 * @param objects
@@ -227,8 +327,9 @@ public class ModelLoader {
 		    	//Node node = sn;
 				bbOrig.setName(((SimpleModel)objects[i]).modelName+i);
 				bbOrig.updateModelBound();
-				//r[i] = sn;//bbOrig;// new PooledSharedNode("1",node);// bbOrig;
-				r[i] = bbOrig;
+				//BillboardNodePooled psn = loadToImposterNode(key,bbOrig);
+				r[i] = bbOrig;// new PooledSharedNode("1",node);// bbOrig;
+				//r[i] = psn;
 			} else
 			if (objects[i] instanceof MovingModel) 
 			{

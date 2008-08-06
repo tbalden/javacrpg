@@ -742,6 +742,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public DisplaySystem getDisplay()
 	{
+		if (display==null) return DisplaySystem.getDisplaySystem();
 		return display;
 	}
     
@@ -2583,6 +2584,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
         else {
             setDialogBehaviour( behaviour, "./data/ui/settings.png" );
         }
+    }
+    
+    public void setCamera(Camera cam)
+    {
+    	this.cam = cam;
     }
     
 }

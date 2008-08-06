@@ -117,11 +117,11 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
+	--
+
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
 	[ ] normal problems - rendered area edges
-	
-	[ ] reexport models of house by Zphr
 	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???
@@ -130,6 +130,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] reexport models of house by Zphr
+
 	[X] add continuous sound sources like water - renderToViewPort should collect them by cube basis -
 		hashset - play them continuously
 		
