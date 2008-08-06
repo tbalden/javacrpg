@@ -46,7 +46,7 @@ public class GeoTileLoader {
 	public GeoTileLoader(ModelLoader l)
 	{
 		this.l = l;
-        as = l.core.getDisplay().getRenderer().createAlphaState();
+        as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
         as.setBlendEnabled(true);
         as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
         as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
@@ -54,7 +54,7 @@ public class GeoTileLoader {
         as.setTestFunction(AlphaState.TF_GREATER);
         as.setEnabled(true);
         // alpha used for blending the lightmap
-        as2 = l.core.getDisplay().getRenderer().createAlphaState();
+        as2 = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
         as2.setBlendEnabled(true);
         as2.setSrcFunction(AlphaState.SB_DST_COLOR);
         as2.setDstFunction(AlphaState.DB_SRC_COLOR);

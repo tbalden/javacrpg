@@ -33,6 +33,7 @@ import org.jcrpg.threed.ModelPool;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
+import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.scene.RenderedArea;
@@ -999,36 +1000,43 @@ public class J3DStandingEngine {
 									{
 										realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE)));
 									}
-									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
-									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
-									if (realPooledNode.getChildren()!=null)
-									for (Spatial s:realPooledNode.getChildren()) {
-										if ( (s.getType()&Node.NODE)>0 )
-										{
-											if (((Node)s).getChildren()!=null)
-											for (Spatial s2:((Node)s).getChildren())
-											{	
-												if ( (s2.getType()&Node.NODE)>0 )
-												{
-													for (Spatial s3:((Node)s2).getChildren())
+									
+									if (realPooledNode instanceof BillboardNodePooled)
+									{
+										
+									} else
+									{
+										// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+										// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+										if (realPooledNode.getChildren()!=null)
+										for (Spatial s:realPooledNode.getChildren()) {
+											if ( (s.getType()&Node.NODE)>0 )
+											{
+												if (((Node)s).getChildren()!=null)
+												for (Spatial s2:((Node)s).getChildren())
+												{	
+													if ( (s2.getType()&Node.NODE)>0 )
 													{
-														if (s3 instanceof TrimeshGeometryBatch) {
-															// setting separate horizontalRotation for trimeshGeomBatch
-															((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+														for (Spatial s3:((Node)s2).getChildren())
+														{
+															if (s3 instanceof TrimeshGeometryBatch) {
+																// setting separate horizontalRotation for trimeshGeomBatch
+																((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+															}												
 														}												
-													}												
+													}
+													s2.setLocalScale(n.getLocalScale());
+													if (s2 instanceof TrimeshGeometryBatch) {
+														// setting separate horizontalRotation for trimeshGeomBatch
+														((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+													} else {
+														s2.setLocalRotation(n.getLocalRotation());
+													}
 												}
-												s2.setLocalScale(n.getLocalScale());
-												if (s2 instanceof TrimeshGeometryBatch) {
-													// setting separate horizontalRotation for trimeshGeomBatch
-													((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
-												} else {
-													s2.setLocalRotation(n.getLocalRotation());
-												}
+											} else {
+												s.setLocalRotation(n.getLocalRotation());
+												s.setLocalScale(n.getLocalScale());
 											}
-										} else {
-											s.setLocalRotation(n.getLocalRotation());
-											s.setLocalScale(n.getLocalScale());
 										}
 									}
 								
@@ -1057,11 +1065,17 @@ public class J3DStandingEngine {
 												}
 											}
 										}*/
-										// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
-										realPooledNode.lockShadows();
-										realPooledNode.lockTransforms();								
-										realPooledNode.lockBranch();
-										realPooledNode.lockBounds();
+										if (realPooledNode instanceof BillboardNodePooled)
+										{
+											
+										} else
+										{
+											// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
+											realPooledNode.lockShadows();
+											realPooledNode.lockTransforms();								
+											realPooledNode.lockBranch();
+											realPooledNode.lockBounds();
+										}
 									}
 								}
 							}
