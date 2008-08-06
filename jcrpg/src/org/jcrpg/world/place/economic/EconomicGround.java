@@ -52,6 +52,7 @@ public class EconomicGround extends Economic {
 	
 	static
 	{
+		SUBTYPE_STREETGROUND.continuousSoundType = "town_street_easy";
 		SUBTYPE_STREETGROUND.audioStepType = AudioServer.STEP_STONE;
 		SUBTYPE_STREETGROUND.colorOverwrite = true;
 		SUBTYPE_STREETGROUND.colorBytes = new byte[] {(byte)150,(byte)150,(byte)150};

@@ -49,7 +49,7 @@ public class AudioServer implements Runnable {
 	public static final String EVENT_ENC1 = "enc1";
 	
 	public int playedAtOnce = 0;
-	public int MAX_PLAYED = 6;
+	public int MAX_PLAYED = 7;
 	public int MAX_MUSIC = 2;
 	
 	public static final String[] stepTypes = new String[] {

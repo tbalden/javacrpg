@@ -1395,7 +1395,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			{
 				try {
 					Side[] s = gameState.world.getCube(-1,gameState.getNormalPositions().viewPositionX, gameState.getNormalPositions().viewPositionY, gameState.getNormalPositions().viewPositionZ, false).getSide(BOTTOM);
-					audioServer.play(s[0].subtype.audioStepType);				
+					boolean played = false;
+					for (Side side:s)
+					{
+						if (side.subtype.audioStepType!=null)
+						{
+							audioServer.play(side.subtype.audioStepType);
+							played = true;
+							break;
+						}
+					}
+					if (!played)
+					{
+						audioServer.play(AudioServer.STEP_SOIL);
+					}
 				} catch (Exception ex)
 				{
 					audioServer.play(AudioServer.STEP_SOIL);

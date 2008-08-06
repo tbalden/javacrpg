@@ -17,7 +17,6 @@
 
 package org.jcrpg.space.sidetype;
 
-import org.jcrpg.audio.AudioServer;
 
 /**
  * The side's sub element types like wall, ground etc. Other more detailed types
@@ -33,7 +32,7 @@ public class SideSubType {
 	/**
 	 * Sound for walking.
 	 */
-	public String audioStepType = AudioServer.STEP_SOIL;
+	public String audioStepType = null;
 	
 	/**
 	 * Sound that is played if player is near it.
