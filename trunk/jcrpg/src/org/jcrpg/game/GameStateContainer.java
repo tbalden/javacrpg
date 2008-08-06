@@ -447,25 +447,43 @@ public class GameStateContainer {
 			// geo related sounds
 			WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
 			boolean played = false;
-			if (desc.g!=null)
+			int random = (int)Math.random()*100;
+			if (random<33)
 			{
-				String sound = desc.g.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
-				if (sound!=null)
+				if (desc.g!=null)
 				{
-					J3DCore.getInstance().audioServer.playLoading(sound, "geo");
-					played = true;
-				}
-			}
-			// climate related sounds
-			if (!played)
-			{
-				CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
-				if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null)
-				{
-					String sound = c.getBelt().audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+					String sound = desc.g.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
 					if (sound!=null)
 					{
-						J3DCore.getInstance().audioServer.playLoading(sound, "climate");
+						J3DCore.getInstance().audioServer.playLoading(sound, "geo");
+						played = true;
+					}
+				}
+			}
+			if (random>33 && random<66 || !played)
+			{
+				if (desc.detailedEconomic!=null)
+				{
+					String sound = desc.detailedEconomic.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+					if (sound!=null)
+					{
+						J3DCore.getInstance().audioServer.playLoading(sound, "eco");
+						played = true;
+					}
+				}
+			}
+			if (random>66 || !played)
+			{
+			// climate related sounds
+				{
+					CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
+					if (c.getBelt()!=null && c.getBelt().audioDescriptor!=null)
+					{
+						String sound = c.getBelt().audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+						if (sound!=null)
+						{
+							J3DCore.getInstance().audioServer.playLoading(sound, "climate");
+						}
 					}
 				}
 			}
