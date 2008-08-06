@@ -80,6 +80,7 @@ public class EconomicGround extends Economic {
 		this.worldGroundLevel = origoY;
 		boundaries = BoundaryUtils.createCubicBoundaries(1, sizeX, sizeY, sizeZ, origoX, origoY, origoZ);
 		boundaries.boundaryPlace = this;
+		audioDescriptor.ENVIRONMENTAL = new String[] {"doorslam","dogs","dogs2"};
 		//needsFlora = false;
 	}
 	
