@@ -351,5 +351,10 @@ public abstract class Place {
 	{
 		return false;
 	}
+	
+	public boolean denyOtherEnvironmentSounds()
+	{
+		return false;
+	}
 
 }

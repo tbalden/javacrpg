@@ -448,19 +448,13 @@ public class GameStateContainer {
 			WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
 			boolean played = false;
 			int random = (int)Math.random()*100;
-			if (random<33)
+			boolean denyOther = false;
+			if (desc.g!=null && desc.g.denyOtherEnvironmentSounds() ||
+					desc.detailedEconomic!=null && desc.detailedEconomic.denyOtherEnvironmentSounds())
 			{
-				if (desc.g!=null)
-				{
-					String sound = desc.g.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
-					if (sound!=null)
-					{
-						J3DCore.getInstance().audioServer.playLoading(sound, "geo");
-						played = true;
-					}
-				}
+				denyOther = true;
 			}
-			if (random>33 && random<66 || !played)
+			if (random>33 && random<66 || desc.detailedEconomic!=null && desc.detailedEconomic.denyOtherEnvironmentSounds())
 			{
 				if (desc.detailedEconomic!=null)
 				{
@@ -471,6 +465,20 @@ public class GameStateContainer {
 						played = true;
 					}
 				}
+				if (denyOther) return;
+			}
+			if (random<33 || desc.g!=null && desc.g.denyOtherEnvironmentSounds())
+			{
+				if (desc.g!=null)
+				{
+					String sound = desc.g.audioDescriptor.getSound(AudioDescription.T_ENVIRONMENTAL);
+					if (sound!=null)
+					{
+						J3DCore.getInstance().audioServer.playLoading(sound, "geo");
+						played = true;
+					}
+				}
+				if (denyOther) return;
 			}
 			if (random>66 || !played)
 			{

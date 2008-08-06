@@ -451,5 +451,12 @@ public class Cave extends Geography implements Surface {
 		return cachedNonType;
 	}
 
+	@Override
+	public boolean denyOtherEnvironmentSounds() {
+		
+		return true;
+	}
+
+	
 
 }
