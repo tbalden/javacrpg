@@ -18,12 +18,14 @@
 package org.jcrpg.threed.scene.model;
 
 import org.jcrpg.threed.NodePlaceholder;
+import org.jcrpg.util.HashUtil;
 
 
 public class SimpleModel extends Model {
 
 	public String modelName, textureName;
 	public String steepTextureName = null;
+	public String secTextureName = null;
 	public boolean mipMap = true;
 	public int xGeomBatchSize = -1;
 	public int yGeomBatchSize = -1;
@@ -31,6 +33,7 @@ public class SimpleModel extends Model {
 	public boolean generatedGroundModel = false;
 	
 	public String steepId = null;
+	public String secId = null;
 	
 	public SimpleModel(String modelName, String textureName)
 	{
@@ -50,7 +53,8 @@ public class SimpleModel extends Model {
 		
 	}
 	
-	public float steepRatio = 0.6f;
+	public float steepRatio = 0.8f;
+	public int secTextChance = 50;
 	
 	@Override
 	public String getId(NodePlaceholder place) {
@@ -67,6 +71,15 @@ public class SimpleModel extends Model {
 			}
 			return steepId;
 		}
+		if (secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
+		{
+			if (secId==null)
+			{
+				this.secId = modelName+mipMap+secTextureName;
+			}
+			return secId;
+		}
+			
 		return id;
 	}
 	
@@ -81,6 +94,13 @@ public class SimpleModel extends Model {
 			//System.out.println("AR: "+place.cube.cube.angleRatio+" "+steepTextureName);
 			return steepTextureName;
 		}
+		if (secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
+			return secTextureName;
+		return textureName;
+	}
+	
+	public String getBlendTextureKey(NodePlaceholder place)
+	{
 		return textureName;
 	}
 	

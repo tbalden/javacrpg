@@ -489,6 +489,9 @@ public class SideTypeModels {
 		
 		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true; qm_grass.farViewEnabled = true;
 		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.generatedGroundModel = true; sm_grass.rotateOnSteep = false; sm_grass.yGeomBatchSize = yCommon; sm_grass.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass.farViewEnabled = true;
+		sm_grass.secTextChance = 30;
+		sm_grass.steepTextureName = "grass_hillside.png";
+		sm_grass.secTextureName = "grass_bare2.jpg";
 		SimpleModel sm_grass_2 = new SimpleModel("models/ground/ground_2.obj","grass2.jpg"); sm_grass_2.rotateOnSteep = true; sm_grass_2.yGeomBatchSize = yCommon; sm_grass_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_2.farViewEnabled = true;
 		SimpleModel sm_grass_3 = new SimpleModel("models/ground/ground_3.obj","grass2.jpg"); sm_grass_3.rotateOnSteep = true; sm_grass_3.yGeomBatchSize = yCommon; sm_grass_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_3.farViewEnabled = true;
 		SimpleModel sm_grass_steep = new SimpleModel("models/ground/ground_steep_1.obj","grass2.jpg"); sm_grass_steep.rotateOnSteep = true; sm_grass_steep.yGeomBatchSize = yCommon; sm_grass_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_steep.noSpecialSteepRotation = false; sm_grass_steep.farViewEnabled = true;
@@ -536,7 +539,8 @@ public class SideTypeModels {
 		QuadModel qm_jungle = new QuadModel("jungle.jpg"); qm_jungle.rotateOnSteep = true; qm_jungle.farViewEnabled = true;
 		
 		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = false; sm_jungle.generatedGroundModel = true; sm_jungle.rotateOnSteep = false; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
-		sm_jungle.steepTextureName = "hillside.png";
+		sm_jungle.steepTextureName = "jungle_hillside.png";
+		sm_jungle.secTextureName = "jungle_b.jpg";
 		
 		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = false; sm_jungle_2.generatedGroundModel = true; sm_jungle_2.rotateOnSteep = false; sm_jungle_2.yGeomBatchSize = yCommon; sm_jungle_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_2.farViewEnabled = true;
 		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = false; sm_jungle_3.generatedGroundModel = true; sm_jungle_3.rotateOnSteep = false; sm_jungle_3.yGeomBatchSize = yCommon; sm_jungle_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_3.farViewEnabled = true;
