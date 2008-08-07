@@ -285,8 +285,12 @@ public class GeoTileLoader {
 		public String adjacentGroundTexture = null;
 		public String oppositeGroundTexture = null;
 		public String oppAdjGroundTexture = null;
-		
-		public String getGeneratedGeoTileTextureNameFromCube(RenderedCube c)
+
+		public String adjacentGroundBaseTexture = null;
+		public String oppositeGroundBaseTexture = null;
+		public String oppAdjGroundBaseTexture = null;
+
+		public String[] getGeneratedGeoTileTextureNameFromCube(RenderedCube c)
 		{
 			if (c==null) return null;
 			for (NodePlaceholder n:c.hsRenderedNodes)
@@ -296,7 +300,7 @@ public class GeoTileLoader {
 					SimpleModel sm = (SimpleModel)n.model;
 					if (sm.generatedGroundModel)
 					{
-						return sm.getTexture(n);
+						return new String[]{sm.getBlendTextureKey(n),sm.getTexture(n)};
 					}
 				}
 			}
@@ -312,19 +316,38 @@ public class GeoTileLoader {
 			this.opposite = opposite;
 			this.adjacent = adjacent;
 			this.oppAdj = oppAdj;
-			String originalTexture = getGeneratedGeoTileTextureNameFromCube(original);
+			String[] s = null;
+			s = getGeneratedGeoTileTextureNameFromCube(original);
+			String originalTexture = s==null?null:s[1];
+			String originalBaseTexture = s==null?null:s[0];
 			ownGroundTexture = originalTexture;
 			if (J3DCore.TEXTURE_SPLATTING && !original.farview)
 			{
 				// TODO with farview the generated ground tiles are not correctly removed from
 				// scenario. This 'if' above can be removed if solution found...
 				// Seems like they are wrongly positioned, generated in farview???
-				oppositeGroundTexture = getGeneratedGeoTileTextureNameFromCube(opposite);
-				adjacentGroundTexture = getGeneratedGeoTileTextureNameFromCube(adjacent);
-				oppAdjGroundTexture = getGeneratedGeoTileTextureNameFromCube(oppAdj);
-				if (oppAdjGroundTexture!=null && !originalTexture.equals(oppAdjGroundTexture) || 
-						oppositeGroundTexture!=null && !originalTexture.equals(oppositeGroundTexture) || 
-						adjacentGroundTexture!=null && !originalTexture.equals(adjacentGroundTexture) )
+				
+				s = getGeneratedGeoTileTextureNameFromCube(opposite);
+				if (s!=null)
+				{
+					oppositeGroundTexture = s[1];
+					oppositeGroundBaseTexture = s[0];
+				}
+				s = getGeneratedGeoTileTextureNameFromCube(adjacent);
+				if (s!=null)
+				{
+					adjacentGroundTexture = s[1];
+					adjacentGroundBaseTexture = s[0];
+				}
+				s = getGeneratedGeoTileTextureNameFromCube(oppAdj);
+				if (s!=null)
+				{
+					oppAdjGroundTexture = s[1];
+					oppAdjGroundBaseTexture = s[0];
+				}
+				if (oppAdjGroundBaseTexture!=null && !originalBaseTexture.equals(oppAdjGroundBaseTexture) || 
+						oppositeGroundBaseTexture!=null && !originalBaseTexture.equals(oppositeGroundBaseTexture) || 
+						adjacentGroundBaseTexture!=null && !originalBaseTexture.equals(adjacentGroundBaseTexture) )
 				{
 					textureKeyPart=oppositeGroundTexture+adjacentGroundTexture+oppAdjGroundTexture;
 				}

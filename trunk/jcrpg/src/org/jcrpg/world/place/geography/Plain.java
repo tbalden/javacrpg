@@ -47,7 +47,7 @@ public class Plain extends Geography {
 		if (overrideHeight!=null) return overrideHeight;
 		//if (x<0 || z<0 || x>=sizeX || z>=sizeZ) return 0;
 		float Y = 0;
-		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/50f);
+		Y+=(((((HashUtil.mixPercentage(worldX/5, worldZ/5, 0)))-30)%100)/70f);
 		
 		// adding some hill thing...
 		int x1 = sizeX / 8;
@@ -59,7 +59,7 @@ public class Plain extends Geography {
 		int r = sizeX / 8;
 		
 		float sY = Math.max(0, r*r - ( (x2 - x1) * (x2 - x1) + (z2 - z1) * (z2 - z1) ))*5;
-		sY/=60f;
+		sY/=80f;
 		Y+=sY;
 		
 		//Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/8, worldZ/8, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/8, worldX/8, 0)+20)/20), 0)))+30)%100)/50);
