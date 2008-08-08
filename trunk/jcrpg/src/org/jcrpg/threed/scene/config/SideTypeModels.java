@@ -259,7 +259,7 @@ public class SideTypeModels {
 		pine_lowest_2.windAnimation = false;*/
 
 		PartlyBillboardModel great_pine_high = new PartlyBillboardModel("pbm_great_pine_0","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},0,MIPMAP_TREES);
-		great_pine_high.genericScale=1.4f;
+		great_pine_high.genericScale=1.3f;
 		great_pine_high.quadXSizeMultiplier = 2f;
 		great_pine_high.quadYSizeMultiplier = 2f;
 		great_pine_high.shadowCaster = true;
@@ -397,8 +397,8 @@ public class SideTypeModels {
 		TextureStateVegetationModel tsm_cave_mushroom = new TextureStateVegetationModel(new String[]{"cave_mushroom.png"},0.55f,0.4f,2,1f);
 		tsm_cave_mushroom.windAnimation = false;
 		tsm_cave_mushroom.alwaysRenderBatch = true;
-		TextureStateVegetationModel tsm_grass_anathum = new TextureStateVegetationModel(new String[]{"anathum.png"},0.55f,0.6f,2,1f);
-		tsm_cave_mushroom.alwaysRenderBatch = true;
+		TextureStateVegetationModel tsm_grass_anathum = new TextureStateVegetationModel(new String[]{"anathum.png"},0.75f,0.8f,2,1f);
+		tsm_grass_anathum.alwaysRenderBatch = true;
 
 		
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.65f,0.5f,4,0.6f);
