@@ -274,6 +274,7 @@ public class GeoTileLoader {
 	
 	public static class NeighborCubeData
 	{
+		public boolean wereNeigboursNotFullyDetected;
 		public RenderedCube opposite;
 		public RenderedCube adjacent;
 		public RenderedCube oppAdj;
@@ -289,6 +290,11 @@ public class GeoTileLoader {
 		public String adjacentGroundBaseTexture = null;
 		public String oppositeGroundBaseTexture = null;
 		public String oppAdjGroundBaseTexture = null;
+		
+		public boolean wereNeigboursNotFullyDetected()
+		{
+			return wereNeigboursNotFullyDetected;
+		}
 
 		public String[] getGeneratedGeoTileTextureNameFromCube(RenderedCube c)
 		{
@@ -355,6 +361,7 @@ public class GeoTileLoader {
 			this.oppositeDeltaY = oppositeDeltaY;
 			this.adjacentDeltaY = adjacentDeltaY;
 			this.oppAdjDeltaY = oppAdjDeltaY;
+			this.wereNeigboursNotFullyDetected = opposite==null||adjacent==null||oppAdj==null;
 		}
 		
 		public String getTextureKeyPartForBatch()

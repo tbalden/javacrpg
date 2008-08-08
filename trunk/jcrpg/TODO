@@ -111,17 +111,20 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] COSAT slope:
 	 lower height point geo tile override height ->
 		and water tile + in getWaterCube
+
+	[ ] shadows coloring wrong color, white???
+	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
+
 ##
 [?] list before next release:
 ##
 
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
-
+	[ ] redesign jungle tree
 	--
 
-	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
-	[ ] normal problems - rendered area edges
+	[X] normal problems - rendered area edges
 	
 	-- QA/DOC
 	[ ] add choice for DETAILS settings at startup???

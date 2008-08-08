@@ -943,7 +943,7 @@ public class J3DStandingEngine {
 								{
 			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
 			    					{
-			    						if (n.neighborCubeData==null)
+			    						if (n.neighborCubeData==null || n.neighborCubeData.wereNeigboursNotFullyDetected())
 			    						{
 			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
 			    						}
@@ -1306,7 +1306,7 @@ public class J3DStandingEngine {
 									
 			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
 			    					{
-			    						if (n.neighborCubeData==null)
+			    						if (n.neighborCubeData==null || n.neighborCubeData.wereNeigboursNotFullyDetected())
 			    						{
 			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
 			    						}

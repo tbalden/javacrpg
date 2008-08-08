@@ -190,26 +190,26 @@ public class SideTypeModels {
 		
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
-		cherry.genericScale=1.5f;
+		cherry.genericScale=1.7f;
 		cherry.shadowCaster = true;
-		PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
 		//cherry_low.windAnimation = false;
 		PartlyBillboardModel cherry_lowest = new PartlyBillboardModel("pbm_cherry_2","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},2,MIPMAP_TREES);
 		cherry_lowest.windAnimation = false;
 		PartlyBillboardModel cherry_lowest_2 = new PartlyBillboardModel("pbm_cherry_3","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},3,MIPMAP_TREES);
-		cherry_lowest_2.windAnimation = false;
+		cherry_lowest_2.windAnimation = false;*/
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
-		acacia.genericScale=1.4f;
+		acacia.genericScale=1.65f;
 		acacia.shadowCaster = true;
-		PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
 		//acacia_low.windAnimation = false;
 		PartlyBillboardModel acacia_lowest = new PartlyBillboardModel("pbm_acacia_2","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},2,MIPMAP_TREES);
 		acacia_lowest.windAnimation = false;
 		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("pbm_acacia_3","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
-		acacia_lowest_2.windAnimation = false;
+		acacia_lowest_2.windAnimation = false;*/
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.genericScale=1.3f;
@@ -219,7 +219,7 @@ public class SideTypeModels {
 		bush.quadXSizeMultiplier = 4.8f;
 		bush.quadYSizeMultiplier = 4.2f;
 		bush.shadowCaster = true;
-		PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		bush_low.quadXSizeMultiplier = 3.3f;
 		bush_low.quadYSizeMultiplier = 3.0f;
 		bush_low.shadowCaster = true;
@@ -230,7 +230,7 @@ public class SideTypeModels {
 		bush_lowest.windAnimation = false;
 		bush_lowest_2.quadXSizeMultiplier = 3.8f;
 		bush_lowest_2.quadYSizeMultiplier = 3.5f;
-		bush_lowest_2.windAnimation = false;
+		bush_lowest_2.windAnimation = false;*/
 		
 /*		PartlyBillboardModel fern = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},0,MIPMAP_TREES);
 		fern.shadowCaster = true;
@@ -239,10 +239,11 @@ public class SideTypeModels {
 		PartlyBillboardModel fern_lowest = new PartlyBillboardModel("models/bush/fern.3ds",new String[]{"3"},new String[]{"2"},new String[]{"fern.png"},2,MIPMAP_TREES);
 */
 		PartlyBillboardModel pine_high = new PartlyBillboardModel("pbm_pine_0","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},0,MIPMAP_TREES);
+		pine_high.genericScale=1.4f;
 		pine_high.quadXSizeMultiplier = 3.0f;
 		pine_high.quadYSizeMultiplier = 3.5f;
 		pine_high.shadowCaster = true;
-		PartlyBillboardModel pine_low = new PartlyBillboardModel("pbm_pine_1","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel pine_low = new PartlyBillboardModel("pbm_pine_1","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
 		pine_low.quadXSizeMultiplier = 2f;
 		pine_low.quadYSizeMultiplier = 3f;
 		pine_low.shadowCaster = true;
@@ -253,13 +254,14 @@ public class SideTypeModels {
 		PartlyBillboardModel pine_lowest_2 = new PartlyBillboardModel("pbm_pine_3","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},3,MIPMAP_TREES);
 		pine_lowest_2.quadXSizeMultiplier = 1.6f;
 		pine_lowest_2.quadYSizeMultiplier = 3f;
-		pine_lowest_2.windAnimation = false;
+		pine_lowest_2.windAnimation = false;*/
 
 		PartlyBillboardModel great_pine_high = new PartlyBillboardModel("pbm_great_pine_0","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},0,MIPMAP_TREES);
+		great_pine_high.genericScale=1.4f;
 		great_pine_high.quadXSizeMultiplier = 2f;
 		great_pine_high.quadYSizeMultiplier = 2f;
 		great_pine_high.shadowCaster = true;
-		PartlyBillboardModel great_pine_low = new PartlyBillboardModel("pbm_great_pine_1","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel great_pine_low = new PartlyBillboardModel("pbm_great_pine_1","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},1,MIPMAP_TREES);
 		great_pine_low.quadXSizeMultiplier = 2f;
 		great_pine_low.quadYSizeMultiplier = 2.5f;
 		great_pine_low.shadowCaster = true;
@@ -270,13 +272,13 @@ public class SideTypeModels {
 		PartlyBillboardModel great_pine_lowest_2 = new PartlyBillboardModel("pbm_great_pine_3","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},3,MIPMAP_TREES);
 		great_pine_lowest_2.quadXSizeMultiplier = 1.3f;
 		great_pine_lowest_2.quadYSizeMultiplier = 2.0f;
-		great_pine_lowest_2.windAnimation = false;
+		great_pine_lowest_2.windAnimation = false;*/
 
 		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_1.png"},0,MIPMAP_TREES);
 		palm_high.quadXSizeMultiplier = 1.5f;
 		palm_high.quadYSizeMultiplier = 2f;
 		palm_high.shadowCaster = true;
-		PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
 		//palm_low.quadXSizeMultiplier = 2f;
 		//palm_low.quadYSizeMultiplier = 2.5f;
 		palm_low.shadowCaster = true;
@@ -290,7 +292,7 @@ public class SideTypeModels {
 		palm_lowest_2.quadYSizeMultiplier = 0.5f;
 		//palm_lowest_2.quadXSizeMultiplier = 1.6f;
 		//palm_lowest_2.quadYSizeMultiplier = 2.5f;
-		palm_lowest_2.windAnimation = false;
+		palm_lowest_2.windAnimation = false;*/
 
 		
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
@@ -298,7 +300,7 @@ public class SideTypeModels {
 		coconut_high.quadYSizeMultiplier = 4f;
 		coconut_high.shadowCaster = true;
 		coconut_high.cullNone = true;
-		PartlyBillboardModel coconut_low = new PartlyBillboardModel("pbm_coconut_1","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel coconut_low = new PartlyBillboardModel("pbm_coconut_1","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},1,MIPMAP_TREES);
 		coconut_low.quadXSizeMultiplier = 3f;
 		coconut_low.quadYSizeMultiplier = 6f;
 		coconut_low.shadowCaster = true;
@@ -312,7 +314,7 @@ public class SideTypeModels {
 		coconut_lowest_2.quadXSizeMultiplier = 1.8f;
 		coconut_lowest_2.quadYSizeMultiplier = 1.7f;
 		coconut_lowest_2.windAnimation = false;
-		coconut_lowest_2.cullNone = true;
+		coconut_lowest_2.cullNone = true;*/
 
 		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("pbm_jungle_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
 		bush.genericScale=1.3f;
@@ -321,7 +323,7 @@ public class SideTypeModels {
 		jungle_bush.quadXSizeMultiplier = 2f;
 		jungle_bush.quadYSizeMultiplier = 2f;
 		jungle_bush.shadowCaster = true;
-		PartlyBillboardModel jungle_bush_low = new PartlyBillboardModel("pbm_jungle_bush_1","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},1,MIPMAP_TREES);
+		/*PartlyBillboardModel jungle_bush_low = new PartlyBillboardModel("pbm_jungle_bush_1","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},1,MIPMAP_TREES);
 		jungle_bush_low.quadXSizeMultiplier = 1.6f;
 		jungle_bush_low.quadYSizeMultiplier = 1.6f;
 		jungle_bush_low.shadowCaster = true;
@@ -332,7 +334,7 @@ public class SideTypeModels {
 		jungle_bush_lowest.windAnimation = false;
 		jungle_bush_lowest_2.quadXSizeMultiplier = 3.5f;
 		jungle_bush_lowest_2.quadYSizeMultiplier = 3.5f;
-		jungle_bush_lowest_2.windAnimation = false;
+		jungle_bush_lowest_2.windAnimation = false;*/
 		
 		SimpleModel pine = new SimpleModel("models/tree/pine.3ds",null,MIPMAP_TREES);
 		pine.shadowCaster = true; pine.useClodMesh = true;
@@ -356,7 +358,7 @@ public class SideTypeModels {
 			TREE_LOD_DIST = J3DCore.TREE_LOD_DIST_HIGH;
 		}
 
-		LODModel lod_cherry = new LODModel("cherry",new SimpleModel[]{cherry,cherry_low,cherry_lowest,cherry_lowest_2},TREE_LOD_DIST);
+		/*LODModel lod_cherry = new LODModel("cherry",new SimpleModel[]{cherry,cherry_low,cherry_lowest,cherry_lowest_2},TREE_LOD_DIST);
 		lod_cherry.shadowCaster = true;
 		LODModel lod_acacia = new LODModel("acacia",new SimpleModel[]{acacia,acacia_low,acacia_lowest,acacia_lowest_2},TREE_LOD_DIST);
 		lod_acacia.shadowCaster = true;
@@ -378,7 +380,7 @@ public class SideTypeModels {
 		LODModel lod_jungle_bush1 = new LODModel("jungle_bush1",new SimpleModel[]{jungle_bush,jungle_bush_low,jungle_bush_lowest,jungle_bush_lowest_2},TREE_LOD_DIST);
 		lod_jungle_bush1.shadowCaster = true;
 		LODModel lod_fern = new LODModel("fern",new SimpleModel[]{fern1},new float[][]{{0f,15f}});
-		lod_fern.shadowCaster = true;
+		lod_fern.shadowCaster = true;*/
 
 		TextureStateVegetationModel tsm_red_forest_mushroom = new TextureStateVegetationModel(new String[]{"red_mushroom.png"},0.4f,0.5f,2,1f);
 		tsm_red_forest_mushroom.windAnimation = false;
@@ -511,7 +513,7 @@ public class SideTypeModels {
 		SimpleModel sm_water_rock_side = new SimpleModel("models/ground/water_rock_side.obj","cave_ground.jpg"); sm_river_bottom.yGeomBatchSize = yCommon; sm_river_bottom.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_river_bottom.rotateOnSteep = true; sm_river_bottom.farViewEnabled = true;
 
 		LODModel lod_cave_wall = new LODModel("cave_wall",new Model[]{wall_cave,qm_cave_wall},TREE_LOD_DIST);
-		lod_jungle_bush1.shadowCaster = false;
+		lod_cave_wall.shadowCaster = false;
 		
 		SimpleModel sm_road_stone = new SimpleModel("models/ground/road_stone_1.3ds",null); sm_road_stone.rotateOnSteep = true; sm_road_stone.farViewEnabled = true;
 		//QuadModel qm_road_stone = new QuadModel("stone.jpg","stone_bump.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE,true); qm_grass.rotateOnSteep = true;
@@ -602,7 +604,7 @@ public class SideTypeModels {
 		
 		
 		// lod vegetations
-		hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
+		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{lod_cherry})); // oak TODO!
 		hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{lod_cherry}));
 		hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{lod_palm}));
 		hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{lod_pine}));
@@ -612,10 +614,10 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{lod_jungletrees_mult}));
 		hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{lod_great_pine}));
 		hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{lod_fern}));
-		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));
+		hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{lod_jungle_bush1}));*/
 
 
-		if (!LOD_VEGETATION)
+		//if (!LOD_VEGETATION)
 		{
 			// no lod version
 			hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!

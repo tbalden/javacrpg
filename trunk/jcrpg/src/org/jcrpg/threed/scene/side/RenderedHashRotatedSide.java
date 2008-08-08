@@ -52,6 +52,6 @@ public class RenderedHashRotatedSide extends RenderedSide {
 	public float scale(int x,int y,int z)
 	{
 		if (scaleFix) return 1f;
-		return 1f+(HashUtil.mix(x, y, z)%100)*0.003f;
+		return 0.9f+(HashUtil.mix(x, y, z)%100)/140f;
 	}
 }
