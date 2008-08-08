@@ -156,7 +156,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmCubeSideSubTypeToRenderedSideId.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(24));//new Integer(24)); TODO quad model
 		hmCubeSideSubTypeToRenderedSideId.put(JungleLowTree.SUBTYPE_TREE.id,  new Integer(57));//new Integer(24)); TODO quad model
-		hmCubeSideSubTypeToRenderedSideId.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
+		hmCubeSideSubTypeToRenderedSideId.put(GreenFern.SUBTYPE_BUSH.id, 58);//new Integer(26)); TODO, quad model?
 		hmCubeSideSubTypeToRenderedSideId.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_BLOCK_GROUND.id, EMPTY_SIDE);
@@ -282,10 +282,10 @@ public class SideTypeModels {
 		palm_high.quadYSizeMultiplier = 1.2f;
 		palm_high.shadowCaster = true;
 
-		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{},new String[]{"jungle_succ_2.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_2.png"},0,MIPMAP_TREES);
 		palm_lowbranch_high.genericScale = 3f;
-		palm_lowbranch_high.quadXSizeMultiplier = 1.1f;
-		palm_lowbranch_high.quadYSizeMultiplier = 1.2f;
+		palm_lowbranch_high.quadXSizeMultiplier = 1.0f;
+		palm_lowbranch_high.quadYSizeMultiplier = 1.0f;
 		palm_lowbranch_high.shadowCaster = true;
 		/*PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
 		//palm_low.quadXSizeMultiplier = 2f;
@@ -777,9 +777,13 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(56), new RenderedSide(
 				new SimpleModel[]{sm_external_ground_above_water}
 				));
+		TextureStateVegetationModel tsm_green_fern = new TextureStateVegetationModel(new String[]{"jungle_ground_plant1.png"},0.9f,1.3f,2,1f);
+		tsm_green_fern.windAnimation = true;
+		tsm_green_fern.alwaysRenderBatch = true;
+		hm3dTypeRenderedSide.put(new Integer(58), new RenderedSide(new Model[]{tsm_green_fern}));
 
 		// NEXT ID = 
-		// 58
+		// 59
 		
 	}
 	
