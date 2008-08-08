@@ -78,12 +78,11 @@ AxisVariation 0.000000
 AxisResolution 3
 ProfileScaleBase 1.000000
 ProfileScaleCurve CubicSpline
-CPCount 4
-Point 0.000000 0.535714
-Point 0.101563 0.892857
+CPCount 3
+Point 0.000000 0.750000
 Point 0.734375 0.464286
 Point 1.000000 0.107143
-ProfileResolution 8
+ProfileResolution 4
 PhototropismCurve CubicSpline
 CPCount 2
 Point 0.000000 0.464286
