@@ -51,6 +51,7 @@ import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
+import org.jcrpg.world.ai.flora.tree.palm.JungleLowTree;
 import org.jcrpg.world.ai.flora.tree.palm.JunglePalmTrees;
 import org.jcrpg.world.ai.flora.tree.pine.GreatPineTree;
 import org.jcrpg.world.ai.flora.tree.pine.GreenPineTree;
@@ -154,6 +155,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(JungleGroundEco.SUBTYPE_GROUND.id, new Integer(49));
 		hmCubeSideSubTypeToRenderedSideId.put(BigCactus.SUBTYPE_CACTUS.id, new Integer(23));
 		hmCubeSideSubTypeToRenderedSideId.put(JunglePalmTrees.SUBTYPE_TREE.id,  new Integer(24));//new Integer(24)); TODO quad model
+		hmCubeSideSubTypeToRenderedSideId.put(JungleLowTree.SUBTYPE_TREE.id,  new Integer(57));//new Integer(24)); TODO quad model
 		hmCubeSideSubTypeToRenderedSideId.put(GreenFern.SUBTYPE_BUSH.id, EMPTY_SIDE);//new Integer(26)); TODO, quad model?
 		hmCubeSideSubTypeToRenderedSideId.put(JungleBush.SUBTYPE_BUSH.id, new Integer(30));
 		hmCubeSideSubTypeToRenderedSideId.put(Cave.SUBTYPE_GROUND.id, new Integer(31));
@@ -274,10 +276,17 @@ public class SideTypeModels {
 		great_pine_lowest_2.quadYSizeMultiplier = 2.0f;
 		great_pine_lowest_2.windAnimation = false;*/
 
-		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_1.png"},0,MIPMAP_TREES);
-		palm_high.quadXSizeMultiplier = 1.5f;
-		palm_high.quadYSizeMultiplier = 2f;
+		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb2_e.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_4.png"},0,MIPMAP_TREES);
+		palm_high.genericScale = 2.3f;
+		palm_high.quadXSizeMultiplier = 1.1f;
+		palm_high.quadYSizeMultiplier = 1.2f;
 		palm_high.shadowCaster = true;
+
+		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{},new String[]{"jungle_succ_2.png"},0,MIPMAP_TREES);
+		palm_lowbranch_high.genericScale = 3f;
+		palm_lowbranch_high.quadXSizeMultiplier = 1.1f;
+		palm_lowbranch_high.quadYSizeMultiplier = 1.2f;
+		palm_lowbranch_high.shadowCaster = true;
 		/*PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
 		//palm_low.quadXSizeMultiplier = 2f;
 		//palm_low.quadYSizeMultiplier = 2.5f;
@@ -631,6 +640,7 @@ public class SideTypeModels {
 			hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{great_pine_high}));
 			hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
 			hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
+			hm3dTypeRenderedSide.put(new Integer(57), new RenderedHashRotatedSide(new Model[]{palm_lowbranch_high}));
 		}
 		
 		/*hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{jungletrees_mult})); // oak TODO!
@@ -769,7 +779,7 @@ public class SideTypeModels {
 				));
 
 		// NEXT ID = 
-		// 57
+		// 58
 		
 	}
 	
