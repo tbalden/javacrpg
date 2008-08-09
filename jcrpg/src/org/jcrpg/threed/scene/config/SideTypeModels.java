@@ -311,7 +311,7 @@ public class SideTypeModels {
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
 		SimpleModel coconut_simple = new SimpleModel("models/tree/palm_02.obj",null,MIPMAP_TREES);
 		coconut_simple.elevateOnSteep = true;
-		coconut_simple.genericScale = 1.3f;
+		coconut_simple.genericScale = 1.5f;
 		//SimpleModel = new SimpleModel()
 		coconut_high.quadXSizeMultiplier = 4f;
 		coconut_high.quadYSizeMultiplier = 4f;
@@ -651,8 +651,8 @@ public class SideTypeModels {
 			hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{palm_high}));
 			hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{great_pine_high}));
 			hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
-			hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
-			//hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush_simple}));
+			//hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
+			hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush_simple}));
 			hm3dTypeRenderedSide.put(new Integer(57), new RenderedHashRotatedSide(new Model[]{palm_lowbranch_high}));
 		}
 		
