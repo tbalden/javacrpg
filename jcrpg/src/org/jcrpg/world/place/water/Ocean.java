@@ -96,6 +96,12 @@ public class Ocean extends Water {
 			SurfaceHeightAndType surface, boolean farView) {
 		
 		if (!isWaterPoint(x, y, z, farView)) return geoCube;
+		
+		if (farView)
+		{
+			//System.out.println("## "+ (y/(farView?J3DCore.FARVIEW_GAP:1)) + " == " + (worldGroundLevel/(farView?J3DCore.FARVIEW_GAP:1)));
+		}
+
 		if (y/(farView?J3DCore.FARVIEW_GAP:1)==worldGroundLevel/(farView?J3DCore.FARVIEW_GAP:1) && !noWaterInTheBed) 
 		{
 			Cube c = new Cube (this,LAKE_WATER,x,y,z,SurfaceHeightAndType.NOT_STEEP);
@@ -196,8 +202,15 @@ public class Ocean extends Water {
 		
 		int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
 		
+		if (farView)
+		{
+			//System.out.println("-- "+ ((worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW)) + "  " + ((worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW))+ "<="+depth+" >= 0");
+		}
+		
 		if ((worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW) <= depth && (worldGroundLevel/CONST_FARVIEW)-(y/CONST_FARVIEW)>=0) 
 		{
+			//if (farView) System.out.println("LEVEL IS GOOD");
+			
 			{
 				int densModifier = calcDensModifier(x, z, density, magnification);//getGeographyHashPercentage((x/(magnification*density)), 0, (z)/(magnification*density)) - 50;
 				

@@ -294,6 +294,9 @@ public class World extends Place {
 							int y = s.surfaceY;
 							int depth = w.getDepth(worldX, worldY, worldZ);
 							int bottom = y - depth;
+							if (farView) y = y - y%J3DCore.FARVIEW_GAP;
+							if (farView) bottom = bottom - bottom%J3DCore.FARVIEW_GAP;
+							//if (farView) System.out.println("Y = "+y+" = "+s.surfaceY+" BOTTOM = "+ bottom + " ## y <= "+worldY +" >= bottom");
 							if (worldY>=bottom&&worldY<=y)
 							{
 								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s, farView);
