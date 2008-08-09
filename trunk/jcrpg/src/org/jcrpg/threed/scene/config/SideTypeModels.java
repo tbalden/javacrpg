@@ -42,6 +42,8 @@ import org.jcrpg.world.ai.flora.ground.Sand;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.middle.grass.Anethum;
+import org.jcrpg.world.ai.flora.middle.grass.MargaritaFlower;
+import org.jcrpg.world.ai.flora.middle.grass.SunFlower;
 import org.jcrpg.world.ai.flora.middle.mushroom.CaveMushroom;
 import org.jcrpg.world.ai.flora.middle.mushroom.RedForestMushroom;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
@@ -171,6 +173,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(CaveMushroom.SUBTYPE_CAVEMUSHROOM.id, new Integer(44));
 		
 		hmCubeSideSubTypeToRenderedSideId.put(Anethum.SUBTYPE_ANETHUM.id, new Integer(45));
+		hmCubeSideSubTypeToRenderedSideId.put(SunFlower.SUBTYPE_SUNFLOWER.id, new Integer(59));
+		hmCubeSideSubTypeToRenderedSideId.put(MargaritaFlower.SUBTYPE_FLOWER.id, new Integer(60));
 		
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
@@ -305,6 +309,10 @@ public class SideTypeModels {
 
 		
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
+		SimpleModel coconut_simple = new SimpleModel("models/tree/palm_02.obj",null,MIPMAP_TREES);
+		coconut_simple.elevateOnSteep = true;
+		coconut_simple.genericScale = 1.3f;
+		//SimpleModel = new SimpleModel()
 		coconut_high.quadXSizeMultiplier = 4f;
 		coconut_high.quadYSizeMultiplier = 4f;
 		coconut_high.shadowCaster = true;
@@ -327,6 +335,9 @@ public class SideTypeModels {
 
 		PartlyBillboardModel jungle_bush = new PartlyBillboardModel("pbm_jungle_bush_0","models/bush/bush1.3ds",new String[]{"3"},new String[]{"2"},new String[]{"palm2a.png"},0,MIPMAP_TREES);
 		bush.genericScale=1.3f;
+		SimpleModel jungle_bush_simple = new SimpleModel("models/bush/Bush_01.obj",null,MIPMAP_TREES);
+		jungle_bush_simple.rotateAndLocate = true;
+		jungle_bush_simple.elevateOnSteep = true;
 		jungle_bush.dislocationRate = 0.4f;
 		jungle_bush.rotateAndLocate = true;
 		jungle_bush.quadXSizeMultiplier = 2f;
@@ -397,8 +408,8 @@ public class SideTypeModels {
 		TextureStateVegetationModel tsm_cave_mushroom = new TextureStateVegetationModel(new String[]{"cave_mushroom.png"},0.55f,0.4f,2,1f);
 		tsm_cave_mushroom.windAnimation = false;
 		tsm_cave_mushroom.alwaysRenderBatch = true;
-		TextureStateVegetationModel tsm_grass_anathum = new TextureStateVegetationModel(new String[]{"anathum.png"},0.75f,0.8f,2,1f);
-		tsm_grass_anathum.alwaysRenderBatch = true;
+		TextureStateVegetationModel tsm_grass_anethum = new TextureStateVegetationModel(new String[]{"anathum.png"},0.75f,0.8f,2,1f);
+		tsm_grass_anethum.alwaysRenderBatch = true;
 
 		
 		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.65f,0.5f,4,0.6f);
@@ -631,7 +642,8 @@ public class SideTypeModels {
 			// no lod version
 			hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
 			hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{cherry}));
-			hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_high}));
+			//hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_high}));
+			hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_simple}));
 			hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{pine_high}));
 			hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{bush})); 
 			hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{acacia}));
@@ -640,6 +652,7 @@ public class SideTypeModels {
 			hm3dTypeRenderedSide.put(new Integer(25), new RenderedHashRotatedSide(new Model[]{great_pine_high}));
 			hm3dTypeRenderedSide.put(new Integer(26), new RenderedHashRotatedSide(new Model[]{fern1}));
 			hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush}));
+			//hm3dTypeRenderedSide.put(new Integer(30), new RenderedHashRotatedSide(new Model[]{jungle_bush_simple}));
 			hm3dTypeRenderedSide.put(new Integer(57), new RenderedHashRotatedSide(new Model[]{palm_lowbranch_high}));
 		}
 		
@@ -731,8 +744,16 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(43), new RenderedSide(new Model[]{tsm_red_forest_mushroom}));
 		hm3dTypeRenderedSide.put(new Integer(44), new RenderedSide(new Model[]{tsm_cave_mushroom}));
 
-		hm3dTypeRenderedSide.put(new Integer(45), new RenderedSide(new Model[]{tsm_grass_anathum}));
-		
+		hm3dTypeRenderedSide.put(new Integer(45), new RenderedSide(new Model[]{tsm_grass_anethum}));
+
+		TextureStateVegetationModel tsm_sunflower = new TextureStateVegetationModel(new String[]{"flower_cont_1.png"},0.55f,0.7f,2,1f);
+		tsm_sunflower.alwaysRenderBatch = true;
+		hm3dTypeRenderedSide.put(new Integer(59), new RenderedSide(new Model[]{tsm_sunflower}));
+
+		TextureStateVegetationModel tsm_margarita = new TextureStateVegetationModel(new String[]{"flower_cont_2.png"},0.55f,0.7f,2,1f);
+		tsm_margarita.alwaysRenderBatch = true;
+		hm3dTypeRenderedSide.put(new Integer(60), new RenderedSide(new Model[]{tsm_margarita}));
+
 		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
 		sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
@@ -783,7 +804,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(58), new RenderedSide(new Model[]{tsm_green_fern}));
 
 		// NEXT ID = 
-		// 59
+		// 61
 		
 	}
 	

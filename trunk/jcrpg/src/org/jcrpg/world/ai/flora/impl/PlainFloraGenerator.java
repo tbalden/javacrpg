@@ -23,6 +23,8 @@ import org.jcrpg.world.ai.flora.ground.JungleGround;
 import org.jcrpg.world.ai.flora.ground.Snow;
 import org.jcrpg.world.ai.flora.middle.deciduous.GreenBush;
 import org.jcrpg.world.ai.flora.middle.grass.Anethum;
+import org.jcrpg.world.ai.flora.middle.grass.MargaritaFlower;
+import org.jcrpg.world.ai.flora.middle.grass.SunFlower;
 import org.jcrpg.world.ai.flora.middle.succulent.GreenFern;
 import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
@@ -40,7 +42,7 @@ public class PlainFloraGenerator extends BaseFloraGenerator{
 	
 	public PlainFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new Anethum(),70),new FloraListElement(new OakTree(),10), new FloraListElement(new CherryTree(),20),new FloraListElement(new Acacia(),1),new FloraListElement(new GreenBush(),100)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new Anethum(),40),new FloraListElement(new OakTree(),10), new FloraListElement(new CherryTree(),20),new FloraListElement(new Acacia(),1),new FloraListElement(new GreenBush(),70),new FloraListElement(new SunFlower(),40),new FloraListElement(new MargaritaFlower(),40)});
 		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),20),new FloraListElement(new JungleBush(),60),new FloraListElement(new JunglePalmTrees(),20),new FloraListElement(new GreenFern(),80)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Snow())});
 	}
