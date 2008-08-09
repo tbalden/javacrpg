@@ -276,13 +276,13 @@ public class SideTypeModels {
 		great_pine_lowest_2.quadYSizeMultiplier = 2.0f;
 		great_pine_lowest_2.windAnimation = false;*/
 
-		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb2_e.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_4.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel palm_high = new PartlyBillboardModel("pbm_palm_0","models/tree/great_succ_bb2_e.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_4.png"},0,MIPMAP_TREES);
 		palm_high.genericScale = 2.3f;
 		palm_high.quadXSizeMultiplier = 1.1f;
 		palm_high.quadYSizeMultiplier = 1.2f;
 		palm_high.shadowCaster = true;
 
-		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{},new String[]{"jung_succ_2.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_2.png"},0,MIPMAP_TREES);
 		palm_lowbranch_high.genericScale = 3f;
 		palm_lowbranch_high.quadXSizeMultiplier = 1.0f;
 		palm_lowbranch_high.quadYSizeMultiplier = 1.0f;
