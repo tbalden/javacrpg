@@ -86,7 +86,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "back", KeyInput.KEY_BACK);
         keyboard.set( "A", KeyInput.KEY_A );
         if (!J3DCore.FREE_MOVEMENT)
-        	keyboard.set( "B", KeyInput.KEY_B );
+        //	keyboard.set( "B", KeyInput.KEY_B );
         keyboard.set( "C", KeyInput.KEY_C );
         keyboard.set( "D", KeyInput.KEY_D );
         keyboard.set( "E", KeyInput.KEY_E );

@@ -507,7 +507,7 @@ public class SideTypeModels {
 				new SimpleModel[]{roof_top}
 				));
 		
-		int yCommon = 1;
+		int yCommon = 10;
 		
 		QuadModel qm_grass = new QuadModel("grass2.jpg",CUBE_EDGE_SIZE,CUBE_EDGE_SIZE); qm_grass.rotateOnSteep = true; qm_grass.farViewEnabled = true;
 		SimpleModel sm_grass = new SimpleModel("models/ground/ground_1.obj","grass2.jpg"); sm_grass.generatedGroundModel = true; sm_grass.rotateOnSteep = false; sm_grass.yGeomBatchSize = yCommon; sm_grass.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass.farViewEnabled = true;
@@ -551,7 +551,9 @@ public class SideTypeModels {
 		SimpleModel sm_desert_steep_3 = new SimpleModel("models/ground/ground_steep_3.obj","sand2.jpg"); sm_desert_steep_3.rotateOnSteep = true; sm_desert_steep_3.yGeomBatchSize = yCommon; sm_desert_steep_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep_3.noSpecialSteepRotation = false; sm_desert_steep_3.farViewEnabled = true;
 		
 		QuadModel qm_arctic = new QuadModel("snow1.jpg"); qm_arctic.rotateOnSteep = true; qm_arctic.farViewEnabled = true;
+		
 		SimpleModel sm_arctic = new SimpleModel("models/ground/ground_1.obj","snow1.jpg"); sm_arctic.rotateOnSteep = false; sm_arctic.generatedGroundModel = true; sm_arctic.yGeomBatchSize = yCommon; sm_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic.farViewEnabled = true;
+		
 		SimpleModel sm_arctic_2 = new SimpleModel("models/ground/ground_2.obj","snow1.jpg"); sm_arctic_2.rotateOnSteep = true; sm_arctic_2.yGeomBatchSize = yCommon; sm_arctic_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_2.farViewEnabled = true;
 		SimpleModel sm_arctic_3 = new SimpleModel("models/ground/ground_3.obj","snow1.jpg"); sm_arctic_3.rotateOnSteep = true; sm_arctic_3.yGeomBatchSize = yCommon; sm_arctic_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_3.farViewEnabled = true;
 		SimpleModel sm_arctic_steep = new SimpleModel("models/ground/ground_steep_1.obj","snow1.jpg"); sm_arctic_steep.rotateOnSteep = true; sm_arctic_steep.yGeomBatchSize = yCommon; sm_arctic_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_arctic_steep.noSpecialSteepRotation = false; sm_arctic_steep.farViewEnabled = true;

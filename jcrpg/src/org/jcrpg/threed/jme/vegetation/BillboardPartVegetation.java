@@ -474,13 +474,21 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		quads.add(new QuadParams(name,states,key,xSize,ySize,x,y,z));
 	}
 	
+	public Spatial foliagelessModelSpatial= null;
+	
 	@Override
 	public int attachChild(Spatial child) {
 		if (!"---".equals(child.getName())) 
 		{
 			transformTrimeshesToQuads(child);
+			// we don't attach the transformed child - it's the trunk mesh stripped from foliage, used 
+			// later in modelGeometryBatch form only.
+			foliagelessModelSpatial = child;
+			return children.size();
+		} else
+		{
+			return super.attachChild(child);
 		}
-		return super.attachChild(child);
 	}
 
 	@Override

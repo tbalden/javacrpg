@@ -36,6 +36,7 @@ public class NodePlaceholder {
 	public RenderedMovingUnit unit;
 	public PooledNode realNode;
 	public Object batchInstance;
+	public HashMap<String, Object> multiBatchInstance;
 	public boolean farView = false;
 	
 	public Quaternion localRotation;

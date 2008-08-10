@@ -45,7 +45,8 @@ import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
 
 /**
- * Trimesh GeomBatch mesh, especially for grass and such things.
+ * Trimesh GeomBatch mesh, especially for grass / tree foliage and such things - it uses vertex shader for wind animation,
+ * and adds an own billboarding of the textured planes. (check onDraw)
  * @author illes
  *
  */
@@ -282,6 +283,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public static boolean passedTimeCalculated = false;
 	public static Quaternion qZero = new Quaternion();
 	int lastMinute = 0;
+	
+	// The special onDraw that handles shader parameters and billboard rotation too.
 	@Override
 	public void onDraw(Renderer r) {
 		

@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed.scene.model;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.util.HashUtil;
 
@@ -71,7 +72,7 @@ public class SimpleModel extends Model {
 			}
 			return steepId;
 		}
-		if (secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
+		if (J3DCore.SECONDARY_TEXTURES && secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
 		{
 			if (secId==null)
 			{
@@ -94,7 +95,7 @@ public class SimpleModel extends Model {
 			//System.out.println("AR: "+place.cube.cube.angleRatio+" "+steepTextureName);
 			return steepTextureName;
 		}
-		if (secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
+		if (J3DCore.SECONDARY_TEXTURES && secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
 			return secTextureName;
 		return textureName;
 	}
