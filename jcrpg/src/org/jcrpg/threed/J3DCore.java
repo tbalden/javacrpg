@@ -203,11 +203,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			FileInputStream fis = new FileInputStream(f);
 			p.load(fis);
 
-			FARVIEW_ENABLED = loadValue("FARVIEW_ENABLED", false);
+			FARVIEW_ENABLED = false;// XXX removing farview option, new geo tiling is not working well with it,
+			// especially the water part, 
+			//loadValue("FARVIEW_ENABLED", false);
 
-			RENDER_DISTANCE_FARVIEW = loadValue("RENDER_DISTANCE_FARVIEW",
+			RENDER_DISTANCE_FARVIEW = 80;
+				/*loadValue("RENDER_DISTANCE_FARVIEW",
 					(int) (60 * CUBE_EDGE_SIZE), (int) (20 * CUBE_EDGE_SIZE),
-					Integer.MAX_VALUE);
+					Integer.MAX_VALUE);*/
 			RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
 
 			RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
