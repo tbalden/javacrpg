@@ -50,10 +50,27 @@ public class BaseFloraGenerator extends FloraGenerator{
 	
 	public BaseFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new RedForestMushroom(),30),new FloraListElement(new Anethum(),60),new FloraListElement(new OakTree(),20), new FloraListElement(new CherryTree(),30),new FloraListElement(new GreenPineTree(),40),new FloraListElement(new Acacia(),40),new FloraListElement(new GreenBush(),60),new FloraListElement(new SunFlower(),30),new FloraListElement(new MargaritaFlower(),20)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{
+				new FloraListElement(new Grass()),
+				new FloraListElement(new RedForestMushroom(),30),
+				new FloraListElement(new Anethum(),60),
+				new FloraListElement(new OakTree(),20), 
+				new FloraListElement(new CherryTree(),30),
+				new FloraListElement(new GreenPineTree(),40),
+				new FloraListElement(new Acacia(),40),
+				new FloraListElement(new GreenBush(),60),
+				new FloraListElement(new SunFlower(),30),
+				new FloraListElement(new MargaritaFlower(),20)});
 		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new CaveMushroom(),100)});
 
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new RedForestMushroom(),35),new FloraListElement(new CoconutTree(),30),new FloraListElement(new JungleLowTree(),35),new FloraListElement(new JunglePalmTrees(),35),new FloraListElement(new JungleBush(),70),new FloraListElement(new GreenFern(),90)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{
+				new FloraListElement(new JungleGround()),
+				new FloraListElement(new RedForestMushroom(),35),
+				new FloraListElement(new CoconutTree(),20),
+				new FloraListElement(new JungleLowTree(),20),
+				new FloraListElement(new JunglePalmTrees(),20),
+				new FloraListElement(new JungleBush(),40),
+				new FloraListElement(new GreenFern(),40)});
 		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,INSIDE,new FloraListElement[]{new FloraListElement(new CaveMushroom(),100)});
 		
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Snow())});

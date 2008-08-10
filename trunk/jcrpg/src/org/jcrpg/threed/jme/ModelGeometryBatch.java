@@ -26,16 +26,24 @@ import org.jcrpg.threed.GeoTileLoader.TiledTerrainBlockAndPassNode;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.RenderState;
 
+/**
+ * Model geometry batch that can hold together a lot of similar texture state trimeshes in one batch mesh
+ * using GeometryBatchMesh.
+ * @author illes
+ *
+ */
 public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
 	private static final long serialVersionUID = 0L;
 	
@@ -48,6 +56,13 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	// TODO create a cache cleaning way!!! in GeometryBatchHelper maybe, check if the model is used at all...
 	// till then it fastens up thing much, so keep it!
 	public  static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
+	
+	/**
+	 * Returning the model's mesh for creating batchInstance copy of it.
+	 * @param m
+	 * @param n
+	 * @return The trimesh to commit into the batch.
+	 */
 	private TriMesh getModelMesh(Model m,NodePlaceholder n)
 	{
 		if (m.type == Model.QUADMODEL) {
@@ -87,7 +102,74 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	}
 
 	public static HashMap<String,Node> sharedParentCache = new HashMap<String, Node>();
+
+	/**
+	 * Special constructor for use with billboard part vegetation node - the node will provide
+	 * the trunk triMesh that is not foliage part - in constructor only used for texture state retrieval.
+	 * @param core
+	 * @param m
+	 * @param placeHolder
+	 * @param veg
+	 */
+	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder, BillboardPartVegetation veg) {
+		model = m;
+		this.core = core;
+		TriMesh mesh = null;
+		TiledTerrainBlockAndPassNode data = null;
+		// getting trunk mesh TriMesh for geometryBatch's base mesh.
+		mesh = ((SharedMesh)(((Node)((Node)veg.foliagelessModelSpatial).getChild(0)).getChild(0))).getTarget();
+		// storing the billboard parent mesh for addItem use.
+
+		String parentKey = m.getId(placeHolder);
+		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
+		Node parentOrig = sharedParentCache.get(parentKey);
+		if (parentOrig==null)
+		{
+			if (data==null || data.passNode==null)
+			{
+				parentOrig = new Node();
+				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
+				if (m.type == Model.PARTLYBILLBOARDMODEL) {
+					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+				}
+				sharedParentCache.put(parentKey,parentOrig);
+			} else
+			{
+				System.out.println("PASSNODE...");
+				parentOrig = new Node();
+				//parentOrig = data.passNode;//.attachChild(parentOrig);
+				parentOrig.attachChild(data.passNode);
+				this.copyTextureCoords(0, 0, 1, 1);
+				data.passNode.attachChild(this);
+				this.updateRenderState();
+				//parentOrig.setRenderState(data.passNode.getRenderState(RenderState.RS_TEXTURE));
+				if (m.type == Model.SIMPLEMODEL) {
+					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
+					//parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+				}
+				//sharedParentCache.put(parentKey,parentOrig);
+			}
+		}
+		if (data==null || data.passNode==null)
+		{
+			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+			parent.setLocalTranslation(placeHolder.getLocalTranslation());
+			parent.attachChild(this);
+			parent.updateModelBound();
+		} else
+		{
+			parent = parentOrig;
+		}
+	}
 	
+
+	/**
+	 * 
+	 * @param core
+	 * @param m The initial model for which we initialize it.
+	 * @param placeHolder Initial placeholder.
+	 */
 	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder) {
 		model = m;
 		this.core = core;
@@ -146,6 +228,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 	}
 	
+	/**
+	 * Returns a unique key for the model type so that reuse of batchInstances in nonVisible list can work.
+	 * @param place
+	 * @return
+	 */
 	public String getModelKey(NodePlaceholder place)
 	{
 		String key = "-";
@@ -155,18 +242,36 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			{
 				
 				key = ((SimpleModel)place.model).getId(place)+((SimpleModel)model).generatedGroundModel+  ( ((SimpleModel)model).generatedGroundModel? (place.cube.cube.cornerHeights!=null?place.cube.cube.cornerHeights.hashCode():"___") : "");
+			} else
+			{
+				key = ((SimpleModel)place.model).getId(place);
 			}
-		} else
+		}
+		else if (model.type == Model.PARTLYBILLBOARDMODEL)
+		{
+			key = ((SimpleModel)place.model).getId(place);
+		}
+		else
 		{
 		}
 		return key;
 		
 	}
-	public static long sumBuildMatricesTime = 0; 
+	public static long sumBuildMatricesTime = 0;
 	public void addItem(NodePlaceholder placeholder)
 	{
+		addItem(placeholder, null);
+	}
+	/**
+	 * Adding a new item to the geomBatch parametered by the placeholder.
+	 * @param placeholder
+	 * @param triMesh sub TriMesh - means a multi trimesh model display, using multiple visibleSets/nonVisible sets.
+	 * Nodeplaceholder multiBatchinstance will be initialized and filled with the for-mesh-created batchInstance .
+	 */
+	public void addItem(NodePlaceholder placeholder,TriMesh triMesh)
+	{
 		
-		String key = getModelKey(placeholder);
+		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 		if (vSet==null)
@@ -198,6 +303,12 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			}
 			instance.getAttributes().setVisible(true);
 			instance.getAttributes().buildMatrices();
+			if (triMesh!=null)
+			{
+				// multi batch instance needed
+				if (placeholder.multiBatchInstance==null) placeholder.multiBatchInstance = new HashMap<String, Object>();
+				placeholder.multiBatchInstance.put(key, instance);
+			}
 			placeholder.batchInstance = instance;
 			nVSet.remove(instance);
 			vSet.add(instance);
@@ -211,6 +322,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			{
 				data = getTiledBlockData(placeholder.model,placeholder,false);
 				quad = data.block;
+			} else
+			if (placeholder.model.type == Model.PARTLYBILLBOARDMODEL)
+			{
+				quad = triMesh;//
 			} else
 			{
 				quad = getModelMesh(placeholder.model,placeholder);
@@ -240,6 +355,13 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			// Add a Box instance (batch and attributes)
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
 					 new GeometryBatchInstanceAttributes(quad));
+			
+			if (triMesh!=null)
+			{
+				// multi batch instance needed
+				if (placeholder.multiBatchInstance==null) placeholder.multiBatchInstance = new HashMap<String, Object>();
+				placeholder.multiBatchInstance.put(key, instance);
+			}
 			placeholder.batchInstance = instance;
 			addInstance(instance);
 			vSet.add(instance);
@@ -251,13 +373,29 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> notVisible = new HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
 	public HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> visible = new HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
 	
-	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder)
 	{
-		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance;
+		removeItem(placeholder, null);
+	}
+	/**
+	 * 
+	 * @param placeholder
+	 * @param triMesh If specified it means a model with multiple batch instances is displayed with
+	 * multiple keys based on trimesh name. Removal will be executed with the sub triMesh's batchInstance
+	 */
+	@SuppressWarnings("unchecked")
+	public void removeItem(NodePlaceholder placeholder,TriMesh triMesh)
+	{
+		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance; 
+		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
+		if (triMesh!=null)
+		{
+			// multi batch instance needed
+			if (placeholder.multiBatchInstance==null) return;
+			instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.multiBatchInstance.get(key);
+		}
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
-			String key = getModelKey(placeholder);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 			if (nVSet==null)
@@ -279,6 +417,12 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			}*/
 			
 			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
+			if (triMesh!=null) 
+			{
+				// if trimesh based detailed model we use multiBatchInstance map
+				placeholder.multiBatchInstance.remove(key);
+				
+			}
 			placeholder.batchInstance = null;
 		}
 	}

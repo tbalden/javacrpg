@@ -397,7 +397,7 @@ public class Cave extends Geography implements Surface {
 						c.merge(new Cube(this,CAVE_NORTH,worldX,worldY,worldZ),worldX,worldY,worldZ,SurfaceHeightAndType.NOT_STEEP);
 					}
 					
-					c.overwritePower = 2;	
+					c.overwritePower = 1;	
 				} else
 				{
 					c.overwritePower = 1;
@@ -439,13 +439,12 @@ public class Cave extends Geography implements Surface {
 			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" CAVE CAN "+ worldX+ " "+worldZ+" " +worldGroundLevel);
 			if (cachedType==null) cachedType = new SurfaceHeightAndType[]{new SurfaceHeightAndType(this,worldGroundLevel,true,SurfaceHeightAndType.NOT_STEEP)};
 			
-			s_lastType = cachedNonType;
+			s_lastType = cachedType;
 			return cachedType;
 		}
 		if (cachedNonType==null)
 		{
 			cachedNonType = new SurfaceHeightAndType[] { new SurfaceHeightAndType(this,worldGroundLevel,false,SurfaceHeightAndType.NOT_STEEP) };
-			s_lastType = cachedNonType;
 		}
 		s_lastType = cachedNonType;
 		return cachedNonType;

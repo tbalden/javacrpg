@@ -25,7 +25,7 @@ import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
-import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
@@ -35,8 +35,20 @@ import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 
+/**
+ * The class used by J3DStandingEngine to append/remove geometryBatches for the models that can
+ * use this feature like SimpleModels and Billboard vegetation/grass. It has universal
+ * addItem/removeItem that will handle the details such as which extension of geomBatch to use.
+ * It will also generate coordinate based keys that hold together several-cubes-sized areas as
+ * one batch with the addition of other key parameters as texture/model id etc. Check getKey().
+ * UpdateAll handles removal of batches.
+ * @author illes
+ *
+ */
 public class GeometryBatchHelper {
 
 	public static HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
@@ -48,7 +60,7 @@ public class GeometryBatchHelper {
 		this.core = core;		
 	}
 	
-	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 10;
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
 	
@@ -68,25 +80,25 @@ public class GeometryBatchHelper {
 			viewMul = 2;
 			yLevelMul = J3DCore.FARVIEW_GAP;
 		}
-    	String key = m.type+m.id+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
-    	if (m.type==Model.SIMPLEMODEL) { // grouping based on coordinate units
+    	String key = m.type+m.id+internal+(farView);
+    	if (m.type==Model.SIMPLEMODEL|| m.type==Model.PARTLYBILLBOARDMODEL) { // grouping based on coordinate units
     		SimpleModel sm = (SimpleModel)m;
     		if (sm.textureName!=null)
     		{
     			if (sm.generatedGroundModel)
     			{
-    				key = m.type+sm.getTexture(place)+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    				key = m.type+sm.getTexture(place)+internal+(farView);
     				if (place.neighborCubeData==null)
     					place.neighborCubeData = GeoTileLoader.getNeighborCubes(place);
     				key+=place.neighborCubeData.getTextureKeyPartForBatch();
     			} else
     			{
-    				key = m.type+sm.getTexture(place)+internal+(farView||place.cube.cube.steepDirection==SurfaceHeightAndType.NOT_STEEP);
+    				key = m.type+sm.getTexture(place)+internal+(farView);
     			}
     		}
-    		if (sm.xGeomBatchSize==-1) 
+    		if (true ||sm.xGeomBatchSize==-1) 
     		{
-    			if (sm.yGeomBatchSize==-1) 
+    			if (true ||sm.yGeomBatchSize==-1) 
     			{
     				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
     			}
@@ -108,7 +120,7 @@ public class GeometryBatchHelper {
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION)
     	{
-    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/yLevelMul;
+    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE;//yLevelMul;
     	} else
     	{   // other models only by Y // quad
     		key+=(int)(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)place.cube.cube.y/yLevelMul;
@@ -116,6 +128,7 @@ public class GeometryBatchHelper {
     	
     	return key+farView;
 	}
+	
     /**
      * Use geometry instancing to create a mesh containing a number of box
      * instances
@@ -182,23 +195,8 @@ public class GeometryBatchHelper {
     		boolean sparse = true;
     		int counter = 0;
 			float variationCutter = 160f;
-			float NW = 0;
-			float NE = 0;
-			float SW = 0;
-			float SE = 0;
-			float xPerc = 0;
-			float zPerc = 0;
 			float heightPercent;
 			float[] cornerHeights = null;
-			if (place.cube.cube.cornerHeights!=null)
-			{	
-				cornerHeights = place.cube.cube.cornerHeights;
-				NW = place.cube.cube.cornerHeights[0];
-				NE = place.cube.cube.cornerHeights[1];
-				SW = place.cube.cube.cornerHeights[2];
-				SE = place.cube.cube.cornerHeights[3];
-				
-			}
     		for (int k=0; k<quadQuantity; k++)
     		{
     			if (sparse && counter>0) {
@@ -210,20 +208,11 @@ public class GeometryBatchHelper {
     				}
     				counter++;
     				TriMesh tri;
+    				cornerHeights = place.cube.cube.cornerHeights;
 					if (cornerHeights!=null)
 					{
 						// NORTH - SOUTH -> Z
 						// WEST _ EAST -> X
-/*						zPerc = ((j*1f)/quadQuantity);
-						xPerc = 1f-((k*1f)/quadQuantity);
-						heightPercent = 
-							(
-							( NW * ((     xPerc  +      zPerc) / 2f) ) +
-							( NE * ((1f - xPerc  +      zPerc) / 2f) ) +
-							( SW * ((     xPerc  + 1f - zPerc) / 2f) ) +
-							( SE * ((1f - xPerc  + 1f - zPerc) / 2f) )
-							)
-							;*/
 						tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,cornerHeights,variationCutter);
 						
 					}
@@ -287,6 +276,78 @@ public class GeometryBatchHelper {
     		}
     	}
     }
+
+    public void removeBillboardVegetationItem(boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode)
+    {
+    	String key = getKey(internal, m, place, farView);
+    	if (m.type==Model.PARTLYBILLBOARDMODEL) {
+	     	ModelGeometryBatch batch = modelBatchMap.get(key);
+	    	if (batch!=null)
+	    	{
+		    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
+		    	{
+		    		if (s instanceof Node)
+		    		{
+		    			for (Spatial sh:((Node)s).getChildren())
+		    			{
+		    				if (sh instanceof SharedMesh)
+		    				{
+		    					TriMesh mesh = ((SharedMesh)sh).getTarget();
+		    					batch.removeItem(place,mesh);
+		    				}
+		    			}
+		    		}
+		    	}
+		    	place.batchInstance = null;
+	    		//batch.removeItem(place);
+	    	}
+    	}
+    }
+
+    
+    public void addBillboardVegetationItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode) {
+    	String key = getKey(internal, m, place, farView);
+
+    	if (m.type!=Model.TEXTURESTATEVEGETATION) {
+	    	ModelGeometryBatch batch = modelBatchMap.get(key);
+	    	if (batch==null)
+	    	{
+	    		batch = new ModelGeometryBatch(core,m,place,vegetationNode);
+	    		batch.key = key;
+	    		if (internal)
+	    		{
+	    			sEngine.intRootNode.attachChild(batch.parent);
+	    			//sEngine.intRootNode.updateRenderState();
+	    		} else
+	    		{
+	    			sEngine.extRootNode.attachChild(batch.parent);
+	    			//sEngine.extRootNode.updateRenderState();
+	    		}
+    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+	    		modelBatchMap.put(key, batch);
+	    		batch.lockTransforms();
+	    		batch.lockShadows();
+	    	}
+	    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
+	    	{
+	    		if (s instanceof Node)
+	    		{
+	    			for (Spatial sh:((Node)s).getChildren())
+	    			{
+	    				if (sh instanceof SharedMesh)
+	    				{
+	    					TriMesh mesh = ((SharedMesh)sh).getTarget();
+	    					batch.addItem(place,mesh);
+	    				}
+	    			}
+	    		}
+	    	}
+    	}
+    }
+    
+    
+    
     boolean locking = true;
     public void lockAll()
     {
@@ -313,6 +374,9 @@ public class GeometryBatchHelper {
     HashSet<TrimeshGeometryBatch> trimeshRemovables = new HashSet<TrimeshGeometryBatch>();
     HashSet<ModelGeometryBatch> modelRemovables = new HashSet<ModelGeometryBatch>();
 
+    /**
+     * Updates all batches, removes removable (empty ones).
+     */
     public void updateAll()
     {
     	Jcrpg.LOGGER.info(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
@@ -370,6 +434,9 @@ public class GeometryBatchHelper {
     }
     
 
+    /**
+     * clearing batch maps and all.
+     */
     public void clearAll()    
     {
     	modelBatchMap.clear();

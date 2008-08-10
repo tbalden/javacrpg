@@ -194,6 +194,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean LOGGING = true;
     public static boolean FPSCOUNTER = true;
     public static boolean TEXTURE_SPLATTING = false;
+    public static boolean SECONDARY_TEXTURES = false;
 
     static Properties p = new Properties();
     static {
@@ -257,6 +258,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			}
 			FPSCOUNTER = loadValue("FPSCOUNTER", false); 
 			TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
+			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

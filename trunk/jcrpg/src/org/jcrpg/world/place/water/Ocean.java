@@ -95,6 +95,7 @@ public class Ocean extends Water {
 	public Cube getWaterCube(int x, int y, int z, Cube geoCube,
 			SurfaceHeightAndType surface, boolean farView) {
 		
+		
 		if (!isWaterPoint(x, y, z, farView)) return geoCube;
 		
 		if (farView)

@@ -42,8 +42,21 @@ public class PlainFloraGenerator extends BaseFloraGenerator{
 	
 	public PlainFloraGenerator()
 	{
-		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Grass()),new FloraListElement(new Anethum(),40),new FloraListElement(new OakTree(),10), new FloraListElement(new CherryTree(),20),new FloraListElement(new Acacia(),1),new FloraListElement(new GreenBush(),70),new FloraListElement(new SunFlower(),40),new FloraListElement(new MargaritaFlower(),40)});
-		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new JungleGround()),new FloraListElement(new CoconutTree(),20),new FloraListElement(new JungleBush(),60),new FloraListElement(new JunglePalmTrees(),20),new FloraListElement(new GreenFern(),80)});
+		addFlora(Continental.CONTINENTAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{
+				new FloraListElement(new Grass()),
+				new FloraListElement(new Anethum(),40),
+				new FloraListElement(new OakTree(),10), 
+				new FloraListElement(new CherryTree(),20),
+				new FloraListElement(new Acacia(),1),
+				new FloraListElement(new GreenBush(),50),
+				new FloraListElement(new SunFlower(),40),
+				new FloraListElement(new MargaritaFlower(),40)});
+		addFlora(Tropical.TROPICAL_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{
+				new FloraListElement(new JungleGround()),
+				new FloraListElement(new CoconutTree(),20),
+				new FloraListElement(new JungleBush(),50),
+				new FloraListElement(new JunglePalmTrees(),20),
+				new FloraListElement(new GreenFern(),60)});
 		addFlora(Arctic.ARCTIC_ID,ClimateLevel.CLIMATELEVEL_ID,OUTDOOR,new FloraListElement[]{new FloraListElement(new Snow())});
 	}
 	

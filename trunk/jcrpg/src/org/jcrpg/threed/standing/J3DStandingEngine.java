@@ -36,6 +36,7 @@ import org.jcrpg.threed.PooledSharedNode;
 import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
+import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.Model;
@@ -483,7 +484,7 @@ public class J3DStandingEngine {
 	 */
 	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
 	
-	protected int fragmentedViewDivider = 4;
+	protected int fragmentedViewDivider = 8;
 	
 	/**
 	 * Set this to true if you want a full rerender of the surroundings, renderedArea won't use it's cache and will return you all previous cubes to remove.
@@ -590,6 +591,13 @@ public class J3DStandingEngine {
 			    				if (overrideBatch)
 			    				{ 
 									PooledNode pooledRealNode = n.realNode;
+				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+				    				{
+				    					if (pooledRealNode!=null)
+				    					{
+				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    					}
+				    				}
 									
 									n.realNode = null;
 									if (pooledRealNode!=null) {
@@ -650,6 +658,13 @@ public class J3DStandingEngine {
 			    				if (overrideBatch)
 			    				{ 
 									PooledNode pooledRealNode = n.realNode;
+				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+				    				{
+				    					if (pooledRealNode!=null)
+				    					{
+				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    					}
+				    				}
 									
 									n.realNode = null;
 									if (pooledRealNode!=null) {
@@ -716,6 +731,11 @@ public class J3DStandingEngine {
 									modelPool.releaseNode(pooledRealNode);
 								}
 		    				}
+		    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+		    				{
+		    					core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+		    				}
+		    				
 		    				n.farView = false;
 		    	    	}
 		    		}
@@ -789,11 +809,31 @@ public class J3DStandingEngine {
 					//boolean foundFar = false;
 					// OPTIMIZATION: if inside and not insidecube is checked, or outside and not outsidecube -> view distance should be fragmented:
 					boolean fragmentViewDist = false;
+					int calcFragmentViewDivider = 2;
 					if (c.cube!=null) {
 						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
+						if (fragmentViewDist) calcFragmentViewDivider = this.fragmentedViewDivider;
+					}
+					if (c.cube!=null)
+					{
+						if (!core.gameState.getCurrentRenderPositions().insideArea && !core.gameState.getCurrentRenderPositions().internalLight)
+						{
+							if (c.cube.internalCube)
+							{
+								calcFragmentViewDivider *= 4;
+							}
+						}
+						if (core.gameState.getCurrentRenderPositions().insideArea && !core.gameState.getCurrentRenderPositions().internalLight)
+						{
+							if (!c.cube.internalCube)
+							{
+								calcFragmentViewDivider *= 4;
+							}
+						}
 					}
 					
-					int checkDistCube = (fragmentViewDist?J3DCore.VIEW_DISTANCE/fragmentedViewDivider : J3DCore.VIEW_DISTANCE/2);
+					
+					int checkDistCube = (J3DCore.VIEW_DISTANCE/calcFragmentViewDivider);
 					boolean checked = false;
 					int distX = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionX-c.cube.x);
 					int distY = Math.abs(core.gameState.getCurrentRenderPositions().viewPositionY-c.cube.y);
@@ -916,6 +956,13 @@ public class J3DStandingEngine {
 									if (overrideBatch)
 									{
 										PooledNode pooledRealNode = n.realNode;
+					    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+					    				{
+					    					if (pooledRealNode!=null)
+					    					{
+					    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+					    					}
+					    				}
 										
 										n.realNode = null;
 										if (pooledRealNode!=null) {
@@ -967,6 +1014,13 @@ public class J3DStandingEngine {
 									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
 									if (realPooledNode==null) continue;
 									n.realNode = (PooledNode)realPooledNode;
+									
+									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+									{
+										if (realPooledNode!=null)
+											// adding trunk to modelGeometryBatch
+											core.batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, false,(BillboardPartVegetation)realPooledNode);
+									}
 								
 									// unlock
 									boolean sharedNode = false;
@@ -1128,6 +1182,13 @@ public class J3DStandingEngine {
 								{
 									PooledNode pooledRealNode = n.realNode;
 									
+				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+				    				{
+				    					if (pooledRealNode!=null)
+				    					{
+				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    					}
+				    				}
 									n.realNode = null;
 									if (pooledRealNode!=null) {
 										Node realNode = (Node)pooledRealNode;
@@ -1326,6 +1387,13 @@ public class J3DStandingEngine {
 									Node realPooledNode = (Node)modelPool.getModel(c, n.model, n);
 									if (realPooledNode==null) continue;
 									n.realNode = (PooledNode)realPooledNode;
+
+									if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+									{
+										if (realPooledNode!=null)
+											// adding trunk to modelGeometryBatch
+											core.batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, true,(BillboardPartVegetation)realPooledNode);
+									}
 								
 									// unlock
 									boolean sharedNode = false;
@@ -1462,13 +1530,6 @@ public class J3DStandingEngine {
 									PooledNode pooledRealNode = n.realNode;
 									
 									n.realNode = null;
-									/*if (geoOverride)
-									{
-										if (pooledRealNode!=null)
-										{
-											System.out.println("REMOVING REAL"+pooledRealNode);
-										}
-									}*/
 									if (pooledRealNode!=null) {
 										Node realNode = (Node)pooledRealNode;
 										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);

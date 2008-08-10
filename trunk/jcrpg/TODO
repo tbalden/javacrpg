@@ -120,21 +120,24 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ##
 
 	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
-	[ ] reconsider continental too ?? curved tree? more texture vegetation!! flower bush!!
-	[X] redesign jungle tree
-		[ ] palm by Zphr
+	[ ] add choice for DETAILS settings at startup???
+		- different starter batch files - jcrpg with args param
 	--
 
+	[X] redesign jungle tree
+		[X] palm by Zphr
+		
+	[X] billboard part veg -> simple model batch for trunk!!
 	
 	[X] normal problems - rendered area edges
 	
 	-- QA/DOC
-	[ ] add choice for DETAILS settings at startup???
 
 	[ ] documenting points, attr - (how it works related to points), calculations, leveling
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] reconsider continental too ?? curved tree? more texture vegetation!! flower bush!!
 	[X] reexport models of house by Zphr
 
 	[X] add continuous sound sources like water - renderToViewPort should collect them by cube basis -
