@@ -104,6 +104,7 @@ public class GroupingRule {
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("getGroupIds = "+instance.description+" "+numberOfGroups);
 		numberOfGroups = randomSeed%numberOfGroups; // primitive randomization for met groups
 		if (numberOfGroups==0 || numberOfGroups==1 ) numberOfGroups = 1;
+		if (numberOfGroups>4) numberOfGroups = 4; // TODO after removing slowness in animation node, you should remove this
 		if (numberOfGroups>f.instance.getGroupSizes().length) numberOfGroups = f.instance.getGroupSizes().length;
 		int[] groupIds = new int[numberOfGroups];
 		HashSet<Integer> used = new HashSet<Integer>();

@@ -114,15 +114,25 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] shadows coloring wrong color, white???
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
+	
+	[ ] farview -> four big heightmaps - with height only
+		- slightly lower generated than normal ground.
 
 ##
 [?] list before next release:
 ##
 
-	[ ] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 	[ ] add choice for DETAILS settings at startup???
 		- different starter batch files - jcrpg with args param
 	--
+
+	-- QA/DOC
+
+	[ ] documenting points, attr - (how it works related to points), calculations, leveling
+		[ ] documenting skill act forms (later completed)
+	
+	--
+	[X] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
 	[X] redesign jungle tree
 		[X] palm by Zphr
@@ -130,13 +140,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[X] billboard part veg -> simple model batch for trunk!!
 	
 	[X] normal problems - rendered area edges
-	
-	-- QA/DOC
 
-	[ ] documenting points, attr - (how it works related to points), calculations, leveling
-		[ ] documenting skill act forms (later completed)
-	
-	--
 	[X] reconsider continental too ?? curved tree? more texture vegetation!! flower bush!!
 	[X] reexport models of house by Zphr
 

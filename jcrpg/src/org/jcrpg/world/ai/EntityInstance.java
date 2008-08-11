@@ -222,7 +222,7 @@ public class EntityInstance {
 	{
 		int counter = 0;
 		
-		if (true==true) return false;
+		//if (true==true) return false; // For debugging without combats, uncomment this.
 		
 		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		

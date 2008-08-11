@@ -116,7 +116,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		if (house!=null)
 		{
 			Residence r = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight()+1, 4, 40, 0, 45, 0, null, null);
-			Residence r2 = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight(), 5, 50, 0, 44, 0, null, null);
+			Residence r2 = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight(), 4, 50, 0, 44, 0, null, null);
 			Residence r3 = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight(), 4, 45, 0, 46, 0, null, null);
 			baseWorld.economyContainer.addPopulation(r);
 			baseWorld.economyContainer.addPopulation(r2);
