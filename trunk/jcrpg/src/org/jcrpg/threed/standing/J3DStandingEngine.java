@@ -87,6 +87,8 @@ public class J3DStandingEngine {
 		this.engine = core.gameState.engine;
 		this.world = core.gameState.world;
 		renderedArea = core.renderedArea;
+		renderedArea.setRenderDistance(J3DCore.RENDER_DISTANCE);
+		renderedArea.setRenderDistanceFarview(J3DCore.RENDER_DISTANCE_FARVIEW);
 		modelPool = core.modelPool;
 		intRootNode = core.intRootNode;
 		extRootNode = core.extRootNode;
@@ -100,6 +102,8 @@ public class J3DStandingEngine {
 		this.engine = core.gameState.engine;
 		this.world = core.gameState.world;
 		renderedArea = core.renderedArea;
+		renderedArea.setRenderDistance(J3DCore.RENDER_DISTANCE);
+		renderedArea.setRenderDistanceFarview(J3DCore.RENDER_DISTANCE_FARVIEW);
 		modelPool = core.modelPool;
 		intRootNode = core.intRootNode;
 		extRootNode = core.extRootNode;
