@@ -118,6 +118,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] farview -> four big heightmaps - with height only
 		- slightly lower generated than normal ground.
 
+	[-] try AnimatedModelNode with neakor's importer ---  seems slower
+		-> shared node??
+
 ##
 [?] list before next release:
 ##
