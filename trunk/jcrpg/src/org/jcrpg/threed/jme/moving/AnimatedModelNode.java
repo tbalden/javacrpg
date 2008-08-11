@@ -82,13 +82,13 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	public static HashMap<String,Animation> animationCache = new HashMap<String,Animation>(); 
 	public static HashMap<String,Integer> animationCacheUsage = new HashMap<String,Integer>();
 	
-	/*public AnimatedModelNode(String fileName, String animation, float speed, boolean importer)
+	/*public AnimatedModelNode(String fileName, MovingModelAnimDescription animation,  float speed, boolean importer)
 	{
 	
 		try 
 		{
 			
-			MD5Importer.getInstance().load(new File(fileName).toURL(), fileName, new File(animation).toURL(), animation, com.model.md5.controller.JointController.RT_CYCLE);
+			MD5Importer.getInstance().load(new File(fileName).toURL(), "_",new File(animation.IDLE).toURL(), "__", com.model.md5.controller.JointController.RT_CYCLE);
 			com.model.md5.ModelNode node = MD5Importer.getInstance().getModelNode();
 			JointAnimation anim = MD5Importer.getInstance().getAnimation();
 			//anim.addAnimation(animation)
@@ -222,8 +222,11 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		try {
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);
+			bodyInstance.lockBounds();
+			bodyInstance.lockShadows();
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-			//bodyAnimationController.setSkipRate(0.05f);
+			if (J3DCore.SLOW_ANIMATION)
+				bodyAnimationController.setSkipRate(1f);
 			bodyAnimationController.addListener(this);
 			
 
