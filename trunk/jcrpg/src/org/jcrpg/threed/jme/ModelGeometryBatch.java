@@ -55,7 +55,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public TriMesh nullmesh = new TriMesh();
 	// TODO create a cache cleaning way!!! in GeometryBatchHelper maybe, check if the model is used at all...
 	// till then it fastens up thing much, so keep it!
-	public  static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
+	public static HashMap<Object, TriMesh> cache = new HashMap<Object, TriMesh>();
 	
 	/**
 	 * Returning the model's mesh for creating batchInstance copy of it.
@@ -262,6 +262,18 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	{
 		addItem(placeholder, null);
 	}
+	
+	public boolean updateNeeded = false;
+	public boolean isUpdateNeededAndSwitchIt()
+	{
+		if (updateNeeded)
+		{
+			updateNeeded = false;
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Adding a new item to the geomBatch parametered by the placeholder.
 	 * @param placeholder
@@ -270,7 +282,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	 */
 	public void addItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
-		
+		updateNeeded = true;
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
 		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
@@ -386,6 +398,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
+		updateNeeded = true;
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance; 
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		if (triMesh!=null)

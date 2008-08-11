@@ -333,6 +333,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	
 	public ModelLoader modelLoader;
 	public GeometryBatchHelper batchHelper = new GeometryBatchHelper(this);
+	public GeometryBatchHelper batchHelperEncounterArea = new GeometryBatchHelper(this);
 	public ModelPool modelPool = new ModelPool(this);
 	
 	public RenderedArea renderedArea = new RenderedArea();
@@ -1973,6 +1974,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			encounterIntRootNode.detachAllChildren();
 			//rootNode.detachAllChildren();
 			batchHelper.clearAll();
+			batchHelperEncounterArea.clearAll();
 			skySphere.removeFromParent();
 			rootNode.updateRenderState();
 			gameState.clearAll();

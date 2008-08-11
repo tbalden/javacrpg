@@ -84,9 +84,9 @@ public class CacheStateInfo extends InputWindow {
 			extIntNodes.text+=" / "+(J3DCore.getInstance().groundParentNode.getChildren()==null?"0":J3DCore.getInstance().groundParentNode.getChildren().size());
 			extIntNodes.text+=" / "+(J3DCore.getInstance().skyParentNode.getChildren()==null?"0":J3DCore.getInstance().skyParentNode.getChildren().size());
 			extIntNodes.activate();
-			trimeshGeoCacheSize.text = ""+GeometryBatchHelper.trimeshBatchMap.size()+" / " +TrimeshGeometryBatch.sharedParentCache.size();
+			//trimeshGeoCacheSize.text = ""+GeometryBatchHelper.trimeshBatchMap.size()+" / " +TrimeshGeometryBatch.sharedParentCache.size();
 			trimeshGeoCacheSize.activate();
-			modelGeoCacheSize.text = ""+GeometryBatchHelper.modelBatchMap.size()+" / " +ModelGeometryBatch.sharedParentCache.size()+ " / Trimesh model cache: "+ModelGeometryBatch.cache.size();
+			// TODO modelGeoCacheSize.text = ""+GeometryBatchHelper.modelBatchMap.size()+" / " +ModelGeometryBatch.sharedParentCache.size()+ " / Trimesh model cache: "+ModelGeometryBatch.cache.size();
 			modelGeoCacheSize.activate();
 			poolSize.text = ""+ModelPool.getPooledSize()+ " (Types: "+ModelPool.pool.size()+")"+" VegSetupQuadC.: "+VegetationSetup.quadCache.size();
 			poolSize.activate();
