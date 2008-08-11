@@ -60,7 +60,7 @@ public class GeometryBatchHelper {
 		this.core = core;		
 	}
 	
-	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 10;
+	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 5;
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
 	
@@ -162,7 +162,14 @@ public class GeometryBatchHelper {
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
 	    	}
+	    	if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+	    	{
+	    		batch.unlockBranch();
+		    	batch.unlockBounds();
+		    	batch.unlockMeshes();
+	    	}
 	    	batch.addItem(place);
+	    	//batch.updateGeometricState(0f, true);
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
     		//if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
@@ -191,6 +198,12 @@ public class GeometryBatchHelper {
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
 	    	}
+	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+	    	{
+	    		batch.unlockBranch();
+		    	batch.unlockBounds();
+	    	}
+	    	
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
     		boolean sparse = true;
     		int counter = 0;
@@ -263,6 +276,12 @@ public class GeometryBatchHelper {
 	     	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch!=null)
 	    	{
+		    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+		    	{
+		    		batch.unlockBranch();
+			    	batch.unlockBounds();
+			    	batch.unlockMeshes();
+		    	}*/
 	    		batch.removeItem(place);
 	    	}
     	} else
@@ -272,6 +291,12 @@ public class GeometryBatchHelper {
     		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
     		if (batch!=null)
     		{
+    	    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+    	    	{
+    	    		batch.unlockBranch();
+    		    	batch.unlockBounds();
+    		    	batch.unlockMeshes();
+    	    	}*/
     			batch.removeItem(place);
     		}
     	}
@@ -284,6 +309,13 @@ public class GeometryBatchHelper {
 	     	ModelGeometryBatch batch = modelBatchMap.get(key);
 	    	if (batch!=null)
 	    	{
+    	    	/*if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+    	    	{
+    	    		batch.unlockBranch();
+    		    	batch.unlockBounds();
+    		    	batch.unlockMeshes();
+    	    	}*/
+	    		
 		    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
 		    	{
 		    		if (s instanceof Node)
@@ -329,6 +361,12 @@ public class GeometryBatchHelper {
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
 	    	}
+	    	if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+	    	{
+	    		batch.unlockBranch();
+		    	batch.unlockBounds();
+		    	batch.unlockMeshes();
+	    	}
 	    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
 	    	{
 	    		if (s instanceof Node)
@@ -356,20 +394,33 @@ public class GeometryBatchHelper {
     		
     		if (batch.parent!=null)
     		{
-    			batch.parent.lockMeshes();
+    			if ((batch.getLocks()&batch.LOCKED_BOUNDS)>0) {continue;}
+    			//batch.lockMeshes(); // XXX you shouldn't lock meshes of trimesh , billboard goes wrong
+    			batch.lockBounds();
+    			batch.lockBranch();
     		}
+    	}
+    	for (ModelGeometryBatch batch: modelBatchMap.values())
+    	{
+    		if ((batch.getLocks()&batch.LOCKED_BOUNDS)>0) {continue;}
+	    	batch.lockBounds();
+	    	batch.lockMeshes();
+    		batch.lockBranch();
     	}
     }
     public void unlockAll()
     {
     	if (!locking) return;
-    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values()) {
+    	/*for (TrimeshGeometryBatch batch: trimeshBatchMap.values()) {
     		
     		if (batch.parent!=null)
     		{
-    			batch.parent.unlockMeshes();
+    			batch.unlockMeshes();
+    			batch.unlockBounds();
+    			batch.unlockBranch();
     		}
-    	}
+    	}*/
+
     }
     HashSet<TrimeshGeometryBatch> trimeshRemovables = new HashSet<TrimeshGeometryBatch>();
     HashSet<ModelGeometryBatch> modelRemovables = new HashSet<ModelGeometryBatch>();

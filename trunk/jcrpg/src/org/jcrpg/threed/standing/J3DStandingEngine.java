@@ -1050,6 +1050,13 @@ public class J3DStandingEngine {
 										realPooledNode.unlockTransforms();
 										realPooledNode.unlockBounds();
 										realPooledNode.unlockBranch();
+										if (realPooledNode instanceof BillboardPartVegetation)
+										{
+											((BillboardPartVegetation)realPooledNode).batch.unlockBounds();
+											((BillboardPartVegetation)realPooledNode).batch.unlockShadows();
+											((BillboardPartVegetation)realPooledNode).batch.unlockTransforms();
+											((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
+										}
 									}
 								
 									// set data from placeholder
@@ -1133,6 +1140,13 @@ public class J3DStandingEngine {
 											realPooledNode.lockTransforms();								
 											realPooledNode.lockBranch();
 											realPooledNode.lockBounds();
+											if (realPooledNode instanceof BillboardPartVegetation)
+											{
+												((BillboardPartVegetation)realPooledNode).batch.lockBounds();
+												((BillboardPartVegetation)realPooledNode).batch.lockShadows();
+												((BillboardPartVegetation)realPooledNode).batch.lockTransforms();
+												((BillboardPartVegetation)realPooledNode).batch.lockBranch();
+											}
 										}
 									}
 								}
@@ -1421,6 +1435,13 @@ public class J3DStandingEngine {
 										realPooledNode.unlockTransforms();
 										realPooledNode.unlockBounds();
 										realPooledNode.unlockBranch();
+										if (realPooledNode instanceof BillboardPartVegetation)
+										{
+											((BillboardPartVegetation)realPooledNode).batch.unlockBounds();
+											((BillboardPartVegetation)realPooledNode).batch.unlockShadows();
+											((BillboardPartVegetation)realPooledNode).batch.unlockTransforms();
+											((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
+										}
 									}
 								
 									// set data from placeholder
@@ -1491,6 +1512,13 @@ public class J3DStandingEngine {
 										realPooledNode.lockBranch();
 										realPooledNode.lockBounds();
 										realPooledNode.lockTransforms();																	
+										if (realPooledNode instanceof BillboardPartVegetation)
+										{
+											((BillboardPartVegetation)realPooledNode).batch.lockBounds();
+											((BillboardPartVegetation)realPooledNode).batch.lockShadows();
+											((BillboardPartVegetation)realPooledNode).batch.lockTransforms();
+											((BillboardPartVegetation)realPooledNode).batch.lockBranch();
+										}
 									}
 								}
 							}
