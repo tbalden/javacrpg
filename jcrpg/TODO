@@ -120,6 +120,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[-] try AnimatedModelNode with neakor's importer ---  seems slower
 		-> shared node??
+		
+	[ ] encounter ground bug Render not complete if you don't move in normal mode at starting a game
 
 ##
 [?] list before next release:
@@ -127,8 +129,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] add choice for DETAILS settings at startup???
 		- different starter batch files - jcrpg with args param
-	--
-
+	
+	[ ] add sample configs,party characters
+	
 	-- QA/DOC
 
 	[ ] documenting points, attr - (how it works related to points), calculations, leveling

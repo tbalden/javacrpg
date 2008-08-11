@@ -35,10 +35,22 @@ public class RenderedArea {
 	public HashMap<Long, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 	
+	
+	int renderDistance, renderDistanceFarview;
+	
+	public RenderedArea()
+	{
+		
+	}
+	public RenderedArea(int renderDistance, int renderDistanceFarview)
+	{
+		this.renderDistance = renderDistance;
+		this.renderDistanceFarview = renderDistanceFarview;
+	}
 
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
-		int distance = farViewEnabled?J3DCore.RENDER_DISTANCE_FARVIEW:J3DCore.RENDER_DISTANCE;
+		int distance = farViewEnabled?renderDistanceFarview:renderDistance;
 		
 		float xPlusMult = 1;
 		float xMinusMult = -1;
@@ -101,7 +113,7 @@ public class RenderedArea {
 					boolean normalView = !farViewEnabled;
 					if (!normalView)
 					{
-						if (Math.abs(z1)<=J3DCore.RENDER_DISTANCE && Math.abs(y1)<=J3DCore.RENDER_DISTANCE && Math.abs(x1)<=J3DCore.RENDER_DISTANCE)
+						if (Math.abs(z1)<=renderDistance && Math.abs(y1)<=renderDistance && Math.abs(x1)<=renderDistance)
 						{
 							normalView = true;
 						}
@@ -243,6 +255,12 @@ public class RenderedArea {
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCacheNext.clear();
 		worldCubeCacheNext_FARVIEW.clear();
+	}
+	public void setRenderDistance(int renderDistance) {
+		this.renderDistance = renderDistance;
+	}
+	public void setRenderDistanceFarview(int renderDistanceFarview) {
+		this.renderDistanceFarview = renderDistanceFarview;
 	}
 	
 }
