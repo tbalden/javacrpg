@@ -152,16 +152,22 @@ public class AnimatedModelViewer extends SimplePassGame{
        des.IDLE = anim;
        
        ;
- /*     n = new AnimatedModelNode(BoarmanTribe.boarmanMale.modelName,BoarmanTribe.boarmanMale.animation,1f,new float[] {0,0,0},1f);
+      n = new AnimatedModelNode(BoarmanTribe.boarmanMale.modelName,BoarmanTribe.boarmanMale.animation,1f,new float[] {0,0,0},1f);
       n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
-
+      rootNode.attachChild(n);
       n2 = new AnimatedModelNode(BoarmanTribe.boarmanMale.modelName,BoarmanTribe.boarmanMale.animation,1f,new float[] {0,0,0},1f);
       n2.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
       n2.setLocalTranslation(new Vector3f(3f,0,0));
-
+      for (int i=0; i<18; i++)
+      {
+          n = new AnimatedModelNode(BoarmanTribe.boarmanMaleMage.modelName,BoarmanTribe.boarmanMaleMage.animation,1f,new float[] {0,0,0},1f);
+          n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+          n.setLocalTranslation(new Vector3f(i/4,2f+(i%4)*2f,0));
+          rootNode.attachChild(n);
+      }
         rootNode.attachChild(n);
         rootNode.attachChild(n2);
-*/
+
         PointLight dr = new PointLight();
         dr.setEnabled(true);
         dr.setDiffuse(ColorRGBA.white);

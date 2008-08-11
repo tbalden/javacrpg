@@ -381,6 +381,7 @@ public class EncounterLogic {
 	
 	private void turnCameraToUnit(EncounterUnitData data)
 	{
+		resetCamera();
 		try 
 		{
 			float deltaY = 0;
