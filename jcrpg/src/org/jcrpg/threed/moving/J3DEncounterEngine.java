@@ -45,6 +45,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	transient World fallbackWorld = null;
 	public J3DEncounterEngine(J3DCore core) {
 		super(core);
+		batchHelper = core.batchHelperEncounterArea;
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
@@ -192,6 +193,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 	@Override
 	public void reinit() {
 		super.reinit();
+		batchHelper = core.batchHelperEncounterArea;
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterExtRootNode;
 		renderedArea = core.renderedEncounterArea;

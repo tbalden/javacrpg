@@ -323,6 +323,7 @@ public class GameStateContainer {
 			J3DCore.getInstance().getCamera().normalize();
 			J3DCore.getInstance().getCamera().update();
 			J3DCore.getInstance().eEngine.switchOn(true);
+			J3DCore.getInstance().groundParentNode.updateRenderState();
 			if (!renderNotNeeded)
 			{
 				//J3DCore.getInstance().eEngine.intRootNode.detachAllChildren();
@@ -332,6 +333,7 @@ public class GameStateContainer {
 				J3DCore.getInstance().eEngine.renderToViewPort();
 				J3DCore.getInstance().eEngine.rerender = false;
 			}
+			J3DCore.getInstance().groundParentNode.updateRenderState();
 			J3DCore.getInstance().eEngine.renderToViewPort();
 			J3DCore.getInstance().groundParentNode.updateRenderState();
 			J3DCore.getInstance().eEngine.renderToViewPort();

@@ -51,8 +51,8 @@ import com.jme.scene.TriMesh;
  */
 public class GeometryBatchHelper {
 
-	public static HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
-	public static HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
+	public HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
+	public HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
 	J3DCore core;
 	
 	public GeometryBatchHelper(J3DCore core)
@@ -265,8 +265,6 @@ public class GeometryBatchHelper {
     	    		
     			}
     		}
-	    	
-    		
     	}
     }
     public void removeItem(boolean internal, Model m, NodePlaceholder place, boolean farView)
@@ -396,6 +394,8 @@ public class GeometryBatchHelper {
     		{
     			if ((batch.getLocks()&batch.LOCKED_BOUNDS)>0) {continue;}
     			//batch.lockMeshes(); // XXX you shouldn't lock meshes of trimesh , billboard goes wrong
+    			batch.updateModelBound();
+    			batch.updateRenderState();
     			batch.lockBounds();
     			batch.lockBranch();
     		}
@@ -440,6 +440,10 @@ public class GeometryBatchHelper {
 	    		if (batch.visible.size()!=0)
 	    		{
 	    			removableFlag = false;
+	    		} else
+	    		{
+	    			//if (batch.isUpdateNeededAndSwitchIt())
+	    			batch.parent.updateRenderState();
 	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();

@@ -127,6 +127,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [?] list before next release:
 ##
 
+	[ ] render bug when not moving away from start point!! also switchin back some parts are missing! locking/updating is wrong
+	
 	[ ] add choice for DETAILS settings at startup???
 		- different starter batch files - jcrpg with args param
 	

@@ -34,6 +34,7 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.PooledSharedNode;
 import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
+import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -75,6 +76,7 @@ public class J3DStandingEngine {
 	public Engine engine;
 	public World world;
 	public RenderedArea renderedArea;
+	public GeometryBatchHelper batchHelper;
 	
 	public Node intRootNode = null;
 	public Node extRootNode = null;
@@ -82,6 +84,7 @@ public class J3DStandingEngine {
 	public J3DStandingEngine(J3DCore core)
 	{
 		this.core = core;
+		this.batchHelper = core.batchHelper;
 		this.modelLoader = core.modelLoader;
 		this.uiBase = core.uiBase;
 		this.engine = core.gameState.engine;
@@ -98,6 +101,7 @@ public class J3DStandingEngine {
 	 */
 	public void reinit()
 	{
+		this.batchHelper = core.batchHelper;
 		this.uiBase = core.uiBase;
 		this.engine = core.gameState.engine;
 		this.world = core.gameState.world;
@@ -542,7 +546,7 @@ public class J3DStandingEngine {
 			//boolean storedPauseState = engine.isPause();
 			engine.pauseForRendering();
 			
-			if (J3DCore.GEOMETRY_BATCH) core.batchHelper.unlockAll();
+			if (J3DCore.GEOMETRY_BATCH) batchHelper.unlockAll();
 
 			boolean overrideBatch = true;
 			
@@ -589,7 +593,7 @@ public class J3DStandingEngine {
 			    					if (!overrideBatch)
 			    					{
 				    					if (n!=null && n.batchInstance!=null)
-				    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			    					}
 			    				} 
 			    				if (overrideBatch)
@@ -599,7 +603,7 @@ public class J3DStandingEngine {
 				    				{
 				    					if (pooledRealNode!=null)
 				    					{
-				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
 				    					}
 				    				}
 									
@@ -656,7 +660,7 @@ public class J3DStandingEngine {
 			    					if (!overrideBatch)
 			        				{
 				    					if (n!=null && n.batchInstance!=null)
-				    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			        				}
 			    				} 
 			    				if (overrideBatch)
@@ -666,7 +670,7 @@ public class J3DStandingEngine {
 				    				{
 				    					if (pooledRealNode!=null)
 				    					{
-				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
 				    					}
 				    				}
 									
@@ -720,7 +724,7 @@ public class J3DStandingEngine {
 		    					if (!overrideBatch)
 		        				{
 			    					if (n!=null && n.batchInstance!=null)
-			    						core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 		        				}
 		    				} 
 		    				if (overrideBatch)
@@ -737,7 +741,7 @@ public class J3DStandingEngine {
 		    				}
 		    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 		    				{
-		    					core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+		    					batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 		    				}
 		    				
 		    				n.farView = false;
@@ -952,7 +956,7 @@ public class J3DStandingEngine {
 										{
 											if (n!=null) {
 												long t0 = System.currentTimeMillis();
-												core.batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
+												batchHelper.removeItem(c.cube.internalCube, n.model, n, true);
 												sumAddRemoveBatch+=System.currentTimeMillis()-t0;
 											}
 										}
@@ -964,7 +968,7 @@ public class J3DStandingEngine {
 					    				{
 					    					if (pooledRealNode!=null)
 					    					{
-					    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+					    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
 					    					}
 					    				}
 										
@@ -1008,7 +1012,7 @@ public class J3DStandingEngine {
 										if (n.batchInstance==null) 
 										{
 											long t0 = System.currentTimeMillis();
-											core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, false);
+											batchHelper.addItem(this,c.cube.internalCube, n.model, n, false);
 											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
 										}
 									}
@@ -1023,7 +1027,7 @@ public class J3DStandingEngine {
 									{
 										if (realPooledNode!=null)
 											// adding trunk to modelGeometryBatch
-											core.batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, false,(BillboardPartVegetation)realPooledNode);
+											batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, false,(BillboardPartVegetation)realPooledNode);
 									}
 								
 									// unlock
@@ -1191,7 +1195,7 @@ public class J3DStandingEngine {
 												if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING TEXSTATE VEG FROM VIEW: "+n.model.id);
 											}*/
 											long t0 = System.currentTimeMillis();
-											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+											batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 											sumAddRemoveBatch+=System.currentTimeMillis()-t0;
 										}
 									}
@@ -1204,7 +1208,7 @@ public class J3DStandingEngine {
 				    				{
 				    					if (pooledRealNode!=null)
 				    					{
-				    						core.batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
 				    					}
 				    				}
 									n.realNode = null;
@@ -1397,7 +1401,7 @@ public class J3DStandingEngine {
 									if (!overrideBatch)
 									{
 										if (n.batchInstance==null)
-											core.batchHelper.addItem(this,c.cube.internalCube, n.model, n, true);
+											batchHelper.addItem(this,c.cube.internalCube, n.model, n, true);
 									}
 								} 
 								if (overrideBatch)
@@ -1410,7 +1414,7 @@ public class J3DStandingEngine {
 									{
 										if (realPooledNode!=null)
 											// adding trunk to modelGeometryBatch
-											core.batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, true,(BillboardPartVegetation)realPooledNode);
+											batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, true,(BillboardPartVegetation)realPooledNode);
 									}
 								
 									// unlock
@@ -1554,7 +1558,7 @@ public class J3DStandingEngine {
 			    					if (!overrideBatch)
 			    					{
 										if (n!=null)
-											core.batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+											batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			    					}
 								}
 								if (overrideBatch)
@@ -1670,8 +1674,8 @@ public class J3DStandingEngine {
 				// update geometry batches...
 				if (J3DCore.GEOMETRY_BATCH) 
 				{
-					core.batchHelper.updateAll();
-					core.batchHelper.lockAll();
+					batchHelper.updateAll();
+					batchHelper.lockAll();
 				}
 				
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
