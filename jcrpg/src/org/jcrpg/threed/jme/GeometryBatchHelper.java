@@ -157,20 +157,24 @@ public class GeometryBatchHelper {
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		modelBatchMap.put(key, batch);
-	    		batch.lockTransforms();
-	    		batch.lockShadows();
+	    		if (locking)
+	    		{
+	    			batch.lockTransforms();
+	    			batch.lockShadows();
+	    		}
+	    		
 	    	}
-	    	if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
 		    	batch.unlockMeshes();
 	    	}
 	    	batch.addItem(place);
-	    	//batch.updateGeometricState(0f, true);
-    	} else
+	    	batch.updateGeometricState(0f, true); // TODO why is it working only if put here?
+	    } else
     	if (m.type==Model.TEXTURESTATEVEGETATION) {
     		//if (place.cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP) return; // on steep, no vegetation
     		// texture state vegetation, trimesh
@@ -193,7 +197,7 @@ public class GeometryBatchHelper {
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
@@ -354,12 +358,15 @@ public class GeometryBatchHelper {
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			J3DStandingEngine.newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		modelBatchMap.put(key, batch);
-	    		batch.lockTransforms();
-	    		batch.lockShadows();
+	    		if (locking)
+	    		{
+	    			batch.lockTransforms();
+	    			batch.lockShadows();
+	    		}
 	    	}
-	    	if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
@@ -379,6 +386,7 @@ public class GeometryBatchHelper {
 	    			}
 	    		}
 	    	}
+	    	batch.updateGeometricState(0f, true); // TODO why is it working only if put here?
     	}
     }
     
@@ -392,7 +400,7 @@ public class GeometryBatchHelper {
     		
     		if (batch.parent!=null)
     		{
-    			if ((batch.getLocks()&batch.LOCKED_BOUNDS)>0) {continue;}
+    			if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
     			//batch.lockMeshes(); // XXX you shouldn't lock meshes of trimesh , billboard goes wrong
     			batch.updateModelBound();
     			batch.updateRenderState();
@@ -402,7 +410,8 @@ public class GeometryBatchHelper {
     	}
     	for (ModelGeometryBatch batch: modelBatchMap.values())
     	{
-    		if ((batch.getLocks()&batch.LOCKED_BOUNDS)>0) {continue;}
+    		if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
+    		//batch.updateGeometricState(0f, true);
 	    	batch.lockBounds();
 	    	batch.lockMeshes();
     		batch.lockBranch();
@@ -422,6 +431,32 @@ public class GeometryBatchHelper {
     	}*/
 
     }
+    public void unlockAllPlus()
+    {
+    	if (!locking) return;
+    	for (TrimeshGeometryBatch batch: trimeshBatchMap.values()) {
+    		
+    		if (batch.parent!=null)
+    		{
+    			batch.unlockMeshes();
+    			batch.unlockBounds();
+    			batch.unlockTransforms();
+    			batch.unlockBranch();
+    		}
+    	}
+    	for (ModelGeometryBatch batch: modelBatchMap.values()) {
+    		
+    		if (batch.parent!=null)
+    		{
+    			batch.unlockMeshes();
+    			batch.unlockTransforms();
+    			batch.unlockBounds();
+    			batch.unlockBranch();
+    		}
+    	}
+
+    }
+
     HashSet<TrimeshGeometryBatch> trimeshRemovables = new HashSet<TrimeshGeometryBatch>();
     HashSet<ModelGeometryBatch> modelRemovables = new HashSet<ModelGeometryBatch>();
 
@@ -442,8 +477,11 @@ public class GeometryBatchHelper {
 	    			removableFlag = false;
 	    		} else
 	    		{
-	    			//if (batch.isUpdateNeededAndSwitchIt())
-	    			batch.parent.updateRenderState();
+	    			if (batch.isUpdateNeededAndSwitchIt())
+	    			{
+	    				//batch.updateGeometricState(0f, true);
+	    				batch.parent.updateRenderState();
+	    			}
 	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();

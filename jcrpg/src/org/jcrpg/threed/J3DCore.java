@@ -1189,7 +1189,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		}
 	}
 
-	public int lastRenderX,lastRenderY,lastRenderZ;
 
 	public int garbCollCounter = 0;
 
@@ -2560,6 +2559,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public Node getRootNode1()
     {
     	return rootNode;
+    }
+    public Node getGroundParentNode()
+    {
+    	return groundParentNode;
     }
     public InputHandler getInputHandler()
     {

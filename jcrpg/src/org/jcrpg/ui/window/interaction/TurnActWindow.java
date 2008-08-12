@@ -217,6 +217,7 @@ public class TurnActWindow extends PagedInputWindow {
 		desc.activate();
 		this.party = party;
 		this.encountered = encountered;
+		info = new TurnActPlayerChoiceInfo();
 	}
 
 	public static Object doNothingSkillChoiceObject = new Object();

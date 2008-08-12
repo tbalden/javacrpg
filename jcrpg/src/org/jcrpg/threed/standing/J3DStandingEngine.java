@@ -137,12 +137,9 @@ public class J3DStandingEngine {
     	if (!J3DCore.CONTINUOUS_LOAD) core.updateDisplay(null);
 		//core.do3DPause(true);
 
-		/*lastRenderX = viewPositionX;
-		lastRenderY = viewPositionY;
-		lastRenderZ = viewPositionZ;*/
-    	core.lastRenderX = core.gameState.getCurrentRenderPositions().relativeX;
-    	core.lastRenderY = core.gameState.getCurrentRenderPositions().relativeY;
-    	core.lastRenderZ = core.gameState.getCurrentRenderPositions().relativeZ;
+    	lastRenderX = core.gameState.getCurrentRenderPositions().relativeX;
+    	lastRenderY = core.gameState.getCurrentRenderPositions().relativeY;
+    	lastRenderZ = core.gameState.getCurrentRenderPositions().relativeZ;
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
@@ -490,9 +487,12 @@ public class J3DStandingEngine {
 	 * list to store the newly rendered nodes during renderToViewPort for special processing: 
 	 * first render with CULL_NEVER then update it to CULL_INHERIT, plus updateRenderState call.
 	 */
-	public static ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
+	public ArrayList<Node> newNodesToSetCullingDynamic = new ArrayList<Node>();
 	
 	protected int fragmentedViewDivider = 8;
+	
+	
+	public int lastRenderX = -1000, lastRenderY, lastRenderZ;
 	
 	/**
 	 * Set this to true if you want a full rerender of the surroundings, renderedArea won't use it's cache and will return you all previous cubes to remove.
@@ -550,7 +550,7 @@ public class J3DStandingEngine {
 
 			boolean overrideBatch = true;
 			
-			Vector3f lastLoc = new Vector3f(core.lastRenderX*J3DCore.CUBE_EDGE_SIZE,core.lastRenderY*J3DCore.CUBE_EDGE_SIZE,core.lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
+			Vector3f lastLoc = new Vector3f(lastRenderX*J3DCore.CUBE_EDGE_SIZE,lastRenderY*J3DCore.CUBE_EDGE_SIZE,lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			if (J3DCore.CONTINUOUS_LOAD && core.renderResult!=null) 
@@ -1670,13 +1670,14 @@ public class J3DStandingEngine {
 						}
 					}
 				}
-				
 				// update geometry batches...
 				if (J3DCore.GEOMETRY_BATCH) 
 				{
 					batchHelper.updateAll();
-					batchHelper.lockAll();
 				}
+
+				if (J3DCore.GEOMETRY_BATCH) batchHelper.lockAll();
+			
 				
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
@@ -1902,9 +1903,9 @@ public class J3DStandingEngine {
 	{
 		if (on)
 		{
-			core.getRootNode1().attachChild(extRootNode);
-			core.getRootNode1().attachChild(intRootNode);
-			core.getRootNode1().updateRenderState();
+			core.getGroundParentNode().attachChild(extRootNode);
+			core.getGroundParentNode().attachChild(intRootNode);
+			core.getGroundParentNode().updateRenderState();
 			extRootNode.setCullMode(Node.CULL_DYNAMIC);
 			intRootNode.setCullMode(Node.CULL_DYNAMIC);
 		} else
