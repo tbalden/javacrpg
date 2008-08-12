@@ -49,8 +49,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
-		renderedArea.setRenderDistance(J3DCore.VIEW_DISTANCE);
-		renderedArea.setRenderDistanceFarview(J3DCore.VIEW_DISTANCE);
+		renderedArea.setRenderDistance(J3DCore.VIEW_DISTANCE+2);
+		renderedArea.setRenderDistanceFarview(J3DCore.VIEW_DISTANCE+2);
 		rerenderWithRemove = true;
 		optimizeAngle = false;
 		fragmentedViewDivider = 2;
@@ -195,10 +195,10 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		super.reinit();
 		batchHelper = core.batchHelperEncounterArea;
 		extRootNode = core.encounterExtRootNode;
-		intRootNode = core.encounterExtRootNode;
+		intRootNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
-		renderedArea.setRenderDistance(J3DCore.VIEW_DISTANCE);
-		renderedArea.setRenderDistanceFarview(J3DCore.VIEW_DISTANCE);
+		renderedArea.setRenderDistance(J3DCore.VIEW_DISTANCE+2);
+		renderedArea.setRenderDistanceFarview(J3DCore.VIEW_DISTANCE+2);
 		rerenderWithRemove = true;
 		lastType = "_______";
 	}
