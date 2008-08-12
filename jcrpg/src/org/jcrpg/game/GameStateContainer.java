@@ -292,10 +292,7 @@ public class GameStateContainer {
             J3DCore.getInstance().setCalculatedCameraLocation();
             J3DCore.getInstance().getCamera().update();
             encounterModePosition.viewDirection = J3DCore.NORTH;
-			J3DCore.getInstance().sEngine.renderToViewPort();
-			getCurrentStandingEngine().batchHelper.unlockAllPlus();
 			currentSEngine = J3DCore.getInstance().eEngine; 
-			getCurrentStandingEngine().batchHelper.unlockAllPlus();
 			J3DCore.getInstance().getKeyboardHandler().setCurrentStandingEngine(J3DCore.getInstance().eEngine);
 			currentRenderPositions = encounterModePosition;
 			boolean renderNotNeeded = J3DCore.getInstance().eEngine.renderToEncounterWorld(
@@ -328,14 +325,12 @@ public class GameStateContainer {
 			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
 			J3DCore.getInstance().getCamera().normalize();
 			J3DCore.getInstance().getCamera().update();
-			J3DCore.getInstance().groundParentNode.updateRenderState();
 			if (!renderNotNeeded)
 			{
 				J3DCore.getInstance().eEngine.rerender = true;
 				J3DCore.getInstance().eEngine.renderToViewPort();
 				J3DCore.getInstance().eEngine.rerender = false;
 			}
-			J3DCore.getInstance().groundParentNode.updateRenderState();
 			J3DCore.getInstance().eEngine.renderToViewPort();
 			J3DCore.getInstance().groundParentNode.updateRenderState();
 			J3DCore.getInstance().eEngine.renderToViewPort();
