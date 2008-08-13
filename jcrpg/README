@@ -10,20 +10,28 @@ Q/E for strafe.
 Up/Down for looking up and down.
 Left/Right for looking around.
 
+C  Camping (resting)
+
 F1 World map
 F2 Party behavior window (no effect of the settings here currently)
 F3 Character Sheet window
 F4 Character's Inventory window
 F5 Party Order window
 
-F10 Main menu
+F10 Main menu - here you can exit the game.
 
 F11 debug infos (memory / 3d related)
 F12 Take a screenshot
 
-ESC to exit the demo or choose Quit through the main menu.
-
 Use main menu for Save/Load your game.
+
+Use Inventory window to attach arrows to bows, equip armors, give items to other characters, drop items.
+Use Character Sheet to view you characters' attributes,resistance, active (spell) effects, XP, level, skill levels.
+
+To start a brand new game with new character use New Game in main menu, create new characters, fill up your party
+and start the game! Use main menu to Save and Load your game. You can save only in Normal mode (not during combat).
+
+Use key C (Camp) if you want to rest and replenish. You should do it at safe places for effective replenishing.
 
 c. Configuration
 

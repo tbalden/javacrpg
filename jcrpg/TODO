@@ -33,6 +33,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] Encounter grounds mode
 		
+	        [ ] camera for lower creatures is not so good, also normal creatures description texture cannot be seen
 		[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
 			-- in combat mode too. only filtered objects will appear as choice in TurnActWindow
 			
