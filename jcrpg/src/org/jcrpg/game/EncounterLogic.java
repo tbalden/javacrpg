@@ -389,18 +389,23 @@ public class EncounterLogic {
 			{
 				gameLogic.core.getCamera().getLocation().y = gameLogic.core.getCurrentLocation().y+1.5f;
 				deltaY = -1f;
+			} else
+			{
+				deltaY = -0.5f;
 			}
 			Vector3f place = gameLogic.core.mEngine.calculatePositionVector(data.visibleForm.unit, data.visibleForm,true);
+			
 			CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+deltaY, place.z);
 		} catch (Exception ex)
 		{
 		}
 	}
+	
 	private void resetCamera()
 	{
 		gameLogic.core.setCalculatedCameraLocation();
 		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
-		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y, place.z);
+		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
 	}
 
 	public void checkTurnActCallbackNeed()

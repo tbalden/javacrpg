@@ -322,7 +322,7 @@ public class GameStateContainer {
 			J3DCore.getInstance().setCalculatedCameraLocation();
 			Vector3f dir = J3DCore.directions[getEncounterPositions().viewDirection];
 			J3DCore.getInstance().eEngine.switchOn(true);
-			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y, dir.z);
+			CKeyAction.setCameraDirection(J3DCore.getInstance().getCamera(), dir.x, dir.y-0.2f, dir.z);
 			J3DCore.getInstance().getCamera().normalize();
 			J3DCore.getInstance().getCamera().update();
 			if (!renderNotNeeded)
