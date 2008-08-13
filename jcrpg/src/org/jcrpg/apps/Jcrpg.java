@@ -63,11 +63,16 @@ public class Jcrpg extends Formatter implements Filter  {
 	}
 
 	public static Logger LOGGER = null;
-	/**
-     * @param args
-     */
-    public static void main(String[] args) {
+    
+	public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
+    	String configFile = "./config.properties";
+    	if (args.length>0 && args[0]!=null)
+    	{
+    		configFile = args[0];
+    	}
+    	J3DCore.loadConfig(configFile);
+    	
     	LOGGER = java.util.logging.Logger.getLogger("");
     	for (Handler handler:LOGGER.getHandlers())
     	{

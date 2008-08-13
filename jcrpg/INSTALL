@@ -1,6 +1,8 @@
 Installing and Running JCRPG
 -----------------------------
 
+A draft description here, a better one can be found at wiki ( http://javacrpg.sourceforge.net/wiki/index.php/Download )
+
 First, install Sun JRE 1.5 or later on your PC. (use your distribution's repository or download at http://java.sun.com)
 Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu).
 Then download jcrpg from http://sf.net/projects/javacrpg downloads. Unpack, and run jcrpg executable.

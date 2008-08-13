@@ -198,9 +198,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     public static boolean SLOW_ANIMATION = false;
 
     static Properties p = new Properties();
-    static {
+    public static void loadConfig(String fileName)
+    {
 		try {
-			File f = new File("./config.properties");
+			File f = new File(fileName);
 			FileInputStream fis = new FileInputStream(f);
 			p.load(fis);
 
