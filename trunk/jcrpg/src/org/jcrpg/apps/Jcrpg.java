@@ -80,7 +80,7 @@ public class Jcrpg extends Formatter implements Filter  {
     		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("H: "+handler);
     	}
 		try {
-			FileHandler h = new FileHandler("./jcrpg-log%u.txt");
+			FileHandler h = new FileHandler("./jcrpg-log-"+System.currentTimeMillis()+"-%u.txt");
 			h.setFormatter(new Jcrpg());
 			h.setFilter(new Jcrpg());
 			LOGGER.addHandler(h);
