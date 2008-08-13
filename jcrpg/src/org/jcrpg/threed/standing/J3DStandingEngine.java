@@ -730,6 +730,13 @@ public class J3DStandingEngine {
 		    				if (overrideBatch)
 		    				{ 
 								PooledNode pooledRealNode = n.realNode;
+			    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+			    				{
+			    					if (pooledRealNode!=null)
+			    					{
+			    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+			    					}
+			    				}
 								
 								n.realNode = null;
 								if (pooledRealNode!=null) {
@@ -738,10 +745,6 @@ public class J3DStandingEngine {
 									realNode.removeFromParent();
 									modelPool.releaseNode(pooledRealNode);
 								}
-		    				}
-		    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-		    				{
-		    					batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 		    				}
 		    				
 		    				n.farView = false;
