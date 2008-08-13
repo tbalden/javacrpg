@@ -121,19 +121,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[-] try AnimatedModelNode with neakor's importer ---  seems slower
 		-> shared node??
 		
-	[ ] encounter ground bug Render not complete if you don't move in normal mode at starting a game
-
 ##
 [?] list before next release:
 ##
-
-	[X] render bug when not moving away from start point!! also switchin back some parts are missing! locking/updating is wrong
-		IT MUST BE LOCKING, if Locking is set to false in GeomHelper, partially it renders...
-	
-	[ ] add choice for DETAILS settings at startup???
-		- different starter batch files - jcrpg with args param
-	
-	[ ] add sample configs,party characters
 	
 	-- QA/DOC
 
@@ -141,6 +131,18 @@ sanity point for Morale is like mana for hp, limiting social skills!
 		[ ] documenting skill act forms (later completed)
 	
 	--
+	[X] add choice for DETAILS settings at startup???
+		- different starter batch files - jcrpg with args param
+	
+	[X] add sample configs,party characters
+	
+
+	[X] cave InternalLight missing??
+	[X] encounter ground bug Render not complete if you don't move in normal mode at starting a game
+
+	[X] render bug when not moving away from start point!! also switchin back some parts are missing! locking/updating is wrong
+		IT MUST BE LOCKING, if Locking is set to false in GeomHelper, partially it renders...
+
 	[X] camera is not working good for 2nd line!! - 3 steps in the village you can test it with 5 groups boar
 
 	[X] redesign jungle tree

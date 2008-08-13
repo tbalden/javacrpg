@@ -271,6 +271,7 @@ public class Cave extends Geography implements Surface {
 				//System.out.println("ENTRANCE EAST for "+i+" "+c);
 				if (c!=null)
 				{
+					c.internalLight = true;
 					return inTheCaveHeight>=0?c:null;
 				}
 			}
@@ -296,6 +297,7 @@ public class Cave extends Geography implements Surface {
 				//System.out.println("ENTRANCE NORTH for "+i+" "+c);
 				if (c!=null)
 				{
+					c.internalLight = true;
 					return inTheCaveHeight>=0?c:null;
 				}
 			}
@@ -321,6 +323,7 @@ public class Cave extends Geography implements Surface {
 				//System.out.println("ENTRANCE NORTH for "+i+" "+c);
 				if (c!=null)
 				{
+					c.internalLight = true;
 					return inTheCaveHeight>=0?c:null;
 				}
 				
