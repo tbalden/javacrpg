@@ -248,12 +248,13 @@ public class EvaluatorBase {
 					int resistanceRoll = HashUtil.mixPer1000(seed, data.target.getNumericId()+data.target.instance.getNumericId(), 0)%120; // random factor
 					
 					float resistanceMul = 1f;
-					if (targetRes<resistanceRoll)
+					if (targetRes<=resistanceRoll)
 					{
+						// full damage
 					} else
 					{
-						int diff = targetRes-resistanceRoll;
-						resistanceMul = diff*1f/(targetRes+1);
+						// resistance roll is lesser than target resistance, modify damage
+						resistanceMul = (resistanceRoll/targetRes);
 					}
 					
 					impact = (sourcePower-targetPower)/100f * resistanceMul;
@@ -585,9 +586,9 @@ public class EvaluatorBase {
 			// DEFENSE POINT = 
 			//
 			//    BASE VALUE (50) + ARMOR VALUE + (CONTRA SKILL TYPE POWER / 2) +
-			//      ( CONTRA ATTRIBUTES AVERAGE ) / 2 )+ ( CONTRA RESISTANCES AVERAGE / 2 )
+			//      ( CONTRA ATTRIBUTES AVERAGE )
 			//
-			//    50 + (0 - 100) + (0 - 50) + (0 - 50) + (0 - 50) = 50 - 250
+			//    50 + (0 - 100) + (0 - 50) + (0 - 100) = 50 - 250
 			
 			int base = DEFENSE_BASE_VALUE;
 			

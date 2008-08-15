@@ -29,6 +29,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] recovery saves for combat phase - on crash useful -> saving gameState in combat somehow.
 
+[ ] keyboard configuration for movement - French keyboards etc cant use 'wsad'
+
 ## list before next-next:
 
 	[ ] use & cast in normal mode too
