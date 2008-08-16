@@ -229,7 +229,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 	{
 		EncounterUnitData data = (EncounterUnitData)groupList.getSelectedObject();
 		ArrayList<InventoryListElement> listOfAll = new ArrayList<InventoryListElement>();
-		if (data.deadMembers!=null)
+		if (data!=null && data.deadMembers!=null)
 		for (EntityMemberInstance inst: data.deadMembers)
 		{
 			ArrayList<InventoryListElement> list  = inst.inventory.getInventoryList(false,false);
