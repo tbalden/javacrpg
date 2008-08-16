@@ -272,6 +272,12 @@ public class EncounterInfo {
 					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
 				} else
 				{
+					if (unitData.isDead() || unitData.isNeutralized())
+					{
+						toRemove.add(unitData);
+						continue;
+					}
+					
 					if (key instanceof EntityFragment)
 					{
 						if (((EntityFragment)key).alwaysIncludeFollowingMembers)
@@ -287,7 +293,10 @@ public class EncounterInfo {
 							}
 						}
 					}
-					if (encounteredSubUnits.get(key)!=null && encounteredSubUnits.get(key).contains(unitData.subUnit)) continue;
+					if (encounteredSubUnits.get(key)!=null && encounteredSubUnits.get(key).contains(unitData.subUnit)) 
+					{
+						continue;
+					}
 					for (EncounterUnit unitKey:encounteredSubUnits.keySet()) {
 						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("--- "+unitKey.getName());
 						if (encounteredSubUnits.get(unitKey)!=null)
