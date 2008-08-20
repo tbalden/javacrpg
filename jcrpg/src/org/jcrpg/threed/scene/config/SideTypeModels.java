@@ -51,6 +51,7 @@ import org.jcrpg.world.ai.flora.middle.succulent.JungleBush;
 import org.jcrpg.world.ai.flora.tree.cactus.BigCactus;
 import org.jcrpg.world.ai.flora.tree.deciduous.Acacia;
 import org.jcrpg.world.ai.flora.tree.deciduous.CherryTree;
+import org.jcrpg.world.ai.flora.tree.deciduous.GreenTreeBush;
 import org.jcrpg.world.ai.flora.tree.deciduous.OakTree;
 import org.jcrpg.world.ai.flora.tree.palm.CoconutTree;
 import org.jcrpg.world.ai.flora.tree.palm.JungleLowTree;
@@ -147,6 +148,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(GreenPineTree.SUBTYPE_TREE.id, new Integer(18));
 		hmCubeSideSubTypeToRenderedSideId.put(GreatPineTree.SUBTYPE_TREE.id, new Integer(25));
 		hmCubeSideSubTypeToRenderedSideId.put(GreenBush.SUBTYPE_BUSH.id, new Integer(19));
+		hmCubeSideSubTypeToRenderedSideId.put(GreenTreeBush.SUBTYPE_BUSH.id, new Integer(61));
 		hmCubeSideSubTypeToRenderedSideId.put(CoconutTree.SUBTYPE_TREE.id, new Integer(15));
 		hmCubeSideSubTypeToRenderedSideId.put(Acacia.SUBTYPE_TREE.id, new Integer(20));
 		hmCubeSideSubTypeToRenderedSideId.put(Grass.SUBTYPE_GRASS.id, new Integer(2));
@@ -195,8 +197,8 @@ public class SideTypeModels {
 
 		
 		
-		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
-		cherry.genericScale=1.7f;
+		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
+		cherry.genericScale=3f;
 		cherry.shadowCaster = true;
 		/*PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
@@ -206,8 +208,12 @@ public class SideTypeModels {
 		PartlyBillboardModel cherry_lowest_2 = new PartlyBillboardModel("pbm_cherry_3","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},3,MIPMAP_TREES);
 		cherry_lowest_2.windAnimation = false;*/
 
-		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
-		acacia.genericScale=1.65f;
+		PartlyBillboardModel oakHigh = new PartlyBillboardModel("pbm_acacia_high_1","models/tree/high_bb_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_1.png"},0,MIPMAP_TREES);
+		oakHigh.genericScale=2.2f;
+		oakHigh.shadowCaster = true;
+
+		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
+		acacia.genericScale=3f;
 		acacia.shadowCaster = true;
 		/*PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
@@ -216,6 +222,13 @@ public class SideTypeModels {
 		acacia_lowest.windAnimation = false;
 		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("pbm_acacia_3","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
 		acacia_lowest_2.windAnimation = false;*/
+
+		PartlyBillboardModel bigBush = new PartlyBillboardModel("pbm_treebush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_2.png"},0,MIPMAP_TREES);
+		bigBush.genericScale=2.6f;
+		bigBush.elevateOnSteep=true;
+		bigBush.quadXSizeMultiplier = 5.2f;
+		bigBush.quadYSizeMultiplier = 6.2f;
+		bigBush.shadowCaster = true;
 
 		PartlyBillboardModel bush = new PartlyBillboardModel("pbm_bush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		bush.genericScale=1.3f;
@@ -642,12 +655,13 @@ public class SideTypeModels {
 		//if (!LOD_VEGETATION)
 		{
 			// no lod version
-			hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{cherry})); // oak TODO!
+			hm3dTypeRenderedSide.put(new Integer(9), new RenderedHashRotatedSide(new Model[]{oakHigh})); // oak TODO!
 			hm3dTypeRenderedSide.put(new Integer(12), new RenderedHashRotatedSide(new Model[]{cherry}));
 			//hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_high}));
 			hm3dTypeRenderedSide.put(new Integer(15), new RenderedHashRotatedSide(new Model[]{coconut_simple}));
 			hm3dTypeRenderedSide.put(new Integer(18), new RenderedHashRotatedSide(new Model[]{pine_high}));
 			hm3dTypeRenderedSide.put(new Integer(19), new RenderedHashRotatedSide(new Model[]{bush})); 
+			hm3dTypeRenderedSide.put(new Integer(61), new RenderedHashRotatedSide(new Model[]{bigBush})); 
 			hm3dTypeRenderedSide.put(new Integer(20), new RenderedHashRotatedSide(new Model[]{acacia}));
 			hm3dTypeRenderedSide.put(new Integer(23), new RenderedHashRotatedSide(new Model[]{cactus}));
 			hm3dTypeRenderedSide.put(new Integer(24), new RenderedHashRotatedSide(new Model[]{palm_high}));
@@ -806,7 +820,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(58), new RenderedSide(new Model[]{tsm_green_fern}));
 
 		// NEXT ID = 
-		// 61
+		// 62
 		
 	}
 	

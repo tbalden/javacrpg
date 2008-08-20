@@ -354,6 +354,7 @@ public class River extends Water implements FlowGeography {
 							else
 								c = c2;
 						}
+						if (c!=null)
 						c.waterCube = true;
 						return c;
 						

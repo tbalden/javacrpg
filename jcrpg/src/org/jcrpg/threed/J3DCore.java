@@ -1194,7 +1194,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public int garbCollCounter = 0;
 
 	public static boolean OPTIMIZE_ANGLES = true;
-	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.5f:3.14f;
+	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.5f:3.15f;
 
 	public static boolean GEOMETRY_BATCH = true;
 	public static boolean GRASS_BIG_BATCH = true;
