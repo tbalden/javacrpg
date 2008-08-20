@@ -200,6 +200,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		renderedArea.setRenderDistance(22); // set a low view distance for battles
 		renderedArea.setRenderDistanceFarview(22);
 		rerenderWithRemove = true;
+		optimizeAngle = false;
 		lastType = "_______";
 	}
 	

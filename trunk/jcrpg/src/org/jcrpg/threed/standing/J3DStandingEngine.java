@@ -111,6 +111,7 @@ public class J3DStandingEngine {
 		modelPool = core.modelPool;
 		intRootNode = core.intRootNode;
 		extRootNode = core.extRootNode;
+		optimizeAngle = J3DCore.OPTIMIZE_ANGLES;
 	}
 
 	HashMap<Long, RenderedCube> hmCurrentCubes = new HashMap<Long, RenderedCube>();
@@ -465,11 +466,11 @@ public class J3DStandingEngine {
 	 */
 	public void renderToViewPort()
 	{
-		renderToViewPort(optimizeAngle?1.1f:3.14f);
+		renderToViewPort(optimizeAngle?1.1f:3.15f);
 	}
 	public void renderToViewPort(int segmentCount, int segments)
 	{
-		renderToViewPort(optimizeAngle?1.1f:.14f, true, segmentCount, segments);
+		renderToViewPort(optimizeAngle?1.1f:3.15f, true, segmentCount, segments);
 	}
 	public void renderToViewPort(float refAngle)
 	{
