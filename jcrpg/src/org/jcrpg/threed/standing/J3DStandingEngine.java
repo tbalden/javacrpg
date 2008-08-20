@@ -593,7 +593,7 @@ public class J3DStandingEngine {
 
 			    					if (!overrideBatch)
 			    					{
-				    					if (n!=null && n.batchInstance!=null)
+				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
 				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			    					}
 			    				} 
@@ -660,7 +660,7 @@ public class J3DStandingEngine {
 
 			    					if (!overrideBatch)
 			        				{
-				    					if (n!=null && n.batchInstance!=null)
+				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
 				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			        				}
 			    				} 
@@ -724,7 +724,7 @@ public class J3DStandingEngine {
 
 		    					if (!overrideBatch)
 		        				{
-			    					if (n!=null && n.batchInstance!=null)
+			    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
 			    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 		        				}
 		    				} 
@@ -974,6 +974,7 @@ public class J3DStandingEngine {
 					    					{
 					    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
 					    					}
+					    					// TODO make fully batched the trees -> common tri batch based on node coordinates etc.
 					    				}
 										
 										n.realNode = null;
@@ -1013,7 +1014,7 @@ public class J3DStandingEngine {
 			    					}
 									if (!overrideBatch)
 									{
-										if (n.batchInstance==null) 
+										if (n.trimeshGeomBatchInstance==null && n.modelGeomBatchInstance==null) 
 										{
 											long t0 = System.currentTimeMillis();
 											batchHelper.addItem(this,c.cube.internalCube, n.model, n, false);
@@ -1032,130 +1033,134 @@ public class J3DStandingEngine {
 										if (realPooledNode!=null)
 											// adding trunk to modelGeometryBatch
 											batchHelper.addBillboardVegetationItem(this,c.cube.internalCube, n.model, n, false,(BillboardPartVegetation)realPooledNode);
-									}
-								
-									// unlock
-									boolean sharedNode = false;
-									if (realPooledNode instanceof SharedNode)
-									{	
-										realPooledNode.unlockMeshes();
-										sharedNode = true;
-									}
+									} 
+									else
 									{
-										if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-										{
-											if (realPooledNode.getChildren()!=null)
-											for (Spatial s:realPooledNode.getChildren())
-											{
-												if (s instanceof PooledSharedNode)
-												{
-													s.unlockMeshes();
-												}
-											}
-										}
-										//realPooledNode.unlockMeshes();
-										realPooledNode.unlockShadows();
-										realPooledNode.unlockTransforms();
-										realPooledNode.unlockBounds();
-										realPooledNode.unlockBranch();
-										if (realPooledNode instanceof BillboardPartVegetation)
-										{
-											((BillboardPartVegetation)realPooledNode).batch.unlockBounds();
-											((BillboardPartVegetation)realPooledNode).batch.unlockShadows();
-											((BillboardPartVegetation)realPooledNode).batch.unlockTransforms();
-											((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
-										}
-									}
-								
-									// set data from placeholder
-									realPooledNode.setLocalTranslation(n.getLocalTranslation());
-									if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
-									{
-										realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE)));
-									}
 									
-									if (realPooledNode instanceof BillboardNodePooled)
-									{
-										
-									} else
-									{
-										// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
-										// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
-										if (realPooledNode.getChildren()!=null)
-										for (Spatial s:realPooledNode.getChildren()) {
-											if ( (s.getType()&Node.NODE)>0 )
+										// unlock
+										boolean sharedNode = false;
+										if (realPooledNode instanceof SharedNode)
+										{	
+											realPooledNode.unlockMeshes();
+											sharedNode = true;
+										}
+										{
+											if (n.model.type==Model.PARTLYBILLBOARDMODEL)
 											{
-												if (((Node)s).getChildren()!=null)
-												for (Spatial s2:((Node)s).getChildren())
-												{	
-													if ( (s2.getType()&Node.NODE)>0 )
+												if (realPooledNode.getChildren()!=null)
+												for (Spatial s:realPooledNode.getChildren())
+												{
+													if (s instanceof PooledSharedNode)
 													{
-														for (Spatial s3:((Node)s2).getChildren())
-														{
-															if (s3 instanceof TrimeshGeometryBatch) {
-																// setting separate horizontalRotation for trimeshGeomBatch
-																((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
-															}												
-														}												
-													}
-													s2.setLocalScale(n.getLocalScale());
-													if (s2 instanceof TrimeshGeometryBatch) {
-														// setting separate horizontalRotation for trimeshGeomBatch
-														((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
-													} else {
-														s2.setLocalRotation(n.getLocalRotation());
+														s.unlockMeshes();
 													}
 												}
-											} else {
-												s.setLocalRotation(n.getLocalRotation());
-												s.setLocalScale(n.getLocalScale());
+											}
+											//realPooledNode.unlockMeshes();
+											realPooledNode.unlockShadows();
+											realPooledNode.unlockTransforms();
+											realPooledNode.unlockBounds();
+											realPooledNode.unlockBranch();
+											if (realPooledNode instanceof BillboardPartVegetation)
+											{
+												((BillboardPartVegetation)realPooledNode).batch.unlockBounds();
+												((BillboardPartVegetation)realPooledNode).batch.unlockShadows();
+												((BillboardPartVegetation)realPooledNode).batch.unlockTransforms();
+												((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
 											}
 										}
-									}
-								
-									if (c.cube.internalCube) {
-										intRootNode.attachChild((Node)realPooledNode);
-									} else 
-									{
-										extRootNode.attachChild((Node)realPooledNode);
-									}
-									realPooledNode.setCullMode(Node.CULL_NEVER);
-									newNodesToSetCullingDynamic.add(realPooledNode);
-									if (sharedNode)
-									{	
-										realPooledNode.lockMeshes();
-										
-									}
-									{
-										/*if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+									
+										// set data from placeholder
+										realPooledNode.setLocalTranslation(n.getLocalTranslation());
+										if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel && n.neighborCubeData!=null && n.neighborCubeData.getTextureKeyPartForBatch()!=null)
 										{
-											if (realPooledNode.getChildren()!=null)
-											for (Spatial s:realPooledNode.getChildren())
-											{
-												if (s instanceof PooledSharedNode)
-												{
-													//s.lockMeshes();
-												}
-											}
-										}*/
+											realPooledNode.setLocalTranslation(realPooledNode.getLocalTranslation().add(new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE,0,-0.5f*J3DCore.CUBE_EDGE_SIZE)));
+										}
+										
 										if (realPooledNode instanceof BillboardNodePooled)
 										{
 											
 										} else
 										{
-											// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
-											realPooledNode.lockShadows();
-											realPooledNode.lockTransforms();								
-											realPooledNode.lockBranch();
-											realPooledNode.lockBounds();
-											if (realPooledNode instanceof BillboardPartVegetation)
-											{
-												((BillboardPartVegetation)realPooledNode).batch.lockBounds();
-												((BillboardPartVegetation)realPooledNode).batch.lockShadows();
-												((BillboardPartVegetation)realPooledNode).batch.lockTransforms();
-												((BillboardPartVegetation)realPooledNode).batch.lockBranch();
+											// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
+											// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
+											if (realPooledNode.getChildren()!=null)
+											for (Spatial s:realPooledNode.getChildren()) {
+												if ( (s.getType()&Node.NODE)>0 )
+												{
+													if (((Node)s).getChildren()!=null)
+													for (Spatial s2:((Node)s).getChildren())
+													{	
+														if ( (s2.getType()&Node.NODE)>0 )
+														{
+															for (Spatial s3:((Node)s2).getChildren())
+															{
+																if (s3 instanceof TrimeshGeometryBatch) {
+																	// setting separate horizontalRotation for trimeshGeomBatch
+																	((TrimeshGeometryBatch)s3).horizontalRotation = n.horizontalRotation;
+																}												
+															}												
+														}
+														s2.setLocalScale(n.getLocalScale());
+														if (s2 instanceof TrimeshGeometryBatch) {
+															// setting separate horizontalRotation for trimeshGeomBatch
+															((TrimeshGeometryBatch)s2).horizontalRotation = n.horizontalRotation;
+														} else {
+															s2.setLocalRotation(n.getLocalRotation());
+														}
+													}
+												} else {
+													s.setLocalRotation(n.getLocalRotation());
+													s.setLocalScale(n.getLocalScale());
+												}
 											}
 										}
+									
+										if (c.cube.internalCube) {
+											intRootNode.attachChild((Node)realPooledNode);
+										} else 
+										{
+											extRootNode.attachChild((Node)realPooledNode);
+										}
+										realPooledNode.setCullMode(Node.CULL_NEVER);
+										newNodesToSetCullingDynamic.add(realPooledNode);
+										if (sharedNode)
+										{	
+											realPooledNode.lockMeshes();
+											
+										}
+										{
+											/*if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+											{
+												if (realPooledNode.getChildren()!=null)
+												for (Spatial s:realPooledNode.getChildren())
+												{
+													if (s instanceof PooledSharedNode)
+													{
+														//s.lockMeshes();
+													}
+												}
+											}*/
+											if (realPooledNode instanceof BillboardNodePooled)
+											{
+												
+											} else
+											{
+												// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
+												realPooledNode.lockShadows();
+												realPooledNode.lockTransforms();								
+												realPooledNode.lockBranch();
+												realPooledNode.lockBounds();
+												if (realPooledNode instanceof BillboardPartVegetation)
+												{
+													((BillboardPartVegetation)realPooledNode).batch.lockBounds();
+													((BillboardPartVegetation)realPooledNode).batch.lockShadows();
+													((BillboardPartVegetation)realPooledNode).batch.lockTransforms();
+													((BillboardPartVegetation)realPooledNode).batch.lockBranch();
+												}
+											}
+										}
+									
 									}
 								}
 							}
@@ -1404,7 +1409,7 @@ public class J3DStandingEngine {
 			    					}
 									if (!overrideBatch)
 									{
-										if (n.batchInstance==null)
+										if (n.trimeshGeomBatchInstance==null && n.modelGeomBatchInstance==null)
 											batchHelper.addItem(this,c.cube.internalCube, n.model, n, true);
 									}
 								} 
@@ -1439,16 +1444,16 @@ public class J3DStandingEngine {
 												}
 											}
 										}
+										realPooledNode.unlockBranch();
 										realPooledNode.unlockShadows();
 										realPooledNode.unlockTransforms();
 										realPooledNode.unlockBounds();
-										realPooledNode.unlockBranch();
 										if (realPooledNode instanceof BillboardPartVegetation)
 										{
+											((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
 											((BillboardPartVegetation)realPooledNode).batch.unlockBounds();
 											((BillboardPartVegetation)realPooledNode).batch.unlockShadows();
 											((BillboardPartVegetation)realPooledNode).batch.unlockTransforms();
-											((BillboardPartVegetation)realPooledNode).batch.unlockBranch();
 										}
 									}
 								
@@ -1517,9 +1522,9 @@ public class J3DStandingEngine {
 											}
 										}*/
 										realPooledNode.lockShadows();
+										realPooledNode.lockTransforms();																	
 										realPooledNode.lockBranch();
 										realPooledNode.lockBounds();
-										realPooledNode.lockTransforms();																	
 										if (realPooledNode instanceof BillboardPartVegetation)
 										{
 											((BillboardPartVegetation)realPooledNode).batch.lockBounds();

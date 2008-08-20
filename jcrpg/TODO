@@ -40,7 +40,9 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [-] rendering bug - behind player battle ground doesnt show tiles... ??
 	Maybe angle is not set correctly upon reinit?
 
-	[ ] grass disappears!! -> updateGeometric???
+	[X] grass disappears!! -> updateGeometric???
+	
+[X] fix economy update billboard prob. 
 
 ## list before next-next:
 

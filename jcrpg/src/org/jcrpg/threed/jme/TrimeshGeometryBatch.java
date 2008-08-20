@@ -181,28 +181,48 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	
 	public static long sumAddItemReal = 0;
-	@SuppressWarnings("unchecked")
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
 	{
-		trimesh.getLocalTranslation().subtractLocal(parent.getLocalTranslation());
+		addItem(placeholder, trimesh, false);
+	}
+	
+	boolean itemAdditionUpdate = false;
+	@SuppressWarnings("unchecked")
+	public void addItem(NodePlaceholder placeholder, TriMesh trimesh, boolean placeholderTranslationRelative)
+	{
+		itemAdditionUpdate = true;
+		Vector3f vec = trimesh.getLocalTranslation();
+		float scaleMultiplier = 1f;
+		if (placeholderTranslationRelative)
+		{
+			scaleMultiplier = placeholder.model.genericScale;
+			if (placeholder.horizontalRotation!=null)
+				vec = placeholder.horizontalRotation.mult(vec);
+			//vec = vec.mult(scaleMultiplier);
+			vec = vec.mult(placeholder.localScale);
+			vec.addLocal(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
+		} else
+		{
+			vec.subtractLocal(parent.getLocalTranslation());
+		}
 		
 		if (notVisible.size()>0)
 		{
 			long t0 = System.currentTimeMillis();
 			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = notVisible.iterator().next();
-			instance.getAttributes().setTranslation(trimesh.getLocalTranslation());
+			instance.getAttributes().setTranslation(vec);
 			instance.getAttributes().setRotation(trimesh.getLocalRotation());
-			instance.getAttributes().setScale(trimesh.getLocalScale());
+			instance.getAttributes().setScale(trimesh.getLocalScale().mult(scaleMultiplier));
 			instance.getAttributes().setVisible(true);
 			instance.getAttributes().buildMatrices();
 			
 			if (placeholder!=null) {
 
-				HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
+				HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 				if (instances==null)
 				{
 					instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
-					placeholder.batchInstance = instances;
+					placeholder.trimeshGeomBatchInstance = instances;
 				}
 				instances.add(instance);
 			}
@@ -218,14 +238,16 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		// Add a Trimesh instance (batch and attributes)
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(trimesh,
 				 new GeometryBatchInstanceAttributes(trimesh));
+		instance.getAttributes().setTranslation(vec);
+		if (scaleMultiplier!=1f) instance.getAttributes().getScale().multLocal(scaleMultiplier);
 		addInstance(instance);
 		
 		if (placeholder!=null) {
-			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
+			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 			if (instances==null)
 			{
 				instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
-				placeholder.batchInstance = instances;
+				placeholder.trimeshGeomBatchInstance = instances;
 			}
 			instances.add(instance);
 		}
@@ -240,7 +262,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder)
 	{
-		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.batchInstance;
+		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 		if (instances!=null)
 		{
 			for (Object instance:instances)
@@ -258,7 +280,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				}
 			}
 		}
-		placeholder.batchInstance = null;
+		placeholder.trimeshGeomBatchInstance = null;
 	}
 	
 	
@@ -299,7 +321,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			boolean needsUpdate = true;//true;
 			if (lastLeft!=null)
 			{
-				if (look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
+				if (!itemAdditionUpdate&&look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
 				{
 					needsUpdate = false;
 					
@@ -317,6 +339,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				{
 					if ((parent.getLocks()&Node.LOCKED_MESH_DATA)>0) parent.unlockMeshes();
 				}
+				itemAdditionUpdate = false;
 			} else
 			{
 				lastLoc = new Vector3f();
@@ -337,7 +360,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				parent.setLocalRotation(qZero);
 				getWorldRotation().set(qZero);
 				
-				if (horizontalRotation!=null) {
+				/*if (horizontalRotation!=null && false) {
 					// needs horizontal rotation
 					
 					
@@ -421,8 +444,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					}
 	
 					// rotation the whole trimesh to position in the cube:
-					setLocalRotation(horizontalRotation);
-				} else {
+					setLocalRotation(horizontalRotation);*/
+				//} else 
+				{
 					setLocalRotation(qZero);
 				}
 				if (vertexShader) {
