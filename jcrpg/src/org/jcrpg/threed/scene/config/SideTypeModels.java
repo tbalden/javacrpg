@@ -223,7 +223,7 @@ public class SideTypeModels {
 		PartlyBillboardModel acacia_lowest_2 = new PartlyBillboardModel("pbm_acacia_3","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},3,MIPMAP_TREES);
 		acacia_lowest_2.windAnimation = false;*/
 
-		PartlyBillboardModel bigBush = new PartlyBillboardModel("pbm_treebush_0","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_2.png"},0,MIPMAP_TREES);
+		PartlyBillboardModel bigBush = new PartlyBillboardModel("pbm_treebush_0","models/bush/bush2.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_2.png"},0,MIPMAP_TREES);
 		bigBush.genericScale=2.6f;
 		bigBush.elevateOnSteep=true;
 		bigBush.quadXSizeMultiplier = 5.2f;
