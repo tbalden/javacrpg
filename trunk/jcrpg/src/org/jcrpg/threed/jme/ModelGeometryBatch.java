@@ -321,7 +321,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				if (placeholder.multiBatchInstance==null) placeholder.multiBatchInstance = new HashMap<String, Object>();
 				placeholder.multiBatchInstance.put(key, instance);
 			}
-			placeholder.batchInstance = instance;
+			placeholder.modelGeomBatchInstance = instance;
 			nVSet.remove(instance);
 			vSet.add(instance);
 			return;
@@ -374,7 +374,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				if (placeholder.multiBatchInstance==null) placeholder.multiBatchInstance = new HashMap<String, Object>();
 				placeholder.multiBatchInstance.put(key, instance);
 			}
-			placeholder.batchInstance = instance;
+			placeholder.modelGeomBatchInstance = instance;
 			addInstance(instance);
 			vSet.add(instance);
 			sumBuildMatricesTime+=System.currentTimeMillis()-t0;
@@ -399,7 +399,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	public void removeItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
 		updateNeeded = true;
-		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance; 
+		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.modelGeomBatchInstance; 
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		if (triMesh!=null)
 		{
@@ -436,7 +436,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				placeholder.multiBatchInstance.remove(key);
 				
 			}
-			placeholder.batchInstance = null;
+			placeholder.modelGeomBatchInstance = null;
 		}
 	}
 	

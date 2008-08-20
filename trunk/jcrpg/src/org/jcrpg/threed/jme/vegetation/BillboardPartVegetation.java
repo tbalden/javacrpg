@@ -148,7 +148,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				this.attachChild(mesh);
 			}
 		}
-		if (!NO_BATCH_GEOMETRY) {
+		/*if (!NO_BATCH_GEOMETRY) {
 			this.attachChild(batch.parent);
 			//batch.setModelBound(modelBound)
 			batch.parent.updateModelBound();
@@ -157,7 +157,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			batch.parent.setLocalRotation(new Quaternion());
 			batch.getWorldRotation().set(new Quaternion());
 			batch.setLocalRotation(new Quaternion());
-		}
+		}*/
 	}
 	
 	public Quad targetQuad = null;
@@ -375,6 +375,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		fillBillboardQuadsRotated(horRotated);
 	}
 	
+	public HashSet<TriMesh> containedFoliageMeshes = new HashSet<TriMesh>();
+	
 	/**
 	 * Create a real quad for the tree from the abstract data upon constructing the tree.
 	 * @param rotated
@@ -391,7 +393,8 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	private SharedMesh createQuad(boolean rotated, String name,TextureState[] states,String key, float xSize, float ySize, float x, float y, float z)
 	{
 		String qkey = model.id+rotated+xSize+ySize+internal;
-		Quad targetQuad = quadCache.get(qkey);
+		//Quad targetQuad = quadCache.get(qkey);
+		targetQuad = null;
 		if (targetQuad == null)
 		{
 			targetQuad = new Quad(name,xSize,ySize);
@@ -407,7 +410,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.setLocalRotation(new Quaternion());
 			TriangleBatch tBatch = targetQuad.getBatch(0);
 			// swapping X,Z
-			if (!NO_BATCH_GEOMETRY && rotated) {
+			/*if (!NO_BATCH_GEOMETRY && rotated) {
 				FloatBuffer buff = tBatch.getVertexBuffer();
 				for (int i=0; i<4; i++)
 				{
@@ -425,17 +428,17 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 					buff.put(i*3 , -cZ);
 					buff.put(i*3 + 2 , -cX);
 				}
-			}
+			}*/
 			
-			quadCache.put(qkey, targetQuad);
+			//quadCache.put(qkey, targetQuad);
 		}
 		if (!NO_BATCH_GEOMETRY) {
 			targetQuad.setLocalTranslation(x, z, -y);
 			targetQuad.setLocalRotation(new Quaternion());
-			targetQuad.getWorldRotation().set(new Quaternion());
+			//targetQuad.getWorldRotation().set(new Quaternion());
 			targetQuad.setModelBound(new BoundingBox());
 			targetQuad.updateModelBound();
-			if (batch==null)
+			/*if (batch==null)
 			{
 				NodePlaceholder fake = new NodePlaceholder();
 				fake.setLocalTranslation(new Vector3f());
@@ -443,10 +446,12 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 				batch.animated = !internal && J3DCore.ANIMATED_TREES && model.windAnimation;
 				batch.setName("---");
 				batch.parent.setName("---");
-			}
+			}*/
 			//targetQuad.setLocalTranslation(x, z, -y);
 			//quad.setLocalTranslation(x, y, z);
-			batch.addItem(null, targetQuad);
+			//batch.addItem(null, targetQuad);
+			containedFoliageMeshes.add(targetQuad);
+			
 		}
 		if (NO_BATCH_GEOMETRY) {
 			SharedMesh quad = new SharedMesh("s"+name,targetQuad);
@@ -484,7 +489,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			// we don't attach the transformed child - it's the trunk mesh stripped from foliage, used 
 			// later in modelGeometryBatch form only.
 			foliagelessModelSpatial = child;
-			return children.size();
+			return 0;//children.size();
 		} else
 		{
 			return super.attachChild(child);

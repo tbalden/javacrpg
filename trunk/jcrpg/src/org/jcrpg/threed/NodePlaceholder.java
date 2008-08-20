@@ -35,7 +35,8 @@ public class NodePlaceholder {
 	public RenderedCube cube;
 	public RenderedMovingUnit unit;
 	public PooledNode realNode;
-	public Object batchInstance;
+	public Object modelGeomBatchInstance;
+	public Object trimeshGeomBatchInstance;
 	public HashMap<String, Object> multiBatchInstance;
 	public boolean farView = false;
 	

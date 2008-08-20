@@ -63,6 +63,8 @@ public class GeometryBatchHelper {
 	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 5;
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
 	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y = 12;
 	
 	
 	/**
@@ -100,7 +102,13 @@ public class GeometryBatchHelper {
     		{
     			if (true ||sm.yGeomBatchSize==-1) 
     			{
-    				key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
+    				if (m.type==Model.PARTLYBILLBOARDMODEL)
+    				{
+    					key+=((place.cube.cube.x/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y));
+    				} else
+    				{
+    					key+=((place.cube.cube.x/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/SIMPLE_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(SIMPLE_MODEL_BATCHED_SPACE_SIZE*yLevelMul));
+    				}
     			}
     			else
     			{
@@ -308,16 +316,90 @@ public class GeometryBatchHelper {
     {
     	String key = getKey(internal, m, place, farView);
     	if (m.type==Model.PARTLYBILLBOARDMODEL) {
-	     	ModelGeometryBatch batch = modelBatchMap.get(key);
-	    	if (batch!=null)
-	    	{
-    	    	/*if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
-    	    	{
-    	    		batch.unlockBranch();
-    		    	batch.unlockBounds();
-    		    	batch.unlockMeshes();
-    	    	}*/
-	    		
+    		// modelGeomBatch part
+    		{
+		     	ModelGeometryBatch batch = modelBatchMap.get(key);
+		    	if (batch!=null)
+		    	{
+	    	    	/*if ( (batch.getLocks()&batch.LOCKED_BOUNDS)>0)
+	    	    	{
+	    	    		batch.unlockBranch();
+	    		    	batch.unlockBounds();
+	    		    	batch.unlockMeshes();
+	    	    	}*/
+		    		
+			    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
+			    	{
+			    		if (s instanceof Node)
+			    		{
+			    			for (Spatial sh:((Node)s).getChildren())
+			    			{
+			    				if (sh instanceof SharedMesh)
+			    				{
+			    					TriMesh mesh = ((SharedMesh)sh).getTarget();
+			    					batch.removeItem(place,mesh);
+			    				}
+			    			}
+			    		}
+			    	}
+			    	place.modelGeomBatchInstance = null;
+		    		//batch.removeItem(place);
+		    	}
+    		}
+    		// trimeshGeomBatch part
+    		{
+        		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
+        		if (batch!=null)
+        		{
+        	    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+        	    	{
+        	    		batch.unlockBranch();
+        		    	batch.unlockBounds();
+        		    	batch.unlockMeshes();
+        	    	}*/
+        			batch.removeItem(place);
+        			place.trimeshGeomBatchInstance = null;
+        		}
+    		}
+    	}
+    }
+
+    
+    public void addBillboardVegetationItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode) {
+    	String key = getKey(internal, m, place, farView);
+
+    	if (m.type!=Model.TEXTURESTATEVEGETATION) {
+    		// modelGeomBatch trunk part
+    		{
+		    	ModelGeometryBatch batch = modelBatchMap.get(key);
+		    	if (batch==null)
+		    	{
+		    		batch = new ModelGeometryBatch(core,m,place,vegetationNode);
+		    		batch.key = key;
+		    		if (internal)
+		    		{
+		    			sEngine.intRootNode.attachChild(batch.parent);
+		    			//sEngine.intRootNode.updateRenderState();
+		    		} else
+		    		{
+		    			sEngine.extRootNode.attachChild(batch.parent);
+		    			//sEngine.extRootNode.updateRenderState();
+		    		}
+	    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+	    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+		    		modelBatchMap.put(key, batch);
+		    		if (locking)
+		    		{
+		    			batch.lockTransforms();
+		    			batch.lockShadows();
+		    		}
+		    	}
+		    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+		    	{
+		    		batch.unlockBranch();
+			    	batch.unlockBounds();
+			    	batch.unlockMeshes();
+		    	}
 		    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
 		    	{
 		    		if (s instanceof Node)
@@ -327,66 +409,56 @@ public class GeometryBatchHelper {
 		    				if (sh instanceof SharedMesh)
 		    				{
 		    					TriMesh mesh = ((SharedMesh)sh).getTarget();
-		    					batch.removeItem(place,mesh);
+		    					batch.addItem(place,mesh);
 		    				}
 		    			}
 		    		}
 		    	}
-		    	place.batchInstance = null;
-	    		//batch.removeItem(place);
-	    	}
-    	}
-    }
+		    	batch.updateGeometricState(0f, true); // TODO why is it working only if put here?
+	    	
+    		}	    	
+    		
+    		// timeshGeomBatch part (foliage)
+    		{
+    			TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
+    	    	if (batch==null)
+    	    	{
+    	    		TriMesh tri = vegetationNode.containedFoliageMeshes.iterator().next(); 
+    	    			
+    	    			//VegetationSetup.getVegTrimesh(internal,place, place.cube, core, (TextureStateVegetationModel)m, 0, 0, 0f, 100f);
+    	    		batch = new TrimeshGeometryBatch(m.id,core,tri,internal,place);
+    	    		batch.model = m;
+    	    		batch.key = key;
+    	    		if (internal)
+    	    		{
+    	    			batch.setAnimated(false,internal); // inside no wind
+    	    			sEngine.intRootNode.attachChild(batch.parent);
+    	    			//sEngine.intRootNode.updateRenderState();
+    	    		} else
+    	    		{
+    	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
+    	    			sEngine.extRootNode.attachChild(batch.parent);
+    	    			//sEngine.extRootNode.updateRenderState();
+    	    		}
+        			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+        			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+    	    		trimeshBatchMap.put(key, batch);
+    	    		batch.lockTransforms();
+    	    		batch.lockShadows();
+    	    	}
+    	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+    	    	{
+    	    		batch.unlockBranch();
+    		    	batch.unlockBounds();
+    	    	}
+    	    	
+    	    	for (TriMesh tri:vegetationNode.containedFoliageMeshes)
+    	    	{
+    	    		batch.addItem(place,tri,true);
+    	    	}
 
-    
-    public void addBillboardVegetationItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode) {
-    	String key = getKey(internal, m, place, farView);
-
-    	if (m.type!=Model.TEXTURESTATEVEGETATION) {
-	    	ModelGeometryBatch batch = modelBatchMap.get(key);
-	    	if (batch==null)
-	    	{
-	    		batch = new ModelGeometryBatch(core,m,place,vegetationNode);
-	    		batch.key = key;
-	    		if (internal)
-	    		{
-	    			sEngine.intRootNode.attachChild(batch.parent);
-	    			//sEngine.intRootNode.updateRenderState();
-	    		} else
-	    		{
-	    			sEngine.extRootNode.attachChild(batch.parent);
-	    			//sEngine.extRootNode.updateRenderState();
-	    		}
-    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
-	    		modelBatchMap.put(key, batch);
-	    		if (locking)
-	    		{
-	    			batch.lockTransforms();
-	    			batch.lockShadows();
-	    		}
-	    	}
-	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
-	    	{
-	    		batch.unlockBranch();
-		    	batch.unlockBounds();
-		    	batch.unlockMeshes();
-	    	}
-	    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
-	    	{
-	    		if (s instanceof Node)
-	    		{
-	    			for (Spatial sh:((Node)s).getChildren())
-	    			{
-	    				if (sh instanceof SharedMesh)
-	    				{
-	    					TriMesh mesh = ((SharedMesh)sh).getTarget();
-	    					batch.addItem(place,mesh);
-	    				}
-	    			}
-	    		}
-	    	}
-	    	batch.updateGeometricState(0f, true); // TODO why is it working only if put here?
+    		}
+	    	
     	}
     }
     
@@ -438,20 +510,20 @@ public class GeometryBatchHelper {
     		
     		if (batch.parent!=null)
     		{
+    			batch.unlockBranch();
     			batch.unlockMeshes();
     			batch.unlockBounds();
     			batch.unlockTransforms();
-    			batch.unlockBranch();
     		}
     	}
     	for (ModelGeometryBatch batch: modelBatchMap.values()) {
     		
     		if (batch.parent!=null)
     		{
+    			batch.unlockBranch();
     			batch.unlockMeshes();
     			batch.unlockTransforms();
     			batch.unlockBounds();
-    			batch.unlockBranch();
     		}
     	}
 
@@ -507,7 +579,7 @@ public class GeometryBatchHelper {
 					removables.add(batch);
 				} else
 				{
-					if (batch.model!=null && batch.model.alwaysRenderBatch) continue;
+					if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
 					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
 					{
 						if (batch.parent.getWorldTranslation().add(batch.avarageTranslation).distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)

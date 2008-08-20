@@ -258,7 +258,8 @@ public class ModelPool {
 					{
 						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING BBPART VEG:");
 						{
-							((BillboardPartVegetation)node).batch.parent.removeFromParent();
+							if (((BillboardPartVegetation)node).batch!=null)
+								((BillboardPartVegetation)node).batch.parent.removeFromParent();
 						}
 					}
 					removed.add(node);
