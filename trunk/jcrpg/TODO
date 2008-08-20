@@ -31,11 +31,29 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] keyboard configuration for movement - French keyboards etc cant use 'wsad'
 
+
+
+[ ] camera is not good positioned for kobold - above them etc.
+[ ] billboard badly positioned for gorilla
+
+[ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
+[-] rendering bug - behind player battle ground doesnt show tiles... ??
+	Maybe angle is not set correctly upon reinit?
+
+	[ ] grass disappears!! -> updateGeometric???
+
 ## list before next-next:
+
 
 	[ ] use & cast in normal mode too
 	
+	[ ] reorder party window in turn act phase window
+	
 	[ ] replace the whole ecology generation from XML with class based parameters
+	
+	[X] test Single NPC encounter's post encounter window - unit not showing??
+		
+	
 	
 	[ ] Encounter grounds mode
 		
