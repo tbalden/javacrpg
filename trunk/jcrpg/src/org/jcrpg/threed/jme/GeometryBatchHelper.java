@@ -516,7 +516,7 @@ public class GeometryBatchHelper {
 							batch.parent.updateRenderState();
 						} else
 						{
-							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
+							batch.parent.setCullMode(TriMesh.CULL_NEVER);
 							batch.parent.updateRenderState();
 						}
 					}
