@@ -1193,7 +1193,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	public int garbCollCounter = 0;
 
-	public static boolean OPTIMIZE_ANGLES = true;
+	public static boolean OPTIMIZE_ANGLES = false;
 	public static float ROTATE_VIEW_ANGLE = OPTIMIZE_ANGLES?2.5f:3.15f;
 
 	public static boolean GEOMETRY_BATCH = true;
@@ -2569,7 +2569,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
     {
     	return input;
     }
-    
+    public ClassicInputHandler getClassicInputHandler()
+    {
+    	return (ClassicInputHandler)input;
+    }
+     
     public ClassicKeyboardLookHandler getKeyboardHandler()
     {
     	return ((ClassicKeyboardLookHandler)getInputHandler().getFromAttachedHandlers(0));    	

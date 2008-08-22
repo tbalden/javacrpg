@@ -788,6 +788,7 @@ public class PartySetup extends PagedInputWindow {
 			core.uiBase.hud.characters.hide();
 			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule);
 			core.init3DGame();
+			core.getClassicInputHandler().enableMouse(true);
 			core.uiBase.hud.characters.update();
 			core.uiBase.hud.characters.show();
 			core.getUIRootNode().updateRenderState();
