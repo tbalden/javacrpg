@@ -103,15 +103,54 @@ public abstract class CKeyAction extends KeyInputAction{
 	}
     
     protected void turnDirectionAndMove(float steps, Vector3f from, Vector3f toReach, Vector3f fromPos, Vector3f toPos, boolean almost) {
+		long fromTime;
+		float x1, y1, z1;
+		float x, y, z;
+		float currentPercent = 0;
+		while (true)
+		{
+			fromTime = System.currentTimeMillis();
+    		x1 = (1/steps)* currentPercent * toPos.x;
+    		y1 = (1/steps)* currentPercent * toPos.y;
+    		z1 = (1/steps)* currentPercent * toPos.z;
+    		
+    		x1 += (1/steps) * (steps-currentPercent) * fromPos.x;
+    		y1 += (1/steps) * (steps-currentPercent) * fromPos.y;
+    		z1 += (1/steps) * (steps-currentPercent) * fromPos.z;
+    		
+    		y1+=FastMath.sin((FastMath.PI/steps)*currentPercent)/10;
+    		camera.setLocation(new Vector3f(x1,y1,z1));
+    		if (J3DCore.WATER_SHADER)
+    		{
+    			J3DCore.waterEffectRenderPass.setWaterHeight(camera.getLocation().y);
+    		}
+			x = (1 / steps) * currentPercent * toReach.x;
+			y = (1 / steps) * currentPercent * toReach.y;
+			z = (1 / steps) * currentPercent * toReach.z;
+
+			x += (1 / steps) * (steps - currentPercent) * from.x;
+			y += (1 / steps) * (steps - currentPercent) * from.y;
+			z += (1 / steps) * (steps - currentPercent) * from.z;
+
+			setCameraDirection(camera, x, y, z);
+			camera.normalize();
+			camera.update();
+		
+            handler.core.updateDisplayCalmer(from);
+
+            long timePast = System.currentTimeMillis()-fromTime;
+            currentPercent += timePast/20f;
+            if (steps<=currentPercent) break;
+		}
+
 		float skipStep = 0f;
 		/*Vector3f center = J3DCore.getInstance().getCurrentLocation();
 		fromPos = center.add(fromPos.negate());
 		toPos = center.add(toPos.negate());*/
-		for (float i = 0; i <= steps; i++) {
+/*		for (float i = 0; i <= steps; i++) {
 			// if (almost && i==0) continue;
 			// if (almost && i==steps) continue;
 			ensureTimeStart();
-    		float x1, y1, z1;
     		x1 = (1/steps)* i * toPos.x;
     		y1 = (1/steps)* i * toPos.y;
     		z1 = (1/steps)* i * toPos.z;
@@ -151,7 +190,7 @@ public abstract class CKeyAction extends KeyInputAction{
 				break;
 
 		}
-
+*/
 	}
 
     /**
@@ -353,21 +392,22 @@ public abstract class CKeyAction extends KeyInputAction{
 	}
 	protected void movePosition(float steps, Vector3f from, Vector3f toReach,boolean sinusoid)
 	{
-		float skipStep = 0f;
-		for (float i=0; i<=steps; i++)
-        {
-    		ensureTimeStart();
-    		float x, y, z;
-    		x = (1/steps)* i * toReach.x;
-    		y = (1/steps)* i * toReach.y;
-    		z = (1/steps)* i * toReach.z;
+		
+		long fromTime;
+		float x, y, z;
+		float currentPercent = 0;
+		while (true)
+		{
+			fromTime = System.currentTimeMillis();
+    		x = (1/steps)* currentPercent * toReach.x;
+    		y = (1/steps)* currentPercent * toReach.y;
+    		z = (1/steps)* currentPercent * toReach.z;
     		
-    		x += (1/steps) * (steps-i) * from.x;
-    		y += (1/steps) * (steps-i) * from.y;
-    		z += (1/steps) * (steps-i) * from.z;
+    		x += (1/steps) * (steps-currentPercent) * from.x;
+    		y += (1/steps) * (steps-currentPercent) * from.y;
+    		z += (1/steps) * (steps-currentPercent) * from.z;
     		
-    		y+=FastMath.sin((FastMath.PI/steps)*i)/10;
-    		
+    		y+=FastMath.sin((FastMath.PI/steps)*currentPercent)/10;
     		camera.setLocation(new Vector3f(x,y,z));
     		if (J3DCore.WATER_SHADER)
     		{
@@ -376,18 +416,11 @@ public abstract class CKeyAction extends KeyInputAction{
     		
             handler.core.updateTimeRelated();
             handler.core.updateDisplayCalmer(from);
-            skipStep+= ensureTimeStop();
-            if (skipStep>1f) {
-            	for (int k=0; k<(int)skipStep; k++)
-            	{
-            		//handler.core.renderToViewPort((int)i+k,(int)steps);
-            	}
-            	i+=(int)skipStep;
-            	skipStep=0f;
-            }
-            if (i>steps) break;
-    
-        }
+
+            long timePast = System.currentTimeMillis()-fromTime;
+            currentPercent += timePast/20f;
+            if (steps<=currentPercent) break;
+		}
 		
 	}
 	

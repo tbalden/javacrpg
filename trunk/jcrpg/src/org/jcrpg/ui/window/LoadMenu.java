@@ -237,6 +237,7 @@ public class LoadMenu extends Window implements KeyListener {
 		SaveLoadNewGame.loadGame(core,data.gameData);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- LOADING GAME ----------------------------");
 		core.init3DGame();
+		core.getClassicInputHandler().enableMouse(true);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- END LOADING GAME ------------------------");
 		core.uiBase.hud.characters.update();
 		core.uiBase.hud.characters.show();

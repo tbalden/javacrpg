@@ -102,6 +102,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal, NodePlaceholder placeHolder) {
 		this.core = core;
+		setIsCollidable(false);
 		Node parentOrig = sharedParentCache.get(id+internal);
 		if (parentOrig==null)
 		{
