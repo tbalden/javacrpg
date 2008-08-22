@@ -50,6 +50,7 @@ public class ClassicInputHandler  extends InputHandler {
     	keyboardLookHandler = new ClassicKeyboardLookHandler(core,cam);
         addToAttachedHandlers( keyboardLookHandler );
     	mouseLookHandler = new MouseLookHandler(cam,2.0f);//ClassicMouseLookHandler(cam);
+    	//mouseLookHandler.setLockAxis(new Vector3f(1f,1f,0));
     	mouseLookHandler.setEnabled(false);
     	//mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );

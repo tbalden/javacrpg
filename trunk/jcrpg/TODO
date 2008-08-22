@@ -40,9 +40,14 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [-] rendering bug - behind player battle ground doesnt show tiles... ??
 	Maybe angle is not set correctly upon reinit?
 
-	[X] grass disappears!! -> updateGeometric???
+[ ] grass disappears!! -> wrong dist calc.
 	
 [X] fix economy update billboard prob. 
+
+[ ] add a UI render pass to render over the 3d part...
+[ ] DoF perfection...
+
+[ ] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
 
 ## list before next-next:
 
