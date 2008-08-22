@@ -46,6 +46,7 @@ import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldPass;
+import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
@@ -128,6 +129,7 @@ import com.jme.util.Timer;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
+import com.jmex.model.collada.schema.sphereType;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
@@ -1021,7 +1023,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					// 0. is directional light for the planet surface
 					l[0].getLight().setEnabled(true);
-					((DirectionalLight)l[0].getLight()).setDirection(new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]).normalizeLocal());
+					Vector3f dir = new Vector3f(lightDirectionCoords[0],lightDirectionCoords[1],lightDirectionCoords[2]).normalizeLocal();
+					((DirectionalLight)l[0].getLight()).setDirection(dir);
+					
+					if (J3DCore.SHADOWS)
+					{
+						sPass.setDirection(dir);
+					}
+					
 					l[0].setTarget(extRootNode);
 					extLightState.attach(l[0].getLight());
 					float[] v = orb.getLightPower(localTime, conditions);
@@ -1813,7 +1822,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FogState fs_external;
 	public FogState fs_external_special;
 	public FogState fs_internal;
-    public ShadowedRenderPass sPass = null;
+    public DirectionalShadowMapPass sPass = null;
 	private DepthOfFieldPass bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
 	
@@ -2217,23 +2226,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		
 		
 		if (SHADOWS) {
-			sPass = new ShadowedRenderPass();
+			sPass = new DirectionalShadowMapPass(new Vector3f(-1f,-1f,-1f));
 			Jcrpg.LOGGER.info("SHADOWS!");
 			//sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
 			sPass.setEnabled(true);
 			//sPass.add(extRootNode);
-			sPass.add(extRootNode);
-	    	sPass.add(intRootNode);
-	    	sPass.add(encounterExtRootNode);
-	    	sPass.add(encounterIntRootNode);
-	    	sPass.setRenderShadows(true);
-	    	sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
+			//sPass.add(extRootNode);
+	    	//sPass.add(intRootNode);
+	    	//sPass.addOccluder(extRootNode);
+	    	//sPass.addOccluder(intRootNode);
+	    	//sPass.add(encounterExtRootNode);
+	    	//sPass.add(encounterIntRootNode);
+	    	//sPass.setRenderShadows(true);
+	    	//sPass.setLightingMethod(ShadowedRenderPass.MODULATIVE);
 	    	//sPass.rTexture = false;
 	    	J3DShadowGate dsg = new J3DShadowGate();
 	    	dsg.core = this;
-	    	sPass.setShadowGate(dsg);
+	    	//sPass.setShadowGate(dsg);
 	    	//sPass.setZOffset(0f);
+	    	//sPass.add(rootNode);
 	    	pManager.add(sPass);
+	    	//sPass.addOccluder(groundParentNode);
 		}
 		
 		if (BLOOM_EFFECT) {
@@ -2410,7 +2423,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			sEngine.renderToViewPort();
 			renderFinished = false;
 		}*/
-		
+		if (J3DCore.SHADOWS)
+		{
+			sPass.setViewTarget(cam.getLocation());
+		}
 		
 		if (dr!=null) {
 			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
