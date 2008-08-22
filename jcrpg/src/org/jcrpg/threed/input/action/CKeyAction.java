@@ -415,11 +415,13 @@ public abstract class CKeyAction extends KeyInputAction{
     		}
     		
             handler.core.updateTimeRelated();
+            //InputSystem.update();
+            //camera.update();
             handler.core.updateDisplayCalmer(from);
 
             long timePast = System.currentTimeMillis()-fromTime;
             currentPercent += timePast/20f;
-            if (steps<=currentPercent) break;
+    		if (steps<=currentPercent) break;
 		}
 		
 	}

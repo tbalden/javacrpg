@@ -580,15 +580,19 @@ public class GeometryBatchHelper {
 				} else
 				{
 					if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
-					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
+					if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
 					{
-						if (batch.parent.getWorldTranslation().add(batch.avarageTranslation).distanceSquared(core.getCamera().getLocation())>J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE*4)
+						float dist = batch.parent.getLocalTranslation().distance(core.getCamera().getLocation());
+						// TODO bad distance is setting cull always here... TODO make a boundary edges based calc instead
+						if (dist>J3DCore.RENDER_GRASS_DISTANCE*2)
 						{
+							//System.out.println("CULLING "+batch.parent.getLocalTranslation()+ " " + core.getCamera().getLocation());
+							
 							batch.parent.setCullMode(TriMesh.CULL_ALWAYS);
 							batch.parent.updateRenderState();
 						} else
 						{
-							batch.parent.setCullMode(TriMesh.CULL_NEVER);
+							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
 							batch.parent.updateRenderState();
 						}
 					}

@@ -41,7 +41,7 @@ public class ScenarioNode extends Node {
 	
 	
 	//@Override
-	public void drraw(Renderer r) {
+	public void ddraw(Renderer r) {
 	       if(children == null) {
 	            return;
 	        }
