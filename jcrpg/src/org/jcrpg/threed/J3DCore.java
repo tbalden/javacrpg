@@ -2176,11 +2176,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// uiRootNode.setModelBound(bigSphere);
 
 		// external cubes' rootnode
-		extRootNode = FARVIEW_ENABLED ? new Node() : new ScenarioNode(cam);
+		extRootNode = FARVIEW_ENABLED ? new Node() : new Node();//new ScenarioNode(cam);
 		// extRootNode.setModelBound(bigSphere);
 		// extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
-		intRootNode = FARVIEW_ENABLED ? new Node() : new ScenarioNode(cam);
+		intRootNode = FARVIEW_ENABLED ? new Node() : new Node();//ScenarioNode(cam);
 
 		encounterExtRootNode = new Node();
 		encounterIntRootNode = new Node();
@@ -2406,6 +2406,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add(waterEffectRenderPass);
 
+		RenderPass uiPass = new RenderPass();
+		uiPass.add(uiRootNode);
+		
+		pManager.add(uiPass);
+
+		
 		waterEffectRenderPass.setReflectedScene(groundParentNode);
 		cam.update();
 
