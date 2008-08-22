@@ -38,6 +38,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 
 /**
  * The class used by J3DStandingEngine to append/remove geometryBatches for the models that can
@@ -546,18 +547,58 @@ public class GeometryBatchHelper {
 	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
+	    			if (J3DCore.SHADOWS)
+	    			{
+		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
+		    			{
+		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<10f)
+			    			{
+			    				core.sPass.addOccluder(batch);
+			    			} else
+			    			{
+								core.sPass.removeOccluder(batch);
+			    			}
+		    			}
+		    			// look for models that goes texturized with shadow...
+		    			if (batch.model.type==Model.SIMPLEMODEL && ((SimpleModel)batch.model).generatedGroundModel)
+		    			{
+		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<20f)
+			    			{
+		    					if (!core.sPass.contains(batch))
+		    					{
+		    						core.sPass.add(batch);
+		    					}
+			    			} else
+			    			{
+			    				core.sPass.remove(batch);
+			    			}
+		    				
+		    			}
+	    			}
 	    			removableFlag = false;
+	    			if (batch.updateNeeded)
+	    			{
+	    				//batch.updateGeometricState(0f, true);
+	    				VBOInfo v = new VBOInfo(true);
+	    				v.setVBOIndexEnabled(true);
+	    				batch.setVBOInfo(v);
+	    			}
 	    		} else
 	    		{
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
-	    				//batch.updateGeometricState(0f, true);
 	    				batch.parent.updateRenderState();
 	    			}
 	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
+					if (J3DCore.SHADOWS)
+					{
+						core.sPass.remove(batch);
+						core.sPass.removeOccluder(batch);
+					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
+					
 					removables.add(batch);
 				}
 	    	}
@@ -571,10 +612,34 @@ public class GeometryBatchHelper {
 	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
+	    			if (J3DCore.SHADOWS)
+	    			{
+		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL)
+		    			{
+		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<10f)
+			    			{
+			    				core.sPass.addOccluder(batch);
+			    			} else
+			    			{
+								core.sPass.removeOccluder(batch);
+			    			}
+		    			}
+	    			}
+	    			if (batch.isUpdateNeededAndSwitchIt())
+	    			{
+	    				VBOInfo v = new VBOInfo(true);
+	    				v.setVBOVertexEnabled(false);
+	    				batch.setVBOInfo(v);
+	    			}
 	    			removableFlag = false;
 	    		}
 				if (removableFlag) {
 					batch.parent.removeFromParent();
+					if (J3DCore.SHADOWS)
+					{
+						core.sPass.remove(batch);
+						core.sPass.removeOccluder(batch);
+					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
 					removables.add(batch);
 				} else

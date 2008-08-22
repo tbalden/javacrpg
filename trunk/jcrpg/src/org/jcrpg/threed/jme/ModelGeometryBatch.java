@@ -36,6 +36,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.state.RenderState;
 
 /**
@@ -161,6 +162,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			parent = parentOrig;
 		}
+		
 	}
 	
 
@@ -226,6 +228,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			parent = parentOrig;
 		}
+		setVBOInfo(new VBOInfo(true));
 	}
 	
 	/**

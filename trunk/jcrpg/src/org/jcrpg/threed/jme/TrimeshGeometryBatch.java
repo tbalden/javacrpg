@@ -37,6 +37,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
@@ -156,7 +157,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
     	{
     		startFog = 2*J3DCore.VIEW_DISTANCE/3;
     	}
-	
+        //this.setVBOInfo(new VBOInfo(true));
 	}
 	
 	/**
@@ -187,10 +188,22 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		addItem(placeholder, trimesh, false);
 	}
 	
+	public boolean updateNeeded = false;
+	public boolean isUpdateNeededAndSwitchIt()
+	{
+		if (updateNeeded)
+		{
+			updateNeeded = false;
+			return true;
+		}
+		return false;
+	}
+
 	boolean itemAdditionUpdate = false;
 	@SuppressWarnings("unchecked")
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh, boolean placeholderTranslationRelative)
 	{
+		updateNeeded = true;
 		itemAdditionUpdate = true;
 		Vector3f vec = trimesh.getLocalTranslation();
 		float scaleMultiplier = 1f;
@@ -312,14 +325,14 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public void onDraw(Renderer r) {
 		
 		if (visible.size()==0) return;
-		
+		boolean needsUpdate = true;//true;
 		//if (System.currentTimeMillis()%8>1) 
 		{
 			Vector3f look = core.getCamera().getDirection().negate();
 			Vector3f left1 = core.getCamera().getLeft().negate();
 			Vector3f loc = core.getCamera().getLocation();
 			// calculating needsUpdate of rotation
-			boolean needsUpdate = true;//true;
+			
 			if (lastLeft!=null)
 			{
 				if (!itemAdditionUpdate&&look.distanceSquared(lastLook)<=0.05f && left1.distanceSquared(lastLeft)<=0.05f && loc.distanceSquared(lastLoc)<=0.1f)
@@ -466,6 +479,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					geoInstance.getAttributes().setRotation(orient);
 					geoInstance.getAttributes().buildMatrices();
 				}
+				
 			}
 	
 			
@@ -526,6 +540,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 		super.onDraw(r);
+		//if (needsUpdate) setVBOInfo(new VBOInfo(true));
 	}
 
 	public boolean isAnimated() {

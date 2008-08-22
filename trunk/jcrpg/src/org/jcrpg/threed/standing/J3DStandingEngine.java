@@ -1600,17 +1600,17 @@ public class J3DStandingEngine {
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
 			    // handling possible occluders
 			    if (J3DCore.SHADOWS) {
-			    	if (J3DCore.LOGGING) Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
+			    	//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
 					for (NodePlaceholder psn : core.possibleOccluders) {
 						if (psn.realNode != null) {
 							Node n = (Node) psn.realNode;
 							float dist = n.getWorldTranslation().distanceSquared(
 									core.getCamera().getLocation());
 							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-								if (!core.sPass.containsOccluder(n))
+								//if (!core.sPass.containsOccluder(n))
 								{
 									if (J3DCore.LOGGING) Jcrpg.LOGGER.info("ADDING OCCLUDER: "+n.getName());
-									core.sPass.addOccluder(n);
+									//core.sPass.addOccluder(n);
 									
 								}
 							} else {
