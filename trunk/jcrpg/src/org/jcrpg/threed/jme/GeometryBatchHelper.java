@@ -34,11 +34,13 @@ import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
+import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.system.DisplaySystem;
 
 /**
  * The class used by J3DStandingEngine to append/remove geometryBatches for the models that can
@@ -579,8 +581,9 @@ public class GeometryBatchHelper {
 	    			if (batch.updateNeeded)
 	    			{
 	    				//batch.updateGeometricState(0f, true);
+	    				if (batch.getVBOInfo(0)!=null)
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
 	    				VBOInfo v = new VBOInfo(true);
-	    				v.setVBOIndexEnabled(true);
 	    				batch.setVBOInfo(v);
 	    			}
 	    		} else
@@ -627,6 +630,8 @@ public class GeometryBatchHelper {
 	    			}
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
+	    				if (batch.getVBOInfo(0)!=null)
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
 	    				VBOInfo v = new VBOInfo(true);
 	    				v.setVBOVertexEnabled(false);
 	    				batch.setVBOInfo(v);

@@ -17,6 +17,10 @@
 
 package org.jcrpg.threed;
 
+import java.util.HashMap;
+
+import com.jme.bounding.BoundingBox;
+import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -39,45 +43,98 @@ public class ScenarioNode extends Node {
 		//this.cam = cam;
 	}
 	
+	public static final int PART_SIZE = 30;
 	
-	//@Override
-	public void ddraw(Renderer r) {
-	       if(children == null) {
-	            return;
-	        }
-	        Spatial child;
-	        for (int i = 0, cSize = children.size(); i < cSize; i++) {
-	            child =  children.get(i);
-	            if (child != null)
-	            {
-	            	if (child.getCullMode()==Spatial.CULL_NEVER || r.getCamera().getLocation().distanceSquared(child.getWorldTranslation())<VIEW_DISTANCE_SQR)
-	            	{
-	            		//if (System.currentTimeMillis()%10>4)
-	            			child.onDraw(r);
-	            	}
-	            }
-	        }
+	public HashMap<Long, Node> space = new HashMap<Long, Node>();
+	
+	public long getKey(Vector3f v)
+	{
+		int x = (int)(v.x/PART_SIZE);
+		int y = (int)(v.y/PART_SIZE);
+		int z = (int)(v.z/PART_SIZE);
+		long s = (((long)x) << 32) + ((z) << 16) + (y);
+		return s;
 	}
-
 	
-    /**
-     * Applies the stack of render states to each child by calling
-     * updateRenderState(states) on each child.
-     * 
-     * @param states
-     *            The Stack[] of render states to apply to each child.
-     */
-    /*protected void applyRenderState(Stack[] states) {
-        if(children == null) {
-            return;
-        }
-        for (int i = 0, cSize = children.size(); i < cSize; i++) {
-            Spatial pkChild = getChild(i);
-            if (pkChild != null) {
-            	if (c.getLocation().distanceSquared(pkChild.getWorldTranslation())<VIEW_DISTANCE_SQR)
-            		pkChild.updateRenderState();
-            }
-        }
-    }*/
+	public class SubNode extends Node
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SubNode() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
+		public SubNode(String arg0) {
+			super(arg0);
+			// TODO Auto-generated constructor stub
+		}
+		
+		public int detachChild(Spatial arg0) {
+			int r = super.detachChild(arg0);
+			if (r==0)
+			{
+				removeFromParent();
+			}
+			return r;
+		}		
+		
+		
+	}
+	
+	@Override
+	public int attachChild(Spatial arg0) {
+		Vector3f v = arg0.getWorldTranslation();
+		long k = getKey(v);
+		Node n = space.get(k);
+		if (n==null)
+		{
+			n = new SubNode();
+			super.attachChild(n);
+			updateRenderState();
+			n.setModelBound(new BoundingBox());
+			space.put(k, n);
+		} else
+		{
+			if (n.getParent()==null)
+			{
+				super.attachChild(n);
+				updateRenderState();
+			}
+
+		}
+		n.attachChild(arg0);
+		n.updateModelBound();
+		return n.getChildren().size();
+	}
+	@Override
+	public int detachChild(Spatial arg0) {
+		if (arg0 instanceof SubNode)
+		{
+			super.detachChild(arg0);
+			return 0;
+		}
+		Vector3f v = arg0.getWorldTranslation();
+		long k = getKey(v);
+		Node n = space.get(k);
+		if (n==null)
+		{
+			return 0;
+		}
+		n.detachChild(arg0);
+		if (n.getChildren()==null || n.getChildren().size()==0)
+		{
+			super.detachChild(n);
+			return 0;
+		}
+		n.updateModelBound();
+		return n.getChildren().size();
+	}
+	
+	
 	
 }
