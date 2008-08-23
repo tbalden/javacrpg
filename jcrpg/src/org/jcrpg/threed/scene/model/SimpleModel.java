@@ -24,6 +24,33 @@ import org.jcrpg.util.HashUtil;
 
 public class SimpleModel extends Model {
 
+	
+	/**
+	 * The atlas texture name.
+	 */
+	public String atlasTextureName = "";
+	/**
+	 * Tells if this model is wanting to use atlas texture technique.
+	 */
+	public boolean useAtlasTexture = false;
+	/**
+	 * Number of All subtextures in the atlas_texture
+	 */
+	public int atlasSize = 3;
+
+	/**
+	 * Which Atlas texture is the normal texture in the row.
+	 */
+	public int atlasNormalId= 0;
+	/**
+	 * Which Atlas texture is the normal texture in the row.
+	 */
+	public int atlasSecTextureId = 1;
+	/**
+	 * Which Atlas texture is the steep texture in the row.
+	 */
+	public int atlasSteepId = 2;
+	
 	public String modelName, textureName;
 	public String steepTextureName = null;
 	public String secTextureName = null;
@@ -39,7 +66,7 @@ public class SimpleModel extends Model {
 	public SimpleModel(String modelName, String textureName)
 	{
 		type = SIMPLEMODEL;
-		this.id = modelName+textureName+mipMap;;
+		this.id = modelName+atlasTextureName+textureName+mipMap;;
 		this.modelName = modelName;
 		this.textureName = textureName;
 		
@@ -47,7 +74,7 @@ public class SimpleModel extends Model {
 	public SimpleModel(String modelName, String textureName, boolean mipMap)
 	{
 		type = SIMPLEMODEL;
-		this.id = modelName+textureName+mipMap;
+		this.id = modelName+atlasTextureName+textureName+mipMap;
 		this.modelName = modelName;
 		this.textureName = textureName;
 		this.mipMap = mipMap;
@@ -68,7 +95,7 @@ public class SimpleModel extends Model {
 		{
 			if (steepId==null)
 			{
-				this.steepId = modelName+mipMap+steepTextureName;
+				this.steepId = modelName+mipMap+atlasTextureName+steepTextureName;
 			}
 			return steepId;
 		}
@@ -76,7 +103,7 @@ public class SimpleModel extends Model {
 		{
 			if (secId==null)
 			{
-				this.secId = modelName+mipMap+secTextureName;
+				this.secId = modelName+mipMap+atlasTextureName+secTextureName;
 			}
 			return secId;
 		}
@@ -99,6 +126,7 @@ public class SimpleModel extends Model {
 			return secTextureName;
 		return textureName;
 	}
+	
 	
 	public String getBlendTextureKey(NodePlaceholder place)
 	{

@@ -25,6 +25,8 @@ import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
@@ -34,6 +36,7 @@ import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
+import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
@@ -91,10 +94,19 @@ public class GeometryBatchHelper {
     		{
     			if (sm.generatedGroundModel)
     			{
+    				
     				key = m.type+sm.getTexture(place)+internal+(farView);
     				if (place.neighborCubeData==null)
     					place.neighborCubeData = GeoTileLoader.getNeighborCubes(place);
     				key+=place.neighborCubeData.getTextureKeyPartForBatch();
+    				if (sm.useAtlasTexture && place.neighborCubeData.getTextureKeyPartForBatch()==null)
+    				{
+    					// atlas texture for the model is needed and no blending / splatting enabled, so
+    					// replace the key with the common atlas texture name to batch 
+    					// common atlas textured tiles into one batch...
+    					key = m.type+sm.atlasTextureName+internal+(farView);
+    				}
+    				
     			} else
     			{
     				key = m.type+sm.getTexture(place)+internal+(farView);
@@ -552,24 +564,45 @@ public class GeometryBatchHelper {
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
 		    			{
-		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<10f)
-			    			{
-			    				core.sPass.addOccluder(batch);
-			    			} else
-			    			{
-								core.sPass.removeOccluder(batch);
-			    			}
+		    				boolean found = false;
+		    				for (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				{
+		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
+		    					{
+		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+		    						if (pos.distance(core.getCamera().getLocation())<20f)
+		    						{
+		    							core.sPass.addOccluder(batch);
+		    							found = true;
+		    						}
+		    					}
+		    				}
+		    				if (!found)
+		    				{
+		    					core.sPass.removeOccluder(batch);	
+		    				}
+		    				
 		    			}
 		    			// look for models that goes texturized with shadow...
 		    			if (batch.model.type==Model.SIMPLEMODEL && ((SimpleModel)batch.model).generatedGroundModel)
 		    			{
-		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<20f)
-			    			{
-		    					if (!core.sPass.contains(batch))
+		    				boolean found = false;
+		    				for (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				{
+		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
-		    						core.sPass.add(batch);
+		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+		    						if (pos.distance(core.getCamera().getLocation())<20f)
+		    						{
+				    					if (!core.sPass.contains(batch))
+				    					{
+				    						core.sPass.add(batch);
+				    					}
+		    							found = true;
+		    						}
 		    					}
-			    			} else
+		    				}		    				
+			    			if (!found)
 			    			{
 			    				core.sPass.remove(batch);
 			    			}
@@ -632,13 +665,20 @@ public class GeometryBatchHelper {
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL)
 		    			{
-		    				if (batch.parent.getLocalTranslation().distance(core.getCamera().getLocation())<10f)
-			    			{
-			    				core.sPass.addOccluder(batch);
-			    			} else
-			    			{
-								core.sPass.removeOccluder(batch);
-			    			}
+		    				boolean found = false;
+		    				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:batch.visible)
+		    				{
+	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+	    						if (pos.distance(core.getCamera().getLocation())<20f)
+	    						{
+	    							core.sPass.addOccluder(batch);
+	    							found = true;
+	    						}
+		    				}
+		    				if (!found)
+		    				{
+		    					core.sPass.removeOccluder(batch);	
+		    				}
 		    			}
 	    			}
 	    			if (batch.isUpdateNeededAndSwitchIt())

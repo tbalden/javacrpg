@@ -580,6 +580,8 @@ public class SideTypeModels {
 		SimpleModel sm_jungle = new SimpleModel("models/ground/ground_1.obj","jungle.jpg"); sm_jungle.rotateOnSteep = false; sm_jungle.generatedGroundModel = true; sm_jungle.rotateOnSteep = false; sm_jungle.yGeomBatchSize = yCommon; sm_jungle.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle.farViewEnabled = true;
 		sm_jungle.steepTextureName = "jungle_hillside.png";
 		sm_jungle.secTextureName = "jungle_b.jpg";
+		sm_jungle.useAtlasTexture = true;
+		sm_jungle.atlasTextureName = "jungle_atlas.png";
 		
 		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = false; sm_jungle_2.generatedGroundModel = true; sm_jungle_2.rotateOnSteep = false; sm_jungle_2.yGeomBatchSize = yCommon; sm_jungle_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_2.farViewEnabled = true;
 		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = false; sm_jungle_3.generatedGroundModel = true; sm_jungle_3.rotateOnSteep = false; sm_jungle_3.yGeomBatchSize = yCommon; sm_jungle_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_3.farViewEnabled = true;

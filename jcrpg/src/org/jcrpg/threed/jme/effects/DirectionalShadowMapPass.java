@@ -44,9 +44,9 @@ public class DirectionalShadowMapPass extends Pass {
 	/** The texture storing the shadow map */
 	private Texture shadowMapTexture;
 	/** The near plane when rendering the shadow map */
-	private float nearPlane = 0.1f;
+	private float nearPlane = 1f;
 	/** The far plane when rendering the shadow map - currently tuned for the test*/
-	private float farPlane = 2000.0f;
+	private float farPlane = 1000.0f;
 	/** The location the shadow light source is looking at - must point at the focus of the scene */
 	private Vector3f shadowCameraLookAt;
 	/** The effective location of the light source - derived based on the distance of casting, look at and direction */
@@ -85,18 +85,18 @@ public class DirectionalShadowMapPass extends Pass {
 	 * The scaling applied to the shadow map when rendered to - lower number means 
 	 * higher res but less ara covered by the shadow map
 	 */
-	protected float shadowMapScale = 0.03f;
+	protected float shadowMapScale = 0.15f;
 	/** 
 	 * The distance we're modelling the direction light source as being away from the focal point, again 
 	 * the higher the number the more of the scene is covered but at lower resolution 
 	 */
-	protected float dis = 100;
+	protected float dis = 20;
 	
 	/** A place to internally save previous enforced states setup before rendering this pass */
 	private RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
 	
 	/** The colour of shadows cast */
-	private ColorRGBA shadowCol = new ColorRGBA(20,20,20,0.2f);
+	private ColorRGBA shadowCol = new ColorRGBA(20,20,20,0.4f);
 	
 	/**
 	 * Create a shadow map pass casting shadows from a light with the direction
@@ -234,7 +234,7 @@ public class DirectionalShadowMapPass extends Pass {
 		shadowMapTexture.setApply(Texture.AM_MODULATE);
 		shadowMapTexture.setMipmapState(Texture.MM_LINEAR_LINEAR); 
 		shadowMapTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T); 
-		//shadowMapTexture.setMagnificationFilter(Texture.MM_LINEAR_LINEAR);
+		shadowMapTexture.setFilter(Texture.FM_LINEAR);
 		shadowMapTexture.setRTTSource(Texture.RTT_SOURCE_DEPTH);
 		shadowMapTexture.setMatrix(new Matrix4f());
 		shadowMapTexture.setEnvironmentalMapMode(Texture.EM_EYE_LINEAR);
@@ -270,12 +270,12 @@ public class DirectionalShadowMapPass extends Pass {
 		// > 0 on shadows.
 		discardShadowFragments = r.createAlphaState();
 		discardShadowFragments.setEnabled(true);
+		discardShadowFragments.setTestEnabled(true);
+		discardShadowFragments.setReference(0.1f);
+		discardShadowFragments.setTestFunction(AlphaState.TF_GREATER);
 		discardShadowFragments.setBlendEnabled(true);
 		discardShadowFragments.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		discardShadowFragments.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		discardShadowFragments.setTestEnabled(true);
-		discardShadowFragments.setReference(0f);
-		discardShadowFragments.setTestFunction(AlphaState.TF_GREATER); 
 		
 		// light used to uniformly light the scene when rendering the shadows themselfs
 		// this is so the geometry colour can be used as the source for blending - i.e.
@@ -350,9 +350,9 @@ public class DirectionalShadowMapPass extends Pass {
 	protected void updateShadowMap(Renderer r) {
 		saveEnforcedStates();
 		context.enforceState(noClip);
-		context.enforceState(noTexture);
+		//context.enforceState(noTexture);
 		context.enforceState(colorDisabled); 
-		context.enforceState(cullFrontFace);
+		//context.enforceState(cullFrontFace);
 		context.enforceState(noLights);
 	
 		r.setPolygonOffset(0, 5); 

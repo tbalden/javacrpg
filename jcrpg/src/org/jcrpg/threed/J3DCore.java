@@ -1069,9 +1069,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					((DirectionalLight) l[0].getLight()).setDirection(dir);
 
 					if (J3DCore.SHADOWS) {
-						Vector3f dir2 = dir.clone();
-						dir2.y *= 2f;
-						sPass.setDirection(dir2);
+						//Vector3f dir2 = dir.clone();
+						//dir2.y *= 2f;
+						sPass.setDirection(dir);
 						//System.out.println("___ "+dir2);
 					}
 
