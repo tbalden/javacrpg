@@ -34,7 +34,6 @@ import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 
-import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
@@ -63,10 +62,10 @@ public class GeometryBatchHelper {
 		this.core = core;		
 	}
 	
-	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 5;
+	public static int SIMPLE_MODEL_BATCHED_SPACE_SIZE = 10;
 	public static int QUAD_MODEL_BATCHED_SPACE_SIZE = 6;
-	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 6;
-	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE = 6;
+	public static int TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE = 10;
+	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE = 10;
 	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y = 12;
 	
 	
@@ -581,10 +580,15 @@ public class GeometryBatchHelper {
 	    			if (batch.updateNeeded)
 	    			{
 	    				//batch.updateGeometricState(0f, true);
-	    				if (batch.getVBOInfo(0)!=null)
-	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
-	    				VBOInfo v = new VBOInfo(true);
-	    				batch.setVBOInfo(v);
+	    				if (J3DCore.VBO_ENABLED)
+	    				{
+	    					if (batch.getVBOInfo(0)!=null)
+		    				{
+		    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+		    				}
+		    				VBOInfo v = new VBOInfo(true);
+		    				batch.setVBOInfo(v);
+	    				}
 	    			}
 	    		} else
 	    		{
@@ -594,6 +598,15 @@ public class GeometryBatchHelper {
 	    			}
 	    		}
 				if (removableFlag) {
+					
+    				if (J3DCore.VBO_ENABLED)
+    				{
+	    				if (batch.getVBOInfo(0)!=null)
+	    				{
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+	    				}
+    				}
+
 					batch.parent.removeFromParent();
 					if (J3DCore.SHADOWS)
 					{
@@ -630,15 +643,25 @@ public class GeometryBatchHelper {
 	    			}
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
-	    				if (batch.getVBOInfo(0)!=null)
+	    				/*if (batch.getVBOInfo(0)!=null)
 	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
 	    				VBOInfo v = new VBOInfo(true);
 	    				v.setVBOVertexEnabled(false);
-	    				batch.setVBOInfo(v);
+	    				batch.setVBOInfo(v);*/
+	    				
 	    			}
 	    			removableFlag = false;
 	    		}
 				if (removableFlag) {
+    				
+    				if (J3DCore.VBO_ENABLED)
+    				{
+						if (batch.getVBOInfo(0)!=null)
+	    				{
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+	    				}
+    				}
+    				
 					batch.parent.removeFromParent();
 					if (J3DCore.SHADOWS)
 					{
@@ -649,12 +672,12 @@ public class GeometryBatchHelper {
 					removables.add(batch);
 				} else
 				{
-					if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
-					if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
+					//if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
+					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
 					{
-						float dist = batch.parent.getLocalTranslation().distance(core.getCamera().getLocation());
+						//float dist = batch.parent.getLocalTranslation().distance(core.getCamera().getLocation());
 						// TODO bad distance is setting cull always here... TODO make a boundary edges based calc instead
-						if (dist>J3DCore.RENDER_GRASS_DISTANCE*2)
+						/*if (dist>J3DCore.RENDER_GRASS_DISTANCE*2)
 						{
 							//System.out.println("CULLING "+batch.parent.getLocalTranslation()+ " " + core.getCamera().getLocation());
 							
@@ -664,7 +687,7 @@ public class GeometryBatchHelper {
 						{
 							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
 							batch.parent.updateRenderState();
-						}
+						}*/
 					}
 				}
 	    	}

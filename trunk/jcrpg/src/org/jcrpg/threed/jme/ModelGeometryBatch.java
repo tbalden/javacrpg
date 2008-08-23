@@ -228,7 +228,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			parent = parentOrig;
 		}
-		setVBOInfo(new VBOInfo(true));
+		//setVBOInfo(new VBOInfo(true));
 	}
 	
 	/**
