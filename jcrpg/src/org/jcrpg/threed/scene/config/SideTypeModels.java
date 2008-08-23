@@ -325,6 +325,7 @@ public class SideTypeModels {
 		SimpleModel coconut_simple = new SimpleModel("models/tree/palm_02.obj",null,MIPMAP_TREES);
 		coconut_simple.elevateOnSteep = true;
 		coconut_simple.genericScale = 1.5f;
+		coconut_simple.shadowCaster = true;
 		//SimpleModel = new SimpleModel()
 		coconut_high.quadXSizeMultiplier = 4f;
 		coconut_high.quadYSizeMultiplier = 4f;
@@ -351,6 +352,7 @@ public class SideTypeModels {
 		SimpleModel jungle_bush_simple = new SimpleModel("models/bush/Bush_01.obj",null,MIPMAP_TREES);
 		jungle_bush_simple.rotateAndLocate = true;
 		jungle_bush_simple.elevateOnSteep = true;
+		jungle_bush_simple.shadowCaster = true;
 		jungle_bush.dislocationRate = 0.4f;
 		jungle_bush.rotateAndLocate = true;
 		jungle_bush.quadXSizeMultiplier = 2f;
@@ -775,6 +777,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
 		SimpleModel sm_extsteps = new SimpleModel("models/external/House_01_steps_wooden.obj",null);
 		sm_extsteps.elevateOnSteep = true;
+		sm_extsteps.shadowCaster = true;
 		//sm_extsteps.disposition = new float[] {0,-1f,0};
 		//sm_extsteps.batchEnabled = false;
 		//sm_extsteps.farViewEnabled = true;
