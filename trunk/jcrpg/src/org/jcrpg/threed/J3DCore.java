@@ -105,7 +105,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
 import com.jme.renderer.pass.RenderPass;
-import com.jme.renderer.pass.ShadowedRenderPass;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.Text;
@@ -129,8 +128,6 @@ import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
-import com.jmex.effects.glsl.BloomRenderPass;
-import com.jmex.model.collada.schema.sphereType;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
@@ -2390,7 +2387,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				bloomRenderPass.setUseCurrentScene(true);
 				bloomRenderPass.setBlurIntensityMultiplier(1.5f);
 				bloomRenderPass.setBlurSize(0.0001f);
-				bloomRenderPass.setDepth(2);
+				bloomRenderPass.setDepth(1);
 
 				bloomRenderPass.setExposureCutoff(0.5f);
 				bloomRenderPass.setExposurePow(6f);

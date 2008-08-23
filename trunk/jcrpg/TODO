@@ -42,12 +42,13 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] grass disappears!! -> wrong dist calc.
 	
+
+[X] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
+
 [X] fix economy update billboard prob. 
 
-[ ] add a UI render pass to render over the 3d part...
-[ ] DoF perfection...
-
-[ ] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
+[X] add a UI render pass to render over the 3d part...
+[X] DoF perfection...
 
 ## list before next-next:
 
