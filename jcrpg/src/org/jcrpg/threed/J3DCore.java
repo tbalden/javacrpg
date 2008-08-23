@@ -197,6 +197,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static boolean TEXTURE_SPLATTING = false;
 	public static boolean SECONDARY_TEXTURES = false;
 	public static boolean SLOW_ANIMATION = false;
+	public static boolean VBO_ENABLED = true;
 
 	static Properties p = new Properties();
 
@@ -270,6 +271,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
 			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
 			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
+			VBO_ENABLED = loadValue("VBO_ENABLED", true);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1067,7 +1069,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					((DirectionalLight) l[0].getLight()).setDirection(dir);
 
 					if (J3DCore.SHADOWS) {
-						sPass.setDirection(dir);
+						Vector3f dir2 = dir.clone();
+						dir2.y *= 2f;
+						sPass.setDirection(dir2);
+						System.out.println("___ "+dir2);
 					}
 
 					l[0].setTarget(extRootNode);

@@ -452,6 +452,7 @@ public class J3DStandingEngine {
 	
 	
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
+	HashSet<NodePlaceholder> conditionalNodes = new HashSet<NodePlaceholder>();
 	HashSet<RenderedCube> inFarViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfFarViewPort = new HashSet<RenderedCube>();
@@ -663,6 +664,10 @@ public class J3DStandingEngine {
 				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
 				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 			        				}
+			    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
+			    					{
+			    						conditionalNodes.remove(n);
+			    					}
 			    				} 
 			    				if (overrideBatch)
 			    				{ 
@@ -727,6 +732,10 @@ public class J3DStandingEngine {
 			    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
 			    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
 		        				}
+		    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
+		    					{
+		    						conditionalNodes.remove(n);
+		    					}
 		    				} 
 		    				if (overrideBatch)
 		    				{ 
@@ -964,6 +973,10 @@ public class J3DStandingEngine {
 												sumAddRemoveBatch+=System.currentTimeMillis()-t0;
 											}
 										}
+				    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
+				    					{
+				    						conditionalNodes.remove(n);
+				    					}
 									}
 									if (overrideBatch)
 									{
@@ -1001,6 +1014,12 @@ public class J3DStandingEngine {
 												|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
 									) 
 								{
+			    					if (!n.model.alwaysRenderBatch && n.model.type == Model.TEXTURESTATEVEGETATION)
+			    					{
+			    						conditionalNodes.add(n);
+			    						overrideBatch = false;
+			    						continue;
+			    					} else
 			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
 			    					{
 			    						if (n.neighborCubeData==null || n.neighborCubeData.wereNeigboursNotFullyDetected())
@@ -1594,7 +1613,29 @@ public class J3DStandingEngine {
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
 			
+			// if not segmented or the last segment the final tasks...
 			if (segmentCount==segments-1 || !segmented) {
+				
+				float dist = 0;
+				for (NodePlaceholder cN:conditionalNodes)
+				{
+					dist = cN.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+					if (dist < J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE)
+					{
+						if (cN.trimeshGeomBatchInstance==null)
+						{
+							batchHelper.addItem(this, cN.cube.cube.internalCube, cN.model, cN, cN.farView);
+						}
+						
+					} else
+					{
+						if (cN.trimeshGeomBatchInstance!=null)
+						{
+							batchHelper.removeItem(cN.cube.cube.internalCube, cN.model, cN, cN.farView);
+						}
+					}
+	
+				}
 				
 				
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
@@ -1604,7 +1645,7 @@ public class J3DStandingEngine {
 					for (NodePlaceholder psn : core.possibleOccluders) {
 						if (psn.realNode != null) {
 							Node n = (Node) psn.realNode;
-							float dist = n.getWorldTranslation().distanceSquared(
+							dist = n.getWorldTranslation().distanceSquared(
 									core.getCamera().getLocation());
 							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
 								//if (!core.sPass.containsOccluder(n))
@@ -1648,7 +1689,7 @@ public class J3DStandingEngine {
 					{
 						for (String key:continuousSoundsAndDistance.keySet())
 						{
-							float dist = continuousSoundsAndDistance.get(key);
+							dist = continuousSoundsAndDistance.get(key);
 							if (previousContinuousSoundsAndDistance.containsKey(key))
 							{
 								// set volume
