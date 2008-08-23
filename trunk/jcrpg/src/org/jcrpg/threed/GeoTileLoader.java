@@ -18,6 +18,7 @@
 package org.jcrpg.threed;
 
 import java.net.URL;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -476,6 +477,14 @@ public class GeoTileLoader {
 		return new int[][]{map,bigMap};
 		
 	}
+	
+	/**
+	 * This part load the terrainblock plus the SplattingPassNode if necessary for the given tile.
+	 * Also it modifies terrainblock texture coordinates when the model is using atlas texture technique.
+	 * @param nodePlaceholder
+	 * @param splatNodeNeeded
+	 * @return
+	 */
 	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
 	{
 
@@ -483,6 +492,7 @@ public class GeoTileLoader {
 		
 		int[][] heightMaps = getHeightMaps(nodePlaceholder);
 		
+		// creating the block (with the normal sized heightmap and the one size bigger normal calculation helper heightmap...)
 		TiledTerrainBlock block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
@@ -502,33 +512,97 @@ public class GeoTileLoader {
 		{
 			if (data.getTextureKeyPartForBatch()==null)
 			{
-			
-				Texture texture = (Texture)ModelLoader.textureCache.get(ownTexture);
 				
-				if (texture==null) {
-					texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+ownTexture,Texture.MM_LINEAR,
-		                    Texture.FM_LINEAR);
-	
-					texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-					texture.setApply(Texture.AM_MODULATE);
-					texture.setRotation(J3DCore.qTexture);
-					ModelLoader.textureCache.put(ownTexture, texture);
-				}
-	
-				TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
-				ts.setTexture(texture, 0);
-				
-	            ts.setEnabled(true);
-	            spatial.setRenderState(ts);
+	            if (model.useAtlasTexture)
+	            {
+	            	// if model is using atlas texture technique we should identify
+	            	// the position of the needed subtexture in the atlas texture...
+	            	
+	            	int place = 0;
+	            	if (ownTexture.equals(model.textureName))
+	            	{
+	            		place = model.atlasNormalId;
+	            	} else
+	            	if (ownTexture.equals(model.steepTextureName))
+	            	{
+	            		place = model.atlasSteepId;
+	            	} else
+		            if (ownTexture.equals(model.secTextureName))
+	            	{
+	            		place = model.atlasSecTextureId;
+	            	}
+	            	
+	            	// now we have to tweak the x texture coordinates, dividing it by full atlas element size
+	            	// and adding displacement ratio...
+	            	
+	        		FloatBuffer b = block.getTextureBuffers(0)[0];
+	        		float position = place;
+	        		int atlas_size = model.atlasSize;
+	        		float f = 0;
+	        		for (int i = 0; i < b.capacity(); i++) {
+	        			if (i%2==1) 
+	        			{
+	        				continue;
+	        			}
+	        			f = b.get(i);
+	        			b.put(i, (f / atlas_size)+ position/atlas_size);
+	        		}
+
+	            	// loading the big atlasTexture
+	            	Texture texture = (Texture)ModelLoader.textureCache.get(model.atlasTextureName);
+	            	
+					if (texture==null) {
+						texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+model.atlasTextureName,Texture.MM_LINEAR,
+			                    Texture.FM_LINEAR);
+		
+						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						texture.setApply(Texture.AM_MODULATE);
+						//texture.setRotation(J3DCore.qTexture);
+						ModelLoader.textureCache.put(model.atlasTextureName, texture);
+					}
+		
+					TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
+					ts.setTexture(texture, 0);
+					
+		            ts.setEnabled(true);
+		            spatial.setRenderState(ts);
+	            	
+	            } else
+	            {
+	            	// no atlas texture, normal working... loading ownTexture
+	            	
+	            	Texture texture = (Texture)ModelLoader.textureCache.get(ownTexture);
+					if (texture==null) {
+						texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+ownTexture,Texture.MM_LINEAR,
+			                    Texture.FM_LINEAR);
+		
+						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						texture.setApply(Texture.AM_MODULATE);
+						texture.setRotation(J3DCore.qTexture);
+						ModelLoader.textureCache.put(ownTexture, texture);
+					}
+		
+					TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
+					ts.setTexture(texture, 0);
+					
+		            ts.setEnabled(true);
+		            spatial.setRenderState(ts);
+	            }
+	            
+	            
 			} else
 			if (splatNodeNeeded)
 			{
+				// this part creates the splat pass node with the needed sides alpha texture: 
+				
 				splattingPassNode = new PooledPassNode("SplatPassNode",block);
 				//l.core.gameState.getCurrentStandingEngine().extRootNode
 			    TextureState ts1 = createSplatTextureState(
 			    		ownTexture, null);
 
 		        TextureState tsOpp = null;
+		        
+		        // checking which side of the tile needs blending...
 		        
 		        if (oppositeTexture!=null && !oppositeTexture.equals(ownTexture)) {
 			        tsOpp = createSplatTextureState(
@@ -549,47 +623,49 @@ public class GeoTileLoader {
 			        		oppAdjTexture,
 			                "blendAlphaOppAdj1.png");
 		        }
-			        //TextureState ts6 = createLightmapTextureState("./data/test/lightmap.jpg");
+		        
+		        //TextureState ts6 = createLightmapTextureState("./data/test/lightmap.jpg");
 
-
-			        PassNodeState passNodeState = new PassNodeState();
-			        passNodeState.setPassState(ts1);
+		        // creating the node with the pass states per texturestate...		        
+		        PassNodeState passNodeState = new PassNodeState();
+		        passNodeState.setPassState(ts1);
+		        splattingPassNode.addPass(passNodeState);
+		        
+		        if (tsOpp!=null)
+		        {
+			        passNodeState = new PassNodeState();
+			        passNodeState.setPassState(tsOpp);
+			        passNodeState.setPassState(as);
 			        splattingPassNode.addPass(passNodeState);
-			        
-			        if (tsOpp!=null)
-			        {
-				        passNodeState = new PassNodeState();
-				        passNodeState.setPassState(tsOpp);
-				        passNodeState.setPassState(as);
-				        splattingPassNode.addPass(passNodeState);
-			        }
-			        if (tsAdj!=null)
-			        {
-				        passNodeState = new PassNodeState();
-				        passNodeState.setPassState(tsAdj);
-				        passNodeState.setPassState(as);
-				        splattingPassNode.addPass(passNodeState);
-			        }
-			        if (tsOppAdj!=null)
-			        {
-				        passNodeState = new PassNodeState();
-				        passNodeState.setPassState(tsOppAdj);
-				        passNodeState.setPassState(as);
-				        splattingPassNode.addPass(passNodeState);
-			        }
+		        }
+		        if (tsAdj!=null)
+		        {
+			        passNodeState = new PassNodeState();
+			        passNodeState.setPassState(tsAdj);
+			        passNodeState.setPassState(as);
+			        splattingPassNode.addPass(passNodeState);
+		        }
+		        if (tsOppAdj!=null)
+		        {
+			        passNodeState = new PassNodeState();
+			        passNodeState.setPassState(tsOppAdj);
+			        passNodeState.setPassState(as);
+			        splattingPassNode.addPass(passNodeState);
+		        }
 
-			        /*passNodeState = new PassNodeState();
-			        passNodeState.setPassState(ts6);
-			        passNodeState.setPassState(as2);
-			        splattingPassNode.addPass(passNodeState);*/
-			        // //////////////////// PASS STUFF END
+		        /*passNodeState = new PassNodeState();
+		        passNodeState.setPassState(ts6);
+		        passNodeState.setPassState(as2);
+		        splattingPassNode.addPass(passNodeState);*/
+		        // //////////////////// PASS STUFF END
 
-			        // lock some things to increase the performance
-			        splattingPassNode.lockBounds();
-			        splattingPassNode.lockTransforms();
-			        splattingPassNode.lockShadows();
+		        // lock some things to increase the performance
+		        splattingPassNode.lockBounds();
+		        splattingPassNode.lockTransforms();
+		        splattingPassNode.lockShadows();
 
-			        block.copyTextureCoords(0, 0, 1, 0.999f);
+		        // the copytexturecoords is needed to make splatting work at all
+		        block.copyTextureCoords(0, 0, 1, 0.999f);
 			}
 			
 		} else 
