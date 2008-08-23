@@ -1072,7 +1072,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 						Vector3f dir2 = dir.clone();
 						dir2.y *= 2f;
 						sPass.setDirection(dir2);
-						System.out.println("___ "+dir2);
+						//System.out.println("___ "+dir2);
 					}
 
 					l[0].setTarget(extRootNode);
