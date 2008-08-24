@@ -17,7 +17,6 @@
 
 package org.jcrpg.threed.jme;
 
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -30,6 +29,7 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
@@ -72,6 +72,26 @@ public class GeometryBatchHelper {
 	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE = 10;
 	public static int PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y = 12;
 	
+	/**
+	 * Special key creator for billboard part vegetation's foliage atlas texture.
+	 * @param internal
+	 * @param m
+	 * @param place
+	 * @param farView
+	 * @return
+	 */
+	private String getBillboardVegetationAtlasKey(boolean internal, Model m, NodePlaceholder place, boolean farView)
+	{
+		int viewMul = 1;
+		int yLevelMul = 1;
+		if (farView) {
+			viewMul = 2;
+			yLevelMul = J3DCore.FARVIEW_GAP;
+		}
+		String key = ((PartlyBillboardModel)m).atlasTextureName+internal;
+		key+=((place.cube.cube.x/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y));
+    	return key;
+	}
 	
 	/**
 	 * Returns Grouping key for batch objects. The key unifies a group of nodes into a batch.
@@ -370,6 +390,11 @@ public class GeometryBatchHelper {
     		}
     		// trimeshGeomBatch part
     		{
+    			PartlyBillboardModel pbm = ((PartlyBillboardModel)m);
+    			if (pbm.atlasTexture)
+    			{
+    				key = getBillboardVegetationAtlasKey(internal, m, place, farView);
+    			}
         		TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
         		if (batch!=null)
         		{
@@ -442,6 +467,13 @@ public class GeometryBatchHelper {
     		
     		// timeshGeomBatch part (foliage)
     		{
+    			PartlyBillboardModel pbm = ((PartlyBillboardModel)m);
+    			if (pbm.atlasTexture)
+    			{
+    				key = getBillboardVegetationAtlasKey(internal, m, place, farView);
+    				System.out.println("ATLAS VEG: "+key+" "+m.id);
+
+    			}
     			TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
     	    	if (batch==null)
     	    	{

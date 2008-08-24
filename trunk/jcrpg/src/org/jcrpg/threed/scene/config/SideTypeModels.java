@@ -298,12 +298,21 @@ public class SideTypeModels {
 		palm_high.quadXSizeMultiplier = 1.1f;
 		palm_high.quadYSizeMultiplier = 1.2f;
 		palm_high.shadowCaster = true;
+		palm_high.atlasTexture = true;
+		palm_high.atlasTextureName = "tropical_foliage_atlas.png";
+		palm_high.atlasSize = AtlasTextureTypeConstants.TROPICAL_FOLIAGE_ATLAS_SIZE;
+		palm_high.atlasId = 1;
 
 		PartlyBillboardModel palm_lowbranch_high = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb3_e.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_2.png"},0,MIPMAP_TREES);
 		palm_lowbranch_high.genericScale = 3f;
 		palm_lowbranch_high.quadXSizeMultiplier = 1.0f;
 		palm_lowbranch_high.quadYSizeMultiplier = 1.0f;
 		palm_lowbranch_high.shadowCaster = true;
+		palm_lowbranch_high.atlasTexture = true;
+		palm_lowbranch_high.atlasTextureName = "tropical_foliage_atlas.png";
+		palm_lowbranch_high.atlasSize = AtlasTextureTypeConstants.TROPICAL_FOLIAGE_ATLAS_SIZE;
+		palm_lowbranch_high.atlasId = 0;
+		
 		/*PartlyBillboardModel palm_low = new PartlyBillboardModel("pbm_palm_1","models/tree/great_succ_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"jung_succ_1.png"},1,MIPMAP_TREES);
 		//palm_low.quadXSizeMultiplier = 2f;
 		//palm_low.quadYSizeMultiplier = 2.5f;

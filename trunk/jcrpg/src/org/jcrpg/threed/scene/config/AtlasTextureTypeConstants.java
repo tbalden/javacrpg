@@ -21,5 +21,8 @@ public class AtlasTextureTypeConstants {
 
 	public static int CONTINENTAL_GRASS_ATLAS_SIZE = 2;
 	public static int TROPICAL_GRASS_ATLAS_SIZE = 2;
+
+	public static int TROPICAL_FOLIAGE_ATLAS_SIZE = 2;
+
 	
 }
