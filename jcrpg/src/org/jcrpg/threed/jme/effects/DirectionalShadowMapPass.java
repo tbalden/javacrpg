@@ -26,6 +26,8 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
+import com.jme.util.TextureManager;
+import com.jme.util.resource.ResourceLocatorTool;
 
 /**
  * A pass providing a shadow mapping layer across the top of an existing scene.
@@ -254,7 +256,7 @@ public class DirectionalShadowMapPass extends Pass {
 		// are required since we're only interested in recording depth
 		// Also only need back faces when rendering the shadow maps
 		noTexture = r.createTextureState();
-		noTexture.setEnabled(false); 
+		noTexture.setEnabled(false); // set to true
 		colorDisabled = r.createColorMaskState();
 		colorDisabled.setAll(false); 
 		cullFrontFace = r.createCullState();
@@ -357,8 +359,12 @@ public class DirectionalShadowMapPass extends Pass {
 	
 		r.setPolygonOffset(0, 5); 
 		shadowMapRenderer.render(occluderNodes.get(0), shadowMapTexture, true);
+		int cullModeBefore;
 		for (int i=1;i<occluderNodes.size();i++) {
+			cullModeBefore = occluderNodes.get(i).getCullMode();
+			occluderNodes.get(i).setCullMode(Spatial.CULL_NEVER);
 			shadowMapRenderer.render(occluderNodes.get(i), shadowMapTexture, false);
+			occluderNodes.get(i).setCullMode(cullModeBefore);
 		}
 		r.clearPolygonOffset();
 		replaceEnforcedStates();

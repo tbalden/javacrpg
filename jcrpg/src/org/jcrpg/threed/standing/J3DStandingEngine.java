@@ -1610,6 +1610,7 @@ public class J3DStandingEngine {
 			}
 			
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
+			System.out.println("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
 			
@@ -1662,6 +1663,7 @@ public class J3DStandingEngine {
 			    }
 			    
 			    if (J3DCore.LOGGING) Jcrpg.LOGGER.info("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
+			    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
 			    sysTime = System.currentTimeMillis();
 			    
 			    
@@ -1731,6 +1733,7 @@ public class J3DStandingEngine {
 				
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+				System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 		
 			    if (cullVariationCounter%20==0) {

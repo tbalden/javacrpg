@@ -24,6 +24,9 @@ public class TextureStateVegetationModel extends Model{
 	public float quadSizeY = 0.5f;
 	public int quadQuantity = 3;
 	public float quadSeparation = 0.64f;
+	public boolean atlasTexture = false;
+	public int atlasSize = 1;
+	public int atlasId = 0;
 
 	public TextureStateVegetationModel(String[] textureName, float quadSizeX, float quadSizeY, int quadQuantity, float quadSeparation) {
 		super();
@@ -53,8 +56,18 @@ public class TextureStateVegetationModel extends Model{
 			{
 				key+=tn;
 			}
+			if (atlasTexture) key+=atlasId;
 		}
 		return key;
+	}
+	
+	public void updateKey()
+	{
+		for (String tn:textureNames)
+		{
+			key+=tn;
+		}
+		if (atlasTexture) key+=atlasId;
 	}
 	
 }
