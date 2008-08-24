@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -94,6 +95,28 @@ public class VegetationSetup {
 					quad.setModelBound(new BoundingBox());
 					//quad.setDefaultColor(ColorRGBA.green);
 					quad.updateModelBound();
+					
+					// if atlas texture technique
+	            	// now we have to tweak the x texture coordinates, dividing it by full atlas element size
+	            	// and adding displacement ratio...
+		    		if (tm.atlasTexture)
+		    		{
+		    			
+		        		FloatBuffer b = quad.getTextureBuffers(0)[0];
+		        		float position = tm.atlasId;
+		        		int atlas_size = tm.atlasSize;
+		        		float f = 0;
+		        		for (int bi = 0; bi < b.capacity(); bi++) {
+		        			if (bi%2==1)
+		        			{
+		        				continue;
+		        			}
+		        			f = b.get(bi);
+		        			b.put(bi, (f / atlas_size)+ position/atlas_size);
+		        		}
+		    			
+		    		}
+		    		
 					
 					Texture t1 = ts[i].getTexture();
 					t1.setApply(Texture.AM_MODULATE);

@@ -427,14 +427,34 @@ public class SideTypeModels {
 		tsm_grass_anethum.alwaysRenderBatch = true;
 
 		
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"grass_aard.png"},0.65f,0.5f,4,0.6f);
-		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"grass1_flower_2.png"},0.65f,0.5f,3,0.7f);
+		// CONTINENTAL GRASS TYPES, atlas
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.png"},0.65f,0.5f,4,0.6f);
+		tsm_cont_grass.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_GRASS_ATLAS_SIZE;
+		tsm_cont_grass.atlasId = 0;
+		tsm_cont_grass.atlasTexture = true;
+		tsm_cont_grass.updateKey();
+		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.png"},0.65f,0.5f,3,0.7f);
+		tsm_cont_grass_flower.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_GRASS_ATLAS_SIZE;
+		tsm_cont_grass_flower.atlasId = 1;
+		tsm_cont_grass_flower.atlasTexture = true;
+		tsm_cont_grass_flower.updateKey();
+		
 		//,"grass1_flower.png","grass1_flower_2.png"
 		LODModel lod_cont_grass_1 = new LODModel("cont_grass_1",new Model[]{tsm_cont_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_cont_grass_1.rotateOnSteep = true;
 		
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"jungle_foliage1.png"},0.5f,0.45f,3,0.7f);
-		TextureStateVegetationModel tsm_jung_grass_flower = new TextureStateVegetationModel(new String[]{"jungle_foliage1_flower.png"},0.5f,0.45f,2,1.0f);
+		// JUNGLE GRASS TYPES, atlas
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.png"},0.5f,0.45f,3,0.7f);
+		tsm_jung_grass.atlasSize = AtlasTextureTypeConstants.TROPICAL_GRASS_ATLAS_SIZE;
+		tsm_jung_grass.atlasId = 0;
+		tsm_jung_grass.atlasTexture = true;
+		tsm_jung_grass.updateKey();
+		TextureStateVegetationModel tsm_jung_grass_flower = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.png"},0.5f,0.45f,2,1.0f);
+		tsm_jung_grass_flower.atlasSize = AtlasTextureTypeConstants.TROPICAL_GRASS_ATLAS_SIZE;
+		tsm_jung_grass_flower.atlasId = 1;
+		tsm_jung_grass_flower.atlasTexture = true;
+		tsm_jung_grass.updateKey();
+		
 		LODModel lod_jung_grass_1 = new LODModel("jung_grass_1",new Model[]{tsm_jung_grass},new float[][]{{0f,RENDER_GRASS_DISTANCE}});
 		lod_jung_grass_1.rotateOnSteep = true;
 

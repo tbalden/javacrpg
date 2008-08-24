@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed.jme;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -142,7 +143,13 @@ public class GeometryBatchHelper {
     	} else
     	if (m.type==Model.TEXTURESTATEVEGETATION)
     	{
-    		key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE;//yLevelMul;
+    		if (((TextureStateVegetationModel)m).atlasTexture)
+    		{
+    			key = ((TextureStateVegetationModel)m).textureNames[0]+(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE;//yLevelMul;
+    		} else
+    		{
+    			key+=(place.cube.cube.x/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+(place.cube.cube.z/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE)+""+place.cube.cube.y/TEXSTATEVEG_MODEL_BATCHED_SPACE_SIZE;//yLevelMul;
+    		}
     	} else
     	{   // other models only by Y // quad
     		key+=(int)(place.cube.cube.x/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)(place.cube.cube.z/QUAD_MODEL_BATCHED_SPACE_SIZE)+""+(int)place.cube.cube.y/yLevelMul;
@@ -287,6 +294,7 @@ public class GeometryBatchHelper {
 	    					tri = VegetationSetup.getVegTrimesh(internal, place,place.cube, core, (TextureStateVegetationModel)m, k, j,2f*heightPercent,variationCutter);
     					}
     				}
+					
     	    		batch.addItem(place,tri);
     	    		
     			}
@@ -579,7 +587,7 @@ public class GeometryBatchHelper {
 		    				}
 		    				if (!found)
 		    				{
-		    					core.sPass.removeOccluder(batch);	
+		    					core.sPass.removeOccluder(batch);
 		    				}
 		    				
 		    			}
