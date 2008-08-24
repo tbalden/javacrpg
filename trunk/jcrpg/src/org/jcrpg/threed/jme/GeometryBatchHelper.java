@@ -570,7 +570,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<20f)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
 		    						{
 		    							core.sPass.addOccluder(batch);
 		    							found = true;
@@ -592,7 +592,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<20f)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
 		    						{
 				    					if (!core.sPass.contains(batch))
 				    					{
@@ -669,7 +669,7 @@ public class GeometryBatchHelper {
 		    				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:batch.visible)
 		    				{
 	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-	    						if (pos.distance(core.getCamera().getLocation())<20f)
+	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
 	    						{
 	    							core.sPass.addOccluder(batch);
 	    							found = true;

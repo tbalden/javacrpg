@@ -2376,6 +2376,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			// sPass.addOccluder(groundParentNode);
 		}
 
+		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);
+		// set equations to use z axis as up
+		waterEffectRenderPass.setWaterPlane(new Plane(new Vector3f(0.0f, 1.0f,
+				0.0f), 0.0f));
+		waterEffectRenderPass.setTangent(new Vector3f(1.0f, 0.0f, 0.0f));
+		waterEffectRenderPass.setBinormal(new Vector3f(0.0f, 1.0f, 0.0f));
+		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
+		pManager.add(waterEffectRenderPass);
+
 		if (BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
 				Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
@@ -2399,14 +2408,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				pManager.add(bloomRenderPass);
 			}
 		}
-		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);
-		// set equations to use z axis as up
-		waterEffectRenderPass.setWaterPlane(new Plane(new Vector3f(0.0f, 1.0f,
-				0.0f), 0.0f));
-		waterEffectRenderPass.setTangent(new Vector3f(1.0f, 0.0f, 0.0f));
-		waterEffectRenderPass.setBinormal(new Vector3f(0.0f, 1.0f, 0.0f));
-		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
-		pManager.add(waterEffectRenderPass);
 
 		RenderPass uiPass = new RenderPass();
 		uiPass.add(uiRootNode);
