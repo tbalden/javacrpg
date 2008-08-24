@@ -99,10 +99,10 @@ public class HUD {
 
         // main hud image area
         
-        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/6.0f));
+        Quad hudQuad = new Quad("hud", core.getDisplay().getWidth(), (core.getDisplay().getHeight()/7.0f));
         hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 
-        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/12f,0));
+        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/14f,0));
  
         Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
 		
