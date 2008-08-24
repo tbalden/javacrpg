@@ -181,7 +181,14 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		
 		int added = 0;
 		HashSet<TriMesh> removed = new HashSet<TriMesh>();
-		TextureState[] states = core.modelLoader.loadTextureStates(model.billboardPartTextures);
+		TextureState[] states = null;
+		if (model.atlasTexture)
+		{
+			states = core.modelLoader.loadTextureStates(new String[]{model.atlasTextureName});
+		} else
+		{
+			states = core.modelLoader.loadTextureStates(model.billboardPartTextures);
+		}
 		for (int i=0; i<states.length; i++) {
 			Texture t1 = states[i].getTexture();
 			t1.setApply(Texture.AM_MODULATE);
@@ -409,6 +416,23 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 			targetQuad.setLocalRotation(new Quaternion());
 			TriangleBatch tBatch = targetQuad.getBatch(0);
+			
+			if (model.atlasTexture)
+			{
+        		FloatBuffer b = targetQuad.getTextureBuffers(0)[0];
+        		float position = model.atlasId;
+        		int atlas_size = model.atlasSize;
+        		float f = 0;
+        		for (int bi = 0; bi < b.capacity(); bi++) {
+        			if (bi%2==1)
+        			{
+        				continue;
+        			}
+        			f = b.get(bi);
+        			b.put(bi, (f / atlas_size)+ position/atlas_size);
+        		}
+			}
+			
 			// swapping X,Z
 			/*if (!NO_BATCH_GEOMETRY && rotated) {
 				FloatBuffer buff = tBatch.getVertexBuffer();

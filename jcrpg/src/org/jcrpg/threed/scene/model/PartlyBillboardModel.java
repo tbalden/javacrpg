@@ -21,6 +21,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class PartlyBillboardModel extends SimpleModel {
+	
+	public boolean atlasTexture = false;
+	public int atlasId = 0;
+	public int atlasSize = 1;
+	public String atlasTextureName = null;
+	
 
 	public String[] billboardPartNames = new String[0];
 	public String[] billboardPartTextures = new String[0];
