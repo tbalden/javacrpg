@@ -31,7 +31,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [ ] keyboard configuration for movement - French keyboards etc cant use 'wsad'
 
-
+BUGS:
+####
 
 [ ] camera is not good positioned for kobold - above them etc.
 [ ] billboard badly positioned for gorilla
@@ -40,8 +41,24 @@ sanity point for Morale is like mana for hp, limiting social skills!
 [-] rendering bug - behind player battle ground doesnt show tiles... ??
 	Maybe angle is not set correctly upon reinit?
 
-[ ] grass disappears!! -> wrong dist calc.
-	
+OPTIMIZATIONS:
+#############
+
+[X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
+
+[ ] Atlas Texture to tree foliage
+
+[ ] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
+	[ ]also some check is needed for water present or not in rendered area
+		and if not render pass should be disabled
+[ ] no shadow render pass if in the night!
+[ ] reconsider texture splattering - use of static textures instead?
+
+[-] add renderToViewport to movement code in segments??
+	or add updateDisplay to renderViewPort?
+ 	
+
+[-] grass disappears!! -> wrong dist calc.
 
 [X] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
 
@@ -49,6 +66,8 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 [X] add a UI render pass to render over the 3d part...
 [X] DoF perfection...
+
+
 
 ## list before next-next:
 
