@@ -47,6 +47,7 @@ import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
@@ -316,6 +317,7 @@ public class J3DMovingEngine {
 				ZBufferState state = getZBuffInForegroundState();
 				n.attachChild(slottextNode);
 				slottextNode.setCullMode( SceneElement.CULL_NEVER );
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 				slottextNode.setTextureCombineMode( TextureState.REPLACE );
 				n.setRenderState(state);
 				addedCounter++;
@@ -340,6 +342,7 @@ public class J3DMovingEngine {
 			n.attachChild(slottextNode);
 			slottextNode.setCullMode( SceneElement.CULL_NEVER );
 			slottextNode.setTextureCombineMode( TextureState.REPLACE );
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 			s.setFunction(ZBufferState.CF_ALWAYS);
 			//s.setEnabled(false);
@@ -369,6 +372,7 @@ public class J3DMovingEngine {
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
 			n.attachChild(slottextNode);
 			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 			s.setFunction(ZBufferState.CF_ALWAYS);
 			//slottextNode.setRenderState(s);
