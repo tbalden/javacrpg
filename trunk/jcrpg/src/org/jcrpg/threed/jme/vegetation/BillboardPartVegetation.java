@@ -422,6 +422,11 @@ public class BillboardPartVegetation extends Node implements PooledNode {
         		FloatBuffer b = targetQuad.getTextureBuffers(0)[0];
         		float position = model.atlasId;
         		int atlas_size = model.atlasSize;
+        		if (model.atlasMultiTextureParts)
+        		{
+        			// choose a random texture position from palette..
+        			position = model.atlasMultiIds[Math.abs(((int)((x+y)*100))%model.atlasMultiIds.length)];
+        		}
         		float f = 0;
         		for (int bi = 0; bi < b.capacity(); bi++) {
         			if (bi%2==1)

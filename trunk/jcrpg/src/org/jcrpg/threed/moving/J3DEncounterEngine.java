@@ -48,6 +48,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		batchHelper = core.batchHelperEncounterArea;
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterIntRootNode;
+		extWaterRefNode = core.encounterExtRootNode;
+		intWaterRefNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
 		renderedArea.setRenderDistance(22); // set a low view distance for battles
 		renderedArea.setRenderDistanceFarview(22);
@@ -196,6 +198,8 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		batchHelper = core.batchHelperEncounterArea;
 		extRootNode = core.encounterExtRootNode;
 		intRootNode = core.encounterIntRootNode;
+		extWaterRefNode = core.encounterExtRootNode;
+		intWaterRefNode = core.encounterIntRootNode;
 		renderedArea = core.renderedEncounterArea;
 		renderedArea.setRenderDistance(22); // set a low view distance for battles
 		renderedArea.setRenderDistanceFarview(22);

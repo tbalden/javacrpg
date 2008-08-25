@@ -357,8 +357,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public Node skyParentNode = new Node();
 	/** external all root */
 	public Node extRootNode;
+	public Node extWaterRefNode; // reflected part
 	/** internal all root */
 	public Node intRootNode;
+	public Node intWaterRefNode;
 
 	/** encounter mode all root */
 	public Node encounterExtRootNode;
@@ -2312,7 +2314,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		extRootNode.setRenderState(extLightState);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
-
+		
 		if (true == true && dr == null) {
 
 			dr = new PointLight();
@@ -2347,10 +2349,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			System.exit(-1);
 
 		}
+		extWaterRefNode = new Node();
+		extRootNode.attachChild(extWaterRefNode);
+		intWaterRefNode = new Node();
+		intRootNode.attachChild(intWaterRefNode);
 
 		RenderPass rootPass = new RenderPass();
 		// rootPass.add(rootNode);
 		pManager.add(rootPass);
+
+		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);
+		// set equations to use z axis as up
+		waterEffectRenderPass.setWaterPlane(new Plane(new Vector3f(0.0f, 1.0f,
+				0.0f), 0.0f));
+		waterEffectRenderPass.setTangent(new Vector3f(1.0f, 0.0f, 0.0f));
+		waterEffectRenderPass.setBinormal(new Vector3f(0.0f, 1.0f, 0.0f));
+		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
+		pManager.add(waterEffectRenderPass);
 
 		if (SHADOWS) {
 			sPass = new DirectionalShadowMapPass(new Vector3f(-1f, -1f, -1f));
@@ -2376,14 +2391,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			// sPass.addOccluder(groundParentNode);
 		}
 
-		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);
-		// set equations to use z axis as up
-		waterEffectRenderPass.setWaterPlane(new Plane(new Vector3f(0.0f, 1.0f,
-				0.0f), 0.0f));
-		waterEffectRenderPass.setTangent(new Vector3f(1.0f, 0.0f, 0.0f));
-		waterEffectRenderPass.setBinormal(new Vector3f(0.0f, 1.0f, 0.0f));
-		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
-		pManager.add(waterEffectRenderPass);
 
 		if (BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
@@ -2426,9 +2433,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE", 20, 20, 300f);
-		waterEffectRenderPass
-				.setReflectedScene(WATER_DETAILED ? groundParentNode
-						: skyParentNode);
+		if (WATER_DETAILED)
+		{
+			waterEffectRenderPass.setReflectedScene(extWaterRefNode);
+			waterEffectRenderPass.addReflectedScene(intWaterRefNode);
+			waterEffectRenderPass.addReflectedScene(skyParentNode);
+		} else
+		{
+			waterEffectRenderPass.setReflectedScene(skyParentNode);
+		}
 		skyParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens
 										// flare

@@ -299,6 +299,8 @@ public class SideTypeModels {
 		palm_high.quadYSizeMultiplier = 1.2f;
 		palm_high.shadowCaster = true;
 		palm_high.atlasTexture = true;
+		palm_high.atlasMultiTextureParts = true;
+		palm_high.atlasMultiIds = new int[]{0,1};
 		palm_high.atlasTextureName = "tropical_foliage_atlas.png";
 		palm_high.atlasSize = AtlasTextureTypeConstants.TROPICAL_FOLIAGE_ATLAS_SIZE;
 		palm_high.atlasId = 1;
