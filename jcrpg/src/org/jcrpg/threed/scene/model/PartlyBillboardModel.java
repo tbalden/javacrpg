@@ -23,7 +23,12 @@ import java.util.HashSet;
 public class PartlyBillboardModel extends SimpleModel {
 	
 	public boolean atlasTexture = false;
+	/**
+	 * Tells if from the atlas more textures are to be used or just 1.
+	 */
+	public boolean atlasMultiTextureParts = false;
 	public int atlasId = 0;
+	public int[] atlasMultiIds = null;
 	public int atlasSize = 1;
 	public String atlasTextureName = null;
 	

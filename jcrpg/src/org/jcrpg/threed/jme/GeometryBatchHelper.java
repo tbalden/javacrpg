@@ -198,11 +198,11 @@ public class GeometryBatchHelper {
 	    		}
 	    		if (internal)
 	    		{
-	    			sEngine.intRootNode.attachChild(batch.parent);
+	    			sEngine.intWaterRefNode.attachChild(batch.parent);
 	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			sEngine.extRootNode.attachChild(batch.parent);
+	    			sEngine.extWaterRefNode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
@@ -425,11 +425,11 @@ public class GeometryBatchHelper {
 		    		batch.key = key;
 		    		if (internal)
 		    		{
-		    			sEngine.intRootNode.attachChild(batch.parent);
+		    			sEngine.intWaterRefNode.attachChild(batch.parent);
 		    			//sEngine.intRootNode.updateRenderState();
 		    		} else
 		    		{
-		    			sEngine.extRootNode.attachChild(batch.parent);
+		    			sEngine.extWaterRefNode.attachChild(batch.parent);
 		    			//sEngine.extRootNode.updateRenderState();
 		    		}
 	    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
@@ -486,12 +486,12 @@ public class GeometryBatchHelper {
     	    		if (internal)
     	    		{
     	    			batch.setAnimated(false,internal); // inside no wind
-    	    			sEngine.intRootNode.attachChild(batch.parent);
+    	    			sEngine.intWaterRefNode.attachChild(batch.parent);
     	    			//sEngine.intRootNode.updateRenderState();
     	    		} else
     	    		{
     	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
-    	    			sEngine.extRootNode.attachChild(batch.parent);
+    	    			sEngine.extWaterRefNode.attachChild(batch.parent);
     	    			//sEngine.extRootNode.updateRenderState();
     	    		}
         			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...

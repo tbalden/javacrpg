@@ -73,7 +73,24 @@ ADD pos.xz, pos, f4;
 
 MOV result.position, pos;
 MOV result.texcoord[0], vertex.texcoord[0];
-MOV result.color, vertex.color;
+
+#PARAM fogScale= { 2, 5 };
+#TEMP vFog;
+#PARAM ONE = { 1, 1, 1, 1 };
+#PARAM HALF = { 0.5, 0.5, 0.5, 0.5 };
+#PARAM NEG = { -1, -1, -1, -1 };
+#MOV vFog, pos.zzzw;
+#MUL vFog, vFog, vFog.w;
+#RCP vFog.w, vFog.w;
+#MUL vFog, vFog, NEG;
+#ADD vFog, vFog, ONE;
+#MUL vFog, vFog, HALF;
+#MUL vFog, vFog, fogScale;
+#MAX vFog.x, vFog.x, pos.y;
+#MOV result.fogcoord, vFog;
+
 MOV result.fogcoord, vertex.fogcoord;
+
+MOV result.color, vertex.color;
 
 END

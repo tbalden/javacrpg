@@ -80,6 +80,8 @@ public class J3DStandingEngine {
 	
 	public Node intRootNode = null;
 	public Node extRootNode = null;
+	public Node intWaterRefNode  = null;
+	public Node extWaterRefNode = null;
 	
 	public J3DStandingEngine(J3DCore core)
 	{
@@ -95,6 +97,8 @@ public class J3DStandingEngine {
 		modelPool = core.modelPool;
 		intRootNode = core.intRootNode;
 		extRootNode = core.extRootNode;
+		intWaterRefNode = core.intWaterRefNode;
+		extWaterRefNode = core.extWaterRefNode;
 	}
 	/**
 	 * Start this when newly initializing core.
@@ -112,6 +116,9 @@ public class J3DStandingEngine {
 		intRootNode = core.intRootNode;
 		extRootNode = core.extRootNode;
 		optimizeAngle = J3DCore.OPTIMIZE_ANGLES;
+		intWaterRefNode = core.intWaterRefNode;
+		extWaterRefNode = core.extWaterRefNode;
+
 	}
 
 	HashMap<Long, RenderedCube> hmCurrentCubes = new HashMap<Long, RenderedCube>();
@@ -1136,10 +1143,10 @@ public class J3DStandingEngine {
 										}
 									
 										if (c.cube.internalCube) {
-											intRootNode.attachChild((Node)realPooledNode);
+											intWaterRefNode.attachChild((Node)realPooledNode);
 										} else 
 										{
-											extRootNode.attachChild((Node)realPooledNode);
+											extWaterRefNode.attachChild((Node)realPooledNode);
 										}
 										realPooledNode.setCullMode(Node.CULL_NEVER);
 										newNodesToSetCullingDynamic.add(realPooledNode);
@@ -1518,10 +1525,10 @@ public class J3DStandingEngine {
 									}
 								
 									if (c.cube.internalCube) {
-										intRootNode.attachChild((Node)realPooledNode);
+										intWaterRefNode.attachChild((Node)realPooledNode);
 									} else 
 									{
-										extRootNode.attachChild((Node)realPooledNode);
+										extWaterRefNode.attachChild((Node)realPooledNode);
 									}
 									realPooledNode.setCullMode(Node.CULL_NEVER);
 									newNodesToSetCullingDynamic.add(realPooledNode);
