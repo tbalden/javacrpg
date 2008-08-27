@@ -46,6 +46,7 @@ import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldPass;
+import org.jcrpg.threed.jme.effects.DepthOfFieldPassOrig;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -350,6 +351,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 
 	public Node groundParentNode = new Node();
+	public Node dofParentNode = new Node();
 	/**
 	 * skyparent for skysphere/sun/moon -> simple water reflection needs this
 	 * node
@@ -1162,7 +1164,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		skySphere.setLocalRotation(qSky);
 
 		// if (skyParentNode.getParent()==null)
-		{
+		{			
 			groundParentNode.attachChild(skyParentNode);
 		}
 		if (skySphere.getParent() == null) {
@@ -1542,18 +1544,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					if (J3DCore.LOGGING)
 						Jcrpg.LOGGER.info("Moved: INTERNAL");
 					gameState.getNormalPositions().insideArea = true;
-					groundParentNode.detachAllChildren(); // workaround for
+					dofParentNode.detachAllChildren(); // workaround for
 															// culling
-					groundParentNode.attachChild(intRootNode);
-					groundParentNode.attachChild(extRootNode);
+					dofParentNode.attachChild(intRootNode);
+					dofParentNode.attachChild(extRootNode);
 				} else {
 					if (J3DCore.LOGGING)
 						Jcrpg.LOGGER.info("Moved: EXTERNAL");
 					gameState.getNormalPositions().insideArea = false;
-					groundParentNode.detachAllChildren(); // workaround for
+					dofParentNode.detachAllChildren(); // workaround for
 															// culling
-					groundParentNode.attachChild(extRootNode);
-					groundParentNode.attachChild(intRootNode);
+					dofParentNode.attachChild(extRootNode);
+					dofParentNode.attachChild(intRootNode);
 				}
 				gameState.getNormalPositions().internalLight = c.internalLight;
 
@@ -1733,15 +1735,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			if (c.internalCube) {
 				Jcrpg.LOGGER.info("Moved: INTERNAL");
 				gameState.getNormalPositions().insideArea = true;
-				groundParentNode.detachAllChildren(); // workaround for culling
-				groundParentNode.attachChild(intRootNode);
-				groundParentNode.attachChild(extRootNode);
+				dofParentNode.detachAllChildren(); // workaround for culling
+				dofParentNode.attachChild(intRootNode);
+				dofParentNode.attachChild(extRootNode);
 			} else {
 				Jcrpg.LOGGER.info("Moved: EXTERNAL");
 				gameState.getNormalPositions().insideArea = false;
-				groundParentNode.detachAllChildren(); // workaround for culling
-				groundParentNode.attachChild(extRootNode);
-				groundParentNode.attachChild(intRootNode);
+				dofParentNode.detachAllChildren(); // workaround for culling
+				dofParentNode.attachChild(extRootNode);
+				dofParentNode.attachChild(intRootNode);
 			}
 			gameState.getNormalPositions().internalLight = c.internalLight;
 		}
@@ -1956,7 +1958,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FogState fs_external_special;
 	public FogState fs_internal;
 	public DirectionalShadowMapPass sPass = null;
-	private DepthOfFieldPass bloomRenderPass;
+	private DepthOfFieldPassOrig bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
 
 	public CullState cs_back = null;
@@ -1994,8 +1996,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 */
 	public void init3DGame() {
 		if (coreFullyInitialized) {
-			groundParentNode.attachChild(intRootNode);
-			groundParentNode.attachChild(extRootNode);
+			dofParentNode.attachChild(intRootNode);
+			dofParentNode.attachChild(extRootNode);
 			groundParentNode.attachChild(skyParentNode);
 		}
 		inventoryWindow.setPageData(gameState.player);
@@ -2151,7 +2153,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		audioServer.init();
 		ZBufferState zStatePasses = display.getRenderer().createZBufferState();
 		zStatePasses.setEnabled(true);
-		zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
+		//zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
 		rootNode.setRenderState(zStatePasses);
 		// rootNode.setCullMode(Node.CULL_DYNAMIC);
 
@@ -2201,7 +2203,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldPass(cam, 4);
+		bloomRenderPass = new DepthOfFieldPassOrig(cam, 4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
@@ -2240,12 +2242,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 		cam.setFrustumPerspective(45.0f, (float) display.getWidth()
 				/ (float) display.getHeight(), 0.002f, 350);
-		groundParentNode.attachChild(intRootNode);
-		groundParentNode.attachChild(extRootNode);
+		dofParentNode.attachChild(intRootNode);
+		dofParentNode.attachChild(extRootNode);
+		groundParentNode.attachChild(dofParentNode);
 		groundParentNode.attachChild(skyParentNode);
 
-		groundParentNode.attachChild(encounterExtRootNode);
-		groundParentNode.attachChild(encounterIntRootNode);
+		dofParentNode.attachChild(encounterExtRootNode);
+		dofParentNode.attachChild(encounterIntRootNode);
 
 		rootNode.attachChild(groundParentNode);
 
@@ -2406,12 +2409,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setUseCurrentScene(true);
-				bloomRenderPass.setBlurIntensityMultiplier(1.5f);
-				bloomRenderPass.setBlurSize(0.0001f);
-				bloomRenderPass.setDepth(1);
+				bloomRenderPass.add(dofParentNode);
+				bloomRenderPass.setBlurIntensityMultiplier(1.6f);
+				bloomRenderPass.setBlurSize(0.001f);
 
-				bloomRenderPass.setExposureCutoff(0.5f);
-				bloomRenderPass.setExposurePow(6f);
+				bloomRenderPass.setExposureCutoff(0.26f);
+				bloomRenderPass.setExposurePow(5f);
 				pManager.add(bloomRenderPass);
 			}
 		}
@@ -2727,7 +2730,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	public Node getGroundParentNode() {
-		return groundParentNode;
+		return dofParentNode;
 	}
 
 	public InputHandler getInputHandler() {
