@@ -44,15 +44,34 @@ BUGS:
 OPTIMIZATIONS:
 #############
 
-[X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
+[ ] md2 model for animated?
 
-[ ] Atlas Texture to tree foliage
+!!!!    [X] shadow pass AFTER water reflection!
 
-[ ] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
+
+[ ] make textures for continental (normal 3 tree) + continental mountain (2 pines)
+
+[-] fog fragment shader distance based!? (bigger batches is a problem)
+	[ ] it doesnt want to work!! GLSL Fragment Shader??
+
+[ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
+[ ] reconsider texture splattering - use of static textures instead?
+
+[X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
-[ ] no shadow render pass if in the night!
-[ ] reconsider texture splattering - use of static textures instead?
+    !!!! [X] grassRootNode -> leave out it from reflection
+    [X] fix water reflection? wrong camera position set?
+    
+!! [X] more texture types for one tree, random/foliage quad!
+	-> texture coordinates swap for more random look on trees?
+	
+
+
+[X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
+
+[X] Atlas Texture to tree foliage
+
 
 [-] add renderToViewport to movement code in segments??
 	or add updateDisplay to renderViewPort?

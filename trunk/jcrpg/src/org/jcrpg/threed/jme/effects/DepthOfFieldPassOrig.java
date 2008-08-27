@@ -48,6 +48,7 @@ import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -59,27 +60,26 @@ import com.jme.system.DisplaySystem;
  *         texrenderer, ability to reuse existing back buffer, faster blur,
  *         throttling speed-up, etc.
  */
-public class DepthOfFieldPass extends Pass {
+public class DepthOfFieldPassOrig extends Pass {
     private static final long serialVersionUID = 1L;
 
     private float throttle = 1/50f; 
     private float sinceLast = 1; 
     
     private TextureRenderer tRenderer;
-    private TextureRenderer tRenderer2;
-	private Texture mainTexture;
-    private Texture secondTexture;
+	private Texture resultTexture;
+	private Texture depthTexture;
     private Texture screenTexture;
-    private Texture depthTexture;
 
     private Quad fullScreenQuad;
 	private TriangleBatch fullScreenQuadBatch;
 
-	private GLSLShaderObjectsState extractionShader;
-	private GLSLShaderObjectsState blurShader;
 	private GLSLShaderObjectsState finalShader;
-	private GLSLShaderObjectsState depthShader;
 
+	private GLSLShaderObjectsState depthShader;
+	private GLSLShaderObjectsState dofShader;
+
+	
 	private int nrBlurPasses;
 	private float blurSize;
 	private float blurIntensityMultiplier;
@@ -97,7 +97,7 @@ public class DepthOfFieldPass extends Pass {
 	 * Reset bloom parameters to default
 	 */
 	public void resetParameters() {
-		nrBlurPasses = 1;
+		nrBlurPasses = 2;
 		blurSize = 0.02f;
 		blurIntensityMultiplier = 1.3f;
 		exposurePow = 3.0f;
@@ -117,28 +117,23 @@ public class DepthOfFieldPass extends Pass {
 	public boolean isSupported() {
 		return supported;
 	}
-	
+	int renderScaleP;
 	/**
 	 * Creates a new bloom renderpass
 	 *
 	 * @param cam		 Camera used for rendering the bloomsource
 	 * @param renderScale Scale of bloom texture
 	 */
-	public DepthOfFieldPass(Camera cam, int renderScale) {
+	public DepthOfFieldPassOrig(Camera cam, int renderScale) {
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
-
+		renderScaleP = renderScale;
 		resetParameters();
 
 		//Create texture renderers and rendertextures(alternating between two not to overwrite pbuffers)
         tRenderer = display.createTextureRenderer(
-                display.getWidth() / renderScale, 
-                display.getHeight() / renderScale,
+                display.getWidth()/ renderScale, 
+                display.getHeight()/ renderScale,
                 TextureRenderer.RENDER_TEXTURE_2D);
-        tRenderer2 = display.createTextureRenderer(
-                display.getWidth() / renderScale, 
-                display.getHeight() / renderScale,
-                TextureRenderer.RENDER_TEXTURE_2D);
-
 		if (!tRenderer.isSupported()) {
 			supported = false;
 			return;
@@ -146,51 +141,26 @@ public class DepthOfFieldPass extends Pass {
 
         tRenderer.setBackgroundColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
         tRenderer.setCamera(cam);
-        tRenderer2.setBackgroundColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
-        tRenderer2.setCamera(cam);
 
-		mainTexture = new Texture();
-		mainTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-		mainTexture.setFilter(Texture.FM_LINEAR);
-        tRenderer.setupTexture(mainTexture);
-
-        secondTexture = new Texture();
-        secondTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-        secondTexture.setFilter(Texture.FM_LINEAR);
-        tRenderer.setupTexture(secondTexture);
 
         screenTexture = new Texture();
         screenTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-        screenTexture.setFilter(Texture.FM_LINEAR);
+        //screenTexture.setFilter(Texture.FM_LINEAR);
         tRenderer.setupTexture(screenTexture);
+
+        
+		resultTexture = new Texture();
+		resultTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+		resultTexture.setFilter(Texture.FM_LINEAR);
+        tRenderer.setupTexture(resultTexture);
+
 
         depthTexture = new Texture();
 		depthTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-		depthTexture.setFilter(Texture.FM_LINEAR);
+		//depthTexture.setFilter(Texture.FM_LINEAR);
 		//depthTexture.setRTTSource(Texture.RTT_SOURCE_DEPTH);
-        tRenderer2.setupTexture(depthTexture);
+        tRenderer.setupTexture(depthTexture);
 
-		//Create extract intensity shader
-		extractionShader = display.getRenderer().createGLSLShaderObjectsState();
-		if(!extractionShader.isSupported()) {
-			supported = false;
-			return;
-		} else {
-			extractionShader.load(DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_extract.vert"),
-					DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_extract.frag"));
-			extractionShader.setEnabled(true);
-		}
-
-		//Create blur shader
-		blurShader = display.getRenderer().createGLSLShaderObjectsState();
-		if(!blurShader.isSupported()) {
-			supported = false;
-			return;
-		} else {
-			blurShader.load(DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_blur.vert"),
-					DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_blur.frag"));
-			blurShader.setEnabled(true);
-		}
 
 		//Create final shader(basic texturing)
 		finalShader = display.getRenderer().createGLSLShaderObjectsState();
@@ -198,11 +168,13 @@ public class DepthOfFieldPass extends Pass {
 			supported = false;
 			return;
 		} else {
-			finalShader.load(DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_final.vert"),
-					DepthOfFieldPass.class.getClassLoader().getResource(shaderDirectory + "bloom_final.frag"));
+			finalShader.load(DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory + "bloom_final.vert"),
+					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory + "bloom_final.frag"));
 			finalShader.setEnabled(true);
 		}
 
+		// DOF
+		
 		depthShader = display.getRenderer().createGLSLShaderObjectsState();
 		if(!depthShader.isSupported()) {
 			supported = false;
@@ -213,6 +185,18 @@ public class DepthOfFieldPass extends Pass {
 			depthShader.setEnabled(true);
 		}
 
+		//Create dof shader
+		dofShader = display.getRenderer().createGLSLShaderObjectsState();
+		if(!dofShader.isSupported()) {
+			supported = false;
+			return;
+		} else {
+			dofShader.load(
+					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_simple.vert"),
+					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_3_dof_2.frag"));
+			dofShader.setEnabled(true);
+		}
+		
 		//Create fullscreen quad
 		fullScreenQuad = new Quad("FullScreenQuad", display.getWidth()/4, display.getHeight()/4);
         fullScreenQuadBatch = fullScreenQuad.getBatch(0);
@@ -225,21 +209,25 @@ public class DepthOfFieldPass extends Pass {
 		fullScreenQuad.setTextureCombineMode(TextureState.REPLACE);
 		fullScreenQuad.setLightCombineMode(LightState.OFF);
         
-		TextureState ts = display.getRenderer().createTextureState();
+		TextureState ts = display.getRenderer().createTextureState();		
 		ts.setEnabled(true);
         fullScreenQuadBatch.setRenderState(ts);
 
 		AlphaState as = display.getRenderer().createAlphaState();
-		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_ONE);
-		as.setDstFunction(AlphaState.DB_ONE);
-		as.setEnabled(true);
+	    as.setTestEnabled(true);
+	    as.setTestFunction(AlphaState.TF_GREATER);
+	    as.setEnabled(true);
+		
         fullScreenQuadBatch.setRenderState(as);
 
         fullScreenQuad.updateRenderState();
         fullScreenQuad.updateGeometricState(0.0f, true);
+		zState = display.getRenderer().createZBufferState();
+		zState.setFunction(ZBufferState.CF_LESS);
+		zState.setEnabled(true);
+		
 	}
-
+	ZBufferState zState;
     /**
      * Helper class to get all spatials rendered in one TextureRenderer.render() call.
      */
@@ -266,7 +254,7 @@ public class DepthOfFieldPass extends Pass {
         super.doUpdate(tpf);
         sinceLast += tpf;
     }
-  
+ 
 	/** A place to internally save previous enforced states setup before rendering this pass */
 	private RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
 
@@ -289,98 +277,49 @@ public class DepthOfFieldPass extends Pass {
 		}
 	}
 
-    
     public void doRender(Renderer r) {
         if (!useCurrentScene && spatials.size() == 0 ) {
             return;
         }
 
         AlphaState as = (AlphaState) fullScreenQuadBatch.states[RenderState.RS_ALPHA];
+        TextureState ts = (TextureState) fullScreenQuadBatch.states[RenderState.RS_TEXTURE];
 
-        if (sinceLast > throttle) {
-            sinceLast = 0;
+        as.setEnabled(false);
+        
+        Spatial s = spatials.get(0);
+        
+        // rendering the screen
+        tRenderer.copyToTexture(screenTexture, 
+              DisplaySystem.getDisplaySystem().getWidth(), 
+            DisplaySystem.getDisplaySystem().getHeight() 
+                );
+        
+        // depth
+        context.enforceState(depthShader);
+        depthShader.setUniform("dofParams", 10f, 25f, 50f, 1.0f);
+        tRenderer.render( s, depthTexture);  // depth texture
+        replaceEnforcedStates();
 
-            as.setEnabled(false);
-            TextureState ts = (TextureState) fullScreenQuadBatch.states[RenderState.RS_TEXTURE];
+		// dof
+		dofShader.clearUniforms();
+		dofShader.setUniform("scene", 0);
+		dofShader.setUniform("depth", 1);
+		fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = dofShader;
+        ts.setTexture(screenTexture, 0);
+        ts.setTexture(depthTexture,1);
+        fullScreenQuad.setRenderState(ts);
+		tRenderer.render( fullScreenQuad , resultTexture);
+		
+		ts.setTexture(resultTexture,0);
+		ts.setTexture(null, 1);
 
-
-            // see if we should use the current scene to bloom, or only things added to the pass.
-            if (useCurrentScene) {
-                // grab backbuffer to texture
-                tRenderer.copyToTexture(screenTexture, 
-                        DisplaySystem.getDisplaySystem().getWidth(), 
-                        DisplaySystem.getDisplaySystem().getHeight() 
-                        );
-                ts.setTexture(screenTexture, 0);
-                fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = finalShader;
-                tRenderer.render(fullScreenQuad, mainTexture);
-            } else {
-        		//Render scene to texture
-                Spatial s = spatials.get(0);
-                tRenderer.render( s , mainTexture);
-            }
-            Spatial s = spatials.get(0);
-            //tRenderer.render( s , mainTexture);
-            //ts.setTexture(mainTexture, 0);
-
-            /*depthTexture.setRTTSource(Texture.RTT_SOURCE_DEPTH);
-            tRenderer.copyToTexture(depthTexture, 
-                    DisplaySystem.getDisplaySystem().getWidth(), 
-                    DisplaySystem.getDisplaySystem().getHeight()
-                    );*/
-
-            saveEnforcedStates();
-            context.enforceState(depthShader);
-            depthShader.setUniform("dofParams", 10f, 15f, 30f, 1.0f);
-            //fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = depthShader;
-            tRenderer2.render( s, depthTexture);  // depth texture
-            replaceEnforcedStates();
-            
-                		//Extract intensity
-    		extractionShader.clearUniforms();
-    		extractionShader.setUniform("RT", 0);
-    		extractionShader.setUniform("exposurePow", getExposurePow());
-    		extractionShader.setUniform("exposureCutoff", getExposureCutoff());
-    
-    		ts.setTexture(mainTexture, 0);
-            fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = extractionShader;
-            tRenderer.render(fullScreenQuad, secondTexture);
-    
-    		//Blur
-    		blurShader.clearUniforms();
-    		blurShader.setUniform("RT", 0);
-    		blurShader.setUniform("depth", 1);
-    		blurShader.setUniform("sampleDist0", getBlurSize());
-    		blurShader.setUniform("blurIntensityMultiplier",  getBlurIntensityMultiplier());
-    		//ts.setTexture(depthTexture, 1);
-            ts.setTexture(secondTexture, 0);
-            fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = blurShader;
-            tRenderer.render(fullScreenQuad, mainTexture);
-    
-    		//Extra blur passes
-    		for(int i = 1; i < getNrBlurPasses(); i++) {
-                if (i%2 == 1) {
-                    ts.setTexture(mainTexture, 0);
-                    tRenderer.render(fullScreenQuad, secondTexture);
-                } else {
-                    ts.setTexture(secondTexture, 0);
-                    tRenderer.render(fullScreenQuad, mainTexture);
-                }
-    		}
-            if (getNrBlurPasses()%2 == 1) {
-                ts.setTexture(mainTexture, 0);
-            } else {
-                ts.setTexture(secondTexture, 0);
-            }
-            ts.removeTexture(1);
-            if (System.currentTimeMillis()%2000<1000)
-            	ts.setTexture(depthTexture);
-        }
-
-		//Final blend
-		//as.setEnabled(true);
+    	//Final blend
+		as.setEnabled(true);
+        
         fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = finalShader;
         r.draw(fullScreenQuadBatch);
+        
 	}
 
 	/**
