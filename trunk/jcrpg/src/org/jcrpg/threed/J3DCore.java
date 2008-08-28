@@ -281,8 +281,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	}
 
 	static private boolean loadValue(String name, boolean defaultValue) {
-		boolean result = parse(p.getProperty(name), defaultValue);
-		p.setProperty(name, result + "");
+		boolean result = defaultValue;
+		try {
+			result = parse(p.getProperty(name), defaultValue);
+			p.setProperty(name, result + "");
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -2410,9 +2416,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setRootSpatial(dofParentNode);
-				bloomRenderPass.setBlurSize(0.020f);
-				bloomRenderPass.setNearBlurDepth(VIEW_DISTANCE/2f);
-				bloomRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.8f);
+				bloomRenderPass.setBlurSize(0.004f);
+				bloomRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.7f);
+				bloomRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.3f);
 				bloomRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
 				bloomRenderPass.setThrottle(0f);
 				pManager.add(bloomRenderPass);
