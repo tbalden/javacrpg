@@ -34,10 +34,10 @@ void main()
 
 	// scale and bias into [0, 1] range
 	vec4 sum = vec4(0.5*f + 0.5);
-	if (texCol.a<0.1)
-	{
-		texCol.a = 0;
-	}
+	//if (texCol.a<0.01)
+	//{
+		//texCol.a = 0;
+	//}
 	sum.a = texCol.a;
 	gl_FragColor = sum;
 }
