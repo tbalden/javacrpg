@@ -32,6 +32,7 @@ import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.scene.shape.Quad;
+import com.jme.util.TextureManager;
 
 public class CacheStateInfo extends InputWindow {
 

@@ -477,7 +477,7 @@ public class GeoTileLoader {
 		return new int[][]{map,bigMap};
 		
 	}
-	
+	TiledTerrainBlock b;
 	/**
 	 * This part load the terrainblock plus the SplattingPassNode if necessary for the given tile.
 	 * Also it modifies terrainblock texture coordinates when the model is using atlas texture technique.
@@ -487,6 +487,10 @@ public class GeoTileLoader {
 	 */
 	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
 	{
+		if (true==false)
+		{
+			if (b!=null) return new TiledTerrainBlockAndPassNode(b,null);
+		}
 
 		NeighborCubeData data = nodePlaceholder.neighborCubeData;//getNeighborCubes(nodePlaceholder);
 		
@@ -547,46 +551,17 @@ public class GeoTileLoader {
 	        			f = b.get(i);
 	        			b.put(i, (f / atlas_size)+ position/atlas_size);
 	        		}
+	        		
+	        		// loading the big atlasTexture
+	            	TextureState[] tss = J3DCore.getInstance().modelLoader.loadTextureStates(new String[]{model.atlasTextureName});
+	        		spatial.setRenderState(tss[0]);
 
-	            	// loading the big atlasTexture
-	            	Texture texture = (Texture)ModelLoader.textureCache.get(model.atlasTextureName);
-	            	
-					if (texture==null) {
-						texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+model.atlasTextureName,Texture.MM_LINEAR,
-			                    Texture.FM_LINEAR);
-		
-						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-						texture.setApply(Texture.AM_MODULATE);
-						//texture.setRotation(J3DCore.qTexture);
-						ModelLoader.textureCache.put(model.atlasTextureName, texture);
-					}
-		
-					TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
-					ts.setTexture(texture, 0);
-					
-		            ts.setEnabled(true);
-		            spatial.setRenderState(ts);
 	            	
 	            } else
 	            {
 	            	// no atlas texture, normal working... loading ownTexture
-	            	
-	            	Texture texture = (Texture)ModelLoader.textureCache.get(ownTexture);
-					if (texture==null) {
-						texture = TextureManager.loadTexture("./data/textures/"+l.TEXDIR+ownTexture,Texture.MM_LINEAR,
-			                    Texture.FM_LINEAR);
-		
-						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-						texture.setApply(Texture.AM_MODULATE);
-						texture.setRotation(J3DCore.qTexture);
-						ModelLoader.textureCache.put(ownTexture, texture);
-					}
-		
-					TextureState ts = l.core.getDisplay().getRenderer().createTextureState();
-					ts.setTexture(texture, 0);
-					
-		            ts.setEnabled(true);
-		            spatial.setRenderState(ts);
+	            	TextureState[] tss = J3DCore.getInstance().modelLoader.loadTextureStates(new String[]{ownTexture});
+	        		spatial.setRenderState(tss[0]);
 	            }
 	            
 	            
@@ -673,7 +648,7 @@ public class GeoTileLoader {
 			Jcrpg.LOGGER.info(o.modelName);
 			//setTextures(node,o.mipMap);
 		}
-		
+		b = block;
 		return new TiledTerrainBlockAndPassNode(block,splattingPassNode);//splattingPassNode);
 	}
 	

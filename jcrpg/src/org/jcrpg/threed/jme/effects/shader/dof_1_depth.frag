@@ -34,10 +34,7 @@ void main()
 
 	// scale and bias into [0, 1] range
 	vec4 sum = vec4(0.5*f + 0.5);
-	//if (texCol.a<0.01)
-	//{
-		//texCol.a = 0;
-	//}
 	sum.a = texCol.a;
+	sum.r += 0.001; // setting r a bit higher to let dof_2 shader know this is a rendered spatial pixel, not background
 	gl_FragColor = sum;
 }

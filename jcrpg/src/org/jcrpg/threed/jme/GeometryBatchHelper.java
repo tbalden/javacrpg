@@ -57,8 +57,12 @@ import com.jme.system.DisplaySystem;
  */
 public class GeometryBatchHelper {
 
+	
 	public HashMap<String, ModelGeometryBatch> modelBatchMap = new HashMap<String, ModelGeometryBatch>();
 	public HashMap<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
+
+	//public HashSet<String, TrimeshGeometryBatch> trimeshBatchMap = new HashMap<String, TrimeshGeometryBatch>();
+
 	J3DCore core;
 	
 	public GeometryBatchHelper(J3DCore core)
@@ -184,6 +188,7 @@ public class GeometryBatchHelper {
      * @param farView tells if this item must be magnified for farview.
      */
     public void addItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView) {
+    	//if (true) return;
     	String key = getKey(internal, m, place, farView);
 
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
@@ -323,6 +328,7 @@ public class GeometryBatchHelper {
     }
     public void removeItem(boolean internal, Model m, NodePlaceholder place, boolean farView)
     {
+    	//if (true) return;
     	String key = getKey(internal, m, place, farView);
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
 	     	ModelGeometryBatch batch = modelBatchMap.get(key);
@@ -356,6 +362,7 @@ public class GeometryBatchHelper {
 
     public void removeBillboardVegetationItem(boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode)
     {
+    	//if (true) return;
     	String key = getKey(internal, m, place, farView);
     	if (m.type==Model.PARTLYBILLBOARDMODEL) {
     		// modelGeomBatch part
@@ -413,6 +420,8 @@ public class GeometryBatchHelper {
 
     
     public void addBillboardVegetationItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode) {
+    	
+    	//if (true) return;
     	String key = getKey(internal, m, place, farView);
 
     	if (m.type!=Model.TEXTURESTATEVEGETATION) {
@@ -471,8 +480,6 @@ public class GeometryBatchHelper {
     			if (pbm.atlasTexture)
     			{
     				key = getBillboardVegetationAtlasKey(internal, m, place, farView);
-    				System.out.println("ATLAS VEG: "+key+" "+m.id);
-
     			}
     			TrimeshGeometryBatch batch = trimeshBatchMap.get(key);
     	    	if (batch==null)
@@ -592,6 +599,7 @@ public class GeometryBatchHelper {
     public void updateAll()
     {
     	Jcrpg.LOGGER.info(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size());
+    	System.out.println(" -------- UPDATE ALL "+modelBatchMap.size()+ " "+trimeshBatchMap.size() +" "+J3DCore.hmSolidColorSpatials.size() );
     	{
 	    	HashSet<ModelGeometryBatch> removables = modelRemovables;
 	    	modelRemovables.clear();
@@ -680,7 +688,13 @@ public class GeometryBatchHelper {
 	    				}
     				}
 
+    				batch.unlock();
+    				batch.parent.unlock();
 					batch.parent.removeFromParent();
+					batch.removeFromParent();
+					batch.clearBatches();
+					batch.clearInstances();
+					
 					if (J3DCore.SHADOWS)
 					{
 						core.sPass.remove(batch);
@@ -742,7 +756,13 @@ public class GeometryBatchHelper {
 	    				}
     				}
     				
+    				batch.unlock();
+    				batch.parent.unlock();
 					batch.parent.removeFromParent();
+					batch.removeFromParent();
+					batch.clearBatches();
+					batch.clearInstances();
+					
 					if (J3DCore.SHADOWS)
 					{
 						core.sPass.remove(batch);

@@ -409,7 +409,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			{
 				if (!internal) {
 					targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
-					J3DCore.hmSolidColorSpatials.put(targetQuad,targetQuad);
+					J3DCore.hmSolidColorSpatials.put(targetQuad,targetQuad); // if not using this strangely quads get light colored... TODO
 				}
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
