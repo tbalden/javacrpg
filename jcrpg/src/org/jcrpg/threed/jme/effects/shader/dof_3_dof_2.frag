@@ -3,23 +3,10 @@
 //
 // This code is in the public domain. You may do whatever you want with it.
 
-#define NUM_TAPS 12						// number of taps the shader will use
-
-// uniform vec2 pixelSizeScene;			// pixel size of full resolution image
-// uniform vec2 pixelSizeBlur;				// pixel size of downsampled and blurred image
-
+uniform float sampleDist0;
 uniform sampler2D scene;				// full resolution image
 uniform sampler2D depth;				// full resolution image with depth values
-// uniform sampler2D blur;					// downsampled and blurred image
 
-//vec2 poisson[NUM_TAPS];					// containts poisson-distributed positions on the unit circle
-
-// vec2 maxCoC = vec2(1.0, 2.0);			// maximum circle of confusion (CoC) radius
-										// and diameter in pixels
-
-// float radiusScale = 1.0;				// scale factor for minimum CoC size on low res. image
-
-varying vec4 viewCoords;
 varying vec2 vTexCoord;
 
 
@@ -43,59 +30,111 @@ void main()
    vec4 sum = texture2D(scene, vTexCoord);
 
 	 
-  vec4 d = texture2D(depth, vTexCoord);
+   vec4 d = texture2D(depth, vTexCoord);
   
-//  if (d.r<0)
-//  {
-  		//sum = 0;
-	//	gl_FragColor =  sum;
+   sampleDist0 = (d.r)*sampleDist0;
   
-  //} else
-  {
-  
-  float sampleDist0 = (d.r)*0.013;
+   float additionCount = 1;
 	
-
+   vec4 dCheck = 0;
    newCoord = vTexCoord + sampleDist0 * samples00;
-   sum += texture2D(scene, newCoord);
-
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
+   
    newCoord = vTexCoord + sampleDist0 * samples01;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples02;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples03;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples04;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples05;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples06;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples07;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples08;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples09;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples10;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
    newCoord = vTexCoord + sampleDist0 * samples11;
-   sum += texture2D(scene, newCoord);
+   dCheck = texture2D(depth, newCoord);
+   if (abs(dCheck.r-d.r)<0.1)
+   {
+    	sum += texture2D(scene, newCoord);
+    	additionCount = additionCount+1;
+   }
 
-	   sum /= 13.0;
-		sum.a = d.r*2;
-		gl_FragColor =  sum;
-		
-	}
+   sum /= additionCount;
+   sum.a = d.r*2;
+   gl_FragColor =  sum;
 		
 }

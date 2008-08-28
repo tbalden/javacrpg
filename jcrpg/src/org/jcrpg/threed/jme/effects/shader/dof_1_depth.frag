@@ -10,9 +10,12 @@ uniform vec4 dofParams;
 
 varying float depth; // in view space
 
+uniform sampler2D mainTexture; 
+
 void main()
 {
 	float f;
+	vec4 texCol = texture2D(mainTexture,gl_TexCoord[0].st);
 	
 	if (depth < dofParams.y)
 	{
@@ -31,7 +34,10 @@ void main()
 
 	// scale and bias into [0, 1] range
 	vec4 sum = vec4(0.5*f + 0.5);
-	sum.w = 1.0;
-	//sum.r = sum.r + 0.1;
+	if (texCol.a<0.1)
+	{
+		texCol.a = 0;
+	}
+	sum.a = texCol.a;
 	gl_FragColor = sum;
 }

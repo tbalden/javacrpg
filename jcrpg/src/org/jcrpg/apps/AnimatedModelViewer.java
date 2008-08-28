@@ -35,6 +35,7 @@ package org.jcrpg.apps;
 import java.io.File;
 import java.nio.FloatBuffer;
 
+import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 
@@ -72,7 +73,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 
 	@Override
 	protected void simpleUpdate() {
-
+		pManager.updatePasses(tpf);
 		super.simpleUpdate();
 		if (true)
 			return;
@@ -240,7 +241,8 @@ public class AnimatedModelViewer extends SimplePassGame {
 		flare.setRootNode(rootNode);
 		lightNode.attachChild(flare);
 
-		Quad q = new Quad("a", 2, 2);
+		Quad q = new Quad("a", 12, 12);
+		Quad q2 = new Quad("a", 12, 12);
 
 		AlphaState as = display.getRenderer().createAlphaState();
 		as.setBlendEnabled(true);
@@ -259,7 +261,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		as2.setEnabled(true);
 
 		// create some interesting texturestates for splatting
-		TextureState ts1 = createSplatTextureState("jungle_atlas.jpg", null);
+		TextureState ts1 = createSplatTextureState("jungle_atlas.png", null);
 
 		/*
 		 * TextureState ts2 = createSplatTextureState( "darkrock.jpg",
@@ -277,7 +279,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		// createLightmapTextureState("./data/test/lightmap.jpg");
 
 		PassNode splattingPassNode = new PassNode("SplatPassNode");
-		Vector3f terrainScale = new Vector3f(5, 0.003f, 6);
+		Vector3f terrainScale = new Vector3f(155, 0.003f, 156);
 		// heightMap.setHeightScale(0.001f);
 		TerrainBlock page = new TerrainBlock("Terrain", 2, terrainScale,
 				new int[2 * 2], new Vector3f(), false);
@@ -287,12 +289,12 @@ public class AnimatedModelViewer extends SimplePassGame {
 		FloatBuffer b = page.getTextureBuffers(0)[0];
 		float position = 2;
 		int atlas_size = 3;
-		for (int i = 0; i < b.capacity(); i++) {
+		/*for (int i = 0; i < b.capacity(); i++) {
 			if (i%2==1) continue;
 			float f = b.get(i);
 			System.out.println(f);
 			b.put(i, (f / atlas_size)+ position/atlas_size);
-		}
+		}*/
 
 		// q.setRenderState(as);
 		// page.setRenderState(as);
@@ -350,14 +352,26 @@ public class AnimatedModelViewer extends SimplePassGame {
 		q.setRenderState(ts1);
 		page.updateRenderState();
 		q.updateRenderState();
+		q2.getLocalTranslation().addLocal(new Vector3f(10,5,2));
 		rootNode.attachChild(page);
+		rootNode.attachChild(q);
+		rootNode.attachChild(q2);
 
 		rootNode.updateRenderState();
 		rootNode.attachChild(lightNode);
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rootNode);
 		pManager.add(rootPass);
+		
+		DepthOfFieldRenderPass dof = new DepthOfFieldRenderPass(cam,4);
 
+		dof.setBlurSize(0.013f);
+		dof.setNearBlurDepth(30f);
+		dof.setFocalPlaneDepth(50f);
+		dof.setFarBlurDepth(120f);
+		dof.setRootSpatial(rootNode);
+	
+		pManager.add(dof);
 		rootNode.attachChild(fpsNode);
 
 		// notice that it comes at the end
@@ -384,7 +398,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 		// t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
 		// t0.setApply(Texture.AM_MODULATE);
-		// t0.setScale(new Vector3f(1.f,1.f, 1.0f));
+		t0.setScale(new Vector3f(10.1f,10f, 10.1f));
 		ts.setTexture(t0, 0);
 		ts.apply();
 		if (alpha != null) {

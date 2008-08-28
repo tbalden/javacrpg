@@ -10,5 +10,6 @@ void main()
 	vec4 viewPos = gl_ModelViewMatrix * gl_Vertex;
 	depth = -viewPos.z;
 
-	gl_Position = ftransform(); 
+	gl_Position = ftransform();
+	gl_TexCoord[0] = gl_MultiTexCoord0; 
 }
