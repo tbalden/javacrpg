@@ -75,6 +75,7 @@ public class DepthOfFieldRenderPass extends Pass {
     private float sinceLast = 1; 
     
     private TextureRenderer tRenderer;
+    private TextureRenderer tRendererScreen;
 	private Texture resultTexture;
 	private Texture depthTexture;
     private Texture screenTexture;
@@ -123,15 +124,17 @@ public class DepthOfFieldRenderPass extends Pass {
 		return supported;
 	}
 	int renderScaleP;
+	int originalScale;
 	/**
 	 * Creates a new bloom renderpass
 	 *
 	 * @param cam		 Camera used for rendering the bloomsource
 	 * @param renderScale Scale of bloom texture
 	 */
-	public DepthOfFieldRenderPass(Camera cam, int renderScale) {
+	public DepthOfFieldRenderPass(Camera cam, int originalScale, int renderScale) {
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 		renderScaleP = renderScale;
+		this.originalScale = originalScale;
 		resetParameters();
 
 		//Create texture renderers and rendertextures(alternating between two not to overwrite pbuffers)
@@ -143,19 +146,29 @@ public class DepthOfFieldRenderPass extends Pass {
 			supported = false;
 			return;
 		}
+        tRendererScreen = display.createTextureRenderer(
+                display.getWidth()/ originalScale, 
+                display.getHeight()/ originalScale,
+                TextureRenderer.RENDER_TEXTURE_2D);
+		if (!tRendererScreen.isSupported()) {
+			supported = false;
+			return;
+		}
 
         tRenderer.setBackgroundColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
         tRenderer.setCamera(cam);
+        tRendererScreen.setBackgroundColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
+        tRendererScreen.setCamera(cam);
 
 
         screenTexture = new Texture();
         screenTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-        tRenderer.setupTexture(screenTexture);
+        tRendererScreen.setupTexture(screenTexture);
         
 		resultTexture = new Texture();
 		resultTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
 		resultTexture.setFilter(Texture.FM_LINEAR);
-        tRenderer.setupTexture(resultTexture);
+		tRendererScreen.setupTexture(resultTexture);
 
 
         depthTexture = new Texture();
@@ -288,7 +301,7 @@ public class DepthOfFieldRenderPass extends Pass {
 	        Spatial s = rootSpatial;
 	        
 	        // rendering the screen
-	        tRenderer.copyToTexture(screenTexture, 
+	        tRendererScreen.copyToTexture(screenTexture, 
 	              DisplaySystem.getDisplaySystem().getWidth(), 
 	            DisplaySystem.getDisplaySystem().getHeight() 
 	                );
@@ -309,7 +322,7 @@ public class DepthOfFieldRenderPass extends Pass {
 	        ts.setTexture(screenTexture, 0);
 	        ts.setTexture(depthTexture,1);
 	        fullScreenQuad.setRenderState(ts);
-			tRenderer.render( fullScreenQuad , resultTexture);
+	        tRendererScreen.render( fullScreenQuad , resultTexture);
 			
 			ts.setTexture(resultTexture,0);
 			ts.setTexture(null, 1);

@@ -2204,7 +2204,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?2:4);
+		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?2:4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
@@ -2285,8 +2285,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			fs_external_special.setNeedsRefresh(true);
 			fs_external_special.setEnabled(true);
 		} else {
-			fs_external.setEnd((VIEW_DISTANCE / 1.15f));
-			fs_external.setStart(2 * VIEW_DISTANCE / 3);
+			fs_external.setEnd((VIEW_DISTANCE ));
+			fs_external.setStart(VIEW_DISTANCE*0.92f);
 		}
 		fs_external.setDensityFunction(FogState.DF_LINEAR);
 		fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
@@ -2411,9 +2411,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setRootSpatial(dofParentNode);
 				bloomRenderPass.setBlurSize(0.020f);
-				bloomRenderPass.setNearBlurDepth(18f);
-				bloomRenderPass.setFocalPlaneDepth(40f);
-				bloomRenderPass.setFarBlurDepth(100f);
+				bloomRenderPass.setNearBlurDepth(VIEW_DISTANCE/2f);
+				bloomRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.8f);
+				bloomRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
 				bloomRenderPass.setThrottle(0f);
 				pManager.add(bloomRenderPass);
 			}
