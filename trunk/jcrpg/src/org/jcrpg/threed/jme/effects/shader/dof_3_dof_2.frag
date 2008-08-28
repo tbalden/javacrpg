@@ -32,6 +32,9 @@ void main()
 	 
    vec4 d = texture2D(depth, vTexCoord);
   
+  if (d.r>0.001)
+  {
+  
    sampleDist0 = (d.r)*sampleDist0;
   
    float additionCount = 1;
@@ -136,5 +139,11 @@ void main()
    sum /= additionCount;
    sum.a = d.r*2;
    gl_FragColor =  sum;
+   
+   } else
+   {
+   	sum.a = 0;
+    gl_FragColor =  sum;
+   }
 		
 }

@@ -219,7 +219,7 @@ public class DepthOfFieldRenderPass extends Pass {
 	    as.setTestEnabled(true);
 	    as.setTestFunction(AlphaState.TF_GREATER);
 	    as.setEnabled(true);
-		
+
         fullScreenQuadBatch.setRenderState(as);
 
         fullScreenQuad.updateRenderState();
@@ -311,7 +311,6 @@ public class DepthOfFieldRenderPass extends Pass {
 	        fullScreenQuad.setRenderState(ts);
 			tRenderer.render( fullScreenQuad , resultTexture);
 			
-			//ts.setTexture(resultTexture,0);
 			ts.setTexture(resultTexture,0);
 			ts.setTexture(null, 1);
         }
