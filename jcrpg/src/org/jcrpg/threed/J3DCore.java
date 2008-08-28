@@ -175,6 +175,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static int EFFECT_VOLUME_PERCENT = 60;
 
 	public static boolean BLOOM_EFFECT = false;
+	public static boolean DOF_DETAILED = false;
 	public static boolean SHADOWS = true;
 
 	public static boolean ANIMATED_GRASS = true;
@@ -248,6 +249,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);
 			BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
+			DOF_DETAILED = loadValue("DOF_DETAILED", false);
 			ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
 			DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
 			SHADOWS = loadValue("SHADOWS", false);
@@ -2202,7 +2204,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldRenderPass(cam, 2);
+		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?2:4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
@@ -2408,7 +2410,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setRootSpatial(dofParentNode);
-				bloomRenderPass.setBlurSize(0.013f);
+				bloomRenderPass.setBlurSize(0.007f);
+				bloomRenderPass.setNearBlurDepth(18f);
+				bloomRenderPass.setFocalPlaneDepth(40f);
+				bloomRenderPass.setFarBlurDepth(100f);
+				bloomRenderPass.setThrottle(0f);
 				pManager.add(bloomRenderPass);
 			}
 		}

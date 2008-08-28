@@ -50,9 +50,11 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
 /**
- * GLSL Depth of Field effect pass. - Creating a depth texture - Use it on full screen texture downsampled
- * to blur it with stronger opacity on blured part - render result (unblended) on the screen overwriting
- * with the blured parts. 
+ * GLSL Depth of Field effect pass. - Creating a depth texture with a root Spatial and its subspatials - 
+ * Use it on full screen texture downsampled
+ * to blur it with stronger opacity and blurring on far away parts - 
+ * render result (unblended) on the screen overwriting
+ * with the blurred parts. 
  * 
  * @author Paul Illes - initial implementation of DepthOfFieldRenderPass for jME 1.0 based on partially MrCorder's 
  *	shaders plus : about original Ogre DoF demo: 
