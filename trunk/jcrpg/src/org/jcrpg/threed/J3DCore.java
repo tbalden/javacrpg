@@ -45,8 +45,7 @@ import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
-import org.jcrpg.threed.jme.effects.DepthOfFieldPass;
-import org.jcrpg.threed.jme.effects.DepthOfFieldPassOrig;
+import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -1958,7 +1957,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FogState fs_external_special;
 	public FogState fs_internal;
 	public DirectionalShadowMapPass sPass = null;
-	private DepthOfFieldPassOrig bloomRenderPass;
+	private DepthOfFieldRenderPass bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
 
 	public CullState cs_back = null;
@@ -2203,7 +2202,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldPassOrig(cam, 4);
+		bloomRenderPass = new DepthOfFieldRenderPass(cam, 2);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
@@ -2408,13 +2407,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
-				bloomRenderPass.setUseCurrentScene(true);
-				bloomRenderPass.add(dofParentNode);
-				bloomRenderPass.setBlurIntensityMultiplier(1.6f);
-				bloomRenderPass.setBlurSize(0.001f);
-
-				bloomRenderPass.setExposureCutoff(0.26f);
-				bloomRenderPass.setExposurePow(5f);
+				bloomRenderPass.setRootSpatial(dofParentNode);
+				bloomRenderPass.setBlurSize(0.013f);
 				pManager.add(bloomRenderPass);
 			}
 		}

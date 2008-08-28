@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003-2007 jMonkeyEngine
+ * Copyright (c) 2003-2008 jMonkeyEngine
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.renderer.pass.Pass;
-import com.jme.scene.Node;
 import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
 import com.jme.scene.batch.TriangleBatch;
@@ -48,19 +47,26 @@ import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 
 /**
- * GLSL bloom effect pass. - Render supplied source to a texture - Extract
- * intensity - Blur intensity - Blend with first pass
+ * GLSL Depth of Field effect pass. - Creating a depth texture - Use it on full screen texture downsampled
+ * to blur it with stronger opacity on blured part - render result (unblended) on the screen overwriting
+ * with the blured parts. 
  * 
- * @author Rikard Herlitz (MrCoder) - initial implementation
+ * @author Paul Illes - initial implementation of DepthOfFieldRenderPass for jME 1.0 based on partially MrCorder's 
+ *	shaders plus : about original Ogre DoF demo: 
+ *  "Depth of Field" demo for Ogre
+ *  Copyright (C) 2006  Christian Lindequist Larsen
+ *  This code is in the public domain. You may do whatever you want with it.
+ *  - Used from that part the depth shader with some modifications. 
+ *  
+ * @author (MrCoder) - initial implementation of BloomRenderPass (original pass)
  * @author Joshua Slack - Enhancements and reworking to use a single
  *         texrenderer, ability to reuse existing back buffer, faster blur,
  *         throttling speed-up, etc.
  */
-public class DepthOfFieldPassOrig extends Pass {
+public class DepthOfFieldRenderPass extends Pass {
     private static final long serialVersionUID = 1L;
 
     private float throttle = 1/50f; 
@@ -75,34 +81,31 @@ public class DepthOfFieldPassOrig extends Pass {
 	private TriangleBatch fullScreenQuadBatch;
 
 	private GLSLShaderObjectsState finalShader;
-
 	private GLSLShaderObjectsState depthShader;
 	private GLSLShaderObjectsState dofShader;
 
 	
-	private int nrBlurPasses;
 	private float blurSize;
-	private float blurIntensityMultiplier;
-	private float exposurePow;
-	private float exposureCutoff;
-	private int depth;
+
+	public float nearBlurDepth = 10f;
+    public float focalPlaneDepth = 25f;
+    public float farBlurDepth = 50f;
+    /** blurriness cutoff constant for objects behind the focal plane */
+    public float blurrinessCutoff = 1f;
 
 	private boolean supported = true;
-    private boolean useCurrentScene = false;
 
-	public static String shaderDirectory = "org/jcrpg/threed/jme/effects/data/";
-	public static String shaderDirectory2 = "org/jcrpg/threed/jme/effects/shader/";
+	public static String shaderDirectory = "org/jcrpg/threed/jme/effects/shader/";
 
 	/**
 	 * Reset bloom parameters to default
 	 */
 	public void resetParameters() {
-		nrBlurPasses = 2;
-		blurSize = 0.02f;
-		blurIntensityMultiplier = 1.3f;
-		exposurePow = 3.0f;
-		exposureCutoff = 0.0f;
-		depth = 4;
+		nearBlurDepth = 10f;
+		focalPlaneDepth = 25f;
+		farBlurDepth = 50f;
+		blurrinessCutoff = 50f;
+		blurSize = 0.013f;
 	}
 
 	/**
@@ -124,7 +127,7 @@ public class DepthOfFieldPassOrig extends Pass {
 	 * @param cam		 Camera used for rendering the bloomsource
 	 * @param renderScale Scale of bloom texture
 	 */
-	public DepthOfFieldPassOrig(Camera cam, int renderScale) {
+	public DepthOfFieldRenderPass(Camera cam, int renderScale) {
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 		renderScaleP = renderScale;
 		resetParameters();
@@ -145,9 +148,7 @@ public class DepthOfFieldPassOrig extends Pass {
 
         screenTexture = new Texture();
         screenTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-        //screenTexture.setFilter(Texture.FM_LINEAR);
         tRenderer.setupTexture(screenTexture);
-
         
 		resultTexture = new Texture();
 		resultTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
@@ -157,8 +158,6 @@ public class DepthOfFieldPassOrig extends Pass {
 
         depthTexture = new Texture();
 		depthTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-		//depthTexture.setFilter(Texture.FM_LINEAR);
-		//depthTexture.setRTTSource(Texture.RTT_SOURCE_DEPTH);
         tRenderer.setupTexture(depthTexture);
 
 
@@ -168,8 +167,8 @@ public class DepthOfFieldPassOrig extends Pass {
 			supported = false;
 			return;
 		} else {
-			finalShader.load(DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory + "bloom_final.vert"),
-					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory + "bloom_final.frag"));
+			finalShader.load(DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_fullscreen.vert"),
+					DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_fullscreen.frag"));
 			finalShader.setEnabled(true);
 		}
 
@@ -180,8 +179,8 @@ public class DepthOfFieldPassOrig extends Pass {
 			supported = false;
 			return;
 		} else {
-			depthShader.load(DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_1_depth.vert"),
-					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_1_depth.frag"));
+			depthShader.load(DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_1_depth.vert"),
+					DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_1_depth.frag"));
 			depthShader.setEnabled(true);
 		}
 
@@ -192,8 +191,8 @@ public class DepthOfFieldPassOrig extends Pass {
 			return;
 		} else {
 			dofShader.load(
-					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_simple.vert"),
-					DepthOfFieldPassOrig.class.getClassLoader().getResource(shaderDirectory2 + "dof_3_dof_2.frag"));
+					DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_simple.vert"),
+					DepthOfFieldRenderPass.class.getClassLoader().getResource(shaderDirectory + "dof_3_dof_2.frag"));
 			dofShader.setEnabled(true);
 		}
 		
@@ -214,6 +213,7 @@ public class DepthOfFieldPassOrig extends Pass {
         fullScreenQuadBatch.setRenderState(ts);
 
 		AlphaState as = display.getRenderer().createAlphaState();
+		// no blending, result texture has to overwrite screen - not blend!
 	    as.setTestEnabled(true);
 	    as.setTestFunction(AlphaState.TF_GREATER);
 	    as.setEnabled(true);
@@ -222,32 +222,9 @@ public class DepthOfFieldPassOrig extends Pass {
 
         fullScreenQuad.updateRenderState();
         fullScreenQuad.updateGeometricState(0.0f, true);
-		zState = display.getRenderer().createZBufferState();
-		zState.setFunction(ZBufferState.CF_LESS);
-		zState.setEnabled(true);
 		
 	}
-	ZBufferState zState;
-    /**
-     * Helper class to get all spatials rendered in one TextureRenderer.render() call.
-     */
-    private class SpatialsRenderNode extends Node {
-        private static final long serialVersionUID = 7367501683137581101L;
-        public void draw( Renderer r ) {
-            Spatial child;
-            for (int i = 0, cSize = spatials.size(); i < cSize; i++) {
-                child = spatials.get(i);
-                if (child != null)
-                    child.onDraw(r);
-            }
-        }
-
-        public void onDraw( Renderer r ) {
-            draw( r );
-        }
-    }
-
-    private final SpatialsRenderNode spatialsRenderNode = new SpatialsRenderNode();
+    
 
     @Override
     protected void doUpdate(float tpf) {
@@ -276,43 +253,66 @@ public class DepthOfFieldPassOrig extends Pass {
 			context.enforcedStateList[x] = preStates[x];
 		}
 	}
+	
+    private Spatial rootSpatial = null;
 
-    public void doRender(Renderer r) {
-        if (!useCurrentScene && spatials.size() == 0 ) {
+
+    public Spatial getRootSpatial() {
+		return rootSpatial;
+	}
+    
+    /**
+     * Sets the scene's root spacial which is used to render depth texture.
+     * @param rootSpatial
+     */
+    public void setRootSpatial(Spatial rootSpatial) {
+		this.rootSpatial = rootSpatial;
+	}
+    
+
+	public void doRender(Renderer r) {
+        if (rootSpatial==null) {
             return;
         }
 
         AlphaState as = (AlphaState) fullScreenQuadBatch.states[RenderState.RS_ALPHA];
         TextureState ts = (TextureState) fullScreenQuadBatch.states[RenderState.RS_TEXTURE];
 
-        as.setEnabled(false);
-        
-        Spatial s = spatials.get(0);
-        
-        // rendering the screen
-        tRenderer.copyToTexture(screenTexture, 
-              DisplaySystem.getDisplaySystem().getWidth(), 
-            DisplaySystem.getDisplaySystem().getHeight() 
-                );
-        
-        // depth
-        context.enforceState(depthShader);
-        depthShader.setUniform("dofParams", 10f, 25f, 50f, 1.0f);
-        tRenderer.render( s, depthTexture);  // depth texture
-        replaceEnforcedStates();
-
-		// dof
-		dofShader.clearUniforms();
-		dofShader.setUniform("scene", 0);
-		dofShader.setUniform("depth", 1);
-		fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = dofShader;
-        ts.setTexture(screenTexture, 0);
-        ts.setTexture(depthTexture,1);
-        fullScreenQuad.setRenderState(ts);
-		tRenderer.render( fullScreenQuad , resultTexture);
-		
-		ts.setTexture(resultTexture,0);
-		ts.setTexture(null, 1);
+        if (throttle<sinceLast)
+        {
+        	sinceLast = 0;
+        	as.setEnabled(false);
+	        
+	        Spatial s = rootSpatial;
+	        
+	        // rendering the screen
+	        tRenderer.copyToTexture(screenTexture, 
+	              DisplaySystem.getDisplaySystem().getWidth(), 
+	            DisplaySystem.getDisplaySystem().getHeight() 
+	                );
+	        
+	        // depth
+	        context.enforceState(depthShader);
+	        depthShader.setUniform("dofParams", nearBlurDepth, focalPlaneDepth, farBlurDepth, blurrinessCutoff);
+	        depthShader.setUniform("mainTexture", 0);
+	        tRenderer.render( s, depthTexture);  // depth texture
+	        replaceEnforcedStates();
+	
+			// dof
+			dofShader.clearUniforms();
+			dofShader.setUniform("scene", 0);
+			dofShader.setUniform("depth", 1);
+			dofShader.setUniform("sampleDist0", getBlurSize());
+			fullScreenQuadBatch.states[RenderState.RS_GLSL_SHADER_OBJECTS] = dofShader;
+	        ts.setTexture(screenTexture, 0);
+	        ts.setTexture(depthTexture,1);
+	        fullScreenQuad.setRenderState(ts);
+			tRenderer.render( fullScreenQuad , resultTexture);
+			
+			//ts.setTexture(resultTexture,0);
+			ts.setTexture(resultTexture,0);
+			ts.setTexture(null, 1);
+        }
 
     	//Final blend
 		as.setEnabled(true);
@@ -338,6 +338,7 @@ public class DepthOfFieldPassOrig extends Pass {
     public void setThrottle(float throttle) {
         this.throttle = throttle;
     }
+    
 
     public float getBlurSize() {
 		return blurSize;
@@ -347,51 +348,35 @@ public class DepthOfFieldPassOrig extends Pass {
 		this.blurSize = blurSize;
 	}
 
-	public float getExposurePow() {
-		return exposurePow;
+    public float getNearBlurDepth() {
+		return nearBlurDepth;
 	}
 
-	public void setExposurePow(float exposurePow) {
-		this.exposurePow = exposurePow;
+	public void setNearBlurDepth(float nearBlurDepth) {
+		this.nearBlurDepth = nearBlurDepth;
 	}
 
-	public float getExposureCutoff() {
-		return exposureCutoff;
+	public float getFocalPlaneDepth() {
+		return focalPlaneDepth;
 	}
 
-	public void setExposureCutoff(float exposureCutoff) {
-		this.exposureCutoff = exposureCutoff;
+	public void setFocalPlaneDepth(float focalPlaneDepth) {
+		this.focalPlaneDepth = focalPlaneDepth;
 	}
 
-	public float getBlurIntensityMultiplier() {
-		return blurIntensityMultiplier;
+	public float getFarBlurDepth() {
+		return farBlurDepth;
 	}
 
-	public void setBlurIntensityMultiplier(float blurIntensityMultiplier) {
-		this.blurIntensityMultiplier = blurIntensityMultiplier;
+	public void setFarBlurDepth(float farBlurDepth) {
+		this.farBlurDepth = farBlurDepth;
 	}
 
-	public int getNrBlurPasses() {
-		return nrBlurPasses;
+	public float getBlurrinessCutoff() {
+		return blurrinessCutoff;
 	}
 
-	public void setNrBlurPasses(int nrBlurPasses) {
-		this.nrBlurPasses = nrBlurPasses;
+	public void setBlurrinessCutoff(float blurrinessCutoff) {
+		this.blurrinessCutoff = blurrinessCutoff;
 	}
-
-    public boolean useCurrentScene() {
-        return useCurrentScene;
-    }
-
-    public void setUseCurrentScene(boolean useCurrentScene) {
-        this.useCurrentScene = useCurrentScene;
-    }
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
 }
