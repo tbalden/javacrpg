@@ -119,6 +119,8 @@ public class VegetationSetup {
 		    		
 					
 					Texture t1 = ts[i].getTexture();
+					t1.setFilter(Texture.FM_LINEAR);
+					t1.setMipmapState(Texture.MM_NEAREST);
 					t1.setApply(Texture.AM_MODULATE);
 					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
 					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
@@ -230,6 +232,8 @@ public class VegetationSetup {
 					quad.updateModelBound();
 					
 					Texture t1 = ts[i].getTexture();
+					t1.setFilter(Texture.FM_LINEAR);
+					t1.setMipmapState(Texture.MM_NEAREST);
 					t1.setApply(Texture.AM_MODULATE);
 					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
 					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
@@ -242,7 +246,7 @@ public class VegetationSetup {
 					if (!internal) {
 						quad.setLightCombineMode(LightState.OFF);
 						quad.setSolidColor(new ColorRGBA(1,1,1,1));
-						J3DCore.hmSolidColorSpatials.put(quad,quad);
+						J3DCore.hmSolidColorSpatials.put(quad,quad); // if not using this strangely quads get light colored... TODO
 					}
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
@@ -370,7 +374,7 @@ public class VegetationSetup {
 					//quad.setRenderState(fp);
 					
 					n.attachChild(quad);
-					J3DCore.hmSolidColorSpatials.put(quad,quad);
+					//J3DCore.hmSolidColorSpatials.put(quad,quad);
 	
 					if (J3DCore.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);

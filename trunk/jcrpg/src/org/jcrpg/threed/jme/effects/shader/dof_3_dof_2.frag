@@ -32,7 +32,7 @@ void main()
 	 
    vec4 d = texture2D(depth, vTexCoord);
   
-  if (d.r>0.001)
+  if (d.r>0.001) // in the scenario, but not the closest parts which should be kept alpha = 0 (see else)...
   {
   
    sampleDist0 = (d.r)*sampleDist0;
@@ -42,7 +42,8 @@ void main()
    vec4 dCheck = 0;
    newCoord = vTexCoord + sampleDist0 * samples00;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   // if out of rendered spatials pixel (background - r = zero) or near, mix it 
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -50,7 +51,7 @@ void main()
    
    newCoord = vTexCoord + sampleDist0 * samples01;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -58,7 +59,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples02;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -66,7 +67,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples03;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -74,7 +75,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples04;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -82,7 +83,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples05;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -90,7 +91,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples06;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -98,7 +99,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples07;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -106,7 +107,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples08;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -114,7 +115,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples09;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -122,7 +123,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples10;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -130,7 +131,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples11;
    dCheck = texture2D(depth, newCoord);
-   if (abs(dCheck.r-d.r)<0.1)
+   if (dCheck.r==0 || abs(dCheck.r-d.r)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -143,7 +144,7 @@ void main()
    } else
    {
    	sum.a = 0;
-    gl_FragColor =  sum;
+    //gl_FragColor =  sum;
    }
 		
 }

@@ -61,6 +61,8 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 
 /**
  * Static elements 3d display part.
@@ -1745,8 +1747,14 @@ public class J3DStandingEngine {
 		
 			    if (cullVariationCounter%20==0) {
 					modelPool.cleanPools();
+					TextureManager.clearCache();
 					System.gc();
 				}
+			    
+			    //TextureManager.doTextureCleanup();
+			    //TextureManager.clearCache();
+			    //modelLoader.cleanAll();
+			    //System.gc();
 		
 				// every 20 steps do a garbage collection
 			    core.garbCollCounter++;

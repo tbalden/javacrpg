@@ -591,58 +591,61 @@ public class ModelLoader {
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
 	    	Jcrpg.LOGGER.warning("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
-	    	
+	    	System.out.println("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-	    	if (normalNames!=null && normalNames[i]!=null)
+	    	//if (true==false)
 	    	{
-	            try {
-		            Texture tex = null;
-	            	if (transformNormal) {
-	            		tex = new Texture();
-	            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+TEXDIR+normalNames[i]).toURI().toURL(),true);
-	            		Image bumpImage = new SobelImageFilter().apply(heightImage);
-			            tex.setImage(bumpImage);
-	            	} else
-	            	{
-			            tex = TextureManager.loadTexture("./data/textures/"+TEXDIR+normalNames[i],Texture.MM_LINEAR,
-					            Texture.FM_LINEAR);
-	            	}
-					tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-					tex.setApply(Texture.AM_COMBINE);
-					tex.setCombineFuncRGB(Texture.ACF_DOT3_RGB);
-					tex.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-					tex.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
-					ts.setTexture(tex, 0);
-	            } catch (Exception ex)
-	            {
-	            	
-	            }
+		    	if (normalNames!=null && normalNames[i]!=null)
+		    	{
+		            try {
+			            Texture tex = null;
+		            	if (transformNormal) {
+		            		tex = new Texture();
+		            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+TEXDIR+normalNames[i]).toURI().toURL(),true);
+		            		Image bumpImage = new SobelImageFilter().apply(heightImage);
+				            tex.setImage(bumpImage);
+		            	} else
+		            	{
+				            tex = TextureManager.loadTexture("./data/textures/"+TEXDIR+normalNames[i],Texture.MM_LINEAR,
+						            Texture.FM_LINEAR);
+		            	}
+						tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
+						tex.setApply(Texture.AM_COMBINE);
+						tex.setCombineFuncRGB(Texture.ACF_DOT3_RGB);
+						tex.setCombineSrc0RGB(Texture.ACS_TEXTURE);
+						tex.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+						ts.setTexture(tex, 0);
+		            } catch (Exception ex)
+		            {
+		            	
+		            }
+		    	}
+		    	
+				Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MM_LINEAR,
+			            Texture.FM_LINEAR);
+				//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
+				qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
+				if (J3DCore.MIPMAP_GLOBAL)
+				{	
+					qtexture.setFilter(Texture.FM_LINEAR);
+					qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+				}
+				
+				
+				if (normalNames!=null && normalNames[i]!=null)
+				{
+					// TODO texture colors don't get in when using dot3 normal map! what settings here?
+					qtexture.setCombineFuncRGB(Texture.ACF_MODULATE);
+					qtexture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
+					qtexture.setCombineSrc1RGB(Texture.ACS_TEXTURE); 
+					qtexture.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+					qtexture.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
+					ts.setTexture(qtexture,1);
+				} else
+				{
+					ts.setTexture(qtexture,0);
+				}
 	    	}
-	    	
-			Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MM_LINEAR,
-		            Texture.FM_LINEAR);
-			//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
-			qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
-			if (J3DCore.MIPMAP_GLOBAL)
-			{	
-				qtexture.setFilter(Texture.FM_LINEAR);
-				qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
-			}
-			
-			
-			if (normalNames!=null && normalNames[i]!=null)
-			{
-				// TODO texture colors don't get in when using dot3 normal map! what settings here?
-				qtexture.setCombineFuncRGB(Texture.ACF_MODULATE);
-				qtexture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
-				qtexture.setCombineSrc1RGB(Texture.ACS_TEXTURE); 
-				qtexture.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-				qtexture.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
-				ts.setTexture(qtexture,1);
-			} else
-			{
-				ts.setTexture(qtexture,0);
-			}
 			ts.setEnabled(true);
 			textureStateCache.put(key, ts);
 			tss.add(ts);
@@ -820,6 +823,7 @@ public class ModelLoader {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
     	//Jcrpg.LOGGER.info("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
+		System.out.println("LOADING MODEL! "+o.modelName+" - CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
 		
 		tempNodeKeys.add(key);
@@ -840,7 +844,7 @@ public class ModelLoader {
     			return n;
     		}
     	}
-    	Jcrpg.LOGGER.info("ModelLoader.loadNode - New model: "+o.modelName);
+    	System.out.println("ModelLoader.loadNode - New model: "+o.modelName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{

@@ -102,12 +102,23 @@ public class ModelPool {
 					cont.used.add(n);
 					return n;
 				}
+				if (model.type==Model.PARTLYBILLBOARDMODEL)
+				{
+					// partly billboard models are batched, no need to load multiple ...
+					if (cont.used.iterator().hasNext()) {
+						PooledNode n = cont.used.iterator().next();
+						n.update(place);
+						return n;
+					}
+				}
 			}
 			PooledNode n = core.modelLoader.loadObject(place,rc, model, rotated);
 			// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
 			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
+			
+			if (model.type==Model.PARTLYBILLBOARDMODEL) toCreate = 0; // partly billboard models are batched, no need to load multiple ...
 			
 			if ( toCreate>0)
 			{
