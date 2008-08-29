@@ -144,7 +144,7 @@ void main()
    } else
    {
    	sum.a = 0;
-    //gl_FragColor =  sum;
+    gl_FragColor =  sum;
    }
 		
 }

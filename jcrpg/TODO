@@ -49,6 +49,9 @@ OPTIMIZATIONS:
 (09:42:14 PM) Momoko_Fan: from ATI site
 (09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
 
+Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
+For alpha textures use DXT5 instead of DXT1. Box filter 
+
 [ ] hunt down memory usage !!! -> createTextureStates?? NOT --> it's the GeometryBatch probably!
 
 	300 MB at start, around 500MB without any batches, and ~800MB+ with batches / loading models
