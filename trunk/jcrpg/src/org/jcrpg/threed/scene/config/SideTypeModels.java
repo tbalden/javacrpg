@@ -301,7 +301,7 @@ public class SideTypeModels {
 		palm_high.atlasTexture = true;
 		palm_high.atlasMultiTextureParts = true;
 		palm_high.atlasMultiIds = new int[]{0,1};
-		palm_high.atlasTextureName = "tropical_foliage_atlas.png";
+		palm_high.atlasTextureName = "tropical_foliage_atlas.dds";
 		palm_high.atlasSize = AtlasTextureTypeConstants.TROPICAL_FOLIAGE_ATLAS_SIZE;
 		palm_high.atlasId = 1;
 
@@ -311,7 +311,7 @@ public class SideTypeModels {
 		palm_lowbranch_high.quadYSizeMultiplier = 1.0f;
 		palm_lowbranch_high.shadowCaster = true;
 		palm_lowbranch_high.atlasTexture = true;
-		palm_lowbranch_high.atlasTextureName = "tropical_foliage_atlas.png";
+		palm_lowbranch_high.atlasTextureName = "tropical_foliage_atlas.dds";
 		palm_lowbranch_high.atlasSize = AtlasTextureTypeConstants.TROPICAL_FOLIAGE_ATLAS_SIZE;
 		palm_lowbranch_high.atlasId = 0;
 		
@@ -439,12 +439,12 @@ public class SideTypeModels {
 
 		
 		// CONTINENTAL GRASS TYPES, atlas
-		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.png"},0.65f,0.5f,4,0.6f);
+		TextureStateVegetationModel tsm_cont_grass = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.dds"},0.65f,0.5f,4,0.6f);
 		tsm_cont_grass.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_GRASS_ATLAS_SIZE;
 		tsm_cont_grass.atlasId = 0;
 		tsm_cont_grass.atlasTexture = true;
 		tsm_cont_grass.updateKey();
-		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.png"},0.65f,0.5f,3,0.7f);
+		TextureStateVegetationModel tsm_cont_grass_flower = new TextureStateVegetationModel(new String[]{"continental_grass_atlas.dds"},0.65f,0.5f,3,0.7f);
 		tsm_cont_grass_flower.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_GRASS_ATLAS_SIZE;
 		tsm_cont_grass_flower.atlasId = 1;
 		tsm_cont_grass_flower.atlasTexture = true;
@@ -455,12 +455,12 @@ public class SideTypeModels {
 		lod_cont_grass_1.rotateOnSteep = true;
 		
 		// JUNGLE GRASS TYPES, atlas
-		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.png"},0.5f,0.45f,3,0.7f);
+		TextureStateVegetationModel tsm_jung_grass = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.dds"},0.5f,0.45f,3,0.7f);
 		tsm_jung_grass.atlasSize = AtlasTextureTypeConstants.TROPICAL_GRASS_ATLAS_SIZE;
 		tsm_jung_grass.atlasId = 0;
 		tsm_jung_grass.atlasTexture = true;
 		tsm_jung_grass.updateKey();
-		TextureStateVegetationModel tsm_jung_grass_flower = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.png"},0.5f,0.45f,2,1.0f);
+		TextureStateVegetationModel tsm_jung_grass_flower = new TextureStateVegetationModel(new String[]{"tropical_grass_atlas.dds"},0.5f,0.45f,2,1.0f);
 		tsm_jung_grass_flower.atlasSize = AtlasTextureTypeConstants.TROPICAL_GRASS_ATLAS_SIZE;
 		tsm_jung_grass_flower.atlasId = 1;
 		tsm_jung_grass_flower.atlasTexture = true;
@@ -612,7 +612,7 @@ public class SideTypeModels {
 		sm_jungle.steepTextureName = "jungle_hillside.png";
 		sm_jungle.secTextureName = "jungle_b.jpg";
 		sm_jungle.useAtlasTexture = true;
-		sm_jungle.atlasTextureName = "jungle_atlas.png";
+		sm_jungle.atlasTextureName = "jungle_atlas.dds";
 		
 		SimpleModel sm_jungle_2 = new SimpleModel("models/ground/ground_2.obj","jungle.jpg"); sm_jungle_2.rotateOnSteep = false; sm_jungle_2.generatedGroundModel = true; sm_jungle_2.rotateOnSteep = false; sm_jungle_2.yGeomBatchSize = yCommon; sm_jungle_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_2.farViewEnabled = true;
 		SimpleModel sm_jungle_3 = new SimpleModel("models/ground/ground_3.obj","jungle.jpg"); sm_jungle_3.rotateOnSteep = false; sm_jungle_3.generatedGroundModel = true; sm_jungle_3.rotateOnSteep = false; sm_jungle_3.yGeomBatchSize = yCommon; sm_jungle_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_jungle_3.farViewEnabled = true;
