@@ -432,12 +432,15 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				instance.getAttributes().setTranslation(visible.iterator().next().getAttributes().getTranslation());
 			}*/
 			
-			//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.batchInstance);
 			if (triMesh!=null) 
 			{
 				// if trimesh based detailed model we use multiBatchInstance map
 				placeholder.multiBatchInstance.remove(key);
+//				removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.multiBatchInstance.get(key));
 				
+			} else
+			{
+				//removeInstance((GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.modelGeomBatchInstance);
 			}
 			placeholder.modelGeomBatchInstance = null;
 		}

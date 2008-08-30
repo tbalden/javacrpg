@@ -392,7 +392,6 @@ public class GeometryBatchHelper {
 			    		}
 			    	}
 			    	place.modelGeomBatchInstance = null;
-		    		//batch.removeItem(place);
 		    	}
     		}
     		// trimeshGeomBatch part
@@ -692,6 +691,7 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
+					batch.releaseBuffersOnCleanUp();
 					batch.clearBatches();
 					batch.clearInstances();
 					
@@ -760,8 +760,10 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
+					batch.releaseBuffersOnCleanUp();
 					batch.clearBatches();
 					batch.clearInstances();
+					
 					
 					if (J3DCore.SHADOWS)
 					{

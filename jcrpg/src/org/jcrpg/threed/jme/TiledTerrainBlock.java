@@ -56,6 +56,7 @@ import java.nio.FloatBuffer;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
+import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
@@ -471,8 +472,16 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     private void buildVertices() {
         TriangleBatch batch = getBatch(0);
         batch.setVertexCount(heightMap.length);
-        batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch
-                .getVertexBuffer(), batch.getVertexCount()));
+        if (batch.getVertexBuffer()==null || !(batch.getVertexBuffer().limit()==batch.getVertexCount()*3))
+        {
+        	if (batch.getVertexBuffer()!=null)
+        	{
+        		ExactBufferPool.releaseVector3Buffer(batch.getVertexBuffer());
+        	}
+        	batch.setVertexBuffer(ExactBufferPool.getVector3Buffer(batch.getVertexCount()));
+        }
+        //batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch
+          //      .getVertexBuffer(), batch.getVertexCount()));
         Vector3f point = new Vector3f();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -515,8 +524,16 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     	int[] heightMap = helperHeightMap;
         TriangleBatch batch = helperBatch;
         batch.setVertexCount(heightMap.length);
-        batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch
-                .getVertexBuffer(), batch.getVertexCount()));
+        if (batch.getVertexBuffer()==null || !(batch.getVertexBuffer().limit()==batch.getVertexCount()*3))
+        {
+        	if (batch.getVertexBuffer()!=null)
+        	{
+        		ExactBufferPool.releaseVector3Buffer(batch.getVertexBuffer());
+        	}
+        	batch.setVertexBuffer(ExactBufferPool.getVector3Buffer(batch.getVertexCount()));
+        }
+        //batch.setVertexBuffer(BufferUtils.createVector3Buffer(batch
+          //      .getVertexBuffer(), batch.getVertexCount()));
         Vector3f point = new Vector3f();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -563,9 +580,19 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         float offsetY = offset.y + (offsetAmount * stepScale.z);
         TriangleBatch batch = getBatch(0);
 
-        FloatBuffer texs = BufferUtils.createVector2Buffer(batch
-                .getTextureBuffers().get(0), batch.getVertexCount());
-        batch.getTextureBuffers().set(0, texs);
+        FloatBuffer texs = null;
+        if (batch.getTextureBuffers().get(0)==null || !(batch.getTextureBuffers().get(0).limit()==batch.getVertexCount()*2))
+        {
+        	if (batch.getTextureBuffers().get(0)!=null)
+        	{
+        		ExactBufferPool.releaseVector2Buffer(batch.getTextureBuffers().get(0));
+        	}
+        	batch.getTextureBuffers().set(0,ExactBufferPool.getVector2Buffer(batch.getVertexCount()));
+        }
+        texs = batch.getTextureBuffer(0);
+        //FloatBuffer texs = BufferUtils.createVector2Buffer(batch
+          //      .getTextureBuffers().get(0), batch.getVertexCount());
+        //batch.getTextureBuffers().set(0, texs);
         texs.clear();
 
         batch.getVertexBuffer().rewind();
@@ -589,8 +616,17 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     	// (check helperNormalIndex trick, and checking the plus column skip.)
     	
         TriangleBatch batch = getBatch(0);
-               batch.setNormalBuffer(BufferUtils.createVector3Buffer(batch
-                .getNormalBuffer(), batch.getVertexCount()));
+
+        if (batch.getNormalBuffer()==null || !(batch.getNormalBuffer().limit()==batch.getVertexCount()*3))
+        {
+        	if (batch.getNormalBuffer()!=null)
+        	{
+        		ExactBufferPool.releaseVector3Buffer(batch.getNormalBuffer());
+        	}
+        	batch.setNormalBuffer(ExactBufferPool.getVector3Buffer(batch.getVertexCount()));
+        }
+        //batch.setNormalBuffer(BufferUtils.createVector3Buffer(batch
+          //      .getNormalBuffer(), batch.getVertexCount()));
         Vector3f oppositePoint = new Vector3f();
         Vector3f adjacentPoint = new Vector3f();
         Vector3f rootPoint = new Vector3f();
