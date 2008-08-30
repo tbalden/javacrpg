@@ -1738,6 +1738,7 @@ public class J3DStandingEngine {
 				}
 
 				if (J3DCore.GEOMETRY_BATCH) batchHelper.lockAll();
+				
 			
 				
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));

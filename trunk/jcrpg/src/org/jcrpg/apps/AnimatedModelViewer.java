@@ -363,12 +363,12 @@ public class AnimatedModelViewer extends SimplePassGame {
 		rootPass.add(rootNode);
 		pManager.add(rootPass);
 		
-		DepthOfFieldRenderPass dof = new DepthOfFieldRenderPass(cam,1,3);
+		DepthOfFieldRenderPass dof = new DepthOfFieldRenderPass(cam,2,4);
 
 		dof.setBlurSize(0.013f);
-		dof.setNearBlurDepth(20f);
-		dof.setFocalPlaneDepth(50f);
-		dof.setFarBlurDepth(120f);
+		dof.setNearBlurDepth(-00f);
+		dof.setFocalPlaneDepth(20f);
+		dof.setFarBlurDepth(200f);
 		dof.setRootSpatial(rootNode);
 	
 		pManager.add(dof);

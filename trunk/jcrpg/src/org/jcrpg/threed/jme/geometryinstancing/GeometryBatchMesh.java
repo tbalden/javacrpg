@@ -2,12 +2,19 @@ package org.jcrpg.threed.jme.geometryinstancing;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeMap;
+
+import org.jcrpg.threed.jme.TiledTerrainBlock;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.util.geom.BufferUtils;
 
@@ -140,24 +147,100 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
      * Buffers
      *******************************************************************/
     
+    
     public void createIndexBuffer() {
-    	getBatch(0).setIndexBuffer(BufferUtils.createIntBuffer(getNumIndices()));
+    	IntBuffer buff = getBatch(0).getIndexBuffer();
+    	if (buff!=null && buff.capacity()>0)
+    	{
+    		/*if (buff.capacity()>=getNumIndices())
+    		{ // XXX it doesnt work to use the index buffer with fewer indices!! i've commented this out.
+    			buff.clear();
+    			buff.limit(getNumIndices());
+    			buff.rewind();
+    			return;
+    		} else*/
+    		{
+    			BufferPool.releaseIntBuffer(buff);
+    		}
+    	}
+    	getBatch(0).setIndexBuffer(BufferPool.getIntBuffer(getNumIndices()));
+    	//getBatch(0).setIndexBuffer(BufferUtils.createIntBuffer(getNumIndices()));
     }
     
     public void createVertexBuffer() {
-    	getBatch(0).setVertexBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
+    	FloatBuffer buff = getBatch(0).getVertexBuffer();
+    	if (buff!=null && buff.capacity()>0)
+    	{
+    		if (buff.capacity()>=getNumVertices()*3)
+    		{
+    			buff.clear();
+    			buff.limit(getNumVertices()*3);
+    			buff.rewind();
+    			return;
+    		} else
+    		{
+    			BufferPool.releaseVector3Buffer(buff);
+    		}
+    	}
+    	getBatch(0).setVertexBuffer(BufferPool.getVector3Buffer(getNumVertices()));
+    	//getBatch(0).setVertexBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
     }
     
     public void createNormalBuffer() {
-    	getBatch(0).setNormalBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
+    	FloatBuffer buff = getBatch(0).getNormalBuffer();
+    	if (buff!=null && buff.capacity()>0)
+    	{
+    		if (buff.capacity()>=getNumVertices()*3)
+    		{
+    			buff.clear();
+    			buff.limit(getNumVertices()*3);
+    			buff.rewind();
+    			return;
+    		} else
+    		{
+    			BufferPool.releaseVector3Buffer(buff);
+    		}
+    	}
+    	getBatch(0).setNormalBuffer(BufferPool.getVector3Buffer(getNumVertices()));
+    	//getBatch(0).setNormalBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
     }
     
     public void createColorBuffer() {
-    	getBatch(0).setColorBuffer(BufferUtils.createFloatBuffer  (getNumVertices() * 4));
+    	FloatBuffer buff = getBatch(0).getColorBuffer();
+    	if (buff!=null && buff.capacity()>0)
+    	{
+    		if (buff.capacity()>=getNumVertices()*4)
+    		{
+    			buff.clear();
+    			buff.limit(getNumVertices()*4);
+    			buff.rewind();
+    			return;
+    		} else
+    		{
+    			BufferPool.releaseFloatBuffer(buff);
+    		}
+    	}
+    	getBatch(0).setColorBuffer(BufferPool.getFloatBuffer(getNumVertices() * 4));
+    	//getBatch(0).setColorBuffer(BufferUtils.createFloatBuffer  (getNumVertices() * 4));
 	}
     
     public void createTextureBuffer(int textureUnit) {
-    	getBatch(0).setTextureBuffer(BufferUtils.createVector2Buffer(getNumVertices()), textureUnit);
+    	FloatBuffer buff = getBatch(0).getTextureBuffer(textureUnit);
+    	if (buff!=null && buff.capacity()>0)
+    	{
+    		if (buff.capacity()>=getNumVertices()*2)
+    		{
+    			buff.clear();
+    			buff.limit(getNumVertices()*2);
+    			buff.rewind();
+    			return;
+    		} else
+    		{
+    			BufferPool.releaseVector2Buffer(buff);
+    		}
+    	}
+    	getBatch(0).setTextureBuffer(BufferPool.getVector2Buffer(getNumVertices()), textureUnit);
+    	
     }
     
     /**
@@ -195,4 +278,79 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
             rewindBuffer(textureBuffer);
 		}
 	}
+    
+    public void releaseBatch(TriangleBatch batch)
+    {
+        BufferPool.releaseIntBuffer(batch.getIndexBuffer());
+        batch.setIndexBuffer(null);
+        BufferPool.releaseVector3Buffer(batch.getVertexBuffer());
+        batch.setVertexBuffer(null);
+        BufferPool.releaseVector3Buffer(batch.getNormalBuffer());
+        batch.setNormalBuffer(null);
+        BufferPool.releaseFloatBuffer(batch.getColorBuffer());
+        batch.setColorBuffer(null);
+        
+        ArrayList<FloatBuffer> textureBuffers = batch.getTextureBuffers();
+        for (FloatBuffer textureBuffer : textureBuffers) {
+            BufferPool.releaseVector2Buffer(textureBuffer);
+		}
+        batch.clearTextureBuffers();
+    	batch.removeFromParent();
+    	
+    }
+
+    public void releaseBatchExact(TriangleBatch batch)
+    {
+        ExactBufferPool.releaseIntBuffer(batch.getIndexBuffer());
+        batch.setIndexBuffer(null);
+        ExactBufferPool.releaseVector3Buffer(batch.getVertexBuffer());
+        batch.setVertexBuffer(null);
+        ExactBufferPool.releaseVector3Buffer(batch.getNormalBuffer());
+        batch.setNormalBuffer(null);
+        ExactBufferPool.releaseFloatBuffer(batch.getColorBuffer());
+        batch.setColorBuffer(null);
+        
+        ArrayList<FloatBuffer> textureBuffers = batch.getTextureBuffers();
+        for (FloatBuffer textureBuffer : textureBuffers) {
+        	ExactBufferPool.releaseVector2Buffer(textureBuffer);
+		}
+        batch.clearTextureBuffers();
+    	batch.removeFromParent();
+    	
+    }
+
+    public void releaseBuffersOnCleanUp()
+    {
+    	for (T t:getInstances())
+    	{
+    		if (t instanceof GeometryBatchSpatialInstance)
+    		{
+    			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> t2 = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)t;
+    			if (t2.mesh instanceof TiledTerrainBlock)
+    			{
+    				//System.out.println("### RELEASING GEOTILE!");
+    				releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0));
+    			}
+    		}
+    	}
+    	
+    	if (getBatchCount()>0)
+    	{
+	        BufferPool.releaseIntBuffer(getBatch(0).getIndexBuffer());
+	        getBatch(0).setIndexBuffer(null);
+	        BufferPool.releaseVector3Buffer(getBatch(0).getVertexBuffer());
+	        getBatch(0).setVertexBuffer(null);
+	        BufferPool.releaseVector3Buffer(getBatch(0).getNormalBuffer());
+	        getBatch(0).setNormalBuffer(null);
+	        BufferPool.releaseFloatBuffer(getBatch(0).getColorBuffer());
+	        getBatch(0).setColorBuffer(null);
+	        
+	        ArrayList<FloatBuffer> textureBuffers = getBatch(0).getTextureBuffers();
+	        for (FloatBuffer textureBuffer : textureBuffers) {
+	            BufferPool.releaseVector2Buffer(textureBuffer);
+			}
+	        getBatch(0).clearTextureBuffers();
+	    	getBatch(0).removeFromParent();
+    	}
+}
 }

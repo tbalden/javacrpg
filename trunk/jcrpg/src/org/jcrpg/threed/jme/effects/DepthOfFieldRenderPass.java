@@ -325,6 +325,7 @@ public class DepthOfFieldRenderPass extends Pass {
 	        tRendererScreen.render( fullScreenQuad , resultTexture);
 			
 			ts.setTexture(resultTexture,0);
+			//ts.setTexture(depthTexture,0);
 			ts.setTexture(null, 1);
         }
 
