@@ -34,6 +34,51 @@ sanity point for Morale is like mana for hp, limiting social skills!
 BUGS:
 ####
 
+[ ] bug reported by brian - combat bug:
+
+Sun Aug 24 16:39:11 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 10
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED RESULT INTERNAL STEP...
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED PAUSE STEP...
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 12
+Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
+Sun Aug 24 16:39:14 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED PAUSE STEP...
+Sun Aug 24 16:39:14 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Lazlum
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ziggo
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Marwu
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ozaza
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ilumi
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Balonimo
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
+Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 0
+Sun Aug 24 16:41:45 EDT 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
+java.lang.NullPointerException
+org.jcrpg.game.logic.EvaluatorBase.evaluateActFormSuccessImpact(EvaluatorBase.java:642)
+org.jcrpg.game.EncounterLogic.checkTurnActCallbackNeed(EncounterLogic.java:437)
+org.jcrpg.threed.J3DCore.simpleUpdate(J3DCore.java:2419)
+org.jcrpg.threed.J3DCore.update(J3DCore.java:2520)
+com.jme.app.BaseGame.start(Unknown Source)
+org.jcrpg.threed.J3DCore.initCore(J3DCore.java:631)
+org.jcrpg.apps.Jcrpg.start(Jcrpg.java:113)
+org.jcrpg.apps.Jcrpg.main(Jcrpg.java:93)
+Sun Aug 24 16:41:45 EDT 2008 com.jme.app.BaseSimpleGame - Cleaning up resources.
+Sun Aug 24 16:41:46 EDT 2008 com.jme.app.BaseGame - Application ending.
+
+
+[ ] walking around the world at the other pole throws...:
+
+Sun Aug 31 20:52:14 CEST 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
+java.lang.ArrayIndexOutOfBoundsException: 26
+org.jcrpg.world.place.WorldSizeBitBoundaries.isInside(WorldSizeBitBoundaries.java:84)
+org.jcrpg.world.place.Place.getPointHeightOutside(Place.java:315)
+org.jcrpg.world.place.geography.sub.Cave.getCubeBase(Cave.java:163)
+org.jcrpg.world.place.geography.sub.Cave.getPointSurfaceData(Cave.java:430)
+org.jcrpg.world.place.World.getCube(World.java:230)
+org.jcrpg.threed.scene.RenderedArea.getRenderedSpace(RenderedArea.java:139)
+o
+
 [ ] camera is not good positioned for kobold - above them etc.
 [ ] billboard badly positioned for gorilla
 
@@ -44,47 +89,68 @@ BUGS:
 OPTIMIZATIONS:
 #############
 
-[X] reconsider geometry batch - reuse them, how? buffers cannot be resized ??!?!
-	look into snylts geom batch. add/remove how it works?
-	
-	[X] BufferPool solution for GeomBatch ->> Update not appearing parts??!! indices were the bad
-		[ ] -> faster cache lookup
-		
-		!!! [ ] GeoTileLoader shouldnt create always new TerrainBlocks with new Buffers!!! a local cache
-		upon release (cache instance meshes in GeomBatch and reuse upon release!?
+
+!!!	[ ]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
 
 [ ] use DDS!!
 	[ ] convert more, use FLIP in modelLoader, reconvert flipped
-	 
 (09:42:08 PM) Momoko_Fan: download Compressonator
 (09:42:14 PM) Momoko_Fan: from ATI site
 (09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
 
 Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
 For alpha textures use DXT5 instead of DXT1. Box filter
+
+[ ] md2 model for animated?
+
+[ ] make textures for continental (normal 3 tree) + continental mountain (2 pines)
+
+[ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
+[ ] reconsider texture splattering - use of static textures instead?
+
+
+[X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
+	[ ]also some check is needed for water present or not in rendered area
+		and if not render pass should be disabled
+
+
+
+[X] reconsider geometry batch - reuse them, how? buffers cannot be resized ??!?!
+	look into snylts geom batch. add/remove how it works?
+	
+	[X] BufferPool solution for GeomBatch ->> Update not appearing parts??!! indices were the bad
+		[X] -> faster cache lookup - how? make performance logs for pools!
+
+
+!!!! [X] GeoTileLoading exact buffer cache is wrong - some of the geotile TerrainBlocks are not
+		even used in a batch so they cannot be removed from cache either! invisible elements are reused
+		with the new mesh old mesh is not handed back!!!
+
+		
+		!!! [X] GeoTileLoader shouldnt create always new TerrainBlocks with new Buffers!!! a local cache
+		upon release (cache instance meshes in GeomBatch and reuse upon release!?
+			[X] test this, make it more for other models too, review whole loading code
+		[X] better cache chunk sizes? bigger? less creation/lookup time  
+	[X] cache is wrong, not reused???just growing
+	
+
+	 
  
 
 [X] hunt down memory usage !!! -> createTextureStates?? NOT --> it's the GeometryBatch probably!
 	300 MB at start, around 500MB without any batches, and ~800MB+ with batches / loading models
 	ITS the buffers..pooling it + geotileloader / batch refactor with instance mesh can solve it ->
-		cache it too 
-
-[ ] md2 model for animated?
+		cache it too
+		
+		[X]
 
 !!!!    [X] shadow pass AFTER water reflection!
 
 
-[ ] make textures for continental (normal 3 tree) + continental mountain (2 pines)
-
 [-] fog fragment shader distance based!? (bigger batches is a problem)
 	[ ] it doesnt want to work!! GLSL Fragment Shader??
 
-[ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
-[ ] reconsider texture splattering - use of static textures instead?
 
-[X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
-	[ ]also some check is needed for water present or not in rendered area
-		and if not render pass should be disabled
     !!!! [X] grassRootNode -> leave out it from reflection
     [X] fix water reflection? wrong camera position set?
     
