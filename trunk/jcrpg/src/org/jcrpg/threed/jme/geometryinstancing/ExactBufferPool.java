@@ -25,28 +25,38 @@ import java.util.HashMap;
 import com.jme.util.geom.BufferUtils;
 
 public class ExactBufferPool {
+	public static int intBuffCount = 0;
+	public static int v3BuffCount = 0;
+	public static int v2BuffCount = 0;
+	public static int floatBuffCount = 0;
+
+	public static int intBuffCacheSize = 0;
+	public static int v3BuffCacheSize = 0;
+	public static int v2BuffCacheSize = 0;
+	public static int floatBuffCacheSize = 0;
 	
     private static HashMap<Integer,ArrayList<IntBuffer>> intCache = new HashMap<Integer, ArrayList<IntBuffer>>();
     private static HashMap<Integer,ArrayList<FloatBuffer>> v3Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
     private static HashMap<Integer,ArrayList<FloatBuffer>> v2Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
     private static HashMap<Integer,ArrayList<FloatBuffer>> floatCache = new HashMap<Integer, ArrayList<FloatBuffer>>();
 
-    private static final int DIVISOR = 1;
-    private static final int MAX_SCAN = 100;
     
     public static IntBuffer getIntBuffer(int capacity)
     {
     	int key = capacity;
     	ArrayList<IntBuffer> list = intCache.get(key);
     	IntBuffer buffer = null;
-    	if (list == null || list.size()==0)
+    	int size = list==null?0:list.size();
+    	if (size==0)
     	{
-    		buffer = BufferUtils.createIntBuffer(key*DIVISOR);
+    		buffer = BufferUtils.createIntBuffer(key);
+    		intBuffCount++;
     		//System.out.println("# I. LOADING NEW "+buffer.capacity()+" K: "+key+" C: "+capacity);
     	} else
     	{
-    		buffer = list.remove(0);
+    		buffer = list.remove(size-1);
         	buffer.clear();
+        	intBuffCacheSize--;
     	}
 		buffer.limit(capacity);
 		buffer.rewind();
@@ -58,15 +68,18 @@ public class ExactBufferPool {
     	int key = capacity;
     	ArrayList<FloatBuffer> list = v3Cache.get(key);
     	FloatBuffer buffer = null;
-    	if (list == null || list.size()==0)
+    	int size = list==null?0:list.size();
+    	if (size==0)
     	{
-    		buffer = BufferUtils.createVector3Buffer(key*DIVISOR);
-    		//System.out.println("# V3. LOADING NEW (SCANS:"+scan+") "+buffer.capacity()+" K: "+key+" C: "+capacity);
+    		buffer = BufferUtils.createVector3Buffer(key);
+    		v3BuffCount++;
+    		//System.out.println("# V3. LOADING NEW "+buffer.capacity()+" K: "+key+" C: "+capacity);
     	} else
     	{
-    		buffer = list.remove(0);
-    		//System.out.println("GETTING FROM CACHE (SCANS:"+scan+") REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity);
+    		buffer = list.remove(size-1);
+    		//System.out.println("GETTING FROM CACHE REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity);
     		buffer.clear();
+    		v3BuffCacheSize--;
     	}
 		buffer.limit(capacity*3);
 		buffer.rewind();
@@ -78,13 +91,16 @@ public class ExactBufferPool {
     	int key = (capacity);
     	ArrayList<FloatBuffer> list = v2Cache.get(key);
     	FloatBuffer buffer = null;
-    	if (list == null || list.size()==0)
+    	int size = list==null?0:list.size();
+    	if (size==0)
     	{
-    		buffer = BufferUtils.createVector2Buffer(key*DIVISOR);
+    		buffer = BufferUtils.createVector2Buffer(key);
+    		v2BuffCount++;
     	} else
     	{
-    		buffer = list.remove(0);
+    		buffer = list.remove(size-1);
     		buffer.clear();
+    		v2BuffCacheSize--;
     	}
 		buffer.limit(capacity*2);
 		buffer.rewind();
@@ -96,19 +112,16 @@ public class ExactBufferPool {
     	int key = (capacity);
     	ArrayList<FloatBuffer> list = floatCache.get(key);
     	FloatBuffer buffer = null;
-    	int scan = 1;
-    	while ( (list==null || list.size()==0) && scan<MAX_SCAN)
+    	int size = list==null?0:list.size();
+    	if (size==0)
     	{
-    		list = floatCache.get(key+scan);
-    		scan++;
-    	}
-    	if (list == null || list.size()==0)
-    	{
-    		buffer = BufferUtils.createFloatBuffer(key*DIVISOR);
+    		buffer = BufferUtils.createFloatBuffer(key);
+    		floatBuffCount++;
     	} else
     	{
-    		buffer = list.remove(0);
+    		buffer = list.remove(size-1);
     		buffer.clear();
+    		floatBuffCacheSize--;
     	}
 		buffer.limit(capacity);
 		buffer.rewind();
@@ -126,6 +139,7 @@ public class ExactBufferPool {
     		intCache.put(key,list);
     	}
     	list.add(buff);
+    	intBuffCacheSize++;
     }
 
     public static void releaseFloatBuffer(FloatBuffer buff)
@@ -139,6 +153,7 @@ public class ExactBufferPool {
     		floatCache.put(key,list);
     	}
     	list.add(buff);
+    	floatBuffCacheSize++;
     }
 
     public static void releaseVector3Buffer(FloatBuffer buff)
@@ -153,6 +168,7 @@ public class ExactBufferPool {
     		v3Cache.put(key,list);
     	}
     	list.add(buff);
+    	v3BuffCacheSize++;
     }
     public static void releaseVector2Buffer(FloatBuffer buff)
     {
@@ -165,6 +181,7 @@ public class ExactBufferPool {
     		v2Cache.put(key,list);
     	}
     	list.add(buff);
+    	v2BuffCacheSize++;
     }
 
     

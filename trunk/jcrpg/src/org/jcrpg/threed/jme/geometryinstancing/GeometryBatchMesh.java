@@ -330,6 +330,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			{
     				//System.out.println("### RELEASING GEOTILE!");
     				releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0));
+    				((TiledTerrainBlock)t2.mesh).releaseExtraBuffers();
     			}
     		}
     	}
