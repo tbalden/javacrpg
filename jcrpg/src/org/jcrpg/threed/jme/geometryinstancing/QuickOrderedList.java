@@ -17,6 +17,86 @@
  */ 
 package org.jcrpg.threed.jme.geometryinstancing;
 
+import java.util.ArrayList;
+
 public class QuickOrderedList {
 
+	private ArrayList<Integer> listOrdering = new ArrayList<Integer>();
+	private ArrayList<Object> list = new ArrayList<Object>();
+	
+	public int getNearestIndex1(int orderingValue)
+	{
+		return getNearestIndex(orderingValue, 0, listOrdering.size()-1);
+	}
+	private int getNearestIndex(int orderingValue,int from, int to)
+	{
+		if (from==to) return from;
+		int center = (from+to)/2;
+		int val = listOrdering.get(center);
+		if (val==orderingValue) return center;
+		if (val<orderingValue)
+		{
+			if (from+1==to)
+			{
+				return to;
+			}
+			return getNearestIndex(orderingValue,center,to);
+		} 
+		if (from+1==to)
+		{
+			return from;
+		}
+		return getNearestIndex(orderingValue,from,center);
+	}
+	
+	public void addElement(int orderingValue, Object value)
+	{
+		int index = 0;
+		if (list.size()==0)
+		{
+			
+		} else
+		{
+			index = getNearestIndex1(orderingValue);
+		}
+		listOrdering.add(index, orderingValue);		
+		list.add(index, value);
+	}
+
+	
+	public void removeElement(Object value)
+	{
+		int index = 0;
+		if (list.size()==0)
+		{
+			
+		} else
+		{
+			index = list.indexOf(value);
+			listOrdering.remove(index);
+			list.remove(index);
+		}
+	}
+	
+	public Object removeElementWithEqualOrBiggerOrderingValue(int orderingValue)
+	{
+		int index = 0;
+		if (list.size()==0)
+		{
+			return null;
+		} else
+		{
+			index = getNearestIndex1(orderingValue);
+		}
+		int order = listOrdering.get(index);
+		if (order>=orderingValue)
+		{
+			listOrdering.remove(index);
+			return list.remove(index);
+		} 
+		// no such element
+		return null;
+		
+	}
+	
 }
