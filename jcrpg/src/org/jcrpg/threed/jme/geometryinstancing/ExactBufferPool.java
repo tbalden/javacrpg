@@ -19,17 +19,17 @@ package org.jcrpg.threed.jme.geometryinstancing;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.HashSet;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jme.util.geom.BufferUtils;
 
 public class ExactBufferPool {
 	
-    private static TreeMap<Integer,HashSet<IntBuffer>> intCache = new TreeMap<Integer, HashSet<IntBuffer>>();
-    private static TreeMap<Integer,HashSet<FloatBuffer>> v3Cache = new TreeMap<Integer, HashSet<FloatBuffer>>();
-    private static TreeMap<Integer,HashSet<FloatBuffer>> v2Cache = new TreeMap<Integer, HashSet<FloatBuffer>>();
-    private static TreeMap<Integer,HashSet<FloatBuffer>> floatCache = new TreeMap<Integer, HashSet<FloatBuffer>>();
+    private static HashMap<Integer,ArrayList<IntBuffer>> intCache = new HashMap<Integer, ArrayList<IntBuffer>>();
+    private static HashMap<Integer,ArrayList<FloatBuffer>> v3Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
+    private static HashMap<Integer,ArrayList<FloatBuffer>> v2Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
+    private static HashMap<Integer,ArrayList<FloatBuffer>> floatCache = new HashMap<Integer, ArrayList<FloatBuffer>>();
 
     private static final int DIVISOR = 1;
     private static final int MAX_SCAN = 100;
@@ -37,7 +37,7 @@ public class ExactBufferPool {
     public static IntBuffer getIntBuffer(int capacity)
     {
     	int key = capacity;
-    	HashSet<IntBuffer> list = intCache.get(key);
+    	ArrayList<IntBuffer> list = intCache.get(key);
     	IntBuffer buffer = null;
     	if (list == null || list.size()==0)
     	{
@@ -45,8 +45,7 @@ public class ExactBufferPool {
     		//System.out.println("# I. LOADING NEW "+buffer.capacity()+" K: "+key+" C: "+capacity);
     	} else
     	{
-    		buffer = list.iterator().next();
-    		list.remove(buffer);
+    		buffer = list.remove(0);
         	buffer.clear();
     	}
 		buffer.limit(capacity);
@@ -57,7 +56,7 @@ public class ExactBufferPool {
     public static FloatBuffer getVector3Buffer(int capacity)
     {
     	int key = capacity;
-    	HashSet<FloatBuffer> list = v3Cache.get(key);
+    	ArrayList<FloatBuffer> list = v3Cache.get(key);
     	FloatBuffer buffer = null;
     	if (list == null || list.size()==0)
     	{
@@ -65,8 +64,7 @@ public class ExactBufferPool {
     		//System.out.println("# V3. LOADING NEW (SCANS:"+scan+") "+buffer.capacity()+" K: "+key+" C: "+capacity);
     	} else
     	{
-    		buffer = list.iterator().next();
-    		list.remove(buffer);
+    		buffer = list.remove(0);
     		//System.out.println("GETTING FROM CACHE (SCANS:"+scan+") REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity);
     		buffer.clear();
     	}
@@ -78,15 +76,14 @@ public class ExactBufferPool {
     public static FloatBuffer getVector2Buffer(int capacity)
     {
     	int key = (capacity);
-    	HashSet<FloatBuffer> list = v2Cache.get(key);
+    	ArrayList<FloatBuffer> list = v2Cache.get(key);
     	FloatBuffer buffer = null;
     	if (list == null || list.size()==0)
     	{
     		buffer = BufferUtils.createVector2Buffer(key*DIVISOR);
     	} else
     	{
-    		buffer = list.iterator().next();
-    		list.remove(buffer);
+    		buffer = list.remove(0);
     		buffer.clear();
     	}
 		buffer.limit(capacity*2);
@@ -97,7 +94,7 @@ public class ExactBufferPool {
     public static FloatBuffer getFloatBuffer(int capacity)
     {
     	int key = (capacity);
-    	HashSet<FloatBuffer> list = floatCache.get(key);
+    	ArrayList<FloatBuffer> list = floatCache.get(key);
     	FloatBuffer buffer = null;
     	int scan = 1;
     	while ( (list==null || list.size()==0) && scan<MAX_SCAN)
@@ -110,8 +107,7 @@ public class ExactBufferPool {
     		buffer = BufferUtils.createFloatBuffer(key*DIVISOR);
     	} else
     	{
-    		buffer = list.iterator().next();
-    		list.remove(buffer);
+    		buffer = list.remove(0);
     		buffer.clear();
     	}
 		buffer.limit(capacity);
@@ -123,10 +119,10 @@ public class ExactBufferPool {
     {
     	if (buff==null) return;
     	int key = buff.capacity();
-    	HashSet<IntBuffer> list = intCache.get(key);
+    	ArrayList<IntBuffer> list = intCache.get(key);
     	if (list == null)
     	{
-    		list = new HashSet<IntBuffer>();
+    		list = new ArrayList<IntBuffer>();
     		intCache.put(key,list);
     	}
     	list.add(buff);
@@ -136,10 +132,10 @@ public class ExactBufferPool {
     {
     	if (buff==null) return;
     	int key = buff.capacity();
-    	HashSet<FloatBuffer> list = floatCache.get(key);
+    	ArrayList<FloatBuffer> list = floatCache.get(key);
     	if (list == null)
     	{
-    		list = new HashSet<FloatBuffer>();
+    		list = new ArrayList<FloatBuffer>();
     		floatCache.put(key,list);
     	}
     	list.add(buff);
@@ -150,10 +146,10 @@ public class ExactBufferPool {
     	if (buff==null) return;
     	int key = (buff.capacity()/3);
     	//System.out.println("RELEASING "+buff.capacity()+" K: "+key);
-    	HashSet<FloatBuffer> list = v3Cache.get(key);
+    	ArrayList<FloatBuffer> list = v3Cache.get(key);
     	if (list == null)
     	{
-    		list = new HashSet<FloatBuffer>();
+    		list = new ArrayList<FloatBuffer>();
     		v3Cache.put(key,list);
     	}
     	list.add(buff);
@@ -162,10 +158,10 @@ public class ExactBufferPool {
     {
     	if (buff==null) return;
     	int key = (buff.capacity()/2);
-    	HashSet<FloatBuffer> list = v2Cache.get(key);
+    	ArrayList<FloatBuffer> list = v2Cache.get(key);
     	if (list == null)
     	{
-    		list = new HashSet<FloatBuffer>();
+    		list = new ArrayList<FloatBuffer>();
     		v2Cache.put(key,list);
     	}
     	list.add(buff);

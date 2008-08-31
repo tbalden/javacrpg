@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed.jme;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -25,6 +26,7 @@ import org.jcrpg.threed.GeoTileLoader;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
+import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -612,7 +614,7 @@ public class GeometryBatchHelper {
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
 		    			{
 		    				boolean found = false;
-		    				for (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				for (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
 		    				{
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
@@ -634,7 +636,7 @@ public class GeometryBatchHelper {
 		    			if (batch.model.type==Model.SIMPLEMODEL && ((SimpleModel)batch.model).generatedGroundModel)
 		    			{
 		    				boolean found = false;
-		    				for (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				for (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
 		    				{
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
@@ -795,6 +797,7 @@ public class GeometryBatchHelper {
 	    	}
 	    	trimeshBatchMap.values().removeAll(removables);
     	}
+    	System.out.println("BUFFER POOL: CACHED "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount);
     }
     
 

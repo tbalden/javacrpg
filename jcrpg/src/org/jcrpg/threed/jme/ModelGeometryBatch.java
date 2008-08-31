@@ -17,8 +17,8 @@
 
 package org.jcrpg.threed.jme;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -36,7 +36,6 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.state.RenderState;
 
 /**
@@ -287,11 +286,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	{
 		updateNeeded = true;
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
-		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
-		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
+		ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
+		ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 		if (vSet==null)
 		{
-			vSet = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+			vSet = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 			visible.put(key, vSet);
 		}
 		if (nVSet!=null && nVSet.size()>0)
@@ -385,8 +384,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			
 	}
 	
-	public HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> notVisible = new HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
-	public HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> visible = new HashMap<String, HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
+	public HashMap<String, ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> notVisible = new HashMap<String, ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
+	public HashMap<String, ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>> visible = new HashMap<String, ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>>();
 	
 	public void removeItem(NodePlaceholder placeholder)
 	{
@@ -412,11 +411,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		if (instance!=null) {
 			instance.getAttributes().setVisible(false);
-			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
-			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
+			ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
+			ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> vSet = visible.get(key);
 			if (nVSet==null)
 			{
-				nVSet = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+				nVSet = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 				notVisible.put(key, nVSet);
 			}
 			if (vSet!=null) {
