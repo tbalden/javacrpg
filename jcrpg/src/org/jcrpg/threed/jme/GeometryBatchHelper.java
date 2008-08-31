@@ -27,6 +27,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.VegetationSetup;
 import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
+import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchInstanceAttributes;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -798,6 +799,7 @@ public class GeometryBatchHelper {
 	    	trimeshBatchMap.values().removeAll(removables);
     	}
     	System.out.println("BUFFER POOL: CACHED "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount);
+    	System.out.println("EX BUFFER POOL: CACHED "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
     }
     
 
