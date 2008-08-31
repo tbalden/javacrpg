@@ -18,8 +18,8 @@
 package org.jcrpg.threed.jme;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -177,8 +177,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			avarageTranslation.set((x+trans.x)/(num+1), (y+trans.y)/(num+1), (z+trans.z)/(num+1));
 		}
 	}
-	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
-	public HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+	public ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> notVisible = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+	public ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> visible = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 	
 	public static long sumAddItemReal = 0;
 	public void addItem(NodePlaceholder placeholder, TriMesh trimesh)
@@ -230,10 +230,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			
 			if (placeholder!=null) {
 
-				HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
+				ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 				if (instances==null)
 				{
-					instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+					instances = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 					placeholder.trimeshGeomBatchInstance = instances;
 				}
 				instances.add(instance);
@@ -255,10 +255,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		addInstance(instance);
 		
 		if (placeholder!=null) {
-			HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
+			ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 			if (instances==null)
 			{
-				instances = new HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
+				instances = new ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>();
 				placeholder.trimeshGeomBatchInstance = instances;
 			}
 			instances.add(instance);
@@ -274,7 +274,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder)
 	{
-		HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (HashSet<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
+		ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
 		if (instances!=null)
 		{
 			for (Object instance:instances)
