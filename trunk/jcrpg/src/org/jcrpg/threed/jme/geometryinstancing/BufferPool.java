@@ -21,7 +21,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import com.jme.util.geom.BufferUtils;
 
@@ -38,6 +37,11 @@ public class BufferPool {
 	public static int v2BuffCacheSize = 0;
 	public static int floatBuffCacheSize = 0;
 	
+	private static QuickOrderedList intList = new QuickOrderedList();
+	private static QuickOrderedList v3List = new QuickOrderedList();
+	private static QuickOrderedList v2List = new QuickOrderedList();
+	private static QuickOrderedList floatList = new QuickOrderedList();
+	
     private static HashMap<Integer,ArrayList<IntBuffer>> intCache = new HashMap<Integer, ArrayList<IntBuffer>>();
     private static HashMap<Integer,ArrayList<FloatBuffer>> v3Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
     private static HashMap<Integer,ArrayList<FloatBuffer>> v2Cache = new HashMap<Integer, ArrayList<FloatBuffer>>();
@@ -46,7 +50,7 @@ public class BufferPool {
     private static final int DIVISOR = 500;
     private static final int MAX_SCAN = 100;
     
-    public static IntBuffer getIntBuffer(int capacity)
+    public static IntBuffer getIntBuffer2(int capacity)
     {
     	int key = (capacity/DIVISOR)+1;
     	ArrayList<IntBuffer> list = intCache.get(key);
@@ -72,8 +76,27 @@ public class BufferPool {
 		buffer.rewind();
 		return buffer;
     }
-	
-    public static FloatBuffer getVector3Buffer(int capacity)
+
+    public static IntBuffer getIntBuffer(int capacity)
+    {
+    	int key = (capacity/DIVISOR)+1;
+    	IntBuffer buffer = (IntBuffer)intList.removeElementWithEqualOrBiggerOrderingValue(key);
+    	if (buffer == null)
+    	{
+    		intBuffCount++;
+    		buffer = BufferUtils.createIntBuffer(key*DIVISOR);
+    		//System.out.println("# I. LOADING NEW "+buffer.capacity()+" K: "+key+" C: "+capacity);
+    	} else
+    	{
+        	buffer.clear();
+        	intBuffCacheSize--;
+    	}
+		buffer.limit(capacity);
+		buffer.rewind();
+		return buffer;
+    }
+
+    public static FloatBuffer getVector3Buffer2(int capacity)
     {
     	int key = (capacity/DIVISOR)+1;
     	ArrayList<FloatBuffer> list = v3Cache.get(key);
@@ -101,7 +124,27 @@ public class BufferPool {
 		return buffer;
     }
 
-    public static FloatBuffer getVector2Buffer(int capacity)
+    public static FloatBuffer getVector3Buffer(int capacity)
+    {
+    	int key = (capacity/DIVISOR)+1;
+    	FloatBuffer buffer = (FloatBuffer)v3List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	if (buffer == null)
+    	{
+    		v3BuffCount++;
+    		buffer = BufferUtils.createVector3Buffer(key*DIVISOR);
+    		//System.out.println("# V3. LOADING NEW  "+buffer.capacity()+" K: "+key+" C: "+capacity);
+    	} else
+    	{
+    		//System.out.println("GETTING FROM CACHE  REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity+" LSIZE: ");//+list.size());
+    		buffer.clear();
+    		v3BuffCacheSize--;
+    	}
+		buffer.limit(capacity*3);
+		buffer.rewind();
+		return buffer;
+    }
+
+    public static FloatBuffer getVector2Buffer2(int capacity)
     {
     	int key = (capacity/DIVISOR)+1;
     	ArrayList<FloatBuffer> list = v2Cache.get(key);
@@ -127,7 +170,25 @@ public class BufferPool {
 		return buffer;
     }
 
-    public static FloatBuffer getFloatBuffer(int capacity)
+    public static FloatBuffer getVector2Buffer(int capacity)
+    {
+    	int key = (capacity/DIVISOR)+1;
+    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	if (buffer==null)
+    	{
+    		v2BuffCount++;
+    		buffer = BufferUtils.createVector2Buffer(key*DIVISOR);
+    	} else
+    	{
+    		buffer.clear();
+    		v2BuffCacheSize--;
+    	}
+		buffer.limit(capacity*2);
+		buffer.rewind();
+		return buffer;
+    }
+
+    public static FloatBuffer getFloatBuffer2(int capacity)
     {
     	int key = (capacity/DIVISOR)+1;
     	ArrayList<FloatBuffer> list = floatCache.get(key);
@@ -152,8 +213,26 @@ public class BufferPool {
 		buffer.rewind();
 		return buffer;
     }
-    
-    public static void releaseIntBuffer(IntBuffer buff)
+
+    public static FloatBuffer getFloatBuffer(int capacity)
+    {
+    	int key = (capacity/DIVISOR)+1;
+    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	if (buffer==null)
+    	{
+    		floatBuffCount++;
+    		buffer = BufferUtils.createFloatBuffer(key*DIVISOR);
+    	} else
+    	{
+    		buffer.clear();
+    		floatBuffCacheSize--;
+    	}
+		buffer.limit(capacity);
+		buffer.rewind();
+		return buffer;
+    }
+
+    public static void releaseIntBuffer2(IntBuffer buff)
     {
     	if (buff==null) return;
     	int key = buff.capacity()/DIVISOR;
@@ -167,7 +246,15 @@ public class BufferPool {
     	list.add(buff);
     }
 
-    public static void releaseFloatBuffer(FloatBuffer buff)
+    public static void releaseIntBuffer(IntBuffer buff)
+    {
+    	if (buff==null) return;
+    	int key = buff.capacity()/DIVISOR;
+    	intList.addElement(key, buff);
+    	intBuffCacheSize++;
+    }
+
+    public static void releaseFloatBuffer2(FloatBuffer buff)
     {
     	if (buff==null) return;
     	int key = buff.capacity()/DIVISOR;
@@ -181,7 +268,15 @@ public class BufferPool {
     	list.add(buff);
     }
 
-    public static void releaseVector3Buffer(FloatBuffer buff)
+    public static void releaseFloatBuffer(FloatBuffer buff)
+    {
+    	if (buff==null) return;
+    	int key = buff.capacity()/DIVISOR;
+    	floatList.addElement(key, buff);
+    	floatBuffCacheSize++;
+    }
+
+    public static void releaseVector3Buffer2(FloatBuffer buff)
     {
     	if (buff==null) return;
     	int key = ((buff.capacity()/3)/DIVISOR);
@@ -195,7 +290,16 @@ public class BufferPool {
     	list.add(buff);
     	//System.out.println("RELEASING "+buff.capacity()+" K: "+key+" LSIZE: "+list.size());
     }
-    public static void releaseVector2Buffer(FloatBuffer buff)
+    public static void releaseVector3Buffer(FloatBuffer buff)
+    {
+    	if (buff==null) return;    	
+    	int key = ((buff.capacity()/3)/DIVISOR);
+    	v3List.addElement(key, buff);
+    	v3BuffCacheSize++;
+    	//System.out.println("RELEASING "+buff.capacity()+" K: "+key+" LSIZE: ");//+list.size());
+    }
+
+    public static void releaseVector2Buffer2(FloatBuffer buff)
     {
     	if (buff==null) return;
     	int key = (buff.capacity()/2)/DIVISOR;
@@ -207,6 +311,14 @@ public class BufferPool {
     	}
     	v2BuffCacheSize++;
     	list.add(buff);
+    }
+
+    public static void releaseVector2Buffer(FloatBuffer buff)
+    {
+    	if (buff==null) return;
+    	int key = (buff.capacity()/2)/DIVISOR;
+    	v2List.addElement(key, buff);
+    	v2BuffCacheSize++;
     }
 
     
