@@ -19,10 +19,12 @@ package org.jcrpg.threed.scene.config;
 
 public class AtlasTextureTypeConstants {
 
-	public static int CONTINENTAL_GRASS_ATLAS_SIZE = 2;
-	public static int TROPICAL_GRASS_ATLAS_SIZE = 2;
+	public static int CONTINENTAL_GRASS_ATLAS_SIZE = 2; // normal | flowery
+	public static int TROPICAL_GRASS_ATLAS_SIZE = 2; // normal | flowery
 
-	public static int TROPICAL_FOLIAGE_ATLAS_SIZE = 2;
+	public static int TROPICAL_FOLIAGE_ATLAS_SIZE = 2; // spotty | normal green
+	public static int CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE = 3; // acacia | high | cherry
+	public static int CONTINENTAL_PINE_FOLIAGE_ATLAS_SIZE = 2; // light | dark
 
 	
 }

@@ -200,6 +200,10 @@ public class SideTypeModels {
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.genericScale=3f;
 		cherry.shadowCaster = true;
+		cherry.atlasTexture = true;
+		cherry.atlasTextureName = "continental_deciduous_atlas.png";
+		cherry.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
+		cherry.atlasId = 2;
 		/*PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
 		cherry_low.shadowCaster = true;
 		//cherry_low.windAnimation = false;
@@ -211,10 +215,18 @@ public class SideTypeModels {
 		PartlyBillboardModel oakHigh = new PartlyBillboardModel("pbm_acacia_high_1","models/tree/high_bb_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_1.png"},0,MIPMAP_TREES);
 		oakHigh.genericScale=2.2f;
 		oakHigh.shadowCaster = true;
+		oakHigh.atlasTexture = true;
+		oakHigh.atlasTextureName = "continental_deciduous_atlas.png";
+		oakHigh.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
+		oakHigh.atlasId = 1;
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.genericScale=3f;
 		acacia.shadowCaster = true;
+		acacia.atlasTexture = true;
+		acacia.atlasTextureName = "continental_deciduous_atlas.png";
+		acacia.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
+		acacia.atlasId = 0;
 		/*PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		acacia_low.shadowCaster = true;
 		//acacia_low.windAnimation = false;
@@ -262,6 +274,10 @@ public class SideTypeModels {
 		pine_high.quadXSizeMultiplier = 3.0f;
 		pine_high.quadYSizeMultiplier = 3.5f;
 		pine_high.shadowCaster = true;
+		pine_high.atlasTexture = true;
+		pine_high.atlasTextureName = "continental_pine_atlas.png";
+		pine_high.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_PINE_FOLIAGE_ATLAS_SIZE;
+		pine_high.atlasId = 0;
 		/*PartlyBillboardModel pine_low = new PartlyBillboardModel("pbm_pine_1","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
 		pine_low.quadXSizeMultiplier = 2f;
 		pine_low.quadYSizeMultiplier = 3f;
@@ -280,6 +296,10 @@ public class SideTypeModels {
 		great_pine_high.quadXSizeMultiplier = 2f;
 		great_pine_high.quadYSizeMultiplier = 2f;
 		great_pine_high.shadowCaster = true;
+		great_pine_high.atlasTexture = true;
+		great_pine_high.atlasTextureName = "continental_pine_atlas.png";
+		great_pine_high.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_PINE_FOLIAGE_ATLAS_SIZE;
+		great_pine_high.atlasId = 1;
 		/*PartlyBillboardModel great_pine_low = new PartlyBillboardModel("pbm_great_pine_1","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},1,MIPMAP_TREES);
 		great_pine_low.quadXSizeMultiplier = 2f;
 		great_pine_low.quadYSizeMultiplier = 2.5f;
