@@ -89,8 +89,9 @@ o
 OPTIMIZATIONS:
 #############
 
+[ ] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
 
-!!!	[ ]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
+!!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
 
 [ ] use DDS!!
 	[ ] convert more, use FLIP in modelLoader, reconvert flipped
@@ -103,7 +104,7 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 
 [ ] md2 model for animated?
 
-[ ] make textures for continental (normal 3 tree) + continental mountain (2 pines)
+[X] make textures for continental (normal 3 tree) + continental mountain (2 pines)
 
 [ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
 [ ] reconsider texture splattering - use of static textures instead?
