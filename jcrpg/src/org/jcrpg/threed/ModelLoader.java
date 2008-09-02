@@ -621,9 +621,9 @@ public class ModelLoader {
 		            }
 		    	}
 		    	
-		    	boolean flip = !textureNames[i].toLowerCase().endsWith(".dds");
+		    	//boolean flip = !textureNames[i].toLowerCase().endsWith(".dds");
 				Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MM_LINEAR,
-			            Texture.FM_LINEAR,1.0f,flip);
+			            Texture.FM_LINEAR);
 				//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
 				qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
 				if (J3DCore.MIPMAP_GLOBAL)

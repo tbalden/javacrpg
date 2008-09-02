@@ -201,7 +201,7 @@ public class SideTypeModels {
 		cherry.genericScale=3f;
 		cherry.shadowCaster = true;
 		cherry.atlasTexture = true;
-		cherry.atlasTextureName = "continental_deciduous_atlas.png";
+		cherry.atlasTextureName = "continental_deciduous_atlas.dds";
 		cherry.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
 		cherry.atlasId = 2;
 		/*PartlyBillboardModel cherry_low = new PartlyBillboardModel("pbm_cherry_1","models/tree/cherry_bb1.obj",new String[]{"3"},new String[]{},new String[]{"cher_1.png"},1,MIPMAP_TREES);
@@ -216,7 +216,7 @@ public class SideTypeModels {
 		oakHigh.genericScale=2.2f;
 		oakHigh.shadowCaster = true;
 		oakHigh.atlasTexture = true;
-		oakHigh.atlasTextureName = "continental_deciduous_atlas.png";
+		oakHigh.atlasTextureName = "continental_deciduous_atlas.dds";
 		oakHigh.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
 		oakHigh.atlasId = 1;
 
@@ -224,7 +224,7 @@ public class SideTypeModels {
 		acacia.genericScale=3f;
 		acacia.shadowCaster = true;
 		acacia.atlasTexture = true;
-		acacia.atlasTextureName = "continental_deciduous_atlas.png";
+		acacia.atlasTextureName = "continental_deciduous_atlas.dds";
 		acacia.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
 		acacia.atlasId = 0;
 		/*PartlyBillboardModel acacia_low = new PartlyBillboardModel("pbm_acacia_1","models/tree/acacia_bb1.obj",new String[]{"3"},new String[]{},new String[]{"acac_1.png"},1,MIPMAP_TREES);
@@ -250,6 +250,10 @@ public class SideTypeModels {
 		bush.quadXSizeMultiplier = 4.8f;
 		bush.quadYSizeMultiplier = 4.2f;
 		bush.shadowCaster = true;
+		bush.atlasTexture = true;
+		bush.atlasTextureName = "continental_deciduous_atlas.dds";
+		bush.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
+		bush.atlasId = 0;
 		/*PartlyBillboardModel bush_low = new PartlyBillboardModel("pbm_bush_1","models/bush/bush1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},1,MIPMAP_TREES);
 		bush_low.quadXSizeMultiplier = 3.3f;
 		bush_low.quadYSizeMultiplier = 3.0f;
@@ -275,7 +279,7 @@ public class SideTypeModels {
 		pine_high.quadYSizeMultiplier = 3.5f;
 		pine_high.shadowCaster = true;
 		pine_high.atlasTexture = true;
-		pine_high.atlasTextureName = "continental_pine_atlas.png";
+		pine_high.atlasTextureName = "continental_pine_atlas.dds";
 		pine_high.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_PINE_FOLIAGE_ATLAS_SIZE;
 		pine_high.atlasId = 0;
 		/*PartlyBillboardModel pine_low = new PartlyBillboardModel("pbm_pine_1","models/tree/pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_1.png"},1,MIPMAP_TREES);
@@ -297,7 +301,7 @@ public class SideTypeModels {
 		great_pine_high.quadYSizeMultiplier = 2f;
 		great_pine_high.shadowCaster = true;
 		great_pine_high.atlasTexture = true;
-		great_pine_high.atlasTextureName = "continental_pine_atlas.png";
+		great_pine_high.atlasTextureName = "continental_pine_atlas.dds";
 		great_pine_high.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_PINE_FOLIAGE_ATLAS_SIZE;
 		great_pine_high.atlasId = 1;
 		/*PartlyBillboardModel great_pine_low = new PartlyBillboardModel("pbm_great_pine_1","models/tree/great_pine_bb1.obj",new String[]{"3"},new String[]{"2"},new String[]{"pine_2.png"},1,MIPMAP_TREES);
@@ -759,7 +763,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_intersect},dependentModels));
 		
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
-		sm_bookcase.batchEnabled = false;
+		//sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
 		
 		// climate dependent
@@ -817,16 +821,16 @@ public class SideTypeModels {
 
 		hm3dTypeRenderedSide.put(new Integer(45), new RenderedSide(new Model[]{tsm_grass_anethum}));
 
-		TextureStateVegetationModel tsm_sunflower = new TextureStateVegetationModel(new String[]{"flower_cont_1.png"},0.55f,0.7f,2,1f);
+		TextureStateVegetationModel tsm_sunflower = new TextureStateVegetationModel(new String[]{"flower_cont_1.dds"},0.55f,0.7f,2,1f);
 		tsm_sunflower.alwaysRenderBatch = true;
 		hm3dTypeRenderedSide.put(new Integer(59), new RenderedSide(new Model[]{tsm_sunflower}));
 
-		TextureStateVegetationModel tsm_margarita = new TextureStateVegetationModel(new String[]{"flower_cont_2.png"},0.55f,0.7f,2,1f);
+		TextureStateVegetationModel tsm_margarita = new TextureStateVegetationModel(new String[]{"flower_cont_2.dds"},0.55f,0.7f,2,1f);
 		tsm_margarita.alwaysRenderBatch = true;
 		hm3dTypeRenderedSide.put(new Integer(60), new RenderedSide(new Model[]{tsm_margarita}));
 
 		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
-		sm_steps_1.batchEnabled = false;
+		//sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
 		SimpleModel sm_extsteps = new SimpleModel("models/external/House_01_steps_wooden.obj",null);
 		sm_extsteps.elevateOnSteep = true;
