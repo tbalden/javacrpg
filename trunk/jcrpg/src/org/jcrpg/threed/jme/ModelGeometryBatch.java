@@ -36,7 +36,9 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.state.RenderState;
+import com.jme.system.DisplaySystem;
 
 /**
  * Model geometry batch that can hold together a lot of similar texture state trimeshes in one batch mesh
@@ -284,6 +286,9 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	 */
 	public void addItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
+		if (J3DCore.VBO_ENABLED)
+		{
+		}
 		updateNeeded = true;
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
@@ -400,7 +405,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	@SuppressWarnings("unchecked")
 	public void removeItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
-		updateNeeded = true;
+		
 		GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)placeholder.modelGeomBatchInstance; 
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		if (triMesh!=null)

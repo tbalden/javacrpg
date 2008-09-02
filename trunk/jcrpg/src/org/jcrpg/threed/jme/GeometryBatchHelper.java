@@ -660,18 +660,19 @@ public class GeometryBatchHelper {
 		    			}
 	    			}
 	    			removableFlag = false;
-	    			if (batch.updateNeeded)
+	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
 	    				//batch.updateGeometricState(0f, true);
 	    				if (J3DCore.VBO_ENABLED)
 	    				{
-	    					if (batch.getVBOInfo(0)!=null)
-		    				{
-		    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
-		    				}
-		    				VBOInfo v = new VBOInfo(true);
-		    				batch.setVBOInfo(v);
+	    					if (batch.getVBOInfo(0)==null)
+	    					{
+	    						//System.out.println("ADDING VBO");
+	    						VBOInfo v = new VBOInfo(true);
+	    						batch.setVBOInfo(v);
+	    					}
 	    				}
+	    				
 	    			}
 	    		} else
 	    		{
@@ -682,6 +683,10 @@ public class GeometryBatchHelper {
 	    		}
 				if (removableFlag) {
 					
+    				batch.unlock();
+    				batch.parent.unlock();
+					batch.parent.removeFromParent();
+					batch.removeFromParent();
     				if (J3DCore.VBO_ENABLED)
     				{
 	    				if (batch.getVBOInfo(0)!=null)
@@ -689,11 +694,6 @@ public class GeometryBatchHelper {
 	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
 	    				}
     				}
-
-    				batch.unlock();
-    				batch.parent.unlock();
-					batch.parent.removeFromParent();
-					batch.removeFromParent();
 					batch.releaseBuffersOnCleanUp();
 					batch.clearBatches();
 					batch.clearInstances();
@@ -751,6 +751,10 @@ public class GeometryBatchHelper {
 	    		}
 				if (removableFlag) {
     				
+    				batch.unlock();
+    				batch.parent.unlock();
+					batch.parent.removeFromParent();
+					batch.removeFromParent();
     				if (J3DCore.VBO_ENABLED)
     				{
 						if (batch.getVBOInfo(0)!=null)
@@ -758,12 +762,7 @@ public class GeometryBatchHelper {
 	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
 	    				}
     				}
-    				
-    				batch.unlock();
-    				batch.parent.unlock();
-					batch.parent.removeFromParent();
-					batch.removeFromParent();
-					batch.releaseBuffersOnCleanUp();
+ 					batch.releaseBuffersOnCleanUp();
 					batch.clearBatches();
 					batch.clearInstances();
 					
