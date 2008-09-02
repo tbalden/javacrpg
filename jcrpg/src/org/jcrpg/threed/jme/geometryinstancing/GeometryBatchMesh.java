@@ -115,14 +115,25 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
      */ 
     public void preCommit() {
     	if (reconstruct) {
-			if (J3DCore.VBO_ENABLED)
-			{
-				if (getBatch(0).getVBOInfo()!=null)
+    		if (J3DCore.VBO_ENABLED)
+    		{
+				TriangleBatch b = getBatch(0);
+				if (b.getVBOInfo()!=null)
 				{
 					//System.out.println("CLEARING VBO");
-					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( getBatch(0).getVertexBuffer());
+					if (b.getVBOInfo().isVBOVertexEnabled())
+						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getVertexBuffer());
+					if (b.getVBOInfo().isVBOTextureEnabled())
+						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getTextureBuffer(0));
+					if (b.getVBOInfo().isVBONormalEnabled())
+						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getNormalBuffer());
+					if (b.getVBOInfo().isVBOColorEnabled())
+						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getColorBuffer());
+					if (b.getVBOInfo().isVBOIndexEnabled())
+						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getIndexBuffer());
+					b.setVBOInfo(null);
 				}
-			}
+    		}
     		createBuffers();		// TODO: Maybe have an integer value for the number of texture units?
     	}
         for (T instance : instances) {

@@ -46,6 +46,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.batch.TriangleBatch;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -669,7 +670,7 @@ public class GeometryBatchHelper {
 	    					{
 	    						//System.out.println("ADDING VBO");
 	    						VBOInfo v = new VBOInfo(true);
-	    						batch.setVBOInfo(v);
+	    						batch.setVBOInfo(0,v);
 	    					}
 	    				}
 	    				
@@ -687,13 +688,25 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
-    				if (J3DCore.VBO_ENABLED)
-    				{
-	    				if (batch.getVBOInfo(0)!=null)
-	    				{
-	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
-	    				}
-    				}
+					if (J3DCore.VBO_ENABLED)
+					{
+						TriangleBatch b = batch.getBatch(0);
+						if (b.getVBOInfo()!=null)
+						{
+							//System.out.println("CLEARING VBO");
+							if (b.getVBOInfo().isVBOVertexEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getVertexBuffer());
+							if (b.getVBOInfo().isVBOTextureEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getTextureBuffer(0));
+							if (b.getVBOInfo().isVBONormalEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getNormalBuffer());
+							if (b.getVBOInfo().isVBOColorEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getColorBuffer());
+							if (b.getVBOInfo().isVBOIndexEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getIndexBuffer());
+							b.setVBOInfo(null);
+						}
+					}
 					batch.releaseBuffersOnCleanUp();
 					batch.clearBatches();
 					batch.clearInstances();

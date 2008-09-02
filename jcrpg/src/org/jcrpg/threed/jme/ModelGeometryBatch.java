@@ -286,9 +286,6 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	 */
 	public void addItem(NodePlaceholder placeholder,TriMesh triMesh)
 	{
-		if (J3DCore.VBO_ENABLED)
-		{
-		}
 		updateNeeded = true;
 		String key = getModelKey(placeholder)+(triMesh!=null?triMesh.getName():"");
 		ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> nVSet = notVisible.get(key);
