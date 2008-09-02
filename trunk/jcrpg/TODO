@@ -89,7 +89,9 @@ o
 OPTIMIZATIONS:
 #############
 
-[ ] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
+
+[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
+	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
 
 [ ] new buffer adds strange vertexes to tree foliage?? limitiation is not enough?? or is it something else?
 
@@ -117,6 +119,9 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 		and if not render pass should be disabled
 
 
+[-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
+
+[X] test VBO with new buffer pool...what's the problem with it?
 
 [X] reconsider geometry batch - reuse them, how? buffers cannot be resized ??!?!
 	look into snylts geom batch. add/remove how it works?
