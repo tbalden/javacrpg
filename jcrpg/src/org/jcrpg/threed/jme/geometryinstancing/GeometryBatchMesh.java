@@ -8,14 +8,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.TiledTerrainBlock;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
+import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
+import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
 /**
@@ -112,6 +115,14 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
      */ 
     public void preCommit() {
     	if (reconstruct) {
+			if (J3DCore.VBO_ENABLED)
+			{
+				if (getBatch(0).getVBOInfo()!=null)
+				{
+					//System.out.println("CLEARING VBO");
+					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( getBatch(0).getVertexBuffer());
+				}
+			}
     		createBuffers();		// TODO: Maybe have an integer value for the number of texture units?
     	}
         for (T instance : instances) {
@@ -127,7 +138,10 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	        for (T instance : instances) {
 	            instance.commit(batch, reconstruct);
 	        }
+	        // if commit happened, recreate VBO info
+	        
     	}
+
     }
     
     public void onDraw(Renderer r) {
