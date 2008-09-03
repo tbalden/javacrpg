@@ -155,7 +155,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
     	{
     		startFog = 2*J3DCore.VIEW_DISTANCE/3;
     	}
-        //this.setVBOInfo(new VBOInfo(true));
 	}
 	
 	/**
@@ -208,10 +207,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		if (placeholderTranslationRelative)
 		{
 			scaleMultiplier = placeholder.model.genericScale;
+			vec = vec.mult(placeholder.localScale);
 			if (placeholder.horizontalRotation!=null)
 				vec = placeholder.horizontalRotation.mult(vec);
-			//vec = vec.mult(scaleMultiplier);
-			vec = vec.mult(placeholder.localScale);
 			vec.addLocal(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 		} else
 		{

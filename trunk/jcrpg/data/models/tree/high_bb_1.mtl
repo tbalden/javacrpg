@@ -8,7 +8,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd bark1.jpg
+map_Kd bark1.dds
 
 
 newmtl pmat1_bark1.jpg
@@ -19,7 +19,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd bark1.jpg
+map_Kd bark1.dds
 
 
 newmtl pmat3
