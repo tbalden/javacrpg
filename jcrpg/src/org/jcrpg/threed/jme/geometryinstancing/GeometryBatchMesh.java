@@ -4,9 +4,6 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeMap;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.TiledTerrainBlock;
@@ -15,11 +12,8 @@ import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
-import com.jme.scene.VBOInfo;
-import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.system.DisplaySystem;
-import com.jme.util.geom.BufferUtils;
 
 /**
  * <code>GeometryBatchMesh</code> is a container class for <code>GeometryInstances</code>, which

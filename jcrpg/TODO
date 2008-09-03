@@ -93,12 +93,12 @@ OPTIMIZATIONS:
 [?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
 	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
 
-[ ] new buffer adds strange vertexes to tree foliage?? limitiation is not enough?? or is it something else?
+[ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result
 
 !!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
 
-[ ] use DDS!!
-	[ ] convert more, use FLIP in modelLoader, reconvert flipped
+[X] use DDS!!
+	[X] convert more, use FLIP in modelLoader, reconvert flipped
 (09:42:08 PM) Momoko_Fan: download Compressonator
 (09:42:14 PM) Momoko_Fan: from ATI site
 (09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
