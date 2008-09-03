@@ -128,7 +128,7 @@ joints {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/bm_spad"
+	shader "bm_spad.dds"
 
 	numverts 464
 	vert 0 ( 0.784549 0.672751 ) 0 1
@@ -1414,7 +1414,7 @@ mesh {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/bm_club"
+	shader "bm_club.dds"
 
 	numverts 538
 	vert 0 ( 0.192832 0.754624 ) 0 1
@@ -2850,7 +2850,7 @@ mesh {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/boarman"
+	shader "boarman.dds"
 
 	numverts 1770
 	vert 0 ( 0.947838 0.940606 ) 0 1

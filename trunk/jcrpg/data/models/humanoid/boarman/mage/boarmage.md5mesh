@@ -127,7 +127,7 @@ joints {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/mage/Boar_Staff"
+	shader "Boar_Staff.dds"
 
 	numverts 384
 	vert 0 ( 0.614256 0.255063 ) 0 1
@@ -1483,7 +1483,7 @@ mesh {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/mage/Old_Boar_Toga"
+	shader "Old_Boar_Toga.dds"
 
 	numverts 322
 	vert 0 ( 0.215646 0.184707 ) 0 2
@@ -3576,7 +3576,7 @@ mesh {
 }
 
 mesh {
-	shader "data/models/humanoid/boarman/mage/Boar_Mage_Tex_01"
+	shader "Boar_Mage_Tex_01.dds"
 
 	numverts 1580
 	vert 0 ( 0.363891 0.200788 ) 0 1
