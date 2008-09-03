@@ -270,7 +270,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					Jcrpg.LOGGER.setLevel(Level.OFF);
 			}
 			FPSCOUNTER = loadValue("FPSCOUNTER", false);
-			TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
+			TEXTURE_SPLATTING = false;//loadValue("TEXTURE_SPLATTING", false); // it's tooo slow, and actually doesnt work with atlas textures?
 			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
 			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
 			VBO_ENABLED = loadValue("VBO_ENABLED", true);
@@ -2210,7 +2210,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?2:4);
+		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?4:4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();

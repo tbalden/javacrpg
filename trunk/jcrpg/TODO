@@ -89,6 +89,9 @@ o
 OPTIMIZATIONS:
 #############
 
+[ ] separate config of bloom and DoF
+
+[ ] texture splattering doesn't work with new atlas??
 
 [?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
 	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
@@ -120,6 +123,9 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 
 
 [-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
+	
+	[ ] make caching of font quads to shared mesh cache??
+	
 
 [X] test VBO with new buffer pool...what's the problem with it?
 
