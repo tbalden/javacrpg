@@ -1,6 +1,17 @@
 
 package org.jcrpg.threed.jme.effects;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.ARBDepthTexture;
@@ -21,13 +32,12 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.ClipState;
 import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.CullState;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.TextureManager;
-import com.jme.util.resource.ResourceLocatorTool;
 
 /**
  * A pass providing a shadow mapping layer across the top of an existing scene.
@@ -36,6 +46,11 @@ import com.jme.util.resource.ResourceLocatorTool;
  * @author kevglass
  */
 public class DirectionalShadowMapPass extends Pass {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Bias matrix borrowed from the projected texture utility */
     private static Matrix4f biasMatrix = new Matrix4f(0.5f, 0.0f, 0.0f, 0.0f,
             0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f,
@@ -99,6 +114,9 @@ public class DirectionalShadowMapPass extends Pass {
 	
 	/** The colour of shadows cast */
 	private ColorRGBA shadowCol = new ColorRGBA(20,20,20,0.4f);
+	private GLSLShaderObjectsState shader;
+	/** True if the pass should use shaders */
+	private boolean useShaders;
 	
 	/**
 	 * Create a shadow map pass casting shadows from a light with the direction
@@ -122,6 +140,8 @@ public class DirectionalShadowMapPass extends Pass {
 		this.direction = direction;
 		
 		setViewTarget(new Vector3f(0,0,0));
+		shader = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
+		useShaders = shader.isSupported();
 	}
 	
 	/**
@@ -297,8 +317,77 @@ public class DirectionalShadowMapPass extends Pass {
 		darkMaterial.setSpecular(new ColorRGBA(0,0,0,0));
 		darkMaterial.setEmissive(new ColorRGBA(0,0,0,0));
 		darkMaterial.setMaterialFace(MaterialState.MF_FRONT);
-		
+
+		if (useShaders) {
+			InputStream v = getResource("shadowMap.vert");
+			InputStream f = 
+		    		     getResource("shadowMap.frag");
+			InputStreamReader vir = new InputStreamReader(v);
+			InputStreamReader fir = new InputStreamReader(f);
+			BufferedReader vbr = new BufferedReader(vir);
+			BufferedReader fbr = new BufferedReader(fir);
+			StringBuffer vb = new StringBuffer();
+			StringBuffer fb = new StringBuffer("const float OFFSET = 0.5 / "+shadowMapSize+";\n");
+			String l = null;
+			while (true)
+			{
+				l = null;
+				try {
+					l = vbr.readLine();
+				} catch (Exception ex)
+				{
+					
+				}
+				if (l==null) break;
+				vb.append(l+"\n");
+			}
+			while (true)
+			{
+				l = null;
+				try {
+					l = fbr.readLine();
+				} catch (Exception ex)
+				{
+					
+				}
+				if (l==null) break;
+				fb.append(l+"\n");
+			}
+
+			System.out.println(vb.toString()+ "\n--"+fb.toString());
+			shader.load(vb.toString(), fb.toString());
+	        shader.setUniform("shadowMap", 0);
+	        shader.setUniform("offset", 0.0002f);
+	        shader.setEnabled(true);
+		}
+
 		updateShadowCamera();
+	}
+	
+	public GLSLShaderObjectsState getShader() {
+		return shader;
+	}
+	private InputStream prefixStream(String text, InputStream in) {
+	try {
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		
+		DataInputStream dataStream = new DataInputStream(in);
+	    byte shaderCode[] = new byte[in.available()];
+	    dataStream.readFully(shaderCode);
+	    in.close();
+	    dataStream.close();
+	    
+	    bout.write(text.getBytes());
+	    bout.write(shaderCode);
+	    bout.close();
+	    
+	    return new ByteArrayInputStream(bout.toByteArray());
+	} catch (IOException e) {
+        throw new RuntimeException("Failed to load shadow map shader:",e);
+	}
+}	
+	private InputStream getResource(String ref) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream("org/jcrpg/threed/jme/effects/shader/"+ref);
 	}
 	
 	/**
@@ -323,8 +412,14 @@ public class DirectionalShadowMapPass extends Pass {
 		saveEnforcedStates();
 		context.enforceState(shadowTextureState);
 		context.enforceState(discardShadowFragments);
-		context.enforceState(brightLights);
-		context.enforceState(darkMaterial);
+		if (useShaders) {
+			Matrix4f view = ((AbstractCamera) r.getCamera()).getModelViewMatrix();
+			shader.setUniform("inverseView", view.invert(), false);
+			context.enforceState(shader);
+		} else {
+			context.enforceState(brightLights);
+			context.enforceState(darkMaterial);
+		}
 		
 		// compare the shadowmap depth wich the current fragment depth
 		// this needs to be moved into JME texture class, not sure where yet?
