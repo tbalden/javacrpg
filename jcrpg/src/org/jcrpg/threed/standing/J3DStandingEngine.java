@@ -37,6 +37,7 @@ import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -61,7 +62,6 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
-import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
 /**
@@ -522,6 +522,10 @@ public class J3DStandingEngine {
 	 */
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
+		System.out.println("######### GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
+		GeometryBatchMesh.preCommitTime = 0;
+		GeometryBatchMesh.commitTime = 0;
+		
 		long t1 = System.currentTimeMillis(); 
 		synchronized(Engine.mutex) {
 			
@@ -1680,18 +1684,19 @@ public class J3DStandingEngine {
 		
 				cullVariationCounter++;
 
-				core.groundParentNode.setCullMode(Node.CULL_NEVER);
+				/*core.groundParentNode.setCullMode(Node.CULL_NEVER);*/
 				
 				// call an update to render new nodes correctly - workaround for culling problem - new nodes are set to CULL_NEVER..
 				core.updateDisplayNoBackBuffer();
+				
 				// ...iterate through new nodes and set normal culling mode...
 				for (Node n:newNodesToSetCullingDynamic)
 				{
 					n.setCullMode(Node.CULL_INHERIT);
 					n.updateRenderState(); // update render state for the newly placed nodes...
 				}
-				
-				core.groundParentNode.setCullMode(Node.CULL_INHERIT);
+				/*
+				core.groundParentNode.setCullMode(Node.CULL_INHERIT);*/
 
 				if (J3DCore.SOUND_ENABLED)
 				{

@@ -460,9 +460,11 @@ public class J3DMovingEngine {
 					
 					if (unit.internal) {
 						core.encounterExtRootNode.attachChild((Node)realPooledNode);
+						if (J3DCore.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 					} else 
 					{
 						core.encounterExtRootNode.attachChild((Node)realPooledNode);
+						if (J3DCore.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
 					realPooledNode.updateRenderState();
