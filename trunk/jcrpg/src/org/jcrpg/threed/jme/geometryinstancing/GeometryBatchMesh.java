@@ -139,21 +139,29 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     
     public void commit(TriangleBatch batch) {
     	if (commit) {
+        	commitStart = System.currentTimeMillis();
 	    	rewindBuffers(batch);
 	        for (T instance : instances) {
 	            instance.commit(batch, reconstruct);
 	        }
-	        // if commit happened, recreate VBO info
+	    	commitTime+=System.currentTimeMillis() - commitStart;
 	        
     	}
 
     }
     
+    public static long preCommitTime = 0;
+    public static long commitTime = 0;
+    public long preCommitStart = 0;
+    public long commitStart = 0;
+    
     public void onDraw(Renderer r) {
     	if (getCullMode() == SceneElement.CULL_ALWAYS) {
     		return;
     	}
+    	preCommitStart = System.currentTimeMillis();
     	preCommit();
+    	preCommitTime+=System.currentTimeMillis() - preCommitStart;
     	super.onDraw(r);
     }
     
