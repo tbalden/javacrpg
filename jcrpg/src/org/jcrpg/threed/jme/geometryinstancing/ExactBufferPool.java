@@ -69,7 +69,7 @@ public class ExactBufferPool {
     public static IntBuffer getIntBuffer(int capacity)
     {
     	int key = (capacity);
-    	IntBuffer buffer = (IntBuffer)intList.removeElementWithEqualOrBiggerOrderingValue(key);
+    	IntBuffer buffer = (IntBuffer)intList.removeElementWithEqualOrderingValue(key);
     	if (buffer == null)
     	{
     		intBuffCount++;
@@ -110,7 +110,7 @@ public class ExactBufferPool {
     public static FloatBuffer getVector3Buffer(int capacity)
     {
     	int key = (capacity);
-    	FloatBuffer buffer = (FloatBuffer)v3List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	FloatBuffer buffer = (FloatBuffer)v3List.removeElementWithEqualOrderingValue(key);
     	if (buffer == null)
     	{
     		v3BuffCount++;
@@ -118,7 +118,7 @@ public class ExactBufferPool {
     		//System.out.println("# V3. LOADING NEW  "+buffer.capacity()+" K: "+key+" C: "+capacity);
     	} else
     	{
-    		//System.out.println("GETTING FROM CACHE  REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity+" LSIZE: ");//+list.size());
+    		//System.out.println("GETTING FROM CACHE  REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity*3+" LSIZE: ");//+list.size());
     		buffer.clear();
     		v3BuffCacheSize--;
     	}
@@ -150,7 +150,7 @@ public class ExactBufferPool {
     public static FloatBuffer getVector2Buffer(int capacity)
     {
     	int key = (capacity);
-    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrderingValue(key);
     	if (buffer==null)
     	{
     		v2BuffCount++;
@@ -188,7 +188,7 @@ public class ExactBufferPool {
     public static FloatBuffer getFloatBuffer(int capacity)
     {
     	int key = (capacity);
-    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrderingValue(key);
     	if (buffer==null)
     	{
     		floatBuffCount++;

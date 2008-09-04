@@ -763,7 +763,7 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(27), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_intersect},dependentModels));
 		
 		SimpleModel sm_bookcase = new SimpleModel("models/inside/furniture/bookcase.3ds",null);
-		//sm_bookcase.batchEnabled = false;
+		sm_bookcase.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(28), new RenderedSide(new Model[]{sm_bookcase}));
 		
 		// climate dependent

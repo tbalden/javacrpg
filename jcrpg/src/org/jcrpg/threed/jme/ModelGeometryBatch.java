@@ -31,6 +31,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
@@ -158,6 +159,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 			parent.setLocalTranslation(placeHolder.getLocalTranslation());
 			parent.attachChild(this);
+			parent.setModelBound(new BoundingBox());
 			parent.updateModelBound();
 		} else
 		{

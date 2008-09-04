@@ -86,18 +86,21 @@ o
 [-] rendering bug - behind player battle ground doesnt show tiles... ??
 	Maybe angle is not set correctly upon reinit?
 
+!! [ ] economy update wrongly leftovers from previous geography CUBES and level!!!
+
 OPTIMIZATIONS:
 #############
-[ ] booklshelf not showing
+
+!!! [ ] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
+
 [ ] shadows don't work for moving units!
-[ ] separate config of bloom and DoF
 
 [ ] texture splattering doesn't work with new atlas??
 
 [?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
 	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
 
-[ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result
+[ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 
 !!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
 
@@ -122,6 +125,7 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
 
+[X] separate config of bloom and DoF
 
 [-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
 	

@@ -91,10 +91,10 @@ public class GeometryBatchHelper {
 	private String getBillboardVegetationAtlasKey(boolean internal, Model m, NodePlaceholder place, boolean farView)
 	{
 		int viewMul = 1;
-		int yLevelMul = 1;
+		//int yLevelMul = 1;
 		if (farView) {
 			viewMul = 2;
-			yLevelMul = J3DCore.FARVIEW_GAP;
+			//yLevelMul = J3DCore.FARVIEW_GAP;
 		}
 		String key = ((PartlyBillboardModel)m).atlasTextureName+internal;
 		key+=((place.cube.cube.x/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+((place.cube.cube.z/PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE)/viewMul)+"_"+(place.cube.cube.y/(PARTYLBILLBOARD_MODEL_BATCHED_SPACE_SIZE_Y));
@@ -215,7 +215,6 @@ public class GeometryBatchHelper {
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		modelBatchMap.put(key, batch);
 	    		if (locking)
 	    		{
@@ -224,12 +223,13 @@ public class GeometryBatchHelper {
 	    		}
 	    		
 	    	}
-	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+	    	core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent);
+	    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
 		    	batch.unlockMeshes();
-	    	}
+	    	}*/
 	    	batch.addItem(place);
 	    	batch.updateGeometricState(0f, true); // TODO why is it working only if put here?
 	    } else
@@ -255,16 +255,16 @@ public class GeometryBatchHelper {
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
     			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
 	    	}
-	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+	    	core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+	    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
-	    	}
+	    	}*/
 	    	
     		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
     		boolean sparse = true;
@@ -421,6 +421,7 @@ public class GeometryBatchHelper {
     	}
     }
 
+    public static boolean ALL = true;
     
     public void addBillboardVegetationItem(J3DStandingEngine sEngine, boolean internal, Model m, NodePlaceholder place, boolean farView, BillboardPartVegetation vegetationNode) {
     	
@@ -445,7 +446,6 @@ public class GeometryBatchHelper {
 		    			//sEngine.extRootNode.updateRenderState();
 		    		}
 	    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-	    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
 		    		modelBatchMap.put(key, batch);
 		    		if (locking)
 		    		{
@@ -453,12 +453,13 @@ public class GeometryBatchHelper {
 		    			batch.lockShadows();
 		    		}
 		    	}
-		    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+		    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 		    	{
 		    		batch.unlockBranch();
 			    	batch.unlockBounds();
 			    	batch.unlockMeshes();
-		    	}
+		    	}*/
 		    	for (Spatial s:((Node)(vegetationNode.foliagelessModelSpatial)).getChildren())
 		    	{
 		    		if (s instanceof Node)
@@ -505,16 +506,16 @@ public class GeometryBatchHelper {
     	    			//sEngine.extRootNode.updateRenderState();
     	    		}
         			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
-        			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
     	    		trimeshBatchMap.put(key, batch);
     	    		batch.lockTransforms();
     	    		batch.lockShadows();
     	    	}
-    	    	if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+    			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
+    			/*if ( !J3DStandingEngine.THREAD_RENDERING &&  (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
     	    	{
     	    		batch.unlockBranch();
     		    	batch.unlockBounds();
-    	    	}
+    	    	}*/
     	    	
     	    	for (TriMesh tri:vegetationNode.containedFoliageMeshes)
     	    	{
