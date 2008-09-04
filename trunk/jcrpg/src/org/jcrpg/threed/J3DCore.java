@@ -48,6 +48,7 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
+import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
@@ -128,6 +129,7 @@ import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
+import com.jmex.effects.glsl.BloomRenderPass;
 
 public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
@@ -175,6 +177,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static int EFFECT_VOLUME_PERCENT = 60;
 
 	public static boolean BLOOM_EFFECT = false;
+	public static boolean DOF_EFFECT = false;
 	public static boolean DOF_DETAILED = false;
 	public static boolean SHADOWS = true;
 
@@ -249,6 +252,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);
 			BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
+			DOF_EFFECT = loadValue("DOF_EFFECT", false);
 			DOF_DETAILED = loadValue("DOF_DETAILED", false);
 			ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
 			DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
@@ -1139,17 +1143,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// this part sets the naive veg quads to a mixed color of the light's
 		// value with the quad texture!
 		int counter = 0;
-		for (Spatial q : hmSolidColorSpatials.values()) {
-			counter++;
-			// q.setSolidColor(new
-			// ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-			if ((q.getType() & Node.TRIMESH) > 0) {
-				((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 1.3f,
-						vTotal[1] / 1.3f, vTotal[2] / 1.3f, 1f));
-			} else {
-				((TriMesh) ((Node) q).getChild(0)).setSolidColor(new ColorRGBA(
-						vTotal[0] / 1.3f, vTotal[1] / 1.3f, vTotal[2] / 1.3f,
-						1f));
+		synchronized (hmSolidColorSpatials)
+		{
+			for (Spatial q : hmSolidColorSpatials.values()) {
+				counter++;
+				// q.setSolidColor(new
+				// ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
+				if ((q.getType() & Node.TRIMESH) > 0) {
+					((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 1.3f,
+							vTotal[1] / 1.3f, vTotal[2] / 1.3f, 1f));
+				} else {
+					((TriMesh) ((Node) q).getChild(0)).setSolidColor(new ColorRGBA(
+							vTotal[0] / 1.3f, vTotal[1] / 1.3f, vTotal[2] / 1.3f,
+							1f));
+				}
 			}
 		}
 		// set fog state color to the light power !
@@ -1230,15 +1237,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 *            Node.
 	 */
 	public void removeSolidColorQuadsRecoursive(Node s) {
-		/*
-		 * if (s instanceof BillboardPartVegetation) {
-		 * hmSolidColorSpatials.remove(((BillboardPartVegetation)s).targetQuad);
-		 * ((BillboardPartVegetation)s).targetQuad = null; }
-		 */
-		{
-			hmSolidColorSpatials.remove(s);
-			((Node) s).removeUserData("rotateOnSteep");
-		}
+		hmSolidColorSpatials.remove(s);
+		((Node) s).removeUserData("rotateOnSteep");
 		if (s.getChildren() != null)
 			for (Spatial c : s.getChildren()) {
 				if (c instanceof BillboardPartVegetation) {
@@ -1899,8 +1899,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		noInput = false;
 	}
 
+	public boolean noThreadedRenderCheck = false;
 	public void updateDisplay(Vector3f from) {
 
+		noThreadedRenderCheck = true;
 		noInput = true;
 		// update game state, do not use interpolation parameter
 		update(-1.0f);
@@ -1909,10 +1911,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		render(-1.0f);
 
 		// swap buffers
-		// pManager.remove(sPass);
 		display.getRenderer().displayBackBuffer();
-		// pManager.add(sPass);
+
 		noInput = false;
+		noThreadedRenderCheck = false;
 	}
 
 	public void updateDisplayNoBackBuffer() {
@@ -1941,8 +1943,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	protected void cleanup() {
 		// gameState.engine.exit();
 		super.cleanup();
-		if (bloomRenderPass != null)
-			bloomRenderPass.cleanup();
+		if (dofRenderPass != null)
+			dofRenderPass.cleanup();
 	}
 
 	@Override
@@ -1965,7 +1967,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public FogState fs_external_special;
 	public FogState fs_internal;
 	public DirectionalShadowMapPass sPass = null;
-	private DepthOfFieldRenderPass bloomRenderPass;
+	private DepthOfFieldRenderPass dofRenderPass;
+	private BloomRenderPass bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
 
 	public CullState cs_back = null;
@@ -2210,7 +2213,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		bloomRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?4:4);
+		dofRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?4:4);
+		bloomRenderPass = new BloomRenderPass(cam,4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
@@ -2415,13 +2419,32 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
-				bloomRenderPass.setRootSpatial(dofParentNode);
-				bloomRenderPass.setBlurSize(0.004f);
-				bloomRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.7f);
-				bloomRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.3f);
-				bloomRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
-				bloomRenderPass.setThrottle(0f);
-				pManager.add(bloomRenderPass);
+				bloomRenderPass.setUseCurrentScene(true);
+				//bloomRenderPass.setThrottle(0.f);
+				pManager.add(dofRenderPass);
+			}
+		} else
+		if (DOF_EFFECT)
+		{
+			if (!dofRenderPass.isSupported()) {
+				Jcrpg.LOGGER.warning("!!!!!! DIF NOT SUPPORTED !!!!!!!! ");
+				Text t = new Text("Text", "DoF not supported (FBO needed).");
+				t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				t.setLightCombineMode(LightState.OFF);
+				t.setLocalTranslation(new Vector3f(0, display.getHeight() - 20,
+						0));
+				fpsNode.attachChild(t);
+				DOF_EFFECT = false;
+			} else {
+				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! Depth of field!");
+				// bloomRenderPass.add(groundParentNode);
+				dofRenderPass.setRootSpatial(dofParentNode);
+				dofRenderPass.setBlurSize(0.004f);
+				dofRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.7f);
+				dofRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.3f);
+				dofRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
+				dofRenderPass.setThrottle(0f);
+				pManager.add(dofRenderPass);
 			}
 		}
 
@@ -2578,10 +2601,57 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	@Override
 	protected void simpleUpdate() {
 
-		/*
-		 * if (renderFinished && ) { sEngine.renderToViewPort(); renderFinished
-		 * = false; }
-		 */
+		if (!noThreadedRenderCheck)
+		{
+			// 'parallel' render related checks..
+			
+			// checking for pending full renderToViewPorts
+			if (sEngine!=null && !sEngine.threadRendering && !sEngine.updateAfterRenderNeeded && sEngine.newRenderPending)
+			{
+				sEngine.renderToViewPort();
+			}
+			if (eEngine!=null && !eEngine.threadRendering && !sEngine.updateAfterRenderNeeded && sEngine.newRenderPending)
+			{
+				eEngine.renderToViewPort();
+			}
+			
+			// checking for threadRendering step by step
+			//long time = 0;
+			if (sEngine!=null && sEngine.threadRendering)
+			{
+				//time = System.currentTimeMillis();	
+				if (sEngine.renderToViewPortStepByStep())
+				{
+					sEngine.threadRendering = false;
+					sEngine.updateAfterRenderNeeded = true;
+					GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
+	
+				}
+				//System.out.println("* THREAD RENDER T: "+(time-System.currentTimeMillis()));
+			}
+			if (eEngine!=null && eEngine.threadRendering)
+			{
+				if (eEngine.renderToViewPortStepByStep())
+				{
+					eEngine.threadRendering = false;
+					eEngine.updateAfterRenderNeeded = true;
+					GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
+	
+				}
+			}
+	
+			// checking for after render update need...
+			if (sEngine!=null && sEngine.updateAfterRenderNeeded)
+			{
+				//time = System.currentTimeMillis();
+				sEngine.updateAfterRender();
+				//System.out.println("* UPDATE AFTER T: "+(time-System.currentTimeMillis()));
+			}
+			if (eEngine!=null && eEngine.updateAfterRenderNeeded)
+			{
+				eEngine.updateAfterRender();
+			}
+		}
 		if (J3DCore.SHADOWS) {
 			sPass.setViewTarget(cam.getLocation());
 		}

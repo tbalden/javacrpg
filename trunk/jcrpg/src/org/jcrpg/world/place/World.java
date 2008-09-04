@@ -595,6 +595,14 @@ public class World extends Place {
 		economyContainer.clearAll();
 	}
 	
+	public void clearCaches()
+	{
+		for (Geography g:geographies.values())
+		{
+			g.clearCaches();
+		}
+	}
+	
 	@Override
 	public void onLoad()
 	{

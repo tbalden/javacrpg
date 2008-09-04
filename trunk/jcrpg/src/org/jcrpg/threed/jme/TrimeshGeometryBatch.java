@@ -29,6 +29,7 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.scene.model.Model;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -50,6 +51,7 @@ import com.jme.system.DisplaySystem;
  *
  */
 public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> {
+
 	private static final long serialVersionUID = 0L;
 	
 	public Model model;
@@ -114,40 +116,62 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 		parent.setLocalTranslation(placeHolder.getLocalTranslation());
 		parent.attachChild(this);
+		parent.setModelBound(new BoundingBox());
 		parent.updateModelBound();
-		if (!internal) J3DCore.hmSolidColorSpatials.put(parent, parent);
+		synchronized (J3DCore.hmSolidColorSpatials)
+		{
+			if (!internal) J3DCore.hmSolidColorSpatials.put(parent, parent);
+		}
 		
 		vertexShader = (J3DCore.ANIMATED_GRASS||J3DCore.ANIMATED_TREES) && !internal;
 
-        if (vertexShader && vp==null)
-        { 
-        	vp = DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
-            try {vp.load(new File(
-                    "./data/shaders/bbGrass2.vp").toURI().toURL());} catch (Exception ex){}
-            vp.setEnabled(true);
-            if (!vp.isSupported())
-            {
-            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO VP !!!!!!!");
-            }
-        }
-        if (vertexShader && fp==null)
-        {
-        	fp = DisplaySystem.getDisplaySystem().getRenderer().createFragmentProgramState();
-            try {fp.load(new File(
-                    "./data/shaders/bbGrass2.fp").toURI().toURL());} catch (Exception ex){}
-            fp.setEnabled(true);
-            if (!fp.isSupported())
-            {
-            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO FP !!!!!!!");
-            }
-            
-        }
-        if (vertexShader) {
-        	this.setRenderState(core.fs_external);
-        	this.setRenderState(vp);
-        	this.setRenderState(fp);
-        }
-        
+	       if (vertexShader && vp==null)
+	        { 
+	        	vp = DisplaySystem.getDisplaySystem().getRenderer().createVertexProgramState();
+	            try {vp.load(new File(
+	                    "./data/shaders/bbGrass2.vp").toURI().toURL());} catch (Exception ex){}
+	            vp.setEnabled(true);
+	            try {
+		            if (!vp.isSupported())
+		            {
+		            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO VP !!!!!!!");
+		            }
+	            } catch (Exception ex)
+	            {
+	            	vp = null;
+	            }
+	        }
+	        if (vertexShader && fp==null)
+	        {
+	        	fp = DisplaySystem.getDisplaySystem().getRenderer().createFragmentProgramState();
+	            try {fp.load(new File(
+	                    "./data/shaders/bbGrass2.fp").toURI().toURL());} catch (Exception ex){}
+	            fp.setEnabled(true);
+	            try {
+		            if (!fp.isSupported())
+		            {
+		            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO FP !!!!!!!");
+		            }
+	            } catch (Exception ex)
+	            {
+	            	fp = null;
+	            }
+	            
+	        }
+	        if (vertexShader && fp!=null) {
+	        	this.setRenderState(core.fs_external);
+	        	this.setRenderState(vp);
+	        	this.setRenderState(fp);
+	        }
+			if (vertexShader && vp!=null && fp!=null) {
+				if (!internal) {
+					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+				} else
+				{
+					fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
+				}
+			}
+       
         if (J3DCore.FARVIEW_ENABLED && model!=null && model.type==Model.PARTLYBILLBOARDMODEL)
     	{
     		startFog = (2*J3DCore.RENDER_DISTANCE_FARVIEW*2)/3;
@@ -239,7 +263,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 
 			calcAvarageTranslation(trimesh.getLocalTranslation());
 			notVisible.remove(instance);
-			visible.add(instance);
+			synchronized (visible)
+			{
+				visible.add(instance);
+			}
 			sumAddItemReal += System.currentTimeMillis()-t0;
 			return;
 		}
@@ -266,7 +293,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		long t1 = System.currentTimeMillis();
 		calcAvarageTranslation(trimesh.getLocalTranslation());
 		sumAddItemReal += System.currentTimeMillis()-t1;
-		visible.add(instance);
+		synchronized (visible)
+		{
+			visible.add(instance);
+		}
 		return;
 	}
 	@SuppressWarnings("unchecked")
@@ -281,7 +311,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				
 				if (geoInstance!=null) {
 					geoInstance.getAttributes().setVisible(false); // switching off visibility
-					visible.remove(geoInstance);
+					synchronized (visible)
+					{
+						visible.remove(geoInstance);
+					}
 					notVisible.add(geoInstance);
 					/*if (visible.size()>0)
 					{
@@ -315,6 +348,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public static boolean passedTimeCalculated = false;
 	public static Quaternion qZero = new Quaternion();
 	int lastMinute = 0;
+	
+	
 	
 	// The special onDraw that handles shader parameters and billboard rotation too.
 	@Override
@@ -459,7 +494,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				{
 					setLocalRotation(qZero);
 				}
-				if (vertexShader) {
+				if (vertexShader && vp!=null && fp!=null) {
     				boolean found = false;
     				float dist = 9999f;
     				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:visible)
@@ -484,17 +519,19 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 					}
 				}
 				
-				
-				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+				synchronized (visible)
 				{
-					geoInstance.getAttributes().setRotation(orient);
-					geoInstance.getAttributes().buildMatrices();
+					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> geoInstance:visible)
+					{
+						geoInstance.getAttributes().setRotation(orient);
+						geoInstance.getAttributes().buildMatrices();
+					}
 				}
 				
 			}
 	
 			
-			if (vertexShader) {
+			if (vertexShader && vp!=null && fp!=null) {
 				if (!internal) {
 					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 				} else
@@ -539,7 +576,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				whichDiff = 0;//HashUtil.mixPercentage((int)this.getWorldTranslation().x,(int)this.getWorldTranslation().y,(int)this.getWorldTranslation().z)%5;
 			}
 			
-			if (vertexShader) {
+			if (vertexShader && fp!=null) {
 	    		vp.setParameter(new float[]{diffs[0],diffs[0],0,0}, 0);
 	    		vp.setParameter(new float[]{diffs[1],diffs[1],0,0}, 1);
 	    		vp.setParameter(new float[]{diffs[2],diffs[2],0,0}, 2);
@@ -585,5 +622,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
         	this.clearRenderState(VertexProgramState.RS_FRAGMENT_PROGRAM);
 		}
 	}
-	
+
+
 }

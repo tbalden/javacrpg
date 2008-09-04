@@ -170,6 +170,10 @@ public class J3DStandingEngine {
 		
     	// get a specific part of the area to render
 		long time = System.currentTimeMillis();
+		if (rerender)
+		{
+			world.clearCaches();
+		}
 		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.getCurrentRenderPositions().viewDirection, J3DCore.FARVIEW_ENABLED,rerender);
     	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
@@ -461,7 +465,7 @@ public class J3DStandingEngine {
 	
 	
 	HashSet<RenderedCube> inViewPort = new HashSet<RenderedCube>();
-	HashSet<NodePlaceholder> conditionalNodes = new HashSet<NodePlaceholder>();
+	ArrayList<NodePlaceholder> conditionalNodes = new ArrayList<NodePlaceholder>();
 	HashSet<RenderedCube> inFarViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfViewPort = new HashSet<RenderedCube>();
 	HashSet<RenderedCube> outOfFarViewPort = new HashSet<RenderedCube>();
@@ -513,328 +517,50 @@ public class J3DStandingEngine {
 	 * Tells if before rerender all previous nodes should be removed.
 	 */
 	public boolean rerenderWithRemove = false;
-	/**
-	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
-	 * @param refAngle
-	 * @param segmented
-	 * @param segmentCount
-	 * @param segments
-	 */
-	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
-	{
-		System.out.println("######### GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
-		GeometryBatchMesh.preCommitTime = 0;
-		GeometryBatchMesh.commitTime = 0;
-		
-		long t1 = System.currentTimeMillis(); 
-		synchronized(Engine.mutex) {
-			
-			
-			/*
-			if (extRootNode!=null && extRootNode.getChildren()!=null) {
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("   -    "+ extRootNode.getChildren().size());
-				//if (true == false)
-				for (Spatial s:extRootNode.getChildren())
-				{
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CM: "+s.getCullMode());
-					if (true==false && s instanceof SharedNode)
-					{
-						Spatial s1 = ((SharedNode)s).getChild(0);
-						if (s1 instanceof TrimeshGeometryBatch)
-						{
-							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getCullMode());
-							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
-						} else
-						if (s1 instanceof ModelGeometryBatch)
-						{
-							//if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
-							//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
-							//;
-						} //else
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getName()+ " "+s1);
-					} //else
-					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s.getName()+ " "+s);
-				}
-			}*/
-			
-			
-			//boolean storedPauseState = engine.isPause();
-			engine.pauseForRendering();
-			
-			if (J3DCore.GEOMETRY_BATCH) batchHelper.unlockAll();
-
-			boolean overrideBatch = true;
-			
-			Vector3f lastLoc = new Vector3f(lastRenderX*J3DCore.CUBE_EDGE_SIZE,lastRenderY*J3DCore.CUBE_EDGE_SIZE,lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
-			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
-			int mulWalkDist = 1;
-			if (J3DCore.CONTINUOUS_LOAD && core.renderResult!=null) 
-			{
-				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = core.renderResult;
-				core.renderResult = null;
-
-				if (true)  {
-					
-					for (int i=0; i<detacheable.length; i++)
-					// removing the unneeded.
-					for (RenderedCube c:detacheable[i]) { 
-			    		if (c!=null) {
-		    	    		inViewPort.remove(c);
-		    	    		inFarViewPort.remove(c);
-		    	    		outOfViewPort.remove(c);
-			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
-			    	    	{
-			    	    		NodePlaceholder n = itNode.next();
-			    	    		overrideBatch = true;
-			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-			    					 )
-			    				{
-			    					
-			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
-			    					{
-			    						if (n.neighborCubeData==null)
-			    						{
-			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
-			    						}
-			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
-			    					} else
-			    					{
-			    						overrideBatch = false;
-			    					}
-
-			    					if (!overrideBatch)
-			    					{
-				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
-				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-			    					}
-			    				} 
-			    				if (overrideBatch)
-			    				{ 
-									PooledNode pooledRealNode = n.realNode;
-				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-				    				{
-				    					if (pooledRealNode!=null)
-				    					{
-				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
-				    					}
-				    				}
-									
-									n.realNode = null;
-									if (pooledRealNode!=null) {
-										Node realNode = (Node)pooledRealNode;
-										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-										realNode.removeFromParent();
-										modelPool.releaseNode(pooledRealNode);
-									}
-			    				}
-			    				n.farView = false;
-			    	    	}
-			    		}
-					}
-				}		
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
-			} else
-			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
-			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
-			{
-				if (rerenderWithRemove)
-				{
-					HashSet<RenderedCube> fullInview = new HashSet<RenderedCube>();
-					fullInview.addAll(inViewPort);
-					fullInview.addAll(inFarViewPort);
-					for (RenderedCube c:fullInview)
-					{
-						if (c!=null) {
-		    	    		inViewPort.remove(c);
-		    	    		inFarViewPort.remove(c);
-		    	    		outOfViewPort.remove(c);
-			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
-			    	    	{
-			    	    		overrideBatch = true;
-			    	    		NodePlaceholder n = itNode.next();
-			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-			    					 )
-			    				{
-			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
-			    					{
-			    						if (n.neighborCubeData==null)
-			    						{
-			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
-			    						}
-			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
-			    					} else
-			    					{
-			    						overrideBatch = false;
-			    					}
-
-			    					if (!overrideBatch)
-			        				{
-				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
-				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-			        				}
-			    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
-			    					{
-			    						conditionalNodes.remove(n);
-			    					}
-			    				} 
-			    				if (overrideBatch)
-			    				{ 
-									PooledNode pooledRealNode = n.realNode;
-				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-				    				{
-				    					if (pooledRealNode!=null)
-				    					{
-				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
-				    					}
-				    				}
-									
-									n.realNode = null;
-									if (pooledRealNode!=null) {
-										Node realNode = (Node)pooledRealNode;
-										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-										realNode.removeFromParent();
-										modelPool.releaseNode(pooledRealNode);
-									}
-			    				}
-			    				n.farView = false;
-			    	    	}
-			    		}
-					}
-				}
-				
-				// doing the render, getting the unneeded renderedCubes too.
-				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = render(core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ,rerender);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
-
-				for (int i=0; i<detacheable.length; i++)
-				// removing the unneeded.
-				for (RenderedCube c:detacheable[i]) { 
-		    		if (c!=null) {
-	    	    		inViewPort.remove(c);
-	    	    		inFarViewPort.remove(c);
-	    	    		outOfViewPort.remove(c);
-		    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
-		    	    	{
-		    	    		overrideBatch = true;
-		    	    		NodePlaceholder n = itNode.next();
-		    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
-		    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
-		    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
-		    					 )
-		    				{
-		    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
-		    					{
-		    						if (n.neighborCubeData==null)
-		    						{
-		    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
-		    						}
-		    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
-		    					} else
-		    					{
-		    						overrideBatch = false;
-		    					}
-
-		    					if (!overrideBatch)
-		        				{
-			    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
-			    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
-		        				}
-		    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
-		    					{
-		    						conditionalNodes.remove(n);
-		    					}
-		    				} 
-		    				if (overrideBatch)
-		    				{ 
-								PooledNode pooledRealNode = n.realNode;
-			    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
-			    				{
-			    					if (pooledRealNode!=null)
-			    					{
-			    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
-			    					}
-			    				}
-								
-								n.realNode = null;
-								if (pooledRealNode!=null) {
-									Node realNode = (Node)pooledRealNode;
-									if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
-									realNode.removeFromParent();
-									modelPool.releaseNode(pooledRealNode);
-								}
-		    				}
-		    				
-		    				n.farView = false;
-		    	    	}
-		    		}
-				}
 	
-			}
-			
-			long sysTime = System.currentTimeMillis();
-			
-			int visibleNodeCounter = 0;
-			int nonVisibleNodeCounter = 0;
-			int addedNodeCounter = 0;
-			int removedNodeCounter = 0;
-			
-			long t2 = System.currentTimeMillis();
-			
-			if (segmented && segmentCount==0 || !segmented)
-			{
-				// clearing newly placed nodes list...
-				newNodesToSetCullingDynamic.clear();
+	public boolean threadRendering = false;
+	
+	int currentConditionalNode = 0;
+	
+	public boolean updateAfterRenderNeeded = false;
+	
+	public boolean newRenderPending = false;
+	
+	
+	public int currentNode = 0;
+	public int currentFarviewNode = 0;
+	long sumAddRemoveBatch = 0;
+	float refAngle = 3.16f;
+	float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
+	int fromCubeCount = 0;
+	int toCubeCount = alCurrentCubes.size();
+	int visibleNodeCounter = 0;
+	int nonVisibleNodeCounter = 0;
+	int removedNodeCounter = 0;
+	int addedNodeCounter = 0;
+	boolean overrideBatch = true;
 
-				// clearing current cubes...
-				alCurrentCubes.clear();
-				alCurrentCubes.addAll(hmCurrentCubes.values());
-				if (J3DCore.FARVIEW_ENABLED)
-				{
-					alCurrentCubes_FARVIEW.clear();
-					alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
-				}
-				previousContinuousSoundsAndDistance = continuousSoundsAndDistance;
-				continuousSoundsAndDistance = new HashMap<String, Float>();
-			}
-			int fromCubeCount = 0; int toCubeCount = alCurrentCubes.size();
-			int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
-			if (segmented)
-			{
-				int sSize = alCurrentCubes.size()/segments;
-				fromCubeCount = sSize*segmentCount;
-				toCubeCount = sSize*(segmentCount+1);
-				if (toCubeCount>alCurrentCubes.size())
-				{
-					toCubeCount = alCurrentCubes.size();
-				}
-			}
-			if (segmented && J3DCore.FARVIEW_ENABLED)
-			{
-				int sSize = alCurrentCubes_FARVIEW.size()/segments;
-				fromCubeCount_FARVIEW = sSize*segmentCount;
-				toCubeCount_FARVIEW = sSize*(segmentCount+1);
-				if (toCubeCount_FARVIEW>alCurrentCubes_FARVIEW.size())
-				{
-					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
-				}
-			}
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
+	Vector3f blendedGeoTileDisplacement = new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP),0,-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP));
+	int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
+	float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
 
-			float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
-			float minAngleCalc = J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE*6;
-			
-			long sumAddRemoveBatch = 0;
-			ModelGeometryBatch.sumBuildMatricesTime = 0;
-			TrimeshGeometryBatch.sumAddItemReal = 0;
-			
-			for (int cc = fromCubeCount; cc<toCubeCount; cc++)
+	
+	/**
+	 * rendering step by step the needed things for the view point - 
+	 * gradually done, j3dcore should call this between draws until
+	 * finished.
+	 */
+	public boolean renderToViewPortStepByStep()
+	{
+		GeometryBatchMesh.GLOBAL_CAN_COMMIT = false; // switch off committing for batches till finishing with rendering
+
+		// normal cubes rendering...
+		if (currentNode<alCurrentCubes.size()) 
+		{
+			long time = System.currentTimeMillis();
+			while (true)
 			{
+				int cc = currentNode;
 				RenderedCube c = alCurrentCubes.get(cc);
 				// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
 				if (c.hsRenderedNodes.size()>0)
@@ -846,7 +572,7 @@ public class J3DStandingEngine {
 					int calcFragmentViewDivider = 2;
 					if (c.cube!=null) {
 						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
-						if (fragmentViewDist) calcFragmentViewDivider = this.fragmentedViewDivider;
+						if (fragmentViewDist) calcFragmentViewDivider = fragmentedViewDivider;
 					}
 					if (c.cube!=null)
 					{
@@ -910,7 +636,7 @@ public class J3DStandingEngine {
 						if (checked)
 						{
 							dist = n.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
-	
+		
 							if (dist<minAngleCalc) {
 								found = true;
 								break;
@@ -1014,7 +740,7 @@ public class J3DStandingEngine {
 									n.farView = false;
 								}
 							}
-	
+		
 							inFarViewPort.remove(c);
 							outOfViewPort.remove(c);
 							for (NodePlaceholder n : c.hsRenderedNodes)
@@ -1266,12 +992,21 @@ public class J3DStandingEngine {
 						 }
 					}
 				}
+				currentNode++;
+				if (currentNode==alCurrentCubes.size()) return false;
+				if (System.currentTimeMillis()-time>5) return false;
 			}
-
-			Vector3f blendedGeoTileDisplacement = new Vector3f(-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP),0,-0.5f*J3DCore.CUBE_EDGE_SIZE*(J3DCore.FARVIEW_GAP));
-			if (J3DCore.FARVIEW_ENABLED)
-			for (int cc = fromCubeCount_FARVIEW; cc<toCubeCount_FARVIEW; cc++)
+		}
+		
+		// farview cubes rendering
+		if (J3DCore.FARVIEW_ENABLED)
+		if (currentNode<alCurrentCubes_FARVIEW.size()) 
+		{
+			long time = System.currentTimeMillis();
+			while (true)
 			{
+				int cc = currentFarviewNode;
+				
 				RenderedCube c = alCurrentCubes_FARVIEW.get(cc);
 				// TODO farview selection, only every 10th x/z based on coordinates -> do scale up in X/Z direction only
 				if (c.hsRenderedNodes.size()>0)
@@ -1620,163 +1355,489 @@ public class J3DStandingEngine {
 						 }
 					}
 				}
+				
+				currentFarviewNode++;
+				if (currentFarviewNode==alCurrentCubes_FARVIEW.size()) return false;
+				if (System.currentTimeMillis()-time>5) return false;
+			}
+		}
+		
+		
+		// conditional rendering
+		long time = System.currentTimeMillis();
+		while (true)
+		{
+			if (currentConditionalNode==conditionalNodes.size()) return true;
+			
+			float dist = 0;
+			NodePlaceholder cN = conditionalNodes.get(currentConditionalNode);
+			{
+				dist = cN.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
+				if (dist < J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE)
+				{
+					if (cN.trimeshGeomBatchInstance==null)
+					{
+						batchHelper.addItem(this, cN.cube.cube.internalCube, cN.model, cN, cN.farView);
+					}
+					
+				} else
+				{
+					if (cN.trimeshGeomBatchInstance!=null)
+					{
+						batchHelper.removeItem(cN.cube.cube.internalCube, cN.model, cN, cN.farView);
+					}
+				}
+			}
+			currentConditionalNode++;
+			if (System.currentTimeMillis()-time>5) return false;
+		}
+	}
+	
+	/**
+	 * Rendering standing nodes into viewport. Converting nodePlaceHolders to actual Nodes if they are visible. (Using modelPool.)
+	 * @param refAngle
+	 * @param segmented
+	 * @param segmentCount
+	 * @param segments
+	 */
+	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
+	{
+		if (threadRendering)
+		{
+			// cannot render right now, set renderToviewport pending...
+			newRenderPending = true;
+			return;
+		}
+		// renderToViewport pending set false...
+		newRenderPending = false;
+		
+		System.out.println("######### GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
+		GeometryBatchMesh.preCommitTime = 0;
+		GeometryBatchMesh.commitTime = 0;
+		
+		synchronized(Engine.mutex) {
+			
+			
+			/*
+			if (extRootNode!=null && extRootNode.getChildren()!=null) {
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("   -    "+ extRootNode.getChildren().size());
+				//if (true == false)
+				for (Spatial s:extRootNode.getChildren())
+				{
+					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CM: "+s.getCullMode());
+					if (true==false && s instanceof SharedNode)
+					{
+						Spatial s1 = ((SharedNode)s).getChild(0);
+						if (s1 instanceof TrimeshGeometryBatch)
+						{
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getCullMode());
+							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TRIMESH SIZE = "+((TrimeshGeometryBatch)s1).visible.size()+ " - "+((TrimeshGeometryBatch)s1).model.id);
+						} else
+						if (s1 instanceof ModelGeometryBatch)
+						{
+							//if ((GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null))
+							//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ModelGeometryBatch SIZE = "+((ModelGeometryBatch)s1).visible.values().iterator().next().size()+ " "+((ModelGeometryBatch)s1).model.id + " "+((ModelGeometryBatch)s1).key+" - "+(GeometryBatchHelper.modelBatchMap.get(((ModelGeometryBatch)s1).key)==null));
+							//;
+						} //else
+						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s1.getName()+ " "+s1);
+					} //else
+					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(s.getName()+ " "+s);
+				}
+			}*/
+			
+			
+			//boolean storedPauseState = engine.isPause();
+			engine.pauseForRendering();
+			
+			if (J3DCore.GEOMETRY_BATCH) batchHelper.unlockAll();
+
+			boolean overrideBatch = true;
+			
+			Vector3f lastLoc = new Vector3f(lastRenderX*J3DCore.CUBE_EDGE_SIZE,lastRenderY*J3DCore.CUBE_EDGE_SIZE,lastRenderZ*J3DCore.CUBE_EDGE_SIZE);
+			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
+			int mulWalkDist = 1;
+			
+			
+			if (J3DCore.CONTINUOUS_LOAD && core.renderResult!=null) 
+			{
+				long t0 = System.currentTimeMillis();
+				HashSet<RenderedCube>[] detacheable = core.renderResult;
+				core.renderResult = null;
+
+				if (true)  {
+					
+					for (int i=0; i<detacheable.length; i++)
+					// removing the unneeded.
+					for (RenderedCube c:detacheable[i]) { 
+			    		if (c!=null) {
+		    	    		inViewPort.remove(c);
+		    	    		inFarViewPort.remove(c);
+		    	    		outOfViewPort.remove(c);
+			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+			    	    	{
+			    	    		NodePlaceholder n = itNode.next();
+			    	    		overrideBatch = true;
+			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+			    					 )
+			    				{
+			    					
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+
+			    					if (!overrideBatch)
+			    					{
+				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
+				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			    					}
+			    				} 
+			    				if (overrideBatch)
+			    				{ 
+									PooledNode pooledRealNode = n.realNode;
+				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+				    				{
+				    					if (pooledRealNode!=null)
+				    					{
+				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    					}
+				    				}
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+			    				}
+			    				n.farView = false;
+			    	    	}
+			    		}
+					}
+				}		
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("DETACH TIME = "+(System.currentTimeMillis()-t0));
+			} else
+			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
+			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
+			{
+				if (rerenderWithRemove)
+				{
+					HashSet<RenderedCube> fullInview = new HashSet<RenderedCube>();
+					fullInview.addAll(inViewPort);
+					fullInview.addAll(inFarViewPort);
+					for (RenderedCube c:fullInview)
+					{
+						if (c!=null) {
+		    	    		inViewPort.remove(c);
+		    	    		inFarViewPort.remove(c);
+		    	    		outOfViewPort.remove(c);
+			    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+			    	    	{
+			    	    		overrideBatch = true;
+			    	    		NodePlaceholder n = itNode.next();
+			    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+			    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+			    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+			    					 )
+			    				{
+			    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+			    					{
+			    						if (n.neighborCubeData==null)
+			    						{
+			    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+			    						}
+			    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+			    					} else
+			    					{
+			    						overrideBatch = false;
+			    					}
+
+			    					if (!overrideBatch)
+			        				{
+				    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
+				    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+			        				}
+			    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
+			    					{
+			    						conditionalNodes.remove(n);
+			    					}
+			    				} 
+			    				if (overrideBatch)
+			    				{ 
+									PooledNode pooledRealNode = n.realNode;
+				    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+				    				{
+				    					if (pooledRealNode!=null)
+				    					{
+				    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+				    					}
+				    				}
+									
+									n.realNode = null;
+									if (pooledRealNode!=null) {
+										Node realNode = (Node)pooledRealNode;
+										if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+										realNode.removeFromParent();
+										modelPool.releaseNode(pooledRealNode);
+									}
+			    				}
+			    				n.farView = false;
+			    	    	}
+			    		}
+					}
+				}
+				
+				// doing the render, getting the unneeded renderedCubes too.
+				long t0 = System.currentTimeMillis();
+				HashSet<RenderedCube>[] detacheable = render(core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ,rerender);
+				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
+
+				for (int i=0; i<detacheable.length; i++)
+				// removing the unneeded.
+				for (RenderedCube c:detacheable[i]) { 
+		    		if (c!=null) {
+	    	    		inViewPort.remove(c);
+	    	    		inFarViewPort.remove(c);
+	    	    		outOfViewPort.remove(c);
+		    	    	for (Iterator<NodePlaceholder> itNode = c.hsRenderedNodes.iterator(); itNode.hasNext();)
+		    	    	{
+		    	    		overrideBatch = true;
+		    	    		NodePlaceholder n = itNode.next();
+		    				if (J3DCore.GEOMETRY_BATCH && n.model.batchEnabled && 
+		    						(n.model.type == Model.QUADMODEL || n.model.type == Model.SIMPLEMODEL
+		    								|| J3DCore.GRASS_BIG_BATCH && n.model.type == Model.TEXTURESTATEVEGETATION) 
+		    					 )
+		    				{
+		    					if (n.model.type==Model.SIMPLEMODEL && ((SimpleModel)n.model).generatedGroundModel)
+		    					{
+		    						if (n.neighborCubeData==null)
+		    						{
+		    							n.neighborCubeData = GeoTileLoader.getNeighborCubes(n);
+		    						}
+		    						overrideBatch = n.neighborCubeData.getTextureKeyPartForBatch()!=null;
+		    					} else
+		    					{
+		    						overrideBatch = false;
+		    					}
+
+		    					if (!overrideBatch)
+		        				{
+			    					if (n!=null && (n.trimeshGeomBatchInstance!=null || n.modelGeomBatchInstance!=null))
+			    						batchHelper.removeItem(c.cube.internalCube, n.model, n, n.farView);
+		        				}
+		    					if (n.model.type == Model.TEXTURESTATEVEGETATION)
+		    					{
+		    						conditionalNodes.remove(n);
+		    					}
+		    				} 
+		    				if (overrideBatch)
+		    				{ 
+								PooledNode pooledRealNode = n.realNode;
+			    				if (n.model.type==Model.PARTLYBILLBOARDMODEL)
+			    				{
+			    					if (pooledRealNode!=null)
+			    					{
+			    						batchHelper.removeBillboardVegetationItem(c.cube.internalCube, n.model, n, n.farView,(BillboardPartVegetation)pooledRealNode);
+			    					}
+			    				}
+								
+								n.realNode = null;
+								if (pooledRealNode!=null) {
+									Node realNode = (Node)pooledRealNode;
+									if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+									realNode.removeFromParent();
+									modelPool.releaseNode(pooledRealNode);
+								}
+		    				}
+		    				
+		    				n.farView = false;
+		    	    	}
+		    		}
+				}
 			}
 			
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
-			System.out.println("BATCH ADD-REM TIME = "+sumAddRemoveBatch);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME mod real = "+ModelGeometryBatch.sumBuildMatricesTime);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BATCH ADD-REM TIME tri real = "+TrimeshGeometryBatch.sumAddItemReal);
+			long t2 = System.currentTimeMillis();
 			
-			// if not segmented or the last segment the final tasks...
-			if (segmentCount==segments-1 || !segmented) {
-				
-				float dist = 0;
-				for (NodePlaceholder cN:conditionalNodes)
+			if (segmented && segmentCount==0 || !segmented)
+			{
+				// clearing newly placed nodes list...
+
+				// clearing current cubes...
+				alCurrentCubes.clear();
+				alCurrentCubes.addAll(hmCurrentCubes.values());
+				if (J3DCore.FARVIEW_ENABLED)
 				{
-					dist = cN.getLocalTranslation().distanceSquared(core.getCamera().getLocation());
-					if (dist < J3DCore.RENDER_GRASS_DISTANCE*J3DCore.RENDER_GRASS_DISTANCE)
+					alCurrentCubes_FARVIEW.clear();
+					alCurrentCubes_FARVIEW.addAll(hmCurrentCubes_FARVIEW.values());
+				}
+				previousContinuousSoundsAndDistance = continuousSoundsAndDistance;
+				continuousSoundsAndDistance = new HashMap<String, Float>();
+			}
+			if (segmented)
+			{
+				int sSize = alCurrentCubes.size()/segments;
+				fromCubeCount = sSize*segmentCount;
+				toCubeCount = sSize*(segmentCount+1);
+				if (toCubeCount>alCurrentCubes.size())
+				{
+					toCubeCount = alCurrentCubes.size();
+				}
+			}
+			if (segmented && J3DCore.FARVIEW_ENABLED)
+			{
+				int sSize = alCurrentCubes_FARVIEW.size()/segments;
+				fromCubeCount_FARVIEW = sSize*segmentCount;
+				toCubeCount_FARVIEW = sSize*(segmentCount+1);
+				if (toCubeCount_FARVIEW>alCurrentCubes_FARVIEW.size())
+				{
+					toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
+				}
+			}
+			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ARRAY COPIES = "+(System.currentTimeMillis()-t2));
+
+			ModelGeometryBatch.sumBuildMatricesTime = 0;
+			TrimeshGeometryBatch.sumAddItemReal = 0;
+
+			
+			currentConditionalNode = 0;
+			currentNode = 0;
+			currentFarviewNode = 0;
+			// start threaded rendering (j3dcore will call it based on threadRendering boolean!)...
+			threadRendering = true;
+			
+		}	
+			
+	}
+	
+	
+	
+	/**
+	 * updates after render complition - gradually done, j3dcore should call this between draws until
+	 * finished.
+	 */
+	public void updateAfterRender()
+	{
+	    long sysTime = System.currentTimeMillis();
+	
+		if (newNodesToSetCullingDynamic.size()>0)
+		{
+			long time = System.currentTimeMillis();
+			while (true)
+			{
+				Node n = newNodesToSetCullingDynamic.remove(0);
+				n.unlock();
+				n.setCullMode(Node.CULL_INHERIT);
+				if (n.getChildren()!=null && n.getChildren().size()==1)
+				{
+					Spatial s = n.getChild(0);
+					if (s instanceof Node)
 					{
-						if (cN.trimeshGeomBatchInstance==null)
-						{
-							batchHelper.addItem(this, cN.cube.cube.internalCube, cN.model, cN, cN.farView);
-						}
+						s = ((Node)s).getChild(0);
+					}
+					if (s instanceof GeometryBatchMesh)
+					{
 						
+						((GeometryBatchMesh)s).rebuild();
+					}
+				}
+				n.updateModelBound();
+				n.updateRenderState(); // update render state for the newly placed nodes...
+				if (newNodesToSetCullingDynamic.size()==0) break;					
+				if (System.currentTimeMillis()-time>5) 
+				{
+					//System.out.println("TIME : "+(time-System.currentTimeMillis()));
+					break;
+				}
+			}
+			return;
+	
+		}	    
+		System.out.println("#!!!!!!!#1 GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
+
+		cullVariationCounter++;
+
+	    core.updateTimeRelated();
+
+		float dist = 0;
+		if (J3DCore.SOUND_ENABLED)
+		{
+			// continuous environment sounds playing/stopping part...
+			if (continuousSoundsAndDistance.size()>0)
+			{
+				for (String key:continuousSoundsAndDistance.keySet())
+				{
+					dist = continuousSoundsAndDistance.get(key);
+					if (previousContinuousSoundsAndDistance.containsKey(key))
+					{
+						// set volume
+						previousContinuousSoundsAndDistance.remove(key);
 					} else
 					{
-						if (cN.trimeshGeomBatchInstance!=null)
-						{
-							batchHelper.removeItem(cN.cube.cube.internalCube, cN.model, cN, cN.farView);
-						}
+						// play it newly
 					}
-	
-				}
-				
-				
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("J3DCore.renderToViewPort: visilbe nodes = "+visibleNodeCounter + " nonV = "+nonVisibleNodeCounter+ " ADD: "+addedNodeCounter+ " RM: "+removedNodeCounter);
-			    // handling possible occluders
-			    if (J3DCore.SHADOWS) {
-			    	//if (J3DCore.LOGGING) Jcrpg.LOGGER.info("OCCS: "+core.sPass.occludersSize());
-					for (NodePlaceholder psn : core.possibleOccluders) {
-						if (psn.realNode != null) {
-							Node n = (Node) psn.realNode;
-							dist = n.getWorldTranslation().distanceSquared(
-									core.getCamera().getLocation());
-							if (dist < J3DCore.RENDER_SHADOW_DISTANCE_SQR) {
-								//if (!core.sPass.containsOccluder(n))
-								{
-									if (J3DCore.LOGGING) Jcrpg.LOGGER.info("ADDING OCCLUDER: "+n.getName());
-									//core.sPass.addOccluder(n);
-									
-								}
-							} else {
-								core.removeOccludersRecoursive(n);
-							}
-						}
-					}
-			    }
-			    
-			    if (J3DCore.LOGGING) Jcrpg.LOGGER.info("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
-			    System.out.println("rtoviewport time: "+(System.currentTimeMillis()-sysTime));
-			    sysTime = System.currentTimeMillis();
-			    
-			    
-			    core.updateTimeRelated();
-		
-				cullVariationCounter++;
-
-				/*core.groundParentNode.setCullMode(Node.CULL_NEVER);*/
-				
-				// call an update to render new nodes correctly - workaround for culling problem - new nodes are set to CULL_NEVER..
-				core.updateDisplayNoBackBuffer();
-				
-				// ...iterate through new nodes and set normal culling mode...
-				for (Node n:newNodesToSetCullingDynamic)
-				{
-					n.setCullMode(Node.CULL_INHERIT);
-					n.updateRenderState(); // update render state for the newly placed nodes...
-				}
-				/*
-				core.groundParentNode.setCullMode(Node.CULL_INHERIT);*/
-
-				if (J3DCore.SOUND_ENABLED)
-				{
-					// continuous environment sounds playing/stopping part...
-					if (continuousSoundsAndDistance.size()>0)
+					float power = Math.min(1f,1f/(dist+0.5f)*10f);
+					if (power>0.05f)
 					{
-						for (String key:continuousSoundsAndDistance.keySet())
-						{
-							dist = continuousSoundsAndDistance.get(key);
-							if (previousContinuousSoundsAndDistance.containsKey(key))
-							{
-								// set volume
-								previousContinuousSoundsAndDistance.remove(key);
-							} else
-							{
-								// play it newly
-							}
-							float power = Math.min(1f,1f/(dist+0.5f)*10f);
-							if (power>0.05f)
-							{
-								core.audioServer.playContinuousLoading(key, "continuous",power);
-							} else
-							{
-								previousContinuousSoundsAndDistance.put(key, 0f);
-							}
-							//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
-							
-						}
-					}
-					if (previousContinuousSoundsAndDistance.size()>0)
+						core.audioServer.playContinuousLoading(key, "continuous",power);
+					} else
 					{
-						// stop playing
-						for (String key:previousContinuousSoundsAndDistance.keySet())
-						{
-							core.audioServer.fadeOut(key);
-							//System.out.println("STOP SOUND: "+key);
-						}
+						previousContinuousSoundsAndDistance.put(key, 0f);
 					}
+					//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
+					
 				}
-				// update geometry batches...
-				if (J3DCore.GEOMETRY_BATCH) 
-				{
-					batchHelper.updateAll();
-				}
-
-				if (J3DCore.GEOMETRY_BATCH) batchHelper.lockAll();
-				
-			
-				
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-				System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
-		
-			    if (cullVariationCounter%20==0) {
-					modelPool.cleanPools();
-					TextureManager.clearCache();
-					System.gc();
-				}
-			    
-			    //TextureManager.doTextureCleanup();
-			    //TextureManager.clearCache();
-			    //modelLoader.cleanAll();
-			    //System.gc();
-		
-				// every 20 steps do a garbage collection
-			    core.garbCollCounter++;
-				if (core.garbCollCounter==20) {
-					//
-					core.garbCollCounter = 0;
-				}
-			} else
-			{
-			    core.updateTimeRelated();
 			}
-			
-			engine.unpauseAfterRendering();
+			if (previousContinuousSoundsAndDistance.size()>0)
+			{
+				// stop playing
+				for (String key:previousContinuousSoundsAndDistance.keySet())
+				{
+					core.audioServer.fadeOut(key);
+					//System.out.println("STOP SOUND: "+key);
+				}
+			}
 		}
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("######## FULL RTVP = "+( System.currentTimeMillis()-t1));
+		// update geometry batches...
+		if (J3DCore.GEOMETRY_BATCH) 
+		{
+			batchHelper.updateAll();
+		}
+
+		if (J3DCore.GEOMETRY_BATCH) batchHelper.lockAll();
+		
+	
+		
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+		System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
+
+	    if (cullVariationCounter%20==0) {
+			modelPool.cleanPools();
+			TextureManager.clearCache();
+			System.gc();
+		}
+
+		// every 20 steps do a garbage collection
+	    core.garbCollCounter++;
+		if (core.garbCollCounter==20) {
+			//
+			core.garbCollCounter = 0;
+		}		
+		newNodesToSetCullingDynamic.clear();
+		threadRendering = false;
+		engine.unpauseAfterRendering();
+	    updateAfterRenderNeeded = false;
 	}
 	
 	

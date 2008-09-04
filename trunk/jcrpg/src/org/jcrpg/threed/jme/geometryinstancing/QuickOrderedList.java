@@ -98,5 +98,26 @@ public class QuickOrderedList {
 		return null;
 		
 	}
-	
+
+	public Object removeElementWithEqualOrderingValue(int orderingValue)
+	{
+		int index = 0;
+		if (list.size()==0)
+		{
+			return null;
+		} else
+		{
+			index = getNearestIndex1(orderingValue);
+		}
+		int order = listOrdering.get(index);
+		if (order==orderingValue)
+		{
+			listOrdering.remove(index);
+			return list.remove(index);
+		} 
+		// no such element
+		return null;
+		
+	}
+
 }

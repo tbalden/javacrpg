@@ -10,7 +10,6 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
 import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
-import com.jme.util.geom.BufferUtils;
 
 /**
  * <code>GeometryBatchSpatialInstance</code> uses <code>GeometryBatchInstanceAttributes</code>
@@ -22,7 +21,7 @@ import com.jme.util.geom.BufferUtils;
 public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttributes> extends GeometryInstance<A> {
 	public Geometry mesh;
 	protected AABB modelBound;
-	private FloatBuffer tempVertBuf;
+	public FloatBuffer tempVertBuf;
 	
 	protected GeomBatch instanceBatch = null;
 	
@@ -37,7 +36,7 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
         this.mesh = mesh;
         instanceBatch = mesh.getBatch(0);
         modelBound = new AABB();
-        tempVertBuf = BufferUtils.createVector3Buffer(mesh.getVertexCount());
+        tempVertBuf = ExactBufferPool.getVector3Buffer(mesh.getVertexCount());
     }
 	
 	/** Update Mesh needs to be called when the mesh is changed (does not support a change of the number of vertices) */

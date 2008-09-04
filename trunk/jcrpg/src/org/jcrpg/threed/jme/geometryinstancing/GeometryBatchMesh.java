@@ -65,18 +65,24 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
         if (geometryInstance == null) {
             return;
         }
-        instances.add(geometryInstance);
-        nIndices += geometryInstance.getNumIndices();
-        nVerts += geometryInstance.getNumVerts();
-        reconstruct = true;
+        synchronized (instances)
+        {
+	        instances.add(geometryInstance);
+	        nIndices += geometryInstance.getNumIndices();
+	        nVerts += geometryInstance.getNumVerts();
+	        reconstruct = true;
+        }
     }
 
     public void removeInstance(T geometryInstance) {
-        if (instances.remove(geometryInstance)) {
-            nIndices -= geometryInstance.getNumIndices();
-            nVerts -= geometryInstance.getNumVerts();
+        synchronized (instances)
+        {
+	        if (instances.remove(geometryInstance)) {
+	            nIndices -= geometryInstance.getNumIndices();
+	            nVerts -= geometryInstance.getNumVerts();
+	        }
+	        reconstruct = true;
         }
-        reconstruct = true;
     }
 
     public int getNumVertices() {
@@ -93,13 +99,17 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     
     private void updateBound() {
     	if (commit) {
-	    	modelBound.reset();
-	        for (T instance : instances) {
-	            if( instance.getAttributes().isVisible() ) {
-	            	modelBound.mergeLocal(instance.getModelBound());
-	        	}
-	        }
-	        modelBound.getBoundingBox((BoundingBox)getBatch(0).getModelBound());
+            synchronized (instances)
+            {
+		    
+	    		modelBound.reset();
+		        for (T instance : instances) {
+		            if( instance.getAttributes().isVisible() ) {
+		            	modelBound.mergeLocal(instance.getModelBound());
+		        	}
+		        }
+		        modelBound.getBoundingBox((BoundingBox)getBatch(0).getModelBound());
+            }
     	}
     }
 	
@@ -108,6 +118,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
      * Calculate the AABB for the whole batch
      */ 
     public void preCommit() {
+    	preCommitStart = System.currentTimeMillis();
     	if (reconstruct) {
     		if (J3DCore.VBO_ENABLED)
     		{
@@ -130,22 +141,29 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     		}
     		createBuffers();		// TODO: Maybe have an integer value for the number of texture units?
     	}
-        for (T instance : instances) {
-            commit = instance.preCommit(reconstruct) || commit;
-        }
-    	reconstruct = false;
-        updateBound();
+    	synchronized (instances)
+    	{
+	        for (T instance : instances) {
+	            commit = instance.preCommit(reconstruct) || commit;
+	        }
+	    	reconstruct = false;
+	        updateBound();
+    	}
+    	preCommitTime+=System.currentTimeMillis() - preCommitStart;
     }
     
     public void commit(TriangleBatch batch) {
     	if (commit) {
         	commitStart = System.currentTimeMillis();
-	    	rewindBuffers(batch);
-	        for (T instance : instances) {
-	            instance.commit(batch, reconstruct);
+	        synchronized (instances)
+	        {
+	        	rewindBuffers(batch);
+		        for (T instance : instances) {
+		            instance.commit(batch, reconstruct);
+		        }
 	        }
 	    	commitTime+=System.currentTimeMillis() - commitStart;
-	        
+	    	commit = false;
     	}
 
     }
@@ -155,14 +173,23 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     public long preCommitStart = 0;
     public long commitStart = 0;
     
+    public static boolean GLOBAL_CAN_COMMIT = true;
+    
     public void onDraw(Renderer r) {
     	if (getCullMode() == SceneElement.CULL_ALWAYS) {
     		return;
     	}
-    	preCommitStart = System.currentTimeMillis();
-    	preCommit();
-    	preCommitTime+=System.currentTimeMillis() - preCommitStart;
+    	if (GLOBAL_CAN_COMMIT) preCommit();
     	super.onDraw(r);
+    }
+    
+    /**
+     * Forcing rebuild before draw.
+     */
+    public void rebuild()
+    {
+    	preCommit();
+    	commit(getBatch(0));
     }
     
     public void draw(Renderer r) {
@@ -362,6 +389,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     		}
     	}
     	
+    	synchronized (instances)
+    	{
+	        for (T instance : instances) {
+	            ExactBufferPool.releaseVector3Buffer(instance.tempVertBuf);
+	        }
+    	}   	
     	if (getBatchCount()>0)
     	{
 	        BufferPool.releaseIntBuffer(getBatch(0).getIndexBuffer());

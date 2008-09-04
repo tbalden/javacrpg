@@ -89,6 +89,12 @@ public class BufferPool {
     	} else
     	{
         	buffer.clear();
+    		/*buffer.position((capacity)-1);
+    		for (int i=(capacity)-1; i<buffer.capacity(); i++)
+    		{
+    			buffer.put(0);
+    		}
+    		buffer.position(0);*/
         	intBuffCacheSize--;
     	}
 		buffer.limit(capacity);
@@ -137,6 +143,12 @@ public class BufferPool {
     	{
     		//System.out.println("GETTING FROM CACHE  REALCAP: "+buffer.capacity()+" K: "+key+" C: "+capacity+" LSIZE: ");//+list.size());
     		buffer.clear();
+    		/*buffer.position((capacity*3)-1);
+    		for (int i=(capacity*3)-1; i<buffer.capacity(); i++)
+    		{
+    			buffer.put(0.0f);
+    		}
+    		buffer.position(0);*/
     		v3BuffCacheSize--;
     	}
 		buffer.limit(capacity*3);
@@ -181,6 +193,12 @@ public class BufferPool {
     	} else
     	{
     		buffer.clear();
+    		/*buffer.position((capacity*2)-1);
+    		for (int i=(capacity*2)-1; i<buffer.capacity(); i++)
+    		{
+    			buffer.put(0.0f);
+    		}
+    		buffer.position(0);*/
     		v2BuffCacheSize--;
     	}
 		buffer.limit(capacity*2);
