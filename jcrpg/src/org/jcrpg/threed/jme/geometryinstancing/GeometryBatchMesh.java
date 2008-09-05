@@ -193,7 +193,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     }
     
     public void draw(Renderer r) {
-    	commit(getBatch(0));
+    	if (GLOBAL_CAN_COMMIT) commit(getBatch(0));
     	super.draw(r);
     }
     
