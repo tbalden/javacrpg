@@ -1571,7 +1571,7 @@ public class J3DStandingEngine {
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
 				nonDrawingRender = true;
-				GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
+				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)
 				{
 					HashSet<RenderedCube> fullInview = new HashSet<RenderedCube>();
