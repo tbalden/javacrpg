@@ -494,7 +494,8 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
 
         // set up the indices
         batch.setTriangleQuantity(((size - 1) * (size - 1)) * 2);
-        batch.setIndexBuffer(BufferUtils.createIntBuffer(batch
+        
+        batch.setIndexBuffer(ExactBufferPool.getIntBuffer(batch
                 .getTriangleCount() * 3));
 
         // go through entire array up to the second to last column.
@@ -550,31 +551,6 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
             }
         }
 
-        // set up the indices
-        batch.setTriangleQuantity(((size - 1) * (size - 1)) * 2);
-        batch.setIndexBuffer(BufferUtils.createIntBuffer(batch
-                .getTriangleCount() * 3));
-
-        // go through entire array up to the second to last column.
-        for (int i = 0; i < (size * (size - 1)); i++) {
-            // we want to skip the top row.
-            if (i % ((size * (i / size + 1)) - 1) == 0 && i != 0) {
-                continue;
-            }
-            // set the top left corner.
-            batch.getIndexBuffer().put(i);
-            // set the bottom right corner.
-            batch.getIndexBuffer().put((1 + size) + i);
-            // set the top right corner.
-            batch.getIndexBuffer().put(1 + i);
-            // set the top left corner
-            batch.getIndexBuffer().put(i);
-            // set the bottom left corner
-            batch.getIndexBuffer().put(size + i);
-            // set the bottom right corner
-            batch.getIndexBuffer().put((1 + size) + i);
-
-        }
     }
 
     /**
@@ -692,6 +668,9 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
                 normalIndex++;helperNormalIndex++;
                 }
         }
+        // free the vertex buffer of the helperbatch, not needed anymore
+        ExactBufferPool.releaseVector3Buffer(helperBatch.getVertexBuffer());
+        helperBatch.setVertexBuffer(null);
     }
     
     /**
@@ -868,6 +847,17 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
                 BufferUtils.setInBuffer(point, batch.getVertexBuffer(),
                         (x + (y * size)));
             }
+        }
+
+        // check if the helperBatch vertex buffer was released before, refill if so...
+        helperBatch.setVertexCount(helperHeightMap.length);
+        if (helperBatch.getVertexBuffer()==null || !(helperBatch.getVertexBuffer().limit()==helperBatch.getVertexCount()*3))
+        {
+        	if (helperBatch.getVertexBuffer()!=null)
+        	{
+        		ExactBufferPool.releaseVector3Buffer(helperBatch.getVertexBuffer());
+        	}
+        	helperBatch.setVertexBuffer(ExactBufferPool.getVector3Buffer(helperBatch.getVertexCount()));
         }
         
         for (int x = 0; x < helperSize; x++) {

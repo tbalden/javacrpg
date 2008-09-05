@@ -2421,7 +2421,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setUseCurrentScene(true);
 				//bloomRenderPass.setThrottle(0.f);
-				pManager.add(dofRenderPass);
+				pManager.add(bloomRenderPass);
 			}
 		} else
 		if (DOF_EFFECT)
