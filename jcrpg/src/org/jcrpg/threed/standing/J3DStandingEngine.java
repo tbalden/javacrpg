@@ -38,6 +38,7 @@ import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
+import org.jcrpg.threed.jme.geometryinstancing.QuickOrderedList;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -62,7 +63,6 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
-import com.jme.util.TextureManager;
 
 /**
  * Static elements 3d display part.
@@ -544,6 +544,7 @@ public class J3DStandingEngine {
 	int fromCubeCount_FARVIEW = 0; int toCubeCount_FARVIEW = alCurrentCubes_FARVIEW.size();
 	float maxFarViewDist = (J3DCore.CUBE_EDGE_SIZE*J3DCore.CUBE_EDGE_SIZE)*J3DCore.RENDER_DISTANCE_FARVIEW*J3DCore.RENDER_DISTANCE_FARVIEW;
 
+	public static long maxRtvpTime = 0;
 	
 	/**
 	 * rendering step by step the needed things for the view point - 
@@ -552,6 +553,7 @@ public class J3DStandingEngine {
 	 */
 	public boolean renderToViewPortStepByStep()
 	{
+		long countRtvpTime = System.currentTimeMillis();
 		GeometryBatchMesh.GLOBAL_CAN_COMMIT = false; // switch off committing for batches till finishing with rendering
 
 		// normal cubes rendering...
@@ -993,8 +995,22 @@ public class J3DStandingEngine {
 					}
 				}
 				currentNode++;
-				if (currentNode==alCurrentCubes.size()) return false;
-				if (System.currentTimeMillis()-time>5) return false;
+				if (currentNode==alCurrentCubes.size()) {
+					countRtvpTime  = System.currentTimeMillis() - countRtvpTime;
+					if (countRtvpTime>maxRtvpTime)
+					{
+						maxRtvpTime = countRtvpTime;
+					}
+					return false;
+				}
+				if (System.currentTimeMillis()-time>5) {
+					countRtvpTime  = System.currentTimeMillis() - countRtvpTime;
+					if (countRtvpTime>maxRtvpTime)
+					{
+						maxRtvpTime = countRtvpTime;
+					}
+					return false;
+				}
 			}
 		}
 		
@@ -1367,7 +1383,15 @@ public class J3DStandingEngine {
 		long time = System.currentTimeMillis();
 		while (true)
 		{
-			if (currentConditionalNode==conditionalNodes.size()) return true;
+			if (currentConditionalNode==conditionalNodes.size()) 
+			{
+				countRtvpTime  = System.currentTimeMillis() - countRtvpTime;
+				if (countRtvpTime>maxRtvpTime)
+				{
+					maxRtvpTime = countRtvpTime;
+				}
+				return true;
+			}
 			
 			float dist = 0;
 			NodePlaceholder cN = conditionalNodes.get(currentConditionalNode);
@@ -1389,7 +1413,16 @@ public class J3DStandingEngine {
 				}
 			}
 			currentConditionalNode++;
-			if (System.currentTimeMillis()-time>5) return false;
+			if (System.currentTimeMillis()-time>5) {
+				
+				countRtvpTime  = System.currentTimeMillis() - countRtvpTime;
+				if (countRtvpTime>maxRtvpTime)
+				{
+					maxRtvpTime = countRtvpTime;
+				}
+				
+				return false;
+			}
 		}
 	}
 	
@@ -1402,12 +1435,15 @@ public class J3DStandingEngine {
 	 */
 	public void renderToViewPort(float refAngle, boolean segmented, int segmentCount, int segments)
 	{
-		if (threadRendering)
+		if (threadRendering || updateAfterRenderNeeded)
 		{
 			// cannot render right now, set renderToviewport pending...
 			newRenderPending = true;
 			return;
 		}
+		QuickOrderedList.timeCounter=0;
+		maxRtvpTime = 0;
+		maxUARTime = 0;
 		// renderToViewport pending set false...
 		newRenderPending = false;
 		
@@ -1712,6 +1748,12 @@ public class J3DStandingEngine {
 			currentConditionalNode = 0;
 			currentNode = 0;
 			currentFarviewNode = 0;
+			batchHelperLocksFinished = false;
+			batchHelperUpdatesFinished = false;
+			batchHelper.modelStepByStepCounter = 0;
+			batchHelper.trimeshStepByStepCounter = 0;
+			maxBatchLockTime = 0;
+			maxBatchUpdateTime = 0;
 			// start threaded rendering (j3dcore will call it based on threadRendering boolean!)...
 			threadRendering = true;
 			
@@ -1720,7 +1762,11 @@ public class J3DStandingEngine {
 	}
 	
 	
-	
+	public static long maxUARTime = 0;
+	public static long maxBatchUpdateTime = 0;
+	public static long maxBatchLockTime = 0;
+	boolean batchHelperUpdatesFinished = false;
+	boolean batchHelperLocksFinished = false;
 	/**
 	 * updates after render complition - gradually done, j3dcore should call this between draws until
 	 * finished.
@@ -1759,11 +1805,60 @@ public class J3DStandingEngine {
 					break;
 				}
 			}
+			sysTime = System.currentTimeMillis() - sysTime;
+			if (sysTime>maxUARTime)
+			{
+				maxUARTime = sysTime;
+			}
 			return;
 	
 		}	    
-		System.out.println("#!!!!!!!#1 GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
 
+		// update geometry batches...
+		if (J3DCore.GEOMETRY_BATCH) 
+		{
+			if (!batchHelperUpdatesFinished)
+			{
+				long bTime = System.currentTimeMillis();
+				batchHelperUpdatesFinished = batchHelper.updateAllStepByStep();
+				//System.out.println("UPDATE: "+batchHelperUpdatesFinished);
+				if (batchHelperUpdatesFinished) 
+				{
+					batchHelper.trimeshStepByStepCounter = 0;
+					batchHelper.modelStepByStepCounter = 0;
+				}
+				bTime = System.currentTimeMillis()-bTime;
+				if (bTime>maxBatchUpdateTime)
+				{
+					maxBatchUpdateTime=bTime;
+				}
+				return;
+			}
+		}
+
+		if (J3DCore.GEOMETRY_BATCH) 
+		{
+			if (!batchHelperLocksFinished)
+			{
+				long bTime = System.currentTimeMillis();
+				batchHelperLocksFinished = batchHelper.lockAllStepByStep();
+				//System.out.println("LOCK: "+batchHelperLocksFinished);
+				if (batchHelperLocksFinished) 
+				{
+					batchHelper.trimeshStepByStepCounter = 0;
+					batchHelper.modelStepByStepCounter = 0;
+				}
+				bTime = System.currentTimeMillis()-bTime;
+				if (bTime>maxBatchLockTime)
+				{
+					maxBatchLockTime=bTime;
+				}
+				return;
+			}
+		}
+
+		long finalTime = System.currentTimeMillis();
+		
 		cullVariationCounter++;
 
 	    core.updateTimeRelated();
@@ -1807,14 +1902,6 @@ public class J3DStandingEngine {
 				}
 			}
 		}
-		// update geometry batches...
-		if (J3DCore.GEOMETRY_BATCH) 
-		{
-			batchHelper.updateAll();
-		}
-
-		if (J3DCore.GEOMETRY_BATCH) batchHelper.lockAll();
-		
 	
 		
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
@@ -1822,10 +1909,10 @@ public class J3DStandingEngine {
 		System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 
-	    if (cullVariationCounter%20==0) {
+	    if (cullVariationCounter%40==0) {
 			modelPool.cleanPools();
-			TextureManager.clearCache();
-			System.gc();
+			//TextureManager.clearCache();
+			//System.gc();
 		}
 
 		// every 20 steps do a garbage collection
@@ -1838,6 +1925,13 @@ public class J3DStandingEngine {
 		threadRendering = false;
 		engine.unpauseAfterRendering();
 	    updateAfterRenderNeeded = false;
+	    System.out.println("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);
+	    System.out.println("MAX RTVP TIME         = "+maxRtvpTime);
+	    System.out.println("MAX UAR TIME          = "+maxUARTime);
+	    System.out.println("MAX BATCH UPDATE TIME = "+maxBatchUpdateTime);
+	    System.out.println("MAX BATCH LOCK   TIME = "+maxBatchLockTime);
+	    System.out.println("FINAL things          = "+(System.currentTimeMillis()-finalTime));
+	    QuickOrderedList.timeCounter=0;
 	}
 	
 	
