@@ -37,6 +37,8 @@ import org.jcrpg.threed.ModelLoader.BillboardNodePooled;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
 import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
+import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
+import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.QuickOrderedList;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
@@ -517,6 +519,8 @@ public class J3DStandingEngine {
 	 * Tells if before rerender all previous nodes should be removed.
 	 */
 	public boolean rerenderWithRemove = false;
+	
+	public static boolean nonDrawingRender = false;
 	
 	public boolean threadRendering = false;
 	
@@ -1566,6 +1570,8 @@ public class J3DStandingEngine {
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
+				nonDrawingRender = true;
+				GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
 				if (rerenderWithRemove)
 				{
 					HashSet<RenderedCube> fullInview = new HashSet<RenderedCube>();
@@ -1631,6 +1637,7 @@ public class J3DStandingEngine {
 			    	    	}
 			    		}
 					}
+					batchHelper.releaseInstancesBuffersOnFullCleanUp();
 				}
 				
 				// doing the render, getting the unneeded renderedCubes too.
@@ -1927,12 +1934,16 @@ public class J3DStandingEngine {
 		threadRendering = false;
 		engine.unpauseAfterRendering();
 	    updateAfterRenderNeeded = false;
+	    nonDrawingRender = false;
 	    System.out.println("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);
 	    System.out.println("MAX RTVP TIME         = "+maxRtvpTime);
 	    System.out.println("MAX UAR TIME          = "+maxUARTime);
 	    System.out.println("MAX BATCH UPDATE TIME = "+maxBatchUpdateTime);
 	    System.out.println("MAX BATCH LOCK   TIME = "+maxBatchLockTime);
 	    System.out.println("FINAL things          = "+(System.currentTimeMillis()-finalTime));
+    	System.out.println("BUFFER POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount);
+    	System.out.println("EX BUFFER POOL: CACHED# "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
+	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
 	}
 	

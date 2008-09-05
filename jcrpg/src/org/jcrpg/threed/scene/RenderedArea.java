@@ -83,8 +83,6 @@ public class RenderedArea {
 		
 		Time wtime = world.engine.getWorldMeanTime();
 		
-		worldCubeCacheNext = new HashMap<Long, RenderedCube>();
-		worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
 		ArrayList<RenderedCube> elements = new ArrayList<RenderedCube>();
 		ArrayList<RenderedCube> elements_FARVIEW = new ArrayList<RenderedCube>();
 		long sumTime = 0, sumTime_1 = 0, sumTime_2 = 0;
@@ -216,13 +214,18 @@ public class RenderedArea {
 		
 		//RenderedCube[] removable =  new RenderedCube[0];//worldCubeCache.values().toArray(new RenderedCube[0]);
 		RenderedCube[] removable = worldCubeCache.values().toArray(new RenderedCube[0]);
+		HashMap<Long, RenderedCube> old = worldCubeCache;
 		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
+		worldCubeCacheNext = old;
 		
 		// farview part
 		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
+		
 		worldCubeCache_FARVIEW.clear();
+		old = worldCubeCache_FARVIEW;
 		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
+		worldCubeCacheNext_FARVIEW = old;
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
 		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable, (RenderedCube[])elements_FARVIEW.toArray(new RenderedCube[0]),removable_FARVIEW};
 		

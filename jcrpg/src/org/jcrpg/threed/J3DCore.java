@@ -2610,7 +2610,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			{
 				sEngine.renderToViewPort();
 			}
-			if (eEngine!=null && !eEngine.threadRendering && !sEngine.updateAfterRenderNeeded && sEngine.newRenderPending)
+			if (eEngine!=null && !eEngine.threadRendering && !eEngine.updateAfterRenderNeeded && eEngine.newRenderPending)
 			{
 				eEngine.renderToViewPort();
 			}
@@ -2756,7 +2756,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @see BaseSimpleGame#update(float interpolation)
 	 */
 	protected final void update(float interpolation) {
-
 		if (!pause) {
 			super.update(interpolation);
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
@@ -2775,8 +2774,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	 * @see AbstractGame#render(float interpolation)
 	 */
 	protected final void render(float interpolation) {
+
 		super.render(interpolation);
 
+		
+		
 		Renderer r = display.getRenderer();
 
 		TrimeshGeometryBatch.passedTimeCalculated = false;

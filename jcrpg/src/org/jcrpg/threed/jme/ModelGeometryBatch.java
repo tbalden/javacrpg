@@ -449,5 +449,11 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 	}
 	
+	public void clearAll()
+	{
+		visible.clear();
+		notVisible.clear();
+	}
+	
 	
 }

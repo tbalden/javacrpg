@@ -372,10 +372,16 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     	batch.removeFromParent();
     	
     }
-
-    public void releaseBuffersOnCleanUp()
+    
+    public void releaseInstanceRelatedOnCleanUp()
     {
-    	for (T t:getInstances())
+    	ArrayList<T> removables = new ArrayList<T>();
+    	removables.addAll(getInstances());
+       	for (T t:removables)
+       	{
+       		removeInstance(t);
+       	}
+      	for (T t:removables)
     	{
     		if (t instanceof GeometryBatchSpatialInstance)
     		{
@@ -383,11 +389,19 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			if (t2.mesh instanceof TiledTerrainBlock)
     			{
     				//System.out.println("### RELEASING GEOTILE!");
-    				releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0));
+    				if (((TiledTerrainBlock)t2.mesh).getBatchCount()>0)
+    				{
+    					releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0));
+    				}
     				((TiledTerrainBlock)t2.mesh).releaseExtraBuffers();
-    			}
+     			}
     		}
     	}
+    }
+
+    public void releaseBuffersOnCleanUp()
+    {
+    	releaseInstanceRelatedOnCleanUp();
     	
     	if (getBatchCount()>0)
     	{

@@ -1110,6 +1110,23 @@ public class GeometryBatchHelper {
     	System.out.println("EX BUFFER POOL: CACHED "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
     }
     
+    /**
+     * if everything is removed from all batches, this can be called, otherwise DON'T call it.
+     */
+    public void releaseInstancesBuffersOnFullCleanUp()
+    {
+    	for (ModelGeometryBatch b:modelBatchMap.values())
+    	{
+   			b.releaseInstanceRelatedOnCleanUp();
+   			b.clearAll();
+    	}
+    	for (TrimeshGeometryBatch b:trimeshBatchMap.values())
+    	{
+   			b.releaseInstanceRelatedOnCleanUp();
+   			b.clearAll();
+    	}
+    }
+    
 
     /**
      * clearing batch maps and all.
