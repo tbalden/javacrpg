@@ -16,12 +16,12 @@ import com.jme.scene.batch.TriangleBatch;
  * to define an instance of object in world space. Uses Geometry as source
  * data for the instance.
  *
- * @author Paul Illes - removed tmpVertexBuffer, using the original vertex buffer instead, saving memory
  * @author Patrik Lindegran
  */
-public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttributes> extends GeometryInstance<A> {
+public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttributes> extends GeometryInstance<A> {
 	public Geometry mesh;
 	protected AABB modelBound;
+	public FloatBuffer tempVertBuf;
 	
 	protected GeomBatch instanceBatch = null;
 	
@@ -31,11 +31,12 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
 	
 	protected boolean forceUpdate = false;
 	
-	public GeometryBatchSpatialInstance(Geometry mesh, A attributes) {
+	public GeometryBatchSpatialInstance1(Geometry mesh, A attributes) {
         super(attributes);
         this.mesh = mesh;
         instanceBatch = mesh.getBatch(0);
         modelBound = new AABB();
+        tempVertBuf = ExactBufferPool.getVector3Buffer(mesh.getVertexCount());
     }
 	
 	/** Update Mesh needs to be called when the mesh is changed (does not support a change of the number of vertices) */
@@ -58,10 +59,31 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
     	}
     	
     	if ((forceUpdate || attributes.isTransformed())) {
-    		updateVerts = true;
-    		// removed tmpVertBuffer filling from here - Paul
-    		attributes.setTransformed(false);
-     	}
+    		FloatBuffer vertBufSrc = instanceBatch.getVertexBuffer();
+    		if(vertBufSrc != null) {
+	    		modelBound.reset();
+	    		tempVertBuf.rewind();
+	    		if(attributes.isVisible()) {	    			
+	    			transformed = true;
+		            vertBufSrc.rewind();		            
+		            for (int i = 0; i < instanceBatch.getVertexCount(); i++) {
+		                worldVector.set(vertBufSrc.get(), vertBufSrc.get(),
+		                                vertBufSrc.get());
+		                attributes.getWorldMatrix().mult(worldVector, worldVector);
+		                modelBound.expand(worldVector);
+		                tempVertBuf.put(worldVector.x);
+		                tempVertBuf.put(worldVector.y);
+		                tempVertBuf.put(worldVector.z);
+		            }
+	    		} else {
+	    			for (int i = 0; i < vertBufSrc.capacity(); i++) {
+		                tempVertBuf.put(0.0f);
+		            }
+	    		}
+	    		updateVerts = true;
+	            attributes.setTransformed(false);
+    		}
+    	}
     	return wantCommit();
     }
     
@@ -104,37 +126,18 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
     		return 0;
     	}
     	int indexStart = vertBufDst.position() / 3;
-    	// filling from original vertexbuffer here at commit time instead of preCommit tmpVertexBuffer - Paul
-		modelBound.reset();
-		if(attributes.isVisible()) {	    			
-			transformed = true;
-            vertBufSrc.rewind();		            
-            for (int i = 0; i < instanceBatch.getVertexCount(); i++) {
-                worldVector.set(vertBufSrc.get(), vertBufSrc.get(),
-                                vertBufSrc.get());
-                attributes.getWorldMatrix().mult(worldVector, worldVector);
-                modelBound.expand(worldVector);
-                vertBufDst.put(worldVector.x);
-                vertBufDst.put(worldVector.y);
-                vertBufDst.put(worldVector.z);
-            }
-		} else {
-			for (int i = 0; i < vertBufSrc.capacity(); i++) {
-				vertBufDst.put(0.0f);
-            }
-		}
-		
+        vertBufSrc.rewind();
+        vertBufDst.put(vertBufSrc);
         return indexStart;
     }
     
     protected int commitVertices(GeomBatch batch) {
     	// Vertex buffer
-    	FloatBuffer vertBufSrc = instanceBatch.getVertexBuffer();
        	if (updateVerts) {
             updateVerts = false;
-            return commitVertices(vertBufSrc, batch.getVertexBuffer());
+            return commitVertices(tempVertBuf, batch.getVertexBuffer());
     	}
-    	skipBuffer(vertBufSrc, batch.getVertexBuffer());
+    	skipBuffer(tempVertBuf, batch.getVertexBuffer());
         return 0;
     }
     
