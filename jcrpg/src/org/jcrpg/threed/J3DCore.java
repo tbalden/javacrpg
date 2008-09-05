@@ -2624,8 +2624,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					sEngine.threadRendering = false;
 					sEngine.updateAfterRenderNeeded = true;
-					GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
-	
 				}
 				//System.out.println("* THREAD RENDER T: "+(time-System.currentTimeMillis()));
 			}
@@ -2635,8 +2633,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				{
 					eEngine.threadRendering = false;
 					eEngine.updateAfterRenderNeeded = true;
-					GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
-	
 				}
 			}
 	

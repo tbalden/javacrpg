@@ -1783,6 +1783,7 @@ public class J3DStandingEngine {
 				Node n = newNodesToSetCullingDynamic.remove(0);
 				n.unlock();
 				n.setCullMode(Node.CULL_INHERIT);
+				n.updateRenderState(); // update render state for the newly placed nodes...
 				if (n.getChildren()!=null && n.getChildren().size()==1)
 				{
 					Spatial s = n.getChild(0);
@@ -1797,7 +1798,6 @@ public class J3DStandingEngine {
 					}
 				}
 				n.updateModelBound();
-				n.updateRenderState(); // update render state for the newly placed nodes...
 				if (newNodesToSetCullingDynamic.size()==0) break;					
 				if (System.currentTimeMillis()-time>5) 
 				{
@@ -1856,6 +1856,8 @@ public class J3DStandingEngine {
 				return;
 			}
 		}
+	
+		GeometryBatchMesh.GLOBAL_CAN_COMMIT = true;
 
 		long finalTime = System.currentTimeMillis();
 		
