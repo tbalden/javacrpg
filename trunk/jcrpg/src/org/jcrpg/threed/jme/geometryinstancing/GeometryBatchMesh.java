@@ -147,7 +147,6 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	            commit = instance.preCommit(reconstruct) || commit;
 	        }
 	    	reconstruct = false;
-	        updateBound();
     	}
     	preCommitTime+=System.currentTimeMillis() - preCommitStart;
     }
@@ -162,6 +161,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 		            instance.commit(batch, reconstruct);
 		        }
 	        }
+	        updateBound();
 	    	commitTime+=System.currentTimeMillis() - commitStart;
 	    	commit = false;
     	}
