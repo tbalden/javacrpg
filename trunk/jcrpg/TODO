@@ -91,12 +91,7 @@ o
 OPTIMIZATIONS:
 #############
 
-[X] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
-
-[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
-	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
-	[-] cube/rendered area cache?? checked JProfiler
-	[ ] map textures again???
+[ ] full rerender still eating up new cache partially!
 
 [ ] rendering shows strange elements... missing textures
 
@@ -120,6 +115,13 @@ OPTIMIZATIONS:
 [X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
+
+[X] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
+
+[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
+	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
+	[-] cube/rendered area cache?? checked JProfiler
+	[X] map textures again???
 
 [X] separate config of bloom and DoF
 
