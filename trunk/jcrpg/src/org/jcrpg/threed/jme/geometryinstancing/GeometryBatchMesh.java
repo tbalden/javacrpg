@@ -27,7 +27,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     protected ArrayList<T> instances;
     private int nVerts;
     private int nIndices;
-    private AABB modelBound;
+    //private AABB modelBound;
     
     private boolean commit = false;    
     public boolean reconstruct = false;
@@ -43,7 +43,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	
 	private void init() {
 		instances = new ArrayList<T>(1);
-        modelBound = new AABB();
+        //modelBound = new AABB();
         getBatch(0).setModelBound(new BoundingBox());
 	}
 	
@@ -56,7 +56,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	
     public void clearInstances() {
         instances.clear();
-        modelBound.reset();
+        //modelBound.reset();
         nVerts = 0;
         nIndices = 0;
     }
@@ -96,11 +96,13 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     public ArrayList<T> getInstances() {
         return instances;
     }
-    
+    /*
     private void updateBound() {
     	if (commit) {
             synchronized (instances)
             {
+            	
+            	((BoundingBox)getBatch(0).getModelBound()).
 		    
 	    		modelBound.reset();
 		        for (T instance : instances) {
@@ -111,7 +113,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 		        modelBound.getBoundingBox((BoundingBox)getBatch(0).getModelBound());
             }
     	}
-    }
+    }*/
 	
     /**
      * Calculates AABBs for all instances and then
@@ -161,7 +163,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 		            instance.commit(batch, reconstruct);
 		        }
 	        }
-	        updateBound();
+	        //updateBound();
 	    	commitTime+=System.currentTimeMillis() - commitStart;
 	    	commit = false;
     	}
