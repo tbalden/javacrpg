@@ -91,6 +91,8 @@ o
 OPTIMIZATIONS:
 #############
 
+[ ] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
+
 [?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
 	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
 	[-] cube/rendered area cache?? checked JProfiler
