@@ -357,8 +357,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 
     public void releaseBatchExact(TriangleBatch batch)
     {
-        ExactBufferPool.releaseIntBuffer(batch.getIndexBuffer());
-        batch.setIndexBuffer(null);
+    	if (batch.getIndexBuffer()!=TiledTerrainBlock.COMMON_INDEX_BUFFER)
+    	{
+    		// shouldn't release only non-common-buffer
+    		ExactBufferPool.releaseIntBuffer(batch.getIndexBuffer());
+    	}
+    	batch.setIndexBuffer(null);
         ExactBufferPool.releaseVector3Buffer(batch.getVertexBuffer());
         batch.setVertexBuffer(null);
         ExactBufferPool.releaseVector3Buffer(batch.getNormalBuffer());

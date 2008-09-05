@@ -52,6 +52,7 @@ package org.jcrpg.threed.jme;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
@@ -64,10 +65,8 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
-import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.lod.AreaClodMesh;
-import com.jme.system.DisplaySystem;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -223,8 +222,8 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         buildColors();
         TriangleBatch batch = getBatch(0);
 
-        VBOInfo vbo = new VBOInfo(true);
-        batch.setVBOInfo(vbo);
+        //VBOInfo vbo = new VBOInfo(true);
+        //batch.setVBOInfo(vbo);
 
         if (useClod) {
             this.create(null);
@@ -464,6 +463,10 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         topLeft.interpolate(bottomLeft, intOnZ);
         return topLeft.normalizeLocal();
     }
+    
+    
+    public static IntBuffer COMMON_INDEX_BUFFER = null;
+    public static int COMMON_SIZE = 2;
 
     /**
      * <code>buildVertices</code> sets up the vertex and index arrays of the
@@ -494,30 +497,62 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
 
         // set up the indices
         batch.setTriangleQuantity(((size - 1) * (size - 1)) * 2);
-        
-        batch.setIndexBuffer(ExactBufferPool.getIntBuffer(batch
-                .getTriangleCount() * 3));
 
-        // go through entire array up to the second to last column.
-        for (int i = 0; i < (size * (size - 1)); i++) {
-            // we want to skip the top row.
-            if (i % ((size * (i / size + 1)) - 1) == 0 && i != 0) {
-                continue;
+        // for common size, use the common index buffer
+        if (size==COMMON_SIZE)
+        {
+	        if (COMMON_INDEX_BUFFER==null)
+	        {
+	        	COMMON_INDEX_BUFFER = ExactBufferPool.getIntBuffer(batch
+	                    .getTriangleCount() * 3); 
+	
+	            // go through entire array up to the second to last column.
+	            for (int i = 0; i < (size * (size - 1)); i++) {
+	                // we want to skip the top row.
+	                if (i % ((size * (i / size + 1)) - 1) == 0 && i != 0) {
+	                    continue;
+	                }
+	                // set the top left corner.
+	                COMMON_INDEX_BUFFER.put(i);
+	                // set the bottom right corner.
+	                COMMON_INDEX_BUFFER.put((1 + size) + i);
+	                // set the top right corner.
+	                COMMON_INDEX_BUFFER.put(1 + i);
+	                // set the top left corner
+	                COMMON_INDEX_BUFFER.put(i);
+	                // set the bottom left corner
+	                COMMON_INDEX_BUFFER.put(size + i);
+	                // set the bottom right corner
+	                COMMON_INDEX_BUFFER.put((1 + size) + i);
+	            }
+	        }
+	        batch.setIndexBuffer(COMMON_INDEX_BUFFER);
+        } else
+        {
+        	batch.setIndexBuffer(ExactBufferPool.getIntBuffer(batch
+                    .getTriangleCount() * 3)); 
+
+            // go through entire array up to the second to last column.
+            for (int i = 0; i < (size * (size - 1)); i++) {
+                // we want to skip the top row.
+                if (i % ((size * (i / size + 1)) - 1) == 0 && i != 0) {
+                    continue;
+                }
+                // set the top left corner.
+                batch.getIndexBuffer().put(i);
+                // set the bottom right corner.
+                batch.getIndexBuffer().put((1 + size) + i);
+                // set the top right corner.
+                batch.getIndexBuffer().put(1 + i);
+                // set the top left corner
+                batch.getIndexBuffer().put(i);
+                // set the bottom left corner
+                batch.getIndexBuffer().put(size + i);
+                // set the bottom right corner
+                batch.getIndexBuffer().put((1 + size) + i);
             }
-            // set the top left corner.
-            batch.getIndexBuffer().put(i);
-            // set the bottom right corner.
-            batch.getIndexBuffer().put((1 + size) + i);
-            // set the top right corner.
-            batch.getIndexBuffer().put(1 + i);
-            // set the top left corner
-            batch.getIndexBuffer().put(i);
-            // set the bottom left corner
-            batch.getIndexBuffer().put(size + i);
-            // set the bottom right corner
-            batch.getIndexBuffer().put((1 + size) + i);
-
         }
+        
     }
     
     public void releaseExtraBuffers()
@@ -871,14 +906,14 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         
         buildNormals();
 
-        if (batch.getVBOInfo() != null) {
+        /*if (batch.getVBOInfo() != null) {
             batch.getVBOInfo().setVBOVertexID(-1);
             batch.getVBOInfo().setVBONormalID(-1);
             DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(
                     getVertexBuffer(0));
             DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(
                     getNormalBuffer(0));
-        }
+        }*/
     }
 
     /**
