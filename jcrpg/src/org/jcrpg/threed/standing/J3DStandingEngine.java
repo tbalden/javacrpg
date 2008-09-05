@@ -1757,6 +1757,7 @@ public class J3DStandingEngine {
 			currentFarviewNode = 0;
 			batchHelperLocksFinished = false;
 			batchHelperUpdatesFinished = false;
+			batchHelperRemovalsFinished = false;
 			batchHelper.modelStepByStepCounter = 0;
 			batchHelper.trimeshStepByStepCounter = 0;
 			maxBatchLockTime = 0;
@@ -1772,6 +1773,7 @@ public class J3DStandingEngine {
 	public static long maxUARTime = 0;
 	public static long maxBatchUpdateTime = 0;
 	public static long maxBatchLockTime = 0;
+	boolean batchHelperRemovalsFinished = false;
 	boolean batchHelperUpdatesFinished = false;
 	boolean batchHelperLocksFinished = false;
 	/**
@@ -1781,6 +1783,22 @@ public class J3DStandingEngine {
 	public void updateAfterRender()
 	{
 	    long sysTime = System.currentTimeMillis();
+	    
+		// update geometry batches...
+		if (J3DCore.GEOMETRY_BATCH) 
+		{
+			if (!batchHelperRemovalsFinished)
+			{
+				batchHelperRemovalsFinished = batchHelper.removeUnneededStepByStep();
+				System.out.println("DELETE: "+batchHelperRemovalsFinished);
+				if (batchHelperRemovalsFinished) 
+				{
+					batchHelper.trimeshStepByStepCounter = 0;
+					batchHelper.modelStepByStepCounter = 0;
+				}
+				return;
+			}
+		}
 	
 		if (newNodesToSetCullingDynamic.size()>0)
 		{

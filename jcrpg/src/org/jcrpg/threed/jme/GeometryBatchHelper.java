@@ -596,27 +596,22 @@ public class GeometryBatchHelper {
     	{
     		if (trimeshStepByStepCounter>=trimeshBatchMap.size() && modelStepByStepCounter>=modelBatchMap.size())
     		{
-    			modelBatchMap.values().removeAll(modelRemovables);
-		    	trimeshBatchMap.values().removeAll(trimeshRemovables);		    	 
     			return true;
     		}
     		if (trimeshStepByStepCounter==0)
     		{
     			tgbList.clear();
-    			trimeshRemovables.clear();
     			tgbList.addAll(trimeshBatchMap.values());
     		}
     		if (modelStepByStepCounter==0)
     		{
     			mgbList.clear();
-    			modelRemovables.clear();
     			mgbList.addAll(modelBatchMap.values());
     		}
     		
     		if (trimeshStepByStepCounter<trimeshBatchMap.size())
     		{
     			TrimeshGeometryBatch batch = tgbList.get(trimeshStepByStepCounter);
-	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
 	    			if (J3DCore.SHADOWS)
@@ -648,60 +643,14 @@ public class GeometryBatchHelper {
 	    				batch.setVBOInfo(v);*/
 	    				
 	    			}
-	    			removableFlag = false;
 	    		}
-				if (removableFlag) {
-    				
-    				batch.unlock();
-    				batch.parent.unlock();
-					batch.parent.removeFromParent();
-					batch.removeFromParent();
-    				if (J3DCore.VBO_ENABLED)
-    				{
-						if (batch.getVBOInfo(0)!=null)
-	    				{
-	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
-	    				}
-    				}
- 					batch.releaseBuffersOnCleanUp();
-					batch.clearBatches();
-					batch.clearInstances();
-					
-					
-					if (J3DCore.SHADOWS)
-					{
-						core.sPass.remove(batch);
-						core.sPass.removeOccluder(batch);
-					}
-					core.removeSolidColorQuadsRecoursive(batch.parent);
-					trimeshRemovables.add(batch);
-				} else
-				{
-					//if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
-					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
-					{
-						//float dist = batch.parent.getLocalTranslation().distance(core.getCamera().getLocation());
-						// TODO bad distance is setting cull always here... TODO make a boundary edges based calc instead
-						/*if (dist>J3DCore.RENDER_GRASS_DISTANCE*2)
-						{
-							//System.out.println("CULLING "+batch.parent.getLocalTranslation()+ " " + core.getCamera().getLocation());
-							
-							batch.parent.setCullMode(TriMesh.CULL_ALWAYS);
-							batch.parent.updateRenderState();
-						} else
-						{
-							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
-							batch.parent.updateRenderState();
-						}*/
-					}
-				}
+
 				trimeshStepByStepCounter++;	
     		} else
     		if (modelStepByStepCounter<modelBatchMap.size())
     		{
     			ModelGeometryBatch batch = mgbList.get(modelStepByStepCounter);
     			
-	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
 	    			if (J3DCore.SHADOWS)
@@ -753,7 +702,6 @@ public class GeometryBatchHelper {
 		    				
 		    			}
 	    			}
-	    			removableFlag = false;
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
 	    				//batch.updateGeometricState(0f, true);
@@ -768,12 +716,87 @@ public class GeometryBatchHelper {
 	    				}
 	    				
 	    			}
-	    		} else
+	    		}
+				modelStepByStepCounter++;
+				
+    		}
+    		if (System.currentTimeMillis()-time>10)
+    		{
+    			return false;
+    		}
+    	}
+     }
+
+    public boolean removeUnneededStepByStep()
+    {
+    	if (!locking) return true;
+    	//System.out.println("HELPER UPDATE ALL..."+modelStepByStepCounter+"/"+modelBatchMap.size()+" "+trimeshStepByStepCounter+"/"+trimeshBatchMap.size());
+    	long time = System.currentTimeMillis();
+    	while (true)
+    	{
+    		if (trimeshStepByStepCounter>=trimeshBatchMap.size() && modelStepByStepCounter>=modelBatchMap.size())
+    		{
+    			modelBatchMap.values().removeAll(modelRemovables);
+		    	trimeshBatchMap.values().removeAll(trimeshRemovables);		    	 
+    			return true;
+    		}
+    		if (trimeshStepByStepCounter==0)
+    		{
+    			tgbList.clear();
+    			trimeshRemovables.clear();
+    			tgbList.addAll(trimeshBatchMap.values());
+    		}
+    		if (modelStepByStepCounter==0)
+    		{
+    			mgbList.clear();
+    			modelRemovables.clear();
+    			mgbList.addAll(modelBatchMap.values());
+    		}
+    		
+    		if (trimeshStepByStepCounter<trimeshBatchMap.size())
+    		{
+    			TrimeshGeometryBatch batch = tgbList.get(trimeshStepByStepCounter);
+	    		boolean removableFlag = true;
+	    		if (batch.visible.size()!=0)
 	    		{
-	    			if (batch.isUpdateNeededAndSwitchIt())
-	    			{
-	    				batch.parent.updateRenderState();
-	    			}
+	    			removableFlag = false;
+	    		}
+				if (removableFlag) {
+    				
+    				batch.unlock();
+    				batch.parent.unlock();
+					batch.parent.removeFromParent();
+					batch.removeFromParent();
+    				if (J3DCore.VBO_ENABLED)
+    				{
+						if (batch.getVBOInfo(0)!=null)
+	    				{
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+	    				}
+    				}
+ 					batch.releaseBuffersOnCleanUp();
+					batch.clearBatches();
+					batch.clearInstances();
+					
+					
+					if (J3DCore.SHADOWS)
+					{
+						core.sPass.remove(batch);
+						core.sPass.removeOccluder(batch);
+					}
+					core.removeSolidColorQuadsRecoursive(batch.parent);
+					trimeshRemovables.add(batch);
+				}
+				trimeshStepByStepCounter++;	
+    		} else
+    		if (modelStepByStepCounter<modelBatchMap.size())
+    		{
+    			ModelGeometryBatch batch = mgbList.get(modelStepByStepCounter);
+    			
+	    		boolean removableFlag = true;
+	    		if (batch.visible.size()!=0)
+	    		{
+	    			removableFlag = false;
 	    		}
 				if (removableFlag) {
 					
@@ -822,8 +845,8 @@ public class GeometryBatchHelper {
     			return false;
     		}
     	}
-     }
-
+     }    
+    
     boolean locking = true;
     public void lockAll()
     {
