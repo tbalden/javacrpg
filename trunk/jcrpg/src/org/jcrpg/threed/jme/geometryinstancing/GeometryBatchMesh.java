@@ -389,12 +389,6 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     		}
     	}
     	
-    	synchronized (instances)
-    	{
-	        for (T instance : instances) {
-	            ExactBufferPool.releaseVector3Buffer(instance.tempVertBuf);
-	        }
-    	}   	
     	if (getBatchCount()>0)
     	{
 	        BufferPool.releaseIntBuffer(getBatch(0).getIndexBuffer());
