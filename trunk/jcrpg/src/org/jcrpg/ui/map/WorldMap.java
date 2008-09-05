@@ -244,6 +244,7 @@ public class WorldMap {
 	
 	public void update(int cx, int cy, int cz)
 	{
+		//if (true) return;
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+Math.min(world.sizeZ,++cz)+" "+Math.max(0,--cx));
 		if (cx==lastCx && cz==lastCz) return;
 		lastCx = cx;

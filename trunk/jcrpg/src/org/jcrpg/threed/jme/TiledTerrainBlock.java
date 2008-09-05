@@ -522,6 +522,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     public void releaseExtraBuffers()
     {
     	ExactBufferPool.releaseVector3Buffer(helperBatch.getVertexBuffer());
+    	helperBatch.setVertexBuffer(null);
     }
 
     private void buildHelperVertices() {

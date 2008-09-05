@@ -623,5 +623,10 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		}
 	}
 
+	public void clearAll()
+	{
+		visible.clear();
+		notVisible.clear();
+	}
 
 }

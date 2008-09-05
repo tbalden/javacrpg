@@ -91,33 +91,25 @@ o
 OPTIMIZATIONS:
 #############
 
-!!! [ ] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
+[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
+	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
+	[-] cube/rendered area cache?? checked JProfiler
+	[ ] map textures again???
 
-[ ] adding a new thread for some of the things?
+[ ] rendering shows strange elements... missing textures
 
 [ ] shadows don't work for moving units!
 
 [ ] texture splattering doesn't work with new atlas??
 
-[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
-	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
 
 [ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 
 !!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
 
-[X] use DDS!!
-	[X] convert more, use FLIP in modelLoader, reconvert flipped
-(09:42:08 PM) Momoko_Fan: download Compressonator
-(09:42:14 PM) Momoko_Fan: from ATI site
-(09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
-
-Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
-For alpha textures use DXT5 instead of DXT1. Box filter
 
 [ ] md2 model for animated?
 
-[X] make textures for continental (normal 3 tree) + continental mountain (2 pines)
 
 [ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
 [ ] reconsider texture splattering - use of static textures instead?
@@ -132,7 +124,21 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 [-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
 	
 	[ ] make caching of font quads to shared mesh cache??
+
+
+[X] use DDS!!
+	[X] convert more, use FLIP in modelLoader, reconvert flipped
+(09:42:08 PM) Momoko_Fan: download Compressonator
+(09:42:14 PM) Momoko_Fan: from ATI site
+(09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
+
+Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
+For alpha textures use DXT5 instead of DXT1. Box filter
+[X] make textures for continental (normal 3 tree) + continental mountain (2 pines)
 	
+!!! [-] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
+
+[-] adding a new thread for some of the things?
 
 [X] test VBO with new buffer pool...what's the problem with it?
 
@@ -179,6 +185,7 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 	-> texture coordinates swap for more random look on trees?
 	
 
+[X]CHECK what's this varying world cache size??? once 60k then 240k???
 
 [X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
 

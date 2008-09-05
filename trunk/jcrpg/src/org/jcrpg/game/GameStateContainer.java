@@ -278,7 +278,9 @@ public class GameStateContainer {
 		J3DCore.getInstance().setCalculatedCameraLocation();
 		
 		J3DCore.getInstance().sEngine.rerender = true;
+		J3DCore.getInstance().sEngine.rerenderWithRemove= true;
 		J3DCore.getInstance().sEngine.renderToViewPort();
+		J3DCore.getInstance().sEngine.rerenderWithRemove= false;
 		J3DCore.getInstance().sEngine.rerender = false;
 		engine.economyUpdateFinished();
 		J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "ECONOMY");

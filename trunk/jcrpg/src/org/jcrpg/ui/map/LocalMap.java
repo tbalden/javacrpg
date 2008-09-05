@@ -139,6 +139,7 @@ public class LocalMap {
 	};
 	
 	public void update() {
+		//if (true) return;
 		try {
 			staticLayerGraphics.setBackground(new Color(0,0,0,0));
 			staticLayerGraphics.clearRect(0, 0, staticLayerGraphics.getImage().getWidth(), staticLayerGraphics.getImage().getHeight());
