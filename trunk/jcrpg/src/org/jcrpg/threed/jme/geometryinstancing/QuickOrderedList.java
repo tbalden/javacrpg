@@ -24,11 +24,13 @@ public class QuickOrderedList {
 	private ArrayList<Integer> listOrdering = new ArrayList<Integer>();
 	private ArrayList<Object> list = new ArrayList<Object>();
 	
-	public int getNearestIndex1(int orderingValue)
+	public static long timeCounter = 0;
+	
+	public int getNearestIndex(int orderingValue)
 	{
-		return getNearestIndex(orderingValue, 0, listOrdering.size()-1);
+		return getNearestIndexPriv(orderingValue, 0, listOrdering.size()-1);
 	}
-	private int getNearestIndex(int orderingValue,int from, int to)
+	private int getNearestIndexPriv(int orderingValue,int from, int to)
 	{
 		if (from==to) return from;
 		int center = (from+to)/2;
@@ -40,27 +42,29 @@ public class QuickOrderedList {
 			{
 				return to;
 			}
-			return getNearestIndex(orderingValue,center,to);
+			return getNearestIndexPriv(orderingValue,center,to);
 		} 
 		if (from+1==to)
 		{
 			return from;
 		}
-		return getNearestIndex(orderingValue,from,center);
+		return getNearestIndexPriv(orderingValue,from,center);
 	}
 	
 	public void addElement(int orderingValue, Object value)
 	{
+		long time = System.currentTimeMillis(); 
 		int index = 0;
 		if (list.size()==0)
 		{
 			
 		} else
 		{
-			index = getNearestIndex1(orderingValue);
+			index = getNearestIndex(orderingValue);
 		}
 		listOrdering.add(index, orderingValue);		
 		list.add(index, value);
+		timeCounter+=System.currentTimeMillis()-time;
 	}
 
 	
@@ -80,42 +84,50 @@ public class QuickOrderedList {
 	
 	public Object removeElementWithEqualOrBiggerOrderingValue(int orderingValue)
 	{
+		long time = System.currentTimeMillis(); 
 		int index = 0;
 		if (list.size()==0)
 		{
+			timeCounter+=System.currentTimeMillis()-time;
 			return null;
 		} else
 		{
-			index = getNearestIndex1(orderingValue);
+			index = getNearestIndex(orderingValue);
 		}
 		int order = listOrdering.get(index);
 		if (order>=orderingValue)
 		{
 			listOrdering.remove(index);
+			timeCounter+=System.currentTimeMillis()-time;
 			return list.remove(index);
 		} 
 		// no such element
+		timeCounter+=System.currentTimeMillis()-time;
 		return null;
 		
 	}
 
 	public Object removeElementWithEqualOrderingValue(int orderingValue)
 	{
+		long time = System.currentTimeMillis(); 
 		int index = 0;
 		if (list.size()==0)
 		{
+			timeCounter+=System.currentTimeMillis()-time;
 			return null;
 		} else
 		{
-			index = getNearestIndex1(orderingValue);
+			index = getNearestIndex(orderingValue);
 		}
 		int order = listOrdering.get(index);
 		if (order==orderingValue)
 		{
 			listOrdering.remove(index);
+			timeCounter+=System.currentTimeMillis()-time;
 			return list.remove(index);
 		} 
 		// no such element
+		timeCounter+=System.currentTimeMillis()-time;
 		return null;
 		
 	}

@@ -93,6 +93,8 @@ OPTIMIZATIONS:
 
 !!! [ ] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
 
+[ ] adding a new thread for some of the things?
+
 [ ] shadows don't work for moving units!
 
 [ ] texture splattering doesn't work with new atlas??

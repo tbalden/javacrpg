@@ -527,8 +527,303 @@ public class GeometryBatchHelper {
     	}
     }
     
+    public int trimeshStepByStepCounter = 0;
+    public int modelStepByStepCounter = 0;
+    public ArrayList<TrimeshGeometryBatch> tgbList = new ArrayList<TrimeshGeometryBatch>();
+    public ArrayList<ModelGeometryBatch> mgbList = new ArrayList<ModelGeometryBatch>();
     
-    
+    public boolean lockAllStepByStep()
+    {
+    	if (!locking) return true;
+    	//System.out.println("HELPER LOCK ALL..."+modelStepByStepCounter+"/"+modelBatchMap.size()+" "+trimeshStepByStepCounter+"/"+trimeshBatchMap.size());
+    	long time = System.currentTimeMillis();
+    	while (true)
+    	{
+        	if (trimeshStepByStepCounter>=trimeshBatchMap.size() && modelStepByStepCounter>=modelBatchMap.size())
+    		{
+    			return true;
+    		}
+    		if (trimeshStepByStepCounter==0)
+    		{
+    			tgbList.clear();
+    			tgbList.addAll(trimeshBatchMap.values());
+    		}
+    		if (modelStepByStepCounter==0)
+    		{
+    			mgbList.clear();
+    			mgbList.addAll(modelBatchMap.values());
+    		}
+    		
+    		if (trimeshStepByStepCounter<trimeshBatchMap.size())
+    		{
+    			TrimeshGeometryBatch batch = tgbList.get(trimeshStepByStepCounter);
+    			trimeshStepByStepCounter++;	
+        		if (batch.parent!=null)
+        		{
+        			if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
+        			//batch.lockMeshes(); // XXX you shouldn't lock meshes of trimesh , billboard goes wrong
+        			batch.updateModelBound();
+        			batch.updateRenderState();
+        			batch.lockBounds();
+        			batch.lockBranch();
+        		}
+    		} else
+    		if (modelStepByStepCounter<modelBatchMap.size())
+    		{
+    			ModelGeometryBatch batch = mgbList.get(modelStepByStepCounter);
+    			modelStepByStepCounter++;
+        		if (batch.parent!=null)
+        		{
+        			if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
+        			batch.lockBounds();
+        			batch.lockMeshes();
+        			batch.lockBranch();
+        		}
+    		}
+    		if (System.currentTimeMillis()-time>10)
+    		{
+    			return false;
+    		}
+    	}
+     }
+  
+    public boolean updateAllStepByStep()
+    {
+    	if (!locking) return true;
+    	//System.out.println("HELPER UPDATE ALL..."+modelStepByStepCounter+"/"+modelBatchMap.size()+" "+trimeshStepByStepCounter+"/"+trimeshBatchMap.size());
+    	long time = System.currentTimeMillis();
+    	while (true)
+    	{
+    		if (trimeshStepByStepCounter>=trimeshBatchMap.size() && modelStepByStepCounter>=modelBatchMap.size())
+    		{
+    			modelBatchMap.values().removeAll(modelRemovables);
+		    	trimeshBatchMap.values().removeAll(trimeshRemovables);		    	 
+    			return true;
+    		}
+    		if (trimeshStepByStepCounter==0)
+    		{
+    			tgbList.clear();
+    			trimeshRemovables.clear();
+    			tgbList.addAll(trimeshBatchMap.values());
+    		}
+    		if (modelStepByStepCounter==0)
+    		{
+    			mgbList.clear();
+    			modelRemovables.clear();
+    			mgbList.addAll(modelBatchMap.values());
+    		}
+    		
+    		if (trimeshStepByStepCounter<trimeshBatchMap.size())
+    		{
+    			TrimeshGeometryBatch batch = tgbList.get(trimeshStepByStepCounter);
+	    		boolean removableFlag = true;
+	    		if (batch.visible.size()!=0)
+	    		{
+	    			if (J3DCore.SHADOWS)
+	    			{
+		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL)
+		    			{
+		    				boolean found = false;
+		    				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:batch.visible)
+		    				{
+	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+	    						{
+	    							core.sPass.addOccluder(batch);
+	    							found = true;
+	    						}
+		    				}
+		    				if (!found)
+		    				{
+		    					core.sPass.removeOccluder(batch);	
+		    				}
+		    			}
+	    			}
+	    			if (batch.isUpdateNeededAndSwitchIt())
+	    			{
+	    				/*if (batch.getVBOInfo(0)!=null)
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+	    				VBOInfo v = new VBOInfo(true);
+	    				v.setVBOVertexEnabled(false);
+	    				batch.setVBOInfo(v);*/
+	    				
+	    			}
+	    			removableFlag = false;
+	    		}
+				if (removableFlag) {
+    				
+    				batch.unlock();
+    				batch.parent.unlock();
+					batch.parent.removeFromParent();
+					batch.removeFromParent();
+    				if (J3DCore.VBO_ENABLED)
+    				{
+						if (batch.getVBOInfo(0)!=null)
+	    				{
+	    					DisplaySystem.getDisplaySystem().getRenderer().deleteVBO(batch.getVertexBuffer(0));
+	    				}
+    				}
+ 					batch.releaseBuffersOnCleanUp();
+					batch.clearBatches();
+					batch.clearInstances();
+					
+					
+					if (J3DCore.SHADOWS)
+					{
+						core.sPass.remove(batch);
+						core.sPass.removeOccluder(batch);
+					}
+					core.removeSolidColorQuadsRecoursive(batch.parent);
+					trimeshRemovables.add(batch);
+				} else
+				{
+					//if (batch.model!=null && (batch.model.alwaysRenderBatch || batch.model.type==Model.PARTLYBILLBOARDMODEL)) continue;
+					//if (batch.parent.getCullMode()!=TriMesh.CULL_NEVER) 
+					{
+						//float dist = batch.parent.getLocalTranslation().distance(core.getCamera().getLocation());
+						// TODO bad distance is setting cull always here... TODO make a boundary edges based calc instead
+						/*if (dist>J3DCore.RENDER_GRASS_DISTANCE*2)
+						{
+							//System.out.println("CULLING "+batch.parent.getLocalTranslation()+ " " + core.getCamera().getLocation());
+							
+							batch.parent.setCullMode(TriMesh.CULL_ALWAYS);
+							batch.parent.updateRenderState();
+						} else
+						{
+							batch.parent.setCullMode(TriMesh.CULL_DYNAMIC);
+							batch.parent.updateRenderState();
+						}*/
+					}
+				}
+				trimeshStepByStepCounter++;	
+    		} else
+    		if (modelStepByStepCounter<modelBatchMap.size())
+    		{
+    			ModelGeometryBatch batch = mgbList.get(modelStepByStepCounter);
+    			
+	    		boolean removableFlag = true;
+	    		if (batch.visible.size()!=0)
+	    		{
+	    			if (J3DCore.SHADOWS)
+	    			{
+		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
+		    			{
+		    				boolean found = false;
+		    				for (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				{
+		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
+		    					{
+		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						{
+		    							core.sPass.addOccluder(batch);
+		    							found = true;
+		    						}
+		    					}
+		    				}
+		    				if (!found)
+		    				{
+		    					core.sPass.removeOccluder(batch);
+		    				}
+		    				
+		    			}
+		    			// look for models that goes texturized with shadow...
+		    			if (batch.model.type==Model.SIMPLEMODEL && ((SimpleModel)batch.model).generatedGroundModel)
+		    			{
+		    				boolean found = false;
+		    				for (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> h:batch.visible.values())
+		    				{
+		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
+		    					{
+		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						{
+				    					if (!core.sPass.contains(batch))
+				    					{
+				    						core.sPass.add(batch);
+				    					}
+		    							found = true;
+		    						}
+		    					}
+		    				}		    				
+			    			if (!found)
+			    			{
+			    				core.sPass.remove(batch);
+			    			}
+		    				
+		    			}
+	    			}
+	    			removableFlag = false;
+	    			if (batch.isUpdateNeededAndSwitchIt())
+	    			{
+	    				//batch.updateGeometricState(0f, true);
+	    				if (J3DCore.VBO_ENABLED)
+	    				{
+	    					if (batch.getVBOInfo(0)==null)
+	    					{
+	    						//System.out.println("ADDING VBO");
+	    						VBOInfo v = new VBOInfo(true);
+	    						batch.setVBOInfo(0,v);
+	    					}
+	    				}
+	    				
+	    			}
+	    		} else
+	    		{
+	    			if (batch.isUpdateNeededAndSwitchIt())
+	    			{
+	    				batch.parent.updateRenderState();
+	    			}
+	    		}
+				if (removableFlag) {
+					
+    				batch.unlock();
+    				batch.parent.unlock();
+					batch.parent.removeFromParent();
+					batch.removeFromParent();
+					if (J3DCore.VBO_ENABLED)
+					{
+						TriangleBatch b = batch.getBatch(0);
+						if (b.getVBOInfo()!=null)
+						{
+							//System.out.println("CLEARING VBO");
+							if (b.getVBOInfo().isVBOVertexEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getVertexBuffer());
+							if (b.getVBOInfo().isVBOTextureEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getTextureBuffer(0));
+							if (b.getVBOInfo().isVBONormalEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getNormalBuffer());
+							if (b.getVBOInfo().isVBOColorEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getColorBuffer());
+							if (b.getVBOInfo().isVBOIndexEnabled())
+								DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getIndexBuffer());
+							b.setVBOInfo(null);
+						}
+					}
+					batch.releaseBuffersOnCleanUp();
+					batch.clearBatches();
+					batch.clearInstances();
+					
+					if (J3DCore.SHADOWS)
+					{
+						core.sPass.remove(batch);
+						core.sPass.removeOccluder(batch);
+					}
+					core.removeSolidColorQuadsRecoursive(batch.parent);
+					
+					modelRemovables.add(batch);
+				
+				}
+				modelStepByStepCounter++;
+				
+    		}
+    		if (System.currentTimeMillis()-time>10)
+    		{
+    			return false;
+    		}
+    	}
+     }
+
     boolean locking = true;
     public void lockAll()
     {
