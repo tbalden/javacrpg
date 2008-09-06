@@ -4,6 +4,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.jcrpg.threed.jme.TiledTerrainBlockUnbuffered;
 import org.jcrpg.threed.jme.geometryinstancing.instance.GeometryInstance;
 
 import com.jme.math.Vector3f;
@@ -72,11 +73,24 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
      * @param batch
      */
     public void commit(GeomBatch batch, boolean force) {
+        if (mesh instanceof TiledTerrainBlockUnbuffered)
+        {
+        	// the tricky part for tiled terrain blocks -- reallocate from pool/rebuild buffers if not present (were released) 
+        	TiledTerrainBlockUnbuffered ttbu = (TiledTerrainBlockUnbuffered)mesh;
+       		ttbu.rebuildBuffers();
+        }
         int indexStart = commitVertices(batch);
         commitIndices(batch, indexStart);
         commitNormals(batch);
         commitTextureCoords(batch);
         commitColors(batch);
+        
+        /*if (mesh instanceof TiledTerrainBlockUnbuffered)
+        {
+        	// releasing the buffers for other TTBUs to use - saving helluva lotsa memory...
+        	GeometryBatchMesh.releaseBatchExact(((TiledTerrainBlockUnbuffered)mesh).getBatch(0),false);
+        	((TiledTerrainBlockUnbuffered)mesh).releaseExtraBuffers();
+        }*/
 
         if(attributes.isVisible()) {
         	transformed = false;

@@ -224,7 +224,7 @@ public class GeometryBatchHelper {
 	    		
 	    	}
 	    	core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent);
-	    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+	    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
@@ -260,7 +260,7 @@ public class GeometryBatchHelper {
 	    		batch.lockShadows();
 	    	}
 	    	core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
-	    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+	    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 	    	{
 	    		batch.unlockBranch();
 		    	batch.unlockBounds();
@@ -454,7 +454,7 @@ public class GeometryBatchHelper {
 		    		}
 		    	}
     			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
-		    	/*if ( !J3DStandingEngine.THREAD_RENDERING && (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+		    	/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
 		    	{
 		    		batch.unlockBranch();
 			    	batch.unlockBounds();
@@ -511,7 +511,7 @@ public class GeometryBatchHelper {
     	    		batch.lockShadows();
     	    	}
     			core.gameState.getCurrentStandingEngine().newNodesToSetCullingDynamic.add(batch.parent); // adding it to newly placed nodes
-    			/*if ( !J3DStandingEngine.THREAD_RENDERING &&  (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
+    			/*if ( (batch.getLocks()&Node.LOCKED_BOUNDS)>0)
     	    	{
     	    		batch.unlockBranch();
     		    	batch.unlockBounds();
