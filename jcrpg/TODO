@@ -91,7 +91,7 @@ o
 OPTIMIZATIONS:
 #############
 
-
+[ ] DDS for GUI, check how it's going in memory/ font cache??? Reduce mem from 200m
 [ ] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) 
 
 [?] full rerender still eating up new cache partially!

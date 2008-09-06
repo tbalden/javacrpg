@@ -1790,7 +1790,7 @@ public class J3DStandingEngine {
 			if (!batchHelperRemovalsFinished)
 			{
 				batchHelperRemovalsFinished = batchHelper.removeUnneededStepByStep();
-				System.out.println("DELETE: "+batchHelperRemovalsFinished);
+				//System.out.println("DELETE: "+batchHelperRemovalsFinished);
 				if (batchHelperRemovalsFinished) 
 				{
 					batchHelper.trimeshStepByStepCounter = 0;
@@ -1954,13 +1954,9 @@ public class J3DStandingEngine {
 	    updateAfterRenderNeeded = false;
 	    nonDrawingRender = false;
 	    System.out.println("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);
-	    System.out.println("MAX RTVP TIME         = "+maxRtvpTime);
-	    System.out.println("MAX UAR TIME          = "+maxUARTime);
-	    System.out.println("MAX BATCH UPDATE TIME = "+maxBatchUpdateTime);
-	    System.out.println("MAX BATCH LOCK   TIME = "+maxBatchLockTime);
+	    System.out.println("MAX RTVP / UAR / BTCHUPD / LOCK TIME = "+maxRtvpTime+" "+maxUARTime+" "+maxBatchUpdateTime+" "+maxBatchLockTime);
 	    System.out.println("FINAL things          = "+(System.currentTimeMillis()-finalTime));
-    	System.out.println("BUFFER POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount);
-    	System.out.println("EX BUFFER POOL: CACHED# "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
+    	System.out.println("BUFFER / EX BUFF POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount+ " # "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
 	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
 	}
