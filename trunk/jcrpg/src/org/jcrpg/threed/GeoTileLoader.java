@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.jme.TiledTerrainBlock;
+import org.jcrpg.threed.jme.TiledTerrainBlockUnbuffered;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.model.SimpleModel;
@@ -497,7 +498,7 @@ public class GeoTileLoader {
 		int[][] heightMaps = getHeightMaps(nodePlaceholder);
 		
 		// creating the block (with the normal sized heightmap and the one size bigger normal calculation helper heightmap...)
-		TiledTerrainBlock block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+		TiledTerrainBlock block = new TiledTerrainBlockUnbuffered("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
 		
@@ -535,6 +536,8 @@ public class GeoTileLoader {
 	            	{
 	            		place = model.atlasSecTextureId;
 	            	}
+	            	
+	            	((TiledTerrainBlockUnbuffered)block).setAtlasTextureUse(model.atlasSize, place);
 	            	
 	            	// now we have to tweak the x texture coordinates, dividing it by full atlas element size
 	            	// and adding displacement ratio...

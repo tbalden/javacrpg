@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.TiledTerrainBlock;
+import org.jcrpg.threed.jme.TiledTerrainBlockUnbuffered;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
@@ -71,6 +72,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	        nIndices += geometryInstance.getNumIndices();
 	        nVerts += geometryInstance.getNumVerts();
 	        reconstruct = true;
+	        /*if (geometryInstance.mesh instanceof TiledTerrainBlockUnbuffered)
+	        {
+	        	// releasing the buffers to pool for making it available for other tiledTerrainBlocks! saving memory :)
+	        	releaseBatchExact(((TiledTerrainBlockUnbuffered)geometryInstance.mesh).getBatch(0),false);
+	        	((TiledTerrainBlockUnbuffered)geometryInstance.mesh).releaseExtraBuffers();
+	        }*/
         }
     }
 
@@ -355,7 +362,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     	
     }
 
-    public void releaseBatchExact(TriangleBatch batch)
+    public static void releaseBatchExact(TriangleBatch batch, boolean clearAndRemove)
     {
     	if (batch.getIndexBuffer()!=TiledTerrainBlock.COMMON_INDEX_BUFFER)
     	{
@@ -374,9 +381,11 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
         for (FloatBuffer textureBuffer : textureBuffers) {
         	ExactBufferPool.releaseVector2Buffer(textureBuffer);
 		}
-        batch.clearTextureBuffers();
-    	batch.removeFromParent();
-    	
+        if (clearAndRemove)
+        {
+        	batch.clearTextureBuffers();
+        	batch.removeFromParent();
+        }
     }
     
     public void releaseInstanceRelatedOnCleanUp()
@@ -392,12 +401,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     		if (t instanceof GeometryBatchSpatialInstance)
     		{
     			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> t2 = (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>)t;
-    			if (t2.mesh instanceof TiledTerrainBlock)
+    			if (t2.mesh instanceof TiledTerrainBlock && !(t2.mesh instanceof TiledTerrainBlockUnbuffered))
     			{
     				//System.out.println("### RELEASING GEOTILE!");
     				if (((TiledTerrainBlock)t2.mesh).getBatchCount()>0)
     				{
-    					releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0));
+    					releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0),true);
     				}
     				((TiledTerrainBlock)t2.mesh).releaseExtraBuffers();
      			}

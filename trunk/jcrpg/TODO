@@ -91,7 +91,10 @@ o
 OPTIMIZATIONS:
 #############
 
-[ ] full rerender still eating up new cache partially!
+
+[ ] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) 
+
+[?] full rerender still eating up new cache partially!
 
 [ ] rendering shows strange elements... missing textures
 
@@ -115,6 +118,9 @@ OPTIMIZATIONS:
 [X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
+
+[X] unbuffered TiledTerrainBlock - on the fly returning newly set buffers for geomBatchMesh? is it quick enough?
+		it will save memory!
 
 [X] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
 
