@@ -498,7 +498,15 @@ public class GeoTileLoader {
 		int[][] heightMaps = getHeightMaps(nodePlaceholder);
 		
 		// creating the block (with the normal sized heightmap and the one size bigger normal calculation helper heightmap...)
-		TiledTerrainBlock block = new TiledTerrainBlockUnbuffered("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+		TiledTerrainBlock block = null;
+		if (data.getTextureKeyPartForBatch()==null)
+		{
+			block = new TiledTerrainBlockUnbuffered("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+		} else
+		{
+			// splatting needs normal buffered block
+			block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+		}
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
 		
