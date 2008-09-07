@@ -53,7 +53,7 @@ public class Map extends Window {
         
         TextureState frameState= core.getDisplay().getRenderer().createTextureState();
         Texture frameTex = new Texture();
-        Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.png").toURI().toURL(),true);
+        Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.dds").toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
         float widthRatio = 4.0f;

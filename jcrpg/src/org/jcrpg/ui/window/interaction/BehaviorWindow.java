@@ -76,7 +76,7 @@ public class BehaviorWindow extends PagedInputWindow {
 	public BehaviorWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.7f*core.getDisplay().getWidth(), 1.55f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.7f*core.getDisplay().getWidth(), 1.55f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);

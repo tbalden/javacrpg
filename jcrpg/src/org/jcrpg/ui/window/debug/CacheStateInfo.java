@@ -46,7 +46,7 @@ public class CacheStateInfo extends InputWindow {
 	public CacheStateInfo(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.png", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.8f*core.getDisplay().getWidth(), 1.65f*(core.getDisplay().getHeight() / 2), 
 	    			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
 			hudQuad.setRenderState(base.hud.hudAS);
 	    	windowNode.attachChild(hudQuad);

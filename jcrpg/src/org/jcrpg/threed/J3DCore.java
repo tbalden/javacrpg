@@ -2420,6 +2420,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
 				bloomRenderPass.setUseCurrentScene(true);
+				bloomRenderPass.setBlurIntensityMultiplier(1.0f);
 				//bloomRenderPass.setThrottle(0.f);
 				pManager.add(bloomRenderPass);
 			}
