@@ -97,6 +97,23 @@ OPTIMIZATIONS:
 [ ] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) 
 [ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 
+[X] when in middle of the VIEW -> RENDER DISTANCE border, start a background process of loading for the given 
+	coordinates -> j3dstandingE.renderCubes and RenderCubes X Y Z must be refactored to calculate
+	the render position based on load-finish's relative position and stored worldX/Y/Z coords. 
+
+	[ ] not perfect - some elements get lost with removal?? or not rendered on time?? (colliding locks?)
+	[ ] hsRenderedNodes - NullPointerException
+		it's using a rerendered/removed one???
+		java.lang.NullPointerException
+		
+org.jcrpg.threed.standing.J3DStandingEngine.renderToViewPortStepByStep(J3DStandingEngine.java:606)
+org.jcrpg.threed.J3DCore.simpleUpdate(J3DCore.java:2636)
+org.jcrpg.threed.J3DCore.update(J3DCore.java:2776)
+org.jcrpg.threed.J3DCore.updateDisplayCalmer(J3DCore.java:1890)
+org.jcrpg.threed.input.action.CKeyAction.movePosition(CKeyAction.java:420)
+org.jcrpg.threed.input.action.CKeyAction.movePosition(CKeyAction.java:391)
+o
+		Use a separate hsCurrentCubes to avoid concurrent use!
 
 [ ] shadows don't work for moving units!
 

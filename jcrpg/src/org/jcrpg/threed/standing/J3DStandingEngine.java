@@ -131,6 +131,37 @@ public class J3DStandingEngine {
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
+	public class RenderedAreaThread extends Thread
+	{
+		
+		J3DStandingEngine engine = null;
+		World world;
+		int x,y,z;
+		public RenderedAreaThread(J3DStandingEngine engine, World world, int x, int y, int z)
+		{
+			System.out.println("NEW RENDER: "+x+" "+y+" "+z);
+			System.out.println("LAST RENDER: "+lastRenderX+" "+lastRenderY+" "+lastRenderZ);
+			this.engine = engine;
+			this.world = world;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+
+		@Override
+		public void run() {
+			if (renderingArea) return;
+			renderingArea = true;
+			engine.areaResult = null;			
+			areaResult = render(
+					x, y, z, false);
+			engine.areaResult = areaResult;
+		}
+	}
+	
+	public boolean renderingArea = false;
+	public HashSet<RenderedCube>[] areaResult = null;
+	
 	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
@@ -302,6 +333,9 @@ public class J3DStandingEngine {
 		
 		if (n==null) return;
 		Object[] f = (Object[])J3DCore.directionAnglesAndTranslations.get(direction);
+		x = x - core.gameState.getCurrentRenderPositions().viewPositionX;
+		y = y - core.gameState.getCurrentRenderPositions().viewPositionY;
+		z = core.gameState.getCurrentRenderPositions().viewPositionZ - z;
 		float cX = ((x+core.gameState.getCurrentRenderPositions().relativeX)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
 		float cY = ((y+core.gameState.getCurrentRenderPositions().relativeY)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
 		float cZ = ((z-core.gameState.getCurrentRenderPositions().relativeZ)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+25.5f;
@@ -1497,12 +1531,20 @@ public class J3DStandingEngine {
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			
+			if (J3DCore.CONTINUOUS_LOAD)
+			{
+				if ( lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE*1.7f) // TODO this is ugly calc 1.5f * !!!
+				{
+					new RenderedAreaThread(this,world,core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ).start();
+				}
+			}
 			
-			if (J3DCore.CONTINUOUS_LOAD && core.renderResult!=null) 
+			if (areaResult!=null) // continuous load ready 
 			{
 				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = core.renderResult;
-				core.renderResult = null;
+				HashSet<RenderedCube>[] detacheable = areaResult;
+				areaResult = null;
+				renderingArea = false;
 
 				if (true)  {
 					
@@ -1570,6 +1612,8 @@ public class J3DStandingEngine {
 			//if (J3DCore.FARVIEW_ENABLED) mulWalkDist = 2; // if farview , more often render is added by this multiplier
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE)
 			{
+				
+				System.out.println("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)
