@@ -214,7 +214,7 @@ public class GeometryBatchHelper {
 	    			sEngine.extWaterRefNode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
-    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+    			batch.parent.setCullMode(Node.CULL_INHERIT); // set culling to NEVER for the first rendering...
 	    		modelBatchMap.put(key, batch);
 	    		if (locking)
 	    		{
@@ -254,7 +254,7 @@ public class GeometryBatchHelper {
 	    			sEngine.extRootNode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
-    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+    			batch.parent.setCullMode(Node.CULL_INHERIT); // set culling to NEVER for the first rendering...
 	    		trimeshBatchMap.put(key, batch);
 	    		batch.lockTransforms();
 	    		batch.lockShadows();
@@ -445,7 +445,7 @@ public class GeometryBatchHelper {
 		    			sEngine.extWaterRefNode.attachChild(batch.parent);
 		    			//sEngine.extRootNode.updateRenderState();
 		    		}
-	    			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+	    			batch.parent.setCullMode(Node.CULL_INHERIT); // set culling to NEVER for the first rendering...
 		    		modelBatchMap.put(key, batch);
 		    		if (locking)
 		    		{
@@ -505,7 +505,7 @@ public class GeometryBatchHelper {
     	    			sEngine.extWaterRefNode.attachChild(batch.parent);
     	    			//sEngine.extRootNode.updateRenderState();
     	    		}
-        			batch.parent.setCullMode(Node.CULL_NEVER); // set culling to NEVER for the first rendering...
+        			batch.parent.setCullMode(Node.CULL_INHERIT); // set culling to NEVER for the first rendering...
     	    		trimeshBatchMap.put(key, batch);
     	    		batch.lockTransforms();
     	    		batch.lockShadows();
