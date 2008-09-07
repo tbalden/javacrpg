@@ -194,7 +194,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public static int FARVIEW_GAP = 4;
 	public static boolean FARVIEW_ENABLED = false;
 
-	public static boolean CONTINUOUS_LOAD = false;
+	public static boolean CONTINUOUS_LOAD = true;
 
 	public static boolean LOGGING = true;
 	public static boolean FPSCOUNTER = true;
@@ -228,9 +228,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 					Integer.MAX_VALUE);
 			RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
-			if (CONTINUOUS_LOAD)
-				VIEW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
-			else
+			//if (CONTINUOUS_LOAD)
+				//VIEW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
+			//else
 				VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5,
 						Integer.MAX_VALUE);
 			VIEW_DISTANCE_SQR = VIEW_DISTANCE * VIEW_DISTANCE;
@@ -248,6 +248,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 			MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
 			MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
+			
+			CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", false);
 
 			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);
@@ -2601,9 +2603,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	@Override
 	protected void simpleUpdate() {
+		
 
 		if (!noThreadedRenderCheck)
 		{
+			if (sEngine!=null && sEngine.areaResult!=null)
+			{
+				sEngine.renderToViewPort();
+			} 
+			if (eEngine!=null && eEngine.areaResult!=null)
+			{
+				eEngine.renderToViewPort();
+			} 
+
 			// 'parallel' render related checks..
 			
 			// checking for pending full renderToViewPorts
@@ -2729,6 +2741,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 	public void run() {
 		if (!CONTINUOUS_LOAD)
 			return;
+		if (CONTINUOUS_LOAD) return;
 		// Thread.currentThread().setPriority(10);
 		if (rendering)
 			return;
