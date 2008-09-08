@@ -2080,9 +2080,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 				.setDirection(J3DCore.directions[gameState.getNormalPositions().viewDirection]);
 		cam.update();
 
-		sEngine.render(gameState.getNormalPositions().viewPositionX, gameState
-				.getNormalPositions().viewPositionY, gameState
-				.getNormalPositions().viewPositionZ, false);
+		sEngine.render(
+				
+				gameState.getNormalPositions().relativeX, 
+				gameState.getNormalPositions().relativeY, 
+				gameState.getNormalPositions().relativeZ, 
+				gameState.getNormalPositions().viewPositionX, 
+				gameState.getNormalPositions().viewPositionY, 
+				gameState.getNormalPositions().viewPositionZ, 
+				false,false);
 		sEngine.renderToViewPort();
 		if (!coreFullyInitialized)
 			sEngine.renderToViewPort(); // for correct culling, call it twice
@@ -2751,9 +2757,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			renderResult = null;
 			long t0 = System.currentTimeMillis();
 			renderResult = sEngine.render(
+					gameState.getNormalPositions().relativeX, 
+					gameState.getNormalPositions().relativeY, 
+					gameState.getNormalPositions().relativeZ, 
 					gameState.getNormalPositions().viewPositionX, gameState
 							.getNormalPositions().viewPositionY, gameState
-							.getNormalPositions().viewPositionZ, false);
+							.getNormalPositions().viewPositionZ, false,false);
 			if (J3DCore.LOGGING)
 				Jcrpg.LOGGER.finest("DO RENDER TIME : "
 						+ (System.currentTimeMillis() - t0));

@@ -52,7 +52,7 @@ public class CKeyRotateLeftAction extends CKeyAction {
     	Vector3f from = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
     	Vector3f fromPos = J3DCore.getInstance().getCurrentLocation();
         handler.core.turnLeft();
-        if (J3DCore.OPTIMIZED_RENDERING) handler.sEngine.render(handler.core.gameState.getCurrentRenderPositions().viewPositionX,handler.core.gameState.getCurrentRenderPositions().viewPositionY,handler.core.gameState.getCurrentRenderPositions().viewPositionZ,false);
+        //if (J3DCore.OPTIMIZED_RENDERING) handler.sEngine.render(handler.core.gameState.getCurrentRenderPositions().viewPositionX,handler.core.gameState.getCurrentRenderPositions().viewPositionY,handler.core.gameState.getCurrentRenderPositions().viewPositionZ,false);
     	Vector3f toReach = J3DCore.turningDirectionsUnit[handler.core.gameState.getCurrentRenderPositions().viewDirection];
     	Vector3f toPos = J3DCore.getInstance().getCurrentLocation();
         float steps = J3DCore.MOVE_STEPS;

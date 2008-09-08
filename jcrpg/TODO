@@ -91,6 +91,10 @@ o
 OPTIMIZATIONS:
 #############
 
+[X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
+    Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
+	[ ] thorough testing!! especially with rerender/thread render at the same time problems!!
+
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
 
