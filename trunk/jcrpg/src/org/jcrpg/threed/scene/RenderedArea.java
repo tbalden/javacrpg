@@ -420,8 +420,8 @@ public class RenderedArea {
 								//if (cube!=null) System.out.println(cube);
 								if (cube!=null)
 								{
-									//c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
-									c = new RenderedCube(cube,wX,worldY,wZ);
+									c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
+									//c = new RenderedCube(cube,wX,worldY,wZ);
 									//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
 									c.world = world;
 									// gather newly rendered cubes

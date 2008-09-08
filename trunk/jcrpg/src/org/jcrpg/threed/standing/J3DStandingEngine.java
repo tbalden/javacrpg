@@ -126,6 +126,7 @@ public class J3DStandingEngine {
 	}
 
 	HashMap<Long, RenderedCube> hmCurrentCubes = new HashMap<Long, RenderedCube>();
+	HashMap<Long, RenderedCube> hmCurrentCubesForSafeRender = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes = new ArrayList<RenderedCube>();
 	
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
@@ -137,7 +138,8 @@ public class J3DStandingEngine {
 		J3DStandingEngine engine = null;
 		World world;
 		int x,y,z;
-		public RenderedAreaThread(J3DStandingEngine engine, World world, int x, int y, int z)
+		int rX,rY,rZ;
+		public RenderedAreaThread(J3DStandingEngine engine, World world, int rX, int rY, int rZ, int x, int y, int z)
 		{
 			System.out.println("NEW RENDER: "+x+" "+y+" "+z);
 			System.out.println("LAST RENDER: "+lastRenderX+" "+lastRenderY+" "+lastRenderZ);
@@ -146,6 +148,9 @@ public class J3DStandingEngine {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.rX = rX;
+			this.rY = rY;
+			this.rZ = rZ;
 		}
 
 		@Override
@@ -153,8 +158,8 @@ public class J3DStandingEngine {
 			if (renderingArea) return;
 			renderingArea = true;
 			engine.areaResult = null;			
-			areaResult = render(
-					x, y, z, false);
+			areaResult = render(rX,rY,rZ,
+					x, y, z, false,true);
 			engine.areaResult = areaResult;
 		}
 	}
@@ -167,7 +172,7 @@ public class J3DStandingEngine {
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	@SuppressWarnings("unchecked")
-	public HashSet<RenderedCube>[] render(int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender)
+	public HashSet<RenderedCube>[] render(int renderPosX, int renderPosY, int renderPostZ, int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender,boolean safeMode)
 	{
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDERING...");
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
@@ -175,14 +180,16 @@ public class J3DStandingEngine {
 		//modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
 		
+		hmCurrentCubesForSafeRender = safeMode?(HashMap<Long, RenderedCube>)hmCurrentCubes.clone():hmCurrentCubes;
+		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
 		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.getCurrentRenderPositions().viewPositionX+"/"+core.gameState.getCurrentRenderPositions().viewPositionZ+"...");
     	if (!J3DCore.CONTINUOUS_LOAD) core.updateDisplay(null);
 		//core.do3DPause(true);
 
-    	lastRenderX = core.gameState.getCurrentRenderPositions().relativeX;
-    	lastRenderY = core.gameState.getCurrentRenderPositions().relativeY;
-    	lastRenderZ = core.gameState.getCurrentRenderPositions().relativeZ;
+    	lastRenderX = renderPosX;
+    	lastRenderY = renderPosY;
+    	lastRenderZ = renderPostZ;
 
 		// start to collect the nodes/binaries which this render will use now
 		modelLoader.startRender();
@@ -213,12 +220,12 @@ public class J3DStandingEngine {
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
 		
-    	detacheable = doRender(cubes, removableCubes, hmCurrentCubes);
+    	detacheable = doRender(renderPosX,renderPosY,renderPostZ,cubes, removableCubes, hmCurrentCubesForSafeRender);
     	if (J3DCore.FARVIEW_ENABLED)
     	{
         	cubes = newAndOldCubes[2];
         	removableCubes = newAndOldCubes[3];
-        	detacheable_FARVIEW = doRender(cubes, removableCubes, hmCurrentCubes_FARVIEW);
+        	detacheable_FARVIEW = doRender(renderPosX,renderPosY,renderPostZ,cubes, removableCubes, hmCurrentCubes_FARVIEW);
     	}
     	
 
@@ -246,7 +253,7 @@ public class J3DStandingEngine {
 	 * @param hmCurrentCubes
 	 * @return
 	 */
-	public HashSet<RenderedCube> doRender(RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Long, RenderedCube> hmCurrentCubes)
+	public HashSet<RenderedCube> doRender(int relX, int relY, int relZ, RenderedCube[] cubes,RenderedCube[] removableCubes, HashMap<Long, RenderedCube> hmCurrentCubes)
 	{
 		int already = 0;
 		int newly = 0;
@@ -293,7 +300,7 @@ public class J3DStandingEngine {
 			{
 				if (sides[j]!=null) {
 					for (int k=0; k<sides[j].length; k++) {
-						renderSide(c,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
+						renderSide(c,relX,relY,relZ,c.renderedX, c.renderedY, c.renderedZ, j, sides[j][k],false); // fake = false !
 					}
 				}
 			}
@@ -328,17 +335,17 @@ public class J3DStandingEngine {
 	 * @param horizontalRotation Horizontal rotation
 	 * @param scale Scale
 	 */
-	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction, int horizontalRotation, float scale)
+	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int relX, int relY, int relZ, int x, int y, int z, int direction, int horizontalRotation, float scale)
 	{
 		
 		if (n==null) return;
 		Object[] f = (Object[])J3DCore.directionAnglesAndTranslations.get(direction);
-		x = x - core.gameState.getCurrentRenderPositions().viewPositionX;
-		y = y - core.gameState.getCurrentRenderPositions().viewPositionY;
-		z = core.gameState.getCurrentRenderPositions().viewPositionZ - z;
-		float cX = ((x+core.gameState.getCurrentRenderPositions().relativeX)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
-		float cY = ((y+core.gameState.getCurrentRenderPositions().relativeY)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
-		float cZ = ((z-core.gameState.getCurrentRenderPositions().relativeZ)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+25.5f;
+		//x = x - core.gameState.getCurrentRenderPositions().viewPositionX;
+		//y = y - core.gameState.getCurrentRenderPositions().viewPositionY;
+		//z = core.gameState.getCurrentRenderPositions().viewPositionZ - z;
+		float cX = ((x+relX)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[0]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
+		float cY = ((y+relY)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[1]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+0.5f;
+		float cZ = ((z-relZ)*J3DCore.CUBE_EDGE_SIZE+1f*((int[])f[1])[2]*(cube.farview?J3DCore.FARVIEW_GAP:1));//+25.5f;
 		if (cube.farview)
 		{
 			cY+=J3DCore.CUBE_EDGE_SIZE*1.5f;
@@ -1531,16 +1538,24 @@ public class J3DStandingEngine {
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			
-			if (J3DCore.CONTINUOUS_LOAD)
+			if (J3DCore.CONTINUOUS_LOAD && !rerender)
 			{
 				if ( lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE*1.7f) // TODO this is ugly calc 1.5f * !!!
 				{
-					new RenderedAreaThread(this,world,core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ).start();
+					new RenderedAreaThread(this,world,
+							core.gameState.getCurrentRenderPositions().relativeX,
+							core.gameState.getCurrentRenderPositions().relativeY,
+							core.gameState.getCurrentRenderPositions().relativeZ,
+							core.gameState.getCurrentRenderPositions().viewPositionX,
+							core.gameState.getCurrentRenderPositions().viewPositionY,
+							core.gameState.getCurrentRenderPositions().viewPositionZ
+							).start();
 				}
 			}
 			
 			if (areaResult!=null) // continuous load ready 
 			{
+				hmCurrentCubes = hmCurrentCubesForSafeRender;
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = areaResult;
 				areaResult = null;
@@ -1686,7 +1701,14 @@ public class J3DStandingEngine {
 				
 				// doing the render, getting the unneeded renderedCubes too.
 				long t0 = System.currentTimeMillis();
-				HashSet<RenderedCube>[] detacheable = render(core.gameState.getCurrentRenderPositions().viewPositionX,core.gameState.getCurrentRenderPositions().viewPositionY,core.gameState.getCurrentRenderPositions().viewPositionZ,rerender);
+				HashSet<RenderedCube>[] detacheable = render(
+						core.gameState.getCurrentRenderPositions().relativeX,
+						core.gameState.getCurrentRenderPositions().relativeY,
+						core.gameState.getCurrentRenderPositions().relativeZ,
+						core.gameState.getCurrentRenderPositions().viewPositionX,
+						core.gameState.getCurrentRenderPositions().viewPositionY,
+						core.gameState.getCurrentRenderPositions().viewPositionZ,
+						rerender,false);
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DO RENDER TIME : "+ (System.currentTimeMillis()-t0));
 
 				for (int i=0; i<detacheable.length; i++)
@@ -2006,9 +2028,9 @@ public class J3DStandingEngine {
 	}
 	
 	
-	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int x, int y, int z, int direction)
+	private void renderNodes(NodePlaceholder[] n, RenderedCube cube, int relX, int relY, int relZ, int x, int y, int z, int direction)
 	{
-		renderNodes(n, cube, x, y, z, direction, -1, 1f);
+		renderNodes(n, cube, relX, relY, relZ, x, y, z, direction, -1, 1f);
 	}
 	
 	public int liveNodes = 0;
@@ -2023,7 +2045,7 @@ public class J3DStandingEngine {
 	 * @param side
 	 * @param fakeLoadForCacheMaint No true rendering if this is true, only fake loading the objects through model loader.
 	 */
-	public void renderSide(RenderedCube cube,int x, int y, int z, int direction, Side side, boolean fakeLoadForCacheMaint)
+	public void renderSide(RenderedCube cube,int relX, int relY, int relZ, int x, int y, int z, int direction, Side side, boolean fakeLoadForCacheMaint)
 	{
 		if (side==null||side.subtype==null) return;
 		Integer n3dType = core.hmCubeSideSubTypeToRenderedSideId.get(side.subtype.id);
@@ -2038,31 +2060,31 @@ public class J3DStandingEngine {
 			{
 				int rD = ((RenderedHashRotatedSide)renderedSide).rotation(cube.cube.x, cube.cube.y, cube.cube.z);
 				float scale = ((RenderedHashRotatedSide)renderedSide).scale(cube.cube.x, cube.cube.y, cube.cube.z);
-				renderNodes(n, cube, x, y, z, direction, rD,scale);
+				renderNodes(n, cube, relX, relY, relZ, x, y, z, direction, rD,scale);
 			} 
 			else
 			if (renderedSide.type == RenderedSide.RS_HASHALTERED)
 			{
-				renderNodes(n, cube, x, y, z, direction);
+				renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 				Model[] m = ((RenderedHashAlteredSide)renderedSide).getRenderedModels(cube.cube.x, cube.cube.y, cube.cube.z, cube.cube.steepDirection!=SurfaceHeightAndType.NOT_STEEP);
 				NodePlaceholder[] n2 = modelPool.loadPlaceHolderObjects(cube,m,fakeLoadForCacheMaint);
 				if (n2.length>0)
-					renderNodes(n2, cube, x, y, z, direction);
+					renderNodes(n2, cube, relX, relY, relZ, x, y, z, direction);
 			} 
 			else
 				if (renderedSide.type == RenderedSide.RS_CLIMATEDEPENDENT)
 				{
-					renderNodes(n, cube, x, y, z, direction);
+					renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 					Model[] m = ((RenderedClimateDependentSide)renderedSide).getRenderedModels(cube.cube.climateId);
 					if (m!=null) {
 						NodePlaceholder[] n2 = modelPool.loadPlaceHolderObjects(cube,m,fakeLoadForCacheMaint);
 						if (n2.length>0)
-							renderNodes(n2, cube, x, y, z, direction);
+							renderNodes(n2, cube, relX, relY, relZ, x, y, z, direction);
 					}
 				} 
 				else
 			{
-				renderNodes(n, cube, x, y, z, direction);
+				renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 			}
 		}
 
@@ -2099,7 +2121,7 @@ public class J3DStandingEngine {
 				n= modelPool.loadPlaceHolderObjects(cube,((RenderedTopSide)renderedSide).nonEdgeObjects,fakeLoadForCacheMaint);
 				if (!fakeLoadForCacheMaint)
 				{
-					renderNodes(n, cube, x, y, z, direction);
+					renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 				}
 			}
 		}
@@ -2126,7 +2148,7 @@ public class J3DStandingEngine {
 						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).continuous, fakeLoadForCacheMaint );
 						if (!fakeLoadForCacheMaint)
 						{
-							renderNodes(n, cube, x, y, z, direction);
+							renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 						}
 					} else
 					{
@@ -2134,7 +2156,7 @@ public class J3DStandingEngine {
 						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint);
 						if (!fakeLoadForCacheMaint)
 						{
-							renderNodes(n, cube, x, y, z, direction);
+							renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 						}
 					}
 				} else
@@ -2143,7 +2165,7 @@ public class J3DStandingEngine {
 					n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousNormal, fakeLoadForCacheMaint );
 					if (!fakeLoadForCacheMaint)
 					{
-						renderNodes(n, cube, x, y, z, direction);
+						renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 					}
 				}
 				
@@ -2157,25 +2179,25 @@ public class J3DStandingEngine {
 						// opposite to normal direction is continuous 
 						// normal direction is continuous
 						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
-						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
+						if (!fakeLoadForCacheMaint) renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 					
 					}else
 					{
 						// no continuous side found
 						n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).nonContinuous, fakeLoadForCacheMaint);
-						if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
+						if (!fakeLoadForCacheMaint) renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 					}
 				} else {
 					// opposite to normal direction is continuous 
 					// normal direction is continuous
 					n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
-					if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
+					if (!fakeLoadForCacheMaint) renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 				}
 			} else {
 				// opposite to normal direction is continuous 
 				// normal direction is continuous
 				n = modelPool.loadPlaceHolderObjects(cube, ((RenderedContinuousSide)renderedSide).oneSideContinuousOpposite, fakeLoadForCacheMaint);
-				if (!fakeLoadForCacheMaint) renderNodes(n, cube, x, y, z, direction);
+				if (!fakeLoadForCacheMaint) renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 			}
 			
 		}
