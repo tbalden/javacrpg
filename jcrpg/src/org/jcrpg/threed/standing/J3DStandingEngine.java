@@ -132,6 +132,8 @@ public class J3DStandingEngine {
 	HashMap<Long, RenderedCube> hmCurrentCubes_FARVIEW = new HashMap<Long, RenderedCube>();
 	ArrayList<RenderedCube> alCurrentCubes_FARVIEW = new ArrayList<RenderedCube>();
 	
+	public ArrayList<RenderedAreaThread> runningThreads = new ArrayList<RenderedAreaThread>();
+	
 	public class RenderedAreaThread extends Thread
 	{
 		
@@ -161,8 +163,17 @@ public class J3DStandingEngine {
 			engine.areaResult = null;			
 			areaResult = render(rX,rY,rZ,
 					x, y, z, false,true);
-			engine.areaResult = areaResult;
+			if (!halt)
+			{
+				engine.areaResult = areaResult;
+			} else
+			{
+				loadRenderedArea = false;
+				halt = false;
+			}
 		}
+		
+		public boolean halt = false;
 	}
 	
 	public boolean loadRenderedArea = false;
@@ -216,6 +227,7 @@ public class J3DStandingEngine {
 			world.clearCaches();
 		}
 		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.getCurrentRenderPositions().viewDirection, J3DCore.FARVIEW_ENABLED,rerender);
+		if (newAndOldCubes==null) return null;
     	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
@@ -1543,14 +1555,16 @@ public class J3DStandingEngine {
 			{
 				if ( lastLoc.distance(currLoc)*mulWalkDist * 1.5f > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE) // TODO this is ugly calc 1.5f * !!!
 				{
-					new RenderedAreaThread(this,world,
+					RenderedAreaThread t = new RenderedAreaThread(this,world,
 							core.gameState.getCurrentRenderPositions().relativeX,
 							core.gameState.getCurrentRenderPositions().relativeY,
 							core.gameState.getCurrentRenderPositions().relativeZ,
 							core.gameState.getCurrentRenderPositions().viewPositionX,
 							core.gameState.getCurrentRenderPositions().viewPositionY,
 							core.gameState.getCurrentRenderPositions().viewPositionZ
-							).start();
+							);
+					runningThreads.add(t);
+					t.start();
 				}
 			}
 			
@@ -1630,6 +1644,11 @@ public class J3DStandingEngine {
 			{
 				
 				System.out.println("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
+				for (RenderedAreaThread t:runningThreads)
+				{
+					t.halt = true;
+				}
+				renderedArea.haltCurrentProcess = true;
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)
