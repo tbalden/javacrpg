@@ -28,6 +28,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
 public class RenderedArea {
+	public HashMap<Long, RenderedCube> worldCubeCacheThreadSafeCopy = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCache = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
 
@@ -47,6 +48,7 @@ public class RenderedArea {
 		this.renderDistanceFarview = renderDistanceFarview;
 	}
 
+	@SuppressWarnings("unchecked")
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		int distance = farViewEnabled?renderDistanceFarview:renderDistance;
@@ -91,6 +93,11 @@ public class RenderedArea {
 		world.perf_geo_t0 = 0;
 		world.perf_surface_t0 = 0;
 		world.perf_water_t0 = 0;
+		if (J3DCore.CONTINUOUS_LOAD)
+		{
+			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
+			worldCubeCacheThreadSafeCopy = (HashMap<Long, RenderedCube>)worldCubeCache.clone();
+		}
 		//HashSet<Long> keysToRemove = new HashSet<Long>();
 		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
@@ -217,6 +224,8 @@ public class RenderedArea {
 		worldCubeCache.clear();
 		worldCubeCache = worldCubeCacheNext;
 		worldCubeCacheNext = old;
+		// setting thread safe copy to newly rendered cache
+		worldCubeCacheThreadSafeCopy = worldCubeCache; 
 		
 		// farview part
 		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
@@ -235,7 +244,7 @@ public class RenderedArea {
 		worldX = world.shrinkToWorld(worldX);
 		worldZ = world.shrinkToWorld(worldZ);
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
-		return worldCubeCache.get(key);
+		return worldCubeCacheThreadSafeCopy.get(key);
 	}
 	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ,boolean farview)
 	{
@@ -244,7 +253,7 @@ public class RenderedArea {
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
 		if (farview)
 			return worldCubeCache_FARVIEW.get(key);
-		return worldCubeCache.get(key);
+		return worldCubeCacheThreadSafeCopy.get(key);
 		
 	}
 	
@@ -253,6 +262,7 @@ public class RenderedArea {
 	 */
 	public void fullUpdateClear()
 	{
+		worldCubeCacheThreadSafeCopy.clear();
 		worldCubeCache.clear();
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCacheNext.clear();
