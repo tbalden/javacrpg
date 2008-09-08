@@ -164,7 +164,6 @@ public class World extends Place {
 		return getCube(localTime,key, worldX,worldY,worldZ, farView);
 	}
 	
-	HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = new HashMap<Geography,SurfaceHeightAndType>();
 	
 	public long perf_eco_t0 = System.currentTimeMillis();
 	public long perf_flora_t0 = System.currentTimeMillis();
@@ -195,6 +194,15 @@ public class World extends Place {
 		}
 	}
 	
+	public static ArrayList<HashMap<Geography,SurfaceHeightAndType>> reusedGeosForSurface = new ArrayList<HashMap<Geography, SurfaceHeightAndType>>();
+	static
+	{
+		for (int i=0; i<8; i++)
+		{
+			reusedGeosForSurface.add(new HashMap<Geography,SurfaceHeightAndType>());
+		}
+	}
+	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
 		if (WORLD_IS_GLOBE) {
@@ -215,7 +223,11 @@ public class World extends Place {
 				
 				return ecoCube;
 			}
-			CubeMergerInfo info = reusedMergerInfos.remove(0);
+			CubeMergerInfo info = null;
+			synchronized (reusedMergerInfos)
+			{
+				info = reusedMergerInfos.remove(0);
+			}
 			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;
@@ -223,7 +235,11 @@ public class World extends Place {
 			info.overLappers.clear();
 			info.finalRounders.clear();
 			boolean insideGeography = false;
-			tempGeosForSurface.clear();
+			HashMap<Geography,SurfaceHeightAndType> tempGeosForSurface = null;
+			synchronized (reusedGeosForSurface)
+			{
+				tempGeosForSurface = reusedGeosForSurface.remove(0);
+			}
 
 			for (Geography geo : geographies.values()) {
 				//System.out.print("-!");
@@ -318,6 +334,7 @@ public class World extends Place {
 								if (c!=null)
 								{
 									reusedMergerInfos.add(info);
+									reusedGeosForSurface.add(tempGeosForSurface);
 									return c;
 								}
 							}
@@ -331,6 +348,7 @@ public class World extends Place {
 			perf_water_t0+=System.currentTimeMillis()-t0;
 			Cube c = info.currentMerged;
 			reusedMergerInfos.add(info);
+			reusedGeosForSurface.add(tempGeosForSurface);
 			if (insideGeography) return c;
 
 			// not in geography, return null
