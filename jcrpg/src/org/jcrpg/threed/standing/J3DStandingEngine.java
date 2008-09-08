@@ -151,12 +151,13 @@ public class J3DStandingEngine {
 			this.rX = rX;
 			this.rY = rY;
 			this.rZ = rZ;
+			hmCurrentCubesForSafeRender = (HashMap<Long, RenderedCube>)hmCurrentCubes.clone();
 		}
 
 		@Override
 		public void run() {
-			if (renderingArea) return;
-			renderingArea = true;
+			if (loadRenderedArea) return;
+			loadRenderedArea = true;
 			engine.areaResult = null;			
 			areaResult = render(rX,rY,rZ,
 					x, y, z, false,true);
@@ -164,7 +165,7 @@ public class J3DStandingEngine {
 		}
 	}
 	
-	public boolean renderingArea = false;
+	public boolean loadRenderedArea = false;
 	public HashSet<RenderedCube>[] areaResult = null;
 	
 	
@@ -179,8 +180,8 @@ public class J3DStandingEngine {
 		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
 		//modelLoader.setLockForSharedNodes(false);
     	//loadingText(0,true);
-		
-		hmCurrentCubesForSafeRender = safeMode?(HashMap<Long, RenderedCube>)hmCurrentCubes.clone():hmCurrentCubes;
+		HashMap<Long, RenderedCube> hmCurrentCubesForSafeRenderLocal = null;
+		hmCurrentCubesForSafeRenderLocal = safeMode?hmCurrentCubesForSafeRender:hmCurrentCubes;
 		
 		uiBase.hud.sr.setVisibility(true, "LOAD");
 		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.getCurrentRenderPositions().viewPositionX+"/"+core.gameState.getCurrentRenderPositions().viewPositionZ+"...");
@@ -220,7 +221,7 @@ public class J3DStandingEngine {
     	RenderedCube[] cubes = newAndOldCubes[0];
     	RenderedCube[] removableCubes = newAndOldCubes[1];
 		
-    	detacheable = doRender(renderPosX,renderPosY,renderPostZ,cubes, removableCubes, hmCurrentCubesForSafeRender);
+    	detacheable = doRender(renderPosX,renderPosY,renderPostZ,cubes, removableCubes, hmCurrentCubesForSafeRenderLocal);
     	if (J3DCore.FARVIEW_ENABLED)
     	{
         	cubes = newAndOldCubes[2];
@@ -1538,9 +1539,9 @@ public class J3DStandingEngine {
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			
-			if (J3DCore.CONTINUOUS_LOAD && !rerender)
+			if (J3DCore.CONTINUOUS_LOAD && !rerender && !loadRenderedArea)
 			{
-				if ( lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE*1.7f) // TODO this is ugly calc 1.5f * !!!
+				if ( lastLoc.distance(currLoc)*mulWalkDist * 1.5f > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE) // TODO this is ugly calc 1.5f * !!!
 				{
 					new RenderedAreaThread(this,world,
 							core.gameState.getCurrentRenderPositions().relativeX,
@@ -1559,7 +1560,7 @@ public class J3DStandingEngine {
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = areaResult;
 				areaResult = null;
-				renderingArea = false;
+				loadRenderedArea = false;
 
 				if (true)  {
 					
@@ -1830,9 +1831,7 @@ public class J3DStandingEngine {
 			maxBatchUpdateTime = 0;
 			// start threaded rendering (j3dcore will call it based on threadRendering boolean!)...
 			threadRendering = true;
-			
 		}	
-			
 	}
 	
 	

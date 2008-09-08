@@ -48,12 +48,10 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
-import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
-import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
@@ -131,7 +129,7 @@ import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
 
-public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
+public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public HashMap<String, Integer> hmCubeSideSubTypeToRenderedSideId = new HashMap<String, Integer>();
 
@@ -1204,10 +1202,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 			uiRootNode.updateRenderState();
 		}
 		quadToFixHUDCulling.setLocalTranslation(cam.getLocation());
-	}
-
-	public void renderParallel() {
-		new Thread(this).start();
 	}
 
 	public HashSet<NodePlaceholder> possibleOccluders = new HashSet<NodePlaceholder>();
@@ -2739,37 +2733,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame implements Runnable {
 
 	protected BasicPassManager pManager;
 
-	public boolean rendering = false;
-	public boolean renderFinished = false;
-	Object mutex = new Object();
-	public HashSet<RenderedCube>[] renderResult = null;
-
-	public void run() {
-		if (!CONTINUOUS_LOAD)
-			return;
-		if (CONTINUOUS_LOAD) return;
-		// Thread.currentThread().setPriority(10);
-		if (rendering)
-			return;
-		synchronized (mutex) {
-			renderFinished = false;
-			rendering = true;
-			renderResult = null;
-			long t0 = System.currentTimeMillis();
-			renderResult = sEngine.render(
-					gameState.getNormalPositions().relativeX, 
-					gameState.getNormalPositions().relativeY, 
-					gameState.getNormalPositions().relativeZ, 
-					gameState.getNormalPositions().viewPositionX, gameState
-							.getNormalPositions().viewPositionY, gameState
-							.getNormalPositions().viewPositionZ, false,false);
-			if (J3DCore.LOGGING)
-				Jcrpg.LOGGER.finest("DO RENDER TIME : "
-						+ (System.currentTimeMillis() - t0));
-			rendering = false;
-			renderFinished = true;
-		}
-	}
 
 	/**
 	 * Called every frame to update scene information.
