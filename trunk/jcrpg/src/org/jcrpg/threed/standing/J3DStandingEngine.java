@@ -154,6 +154,11 @@ public class J3DStandingEngine {
 			this.rY = rY;
 			this.rZ = rZ;
 			hmCurrentCubesForSafeRender = (HashMap<Long, RenderedCube>)hmCurrentCubes.clone();
+			if (!loadRenderedArea)
+			{
+				uiBase.hud.sr.setVisibility(true, "LOAD");
+			}
+			setPriority(1);
 		}
 
 		@Override
@@ -165,7 +170,7 @@ public class J3DStandingEngine {
 					x, y, z, false,true);
 			if (!halt)
 			{
-				engine.areaResult = areaResult;
+			engine.areaResult = areaResult;
 			} else
 			{
 				loadRenderedArea = false;
@@ -194,9 +199,12 @@ public class J3DStandingEngine {
 		HashMap<Long, RenderedCube> hmCurrentCubesForSafeRenderLocal = null;
 		hmCurrentCubesForSafeRenderLocal = safeMode?hmCurrentCubesForSafeRender:hmCurrentCubes;
 		
-		uiBase.hud.sr.setVisibility(true, "LOAD");
-		uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.getCurrentRenderPositions().viewPositionX+"/"+core.gameState.getCurrentRenderPositions().viewPositionZ+"...");
-    	if (!J3DCore.CONTINUOUS_LOAD) core.updateDisplay(null);
+		if (!safeMode)
+		{
+			uiBase.hud.sr.setVisibility(true, "LOAD");
+			uiBase.hud.mainBox.addEntry("Loading Geo at X/Z "+core.gameState.getCurrentRenderPositions().viewPositionX+"/"+core.gameState.getCurrentRenderPositions().viewPositionZ+"...");
+			core.updateDisplay(null);
+		}
 		//core.do3DPause(true);
 
     	lastRenderX = renderPosX;
@@ -253,8 +261,11 @@ public class J3DStandingEngine {
 		//System.gc();
 		//core.do3DPause(false);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(" ######################## LIVE NODES = "+liveNodes + " --- LIVE HM QUADS "+J3DCore.hmSolidColorSpatials.size());
-		uiBase.hud.sr.setVisibility(false, "LOAD");
-		uiBase.hud.mainBox.addEntry("Load Complete.");
+		if (!safeMode)
+		{
+			uiBase.hud.sr.setVisibility(false, "LOAD");
+			uiBase.hud.mainBox.addEntry("Load Complete.");
+		}
 		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
 		return ret;
 	}
@@ -1570,6 +1581,7 @@ public class J3DStandingEngine {
 			
 			if (areaResult!=null) // continuous load ready 
 			{
+				uiBase.hud.sr.setVisibility(false, "LOAD");
 				hmCurrentCubes = hmCurrentCubesForSafeRender;
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = areaResult;
@@ -1646,9 +1658,16 @@ public class J3DStandingEngine {
 				System.out.println("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
 				for (RenderedAreaThread t:runningThreads)
 				{
-					t.halt = true;
+					if (t.isAlive())
+					{
+						t.halt = true;
+						if (renderedArea.isInProcess) 
+						{
+							renderedArea.haltCurrentProcess = true;
+						}
+					}
 				}
-				renderedArea.haltCurrentProcess = true;
+				runningThreads.clear();
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)

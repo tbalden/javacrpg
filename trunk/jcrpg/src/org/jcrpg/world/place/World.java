@@ -227,6 +227,9 @@ public class World extends Place {
 			synchronized (reusedMergerInfos)
 			{
 				info = reusedMergerInfos.remove(0);
+				info.currentMerged = null;
+				info.finalRounders.clear();
+				info.overLappers.clear();
 			}
 			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
@@ -239,6 +242,7 @@ public class World extends Place {
 			synchronized (reusedGeosForSurface)
 			{
 				tempGeosForSurface = reusedGeosForSurface.remove(0);
+				tempGeosForSurface.clear();
 			}
 
 			for (Geography geo : geographies.values()) {
