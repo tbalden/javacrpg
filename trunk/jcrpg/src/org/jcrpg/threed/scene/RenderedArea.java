@@ -365,6 +365,13 @@ public class RenderedArea {
 				{
 					int[][] limiters = toRemoveCoordinates[count];
 					
+					System.out.println("REMOVED = "+
+							limiters[0][0]+"-"+limiters[0][0]+"-"+
+							limiters[2][0]+"-"+limiters[2][0]+"-"+
+							limiters[1][0]+"-"+limiters[1][1]+"-"
+							);
+
+					
 					for (int worldX=limiters[0][0]; worldX<=limiters[0][1]; worldX++)
 					{
 						for (int worldZ=limiters[2][0]; worldZ<=limiters[2][1]; worldZ++)
@@ -395,7 +402,9 @@ public class RenderedArea {
 								}
 								//if (worldCubeCache.containsKey(key))
 								{
-									removed.add(worldCubeCache.remove(key));								
+									RenderedCube c = worldCubeCache.remove(key);
+									if (c!=null)
+										removed.add(c);								
 								}
 							}
 						}
@@ -415,6 +424,11 @@ public class RenderedArea {
 				for (int count = 0; count<toAddCoordinates.length; count++)
 				{
 					int[][] limiters = toAddCoordinates[count];
+					System.out.println("ADDED = "+
+							limiters[0][0]+"-"+limiters[0][0]+"-"+
+							limiters[2][0]+"-"+limiters[2][0]+"-"+
+							limiters[1][0]+"-"+limiters[1][1]+"-"
+							);
 					
 					for (int worldX=limiters[0][0]; worldX<=limiters[0][1]; worldX++)
 					{
