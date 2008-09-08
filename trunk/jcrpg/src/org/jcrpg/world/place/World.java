@@ -38,8 +38,6 @@ import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.time.Time;
 
-import com.jmex.effects.water.HeightGenerator;
-
 public class World extends Place {
 
 	public Engine engine;
@@ -185,6 +183,17 @@ public class World extends Place {
 	public static HashSet<Object> hsProvedToBeNear = null;
 	public static HashSet<Object> hsProvedToBeAway = null;
 	
+	/**
+	 * For parallel use of world in more than 1 thread, we need separate merger objects...
+	 */
+	public static ArrayList<CubeMergerInfo> reusedMergerInfos = new ArrayList<CubeMergerInfo>();
+	static
+	{
+		for (int i=0; i<4; i++)
+		{
+			reusedMergerInfos.add(new CubeMergerInfo());
+		}
+	}
 	
 	public Cube getCube(Time localTime, long key, int worldX, int worldY, int worldZ, boolean farView) {
 
@@ -193,6 +202,7 @@ public class World extends Place {
 			worldZ = shrinkToWorld(worldZ);
 		}
 		int CONST_FARVIEW = farView?J3DCore.FARVIEW_GAP:1;
+		
 		
 		if (boundaries.isInside(worldX, worldY, worldZ))
 		{
@@ -205,12 +215,13 @@ public class World extends Place {
 				
 				return ecoCube;
 			}
+			CubeMergerInfo info = reusedMergerInfos.remove(0);
 			
 			perf_eco_t0+=System.currentTimeMillis()-t0;
 			//Cube retCube = null;
-			currentMerged = null;
-			overLappers.clear();
-			finalRounders.clear();
+			info.currentMerged = null;
+			info.overLappers.clear();
+			info.finalRounders.clear();
 			boolean insideGeography = false;
 			tempGeosForSurface.clear();
 
@@ -223,7 +234,7 @@ public class World extends Place {
 					t0 = System.currentTimeMillis();
 					Cube geoCube = geo.getCube(key, worldX, worldY, worldZ, farView);
 					perf_geo_t0+=System.currentTimeMillis()-t0;
-					collectCubes(geoCube,false);
+					collectCubes(info,geoCube,false);
 					if (geo instanceof Surface)
 					{
 						t0 = System.currentTimeMillis();
@@ -252,7 +263,7 @@ public class World extends Place {
 									if (floraCube!=null)
 									{
 										floraCube.internalCube = geoCube.internalCube;
-										collectCubes(floraCube,true);
+										collectCubes(info,floraCube,true);
 									} 
 									else 
 									{
@@ -261,7 +272,7 @@ public class World extends Place {
 										} else 
 										{
 											// outside green ground appended
-											collectCubes(new Cube(this,GROUND,worldX,worldY,worldZ),false);
+											collectCubes(info,new Cube(this,GROUND,worldX,worldY,worldZ),false);
 										}
 										
 									}
@@ -279,7 +290,7 @@ public class World extends Place {
 					}
 				}
 			}
-			mergeCubes();
+			mergeCubes(info);
 			
 			// waters
 			t0 = System.currentTimeMillis();
@@ -299,13 +310,16 @@ public class World extends Place {
 							//if (farView) System.out.println("Y = "+y+" = "+s.surfaceY+" BOTTOM = "+ bottom + " ## y <= "+worldY +" >= bottom");
 							if (worldY>=bottom&&worldY<=y)
 							{
-								Cube c = w.getWaterCube(worldX, worldY, worldZ, currentMerged, s, farView);
-								if (currentMerged!=null && currentMerged.overwrite) {
-									collectCubes(c,false);
-									c = mergeCubes();
+								Cube c = w.getWaterCube(worldX, worldY, worldZ, info.currentMerged, s, farView);
+								if (info.currentMerged!=null && info.currentMerged.overwrite) {
+									collectCubes(info,c,false);
+									c = mergeCubes(info);
 								}
 								if (c!=null)
+								{
+									reusedMergerInfos.add(info);
 									return c;
+								}
 							}
 						}
 					} else
@@ -315,7 +329,8 @@ public class World extends Place {
 				}
 			}
 			perf_water_t0+=System.currentTimeMillis()-t0;
-			if (insideGeography) return currentMerged;
+			reusedMergerInfos.add(info);
+			if (insideGeography) return info.currentMerged;
 
 			// not in geography, return null
 			return null;
@@ -324,44 +339,49 @@ public class World extends Place {
 		else return null;
 	}
 
-	public ArrayList<Cube> overLappers = new ArrayList<Cube>();
-	public ArrayList<Cube> finalRounders = new ArrayList<Cube>();
+	public static class CubeMergerInfo
+	{
+		public ArrayList<Cube> overLappers = new ArrayList<Cube>();
+		public ArrayList<Cube> finalRounders = new ArrayList<Cube>();
+		Cube currentMerged = null;
+	}
 	
-	public Cube currentMerged;
 	
-	public void collectCubes(Cube cube,boolean finalRound)
+	//public Cube currentMerged;
+	
+	public void collectCubes(CubeMergerInfo info, Cube cube,boolean finalRound)
 	{
 		if (cube!=null && cube.onlyIfOverlaps) {
-			overLappers.add(cube);
+			info.overLappers.add(cube);
 			return;
 		}
 		if (cube!=null && finalRound) {
-			finalRounders.add(cube);
+			info.finalRounders.add(cube);
 			return;
 		}
-		if (cube!=null && !cube.onlyIfOverlaps && currentMerged==null) {
-			currentMerged=cube;
+		if (cube!=null && !cube.onlyIfOverlaps && info.currentMerged==null) {
+			info.currentMerged=cube;
 		} else
-		if (cube!=null && !cube.onlyIfOverlaps && currentMerged!=null)
+		if (cube!=null && !cube.onlyIfOverlaps && info.currentMerged!=null)
 		{
-			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+			info.currentMerged = appendCube(info.currentMerged, cube, cube.x, cube.y, cube.z);
 		}
 		
 	}
-	public Cube mergeCubes()
+	public Cube mergeCubes(CubeMergerInfo info)
 	{
-		if (currentMerged==null) return currentMerged;
-		for (Cube cube:overLappers)
+		if (info.currentMerged==null) return info.currentMerged;
+		for (Cube cube:info.overLappers)
 		{
-			currentMerged = appendCube(cube,currentMerged, cube.x, cube.y, cube.z);
+			info.currentMerged = appendCube(cube,info.currentMerged, cube.x, cube.y, cube.z);
 		}
-		for (Cube cube:finalRounders)
+		for (Cube cube:info.finalRounders)
 		{
-			currentMerged = appendCube(currentMerged, cube, cube.x, cube.y, cube.z);
+			info.currentMerged = appendCube(info.currentMerged, cube, cube.x, cube.y, cube.z);
 		}
-		overLappers.clear();
-		finalRounders.clear();
-		return currentMerged;
+		info.overLappers.clear();
+		info.finalRounders.clear();
+		return info.currentMerged;
 	}
 	
 	public Cube appendCube(Cube orig, Cube newCube, int worldX, int worldY, int worldZ)
@@ -590,7 +610,7 @@ public class World extends Place {
 		geographies.clear();
 		geographyCache.clear();
 		waters.clear();
-		overLappers.clear();
+		//overLappers.clear();
 		politicals.clear();
 		economyContainer.clearAll();
 	}

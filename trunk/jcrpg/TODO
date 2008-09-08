@@ -94,6 +94,10 @@ OPTIMIZATIONS:
 [X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
     Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
 	[ ] thorough testing!! especially with rerender/thread render at the same time problems!!
+	[ ] tiles are not showing sometimes!!?? not loaded on time??
+			-> new RenderedArea is buggy , not loading some parts or removing them??
+	[ ] normals get messed up on freshly loaded parts -> Don't add ground tiles  where no neighbor data
+		is present? or force loading directly from world??
 
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
