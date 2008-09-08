@@ -28,7 +28,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.time.Time;
 
 public class RenderedAreaOld {
-	
+	public HashMap<Long, RenderedCube> worldCubeCacheThreadSafeCopy = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCache = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
 
@@ -47,7 +47,10 @@ public class RenderedAreaOld {
 		this.renderDistance = renderDistance;
 		this.renderDistanceFarview = renderDistanceFarview;
 	}
+	
+	public boolean haltCurrentProcess = false;
 
+	@SuppressWarnings("unchecked")
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		int distance = farViewEnabled?renderDistanceFarview:renderDistance;
@@ -92,6 +95,14 @@ public class RenderedAreaOld {
 		world.perf_geo_t0 = 0;
 		world.perf_surface_t0 = 0;
 		world.perf_water_t0 = 0;
+		if (J3DCore.CONTINUOUS_LOAD)
+		{
+			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
+			synchronized (worldCubeCache)
+			{
+				worldCubeCacheThreadSafeCopy = (HashMap<Long, RenderedCube>)worldCubeCache.clone();
+			}
+		}
 		//HashSet<Long> keysToRemove = new HashSet<Long>();
 		for (int x1=Math.round(xMinusMult*distance); x1<=xPlusMult*distance; x1++)
 		{
@@ -100,6 +111,11 @@ public class RenderedAreaOld {
 				long key = 0; boolean getKey = true;
 				for (int y1=-1*Math.min(distance,15); y1<=1*Math.min(distance,15); y1++)
 				{
+					if (haltCurrentProcess) 
+					{
+						haltCurrentProcess = false;
+						return null;
+					}
 					long t0_1 = System.currentTimeMillis();
 					int worldX = x+x1;
 					int worldY = y+y1;
@@ -131,25 +147,28 @@ public class RenderedAreaOld {
 					{
 						long t0 = System.currentTimeMillis();
 						RenderedCube c = null;
-						if (rerender || !worldCubeCache.containsKey(key))
+						synchronized (worldCubeCache)
 						{
-							//t0 = System.currentTimeMillis();
-							Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
-							sumTime+=System.currentTimeMillis()-t0;
-							
-							if (cube!=null)
+							if (rerender || !worldCubeCache.containsKey(key))
 							{
-								c = new RenderedCube(cube,x1,y1,z1);
-								c.world = world;
-								// gather newly rendered cubes
-								elements.add(c);
+								//t0 = System.currentTimeMillis();
+								Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
+								sumTime+=System.currentTimeMillis()-t0;
+								
+								if (cube!=null)
+								{
+									c = new RenderedCube(cube,x1,y1,z1);
+									c.world = world;
+									// gather newly rendered cubes
+									elements.add(c);
+								}
+								//worldCubeCache.put(key, c);
+							} else
+							{
+								//t0 = System.currentTimeMillis();
+								c = worldCubeCache.remove(key);
+								
 							}
-							//worldCubeCache.put(key, c);
-						} else
-						{
-							//t0 = System.currentTimeMillis();
-							c = worldCubeCache.remove(key);
-							
 						}
 						worldCubeCacheNext.put(key, c);
 						sumTime_2+=System.currentTimeMillis()-t0;
@@ -215,9 +234,14 @@ public class RenderedAreaOld {
 		//RenderedCube[] removable =  new RenderedCube[0];//worldCubeCache.values().toArray(new RenderedCube[0]);
 		RenderedCube[] removable = worldCubeCache.values().toArray(new RenderedCube[0]);
 		HashMap<Long, RenderedCube> old = worldCubeCache;
-		worldCubeCache.clear();
+		synchronized (worldCubeCache)
+		{
+			worldCubeCache.clear();
+		}
 		worldCubeCache = worldCubeCacheNext;
 		worldCubeCacheNext = old;
+		// setting thread safe copy to newly rendered cache
+		worldCubeCacheThreadSafeCopy = worldCubeCache; 
 		
 		// farview part
 		RenderedCube[] removable_FARVIEW =  worldCubeCache_FARVIEW.values().toArray(new RenderedCube[0]);
@@ -227,6 +251,11 @@ public class RenderedAreaOld {
 		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
 		worldCubeCacheNext_FARVIEW = old;
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
+		if (haltCurrentProcess) 
+		{
+			haltCurrentProcess = false;
+			return null;
+		}
 		return new RenderedCube[][]{(RenderedCube[])elements.toArray(new RenderedCube[0]),removable, (RenderedCube[])elements_FARVIEW.toArray(new RenderedCube[0]),removable_FARVIEW};
 		
 	}
@@ -236,7 +265,7 @@ public class RenderedAreaOld {
 		worldX = world.shrinkToWorld(worldX);
 		worldZ = world.shrinkToWorld(worldZ);
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
-		return worldCubeCache.get(key);
+		return worldCubeCacheThreadSafeCopy.get(key);
 	}
 	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ,boolean farview)
 	{
@@ -245,7 +274,7 @@ public class RenderedAreaOld {
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
 		if (farview)
 			return worldCubeCache_FARVIEW.get(key);
-		return worldCubeCache.get(key);
+		return worldCubeCacheThreadSafeCopy.get(key);
 		
 	}
 	
@@ -254,6 +283,7 @@ public class RenderedAreaOld {
 	 */
 	public void fullUpdateClear()
 	{
+		worldCubeCacheThreadSafeCopy.clear();
 		worldCubeCache.clear();
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCacheNext.clear();
@@ -264,6 +294,4 @@ public class RenderedAreaOld {
 	}
 	public void setRenderDistanceFarview(int renderDistanceFarview) {
 		this.renderDistanceFarview = renderDistanceFarview;
-	}
-	
-}
+	}}
