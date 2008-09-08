@@ -189,7 +189,7 @@ public class World extends Place {
 	public static ArrayList<CubeMergerInfo> reusedMergerInfos = new ArrayList<CubeMergerInfo>();
 	static
 	{
-		for (int i=0; i<4; i++)
+		for (int i=0; i<8; i++)
 		{
 			reusedMergerInfos.add(new CubeMergerInfo());
 		}
@@ -329,8 +329,9 @@ public class World extends Place {
 				}
 			}
 			perf_water_t0+=System.currentTimeMillis()-t0;
+			Cube c = info.currentMerged;
 			reusedMergerInfos.add(info);
-			if (insideGeography) return info.currentMerged;
+			if (insideGeography) return c;
 
 			// not in geography, return null
 			return null;
