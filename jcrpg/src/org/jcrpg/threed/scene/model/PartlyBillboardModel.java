@@ -20,6 +20,8 @@ package org.jcrpg.threed.scene.model;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.jcrpg.threed.NodePlaceholder;
+
 public class PartlyBillboardModel extends SimpleModel {
 	
 	public boolean atlasTexture = false;
@@ -100,5 +102,12 @@ public class PartlyBillboardModel extends SimpleModel {
 	public PartlyBillboardModel(String id, String modelName, String[] billboardPartNames, String[] removedPartNames, String[] billboardPartTextures,int LOD) {
 		this(id,modelName,billboardPartNames,billboardPartTextures,removedPartNames,LOD,false);
 	}
+
+	@Override
+	public String getId(NodePlaceholder place) {
+		return id;
+	}
+	
+	
 
 }
