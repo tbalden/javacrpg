@@ -97,8 +97,6 @@ OPTIMIZATIONS:
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
 
-[ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
-
 [ ] shadows don't work for moving units!
 
 [ ] texture splattering doesn't work with new atlas??
@@ -112,6 +110,9 @@ OPTIMIZATIONS:
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
 
+
+[X] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
+	It was the modified locTrans vector of the Trimesh, it shouldn't be used in instantiating the GeometryBatchInstance!
 
 [X] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) - it was instance.buildMatrices needed! 
 
