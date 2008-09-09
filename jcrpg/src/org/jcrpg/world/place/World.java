@@ -460,8 +460,8 @@ public class World extends Place {
 					{
 						boolean add = true;
 						for (int[] vi:v){
-							if (vi[0]<minY && vi[1]<maxY) continue;
-							if (vi[0]>minY && vi[1]>maxY) continue;
+							if (vi[0]<minY && vi[1]<minY) continue;
+							if (vi[0]>maxY && vi[1]>maxY) continue;
 							add = true;
 							for (int[] m:list)
 							{
@@ -501,8 +501,8 @@ public class World extends Place {
 					{
 						boolean add = true;
 						for (int[] vi:v){
-							if (vi[0]<minY && vi[1]<maxY) continue;
-							if (vi[0]>minY && vi[1]>maxY) continue;
+							if (vi[0]<minY && vi[1]<minY) continue;
+							if (vi[0]>maxY && vi[1]>maxY) continue;
 							add = true;
 							for (int[] m:list)
 							{
@@ -543,6 +543,8 @@ public class World extends Place {
 					{
 						boolean add = true;
 						for (int[] vi:v){
+							if (vi[0]<minY && vi[1]<minY) continue;
+							if (vi[0]>maxY && vi[1]>maxY) continue;
 							add = true;
 							for (int[] m:list)
 							{

@@ -47,5 +47,14 @@ public abstract class Residence extends Economic {
 	public abstract Residence getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner);
 	
 	public abstract int getMinimumHeight();
+	
+	int[][] tmpFilledZones = new int[1][2];
+	@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY) {
+		
+		tmpFilledZones[0][0] = origoY;
+		tmpFilledZones[0][1] = origoY+sizeY;
+		return tmpFilledZones;
+	}
 
 }
