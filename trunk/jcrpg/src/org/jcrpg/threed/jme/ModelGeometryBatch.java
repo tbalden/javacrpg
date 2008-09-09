@@ -226,6 +226,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
 			parent.setLocalTranslation(placeHolder.getLocalTranslation());
 			parent.attachChild(this);
+			parent.setModelBound(new BoundingBox());
 			parent.updateModelBound();
 		} else
 		{

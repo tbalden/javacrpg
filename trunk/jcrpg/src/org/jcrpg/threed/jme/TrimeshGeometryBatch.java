@@ -233,7 +233,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			scaleMultiplier = placeholder.model.genericScale;
 			vec = vec.mult(placeholder.localScale);
 			if (placeholder.horizontalRotation!=null)
+			{
 				vec = placeholder.horizontalRotation.mult(vec);
+			}
 			vec.addLocal(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 		} else
 		{
@@ -278,6 +280,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		instance.getAttributes().setTranslation(vec);
 		if (scaleMultiplier!=1f) instance.getAttributes().getScale().multLocal(scaleMultiplier);
 		addInstance(instance);
+		instance.getAttributes().buildMatrices();
 		
 		if (placeholder!=null) {
 			ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>> instances = (ArrayList<GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>>)placeholder.trimeshGeomBatchInstance;
@@ -588,7 +591,6 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			}
 		}
 		super.onDraw(r);
-		//if (needsUpdate) setVBOInfo(new VBOInfo(true));
 	}
 
 	public boolean isAnimated() {
