@@ -9,7 +9,6 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.TiledTerrainBlock;
 import org.jcrpg.threed.jme.TiledTerrainBlockUnbuffered;
 
-import com.jme.bounding.BoundingBox;
 import com.jme.renderer.Renderer;
 import com.jme.scene.SceneElement;
 import com.jme.scene.TriMesh;
@@ -45,7 +44,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	private void init() {
 		instances = new ArrayList<T>(1);
         //modelBound = new AABB();
-        getBatch(0).setModelBound(new BoundingBox());
+        //getBatch(0).setModelBound(new BoundingBox());
 	}
 	
 	public int getNumInstances() {

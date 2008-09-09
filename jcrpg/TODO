@@ -97,7 +97,6 @@ OPTIMIZATIONS:
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
 
-[ ] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) 
 [ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 
 [ ] shadows don't work for moving units!
@@ -114,6 +113,7 @@ OPTIMIZATIONS:
 		and if not render pass should be disabled
 
 
+[X] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) - it was instance.buildMatrices needed! 
 
 [-] rendering bug - behind player battle ground doesnt show tiles... ??
 	Maybe angle is not set correctly upon reinit?

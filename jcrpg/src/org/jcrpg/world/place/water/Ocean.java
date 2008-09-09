@@ -599,4 +599,11 @@ public class Ocean extends Water {
 		return isWaterPointSpecial(worldX, worldY, worldZ, false, false);
 	}
 
+	/*@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY) {
+		// TODO Auto-generated method stub
+		return super.getFilledZonesOfY(worldX, worldZ, minY, maxY);
+	}*/
+	
+
 }
