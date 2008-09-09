@@ -472,6 +472,7 @@ public class World extends Place {
 									{
 										m[1] = vi[1];
 									}
+									break;
 								} else
 								if (vi[1]>=m[0] && vi[1]<=m[1])
 								{
@@ -480,6 +481,7 @@ public class World extends Place {
 									{
 										m[0] = vi[0];
 									}
+									break;
 								}
 							}
 							if (add)
@@ -511,6 +513,7 @@ public class World extends Place {
 									{
 										m[1] = vi[1];
 									}
+									break;
 								} else
 								if (vi[1]>=m[0] && vi[1]<=m[1])
 								{
@@ -519,6 +522,7 @@ public class World extends Place {
 									{
 										m[0] = vi[0];
 									}
+									break;
 								}
 							}
 							if (add)
@@ -551,6 +555,7 @@ public class World extends Place {
 										// maximum is greater, we should set the higher maximum
 										m[1] = vi[1];
 									}
+									break;
 								} else
 								if (vi[1]>=m[0] && vi[1]<=m[1])
 								{
@@ -561,6 +566,7 @@ public class World extends Place {
 										// minimum is lesser, we should set the lower minimum
 										m[0] = vi[0];
 									}
+									break;
 								}
 							}
 							if (add)

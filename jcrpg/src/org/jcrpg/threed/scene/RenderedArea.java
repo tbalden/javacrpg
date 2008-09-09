@@ -311,23 +311,61 @@ public class RenderedArea {
 		
 	}
 	
+	
+	public ArrayList<int[][]> joinLimiters(int[][][] limiterList)
+	{
+		ArrayList<int[][]> joinedLimiters = new ArrayList<int[][]>();
+		for (int count = 0; count<limiterList.length; count++)
+		{
+			int[][] limiters = limiterList[count];
+			if (limiters[1][0]>limiters[1][1]) continue;
+			boolean add = true;
+			for (int[][] checker:joinedLimiters)
+			{
+				if (checker[1][0]==limiters[1][1]+1) // check y join possible from below (new max+1 == old min)?
+				{
+					if (
+							checker[0][0]==limiters[0][0] &&
+							checker[0][1]==limiters[0][1] &&
+							checker[2][0]==limiters[2][0] &&
+							checker[2][1]==limiters[2][1]
+						)
+					{
+						// joinable from below
+						add = false;
+						checker[1][0]=limiters[1][0]; // setting new minimum
+						break;
+					}
+				}
+				if (checker[1][1]+1==limiters[1][0]) // check y join possible from above (new min == old max + 1)?
+				{
+					if (
+							checker[0][0]==limiters[0][0] &&
+							checker[0][1]==limiters[0][1] &&
+							checker[2][0]==limiters[2][0] &&
+							checker[2][1]==limiters[2][1]
+						)
+					{
+						// joinable from below
+						add = false;
+						checker[1][1]=limiters[1][1]; // setting new maximum
+						break;
+					}
+				}	
+			}
+			if (add)
+			{
+				joinedLimiters.add(limiters);
+			}
+		}
+		return joinedLimiters;
+	}
+
 	boolean USE_ZONES = true;
 	boolean USE_ZONES_REMOVE = false;
 	
-	public int[][] getFilledZones(World world, HashMap<Long, int[][]> cache, int worldX, int worldZ, int minY, int maxY, boolean fillCache)
-	{
-		Long key = (long)((worldX<<16)+worldZ);
-		int[][] value = null;
-		if (fillCache) value = cache.get(key);
-		if (value==null)
-		{
-			value = world.getFilledZonesOfY(worldX, worldZ, minY,maxY);
-			if (fillCache)
-				cache.put(key, value);
-		}
-		return value;
-	}
 
+	@SuppressWarnings("unchecked")
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		isInProcess = true;
@@ -367,8 +405,6 @@ public class RenderedArea {
 			}
 		}
 
-		HashMap<Long, int[][]> filledZonesCache = new HashMap<Long, int[][]>();
-		
 		if (toRemoveCoordinates!=null)
 		{
 			if (toRemoveCoordinates==ALL_COORDINATES)
@@ -381,9 +417,11 @@ public class RenderedArea {
 				// removal cycle
 				ArrayList<RenderedCube> removed = new ArrayList<RenderedCube>();
 				
-				for (int count = 0; count<toRemoveCoordinates.length; count++)
+				ArrayList<int[][]> joinedLimiters = joinLimiters(toRemoveCoordinates);
+				
+				for (int count = 0; count<joinedLimiters.size(); count++)
 				{
-					int[][] limiters = toRemoveCoordinates[count];
+					int[][] limiters = joinedLimiters.get(count);
 					
 					/*System.out.println("REMOVED = "+
 							limiters[0][0]+"-"+limiters[0][1]+"-"+
@@ -484,9 +522,11 @@ public class RenderedArea {
 				ArrayList<RenderedCube> added = new ArrayList<RenderedCube>();
 				RenderedCube c = null;
 				
-				for (int count = 0; count<toAddCoordinates.length; count++)
+				ArrayList<int[][]> joinedLimiters = joinLimiters(toAddCoordinates);
+				
+				for (int count = 0; count<joinedLimiters.size(); count++)
 				{
-					int[][] limiters = toAddCoordinates[count];
+					int[][] limiters = joinedLimiters.get(count);
 					/*System.out.println("ADDED = "+
 							limiters[0][0]+"-"+limiters[0][1]+"-"+
 							limiters[2][0]+"-"+limiters[2][1]+"-"+
@@ -501,8 +541,9 @@ public class RenderedArea {
 							
 							if (USE_ZONES)
 							{
-								int[][] zones = getFilledZones(world, filledZonesCache, worldX, worldZ, y-renderDistance, y+renderDistance,limiters.length>1); 
-									//world.getFilledZonesOfY(worldX, worldZ, limiters[1][0], limiters[1][1]);
+								int[][] zones = 
+									//getFilledZones(world, filledZonesCache, worldX, worldZ, y-renderDistance, y+renderDistance,limiters.length>1); 
+									world.getFilledZonesOfY(worldX, worldZ, limiters[1][0], limiters[1][1]);
 								if (zones!=null)
 								for (int[] zone:zones)
 								{
