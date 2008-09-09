@@ -262,6 +262,16 @@ public abstract class Population extends Economic{
 	 * @return the list of checkers.
 	 */
 	public abstract ArrayList<InfrastructureBlockChecker> getBlockCheckers();
+
+	int[][] tmpFilledZones = new int[1][2];
+	
+	@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY) {
+		
+		tmpFilledZones[0][0] = origoY;
+		tmpFilledZones[0][1] = origoY+sizeY;
+		return tmpFilledZones;
+	}
 	
 	
 	

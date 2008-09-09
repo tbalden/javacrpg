@@ -356,5 +356,16 @@ public abstract class Place {
 	{
 		return false;
 	}
+	
+	/**
+	 * Returns worldY intervals that are not empty in a given X/Z column of the place.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY)
+	{
+		return null;
+	}
 
 }

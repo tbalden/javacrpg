@@ -429,6 +429,157 @@ public class World extends Place {
 		}
 		return newCube==null?orig:newCube;
 	}
+	
+	
+	public static ArrayList<ArrayList<int[]>> reusedZoneArrays = new ArrayList<ArrayList<int[]>>();
+	static
+	{
+		for (int i=0; i<8; i++)
+		{
+			reusedZoneArrays.add(new ArrayList<int[]>());
+		}
+	}
+	
+	@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY)
+	{
+		if (WORLD_IS_GLOBE) {
+			worldX = shrinkToWorld(worldX);
+			worldZ = shrinkToWorld(worldZ);
+		}
+		
+		ArrayList<int[]> list = reusedZoneArrays.remove(0);
+		list.clear();
+		if (boundaries.isInside(worldX, worldGroundLevel, worldZ))
+		{
+			for (Water w : waters.values()) {
+				if (w.boundaries.isInside(worldX, w.worldGroundLevel, worldZ)) 
+				{
+					int[][] v = w.getFilledZonesOfY(worldX, worldZ, minY, maxY);
+					if (v!=null)
+					{
+						boolean add = true;
+						for (int[] vi:v){
+							if (vi[0]<minY && vi[1]<maxY) continue;
+							if (vi[0]>minY && vi[1]>maxY) continue;
+							add = true;
+							for (int[] m:list)
+							{
+								if (vi[0]>=m[0] && vi[0]<=m[1])
+								{
+									add = false;
+									if (vi[1]>m[1])
+									{
+										m[1] = vi[1];
+									}
+								} else
+								if (vi[1]>=m[0] && vi[1]<=m[1])
+								{
+									add = false;
+									if (vi[0]<m[0])
+									{
+										m[0] = vi[0];
+									}
+								}
+							}
+							if (add)
+							{
+								list.add(vi);
+							}
+						}
+					}
+				}
+			}
+			for (Geography geo : geographies.values()) {
+				//System.out.print("-!");
+				if (geo.getBoundaries().isInside(worldX, geo.worldGroundLevel, worldZ))
+				{
+					int[][] v = geo.getFilledZonesOfY(worldX,worldZ,minY,maxY);
+					if (v!=null)
+					{
+						boolean add = true;
+						for (int[] vi:v){
+							if (vi[0]<minY && vi[1]<maxY) continue;
+							if (vi[0]>minY && vi[1]>maxY) continue;
+							add = true;
+							for (int[] m:list)
+							{
+								if (vi[0]>=m[0] && vi[0]<=m[1])
+								{
+									add = false;
+									if (vi[1]>m[1])
+									{
+										m[1] = vi[1];
+									}
+								} else
+								if (vi[1]>=m[0] && vi[1]<=m[1])
+								{
+									add = false;
+									if (vi[0]<m[0])
+									{
+										m[0] = vi[0];
+									}
+								}
+							}
+							if (add)
+							{
+								list.add(vi);
+							}
+						}
+					}
+				}
+			}
+			ArrayList<Economic> ecos = economyContainer.getEconomicsInColumn(worldX, worldZ);
+			if (ecos!=null)
+			{
+				for (Economic e:ecos)
+				{
+					int[][] v = e.getFilledZonesOfY(worldX, worldZ,minY,maxY);
+					if (v!=null)
+					{
+						boolean add = true;
+						for (int[] vi:v){
+							add = true;
+							for (int[] m:list)
+							{
+								if (vi[0]>=m[0] && vi[0]<=m[1])
+								{
+									// new interval's minimum inside an old interval, no addition needed
+									add = false;
+									if (vi[1]>m[1])
+									{
+										// maximum is greater, we should set the higher maximum
+										m[1] = vi[1];
+									}
+								} else
+								if (vi[1]>=m[0] && vi[1]<=m[1])
+								{
+									// new interval's maximum inside an old interval, no addition needed
+									add = false;
+									if (vi[0]<m[0])
+									{
+										// minimum is lesser, we should set the lower minimum
+										m[0] = vi[0];
+									}
+								}
+							}
+							if (add)
+							{
+								// no intersection, we should add the new
+								list.add(vi);
+							}
+						}
+					}
+				}
+			}
+			reusedZoneArrays.add(list);
+			return (int[][])list.toArray(new int[0][]);
+		}		
+		reusedZoneArrays.add(list);
+		return null;
+		
+	}
+	
 
 	/**
 	 * 
