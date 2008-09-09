@@ -369,13 +369,7 @@ public class RenderedArea {
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		isInProcess = true;
-		/*try
-		{
-			throw new Exception();
-		}catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}*/
+
 		Time wtime = world.engine.getWorldMeanTime();		
 		world.perf_eco_t0 = 0;
 		world.perf_climate_t0 = 0;
@@ -662,12 +656,6 @@ public class RenderedArea {
 		System.out.println("-- wat = "+world.perf_water_t0);
 		System.out.println("-- sur = "+world.perf_surface_t0);
 		System.out.println("FULL TIME = "+(System.currentTimeMillis()-time1));
-		if (haltCurrentProcess) 
-		{
-			haltCurrentProcess = false;
-			isInProcess = false;
-			return null;
-		}
 		isInProcess = false;
 		return new RenderedCube[][]{toAdd,toRemove, new RenderedCube[0],new RenderedCube[0]};
 		
