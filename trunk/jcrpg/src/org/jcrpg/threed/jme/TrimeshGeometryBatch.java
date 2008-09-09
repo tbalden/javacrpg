@@ -243,7 +243,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			vec.addLocal(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 		} else
 		{
-			vec.subtractLocal(parent.getLocalTranslation());
+			vec = vec.subtract(parent.getLocalTranslation());
 		}
 		
 		if (notVisible.size()>0)

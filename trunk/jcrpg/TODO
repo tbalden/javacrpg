@@ -88,7 +88,6 @@ o
 OPTIMIZATIONS:
 #############
 
-[ ] bug with texture state vegetation terrain level conflict...wrongly positioned height. review that code (renderNodes + VegetationSetup)
 
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
@@ -106,6 +105,7 @@ OPTIMIZATIONS:
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
 
+[X] bug with texture state vegetation terrain level conflict...wrongly positioned height. review that code (renderNodes + VegetationSetup)
 
 [X] reorganize RenderedArea. world.getCube part into ->
 		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
