@@ -247,7 +247,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
 			MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
 			
-			CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", false);
+			CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", true);
 
 			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);

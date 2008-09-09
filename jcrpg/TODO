@@ -83,32 +83,16 @@ o
 [ ] billboard badly positioned for gorilla
 
 [ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
-[-] rendering bug - behind player battle ground doesnt show tiles... ??
-	Maybe angle is not set correctly upon reinit?
 
-!! [X economy update wrongly leftovers from previous geography CUBES and level!!!
 
 OPTIMIZATIONS:
 #############
 
-	!!! [ ] deadlock while walking too quick ?!
+!!! [ ] deadlock while walking too quick ?! test with slowing the process probably
 
 [X] reorganize RenderedArea. world.getCube part into ->
 		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
 	[ ] TEST!
-
-[X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
-    Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
-	[ ] thorough testing!! especially with rerender/thread render at the same time problems!!
-	[X] tiles are not showing sometimes!!?? not loaded on time??
-			-> new RenderedArea is buggy , not loading some parts or removing them??
-		
-	[?] normals get messed up on freshly loaded parts -> Don't add ground tiles  where no neighbor data
-		is present? or force loading directly from world??
-		
-	
-	
-	[X] optimize new rendering.. too much removal???
 
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
@@ -116,43 +100,47 @@ OPTIMIZATIONS:
 [ ] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) 
 [ ] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 
-[X] when in middle of the VIEW -> RENDER DISTANCE border, start a background process of loading for the given 
-	coordinates -> j3dstandingE.renderCubes and RenderCubes X Y Z must be refactored to calculate
-	the render position based on load-finish's relative position and stored worldX/Y/Z coords. 
-
-	[ ] not perfect - some elements get lost with removal?? or not rendered on time?? (colliding locks?)
-	[ ] hsRenderedNodes - NullPointerException
-		it's using a rerendered/removed one???
-		java.lang.NullPointerException
-		
-org.jcrpg.threed.standing.J3DStandingEngine.renderToViewPortStepByStep(J3DStandingEngine.java:606)
-org.jcrpg.threed.J3DCore.simpleUpdate(J3DCore.java:2636)
-org.jcrpg.threed.J3DCore.update(J3DCore.java:2776)
-org.jcrpg.threed.J3DCore.updateDisplayCalmer(J3DCore.java:1890)
-org.jcrpg.threed.input.action.CKeyAction.movePosition(CKeyAction.java:420)
-org.jcrpg.threed.input.action.CKeyAction.movePosition(CKeyAction.java:391)
-o
-		Use a separate hsCurrentCubes to avoid concurrent use!
-
 [ ] shadows don't work for moving units!
 
 [ ] texture splattering doesn't work with new atlas??
 
 
-
-!!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
-
-
 [ ] md2 model for animated?
-
-
 [ ] remove shadow render pass / 'water reflection for all nodes' if in the night!
 [ ] reconsider texture splattering - use of static textures instead?
-
 
 [X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
+
+
+
+[-] rendering bug - behind player battle ground doesnt show tiles... ??
+	Maybe angle is not set correctly upon reinit?
+!! [X] economy update wrongly leftovers from previous geography CUBES and level!!!
+
+!!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
+
+[X] when in middle of the VIEW -> RENDER DISTANCE border, start a background process of loading for the given 
+	coordinates -> j3dstandingE.renderCubes and RenderCubes X Y Z must be refactored to calculate
+	the render position based on load-finish's relative position and stored worldX/Y/Z coords. 
+	[X] not perfect - some elements get lost with removal?? or not rendered on time?? (colliding locks?)
+	[X] hsRenderedNodes - NullPointerException
+		it's using a rerendered/removed one???
+		java.lang.NullPointerException
+		- concurrency problesm eleminated (use of safety copy)
+
+[X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
+    Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
+	[-] thorough testing!! especially with rerender/thread render at the same time problems!!
+	[X] tiles are not showing sometimes!!?? not loaded on time??
+			-> new RenderedArea is buggy , not loading some parts or removing them??
+		
+	[?] normals get messed up on freshly loaded parts -> Don't add ground tiles  where no neighbor data
+		is present? or force loading directly from world??
+	
+	[X] optimize new rendering.. too much removal???
+
 
 [X] unbuffered TiledTerrainBlock - on the fly returning newly set buffers for geomBatchMesh? is it quick enough?
 		it will save memory!
