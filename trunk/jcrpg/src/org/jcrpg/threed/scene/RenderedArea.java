@@ -311,6 +311,22 @@ public class RenderedArea {
 		
 	}
 	
+	boolean USE_ZONES = true;
+	boolean USE_ZONES_REMOVE = false;
+	
+	public int[][] getFilledZones(World world, HashMap<Long, int[][]> cache, int worldX, int worldZ, int minY, int maxY, boolean fillCache)
+	{
+		Long key = (long)((worldX<<16)+worldZ);
+		int[][] value = null;
+		if (fillCache) value = cache.get(key);
+		if (value==null)
+		{
+			value = world.getFilledZonesOfY(worldX, worldZ, minY,maxY);
+			if (fillCache)
+				cache.put(key, value);
+		}
+		return value;
+	}
 
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
@@ -345,10 +361,14 @@ public class RenderedArea {
 			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
 			synchronized (worldCubeCache)
 			{
+				long time = System.currentTimeMillis();
 				worldCubeCacheThreadSafeCopy = (HashMap<Long, RenderedCube>)worldCubeCache.clone();
+				System.out.println("clone time: "+(System.currentTimeMillis()-time));
 			}
 		}
 
+		HashMap<Long, int[][]> filledZonesCache = new HashMap<Long, int[][]>();
+		
 		if (toRemoveCoordinates!=null)
 		{
 			if (toRemoveCoordinates==ALL_COORDINATES)
@@ -365,46 +385,89 @@ public class RenderedArea {
 				{
 					int[][] limiters = toRemoveCoordinates[count];
 					
-					System.out.println("REMOVED = "+
-							limiters[0][0]+"-"+limiters[0][0]+"-"+
-							limiters[2][0]+"-"+limiters[2][0]+"-"+
+					/*System.out.println("REMOVED = "+
+							limiters[0][0]+"-"+limiters[0][1]+"-"+
+							limiters[2][0]+"-"+limiters[2][1]+"-"+
 							limiters[1][0]+"-"+limiters[1][1]+"-"
-							);
+							);*/
 
+					if (limiters[1][0]>limiters[1][1]) continue; 
 					
 					for (int worldX=limiters[0][0]; worldX<=limiters[0][1]; worldX++)
 					{
 						for (int worldZ=limiters[2][0]; worldZ<=limiters[2][1]; worldZ++)
 						{
-							if (haltCurrentProcess) 
-							{
-								isInProcess = false;
-								haltCurrentProcess = false;
-								return null;
-							}
 
-							long key = 0; boolean getKey = true;
-							for (int worldY=limiters[1][0]; worldY<=limiters[1][1]; worldY++)
-							{
-
-								worldX = world.shrinkToWorld(worldX);
-								worldZ = world.shrinkToWorld(worldZ);
-								//if (worldY<0) 
-									getKey = true; // key recalc needed
-								if (getKey)
+							if (USE_ZONES_REMOVE)
+							{								
+								int[][] zones = world.getFilledZonesOfY(worldX, worldZ, limiters[1][0], limiters[1][1]);
+								if (zones!=null)
+								for (int[] zone:zones)
 								{
-									key = Boundaries.getKey(worldX,worldY,worldZ);
-									getKey = false;
-								} else
-								{
-									// no key calc needed, increase it...
-									key++;
+									long key = 0; boolean getKey = true;
+									for (int worldY=zone[0]; worldY<=zone[1]; worldY++)
+									{
+										if (haltCurrentProcess) 
+										{
+											isInProcess = false;
+											haltCurrentProcess = false;
+											return null;
+										}
+		
+		
+										worldX = world.shrinkToWorld(worldX);
+										worldZ = world.shrinkToWorld(worldZ);
+										//if (worldY<0) 
+											getKey = true; // key recalc needed
+										if (getKey)
+										{
+											key = Boundaries.getKey(worldX,worldY,worldZ);
+											getKey = false;
+										} else
+										{
+											// no key calc needed, increase it...
+											key++;
+										}
+										//if (worldCubeCache.containsKey(key))
+										{
+											RenderedCube c = worldCubeCache.remove(key);
+											if (c!=null)
+												removed.add(c);								
+										}
+									}
 								}
-								//if (worldCubeCache.containsKey(key))
+							} else
+							{
+								long key = 0; boolean getKey = true;
+								for (int worldY=limiters[1][0]; worldY<=limiters[1][1]; worldY++)
 								{
-									RenderedCube c = worldCubeCache.remove(key);
-									if (c!=null)
-										removed.add(c);								
+									if (haltCurrentProcess) 
+									{
+										isInProcess = false;
+										haltCurrentProcess = false;
+										return null;
+									}
+	
+	
+									worldX = world.shrinkToWorld(worldX);
+									worldZ = world.shrinkToWorld(worldZ);
+									//if (worldY<0) 
+										getKey = true; // key recalc needed
+									if (getKey)
+									{
+										key = Boundaries.getKey(worldX,worldY,worldZ);
+										getKey = false;
+									} else
+									{
+										// no key calc needed, increase it...
+										key++;
+									}
+									//if (worldCubeCache.containsKey(key))
+									{
+										RenderedCube c = worldCubeCache.remove(key);
+										if (c!=null)
+											removed.add(c);								
+									}
 								}
 							}
 						}
@@ -424,54 +487,109 @@ public class RenderedArea {
 				for (int count = 0; count<toAddCoordinates.length; count++)
 				{
 					int[][] limiters = toAddCoordinates[count];
-					System.out.println("ADDED = "+
-							limiters[0][0]+"-"+limiters[0][0]+"-"+
-							limiters[2][0]+"-"+limiters[2][0]+"-"+
+					/*System.out.println("ADDED = "+
+							limiters[0][0]+"-"+limiters[0][1]+"-"+
+							limiters[2][0]+"-"+limiters[2][1]+"-"+
 							limiters[1][0]+"-"+limiters[1][1]+"-"
-							);
+							);*/
+					if (limiters[1][0]>limiters[1][1]) continue;
 					
 					for (int worldX=limiters[0][0]; worldX<=limiters[0][1]; worldX++)
 					{
 						for (int worldZ=limiters[2][0]; worldZ<=limiters[2][1]; worldZ++)
 						{
-							long key = 0; boolean getKey = true;
-							for (int worldY=limiters[1][0]; worldY<=limiters[1][1]; worldY++)
+							
+							if (USE_ZONES)
 							{
-								if (haltCurrentProcess) 
+								int[][] zones = getFilledZones(world, filledZonesCache, worldX, worldZ, y-renderDistance, y+renderDistance,limiters.length>1); 
+									//world.getFilledZonesOfY(worldX, worldZ, limiters[1][0], limiters[1][1]);
+								if (zones!=null)
+								for (int[] zone:zones)
 								{
-									isInProcess = false;
-									haltCurrentProcess = false;
-									return null;
+									long key = 0; boolean getKey = true;
+									for (int worldY=zone[0]; worldY<=zone[1]; worldY++)
+									{
+										if (haltCurrentProcess) 
+										{
+											isInProcess = false;
+											haltCurrentProcess = false;
+											return null;
+										}
+										int wX = worldX;
+										int wZ = worldZ;
+										worldX = world.shrinkToWorld(worldX);
+										worldZ = world.shrinkToWorld(worldZ);
+										if (worldY<0) 
+											getKey = true; // key recalc needed
+										if (getKey)
+										{
+											key = Boundaries.getKey(worldX,worldY,worldZ);
+											getKey = false;
+										} else
+										{
+											// no key calc needed, increase it...
+											key++;
+										}
+										c = null;
+										if (!worldCubeCache.containsKey(key))
+										{
+											Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
+											//if (cube!=null) System.out.println(cube);
+											if (cube!=null)
+											{
+												c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
+												//c = new RenderedCube(cube,wX,worldY,wZ);
+												//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
+												c.world = world;
+												// gather newly rendered cubes
+												added.add(c);
+											}
+											worldCubeCache.put(key, c);
+										}
+										
+									}
 								}
-								int wX = worldX;
-								int wZ = worldZ;
-								worldX = world.shrinkToWorld(worldX);
-								worldZ = world.shrinkToWorld(worldZ);
-								//if (worldY<0) 
-									getKey = true; // key recalc needed
-								if (getKey)
+							} else
+							{
+								long key = 0; boolean getKey = true;
+								for (int worldY=limiters[1][0]; worldY<=limiters[1][1]; worldY++)
 								{
-									key = Boundaries.getKey(worldX,worldY,worldZ);
-									getKey = false;
-								} else
-								{
-									// no key calc needed, increase it...
-									key++;
+									if (haltCurrentProcess) 
+									{
+										isInProcess = false;
+										haltCurrentProcess = false;
+										return null;
+									}
+									int wX = worldX;
+									int wZ = worldZ;
+									worldX = world.shrinkToWorld(worldX);
+									worldZ = world.shrinkToWorld(worldZ);
+									if (worldY<0) 
+										getKey = true; // key recalc needed
+									if (getKey)
+									{
+										key = Boundaries.getKey(worldX,worldY,worldZ);
+										getKey = false;
+									} else
+									{
+										// no key calc needed, increase it...
+										key++;
+									}
+									c = null;
+									Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
+									//if (cube!=null) System.out.println(cube);
+									if (cube!=null)
+									{
+										c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
+										//c = new RenderedCube(cube,wX,worldY,wZ);
+										//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
+										c.world = world;
+										// gather newly rendered cubes
+										added.add(c);
+									}
+									worldCubeCache.put(key, c);
+									
 								}
-								c = null;
-								Cube cube = world.getCube(wtime,key, worldX, worldY, worldZ, false);
-								//if (cube!=null) System.out.println(cube);
-								if (cube!=null)
-								{
-									c = new RenderedCube(cube,wX-x,worldY-y,z-wZ);
-									//c = new RenderedCube(cube,wX,worldY,wZ);
-									//System.out.println(c.renderedX+" "+c.renderedY+" "+c.renderedZ);
-									c.world = world;
-									// gather newly rendered cubes
-									added.add(c);
-								}
-								worldCubeCache.put(key, c);
-								
 							}
 						}
 					}

@@ -49,6 +49,18 @@ public class EconomyContainer {
 		economics = new TreeMap<String, Economic>();
 	}
 
+	public ArrayList<Economic> getEconomicsInColumn(int worldX,int worldZ)
+	{
+		ArrayList<Object> economicsList = treeLocator.getElements(worldX, 0, worldZ);
+		if (economicsList==null) return null;
+		ArrayList<Economic> list = new ArrayList<Economic>();
+		for (Object o:economicsList)
+		{
+			list.add((Economic)o);
+		}
+		return list;
+	}
+	
 	/**
 	 * Economic cube getter. Null if no economic there.
 	 * @param key

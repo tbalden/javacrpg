@@ -980,5 +980,20 @@ public class Geography extends Place implements Surface {
 		int z = worldZ/blockSize;
 		return DialectTool.getName(dialect, this.getClass().getSimpleName(), (int)(x+z+numericId), this.getClass(), this);
 	}
+	@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ, int minY, int maxY) {
+		SurfaceHeightAndType[] sht = getPointSurfaceData(worldX, worldZ, null, false);
+		int[][] ret = new int[sht.length][2];
+		int count = 0;
+		for (SurfaceHeightAndType h:sht)
+		{
+			ret[count][0] = h.surfaceY-1;//water -1
+			ret[count][1] = h.surfaceY;
+			count++;
+		}
+		return ret;
+	}
+	
+	
 	
 }

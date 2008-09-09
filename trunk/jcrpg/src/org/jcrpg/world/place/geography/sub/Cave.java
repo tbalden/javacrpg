@@ -459,6 +459,12 @@ public class Cave extends Geography implements Surface {
 		return true;
 	}
 
-	
+	@Override
+	public int[][] getFilledZonesOfY(int worldX, int worldZ,int minY, int maxY)  
+	{
+		if (minY<=worldHeight)
+			return new int[][]{{worldGroundLevel,worldHeight}};
+		return null;
+	}
 
 }
