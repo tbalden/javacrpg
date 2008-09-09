@@ -516,10 +516,9 @@ public class GeometryBatchHelper {
     	    		batch.unlockBranch();
     		    	batch.unlockBounds();
     	    	}*/
-    	    	
     	    	for (TriMesh tri:vegetationNode.containedFoliageMeshes)
     	    	{
-    	    		batch.addItem(place,tri,true);
+   	    			batch.addItem(place,tri,true);
     	    	}
 
     		}

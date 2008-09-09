@@ -86,6 +86,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 	boolean internal = false;
 	
 	public BillboardPartVegetation(J3DCore core, Camera cam, float viewDistance, PartlyBillboardModel model, boolean horRotated, boolean internal) {
+		System.out.println("BillbPV "+horRotated+" I: "+internal+" "+model.modelName+" "+model.id);
 		this.core = core;
 		this.cam = cam;
 		this.viewDistance = viewDistance;
@@ -382,7 +383,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		fillBillboardQuadsRotated(horRotated);
 	}
 	
-	public HashSet<TriMesh> containedFoliageMeshes = new HashSet<TriMesh>();
+	public ArrayList<TriMesh> containedFoliageMeshes = new ArrayList<TriMesh>();
 	
 	/**
 	 * Create a real quad for the tree from the abstract data upon constructing the tree.
@@ -461,36 +462,26 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			
 			//quadCache.put(qkey, targetQuad);
 		}
-		if (!NO_BATCH_GEOMETRY) {
-			targetQuad.setLocalTranslation(x, z, -y);
-			targetQuad.setLocalRotation(new Quaternion());
-			//targetQuad.getWorldRotation().set(new Quaternion());
-			targetQuad.setModelBound(new BoundingBox());
-			targetQuad.updateModelBound();
-			/*if (batch==null)
-			{
-				NodePlaceholder fake = new NodePlaceholder();
-				fake.setLocalTranslation(new Vector3f());
-				batch = new TrimeshGeometryBatch(model.id,core,targetQuad,internal,fake);
-				batch.animated = !internal && J3DCore.ANIMATED_TREES && model.windAnimation;
-				batch.setName("---");
-				batch.parent.setName("---");
-			}*/
-			//targetQuad.setLocalTranslation(x, z, -y);
-			//quad.setLocalTranslation(x, y, z);
-			//batch.addItem(null, targetQuad);
-			containedFoliageMeshes.add(targetQuad);
-			
-		}
-		if (NO_BATCH_GEOMETRY) {
-			SharedMesh quad = new SharedMesh("s"+name,targetQuad);
-			quad.setLocalTranslation(x, y, z);
-			return quad;
-		} else
+		targetQuad.setLocalTranslation(x, z, -y);
+		targetQuad.setLocalRotation(new Quaternion());
+		//targetQuad.getWorldRotation().set(new Quaternion());
+		targetQuad.setModelBound(new BoundingBox());
+		targetQuad.updateModelBound();
+		/*if (batch==null)
 		{
-			return null;
-		}
-		
+			NodePlaceholder fake = new NodePlaceholder();
+			fake.setLocalTranslation(new Vector3f());
+			batch = new TrimeshGeometryBatch(model.id,core,targetQuad,internal,fake);
+			batch.animated = !internal && J3DCore.ANIMATED_TREES && model.windAnimation;
+			batch.setName("---");
+			batch.parent.setName("---");
+		}*/
+		//targetQuad.setLocalTranslation(x, z, -y);
+		//quad.setLocalTranslation(x, y, z);
+		//batch.addItem(null, targetQuad);
+		containedFoliageMeshes.add(targetQuad);
+			
+		return null;
 	}
 	/**
 	 * Storing a replacer quad's abstract description for the model for later addition to the tree (in form of quad or batchgeom).

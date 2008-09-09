@@ -82,7 +82,9 @@ public class ModelPool {
 			rotated = true;
 		}
 		
-		String key = model.getId(place)+(rotated)+rc.cube.internalCube;
+		String key = //model.getId(place)+(rotated)+rc.cube.internalCube;
+			model.getId(place)+rc.cube.internalCube;
+		//System.out.println("KEY: "+key);
 		if (place.model.type==Model.SIMPLEMODEL && ((SimpleModel)place.model).generatedGroundModel && place.neighborCubeData!=null && place.neighborCubeData.getTextureKeyPartForBatch()!=null)
 		{
 			key+=place.neighborCubeData.getTextureKeyPartForBatch();

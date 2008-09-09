@@ -511,13 +511,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final HashMap<Integer, Quaternion> horizontalRotations = new HashMap<Integer, Quaternion>();
 	static {
 		// horizontal rotations
-		horizontalN = new Quaternion();
+		horizontalN = new QuaternionBuggy();
 		horizontalN.fromAngles(new float[] { 0, 0, FastMath.PI * 2 });
-		horizontalS = new Quaternion();
+		horizontalS = new QuaternionBuggy();
 		horizontalS.fromAngles(new float[] { 0, 0, FastMath.PI });
-		horizontalW = new Quaternion();
+		horizontalW = new QuaternionBuggy();
 		horizontalW.fromAngles(new float[] { 0, 0, FastMath.PI / 2 });
-		horizontalE = new Quaternion();
+		horizontalE = new QuaternionBuggy();
 		horizontalE.fromAngles(new float[] { 0, 0, FastMath.PI * 3 / 2 });
 
 		horizontalRotations.put(new Integer(NORTH), horizontalN);
@@ -529,13 +529,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final HashMap<Integer, Quaternion> horizontalRotationsReal = new HashMap<Integer, Quaternion>();
 	static {
 		// horizontal rotations
-		horizontalNReal = new Quaternion();
+		horizontalNReal = new QuaternionBuggy();
 		horizontalNReal.fromAngles(new float[] { 0, FastMath.PI * 2, 0 });
-		horizontalSReal = new Quaternion();
+		horizontalSReal = new QuaternionBuggy();
 		horizontalSReal.fromAngles(new float[] { 0, FastMath.PI, 0 });
-		horizontalWReal = new Quaternion();
+		horizontalWReal = new QuaternionBuggy();
 		horizontalWReal.fromAngles(new float[] { 0, FastMath.PI / 2, 0 });
-		horizontalEReal = new Quaternion();
+		horizontalEReal = new QuaternionBuggy();
 		horizontalEReal.fromAngles(new float[] { 0, FastMath.PI * 3 / 2, 0 });
 
 		horizontalRotationsReal.put(new Integer(NORTH), horizontalNReal);
@@ -547,13 +547,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final HashMap<Integer, Quaternion> steepRotations = new HashMap<Integer, Quaternion>();
 	static {
 		// steep rotations
-		steepE = new Quaternion();
+		steepE = new QuaternionBuggy();
 		steepE.fromAngles(new float[] { 0, FastMath.PI / 4, 0 });
-		steepW = new Quaternion();
+		steepW = new QuaternionBuggy();
 		steepW.fromAngles(new float[] { 0, -FastMath.PI / 4, 0 });
-		steepS = new Quaternion();
+		steepS = new QuaternionBuggy();
 		steepS.fromAngles(new float[] { FastMath.PI / 4, 0, 0 });
-		steepN = new Quaternion();
+		steepN = new QuaternionBuggy();
 		steepN.fromAngles(new float[] { -FastMath.PI / 4, 0, 0 });
 
 		steepRotations.put(new Integer(NORTH), steepN);
@@ -587,17 +587,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final HashMap<Integer, Quaternion> steepRotations_FARVIEW = new HashMap<Integer, Quaternion>();
 	static {
 		// steep rotations
-		Quaternion steepE = new Quaternion();
+		Quaternion steepE = new QuaternionBuggy();
 		steepE
 				.fromAngles(new float[] { 0, (FastMath.PI / 4) / FARVIEW_GAP, 0 });
-		Quaternion steepW = new Quaternion();
+		Quaternion steepW = new QuaternionBuggy();
 		steepW
 				.fromAngles(new float[] { 0, (-FastMath.PI / 4) / FARVIEW_GAP,
 						0 });
-		Quaternion steepS = new Quaternion();
+		Quaternion steepS = new QuaternionBuggy();
 		steepS
 				.fromAngles(new float[] { (FastMath.PI / 4) / FARVIEW_GAP, 0, 0 });
-		Quaternion steepN = new Quaternion();
+		Quaternion steepN = new QuaternionBuggy();
 		steepN
 				.fromAngles(new float[] { (-FastMath.PI / 4) / FARVIEW_GAP, 0,
 						0 });
@@ -611,16 +611,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final HashMap<Integer, Quaternion> steepRotations_special_FARVIEW = new HashMap<Integer, Quaternion>();
 	static {
 		// steep rotations with special in-one-step rotation
-		Quaternion steepE_noRot = new Quaternion();
+		Quaternion steepE_noRot = new QuaternionBuggy();
 		steepE_noRot.fromAngles(new float[] { FastMath.PI / 2, 0,
 				(3 * FastMath.PI / 4) / FARVIEW_GAP });
-		Quaternion steepW_noRot = new Quaternion();
+		Quaternion steepW_noRot = new QuaternionBuggy();
 		steepW_noRot.fromAngles(new float[] { -FastMath.PI / 2, 0,
 				(FastMath.PI / 4) / FARVIEW_GAP });
-		Quaternion steepS_noRot = new Quaternion();
+		Quaternion steepS_noRot = new QuaternionBuggy();
 		steepS_noRot.fromAngles(new float[] { 0,
 				(FastMath.PI / 4) / FARVIEW_GAP, FastMath.PI / 2 });
-		Quaternion steepN_noRot = new Quaternion();
+		Quaternion steepN_noRot = new QuaternionBuggy();
 		steepN_noRot.fromAngles(new float[] { 0,
 				(-3 * FastMath.PI / 4) / FARVIEW_GAP, -FastMath.PI / 2 });
 
