@@ -154,7 +154,7 @@ public class J3DStandingEngine {
 			this.rY = rY;
 			this.rZ = rZ;
 			hmCurrentCubesForSafeRender = (HashMap<Long, RenderedCube>)hmCurrentCubes.clone();
-			if (!loadRenderedArea)
+			if (!loadRenderedAreaParallel)
 			{
 				uiBase.hud.sr.setVisibility(true, "LOAD");
 			}
@@ -163,8 +163,8 @@ public class J3DStandingEngine {
 
 		@Override
 		public void run() {
-			if (loadRenderedArea) return;
-			loadRenderedArea = true;
+			if (loadRenderedAreaParallel) return;
+			loadRenderedAreaParallel = true;
 			engine.areaResult = null;			
 			areaResult = render(rX,rY,rZ,
 					x, y, z, false,true);
@@ -173,7 +173,7 @@ public class J3DStandingEngine {
 			engine.areaResult = areaResult;
 			} else
 			{
-				loadRenderedArea = false;
+				loadRenderedAreaParallel = false;
 				halt = false;
 			}
 		}
@@ -181,7 +181,7 @@ public class J3DStandingEngine {
 		public boolean halt = false;
 	}
 	
-	public boolean loadRenderedArea = false;
+	public boolean loadRenderedAreaParallel = false;
 	public HashSet<RenderedCube>[] areaResult = null;
 	
 	
@@ -1562,7 +1562,7 @@ public class J3DStandingEngine {
 			Vector3f currLoc = new Vector3f(core.gameState.getCurrentRenderPositions().relativeX*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeY*J3DCore.CUBE_EDGE_SIZE,core.gameState.getCurrentRenderPositions().relativeZ*J3DCore.CUBE_EDGE_SIZE);
 			int mulWalkDist = 1;
 			
-			if (J3DCore.CONTINUOUS_LOAD && !rerender && !loadRenderedArea)
+			if (J3DCore.CONTINUOUS_LOAD && !rerender && !loadRenderedAreaParallel)
 			{
 				if ( lastLoc.distance(currLoc)*mulWalkDist * 1.5f > ((J3DCore.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.VIEW_DISTANCE) // TODO this is ugly calc 1.5f * !!!
 				{
@@ -1586,7 +1586,7 @@ public class J3DStandingEngine {
 				long t0 = System.currentTimeMillis();
 				HashSet<RenderedCube>[] detacheable = areaResult;
 				areaResult = null;
-				loadRenderedArea = false;
+				loadRenderedAreaParallel = false;
 
 				if (true)  {
 					
@@ -1667,6 +1667,7 @@ public class J3DStandingEngine {
 						}
 					}
 				}
+				loadRenderedAreaParallel = false;
 				runningThreads.clear();
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;

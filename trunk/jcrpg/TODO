@@ -88,11 +88,7 @@ o
 OPTIMIZATIONS:
 #############
 
-!!! [ ] deadlock while walking too quick ?! test with slowing the process probably
-
-[X] reorganize RenderedArea. world.getCube part into ->
-		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
-	[ ] TEST!
+[ ] bug with texture state vegetation terrain level conflict...wrongly positioned height. review that code (renderNodes + VegetationSetup)
 
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
@@ -110,6 +106,12 @@ OPTIMIZATIONS:
 	[ ]also some check is needed for water present or not in rendered area
 		and if not render pass should be disabled
 
+
+[X] reorganize RenderedArea. world.getCube part into ->
+		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
+	[X] TEST!
+
+!!! [-] deadlock while walking too quick ?! test with slowing the process probably
 
 [X] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
 	It was the modified locTrans vector of the Trimesh, it shouldn't be used in instantiating the GeometryBatchInstance!
