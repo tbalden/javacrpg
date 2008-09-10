@@ -35,33 +35,33 @@ import com.jme.scene.Node;
 import com.jme.scene.PassNode;
 import com.jme.scene.PassNodeState;
 import com.jme.scene.Spatial;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
 import com.jme.util.resource.ResourceLocatorTool;
 
 public class GeoTileLoader {
-	AlphaState as2; 
-	AlphaState as;
+	BlendState as2; 
+	BlendState as;
 	ModelLoader l = null;
 	public GeoTileLoader(ModelLoader l)
 	{
 		this.l = l;
-        as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+        as = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
         as.setBlendEnabled(true);
-        as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+        as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
         as.setTestEnabled(true);
-        as.setTestFunction(AlphaState.TF_GREATER);
+        as.setTestFunction(BlendState.TestFunction.GreaterThan);
         as.setEnabled(true);
         // alpha used for blending the lightmap
-        as2 = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+        as2 = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
         as2.setBlendEnabled(true);
-        as2.setSrcFunction(AlphaState.SB_DST_COLOR);
-        as2.setDstFunction(AlphaState.DB_SRC_COLOR);
+        as2.setSourceFunction(BlendState.SourceFunction.DestinationColor);
+        as2.setDestinationFunction(BlendState.DestinationFunction.SourceColor);
         as2.setTestEnabled(true);
-        as2.setTestFunction(AlphaState.TF_GREATER);
+        as2.setTestFunction(BlendState.TestFunction.GreaterThan);
         as2.setEnabled(true);
 	}
 	
@@ -550,7 +550,7 @@ public class GeoTileLoader {
 	            	// now we have to tweak the x texture coordinates, dividing it by full atlas element size
 	            	// and adding displacement ratio...
 	            	
-	        		FloatBuffer b = block.getTextureBuffers(0)[0];
+	        		FloatBuffer b = block.getTextureCoords(0).coords;
 	        		float position = place;
 	        		int atlas_size = model.atlasSize;
 	        		float f = 0;
@@ -651,7 +651,7 @@ public class GeoTileLoader {
 		        splattingPassNode.lockShadows();
 
 		        // the copytexturecoords is needed to make splatting work at all
-		        block.copyTextureCoords(0, 0, 1, 0.999f);
+		        block.copyTextureCoordinates(0, 1, 0.999f);
 			}
 			
 		} else 
@@ -670,11 +670,11 @@ public class GeoTileLoader {
 		if (texture==null) {
 			URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, textureName);
 			if (u==null)return null;
-			texture = TextureManager.loadTexture(u,Texture.MM_LINEAR,
-                    Texture.FM_LINEAR);
-
-			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.AM_COMBINE);
+			texture = TextureManager.loadTexture(u,Texture.MinificationFilter.BilinearNoMipMaps,
+		            Texture.MagnificationFilter.NearestNeighbor);
+			
+			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.ApplyMode.Combine);			
 			//texture.setCombineFuncAlpha(combineFuncAlpha)
 			texture.setRotation(J3DCore.qTexture);
 			ModelLoader.textureCache.put(textureName, texture);
@@ -698,9 +698,11 @@ public class GeoTileLoader {
 	    	{
 		        URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, texture);
 		        t0 = TextureManager.loadTexture(u,
-		                Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		        //t0.setWrap(Texture.WM_CLAMP_S_CLAMP_T);//WM_WRAP_S_WRAP_T);
-		        t0.setApply(Texture.AM_MODULATE);
+		        		Texture.MinificationFilter.BilinearNoMipMaps,
+			            Texture.MagnificationFilter.NearestNeighbor);
+				
+				//texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+				t0.setApply(Texture.ApplyMode.Modulate);
 		        //t0.setScale(new Vector3f(1f, 1f, 1.0f));
 		        splatTextureCache.put(texture, t0);
 	    	} 
@@ -724,14 +726,16 @@ public class GeoTileLoader {
         	if (u!=null)
         	{
         		
-    	        t1 = TextureManager.loadTexture(u, Texture.MM_LINEAR_LINEAR,
-    	                Texture.FM_LINEAR);
-    	        //t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
-    	        t1.setApply(Texture.AM_COMBINE);
-    	        t1.setCombineFuncRGB(Texture.ACF_REPLACE);
-    	        t1.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
-    	        t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-    	        t1.setCombineFuncAlpha(Texture.ACF_REPLACE);
+    	        t1 = TextureManager.loadTexture(u, 		        		Texture.MinificationFilter.BilinearNoMipMaps,
+			            Texture.MagnificationFilter.NearestNeighbor);
+				
+				//texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+				t1.setApply(Texture.ApplyMode.Combine);
+
+    	        t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Replace);
+    	        t1.setCombineSrc0RGB(Texture.CombinerSource.Previous);
+    	        t1.setCombineOp0RGB(Texture.CombinerOperandRGB.SourceColor);
+    	        t1.setCombineFuncAlpha(Texture.CombinerFunctionAlpha.Replace);
         	}
         	alphaTextureCache.put(alpha, t1);
     	}

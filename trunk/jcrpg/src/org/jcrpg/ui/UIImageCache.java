@@ -26,6 +26,7 @@ import org.jcrpg.threed.jme.ui.ZoomingQuad;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.TextureState;
@@ -48,7 +49,7 @@ public class UIImageCache {
 	
 				TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
 						.createTextureState();
-				Texture texture = new Texture();
+				Texture texture = new Texture2D();
 				texture.setImage(hudImage);
 	
 				state.setTexture(texture,0);
@@ -87,7 +88,7 @@ public class UIImageCache {
 	
 				TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
 						.createTextureState();
-				Texture texture = new Texture();
+				Texture texture = new Texture2D();
 				texture.setImage(hudImage);
 	
 				state.setTexture(texture,0);
@@ -126,7 +127,7 @@ public class UIImageCache {
 	
 				TextureState state = J3DCore.getInstance().getDisplay().getRenderer()
 						.createTextureState();
-				Texture texture = new Texture();
+				Texture texture = new Texture2D();
 				texture.setImage(hudImage);
 	
 				state.setTexture(texture,0);

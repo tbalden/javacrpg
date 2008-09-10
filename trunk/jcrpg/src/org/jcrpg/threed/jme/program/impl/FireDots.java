@@ -25,7 +25,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ZBufferState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticlePoints;
@@ -58,7 +58,7 @@ public class FireDots extends EffectNode {
 		pPoints.getParticleController().setControlFlow(false);
 		pPoints.warmUp(120);
 
-		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
+		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 
 		this.setRenderState(as1);

@@ -18,11 +18,12 @@
 package org.jcrpg.threed.jme;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 
 
 public class QuaternionBuggy extends com.jme.math.Quaternion {
 		@Override
-	    public void fromAngles(float xAngle, float yAngle, float zAngle) {
+	    public Quaternion fromAngles(float xAngle, float yAngle, float zAngle) {
 	        float angle;
 	        float sr, sp, sy, cr, cp, cy;
 	        angle = zAngle * 0.5f;
@@ -42,6 +43,7 @@ public class QuaternionBuggy extends com.jme.math.Quaternion {
 	        y = (cr * sp * cy + sr * cp * sy);
 	        z = (crcp * sy - srsp * cy);
 	        w = (crcp * cy + srsp * sy);
+	        return this;
 	    }
 
 }

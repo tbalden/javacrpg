@@ -36,6 +36,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.LightState;
@@ -220,7 +221,7 @@ public class Characters {
 				Quad q = Window.loadImageToQuad(new File("./data/ui/bar_meter.png"), hud.core.getDisplay().getWidth()/230f, hud.core.getDisplay().getHeight()/barScreenRatio, 0,0);
 				//Quad q = new Quad("BAR_"+i+p.foreName+p.surName,hud.core.getDisplay().getWidth()/230f,);
 				q.setSolidColor(pointQuadData.get(i));
-				q.setLightCombineMode(LightState.OFF);
+				q.setLightCombineMode(LightCombineMode.Off);
 				q.setLocalTranslation(origoX+i*hud.core.getDisplay().getWidth()/230f,origoY,0f);
 				q.setLocalScale(1f);
 				barPos.add(origoY);

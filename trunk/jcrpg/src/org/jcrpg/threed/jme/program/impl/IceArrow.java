@@ -25,7 +25,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jmex.effects.particles.ParticleFactory;
@@ -43,7 +43,7 @@ public class IceArrow extends EffectNode {
 
 	public IceArrow() {
 		speed = 2;
-		AlphaState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
+		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader
 				.loadTextureStates(new String[] { "flaresmall.jpg" })[0];

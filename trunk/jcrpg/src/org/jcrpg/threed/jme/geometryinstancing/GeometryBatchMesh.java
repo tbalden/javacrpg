@@ -10,9 +10,8 @@ import org.jcrpg.threed.jme.TiledTerrainBlock;
 import org.jcrpg.threed.jme.TiledTerrainBlockUnbuffered;
 
 import com.jme.renderer.Renderer;
-import com.jme.scene.SceneElement;
+import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.TriangleBatch;
 import com.jme.system.DisplaySystem;
 
 /**
@@ -44,7 +43,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	private void init() {
 		instances = new ArrayList<T>(1);
         //modelBound = new AABB();
-        //getBatch(0).setModelBound(new BoundingBox());
+        //setModelBound(new BoundingBox());
 	}
 	
 	public int getNumInstances() {
@@ -108,7 +107,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
             synchronized (instances)
             {
             	
-            	((BoundingBox)getBatch(0).getModelBound()).
+            	((BoundingBox)getModelBound()).
 		    
 	    		modelBound.reset();
 		        for (T instance : instances) {
@@ -116,7 +115,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 		            	modelBound.mergeLocal(instance.getModelBound());
 		        	}
 		        }
-		        modelBound.getBoundingBox((BoundingBox)getBatch(0).getModelBound());
+		        modelBound.getBoundingBox((BoundingBox)getModelBound());
             }
     	}
     }*/
@@ -130,14 +129,17 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     	if (reconstruct) {
     		if (J3DCore.VBO_ENABLED)
     		{
-				TriangleBatch b = getBatch(0);
+				TriMesh b = this;
 				if (b.getVBOInfo()!=null)
 				{
 					//System.out.println("CLEARING VBO");
 					if (b.getVBOInfo().isVBOVertexEnabled())
 						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getVertexBuffer());
 					if (b.getVBOInfo().isVBOTextureEnabled())
-						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getTextureBuffer(0));
+					{
+						if (b.getTextureCoords(0)!=null)
+							DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getTextureCoords(0).coords);
+					}
 					if (b.getVBOInfo().isVBONormalEnabled())
 						DisplaySystem.getDisplaySystem().getRenderer().deleteVBO( b.getNormalBuffer());
 					if (b.getVBOInfo().isVBOColorEnabled())
@@ -159,7 +161,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     	preCommitTime+=System.currentTimeMillis() - preCommitStart;
     }
     
-    public void commit(TriangleBatch batch) {
+    public void commit(TriMesh batch) {
     	if (commit) {
         	commitStart = System.currentTimeMillis();
 	        synchronized (instances)
@@ -184,7 +186,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     public static boolean GLOBAL_CAN_COMMIT = true;
     
     public void onDraw(Renderer r) {
-    	if (getCullMode() == SceneElement.CULL_ALWAYS) {
+    	if (getCullHint() == CullHint.Always) {
     		return;
     	}
     	if (GLOBAL_CAN_COMMIT) preCommit();
@@ -197,11 +199,11 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     public void rebuild()
     {
     	preCommit();
-    	commit(getBatch(0));
+    	commit(this);
     }
     
     public void draw(Renderer r) {
-    	if (GLOBAL_CAN_COMMIT) commit(getBatch(0));
+    	if (GLOBAL_CAN_COMMIT) commit(this);
     	super.draw(r);
     }
     
@@ -211,7 +213,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     
     
     public void createIndexBuffer() {
-    	IntBuffer buff = getBatch(0).getIndexBuffer();
+    	IntBuffer buff = getIndexBuffer();
     	if (buff!=null && buff.capacity()>0)
     	{
     		/*if (buff.capacity()>=getNumIndices())
@@ -225,12 +227,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			BufferPool.releaseIntBuffer(buff);
     		}
     	}
-    	getBatch(0).setIndexBuffer(BufferPool.getIntBuffer(getNumIndices()));
-    	//getBatch(0).setIndexBuffer(BufferUtils.createIntBuffer(getNumIndices()));
+    	setIndexBuffer(BufferPool.getIntBuffer(getNumIndices()));
+    	//setIndexBuffer(BufferUtils.createIntBuffer(getNumIndices()));
     }
     
     public void createVertexBuffer() {
-    	FloatBuffer buff = getBatch(0).getVertexBuffer();
+    	FloatBuffer buff = getVertexBuffer();
     	if (buff!=null && buff.capacity()>0)
     	{
     		if (buff.capacity()>=getNumVertices()*3)
@@ -244,12 +246,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			BufferPool.releaseVector3Buffer(buff);
     		}
     	}
-    	getBatch(0).setVertexBuffer(BufferPool.getVector3Buffer(getNumVertices()));
-    	//getBatch(0).setVertexBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
+    	setVertexBuffer(BufferPool.getVector3Buffer(getNumVertices()));
+    	//setVertexBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
     }
     
     public void createNormalBuffer() {
-    	FloatBuffer buff = getBatch(0).getNormalBuffer();
+    	FloatBuffer buff = getNormalBuffer();
     	if (buff!=null && buff.capacity()>0)
     	{
     		if (buff.capacity()>=getNumVertices()*3)
@@ -263,12 +265,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			BufferPool.releaseVector3Buffer(buff);
     		}
     	}
-    	getBatch(0).setNormalBuffer(BufferPool.getVector3Buffer(getNumVertices()));
-    	//getBatch(0).setNormalBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
+    	setNormalBuffer(BufferPool.getVector3Buffer(getNumVertices()));
+    	//setNormalBuffer(BufferUtils.createVector3Buffer(getNumVertices()));
     }
     
     public void createColorBuffer() {
-    	FloatBuffer buff = getBatch(0).getColorBuffer();
+    	FloatBuffer buff = getColorBuffer();
     	if (buff!=null && buff.capacity()>0)
     	{
     		if (buff.capacity()>=getNumVertices()*4)
@@ -282,12 +284,12 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			BufferPool.releaseFloatBuffer(buff);
     		}
     	}
-    	getBatch(0).setColorBuffer(BufferPool.getFloatBuffer(getNumVertices() * 4));
-    	//getBatch(0).setColorBuffer(BufferUtils.createFloatBuffer  (getNumVertices() * 4));
+    	setColorBuffer(BufferPool.getFloatBuffer(getNumVertices() * 4));
+    	//setColorBuffer(BufferUtils.createFloatBuffer  (getNumVertices() * 4));
 	}
     
     public void createTextureBuffer(int textureUnit) {
-    	FloatBuffer buff = getBatch(0).getTextureBuffer(textureUnit);
+    	FloatBuffer buff = getTextureCoords(0)!=null?getTextureCoords(0).coords:null;
     	if (buff!=null && buff.capacity()>0)
     	{
     		if (buff.capacity()>=getNumVertices()*2)
@@ -301,7 +303,14 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			BufferPool.releaseVector2Buffer(buff);
     		}
     	}
-    	getBatch(0).setTextureBuffer(BufferPool.getVector2Buffer(getNumVertices()), textureUnit);
+    	buff = BufferPool.getVector2Buffer(getNumVertices());
+    	if (getTextureCoords(0)==null)
+    	{
+    		setTextureCoords(new TexCoords(buff), 0);
+    	} else
+    	{
+    		getTextureCoords(0).coords = buff;
+    	}
     	
     }
     
@@ -330,18 +339,19 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
      * Rewind all buffers in a batch 
      * Could a function like this be a part of the batch?
      */
-    public void rewindBuffers(TriangleBatch batch) {
+    public void rewindBuffers(TriMesh batch) {
         rewindBuffer(batch.getIndexBuffer());
         rewindBuffer(batch.getVertexBuffer());
         rewindBuffer(batch.getColorBuffer());
         rewindBuffer(batch.getNormalBuffer());
-        ArrayList<FloatBuffer> textureBuffers = batch.getTextureBuffers();
-        for (FloatBuffer textureBuffer : textureBuffers) {
-            rewindBuffer(textureBuffer);
+        ArrayList<TexCoords> textureBuffers = batch.getTextureCoords();
+        for (TexCoords textureBuffer : textureBuffers) {
+        	if (textureBuffer!=null)
+        		rewindBuffer(textureBuffer.coords);
 		}
 	}
     
-    public void releaseBatch(TriangleBatch batch)
+    public void releaseBatch(TriMesh batch)
     {
         BufferPool.releaseIntBuffer(batch.getIndexBuffer());
         batch.setIndexBuffer(null);
@@ -352,16 +362,17 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
         BufferPool.releaseFloatBuffer(batch.getColorBuffer());
         batch.setColorBuffer(null);
         
-        ArrayList<FloatBuffer> textureBuffers = batch.getTextureBuffers();
-        for (FloatBuffer textureBuffer : textureBuffers) {
-            BufferPool.releaseVector2Buffer(textureBuffer);
+        ArrayList<TexCoords> textureBuffers = batch.getTextureCoords();
+        for (TexCoords textureBuffer : textureBuffers) {
+        	if (textureBuffer!=null)
+        		BufferPool.releaseVector2Buffer(textureBuffer.coords);
 		}
         batch.clearTextureBuffers();
     	batch.removeFromParent();
     	
     }
 
-    public static void releaseBatchExact(TriangleBatch batch, boolean clearAndRemove)
+    public static void releaseBatchExact(TriMesh batch, boolean clearAndRemove)
     {
     	if (batch.getIndexBuffer()!=TiledTerrainBlock.COMMON_INDEX_BUFFER)
     	{
@@ -376,9 +387,10 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
         ExactBufferPool.releaseFloatBuffer(batch.getColorBuffer());
         batch.setColorBuffer(null);
         
-        ArrayList<FloatBuffer> textureBuffers = batch.getTextureBuffers();
-        for (FloatBuffer textureBuffer : textureBuffers) {
-        	ExactBufferPool.releaseVector2Buffer(textureBuffer);
+        ArrayList<TexCoords> textureBuffers = batch.getTextureCoords();
+        for (TexCoords textureBuffer : textureBuffers) {
+        	if (textureBuffer!=null)
+        		ExactBufferPool.releaseVector2Buffer(textureBuffer.coords);
 		}
         if (clearAndRemove)
         {
@@ -403,9 +415,9 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			if (t2.mesh instanceof TiledTerrainBlock && !(t2.mesh instanceof TiledTerrainBlockUnbuffered))
     			{
     				//System.out.println("### RELEASING GEOTILE!");
-    				if (((TiledTerrainBlock)t2.mesh).getBatchCount()>0)
+    				if (((TiledTerrainBlock)t2.mesh)!=null)
     				{
-    					releaseBatchExact(((TiledTerrainBlock)t2.mesh).getBatch(0),true);
+    					releaseBatchExact(((TiledTerrainBlock)t2.mesh),true);
     				}
     				((TiledTerrainBlock)t2.mesh).releaseExtraBuffers();
      			}
@@ -417,23 +429,23 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     {
     	releaseInstanceRelatedOnCleanUp();
     	
-    	if (getBatchCount()>0)
     	{
-	        BufferPool.releaseIntBuffer(getBatch(0).getIndexBuffer());
-	        getBatch(0).setIndexBuffer(null);
-	        BufferPool.releaseVector3Buffer(getBatch(0).getVertexBuffer());
-	        getBatch(0).setVertexBuffer(null);
-	        BufferPool.releaseVector3Buffer(getBatch(0).getNormalBuffer());
-	        getBatch(0).setNormalBuffer(null);
-	        BufferPool.releaseFloatBuffer(getBatch(0).getColorBuffer());
-	        getBatch(0).setColorBuffer(null);
+	        BufferPool.releaseIntBuffer(getIndexBuffer());
+	        setIndexBuffer(null);
+	        BufferPool.releaseVector3Buffer(getVertexBuffer());
+	        setVertexBuffer(null);
+	        BufferPool.releaseVector3Buffer(getNormalBuffer());
+	        setNormalBuffer(null);
+	        BufferPool.releaseFloatBuffer(getColorBuffer());
+	        setColorBuffer(null);
 	        
-	        ArrayList<FloatBuffer> textureBuffers = getBatch(0).getTextureBuffers();
-	        for (FloatBuffer textureBuffer : textureBuffers) {
-	            BufferPool.releaseVector2Buffer(textureBuffer);
+	        ArrayList<TexCoords> textureBuffers = getTextureCoords();
+	        for (TexCoords textureBuffer : textureBuffers) {
+	        	if (textureBuffer!=null)
+	        		BufferPool.releaseVector2Buffer(textureBuffer.coords);
 			}
-	        getBatch(0).clearTextureBuffers();
-	    	getBatch(0).removeFromParent();
+	        clearTextureBuffers();
+	    	removeFromParent();
     	}
 }
 }

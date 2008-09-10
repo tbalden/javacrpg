@@ -15,6 +15,7 @@ import org.lwjgl.opengl.ARBShadow;
 import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.light.DirectionalLight;
 import com.jme.math.Matrix4f;
 import com.jme.math.Vector3f;
@@ -24,7 +25,8 @@ import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.renderer.pass.Pass;
 import com.jme.scene.Spatial;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ClipState;
 import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.CullState;
@@ -55,7 +57,7 @@ public class DirectionalShadowMapPass extends Pass {
     /** The renderer used to produce the shadow map */
 	private TextureRenderer shadowMapRenderer;
 	/** The texture storing the shadow map */
-	private Texture shadowMapTexture;
+	private Texture2D shadowMapTexture;
 	/** The near plane when rendering the shadow map */
 	private float nearPlane = 1f;
 	/** The far plane when rendering the shadow map - currently tuned for the test*/
@@ -78,7 +80,7 @@ public class DirectionalShadowMapPass extends Pass {
 	private LightState noLights;
 	
 	/** The blending to both discard the fragements that have been determined to be free of shadows and to blend into the background scene */
-	private AlphaState discardShadowFragments;
+	private BlendState discardShadowFragments;
 	/** The state applying the shadow map */
 	private TextureState shadowTextureState;
 	/** The bright light used to blend the shadows version into the scene */
@@ -248,17 +250,17 @@ public class DirectionalShadowMapPass extends Pass {
 
 		// the texture that the shadow map will be rendered into. Modulated so 
 		// that it can be blended over the scene. 
-		shadowMapTexture = new Texture();
-		shadowMapTexture.setApply(Texture.AM_MODULATE);
-		shadowMapTexture.setMipmapState(Texture.MM_LINEAR_LINEAR); 
-		shadowMapTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T); 
-		shadowMapTexture.setFilter(Texture.FM_LINEAR);
-		shadowMapTexture.setRTTSource(Texture.RTT_SOURCE_DEPTH);
+		shadowMapTexture = new Texture2D();
+		shadowMapTexture.setApply(Texture.ApplyMode.Modulate);
+		shadowMapTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps); 
+		shadowMapTexture.setWrap(Texture.WrapMode.Clamp); 
+		shadowMapTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
+		shadowMapTexture.setRenderToTextureType(Texture.RenderToTextureType.Depth);
 		shadowMapTexture.setMatrix(new Matrix4f());
-		shadowMapTexture.setEnvironmentalMapMode(Texture.EM_EYE_LINEAR);
+		shadowMapTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.EyeLinear);
 		
 		// configure the texture renderer to output to the texture
-		shadowMapRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(shadowMapSize, shadowMapSize,TextureRenderer.RENDER_TEXTURE_2D);
+		shadowMapRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(shadowMapSize, shadowMapSize,TextureRenderer.Target.Texture2D);
 		shadowMapRenderer.setupTexture(shadowMapTexture); 
 
 		// render state to apply the shadow map texture
@@ -277,7 +279,7 @@ public class DirectionalShadowMapPass extends Pass {
 		colorDisabled.setAll(false); 
 		cullFrontFace = r.createCullState();
 		cullFrontFace.setEnabled(true);
-		cullFrontFace.setCullMode(CullState.CS_FRONT);
+		cullFrontFace.setCullFace(CullState.Face.Front);
 		noLights = r.createLightState();
 		noLights.setEnabled(false);
 		
@@ -286,14 +288,14 @@ public class DirectionalShadowMapPass extends Pass {
 		// to 0 if it's is in shadow. However, we're going to blend it into the scene
 		// so the alpha will be zero if there is no shadow at this location but
 		// > 0 on shadows.
-		discardShadowFragments = r.createAlphaState();
+		discardShadowFragments = r.createBlendState();
 		discardShadowFragments.setEnabled(true);
 		discardShadowFragments.setTestEnabled(true);
 		discardShadowFragments.setReference(0.1f);
-		discardShadowFragments.setTestFunction(AlphaState.TF_GREATER);
+		discardShadowFragments.setTestFunction(BlendState.TestFunction.GreaterThan);
 		discardShadowFragments.setBlendEnabled(true);
-		discardShadowFragments.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		discardShadowFragments.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		discardShadowFragments.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		discardShadowFragments.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
 		
 		// light used to uniformly light the scene when rendering the shadows themselfs
 		// this is so the geometry colour can be used as the source for blending - i.e.
@@ -312,7 +314,7 @@ public class DirectionalShadowMapPass extends Pass {
 		darkMaterial.setShininess(0);
 		darkMaterial.setSpecular(new ColorRGBA(0,0,0,0));
 		darkMaterial.setEmissive(new ColorRGBA(0,0,0,0));
-		darkMaterial.setMaterialFace(MaterialState.MF_FRONT);
+		darkMaterial.setMaterialFace(MaterialState.MaterialFace.Front);
 
 		if (useShaders) {
 			InputStream v = getResource("shadowMap.vert");
@@ -450,12 +452,12 @@ public class DirectionalShadowMapPass extends Pass {
 	
 		r.setPolygonOffset(0, 5); 
 		shadowMapRenderer.render(occluderNodes.get(0), shadowMapTexture, true);
-		int cullModeBefore;
+		CullHint cullModeBefore;
 		for (int i=1;i<occluderNodes.size();i++) {
-			cullModeBefore = occluderNodes.get(i).getCullMode();
-			occluderNodes.get(i).setCullMode(Spatial.CULL_NEVER);
+			cullModeBefore = occluderNodes.get(i).getCullHint();
+			occluderNodes.get(i).setCullHint(CullHint.Never);
 			shadowMapRenderer.render(occluderNodes.get(i), shadowMapTexture, false);
-			occluderNodes.get(i).setCullMode(cullModeBefore);
+			occluderNodes.get(i).setCullHint(cullModeBefore);
 		}
 		r.clearPolygonOffset();
 		replaceEnforcedStates();

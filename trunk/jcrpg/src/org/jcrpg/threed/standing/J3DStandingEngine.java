@@ -65,6 +65,7 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
+import com.jme.scene.Spatial.CullHint;
 
 /**
  * Static elements 3d display part.
@@ -915,12 +916,12 @@ public class J3DStandingEngine {
 											// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 											if (realPooledNode.getChildren()!=null)
 											for (Spatial s:realPooledNode.getChildren()) {
-												if ( (s.getType()&Node.NODE)>0 )
+												if ( (s instanceof Node) )
 												{
 													if (((Node)s).getChildren()!=null)
 													for (Spatial s2:((Node)s).getChildren())
 													{	
-														if ( (s2.getType()&Node.NODE)>0 )
+														if ( s2 instanceof Node )
 														{
 															for (Spatial s3:((Node)s2).getChildren())
 															{
@@ -951,7 +952,7 @@ public class J3DStandingEngine {
 										{
 											extWaterRefNode.attachChild((Node)realPooledNode);
 										}
-										realPooledNode.setCullMode(Node.CULL_NEVER);
+										realPooledNode.setCullHint(CullHint.Never);
 										newNodesToSetCullingDynamic.add(realPooledNode);
 										if (sharedNode)
 										{	
@@ -1319,11 +1320,11 @@ public class J3DStandingEngine {
 									// detailed loop through children, looking for TrimeshGeometryBatch preventing setting localRotation
 									// on it, because its rotation is handled by the TrimeshGeometryBatch's billboarding.
 									for (Spatial s:realPooledNode.getChildren()) {
-										if ( (s.getType()&Node.NODE)>0 )
+										if ( s instanceof Node )
 										{
 											for (Spatial s2:((Node)s).getChildren())
 											{	
-												if ( (s2.getType()&Node.NODE)>0 )
+												if ( s2 instanceof Node )
 												{
 													for (Spatial s3:((Node)s2).getChildren())
 													{
@@ -1356,7 +1357,7 @@ public class J3DStandingEngine {
 									{
 										extWaterRefNode.attachChild((Node)realPooledNode);
 									}
-									realPooledNode.setCullMode(Node.CULL_NEVER);
+									realPooledNode.setCullHint(CullHint.Never);
 									newNodesToSetCullingDynamic.add(realPooledNode);
 									if (sharedNode)
 									{	
@@ -1911,7 +1912,7 @@ public class J3DStandingEngine {
 			{
 				Node n = newNodesToSetCullingDynamic.remove(0);
 				n.unlock();
-				n.setCullMode(Node.CULL_INHERIT);
+				n.setCullHint(CullHint.Inherit);
 				n.updateRenderState(); // update render state for the newly placed nodes...
 				if (n.getChildren()!=null && n.getChildren().size()==1)
 				{
@@ -2266,15 +2267,15 @@ public class J3DStandingEngine {
 			core.getGroundParentNode().attachChild(extRootNode);
 			core.getGroundParentNode().attachChild(intRootNode);
 			core.getGroundParentNode().updateRenderState();
-			extRootNode.setCullMode(Node.CULL_DYNAMIC);
-			intRootNode.setCullMode(Node.CULL_DYNAMIC);
+			extRootNode.setCullHint(CullHint.Dynamic);
+			intRootNode.setCullHint(CullHint.Dynamic);
 		} else
 		{
 			extRootNode.removeFromParent();
 			intRootNode.removeFromParent();
 			core.getRootNode1().updateRenderState();
-			extRootNode.setCullMode(Node.CULL_ALWAYS);
-			intRootNode.setCullMode(Node.CULL_ALWAYS);
+			extRootNode.setCullHint(CullHint.Always);
+			intRootNode.setCullHint(CullHint.Always);
 		}
 	}
 	

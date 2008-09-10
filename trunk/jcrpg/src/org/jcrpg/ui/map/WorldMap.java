@@ -38,6 +38,7 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
@@ -199,21 +200,21 @@ public class WorldMap {
 			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("");
 		}
 		oceanImage = new Image();
-		oceanImage.setType(Image.RGBA8888);
+		oceanImage.setFormat(Image.Format.RGBA8);
 		oceanImage.setHeight(w.sizeZ);
 		oceanImage.setWidth(w.sizeX);
 		ByteBuffer buffer = ByteBuffer.wrap(mapImage);
 		oceanImage.setData(buffer);
 		
 		positionImage = new Image();
-		positionImage.setType(Image.RGBA8888);
+		positionImage.setFormat(Image.Format.RGBA8);
 		positionImage.setHeight(w.sizeZ);
 		positionImage.setWidth(w.sizeX);
 		ByteBuffer buffer2 = ByteBuffer.wrap(positionImageSet);
 		positionImage.setData(buffer2);
 		
 		geoImage = new Image();
-		geoImage.setType(Image.RGBA8888);
+		geoImage.setFormat(Image.Format.RGBA8);
 		geoImage.setHeight(w.sizeZ);
 		geoImage.setWidth(w.sizeX);
 		ByteBuffer buffer3 = ByteBuffer.wrap(geoImageSet);
@@ -286,9 +287,9 @@ public class WorldMap {
 		if (newInstance)
 		{
 			posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-			posTex = new Texture();
-			posTex.setFilter( Texture.FM_LINEAR );
-			posTex.setMipmapState(Texture.MM_LINEAR);
+			posTex = new Texture2D();
+			posTex.setMagnificationFilter( Texture.MagnificationFilter.NearestNeighbor);
+			posTex.setMinificationFilter(Texture.MinificationFilter.NearestNeighborLinearMipMap);
 			posTex.setImage(positionGraphics.getImage());
 			posTexState.setTexture(posTex);
 			posTexState.apply();
@@ -308,9 +309,9 @@ public class WorldMap {
 
 	public TextureState[] getMapTextures()
 	{
-		oceanTex = new Texture();
+		oceanTex = new Texture2D();
 		oceanTex.setImage(oceanImage);
-		geoTex = new Texture();
+		geoTex = new Texture2D();
 		geoTex.setImage(geoImage);
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		baseTexState.setTexture(oceanTex);

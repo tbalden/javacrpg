@@ -8,8 +8,7 @@ import org.jcrpg.threed.jme.geometryinstancing.instance.GeometryInstance;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Geometry;
-import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TriMesh;
 
 /**
  * <code>GeometryBatchSpatialInstance</code> uses <code>GeometryBatchInstanceAttributes</code>
@@ -23,7 +22,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
 	protected AABB modelBound;
 	public FloatBuffer tempVertBuf;
 	
-	protected GeomBatch instanceBatch = null;
+	protected TriMesh instanceBatch = null;
 	
 	protected boolean transformed = false;
 	private boolean updateVerts = false;
@@ -31,10 +30,10 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
 	
 	protected boolean forceUpdate = false;
 	
-	public GeometryBatchSpatialInstance1(Geometry mesh, A attributes) {
+	public GeometryBatchSpatialInstance1(TriMesh mesh, A attributes) {
         super(attributes);
         this.mesh = mesh;
-        instanceBatch = mesh.getBatch(0);
+        instanceBatch = mesh;
         modelBound = new AABB();
         tempVertBuf = ExactBufferPool.getVector3Buffer(mesh.getVertexCount());
     }
@@ -93,7 +92,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
      *
      * @param batch
      */
-    public void commit(GeomBatch batch, boolean force) {
+    public void commit(TriMesh batch, boolean force) {
         int indexStart = commitVertices(batch);
         commitIndices(batch, indexStart);
         commitNormals(batch);
@@ -131,7 +130,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
         return indexStart;
     }
     
-    protected int commitVertices(GeomBatch batch) {
+    protected int commitVertices(TriMesh batch) {
     	// Vertex buffer
        	if (updateVerts) {
             updateVerts = false;
@@ -141,14 +140,14 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
         return 0;
     }
     
-    protected void commitIndices(GeomBatch batch, int indexStart) {
-    	if (!(instanceBatch instanceof TriangleBatch && batch instanceof TriangleBatch)) {
+    protected void commitIndices(TriMesh batch, int indexStart) {
+    	if (!(instanceBatch instanceof TriMesh && batch instanceof TriMesh)) {
     		return;
     	}
     	// Index buffer        
     	if (updateIndices) {
-    		IntBuffer indexBufSrc = ((TriangleBatch)instanceBatch).getIndexBuffer();
-            IntBuffer indexBufDst = ((TriangleBatch)batch).getIndexBuffer();
+    		IntBuffer indexBufSrc = instanceBatch.getIndexBuffer();
+            IntBuffer indexBufDst = batch.getIndexBuffer();
             if (indexBufSrc != null && indexBufDst != null) {
         		updateIndices = false;
 	            indexBufSrc.rewind();
@@ -157,7 +156,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
 	            }
         	} 
         } else {
-    		skipBuffer(((TriangleBatch)instanceBatch).getIndexBuffer(), ((TriangleBatch)batch).getIndexBuffer());
+    		skipBuffer(((TriMesh)instanceBatch).getIndexBuffer(), ((TriMesh)batch).getIndexBuffer());
     	}
     }
     
@@ -177,7 +176,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
         }
     }
     
-    protected void commitNormals(GeomBatch batch) {
+    protected void commitNormals(TriMesh batch) {
     	// Normal buffer
     	if ((forceUpdate || transformed) && attributes.isVisible()) {
     		commitNormals(instanceBatch.getNormalBuffer(), batch.getNormalBuffer());
@@ -186,11 +185,11 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
     	}
     }
         
-    protected void commitTextureCoords(GeomBatch batch) {
+    protected void commitTextureCoords(TriMesh batch) {
     	// Texture buffers
         for (int i = 0; i < 8; i++) {
-            FloatBuffer texBufSrc = instanceBatch.getTextureBuffer(i);
-            FloatBuffer texBufDst = batch.getTextureBuffer(i);
+            FloatBuffer texBufSrc = instanceBatch.getTextureCoords(i)!=null?instanceBatch.getTextureCoords(i).coords:null;
+            FloatBuffer texBufDst = batch.getTextureCoords(i)!=null?batch.getTextureCoords(i).coords:null;
             if (texBufSrc != null && texBufDst != null) {
             	if (forceUpdate && attributes.isVisible()) {
             		texBufSrc.rewind();
@@ -202,7 +201,7 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
         }
     }
     
-	protected void commitColors(GeomBatch batch) {
+	protected void commitColors(TriMesh batch) {
 	 // Color buffer
 	    FloatBuffer colorBufSrc = instanceBatch.getColorBuffer();
 	    FloatBuffer colorBufDst = batch.getColorBuffer();
@@ -237,8 +236,8 @@ public class GeometryBatchSpatialInstance1<A extends GeometryBatchInstanceAttrib
         if (instanceBatch == null) {
             return 0;
         }
-        if ((instanceBatch.getType() & TriangleBatch.TRIANGLEBATCH)>0) {
-        	return ((TriangleBatch)instanceBatch).getMaxIndex();        	
+        if ((instanceBatch instanceof TriMesh)) {
+        	return ((TriMesh)instanceBatch).getMaxIndex();        	
         }
         return 0;
     }

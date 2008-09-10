@@ -5,6 +5,8 @@
 
 package org.jcrpg.threed;
 
+import java.nio.FloatBuffer;
+
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -14,9 +16,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Dome;
 import com.jme.scene.state.LightState;
@@ -28,7 +29,6 @@ import com.jme.util.Timer;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
-import java.nio.FloatBuffer;
  
 /**
  * sky gradient based on "A practical analytic model for daylight"
@@ -85,7 +85,7 @@ public class SkyDome extends Node {
     private Vector3f sunPosition = new Vector3f();
     private ColorXYZ color;
     private ColorXYZ colorTemp;
-    private TriangleBatch batch;
+    private TriMesh batch;
     private FloatBuffer colorBuf;
     private FloatBuffer normalBuf;
     private Vector3f vertex = new Vector3f();
@@ -172,11 +172,11 @@ public class SkyDome extends Node {
         ZBufferState zbuff = DisplaySystem.getDisplaySystem().getRenderer().createZBufferState();
         zbuff.setWritable(false);
         zbuff.setEnabled(true);
-        zbuff.setFunction(ZBufferState.CF_LEQUAL);
+        zbuff.setFunction(ZBufferState.TestFunction.LessThanOrEqualTo);
         setRenderState(zbuff);
-        setCullMode(SceneElement.CULL_NEVER);
-        setLightCombineMode(LightState.OFF);
-        setTextureCombineMode(TextureState.REPLACE);
+        setCullHint(CullHint.Never);
+        setLightCombineMode(LightCombineMode.Off);
+        setTextureCombineMode(TextureCombineMode.Replace);
     }
     
     /**
@@ -425,8 +425,9 @@ public class SkyDome extends Node {
         sunDirection.normalize();
         
         // trough all vertices
-        for (int i = 0; i < dome.getBatchCount(); i++) {
-            batch = dome.getBatch(i);
+        //for (int i = 0; i < dome.getBatchCount(); i++) 
+        {
+            batch = dome;
             
             normalBuf = batch.getNormalBuffer();
             colorBuf = batch.getColorBuffer();
@@ -510,7 +511,7 @@ public class SkyDome extends Node {
      */
     public void setTarget(Spatial node) {
         if (sun != null) {
-            sun.setTarget(node);
+            //sun.setTarget(node);
         }
     }
     
@@ -546,7 +547,7 @@ public class SkyDome extends Node {
         dr.setAmbient(ColorRGBA.gray);
         dr.setDirection(new Vector3f(0.0f, 0.0f, 0.0f));
         
-        sun = new LightNode("SunNode", DisplaySystem.getDisplaySystem().getRenderer().createLightState());
+        sun = new LightNode("SunNode");//, DisplaySystem.getDisplaySystem().getRenderer().createLightState());
         sun.setLight(dr);
         
         Vector3f min2 = new Vector3f( -0.1f, -0.1f, -0.1f);
@@ -555,7 +556,7 @@ public class SkyDome extends Node {
         lightBox.setModelBound(new BoundingBox());
         lightBox.updateModelBound();
         sun.attachChild(lightBox);
-        lightBox.setLightCombineMode(LightState.OFF);
+        lightBox.setLightCombineMode(LightCombineMode.Off);
         
         // Setup the lensflare textures.
         TextureState[] tex = new TextureState[4];
@@ -564,9 +565,9 @@ public class SkyDome extends Node {
                 TextureManager.loadTexture(
                 SkyDome.class.getClassLoader().getResource(
                 "resources/images/texture/flare1.png"),
-                Texture.MM_LINEAR_LINEAR,
-                Texture.FM_LINEAR,
-                Image.RGBA8888,
+                Texture.MinificationFilter.BilinearNearestMipMap,
+                Texture.MagnificationFilter.NearestNeighbor,
+                Image.Format.RGBA8,
                 1.0f,
                 true));
         tex[0].setEnabled(true);
@@ -577,8 +578,8 @@ public class SkyDome extends Node {
                 TextureManager.loadTexture(
                 SkyDome.class.getClassLoader().getResource(
                 "resources/images/texture/flare2.png"),
-                Texture.MM_LINEAR_LINEAR,
-                Texture.FM_LINEAR));
+                Texture.MinificationFilter.BilinearNearestMipMap,
+                Texture.MagnificationFilter.NearestNeighbor));
         tex[1].setEnabled(true);
         tex[1].apply();
         
@@ -587,8 +588,8 @@ public class SkyDome extends Node {
                 TextureManager.loadTexture(
                 SkyDome.class.getClassLoader().getResource(
                 "resources/images/texture/flare3.png"),
-                Texture.MM_LINEAR_LINEAR,
-                Texture.FM_LINEAR));
+                Texture.MinificationFilter.BilinearNearestMipMap,
+                Texture.MagnificationFilter.NearestNeighbor));
         tex[2].setEnabled(true);
         tex[2].apply();
         
@@ -597,8 +598,8 @@ public class SkyDome extends Node {
                 TextureManager.loadTexture(
                 SkyDome.class.getClassLoader().getResource(
                 "resources/images/texture/flare4.png"),
-                Texture.MM_LINEAR_LINEAR,
-                Texture.FM_LINEAR));
+                Texture.MinificationFilter.BilinearNearestMipMap,
+                Texture.MagnificationFilter.NearestNeighbor));
         tex[3].setEnabled(true);
         tex[3].apply();
         

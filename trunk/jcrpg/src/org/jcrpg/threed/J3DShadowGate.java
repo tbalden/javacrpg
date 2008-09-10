@@ -18,14 +18,14 @@
 package org.jcrpg.threed;
 
 import com.jme.renderer.pass.DefaultShadowGate;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TriMesh;
 
 public class J3DShadowGate extends DefaultShadowGate {
 
 	public J3DCore core;
 	
 	@Override
-	public boolean shouldDrawShadows(TriangleBatch batch) {
+	public boolean shouldDrawShadows(TriMesh batch) {
 		//if (true==true)return true;
 		//int l = batch.getParentGeom().getName().length();
 		//if (batch.getParentGeom().getName().charAt(l-1)=='3') return false;
@@ -35,7 +35,7 @@ public class J3DShadowGate extends DefaultShadowGate {
 	}
 
 	@Override
-	public boolean shouldUpdateShadows(TriangleBatch batch) {
+	public boolean shouldUpdateShadows(TriMesh batch) {
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(batch.getName());
 		//if (System.currentTimeMillis()%30>27) return true;
 		// TODO Auto-generated method stub

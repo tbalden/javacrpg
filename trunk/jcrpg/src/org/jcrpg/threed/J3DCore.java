@@ -82,6 +82,7 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
+import com.jme.app.BaseGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
@@ -109,9 +110,11 @@ import com.jme.scene.Spatial;
 import com.jme.scene.Text;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.FragmentProgramState;
@@ -664,8 +667,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void initCore() {
-		this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);// FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG
+		//this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);// FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG
 																	// );
+		//TODO this how?
 		this.start();
 	}
 
@@ -679,7 +683,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			 * Get a DisplaySystem acording to the renderer selected in the
 			 * startup box.
 			 */
-			display = DisplaySystem.getDisplaySystem(properties.getRenderer());
+			display = DisplaySystem.getDisplaySystem(settings.getRenderer());
 
 			display.setMinDepthBits(depthBits);
 			display.setMinStencilBits(stencilBits);
@@ -687,9 +691,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			display.setMinSamples(samples);
 
 			/** Create a window with the startup box's information. */
-			display.createWindow(properties.getWidth(), properties.getHeight(),
-					properties.getDepth(), properties.getFreq(), properties
-							.getFullscreen());
+			display.createWindow(settings.getWidth(), settings.getHeight(),
+					settings.getDepth(), settings.getFrequency(), settings.
+							isFullscreen());
 			logger.info("Running on: " + display.getAdapter()
 					+ "\nDriver version: " + display.getDriverVersion() + "\n"
 					+ display.getDisplayVendor() + " - "
@@ -745,7 +749,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 * Signal to the renderer that it should keep track of rendering
 		 * information.
 		 */
-		display.getRenderer().enableStatistics(true);
+		//display.getRenderer().enableStatistics(true); // TODO
 
 		/** Assign key P to action "toggle_pause". */
 		if (true == true) {
@@ -820,36 +824,39 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			dr.setShadowCaster(false);
 			extLightState.setTwoSidedLighting(false);
 
-			lightNode = new LightNode("light", skydomeLightState);
+			lightNode = new LightNode("light");
 			lightNode.setLight(dr);
+			
+			skydomeLightState.attach(dr);
 
-			lightNode.setTarget(skyParentNode);
+			skyParentNode.setRenderState(skydomeLightState);
+			//lightNode.setTarget(skyParentNode);
 			lightNode.setLocalTranslation(new Vector3f(-4f, -4f, -4f));
 
 			// Setup the lensflare textures.
 			TextureState[] tex = new TextureState[4];
 			tex[0] = display.getRenderer().createTextureState();
 			tex[0].setTexture(TextureManager.loadTexture(
-					"./data/flare/flare1.png", Texture.MM_LINEAR_LINEAR,
-					Texture.FM_LINEAR, Image.RGBA8888, 1.0f, true));
+					"./data/flare/flare1.png", Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor, Image.Format.RGBA8, 1.0f, true));
 			tex[0].setEnabled(true);
 
 			tex[1] = display.getRenderer().createTextureState();
 			tex[1].setTexture(TextureManager.loadTexture(
-					"./data/flare/flare2.png", Texture.MM_LINEAR_LINEAR,
-					Texture.FM_LINEAR));
+					"./data/flare/flare2.png", Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor));
 			tex[1].setEnabled(true);
 
 			tex[2] = display.getRenderer().createTextureState();
 			tex[2].setTexture(TextureManager.loadTexture(
-					("./data/flare/flare3.png"), Texture.MM_LINEAR_LINEAR,
-					Texture.FM_LINEAR));
+					("./data/flare/flare3.png"), Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor));
 			tex[2].setEnabled(true);
 
 			tex[3] = display.getRenderer().createTextureState();
 			tex[3].setTexture(TextureManager.loadTexture(
-					("./data/flare/flare4.png"), Texture.MM_LINEAR_LINEAR,
-					Texture.FM_LINEAR));
+					("./data/flare/flare4.png"), Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor));
 			tex[3].setEnabled(true);
 
 			flare = LensFlareFactory.createBasicLensFlare("flare", tex);
@@ -867,10 +874,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			skyParentNode.attachChild(sunNode);
 
 			Texture texture = TextureManager.loadTexture("./data/textures/low/"
-					+ "sun.png", Texture.MM_LINEAR, Texture.FM_LINEAR);
+					+ "sun.png", Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor);
 
-			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.AM_REPLACE);
+			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.ApplyMode.Replace);//AM_REPLACE);
 			texture.setRotation(J3DCore.qTexture);
 
 			TextureState ts = getDisplay().getRenderer().createTextureState();
@@ -888,13 +896,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			TriMesh moon = new Sphere(o.id, 20, 20, 3.5f);
 
 			Texture texture = TextureManager.loadTexture(
-					"./data/orbiters/moon2.jpg", Texture.MM_LINEAR,
-					Texture.FM_LINEAR);
+					"./data/orbiters/moon2.jpg", Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.NearestNeighbor);//Texture.MM_LINEAR,
+					//Texture.FM_LINEAR);
 
 			if (texture != null) {
 
-				texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-				texture.setApply(Texture.AM_REPLACE);
+				texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+				texture.setApply(Texture.ApplyMode.Replace);//AM_REPLACE);
 				texture.setRotation(qTexture);
 				TextureState state = DisplaySystem.getDisplaySystem()
 						.getRenderer().createTextureState();
@@ -907,7 +916,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			moon.updateRenderState();
 
 			skyParentNode.attachChild(moon);
-			moon.setLightCombineMode(LightState.OFF);
+			moon.setLightCombineMode(LightCombineMode.Off);
 			moon.setRenderState(getDisplay().getRenderer().createFogState());
 			return moon;
 		}
@@ -926,20 +935,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	public LightNode[] createLightsForOrbiter(Orbiter o) {
 		if (o.type.equals(SimpleSun.SIMPLE_SUN_ORBITER)) {
-			LightNode dirLightNode = new LightNode("Sun light " + o.id,
-					extLightState);
+			LightNode dirLightNode = new LightNode("Sun light " + o.id
+					);
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1, 1, 1, 1));
 			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f, 0.6f));
 			dirLight.setDirection(new Vector3f(0, 0, 1));
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
-			dirLightNode.setTarget(extRootNode);
+			
 			dirLight.setShadowCaster(true);
 			extLightState.attach(dirLight);
+			extRootNode.setRenderState(extLightState);
 
-			LightNode pointLightNode = new LightNode("Sun spotlight " + o.id,
-					skydomeLightState);
+			LightNode pointLightNode = new LightNode("Sun spotlight " + o.id);
 			PointLight pointLight = new PointLight();
 			pointLight.setDiffuse(new ColorRGBA(1, 1, 1, 0));
 			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f, 0));
@@ -949,11 +958,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 											// switching off
 			pointLight.setLinear(0.0002f);
 			pointLightNode.setLight(pointLight);
+			skydomeLightState.attach(pointLight);
 
 			return new LightNode[] { dirLightNode, pointLightNode };
 		} else if (o.type.equals(SimpleMoon.SIMPLE_MOON_ORBITER)) {
-			LightNode dirLightNode = new LightNode("Moon light " + o.id,
-					extLightState);
+			LightNode dirLightNode = new LightNode("Moon light " + o.id);
 			DirectionalLight dirLight = new DirectionalLight();
 			dirLight.setDiffuse(new ColorRGBA(1, 1, 1, 1));
 			dirLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f, 1));
@@ -961,11 +970,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			dirLight.setShadowCaster(false);// moon shouldnt cast shadow (?)
 			dirLight.setEnabled(true);
 			dirLightNode.setLight(dirLight);
-			dirLightNode.setTarget(extRootNode);
 			extLightState.attach(dirLight);
+			extRootNode.setRenderState(extLightState);
 
-			LightNode pointLightNode = new LightNode("Moon spotlight " + o.id,
-					skydomeLightState);
+			LightNode pointLightNode = new LightNode("Moon spotlight " + o.id);
 			SpotLight pointLight = new SpotLight();
 			pointLight.setDiffuse(new ColorRGBA(1, 1, 1, 1));
 			pointLight.setAmbient(new ColorRGBA(0.4f, 0.4f, 0.4f, 1));
@@ -974,6 +982,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			pointLight.setAngle(180);
 			pointLight.setShadowCaster(false);
 			pointLightNode.setLight(pointLight);
+			skydomeLightState.attach(pointLight);
 
 			return new LightNode[] { dirLightNode, pointLightNode };
 		}
@@ -1090,7 +1099,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 						//System.out.println("___ "+dir2);
 					}
 
-					l[0].setTarget(extRootNode);
+					//l[0].setTarget(extRootNode);
 					extLightState.attach(l[0].getLight());
 					float[] v = orb.getLightPower(localTime, conditions);
 					vTotal[0] += v[0];
@@ -1107,7 +1116,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 					// 1. is point light for the skysphere
 					l[1].getLight().setEnabled(true);
-					l[1].setTarget(skySphere);
+					//l[1].setTarget(skySphere);
 					skydomeLightState.attach(l[1].getLight());
 					c = new ColorRGBA(v[0], v[1], v[2], 0.6f);
 					l[1].getLight().setDiffuse(c);
@@ -1149,7 +1158,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				counter++;
 				// q.setSolidColor(new
 				// ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
-				if ((q.getType() & Node.TRIMESH) > 0) {
+				if ((q instanceof TriMesh)) {
 					((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 1.3f,
 							vTotal[1] / 1.3f, vTotal[2] / 1.3f, 1f));
 				} else {
@@ -1185,11 +1194,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			skyParentNode.attachChild(skySphere);
 		}
 		if (gameState.getCurrentRenderPositions().internalLight) {
-			skyParentNode.setCullMode(Node.CULL_ALWAYS);
-			skySphere.setCullMode(Node.CULL_ALWAYS);
+			skyParentNode.setCullHint(CullHint.Always);
+			skySphere.setCullHint(CullHint.Always);
 		} else {
-			skyParentNode.setCullMode(Node.CULL_DYNAMIC);
-			skySphere.setCullMode(Node.CULL_DYNAMIC);
+			skyParentNode.setCullHint(CullHint.Dynamic);
+			skySphere.setCullHint(CullHint.Dynamic);
 		}
 		skySphere.updateRenderState(); // do not update root or
 										// groundParentNode, no need for that
@@ -1219,7 +1228,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		sPass.removeOccluder(s);
 		if (s.getChildren() != null)
 			for (Spatial c : s.getChildren()) {
-				if ((c.getType() & Node.NODE) > 0) {
+				if ((c instanceof Node)) {
 					removeOccludersRecoursive((Node) c);
 				}
 			}
@@ -1243,12 +1252,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					((BillboardPartVegetation) c).targetQuad = null;
 
 				}
-				if ((c.getType() & Node.NODE) > 0) {
+				if (c instanceof Node) {
 					hmSolidColorSpatials.remove(c);
 					removeSolidColorQuadsRecoursive((Node) c);
 					((Node) c).removeUserData("rotateOnSteep");
 				}
-				if ((c.getType() & Spatial.TRIMESH) > 0) {
+				if (c instanceof TriMesh) {
 					hmSolidColorSpatials.remove(c);
 					// c.removeFromParent();
 				}
@@ -1929,8 +1938,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	@Override
 	protected void updateInput() {
-		if (!FPSCOUNTER)
-			fpsNode.detachAllChildren();
+		//if (!FPSCOUNTER)
+			//fpsNode.detachAllChildren(); // TODO
 		if (!noInput)
 			super.updateInput();
 	}
@@ -2027,7 +2036,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		skySphere.setModelBound(null); // this must be set to null for lens
 										// flare
 		skySphere.setRenderState(cs_none);
-		skySphere.setCullMode(Node.CULL_NEVER);
+		skySphere.setCullHint(CullHint.Never);
 		VBOInfo v = new VBOInfo(true);
 		skySphere.setVBOInfo(v);
 
@@ -2037,12 +2046,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		// intRootNode.attachChild(skySphereInvisibleGround);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
+				Texture.MinificationFilter.NearestNeighborLinearMipMap, Texture.MagnificationFilter.NearestNeighbor);
 
 		if (texture != null) {
 
-			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.AM_MODULATE);
+			//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
+			//texture.setApply(Texture.AM_MODULATE);
+			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.ApplyMode.Modulate);
+
 			texture.setRotation(qTexture);
 			TextureState state = DisplaySystem.getDisplaySystem().getRenderer()
 					.createTextureState();
@@ -2052,11 +2064,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 		skySphere.updateRenderState();
 
-		if (fpsNode.getChildren() != null && fpsNode.getChildren().size() > 0) {
+		/*if (fpsNode.getChildren() != null && fpsNode.getChildren().size() > 0) {
 			fpsNode.getChild(0).setLocalTranslation(
 					new Vector3f(0, display.getHeight() - 20, 0));
 			fpsNode.getChild(0).setLocalScale(display.getWidth() / 1000f);
-		}
+		}*/ // TODO new fps?
 
 		updateDisplay(null);
 
@@ -2173,13 +2185,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		uiRootNode = new Node();
 		rootNode.attachChild(uiRootNode);
 		ZBufferState zStateOff = display.getRenderer().createZBufferState();
-		zStateOff.setFunction(ZBufferState.CF_ALWAYS);
+		zStateOff.setFunction(ZBufferState.TestFunction.Always);
 		zStateOff.setEnabled(true);
-		uiRootNode.setCullMode(Node.CULL_NEVER);
+		uiRootNode.setCullHint(CullHint.Never);
 		uiRootNode.setRenderState(zStateOff);
 		uiRootNode.setModelBound(new BoundingBox());
 		uiRootNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		uiRootNode.setLightCombineMode(LightState.OFF);
+		uiRootNode.setLightCombineMode(LightCombineMode.Off);
 
 		quadToFixHUDCulling = new Quad("", 0, 0);
 		quadToFixHUDCulling.setModelBound(new BoundingBox());
@@ -2208,9 +2220,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 * groundParentNode.setModelBound(null); rootNode.setModelBound(null);
 		 * intRootNode.setModelBound(null); extRootNode.setModelBound(null);
 		 */
-		intRootNode.setCullMode(Node.CULL_DYNAMIC);
-		extRootNode.setCullMode(Node.CULL_DYNAMIC);
-		groundParentNode.setCullMode(Node.CULL_DYNAMIC);
+		intRootNode.setCullHint(CullHint.Dynamic);
+		extRootNode.setCullHint(CullHint.Dynamic);
+		groundParentNode.setCullHint(CullHint.Dynamic);
 
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
@@ -2220,16 +2232,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
 				.createShadeState();
-		ss.setShade(ShadeState.SM_FLAT);
+		ss.setShadeMode(ShadeState.ShadeMode.Flat);
 		ss.setEnabled(false);
 		// rootNode.setRenderState(ss);
 		// rootNode.clearRenderState(RenderState.RS_SHADE);
 
 		cs_back = display.getRenderer().createCullState();
-		cs_back.setCullMode(CullState.CS_BACK);
+		cs_back.setCullFace(CullState.Face.Back);
 		cs_back.setEnabled(true);
 		cs_none = display.getRenderer().createCullState();
-		cs_none.setCullMode(CullState.CS_NONE);
+		cs_none.setCullFace(CullState.Face.None);
 
 		rootNode.setRenderState(cs_none);
 		/*
@@ -2265,12 +2277,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		rootNode.attachChild(groundParentNode);
 
-		AlphaState as = DisplaySystem.getDisplaySystem().getRenderer()
-				.createAlphaState();
+		BlendState as = DisplaySystem.getDisplaySystem().getRenderer()
+				.createBlendState();
 		as.setEnabled(true);
 		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
 		if (!BLOOM_EFFECT) {
 			if (TEXTURE_QUALITY == 2)
 				as.setReference(0.9f);
@@ -2279,7 +2291,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		} else
 			as.setReference(0.9f);
 		as.setTestEnabled(true);
-		as.setTestFunction(AlphaState.TF_GREATER);// GREATER is good only
+		as.setTestFunction(BlendState.TestFunction.GreaterThan);// GREATER is good only
 
 		fs_external = display.getRenderer().createFogState();
 		fs_external_special = display.getRenderer().createFogState();
@@ -2292,16 +2304,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			fs_external_special.setDensity(0.3f);
 			fs_external_special.setEnd((VIEW_DISTANCE * 1.65f));
 			fs_external_special.setStart(2 * VIEW_DISTANCE / 3);
-			fs_external_special.setDensityFunction(FogState.DF_LINEAR);
-			fs_external_special.setApplyFunction(FogState.AF_PER_VERTEX);
+			fs_external_special.setDensityFunction(FogState.DensityFunction.Linear);
+			fs_external_special.setQuality(FogState.Quality.PerVertex);
 			fs_external_special.setNeedsRefresh(true);
 			fs_external_special.setEnabled(true);
 		} else {
 			fs_external.setEnd((VIEW_DISTANCE ));
 			fs_external.setStart(VIEW_DISTANCE*0.92f);
 		}
-		fs_external.setDensityFunction(FogState.DF_LINEAR);
-		fs_external.setApplyFunction(FogState.AF_PER_VERTEX);
+		fs_external.setDensityFunction(FogState.DensityFunction.Linear);
+		fs_external.setQuality(FogState.Quality.PerVertex);
 		fs_external.setNeedsRefresh(true);
 		fs_external.setEnabled(true);
 		extRootNode.setRenderState(fs_external);
@@ -2313,8 +2325,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		fs_internal.setColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
 		fs_internal.setEnd((VIEW_DISTANCE / 1.15f));
 		fs_internal.setStart(3);
-		fs_internal.setDensityFunction(FogState.DF_LINEAR);
-		fs_internal.setApplyFunction(FogState.AF_PER_VERTEX);
+		fs_internal.setDensityFunction(FogState.DensityFunction.Linear);
+		fs_internal.setQuality(FogState.Quality.PerVertex);
 		intRootNode.setRenderState(fs_internal);
 		intRootNode.setRenderState(as);
 
@@ -2413,10 +2425,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
 				Text t = new Text("Text", "Bloom not supported (FBO needed).");
 				t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				t.setLightCombineMode(LightState.OFF);
+				t.setLightCombineMode(LightCombineMode.Off);
 				t.setLocalTranslation(new Vector3f(0, display.getHeight() - 20,
 						0));
-				fpsNode.attachChild(t);
+				//fpsNode.attachChild(t);
 				BLOOM_EFFECT = false;
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
@@ -2433,10 +2445,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				Jcrpg.LOGGER.warning("!!!!!! DIF NOT SUPPORTED !!!!!!!! ");
 				Text t = new Text("Text", "DoF not supported (FBO needed).");
 				t.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				t.setLightCombineMode(LightState.OFF);
+				t.setLightCombineMode(LightCombineMode.Off);
 				t.setLocalTranslation(new Vector3f(0, display.getHeight() - 20,
 						0));
-				fpsNode.attachChild(t);
+				//fpsNode.attachChild(t);
 				DOF_EFFECT = false;
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! Depth of field!");
@@ -2460,9 +2472,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		waterEffectRenderPass.setReflectedScene(groundParentNode);
 		cam.update();
 
-		fpsNode.getChild(0).setLocalTranslation(
-				new Vector3f(0, display.getHeight() - 20, 0));
-		fpsNode.getChild(0).setLocalScale(display.getWidth() / 1000f);
+		//fpsNode.getChild(0).setLocalTranslation(
+			//	new Vector3f(0, display.getHeight() - 20, 0));
+		//fpsNode.getChild(0).setLocalScale(display.getWidth() / 1000f);
 
 		/*
 		 * Skysphere
@@ -2481,7 +2493,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		skySphere.setModelBound(null); // this must be set to null for lens
 										// flare
 		skySphere.setRenderState(cs_none);
-		skySphere.setCullMode(Node.CULL_NEVER);
+		skySphere.setCullHint(CullHint.Never);
 
 		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 		rootNode.clearRenderState(RenderState.RS_LIGHT);
@@ -2489,12 +2501,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		// intRootNode.attachChild(skySphereInvisibleGround);
 		Texture texture = TextureManager.loadTexture("./data/sky/day/top.jpg",
-				Texture.MM_LINEAR, Texture.FM_LINEAR);
+				Texture.MinificationFilter.NearestNeighborLinearMipMap, Texture.MagnificationFilter.NearestNeighbor);
 
 		if (texture != null) {
 
-			texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.AM_MODULATE);
+			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+			texture.setApply(Texture.ApplyMode.Modulate);
 			texture.setRotation(qTexture);
 			TextureState state = DisplaySystem.getDisplaySystem().getRenderer()
 					.createTextureState();
@@ -2711,7 +2723,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			if (mEngine != null)
 				mEngine.updateScene(tpf);
 			rootNode.updateGeometricState(tpf, true);
-			fpsNode.updateGeometricState(tpf, true);
+			//fpsNode.updateGeometricState(tpf, true);
 
 			// if (BLOOM_EFFECT|| SHADOWS || WATER_SHADER)
 			pManager.updatePasses(tpf);
@@ -2776,7 +2788,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		simpleRender();
 
 		/** Draw the fps node to show the fancy information at the bottom. */
-		r.draw(fpsNode);
+		//r.draw(fpsNode);
 
 		doDebug(r);
 	}
@@ -2812,8 +2824,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 	}
 
-	@Override
-	public void setDialogBehaviour(int behaviour) {
+	//@Override
+	/*public void setDialogBehaviour(int behaviour) {
 		URL url = null;
 		try {
 			url = AbstractGame.class.getResource("./data/ui/settings.png");
@@ -2825,7 +2837,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		} else {
 			setDialogBehaviour(behaviour, "./data/ui/settings.png");
 		}
-	}
+	}*/
 
 	public void setCamera(Camera cam) {
 		this.cam = cam;

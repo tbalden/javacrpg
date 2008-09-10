@@ -64,8 +64,8 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.SceneElement;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TexCoords;
+import com.jme.scene.TriMesh;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -224,42 +224,13 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
         buildTextureCoordinates();
         buildNormals();
         buildColors();
-        TriangleBatch batch = getBatch(0);
-
-        //VBOInfo vbo = new VBOInfo(true);
-        //batch.setVBOInfo(vbo);
-
-        if (useClod) {
-            this.create(null);
-            this.setTrisPerPixel(0.02f);
-        }
     }
     
-    TriangleBatch helperBatch = new TriangleBatch();
+    TriMesh helperBatch = new TriMesh();
     int[] helperHeightMap = null;
     int helperSize = 0;
     
     
-
-    public int getType() {
-        return (SceneElement.GEOMETRY | SceneElement.TRIMESH | SceneElement.TERRAIN_BLOCK);
-    }
-
-    /**
-     * <code>chooseTargetRecord</code> determines which level of detail to
-     * use. If CLOD is not used, the index 0 is always returned.
-     * 
-     * @param r
-     *            the renderer to use for determining the LOD record.
-     * @return the index of the record to use.
-     */
-    public int chooseTargetRecord(Renderer r) {
-        if (useClod) {
-            return super.chooseTargetRecord(r);
-        }
-
-        return 0;
-    }
 
     /**
      * <code>setDetailTexture</code> copies the texture coordinates from the
@@ -273,8 +244,8 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
      *            number of times to repeat the texture across and down the
      *            block
      */
-    public void setDetailTexture(int unit, int repeat) {
-        copyTextureCoords(0, 0, unit, repeat);
+    public void setDetailTexture(int unit, float repeat) {
+        copyTextureCoordinates(0, unit, repeat);
     }
 
     /**
@@ -441,7 +412,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
         Vector3f topLeft = store, topRight = calcVec1, bottomLeft = calcVec2, bottomRight = calcVec3;
 
         int focalSpot = (int) (col + row * size);
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         // find the heightmap point closest to this position (but will always
         // be to the left ( < x) and above (< z) of the spot.
@@ -483,7 +454,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
      * TriMesh.
      */
     private void buildVertices() {
-        TriangleBatch batch = getBatch(0);
+    	TriMesh batch = this;
         batch.setVertexCount(heightMap.length);
         if (SHARED_VERTEX_BUFFER==null)
         {
@@ -581,7 +552,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
     private void buildHelperVertices() {
     	int size = helperSize;
     	int[] heightMap = helperHeightMap;
-        TriangleBatch batch = helperBatch;
+        TriMesh batch = helperBatch;
         batch.setVertexCount(heightMap.length);
         if (SHARED_VERTEX_HELPER_BUFFER==null)
         {
@@ -619,26 +590,27 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
     public void buildTextureCoordinates() {
         float offsetX = offset.x + (offsetAmount * stepScale.x);
         float offsetY = offset.y + (offsetAmount * stepScale.z);
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         FloatBuffer texs = null;
         if (SHARED_TEXTURE_BUFFER==null)
         {
-	        if (batch.getTextureBuffers().get(0)==null || !(batch.getTextureBuffers().get(0).limit()==batch.getVertexCount()*2))
+	        if (batch.getTextureCoords(0)==null || batch.getTextureCoords(0).coords==null || !(batch.getTextureCoords(0).coords.limit()==batch.getVertexCount()*2))
 	        {
-	        	if (batch.getTextureBuffers().get(0)!=null)
+	        	if (batch.getTextureCoords(0)!=null && batch.getTextureCoords(0).coords!=null)
 	        	{
-	        		ExactBufferPool.releaseVector2Buffer(batch.getTextureBuffers().get(0));
+	        		ExactBufferPool.releaseVector2Buffer(batch.getTextureCoords(0).coords);
 	        	}
-	        	batch.getTextureBuffers().set(0,ExactBufferPool.getVector2Buffer(batch.getVertexCount()));
+	        	batch.setTextureCoords(new TexCoords(ExactBufferPool.getVector2Buffer(batch.getVertexCount())), 0);
 	        }
-	        SHARED_TEXTURE_BUFFER = batch.getTextureBuffer(0);
+	        SHARED_TEXTURE_BUFFER = batch.getTextureCoords(0).coords;
         } else
         {
-        	batch.setTextureBuffer(SHARED_TEXTURE_BUFFER, 0);
+        	batch.setTextureCoords(new TexCoords(SHARED_TEXTURE_BUFFER), 0);
+        	//batch.getTextureCoords(0).coords = SHARED_TEXTURE_BUFFER;
         }
         
-        texs = batch.getTextureBuffer(0);
+        texs = batch.getTextureCoords(0).coords;
         //FloatBuffer texs = BufferUtils.createVector2Buffer(batch
           //      .getTextureBuffers().get(0), batch.getVertexCount());
         //batch.getTextureBuffers().set(0, texs);
@@ -654,7 +626,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
         }
         if (atlasTextureCoordinatesNeeded)
         {
-			FloatBuffer b = getTextureBuffers(0)[0];
+			FloatBuffer b = batch.getTextureCoords(0).coords;
 			float position = atlasId;
 			int atlas_size = atlasSize;
 			float f = 0;
@@ -680,7 +652,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
     	// but put the normals into the small sized normals map
     	// (check helperNormalIndex trick, and checking the plus column skip.)
     	
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
         
         if (SHARED_NORMAL_BUFFER==null)
         {
@@ -927,7 +899,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
     public void updateFromHeightMap() {
         if (!hasChanged())
             return;
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         Vector3f point = new Vector3f();
         for (int x = 0; x < size; x++) {
@@ -1085,7 +1057,7 @@ public class TiledTerrainBlockUnbuffered extends TiledTerrainBlock implements Po
 	
 	public boolean hasBuffersPrepared()
 	{
-		return getBatch(0).getVertexBuffer()!=null;
+		return getVertexBuffer()!=null;
 	}
 	public void rebuildBuffers()
 	{

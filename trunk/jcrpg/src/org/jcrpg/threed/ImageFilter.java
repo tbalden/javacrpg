@@ -43,13 +43,13 @@ public abstract class ImageFilter {
                 width = sourceImage.getWidth();
                 height = sourceImage.getHeight();
                 componentCount = 3;
-                if (sourceImage.getType() == Image.RGBA8888) {
+                if (sourceImage.getFormat() == Image.Format.RGBA8) {
                         componentCount = 4;
                 }
                 
-                source = sourceImage.getData();
-                dest = BufferUtils.createByteBuffer(sourceImage.getData().limit());
-                Image destImage = new Image(sourceImage.getType(), width, height, dest);
+                source = sourceImage.getData(0);
+                dest = BufferUtils.createByteBuffer(sourceImage.getData(0).limit());
+                Image destImage = new Image(sourceImage.getFormat(), width, height, dest);
                 
                 filter();
                 

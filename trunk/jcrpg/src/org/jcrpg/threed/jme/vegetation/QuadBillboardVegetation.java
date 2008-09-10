@@ -18,7 +18,7 @@
 package org.jcrpg.threed.jme.vegetation;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
@@ -29,15 +29,10 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.GeomBatch;
-import com.jme.scene.batch.TriangleBatch;
-import com.jme.scene.geometryinstancing.GeometryBatchInstance;
-import com.jme.scene.geometryinstancing.instance.GeometryBatchCreator;
 
 /**
  * Fully billboarded quad vegetation.
@@ -59,14 +54,14 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 	}
 
 	public void addVegetationObject(Spatial target, Vector3f translation, Vector3f scale, Quaternion rotation) {
-		if ((target.getType() & SceneElement.NODE) != 0) {
+		if ((target instanceof Node)) {
 			
 			SharedNode node = new SharedNode("SharedNode", (Node) target);
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
 			node.setLocalRotation(rotation);
 			this.attachChild(node);
-		} else if ((target.getType() & SceneElement.TRIMESH) != 0) {
+		} else if ((target instanceof TriMesh)) {
 			SharedMesh node = new SharedMesh("SharedMesh", (TriMesh) target);
 			node.setLocalTranslation(translation);
 			node.setLocalScale(scale);
@@ -158,9 +153,9 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 
 						// animation
 
-						if (child.getType() == Node.NODE) {
+						if (child instanceof Node) {
 							Node n = (Node) child;
-							ArrayList<Spatial> c2 = n.getChildren();
+							List<Spatial> c2 = n.getChildren();
 							for (Spatial s : c2) {
 								// if (s instanceof TriMesh)
 								{
@@ -170,7 +165,7 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 									if (!(doGrassMove))
 										continue;
 									// CPU computed grass moving
-									TriangleBatch b = q.getBatch(0);
+									TriMesh b = q;
 									FloatBuffer fb = b.getVertexBuffer();
 									for (int fIndex = 0; fIndex < 4 * 3; fIndex++) {
 										boolean f2_1Read = false;

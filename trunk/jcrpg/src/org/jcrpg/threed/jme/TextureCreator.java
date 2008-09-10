@@ -18,16 +18,10 @@
 package org.jcrpg.threed.jme;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.util.HashMap;
 
-import org.jcrpg.threed.J3DCore;
-
 import com.jme.image.Texture;
-import com.jme.math.Vector3f;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
+import com.jme.image.Texture2D;
 import com.jmex.awt.swingui.ImageGraphics;
 
 public class TextureCreator {
@@ -69,9 +63,9 @@ public class TextureCreator {
 				
 		}
 		//TextureState staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-		Texture texture = new Texture();
-		texture.setFilter( Texture.FM_LINEAR );
-		texture.setMipmapState(Texture.MM_LINEAR);
+		Texture texture = new Texture2D();
+		texture.setMagnificationFilter( Texture.MagnificationFilter.NearestNeighbor);
+		texture.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
 		graphics.update();
 		texture.setImage(graphics.getImage());
 		//texture.setScale(new Vector3f(10.1f,10.1f,10.1f));

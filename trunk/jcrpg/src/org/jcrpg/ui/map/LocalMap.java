@@ -31,12 +31,14 @@ import org.jcrpg.world.place.World;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 import com.jmex.awt.swingui.ImageGraphics;
 
 public class LocalMap {
@@ -248,9 +250,10 @@ public class LocalMap {
 			{
 				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NEW STATIC TEX STATE");
 				staticTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
-				staticLayerTex = new Texture();
-				staticLayerTex.setFilter( Texture.FM_LINEAR );
-				staticLayerTex.setMipmapState(Texture.MM_LINEAR);
+				
+				staticLayerTex = new Texture2D(); 
+				staticLayerTex.setMagnificationFilter( Texture.MagnificationFilter.NearestNeighbor);
+				staticLayerTex.setMinificationFilter(Texture.MinificationFilter.NearestNeighborLinearMipMap);
 				staticLayerTex.setImage(staticLayerGraphics.getImage());
 				staticTexState.setTexture(staticLayerTex);
 				staticTexState.apply();
@@ -281,7 +284,7 @@ public class LocalMap {
 		this.world = world;
 		
 		staticLayer = new Image();
-		staticLayer.setType(Image.RGBA8888);
+		staticLayer.setFormat(Image.Format.RGBA8);
 		staticLayer.setHeight(localMapSizeX*pointSizeX);
 		staticLayer.setWidth(localMapSizeY*pointSizeY);
 		

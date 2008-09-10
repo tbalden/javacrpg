@@ -2,8 +2,7 @@ package org.jcrpg.threed.jme.geometryinstancing;
 
 import java.nio.FloatBuffer;
 
-import com.jme.scene.Geometry;
-import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.TriMesh;
 
 /**
  * <code>GeometryBatchTangentSpatialInstance</code> extends <code>GeometryBatchSpatialInstance</code>
@@ -15,7 +14,7 @@ public class GeometryBatchTangentSpatialInstance<A extends GeometryBatchInstance
 	private FloatBuffer tangentBufDst;
 	private FloatBuffer tangentBufSrc;
 	
-    public GeometryBatchTangentSpatialInstance(Geometry mesh, FloatBuffer tangentBufSrc, A attributes) {
+    public GeometryBatchTangentSpatialInstance(TriMesh mesh, FloatBuffer tangentBufSrc, A attributes) {
         super(mesh, attributes);
         this.tangentBufSrc = tangentBufSrc;
     }    
@@ -42,7 +41,7 @@ public class GeometryBatchTangentSpatialInstance<A extends GeometryBatchInstance
         }
     }
     
-    protected void commitNormals(GeomBatch batch) {
+    protected void commitNormals(TriMesh batch) {
     	super.commitNormals(batch);
     	commitTangents();    	
     }

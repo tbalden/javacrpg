@@ -22,8 +22,11 @@ import java.util.HashMap;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -48,16 +51,16 @@ public class SystemRelated {
 		{
 			Quad q = new Quad("Q_"+quString,hud.core.getDisplay().getWidth()/18,hud.core.getDisplay().getHeight()/14);
 			Image baseImage = TextureManager.loadImage(new File(images[y]).toURI().toURL(),true);
-			Texture base_tex = new Texture();
+			Texture base_tex = new Texture2D();
 			base_tex.setImage(baseImage);			
 	        TextureState state = hud.core.getDisplay().getRenderer().createTextureState();
 			state.setTexture(base_tex, 0);
 			q.setRenderState(state);
-			q.setCullMode(Quad.CULL_ALWAYS);
+			q.setCullHint(CullHint.Always);
 			q.setRenderState(hud.hudAS);
 	        q.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        q.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/40)*2+(y*(hud.core.getDisplay().getWidth()/17)),hud.core.getDisplay().getHeight()-(1*(hud.core.getDisplay().getHeight()/36))*2,0));
-	        q.setLightCombineMode(LightState.OFF);
+	        q.setLightCombineMode(LightCombineMode.Off);
 	        q.updateRenderState();
 	        hmQuad.put(quString, q);
 			hud.hudNode.attachChild(q);
@@ -68,7 +71,7 @@ public class SystemRelated {
 	public void setVisibility(boolean visible, String id)
 	{
 		try {
-			hmQuad.get(id).setCullMode(visible?Quad.CULL_NEVER:Quad.CULL_ALWAYS);
+			hmQuad.get(id).setCullHint(visible?CullHint.Never:CullHint.Always);
 			hmQuad.get(id).updateRenderState();
 		} catch (Exception ex)
 		{

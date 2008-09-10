@@ -26,10 +26,12 @@ import org.jcrpg.ui.map.WorldMap;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
@@ -43,16 +45,17 @@ public class Map extends Window {
 		this.wmap = wmap;
         // main hud image area
 
-        AlphaState hudAS = core.getDisplay().getRenderer().createAlphaState();
-        hudAS.setBlendEnabled(true);
+		BlendState hudAS = base.hud.hudAS;
+        //AlphaState hudAS = core.getDisplay().getRenderer().createAlphaState();
+        //hudAS.setBlendEnabled(true);
   
-        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+/*        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
         hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
         hudAS.setTestEnabled(false);
-        hudAS.setEnabled(true);
+        hudAS.setEnabled(true);*/
         
         TextureState frameState= core.getDisplay().getRenderer().createTextureState();
-        Texture frameTex = new Texture();
+        Texture frameTex = new Texture2D();
         Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.dds").toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
@@ -93,7 +96,7 @@ public class Map extends Window {
         {
         	Quad hudQuad = new Quad("hud_pos", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        hudQuad.setLightCombineMode(LightState.OFF);
+	        hudQuad.setLightCombineMode(LightCombineMode.Off);
 	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
 	        wmap.registerQuad(hudQuad);
 	        windowNode.attachChild(hudQuad);
