@@ -50,7 +50,8 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 
@@ -288,7 +289,7 @@ public class J3DMovingEngine {
 		if (zInFG==null)
 		{
 			zInFG = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
-			zInFG.setFunction(ZBufferState.CF_ALWAYS);
+			zInFG.setFunction(ZBufferState.TestFunction.Always);
 		}
 		return zInFG;
 		
@@ -316,9 +317,9 @@ public class J3DMovingEngine {
 				slottextNode.setLocalTranslation(0.1f*addedCounter, 0f, 0f);
 				ZBufferState state = getZBuffInForegroundState();
 				n.attachChild(slottextNode);
-				slottextNode.setCullMode( SceneElement.CULL_NEVER );
+				slottextNode.setCullHint( CullHint.Never);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-				slottextNode.setTextureCombineMode( TextureState.REPLACE );
+				slottextNode.setTextureCombineMode( TextureCombineMode.Replace );
 				n.setRenderState(state);
 				addedCounter++;
 			}
@@ -340,11 +341,11 @@ public class J3DMovingEngine {
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.getSize(), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
 			n.attachChild(slottextNode);
-			slottextNode.setCullMode( SceneElement.CULL_NEVER );
-			slottextNode.setTextureCombineMode( TextureState.REPLACE );
+			slottextNode.setCullHint( CullHint.Never);
+			slottextNode.setTextureCombineMode( TextureCombineMode.Replace );
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
-			s.setFunction(ZBufferState.CF_ALWAYS);
+			s.setFunction(ZBufferState.TestFunction.Always);
 			//s.setEnabled(false);
 			//slottextNode.setRenderState(s);
 			n.setRenderState(s);
@@ -371,10 +372,10 @@ public class J3DMovingEngine {
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
 			n.attachChild(slottextNode);
-			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			slottextNode.setCullHint( CullHint.Never);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
-			s.setFunction(ZBufferState.CF_ALWAYS);
+			s.setFunction(ZBufferState.TestFunction.Always);
 			//slottextNode.setRenderState(s);
 			//s.setEnabled(false);
 			n.setRenderState(s);
@@ -394,9 +395,9 @@ public class J3DMovingEngine {
 			//n.setAlignment(BillboardNode.AXIAL_Z);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText("o", 1, new ColorRGBA(0.3f,0.9f,0.3f,1f),new ColorRGBA(0.1f,0.6f,0.1f,1f),true);
 			n.attachChild(slottextNode);
-			slottextNode.setCullMode( SceneElement.CULL_NEVER );
+			slottextNode.setCullHint( CullHint.Never);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
-			s.setFunction(ZBufferState.CF_ALWAYS);
+			s.setFunction(ZBufferState.TestFunction.Always);
 			//slottextNode.setRenderState(s);
 			n.setRenderState(s);
 			n.setLocalRotation(J3DCore.qT);

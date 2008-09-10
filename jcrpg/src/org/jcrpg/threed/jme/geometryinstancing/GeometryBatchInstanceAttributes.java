@@ -21,7 +21,7 @@ public class GeometryBatchInstanceAttributes extends GeometryInstanceAttributes 
     	this(new Vector3f(mesh.getLocalTranslation()), 
     		 new Vector3f(mesh.getLocalScale()), 
     		 new Quaternion(mesh.getLocalRotation()), true, 
-    		 new ColorRGBA(mesh.getBatch(0).getDefaultColor()));
+    		 new ColorRGBA(mesh.getDefaultColor()));
     }
     
     public GeometryBatchInstanceAttributes(GeometryBatchInstanceAttributes attributes) {

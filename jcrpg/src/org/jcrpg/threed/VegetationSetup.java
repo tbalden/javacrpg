@@ -29,6 +29,7 @@ import org.jcrpg.world.place.SurfaceHeightAndType;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.image.Texture.CombinerScale;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -36,8 +37,10 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
+import com.jme.scene.Spatial.LightCombineMode;
+import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
@@ -45,17 +48,17 @@ import com.jme.system.DisplaySystem;
 
 public class VegetationSetup {
 
-	static AlphaState as = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+	static BlendState as = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
 	
 	static {
 
 	    as.setEnabled(true);
 		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+		as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
 		as.setReference(0.3f); // the grass needs a higher value for bugfixing blueness of grass blended!
 		as.setTestEnabled(true);
-		as.setTestFunction(AlphaState.TF_GREATER);//GREATER is good only
+		as.setTestFunction(BlendState.TestFunction.GreaterThan);//GREATER is good only
 	}
 
 
@@ -102,7 +105,7 @@ public class VegetationSetup {
 		    		if (tm.atlasTexture)
 		    		{
 		    			
-		        		FloatBuffer b = quad.getTextureBuffers(0)[0];
+		        		FloatBuffer b = quad.getTextureCoords(0).coords;
 		        		float position = tm.atlasId;
 		        		int atlas_size = tm.atlasSize;
 		        		float f = 0;
@@ -119,25 +122,25 @@ public class VegetationSetup {
 		    		
 					
 					Texture t1 = ts[i].getTexture();
-					t1.setFilter(Texture.FM_LINEAR);
-					t1.setMipmapState(Texture.MM_NEAREST);
-					t1.setApply(Texture.AM_MODULATE);
-					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineScaleRGB(1.0f);
+					t1.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+					t1.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
+					t1.setApply(Texture.ApplyMode.Modulate);
+					t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+					t1.setCombineSrc0RGB(Texture.CombinerSource.TextureUnit0);
+					t1.setCombineOp0RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineSrc1RGB(Texture.CombinerSource.TextureUnit1);
+					t1.setCombineOp1RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineScaleRGB(CombinerScale.One);
 					quad.setRenderState(ts[i]);
 					quad.setRenderState(as);
 					if (!internal) {
-						quad.setLightCombineMode(LightState.OFF);
+						quad.setLightCombineMode(LightCombineMode.Off);
 						quad.setSolidColor(new ColorRGBA(1,1,1,1));
 						J3DCore.hmSolidColorSpatials.put(quad,quad);
 					}
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
-					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
 					quad.setRenderState(ms);
 					
 					n.attachChild(quad);
@@ -232,25 +235,25 @@ public class VegetationSetup {
 					quad.updateModelBound();
 					
 					Texture t1 = ts[i].getTexture();
-					t1.setFilter(Texture.FM_LINEAR);
-					t1.setMipmapState(Texture.MM_NEAREST);
-					t1.setApply(Texture.AM_MODULATE);
-					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineScaleRGB(1.0f);
+					t1.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+					t1.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
+					t1.setApply(Texture.ApplyMode.Modulate);
+					t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+					t1.setCombineSrc0RGB(Texture.CombinerSource.TextureUnit0);
+					t1.setCombineOp0RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineSrc1RGB(Texture.CombinerSource.TextureUnit1);
+					t1.setCombineOp1RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineScaleRGB(CombinerScale.One);
 					quad.setRenderState(ts[i]);
 					quad.setRenderState(as);
 					if (!internal) {
-						quad.setLightCombineMode(LightState.OFF);
+						quad.setLightCombineMode(LightCombineMode.Off);
 						quad.setSolidColor(new ColorRGBA(1,1,1,1));
 						J3DCore.hmSolidColorSpatials.put(quad,quad); // if not using this strangely quads get light colored... TODO
 					}
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
-					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
 					quad.setRenderState(ms);
 					
 					n.attachChild(quad);
@@ -354,20 +357,22 @@ public class VegetationSetup {
 					quad.updateModelBound();
 					
 					Texture t1 = ts[i].getTexture();
-					t1.setApply(Texture.AM_MODULATE);
-					t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-					t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
-					t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-					t1.setCombineScaleRGB(1.0f);
+					t1.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+					t1.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps);
+					t1.setApply(Texture.ApplyMode.Modulate);
+					t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+					t1.setCombineSrc0RGB(Texture.CombinerSource.TextureUnit0);
+					t1.setCombineOp0RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineSrc1RGB(Texture.CombinerSource.TextureUnit1);
+					t1.setCombineOp1RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+					t1.setCombineScaleRGB(CombinerScale.One);
 					quad.setRenderState(ts[i]);
 					quad.setRenderState(as);
-					quad.setLightCombineMode(LightState.OFF);
+					quad.setLightCombineMode(LightCombineMode.Off);
 					quad.setSolidColor(new ColorRGBA(1,1,1,1));
 					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
-					ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
 					quad.setRenderState(ms);
 
 					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)

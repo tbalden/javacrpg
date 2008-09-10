@@ -110,7 +110,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			parentOrig = new Node();
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
-			if (!internal) parentOrig.setLightCombineMode(LightState.OFF);
+			if (!internal) parentOrig.setLightCombineMode(lightCombineMode.Off);
 			sharedParentCache.put(id+internal,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);

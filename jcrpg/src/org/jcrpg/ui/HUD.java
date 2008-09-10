@@ -30,13 +30,14 @@ import org.jcrpg.world.ai.EntityMemberInstance;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.LightState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.TextureManager;
@@ -50,7 +51,7 @@ public class HUD {
 	
 	public HUDParams params;
 	
-	public AlphaState hudAS;
+	public BlendState hudAS;
 	public DirectionTimeMeter meter;
 	public SystemRelated sr;
 	public TextBox mainBox;
@@ -84,7 +85,7 @@ public class HUD {
         mapQuad = new Quad("hud", (1f/sizeX) * core.getDisplay().getWidth()/12, (1f/sizeY) *(core.getDisplay().getHeight()/9));
         mapQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         mapQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth() - dispX*(core.getDisplay().getWidth()/24),dispY*(core.getDisplay().getHeight()/18),0));
-        mapQuad.setLightCombineMode(LightState.OFF);
+        mapQuad.setLightCombineMode(LightCombineMode.Off);
         localMap = new LocalMap(core.gameState.world, core.renderedArea);
         localMap.registerQuad(mapQuad);
         mapQuad.setRenderState(hudAS);
@@ -107,16 +108,16 @@ public class HUD {
         Image hudImage = TextureManager.loadImage(new File(params.image).toURI().toURL(),true);
 		
         TextureState state = core.getDisplay().getRenderer().createTextureState();
-        Texture texture = new Texture();
+        Texture texture = new Texture2D();
         texture.setImage(hudImage);
         state.setTexture(texture);
         hudQuad.setRenderState(state);
 
-        hudAS = core.getDisplay().getRenderer().createAlphaState();
+        hudAS = core.getDisplay().getRenderer().createBlendState();
         hudAS.setBlendEnabled(true);
   
-        hudAS.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-        hudAS.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+        hudAS.setSourceFunction( BlendState.SourceFunction.SourceAlpha);
+        hudAS.setDestinationFunction( BlendState.DestinationFunction.OneMinusSourceAlpha);
         hudAS.setTestEnabled(false);
         hudAS.setEnabled(true);
         hudQuad.setRenderState(hudAS);

@@ -24,10 +24,12 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -57,11 +59,11 @@ public class DirectionTimeMeter {
 		Image baseImage = TextureManager.loadImage(new File("./data/ui/meter.png").toURI().toURL(),true);
 		Image signDirImage = TextureManager.loadImage(new File("./data/ui/sign1.png").toURI().toURL(),true);
 		Image signSunImage = TextureManager.loadImage(new File("./data/ui/sign_sun.png").toURI().toURL(),true);
-		base_tex = new Texture();
+		base_tex = new Texture2D();
 		base_tex.setImage(baseImage);
-		sign_dir = new Texture();
+		sign_dir = new Texture2D();
 		sign_dir.setImage(signDirImage);
-		sign_sun = new Texture();
+		sign_sun = new Texture2D();
 		sign_sun.setImage(signSunImage);
 		
         TextureState state = hud.core.getDisplay().getRenderer().createTextureState();
@@ -78,7 +80,7 @@ public class DirectionTimeMeter {
 		quad.setRenderState(hud.hudAS);
         quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         quad.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
-        quad.setLightCombineMode(LightState.OFF);
+        quad.setLightCombineMode(LightCombineMode.Off);
         quad.updateRenderState();
 
 		quad_sign_dir = new Quad("SIGN_DIR",hud.core.getDisplay().getWidth()/13, (hud.core.getDisplay().getHeight()/9));
@@ -86,7 +88,7 @@ public class DirectionTimeMeter {
 		quad_sign_dir.setRenderState(hud.hudAS);
         quad_sign_dir.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         quad_sign_dir.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
-        quad_sign_dir.setLightCombineMode(LightState.OFF);
+        quad_sign_dir.setLightCombineMode(LightCombineMode.Off);
         quad_sign_dir.updateRenderState();
 
 		quad_sign_sun = new Quad("SIGN_SUN",hud.core.getDisplay().getWidth()/13, (hud.core.getDisplay().getHeight()/9));
@@ -94,7 +96,7 @@ public class DirectionTimeMeter {
 		quad_sign_sun.setRenderState(hud.hudAS);
         quad_sign_sun.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
         quad_sign_sun.setLocalTranslation(new Vector3f((hud.core.getDisplay().getWidth()/24.7f),(hud.core.getDisplay().getHeight()/18.5f),0));
-        quad_sign_sun.setLightCombineMode(LightState.OFF);
+        quad_sign_sun.setLightCombineMode(LightCombineMode.Off);
         quad_sign_sun.updateRenderState();
 		
 	}

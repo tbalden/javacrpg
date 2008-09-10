@@ -21,6 +21,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
@@ -32,6 +33,7 @@ import org.jcrpg.util.HashUtil;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.image.Texture.CombinerScale;
 import com.jme.math.FastMath;
 import com.jme.math.Matrix3f;
 import com.jme.math.Quaternion;
@@ -43,9 +45,7 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
 /**
@@ -192,22 +192,22 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		}
 		for (int i=0; i<states.length; i++) {
 			Texture t1 = states[i].getTexture();
-			t1.setApply(Texture.AM_MODULATE);
-			t1.setCombineFuncRGB(Texture.ACF_MODULATE);
-			t1.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-			t1.setCombineOp0RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-			t1.setCombineSrc1RGB(Texture.ACS_TEXTURE);
-			t1.setCombineOp1RGB(Texture.ACO_ONE_MINUS_SRC_COLOR);
-			t1.setCombineScaleRGB(1.0f);
+			t1.setApply(Texture.ApplyMode.Modulate);
+			t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+			t1.setCombineSrc0RGB(Texture.CombinerSource.TextureUnit0);
+			t1.setCombineOp0RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+			t1.setCombineSrc1RGB(Texture.CombinerSource.TextureUnit1);
+			t1.setCombineOp1RGB(Texture.CombinerOperandRGB.OneMinusSourceColor);
+			t1.setCombineScaleRGB(CombinerScale.One);
 		}
 		
 
 		if (child != null) {
 			{
 				{
-					if ((child.getType() & Node.NODE) != 0) {
+					if ((child instanceof Node)) {
 						Node n = (Node) child;
-						ArrayList<Spatial> c2 = n.getChildren();
+						List<Spatial> c2 = n.getChildren();
 						//int sCounter = 0;
 						for (Spatial s2 : c2) {
 							ArrayList<Spatial> spatials = new ArrayList<Spatial>();
@@ -240,8 +240,10 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 									if (model.partNameToTextureCount.containsKey(key)) 
 									{
 	
-										for (int bc = 0; bc < q.getBatchCount(); bc++) {
-											TriangleBatch b = q.getBatch(bc);
+										//for (int bc = 0; bc < q.getBatchCount(); bc++)
+										
+										{
+											TriMesh b = q;//q.getBatch(bc);
 											FloatBuffer fb = b.getVertexBuffer();
 											//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("BATCH!!"
 												//	+ fb.capacity() + " " + bc);
@@ -409,18 +411,18 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (model.quadLightStateOff)
 			{
 				if (!internal) {
-					targetQuad.setLightCombineMode(LightState.OFF); // if this is set off, all sides of the tree equally lit
+					targetQuad.setLightCombineMode(LightCombineMode.Off); // if this is set off, all sides of the tree equally lit
 					J3DCore.hmSolidColorSpatials.put(targetQuad,targetQuad); // if not using this strangely quads get light colored... TODO
 				}
 			}
 			targetQuad.setSolidColor(new ColorRGBA(1,1,1,1));
 			targetQuad.setRenderState(states[model.partNameToTextureCount.get(key).intValue()]);
 			targetQuad.setLocalRotation(new Quaternion());
-			TriangleBatch tBatch = targetQuad.getBatch(0);
+			TriMesh tBatch = targetQuad;
 			
 			if (model.atlasTexture)
 			{
-        		FloatBuffer b = targetQuad.getTextureBuffers(0)[0];
+        		FloatBuffer b = targetQuad.getTextureCoords(0).coords;
         		float position = model.atlasId;
         		int atlas_size = model.atlasSize;
         		if (model.atlasMultiTextureParts)
@@ -613,12 +615,12 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 					
 						// animation
 	
-						if (child.getType() == Node.NODE) {
+						if (child instanceof Node) {
 							Node n = (Node) child;
-							ArrayList<Spatial> c2 = n.getChildren();
+							List<Spatial> c2 = n.getChildren();
 							int sCounter = 0;
 							for (Spatial s : c2) {
-								if ( (s.getType() & Node.TRIMESH)!=0)
+								if ( (s instanceof TriMesh))
 								{
 									// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SPATIAL: "+s.getName()+"
 									// "+sCounter++);
@@ -636,7 +638,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 										if (!(doGrassMove))
 											continue;
 										// CPU computed grass moving
-										TriangleBatch b = q.getBatch(0);
+										TriMesh b = q;
 										FloatBuffer fb = b.getVertexBuffer();
 										for (int fIndex = 0; fIndex < 4 * 3; fIndex++) {
 											boolean f2_1Read = false;

@@ -49,6 +49,7 @@ import org.lwjgl.opengl.GLContext;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.math.FastMath;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
@@ -57,15 +58,14 @@ import com.jme.scene.DistanceSwitchModel;
 import com.jme.scene.Geometry;
 import com.jme.scene.ImposterNode;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.SharedNode;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
-import com.jme.scene.state.LightState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -104,19 +104,19 @@ public class ModelLoader {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    alphaStateBase = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+	    alphaStateBase = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
 	    alphaStateBase.setBlendEnabled(true);
-	    alphaStateBase.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-	    alphaStateBase.setDstFunction(AlphaState.DB_ONE);
+	    alphaStateBase.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+	    alphaStateBase.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
 	    alphaStateBase.setTestEnabled(true);
-	    alphaStateBase.setTestFunction(AlphaState.TF_GREATER);
+	    alphaStateBase.setTestFunction(BlendState.TestFunction.GreaterThan);
 	    alphaStateBase.setEnabled(true);
 	    zBufferStateOff = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 	    zBufferStateOff.setEnabled(false);
 	    
 	}
 	
-	public AlphaState alphaStateBase = null;
+	public BlendState alphaStateBase = null;
 	public ZBufferState zBufferStateOff = null;
 	
     
@@ -132,8 +132,8 @@ public class ModelLoader {
     
     int counter=0;
     
-    //AlphaState as;
-    AlphaState as_off;
+    //BlendState as;
+    BlendState as_off;
 
     HashMap<String, Node> vegetationTargetCache = new HashMap<String, Node>();
 
@@ -466,7 +466,7 @@ public class ModelLoader {
      * Sets mipmap rendering state to a scenelement recoursively.
      * @param sp
      */
-    private void setTextures(SceneElement sp, boolean mipmap) {
+    private void setTextures(Spatial sp, boolean mipmap) {
         if (sp instanceof Node) {
             Node n = (Node) sp;
           
@@ -486,19 +486,15 @@ public class ModelLoader {
             //g.clearRenderState(RenderState.RS_ZBUFFER);
             
             if (ts1!=null) {
-                ts1.setCorrection(TextureState.CM_PERSPECTIVE);
+                ts1.setCorrectionType(TextureState.CorrectionType.Perspective);
                 for (int i=0; i<ts1.getNumberOfSetTextures();i++)
     		    {
     		    	Texture t = ts1.getTexture(i);
     		    	if (mipmap && J3DCore.MIPMAP_GLOBAL) {
-    		    		t.setFilter(Texture.FM_LINEAR);
-    		    		t.setMipmapState(Texture.MM_LINEAR_LINEAR);
+    		    		t.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
+    		    		t.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
     		    	}
     		    }
-            }
-            for (int x = 0; x < g.getBatchCount(); x++) {
-            	
-            	setTextures(g.getBatch(x),mipmap);
             }
         }
     }
@@ -600,20 +596,20 @@ public class ModelLoader {
 		            try {
 			            Texture tex = null;
 		            	if (transformNormal) {
-		            		tex = new Texture();
+		            		tex = new Texture2D();
 		            		Image heightImage = TextureManager.loadImage(new File("./data/textures/"+TEXDIR+normalNames[i]).toURI().toURL(),true);
 		            		Image bumpImage = new SobelImageFilter().apply(heightImage);
 				            tex.setImage(bumpImage);
 		            	} else
 		            	{
-				            tex = TextureManager.loadTexture("./data/textures/"+TEXDIR+normalNames[i],Texture.MM_LINEAR,
-						            Texture.FM_LINEAR);
+				            tex = TextureManager.loadTexture("./data/textures/"+TEXDIR+normalNames[i],Texture.MinificationFilter.BilinearNoMipMaps,
+						            Texture.MagnificationFilter.NearestNeighbor);
 		            	}
-						tex.setWrap(Texture.WM_WRAP_S_WRAP_T);
-						tex.setApply(Texture.AM_COMBINE);
-						tex.setCombineFuncRGB(Texture.ACF_DOT3_RGB);
-						tex.setCombineSrc0RGB(Texture.ACS_TEXTURE);
-						tex.setCombineSrc1RGB(Texture.ACS_PRIMARY_COLOR);
+		    			tex.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+		    			tex.setApply(Texture.ApplyMode.Combine);
+						tex.setCombineFuncRGB(Texture.CombinerFunctionRGB.Dot3RGB);
+						tex.setCombineSrc0RGB(Texture.CombinerSource.TextureUnit0);
+						tex.setCombineSrc1RGB(Texture.CombinerSource.PrimaryColor);
 						ts.setTexture(tex, 0);
 		            } catch (Exception ex)
 		            {
@@ -622,25 +618,25 @@ public class ModelLoader {
 		    	}
 		    	
 		    	//boolean flip = !textureNames[i].toLowerCase().endsWith(".dds");
-				Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MM_LINEAR,
-			            Texture.FM_LINEAR);
+				Texture qtexture = TextureManager.loadTexture("./data/textures/"+TEXDIR+textureNames[i],Texture.MinificationFilter.BilinearNoMipMaps,
+			            Texture.MagnificationFilter.NearestNeighbor);
 				//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
-				qtexture.setApply(Texture.AM_MODULATE); // use modulate here!
+				qtexture.setApply(Texture.ApplyMode.Modulate); // use modulate here!
 				if (J3DCore.MIPMAP_GLOBAL)
 				{	
-					qtexture.setFilter(Texture.FM_LINEAR);
-					qtexture.setMipmapState(Texture.MM_LINEAR_LINEAR);
+					qtexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
+					qtexture.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
 				}
 				
 				
 				if (normalNames!=null && normalNames[i]!=null)
 				{
 					// TODO texture colors don't get in when using dot3 normal map! what settings here?
-					qtexture.setCombineFuncRGB(Texture.ACF_MODULATE);
-					qtexture.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
-					qtexture.setCombineSrc1RGB(Texture.ACS_TEXTURE); 
-					qtexture.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-					qtexture.setCombineOp1RGB(Texture.ACO_SRC_COLOR);
+					qtexture.setCombineFuncRGB(Texture.CombinerFunctionRGB.Modulate);
+					qtexture.setCombineSrc0RGB(Texture.CombinerSource.Previous);
+					qtexture.setCombineSrc1RGB(Texture.CombinerSource.TextureUnit1); 
+					qtexture.setCombineOp0RGB(Texture.CombinerOperandRGB.SourceColor);
+					qtexture.setCombineOp1RGB(Texture.CombinerOperandRGB.SourceColor);
 					ts.setTexture(qtexture,1);
 				} else
 				{
@@ -683,17 +679,17 @@ public class ModelLoader {
 			}
 			MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 			.createMaterialState();
-			ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+			ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
 			//ms.setAmbient(new ColorRGBA(0.0f,0.0f,0.0f,0.5f));
 			quad.setRenderState(ms);
-			quad.setLightCombineMode(LightState.COMBINE_FIRST);
+			quad.setLightCombineMode(LightCombineMode.CombineFirst);
 			
 			quad.setRenderState(ts[0]);
 			quad.setSolidColor(new ColorRGBA(1,1,1,1));
 			quad.setRenderState(core.cs_none);
 			if (as_off==null) 
 			{
-				as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+				as_off = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
 				as_off.setEnabled(false);
 			}
 			quad.setRenderState(as_off);
@@ -744,17 +740,17 @@ public class ModelLoader {
 			}
 			MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 			.createMaterialState();
-			ms.setColorMaterial(MaterialState.CM_AMBIENT_AND_DIFFUSE);
+			ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
 			//ms.setAmbient(new ColorRGBA(0.0f,0.0f,0.0f,0.5f));
 			quad.setRenderState(ms);
-			quad.setLightCombineMode(LightState.COMBINE_FIRST);
+			quad.setLightCombineMode(LightCombineMode.CombineFirst);
 			
 			quad.setRenderState(ts[0]);
 			quad.setSolidColor(new ColorRGBA(1,1,1,1));
 			quad.setRenderState(core.cs_none);
 			if (as_off==null) 
 			{
-				as_off = DisplaySystem.getDisplaySystem().getRenderer().createAlphaState();
+				as_off = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
 				as_off.setEnabled(false);
 			}
 			quad.setRenderState(as_off);
@@ -889,11 +885,11 @@ public class ModelLoader {
 						Texture texture = (Texture)textureCache.get(o.textureName);
 						
 						if (texture==null) {
-							texture = TextureManager.loadTexture("./data/textures/"+TEXDIR+o.textureName,Texture.MM_LINEAR,
-				                    Texture.FM_LINEAR);
+							texture = TextureManager.loadTexture("./data/textures/"+TEXDIR+o.textureName,Texture.MinificationFilter.BilinearNoMipMaps,
+						            Texture.MagnificationFilter.NearestNeighbor);
 			
-							texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-							texture.setApply(Texture.AM_MODULATE);
+			    			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+			    			texture.setApply(Texture.ApplyMode.Modulate);
 							texture.setRotation(J3DCore.qTexture);
 							textureCache.put(o.textureName, texture);
 						}
@@ -967,7 +963,7 @@ public class ModelLoader {
 			    	Node node2 = getClodNodeFromParent(node);
 				    for (Spatial child:node.getChildren())
 				    {
-				    	Jcrpg.LOGGER.info("child type = "+child.getType());
+				    	Jcrpg.LOGGER.info("child type = "+child.getClass());
 				    	if (child instanceof Node)
 				    	{
 				    		node2.attachChild(getClodNodeFromParent((Node)child));
@@ -986,11 +982,11 @@ public class ModelLoader {
 					Texture texture = (Texture)textureCache.get(o.textureName);
 					
 					if (texture==null) {
-						texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MM_LINEAR,
-			                    Texture.FM_LINEAR);
-		
-						texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
-						texture.setApply(Texture.AM_REPLACE);
+						texture = TextureManager.loadTexture("./data/"+o.textureName,Texture.MinificationFilter.BilinearNoMipMaps,
+					            Texture.MagnificationFilter.NearestNeighbor);
+						
+		    			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+		    			texture.setApply(Texture.ApplyMode.Replace);
 						texture.setRotation(J3DCore.qTexture);
 						textureCache.put(o.textureName, texture);
 					}

@@ -39,6 +39,8 @@ import java.util.logging.Logger;
 import org.jcrpg.threed.J3DCore;
 
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
+import com.jme.image.Texture.WrapMode;
 import com.jme.math.Plane;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
@@ -47,14 +49,13 @@ import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.renderer.pass.Pass;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ClipState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.GLSLShaderObjectsState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
@@ -81,9 +82,9 @@ public class WaterRenderPass extends Pass {
 	private boolean useFadeToFogColor = false;
 
 	private TextureRenderer tRenderer;
-	private Texture textureReflect;
-	private Texture textureRefract;
-	private Texture textureDepth;
+	private Texture2D textureReflect;
+	private Texture2D textureRefract;
+	private Texture2D textureDepth;
 
 	private ArrayList<Spatial> renderList;
     private ArrayList<Texture> texArray = new ArrayList<Texture>();
@@ -92,7 +93,7 @@ public class WaterRenderPass extends Pass {
 	private GLSLShaderObjectsState waterShader;
 	private CullState cullBackFace;
 	private TextureState textureState;
-	private AlphaState as1;
+	private BlendState as1;
 	private ClipState clipState;
     private FogState noFog;
 
@@ -199,35 +200,35 @@ public class WaterRenderPass extends Pass {
 
 		cullBackFace = display.getRenderer().createCullState();
 		cullBackFace.setEnabled( true );
-		cullBackFace.setCullMode( CullState.CS_NONE );
+		cullBackFace.setCullFace( CullState.Face.None );
 		clipState = display.getRenderer().createClipState();
 		if( isSupported() ) {
 			tRenderer = display.createTextureRenderer(
 					    display.getWidth() / renderScale,
                         display.getHeight() / renderScale,
-                        TextureRenderer.RENDER_TEXTURE_2D);
+                        TextureRenderer.Target.Texture2D);
 
 			if( tRenderer.isSupported() ) {
                 tRenderer.setMultipleTargets(true);
 				tRenderer.setBackgroundColor( new ColorRGBA( 0.0f, 0.0f, 0.0f, 1.0f ) );
 				tRenderer.getCamera().setFrustum( cam.getFrustumNear(), cam.getFrustumFar(), cam.getFrustumLeft(), cam.getFrustumRight(), cam.getFrustumTop(), cam.getFrustumBottom() );
 
-				textureReflect = new Texture();
-				textureReflect.setWrap( Texture.WM_ECLAMP_S_ECLAMP_T );
-				textureReflect.setFilter( Texture.FM_LINEAR );
+				textureReflect = new Texture2D();
+				textureReflect.setWrap( WrapMode.Clamp );
+				textureReflect.setMagnificationFilter( Texture.MagnificationFilter.Bilinear );
 				textureReflect.setScale( new Vector3f( -1.0f, 1.0f, 1.0f ) );
 				textureReflect.setTranslation( new Vector3f( 1.0f, 0.0f, 0.0f ) );
 				tRenderer.setupTexture( textureReflect );
 
-				textureRefract = new Texture();
-				textureRefract.setWrap( Texture.WM_ECLAMP_S_ECLAMP_T );
-				textureRefract.setFilter( Texture.FM_LINEAR );
+				textureRefract = new Texture2D();
+				textureRefract.setWrap( WrapMode.Clamp );
+				textureReflect.setMagnificationFilter( Texture.MagnificationFilter.Bilinear );
 				tRenderer.setupTexture( textureRefract );
 
-				textureDepth = new Texture();
-				textureDepth.setWrap( Texture.WM_ECLAMP_S_ECLAMP_T );
-				textureDepth.setFilter( Texture.FM_NEAREST );
-				textureDepth.setRTTSource( Texture.RTT_SOURCE_DEPTH );
+				textureDepth = new Texture2D();
+				textureDepth.setWrap( WrapMode.Clamp );
+				textureReflect.setMagnificationFilter( Texture.MagnificationFilter.NearestNeighbor );
+				textureDepth.setRenderToTextureType( Texture.RenderToTextureType.Depth );
 				tRenderer.setupTexture( textureDepth );
 
 				textureState = display.getRenderer().createTextureState();
@@ -235,21 +236,21 @@ public class WaterRenderPass extends Pass {
 
 				Texture t1 = TextureManager.loadTexture(
 						WaterRenderPass.class.getClassLoader().getResource( normalMapTexture ),
-						Texture.MM_LINEAR_LINEAR,
-						Texture.FM_LINEAR
+						Texture.MinificationFilter.BilinearNoMipMaps,
+						Texture.MagnificationFilter.Bilinear
 				);
 				textureState.setTexture( t1, 0 );
-				t1.setWrap( Texture.WM_WRAP_S_WRAP_T );
+				t1.setWrap( Texture.WrapMode.Repeat );
 
 				textureState.setTexture( textureReflect, 1 );
 
 				t1 = TextureManager.loadTexture(
 						WaterRenderPass.class.getClassLoader().getResource( dudvMapTexture ),
-						Texture.MM_LINEAR_LINEAR,
-						Texture.FM_LINEAR, com.jme.image.Image.GUESS_FORMAT_NO_S3TC, 1.0f, false
+						Texture.MinificationFilter.BilinearNoMipMaps,
+						Texture.MagnificationFilter.Bilinear, com.jme.image.Image.Format.GuessNoCompression, 1.0f, false
 				);
 				textureState.setTexture( t1, 2 );
-				t1.setWrap( Texture.WM_WRAP_S_WRAP_T );
+				t1.setWrap( Texture.WrapMode.Repeat );
 
 				if( useRefraction ) {
 					textureState.setTexture( textureRefract, 3 );
@@ -259,15 +260,15 @@ public class WaterRenderPass extends Pass {
 				if( useProjectedShader ) {
 					t1 = TextureManager.loadTexture(
 							WaterRenderPass.class.getClassLoader().getResource( foamMapTexture ),
-							Texture.MM_LINEAR_LINEAR,
-							Texture.FM_LINEAR );
+							Texture.MinificationFilter.BilinearNoMipMaps,
+							Texture.MagnificationFilter.Bilinear );
 					if( useRefraction ) {
 						textureState.setTexture( t1, 5 );
 					}
 					else {
 						textureState.setTexture( t1, 3 );
 					}
-					t1.setWrap( Texture.WM_WRAP_S_WRAP_T );
+					t1.setWrap( Texture.WrapMode.Repeat );
 				}
 
 				clipState.setEnabled( true );
@@ -286,15 +287,15 @@ public class WaterRenderPass extends Pass {
 
 			Texture t1 = TextureManager.loadTexture(
 					WaterRenderPass.class.getClassLoader().getResource( fallbackMapTexture ),
-					Texture.MM_LINEAR_LINEAR,
-					Texture.FM_LINEAR );
+					Texture.MinificationFilter.BilinearNoMipMaps,
+					Texture.MagnificationFilter.Bilinear );
 			textureState.setTexture( t1, 0 );
-			t1.setWrap( Texture.WM_WRAP_S_WRAP_T );
+			t1.setWrap( Texture.WrapMode.Repeat );
 
-			as1 = display.getRenderer().createAlphaState();
+			as1 = display.getRenderer().createBlendState();
 			as1.setBlendEnabled( true );
-			as1.setSrcFunction( AlphaState.SB_SRC_ALPHA );
-			as1.setDstFunction( AlphaState.DB_ONE_MINUS_SRC_ALPHA );
+			as1.setSourceFunction( BlendState.SourceFunction.SourceAlpha );
+			as1.setDestinationFunction( BlendState.DestinationFunction.OneMinusSourceAlpha );
 			as1.setEnabled( true );
 		} else {
             noFog = display.getRenderer().createFogState();
@@ -502,10 +503,10 @@ public class WaterRenderPass extends Pass {
 		tRenderer.getCamera().getUp().set( cam.getUp() );
 		tRenderer.getCamera().getLeft().set( cam.getLeft() );
 
-		int cullMode = 0;
+		CullHint cullMode = CullHint.Inherit;
 		if ( skyBox != null ) {
-			cullMode = skyBox.getCullMode();
-			skyBox.setCullMode( SceneElement.CULL_ALWAYS );
+			cullMode = skyBox.getCullHint();
+			skyBox.setCullHint( CullHint.Always );
 		}
 
         texArray.clear();
@@ -521,7 +522,7 @@ public class WaterRenderPass extends Pass {
         }
 
 		if ( skyBox != null ) {
-			skyBox.setCullMode( cullMode );
+			skyBox.setCullHint( cullMode );
 		}
 	}
 

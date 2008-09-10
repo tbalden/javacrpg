@@ -103,14 +103,19 @@ public abstract class EffectNode extends Node {
 		if (light==null)
 		{
 			LightState ls = DisplaySystem.getDisplaySystem().getRenderer().createLightState();
-			light = new LightNode("light",ls);
+			light = new LightNode("light");
 			PointLight pointLight = new PointLight();
 			pointLight.setAttenuate(true);
 			pointLight.setConstant(1f);
 			pointLight.setQuadratic(0.2f);
 			light.setLight(pointLight);
 			pointLight.setEnabled(true);
-			light.setTarget(J3DCore.getInstance().getRootNode1());		
+			ls.attach(pointLight);
+			
+			// TODO attach to rootnode's lightstate instead!!
+			
+			//J3DCore.getInstance().getRootNode1().
+			//light.setTarget(J3DCore.getInstance().getRootNode1());		
 		}
 		light.removeFromParent();
 		light.getLight().setAmbient(color);

@@ -50,7 +50,7 @@ import com.jme.renderer.pass.RenderPass;
 import com.jme.scene.PassNode;
 import com.jme.scene.PassNodeState;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 import com.jme.util.resource.ResourceLocatorTool;
@@ -131,7 +131,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		mesh = args[0];
 		anim = args[1];
 		AnimatedModelViewer app = new AnimatedModelViewer();
-		app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
+		//app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
 		app.start();
 	}
 
@@ -195,7 +195,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		dr.setLocation(new Vector3f(0f, 0f, 0f));
 		lightState.setTwoSidedLighting(false);
 
-		lightNode = new LightNode("light", lightState);
+		lightNode = new LightNode("light");
 		lightNode.setLight(dr);
 
 		Vector3f min2 = new Vector3f(-0.5f, -0.5f, -0.5f);
@@ -204,7 +204,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		// lightBox.setModelBound(new BoundingBox());
 		// lightBox.updateModelBound();
 		// lightNode.attachChild(lightBox);
-		lightNode.setTarget(rootNode);
+		//lightNode.setTarget(rootNode);
 		lightNode.setLocalTranslation(new Vector3f(+14f, 14f, +14f));
 
 		// clear the lights from this lightbox so the lightbox itself doesn't
@@ -214,7 +214,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 
 		// Setup the lensflare textures.
 		TextureState[] tex = new TextureState[4];
-		tex[0] = display.getRenderer().createTextureState();
+		/*tex[0] = display.getRenderer().createTextureState();
 		tex[0].setTexture(TextureManager.loadTexture("./data/flare/flare1.png",
 				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.RGBA8888,
 				1.0f, true));
@@ -235,7 +235,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		tex[3].setTexture(TextureManager.loadTexture(
 				("./data/flare/flare4.png"), Texture.MM_LINEAR_LINEAR,
 				Texture.FM_LINEAR));
-		tex[3].setEnabled(true);
+		tex[3].setEnabled(true);*/
 
 		flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 		flare.setRootNode(rootNode);
@@ -244,21 +244,21 @@ public class AnimatedModelViewer extends SimplePassGame {
 		Quad q = new Quad("a", 12, 12);
 		Quad q2 = new Quad("a", 12, 12);
 
-		AlphaState as = display.getRenderer().createAlphaState();
+		BlendState as = display.getRenderer().createBlendState();
 		as.setBlendEnabled(true);
-		as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+		/*as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
 		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
 		as.setTestEnabled(true);
 		as.setTestFunction(AlphaState.TF_GREATER);
 		as.setEnabled(true);
-		// alpha used for blending the lightmap
-		AlphaState as2 = display.getRenderer().createAlphaState();
+		// alpha used for blending the lightmap*/
+		BlendState as2 = display.getRenderer().createBlendState();
 		as2.setBlendEnabled(true);
-		as2.setSrcFunction(AlphaState.SB_DST_COLOR);
+		/*as2.setSrcFunction(AlphaState.SB_DST_COLOR);
 		as2.setDstFunction(AlphaState.DB_SRC_COLOR);
 		as2.setTestEnabled(true);
 		as2.setTestFunction(AlphaState.TF_GREATER);
-		as2.setEnabled(true);
+		as2.setEnabled(true);*/
 
 		// create some interesting texturestates for splatting
 		TextureState ts1 = createSplatTextureState("jungle_atlas.png", null);
@@ -282,11 +282,11 @@ public class AnimatedModelViewer extends SimplePassGame {
 		Vector3f terrainScale = new Vector3f(155, 0.003f, 156);
 		// heightMap.setHeightScale(0.001f);
 		TerrainBlock page = new TerrainBlock("Terrain", 2, terrainScale,
-				new int[2 * 2], new Vector3f(), false);
+				new float[2 * 2], new Vector3f());
 		page.getLocalTranslation().set(0, -9.5f, 0);
 		page.setRenderState(ts1);
 
-		FloatBuffer b = page.getTextureBuffers(0)[0];
+		FloatBuffer b = page.getTextureCoords(0).coords;
 		float position = 2;
 		int atlas_size = 3;
 		/*for (int i = 0; i < b.capacity(); i++) {
@@ -372,7 +372,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		dof.setRootSpatial(rootNode);
 	
 		pManager.add(dof);
-		rootNode.attachChild(fpsNode);
+	//	rootNode.attachChild(fpsNode);
 
 		// notice that it comes at the end
 		// lightNode.attachChild(flare);
@@ -382,11 +382,11 @@ public class AnimatedModelViewer extends SimplePassGame {
 	private TextureState createLightmapTextureState(String texture) {
 		TextureState ts = display.getRenderer().createTextureState();
 
-		Texture t0 = TextureManager.loadTexture(texture,
+/*		Texture t0 = TextureManager.loadTexture(texture,
 				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 		t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
 		ts.setTexture(t0, 0);
-
+*/
 		return ts;
 	}
 
@@ -394,8 +394,8 @@ public class AnimatedModelViewer extends SimplePassGame {
 		TextureState ts = display.getRenderer().createTextureState();
 		boolean[][] data = new boolean[50][50];
 		// Texture t0 = TextureCreator.newAlphaMaskTexture(data);
-		Texture t0 = TextureManager.loadTexture(texture,
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+		Texture t0 = null;//TextureManager.loadTexture(texture,
+			//	Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 		// t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
 		// t0.setApply(Texture.AM_MODULATE);
 		t0.setScale(new Vector3f(10.1f,10f, 10.1f));
@@ -413,7 +413,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		data[3][3] = true;
 		// Texture t1 = TextureCreator.newAlphaMaskTexture(data);
 
-		Texture t1 = TextureManager.loadTexture(alpha,
+		/*Texture t1 = TextureManager.loadTexture(alpha,
 				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 		// t1.setScale(new Vector3f(1110.01f,1110.01f, 1110.01f));
 		t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
@@ -423,7 +423,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
 		t1.setCombineFuncAlpha(Texture.ACF_REPLACE);
 		ts.setTexture(t1, ts.getNumberOfSetTextures());
-		ts.apply();
+		ts.apply();*/
 	}
 
 }

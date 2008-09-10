@@ -143,7 +143,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				parentOrig = new Node();
 				//parentOrig = data.passNode;//.attachChild(parentOrig);
 				parentOrig.attachChild(data.passNode);
-				this.copyTextureCoords(0, 0, 1, 1);
+				this.copyTextureCoordinates(0, 1, 1);
 				data.passNode.attachChild(this);
 				this.updateRenderState();
 				//parentOrig.setRenderState(data.passNode.getRenderState(RenderState.RS_TEXTURE));
@@ -210,7 +210,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				parentOrig = new Node();
 				//parentOrig = data.passNode;//.attachChild(parentOrig);
 				parentOrig.attachChild(data.passNode);
-				this.copyTextureCoords(0, 0, 1, 1);
+				this.copyTextureCoordinates(0, 1, 1);
 				data.passNode.attachChild(this);
 				this.updateRenderState();
 				//parentOrig.setRenderState(data.passNode.getRenderState(RenderState.RS_TEXTURE));

@@ -64,9 +64,7 @@ import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-import com.jme.scene.SceneElement;
-import com.jme.scene.batch.TriangleBatch;
-import com.jme.scene.lod.AreaClodMesh;
+import com.jme.scene.TriMesh;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -92,7 +90,7 @@ import com.jme.util.geom.BufferUtils;
  * @author Mark Powell
  * @version $Id: TerrainBlock.java,v 1.30 2006/11/19 16:09:53 renanse Exp $
  */
-public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
+public class TiledTerrainBlock extends TriMesh implements PooledNode {
 
     private static final long serialVersionUID = 1L;
 
@@ -220,43 +218,19 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         buildTextureCoordinates();
         buildNormals();
         buildColors();
-        TriangleBatch batch = getBatch(0);
-
         //VBOInfo vbo = new VBOInfo(true);
         //batch.setVBOInfo(vbo);
 
-        if (useClod) {
-            this.create(null);
-            this.setTrisPerPixel(0.02f);
-        }
     }
     
-    TriangleBatch helperBatch = new TriangleBatch();
+    TriMesh helperBatch = new TriMesh();
     int[] helperHeightMap = null;
     int helperSize = 0;
     
     
 
-    public int getType() {
-        return (SceneElement.GEOMETRY | SceneElement.TRIMESH | SceneElement.TERRAIN_BLOCK);
-    }
 
-    /**
-     * <code>chooseTargetRecord</code> determines which level of detail to
-     * use. If CLOD is not used, the index 0 is always returned.
-     * 
-     * @param r
-     *            the renderer to use for determining the LOD record.
-     * @return the index of the record to use.
-     */
-    public int chooseTargetRecord(Renderer r) {
-        if (useClod) {
-            return super.chooseTargetRecord(r);
-        }
-
-        return 0;
-    }
-
+    
     /**
      * <code>setDetailTexture</code> copies the texture coordinates from the
      * first texture channel to another channel specified by unit, mulitplying
@@ -269,8 +243,8 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
      *            number of times to repeat the texture across and down the
      *            block
      */
-    public void setDetailTexture(int unit, int repeat) {
-        copyTextureCoords(0, 0, unit, repeat);
+    public void setDetailTexture(int unit, float repeat) {
+        copyTextureCoordinates(0, unit, repeat);
     }
 
     /**
@@ -437,7 +411,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
         Vector3f topLeft = store, topRight = calcVec1, bottomLeft = calcVec2, bottomRight = calcVec3;
 
         int focalSpot = (int) (col + row * size);
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         // find the heightmap point closest to this position (but will always
         // be to the left ( < x) and above (< z) of the spot.
@@ -473,7 +447,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
      * TriMesh.
      */
     private void buildVertices() {
-        TriangleBatch batch = getBatch(0);
+    	TriMesh batch = this;
         batch.setVertexCount(heightMap.length);
         if (batch.getVertexBuffer()==null || !(batch.getVertexBuffer().limit()==batch.getVertexCount()*3))
         {
@@ -564,7 +538,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     private void buildHelperVertices() {
     	int size = helperSize;
     	int[] heightMap = helperHeightMap;
-        TriangleBatch batch = helperBatch;
+        TriMesh batch = helperBatch;
         batch.setVertexCount(heightMap.length);
         if (batch.getVertexBuffer()==null || !(batch.getVertexBuffer().limit()==batch.getVertexCount()*3))
         {
@@ -595,18 +569,18 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     public void buildTextureCoordinates() {
         float offsetX = offset.x + (offsetAmount * stepScale.x);
         float offsetY = offset.y + (offsetAmount * stepScale.z);
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         FloatBuffer texs = null;
-        if (batch.getTextureBuffers().get(0)==null || !(batch.getTextureBuffers().get(0).limit()==batch.getVertexCount()*2))
+        if (batch.getTextureCoords(0).coords==null || !(batch.getTextureCoords(0).coords.limit()==batch.getVertexCount()*2))
         {
-        	if (batch.getTextureBuffers().get(0)!=null)
+        	if (batch.getTextureCoords(0).coords!=null)
         	{
-        		ExactBufferPool.releaseVector2Buffer(batch.getTextureBuffers().get(0));
+        		ExactBufferPool.releaseVector2Buffer(batch.getTextureCoords(0).coords);
         	}
-        	batch.getTextureBuffers().set(0,ExactBufferPool.getVector2Buffer(batch.getVertexCount()));
+        	batch.getTextureCoords(0).coords = ExactBufferPool.getVector2Buffer(batch.getVertexCount());
         }
-        texs = batch.getTextureBuffer(0);
+        texs = batch.getTextureCoords(0).coords;
         //FloatBuffer texs = BufferUtils.createVector2Buffer(batch
           //      .getTextureBuffers().get(0), batch.getVertexCount());
         //batch.getTextureBuffers().set(0, texs);
@@ -632,7 +606,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     	// but put the normals into the small sized normals map
     	// (check helperNormalIndex trick, and checking the plus column skip.)
     	
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         if (batch.getNormalBuffer()==null || !(batch.getNormalBuffer().limit()==batch.getVertexCount()*3))
         {
@@ -872,7 +846,7 @@ public class TiledTerrainBlock extends AreaClodMesh implements PooledNode {
     public void updateFromHeightMap() {
         if (!hasChanged())
             return;
-        TriangleBatch batch = getBatch(0);
+        TriMesh batch = this;
 
         Vector3f point = new Vector3f();
         for (int x = 0; x < size; x++) {

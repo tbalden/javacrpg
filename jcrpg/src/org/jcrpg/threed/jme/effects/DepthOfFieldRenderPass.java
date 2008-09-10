@@ -33,16 +33,16 @@
 package org.jcrpg.threed.jme.effects;
 
 import com.jme.image.Texture;
+import com.jme.image.Texture2D;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.renderer.pass.Pass;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Spatial;
-import com.jme.scene.batch.TriangleBatch;
+import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Quad;
-import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
@@ -76,12 +76,12 @@ public class DepthOfFieldRenderPass extends Pass {
     
     private TextureRenderer tRenderer;
     private TextureRenderer tRendererScreen;
-	private Texture resultTexture;
-	private Texture depthTexture;
-    private Texture screenTexture;
+	private Texture2D resultTexture;
+	private Texture2D depthTexture;
+    private Texture2D screenTexture;
 
     private Quad fullScreenQuad;
-	private TriangleBatch fullScreenQuadBatch;
+	private TriMesh fullScreenQuadBatch;
 
 	private GLSLShaderObjectsState finalShader;
 	private GLSLShaderObjectsState depthShader;
@@ -141,7 +141,7 @@ public class DepthOfFieldRenderPass extends Pass {
         tRenderer = display.createTextureRenderer(
                 display.getWidth()/ renderScale, 
                 display.getHeight()/ renderScale,
-                TextureRenderer.RENDER_TEXTURE_2D);
+                TextureRenderer.Target.Texture2D);
 		if (!tRenderer.isSupported()) {
 			supported = false;
 			return;
@@ -149,7 +149,7 @@ public class DepthOfFieldRenderPass extends Pass {
         tRendererScreen = display.createTextureRenderer(
                 display.getWidth()/ originalScale, 
                 display.getHeight()/ originalScale,
-                TextureRenderer.RENDER_TEXTURE_2D);
+                TextureRenderer.Target.Texture2D);
 		if (!tRendererScreen.isSupported()) {
 			supported = false;
 			return;
@@ -161,18 +161,18 @@ public class DepthOfFieldRenderPass extends Pass {
         tRendererScreen.setCamera(cam);
 
 
-        screenTexture = new Texture();
-        screenTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+        screenTexture = new Texture2D();
+        screenTexture.setWrap(Texture.WrapMode.Clamp);
         tRendererScreen.setupTexture(screenTexture);
         
-		resultTexture = new Texture();
-		resultTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
-		resultTexture.setFilter(Texture.FM_LINEAR);
+		resultTexture = new Texture2D();
+		resultTexture.setWrap(Texture.WrapMode.Clamp);
+		resultTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
 		tRendererScreen.setupTexture(resultTexture);
 
 
-        depthTexture = new Texture();
-		depthTexture.setWrap(Texture.WM_CLAMP_S_CLAMP_T);
+        depthTexture = new Texture2D();
+		depthTexture.setWrap(Texture.WrapMode.Clamp);
         tRenderer.setupTexture(depthTexture);
 
 
@@ -213,24 +213,24 @@ public class DepthOfFieldRenderPass extends Pass {
 		
 		//Create fullscreen quad
 		fullScreenQuad = new Quad("FullScreenQuad", display.getWidth()/4, display.getHeight()/4);
-        fullScreenQuadBatch = fullScreenQuad.getBatch(0);
+        fullScreenQuadBatch = fullScreenQuad;
 		fullScreenQuad.getLocalRotation().set(0, 0, 0, 1);
 		fullScreenQuad.getLocalTranslation().set(display.getWidth() / 2, display.getHeight() / 2, 0);
 		fullScreenQuad.getLocalScale().set(1, 1, 1);
 		fullScreenQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
-		fullScreenQuad.setCullMode(SceneElement.CULL_NEVER);
-		fullScreenQuad.setTextureCombineMode(TextureState.REPLACE);
-		fullScreenQuad.setLightCombineMode(LightState.OFF);
+		fullScreenQuad.setCullHint(Spatial.CullHint.Never);
+		fullScreenQuad.setTextureCombineMode(Spatial.TextureCombineMode.Replace);
+		fullScreenQuad.setLightCombineMode(Spatial.LightCombineMode.Off);
         
 		TextureState ts = display.getRenderer().createTextureState();		
 		ts.setEnabled(true);
         fullScreenQuadBatch.setRenderState(ts);
 
-		AlphaState as = display.getRenderer().createAlphaState();
+		BlendState as = display.getRenderer().createBlendState();
 		// no blending, result texture has to overwrite screen - not blend!
 	    as.setTestEnabled(true);
-	    as.setTestFunction(AlphaState.TF_GREATER);
+	    as.setTestFunction(BlendState.TestFunction.GreaterThan);
 	    as.setEnabled(true);
 
         fullScreenQuadBatch.setRenderState(as);
@@ -290,7 +290,7 @@ public class DepthOfFieldRenderPass extends Pass {
             return;
         }
 
-        AlphaState as = (AlphaState) fullScreenQuadBatch.states[RenderState.RS_ALPHA];
+        BlendState as = (BlendState) fullScreenQuadBatch.states[RenderState.RS_BLEND];
         TextureState ts = (TextureState) fullScreenQuadBatch.states[RenderState.RS_TEXTURE];
 
         if (throttle<sinceLast)

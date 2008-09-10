@@ -2,7 +2,7 @@ package org.jcrpg.threed.jme.geometryinstancing.instance;
 
 import org.jcrpg.threed.jme.geometryinstancing.AABB;
 
-import com.jme.scene.batch.GeomBatch;
+import com.jme.scene.TriMesh;
 
 /**
  * <code>GeometryInstance</code> uses <code>GeometryInstanceAttributes</code>
@@ -15,7 +15,7 @@ public abstract class GeometryInstance<T extends GeometryInstanceAttributes> {
 
     public abstract boolean preCommit(boolean force);
     
-    public abstract void commit(GeomBatch batch, boolean force);
+    public abstract void commit(TriMesh batch, boolean force);
 
     public abstract int getNumIndices();
 

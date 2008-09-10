@@ -27,10 +27,10 @@ import org.jcrpg.ui.KeyListener;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
 import com.jme.scene.Text;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.state.RenderState;
-import com.jme.scene.state.TextureState;
 
 public class TextBox implements KeyListener {
 	
@@ -64,17 +64,17 @@ public class TextBox implements KeyListener {
 		for (int i=0; i<maxLines; i++)
 		{
 			textLines[i] = Text.createDefaultTextLabel("TextBox_"+name, "");
-			textLines[i].setCullMode( SceneElement.CULL_NEVER );
-			textLines[i].setTextureCombineMode( TextureState.REPLACE );
+			textLines[i].setCullHint(CullHint.Never );
+			textLines[i].setTextureCombineMode( TextureCombineMode.Replace );
 			
 			textLines[i].setLocalTranslation(hud.core.getDisplay().getWidth()*middleX, (hud.core.getDisplay().getHeight()*middleY)-i*fontSize*stretch, 0);
 			textLines[i].setLocalScale(stretch);
 			n.attachChild(textLines[i]);
 		}
 		
-		n.setRenderState( textLines[0].getRenderState( RenderState.RS_ALPHA ) );
+		n.setRenderState( textLines[0].getRenderState( RenderState.RS_BLEND) );
         n.setRenderState( textLines[0].getRenderState( RenderState.RS_TEXTURE ) );
-        n.setCullMode( SceneElement.CULL_NEVER );
+        n.setCullHint(CullHint.Never );
 		updateText();
 		//hud.hudNode.attachChild(n);
 	}

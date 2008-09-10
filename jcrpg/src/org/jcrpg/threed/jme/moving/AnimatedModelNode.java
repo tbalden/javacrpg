@@ -50,11 +50,7 @@ import com.jme.animation.SkinNode;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-import com.jme.scene.Geometry;
 import com.jme.scene.Node;
-import com.jme.scene.SceneElement;
-import com.jme.scene.Spatial;
-import com.jme.scene.state.RenderState;
 
 /**
  * Animated model helper node for md5.
@@ -250,7 +246,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				
 			}
 
-	        bodyInstance.setNormalsMode(SceneElement.NM_INHERIT);
+	        bodyInstance.setNormalsMode(NormalsMode.Inherit);
 	        bodyInstance.getLocalTranslation().set(0, 0, 0);
 	        bodyInstance.setLocalScale(0.2f*scale);
 	        Quaternion q = new Quaternion();
@@ -278,7 +274,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	{
 		this(fileName,animation,scale, disposition,1f);		
 	}
-    @SuppressWarnings("unused")
+    /*@SuppressWarnings("unused")
 	private void stripTexturesAndMaterials(SceneElement sp) {
         sp.clearRenderState(RenderState.RS_TEXTURE);
         sp.clearRenderState(RenderState.RS_MATERIAL);
@@ -298,7 +294,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
                 stripTexturesAndMaterials(g.getBatch(x));
             }
         }
-    }
+    }*/
     
     public static HashMap<String, Model> cache = new HashMap<String, Model>();
 	
