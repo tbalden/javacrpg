@@ -111,7 +111,7 @@ public class DirectionalShadowMapPass extends Pass {
 	private RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
 	
 	/** The colour of shadows cast */
-	private ColorRGBA shadowCol = new ColorRGBA(20,20,20,0.4f);
+	private ColorRGBA shadowCol = new ColorRGBA(0.1f,0.1f,0.1f,0.4f);
 	private GLSLShaderObjectsState shader;
 	/** True if the pass should use shaders */
 	private boolean useShaders;
