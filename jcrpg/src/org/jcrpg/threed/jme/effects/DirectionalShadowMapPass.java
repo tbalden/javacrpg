@@ -252,13 +252,13 @@ public class DirectionalShadowMapPass extends Pass {
 		// that it can be blended over the scene. 
 		shadowMapTexture = new Texture2D();
 		shadowMapTexture.setApply(Texture.ApplyMode.Modulate);
-		shadowMapTexture.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps); 
+		shadowMapTexture.setMinificationFilter(Texture.MinificationFilter.NearestNeighborNoMipMaps); 
 		shadowMapTexture.setWrap(Texture.WrapMode.Clamp); 
 		shadowMapTexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
 		shadowMapTexture.setRenderToTextureType(Texture.RenderToTextureType.Depth);
 		shadowMapTexture.setMatrix(new Matrix4f());
 		shadowMapTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.EyeLinear);
-		
+
 		// configure the texture renderer to output to the texture
 		shadowMapRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(shadowMapSize, shadowMapSize,TextureRenderer.Target.Texture2D);
 		shadowMapRenderer.setupTexture(shadowMapTexture); 
@@ -291,7 +291,7 @@ public class DirectionalShadowMapPass extends Pass {
 		discardShadowFragments = r.createBlendState();
 		discardShadowFragments.setEnabled(true);
 		discardShadowFragments.setTestEnabled(true);
-		discardShadowFragments.setReference(0.1f);
+		//discardShadowFragments.setReference(0.1f);
 		discardShadowFragments.setTestFunction(BlendState.TestFunction.GreaterThan);
 		discardShadowFragments.setBlendEnabled(true);
 		discardShadowFragments.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
