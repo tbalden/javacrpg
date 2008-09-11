@@ -491,8 +491,8 @@ public class ModelLoader {
     		    {
     		    	Texture t = ts1.getTexture(i);
     		    	if (mipmap && J3DCore.MIPMAP_GLOBAL) {
-    		    		t.setMagnificationFilter(Texture.MagnificationFilter.NearestNeighbor);
-    		    		t.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
+    		    		t.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
+    		    		t.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
     		    	}
     		    }
             }
@@ -885,8 +885,8 @@ public class ModelLoader {
 						Texture texture = (Texture)textureCache.get(o.textureName);
 						
 						if (texture==null) {
-							texture = TextureManager.loadTexture("./data/textures/"+TEXDIR+o.textureName,Texture.MinificationFilter.BilinearNoMipMaps,
-						            Texture.MagnificationFilter.NearestNeighbor);
+							texture = TextureManager.loadTexture("./data/textures/"+TEXDIR+o.textureName,Texture.MinificationFilter.BilinearNearestMipMap,
+						            Texture.MagnificationFilter.Bilinear);
 			
 			    			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 			    			texture.setApply(Texture.ApplyMode.Modulate);

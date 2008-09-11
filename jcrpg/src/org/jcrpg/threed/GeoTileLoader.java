@@ -670,8 +670,8 @@ public class GeoTileLoader {
 		if (texture==null) {
 			URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, textureName);
 			if (u==null)return null;
-			texture = TextureManager.loadTexture(u,Texture.MinificationFilter.BilinearNoMipMaps,
-		            Texture.MagnificationFilter.NearestNeighbor);
+			texture = TextureManager.loadTexture(u,Texture.MinificationFilter.BilinearNearestMipMap,
+		            Texture.MagnificationFilter.Bilinear);
 			
 			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 			texture.setApply(Texture.ApplyMode.Combine);			
@@ -698,8 +698,8 @@ public class GeoTileLoader {
 	    	{
 		        URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, texture);
 		        t0 = TextureManager.loadTexture(u,
-		        		Texture.MinificationFilter.BilinearNoMipMaps,
-			            Texture.MagnificationFilter.NearestNeighbor);
+		        		Texture.MinificationFilter.BilinearNearestMipMap,
+			            Texture.MagnificationFilter.Bilinear);
 				
 				//texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 				t0.setApply(Texture.ApplyMode.Modulate);

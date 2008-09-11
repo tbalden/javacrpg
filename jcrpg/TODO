@@ -88,6 +88,22 @@ o
 OPTIMIZATIONS:
 #############
 
+[X] jme2 migr:
+	[ ] check light source things?? not correct for animated
+		[ ] check a day/night cycle
+	[X] add fps stats
+	[X] add choice of screen res
+		[ ] add jcrpg logo for choice (BaseGame Settings prop file??)
+	
+
+to check for OS leak/Java mem state info: Runtime.getRuntime().freeMemory()
+
+(02:45:54 PM) Pali: but md5reader2 is using jme's animation api
+(02:46:00 PM) Momoko_Fan: its not
+
+check mesh.xml loading in radakan, convert to jme2.0?
+
+[ ] md5reader -? buffer pool? how is it cached
 
 [X] DDS for GUI, check how it's going in memory/ 
 	[ ] font cache??? Reduce mem from 200m
