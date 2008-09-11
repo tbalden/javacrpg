@@ -561,8 +561,8 @@ public class GeometryBatchHelper {
         		{
         			if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
         			//batch.lockMeshes(); // XXX you shouldn't lock meshes of trimesh , billboard goes wrong
-        			batch.updateModelBound();
-        			batch.updateRenderState();
+        			batch.lockShadows();
+        			batch.lockTransforms();
         			batch.lockBounds();
         			batch.lockBranch();
         		}
@@ -574,6 +574,8 @@ public class GeometryBatchHelper {
         		if (batch.parent!=null)
         		{
         			if ((batch.getLocks()&Node.LOCKED_BOUNDS)>0) {continue;}
+        			batch.lockShadows();
+        			batch.lockTransforms();
         			batch.lockBounds();
         			batch.lockMeshes();
         			batch.lockBranch();

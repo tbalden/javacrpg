@@ -100,6 +100,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	
 	float startFog;
 	
+	static int instanceCounter = 0;
+	
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal, NodePlaceholder placeHolder) {
 		this.core = core;
 		setIsCollidable(false);
@@ -112,7 +114,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			if (!internal) parentOrig.setLightCombineMode(LightCombineMode.Off);
 			sharedParentCache.put(id+internal,parentOrig);
 		}
-		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+		parent = new SharedNode("sTriGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
 		parent.setLocalTranslation(placeHolder.getLocalTranslation());
 		parent.attachChild(this);
 		parent.setModelBound(new BoundingBox());

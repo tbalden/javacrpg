@@ -221,7 +221,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		if (data==null || data.passNode==null)
 		{
-			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+			parent = new SharedNode("sMGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
 			parent.setLocalTranslation(placeHolder.getLocalTranslation());
 			parent.attachChild(this);
 			parent.setModelBound(new BoundingBox());
@@ -232,6 +232,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		//setVBOInfo(new VBOInfo(true));
 	}
+	static int instanceCounter = 0;
 	
 	/**
 	 * Returns a unique key for the model type so that reuse of batchInstances in nonVisible list can work.

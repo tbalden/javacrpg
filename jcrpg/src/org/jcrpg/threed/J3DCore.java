@@ -364,13 +364,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public HashMap<String, Spatial> orbiters3D = new HashMap<String, Spatial>();
 	public HashMap<String, LightNode[]> orbitersLight3D = new HashMap<String, LightNode[]>();
 
-	public Node groundParentNode = new Node();
-	public Node dofParentNode = new Node();
+	public Node groundParentNode = new Node("groundParent");
+	public Node dofParentNode = new Node("dofParent");
 	/**
 	 * skyparent for skysphere/sun/moon -> simple water reflection needs this
 	 * node
 	 */
-	public Node skyParentNode = new Node();
+	public Node skyParentNode = new Node("skyParent");
 	/** external all root */
 	public Node extRootNode;
 	public Node extWaterRefNode; // reflected part
@@ -869,7 +869,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			lightNode.attachChild(flare);
 
 			TriMesh sun = new Sphere(o.id, 20, 20, 3.5f);
-			Node sunNode = new Node();
+			Node sunNode = new Node("SUN");
 			sunNode.attachChild(sun);
 			skyParentNode.attachChild(sunNode);
 
@@ -2113,8 +2113,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		setCalculatedCameraLocation();
 
-		cam
-				.setDirection(J3DCore.directions[gameState.getNormalPositions().viewDirection]);
+		cam.setDirection(J3DCore.directions[gameState.getNormalPositions().viewDirection]);
 		cam.update();
 
 		sEngine.render(
@@ -2127,9 +2126,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				gameState.getNormalPositions().viewPositionZ, 
 				false,false);
 		sEngine.renderToViewPort();
-		if (!coreFullyInitialized)
+		/*if (!coreFullyInitialized)
 			sEngine.renderToViewPort(); // for correct culling, call it twice
 										// ;-)
+		 */
+		
+		// call for normal initial camera view
+		cam.normalize();
+		cam.update();
 
 		if (mEngine == null) {
 			mEngine = new J3DMovingEngine(this);
@@ -2202,6 +2206,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	@Override
 	protected void simpleInitGame() {
+		
+		//SceneMonitor.getMonitor().showViewer(true);
+		//SceneMonitor.getMonitor().registerNode(rootNode);
 		modelLoader = new ModelLoader(this);
 		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
@@ -2213,7 +2220,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// rootNode.setCullMode(Node.CULL_DYNAMIC);
 
 		// ui root
-		uiRootNode = new Node();
+		uiRootNode = new Node("uiRoot");
 		rootNode.attachChild(uiRootNode);
 		ZBufferState zStateOff = display.getRenderer().createZBufferState();
 		zStateOff.setFunction(ZBufferState.TestFunction.Always);
@@ -2237,14 +2244,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// uiRootNode.setModelBound(bigSphere);
 
 		// external cubes' rootnode
-		extRootNode = FARVIEW_ENABLED ? new Node() : new Node();//new ScenarioNode(cam);
+		extRootNode = FARVIEW_ENABLED ? new Node("ex") : new Node("extRootNode");//new ScenarioNode(cam);
 		// extRootNode.setModelBound(bigSphere);
 		// extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
-		intRootNode = FARVIEW_ENABLED ? new Node() : new Node();//ScenarioNode(cam);
+		intRootNode = FARVIEW_ENABLED ? new Node("in") : new Node("intRootNode");//ScenarioNode(cam);
 
-		encounterExtRootNode = new Node();
-		encounterIntRootNode = new Node();
+		encounterExtRootNode = new Node("encExtRootNode");
+		encounterIntRootNode = new Node("encIntRootNode");
 		// intRootNode.setModelBound(bigSphere);
 		// intRootNode.attachChild(new Node());
 		/*
@@ -2302,6 +2309,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		dofParentNode.attachChild(extRootNode);
 		groundParentNode.attachChild(dofParentNode);
 		groundParentNode.attachChild(skyParentNode);
+		skyParentNode.setCullHint(CullHint.Always);
 
 		dofParentNode.attachChild(encounterExtRootNode);
 		dofParentNode.attachChild(encounterIntRootNode);
@@ -2408,9 +2416,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			System.exit(-1);
 
 		}
-		extWaterRefNode = new Node();
+		extWaterRefNode = new Node("extWatRef");
 		extRootNode.attachChild(extWaterRefNode);
-		intWaterRefNode = new Node();
+		intWaterRefNode = new Node("intWatRef");
 		intRootNode.attachChild(intWaterRefNode);
 
 		RenderPass rootPass = new RenderPass();
@@ -2506,6 +2514,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		
 		
 		waterEffectRenderPass.setReflectedScene(groundParentNode);
+		cam.normalize();
 		cam.update();
 
 		//fpsNode.getChild(0).setLocalTranslation(

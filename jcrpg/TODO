@@ -7,7 +7,12 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-
+[X] Test with Scene Monitor 1.0
+    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
+    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg65768#msg65768
+    * To begin, add the 'scenemonitor.jar' to your project or classpath. 
+    * If you want text descriptions add the 'sm_textdescriptor_jme2.jar'. If you want editable properties add 'sm_properties_jme2.jar'.
+    * To tool can be displayed or hidden using the SceneMonitor.getMonitor().showViewer(); function. I would suggest adding a key binding to show or hide the tool during execution.
 
 [ ] particle effect for models
 [?] camera bigger view - switch off back rendered models (check cave)
@@ -89,11 +94,12 @@ OPTIMIZATIONS:
 #############
 
 [X] jme2 migr:
+	[ ] add jcrpg logo for choice (BaseGame Settings prop file??)
 	[ ] check light source things?? not correct for animated
-		[ ] check a day/night cycle
+		[X] check a day/night cycle
+
 	[X] add fps stats
 	[X] add choice of screen res
-		[ ] add jcrpg logo for choice (BaseGame Settings prop file??)
 	
 
 to check for OS leak/Java mem state info: Runtime.getRuntime().freeMemory()
