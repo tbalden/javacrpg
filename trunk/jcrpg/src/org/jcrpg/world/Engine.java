@@ -36,6 +36,8 @@ public class Engine implements Runnable {
 	boolean pause = true;
 	Time worldMeanTime = null;
 	
+	boolean debugOnlyTime = false;
+	
 	
 	/**
 	 * Tells how many turns will take until a full economy
@@ -102,32 +104,36 @@ public class Engine implements Runnable {
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### TICK-TACK ###");
 				int secondsPast = camping?TICK_SECONDS_CAMPING:TICK_SECONDS;
 				worldMeanTime.tick(secondsPast);
-				secondsLeftForTurn-=secondsPast;
-				secondsLeftForEnvironment-=secondsPast+getTrueRandom().nextInt(secondsPast); // this is random
-				if (secondsLeftForTurn<=0)
+				
+				if (!debugOnlyTime)
 				{
-					synchronized (mutex) {
-						Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
-						secondsLeftForTurn = SECONDS_PER_TURN;
-						turnsLeftForEconomyUpdate-=1;
-						setPause(true);
-						turnCome = true;
-						numberOfTurn++;
-						if (turnsLeftForEconomyUpdate<=0)
-						{
-							Jcrpg.LOGGER.info("NEW ECONOMY TURN!!");
-							economyUpdateCome = true;
-							turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
+					secondsLeftForTurn-=secondsPast;
+					secondsLeftForEnvironment-=secondsPast+getTrueRandom().nextInt(secondsPast); // this is random
+					if (secondsLeftForTurn<=0)
+					{
+						synchronized (mutex) {
+							Jcrpg.LOGGER.info("NEW TURN FOR AI STARTED... pause");
+							secondsLeftForTurn = SECONDS_PER_TURN;
+							turnsLeftForEconomyUpdate-=1;
+							setPause(true);
+							turnCome = true;
+							numberOfTurn++;
+							if (turnsLeftForEconomyUpdate<=0)
+							{
+								Jcrpg.LOGGER.info("NEW ECONOMY TURN!!");
+								economyUpdateCome = true;
+								turnsLeftForEconomyUpdate = TURNS_PER_ECONOMY_UPDATE;
+							}
 						}
 					}
-				}
-				if (secondsLeftForEnvironment<=0)
-				{
-					synchronized (mutex) {
-						Jcrpg.LOGGER.info("NEW ENVIRONMENT");
-						secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
-						if (!camping) {
-							doEnvironmentNeeded = true;
+					if (secondsLeftForEnvironment<=0)
+					{
+						synchronized (mutex) {
+							Jcrpg.LOGGER.info("NEW ENVIRONMENT");
+							secondsLeftForEnvironment = SECONDS_PER_ENVIRONMENT;
+							if (!camping) {
+								doEnvironmentNeeded = true;
+							}
 						}
 					}
 				}

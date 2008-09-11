@@ -39,7 +39,6 @@ import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.GLSLShaderObjectsState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.system.DisplaySystem;
@@ -110,7 +109,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			parentOrig = new Node();
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
-			if (!internal) parentOrig.setLightCombineMode(lightCombineMode.Off);
+			if (!internal) parentOrig.setLightCombineMode(LightCombineMode.Off);
 			sharedParentCache.put(id+internal,parentOrig);
 		}
 		parent = new SharedNode("s"+parentOrig.getName(),parentOrig);

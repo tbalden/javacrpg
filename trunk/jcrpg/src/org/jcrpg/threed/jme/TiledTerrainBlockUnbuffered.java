@@ -63,7 +63,6 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
-import com.jme.renderer.Renderer;
 import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
 import com.jme.util.export.InputCapsule;

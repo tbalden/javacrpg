@@ -20,7 +20,6 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,7 +81,6 @@ import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
 
 import com.jme.app.AbstractGame;
-import com.jme.app.BaseGame;
 import com.jme.app.BaseSimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.bounding.BoundingSphere;
@@ -126,8 +124,10 @@ import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
+import com.jme.util.Debug;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
+import com.jme.util.stat.StatCollector;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
@@ -667,9 +667,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void initCore() {
-		//this.setDialogBehaviour(J3DCore.ALWAYS_SHOW_PROPS_DIALOG);// FIRSTRUN_OR_NOCONFIGFILE_SHOW_PROPS_DIALOG
-																	// );
-		//TODO this how?
+		this.setConfigShowMode(ConfigShowMode.AlwaysShow);
 		this.start();
 	}
 
@@ -781,6 +779,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			KeyBindingManager.getKeyBindingManager().set("exit",
 					KeyInput.KEY_ESCAPE);
 		}
+        KeyBindingManager.getKeyBindingManager().set( "toggle_stats",
+                KeyInput.KEY_F9 );
 		/*
 		 * KeyBindingManager.getKeyBindingManager().set( "parallel_projection",
 		 * KeyInput.KEY_F2 ); KeyBindingManager.getKeyBindingManager().set(
@@ -995,7 +995,38 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	@Override
 	protected void initGame() {
 		pManager = new BasicPassManager();
+		//System.setProperty("jme.stats", "true");
+		//showGraphs = true;
+		//Debug.updateGraphs = true;
 		super.initGame();
+		if (Debug.stats)
+		{
+	        Text f9Hint = new Text("f9", "F9 - toggle stats") {
+	            private static final long serialVersionUID = 1L;
+	            @Override
+	            public void draw(Renderer r) {
+	                StatCollector.pause();
+	                super.draw(r);
+	                StatCollector.resume();
+	            }
+	        };
+	        f9Hint.setCullHint( Spatial.CullHint.Never );
+	        f9Hint.setRenderState( Text.getDefaultFontTextureState() );
+	        f9Hint.setRenderState( Text.getFontBlend() );
+	        f9Hint.setLocalScale(.8f);
+	        f9Hint.setTextColor(ColorRGBA.gray);
+	        f9Hint.setLocalTranslation(display.getRenderer().getWidth() - f9Hint.getWidth() - 15, display.getRenderer().getHeight() - f9Hint.getHeight() - 10, 0);
+	        for (Spatial s:graphNode.getChildren())
+	        {
+	        	if (s instanceof Text)
+	        	{
+	        		s.removeFromParent();
+	        	}
+	        }
+	        graphNode.attachChild(f9Hint);
+	        graphNode.updateRenderState();
+		}
+
 	}
 
 	/**
@@ -2468,6 +2499,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		
 		pManager.add(uiPass);
 
+		// FPS render pass
+        RenderPass statPass = new RenderPass();
+        statPass.add(statNode);
+        pManager.add(statPass);
+		
 		
 		waterEffectRenderPass.setReflectedScene(groundParentNode);
 		cam.update();
@@ -2759,6 +2795,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 			simpleUpdate();
 
+			statNode.updateGeometricState(tpf, true);
 			/** Update controllers/render states/transforms/bounds for rootNode. */
 			rootNode.updateGeometricState(tpf, true);
 		}
