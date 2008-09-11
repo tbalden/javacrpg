@@ -2207,8 +2207,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	@Override
 	protected void simpleInitGame() {
 		
-		//SceneMonitor.getMonitor().showViewer(true);
-		//SceneMonitor.getMonitor().registerNode(rootNode);
 		modelLoader = new ModelLoader(this);
 		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
@@ -2562,6 +2560,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		skySphere.updateRenderState();
 
 		mainMenu.toggle();
+		//SceneMonitor.getMonitor().showViewer(true);
+		//SceneMonitor.getMonitor().registerNode(rootNode);
 	}
 
 	public void setupUIElements() throws Exception {

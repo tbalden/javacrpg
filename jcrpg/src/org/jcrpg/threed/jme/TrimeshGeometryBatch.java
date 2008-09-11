@@ -35,7 +35,6 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.GLSLShaderObjectsState;
@@ -105,16 +104,16 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal, NodePlaceholder placeHolder) {
 		this.core = core;
 		setIsCollidable(false);
-		Node parentOrig = sharedParentCache.get(id+internal);
+		Node parentOrig = null;//sharedParentCache.get(id+internal);
 		if (parentOrig==null)
 		{
-			parentOrig = new Node();
+			parentOrig = new Node("TGB"+instanceCounter++);
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
 			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
 			if (!internal) parentOrig.setLightCombineMode(LightCombineMode.Off);
-			sharedParentCache.put(id+internal,parentOrig);
+			//sharedParentCache.put(id+internal,parentOrig);
 		}
-		parent = new SharedNode("sTriGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
+		parent = parentOrig;//new SharedNode("sTriGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
 		parent.setLocalTranslation(placeHolder.getLocalTranslation());
 		parent.attachChild(this);
 		parent.setModelBound(new BoundingBox());
