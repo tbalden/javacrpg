@@ -142,6 +142,7 @@ public class J3DStandingEngine {
 		World world;
 		int x,y,z;
 		int rX,rY,rZ;
+		@SuppressWarnings("unchecked")
 		public RenderedAreaThread(J3DStandingEngine engine, World world, int rX, int rY, int rZ, int x, int y, int z)
 		{
 			System.out.println("NEW RENDER: "+x+" "+y+" "+z);
@@ -2064,6 +2065,7 @@ public class J3DStandingEngine {
     	System.out.println("BUFFER / EX BUFF POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount+ " # "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
 	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
+	    //SceneMonitor.getMonitor().updateViewer(0.0f);
 	}
 	
 	
