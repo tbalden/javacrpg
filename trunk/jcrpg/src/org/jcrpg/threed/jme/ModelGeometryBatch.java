@@ -35,7 +35,6 @@ import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
-import com.jme.scene.SharedNode;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.RenderState;
 
@@ -123,7 +122,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 
 		String parentKey = m.getId(placeHolder);
 		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
-		Node parentOrig = sharedParentCache.get(parentKey);
+		Node parentOrig = null;//sharedParentCache.get(parentKey);
 		if (parentOrig==null)
 		{
 			if (data==null || data.passNode==null)
@@ -134,7 +133,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
 				}
-				sharedParentCache.put(parentKey,parentOrig);
+				//sharedParentCache.put(parentKey,parentOrig);
 			} else
 			{
 				System.out.println("PASSNODE...");
@@ -154,7 +153,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		if (data==null || data.passNode==null)
 		{
-			parent = new SharedNode("s"+parentOrig.getName(),parentOrig);
+			parent = parentOrig;//new SharedNode("s"+parentOrig.getName(),parentOrig);
 			parent.setLocalTranslation(placeHolder.getLocalTranslation());
 			parent.attachChild(this);
 			parent.setModelBound(new BoundingBox());
@@ -190,22 +189,22 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 
 		String parentKey = m.getId(placeHolder);
 		parentKey+= placeHolder.neighborCubeData==null?"":placeHolder.neighborCubeData.getTextureKeyPartForBatch();
-		Node parentOrig = sharedParentCache.get(parentKey);
+		Node parentOrig = null;//sharedParentCache.get(parentKey);
 		if (parentOrig==null)
 		{
 			if (data==null || data.passNode==null)
 			{
-				parentOrig = new Node();
+				parentOrig = new Node("MGB"+instanceCounter++);
 				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
 				if (m.type == Model.SIMPLEMODEL) {
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
 				}
-				sharedParentCache.put(parentKey,parentOrig);
+				//sharedParentCache.put(parentKey,parentOrig);
 			} else
 			{
 				System.out.println("PASSNODE...");
-				parentOrig = new Node();
+				parentOrig = new Node("MGB"+instanceCounter++);
 				//parentOrig = data.passNode;//.attachChild(parentOrig);
 				parentOrig.attachChild(data.passNode);
 				this.copyTextureCoordinates(0, 1, 1);
@@ -221,7 +220,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		if (data==null || data.passNode==null)
 		{
-			parent = new SharedNode("sMGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
+			parent = parentOrig;//new SharedNode("sMGB_"+(instanceCounter++)+"_"+parentOrig.getName(),parentOrig);
 			parent.setLocalTranslation(placeHolder.getLocalTranslation());
 			parent.attachChild(this);
 			parent.setModelBound(new BoundingBox());
