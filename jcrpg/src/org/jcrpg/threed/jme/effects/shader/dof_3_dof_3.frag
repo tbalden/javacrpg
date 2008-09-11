@@ -185,7 +185,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples04;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -193,7 +193,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples05;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -201,7 +201,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples06;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -209,7 +209,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples07;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -217,7 +217,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples08;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -225,7 +225,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples09;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -233,7 +233,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples10;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
@@ -241,7 +241,7 @@ void main()
 
    newCoord = vTexCoord + sampleDist0 * samples11;
    dCheck = texture2D(depth, newCoord);
-   if (dCheck.g==0 || abs(dCheck.g-d.r)<0.1)
+   if (dCheck.g==0 || abs(dCheck.g-d.g)<0.1)
    {
     	sum += texture2D(scene, newCoord);
     	additionCount = additionCount+1;
