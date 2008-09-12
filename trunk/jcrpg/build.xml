@@ -67,6 +67,7 @@
 				<fileset dir="${srcjme.dir}" includes="*.jar"/>
 				<fileset dir="${srclib.dir}" includes="*.jar"/>
 				<fileset dir="${srclib.dir}/xstream" includes="*.jar"/>
+				<fileset dir="${srclib.dir}/lwjgl" includes="*.jar"/>
 			</classpath>
 			<include name="org/jcrpg/**"/>
 		</javac>
@@ -82,6 +83,12 @@
 				<include name="*.jar"/>
 			</fileset>
 			<fileset dir="${srclib.dir}/xstream">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${srclib.dir}/lwjgl">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${srclib.dir}/jorbis">
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
@@ -115,7 +122,7 @@
 				<fileset dir="${srcjme.dir}" includes="*.jar"/>
 			</classpath>
 			<env key="java.library.path" value="${srclib.dir}"/>
-			<jvmarg value="-Djava.library.path=${srclib.dir}"/>
+			<jvmarg value="-Djava.library.path=${srclib.dir}/lwjgl/native"/>
 		</java>
 	</target>
 
