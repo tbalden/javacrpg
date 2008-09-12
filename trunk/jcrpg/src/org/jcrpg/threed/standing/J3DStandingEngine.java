@@ -1912,7 +1912,6 @@ public class J3DStandingEngine {
 			while (true)
 			{
 				Node n = newNodesToSetCullingDynamic.remove(0);
-				n.unlock();
 				n.setCullHint(CullHint.Inherit);
 				n.updateRenderState(); // update render state for the newly placed nodes...
 				if (n.getChildren()!=null && n.getChildren().size()==1)
@@ -1924,7 +1923,7 @@ public class J3DStandingEngine {
 					}
 					if (s instanceof GeometryBatchMesh)
 					{
-						
+						n.unlock();
 						((GeometryBatchMesh)s).rebuild();
 					}
 				}

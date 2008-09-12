@@ -2,10 +2,6 @@
 package org.jcrpg.threed.jme.effects;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -139,7 +135,7 @@ public class DirectionalShadowMapPass extends Pass {
 		
 		setViewTarget(new Vector3f(0,0,0));
 		shader = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-		useShaders = false;//GLSLShaderObjectsState.isSupported();
+		useShaders = GLSLShaderObjectsState.isSupported();
 	}
 	
 	/**
@@ -368,25 +364,25 @@ public class DirectionalShadowMapPass extends Pass {
 	public GLSLShaderObjectsState getShader() {
 		return shader;
 	}
-	private InputStream prefixStream(String text, InputStream in) {
-	try {
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		
-		DataInputStream dataStream = new DataInputStream(in);
-	    byte shaderCode[] = new byte[in.available()];
-	    dataStream.readFully(shaderCode);
-	    in.close();
-	    dataStream.close();
-	    
-	    bout.write(text.getBytes());
-	    bout.write(shaderCode);
-	    bout.close();
-	    
-	    return new ByteArrayInputStream(bout.toByteArray());
-	} catch (IOException e) {
-        throw new RuntimeException("Failed to load shadow map shader:",e);
-	}
-}	
+	/*private InputStream prefixStream(String text, InputStream in) {
+		try {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			
+			DataInputStream dataStream = new DataInputStream(in);
+		    byte shaderCode[] = new byte[in.available()];
+		    dataStream.readFully(shaderCode);
+		    in.close();
+		    dataStream.close();
+		    
+		    bout.write(text.getBytes());
+		    bout.write(shaderCode);
+		    bout.close();
+		    
+		    return new ByteArrayInputStream(bout.toByteArray());
+		} catch (IOException e) {
+	        throw new RuntimeException("Failed to load shadow map shader:",e);
+		}
+	}	*/
 	private InputStream getResource(String ref) {
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream("org/jcrpg/threed/jme/effects/shader/"+ref);
 	}

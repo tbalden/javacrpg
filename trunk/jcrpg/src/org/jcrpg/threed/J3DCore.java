@@ -20,7 +20,6 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -124,9 +123,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
-import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
-import com.jme.system.PropertiesGameSettings;
 import com.jme.util.Debug;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
@@ -280,7 +277,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					Jcrpg.LOGGER.setLevel(Level.OFF);
 			}
 			FPSCOUNTER = loadValue("FPSCOUNTER", false);
-			TEXTURE_SPLATTING = false;//loadValue("TEXTURE_SPLATTING", false); // it's tooo slow, and actually doesnt work with atlas textures?
+			TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
 			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
 			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
 			VBO_ENABLED = loadValue("VBO_ENABLED", true);
@@ -1045,15 +1042,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void updateTimeRelated(boolean modifyLights) {
-		if (true == false) {
-			// cRootNode.clearRenderState(RenderState.RS_LIGHT);
-			// cRootNode.setLightCombineMode(LightState.OFF);
-			// skydomeLightState.detachAll();
-			// cLightState.detachAll();
-			return;
-		}
-
-		// map.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(
 				gameState.world, gameState.getNormalPositions().viewPositionX,
@@ -2226,7 +2214,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		ZBufferState zStatePasses = display.getRenderer().createZBufferState();
 		zStatePasses.setEnabled(true);
 		//zStatePasses.setFunction(ZBufferState.CF_LEQUAL);
-		rootNode.setRenderState(zStatePasses);
+		//rootNode.setRenderState(zStatePasses);
 		// rootNode.setCullMode(Node.CULL_DYNAMIC);
 
 		// ui root
@@ -2291,7 +2279,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		cs_none = display.getRenderer().createCullState();
 		cs_none.setCullFace(CullState.Face.None);
 
-		rootNode.setRenderState(cs_none);
+		//rootNode.setRenderState(cs_none);
 		/*
 		 * rootNode.clearRenderState(RenderState.RS_DITHER);
 		 * rootNode.clearRenderState(RenderState.RS_FRAGMENT_PROGRAM);
@@ -2432,7 +2420,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		intRootNode.attachChild(intWaterRefNode);
 
 		RenderPass rootPass = new RenderPass();
-		// rootPass.add(rootNode);
+		//rootPass.add(rootNode);
 		pManager.add(rootPass);
 
 		waterEffectRenderPass = new WaterRenderPass(cam, 4, false, true);

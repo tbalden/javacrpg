@@ -132,6 +132,7 @@ public class GeoTileLoader {
 	{
 		TiledTerrainBlockAndPassNode block = loadNodeOriginal(nodePlaceholder, true);
 		block.passNode.attachChild(block.block);
+		block.block.copyTextureCoordinates(0, 1, 1);
 		return (PooledNode)block.passNode;
 	}
 
@@ -389,7 +390,7 @@ public class GeoTileLoader {
 	
 	public int[][] getHeightMaps(NodePlaceholder nodePlaceholder)
 	{
-		SimpleModel model = (SimpleModel)nodePlaceholder.model;
+		//SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		RenderedCube rCube = nodePlaceholder.cube;
 		float[] cornerHeights = rCube.cube.cornerHeights;
 		if (cornerHeights==null) cornerHeights = new float[9];
@@ -488,10 +489,6 @@ public class GeoTileLoader {
 	 */
 	public TiledTerrainBlockAndPassNode loadNodeOriginal(NodePlaceholder nodePlaceholder, boolean splatNodeNeeded)
 	{
-		if (true==false)
-		{
-			if (b!=null) return new TiledTerrainBlockAndPassNode(b,null);
-		}
 
 		NeighborCubeData data = nodePlaceholder.neighborCubeData;//getNeighborCubes(nodePlaceholder);
 		
@@ -508,7 +505,7 @@ public class GeoTileLoader {
 			block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
 		}
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
-		RenderedCube rCube = nodePlaceholder.cube;
+		//RenderedCube rCube = nodePlaceholder.cube;
 		
 		String ownTexture = data.ownGroundTexture;
 		String oppositeTexture = data.oppositeGroundTexture;
@@ -580,7 +577,7 @@ public class GeoTileLoader {
 			if (splatNodeNeeded)
 			{
 				// this part creates the splat pass node with the needed sides alpha texture: 
-				
+				System.out.println("SPLAT "+data.getTextureKeyPartForBatch()+" "+oppAdjTexture+" "+adjacentTexture);
 				splattingPassNode = new PooledPassNode("SplatPassNode",block);
 				//l.core.gameState.getCurrentStandingEngine().extRootNode
 			    TextureState ts1 = createSplatTextureState(
@@ -607,15 +604,17 @@ public class GeoTileLoader {
 		        if (oppAdjTexture!=null && !oppAdjTexture.equals(ownTexture)) {
 		        	tsOppAdj = createSplatTextureState(
 			        		oppAdjTexture,
-			                "blendAlphaOppAdj1.png");
+		        			"blendAlphaOppAdj1.png");
 		        }
 		        
 		        //TextureState ts6 = createLightmapTextureState("./data/test/lightmap.jpg");
 
 		        // creating the node with the pass states per texturestate...		        
 		        PassNodeState passNodeState = new PassNodeState();
+		        passNodeState.setPassState(as);
 		        passNodeState.setPassState(ts1);
 		        splattingPassNode.addPass(passNodeState);
+		        splattingPassNode.setRenderState(as);
 		        
 		        if (tsOpp!=null)
 		        {
@@ -649,9 +648,8 @@ public class GeoTileLoader {
 		        splattingPassNode.lockBounds();
 		        splattingPassNode.lockTransforms();
 		        splattingPassNode.lockShadows();
-
 		        // the copytexturecoords is needed to make splatting work at all
-		        block.copyTextureCoordinates(0, 1, 0.999f);
+		        
 			}
 			
 		} else 
@@ -663,24 +661,6 @@ public class GeoTileLoader {
 		return new TiledTerrainBlockAndPassNode(block,splattingPassNode);//splattingPassNode);
 	}
 	
-	public Texture loadTexture(String textureName)
-	{
-		Texture texture = (Texture)ModelLoader.textureCache.get(textureName);
-		
-		if (texture==null) {
-			URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, textureName);
-			if (u==null)return null;
-			texture = TextureManager.loadTexture(u,Texture.MinificationFilter.BilinearNearestMipMap,
-		            Texture.MagnificationFilter.Bilinear);
-			
-			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
-			texture.setApply(Texture.ApplyMode.Combine);			
-			//texture.setCombineFuncAlpha(combineFuncAlpha)
-			texture.setRotation(J3DCore.qTexture);
-			ModelLoader.textureCache.put(textureName, texture);
-		}
-		return texture;
-	}
 	
 	public HashMap<String, TextureState> stateCache = new HashMap<String, TextureState>();
 	public HashMap<String, Texture> alphaTextureCache = new HashMap<String, Texture>();
@@ -698,10 +678,10 @@ public class GeoTileLoader {
 	    	{
 		        URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, texture);
 		        t0 = TextureManager.loadTexture(u,
-		        		Texture.MinificationFilter.BilinearNearestMipMap,
-			            Texture.MagnificationFilter.Bilinear);
+		                Texture.MinificationFilter.Trilinear,
+		                Texture.MagnificationFilter.Bilinear);
 				
-				//texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
+				//t0.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 				t0.setApply(Texture.ApplyMode.Modulate);
 		        //t0.setScale(new Vector3f(1f, 1f, 1.0f));
 		        splatTextureCache.put(texture, t0);
@@ -725,13 +705,11 @@ public class GeoTileLoader {
         	URL u = ResourceLocatorTool.locateResource(ResourceLocatorTool.TYPE_TEXTURE, alpha);
         	if (u!=null)
         	{
-        		
-    	        t1 = TextureManager.loadTexture(u, 		        		Texture.MinificationFilter.BilinearNoMipMaps,
-			            Texture.MagnificationFilter.NearestNeighbor);
-				
-				//texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
-				t1.setApply(Texture.ApplyMode.Combine);
-
+    	        t1 = TextureManager.loadTexture(u,                
+    	        		Texture.MinificationFilter.Trilinear,
+    	                Texture.MagnificationFilter.Bilinear);
+    	        //t1.setWrap(Texture.WrapMode.Repeat);
+    	        t1.setApply(Texture.ApplyMode.Combine);
     	        t1.setCombineFuncRGB(Texture.CombinerFunctionRGB.Replace);
     	        t1.setCombineSrc0RGB(Texture.CombinerSource.Previous);
     	        t1.setCombineOp0RGB(Texture.CombinerOperandRGB.SourceColor);
