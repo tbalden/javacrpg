@@ -111,7 +111,7 @@ public class DirectionalShadowMapPass extends Pass {
 	private RenderState[] preStates = new RenderState[RenderState.RS_MAX_STATE];
 	
 	/** The colour of shadows cast */
-	private ColorRGBA shadowCol = new ColorRGBA(0.1f,0.1f,0.1f,0.4f);
+	private ColorRGBA shadowCol = new ColorRGBA(0.0f,0.0f,0.0f,0.3f);
 	private GLSLShaderObjectsState shader;
 	/** True if the pass should use shaders */
 	private boolean useShaders;
@@ -139,7 +139,7 @@ public class DirectionalShadowMapPass extends Pass {
 		
 		setViewTarget(new Vector3f(0,0,0));
 		shader = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-		useShaders = shader.isSupported();
+		useShaders = false;//GLSLShaderObjectsState.isSupported();
 	}
 	
 	/**
@@ -185,6 +185,10 @@ public class DirectionalShadowMapPass extends Pass {
 	 */
 	public void setViewTarget(Vector3f target) {
 		if (target.equals(shadowCameraLookAt)) {
+			return;
+		}
+		if (target!=null && shadowCameraLookAt!=null && target.distance(shadowCameraLookAt)<0.5f)
+		{
 			return;
 		}
 		
@@ -290,9 +294,8 @@ public class DirectionalShadowMapPass extends Pass {
 		// > 0 on shadows.
 		discardShadowFragments = r.createBlendState();
 		discardShadowFragments.setEnabled(true);
-		discardShadowFragments.setTestEnabled(true);
-		//discardShadowFragments.setReference(0.1f);
-		discardShadowFragments.setTestFunction(BlendState.TestFunction.GreaterThan);
+		//discardShadowFragments.setTestEnabled(true);
+		//discardShadowFragments.setTestFunction(BlendState.TestFunction.GreaterThan);
 		discardShadowFragments.setBlendEnabled(true);
 		discardShadowFragments.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
 		discardShadowFragments.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
@@ -445,9 +448,9 @@ public class DirectionalShadowMapPass extends Pass {
 	protected void updateShadowMap(Renderer r) {
 		saveEnforcedStates();
 		context.enforceState(noClip);
-		//context.enforceState(noTexture);
+		context.enforceState(noTexture);
 		context.enforceState(colorDisabled); 
-		//context.enforceState(cullFrontFace);
+		context.enforceState(cullFrontFace);
 		context.enforceState(noLights);
 	
 		r.setPolygonOffset(0, 5); 

@@ -32,6 +32,7 @@ public class SimpleMoon extends Orbiter{
 	{
 		this.id = id;
 		type = SIMPLE_MOON_ORBITER;
+		needsShadowPass = false;
 	}
 	
 	@Override
