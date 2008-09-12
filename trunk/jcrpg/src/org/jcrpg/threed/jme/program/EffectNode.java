@@ -113,11 +113,11 @@ public abstract class EffectNode extends Node {
 			pointLight.setEnabled(true);
 			ls.attach(pointLight);
 			
-			J3DCore.getInstance().extLightState.attach(pointLight);
 		}
 		light.removeFromParent();
 		light.getLight().setAmbient(color);
 		light.getLight().setEnabled(true);
+		J3DCore.getInstance().extLightState.attach(light.getLight());
 		return light;
 	}
 
