@@ -104,19 +104,19 @@ public class ModelLoader {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    alphaStateBase = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
-	    alphaStateBase.setBlendEnabled(true);
-	    alphaStateBase.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
-	    alphaStateBase.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
-	    alphaStateBase.setTestEnabled(true);
-	    alphaStateBase.setTestFunction(BlendState.TestFunction.GreaterThan);
-	    alphaStateBase.setEnabled(true);
+	    alphaStateParticleEffectBase = DisplaySystem.getDisplaySystem().getRenderer().createBlendState();
+	    alphaStateParticleEffectBase.setBlendEnabled(true);
+	    alphaStateParticleEffectBase.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
+	    alphaStateParticleEffectBase.setDestinationFunction(BlendState.DestinationFunction.One);
+	    alphaStateParticleEffectBase.setTestEnabled(true);
+	    alphaStateParticleEffectBase.setTestFunction(BlendState.TestFunction.GreaterThan);
+	    alphaStateParticleEffectBase.setEnabled(true);
 	    zBufferStateOff = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();
 	    zBufferStateOff.setEnabled(false);
 	    
 	}
 	
-	public BlendState alphaStateBase = null;
+	public BlendState alphaStateParticleEffectBase = null;
 	public ZBufferState zBufferStateOff = null;
 	
     

@@ -95,6 +95,7 @@ public abstract class EffectNode extends Node {
 		{
 			light.removeFromParent();
 			light.getLight().setEnabled(false);
+			J3DCore.getInstance().extLightState.detach(light.getLight());
 		}
 	}
 	
@@ -112,10 +113,7 @@ public abstract class EffectNode extends Node {
 			pointLight.setEnabled(true);
 			ls.attach(pointLight);
 			
-			// TODO attach to rootnode's lightstate instead!!
-			
-			//J3DCore.getInstance().getRootNode1().
-			//light.setTarget(J3DCore.getInstance().getRootNode1());		
+			J3DCore.getInstance().extLightState.attach(pointLight);
 		}
 		light.removeFromParent();
 		light.getLight().setAmbient(color);

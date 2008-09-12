@@ -58,7 +58,7 @@ public class FireDots extends EffectNode {
 		pPoints.getParticleController().setControlFlow(false);
 		pPoints.warmUp(120);
 
-		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
+		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateParticleEffectBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 
 		this.setRenderState(as1);
