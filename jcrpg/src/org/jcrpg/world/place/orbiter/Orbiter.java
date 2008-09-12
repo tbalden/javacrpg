@@ -27,6 +27,7 @@ public abstract class Orbiter {
 	public abstract float[] getLightPower(Time localTime, CubeClimateConditions conditions);
 	public String type;
 	public String id;
+	public boolean needsShadowPass = true;
 	
 	
 }

@@ -1114,6 +1114,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					updateRenderState = true;
 				}
 				s.setLocalTranslation(orbiterVector);
+				if (J3DCore.SHADOWS)
+				{
+					sPass.setEnabled(orb.needsShadowPass);
+				}
 				// s.updateRenderState();
 			} else {
 				// if there is no coordinates, detach the orbiter

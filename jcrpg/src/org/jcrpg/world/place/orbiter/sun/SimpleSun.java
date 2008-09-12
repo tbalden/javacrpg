@@ -30,6 +30,7 @@ public class SimpleSun extends Orbiter{
 	{
 		this.id = id;
 		type = SIMPLE_SUN_ORBITER;
+		needsShadowPass = true;
 	}
 	
 	@Override
