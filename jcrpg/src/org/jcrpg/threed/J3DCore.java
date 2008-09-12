@@ -862,7 +862,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 			// flare.setIntensity(J3DCore.BLOOM_EFFECT?0.0001f:1.0f);
 			flare.setRootNode(groundParentNode);
-			groundParentNode.attachChild(lightNode);
+			skyParentNode.attachChild(lightNode);
 			flares.put(flare, flare.getRootNode());
 
 			// notice that it comes at the end
@@ -924,7 +924,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	}
 
-	LightState extLightState, skydomeLightState = null, internalLightState,
+	public LightState extLightState, skydomeLightState = null, internalLightState,
 			encounterIntLightState;
 
 	/**

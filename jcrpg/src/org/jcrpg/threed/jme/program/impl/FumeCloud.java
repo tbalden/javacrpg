@@ -43,7 +43,7 @@ public class FumeCloud extends EffectNode {
 
 	public FumeCloud() {
 		speed = 0.8f;
-		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateBase;
+		BlendState as1 = J3DCore.getInstance().modelLoader.alphaStateParticleEffectBase;
 		ZBufferState zstate = J3DCore.getInstance().modelLoader.zBufferStateOff;
 		TextureState ts = J3DCore.getInstance().modelLoader
 				.loadTextureStates(new String[] { "flaresmall.jpg" })[0];

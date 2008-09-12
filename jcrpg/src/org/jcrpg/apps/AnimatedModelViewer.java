@@ -35,9 +35,12 @@ package org.jcrpg.apps;
 import java.io.File;
 import java.nio.FloatBuffer;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
+import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
+import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 
 import com.jme.app.SimplePassGame;
 import com.jme.image.Image;
@@ -131,7 +134,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		mesh = args[0];
 		anim = args[1];
 		AnimatedModelViewer app = new AnimatedModelViewer();
-		//app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
+		// app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
 		app.start();
 	}
 
@@ -173,21 +176,27 @@ public class AnimatedModelViewer extends SimplePassGame {
 		 * n2.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
 		 * n2.setLocalTranslation(new Vector3f(3f,0,0));
 		 */
-		/*
-		 * for (int i=0; i<36; i++) { n = new
-		 * AnimatedModelNode(BoarmanTribe.boarmanMaleMage
-		 * .modelName,BoarmanTribe.boarmanMaleMage.animation,1f,new float[]
-		 * {0,0,0},1f); //SharedNode ns = new SharedNode("_",n);
-		 * //ns.setLocalTranslation(new Vector3f(i/4,2f+(i%4)2f,0)); //n = new
-		 * AnimatedModelNode
-		 * (BoarmanTribe.boarmanMaleMage.modelName,BoarmanTribe.
-		 * boarmanMaleMage.animation,1f,true);;
-		 * n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
-		 * n.unlockTransforms(); n.setLocalTranslation(new
-		 * Vector3f(i/4,2f+(i%4)2f,0)); n.lockTransforms(); //n.lockBranch();
-		 * rootNode.attachChild(n); } rootNode.attachChild(n);
-		 * //rootNode.attachChild(n2);
-		 */
+		J3DCore.LOGGING = false;
+		for (int i = 0; i < 36; i++) {
+			n = new AnimatedModelNode(BoarmanTribe.boarmanMaleMage.modelName,
+					BoarmanTribe.boarmanMaleMage.animation, 1f, new float[] {
+							0, 0, 0 }, 1f); 
+			/*n = new AnimatedModelNode(GorillaHorde.gorilla.modelName,
+					GorillaHorde.gorilla.animation, 1f, new float[] {
+							0, 0, 0 }, 1f);*/ 
+			// ns.setLocalTranslation(new Vector3f(i/4,2f+(i%4)2f,0));
+			// n = new AnimatedModelNode
+			// (BoarmanTribe.boarmanMaleMage.modelName,BoarmanTribe.
+			// boarmanMaleMage.animation,1f,true);;
+			n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
+			n.unlockTransforms();
+			n.setLocalTranslation(new Vector3f(i / 4, 2f + (i % 4) * 2f, 0));
+			n.lockTransforms(); // n.lockBranch();
+			rootNode.attachChild(n);
+		}
+		rootNode.attachChild(n);
+		// rootNode.attachChild(n2);
+
 		PointLight dr = new PointLight();
 		dr.setEnabled(true);
 		dr.setDiffuse(ColorRGBA.white);
@@ -204,7 +213,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		// lightBox.setModelBound(new BoundingBox());
 		// lightBox.updateModelBound();
 		// lightNode.attachChild(lightBox);
-		//lightNode.setTarget(rootNode);
+		// lightNode.setTarget(rootNode);
 		lightNode.setLocalTranslation(new Vector3f(+14f, 14f, +14f));
 
 		// clear the lights from this lightbox so the lightbox itself doesn't
@@ -214,28 +223,27 @@ public class AnimatedModelViewer extends SimplePassGame {
 
 		// Setup the lensflare textures.
 		TextureState[] tex = new TextureState[4];
-		/*tex[0] = display.getRenderer().createTextureState();
-		tex[0].setTexture(TextureManager.loadTexture("./data/flare/flare1.png",
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR, Image.RGBA8888,
-				1.0f, true));
-		tex[0].setEnabled(true);
-
-		tex[1] = display.getRenderer().createTextureState();
-		tex[1].setTexture(TextureManager.loadTexture("./data/flare/flare2.png",
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR));
-		tex[1].setEnabled(true);
-
-		tex[2] = display.getRenderer().createTextureState();
-		tex[2].setTexture(TextureManager.loadTexture(
-				("./data/flare/flare3.png"), Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR));
-		tex[2].setEnabled(true);
-
-		tex[3] = display.getRenderer().createTextureState();
-		tex[3].setTexture(TextureManager.loadTexture(
-				("./data/flare/flare4.png"), Texture.MM_LINEAR_LINEAR,
-				Texture.FM_LINEAR));
-		tex[3].setEnabled(true);*/
+		
+		  tex[0] = display.getRenderer().createTextureState();
+		  tex[0].setTexture
+		  (TextureManager.loadTexture("./data/flare/flare1.png",
+		  Texture.MinificationFilter.BilinearNearestMipMap, Texture.MagnificationFilter.Bilinear, Image.Format.RGBA8, 1.0f,
+		  true)); tex[0].setEnabled(true);
+		  
+		  tex[1] = display.getRenderer().createTextureState();
+		  tex[1].setTexture
+		  (TextureManager.loadTexture("./data/flare/flare2.png",
+				  Texture.MinificationFilter.BilinearNearestMipMap, Texture.MagnificationFilter.Bilinear));
+		  tex[1].setEnabled(true);
+		  
+		  tex[2] = display.getRenderer().createTextureState();
+		  tex[2].setTexture(TextureManager.loadTexture(
+		  ("./data/flare/flare3.png"), Texture.MinificationFilter.BilinearNearestMipMap, Texture.MagnificationFilter.Bilinear)); tex[2].setEnabled(true);
+		  
+		  tex[3] = display.getRenderer().createTextureState();
+		  tex[3].setTexture(TextureManager.loadTexture(
+		  ("./data/flare/flare4.png"), Texture.MinificationFilter.BilinearNearestMipMap, Texture.MagnificationFilter.Bilinear)); tex[3].setEnabled(true);
+		 
 
 		flare = LensFlareFactory.createBasicLensFlare("flare", tex);
 		flare.setRootNode(rootNode);
@@ -246,22 +254,23 @@ public class AnimatedModelViewer extends SimplePassGame {
 
 		BlendState as = display.getRenderer().createBlendState();
 		as.setBlendEnabled(true);
-		/*as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-		as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
-		as.setTestEnabled(true);
-		as.setTestFunction(AlphaState.TF_GREATER);
-		as.setEnabled(true);
-		// alpha used for blending the lightmap*/
+		/*
+		 * as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+		 * as.setDstFunction(AlphaState.DB_ONE_MINUS_SRC_ALPHA);
+		 * as.setTestEnabled(true); as.setTestFunction(AlphaState.TF_GREATER);
+		 * as.setEnabled(true); // alpha used for blending the lightmap
+		 */
 		BlendState as2 = display.getRenderer().createBlendState();
 		as2.setBlendEnabled(true);
-		/*as2.setSrcFunction(AlphaState.SB_DST_COLOR);
-		as2.setDstFunction(AlphaState.DB_SRC_COLOR);
-		as2.setTestEnabled(true);
-		as2.setTestFunction(AlphaState.TF_GREATER);
-		as2.setEnabled(true);*/
+		/*
+		 * as2.setSrcFunction(AlphaState.SB_DST_COLOR);
+		 * as2.setDstFunction(AlphaState.DB_SRC_COLOR);
+		 * as2.setTestEnabled(true); as2.setTestFunction(AlphaState.TF_GREATER);
+		 * as2.setEnabled(true);
+		 */
 
 		// create some interesting texturestates for splatting
-		TextureState ts1 = createSplatTextureState("jungle_atlas.png", null);
+		/*TextureState ts1 = createSplatTextureState("jungle_atlas.png", null);
 
 		/*
 		 * TextureState ts2 = createSplatTextureState( "darkrock.jpg",
@@ -273,7 +282,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		 * TextureState ts4 = createSplatTextureState( "nicegrass.jpg",
 		 * "grassalpha.png");
 		 */
-		TextureState ts5 = createSplatTextureState("sand2.jpg",
+		/*TextureState ts5 = createSplatTextureState("sand2.jpg",
 				"blendAlphaOpp1.png");
 		// TextureState ts6 =
 		// createLightmapTextureState("./data/test/lightmap.jpg");
@@ -289,20 +298,17 @@ public class AnimatedModelViewer extends SimplePassGame {
 		FloatBuffer b = page.getTextureCoords(0).coords;
 		float position = 2;
 		int atlas_size = 3;
-		/*for (int i = 0; i < b.capacity(); i++) {
-			if (i%2==1) continue;
-			float f = b.get(i);
-			System.out.println(f);
-			b.put(i, (f / atlas_size)+ position/atlas_size);
-		}*/
+		/*
+		 * for (int i = 0; i < b.capacity(); i++) { if (i%2==1) continue; float
+		 * f = b.get(i); System.out.println(f); b.put(i, (f / atlas_size)+
+		 * position/atlas_size); }
+		 */
 
 		// q.setRenderState(as);
 		// page.setRenderState(as);
 		// page.setDetailTexture(1, 1);
-
 		// splattingPassNode.attachChild(page);
-
-		PassNodeState passNodeState = new PassNodeState();
+		/*PassNodeState passNodeState = new PassNodeState();
 
 		passNodeState.setPassState(ts1);
 		splattingPassNode.addPass(passNodeState);
@@ -321,12 +327,12 @@ public class AnimatedModelViewer extends SimplePassGame {
 		 * passNodeState.setPassState(as);
 		 * splattingPassNode.addPass(passNodeState);
 		 */
-		if (true == true) {
+		/*if (true == true) {
 			passNodeState = new PassNodeState();
 			passNodeState.setPassState(ts5);
 			passNodeState.setPassState(as);
 			splattingPassNode.addPass(passNodeState);
-		}
+		}*/
 
 		// splattingPassNode.set
 		// passNodeState = new PassNodeState();
@@ -342,7 +348,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 
 		// splatTerrain = splattingPassNode;
 
-		page.updateRenderState();
+		/*page.updateRenderState();
 		splattingPassNode.setLocalTranslation(new Vector3f(3f, 0, 0));
 		// rootNode.attachChild(page);
 		// rootNode.attachChild(splattingPassNode);
@@ -352,27 +358,27 @@ public class AnimatedModelViewer extends SimplePassGame {
 		q.setRenderState(ts1);
 		page.updateRenderState();
 		q.updateRenderState();
-		q2.getLocalTranslation().addLocal(new Vector3f(10,5,2));
+		q2.getLocalTranslation().addLocal(new Vector3f(10, 5, 2));
 		rootNode.attachChild(page);
 		rootNode.attachChild(q);
-		rootNode.attachChild(q2);
+		rootNode.attachChild(q2);*/
 
 		rootNode.updateRenderState();
 		rootNode.attachChild(lightNode);
 		RenderPass rootPass = new RenderPass();
 		rootPass.add(rootNode);
 		pManager.add(rootPass);
-		
-		DepthOfFieldRenderPass dof = new DepthOfFieldRenderPass(cam,2,4);
+
+		DepthOfFieldRenderPass dof = new DepthOfFieldRenderPass(cam, 2, 4);
 
 		dof.setBlurSize(0.013f);
 		dof.setNearBlurDepth(-00f);
 		dof.setFocalPlaneDepth(20f);
 		dof.setFarBlurDepth(200f);
 		dof.setRootSpatial(rootNode);
-	
-		pManager.add(dof);
-	//	rootNode.attachChild(fpsNode);
+
+		//pManager.add(dof);
+		//rootNode.attachChild(fpsNode);
 
 		// notice that it comes at the end
 		// lightNode.attachChild(flare);
@@ -382,11 +388,11 @@ public class AnimatedModelViewer extends SimplePassGame {
 	private TextureState createLightmapTextureState(String texture) {
 		TextureState ts = display.getRenderer().createTextureState();
 
-/*		Texture t0 = TextureManager.loadTexture(texture,
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		ts.setTexture(t0, 0);
-*/
+		/*
+		 * Texture t0 = TextureManager.loadTexture(texture,
+		 * Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+		 * t0.setWrap(Texture.WM_WRAP_S_WRAP_T); ts.setTexture(t0, 0);
+		 */
 		return ts;
 	}
 
@@ -394,11 +400,11 @@ public class AnimatedModelViewer extends SimplePassGame {
 		TextureState ts = display.getRenderer().createTextureState();
 		boolean[][] data = new boolean[50][50];
 		// Texture t0 = TextureCreator.newAlphaMaskTexture(data);
-		Texture t0 = null;//TextureManager.loadTexture(texture,
-			//	Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
+		Texture t0 = null;// TextureManager.loadTexture(texture,
+		// Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
 		// t0.setWrap(Texture.WM_WRAP_S_WRAP_T);
 		// t0.setApply(Texture.AM_MODULATE);
-		t0.setScale(new Vector3f(10.1f,10f, 10.1f));
+		t0.setScale(new Vector3f(10.1f, 10f, 10.1f));
 		ts.setTexture(t0, 0);
 		ts.apply();
 		if (alpha != null) {
@@ -413,17 +419,18 @@ public class AnimatedModelViewer extends SimplePassGame {
 		data[3][3] = true;
 		// Texture t1 = TextureCreator.newAlphaMaskTexture(data);
 
-		/*Texture t1 = TextureManager.loadTexture(alpha,
-				Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR);
-		// t1.setScale(new Vector3f(1110.01f,1110.01f, 1110.01f));
-		t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
-		t1.setApply(Texture.AM_COMBINE);
-		t1.setCombineFuncRGB(Texture.ACF_REPLACE);
-		t1.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
-		t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
-		t1.setCombineFuncAlpha(Texture.ACF_REPLACE);
-		ts.setTexture(t1, ts.getNumberOfSetTextures());
-		ts.apply();*/
+		/*
+		 * Texture t1 = TextureManager.loadTexture(alpha,
+		 * Texture.MM_LINEAR_LINEAR, Texture.FM_LINEAR); // t1.setScale(new
+		 * Vector3f(1110.01f,1110.01f, 1110.01f));
+		 * t1.setWrap(Texture.WM_WRAP_S_WRAP_T);
+		 * t1.setApply(Texture.AM_COMBINE);
+		 * t1.setCombineFuncRGB(Texture.ACF_REPLACE);
+		 * t1.setCombineSrc0RGB(Texture.ACS_PREVIOUS);
+		 * t1.setCombineOp0RGB(Texture.ACO_SRC_COLOR);
+		 * t1.setCombineFuncAlpha(Texture.ACF_REPLACE); ts.setTexture(t1,
+		 * ts.getNumberOfSetTextures()); ts.apply();
+		 */
 	}
 
 }
