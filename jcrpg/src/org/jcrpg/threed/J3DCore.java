@@ -20,6 +20,7 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -123,7 +124,9 @@ import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
+import com.jme.system.GameSettings;
 import com.jme.system.JmeException;
+import com.jme.system.PropertiesGameSettings;
 import com.jme.util.Debug;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
@@ -667,7 +670,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void initCore() {
-		this.setConfigShowMode(ConfigShowMode.AlwaysShow);
+		try {
+			this.setConfigShowMode(ConfigShowMode.AlwaysShow,new File("./data/ui/settings.png").toURL());
+		} catch (Exception ex)
+		{
+			this.setConfigShowMode(ConfigShowMode.AlwaysShow);
+		}
 		this.start();
 	}
 
@@ -2888,5 +2896,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public void setCamera(Camera cam) {
 		this.cam = cam;
 	}
+	
 
 }
