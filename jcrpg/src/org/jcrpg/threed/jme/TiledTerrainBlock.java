@@ -63,6 +63,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.TexCoords;
 import com.jme.scene.TriMesh;
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -571,13 +572,14 @@ public class TiledTerrainBlock extends TriMesh implements PooledNode {
         TriMesh batch = this;
 
         FloatBuffer texs = null;
-        if (batch.getTextureCoords(0).coords==null || !(batch.getTextureCoords(0).coords.limit()==batch.getVertexCount()*2))
+        if (batch.getTextureCoords(0)==null || batch.getTextureCoords(0).coords==null || !(batch.getTextureCoords(0).coords.limit()==batch.getVertexCount()*2))
         {
-        	if (batch.getTextureCoords(0).coords!=null)
+        	if (batch.getTextureCoords(0)!=null && batch.getTextureCoords(0).coords!=null)
         	{
         		ExactBufferPool.releaseVector2Buffer(batch.getTextureCoords(0).coords);
         	}
-        	batch.getTextureCoords(0).coords = ExactBufferPool.getVector2Buffer(batch.getVertexCount());
+        	batch.setTextureCoords(new TexCoords(ExactBufferPool.getVector2Buffer(batch.getVertexCount())));
+        	//batch.getTextureCoords(0).coords = ;
         }
         texs = batch.getTextureCoords(0).coords;
         //FloatBuffer texs = BufferUtils.createVector2Buffer(batch
