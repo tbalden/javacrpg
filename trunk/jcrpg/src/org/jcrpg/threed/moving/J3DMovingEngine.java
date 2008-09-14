@@ -31,9 +31,7 @@ import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
 import org.jcrpg.threed.jme.ui.FlyingNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
-import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
-import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.Characters;
@@ -52,7 +50,6 @@ import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial.CullHint;
 import com.jme.scene.Spatial.TextureCombineMode;
-import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 
 /**
@@ -156,16 +153,11 @@ public class J3DMovingEngine {
 			scale[1] *= n[i].model.scale[1];
 			scale[2] *= n[i].model.scale[2];
 			n[i].setLocalScale(new Vector3f(scale[0],scale[1],scale[2]));
-			if ((unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
-			{
-				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,.5f,0).mult(J3DCore.CUBE_EDGE_SIZE));
-				
-			} else
 			{
 				// scaling for md5 needs substraction
 				n[i].getLocalTranslation().subtractLocal(new Vector3f(0,(1-scale[2])*0.4f,0).mult(J3DCore.CUBE_EDGE_SIZE));
 				float[] d = (unit.models[0]).disposition;
-				n[i].getLocalTranslation().addLocal(d[0],d[1],d[2]);
+				n[i].getLocalTranslation().addLocal(d[0],d[1]-0.93f,d[2]);
 			}
 			if (unit.onSteep)
 			{
@@ -351,7 +343,8 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.5f,0.20f,0.2f));
+			float dispY = unit.models[0].disposition[1];
+			n.setLocalTranslation(new Vector3f(0.5f,0.20f-dispY,0.2f));
 			n.setLocalScale(0.095f);
 			unit.sizeTextNode = n;
 		}
@@ -381,7 +374,8 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
-			n.setLocalTranslation(new Vector3f(0.3f,0.34f,0.2f));
+			float dispY = unit.models[0].disposition[1];
+			n.setLocalTranslation(new Vector3f(0.3f,0.34f-dispY,0.2f));
 			n.setLocalScale(0.067f);
 			unit.memberTypeNameNode= n;
 		}
@@ -736,14 +730,11 @@ public class J3DMovingEngine {
 		
 		if (unit!=null)
 		{
-			if (!staticCalc && (unit.models[0].type==Model.MOVINGMODEL) && !((MovingModel)unit.models[0]).animatedModel)
-			{
-				eY-=.5f*J3DCore.CUBE_EDGE_SIZE;
-			}
 			if (!staticCalc)
 			{
 				float[] d = (unit.models[0]).disposition;
-				eY+=d[1];
+				
+				eY+=d[1]-0.93f;
 			}
 			
 			if (unit.toSteep || staticCalc && unit.onSteep)

@@ -17,8 +17,6 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 BUGS:
 ####
 
-[ ] billboard badly positioned for gorilla
-
 [ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
 
 [ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
@@ -40,6 +38,7 @@ BUGS:
 	Sun Aug 24 16:41:45 EDT 2008 com.jme.app.BaseSimpleGame - Cleaning up resources.
 	Sun Aug 24 16:41:46 EDT 2008 com.jme.app.BaseGame - Application ending.
 
+[X] billboard badly positioned for gorilla
 [X] camera is not good positioned for kobold - above them etc.
 [X] walking around the world at the other pole throws...:
 
