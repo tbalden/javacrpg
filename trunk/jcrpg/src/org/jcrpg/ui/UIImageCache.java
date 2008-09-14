@@ -38,6 +38,10 @@ public class UIImageCache {
 	
 	public static Quad getImage(String filePath, boolean alpha, float sizeMul)
 	{
+		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		{
+			filePath = filePath.substring(0,filePath.length()-3)+"png";
+		}
 		TextureState q = imageCache.get(filePath);
 		if (q==null)
 		{
@@ -77,6 +81,10 @@ public class UIImageCache {
 
 	public static Quad getImage(String filePath, boolean alpha, float sizeX, float sizeY)
 	{
+		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		{
+			filePath = filePath.substring(0,filePath.length()-3)+"png";
+		}
 		TextureState q = imageCache.get(filePath);
 		if (q==null)
 		{
@@ -116,6 +124,10 @@ public class UIImageCache {
 
 	public static ZoomingQuad getImageZoomingQuad(String filePath, boolean alpha, float sizeX, float sizeY)
 	{
+		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		{
+			filePath = filePath.substring(0,filePath.length()-3)+"png";
+		}
 		TextureState q = imageCache.get(filePath);
 		if (q==null)
 		{
