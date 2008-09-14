@@ -12,6 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.jme.image.Texture;
 import com.jme.image.Texture2D;
+import com.jme.image.Texture.DepthTextureCompareFunc;
+import com.jme.image.Texture.DepthTextureCompareMode;
+import com.jme.image.Texture.DepthTextureMode;
 import com.jme.light.DirectionalLight;
 import com.jme.math.Matrix4f;
 import com.jme.math.Vector3f;
@@ -258,6 +261,11 @@ public class DirectionalShadowMapPass extends Pass {
 		shadowMapTexture.setRenderToTextureType(Texture.RenderToTextureType.Depth);
 		shadowMapTexture.setMatrix(new Matrix4f());
 		shadowMapTexture.setEnvironmentalMapMode(Texture.EnvironmentalMapMode.EyeLinear);
+        shadowMapTexture
+        	.setDepthCompareMode(DepthTextureCompareMode.RtoTexture);
+        shadowMapTexture
+        	.setDepthCompareFunc(DepthTextureCompareFunc.GreaterThanEqual);
+        shadowMapTexture.setDepthMode(DepthTextureMode.Intensity);
 
 		// configure the texture renderer to output to the texture
 		shadowMapRenderer = DisplaySystem.getDisplaySystem().createTextureRenderer(shadowMapSize, shadowMapSize,TextureRenderer.Target.Texture2D);
@@ -420,9 +428,9 @@ public class DirectionalShadowMapPass extends Pass {
 		
 		// compare the shadowmap depth wich the current fragment depth
 		// this needs to be moved into JME texture class, not sure where yet?
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBShadow.GL_TEXTURE_COMPARE_MODE_ARB, ARBShadow.GL_COMPARE_R_TO_TEXTURE_ARB);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBShadow.GL_TEXTURE_COMPARE_FUNC_ARB, GL11.GL_GEQUAL);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBDepthTexture.GL_DEPTH_TEXTURE_MODE_ARB, GL11.GL_INTENSITY);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBShadow.GL_TEXTURE_COMPARE_MODE_ARB, ARBShadow.GL_COMPARE_R_TO_TEXTURE_ARB);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBShadow.GL_TEXTURE_COMPARE_FUNC_ARB, GL11.GL_GEQUAL);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, ARBDepthTexture.GL_DEPTH_TEXTURE_MODE_ARB, GL11.GL_INTENSITY);
 		
 		// draw the scene, only the shadowed bits will be drawn and blended
 		// with the shadow coloured geometry
