@@ -433,6 +433,8 @@ public class EncounterLogic {
 							TurnActMemberChoice choice = turnActTurnState.getCurrentEvent().choice;
 							if (!choice.doNothing && (choice.doUse || choice.skill!=null))
 							{
+								Jcrpg.LOGGER.fine("Evaluating:\n"+choice.toString());
+								//System.out.println("Evaluating:\n"+choice.toString());
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
 								//impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);

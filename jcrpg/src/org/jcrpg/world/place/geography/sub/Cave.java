@@ -159,6 +159,8 @@ public class Cave extends Geography implements Surface {
 			// checking till we get +2 under the ground on the entrance level.
 			tmpWorldX = worldX+i;
 			tmpWorldZ = worldZ+i;
+			tmpWorldX = ((World)getRoot()).shrinkToWorld(tmpWorldX);
+			tmpWorldZ = ((World)getRoot()).shrinkToWorld(tmpWorldZ);
 			int tmpHeightX = (int)getPointHeightOutside(tmpWorldX, worldZ, farView);
 			int tmpHeightZ = (int)getPointHeightOutside(worldX, tmpWorldZ, farView);
 			if (Math.abs(i)==1 && true==false)

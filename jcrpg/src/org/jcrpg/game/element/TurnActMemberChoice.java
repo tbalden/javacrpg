@@ -159,5 +159,11 @@ public class TurnActMemberChoice {
 	{
 		return doUse && usedObject.description instanceof BonusObject||skillActForm!=null;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "DoUse: "+doUse+" DoNothing: "+doNothing+" DoEscape: "+doEscape+"\n"+" ActForm "+(skillActForm==null?"null":skillActForm.getName())+" Skill: "+(skill==null?"null":skill.getSkill().getName())+" Object"+(usedObject==null?"null":usedObject.getName())+"\n"+"Member: "+(member==null?"null":(member.description.getName()+" EncData="+member.encounterData))+" TargetMember: "+(targetMember==null?"null":targetMember.description.getName())+" TargetEncData: "+(target==null?"null":(target.getName()+"/"+(target.description!=null?target.description.getName():"target no desc"))); 
+	}
 
 }
