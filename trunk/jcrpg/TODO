@@ -7,12 +7,49 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-[X] Test with Scene Monitor 1.0
-    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
-    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg65768#msg65768
-    * To begin, add the 'scenemonitor.jar' to your project or classpath. 
-    * If you want text descriptions add the 'sm_textdescriptor_jme2.jar'. If you want editable properties add 'sm_properties_jme2.jar'.
-    * To tool can be displayed or hidden using the SceneMonitor.getMonitor().showViewer(); function. I would suggest adding a key binding to show or hide the tool during execution.
+[ ] 2D sprite billboard monsters for classic revival and in need of 3d artists!
+
+	[ ]also some check is needed for water present or not in rendered area
+		and if not render pass should be disabled
+
+[ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
+BUGS:
+####
+
+[ ] billboard badly positioned for gorilla
+
+[ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
+
+[ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
+
+[?] bug reported by brian - combat bug:
+	[ ] added more log, should recheck if happens again
+
+	Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 0
+	Sun Aug 24 16:41:45 EDT 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
+	java.lang.NullPointerException
+	org.jcrpg.game.logic.EvaluatorBase.evaluateActFormSuccessImpact(EvaluatorBase.java:642)
+	org.jcrpg.game.EncounterLogic.checkTurnActCallbackNeed(EncounterLogic.java:437)
+	org.jcrpg.threed.J3DCore.simpleUpdate(J3DCore.java:2419)
+	org.jcrpg.threed.J3DCore.update(J3DCore.java:2520)
+	com.jme.app.BaseGame.start(Unknown Source)
+	org.jcrpg.threed.J3DCore.initCore(J3DCore.java:631)
+	org.jcrpg.apps.Jcrpg.start(Jcrpg.java:113)
+	org.jcrpg.apps.Jcrpg.main(Jcrpg.java:93)
+	Sun Aug 24 16:41:45 EDT 2008 com.jme.app.BaseSimpleGame - Cleaning up resources.
+	Sun Aug 24 16:41:46 EDT 2008 com.jme.app.BaseGame - Application ending.
+
+[X] camera is not good positioned for kobold - above them etc.
+[X] walking around the world at the other pole throws...:
+
+	Sun Aug 31 20:52:14 CEST 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
+	java.lang.ArrayIndexOutOfBoundsException: 26
+	org.jcrpg.world.place.WorldSizeBitBoundaries.isInside(WorldSizeBitBoundaries.java:84)
+	org.jcrpg.world.place.Place.getPointHeightOutside(Place.java:315)
+	org.jcrpg.world.place.geography.sub.Cave.getCubeBase(Cave.java:163)
+
+-----------------------
 
 [ ] particle effect for models
 [?] camera bigger view - switch off back rendered models (check cave)
@@ -30,247 +67,14 @@ qubodup: timong: I recommend the Baldur's gate way, where you select class first
 
 sanity point for Morale is like mana for hp, limiting social skills!
 
-[ ] try using md5importer - animation problems are unsolvable
+[-] try using md5importer - animation problems are unsolvable -> too slow
 
 [ ] recovery saves for combat phase - on crash useful -> saving gameState in combat somehow.
 
 [ ] keyboard configuration for movement - French keyboards etc cant use 'wsad'
 
-BUGS:
-####
 
-[ ] bug reported by brian - combat bug:
-
-Sun Aug 24 16:39:11 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 10
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED RESULT INTERNAL STEP...
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED PAUSE STEP...
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 12
-Sun Aug 24 16:39:13 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
-Sun Aug 24 16:39:14 EDT 2008 java.util.logging.LogManager$RootLogger - FINISHED PAUSE STEP...
-Sun Aug 24 16:39:14 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Lazlum
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ziggo
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Marwu
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ozaza
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Ilumi
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - PLAYER CHOICE TIME... Balonimo
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - playTurnActStep 
-Sun Aug 24 16:41:44 EDT 2008 java.util.logging.LogManager$RootLogger - ### MEMBER_CHOICE 0
-Sun Aug 24 16:41:45 EDT 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
-java.lang.NullPointerException
-org.jcrpg.game.logic.EvaluatorBase.evaluateActFormSuccessImpact(EvaluatorBase.java:642)
-org.jcrpg.game.EncounterLogic.checkTurnActCallbackNeed(EncounterLogic.java:437)
-org.jcrpg.threed.J3DCore.simpleUpdate(J3DCore.java:2419)
-org.jcrpg.threed.J3DCore.update(J3DCore.java:2520)
-com.jme.app.BaseGame.start(Unknown Source)
-org.jcrpg.threed.J3DCore.initCore(J3DCore.java:631)
-org.jcrpg.apps.Jcrpg.start(Jcrpg.java:113)
-org.jcrpg.apps.Jcrpg.main(Jcrpg.java:93)
-Sun Aug 24 16:41:45 EDT 2008 com.jme.app.BaseSimpleGame - Cleaning up resources.
-Sun Aug 24 16:41:46 EDT 2008 com.jme.app.BaseGame - Application ending.
-
-
-[ ] walking around the world at the other pole throws...:
-
-Sun Aug 31 20:52:14 CEST 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
-java.lang.ArrayIndexOutOfBoundsException: 26
-org.jcrpg.world.place.WorldSizeBitBoundaries.isInside(WorldSizeBitBoundaries.java:84)
-org.jcrpg.world.place.Place.getPointHeightOutside(Place.java:315)
-org.jcrpg.world.place.geography.sub.Cave.getCubeBase(Cave.java:163)
-org.jcrpg.world.place.geography.sub.Cave.getPointSurfaceData(Cave.java:430)
-org.jcrpg.world.place.World.getCube(World.java:230)
-org.jcrpg.threed.scene.RenderedArea.getRenderedSpace(RenderedArea.java:139)
-o
-
-[ ] camera is not good positioned for kobold - above them etc.
-[ ] billboard badly positioned for gorilla
-
-[ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
-
-
-OPTIMIZATIONS:
-#############
-
-to check for OS leak/Java mem state info: Runtime.getRuntime().freeMemory()
-
-(02:45:54 PM) Pali: but md5reader2 is using jme's animation api
-(02:46:00 PM) Momoko_Fan: its not
-
-check mesh.xml loading in radakan, convert to jme2.0?
-
-[X] DDS for GUI, check how it's going in memory/ 
-	[ ] font cache??? Reduce mem from 200m
-
-[ ] md2 model for animated?
-
-[X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
-	[ ]also some check is needed for water present or not in rendered area
-		and if not render pass should be disabled
-
-
-[-] md5reader -? buffer pool? how is it cached , java 6 is correct
-
-[X] texture splattering doesn't work with new atlas??
-
-[X] shadows don't work for moving units!
-	jme2 -> noTexture comment out caused it...
-
-[-] reconsider texture splattering - use of static textures instead?
-
-[X] remove shadow render pass / 'water reflection for all nodes' if in the night!
-
-[X] jme2 migr:
-	[X] add jcrpg logo for choice (BaseGame Settings prop file??)
-	[X] check light source things?? not correct for animated
-		[X] check a day/night cycle
-
-	[X] add fps stats
-	[X] add choice of screen res
-	
-[X] bug with texture state vegetation terrain level conflict...wrongly positioned height. review that code (renderNodes + VegetationSetup)
-
-[X] reorganize RenderedArea. world.getCube part into ->
-		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
-	[X] TEST!
-
-!!! [-] deadlock while walking too quick ?! test with slowing the process probably
-
-[X] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
-	It was the modified locTrans vector of the Trimesh, it shouldn't be used in instantiating the GeometryBatchInstance!
-
-[X] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) - it was instance.buildMatrices needed! 
-
-[-] rendering bug - behind player battle ground doesnt show tiles... ??
-	Maybe angle is not set correctly upon reinit?
-!! [X] economy update wrongly leftovers from previous geography CUBES and level!!!
-
-!!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
-
-[X] when in middle of the VIEW -> RENDER DISTANCE border, start a background process of loading for the given 
-	coordinates -> j3dstandingE.renderCubes and RenderCubes X Y Z must be refactored to calculate
-	the render position based on load-finish's relative position and stored worldX/Y/Z coords. 
-	[X] not perfect - some elements get lost with removal?? or not rendered on time?? (colliding locks?)
-	[X] hsRenderedNodes - NullPointerException
-		it's using a rerendered/removed one???
-		java.lang.NullPointerException
-		- concurrency problesm eleminated (use of safety copy)
-
-[X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
-    Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
-	[-] thorough testing!! especially with rerender/thread render at the same time problems!!
-	[X] tiles are not showing sometimes!!?? not loaded on time??
-			-> new RenderedArea is buggy , not loading some parts or removing them??
-		
-	[?] normals get messed up on freshly loaded parts -> Don't add ground tiles  where no neighbor data
-		is present? or force loading directly from world??
-	
-	[X] optimize new rendering.. too much removal???
-
-
-[X] unbuffered TiledTerrainBlock - on the fly returning newly set buffers for geomBatchMesh? is it quick enough?
-		it will save memory!
-
-[X] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
-
-[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
-	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
-	[-] cube/rendered area cache?? checked JProfiler
-	[X] map textures again???
-
-[X] separate config of bloom and DoF
-
-[-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
-	
-	[ ] make caching of font quads to shared mesh cache??
-
-[X] full rerender still eating up new cache partially!
-
-[-] rendering shows strange elements... missing textures
-
-[X] use DDS!!
-	[X] convert more, use FLIP in modelLoader, reconvert flipped
-(09:42:08 PM) Momoko_Fan: download Compressonator
-(09:42:14 PM) Momoko_Fan: from ATI site
-(09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
-
-Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
-For alpha textures use DXT5 instead of DXT1. Box filter
-[X] make textures for continental (normal 3 tree) + continental mountain (2 pines)
-	
-!!! [-] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
-
-[-] adding a new thread for some of the things?
-
-[X] test VBO with new buffer pool...what's the problem with it?
-
-[X] reconsider geometry batch - reuse them, how? buffers cannot be resized ??!?!
-	look into snylts geom batch. add/remove how it works?
-	
-	[X] BufferPool solution for GeomBatch ->> Update not appearing parts??!! indices were the bad
-		[X] -> faster cache lookup - how? make performance logs for pools!
-
-
-!!!! [X] GeoTileLoading exact buffer cache is wrong - some of the geotile TerrainBlocks are not
-		even used in a batch so they cannot be removed from cache either! invisible elements are reused
-		with the new mesh old mesh is not handed back!!!
-
-		
-		!!! [X] GeoTileLoader shouldnt create always new TerrainBlocks with new Buffers!!! a local cache
-		upon release (cache instance meshes in GeomBatch and reuse upon release!?
-			[X] test this, make it more for other models too, review whole loading code
-		[X] better cache chunk sizes? bigger? less creation/lookup time  
-	[X] cache is wrong, not reused???just growing
-	
-
-	 
- 
-
-[X] hunt down memory usage !!! -> createTextureStates?? NOT --> it's the GeometryBatch probably!
-	300 MB at start, around 500MB without any batches, and ~800MB+ with batches / loading models
-	ITS the buffers..pooling it + geotileloader / batch refactor with instance mesh can solve it ->
-		cache it too
-		
-		[X]
-
-!!!!    [X] shadow pass AFTER water reflection!
-
-
-[-] fog fragment shader distance based!? (bigger batches is a problem)
-	[ ] it doesnt want to work!! GLSL Fragment Shader??
-
-
-    !!!! [X] grassRootNode -> leave out it from reflection
-    [X] fix water reflection? wrong camera position set?
-    
-!! [X] more texture types for one tree, random/foliage quad!
-	-> texture coordinates swap for more random look on trees?
-	
-
-[X]CHECK what's this varying world cache size??? once 60k then 240k???
-
-[X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
-
-[X] Atlas Texture to tree foliage
-
-
-[-] add renderToViewport to movement code in segments??
-	or add updateDisplay to renderViewPort?
- 	
-
-[-] grass disappears!! -> wrong dist calc.
-
-[X] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
-
-[X] fix economy update billboard prob. 
-
-[X] add a UI render pass to render over the 3d part...
-[X] DoF perfection...
-
-
-
-## list before next-next:
+## list before next release:
 
 
 	[ ] use & cast in normal mode too
@@ -374,14 +178,422 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 	[-] try AnimatedModelNode with neakor's importer ---  seems slower
 		-> shared node??
 		
-##
-[?] list before next release:
-##
-	
 	-- QA/DOC
 
 	[ ] documenting points, attr - (how it works related to points), calculations, leveling
 		[ ] documenting skill act forms (later completed)
+
+##
+
+
+[X] use PlacementMatrix matrix to place scenario 
+	[ ](colored OSD for different lines)...
+
+	[ ] when the Turn Act begins, (after the encounter phase) all should be decided which side the given
+	entities will take part: enemy or friend - neutral should be removed.
+	Friendly units should be placed on left and right (also in ordered lines, so nearer can fight the front of the
+	enemy) - like a plus to the own units, facing face-2-face the
+	enemy. Enemy units should be placed in front (the nearer can attack directly, others shooting and magic!).
+	An ordered placement list should be generated before starting the encounter for friendly units (1 to 3 lines)
+	and in front of this an enemy ordere placement list (1 to 3 lines), after that should be placed the
+	3d models and start the round. Movement -> how to animate? 
+	
+	each turn Neutralized (mentally or physically)  friendly/enemy units should be removed from the act -
+	after that if someone is detained by player -> prison?payment for it for the player?
+	
+	A fight if won by neutralization should positively add to a relationship
+	
+[ ] try md5reader2 dot3 bump shader 
+
+[X] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
+	[X] encounter 3d models -> one model should represent a group!!
+
+[X] model viewer for md5, separate application
+
+[X] owned infrastrucures are present now in a build of a population, and it is set as owned economic too...
+ now 
+	[ ] add "at home" state for PersistentEntities -> they should be found in one of their infrastructure, roaming boundary set to its position!
+
+
+[ ] turnAct, encounter phase EncounterLogic - big development needed, plus 3D view + J3DMovingEngine combination...
+
+    [ ] skill system: skill act forms for all skills, skill act form parameters!
+    further skill design, how it will work!
+
+[ ] entity ->
+	[X]
+		! Multiple RoamingBoundaries ! -> added a size parameter, an EntityInstance can be fragmented
+		to do different things around, and can rejoin, RoamingBoundaries removed for that Fragment.
+		
+	[ ] implement split and rejoin! 
+	
+		If a group's fragment's size is lessening, it will be counted in its own fragment RoamingBoundaries
+		till it rejoins group. -> this way we have little memory overhead for subgroups (and REMOVE the subEntities
+		thing from EntityInstance). EntityMemberInstances (NPCs) can decide which fragment to follow.
+		
+	- Entities in alliances with other entities -> like in a town, commoners with fighters, nobles etc.
+	(similar to Population -> Town integration)
+		
+[ ] Limiting access to "Population" and closed areas. The presence of an "overlapping boundary" (encounter) 
+	does only count if a population zone's owner doesn't detect access (skill)/ it gives permission / 
+	is friendly. Entities inside
+	a Population won't meet a roaming unit until the population has power to defend the area. Entities inside
+	can nominate defenders? 
+	- Always register CurrentGeography in RoamingBoundaries of its fragment groups of an EntityInstance.
+	- Checks -> upon a roaming boundary overlap of two entities Geography/ EConomics should be checked
+	if they have a "defend" position. 
+	This should be a new rule surely implemented to avoid encounters that are blocked by walls/economic or
+	inaccessible areas.
+
+[ ] inter-entity relations web
+
+	[ ] add goals to groups / members based on entity relation qualities + automatically generated
+		goals (colonization etc.), to make drive for different actions for groups.
+	[ ] add some actions / outcomes that take place in encounters between groups and modifies relations
+	
+	[ ] generation -> add some conflicts, knowledge of other group's places etc. and goals
+	
+	--> this will lead to design encounter mode of player too 
+
+	
+[X] encounter screens, Interception, Encounter TurnAction windows
+
+
+	[?] // TODO based on economic (house) heights add steps to the population
+	
+[X] TreeLocator.java
+	[ ] //TODO this is not working correctly for a few cases, why?replaced with +1 for now
+
+[X] skill based hud EntityOMeter
+	[ ] -> only detected beings should be displayed
+
+[ ] cave geo population -> rock rooms?
+
+
+[ ] try to set fixed framerate
+
+
+ [?] a giant 3d bitmap for explored area to make a local map charting work 
+
+[ ] Skill tuner page with subframes - selecting a group of skills makes changing to those skill tuners - just like in Wiz7
+
+[ ] social skills -> in a combat these people can throw their different skills into combat -> fighting other social skills
+of the enemy or friend. We'll have to develop different 'words' for the different skills to make it really funny, and make 
+a peaceful solution available in most of the cases.
+
+[ ] possible portraits? http://search.freegamedev.net/artitems/tag/campaigns
+
+[ ] rocks to mountain side with new RenderedHashGeneratedSides probably...
+
+
+[?] gorilla model scaling -> walk in the air :-) recenter in blender?? -> fixed temp for gor only probably.
+
+[ ] Combat !!!! 
+	combat encounter -> regroup friendly units left/right flank of player!! :-) Enemies remain opposite of player. --- make possible to look around while combat! ;-)
+
+[ ] ecology
+    [ ] sophisticated generation -> geography, water food etc...
+    [ ] foodchain - generation and per turn eat, plus multiplication etc.
+    [ ] turn choice of AI, skills involved etc.
+    [ ] moving of groups, fixed groups
+  	[ ] hierarchy -> dynamic, boundaries added together, processed to the top of the hierarchy -> events possible on every level of living example: country <-> city population <-> guards etc.
+	[ ] entering domain in a given turn will trigger possibilities for you to start skill based processes -> trying to hunt down animals in the domain, or avoiding a group of bandits there
+	[ ] foodchain based generation, growing/decay, multiplication, new groups later ...
+    
+[ ] encounter system
+    [ ] encounter choices, skills etc, UI elements
+    [ ] combat - grouped, decisions etc., attribute + skill to lists
+
+Groups:
+	Dune/Wizardry like depersonalized groups moving around! Special NPC and such likely as part of groups.
+	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
+	Decisions made by player affect back through the group if depersonalized is subject.
+
+[ ] encountered group -> actions done with them spread by turn basis in the whole group around. so in a few turns the whole big entityInstance group can become hostile or friendly
+
+each entity will look for the groups nearby every turn. Even if the nearby entity have acted on it a new acting from itself is needed in every case.
+The unit shall check if there is common intersection with more than one nearby entity and do a common act upon them in one act not two. In this
+case it can use as much entity of it as the sum of the common radius would allow!! 
+If they don't intersect do two separate act for each other nearby entity.
+
+
+EntityGroups won't do sophisticated positioning when acting between themselves -> only ActionPoint based thing should be implemented. 
+
+With player : PositionCalculus is used and extended for different Entities.
+
+UI:
+--
+[ ] combat thingies...
+[X] player choice window -> actions when meeting entities
+[ ] UI detailed map
+
+Moving:
+------
+[ ] j3dmovingengine
+    http://jsourcery.com/api/captiveimagination.com/jmonkeyengine/02-05-2007/jmetest/renderer/TestMipMaps.source.html -> animated model
+	[X] wildlife -> rangedBoundaries
+	
+	[ ] refactor of loadObjects in model loader , extend AnimatedModelNode with additional object nodes like weapon etc... 
+
+
+World Generator:
+---------------
+[-] World generator
+	parameterized cool world generation!
+	
+	[X] Geography GenerationProperty -> what to put on and what not, where to begin where not. Use implementation independent type references for FLOW_BEGIN, FLOW_END etc...
+		[ ] sophisticate
+		
+	[X] rivers depending on oceans! ;-)
+		
+		[ ] ! River: if no river on two sides endside should be SIDE_NONE!!
+			[ ] River end is too rocky in the sea?? check outside water (like geo getoutsideheightpoint, getOutsideWaterPoint)
+		
+	[ ] mountain bigger than blocks, trickier mountain algorithm. ?
+	[ ] valley?
+	[ ] lake
+	
+	[ ] creating "Territories/Areas" of geography -> bigger multiblock areas with DistanceBasedBoundaries! In generation process this can be done
+	
+	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
+	
+
+Other:
+-----
+
+
+[ ] moving N-S should be limited on map edge!  
+[?] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
+
+
+[ ] climate
+	[ ] swamp , savana climate belt
+	[ ] climate levels: SNOW limit to the mountains
+	[ ] climate related events -> snowing, rain, UI messages
+	[ ] seasonal models for plants
+	[ ] detailed fruit object structure later and such!
+
+
+[ ] Knowledge base Modularity -> things can have knowledge attached to it, which modifies the possibilities of players to handle them:
+	plug knowledge about object/monsters/animals etc with the given
+	object/being! Thus you can collect bonus info about them random
+	scattered around the world, -- beat monsters more easy etc.
+
+[ ] lamp key, to switch on/off lamp in the dark!
+	[ ] spot light to the user in the night, doesnt work!!
+
+
+[ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
+[ ] bumpmapped texture disappear in the night! ?? checkout jme source?
+		
+
+[ ] clean up climate and implement all parts of it with conditions, continue the work on it
+[ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
+[ ] rain, fog, snow?
+
+[ ] mineral system too to the caves etc.
+
+[ ] skySphere change: night sky based on calculated light value (v)
+[ ] cloud planes on sky
+
+[ ] add Harek's table to the house
+
+
+[?] quicken loading of Cubes in Geography etc. 
+[?] Lod modelling trees with billboard images captured in blender!
+
+
+
+
+
+
+
+
+
+
+
+-- ########## DONE ######################################################################################
+
+[X] Test with Scene Monitor 1.0
+    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
+    http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg65768#msg65768
+    * To begin, add the 'scenemonitor.jar' to your project or classpath. 
+    * If you want text descriptions add the 'sm_textdescriptor_jme2.jar'. If you want editable properties add 'sm_properties_jme2.jar'.
+    * To tool can be displayed or hidden using the SceneMonitor.getMonitor().showViewer(); function. I would suggest adding a key binding to show or hide the tool during execution.
+
+OPTIMIZATIONS:
+#############
+
+[X] to check for OS leak/Java mem state info: Runtime.getRuntime().freeMemory()
+
+(02:45:54 PM) Pali: but md5reader2 is using jme's animation api
+(02:46:00 PM) Momoko_Fan: its not
+
+[-] check mesh.xml loading in radakan, convert to jme2.0?
+
+[X] DDS for GUI, check how it's going in memory/ 
+	[?] font cache??? Reduce mem from 200m
+
+[?] md2 model for animated?
+
+[X] water reflection not for grass batches! (one by one addition of spatials to WaterRenderPass)
+
+[-] md5reader -? buffer pool? how is it cached , java 6 is correct
+
+[X] texture splattering doesn't work with new atlas??
+
+[X] shadows don't work for moving units!
+	jme2 -> noTexture comment out caused it...
+
+[-] reconsider texture splattering - use of static textures instead?
+
+[X] remove shadow render pass / 'water reflection for all nodes' if in the night!
+
+[X] jme2 migr:
+	[X] add jcrpg logo for choice (BaseGame Settings prop file??)
+	[X] check light source things?? not correct for animated
+		[X] check a day/night cycle
+
+	[X] add fps stats
+	[X] add choice of screen res
+	
+[X] bug with texture state vegetation terrain level conflict...wrongly positioned height. review that code (renderNodes + VegetationSetup)
+
+[X] reorganize RenderedArea. world.getCube part into ->
+		getFilledZones (returns Y min/max intervals where getCube should be called, filtering out empty zones!)
+	[X] TEST!
+
+!!! [-] deadlock while walking too quick ?! test with slowing the process probably
+
+[X] strange vertexes to tree foliage because of the bigBatching!! It's not caused by Pooling, tried without it, and same result!!
+	It was the modified locTrans vector of the Trimesh, it shouldn't be used in instantiating the GeometryBatchInstance!
+
+[X] culling problem with some foliage?? probably it has no proper boundingbox?? (single element batch?) - it was instance.buildMatrices needed! 
+
+[-] rendering bug - behind player battle ground doesnt show tiles... ??
+	Maybe angle is not set correctly upon reinit?
+!! [X] economy update wrongly leftovers from previous geography CUBES and level!!!
+
+!!!	[X]Economy updadte rerender doubles the number of buffers, not handed back of the geotiles! REVIEW THIS ALL!
+
+[X] when in middle of the VIEW -> RENDER DISTANCE border, start a background process of loading for the given 
+	coordinates -> j3dstandingE.renderCubes and RenderCubes X Y Z must be refactored to calculate
+	the render position based on load-finish's relative position and stored worldX/Y/Z coords. 
+	[X] not perfect - some elements get lost with removal?? or not rendered on time?? (colliding locks?)
+	[X] hsRenderedNodes - NullPointerException
+		it's using a rerendered/removed one???
+		java.lang.NullPointerException
+		- concurrency problesm eleminated (use of safety copy)
+
+[X] use a separate hsCurrentCubes for the rendering and overwrite on completion in the MAIN thread!
+    Fix relativePosition storing for renderNodes, use that one instead of getting it from unsafe changing source!
+	[-] thorough testing!! especially with rerender/thread render at the same time problems!!
+	[X] tiles are not showing sometimes!!?? not loaded on time??
+			-> new RenderedArea is buggy , not loading some parts or removing them??
+		
+	[?] normals get messed up on freshly loaded parts -> Don't add ground tiles  where no neighbor data
+		is present? or force loading directly from world??
+	
+	[X] optimize new rendering.. too much removal???
+
+
+[X] unbuffered TiledTerrainBlock - on the fly returning newly set buffers for geomBatchMesh? is it quick enough?
+		it will save memory!
+
+[X] REMOVE first, releasing unneeded - cave parts can eat new buffers!!
+
+[?] something still eating memory? test sounds!! (playLoading eats it?) switch off audio and measure
+	?? it's buffered by OpenALSystem... so it's not gonna eat all on the long run probably.
+	[-] cube/rendered area cache?? checked JProfiler
+	[X] map textures again???
+
+[X] separate config of bloom and DoF
+
+[-] test buffer pooling under windows java, it's glitchy under windows... ITS VBO problem with new buffer pooling
+	
+	[X] make caching of font quads to shared mesh cache??
+
+[X] full rerender still eating up new cache partially!
+
+[-] rendering shows strange elements... missing textures
+
+[X] use DDS!!
+	[X] convert more, use FLIP in modelLoader, reconvert flipped
+(09:42:08 PM) Momoko_Fan: download Compressonator
+(09:42:14 PM) Momoko_Fan: from ATI site
+(09:42:48 PM) Momoko_Fan: go to batch convert, specify DDS format, for mipmap generation, use Box filter, for compression, use DirectX compression DXT1 or DXT1A
+
+Using Gimp DDS -> tweak mipmap.c , add 2 more mipmaps, for 2:1 even 3! Flip vertically image.
+For alpha textures use DXT5 instead of DXT1. Box filter
+[X] make textures for continental (normal 3 tree) + continental mountain (2 pines)
+	
+!!! [-] TEST QuickOrderedList times -> remove/add an arraylist may be time consuming with a long list!!!
+
+[-] adding a new thread for some of the things?
+
+[X] test VBO with new buffer pool...what's the problem with it?
+
+[X] reconsider geometry batch - reuse them, how? buffers cannot be resized ??!?!
+	look into snylts geom batch. add/remove how it works?
+	
+	[X] BufferPool solution for GeomBatch ->> Update not appearing parts??!! indices were the bad
+		[X] -> faster cache lookup - how? make performance logs for pools!
+
+
+!!!! [X] GeoTileLoading exact buffer cache is wrong - some of the geotile TerrainBlocks are not
+		even used in a batch so they cannot be removed from cache either! invisible elements are reused
+		with the new mesh old mesh is not handed back!!!
+
+		
+		!!! [X] GeoTileLoader shouldnt create always new TerrainBlocks with new Buffers!!! a local cache
+		upon release (cache instance meshes in GeomBatch and reuse upon release!?
+			[X] test this, make it more for other models too, review whole loading code
+		[X] better cache chunk sizes? bigger? less creation/lookup time  
+	[X] cache is wrong, not reused???just growing
+	
+
+	 
+ 
+
+[X] hunt down memory usage !!! -> createTextureStates?? NOT --> it's the GeometryBatch probably!
+	300 MB at start, around 500MB without any batches, and ~800MB+ with batches / loading models
+	ITS the buffers..pooling it + geotileloader / batch refactor with instance mesh can solve it ->
+		cache it too
+		
+		[X]
+
+!!!!    [X] shadow pass AFTER water reflection!
+
+
+[-] fog fragment shader distance based!? (bigger batches is a problem)
+	[-] it doesnt want to work!! GLSL Fragment Shader??
+
+    !!!! [X] grassRootNode -> leave out it from reflection
+    [X] fix water reflection? wrong camera position set?
+    
+!! [X] more texture types for one tree, random/foliage quad!
+	-> texture coordinates swap for more random look on trees?
+	
+[X]CHECK what's this varying world cache size??? once 60k then 240k???
+
+[X] Atlas Texture to vegetation -> to TEXTURESTATEVEGETATION add a special description kind
+
+[X] Atlas Texture to tree foliage
+
+
+[-] add renderToViewport to movement code in segments??
+	or add updateDisplay to renderViewPort?
+ 	
+
+[-] grass disappears!! -> wrong dist calc.
+
+[X] distance based scarcity to trimesh geom batch instances? FOG shader distance based?? bigger batches possible
+
+[X] fix economy update billboard prob. 
+
+[X] add a UI render pass to render over the 3d part...
+[X] DoF perfection...
+
 	
 	--
 	[X] add choice for DETAILS settings at startup???
@@ -489,7 +701,7 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 
 	[X] achieve that Economic ground Pavement too have ground below it!! check how it looks like!
 		maybe override can then be removed for economics ->
-		[ ] add new pavement by Zphr, with logs below it
+		[X] add new pavement by Zphr, with logs below it
 
 	[X] refactor grass vegetation level generation
 		[-] it should be done by picking level from Ground block ?? ordered rendering in renderToViewPort
@@ -707,230 +919,6 @@ For alpha textures use DXT5 instead of DXT1. Box filter
 	[X] LEVELING,
 		[X] HEP,STP,SAP,MOP,MAP increasing on leveling based on attributes and level!
 		[X] hud.characters bars are not updating correctly?? or current points are wrong
-
-##
-
-
-[X] use PlacementMatrix matrix to place scenario 
-	[ ](colored OSD for different lines)...
-
-	[ ] when the Turn Act begins, (after the encounter phase) all should be decided which side the given
-	entities will take part: enemy or friend - neutral should be removed.
-	Friendly units should be placed on left and right (also in ordered lines, so nearer can fight the front of the
-	enemy) - like a plus to the own units, facing face-2-face the
-	enemy. Enemy units should be placed in front (the nearer can attack directly, others shooting and magic!).
-	An ordered placement list should be generated before starting the encounter for friendly units (1 to 3 lines)
-	and in front of this an enemy ordere placement list (1 to 3 lines), after that should be placed the
-	3d models and start the round. Movement -> how to animate? 
-	
-	each turn Neutralized (mentally or physically)  friendly/enemy units should be removed from the act -
-	after that if someone is detained by player -> prison?payment for it for the player?
-	
-	A fight if won by neutralization should positively add to a relationship
-	
-[ ] try md5reader2 dot3 bump shader 
-
-[X] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
-	[X] encounter 3d models -> one model should represent a group!!
-
-[X] model viewer for md5, separate application
-
-[X] owned infrastrucures are present now in a build of a population, and it is set as owned economic too...
- now 
-	[ ] add "at home" state for PersistentEntities -> they should be found in one of their infrastructure, roaming boundary set to its position!
-
-
-[ ] turnAct, encounter phase EncounterLogic - big development needed, plus 3D view + J3DMovingEngine combination...
-
-    [ ] skill system: skill act forms for all skills, skill act form parameters!
-    further skill design, how it will work!
-
-[ ] entity ->
-	[X]
-		! Multiple RoamingBoundaries ! -> added a size parameter, an EntityInstance can be fragmented
-		to do different things around, and can rejoin, RoamingBoundaries removed for that Fragment.
-		
-	[ ] implement split and rejoin! 
-	
-		If a group's fragment's size is lessening, it will be counted in its own fragment RoamingBoundaries
-		till it rejoins group. -> this way we have little memory overhead for subgroups (and REMOVE the subEntities
-		thing from EntityInstance). EntityMemberInstances (NPCs) can decide which fragment to follow.
-		
-	- Entities in alliances with other entities -> like in a town, commoners with fighters, nobles etc.
-	(similar to Population -> Town integration)
-		
-[ ] Limiting access to "Population" and closed areas. The presence of an "overlapping boundary" (encounter) 
-	does only count if a population zone's owner doesn't detect access (skill)/ it gives permission / 
-	is friendly. Entities inside
-	a Population won't meet a roaming unit until the population has power to defend the area. Entities inside
-	can nominate defenders? 
-	- Always register CurrentGeography in RoamingBoundaries of its fragment groups of an EntityInstance.
-	- Checks -> upon a roaming boundary overlap of two entities Geography/ EConomics should be checked
-	if they have a "defend" position. 
-	This should be a new rule surely implemented to avoid encounters that are blocked by walls/economic or
-	inaccessible areas.
-
-[ ] inter-entity relations web
-
-	[ ] add goals to groups / members based on entity relation qualities + automatically generated
-		goals (colonization etc.), to make drive for different actions for groups.
-	[ ] add some actions / outcomes that take place in encounters between groups and modifies relations
-	
-	[ ] generation -> add some conflicts, knowledge of other group's places etc. and goals
-	
-	--> this will lead to design encounter mode of player too 
-
-	
-[X] encounter screens, Interception, Encounter TurnAction windows
-
-
-	[?] // TODO based on economic (house) heights add steps to the population
-	
-[X] TreeLocator.java
-	[ ] //TODO this is not working correctly for a few cases, why?replaced with +1 for now
-
-[X] skill based hud EntityOMeter
-	[ ] -> only detected beings should be displayed
-
-[ ] cave geo population -> rock rooms?
-
-
-[ ] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
-
-
-[ ] try to set fixed framerate
-
-
- [?] a giant 3d bitmap for explored area to make a local map charting work 
-
-[ ] Skill tuner page with subframes - selecting a group of skills makes changing to those skill tuners - just like in Wiz7
-
-[ ] social skills -> in a combat these people can throw their different skills into combat -> fighting other social skills
-of the enemy or friend. We'll have to develop different 'words' for the different skills to make it really funny, and make 
-a peaceful solution available in most of the cases.
-
-[ ] possible portraits? http://search.freegamedev.net/artitems/tag/campaigns
-
-[ ] rocks to mountain side with new RenderedHashGeneratedSides probably...
-
-
-[?] gorilla model scaling -> walk in the air :-) recenter in blender?? -> fixed temp for gor only probably.
-
-[ ] Combat !!!! 
-	combat encounter -> regroup friendly units left/right flank of player!! :-) Enemies remain opposite of player. --- make possible to look around while combat! ;-)
-
-[ ] ecology
-    [ ] sophisticated generation -> geography, water food etc...
-    [ ] foodchain - generation and per turn eat, plus multiplication etc.
-    [ ] turn choice of AI, skills involved etc.
-    [ ] moving of groups, fixed groups
-  	[ ] hierarchy -> dynamic, boundaries added together, processed to the top of the hierarchy -> events possible on every level of living example: country <-> city population <-> guards etc.
-	[ ] entering domain in a given turn will trigger possibilities for you to start skill based processes -> trying to hunt down animals in the domain, or avoiding a group of bandits there
-	[ ] foodchain based generation, growing/decay, multiplication, new groups later ...
-    
-[ ] encounter system
-    [ ] encounter choices, skills etc, UI elements
-    [ ] combat - grouped, decisions etc., attribute + skill to lists
-
-Groups:
-	Dune/Wizardry like depersonalized groups moving around! Special NPC and such likely as part of groups.
-	Hash sorted coordinates in a domain. Create moving cursors for humanoid communication. 
-	Decisions made by player affect back through the group if depersonalized is subject.
-
-[ ] encountered group -> actions done with them spread by turn basis in the whole group around. so in a few turns the whole big entityInstance group can become hostile or friendly
-
-each entity will look for the groups nearby every turn. Even if the nearby entity have acted on it a new acting from itself is needed in every case.
-The unit shall check if there is common intersection with more than one nearby entity and do a common act upon them in one act not two. In this
-case it can use as much entity of it as the sum of the common radius would allow!! 
-If they don't intersect do two separate act for each other nearby entity.
-
-
-EntityGroups won't do sophisticated positioning when acting between themselves -> only ActionPoint based thing should be implemented. 
-
-With player : PositionCalculus is used and extended for different Entities.
-
-UI:
---
-[ ] combat thingies...
-[X] player choice window -> actions when meeting entities
-[ ] UI detailed map
-
-Moving:
-------
-[ ] j3dmovingengine
-    http://jsourcery.com/api/captiveimagination.com/jmonkeyengine/02-05-2007/jmetest/renderer/TestMipMaps.source.html -> animated model
-	[X] wildlife -> rangedBoundaries
-	
-	[ ] refactor of loadObjects in model loader , extend AnimatedModelNode with additional object nodes like weapon etc... 
-
-
-World Generator:
----------------
-[-] World generator
-	parameterized cool world generation!
-	
-	[X] Geography GenerationProperty -> what to put on and what not, where to begin where not. Use implementation independent type references for FLOW_BEGIN, FLOW_END etc...
-		[ ] sophisticate
-		
-	[X] rivers depending on oceans! ;-)
-		
-		[ ] ! River: if no river on two sides endside should be SIDE_NONE!!
-			[ ] River end is too rocky in the sea?? check outside water (like geo getoutsideheightpoint, getOutsideWaterPoint)
-		
-	[ ] mountain bigger than blocks, trickier mountain algorithm. ?
-	[ ] valley?
-	[ ] lake
-	
-	[ ] creating "Territories/Areas" of geography -> bigger multiblock areas with DistanceBasedBoundaries! In generation process this can be done
-	
-	[ ] hash based geo placing through a map (like static HashMap), if two geo block is similar, join them into one geo (?)
-	
-
-Other:
------
-
-
-[ ] moving N-S should be limited on map edge!  
-[?] movement in 8 direction! new blocker side type -> trees can be moved in between, walls cannot?
-
-
-[ ] climate
-	[ ] swamp , savana climate belt
-	[ ] climate levels: SNOW limit to the mountains
-	[ ] climate related events -> snowing, rain, UI messages
-	[ ] seasonal models for plants
-	[ ] detailed fruit object structure later and such!
-
-
-[ ] Knowledge base Modularity -> things can have knowledge attached to it, which modifies the possibilities of players to handle them:
-	plug knowledge about object/monsters/animals etc with the given
-	object/being! Thus you can collect bonus info about them random
-	scattered around the world, -- beat monsters more easy etc.
-
-[ ] lamp key, to switch on/off lamp in the dark!
-	[ ] spot light to the user in the night, doesnt work!!
-
-
-[ ] occluder invisible quad to the tree middle top -> billboard it but in 90 to the camera so you cannot see it, but occluding! :-)
-[ ] bumpmapped texture disappear in the night! ?? checkout jme source?
-		
-
-[ ] clean up climate and implement all parts of it with conditions, continue the work on it
-[ ]	implement changing 3d models, how (updating some of the rendered nodes)? 
-[ ] rain, fog, snow?
-
-[ ] mineral system too to the caves etc.
-
-[ ] skySphere change: night sky based on calculated light value (v)
-[ ] cloud planes on sky
-
-[ ] add Harek's table to the house
-
-
-[?] quicken loading of Cubes in Geography etc. 
-[?] Lod modelling trees with billboard images captured in blender!
-
--- ########## DONE ######################################################################################
 
 [X] adding a separate Turn Act view -> zoom into a plain grounded place - using the cube where player
 	standed , generate a place with objects similar tile types etc.
