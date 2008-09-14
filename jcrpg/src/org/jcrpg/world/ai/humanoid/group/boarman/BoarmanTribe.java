@@ -72,7 +72,6 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/boarman_death.md5anim";
 		desc.DEAD = "./data/models/humanoid/boarman/boarman_dead.md5anim";
 		boarmanMale = new MovingModel("./data/models/humanoid/boarman/boarman.md5mesh",desc,null,null,false);
-		boarmanMale.disposition = new float[] {0,-0.93f,0};
 		boarmanMale.genericScale = 1.1f;
 		boarmanFemale = boarmanMale;
 
@@ -89,7 +88,6 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		desc.DEATH_NORMAL = "./data/models/humanoid/boarman/mage/boarmage_death.md5anim";
 		desc.DEAD = "./data/models/humanoid/boarman/mage/boarmage_dead.md5anim";
 		boarmanMaleMage = new MovingModel("./data/models/humanoid/boarman/mage/boarmage.md5mesh",desc,null,null,false);
-		boarmanMaleMage.disposition = new float[] {0,-0.93f,0};
 	
 	}
 	public static RenderedMovingUnit boarmanMale_unit = new RenderedMovingUnit(new Model[]{boarmanMale});

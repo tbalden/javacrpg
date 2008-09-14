@@ -49,7 +49,6 @@ public class KoboldHorde extends HumanoidEntityDescription {
 	static {
 		MovingModelAnimDescription desc = new MovingModelAnimDescription("./data/models/humanoid/kobold/kobold_pose.md5anim");
 		koboldMaleMiner = new MovingModel("./data/models/humanoid/kobold/kobold.md5mesh",desc,null,null,false);
-		koboldMaleMiner.disposition = new float[] {0,-0.93f,0};
 		koboldMaleMiner.genericScale = 0.5f;
 	
 	}
