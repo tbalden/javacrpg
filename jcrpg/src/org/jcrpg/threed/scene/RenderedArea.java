@@ -523,11 +523,11 @@ public class RenderedArea {
 				for (int count = 0; count<joinedLimiters.size(); count++)
 				{
 					int[][] limiters = joinedLimiters.get(count);
-					System.out.println("ADDED = "+
+					/*System.out.println("ADDED = "+
 							limiters[0][0]+"-"+limiters[0][1]+"-"+
 							limiters[2][0]+"-"+limiters[2][1]+"-"+
 							limiters[1][0]+"-"+limiters[1][1]+"-"
-							);
+							);*/
 					if (limiters[1][0]>limiters[1][1]) continue;
 					
 					for (int worldX=limiters[0][0]; worldX<=limiters[0][1]; worldX++)
@@ -540,7 +540,6 @@ public class RenderedArea {
 								int[][] zones = 
 									//getFilledZones(world, filledZonesCache, worldX, worldZ, y-renderDistance, y+renderDistance,limiters.length>1); 
 									world.getFilledZonesOfY(worldX, worldZ, limiters[1][0], limiters[1][1]);
-								System.out.println("."+worldX+" - "+worldZ+" "+zones.length);
 								if (zones!=null)
 								for (int[] zone:zones)
 								{
