@@ -2046,6 +2046,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (coreFullyInitialized) {
 			dofParentNode.attachChild(intRootNode);
 			dofParentNode.attachChild(extRootNode);
+			dofParentNode.attachChild(encounterExtRootNode);
+			dofParentNode.attachChild(encounterIntRootNode);
+			extRootNode.attachChild(extWaterRefNode);
+			intRootNode.attachChild(intWaterRefNode);
+			groundParentNode.attachChild(dofParentNode);
 			groundParentNode.attachChild(skyParentNode);
 		}
 		inventoryWindow.setPageData(gameState.player);
@@ -2173,6 +2178,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			mEngine.clearAll();
 			extRootNode.detachAllChildren();
 			intRootNode.detachAllChildren();
+			extWaterRefNode.detachAllChildren();
+			intWaterRefNode.detachAllChildren();
 			groundParentNode.detachAllChildren();
 			encounterExtRootNode.detachAllChildren();
 			encounterIntRootNode.detachAllChildren();
