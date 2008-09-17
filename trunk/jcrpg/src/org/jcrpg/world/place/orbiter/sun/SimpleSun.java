@@ -118,7 +118,7 @@ public class SimpleSun extends Orbiter{
 		if (r>0.8f) r=0.8f;
 		if (g>0.8f) b=0.8f;
 		
-		return new float[]{r+0.2f,g+0.2f,b+0.2f};
+		return new float[]{r+0.2f,g+0.2f,b-0.2f};
 	}
 
 }
