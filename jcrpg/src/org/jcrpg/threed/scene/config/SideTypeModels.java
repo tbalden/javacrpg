@@ -534,7 +534,7 @@ public class SideTypeModels {
 		SimpleModel wall_cave_rev = new SimpleModel("models/ground/wall_cave_rev.obj", null);
 		SimpleModel ground_cave = new SimpleModel("models/ground/ground_cave.obj", null);
 		SimpleModel entrance_cave = new SimpleModel("models/ground/cave_entrance.obj", null);
-		//SimpleModel entrance_cave = new SimpleModel("models/ground/ground_cave.obj", null);
+		SimpleModel entrance_cave_alternative = new SimpleModel("models/ground/cave_entrance_tex.obj", null);
 		
 		SimpleModel wall_door_wall_wooden = new SimpleModel("models/external/House_01_door.obj", null);
 		wall_door_wall_wooden.shadowCaster = true;
@@ -794,7 +794,8 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(31), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground,sm_cave_ground_2,sm_cave_ground_3,sm_cave_ground_3,sm_cave_ground_3}}));//ground_cave}));
 		//hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{qm_cave_wall}));
 		hm3dTypeRenderedSide.put(new Integer(32), new RenderedSide(new Model[]{wall_cave}));//lod_cave_wall}));
-		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
+//		hm3dTypeRenderedSide.put(new Integer(33), new RenderedSide(new Model[]{entrance_cave}));
+		hm3dTypeRenderedSide.put(new Integer(33), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{entrance_cave,entrance_cave_alternative}}));
 		hm3dTypeRenderedSide.put(new Integer(34), new RenderedHashRotatedSide(new Model[]{cave_rock},true));
 		hm3dTypeRenderedSide.put(new Integer(35), new RenderedSide(new Model[]{wall_cave_rev}));//lod_cave_wall}));*/
 		hm3dTypeRenderedSide.put(new Integer(36), new RenderedSide(new Model[]{qm_waterfall}));
