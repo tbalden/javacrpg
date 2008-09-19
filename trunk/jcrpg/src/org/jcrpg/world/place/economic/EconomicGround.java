@@ -42,7 +42,7 @@ import org.jcrpg.world.place.water.Ocean;
  * @author pali
  *
  */
-public class EconomicGround extends Economic {
+public abstract class EconomicGround extends Economic {
 
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
 	
@@ -106,10 +106,14 @@ public class EconomicGround extends Economic {
 		//hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
 	}
 	
+	public HashMap<Integer, Cube> getOverrideMap()
+	{
+		return hmKindCubeOverride;
+	}
 
 	@Override
 	public Cube getCubeObject(int kind, boolean farView) {
-		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
+		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 		return c;
 	}
 
@@ -166,16 +170,7 @@ public class EconomicGround extends Economic {
 		return getPointHeightOutside(worldX, worldZ, farView);
 	}
 
-	public EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)
-	{
-		try {
-			return new EconomicGround(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-			System.exit(1);
-			return null;
-		}
-	}
+	public abstract EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner);
+
 
 }

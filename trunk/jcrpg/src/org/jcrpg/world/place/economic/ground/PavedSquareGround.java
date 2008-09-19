@@ -21,6 +21,8 @@ import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.GroundSubType;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Geography;
@@ -28,64 +30,37 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.economic.EconomicGround;
 
-/**
- * used for creating parts that are grassy but not with other flora - in Encounter mode.
- * @author illes
- *
- */
-public class EncounterGround extends EconomicGround {
-
-	public EncounterGround() {
+public class PavedSquareGround extends EconomicGround{
+	
+	public PavedSquareGround() {
 		super();
-		needsFlora = true;
+		// TODO Auto-generated constructor stub
 	}
 
-	public EncounterGround(String id, Geography soilGeo, Place parent,
+	public PavedSquareGround(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 			throws Exception {
 		super(id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
-		needsFlora = true;
-	}
-
-	public static HashMap<Integer, Cube> hmKindCubeOverride = new HashMap<Integer, Cube>();
-	public static HashMap<Integer, Cube> hmKindCubeOverride_FARVIEW = new HashMap<Integer, Cube>();
-
-	public static Side[][] STEPS_NORTH = new Side[][] { STEEP, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND};
-	public static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,BLOCK,GROUND};
-	public static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,BLOCK,GROUND};
-	public static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND};
-	public static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,GROUND };
-
-	static 
-	{
-		Cube ground = new Cube(null,EXTERNAL,0,0,0,true,true);
-		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
-		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
-		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
-		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0,true,true);
-		hmKindCubeOverride.put(K_STEEP_WEST, stepWest);
-		Cube stepNorth = new Cube(null,STEPS_NORTH,0,0,0,true,true);
-		hmKindCubeOverride.put(K_STEEP_NORTH, stepNorth);
-		Cube stepSouth = new Cube(null,STEPS_SOUTH,0,0,0,true,true);
-		hmKindCubeOverride.put(K_STEEP_SOUTH, stepSouth);
-
-		//hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
+		// TODO Auto-generated constructor stub
 	}
 	
+	
+
 	@Override
-	public Cube getCubeObject(int kind, boolean farView) {
-		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):hmKindCubeOverride.get(kind);
-		return c;
+	public boolean overrideGeoHeight() {
+		// TODO Auto-generated method stub
+		//
+		return true;
 	}
 
 	@Override
 	public EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 	{
 		try {
-			return new EncounterGround(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
+			return new PavedSquareGround(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -94,4 +69,35 @@ public class EncounterGround extends EconomicGround {
 		}
 	}
 
+	public static HashMap<Integer, Cube> hmKindCubeOverride = new HashMap<Integer, Cube>();
+	public static HashMap<Integer, Cube> hmKindCubeOverride_FARVIEW = new HashMap<Integer, Cube>();
+	
+	public static final String TYPE_HOUSE = "WOODEN_HOUSE";
+	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND",true);
+	static Side[][] GROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+
+	static 
+	{
+		Cube ground = new Cube(null,GROUND,0,0,0,true,true);
+		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
+		Cube waterGround = new Cube(null,EXTERNAL_WATER_WOODEN_GROUND,0,0,0,true,false);
+		hmKindCubeOverride.put(K_WATER_GROUND, waterGround );		
+		/*Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
+		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
+		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0,true,true);
+		hmKindCubeOverride.put(K_STEEP_WEST, stepWest);
+		Cube stepNorth = new Cube(null,STEPS_NORTH,0,0,0,true,true);
+		hmKindCubeOverride.put(K_STEEP_NORTH, stepNorth);
+		Cube stepSouth = new Cube(null,STEPS_SOUTH,0,0,0,true,true);
+		hmKindCubeOverride.put(K_STEEP_SOUTH, stepSouth);*/
+
+		//hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
+	}
+	
+	public HashMap<Integer, Cube> getOverrideMap()
+	{
+		return hmKindCubeOverride;
+	}
+	
+	
 }
