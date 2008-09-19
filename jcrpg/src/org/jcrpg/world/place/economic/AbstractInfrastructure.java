@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.humanoid.EconomyTemplate;
 import org.jcrpg.world.place.Economic;
@@ -347,4 +348,30 @@ public abstract class AbstractInfrastructure {
 		return isOccupiedBlock(occupiedBlocks,x+z*maxBlocksOneDim,additionalCheckers);
 	}
 	
+	//protected Economic getget
+	protected Economic getLikelyEconomicInstance(int randomPercent, ArrayList types,int blockX, int blockZ)
+	{
+		int centerBlock = maxBlocksOneDim/2;
+		int dist = (( ( Math.abs(centerBlock-blockX) + Math.abs(centerBlock-blockZ) ) /2 ) / centerBlock)*100;
+		int closestLike = 1000;
+		Economic closestEco = null;
+		int i=0;
+		for (Object t:types)
+		{
+			randomPercent = HashUtil.mixPercentage(randomPercent, i++, 0);
+			Economic e = EconomyTemplate.economicBase.get(t);
+			int like = (int)(e.getLikelyDistanceRatioFromCenter()*100) + (randomPercent-50);
+			if (like-10>dist && like+10<dist) {
+				//System.out.println("LIKELY: "+t);
+				return e;
+			}
+			if (Math.abs(like-dist)<closestLike)
+			{
+				closestLike = Math.abs(like-dist);
+				closestEco = e;
+			}
+		}
+		//System.out.println("LIKELY: "+closestEco.getClass());
+		return closestEco;	
+	}
 }

@@ -127,6 +127,14 @@ public class Economic extends Geography {
 		return STANDARD_WATER_CHECKER_LIST;
 	}
 	
+	/**
+	 * 
+	 * @return The likeness that this economic unit is farthest away from center. Between 1-0 (1 farthest, 0 closest to center).
+	 */
+	public float getLikelyDistanceRatioFromCenter()
+	{
+		return 0f;
+	}
 	
 	
 

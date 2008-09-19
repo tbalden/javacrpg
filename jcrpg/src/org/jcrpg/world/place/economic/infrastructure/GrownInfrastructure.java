@@ -44,20 +44,26 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 			
 			boolean found = false;
 			
-			Class<? extends Economic> type = null;
+			//Class<? extends Economic> type = null;
+			boolean groundType = false;
 			if (blockUsed%2==0) {
-				type = groundTypes.get(0);
+				groundType = true;
+				//types = groundTypes;//.get(0);
 			} else
 			{
-				type = residenceTypes.get(0);
+				groundType = false;
+				//type = residenceTypes.get(0);
 			}		
-			Economic ecoBase = ((Economic)EconomyTemplate.economicBase.get(type));
+			//Economic ecoBase = ((Economic)EconomyTemplate.economicBase.get(type));
 			
-			
-			
+			Economic ecoBase = null;
+			int r = 0;
 			while (true){
-				int r = HashUtil.mixPercentage((int)seed, j+(delta++), j+1, j+2);
+				r = HashUtil.mixPercentage((int)seed, j+(delta++), j+1, j+2);
 				int [] coords = getRandomCoordinates(r, lastStreetBlockX, lastStreetBlockZ);
+				
+				ecoBase = getLikelyEconomicInstance(r, !groundType?residenceTypes:groundTypes,coords[0],coords[1]);
+				
 				if (isOccupiedBlock(occupiedBlocks, coords[0], coords[1],ecoBase.getGenerationBlockAvailabilityCheckers()))
 				{
 					if (delta>10)
@@ -78,6 +84,9 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				{
 					lastStreetBlockX = (lastStreetBlockX+1)%maxBlocksOneDim;
 					lastStreetBlockZ = (lastStreetBlockZ+1)%maxBlocksOneDim;
+					
+					ecoBase = getLikelyEconomicInstance(r,!groundType?residenceTypes:groundTypes,lastStreetBlockX,lastStreetBlockZ);
+					
 					if (!isOccupiedBlock(occupiedBlocks, lastStreetBlockX,lastStreetBlockZ,ecoBase.getGenerationBlockAvailabilityCheckers()))
 					{
 						break;
@@ -95,10 +104,10 @@ public class GrownInfrastructure extends AbstractInfrastructure {
 				p.sizeY = (blockUsed%5)/4+1;
 				p.sizeZ = BUILDING_BLOCK_SIZE;
 				if (blockUsed%2==0) {
-					p.type = type;
+					p.type = ecoBase.getClass();
 				} else
 				{
-					p.type = type;
+					p.type = ecoBase.getClass();
 					if (p.sizeY<((Residence)ecoBase).getMinimumHeight())
 					{
 						p.sizeY = ((Residence)ecoBase).getMinimumHeight();
