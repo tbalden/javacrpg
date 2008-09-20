@@ -66,6 +66,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.House;
+import org.jcrpg.world.place.economic.ground.PavedSquareGround;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
@@ -194,6 +195,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_WINDOW.id, new Integer(53));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_CORNER.id, new Integer(54));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_STRAIGHT.id, new Integer(55));
+		hmCubeSideSubTypeToRenderedSideId.put(PavedSquareGround.SUBTYPE_BARREL.id, new Integer(62));		
+		hmCubeSideSubTypeToRenderedSideId.put(PavedSquareGround.SUBTYPE_CRATE.id, new Integer(63));
 
 		
 		
@@ -880,8 +883,16 @@ public class SideTypeModels {
 		tsm_green_fern.alwaysRenderBatch = true;
 		hm3dTypeRenderedSide.put(new Integer(58), new RenderedSide(new Model[]{tsm_green_fern}));
 
+		SimpleModel sm_barrel = new SimpleModel("models/item/storage/barrel.obj",null);
+		sm_barrel.genericScale = 0.2f;
+		sm_barrel.disposition = new float[]{0,0.2f,0};
+		hm3dTypeRenderedSide.put(new Integer(62), new RenderedSide(new Model[]{sm_barrel}));
+		SimpleModel sm_crate = new SimpleModel("models/item/storage/crate.obj",null);
+		sm_crate.genericScale = 0.2f;
+		sm_crate.disposition = new float[]{1,0.2f,0};
+		hm3dTypeRenderedSide.put(new Integer(63), new RenderedSide(new Model[]{sm_crate}));
 		// NEXT ID = 
-		// 62
+		// 64
 		
 	}
 	

@@ -112,7 +112,7 @@ public abstract class EconomicGround extends Economic {
 	}
 
 	@Override
-	public Cube getCubeObject(int kind, boolean farView) {
+	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 		return c;
 	}

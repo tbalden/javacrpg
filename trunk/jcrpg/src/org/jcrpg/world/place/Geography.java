@@ -250,7 +250,7 @@ public class Geography extends Place implements Surface {
 	 * @param farView
 	 * @return The Cube.
 	 */
-	public Cube getCubeObject(int kind, boolean farView)
+	public Cube getCubeObject(int kind, int x, int y, int z, boolean farView)
 	{
 		Cube c;
 		if (farView)
@@ -270,7 +270,7 @@ public class Geography extends Place implements Surface {
 	@Override
 	public Cube getCube(long key, int worldX, int worldY, int worldZ, boolean farView) {
 		float[] kind = getCubeKind(key, worldX, worldY, worldZ, farView);
-		Cube c = getCubeObject((int)kind[4], farView);
+		Cube c = getCubeObject((int)kind[4], worldX, worldY, worldZ, farView);
 		if (c==null) return c;
 		c = c.copy(this);
 		c.x = worldX;

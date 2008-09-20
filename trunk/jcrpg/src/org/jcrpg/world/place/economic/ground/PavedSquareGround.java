@@ -23,6 +23,8 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Geography;
@@ -74,7 +76,14 @@ public class PavedSquareGround extends EconomicGround{
 	
 	public static final String TYPE_HOUSE = "WOODEN_HOUSE";
 	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND",true);
+	public static final SideSubType SUBTYPE_CRATE = new SideSubType(TYPE_HOUSE+"_CRATE");
+	public static final SideSubType SUBTYPE_BARREL = new SideSubType(TYPE_HOUSE+"_BARREL");
 	static Side[][] GROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	static Side[][] GROUND_CRATE = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_CRATE)} };
+	static Side[][] GROUND_BARREL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_BARREL)} };
+	
+	Cube crate = new Cube(null,GROUND_CRATE,0,0,0,true,true);
+	Cube barrel = new Cube(null,GROUND_BARREL,0,0,0,true,true);
 
 	static 
 	{
@@ -99,5 +108,25 @@ public class PavedSquareGround extends EconomicGround{
 		return hmKindCubeOverride;
 	}
 	
+	@Override
+	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
+		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
+		if (c!=null && kind==K_NORMAL_GROUND)
+		{
+			int perc = HashUtil.mixPercentage(worldX, worldZ, worldY);
+			if (perc%3==0)
+			{
+				if ((perc+worldY)%5<2)
+				{
+					return barrel;
+				} else
+				{
+					return crate;
+				}
+			}
+		}
+		return c;
+	}
+
 	
 }
