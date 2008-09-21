@@ -19,8 +19,8 @@ package org.jcrpg.world.ai.flora.impl;
 
 import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.place.economic.EconomicGround;
-import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.ground.EncounterGround;
+import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;

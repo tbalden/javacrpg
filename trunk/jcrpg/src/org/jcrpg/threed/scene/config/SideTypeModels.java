@@ -65,8 +65,8 @@ import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
-import org.jcrpg.world.place.economic.House;
-import org.jcrpg.world.place.economic.ground.PavedSquareGround;
+import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
+import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
@@ -195,8 +195,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_WINDOW.id, new Integer(53));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_CORNER.id, new Integer(54));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_STRAIGHT.id, new Integer(55));
-		hmCubeSideSubTypeToRenderedSideId.put(PavedSquareGround.SUBTYPE_BARREL.id, new Integer(62));		
-		hmCubeSideSubTypeToRenderedSideId.put(PavedSquareGround.SUBTYPE_CRATE.id, new Integer(63));
+		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BARREL.id, new Integer(62));		
+		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_CRATE.id, new Integer(63));
 
 		
 		

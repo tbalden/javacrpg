@@ -1,4 +1,4 @@
-package org.jcrpg.world.place.economic;
+package org.jcrpg.world.place.economic.population;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.InfrastructureBlockChecker;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.checker.WaterChecker;
 import org.jcrpg.world.place.economic.infrastructure.GrownInfrastructure;
 

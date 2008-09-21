@@ -24,13 +24,14 @@ import java.util.HashMap;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.economic.EconomicGround;
-import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
-import org.jcrpg.world.place.economic.SimpleDistrict;
-import org.jcrpg.world.place.economic.ground.PavedSquareGround;
+import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
+import org.jcrpg.world.place.economic.population.SimpleDistrict;
+import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 
 /**
  * Describes a certain economy type which humanoids may build as their home domain.
@@ -46,8 +47,9 @@ public class EconomyTemplate {
 		economicBase.put(SimpleDistrict.class, new SimpleDistrict());
 		economicBase.put(House.class, new House());
 		economicBase.put(WoodenHouse.class, new WoodenHouse());
+		economicBase.put(SimpleDungeonPart.class, new SimpleDungeonPart());
 		economicBase.put(RawStreetGround.class, new RawStreetGround());
-		economicBase.put(PavedSquareGround.class, new PavedSquareGround());
+		economicBase.put(PavedStorageAreaGround.class, new PavedStorageAreaGround());
 	}
 	
 
