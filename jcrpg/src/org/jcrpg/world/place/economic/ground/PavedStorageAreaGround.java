@@ -23,7 +23,6 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
@@ -32,14 +31,14 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.economic.EconomicGround;
 
-public class PavedSquareGround extends EconomicGround{
+public class PavedStorageAreaGround extends EconomicGround{
 	
-	public PavedSquareGround() {
+	public PavedStorageAreaGround() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public PavedSquareGround(String id, Geography soilGeo, Place parent,
+	public PavedStorageAreaGround(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner)
@@ -62,7 +61,7 @@ public class PavedSquareGround extends EconomicGround{
 	public EconomicGround getInstance(String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 	{
 		try {
-			return new PavedSquareGround(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
+			return new PavedStorageAreaGround(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
