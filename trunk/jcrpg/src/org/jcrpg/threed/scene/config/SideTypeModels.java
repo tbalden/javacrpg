@@ -197,6 +197,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_STRAIGHT.id, new Integer(55));
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BARREL.id, new Integer(62));		
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_CRATE.id, new Integer(63));
+		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_PAVILION.id, new Integer(64));
+		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BASKET.id, new Integer(65));
 
 		
 		
@@ -893,8 +895,21 @@ public class SideTypeModels {
 		sm_crate.rotateAndLocate = true;
 		sm_crate.dislocationRate = 0.2f;
 		hm3dTypeRenderedSide.put(new Integer(63), new RenderedHashRotatedSide(new Model[]{sm_crate},true));
+
+		SimpleModel sm_pavilon = new SimpleModel("models/item/storage/pav.obj",null);
+		//sm_crate.genericScale = 0.2f;
+		//sm_crate.rotateAndLocate = true;
+		//sm_crate.dislocationRate = 0.2f;
+		hm3dTypeRenderedSide.put(new Integer(64), new RenderedSide(new Model[]{sm_pavilon}));
+
+		SimpleModel sm_basket = new SimpleModel("models/item/storage/basket.obj",null);
+		sm_basket.genericScale = 0.33f;
+		sm_basket.rotateAndLocate = true;
+		sm_basket.dislocationRate = 0.2f;
+		hm3dTypeRenderedSide.put(new Integer(65), new RenderedHashRotatedSide(new Model[]{sm_basket},true));
+
 		// NEXT ID = 
-		// 64
+		// 66
 		
 	}
 	
