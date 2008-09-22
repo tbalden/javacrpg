@@ -379,6 +379,39 @@ public class EncounterLogic {
 		playTurnActStep();
 	}
 	
+	public void turnCameraIntelligent(EncounterInfo info)
+	{
+		if (info.getTopology()!=null)
+		{
+			try {
+				EncounterUnitData d= info.getTopology().getEnemyLineup().getAllUnits().get(0);
+				if (d!=null)
+				{
+					turnCameraToUnit(d);
+				}
+			} catch (Exception ex)
+			{
+				
+			}
+		} else
+		{
+			if (info.getEncounterPhaseLineup()!=null)
+			{
+				try
+				{
+					EncounterUnitData d = info.getEncounterPhaseLineup().orderedList.values().iterator().next().get(0);
+					if (d!=null)
+					{
+						turnCameraToUnit(d);
+					}
+				} catch (Exception ex)
+				{
+					
+				}
+			}
+		}
+	}
+	
 	private void turnCameraToUnit(EncounterUnitData data)
 	{
 		resetCamera();

@@ -69,10 +69,10 @@ public class WoodenHouse extends Residence {
 	static Side[][] WALL_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,null };
 	static Side[][] WALL_SOUTH = new Side[][] { null, null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null };
 	static Side[][] WALL_WEST = new Side[][] { null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null };
-	static Side[][] WALL_GROUND_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL),new Side(TYPE_HOUSE,SUBTYPE_BOOKCASE)}, null, null ,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
-	static Side[][] WALL_GROUND_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
-	static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
-	static Side[][] WALL_GROUND_WEST = new Side[][] { null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	protected static Side[][] WALL_GROUND_NORTH = new Side[][] { {new Side(TYPE_HOUSE,SUBTYPE_WALL),new Side(TYPE_HOUSE,SUBTYPE_BOOKCASE)}, null, null ,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	protected static Side[][] WALL_GROUND_EAST = new Side[][] { null, {new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	protected static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+	protected static Side[][] WALL_GROUND_WEST = new Side[][] { null, null,null,{new Side(TYPE_HOUSE,SUBTYPE_WALL)}, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] DOOR_GROUND_NORTH = new Side[][] { EXTERNAL_DOOR, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] DOOR_GROUND_EAST = new Side[][] { null, EXTERNAL_DOOR, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 	static Side[][] DOOR_GROUND_SOUTH = new Side[][] { null, null,EXTERNAL_DOOR, null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
@@ -93,7 +93,7 @@ public class WoodenHouse extends Residence {
 	static Side[][] INTERNAL_STEPS_SOUTH = new Side[][] { null, null, STAIRS,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_WEST = new Side[][] { null, null, null,STAIRS,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
 	static Side[][] INTERNAL_STEPS_EAST = new Side[][] { null, STAIRS, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_INTERNAL_GROUND)} };
-	static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_GEO,SUBTYPE_GROUND)} };
+	protected static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_GEO,SUBTYPE_GROUND)} };
 
 	static Side[][] ROOF_CORNER_NORTH = new Side[][] { ROOF_CORNER, null, null,null,null,null };
 	static Side[][] ROOF_CORNER_EAST = new Side[][] { null, ROOF_CORNER, null,null,null,null };
