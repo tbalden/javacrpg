@@ -77,12 +77,16 @@ public class PavedStorageAreaGround extends EconomicGround{
 	public static final SideSubType SUBTYPE_EXTERNAL_GROUND = new GroundSubType(TYPE_HOUSE+"_EXTERNAL_GROUND",true);
 	public static final SideSubType SUBTYPE_CRATE = new SideSubType(TYPE_HOUSE+"_CRATE");
 	public static final SideSubType SUBTYPE_BARREL = new SideSubType(TYPE_HOUSE+"_BARREL");
+	public static final SideSubType SUBTYPE_BASKET = new SideSubType(TYPE_HOUSE+"_BASKET");
+	public static final SideSubType SUBTYPE_PAVILION = new SideSubType(TYPE_HOUSE+"_PAVILION");
 	static Side[][] GROUND = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
-	static Side[][] GROUND_CRATE = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_CRATE)} };
-	static Side[][] GROUND_BARREL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_BARREL)} };
+	static Side[][] GROUND_CRATE = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_PAVILION),new Side(TYPE_HOUSE,SUBTYPE_CRATE)} };
+	static Side[][] GROUND_BARREL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_PAVILION),new Side(TYPE_HOUSE,SUBTYPE_BARREL)} };
+	static Side[][] GROUND_BASKET = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_PAVILION),new Side(TYPE_HOUSE,SUBTYPE_BASKET)} };
 	
 	Cube crate = new Cube(null,GROUND_CRATE,0,0,0,false,true);
 	Cube barrel = new Cube(null,GROUND_BARREL,0,0,0,false,true);
+	Cube basket = new Cube(null,GROUND_BASKET,0,0,0,false,true);
 
 	static 
 	{
@@ -115,12 +119,16 @@ public class PavedStorageAreaGround extends EconomicGround{
 			int perc = HashUtil.mixPercentage(worldX, worldZ, worldY);
 			if (perc%3==0)
 			{
-				if ((perc+worldY)%5<2)
+				if ((perc+worldY)%8<3)
 				{
 					return barrel;
 				} else
+				if ((perc+worldY)%8<5)
 				{
 					return crate;
+				} else
+				{
+					return basket;
 				}
 			}
 		}
