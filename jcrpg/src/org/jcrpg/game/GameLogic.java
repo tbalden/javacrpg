@@ -102,6 +102,7 @@ public class GameLogic {
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.encounterWindow.toggle();
+					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
 					core.gameState.switchToEncounterScenario(false, "debug");
@@ -126,6 +127,7 @@ public class GameLogic {
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 					core.turnActWindow.toggle();
+					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
 					core.gameState.switchToEncounterScenario(false, "debug");
@@ -157,6 +159,7 @@ public class GameLogic {
 						core.gameState.engine.campingFinished = false;
 					}
 					core.turnActWindow.toggle();
+					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
 					core.gameState.switchToEncounterScenario(false, "debug");

@@ -81,8 +81,8 @@ public class PavedStorageAreaGround extends EconomicGround{
 	static Side[][] GROUND_CRATE = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_CRATE)} };
 	static Side[][] GROUND_BARREL = new Side[][] { null, null, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND),new Side(TYPE_HOUSE,SUBTYPE_BARREL)} };
 	
-	Cube crate = new Cube(null,GROUND_CRATE,0,0,0,true,true);
-	Cube barrel = new Cube(null,GROUND_BARREL,0,0,0,true,true);
+	Cube crate = new Cube(null,GROUND_CRATE,0,0,0,false,true);
+	Cube barrel = new Cube(null,GROUND_BARREL,0,0,0,false,true);
 
 	static 
 	{

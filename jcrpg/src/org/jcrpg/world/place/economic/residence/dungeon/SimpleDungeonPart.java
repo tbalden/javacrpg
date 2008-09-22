@@ -28,8 +28,9 @@ import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.residence.House;
+import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
-public class SimpleDungeonPart extends House {
+public class SimpleDungeonPart extends WoodenHouse {
 
 	public SimpleDungeonPart() {
 		super();

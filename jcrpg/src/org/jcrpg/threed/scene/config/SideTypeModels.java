@@ -885,12 +885,14 @@ public class SideTypeModels {
 
 		SimpleModel sm_barrel = new SimpleModel("models/item/storage/barrel.obj",null);
 		sm_barrel.genericScale = 0.2f;
-		sm_barrel.disposition = new float[]{0,0.2f,0};
-		hm3dTypeRenderedSide.put(new Integer(62), new RenderedSide(new Model[]{sm_barrel}));
+		sm_barrel.rotateAndLocate = true;
+		sm_barrel.dislocationRate = 0.2f;
+		hm3dTypeRenderedSide.put(new Integer(62), new RenderedHashRotatedSide(new Model[]{sm_barrel},true));
 		SimpleModel sm_crate = new SimpleModel("models/item/storage/crate.obj",null);
 		sm_crate.genericScale = 0.2f;
-		sm_crate.disposition = new float[]{1,0.2f,0};
-		hm3dTypeRenderedSide.put(new Integer(63), new RenderedSide(new Model[]{sm_crate}));
+		sm_crate.rotateAndLocate = true;
+		sm_crate.dislocationRate = 0.2f;
+		hm3dTypeRenderedSide.put(new Integer(63), new RenderedHashRotatedSide(new Model[]{sm_crate},true));
 		// NEXT ID = 
 		// 64
 		
