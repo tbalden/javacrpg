@@ -39,7 +39,9 @@ public abstract class Resistances {
 	public int getResistance(String attr)
 	{
 		if (resistances==null) return 0;
-		return resistances.get(attr);
+		Integer r = resistances.get(attr);
+		if (r==null) return 0;
+		return r;
 	}
 	
 	public static int getResistance(String attr, Resistances base, Resistances modifier)
