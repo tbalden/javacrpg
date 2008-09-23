@@ -18,9 +18,11 @@
 package org.jcrpg.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.ui.FlyingNode;
+import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.ui.map.LocalMap;
 import org.jcrpg.ui.meter.DirectionTimeMeter;
 import org.jcrpg.ui.meter.EntityOMeter;
@@ -172,6 +174,10 @@ public class HUD {
 		lastOSDText = node;
 		node.setLocalTranslation(DisplaySystem.getDisplaySystem().getWidth()/2f,y,0f);
 		Node n = FontUtils.textNonBoldVerdana.createOutlinedText(text, 19,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+		NodeFontFreer freer = new NodeFontFreer(FontUtils.textNonBoldVerdana,n);
+		ArrayList<Runnable> onFinish = new ArrayList<Runnable>();
+		onFinish.add(freer);
+		node.onFinish = onFinish;
 		n.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		n.setLocalScale(core.getDisplay().getWidth()/600f);		
 		node.attachChild(n);

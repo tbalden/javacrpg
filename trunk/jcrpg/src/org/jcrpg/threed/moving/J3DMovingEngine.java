@@ -30,12 +30,14 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
 import org.jcrpg.threed.jme.ui.FlyingNode;
+import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.Characters;
 import org.jcrpg.ui.FontUtils;
+import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityScaledRelationType;
@@ -174,14 +176,31 @@ public class J3DMovingEngine {
 		if (u.circleNode!=null)
 		{
 			u.circleNode.removeFromParent();
+			FontTT font = currentTextNodes.remove(u.circleNode.getChild(0));
+			if (font!=null)
+			{
+				font.moveFreedToCache((Node)u.circleNode.getChild(0));
+			}
 		}
 		if (u.sizeTextNode!=null)
 		{
 			u.sizeTextNode.removeFromParent();
+			FontTT font = currentTextNodes.remove(u.sizeTextNode.getChild(0));
+			if (font!=null)
+			{
+				//System.out.println("SIZE FREEING "+u.form.encounterUnitData.getName());
+				font.moveFreedToCache((Node)u.sizeTextNode.getChild(0));
+			}
 		}
 		if (u.memberTypeNameNode!=null)
 		{
 			u.memberTypeNameNode.removeFromParent();
+			FontTT font = currentTextNodes.remove(u.memberTypeNameNode.getChild(0));
+			if (font!=null)
+			{
+				//System.out.println("TYPE FREEING "+u.form.encounterUnitData.getName());
+				font.moveFreedToCache((Node)u.memberTypeNameNode.getChild(0));
+			}
 		}
 	}
 	
@@ -191,18 +210,7 @@ public class J3DMovingEngine {
 		{
 			PooledNode pooledRealNode = n.realNode;
 			n.realNode = null;
-			if (u.circleNode!=null)
-			{
-				u.circleNode.removeFromParent();
-			}
-			if (u.sizeTextNode!=null)
-			{
-				u.sizeTextNode.removeFromParent();
-			}
-			if (u.memberTypeNameNode!=null)
-			{
-				u.memberTypeNameNode.removeFromParent();
-			}
+			clearUnitTextNodes(u);
 			if (pooledRealNode!=null) {
 				Node realNode = (Node)pooledRealNode;
 				if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
@@ -223,18 +231,7 @@ public class J3DMovingEngine {
 			{
 				PooledNode pooledRealNode = n.realNode;
 				n.realNode = null;
-				if (u.circleNode!=null)
-				{
-					u.circleNode.removeFromParent();
-				}
-				if (u.sizeTextNode!=null)
-				{
-					u.sizeTextNode.removeFromParent();
-				}
-				if (u.memberTypeNameNode!=null)
-				{
-					u.memberTypeNameNode.removeFromParent();
-				}
+				clearUnitTextNodes(u);
 				if (pooledRealNode!=null) {
 					Node realNode = (Node)pooledRealNode;
 					if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
@@ -287,7 +284,7 @@ public class J3DMovingEngine {
 		
 	}
 	
-
+	public HashMap<Node,FontTT> currentTextNodes = new HashMap<Node,FontTT>();
 	
 	/**
 	 * Creates a flying node with numbers for not-0 impact points
@@ -300,12 +297,14 @@ public class J3DMovingEngine {
 		n.setAlignment(BillboardNode.SCREEN_ALIGNED);
 		int counter = 0;
 		int addedCounter = 0;
+		ArrayList<Runnable> freers = new ArrayList<Runnable>();
 		for (Integer i:unit.orderedImpactPoints)
 		{
 			if (i!=null && i!=0)
 			{
 				ColorRGBA color = Characters.pointQuadData.get(counter);
 				Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+i, 1,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+				freers.add(new NodeFontFreer(FontUtils.textNonBoldVerdana,slottextNode));
 				slottextNode.setLocalTranslation(0.1f*addedCounter, 0f, 0f);
 				ZBufferState state = getZBuffInForegroundState();
 				n.attachChild(slottextNode);
@@ -320,10 +319,11 @@ public class J3DMovingEngine {
 		n.setLocalTranslation(new Vector3f(0.2f,1.9f,0.1f));
 		n.setLocalScale(0.17f);
 		FlyingNode fn = new FlyingNode();
+		fn.onFinish = freers;
 		fn.attachChild(n);
 		return fn;
-		
 	}
+	
 	
 	
 	public void getVisibleFormBillboardNodes(RenderedMovingUnit unit)
@@ -332,6 +332,7 @@ public class J3DMovingEngine {
 			BillboardNode n = new BillboardNode("name");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.getSize(), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+			currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
 			n.attachChild(slottextNode);
 			slottextNode.setCullHint( CullHint.Never);
 			slottextNode.setTextureCombineMode( TextureCombineMode.Replace );
@@ -364,6 +365,7 @@ public class J3DMovingEngine {
 			BillboardNode n = new BillboardNode("name2");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
+			currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
 			n.attachChild(slottextNode);
 			slottextNode.setCullHint( CullHint.Never);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -388,6 +390,7 @@ public class J3DMovingEngine {
 			Node n = new Node("name2");
 			//n.setAlignment(BillboardNode.AXIAL_Z);
 			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText("o", 1, new ColorRGBA(0.3f,0.9f,0.3f,1f),new ColorRGBA(0.1f,0.6f,0.1f,1f),true);
+			currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
 			n.attachChild(slottextNode);
 			slottextNode.setCullHint( CullHint.Never);
 			ZBufferState s = J3DCore.getInstance().getDisplay().getRenderer().createZBufferState();

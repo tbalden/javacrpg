@@ -1554,7 +1554,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 							.getNormalPositions().viewPositionY, gameState
 							.getNormalPositions().viewPositionZ);
 			gameState.updateEntityIcons();
-			gameState.checkEnterLeave();
+			gameState.checkAndHandleEnterLeave();
 		}
 		return success;
 	}

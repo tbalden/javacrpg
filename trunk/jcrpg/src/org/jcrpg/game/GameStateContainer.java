@@ -391,7 +391,7 @@ public class GameStateContainer {
 	/**
 	 * Check if player has entered/left a population, write to log if so.
 	 */
-	public void checkEnterLeave()
+	public void checkAndHandleEnterLeave()
 	{
 		WorldTypeDesc desc = world.getWorldDescAtPosition(normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ,false);
 		if (desc.population==null)

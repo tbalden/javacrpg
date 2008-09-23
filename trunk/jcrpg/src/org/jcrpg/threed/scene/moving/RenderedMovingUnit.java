@@ -63,6 +63,7 @@ public class RenderedMovingUnit {
 	
 	public transient HashSet<NodePlaceholder> nodePlaceholders = new HashSet<NodePlaceholder>();
 	
+	
 	/**
 	 * billboard node for group size text
 	 */

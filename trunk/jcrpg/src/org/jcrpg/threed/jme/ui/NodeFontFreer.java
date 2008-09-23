@@ -17,45 +17,22 @@
  */ 
 package org.jcrpg.threed.jme.ui;
 
-import java.util.ArrayList;
+import org.jcrpg.ui.text.FontTT;
 
 import com.jme.scene.Node;
 
-public class TimedNode extends Node
+public class NodeFontFreer implements Runnable
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	private long startTime = System.currentTimeMillis();
-	private long maxTime = 900;
-	private boolean counting = false;
-	
-	public ArrayList<Runnable> onFinish = null;
-	
-	@Override
-	public void updateGeometricState(float time, boolean initiator) {
-		if (counting && maxTime<=System.currentTimeMillis()-startTime)
-		{
-			this.removeFromParent();
-			if (onFinish!=null)
-			{
-				for (Runnable r:onFinish)
-				{
-					r.run();
-				}
-			}
-			return;
-		}
-		super.updateGeometricState(time, initiator);
-	}
-	
-	public void startCounting()
+	FontTT font;
+	Node node;
+	public NodeFontFreer(FontTT font, Node node)
 	{
-		startTime = System.currentTimeMillis();
-		counting = true;
+		this.font = font;
+		this.node = node;
 	}
+	
+	public void run() {
+		font.moveFreedToCache(node);
+	}
+	
 }
-
