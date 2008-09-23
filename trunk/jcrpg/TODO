@@ -7,13 +7,21 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 --------------------------------------------------------------------------------------
-[ ] 2D sprite billboard monsters for classic revival and in lack of 3d artists!
-	or Review other open media project's 3d models
 
-[?]also some check is needed for water present or not in rendered area
-	and if not render pass should be disabled
+[X] add town misc objects, new plaza ground type?
+	[-] needs a development of some kind of AbstractInfrastructure abstract method? some kind of 
+		decision where to put what kind of things...probably the Economic/Ground should be aware of it??
+		[X]!!! type's likeness of distance from center?? good!
+		or !!! grouped by some typeId together into some blocks in a block?
+
+[ ] dungeon dev
+[ ] the other misc objects
+[ ] cyclops
 
 [ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
+[-] 2D sprite billboard monsters for classic revival and in lack of 3d artists!
+	or Review other open media project's 3d models
 
 BUGS:
 ####
@@ -422,6 +430,9 @@ Other:
 
 OPTIMIZATIONS:
 #############
+[?]also some check is needed for water present or not in rendered area
+	and if not render pass should be disabled
+
 
 [X] to check for OS leak/Java mem state info: Runtime.getRuntime().freeMemory()
 
