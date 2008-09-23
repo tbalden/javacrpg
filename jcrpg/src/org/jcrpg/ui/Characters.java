@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.threed.jme.ui.TimedNode;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.text.FontTT;
@@ -39,7 +40,6 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 
 public class Characters {
@@ -112,6 +112,8 @@ public class Characters {
 	
 	float barScreenRatio = 13f;
 	
+	ArrayList<Runnable> globalFontFreers = new ArrayList<Runnable>();
+	
 	public void addMembers(ArrayList<PersistentMemberInstance> orderedParty)
 	{
 		bars.clear();
@@ -122,6 +124,12 @@ public class Characters {
 		effectIconOrigoYPositions.clear();
 		centerNode.clear();
 		deadlyNode.clear();
+		
+		for (Runnable r:globalFontFreers)
+		{
+			r.run();
+		}
+		
 		try {
 			int counter = 0;
 			int counterPair = 0;
@@ -163,14 +171,14 @@ public class Characters {
 						ZoomingQuad q = Window.loadImageToZoomingQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
 						Node nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-						
+						globalFontFreers.add(new NodeFontFreer(this.text,nametextNode));
 						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.39f,0);
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
 						
 						Node classtextNode = this.text.createOutlinedText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-						
+						globalFontFreers.add(new NodeFontFreer(this.text,classtextNode));
 						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.515f,0);
 						
 						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-maxSizeY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
@@ -464,6 +472,7 @@ public class Characters {
 				Node n = new Node();
 				int counter = 0;
 				int addedCounter = 0;
+				ArrayList<Runnable> freers = new ArrayList<Runnable>();
 				for (Integer i:u.orderedImpactPoints)
 				{
 					if (i!=null && i!=0)
@@ -471,6 +480,7 @@ public class Characters {
 						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_#_#_#_ VISUALIZING "+member.description.getName()+" "+counter+" = "+i);
 						ColorRGBA color = Characters.pointQuadData.get(counter);
 						Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+i, 1,color,new ColorRGBA(0.8f,0.8f,0.8f,1f),true);
+						freers.add(new NodeFontFreer(FontUtils.textNonBoldVerdana,slottextNode));
 						slottextNode.setLocalTranslation(0,0,0);
 						slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						slottextNode.setLocalScale(hud.core.getDisplay().getWidth()/30f);
@@ -483,6 +493,7 @@ public class Characters {
 				n.setLocalTranslation(new Vector3f(0f,0f,0f));
 				//n.setLocalScale(0.17f);
 				TimedNode fn = new TimedNode();
+				fn.onFinish = freers;
 				fn.attachChild(n);
 				fn.updateRenderState();
 				center.attachChild(fn);	

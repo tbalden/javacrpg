@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
@@ -152,8 +153,15 @@ public class LoadMenu extends Window implements KeyListener {
 		return true;
 	}
 	
+	ArrayList<Runnable> fontFreers = new ArrayList<Runnable>();
 	public void loadSlots() throws Exception
 	{
+		for (Runnable r:fontFreers)
+		{
+			r.run();
+		}
+		fontFreers.clear();
+		
 		for (Button b:buttons)
 		{
 			windowNode.detachChild(b.quad);
@@ -174,6 +182,7 @@ public class LoadMenu extends Window implements KeyListener {
 				windowNode.attachChild(button);
 				
 				Node slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				fontFreers.add(new NodeFontFreer(this.text,slottextNode));
 				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(core.getDisplay().getWidth()/900f);
@@ -183,8 +192,8 @@ public class LoadMenu extends Window implements KeyListener {
 			}
 			counter++;
 		}
-		
 	}
+	
 	
 	public void highlightSelected()
 	{

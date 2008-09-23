@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.threed.jme.ui;
 
+import java.util.ArrayList;
+
 import com.jme.scene.Node;
 
 public class FlyingNode extends Node
@@ -32,6 +34,8 @@ public class FlyingNode extends Node
 	private boolean flying = false;
 	private float speed = 0.1f;
 	
+	public ArrayList<Runnable> onFinish = null;
+	
 	@Override
 	public void updateGeometricState(float time, boolean initiator) {
 		if (flying && fliedTime<maxTime) {
@@ -41,6 +45,13 @@ public class FlyingNode extends Node
 		if (flying && fliedTime>=maxTime)
 		{
 			this.removeFromParent();
+			if (onFinish!=null)
+			{
+				for (Runnable r:onFinish)
+				{
+					r.run();
+				}
+			}
 			return;
 		}
 		super.updateGeometricState(time, initiator);
