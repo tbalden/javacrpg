@@ -40,6 +40,7 @@ public class RenderedArea {
 	int renderDistance, renderDistanceFarview;
 
 	public boolean isInProcess = false;
+	public int numberOfProcesses = 0;
 	public boolean haltCurrentProcess = false;
 
 	
@@ -369,6 +370,7 @@ public class RenderedArea {
 	public RenderedCube[][] getRenderedSpace(World world, int x, int y, int z, int direction, boolean farViewEnabled, boolean rerender)
 	{
 		isInProcess = true;
+		numberOfProcesses++;
 
 		Time wtime = world.engine.getWorldMeanTime();		
 		world.perf_eco_t0 = 0;
@@ -445,6 +447,7 @@ public class RenderedArea {
 										{
 											isInProcess = false;
 											haltCurrentProcess = false;
+											numberOfProcesses--;
 											return null;
 										}
 		
@@ -479,6 +482,7 @@ public class RenderedArea {
 									{
 										isInProcess = false;
 										haltCurrentProcess = false;
+										numberOfProcesses--;
 										return null;
 									}
 	
@@ -550,6 +554,7 @@ public class RenderedArea {
 										{
 											isInProcess = false;
 											haltCurrentProcess = false;
+											numberOfProcesses--;
 											return null;
 										}
 										int wX = worldX;
@@ -595,6 +600,7 @@ public class RenderedArea {
 									{
 										isInProcess = false;
 										haltCurrentProcess = false;
+										numberOfProcesses--;
 										return null;
 									}
 									int wX = worldX;
@@ -659,6 +665,7 @@ public class RenderedArea {
 		System.out.println("-- sur = "+world.perf_surface_t0);
 		System.out.println("FULL TIME = "+(System.currentTimeMillis()-time1));
 		isInProcess = false;
+		numberOfProcesses--;
 		return new RenderedCube[][]{toAdd,toRemove, new RenderedCube[0],new RenderedCube[0]};
 		
 	}
