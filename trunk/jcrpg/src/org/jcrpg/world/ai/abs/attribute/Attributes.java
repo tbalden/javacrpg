@@ -38,7 +38,10 @@ public abstract class Attributes {
 	}
 	public int getAttribute(String attr)
 	{
-		return attributes.get(attr);
+		if (attributes==null) return 0;
+		Integer r = attributes.get(attr);
+		if (r==null) return 0;
+		return r;
 	}
 	
 	public static int getAttribute(String attr, Attributes base, Attributes modifier)
