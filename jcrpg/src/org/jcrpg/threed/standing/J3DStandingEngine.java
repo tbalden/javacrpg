@@ -1671,6 +1671,16 @@ public class J3DStandingEngine {
 				}
 				loadRenderedAreaParallel = false;
 				runningThreads.clear();
+				while (renderedArea.numberOfProcesses>0)
+				{
+					Jcrpg.LOGGER.info("WAITING FOR RENDER THREADS TO STOP...");
+					try {
+						Thread.sleep(5);
+					} catch (Exception ex)
+					{
+						
+					}
+				}
 				nonDrawingRender = true;
 				GeometryBatchMesh.GLOBAL_CAN_COMMIT = false;
 				if (rerenderWithRemove)
