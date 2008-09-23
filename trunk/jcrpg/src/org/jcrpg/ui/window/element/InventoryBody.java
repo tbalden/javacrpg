@@ -17,6 +17,7 @@
  */ 
 package org.jcrpg.ui.window.element;
 
+
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
@@ -47,9 +48,11 @@ public class InventoryBody extends InputBase {
 	
 	Quad currentPic = null;
 	
+	
 	public void updateToEntityMemberInstance(EntityMemberInstance instance)
 	{
 		baseNode.detachAllChildren();
+		freeTextNodes();
 		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("instance.description.bodyType "+instance.description.getName()+" "+instance.description.bodyType);
 		BodyBase bodyBase = BodyBase.bodyBaseInstances.get(instance.description.bodyType);
 		String image = "./data/ui/inventory/"+bodyBase.getBodyImage()+".png";
@@ -93,6 +96,7 @@ public class InventoryBody extends InputBase {
 			
 			
 			Node textNode = FontUtils.textVerdana.createOutlinedText(txt, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+			currentTextNodes.put(textNode,FontUtils.textVerdana);
 			textNode.setLocalTranslation(dCenterX - fullSizeX/2f + fullSizeX*ratio[0], dCenterY - fullSizeY/2f +fullSizeY*ratio[1], 0);
 			textNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			textNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
