@@ -43,7 +43,6 @@ import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.player.PartyInstance;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
-import org.jcrpg.world.place.economic.House;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
@@ -222,7 +221,7 @@ public class EntityInstance {
 	{
 		int counter = 0;
 		
-		//if (true==true) return false; // For debugging without combats, uncomment this.
+		//if (true) return false; // For debugging without combats, uncomment this.
 		
 		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
