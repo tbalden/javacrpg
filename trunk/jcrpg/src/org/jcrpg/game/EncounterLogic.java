@@ -378,8 +378,13 @@ public class EncounterLogic {
 
 		playTurnActStep();
 	}
+
+	public boolean turnCameraIntelligent(EncounterInfo info)
+	{
+		return turnCameraIntelligent(info,true);
+	}
 	
-	public void turnCameraIntelligent(EncounterInfo info)
+	public boolean turnCameraIntelligent(EncounterInfo info, boolean reset)
 	{
 		if (info.getTopology()!=null)
 		{
@@ -387,7 +392,8 @@ public class EncounterLogic {
 				EncounterUnitData d= info.getTopology().getEnemyLineup().getAllUnits().get(0);
 				if (d!=null)
 				{
-					turnCameraToUnit(d);
+					turnCameraToUnit(d,reset);
+					return true;
 				}
 			} catch (Exception ex)
 			{
@@ -402,7 +408,8 @@ public class EncounterLogic {
 					EncounterUnitData d = info.getEncounterPhaseLineup().orderedList.values().iterator().next().get(0);
 					if (d!=null)
 					{
-						turnCameraToUnit(d);
+						turnCameraToUnit(d,reset);
+						return true;
 					}
 				} catch (Exception ex)
 				{
@@ -410,11 +417,17 @@ public class EncounterLogic {
 				}
 			}
 		}
+		return false;
 	}
 	
 	private void turnCameraToUnit(EncounterUnitData data)
 	{
-		resetCamera();
+		turnCameraToUnit(data,true);
+	}
+	
+	private void turnCameraToUnit(EncounterUnitData data, boolean reset)
+	{
+		if (reset) resetCamera();
 		try 
 		{
 			float deltaY = 0;
@@ -436,6 +449,15 @@ public class EncounterLogic {
 	
 	private void resetCamera()
 	{
+		if (encounterRoundState!=null && encounterRoundState.encounter!=null)
+		{
+			if (turnCameraIntelligent(encounterRoundState.encounter,false)) return;	
+		}
+		if (turnActTurnState!=null && turnActTurnState.encounter!=null)
+		{
+			if (turnCameraIntelligent(turnActTurnState.encounter,false)) return;	
+		}
+		
 		gameLogic.core.setCalculatedCameraLocation();
 		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
 		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
