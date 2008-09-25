@@ -75,7 +75,7 @@ public class SaveLoadNewGame {
 		
 			Engine engine = new Engine();
 			Time wmt = new Time();
-			wmt.setHour(16);
+			wmt.setHour(13);
 			engine.setWorldMeanTime(wmt);
 			engine.setNumberOfTurn(0);
 			Thread t = new Thread(engine);
@@ -102,14 +102,18 @@ public class SaveLoadNewGame {
 			int zDiff = -60;
 			if (true==false)
 			{
-				xDiff = +75;
+				xDiff = -15;
 				yDiff = 0;
 				zDiff = +66;
 			}
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
-			;
+
+			//wX = world.realSizeX-1;///2+xDiff;
+			//wY = world.getSeaLevel(1)+4;//yDiff;
+			//wZ = world.realSizeZ-1;///2+zDiff;
+			
 			PartyInstance party = new PartyInstance(new Party(),world,ecology,Ecology.getNextEntityId(), "Player",0, wX, wY, wZ);
 			for (PersistentMemberInstance m:partyMembers)
 			{

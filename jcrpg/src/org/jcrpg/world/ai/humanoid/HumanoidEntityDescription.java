@@ -30,6 +30,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.population.DungeonDistrict;
 
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
@@ -64,10 +65,24 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 							break;
 						}
 					} else {
-						// okay, here we can settle the population for this group...
-						instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
-						Class<? extends Population> p = list.get(0);
-						Population pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3],coords[0],coords[1]);
+						// okay, here we can try to settle the population for this group...
+						Population pI = null;
+						for (Class<? extends Population> p:list)
+						{
+							//if (p==DungeonDistrict.class) System.out.println("INSPECTING p" +p);
+							instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
+							pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3],coords[0],coords[1]);
+							if (!pI.isGeographyAreaUsable()) 
+							{
+								//if (p==DungeonDistrict.class) System.out.println("NOT USABLE");
+								instance.homeBoundary = null;
+								pI = null;
+								continue;
+							}
+							break;
+						}
+						if (pI==null) continue;
+						//System.out.println("CREATED pI" +pI);
 						pI.update();
 						world.economyContainer.addPopulation(pI);
 						namePopulation(pI);

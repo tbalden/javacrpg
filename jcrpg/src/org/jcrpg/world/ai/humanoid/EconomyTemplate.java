@@ -28,6 +28,7 @@ import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
+import org.jcrpg.world.place.economic.population.DungeonDistrict;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
@@ -45,6 +46,7 @@ public class EconomyTemplate {
 	static 
 	{
 		economicBase.put(SimpleDistrict.class, new SimpleDistrict());
+		economicBase.put(DungeonDistrict.class, new DungeonDistrict());
 		economicBase.put(House.class, new House());
 		economicBase.put(WoodenHouse.class, new WoodenHouse());
 		economicBase.put(SimpleDungeonPart.class, new SimpleDungeonPart());

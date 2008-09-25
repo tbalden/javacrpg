@@ -68,6 +68,7 @@ import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
+import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
@@ -200,6 +201,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_PAVILION.id, new Integer(64));
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BASKET.id, new Integer(65));
 
+		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
 		
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -908,8 +910,18 @@ public class SideTypeModels {
 		sm_basket.dislocationRate = 0.2f;
 		hm3dTypeRenderedSide.put(new Integer(65), new RenderedHashRotatedSide(new Model[]{sm_basket},true));
 
+		// dungeon
+		SimpleModel sm_cave_ground_e = new SimpleModel("models/ground/ground_1.obj","cave_ground.jpg"); sm_cave_ground_e.yGeomBatchSize = yCommon; sm_cave_ground_e.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_cave_ground_e.farViewEnabled = true;
+		SimpleModel sm_cave_ground_2_e = new SimpleModel("models/ground/ground_2.obj","cave_ground.jpg"); sm_cave_ground_2_e.yGeomBatchSize = yCommon; sm_cave_ground_2_e.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_cave_ground_2_e.farViewEnabled = true;
+		SimpleModel sm_cave_ground_3_e = new SimpleModel("models/ground/ground_3.obj","cave_ground.jpg"); sm_cave_ground_3_e.yGeomBatchSize = yCommon; sm_cave_ground_3_e.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_cave_ground_3_e.farViewEnabled = true;
+		sm_cave_ground_e.disposition = new float[]{0,0.04f,0};
+		sm_cave_ground_2_e.disposition = new float[]{0,0.04f,0};
+		sm_cave_ground_3_e.disposition = new float[]{0,0.04f,0};
+		hm3dTypeRenderedSide.put(new Integer(66), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground_e,sm_cave_ground_2_e,sm_cave_ground_3_e,sm_cave_ground_3_e,sm_cave_ground_3_e}}));//ground_cave}));
+		
+
 		// NEXT ID = 
-		// 66
+		// 67
 		
 	}
 	

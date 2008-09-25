@@ -33,6 +33,7 @@ import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
+import org.jcrpg.world.place.economic.population.DungeonDistrict;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
@@ -102,13 +103,18 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	public BoarmanTribe()
 	{
 		iconPic = "boarman";
+		
+		economyTemplate.addPopulationType(Plain.class, DungeonDistrict.class);
+		economyTemplate.addResidenceType(Plain.class, SimpleDungeonPart.class);
+		economyTemplate.addPopulationType(Forest.class, DungeonDistrict.class);
+		economyTemplate.addResidenceType(Forest.class, SimpleDungeonPart.class);
+		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
-		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);
+		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);		
 		economyTemplate.addResidenceType(Plain.class, WoodenHouse.class);
 		economyTemplate.addResidenceType(Forest.class, WoodenHouse.class);
 		economyTemplate.addResidenceType(Mountain.class, WoodenHouse.class);
-		//economyTemplate.addResidenceType(Mountain.class, SimpleDungeonPart.class);
 		economyTemplate.addEcoGroundType(Plain.class, RawStreetGround.class);
 		economyTemplate.addEcoGroundType(Plain.class, PavedStorageAreaGround.class);
 		economyTemplate.addEcoGroundType(Forest.class, RawStreetGround.class);
