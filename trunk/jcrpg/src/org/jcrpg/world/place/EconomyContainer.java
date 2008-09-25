@@ -127,9 +127,9 @@ public class EconomyContainer {
 	public int[] getPopulationCoordinatesInZone(int worldX, int worldZ, int populationGridSize)
 	{
 		
-		int x= ((worldX/populationGridSize)*populationGridSize)+populationGridSize/2;
-		int z= ((worldZ/populationGridSize)*populationGridSize)+populationGridSize/2;
-		return new int[]{x,z,(worldX/populationGridSize)*populationGridSize,(worldZ/populationGridSize)*populationGridSize};
+		int x= (((worldX/populationGridSize))*populationGridSize)+populationGridSize/2;
+		int z= (((worldZ/populationGridSize)-1)*populationGridSize)+populationGridSize/2;
+		return new int[]{x,z,(worldX/populationGridSize)*populationGridSize,((worldZ/populationGridSize)-1)*populationGridSize};
 	}
 	
 	/**

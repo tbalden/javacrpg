@@ -42,7 +42,7 @@ import org.jcrpg.world.place.water.Ocean;
  * @author pali
  *
  */
-public abstract class EconomicGround extends Economic {
+public abstract class EconomicGround extends DistrictSubelement {
 
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
 	

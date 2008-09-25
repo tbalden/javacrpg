@@ -288,7 +288,7 @@ public class WorldMap {
 		{
 			posTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 			posTex = new Texture2D();
-			posTex.setMagnificationFilter( Texture.MagnificationFilter.NearestNeighbor);
+			posTex.setMagnificationFilter( Texture.MagnificationFilter.Bilinear);
 			posTex.setMinificationFilter(Texture.MinificationFilter.NearestNeighborLinearMipMap);
 			posTex.setImage(positionGraphics.getImage());
 			posTexState.setTexture(posTex);

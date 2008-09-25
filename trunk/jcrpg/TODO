@@ -8,13 +8,20 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] dungeon dev
+	[ ] slow, too much details
+	[ ] ground is varying??
+	
+	[ ] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
+		( AbstractInfrastructure I modified to reposition blockstartX/Z, but this conflicts with water detection)
+
 [X] add town misc objects, new plaza ground type?
 	[-] needs a development of some kind of AbstractInfrastructure abstract method? some kind of 
 		decision where to put what kind of things...probably the Economic/Ground should be aware of it??
 		[X]!!! type's likeness of distance from center?? good!
 		or !!! grouped by some typeId together into some blocks in a block?
+	[ ] integrate tidbit's bench to where ??
 
-[ ] dungeon dev
 [ ] the other misc objects
 [ ] cyclops
 

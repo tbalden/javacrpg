@@ -148,6 +148,32 @@ public abstract class AbstractInfrastructure {
 		ArrayList<Class<?extends EconomicGround>> groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: ground: "+groundTypes);
 		// base parts
+		{
+			ArrayList<Class<?extends Residence>> filtered = new ArrayList<Class<? extends Residence>>();
+			for (Class<?extends Residence> r:residenceTypes)
+			{
+				if (
+						((DistrictSubelement)(EconomyTemplate.economicBase.get(r))).isValidForDistrict(population.getClass())
+						)
+				{
+					filtered.add(r);
+				}
+			}
+			residenceTypes = filtered;
+		}
+		{
+			ArrayList<Class<?extends EconomicGround>> filtered = new ArrayList<Class<? extends EconomicGround>>();
+			for (Class<?extends EconomicGround> r:groundTypes)
+			{
+				if (
+						((DistrictSubelement)(EconomyTemplate.economicBase.get(r))).isValidForDistrict(population.getClass())
+						)
+				{
+					filtered.add(r);
+				}
+			}
+			groundTypes = filtered;
+		}
 		
 		createUnavailableBlocksArray();
 		

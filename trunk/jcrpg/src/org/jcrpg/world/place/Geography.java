@@ -392,6 +392,7 @@ public class Geography extends Place implements Surface {
 		
 	}
 	
+	private World w;
 	
 	/**
 	 * Checks if the geography height is modified by special elements (river or economics).
@@ -403,7 +404,11 @@ public class Geography extends Place implements Surface {
 	 */
 	public Float overrideHeightForException(int worldX, int worldY, int worldZ, boolean farView)
 	{
-		World w = (World)getRoot();
+		if (w==null)
+		{
+			w = (World)getRoot();	
+		}
+		
 		
 		// economics...
 		ArrayList<Object> list = w.economyContainer.treeLocator.getElements(worldX, worldY, worldZ);
