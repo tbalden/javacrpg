@@ -47,7 +47,13 @@ public class SimpleDungeonPart extends WoodenHouse {
 			throws Exception {
 		super(id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
+		internalPartSizeX = sizeX-outerEdgeSize*2;
+		internalPartSizeZ = sizeZ-outerEdgeSize*2;
 	}
+	int outerEdgeSize = 4;
+	int internalPartSizeX = 0;
+	int internalPartSizeZ = 0;
+	int entrancePosition = 10;
 
 	@Override
 	public Residence getInstance(String id, Geography soilGeo, Place parent,
@@ -64,11 +70,12 @@ public class SimpleDungeonPart extends WoodenHouse {
 		}
 	}
 	
+	
 	public byte[][] labyrinthData;
 
 	@Override
 	public int getMinimumHeight() {
-		return 1;
+		return 3;
 	}
 	
 	@Override
@@ -87,6 +94,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 	
 	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_EAST = new Side[][] { null, GROUND, GROUND, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_WEST = new Side[][] { null, null, GROUND, GROUND, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, null, GROUND };
+	static Side[][] WALL_GROUND_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, null, GROUND };
     static Side[][] WALL_GROUND_NORTH = new Side[][] { GROUND, null, null, null, null, GROUND };
     static Side[][] WALL_GROUND_WEST = new Side[][] { null, null, null, GROUND, null, GROUND };
     static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null, GROUND, null, null, GROUND };
@@ -94,6 +106,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,GROUND,null };
 	static Side[][] WALL_CEILING_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, GROUND, null};
+	static Side[][] WALL_CEILING_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
+	static Side[][] WALL_CEILING_SOUTH_EAST = new Side[][] { null, GROUND, GROUND, null, GROUND, null };
+	static Side[][] WALL_CEILING_SOUTH_WEST = new Side[][] { null, null, GROUND, GROUND, GROUND, null };
+	static Side[][] WALL_CEILING_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, GROUND, null };
+	static Side[][] WALL_CEILING_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, GROUND, null };
     static Side[][] WALL_CEILING_NORTH = new Side[][] { GROUND, null, null, null, GROUND, null};
     static Side[][] WALL_CEILING_WEST = new Side[][] { null, null, null, GROUND, GROUND, null};
     static Side[][] WALL_CEILING_SOUTH = new Side[][] { null, null, GROUND, null, GROUND, null};
@@ -107,14 +124,24 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Cube south = new Cube(null,WALL_GROUND_SOUTH,0,0,0,true,false);
 	static Cube east = new Cube(null,WALL_GROUND_EAST,0,0,0,true,false);
 	static Cube northWest = new Cube(null,WALL_GROUND_NORTH_WEST,0,0,0,true,false);
+	static Cube northEast = new Cube(null,WALL_GROUND_NORTH_EAST,0,0,0,true,false);
+	static Cube southWest = new Cube(null,WALL_GROUND_SOUTH_WEST,0,0,0,true,false);
+	static Cube southEast = new Cube(null,WALL_GROUND_SOUTH_EAST,0,0,0,true,false);
 	static Cube gap = new Cube(null,CAVE_GROUND,0,0,0,true,false);
+	static Cube e_northSouth = new Cube(null,WALL_GROUND_NORTH_SOUTH,0,0,0,true,false);
+	static Cube e_eastWest = new Cube(null,WALL_GROUND_EAST_WEST,0,0,0,true,false);
 
 	static Cube north_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
 	static Cube west_ceiling = new Cube(null,WALL_CEILING_WEST,0,0,0,true,false);
     static Cube south_ceiling = new Cube(null,WALL_CEILING_SOUTH,0,0,0,true,false);
 	static Cube east_ceiling = new Cube(null,WALL_CEILING_EAST,0,0,0,true,false);
 	static Cube northWest_ceiling = new Cube(null,WALL_CEILING_NORTH_WEST,0,0,0,true,false);
+	static Cube northEast_ceiling = new Cube(null,WALL_CEILING_NORTH_EAST,0,0,0,true,false);
+	static Cube southWest_ceiling = new Cube(null,WALL_CEILING_SOUTH_WEST,0,0,0,true,false);
+	static Cube southEast_ceiling = new Cube(null,WALL_CEILING_SOUTH_EAST,0,0,0,true,false);
 	static Cube gap_ceiling = new Cube(null,CAVE_CEILING,0,0,0,true,false);
+	static Cube e_northSouth_ceiling = new Cube(null,WALL_CEILING_NORTH_SOUTH,0,0,0,true,false);
+	static Cube e_eastWest_ceiling = new Cube(null,WALL_CEILING_EAST_WEST,0,0,0,true,false);
 
 	static Cube external_top = new Cube(null,EXTERNAL_TOP,0,0,0,true,false);
 	
@@ -137,12 +164,23 @@ public class SimpleDungeonPart extends WoodenHouse {
 		south.internalLight = true;
 		east.internalLight = true;
 		northWest.internalLight = true;
+		northEast.internalLight = true;
+		southWest.internalLight = true;
+		southEast.internalLight = true;
+		e_northSouth.internalLight = true;
+		e_eastWest.internalLight = true;
 		gap.internalLight = true;
+
 		north_ceiling.internalLight = true;
 		west_ceiling.internalLight = true;
 		south_ceiling.internalLight = true;
 		east_ceiling.internalLight = true;
 		northWest_ceiling.internalLight = true;
+		northEast_ceiling.internalLight = true;
+		southWest_ceiling.internalLight = true;
+		southEast_ceiling.internalLight = true;
+		e_northSouth_ceiling.internalLight = true;
+		e_eastWest_ceiling.internalLight = true;
 		gap_ceiling.internalLight = true;
 
 		north_internal.overwrite = true;
@@ -191,7 +229,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
 		if (labyrinthData==null)
 		{
-			labyrinthData = MazeTool.getLabyrinth(origoX+origoY+origoZ, sizeX+1, sizeZ+1, null);
+			labyrinthData = MazeTool.getLabyrinth(origoX+origoY+origoZ, internalPartSizeX, internalPartSizeZ, null);
 		}
 
 		boolean edge = worldX==origoX || worldX>=origoX+sizeX-1;
@@ -202,112 +240,267 @@ public class SimpleDungeonPart extends WoodenHouse {
 			if (edge) return null;
 			return external_top;
 		}
-		if (worldY==origoY)
-		//if (kind==K_NORMAL_GROUND)
+		
+		if (worldY==origoY || worldY == origoY+1)
 		{
-			if (edge) return edge_ground;
-			boolean horWall = false;
-			boolean verWall = false;
-			if ((labyrinthData[worldX-origoX][worldZ-origoZ] & MazeTool.WALL_HORI)>0)
+			int relativeX = worldX-origoX-outerEdgeSize;
+			int relativeZ = worldZ-origoZ-outerEdgeSize;
+			boolean externalX = false;
+			boolean externalXMin = false;
+			boolean externalXMax = false;
+			boolean externalZ = false;
+			boolean externalZMin = false;
+			boolean externalZMax = false;
+			boolean transPartX = false;
+			boolean transPartZ = false;
+			boolean entranceX = false;
+			boolean entranceZ = false;
+			boolean edgeOfTransXMin = false;
+			boolean edgeOfTransXMax = false;
+			boolean edgeOfTransZMin = false;
+			boolean edgeOfTransZMax = false;
+			if (relativeX<0 || relativeX>=internalPartSizeX) 
 			{
-				horWall = true;
+				if (relativeX==-1)
+				{
+					edgeOfTransXMin = true;
+				} else
+				if (relativeX==internalPartSizeX)
+				{
+					edgeOfTransXMax = true;
+				}
+				transPartX = true;
 			}
-			if ((labyrinthData[worldX-origoX][worldZ-origoZ] & MazeTool.WALL_VERT)>0)
+			if (relativeZ<0 || relativeZ>=internalPartSizeZ) 
 			{
-				verWall = true;
+				if (relativeZ==-1)
+				{
+					edgeOfTransZMin = true;
+				} else
+				if (relativeZ==internalPartSizeZ)
+				{
+					edgeOfTransZMax = true;
+				}
+				transPartZ = true;
 			}
-			
-			boolean external = worldX==origoX+1 || worldX>=origoX+sizeX-2;
-			external = external || worldZ==origoZ+1 || worldZ>=origoZ+sizeZ-2;
-			
-			if (external)
+			if (worldZ-origoZ==entrancePosition)
 			{
-				if (worldX==origoX+1)
+				entranceX = true;
+			}
+			if (worldX-origoX==entrancePosition)
+			{
+				entranceZ = true;
+			}
+			if (worldX==origoX+1)
+			{
+				externalX = true;
+				externalXMin = true;
+			}
+			if (worldX==origoX+sizeX-2)
+			{
+				externalX = true;
+				externalXMax = true;
+			}
+			if (worldZ==origoZ+1)
+			{
+				externalZ = true;
+				externalZMin = true;
+			}
+			if (worldZ==origoZ+sizeZ-2)
+			{
+				externalZ = true;
+				externalZMax = true;
+			}
+		
+			if (worldY==origoY)
+			{
+				if (edge) return edge_ground;
+				boolean horWall = false;
+				boolean verWall = false;
+				
+				if (externalXMin && externalZMin)
+				{
+					return southWest;
+				}
+				if (externalXMin && externalZMax)
+				{
+					return northWest;
+				}
+				if (externalXMax && externalZMin)
+				{
+					return southEast;
+				}
+				if (externalXMax && externalZMax)
+				{
+					return northEast;
+				}
+
+				if ((externalX ||transPartX ) && entranceX)
+				{
+					return e_northSouth;
+				}
+				if (externalXMin)
 				{
 					return west;
 				}
-				if (worldX==origoX+sizeX-2)
+				if (externalXMax)
 				{
 					return east;
 				}
-				if (worldZ==origoZ+1)
+				if (edgeOfTransXMin)
+				{
+					return east;
+				}
+				if (edgeOfTransXMax)
+				{
+					return west;
+				}
+
+				if ((externalZ || transPartZ) && entranceZ)
+				{
+					return e_eastWest;
+				}
+				if (externalZMin)
 				{
 					return south;
 				}
-				if (worldZ==origoZ+sizeZ-2)
+				if (externalZMax)
 				{
 					return north;
 				}
-			}
-			
-			if (horWall&&verWall) 
-			{
-				return external?northWest:northWest_internal;
-			}
-			if (horWall) 
-			{
-				return external?north:north_internal;
-			}
-			if (verWall) 
-			{
-				return external?west:west_internal;
-			}
-			return external?gap:gap_internal;
-		}
+				if (edgeOfTransZMin)
+				{
+					return north;
+				}
+				if (edgeOfTransZMax)
+				{
+					return south;
+				}
 
-		if (worldY==origoY+1)
-			//if (kind==K_NORMAL_GROUND)
-			{
-				if (edge) return null;
-				boolean horWall = false;
-				boolean verWall = false;
-				if ((labyrinthData[worldX-origoX][worldZ-origoZ] & MazeTool.WALL_HORI)>0)
+				if (transPartX || transPartZ)
+				{
+					return gap;
+				}
+				
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.WALL_HORI)>0)
 				{
 					horWall = true;
 				}
-				if ((labyrinthData[worldX-origoX][worldZ-origoZ] & MazeTool.WALL_VERT)>0)
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.WALL_VERT)>0)
 				{
 					verWall = true;
 				}
 				
-				boolean external = worldX==origoX+1 || worldX>=origoX+sizeX-2;
-				external = external || worldZ==origoZ+1 || worldZ>=origoZ+sizeZ-2;
-				
-				if (external)
+				if (horWall&&verWall) 
 				{
-					if (worldX==origoX+1)
-					{
-						return west_ceiling;
-					}
-					if (worldX==origoX+sizeX-2)
-					{
-						return east_ceiling;
-					}
-					if (worldZ==origoZ+1)
-					{
-						return south_ceiling;
-					}
-					if (worldZ==origoZ+sizeZ-2)
-					{
-						return north_ceiling;
-					}
+					return northWest_internal;
+				}
+				if (horWall) 
+				{
+					return north_internal;
+				}
+				if (verWall) 
+				{
+					return west_internal;
+				}
+				return gap_internal;
+			}
+	
+			if (worldY==origoY+1)
+			{
+				if (edge) return null;
+				boolean horWall = false;
+				boolean verWall = false;
+				
+				if (externalXMin && externalZMin)
+				{
+					return southWest_ceiling;
+				}
+				if (externalXMin && externalZMax)
+				{
+					return northWest_ceiling;
+				}
+				if (externalXMax && externalZMin)
+				{
+					return southEast_ceiling;
+				}
+				if (externalXMax && externalZMax)
+				{
+					return northEast_ceiling;
+				}
+				if ((externalX ||transPartX ) && entranceX)
+				{
+					return e_northSouth_ceiling;
+				}
+				if (externalXMin)
+				{
+					return west_ceiling;
+				}
+				if (externalXMax)
+				{
+					return east_ceiling;
+				}
+				if (edgeOfTransXMin)
+				{
+					return east_ceiling;
+				}
+				if (edgeOfTransXMax)
+				{
+					return west_ceiling;
+				}
+
+				if ((externalZ || transPartZ) && entranceZ)
+				{
+					return e_eastWest_ceiling;
+				}
+				if (externalZMin)
+				{
+					return south_ceiling;
+				}
+				if (externalZMax)
+				{
+					return north_ceiling;
+				}
+				if (edgeOfTransZMin)
+				{
+					return north_ceiling;
+				}
+				if (edgeOfTransZMax)
+				{
+					return south_ceiling;
+				}
+				
+				
+				if (transPartX || transPartZ)
+				{
+					return gap_ceiling;
+				}
+				
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.WALL_HORI)>0)
+				{
+					horWall = true;
+				}
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.WALL_VERT)>0)
+				{
+					verWall = true;
 				}
 				
 				if (horWall&&verWall) 
 				{
-					return external?northWest_ceiling:northWest_internal_ceiling;
+					return northWest_internal_ceiling;
 				}
 				if (horWall) 
 				{
-					return external?north_ceiling:north_internal_ceiling;
+					return north_internal_ceiling;
 				}
 				if (verWall) 
 				{
-					return external?west_ceiling:west_internal_ceiling;
+					return west_internal_ceiling;
 				}
-				return external?gap_ceiling:gap_internal_ceiling;
+				return gap_internal_ceiling;
 			}
-
+		}
+		
 		return null;
 	}
 
