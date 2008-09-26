@@ -184,6 +184,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_EXTERNAL_WOODEN_GROUND.id, new Integer(56));
 
+
 		
 		// WOODEN HOUSE
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_STAIRS.id, new Integer(46));
@@ -202,7 +203,8 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BASKET.id, new Integer(65));
 
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
-		
+		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(67));
+
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.genericScale=3f;
@@ -919,9 +921,10 @@ public class SideTypeModels {
 		sm_cave_ground_3_e.disposition = new float[]{0,0.04f,0};
 		hm3dTypeRenderedSide.put(new Integer(66), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground_e,sm_cave_ground_2_e,sm_cave_ground_3_e,sm_cave_ground_3_e,sm_cave_ground_3_e}}));//ground_cave}));
 		
+		hm3dTypeRenderedSide.put(new Integer(67), new RenderedSide(new Model[]{wall_thick}));
 
 		// NEXT ID = 
-		// 67
+		// 68
 		
 	}
 	

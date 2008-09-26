@@ -29,15 +29,17 @@ public class MazeTool {
 	public static final byte GAP = 0;
 	public static final byte WALL_HORI = 1;
 	public static final byte WALL_VERT = 2;
+	public static final byte OPEN_PART = 4;
 	public static final byte WALL_HORI_NEG = (byte)254;
 	public static final byte WALL_VERT_NEG = (byte)253;
+	public static final byte OPEN_PART_NEG = (byte)251;
 	
-	public static byte[][] getLabyrinth(int seed, int sizeX, int sizeY, int[][][] entranceGaps)
+	public static byte[][] getLabyrinth(int seed, int sizeX, int sizeY, boolean allClosed)
 	{
 		
 		byte[][] r = new byte[sizeX][sizeY];
 		
-		recoursiveDivision(seed, 0,(int)(sizeX/Math.exp(sizeX/50f)), r, 0, 0, sizeX, sizeY);
+		recoursiveDivision(seed, 0,(int)(sizeX/Math.exp(sizeX/50f)), r, 0, 0, sizeX, sizeY,allClosed);
 		
 		return r;
 		
@@ -54,12 +56,32 @@ public class MazeTool {
 	 * @param endX
 	 * @param endY
 	 */
-	public static void recoursiveDivision(int seed, int level, int maxLevel, byte[][] map, int origoX, int origoY, int endX, int endY)
+	public static void recoursiveDivision(int seed, int level, int maxLevel, byte[][] map, int origoX, int origoY, int endX, int endY, boolean allClosed)
 	{
 		int sizeX = endX-origoX;
 		int sizeY = endY-origoY;
 		if (sizeX<3 || sizeY<3) return;
 		int hash1 = HashUtil.mix(seed, origoX+origoY, sizeX+sizeY);
+		
+		boolean open = false;
+		if (hash1%3==1 && !allClosed)
+		{
+			open = true;
+			
+		} 
+		for (int x=origoX; x<origoX+sizeX; x++)
+		{
+			for (int y=origoY; y<origoY+sizeY; y++)
+			{
+				if (open)
+				{
+					map[x][y] = (byte)(map[x][y] | OPEN_PART);
+				} else
+				{
+					map[x][y] = (byte)(map[x][y] & OPEN_PART_NEG);
+				}
+			}
+		}
 		int hash2 = HashUtil.mix(seed+1, origoX+origoY, sizeX+sizeY);
 		int divX = Math.min(Math.max(2,hash1%sizeX),sizeX-2);
 		int divY = Math.min(Math.max(2,hash2%sizeY),sizeY-2);
@@ -105,10 +127,10 @@ public class MazeTool {
 		}
 		if (level<maxLevel)
 		{
-			recoursiveDivision(seed, level+1, maxLevel, map, origoX, origoY, origoX+divX, origoY+divY);
-			recoursiveDivision(seed, level+1, maxLevel, map, origoX+divX, origoY, endX, origoY+divY);
-			recoursiveDivision(seed, level+1, maxLevel, map, origoX+divX, origoY+divY, endX, endY);
-			recoursiveDivision(seed, level+1, maxLevel, map, origoX, origoY+divY, origoX+divX, endY);
+			recoursiveDivision(seed, level+1, maxLevel, map, origoX, origoY, origoX+divX, origoY+divY,allClosed);
+			recoursiveDivision(seed, level+1, maxLevel, map, origoX+divX, origoY, endX, origoY+divY,allClosed);
+			recoursiveDivision(seed, level+1, maxLevel, map, origoX+divX, origoY+divY, endX, endY,allClosed);
+			recoursiveDivision(seed, level+1, maxLevel, map, origoX, origoY+divY, origoX+divX, endY,allClosed);
 		}
 		
 	}
@@ -140,13 +162,13 @@ public class MazeTool {
 	public static void main(String[] args)
 	{
 		long t0 = System.currentTimeMillis(); 
-		byte[][] b = getLabyrinth(1, 20, 20, null);
+		byte[][] b = getLabyrinth(1, 20, 20, false);
 		System.out.println(System.currentTimeMillis()-t0);
 		for (int y=0; y<b[0].length; y++)
 		{
 			for (int x=0; x<b.length; x++)
 			{
-				System.out.print(((b[x][y]&WALL_HORI)>0)?(((b[x][y]&WALL_VERT)>0)?"T\"":"\"\""):(((b[x][y]&WALL_VERT)>0)?"| ":"  "));
+				System.out.print(((b[x][y]&WALL_HORI)>0)?(((b[x][y]&WALL_VERT)>0)?"T\"":"\"\""):(((b[x][y]&WALL_VERT)>0)?(((b[x][y]&OPEN_PART)>0)?"| ":"|X"):(((b[x][y]&OPEN_PART)>0)?"  ":"XX")));
 			}
 			System.out.println("X");
 			
