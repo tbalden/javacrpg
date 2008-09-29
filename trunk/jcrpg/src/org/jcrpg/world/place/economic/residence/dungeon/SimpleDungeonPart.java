@@ -86,12 +86,15 @@ public class SimpleDungeonPart extends WoodenHouse {
 	}
 
 
-	public static final String TYPE_CAVE = "DUNGEON";
-	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_CAVE+"_GROUND",true);
-	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_CAVE+"_GROUND_ELEVATED",true);
-	static Side[] GROUND = {new Side(TYPE_CAVE,SUBTYPE_GROUND)};
-	static Side[] GROUND_ELEVATED = {new Side(TYPE_CAVE,SUBTYPE_GROUND_ELEVATED)};
-	
+	public static final String TYPE_DUNGEON = "DUNGEON";
+	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
+	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
+	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_DUNGEON+"_EXTERNAL_DOOR");
+
+	static Side[] GROUND = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
+	static Side[] GROUND_ELEVATED = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND_ELEVATED)};
+	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_DUNGEON,SUBTYPE_EXTERNAL_DOOR)};
+
 	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, GROUND };
 	static Side[][] WALL_GROUND_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
