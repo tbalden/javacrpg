@@ -59,7 +59,7 @@ public class WoodenHouse extends Residence {
 		SUBTYPE_INTERNAL_GROUND.colorBytes = new byte[] {(byte)150,(byte)150,(byte)0};
 	}
 	
-	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
+	protected static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_DOOR)};
 	static Side[] WINDOW = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_WINDOW)};
 	static Side[] STAIRS = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_STAIRS)};
 	static Side[] ROOF_CORNER = new Side[]{new Side(TYPE_HOUSE,SUBTYPE_ROOF_CORNER)};

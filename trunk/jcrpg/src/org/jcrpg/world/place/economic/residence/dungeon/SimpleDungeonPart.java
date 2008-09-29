@@ -122,8 +122,19 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_EAST = new Side[][] { null, GROUND, null, null, null, null };
 	static Side[][] WALL_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, null};
 
+	static Side[][] DOOR_GROUND_NORTH_WEST = new Side[][] { EXTERNAL_DOOR, null, null, EXTERNAL_DOOR, null, GROUND };
+	static Side[][] DOOR_GROUND_NORTH_EAST = new Side[][] { EXTERNAL_DOOR, EXTERNAL_DOOR, null, null, null, GROUND };
+	static Side[][] DOOR_GROUND_SOUTH_EAST = new Side[][] { null, EXTERNAL_DOOR, EXTERNAL_DOOR, null, null, GROUND };
+	static Side[][] DOOR_GROUND_SOUTH_WEST = new Side[][] { null, null, EXTERNAL_DOOR, EXTERNAL_DOOR, null, GROUND };
+    static Side[][] DOOR_GROUND_NORTH = new Side[][] { EXTERNAL_DOOR, null, null, null, null, GROUND };
+    static Side[][] DOOR_GROUND_WEST = new Side[][] { null, null, null, EXTERNAL_DOOR, null, GROUND };
+    static Side[][] DOOR_GROUND_SOUTH = new Side[][] { null, null, EXTERNAL_DOOR, null, null, GROUND };
+    static Side[][] DOOR_GROUND_EAST = new Side[][] { null, EXTERNAL_DOOR, null, null, null, GROUND };
+
+	
     static Side[][] EXTERNAL_TOP = new Side[][] { null, null, null,null,null,GROUND_ELEVATED };
 
+    
 
     static Cube north = new Cube(null,WALL_GROUND_NORTH,0,0,0,true,false);
 	static Cube west = new Cube(null,WALL_GROUND_WEST,0,0,0,true,false);
@@ -153,16 +164,24 @@ public class SimpleDungeonPart extends WoodenHouse {
 	
 	static Cube edge_ground= new Cube(null,EXTERNAL,0,0,0,true,true);
 
+	// INTERNAL with ground 
 	static Cube north_internal = new Cube(null,WALL_GROUND_NORTH,0,0,0,true,false);
 	static Cube west_internal = new Cube(null,WALL_GROUND_WEST,0,0,0,true,false);
 	static Cube northWest_internal = new Cube(null,WALL_GROUND_NORTH_WEST,0,0,0,true,false);
 	static Cube gap_internal = new Cube(null,CAVE_GROUND,0,0,0,true,false);
 
+	// INTERNAL DOOR
+	static Cube north_door_internal = new Cube(null,DOOR_GROUND_NORTH,0,0,0,true,false);
+	static Cube west_door_internal = new Cube(null,DOOR_GROUND_WEST,0,0,0,true,false);
+	static Cube northWest_door_internal = new Cube(null,DOOR_GROUND_NORTH_WEST,0,0,0,true,false);
+
+	// INTERNAL with CEILING
 	static Cube north_internal_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
 	static Cube west_internal_ceiling = new Cube(null,WALL_CEILING_WEST,0,0,0,true,false);
 	static Cube northWest_internal_ceiling = new Cube(null,WALL_CEILING_NORTH_WEST,0,0,0,true,false);
 	static Cube gap_internal_ceiling = new Cube(null,CAVE_CEILING,0,0,0,true,false);
 	
+	// INTERNAL No ground
 	static Cube north_internal_wall = new Cube(null,WALL_NORTH,0,0,0,true,false);
 	static Cube west_internal_wall = new Cube(null,WALL_WEST,0,0,0,true,false);
 	static Cube northWest_internal_wall = new Cube(null,WALL_NORTH_WEST,0,0,0,true,false);
@@ -193,6 +212,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 		e_eastWest_ceiling.internalLight = true;
 		gap_ceiling.internalLight = true;
 
+		// GROUND
 		north_internal.overwrite = true;
 		west_internal.overwrite = true;
 		northWest_internal.overwrite = true;
@@ -201,17 +221,29 @@ public class SimpleDungeonPart extends WoodenHouse {
 		west_internal.overwritePower = 2;
 		northWest_internal.overwritePower = 2;
 		gap_internal.overwritePower= 2;
-
 		north_internal.internalLight = true;
 		west_internal.internalLight = true;
 		northWest_internal.internalLight = true;
 		gap_internal.internalLight = true;
-
 		north_internal.internalCube = true;
 		west_internal.internalCube = true;
 		northWest_internal.internalCube = true;
 		gap_internal.internalCube = true;
+		// DOOR
+		north_door_internal.overwrite = true;
+		west_door_internal.overwrite = true;
+		northWest_door_internal.overwrite = true;
+		north_door_internal.overwritePower = 2;
+		west_door_internal.overwritePower = 2;
+		northWest_door_internal.overwritePower = 2;
+		north_door_internal.internalLight = true;
+		west_door_internal.internalLight = true;
+		northWest_door_internal.internalLight = true;
+		north_door_internal.internalCube = true;
+		west_door_internal.internalCube = true;
+		northWest_door_internal.internalCube = true;
 
+		// CEILING
 		north_internal_ceiling.overwrite = true;
 		west_internal_ceiling.overwrite = true;
 		northWest_internal_ceiling.overwrite = true;
@@ -220,17 +252,16 @@ public class SimpleDungeonPart extends WoodenHouse {
 		west_internal_ceiling.overwritePower = 2;
 		northWest_internal_ceiling.overwritePower = 2;
 		gap_internal.overwritePower= 2;
-
 		north_internal_ceiling.internalLight = true;
 		west_internal_ceiling.internalLight = true;
 		northWest_internal_ceiling.internalLight = true;
 		gap_internal_ceiling.internalLight = true;
-
 		north_internal_ceiling.internalCube = true;
 		west_internal_ceiling.internalCube = true;
 		northWest_internal_ceiling.internalCube = true;
 		gap_internal_ceiling.internalCube = true;
 
+		// WALL
 		north_internal_wall.overwrite = true;
 		west_internal_wall.overwrite = true;
 		northWest_internal_wall.overwrite = true;
@@ -356,6 +387,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 				if (edge) return edge_ground;
 				boolean horWall = false;
 				boolean verWall = false;
+				boolean horDoor = false;
+				boolean verDoor = false;
 				
 				if (externalXMin && externalZMin)
 				{
@@ -432,6 +465,15 @@ public class SimpleDungeonPart extends WoodenHouse {
 					verWall = true;
 				}
 				
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.DOOR_HORI)>0)
+				{
+					horDoor = true;
+				}
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.DOOR_VERT)>0)
+				{
+					verDoor = true;
+				}
+				
 				if (horWall&&verWall) 
 				{
 					return northWest_internal;
@@ -444,6 +486,18 @@ public class SimpleDungeonPart extends WoodenHouse {
 				{
 					return west_internal;
 				}
+				if (horDoor&&verDoor) 
+				{
+					return northWest_door_internal;
+				}
+				if (horDoor) 
+				{
+					return north_door_internal;
+				}
+				if (verDoor) 
+				{
+					return west_door_internal;
+				}
 				return gap_internal;
 			}
 	
@@ -452,6 +506,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 				if (edge) return null;
 				boolean horWall = false;
 				boolean verWall = false;
+				boolean horDoor = false;
+				boolean verDoor = false;
 				
 				if (externalXMin && externalZMin)
 				{
@@ -533,32 +589,43 @@ public class SimpleDungeonPart extends WoodenHouse {
 				{
 					verWall = true;
 				}
+				
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.DOOR_HORI)>0)
+				{
+					horDoor = true;
+				}
+				if ((labyrinthData[relativeX][relativeZ] & MazeTool.DOOR_VERT)>0)
+				{
+					verDoor = true;
+				}
+				
 				if (!openArea)
 				{
-					if (horWall&&verWall) 
+					if (horWall&&verWall || horDoor&&verDoor) 
 					{
 						return northWest_internal_ceiling;
 					}
-					if (horWall) 
+					if (horWall||horDoor) 
 					{
 						return north_internal_ceiling;
 					}
-					if (verWall) 
+					if (verWall||verDoor) 
 					{
 						return west_internal_ceiling;
 					}
+					
 					return gap_internal_ceiling;
 				} else
 				{
-					if (horWall&&verWall) 
+					if (horWall&&verWall || horDoor&&verDoor) 
 					{
 						return northWest_internal_wall;
 					}
-					if (horWall) 
+					if (horWall||horDoor) 
 					{
 						return north_internal_wall;
 					}
-					if (verWall) 
+					if (verWall||verDoor) 
 					{
 						return west_internal_wall;
 					}

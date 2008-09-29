@@ -30,13 +30,19 @@ public class MazeTool {
 	public static final byte WALL_HORI = 1;
 	public static final byte WALL_VERT = 2;
 	public static final byte OPEN_PART = 4;
+	public static final byte DOOR_HORI = 8;
+	public static final byte DOOR_VERT = 16;
+	public static final byte GROUND_TYPE_1 = 32;
+	public static final byte GROUND_TYPE_2 = 64;
+	public static final byte GROUND_TYPE_3 = (byte)128;
+
 	public static final byte WALL_HORI_NEG = (byte)254;
 	public static final byte WALL_VERT_NEG = (byte)253;
 	public static final byte OPEN_PART_NEG = (byte)251;
 	
 	public static byte[][] getLabyrinth(int seed, int sizeX, int sizeY, boolean allClosed)
 	{
-		
+		if (sizeX<0 || sizeY<0) return new byte[10][10];
 		byte[][] r = new byte[sizeX][sizeY];
 		
 		recoursiveDivision(seed, 0,(int)(sizeX/Math.exp(sizeX/50f)), r, 0, 0, sizeX, sizeY,allClosed);
@@ -97,33 +103,34 @@ public class MazeTool {
 		boolean gapOnWallWest = nonGapWall!=2;
 		boolean gapOnWallEast = nonGapWall!=3;
 		int gapCount = 0;
+		boolean door = true;
 		if (gapOnWallWest)
 		{
 			int gapPosX = origoX+hash1%divX;
 			int gapPosY = origoY+divY;
 			//System.out.println("GapW:  X: "+gapPosX+" Y: "+gapPosY);
-			removeWall(map, gapPosX, gapPosY, true);
+			removeWall(map, gapPosX, gapPosY, true,door);
 		}
 		if (gapOnWallEast)
 		{
 			int gapPosX = origoX+divX+hash1%(sizeX-divX);
 			int gapPosY = origoY+divY;
 			//System.out.println("GapE:  X: "+gapPosX+" Y: "+gapPosY);
-			removeWall(map, gapPosX, gapPosY, true);
+			removeWall(map, gapPosX, gapPosY, true,door);
 		}
 		if (gapOnWallNorth)
 		{
 			int gapPosX = origoX+divX;
 			int gapPosY = origoY+hash2%divY;
 			//System.out.println("GapN:  X: "+gapPosX+" Y: "+gapPosY);
-			removeWall(map, gapPosX, gapPosY, false);
+			removeWall(map, gapPosX, gapPosY, false,door);
 		}
 		if (gapOnWallSouth)
 		{
 			int gapPosX = origoX+divX;
 			int gapPosY = origoY+divY+hash2%(sizeY-divY);
 			//System.out.println("GapS:  X: "+gapPosX+" Y: "+gapPosY);
-			removeWall(map, gapPosX, gapPosY, false);
+			removeWall(map, gapPosX, gapPosY, false,door);
 		}
 		if (level<maxLevel)
 		{
@@ -148,14 +155,16 @@ public class MazeTool {
 		}
 	}
 
-	public static void removeWall(byte[][] map, int origoX, int origoY, boolean horizontal)
+	public static void removeWall(byte[][] map, int origoX, int origoY, boolean horizontal, boolean door)
 	{
 			if (horizontal)
 			{
 				map[origoX][origoY] = (byte)(map[origoX][origoY] & WALL_HORI_NEG);
+				if (door) map[origoX][origoY] = (byte)(map[origoX][origoY] | DOOR_HORI);
 			} else
 			{
 				map[origoX][origoY] = (byte)(map[origoX][origoY] & WALL_VERT_NEG);
+				if (door) map[origoX][origoY] = (byte)(map[origoX][origoY] | DOOR_VERT);
 			}
 	}
 	
