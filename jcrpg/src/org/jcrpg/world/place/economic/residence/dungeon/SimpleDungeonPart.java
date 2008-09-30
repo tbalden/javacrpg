@@ -39,6 +39,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public boolean encounterMode = false;
 
 	public SimpleDungeonPart(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
@@ -49,6 +51,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 				groundLevel, homeBoundaries, owner);
 		internalPartSizeX = sizeX-outerEdgeSize*2;
 		internalPartSizeZ = sizeZ-outerEdgeSize*2;
+		encounterMode = false;
 	}
 	int outerEdgeSize = 4;
 	int internalPartSizeX = 0;
@@ -387,6 +390,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 		
 			if (worldY==origoY)
 			{
+				if (encounterMode) return gap_internal;
+				
 				if (edge) return edge_ground;
 				boolean horWall = false;
 				boolean verWall = false;
@@ -506,6 +511,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	
 			if (worldY==origoY+1)
 			{
+				if (encounterMode) return gap_internal_ceiling;
+
 				if (edge) return null;
 				boolean horWall = false;
 				boolean verWall = false;
