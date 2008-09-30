@@ -922,7 +922,8 @@ public class SideTypeModels {
 		sm_cave_ground_3_e.disposition = new float[]{0,0.04f,0};
 		hm3dTypeRenderedSide.put(new Integer(66), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground_e,sm_cave_ground_2_e,sm_cave_ground_3_e,sm_cave_ground_3_e,sm_cave_ground_3_e}}));//ground_cave}));
 		
-		hm3dTypeRenderedSide.put(new Integer(67), new RenderedSide(new Model[]{wall_thick}));
+		SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", null);
+		hm3dTypeRenderedSide.put(new Integer(67), new RenderedSide(new Model[]{sm_maze_wall_1}));
 		
 		SimpleModel sm_maze_door_1 = new SimpleModel("models/external/maze/maze-door1rot.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(68), new RenderedSide(new Model[]{sm_maze_door_1}));
