@@ -257,7 +257,10 @@ public class GameStateContainer {
 		encounterModePosition.relativeY += y-encounterModePosition.viewPositionY;
 		encounterModePosition.viewPositionY = y;
 		Cube c = J3DCore.getInstance().eEngine.world.getCube(-1, encounterModePosition.viewPositionX, encounterModePosition.viewPositionY, encounterModePosition.viewPositionZ, false);
-		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) encounterModePosition.onSteep = true;
+		if (c!=null)
+		{
+			if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) encounterModePosition.onSteep = true;
+		}
 	}
 
 	/**
@@ -309,8 +312,10 @@ public class GameStateContainer {
 					false);
 			if (c!=null)
 			{
+				System.out.println("##### "+c);
 				if (c.internalCube)
 				{
+					System.out.println("INSIDE AREA!!!!!!!!");
 					encounterModePosition.insideArea = true;
 				
 				} else

@@ -2273,6 +2273,7 @@ public class J3DStandingEngine {
 	
 	public void switchOn(boolean on)
 	{
+		
 		if (on)
 		{
 			core.getGroundParentNode().attachChild(extRootNode);
@@ -2280,6 +2281,24 @@ public class J3DStandingEngine {
 			core.getGroundParentNode().updateRenderState();
 			extRootNode.setCullHint(CullHint.Dynamic);
 			intRootNode.setCullHint(CullHint.Dynamic);
+			/*Cube c = core.gameState.world.getCube(-1, core.gameState.getCurrentRenderPositions().viewPositionX, core.gameState.getCurrentRenderPositions().viewPositionY,
+					core.gameState.getCurrentRenderPositions().viewPositionZ, false);
+			if (c != null) {
+				if (c.internalCube) {
+					if (J3DCore.LOGGING)
+						Jcrpg.LOGGER.info("Moved: INTERNAL");
+					System.out.println("Moved: INTERNAL");
+					core.gameState.getCurrentRenderPositions().insideArea = true;
+				} else {
+					if (J3DCore.LOGGING)
+						Jcrpg.LOGGER.info("Moved: EXTERNAL");
+					System.out.println("Moved: EXTERNAL");
+					core.gameState.getCurrentRenderPositions().insideArea = false;
+				}
+				core.gameState.getCurrentRenderPositions().internalLight = c.internalLight;
+			}*/
+			
+
 		} else
 		{
 			extRootNode.removeFromParent();

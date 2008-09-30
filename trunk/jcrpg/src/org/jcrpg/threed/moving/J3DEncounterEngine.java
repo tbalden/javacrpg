@@ -34,6 +34,7 @@ import org.jcrpg.world.place.World.WorldTypeDesc;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.ground.EncounterGround;
+import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.geography.Plain;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
@@ -111,15 +112,26 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 			//System.out.println("ADDING POPULATION'S OWN GROUND "+g.getClass());
 		} else
 		{
-			if (newGeo instanceof Plain)
+			if (newGeo instanceof Plain && 
+					// no residence type dungeon present at the location...
+					!(house!=null && house.getClass() == SimpleDungeonPart.class))
 			{
 				EconomicGround g = new EncounterGround("enc", newGeo, baseWorld, null, 6, 10, 10, 44, 0, 36, 0, null, null);
 				baseWorld.economyContainer.addGround(g);
 				//System.out.println("ADDING ENCOUTNER GROUND "+g.getClass());
 			}
 		}
+		
+		if (house!=null && house.getClass() == SimpleDungeonPart.class)
+		{
+			// dungeon, replacing whole terrain...
+			SimpleDungeonPart dungeon = new SimpleDungeonPart("cave1",geo,baseWorld,null,110,4,110,10,0,10,0, null, null);
+			dungeon.encounterMode = true;
+			baseWorld.economyContainer.addPopulation(dungeon);
+		} else
 		if (house!=null)
 		{
+			// normal houses, adding small instance of it...
 			Residence r = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight()+1, 4, 40, 0, 45, 0, null, null);
 			Residence r2 = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight(), 4, 50, 0, 44, 0, null, null);
 			Residence r3 = house.getInstance("enc", geo, baseWorld, null, 4, house.getMinimumHeight(), 4, 45, 0, 46, 0, null, null);
