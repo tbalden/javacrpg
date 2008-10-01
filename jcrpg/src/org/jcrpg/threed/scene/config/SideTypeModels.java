@@ -205,6 +205,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(67));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_EXTERNAL_DOOR.id, new Integer(68));
+		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_4_COLUMNS.id, new Integer(69));
 
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
@@ -928,8 +929,11 @@ public class SideTypeModels {
 		SimpleModel sm_maze_door_1 = new SimpleModel("models/external/maze/maze-door1rot.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(68), new RenderedSide(new Model[]{sm_maze_door_1}));
 
+		SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/4_pillars.obj",null);
+		hm3dTypeRenderedSide.put(new Integer(69), new RenderedSide(new Model[]{sm_maze_4_pillars}));
+
 		// NEXT ID = 
-		// 69
+		// 70
 		
 	}
 	
