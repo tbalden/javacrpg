@@ -40,6 +40,9 @@ public class SimpleDungeonPart extends WoodenHouse {
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * is this dungeon used in encounter standing engine? if so, returned cubes will be of an open area.
+	 */
 	public boolean encounterMode = false;
 
 	public SimpleDungeonPart(String id, Geography soilGeo, Place parent,
@@ -92,10 +95,12 @@ public class SimpleDungeonPart extends WoodenHouse {
 	public static final String TYPE_DUNGEON = "DUNGEON";
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
+	public static final SideSubType SUBTYPE_4_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_4COLUMNS",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_DUNGEON+"_EXTERNAL_DOOR");
 
 	static Side[] GROUND = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] GROUND_ELEVATED = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND_ELEVATED)};
+	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_DUNGEON,SUBTYPE_EXTERNAL_DOOR)};
 
 	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
@@ -105,6 +110,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Side[][] WALL_GROUND_SOUTH_WEST = new Side[][] { null, null, GROUND, GROUND, null, GROUND };
 	static Side[][] WALL_GROUND_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, null, GROUND };
 	static Side[][] WALL_GROUND_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_SOUTH_ENTRANCE = new Side[][] { GROUND, null, GROUND, null, null, GROUND_ENTRANCE_COLUMNS };
+	static Side[][] WALL_GROUND_EAST_WEST_ENTRANCE = new Side[][] { null, GROUND,null , GROUND, null, GROUND_ENTRANCE_COLUMNS };
     static Side[][] WALL_GROUND_NORTH = new Side[][] { GROUND, null, null, null, null, GROUND };
     static Side[][] WALL_GROUND_WEST = new Side[][] { null, null, null, GROUND, null, GROUND };
     static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null, GROUND, null, null, GROUND };
@@ -127,6 +134,8 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_SOUTH = new Side[][] { null, null, GROUND, null, null, null};
     static Side[][] WALL_EAST = new Side[][] { null, GROUND, null, null, null, null };
 	static Side[][] WALL_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, null};
+	static Side[][] WALL_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, null, null };
+	static Side[][] WALL_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, null, null };
 
 	static Side[][] DOOR_GROUND_NORTH_WEST = new Side[][] { EXTERNAL_DOOR, null, null, EXTERNAL_DOOR, null, GROUND };
 	static Side[][] DOOR_GROUND_NORTH_EAST = new Side[][] { EXTERNAL_DOOR, EXTERNAL_DOOR, null, null, null, GROUND };
@@ -153,6 +162,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Cube gap = new Cube(null,CAVE_GROUND,0,0,0,true,false);
 	static Cube e_northSouth = new Cube(null,WALL_GROUND_NORTH_SOUTH,0,0,0,true,false);
 	static Cube e_eastWest = new Cube(null,WALL_GROUND_EAST_WEST,0,0,0,true,false);
+	static Cube e_northSouth_columns = new Cube(null,WALL_GROUND_NORTH_SOUTH_ENTRANCE,0,0,0,true,false);
+	static Cube e_eastWest_columns = new Cube(null,WALL_GROUND_EAST_WEST_ENTRANCE,0,0,0,true,false);
 
 	static Cube north_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
 	static Cube west_ceiling = new Cube(null,WALL_CEILING_WEST,0,0,0,true,false);
@@ -165,6 +176,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Cube gap_ceiling = new Cube(null,CAVE_CEILING,0,0,0,true,false);
 	static Cube e_northSouth_ceiling = new Cube(null,WALL_CEILING_NORTH_SOUTH,0,0,0,true,false);
 	static Cube e_eastWest_ceiling = new Cube(null,WALL_CEILING_EAST_WEST,0,0,0,true,false);
+	static Cube e_northSouth_wall = new Cube(null,WALL_NORTH_SOUTH,0,0,0,true,false);
+	static Cube e_eastWest_wall = new Cube(null,WALL_EAST_WEST,0,0,0,true,false);
 
 	static Cube external_top = new Cube(null,EXTERNAL_TOP,0,0,0,true,false);
 	
@@ -380,6 +393,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (!openArea || !inGeneratedPart)
 				{
+					if (externalX || externalZ) return null;
 					return external_top;
 				} else
 				{
@@ -417,6 +431,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 				if ((externalX ||transPartX ) && entranceX)
 				{
+					if (externalX) return e_northSouth_columns;
 					return e_northSouth;
 				}
 				if (externalXMin)
@@ -430,6 +445,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 				if ((externalZ || transPartZ) && entranceZ)
 				{
+					if (externalZ) return e_eastWest_columns;
 					return e_eastWest;
 				}
 				if (externalZMin)
@@ -537,6 +553,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if ((externalX ||transPartX ) && entranceX)
 				{
+					if (externalX) return e_northSouth_wall;
 					return e_northSouth_ceiling;
 				}
 				if (externalXMin)
@@ -550,6 +567,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 				if ((externalZ || transPartZ) && entranceZ)
 				{
+					if (externalZ) return e_eastWest_wall;
 					return e_eastWest_ceiling;
 				}
 				if (externalZMin)
@@ -611,7 +629,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 				
 				if (!openArea)
 				{
-					if (horWall&&verWall || horDoor&&verDoor) 
+					if (horWall&&verWall || horDoor&&verDoor || horWall && verDoor || verWall && horDoor) 
 					{
 						return northWest_internal_ceiling;
 					}
@@ -627,7 +645,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 					return gap_internal_ceiling;
 				} else
 				{
-					if (horWall&&verWall || horDoor&&verDoor) 
+					if (horWall&&verWall || horDoor&&verDoor || horWall && verDoor || verWall && horDoor) 
 					{
 						return northWest_internal_wall;
 					}
@@ -711,4 +729,9 @@ public class SimpleDungeonPart extends WoodenHouse {
 		return true;
 	}
 
+	@Override
+	public boolean denyOtherEnvironmentSounds() {
+		
+		return true;
+	}
 }
