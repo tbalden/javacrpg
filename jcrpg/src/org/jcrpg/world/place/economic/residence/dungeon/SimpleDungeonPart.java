@@ -96,14 +96,16 @@ public class SimpleDungeonPart extends WoodenHouse {
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
 	public static final SideSubType SUBTYPE_4_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_4COLUMNS",true);
+	public static final SideSubType SUBTYPE_2_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_2COLUMNS",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_DUNGEON+"_EXTERNAL_DOOR");
 
 	static Side[] GROUND = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
+	static Side[] PILLAR_WALL = {new Side(TYPE_DUNGEON,SUBTYPE_2_COLUMNS)};
 	static Side[] GROUND_ELEVATED = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND_ELEVATED)};
 	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_DUNGEON,SUBTYPE_EXTERNAL_DOOR)};
 
-	static Side[][] CAVE_GROUND = new Side[][] { null, null, null,null,null,GROUND };
+	static Side[][] GAP_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, GROUND };
 	static Side[][] WALL_GROUND_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
 	static Side[][] WALL_GROUND_SOUTH_EAST = new Side[][] { null, GROUND, GROUND, null, null, GROUND };
@@ -116,7 +118,16 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_GROUND_WEST = new Side[][] { null, null, null, GROUND, null, GROUND };
     static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null, GROUND, null, null, GROUND };
     static Side[][] WALL_GROUND_EAST = new Side[][] { null, GROUND, null, null, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_WEST_PILLARS = new Side[][] { PILLAR_WALL, null, null, PILLAR_WALL, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_EAST_PILLARS = new Side[][] { PILLAR_WALL, PILLAR_WALL, null, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_EAST_PILLARS = new Side[][] { null, PILLAR_WALL, PILLAR_WALL, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_WEST_PILLARS = new Side[][] { null, null, PILLAR_WALL, PILLAR_WALL, null, GROUND };
+    static Side[][] WALL_GROUND_NORTH_PILLARS = new Side[][] { PILLAR_WALL, null, null, null, null, GROUND };
+    static Side[][] WALL_GROUND_WEST_PILLARS = new Side[][] { null, null, null, PILLAR_WALL, null, GROUND };
+    static Side[][] WALL_GROUND_SOUTH_PILLARS = new Side[][] { null, null, PILLAR_WALL, null, null, GROUND };
+    static Side[][] WALL_GROUND_EAST_PILLARS = new Side[][] { null, PILLAR_WALL, null, null, null, GROUND };
 
+    
 	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,GROUND,null };
 	static Side[][] WALL_CEILING_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, GROUND, null};
 	static Side[][] WALL_CEILING_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
@@ -147,6 +158,7 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] DOOR_GROUND_EAST = new Side[][] { null, EXTERNAL_DOOR, null, null, null, GROUND };
 
 	
+    static Side[][] NORMAL_TOP = new Side[][] { null, null, null,null,GROUND,null };
     static Side[][] EXTERNAL_TOP = new Side[][] { null, null, null,null,null,GROUND_ELEVATED };
 
     
@@ -159,11 +171,20 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Cube northEast = new Cube(null,WALL_GROUND_NORTH_EAST,0,0,0,true,false);
 	static Cube southWest = new Cube(null,WALL_GROUND_SOUTH_WEST,0,0,0,true,false);
 	static Cube southEast = new Cube(null,WALL_GROUND_SOUTH_EAST,0,0,0,true,false);
-	static Cube gap = new Cube(null,CAVE_GROUND,0,0,0,true,false);
+	static Cube gap = new Cube(null,GAP_GROUND,0,0,0,true,false);
 	static Cube e_northSouth = new Cube(null,WALL_GROUND_NORTH_SOUTH,0,0,0,true,false);
 	static Cube e_eastWest = new Cube(null,WALL_GROUND_EAST_WEST,0,0,0,true,false);
 	static Cube e_northSouth_columns = new Cube(null,WALL_GROUND_NORTH_SOUTH_ENTRANCE,0,0,0,true,false);
 	static Cube e_eastWest_columns = new Cube(null,WALL_GROUND_EAST_WEST_ENTRANCE,0,0,0,true,false);
+    static Cube north_columns = new Cube(null,WALL_GROUND_NORTH_PILLARS,0,0,0,true,false);
+	static Cube west_columns = new Cube(null,WALL_GROUND_WEST_PILLARS,0,0,0,true,false);
+    static Cube south_columns = new Cube(null,WALL_GROUND_SOUTH_PILLARS,0,0,0,true,false);
+	static Cube east_columns = new Cube(null,WALL_GROUND_EAST_PILLARS,0,0,0,true,false);
+	static Cube northWest_columns = new Cube(null,WALL_GROUND_NORTH_WEST_PILLARS,0,0,0,true,false);
+	static Cube northEast_columns = new Cube(null,WALL_GROUND_NORTH_EAST_PILLARS,0,0,0,true,false);
+	static Cube southWest_columns = new Cube(null,WALL_GROUND_SOUTH_WEST_PILLARS,0,0,0,true,false);
+	static Cube southEast_columns = new Cube(null,WALL_GROUND_SOUTH_EAST_PILLARS,0,0,0,true,false);
+	static Cube normal_top = new Cube(null,NORMAL_TOP,0,0,0,true,false);
 
 	static Cube north_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
 	static Cube west_ceiling = new Cube(null,WALL_CEILING_WEST,0,0,0,true,false);
@@ -181,13 +202,13 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 	static Cube external_top = new Cube(null,EXTERNAL_TOP,0,0,0,true,false);
 	
-	static Cube edge_ground= new Cube(null,EXTERNAL,0,0,0,true,true);
+	static Cube edge_ground= new Cube(null,GAP_GROUND,0,0,0,true,true);
 
 	// INTERNAL with ground 
 	static Cube north_internal = new Cube(null,WALL_GROUND_NORTH,0,0,0,true,false);
 	static Cube west_internal = new Cube(null,WALL_GROUND_WEST,0,0,0,true,false);
 	static Cube northWest_internal = new Cube(null,WALL_GROUND_NORTH_WEST,0,0,0,true,false);
-	static Cube gap_internal = new Cube(null,CAVE_GROUND,0,0,0,true,false);
+	static Cube gap_internal = new Cube(null,GAP_GROUND,0,0,0,true,false);
 
 	// INTERNAL DOOR
 	static Cube north_door_internal = new Cube(null,DOOR_GROUND_NORTH,0,0,0,true,false);
@@ -414,19 +435,19 @@ public class SimpleDungeonPart extends WoodenHouse {
 				
 				if (externalXMin && externalZMin)
 				{
-					return southWest;
+					return southWest_columns;
 				}
 				if (externalXMin && externalZMax)
 				{
-					return northWest;
+					return northWest_columns;
 				}
 				if (externalXMax && externalZMin)
 				{
-					return southEast;
+					return southEast_columns;
 				}
 				if (externalXMax && externalZMax)
 				{
-					return northEast;
+					return northEast_columns;
 				}
 
 				if ((externalX ||transPartX ) && entranceX)
@@ -436,11 +457,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (externalXMin)
 				{
-					return west;
+					return west_columns;
 				}
 				if (externalXMax)
 				{
-					return east;
+					return east_columns;
 				}
 
 				if ((externalZ || transPartZ) && entranceZ)
@@ -450,11 +471,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (externalZMin)
 				{
-					return south;
+					return south_columns;
 				}
 				if (externalZMax)
 				{
-					return north;
+					return north_columns;
 				}
 
 				if (edgeOfTransXMin)
@@ -537,19 +558,19 @@ public class SimpleDungeonPart extends WoodenHouse {
 				
 				if (externalXMin && externalZMin)
 				{
-					return southWest_ceiling;
+					return normal_top;//southWest_ceiling;
 				}
 				if (externalXMin && externalZMax)
 				{
-					return northWest_ceiling;
+					return normal_top;//northWest_ceiling;
 				}
 				if (externalXMax && externalZMin)
 				{
-					return southEast_ceiling;
+					return normal_top;//southEast_ceiling;
 				}
 				if (externalXMax && externalZMax)
 				{
-					return northEast_ceiling;
+					return normal_top;//northEast_ceiling;
 				}
 				if ((externalX ||transPartX ) && entranceX)
 				{
@@ -558,11 +579,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (externalXMin)
 				{
-					return west_ceiling;
+					return normal_top;//west_ceiling;
 				}
 				if (externalXMax)
 				{
-					return east_ceiling;
+					return normal_top;//east_ceiling;
 				}
 
 				if ((externalZ || transPartZ) && entranceZ)
@@ -572,11 +593,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (externalZMin)
 				{
-					return south_ceiling;
+					return normal_top;//south_ceiling;
 				}
 				if (externalZMax)
 				{
-					return north_ceiling;
+					return normal_top;//north_ceiling;
 				}
 
 				if (edgeOfTransXMin)
