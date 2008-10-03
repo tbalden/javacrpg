@@ -93,31 +93,41 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 
 	public static final String TYPE_DUNGEON = "DUNGEON";
+	public static final SideSubType SUBTYPE_WALL = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
 	public static final SideSubType SUBTYPE_4_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_4COLUMNS",true);
 	public static final SideSubType SUBTYPE_2_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_2COLUMNS",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_DUNGEON+"_EXTERNAL_DOOR");
 
+	static Side[] WALL = {new Side(TYPE_DUNGEON,SUBTYPE_WALL)};
 	static Side[] GROUND = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] PILLAR_WALL = {new Side(TYPE_DUNGEON,SUBTYPE_2_COLUMNS)};
 	static Side[] GROUND_ELEVATED = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND_ELEVATED)};
-	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
+	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_WALL)};
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_DUNGEON,SUBTYPE_EXTERNAL_DOOR)};
+	
+	static 
+	{
+		SUBTYPE_WALL.colorBytes= new byte[]{(byte)255,(byte)225,(byte)200};
+		SUBTYPE_WALL.colorOverwrite = true;
+		SUBTYPE_GROUND.colorBytes= new byte[]{(byte)30,(byte)30,(byte)20};
+		SUBTYPE_GROUND.colorOverwrite = true;
+	}
 
 	static Side[][] GAP_GROUND = new Side[][] { null, null, null,null,null,GROUND };
-	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, GROUND };
-	static Side[][] WALL_GROUND_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
-	static Side[][] WALL_GROUND_SOUTH_EAST = new Side[][] { null, GROUND, GROUND, null, null, GROUND };
-	static Side[][] WALL_GROUND_SOUTH_WEST = new Side[][] { null, null, GROUND, GROUND, null, GROUND };
-	static Side[][] WALL_GROUND_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, null, GROUND };
-	static Side[][] WALL_GROUND_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, null, GROUND };
-	static Side[][] WALL_GROUND_NORTH_SOUTH_ENTRANCE = new Side[][] { GROUND, null, GROUND, null, null, GROUND_ENTRANCE_COLUMNS };
-	static Side[][] WALL_GROUND_EAST_WEST_ENTRANCE = new Side[][] { null, GROUND,null , GROUND, null, GROUND_ENTRANCE_COLUMNS };
-    static Side[][] WALL_GROUND_NORTH = new Side[][] { GROUND, null, null, null, null, GROUND };
-    static Side[][] WALL_GROUND_WEST = new Side[][] { null, null, null, GROUND, null, GROUND };
-    static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null, GROUND, null, null, GROUND };
-    static Side[][] WALL_GROUND_EAST = new Side[][] { null, GROUND, null, null, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { WALL, null, null, WALL, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_EAST = new Side[][] { WALL, WALL, null, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_EAST = new Side[][] { null, WALL, WALL, null, null, GROUND };
+	static Side[][] WALL_GROUND_SOUTH_WEST = new Side[][] { null, null, WALL, WALL, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_SOUTH = new Side[][] { WALL, null, WALL, null, null, GROUND };
+	static Side[][] WALL_GROUND_EAST_WEST = new Side[][] { null, WALL,null , WALL, null, GROUND };
+	static Side[][] WALL_GROUND_NORTH_SOUTH_ENTRANCE = new Side[][] { WALL, null, WALL, null, null, GROUND_ENTRANCE_COLUMNS };
+	static Side[][] WALL_GROUND_EAST_WEST_ENTRANCE = new Side[][] { null, WALL,null , WALL, null, GROUND_ENTRANCE_COLUMNS };
+    static Side[][] WALL_GROUND_NORTH = new Side[][] { WALL, null, null, null, null, GROUND };
+    static Side[][] WALL_GROUND_WEST = new Side[][] { null, null, null, WALL, null, GROUND };
+    static Side[][] WALL_GROUND_SOUTH = new Side[][] { null, null, WALL, null, null, GROUND };
+    static Side[][] WALL_GROUND_EAST = new Side[][] { null, WALL, null, null, null, GROUND };
 	static Side[][] WALL_GROUND_NORTH_WEST_PILLARS = new Side[][] { PILLAR_WALL, null, null, PILLAR_WALL, null, GROUND };
 	static Side[][] WALL_GROUND_NORTH_EAST_PILLARS = new Side[][] { PILLAR_WALL, PILLAR_WALL, null, null, null, GROUND };
 	static Side[][] WALL_GROUND_SOUTH_EAST_PILLARS = new Side[][] { null, PILLAR_WALL, PILLAR_WALL, null, null, GROUND };
@@ -128,25 +138,25 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_GROUND_EAST_PILLARS = new Side[][] { null, PILLAR_WALL, null, null, null, GROUND };
 
     
-	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,GROUND,null };
-	static Side[][] WALL_CEILING_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, GROUND, null};
-	static Side[][] WALL_CEILING_NORTH_EAST = new Side[][] { GROUND, GROUND, null, null, null, GROUND };
-	static Side[][] WALL_CEILING_SOUTH_EAST = new Side[][] { null, GROUND, GROUND, null, GROUND, null };
-	static Side[][] WALL_CEILING_SOUTH_WEST = new Side[][] { null, null, GROUND, GROUND, GROUND, null };
-	static Side[][] WALL_CEILING_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, GROUND, null };
-	static Side[][] WALL_CEILING_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, GROUND, null };
-    static Side[][] WALL_CEILING_NORTH = new Side[][] { GROUND, null, null, null, GROUND, null};
-    static Side[][] WALL_CEILING_WEST = new Side[][] { null, null, null, GROUND, GROUND, null};
-    static Side[][] WALL_CEILING_SOUTH = new Side[][] { null, null, GROUND, null, GROUND, null};
-    static Side[][] WALL_CEILING_EAST = new Side[][] { null, GROUND, null, null, GROUND, null };
+	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,WALL,null };
+	static Side[][] WALL_CEILING_NORTH_WEST = new Side[][] { WALL, null, null, WALL, GROUND, null};
+	static Side[][] WALL_CEILING_NORTH_EAST = new Side[][] { WALL, WALL, null, null, GROUND, null };
+	static Side[][] WALL_CEILING_SOUTH_EAST = new Side[][] { null, WALL, WALL, null, GROUND, null };
+	static Side[][] WALL_CEILING_SOUTH_WEST = new Side[][] { null, null, WALL, WALL, GROUND, null };
+	static Side[][] WALL_CEILING_NORTH_SOUTH = new Side[][] { WALL, null, WALL, null, GROUND, null };
+	static Side[][] WALL_CEILING_EAST_WEST = new Side[][] { null, WALL,null , WALL, GROUND, null };
+    static Side[][] WALL_CEILING_NORTH = new Side[][] { WALL, null, null, null, GROUND, null};
+    static Side[][] WALL_CEILING_WEST = new Side[][] { null, null, null, WALL, GROUND, null};
+    static Side[][] WALL_CEILING_SOUTH = new Side[][] { null, null, WALL, null, GROUND, null};
+    static Side[][] WALL_CEILING_EAST = new Side[][] { null, WALL, null, null, GROUND, null };
 
-    static Side[][] WALL_NORTH = new Side[][] { GROUND, null, null, null, null, null};
-    static Side[][] WALL_WEST = new Side[][] { null, null, null, GROUND, null, null};
-    static Side[][] WALL_SOUTH = new Side[][] { null, null, GROUND, null, null, null};
-    static Side[][] WALL_EAST = new Side[][] { null, GROUND, null, null, null, null };
-	static Side[][] WALL_NORTH_WEST = new Side[][] { GROUND, null, null, GROUND, null, null};
-	static Side[][] WALL_NORTH_SOUTH = new Side[][] { GROUND, null, GROUND, null, null, null };
-	static Side[][] WALL_EAST_WEST = new Side[][] { null, GROUND,null , GROUND, null, null };
+    static Side[][] WALL_NORTH = new Side[][] { WALL, null, null, null, null, null};
+    static Side[][] WALL_WEST = new Side[][] { null, null, null, WALL, null, null};
+    static Side[][] WALL_SOUTH = new Side[][] { null, null, WALL, null, null, null};
+    static Side[][] WALL_EAST = new Side[][] { null, WALL, null, null, null, null };
+	static Side[][] WALL_NORTH_WEST = new Side[][] { WALL, null, null, WALL, null, null};
+	static Side[][] WALL_NORTH_SOUTH = new Side[][] { WALL, null, WALL, null, null, null };
+	static Side[][] WALL_EAST_WEST = new Side[][] { null, WALL,null , WALL, null, null };
 
 	static Side[][] DOOR_GROUND_NORTH_WEST = new Side[][] { EXTERNAL_DOOR, null, null, EXTERNAL_DOOR, null, GROUND };
 	static Side[][] DOOR_GROUND_NORTH_EAST = new Side[][] { EXTERNAL_DOOR, EXTERNAL_DOOR, null, null, null, GROUND };
