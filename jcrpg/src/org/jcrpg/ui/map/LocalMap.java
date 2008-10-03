@@ -28,6 +28,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -93,6 +94,15 @@ public class LocalMap {
 		updatedQuads.add(q);
 	}
 	
+	static int byteToInt(byte b)
+	{
+		if ((int)b<0)
+		{
+			return 256+b;
+		}
+		return b;
+	}
+	
 
 	public void paintPointAllSides(ImageGraphics set, int x, int y, int r, int g, int b, int a)
 	{
@@ -123,13 +133,13 @@ public class LocalMap {
 	
 	public byte[][][] sideOffsets = new byte[][][]{
 			//North 0
-			{{-2,2,4,0}},
-			//East 1
 			{{2,-1,0,2}},
+			//East 1
+			{{-2,2,4,0}},
 			//South 2
-			{{-2,-2,4,0}},
-			//West 3
 			{{-2,-1,0,2}},
+			//West 3
+			{{-2,-2,4,0}},
 			//Top 4
 			{},
 			//Bottom 5
@@ -203,9 +213,9 @@ public class LocalMap {
 									neutralColor[GREEN] = b[GREEN];
 									neutralColor[BLUE] = b[BLUE];
 									if (side.subtype.colorOverwrite) {
-										neutralColorSum[RED]+= ((int)b[RED]+256)%256;
-										neutralColorSum[GREEN]+= ((int)b[GREEN]+256)%256;
-										neutralColorSum[BLUE]+= ((int)b[BLUE]+256)%256;
+										neutralColorSum[RED]+= (byteToInt(b[RED]));
+										neutralColorSum[GREEN]+= (byteToInt(b[GREEN]));
+										neutralColorSum[BLUE]+= (byteToInt(b[BLUE]));
 										colorsAdded++;
 										/*if (colorsAdded==2)
 										{
@@ -225,12 +235,22 @@ public class LocalMap {
 							paintPoint(staticLayerGraphics, x, z, 5, (neutralColorSum[RED]/colorsAdded), (neutralColorSum[GREEN]/colorsAdded), (neutralColorSum[BLUE]/colorsAdded), 80);
 							for (int i=0; i<4; i++) {
 								colorized = false;
+								boolean dPart = false;
 								if (c.cube.sides!=null && c.cube.sides[i]!=null)
 								for (Side side:c.cube.sides[i])
 								{
 									byte[] b = side.subtype.colorBytes;
+									if (side.subtype == SimpleDungeonPart.SUBTYPE_WALL)
+									{
+										System.out.println("COLORIZED = "+colorized+ " "+byteToInt(b[RED]) +" "+ byteToInt(b[GREEN])+" "+ byteToInt(b[BLUE]));
+										dPart = true;
+									} else
+										if (dPart)
+										{
+											System.out.println("OVERWRITE DPART = "+colorized);
+										}
 									if (!colorized || colorized && side.subtype.colorOverwrite) {
-										paintPoint(staticLayerGraphics, x, z, i, b[RED], b[GREEN], b[BLUE], 80);
+										paintPoint(staticLayerGraphics, x, z, i, byteToInt(b[RED]), byteToInt(b[GREEN]), byteToInt(b[BLUE]), 80);
 									}
 									colorized = true;
 								}

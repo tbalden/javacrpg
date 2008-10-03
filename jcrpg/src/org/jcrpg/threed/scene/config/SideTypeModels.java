@@ -204,6 +204,7 @@ public class SideTypeModels {
 
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(67));
+		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_WALL.id, new Integer(67));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_EXTERNAL_DOOR.id, new Integer(68));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_4_COLUMNS.id, new Integer(69));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_2_COLUMNS.id, new Integer(70));
