@@ -20,6 +20,7 @@ package org.jcrpg.world.place.economic.residence.dungeon;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
+import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
@@ -93,18 +94,18 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 
 	public static final String TYPE_DUNGEON = "DUNGEON";
-	public static final SideSubType SUBTYPE_WALL = new GroundSubType(TYPE_DUNGEON+"_WALL",true);
+	public static final SideSubType SUBTYPE_WALL = new NotPassable(TYPE_DUNGEON+"_WALL",true);
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
 	public static final SideSubType SUBTYPE_4_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_4COLUMNS",true);
-	public static final SideSubType SUBTYPE_2_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_2COLUMNS",true);
+	public static final SideSubType SUBTYPE_2_COLUMNS = new SideSubType(TYPE_DUNGEON+"_2COLUMNS",true);
 	public static final SideSubType SUBTYPE_EXTERNAL_DOOR = new SideSubType(TYPE_DUNGEON+"_EXTERNAL_DOOR");
 
 	static Side[] WALL = {new Side(TYPE_DUNGEON,SUBTYPE_WALL)};
 	static Side[] GROUND = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] PILLAR_WALL = {new Side(TYPE_DUNGEON,SUBTYPE_2_COLUMNS)};
 	static Side[] GROUND_ELEVATED = {new Side(TYPE_DUNGEON,SUBTYPE_GROUND_ELEVATED)};
-	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_WALL)};
+	static Side[] GROUND_ENTRANCE_COLUMNS = {new Side(TYPE_DUNGEON,SUBTYPE_4_COLUMNS), new Side(TYPE_DUNGEON,SUBTYPE_GROUND)};
 	static Side[] EXTERNAL_DOOR = new Side[]{new Side(TYPE_DUNGEON,SUBTYPE_EXTERNAL_DOOR)};
 	
 	static 
