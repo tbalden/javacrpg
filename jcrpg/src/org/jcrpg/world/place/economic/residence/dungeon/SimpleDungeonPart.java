@@ -93,7 +93,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 
 
 	public static final String TYPE_DUNGEON = "DUNGEON";
-	public static final SideSubType SUBTYPE_WALL = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
+	public static final SideSubType SUBTYPE_WALL = new GroundSubType(TYPE_DUNGEON+"_WALL",true);
 	public static final SideSubType SUBTYPE_GROUND = new GroundSubType(TYPE_DUNGEON+"_GROUND",true);
 	public static final SideSubType SUBTYPE_GROUND_ELEVATED = new GroundSubType(TYPE_DUNGEON+"_GROUND_ELEVATED",true);
 	public static final SideSubType SUBTYPE_4_COLUMNS = new GroundSubType(TYPE_DUNGEON+"_4COLUMNS",true);

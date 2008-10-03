@@ -203,7 +203,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BASKET.id, new Integer(65));
 
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
-		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(67));
+		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(71));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_WALL.id, new Integer(67));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_EXTERNAL_DOOR.id, new Integer(68));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_4_COLUMNS.id, new Integer(69));
@@ -938,8 +938,12 @@ public class SideTypeModels {
 		SimpleModel sm_maze_2_pillars = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(70), new RenderedSide(new Model[]{sm_maze_2_pillars}));
 
+		SimpleModel sm_maze_ground_1 = new SimpleModel("sides/maze_ground.obj", null);
+		//SimpleModel sm_maze_wall_1 = new SimpleModel("models/external/maze/2_pillars.obj", null);
+		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
+
 		// NEXT ID = 
-		// 71
+		// 72
 		
 	}
 	
