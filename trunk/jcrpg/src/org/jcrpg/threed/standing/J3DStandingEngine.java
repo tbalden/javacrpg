@@ -644,7 +644,7 @@ public class J3DStandingEngine {
 					boolean fragmentViewDist = false;
 					int calcFragmentViewDivider = 2;
 					if (c.cube!=null) {
-						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube)&&core.gameState.getCurrentRenderPositions().insideArea;
+						fragmentViewDist = c.cube.internalCube&&(!core.gameState.getCurrentRenderPositions().insideArea) || (!c.cube.internalCube&&!c.cube.internalLight)&&core.gameState.getCurrentRenderPositions().insideArea;
 						if (fragmentViewDist) calcFragmentViewDivider = fragmentedViewDivider;
 					}
 					if (c.cube!=null)
