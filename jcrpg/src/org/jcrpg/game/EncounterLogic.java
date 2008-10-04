@@ -449,6 +449,7 @@ public class EncounterLogic {
 	
 	private void resetCamera()
 	{
+		gameLogic.core.setCalculatedCameraLocation();
 		if (encounterRoundState!=null && encounterRoundState.encounter!=null)
 		{
 			if (turnCameraIntelligent(encounterRoundState.encounter,false)) return;	
@@ -458,7 +459,6 @@ public class EncounterLogic {
 			if (turnCameraIntelligent(turnActTurnState.encounter,false)) return;	
 		}
 		
-		gameLogic.core.setCalculatedCameraLocation();
 		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
 		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
 	}
