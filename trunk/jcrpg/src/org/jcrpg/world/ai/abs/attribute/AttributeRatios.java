@@ -39,6 +39,13 @@ public class AttributeRatios {
 		attributeRatios.put(attr, value);
 	}
 	
+	public float getAttributeRatio(String attr)
+	{
+		Float f = attributeRatios.get(attr);
+		if (f==null) return 0;
+		return f;
+	}
+	
 	public static int getAttribute(String attr, Attributes base, AttributeRatios modifier)
 	{
 		Float ratio = modifier.attributeRatios.get(attr);

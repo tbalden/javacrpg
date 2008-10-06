@@ -17,9 +17,18 @@
  */ 
 package org.jcrpg.world.ai;
 
+import java.util.HashMap;
+
+import org.jcrpg.game.CharacterCreationRules;
+import org.jcrpg.game.GameLogic;
+import org.jcrpg.game.GameLogicConstants;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.EntityMember.SkillPreferenceHint;
+import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 
 public class GeneratedMemberInstance extends EntityMemberInstance {
 
@@ -38,6 +47,7 @@ public class GeneratedMemberInstance extends EntityMemberInstance {
 			EntityInstance instance, EntityMember description, int numericId, int level) {
 		super(parent, instance, description, numericId);
 		memberState.level = level;
+		levelUp(level);
 		// TODO generate skill/attribute level additions for the level
 		generatedSkills = description.memberSkills.copy();
 	}
@@ -55,6 +65,42 @@ public class GeneratedMemberInstance extends EntityMemberInstance {
 		return base;
 	}
 	
+	/**
+	 * Do the leveling up for a number of levels (attributes,skills etc.).
+	 * @param levels number of levels.
+	 */
+	public void levelUp(int levels)
+	{
+		for (int i=0; i<levels; i++)
+		{
+			levelUp();
+		}
+	}
+	
+	/**
+	 * Level up 1 level.
+	 */
+	public void levelUp()
+	{
+		int attributePointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE_ON_LEVELING;
+		int skillPointLeft = GameLogicConstants.SKILL_POINTS_TO_USE_ON_LEVELING;
+		AttributeRatios rDesc = description.getLevelingAttributeRatioHint(this);
+		AttributeRatios rProf = null;
+		try {
+			J3DCore.getInstance().gameState.getCharCreationRules().profInstances.get(description.professions.get(0)).getLevelingAttributeRatioHint(this);
+		}catch (Exception ex)
+		{	
+		}
+		//for (att)
+		// TODO combing together the ratios, setting new attributes
+		
+		// TODO skill hints - profession should get info about what kind of Skills are preferred
+		// from the EntityMember description, and the profession should return which skills to increase
+		// and how much
+		SkillPreferenceHint sHint = description.getLevelingSkillPreferenceHint(this);
+		
+		updateAfterLeveling();
+	}
 	
 
 }
