@@ -78,6 +78,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "charSheetWindow", KeyInput.KEY_F3 );
         keyboard.set( "inventoryWindow", KeyInput.KEY_F4 );
         keyboard.set( "partyOrderWindow", KeyInput.KEY_F5 );
+        keyboard.set( "normalActWindow", KeyInput.KEY_F6 );
         keyboard.set( "mainMenu", KeyInput.KEY_F10 );
         keyboard.set( "cacheStateInfo", KeyInput.KEY_F11 );
         keyboard.set( "logUp", KeyInput.KEY_PGUP );
@@ -157,6 +158,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "inventoryWindow", false);
         addAction( new CKeyMenu(this), "charSheetWindow", false);
         addAction( new CKeyMenu(this), "partyOrderWindow", false);
+        addAction( new CKeyMenu(this), "normalActWindow", false);
         addAction( new CKeyMenu(this), "mainMenu", false);
         addAction( new CKeyMenu(this), "cacheStateInfo", false);
         addAction( new CKeyMenu(this), "logUp", false);
