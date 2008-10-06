@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import org.jcrpg.game.EncounterLogic;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitLineup;
+import org.jcrpg.game.logic.PlayerActChoiceInfo;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.PagedInputWindow;
@@ -217,7 +218,7 @@ public class TurnActWindow extends PagedInputWindow {
 		desc.activate();
 		this.party = party;
 		this.encountered = encountered;
-		info = new TurnActPlayerChoiceInfo();
+		info = new PlayerActChoiceInfo();
 	}
 
 	public static Object doNothingSkillChoiceObject = new Object();
@@ -718,20 +719,7 @@ public class TurnActWindow extends PagedInputWindow {
 	}
 	
 	
-	public class TurnActPlayerChoiceInfo
-	{
-		boolean doEscape = false;
-		HashMap<EntityMemberInstance, TurnActMemberChoice> memberToChoice = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
-		public Collection<TurnActMemberChoice> getChoices()
-		{
-			return memberToChoice.values();
-		}
-		public boolean isEscaping()
-		{
-			return doEscape;
-		}
-	}
-	public TurnActPlayerChoiceInfo info = new TurnActPlayerChoiceInfo();
+	public PlayerActChoiceInfo info = new PlayerActChoiceInfo();
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -757,6 +745,7 @@ public class TurnActWindow extends PagedInputWindow {
 					counter++;
 				}
 				info.doEscape = true;
+				info.callbackWindow = this;
 				core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
 				/*core.uiBase.hud.mainBox.addEntry("Your party is able to leave the encounter.");
 				core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
@@ -838,6 +827,7 @@ public class TurnActWindow extends PagedInputWindow {
 			
 			core.uiBase.hud.mainBox.addEntry("Starting turn!");
 			toggle();
+			info.callbackWindow = this;
 			core.gameState.gameLogic.encounterLogic.doTurnActTurn(info,encountered);
 			storeSettings();
 			
