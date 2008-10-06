@@ -23,6 +23,8 @@ import java.util.HashMap;
 
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -106,5 +108,10 @@ public class Profession {
 	{
 		addSkill(skill, 10, MAJOR);
 	}
-	
+
+	public AttributeRatios getLevelingAttributeRatioHint(EntityMemberInstance instance)
+	{
+		return new AttributeRatios();
+	}
+
 }

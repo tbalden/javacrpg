@@ -20,6 +20,7 @@ package org.jcrpg.world.ai;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -286,6 +287,21 @@ public class EntityMember extends DescriptionBase {
 	public SkillContainer getMemberSkills()
 	{
 		return memberSkills;
+	}
+	
+	public AttributeRatios getLevelingAttributeRatioHint(EntityMemberInstance instance)
+	{
+		return new AttributeRatios();
+	}
+	
+	public class SkillPreferenceHint
+	{
+		HashMap<Class<? extends SkillBase>, Float> map = new HashMap<Class<? extends SkillBase>, Float>();
+	}
+	
+	public SkillPreferenceHint getLevelingSkillPreferenceHint(EntityMemberInstance instance)
+	{
+		return new SkillPreferenceHint();
 	}
 	
 }
