@@ -782,7 +782,8 @@ public class TurnActWindow extends PagedInputWindow {
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 						choice.target = fragmentAndSubunit;					
 						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
-						choice.usedObject = obj;						
+						choice.usedObject = obj;
+						if (obj==null) return true; // no object for use!
 					} else
 					{
 
