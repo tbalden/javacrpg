@@ -8,11 +8,25 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+
+[ ] monster leveling generation
+
+[ ] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
+
+
+[ ] add chests, cyclops
+
+[ ] the other misc objects
+
+[ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
 [ ] dungeon dev
-	[ ] slow, too much details
-	[ ] ground is varying??
+	[ ] add skysphere switch to Cube??
+	[ ] bad wall openings at higher part etc.
+	[X] slow, too much details
+	[X] ground is varying??
 	
-	[ ] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
+	[X] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
 		( AbstractInfrastructure I modified to reposition blockstartX/Z, but this conflicts with water detection)
 
 [X] add town misc objects, new plaza ground type?
@@ -22,10 +36,19 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 		or !!! grouped by some typeId together into some blocks in a block?
 	[ ] integrate tidbit's bench to where ??
 
-[ ] the other misc objects
-[ ] cyclops
 
-[ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+[X] use/cast spell normal mode
+
+----------------------
+ [ Character ]
+ [ Skill/Use dropdown] [ ActForm ]
+ [ Object ]             [ Target  ]
+
+--> copy TurnActWindow partially, add Char dropdown
+
+[?] listen jamendo for classics! -- waiting for musician
+
+[X] dungeon area for encounter ground!
 
 [-] 2D sprite billboard monsters for classic revival and in lack of 3d artists!
 	or Review other open media project's 3d models
