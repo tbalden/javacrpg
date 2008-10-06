@@ -27,12 +27,12 @@ import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.element.TurnActUnitTopology;
 import org.jcrpg.game.logic.EvaluatorBase;
 import org.jcrpg.game.logic.Impact;
+import org.jcrpg.game.logic.PlayerActChoiceInfo;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.ui.text.TextEntry;
-import org.jcrpg.ui.window.interaction.TurnActWindow.TurnActPlayerChoiceInfo;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -194,7 +194,7 @@ public class EncounterLogic {
 	
 
 	public class TurnActTurnState {
-		public TurnActPlayerChoiceInfo choiceInfo = null;
+		public PlayerActChoiceInfo choiceInfo = null;
 		public EncounterInfo encounter;
 		public int nextEventCount = -1;
 		//public int maxEventCount = 0;
@@ -209,7 +209,7 @@ public class EncounterLogic {
 		public long playStart = 0;
 		public long maxTime = 0;
 		
-		public TurnActTurnState(EncounterInfo encounter, TurnActPlayerChoiceInfo info)
+		public TurnActTurnState(EncounterInfo encounter, PlayerActChoiceInfo info)
 		{
 			this.choiceInfo = info;
 			this.encounter = encounter;
@@ -268,7 +268,7 @@ public class EncounterLogic {
 	public int currentEncounterRound = 0;
 	public int currentTurnActTurn = 0;
 	
-	public void doTurnActTurn(TurnActPlayerChoiceInfo info, EncounterInfo encountered)
+	public void doTurnActTurn(PlayerActChoiceInfo info, EncounterInfo encountered)
 	{
 		turnActTurnState = new TurnActTurnState(encountered,info);
 		turnActTurnState.encounter = encountered;
@@ -775,25 +775,32 @@ public class EncounterLogic {
 				ArrayList<EncounterUnit> leaving = turnActTurnState.encounter.filterNeutralsForSubjectBeforeTurnAct(true,(PartyInstance)turnActTurnState.encounter.playerIfPresent.instance);
 				postLeaversMessage(leaving);
 				
-				if (isEncounterFinishedLosing(turnActTurnState.encounter))
-				{
-					finishEncounterLose(turnActTurnState.encounter);
-				} else
-				if (isEncounterFinishedWinning(turnActTurnState.encounter))
-				{
-					finishEncounterWin(turnActTurnState.encounter);
-				} else
-				if (isEncounterFinishedNeutralized(turnActTurnState.encounter))
-				{
-					finishEncounterNeutralized(turnActTurnState.encounter);
-				} else
-				if (turnActTurnState.choiceInfo.isEscaping())
-				{
-					finishEncounterEscaping(turnActTurnState.encounter);
-				} else
+				if (turnActTurnState.choiceInfo.nonEncounterMode)
 				{
 					gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
-					gameLogic.core.turnActWindow.toggle();
+					turnActTurnState.choiceInfo.callbackWindow.toggle();
+				} else
+				{
+					if (isEncounterFinishedLosing(turnActTurnState.encounter))
+					{
+						finishEncounterLose(turnActTurnState.encounter);
+					} else
+					if (isEncounterFinishedWinning(turnActTurnState.encounter))
+					{
+						finishEncounterWin(turnActTurnState.encounter);
+					} else
+					if (isEncounterFinishedNeutralized(turnActTurnState.encounter))
+					{
+						finishEncounterNeutralized(turnActTurnState.encounter);
+					} else
+					if (turnActTurnState.choiceInfo.isEscaping())
+					{
+						finishEncounterEscaping(turnActTurnState.encounter);
+					} else
+					{
+						gameLogic.core.uiBase.hud.mainBox.addEntry("Next turn comes...");
+						turnActTurnState.choiceInfo.callbackWindow.toggle();
+					}
 				}
 				turnActTurnState = null;
 				
