@@ -268,6 +268,9 @@ public class NormalActWindow extends PagedInputWindow {
 				texts[texts.length-1] = Language.v("turnActWindow.DoNothing");
 				objects[objects.length-1] = doNothingSkillChoiceObject;
 				
+				// set Do Nothing default
+				selected = objects.length-1;
+				
 				select.ids = ids;
 				select.texts = texts;
 				select.objects = objects;
@@ -766,7 +769,8 @@ public class NormalActWindow extends PagedInputWindow {
 						fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
 						choice.target = fragmentAndSubunit;					
 						choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
-						choice.usedObject = obj;						
+						choice.usedObject = obj;
+						if (obj==null) return true; // no object for use!
 					} else
 					{
 
