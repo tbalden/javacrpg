@@ -18,6 +18,7 @@
 package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -398,7 +399,17 @@ public class RenderedArea {
 			synchronized (worldCubeCache)
 			{
 				long time = System.currentTimeMillis();
-				worldCubeCacheThreadSafeCopy = (HashMap<Long, RenderedCube>)worldCubeCache.clone();
+				try 
+				{
+					worldCubeCacheThreadSafeCopy = (HashMap<Long, RenderedCube>)worldCubeCache.clone();
+				} catch (ConcurrentModificationException cme)
+				{
+					Jcrpg.LOGGER.severe("RenderedArea #### CONCURRENCY !! #### "+cme);
+					isInProcess = false;
+					haltCurrentProcess = false;
+					numberOfProcesses--;
+					return null;
+				}
 				System.out.println("clone time: "+(System.currentTimeMillis()-time));
 			}
 		}
