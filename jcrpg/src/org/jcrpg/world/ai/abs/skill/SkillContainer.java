@@ -24,7 +24,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.Ecology;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.EntityMember.SkillPreferenceHint;
+import org.jcrpg.world.ai.profession.Profession;
 
 public class SkillContainer {
 	
@@ -210,5 +215,51 @@ public class SkillContainer {
 		}
 		return highestLevel;
 	}
+	
+	public void levelUpSkills(EntityMemberInstance instance, SkillPreferenceHint hint, int points)
+	{
+
+		// no skill to increase...
+		if (skills.keySet().size()==0) return; // return.
+
+		float sum = 0;
+		int count = 0;
+		Profession p = null;
+		try {
+			J3DCore.getInstance().gameState.charCreationRules.getProfession(instance.description.professions.get(0));
+		} catch (Exception ex)
+		{
+			
+		}
+		for (Class<? extends SkillBase> key : skills.keySet())
+		{
+			int mod = p==null?1:p.skillLearnModifier.getMultiplier(key);
+			{
+				// summarizing all skill multiplier 
+				sum+=mod;
+				count++;
+			}
+		}
+		int seed = instance.getNumericId();
+		while (points>0)
+		{
+			count ++;
+			for (Class<? extends SkillBase> key : skills.keySet())
+			{
+				int mod = p==null?1:p.skillLearnModifier.getMultiplier(key);
+				{
+					float modF = mod*1f/sum; // calculating the ratio of a given skill in the full spectrum based on its multiplier.
+					int i = (int)(modF * 1000);
+					if (i>HashUtil.mixPer1000(seed+count, points, count)) // rolled value is below, so we will increase that skill...
+					{
+						setSkillValue(key, getSkillLevel(key, null)+(1 * mod));
+						System.out.println(instance.description.getName()+" INCREASING SKILL "+key);
+						points--;
+					}
+				}
+			}
+		}
+	}
+	
 
 }
