@@ -17,10 +17,6 @@
  */ 
 package org.jcrpg.world.ai;
 
-import java.util.HashMap;
-
-import org.jcrpg.game.CharacterCreationRules;
-import org.jcrpg.game.GameLogic;
 import org.jcrpg.game.GameLogicConstants;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
@@ -28,7 +24,6 @@ import org.jcrpg.world.ai.EntityMember.SkillPreferenceHint;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
-import org.jcrpg.world.ai.abs.skill.SkillGroups;
 
 public class GeneratedMemberInstance extends EntityMemberInstance {
 
@@ -47,9 +42,8 @@ public class GeneratedMemberInstance extends EntityMemberInstance {
 			EntityInstance instance, EntityMember description, int numericId, int level) {
 		super(parent, instance, description, numericId);
 		memberState.level = level;
-		levelUp(level);
-		// TODO generate skill/attribute level additions for the level
 		generatedSkills = description.memberSkills.copy();
+		levelUp(level);
 	}
 
 	@Override
@@ -91,13 +85,19 @@ public class GeneratedMemberInstance extends EntityMemberInstance {
 		}catch (Exception ex)
 		{	
 		}
-		//for (att)
-		// TODO combing together the ratios, setting new attributes
+		Attributes a = rDesc.calculateLevelingAttributes(getNumericId()+memberState.level, rProf!=null?attributePointsLeft/2:attributePointsLeft,getAttributesVanilla().getClass());
+		getAttributesVanilla().appendAttributes(a);
+		if (rProf!=null)
+		{
+			a = rProf.calculateLevelingAttributes(getNumericId()+memberState.level+1, attributePointsLeft/2, getAttributesVanilla().getClass());
+			getAttributesVanilla().appendAttributes(a);
+		}
 		
 		// TODO skill hints - profession should get info about what kind of Skills are preferred
 		// from the EntityMember description, and the profession should return which skills to increase
-		// and how much
+		// and how much. CURRENTLY it's much simpler - check levelUpSkills
 		SkillPreferenceHint sHint = description.getLevelingSkillPreferenceHint(this);
+		getSkills().levelUpSkills(this, sHint, skillPointLeft);
 		
 		updateAfterLeveling();
 	}

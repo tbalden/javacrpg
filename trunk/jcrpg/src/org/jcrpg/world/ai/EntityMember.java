@@ -29,6 +29,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
 import org.jcrpg.world.ai.abs.attribute.ResistanceRatios;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -289,9 +290,19 @@ public class EntityMember extends DescriptionBase {
 		return memberSkills;
 	}
 	
+	public static AttributeRatios nonSpecificLevelingRatios = new FantasyAttrRatios();
+	
+	static
+	{
+		for (String attr:nonSpecificLevelingRatios.attributeRatios.keySet())
+		{
+			nonSpecificLevelingRatios.setAttributeRatio(attr, 1);
+		}
+	}
+	
 	public AttributeRatios getLevelingAttributeRatioHint(EntityMemberInstance instance)
 	{
-		return new AttributeRatios();
+		return nonSpecificLevelingRatios;
 	}
 	
 	public class SkillPreferenceHint
@@ -302,6 +313,7 @@ public class EntityMember extends DescriptionBase {
 	public SkillPreferenceHint getLevelingSkillPreferenceHint(EntityMemberInstance instance)
 	{
 		return new SkillPreferenceHint();
+		
 	}
 	
 }

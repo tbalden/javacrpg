@@ -39,7 +39,6 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
-import com.jme.util.TextureManager;
 import com.jmex.awt.swingui.ImageGraphics;
 
 public class LocalMap {
@@ -242,12 +241,12 @@ public class LocalMap {
 									byte[] b = side.subtype.colorBytes;
 									if (side.subtype == SimpleDungeonPart.SUBTYPE_WALL)
 									{
-										System.out.println("COLORIZED = "+colorized+ " "+byteToInt(b[RED]) +" "+ byteToInt(b[GREEN])+" "+ byteToInt(b[BLUE]));
+										//System.out.println("COLORIZED = "+colorized+ " "+byteToInt(b[RED]) +" "+ byteToInt(b[GREEN])+" "+ byteToInt(b[BLUE]));
 										dPart = true;
 									} else
 										if (dPart)
 										{
-											System.out.println("OVERWRITE DPART = "+colorized);
+										//	System.out.println("OVERWRITE DPART = "+colorized);
 										}
 									if (!colorized || colorized && side.subtype.colorOverwrite) {
 										paintPoint(staticLayerGraphics, x, z, i, byteToInt(b[RED]), byteToInt(b[GREEN]), byteToInt(b[BLUE]), 80);

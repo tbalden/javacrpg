@@ -20,6 +20,8 @@ package org.jcrpg.world.ai.abs.attribute;
 
 import java.util.HashMap;
 
+import org.jcrpg.util.HashUtil;
+
 /**
  * Class that can be used for an entity member to shade the common Attributes of a group
  * to a detailed level for an entity member type.
@@ -45,6 +47,48 @@ public class AttributeRatios {
 		if (f==null) return 0;
 		return f;
 	}
+	
+	public Attributes calculateLevelingAttributes(int seed, int points, Class<? extends Attributes> attr)
+	{
+		float sum = 0;
+		int count = 0;
+		for (String key : attributeRatios.keySet())
+		{
+			Float f = attributeRatios.get(key);
+			if (f!=null)
+			{
+				sum+=f;
+				count++;
+			}
+		}
+		Attributes a = null;
+		try 
+		{
+			a = attr.newInstance();
+		} catch (Exception e)
+		{}
+		while (points>0)
+		{
+			count ++;
+			for (String key : attributeRatios.keySet())
+			{
+				Float f = attributeRatios.get(key);
+				if (f!=null)
+				{
+					f = f/sum;
+					int i = (int)(f * 1000);
+					if (i>HashUtil.mixPer1000(seed, points, count))
+					{
+						a.setAttribute(key, a.getAttribute(key) + 1);
+						System.out.println("INCREASING ATTRIBUTES "+key);
+						points--;
+					}
+				}
+			}
+		}
+		return a;
+	}
+	
 	
 	public static int getAttribute(String attr, Attributes base, AttributeRatios modifier)
 	{
