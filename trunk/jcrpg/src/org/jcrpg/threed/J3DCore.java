@@ -1002,6 +1002,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	@Override
 	protected void initGame() {
+		display.setVSyncEnabled(true);
 		pManager = new BasicPassManager();
 		//System.setProperty("jme.stats", "true");
 		//showGraphs = true;

@@ -38,8 +38,11 @@ public class GroupingRule {
 	{
 		ArrayList<EntityMemberInstance> members = new ArrayList<EntityMemberInstance>();
 		int i=0;
+		int entityLevel = fragment.instance.entityState.currentLevelOfQuality;
+		int cEL = entityLevel;
 		while (members.size()<fragment.instance.getGroupSizes()[groupId]) {
-			members.add(new GeneratedMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1+i+groupId*100, 1));
+			members.add(new GeneratedMemberInstance(fragment, fragment.instance,fragment.instance.getGroupSizesAndTypes()[groupId].type,-1+i+groupId*100, cEL--));
+			if (cEL<1) cEL = entityLevel;
 			i++;
 		}
 		return members;
