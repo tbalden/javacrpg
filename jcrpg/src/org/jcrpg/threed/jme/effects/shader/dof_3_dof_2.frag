@@ -3,7 +3,6 @@
 //
 // This code is in the public domain. You may do whatever you want with it.
 
-uniform float sampleDist0;
 uniform sampler2D scene;				// full resolution image
 uniform sampler2D depth;				// full resolution image with depth values
 
@@ -12,6 +11,7 @@ varying vec2 vTexCoord;
 
 void main()
 {
+   float sampleDist0=0.013;
 
    vec2 samples00 = vec2(-0.326212, -0.405805);
    vec2 samples01 = vec2(-0.840144, -0.073580);
@@ -39,7 +39,7 @@ void main()
   
    float additionCount = 1;
 	
-   vec4 dCheck = 0;
+   vec4 dCheck;
    newCoord = vTexCoord + sampleDist0 * samples00;
    dCheck = texture2D(depth, newCoord);
    // if out of rendered spatials pixel (background - r = zero) or near, mix it 
