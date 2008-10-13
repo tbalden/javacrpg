@@ -38,11 +38,8 @@ import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
 import com.jme.scene.Spatial.LightCombineMode;
-import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.BlendState;
-import com.jme.scene.state.LightState;
-import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
@@ -138,10 +135,10 @@ public class VegetationSetup {
 						quad.setSolidColor(new ColorRGBA(1,1,1,1));
 						J3DCore.hmSolidColorSpatials.put(quad,quad);
 					}
-					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
-					.createMaterialState();
-					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
-					quad.setRenderState(ms);
+					//MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+					//.createMaterialState();
+					//ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
+					//quad.setRenderState(ms);
 					
 					n.attachChild(quad);
 	
@@ -251,10 +248,10 @@ public class VegetationSetup {
 						quad.setSolidColor(new ColorRGBA(1,1,1,1));
 						J3DCore.hmSolidColorSpatials.put(quad,quad); // if not using this strangely quads get light colored... TODO
 					}
-					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+					/*MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
 					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
-					quad.setRenderState(ms);
+					quad.setRenderState(ms);*/
 					
 					n.attachChild(quad);
 	
@@ -370,10 +367,10 @@ public class VegetationSetup {
 					quad.setRenderState(as);
 					quad.setLightCombineMode(LightCombineMode.Off);
 					quad.setSolidColor(new ColorRGBA(1,1,1,1));
-					MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
+					/*MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
 					.createMaterialState();
 					ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
-					quad.setRenderState(ms);
+					quad.setRenderState(ms);*/
 
 					//quad.setRenderState(vp);// TODO  grassMove.vp programming! :-)
 					//quad.setRenderState(fp);

@@ -97,7 +97,7 @@ public class SimpleMoon extends Orbiter{
 
 		
 		float v = ((dayNightPer+100)/200f)-0.6f;
-		if (v<0.1f) v= 0.07f;
+		if (v<0.1f) v= 0.1f;
 		if (v>1f) v=1f;
 		return new float[]{v,v,v};
 	}

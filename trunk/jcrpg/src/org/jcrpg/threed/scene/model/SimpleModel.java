@@ -54,6 +54,10 @@ public class SimpleModel extends Model {
 	public String modelName, textureName;
 	public String steepTextureName = null;
 	public String secTextureName = null;
+	
+	public String normalMapTexture = null;
+	public String specMapTexture = null;
+	
 	public boolean mipMap = true;
 	public int xGeomBatchSize = -1;
 	public int yGeomBatchSize = -1;

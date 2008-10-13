@@ -42,6 +42,7 @@ import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
+import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
@@ -118,11 +119,13 @@ import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
 import com.jme.scene.state.FragmentProgramState;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.scene.state.MaterialState.ColorMaterial;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.Debug;
@@ -830,7 +833,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			dr.setEnabled(false);
 			dr.setLocation(new Vector3f(0f, 0f, 0f));
 			dr.setShadowCaster(false);
-			extLightState.setTwoSidedLighting(false);
+			//extLightState.setTwoSidedLighting(false);
 
 			lightNode = new LightNode("light");
 			lightNode.setLight(dr);
@@ -1144,7 +1147,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 					l[0].getLight().setDiffuse(c);// c);//new
 													// ColorRGBA(1,1,1,1));
-					l[0].getLight().setAmbient(ColorRGBA.white);
+					l[0].getLight().setAmbient(c.clone().multLocal(1.3f));
 					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
 					extRootNode.setRenderState(extLightState);
@@ -1194,15 +1197,25 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				// q.setSolidColor(new
 				// ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
 				if ((q instanceof TriMesh)) {
-					((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 1.3f,
-							vTotal[1] / 1.3f, vTotal[2] / 1.3f, 1f));
+					((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 0.3f,
+							vTotal[1] / 0.3f, vTotal[2] / 0.3f, 1f));
 				} else {
 					((TriMesh) ((Node) q).getChild(0)).setSolidColor(new ColorRGBA(
-							vTotal[0] / 1.3f, vTotal[1] / 1.3f, vTotal[2] / 1.3f,
+							vTotal[0] / 0.3f, vTotal[1] / 0.3f, vTotal[2] / 0.3f,
 							1f));
 				}
 			}
 		}
+		/*if (ms!=null)
+		{
+			ms.setDiffuse(new ColorRGBA(vTotal[0] / 2.3f,
+					vTotal[1] / 2.3f, vTotal[2] / 2.3f, 1f));
+			ms.setSpecular(new ColorRGBA(vTotal[0] / 2.3f,
+					vTotal[1] / 2.3f, vTotal[2] / 2.3f, 1f));
+			ms.setAmbient(new ColorRGBA(vTotal[0] / 2.3f,
+					vTotal[1] / 2.3f, vTotal[2] / 2.3f, 1f));
+		}*/
+		
 		// set fog state color to the light power !
 		fs_external.setColor(new ColorRGBA(vTotal[0] / 2f, vTotal[1] / 1.5f,
 				vTotal[2] / 1.1f, 1f));
@@ -2040,6 +2053,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		}
 	}
+    public static MaterialState ms;
 
 	/**
 	 * This renders a gameState.world initially, call it after loading a game
@@ -2300,6 +2314,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 * rootNode.clearRenderState(RenderState.RS_SHADE);
 		 * rootNode.clearRenderState(RenderState.RS_STENCIL);
 		 */
+		if (ms==null)
+		{
+			// Test materialstate (should be set through the import anyway)
+	        ms = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
+	        ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
+	        ms.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+	        ms.setDiffuse(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+	        ms.setSpecular(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+	        ms.setShininess(10.0f);
+	        
+		}
+		groundParentNode.setRenderState(ms);
 
 		DisplaySystem.getDisplaySystem().getRenderer().getQueue()
 				.setTwoPassTransparency(false);
