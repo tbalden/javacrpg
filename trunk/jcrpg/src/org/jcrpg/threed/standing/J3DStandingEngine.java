@@ -240,7 +240,10 @@ public class J3DStandingEngine {
 			world.clearCaches();
 		}
 		RenderedCube[][] newAndOldCubes = renderedArea.getRenderedSpace(world, viewPositionX, viewPositionY, viewPositionZ,core.gameState.getCurrentRenderPositions().viewDirection, J3DCore.FARVIEW_ENABLED,rerender);
-		if (newAndOldCubes==null) return null;
+		if (newAndOldCubes==null) {
+			numberOfProcesses--;
+			return null;
+		}
     	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDER AREA TIME: "+ (System.currentTimeMillis()-time));
     	
     	RenderedCube[] cubes = newAndOldCubes[0];
