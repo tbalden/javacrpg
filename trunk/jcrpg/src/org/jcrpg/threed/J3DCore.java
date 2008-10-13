@@ -210,6 +210,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static boolean SLOW_ANIMATION = false;
 	public static boolean VBO_ENABLED = true;
 
+	public static boolean WITHOUT_COMBATS = false;
+	
 	static Properties p = new Properties();
 
 	public static void loadConfig(String fileName) {
@@ -288,6 +290,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
 			VBO_ENABLED = loadValue("VBO_ENABLED", true);
 
+			// developer settings
+			WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

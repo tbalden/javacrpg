@@ -31,8 +31,8 @@ import org.jcrpg.world.time.Time;
 public class RenderedArea {
 	
 	public HashMap<Long, RenderedCube> worldCubeCacheThreadSafeCopy = new HashMap<Long, RenderedCube>(); 
-	public HashMap<Long, RenderedCube> worldCubeCache = new HashMap<Long, RenderedCube>(); 
-	public HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
+	private HashMap<Long, RenderedCube> worldCubeCache = new HashMap<Long, RenderedCube>(); 
+	private HashMap<Long, RenderedCube> worldCubeCacheNext = new HashMap<Long, RenderedCube>(); 
 
 	public HashMap<Long, RenderedCube> worldCubeCache_FARVIEW = new HashMap<Long, RenderedCube>(); 
 	public HashMap<Long, RenderedCube> worldCubeCacheNext_FARVIEW = new HashMap<Long, RenderedCube>();
@@ -686,7 +686,11 @@ public class RenderedArea {
 		worldX = world.shrinkToWorld(worldX);
 		worldZ = world.shrinkToWorld(worldZ);
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
-		return worldCubeCacheThreadSafeCopy.get(key);
+		synchronized (worldCubeCache)
+		{
+			return worldCubeCacheThreadSafeCopy.get(key);
+		}
+		
 	}
 	public RenderedCube getCubeAtPosition(World world, int worldX, int worldY, int worldZ,boolean farview)
 	{
@@ -695,7 +699,10 @@ public class RenderedArea {
 		long key = Boundaries.getKey(worldX, worldY, worldZ);
 		if (farview)
 			return worldCubeCache_FARVIEW.get(key);
-		return worldCubeCacheThreadSafeCopy.get(key);
+		synchronized (worldCubeCache)
+		{
+			return worldCubeCacheThreadSafeCopy.get(key);
+		}
 		
 	}
 	
@@ -714,6 +721,14 @@ public class RenderedArea {
 	}
 	public void setRenderDistanceFarview(int renderDistanceFarview) {
 		this.renderDistanceFarview = renderDistanceFarview;
+	}
+	
+	public synchronized void clear()
+	{
+		worldCubeCache.clear();
+		worldCubeCache_FARVIEW.clear();
+		worldCubeCacheNext.clear();
+		worldCubeCacheNext_FARVIEW.clear();
 	}
 	
 }
