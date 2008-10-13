@@ -1237,7 +1237,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// Animating skySphere rotated...
 		Quaternion qSky = new Quaternion();
 		qSky.fromAngleAxis(
-				FastMath.PI * localTime.getCurrentDayPercent() / 100,
+				FastMath.PI * 0.5f,//localTime.getCurrentDayPercent() / 100,
 				new Vector3f(0, 0, -1));
 		skySphere.setLocalRotation(qSky);
 
@@ -2111,13 +2111,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				Texture.MinificationFilter.NearestNeighborLinearMipMap, Texture.MagnificationFilter.NearestNeighbor);
 
 		if (texture != null) {
+			skySphere.setTextureMode(Sphere.TEX_PROJECTED);
 
 			//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 			//texture.setApply(Texture.AM_MODULATE);
 			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 			texture.setApply(Texture.ApplyMode.Modulate);
 
-			texture.setRotation(qTexture);
+			//texture.setRotation(qTexture);
 			TextureState state = DisplaySystem.getDisplaySystem().getRenderer()
 					.createTextureState();
 			state.setTexture(texture, 0);
