@@ -1144,10 +1144,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					vTotal[1] += v[1];
 					vTotal[2] += v[2];
 					ColorRGBA c = new ColorRGBA(v[0], v[1], v[2], 0.3f);
+					float cV = (v[0]+v[1]+v[2])/3f;
+					ColorRGBA a = new ColorRGBA(cV, cV, cV, 1.0f);
 
 					l[0].getLight().setDiffuse(c);// c);//new
 													// ColorRGBA(1,1,1,1));
-					l[0].getLight().setAmbient(c.clone().multLocal(1.3f));
+					l[0].getLight().setAmbient(a.clone().multLocal(0.5f));
 					l[0].getLight().setSpecular(c);
 					l[0].getLight().setShadowCaster(true);
 					extRootNode.setRenderState(extLightState);
@@ -2319,9 +2321,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// Test materialstate (should be set through the import anyway)
 	        ms = DisplaySystem.getDisplaySystem().getRenderer().createMaterialState();
 	        ms.setColorMaterial(MaterialState.ColorMaterial.AmbientAndDiffuse);
-	        ms.setAmbient(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-	        ms.setDiffuse(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
-	        ms.setSpecular(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.5f));
+	        ms.setAmbient(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+	        ms.setDiffuse(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+	        ms.setSpecular(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 	        ms.setShininess(10.0f);
 	        
 		}
