@@ -172,7 +172,7 @@ public class J3DStandingEngine {
 					x, y, z, false,true);
 			if (!halt)
 			{
-			engine.areaResult = areaResult;
+				engine.areaResult = areaResult;
 			} else
 			{
 				loadRenderedAreaParallel = false;
@@ -187,12 +187,15 @@ public class J3DStandingEngine {
 	public HashSet<RenderedCube>[] areaResult = null;
 	
 	
+	public int numberOfProcesses = 0;
+	
 	/**
 	 * Renders the scenario, adds new jme Nodes, removes outmoved nodes and keeps old nodes on scenario.
 	 */
 	@SuppressWarnings("unchecked")
 	public HashSet<RenderedCube>[] render(int renderPosX, int renderPosY, int renderPostZ, int viewPositionX, int viewPositionY, int viewPositionZ, boolean rerender,boolean safeMode)
 	{
+		numberOfProcesses++;
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RENDERING...");
 		HashSet<RenderedCube> detacheable = new HashSet<RenderedCube>();
 		HashSet<RenderedCube> detacheable_FARVIEW = new HashSet<RenderedCube>();
@@ -269,6 +272,7 @@ public class J3DStandingEngine {
 			uiBase.hud.mainBox.addEntry("Load Complete.");
 		}
 		HashSet<RenderedCube>[] ret = new HashSet[] {detacheable,detacheable_FARVIEW};
+		numberOfProcesses--;
 		return ret;
 	}
 	
@@ -1660,9 +1664,10 @@ public class J3DStandingEngine {
 				System.out.println("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
 				for (RenderedAreaThread t:runningThreads)
 				{
+					t.halt = true;
 					if (t.isAlive())
 					{
-						t.halt = true;
+						
 						if (renderedArea.isInProcess) 
 						{
 							renderedArea.haltCurrentProcess = true;
@@ -1671,7 +1676,7 @@ public class J3DStandingEngine {
 				}
 				loadRenderedAreaParallel = false;
 				runningThreads.clear();
-				while (renderedArea.numberOfProcesses>0)
+				while (renderedArea.numberOfProcesses>0 && numberOfProcesses>0)
 				{
 					Jcrpg.LOGGER.info("WAITING FOR RENDER THREADS TO STOP...");
 					try {
