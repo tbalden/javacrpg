@@ -19,7 +19,9 @@ package org.jcrpg.threed.jme;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.GeoTileLoader.TiledTerrainBlockAndPassNode;
@@ -32,11 +34,18 @@ import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Image;
+import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.TriMesh;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.TextureState;
+import com.jme.system.DisplaySystem;
+import com.jme.system.JmeException;
+import com.jme.util.TextureManager;
 
 /**
  * Model geometry batch that can hold together a lot of similar texture state trimeshes in one batch mesh
@@ -164,7 +173,44 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		
 	}
+    private GLSLShaderObjectsState so;
+    private String currentShaderStr = "org/jcrpg/threed/jme/effects/shader/normalmap/normalmap";
+
+	   public void reloadShader() {
+	        GLSLShaderObjectsState testShader = DisplaySystem.getDisplaySystem()
+	                .getRenderer().createGLSLShaderObjectsState();
+	        try {
+	            testShader.load(ModelGeometryBatch.class.getClassLoader()
+	                    .getResource(currentShaderStr + ".vert"),
+	                    ModelGeometryBatch.class.getClassLoader().getResource(
+	                            currentShaderStr + ".frag"));
+	            testShader.apply();
+	            DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+	        } catch (JmeException e) {
+	            Jcrpg.LOGGER.log(Level.WARNING, "Failed to reload shader", e);
+	            return;
+	        }
+	        if (so==null)
+	        {
+		        so = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
 	
+		        // Check is GLSL is supported on current hardware.
+		        if (!GLSLShaderObjectsState.isSupported()) {
+		            Jcrpg.LOGGER.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
+		            return;
+		        }
+	        }
+
+	        so.load(ModelGeometryBatch.class.getClassLoader().getResource(
+	                currentShaderStr + ".vert"), ModelGeometryBatch.class
+	                .getClassLoader().getResource(currentShaderStr + ".frag"));
+
+	        so.setUniform("baseMap", 0);
+	        so.setUniform("normalMap", 1);
+	        so.setUniform("specularMap", 2);
+
+	        Jcrpg.LOGGER.info("Shader reloaded...");
+	    }
 
 	/**
 	 * 
@@ -195,10 +241,37 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (data==null || data.passNode==null)
 			{
 				parentOrig = new Node("MGB"+instanceCounter++);
-				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
+				TextureState ts = (TextureState)mesh.getRenderState(RenderState.RS_TEXTURE);
+				parentOrig.setRenderState(ts);
+				
 				if (m.type == Model.SIMPLEMODEL) {
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+					SimpleModel sm = (SimpleModel)m;
+					if (sm.normalMapTexture!=null)
+					{
+						if (so==null) reloadShader();
+				        // Normal map
+				        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
+				        		//"Pillar_Nor.png",
+				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
+				                Image.Format.GuessNoCompression, 0.0f, true);
+				        normalMap.setWrap(Texture.WrapMode.Repeat);
+				        ts.setTexture(normalMap, 1);
+				        
+				        // Spec Map
+				        if (sm.specMapTexture!=null)
+				        {
+					        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
+					        		//"Pillar_Spec.png",
+			                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+			        		specMap.setWrap(Texture.WrapMode.Repeat);
+			        		ts.setTexture(specMap, 2);
+				        }
+		        		
+		        		parentOrig.setRenderState(so);
+						//parentOrig.setRenderState(ms);
+					}
 				}
 				//sharedParentCache.put(parentKey,parentOrig);
 			} else

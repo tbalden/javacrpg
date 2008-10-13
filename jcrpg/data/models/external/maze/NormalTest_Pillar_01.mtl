@@ -1,0 +1,13 @@
+# Blender3D MTL File: NormalTest_Pillar_01.blend
+# Material Count: 1
+newmtl Saeule.001_Pillar_Tex_Full.tga
+Ns 17.647059
+Ka 0.000000 0.000000 0.000000
+Kd 0.477614 0.444205 0.348567
+Ks 0.120000 0.115296 0.101831
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Pillar_Tex_Full.png
+
+
