@@ -2273,10 +2273,7 @@ public class J3DStandingEngine {
 		inViewPort.clear();
 		outOfViewPort.clear();
 		outOfFarViewPort.clear();
-		renderedArea.worldCubeCache.clear();
-		renderedArea.worldCubeCache_FARVIEW.clear();
-		renderedArea.worldCubeCacheNext.clear();
-		renderedArea.worldCubeCacheNext_FARVIEW.clear();
+		renderedArea.clear();
 	}
 	
 	public void switchOn(boolean on)

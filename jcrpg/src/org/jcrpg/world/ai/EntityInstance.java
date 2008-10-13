@@ -220,9 +220,11 @@ public class EntityInstance {
 	public boolean liveOneTurn(int seed, Collection<EncounterInfo> nearbyEncounters)
 	{
 		int counter = 0;
-		
-		//if (true) return false; // For debugging without combats, uncomment this.
-		
+		// For debugging without combats
+		if (J3DCore.WITHOUT_COMBATS) {
+			return false;
+		}
+				
 		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
 		//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
