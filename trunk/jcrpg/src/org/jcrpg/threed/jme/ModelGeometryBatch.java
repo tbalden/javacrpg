@@ -173,63 +173,68 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		}
 		
 	}
-    private GLSLShaderObjectsState so;
-    private GLSLShaderObjectsState so_point;
+    static private GLSLShaderObjectsState so;
+    static private GLSLShaderObjectsState so_point;
     private String currentShaderStr = "org/jcrpg/threed/jme/effects/shader/normalmap/parallax";//parallax";
 
-	   public void reloadShader() {
-	        GLSLShaderObjectsState testShader = DisplaySystem.getDisplaySystem()
-	                .getRenderer().createGLSLShaderObjectsState();
-	        try {
-	            testShader.load(ModelGeometryBatch.class.getClassLoader()
-	                    .getResource(currentShaderStr + ".vert"),
-	                    ModelGeometryBatch.class.getClassLoader().getResource(
-	                            currentShaderStr + ".frag"));
-	            testShader.apply();
-	            DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
-	        } catch (JmeException e) {
-	            Jcrpg.LOGGER.log(Level.WARNING, "Failed to reload shader", e);
-	            return;
-	        }
-	        if (so==null)
-	        {
-		        so = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-	
-		        // Check is GLSL is supported on current hardware.
-		        if (!GLSLShaderObjectsState.isSupported()) {
-		            Jcrpg.LOGGER.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
-		            return;
-		        }
-	        }
-	        if (so_point==null)
-	        {
-		        so_point = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
-	
-		        // Check is GLSL is supported on current hardware.
-		        if (!GLSLShaderObjectsState.isSupported()) {
-		            Jcrpg.LOGGER.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
-		            return;
-		        }
-	        }
+   public void reloadShader() {
+		GLSLShaderObjectsState testShader = DisplaySystem.getDisplaySystem()
+				.getRenderer().createGLSLShaderObjectsState();
+		try {
+			testShader.load(ModelGeometryBatch.class.getClassLoader()
+					.getResource(currentShaderStr + ".vert"),
+					ModelGeometryBatch.class.getClassLoader().getResource(
+							currentShaderStr + ".frag"));
+			testShader.apply();
+			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+		} catch (JmeException e) {
+			Jcrpg.LOGGER.log(Level.WARNING, "Failed to reload shader", e);
+			return;
+		}
+		if (so == null) {
+			so = DisplaySystem.getDisplaySystem().getRenderer()
+					.createGLSLShaderObjectsState();
 
-	        so.load(ModelGeometryBatch.class.getClassLoader().getResource(
-	                currentShaderStr + ".vert"), ModelGeometryBatch.class
-	                .getClassLoader().getResource(currentShaderStr + ".frag"));
-	        so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
-	                currentShaderStr + "_pointlight.vert"), ModelGeometryBatch.class
-	                .getClassLoader().getResource(currentShaderStr + ".frag"));
+			// Check is GLSL is supported on current hardware.
+			if (!GLSLShaderObjectsState.isSupported()) {
+				Jcrpg.LOGGER
+						.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
+				return;
+			}
+		}
+		if (so_point == null) {
+			so_point = DisplaySystem.getDisplaySystem().getRenderer()
+					.createGLSLShaderObjectsState();
 
-	        so.setUniform("baseMap", 0);
-	        so.setUniform("normalMap", 1);
-	        so.setUniform("specularMap", 2);
-	        
-	        so_point.setUniform("baseMap", 0);
-	        so_point.setUniform("normalMap", 1);
-	        so_point.setUniform("specularMap", 2);
+			// Check is GLSL is supported on current hardware.
+			if (!GLSLShaderObjectsState.isSupported()) {
+				Jcrpg.LOGGER
+						.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
+				return;
+			}
+		}
 
-	        Jcrpg.LOGGER.info("Shader reloaded...");
-	    }
+		so.load(ModelGeometryBatch.class.getClassLoader().getResource(
+				currentShaderStr + ".vert"), ModelGeometryBatch.class
+				.getClassLoader().getResource(currentShaderStr + ".frag"));
+		so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
+				currentShaderStr + "_pointlight.vert"),
+				ModelGeometryBatch.class.getClassLoader().getResource(
+						currentShaderStr + ".frag"));
 
+		so.setUniform("baseMap", 0);
+		so.setUniform("normalMap", 1);
+		so.setUniform("specularMap", 2);
+		so.setUniform("heightValue", 0.01f);
+
+		so_point.setUniform("baseMap", 0);
+		so_point.setUniform("normalMap", 1);
+		so_point.setUniform("specularMap", 2);
+		so_point.setUniform("heightValue", 0.01f);
+
+		Jcrpg.LOGGER.info("Shader reloaded...");
+	}
+   
 	/**
 	 * 
 	 * @param core
@@ -268,31 +273,36 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 					SimpleModel sm = (SimpleModel)m;
 					if (sm.normalMapTexture!=null)
 					{
-						if (so==null) reloadShader();
-				        // Normal map
-				        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
-				        		//"Pillar_Nor.png",
-				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
-				                Image.Format.GuessNoCompression, 0.0f, true);
-				        normalMap.setWrap(Texture.WrapMode.Repeat);
-				        ts.setTexture(normalMap, 1);
-				        
-				        // Spec Map
-				        if (sm.specMapTexture!=null)
-				        {
-					        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
-					        		//"Pillar_Spec.png",
-			                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
-			        		specMap.setWrap(Texture.WrapMode.Repeat);
-			        		ts.setTexture(specMap, 2);
-				        }
-		        		if (placeHolder.cube.cube.internalCube)
-		        		{
-		        			parentOrig.setRenderState(so_point);
-		        		} else
-		        		{
-		        			parentOrig.setRenderState(so);
-		        		}
+						if (ts.getNumberOfSetTextures()==1) 
+						{
+							if (so==null) reloadShader();
+					        // Normal map
+					        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
+					        		//"Pillar_Nor.png",
+					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
+					                Image.Format.GuessNoCompression, 0.0f, true);
+					        normalMap.setWrap(Texture.WrapMode.Repeat);
+					        ts.setTexture(normalMap, 1);
+					        
+					        // Spec Map
+					        if (sm.specMapTexture!=null)
+					        {
+						        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
+						        		//"Pillar_Spec.png",
+				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+				        		specMap.setWrap(Texture.WrapMode.Repeat);
+				        		ts.setTexture(specMap, 2);
+					        }
+						}
+						{
+			        		if (placeHolder.cube.cube.internalCube)
+			        		{
+			        			parentOrig.setRenderState(so_point);
+			        		} else
+			        		{
+			        			parentOrig.setRenderState(so);
+			        		}
+						}
 						parentOrig.setRenderState(J3DCore.ms);
 					}
 				}
