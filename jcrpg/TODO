@@ -9,16 +9,25 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 
-[ ] monster leveling generation
+[X] monster leveling generation
+	[X] monster levels based on group levels - create higher level monsters based on that for an encounter
+
+[X] normal map -Column!!
 
 [ ] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
 
-
-[ ] add chests, cyclops
+[ ] add chests, unlock UI 
+[ ] cyclops - Zphr working on it
 
 [ ] the other misc objects
 
 [ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
+
+bugs:
+	[ ] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
+			Check if below one cube, is there cave? avoid the zone
+	[X] concurrency is still in rendering
 
 [ ] dungeon dev
 	[ ] add skysphere switch to Cube??

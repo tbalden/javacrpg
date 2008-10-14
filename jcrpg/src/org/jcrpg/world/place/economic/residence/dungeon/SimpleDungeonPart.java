@@ -218,6 +218,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	// INTERNAL with ground 
 	static Cube north_internal = new Cube(null,WALL_GROUND_NORTH,0,0,0,true,false);
 	static Cube west_internal = new Cube(null,WALL_GROUND_WEST,0,0,0,true,false);
+	static Cube east_internal = new Cube(null,WALL_GROUND_EAST,0,0,0,true,false);
+	static Cube south_internal = new Cube(null,WALL_GROUND_SOUTH,0,0,0,true,false);
 	static Cube northWest_internal = new Cube(null,WALL_GROUND_NORTH_WEST,0,0,0,true,false);
 	static Cube gap_internal = new Cube(null,GAP_GROUND,0,0,0,true,false);
 
@@ -229,6 +231,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 	// INTERNAL with CEILING
 	static Cube north_internal_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
 	static Cube west_internal_ceiling = new Cube(null,WALL_CEILING_WEST,0,0,0,true,false);
+	static Cube south_internal_ceiling = new Cube(null,WALL_CEILING_SOUTH,0,0,0,true,false);
+	static Cube east_internal_ceiling = new Cube(null,WALL_CEILING_EAST,0,0,0,true,false);
 	static Cube northWest_internal_ceiling = new Cube(null,WALL_CEILING_NORTH_WEST,0,0,0,true,false);
 	static Cube gap_internal_ceiling = new Cube(null,CAVE_CEILING,0,0,0,true,false);
 	
@@ -266,18 +270,26 @@ public class SimpleDungeonPart extends WoodenHouse {
 		// GROUND
 		north_internal.overwrite = true;
 		west_internal.overwrite = true;
+		east_internal.overwrite = true;
+		south_internal.overwrite = true;
 		northWest_internal.overwrite = true;
 		gap_internal.overwrite= true;
 		north_internal.overwritePower = 2;
 		west_internal.overwritePower = 2;
+		east_internal.overwritePower = 2;
+		south_internal.overwritePower = 2;
 		northWest_internal.overwritePower = 2;
 		gap_internal.overwritePower= 2;
 		north_internal.internalLight = true;
 		west_internal.internalLight = true;
+		south_internal.internalLight = true;
+		east_internal.internalLight = true;
 		northWest_internal.internalLight = true;
 		gap_internal.internalLight = true;
 		north_internal.internalCube = true;
 		west_internal.internalCube = true;
+		south_internal.internalCube = true;
+		east_internal.internalCube = true;
 		northWest_internal.internalCube = true;
 		gap_internal.internalCube = true;
 		// DOOR
@@ -297,18 +309,26 @@ public class SimpleDungeonPart extends WoodenHouse {
 		// CEILING
 		north_internal_ceiling.overwrite = true;
 		west_internal_ceiling.overwrite = true;
+		south_internal_ceiling.overwrite = true;
+		east_internal_ceiling.overwrite = true;
 		northWest_internal_ceiling.overwrite = true;
 		gap_internal_ceiling.overwrite= true;
 		north_internal_ceiling.overwritePower = 2;
 		west_internal_ceiling.overwritePower = 2;
+		south_internal_ceiling.overwritePower = 2;
+		east_internal_ceiling.overwritePower = 2;
 		northWest_internal_ceiling.overwritePower = 2;
 		gap_internal.overwritePower= 2;
 		north_internal_ceiling.internalLight = true;
 		west_internal_ceiling.internalLight = true;
+		south_internal_ceiling.internalLight = true;
+		east_internal_ceiling.internalLight = true;
 		northWest_internal_ceiling.internalLight = true;
 		gap_internal_ceiling.internalLight = true;
 		north_internal_ceiling.internalCube = true;
 		west_internal_ceiling.internalCube = true;
+		south_internal_ceiling.internalCube = true;
+		east_internal_ceiling.internalCube = true;
 		northWest_internal_ceiling.internalCube = true;
 		gap_internal_ceiling.internalCube = true;
 
@@ -354,6 +374,10 @@ public class SimpleDungeonPart extends WoodenHouse {
 			boolean transPartZ = false;
 			boolean entranceX = false;
 			boolean entranceZ = false;
+			boolean outerEdgeOfTransXMin = false;
+			boolean outerEdgeOfTransXMax = false;
+			boolean outerEdgeOfTransZMin = false;
+			boolean outerEdgeOfTransZMax = false;
 			boolean edgeOfTransXMin = false;
 			boolean edgeOfTransXMax = false;
 			boolean edgeOfTransZMin = false;
@@ -370,6 +394,14 @@ public class SimpleDungeonPart extends WoodenHouse {
 				{
 					edgeOfTransXMax = true;
 				}
+				if (relativeX==-2)
+				{
+					outerEdgeOfTransXMin = true;
+				} else
+				if (relativeX==internalPartSizeX+1)
+				{
+					outerEdgeOfTransXMax = true;
+				}
 				transPartX = true;
 			}
 			if (relativeZ<0 || relativeZ>=internalPartSizeZ) 
@@ -382,6 +414,14 @@ public class SimpleDungeonPart extends WoodenHouse {
 				if (relativeZ==internalPartSizeZ)
 				{
 					edgeOfTransZMax = true;
+				}
+				if (relativeZ==-2)
+				{
+					outerEdgeOfTransZMin = true;
+				} else
+				if (relativeZ==internalPartSizeZ+1)
+				{
+					outerEdgeOfTransZMax = true;
 				}
 				transPartZ = true;
 			}
@@ -489,24 +529,44 @@ public class SimpleDungeonPart extends WoodenHouse {
 					return north_columns;
 				}
 
-				if (edgeOfTransXMin)
+				if (outerEdgeOfTransXMin)
 				{
 					return east;
 				}
-				if (edgeOfTransXMax)
+				if (outerEdgeOfTransXMax)
 				{
 					return west;
 				}
 
-				if (edgeOfTransZMin)
+				if (outerEdgeOfTransZMin)
 				{
 					return north;
 				}
-				if (edgeOfTransZMax)
+				if (outerEdgeOfTransZMax)
 				{
 					return south;
 				}
 
+				// this part MUST come after outerEdge if parts
+				if (edgeOfTransXMin)
+				{
+					return east_internal;
+				}
+				if (edgeOfTransXMax)
+				{
+					return west_internal;
+				}
+
+				if (edgeOfTransZMin)
+				{
+					return north_internal;
+				}
+				if (edgeOfTransZMax)
+				{
+					return south_internal;
+				}
+				
+				
 				if (transPartX || transPartZ)
 				{
 					return gap;
@@ -611,23 +671,41 @@ public class SimpleDungeonPart extends WoodenHouse {
 					return normal_top;//north_ceiling;
 				}
 
-				if (edgeOfTransXMin)
+				if (outerEdgeOfTransXMin)
 				{
 					return east_ceiling;
 				}
-				if (edgeOfTransXMax)
+				if (outerEdgeOfTransXMax)
 				{
 					return west_ceiling;
 				}
-				if (edgeOfTransZMin)
+				if (outerEdgeOfTransZMin)
 				{
 					return north_ceiling;
 				}
-				if (edgeOfTransZMax)
+				if (outerEdgeOfTransZMax)
 				{
 					return south_ceiling;
 				}
-				
+
+				// this part MUST come after outerEdge if parts
+				if (edgeOfTransXMin)
+				{
+					return east_internal_ceiling;
+				}
+				if (edgeOfTransXMax)
+				{
+					return west_internal_ceiling;
+				}
+				if (edgeOfTransZMin)
+				{
+					return north_internal_ceiling;
+				}
+				if (edgeOfTransZMax)
+				{
+					return south_internal_ceiling;
+				}
+			
 				
 				if (transPartX || transPartZ)
 				{
