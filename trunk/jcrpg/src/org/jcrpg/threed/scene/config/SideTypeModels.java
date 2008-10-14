@@ -928,6 +928,7 @@ public class SideTypeModels {
 		SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "Fieldstone.jpg");
 		sm_maze_wall_1.normalMapTexture = "FieldstoneNormal.jpg";
 		sm_maze_wall_1.specMapTexture = "FieldstoneSpec.jpg";
+		sm_maze_wall_1.heightMapTexture = "FieldstoneSpec.jpg";
 		hm3dTypeRenderedSide.put(new Integer(67), new RenderedSide(new Model[]{sm_maze_wall_1}));
 		
 		SimpleModel sm_maze_door_1 = new SimpleModel("models/external/maze/maze-door1rot.obj",null);
@@ -937,6 +938,7 @@ public class SideTypeModels {
 		SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/NormalTest_Pillar_01.obj",null);
 		sm_maze_4_pillars.normalMapTexture = "Pillar_Nor.png";
 		sm_maze_4_pillars.specMapTexture = "Pillar_Spec.png";
+		sm_maze_4_pillars.heightMapTexture = "Pillar_Spec.png";
 		SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(69), new RenderedSide(new Model[]{sm_maze_4_pillars}));//,sm_chest}));
 

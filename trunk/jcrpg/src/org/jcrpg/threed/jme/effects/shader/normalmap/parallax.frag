@@ -1,6 +1,7 @@
 uniform sampler2D baseMap;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
+uniform sampler2D heightMap;
 
 varying vec3 viewDirection;
 varying vec3 lightDirection;
@@ -16,8 +17,9 @@ void main(void)
 	/* Extract colors from baseMap and specularMap */
 //	vec4  baseColor      = texture2D( baseMap, gl_TexCoord[0].xy );
 	vec4  specularColor  = texture2D( specularMap, gl_TexCoord[0].xy );
+	vec4  heightColor  = texture2D( heightMap, gl_TexCoord[0].xy );
 
-	float height = length(specularColor.xyz) * heightValue - heightValue * 0.5;
+	float height = length(heightColor.xyz) * heightValue - heightValue * 0.5;
 	vec2 newTexcoord = gl_TexCoord[0].xy - normalizedViewDirection.xy * height;
 	vec4 baseColor = texture2D( baseMap, newTexcoord );
 

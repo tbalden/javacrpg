@@ -57,6 +57,7 @@ public class SimpleModel extends Model {
 	
 	public String normalMapTexture = null;
 	public String specMapTexture = null;
+	public String heightMapTexture = null;
 	
 	public boolean mipMap = true;
 	public int xGeomBatchSize = -1;

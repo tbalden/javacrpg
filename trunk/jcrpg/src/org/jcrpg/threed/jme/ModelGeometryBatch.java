@@ -225,12 +225,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		so.setUniform("baseMap", 0);
 		so.setUniform("normalMap", 1);
 		so.setUniform("specularMap", 2);
-		so.setUniform("heightValue", 0.01f);
+		so.setUniform("heightMap", 3);
+		so.setUniform("heightValue", 0.03f);
 
 		so_point.setUniform("baseMap", 0);
 		so_point.setUniform("normalMap", 1);
 		so_point.setUniform("specularMap", 2);
-		so_point.setUniform("heightValue", 0.01f);
+		so_point.setUniform("heightMap", 3);
+		so_point.setUniform("heightValue", 0.02f);
 
 		Jcrpg.LOGGER.info("Shader reloaded...");
 	}
@@ -292,6 +294,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 				        		specMap.setWrap(Texture.WrapMode.Repeat);
 				        		ts.setTexture(specMap, 2);
+					        }
+					        if (sm.heightMapTexture!=null)
+					        {
+						        Texture heightMap = TextureManager.loadTexture( sm.heightMapTexture,
+						        		//"Pillar_Spec.png",
+				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+				        		heightMap.setWrap(Texture.WrapMode.Repeat);
+				        		ts.setTexture(heightMap, 3);
 					        }
 						}
 						{
