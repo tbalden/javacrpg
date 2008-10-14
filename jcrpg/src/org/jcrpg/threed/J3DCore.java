@@ -207,6 +207,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static boolean SECONDARY_TEXTURES = false;
 	public static boolean SLOW_ANIMATION = false;
 	public static boolean VBO_ENABLED = true;
+	
+	public static boolean NORMALMAP_ENABLED = true;
 
 	public static boolean WITHOUT_COMBATS = false;
 	
@@ -287,6 +289,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
 			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
 			VBO_ENABLED = loadValue("VBO_ENABLED", true);
+			
+			NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
 
 			// developer settings
 			WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
