@@ -1052,14 +1052,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void updateTimeRelated(boolean modifyLights) {
-		if (playerLight != null) {
-			Vector3f f = cam.getLocation().add(new Vector3f(0f, 0.1f, 0f));
-			playerLight.setLocation(f);
-			playerLightNode.setLocalTranslation(f);
-			//playerLight.setDirection(cam.getDirection().clone());
-			//playerLight.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
-			// dr.setDirection(cam.getDirection());
-		}
 
 		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(
 				gameState.world, gameState.getNormalPositions().viewPositionX,
@@ -2441,8 +2433,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
 			playerLight.setAmbient(new ColorRGBA(0.3f, 0.3f, 0.3f, 0.3f));
 			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
-			playerLight.setQuadratic(1f);
-			playerLight.setLinear(1f);
+			playerLight.setQuadratic(0.1f);
+			playerLight.setLinear(0f);
+			playerLight.setAttenuate(true);
 			playerLight.setShadowCaster(false);
 			playerLightNode = new LightNode("torch");
 			playerLightNode.setLight(playerLight);
@@ -2780,11 +2773,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 
 		if (playerLight != null) {
-			//playerLightNode.setLocalTranslation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
-			//playerLight.setDirection(cam.getDirection().clone());
-			//playerLight.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
-			// dr.setDirection(cam.getDirection());
+			Vector3f f = cam.getLocation().add(new Vector3f(0f, 0.1f, 0f));
+			playerLight.setLocation(f);
+			playerLightNode.setLocalTranslation(f);
 		}
+
 
 		if (gameState.gameLogic != null) {
 			gameState.gameLogic.encounterLogic.checkEncounterCallbackNeed();

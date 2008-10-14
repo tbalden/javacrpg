@@ -3,6 +3,7 @@
 
 varying vec3 viewDirection;
 varying vec3 lightDirection;
+varying float att;
 
 void main(void)
 {
@@ -15,8 +16,13 @@ void main(void)
 	
 	/* Get view and light directions in viewspace */
 	vec3 localViewDirection = -vertexViewSpace.xyz;
-	//vec3 localLightDirection = normalize(gl_LightSource[0].position.xyz);
-	vec3 localLightDirection = normalize( gl_LightSource[0].position.xyz - vertexViewSpace.xyz);
+
+	vec3 localLightDist = gl_LightSource[0].position.xyz - vertexViewSpace.xyz;
+	
+	float dist = length(localLightDist.xyz);
+	att = 1.0 / (gl_LightSource[0].constantAttenuation + gl_LightSource[0].linearAttenuation * dist + gl_LightSource[0].quadraticAttenuation * dist * dist);	
+	
+	vec3 localLightDirection = normalize(localLightDist);
 	
 	/* Calculate tangent info - stored in colorbuffer */
 	vec3 normal = gl_NormalMatrix * gl_Normal;

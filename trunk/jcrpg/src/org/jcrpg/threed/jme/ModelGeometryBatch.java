@@ -220,7 +220,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
 				currentShaderStr + "_pointlight.vert"),
 				ModelGeometryBatch.class.getClassLoader().getResource(
-						currentShaderStr + ".frag"));
+						currentShaderStr + "_pointlight.frag"));
 
 		so.setUniform("baseMap", 0);
 		so.setUniform("normalMap", 1);
