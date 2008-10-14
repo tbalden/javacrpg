@@ -273,47 +273,50 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
 					SimpleModel sm = (SimpleModel)m;
-					if (sm.normalMapTexture!=null)
+					if (J3DCore.NORMALMAP_ENABLED)
 					{
-						if (ts.getNumberOfSetTextures()==1) 
+						if (sm.normalMapTexture!=null)
 						{
-							if (so==null) reloadShader();
-					        // Normal map
-					        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
-					        		//"Pillar_Nor.png",
-					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
-					                Image.Format.GuessNoCompression, 0.0f, true);
-					        normalMap.setWrap(Texture.WrapMode.Repeat);
-					        ts.setTexture(normalMap, 1);
-					        
-					        // Spec Map
-					        if (sm.specMapTexture!=null)
-					        {
-						        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
-						        		//"Pillar_Spec.png",
-				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
-				        		specMap.setWrap(Texture.WrapMode.Repeat);
-				        		ts.setTexture(specMap, 2);
-					        }
-					        if (sm.heightMapTexture!=null)
-					        {
-						        Texture heightMap = TextureManager.loadTexture( sm.heightMapTexture,
-						        		//"Pillar_Spec.png",
-				                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
-				        		heightMap.setWrap(Texture.WrapMode.Repeat);
-				        		ts.setTexture(heightMap, 3);
-					        }
+							if (ts.getNumberOfSetTextures()==1) 
+							{
+								if (so==null) reloadShader();
+						        // Normal map
+						        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
+						        		//"Pillar_Nor.png",
+						                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
+						                Image.Format.GuessNoCompression, 0.0f, true);
+						        normalMap.setWrap(Texture.WrapMode.Repeat);
+						        ts.setTexture(normalMap, 1);
+						        
+						        // Spec Map
+						        if (sm.specMapTexture!=null)
+						        {
+							        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
+							        		//"Pillar_Spec.png",
+					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+					        		specMap.setWrap(Texture.WrapMode.Repeat);
+					        		ts.setTexture(specMap, 2);
+						        }
+						        if (sm.heightMapTexture!=null)
+						        {
+							        Texture heightMap = TextureManager.loadTexture( sm.heightMapTexture,
+							        		//"Pillar_Spec.png",
+					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+					        		heightMap.setWrap(Texture.WrapMode.Repeat);
+					        		ts.setTexture(heightMap, 3);
+						        }
+							}
+							{
+				        		if (placeHolder.cube.cube.internalCube)
+				        		{
+				        			parentOrig.setRenderState(so_point);
+				        		} else
+				        		{
+				        			parentOrig.setRenderState(so);
+				        		}
+							}
+							parentOrig.setRenderState(J3DCore.ms);
 						}
-						{
-			        		if (placeHolder.cube.cube.internalCube)
-			        		{
-			        			parentOrig.setRenderState(so_point);
-			        		} else
-			        		{
-			        			parentOrig.setRenderState(so);
-			        		}
-						}
-						parentOrig.setRenderState(J3DCore.ms);
 					}
 				}
 				//sharedParentCache.put(parentKey,parentOrig);
