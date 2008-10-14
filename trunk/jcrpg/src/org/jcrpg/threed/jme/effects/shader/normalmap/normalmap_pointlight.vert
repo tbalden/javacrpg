@@ -16,7 +16,8 @@ void main(void)
 	
 	/* Get view and light directions in viewspace */
 	vec3 localViewDirection = -vertexViewSpace.xyz;
-	vec3 localLightDirection = normalize(gl_LightSource[0].position.xyz);
+	//vec3 localLightDirection = normalize(gl_LightSource[0].position.xyz);
+	vec3 localLightDirection = normalize( gl_LightSource[0].position.xyz - vertexViewSpace);
 	
 	/* Calculate tangent info - stored in colorbuffer */
 	vec3 normal = gl_NormalMatrix * gl_Normal;
