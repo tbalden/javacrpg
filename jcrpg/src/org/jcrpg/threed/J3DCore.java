@@ -42,7 +42,6 @@ import org.jcrpg.space.sidetype.Swimming;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
-import org.jcrpg.threed.jme.ModelGeometryBatch;
 import org.jcrpg.threed.jme.QuaternionBuggy;
 import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
@@ -125,7 +124,6 @@ import com.jme.scene.state.ShadeState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.VertexProgramState;
 import com.jme.scene.state.ZBufferState;
-import com.jme.scene.state.MaterialState.ColorMaterial;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.Debug;
@@ -1054,6 +1052,14 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void updateTimeRelated(boolean modifyLights) {
+		if (playerLight != null) {
+			Vector3f f = cam.getLocation().add(new Vector3f(0f, 0.1f, 0f));
+			playerLight.setLocation(f);
+			playerLightNode.setLocalTranslation(f);
+			//playerLight.setDirection(cam.getDirection().clone());
+			//playerLight.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
+			// dr.setDirection(cam.getDirection());
+		}
 
 		Time localTime = gameState.engine.getWorldMeanTime().getLocalTime(
 				gameState.world, gameState.getNormalPositions().viewPositionX,
@@ -2174,6 +2180,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		updateDisplay(null);
 		rootNode.updateGeometricState(0, false);
 		gameState.engine.setPause(false);
+		intRootNode.attachChild(playerLightNode);
 		if (coreFullyInitialized) {
 			reinitialized = true;
 		}
@@ -2426,25 +2433,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.setRenderState(internalLightState);
 		
-		if (true == true && dr == null) {
+		if (true == true && playerLight == null) {
 
-			dr = new PointLight();
-			dr.setEnabled(true);
+			playerLight = new PointLight();
+			playerLight.setEnabled(true);
 			float lp = 0.8f;
-			dr.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
-			dr.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
-			dr.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
-			dr.setQuadratic(1f);
-			dr.setLinear(1f);
-			// dr.setAngle(45);
-			dr.setShadowCaster(false);
-			internalLightState.attach(dr);
+			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
+			playerLight.setAmbient(new ColorRGBA(0.3f, 0.3f, 0.3f, 0.3f));
+			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
+			playerLight.setQuadratic(1f);
+			playerLight.setLinear(1f);
+			playerLight.setShadowCaster(false);
+			playerLightNode = new LightNode("torch");
+			playerLightNode.setLight(playerLight);
+			intRootNode.attachChild(playerLightNode);
+			internalLightState.attach(playerLight);
 
 			PointLight dr2 = new PointLight();
 			dr2.setEnabled(true);
 			lp = 0.95f;
 			dr2.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
-			dr2.setAmbient(new ColorRGBA(1f, 1f, 1f, 0.5f));
+			dr2.setAmbient(new ColorRGBA(0.3f, 0.3f,0.3f, 0.5f));
 			dr2.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
 			dr2.setQuadratic(1f);
 			dr2.setLinear(1f);
@@ -2647,8 +2656,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public J3DMovingEngine mEngine = null;
 	public J3DStandingEngine sEngine = null;
 
-	LightNode drn;
-	PointLight dr;
+	LightNode playerLightNode;
+	PointLight playerLight;
 
 	/**
 	 * If doing an gameState.engine-paused encounter mode this is with value
@@ -2770,8 +2779,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			sPass.setViewTarget(cam.getLocation());
 		}
 
-		if (dr != null) {
-			dr.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
+		if (playerLight != null) {
+			//playerLightNode.setLocalTranslation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
+			//playerLight.setDirection(cam.getDirection().clone());
+			//playerLight.setLocation(cam.getLocation().add(new Vector3f(0f, 0.1f, 0f)));
 			// dr.setDirection(cam.getDirection());
 		}
 

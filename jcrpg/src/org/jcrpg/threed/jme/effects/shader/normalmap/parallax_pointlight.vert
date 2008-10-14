@@ -9,14 +9,14 @@ void main(void)
 	/* Transform vertices and pass on texture coordinates */
 	gl_Position = ftransform();
 	gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
-	// * vec4(4.0, 4.0, 1.0, 1.0);
 	
 	/* Transform vertex into viewspace */
 	vec4 vertexViewSpace = gl_ModelViewMatrix * gl_Vertex;
 	
 	/* Get view and light directions in viewspace */
 	vec3 localViewDirection = -vertexViewSpace.xyz;
-	vec3 localLightDirection = normalize(gl_LightSource[0].position.xyz);
+	//vec3 localLightDirection = normalize(gl_LightSource[0].position.xyz);
+	vec3 localLightDirection = normalize( gl_LightSource[0].position.xyz - vertexViewSpace.xyz);
 	
 	/* Calculate tangent info - stored in colorbuffer */
 	vec3 normal = gl_NormalMatrix * gl_Normal;
@@ -26,6 +26,7 @@ void main(void)
 	/* Calculate tangent info - stored in attributes */
 //	vec3 normal = gl_NormalMatrix * gl_Normal;
 //	vec3 tangent = gl_NormalMatrix * modelTangent;
+//	vec3 binormal = cross( normal, tangent );
 //	vec3 binormal = gl_NormalMatrix * modelBinormal;
 
 	/* Calculate tangent info - stored in texturecoordinates */

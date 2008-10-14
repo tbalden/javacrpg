@@ -174,7 +174,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		
 	}
     private GLSLShaderObjectsState so;
-    private String currentShaderStr = "org/jcrpg/threed/jme/effects/shader/normalmap/normalmap";
+    private GLSLShaderObjectsState so_point;
+    private String currentShaderStr = "org/jcrpg/threed/jme/effects/shader/normalmap/parallax";//parallax";
 
 	   public void reloadShader() {
 	        GLSLShaderObjectsState testShader = DisplaySystem.getDisplaySystem()
@@ -200,14 +201,31 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		            return;
 		        }
 	        }
+	        if (so_point==null)
+	        {
+		        so_point = DisplaySystem.getDisplaySystem().getRenderer().createGLSLShaderObjectsState();
+	
+		        // Check is GLSL is supported on current hardware.
+		        if (!GLSLShaderObjectsState.isSupported()) {
+		            Jcrpg.LOGGER.severe("Your graphics card does not support GLSL programs, and thus cannot run this test.");
+		            return;
+		        }
+	        }
 
 	        so.load(ModelGeometryBatch.class.getClassLoader().getResource(
 	                currentShaderStr + ".vert"), ModelGeometryBatch.class
+	                .getClassLoader().getResource(currentShaderStr + ".frag"));
+	        so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
+	                currentShaderStr + "_pointlight.vert"), ModelGeometryBatch.class
 	                .getClassLoader().getResource(currentShaderStr + ".frag"));
 
 	        so.setUniform("baseMap", 0);
 	        so.setUniform("normalMap", 1);
 	        so.setUniform("specularMap", 2);
+	        
+	        so_point.setUniform("baseMap", 0);
+	        so_point.setUniform("normalMap", 1);
+	        so_point.setUniform("specularMap", 2);
 
 	        Jcrpg.LOGGER.info("Shader reloaded...");
 	    }
@@ -268,9 +286,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			        		specMap.setWrap(Texture.WrapMode.Repeat);
 			        		ts.setTexture(specMap, 2);
 				        }
-		        		
-		        		parentOrig.setRenderState(so);
-						//parentOrig.setRenderState(ms);
+		        		if (placeHolder.cube.cube.internalCube)
+		        		{
+		        			parentOrig.setRenderState(so_point);
+		        		} else
+		        		{
+		        			parentOrig.setRenderState(so);
+		        		}
+						parentOrig.setRenderState(J3DCore.ms);
 					}
 				}
 				//sharedParentCache.put(parentKey,parentOrig);
