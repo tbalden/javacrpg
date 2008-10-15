@@ -929,6 +929,11 @@ public class SideTypeModels {
 		sm_maze_wall_1.normalMapTexture = "FieldstoneNormal.jpg";
 		sm_maze_wall_1.specMapTexture = "FieldstoneSpec.jpg";
 		sm_maze_wall_1.heightMapTexture = "FieldstoneSpec.jpg";
+		/*SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "wh.jpg");
+		sm_maze_wall_1.normalMapTexture = "wh_n.jpg";
+		sm_maze_wall_1.specMapTexture = "wh_s.jpg";
+		sm_maze_wall_1.heightMapTexture = "wh_h.jpg";*/
+
 		hm3dTypeRenderedSide.put(new Integer(67), new RenderedSide(new Model[]{sm_maze_wall_1}));
 		
 		SimpleModel sm_maze_door_1 = new SimpleModel("models/external/maze/maze-door1rot.obj",null);
