@@ -2435,9 +2435,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			playerLight.setEnabled(true);
 			float lp = 0.8f;
 			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
-			playerLight.setAmbient(new ColorRGBA(0.3f, 0.3f, 0.3f, 0.3f));
+			playerLight.setAmbient(new ColorRGBA(0.33f, 0.3f, 0.3f, 0.3f));
 			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
-			playerLight.setQuadratic(0.1f);
+			playerLight.setQuadratic(0.06f);
 			playerLight.setLinear(0f);
 			playerLight.setAttenuate(true);
 			playerLight.setShadowCaster(false);
@@ -2711,6 +2711,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	boolean swapUpdate = false;
+	
+	float lightDiff = 0; 
+	float lightDelta = 0.02f;
+	float lightDiffX = (float)Math.random()/3;
+	float lightDiffY = (float)Math.random()/3;
+	float lightDiffZ = (float)Math.random()/3;
 
 	@Override
 	protected void simpleUpdate() {
@@ -2777,7 +2783,15 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 
 		if (playerLight != null) {
-			Vector3f f = cam.getLocation().add(new Vector3f(0f, 0.1f, 0f));
+			lightDiff+=tpf;
+			Vector3f f = cam.getLocation().add(new Vector3f(lightDiffX, lightDiffY, lightDiffZ));
+			if (lightDiff>0.08f)
+			{
+				lightDiff = 0;
+				lightDiffX = (float)Math.random()/3;
+				lightDiffY = (float)Math.random()/3;
+				lightDiffZ = (float)Math.random()/3;
+			}
 			playerLight.setLocation(f);
 			playerLightNode.setLocalTranslation(f);
 		}

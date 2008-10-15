@@ -890,7 +890,7 @@ public class ModelLoader {
 			
 			    			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 			    			texture.setApply(Texture.ApplyMode.Modulate);
-							texture.setRotation(J3DCore.qTexture);
+							//texture.setRotation(J3DCore.qTexture);
 							textureCache.put(o.textureName, texture);
 						}
 						/*MaterialState ms = DisplaySystem.getDisplaySystem().getRenderer()
