@@ -950,7 +950,10 @@ public class SideTypeModels {
 		SimpleModel sm_maze_2_pillars = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(70), new RenderedSide(new Model[]{sm_maze_2_pillars}));
 
-		SimpleModel sm_maze_ground_1 = new SimpleModel("sides/maze_ground.obj", null);
+		SimpleModel sm_maze_ground_1 = new SimpleModel("sides/maze_ground.obj", "Fieldstone.jpg");
+		sm_maze_ground_1.normalMapTexture = "FieldstoneNormal.jpg";
+		sm_maze_ground_1.specMapTexture = "FieldstoneSpec.jpg";
+		sm_maze_ground_1.heightMapTexture = "FieldstoneSpec.jpg";
 		//SimpleModel sm_maze_wall_1 = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
 
