@@ -8,6 +8,7 @@ import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureBlockChecker;
 import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.checker.CaveChecker;
 import org.jcrpg.world.place.economic.checker.WaterChecker;
 import org.jcrpg.world.place.economic.infrastructure.GrownInfrastructure;
 
@@ -33,6 +34,7 @@ public class SimpleDistrict extends Population {
 	static
 	{
 		checkers.add(new WaterChecker());
+		checkers.add(new CaveChecker());
 	}
 	
 	@Override
