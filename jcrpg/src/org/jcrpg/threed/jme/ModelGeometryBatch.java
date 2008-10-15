@@ -189,6 +189,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
 		} catch (JmeException e) {
 			Jcrpg.LOGGER.log(Level.WARNING, "Failed to reload shader", e);
+			e.printStackTrace();
 			return;
 		}
 		if (so == null) {
