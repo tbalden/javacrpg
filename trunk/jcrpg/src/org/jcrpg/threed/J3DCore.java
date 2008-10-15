@@ -2437,7 +2437,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
 			playerLight.setAmbient(new ColorRGBA(0.33f, 0.3f, 0.3f, 0.3f));
 			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
-			playerLight.setQuadratic(0.06f);
+			playerLight.setQuadratic(0.08f);
 			playerLight.setLinear(0f);
 			playerLight.setAttenuate(true);
 			playerLight.setShadowCaster(false);
@@ -2655,6 +2655,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	LightNode playerLightNode;
 	PointLight playerLight;
+	protected boolean torchLightEffect = true;
 
 	/**
 	 * If doing an gameState.engine-paused encounter mode this is with value
@@ -2718,6 +2719,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	float lightDiffY = (float)Math.random()/3;
 	float lightDiffZ = (float)Math.random()/3;
 
+	Vector3f diffVec = new Vector3f();
+	
 	@Override
 	protected void simpleUpdate() {
 		
@@ -2784,16 +2787,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		if (playerLight != null) {
 			lightDiff+=tpf;
-			Vector3f f = cam.getLocation().add(new Vector3f(lightDiffX, lightDiffY, lightDiffZ));
+			diffVec.x = cam.getLocation().x+lightDiffX; 
+			diffVec.y = cam.getLocation().y+lightDiffY;
+			diffVec.z = cam.getLocation().z+lightDiffZ;
 			if (lightDiff>0.08f)
 			{
 				lightDiff = 0;
-				lightDiffX = (float)Math.random()/3;
-				lightDiffY = (float)Math.random()/3;
-				lightDiffZ = (float)Math.random()/3;
+				if (torchLightEffect)
+				{
+					lightDiffX = (float)Math.random()/3;
+					lightDiffY = (float)Math.random()/3;
+					lightDiffZ = (float)Math.random()/3;
+				}
 			}
-			playerLight.setLocation(f);
-			playerLightNode.setLocalTranslation(f);
+			playerLight.setLocation(diffVec);
+			playerLightNode.setLocalTranslation(diffVec);
 		}
 
 
