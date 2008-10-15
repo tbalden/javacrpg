@@ -51,15 +51,15 @@ public class ClassicInputHandler  extends InputHandler {
         addToAttachedHandlers( keyboardLookHandler );
     	mouseLookHandler = new MouseLookHandler(cam,1.0f);//ClassicMouseLookHandler(cam);
     	//mouseLookHandler.setLockAxis(new Vector3f(1f,1f,0));
-    	mouseLookHandler.setEnabled(false);
+    	enableMouse(false);
     	//mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );
-        org.lwjgl.input.Mouse.setGrabbed(false);    	
+        org.lwjgl.input.Mouse.setGrabbed(false);
     }
     
     public void enableMouse(boolean state)
     {
-    	mouseLookHandler.setEnabled(state);
+    	mouseLookHandler.setEnabled(J3DCore.MOUSELOOK && state);
     }
     
 }

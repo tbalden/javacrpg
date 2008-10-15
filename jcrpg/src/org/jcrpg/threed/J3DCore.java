@@ -210,7 +210,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	public static boolean NORMALMAP_ENABLED = true;
 
+	// Developer settings
 	public static boolean WITHOUT_COMBATS = false;
+	public static boolean QUICK_EXIT = true;
+
+	// Controller settings
+	public static boolean MOUSELOOK = false;
 	
 	static Properties p = new Properties();
 
@@ -292,8 +297,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			
 			NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
 
+			// controller settings
+			MOUSELOOK = loadValue("MOUSELOOK", false);
+			
 			// developer settings
 			WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
+			QUICK_EXIT = loadValue("QUICK_EXIT", true);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -793,7 +802,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 		KeyBindingManager.getKeyBindingManager().set("screen_shot",
 				KeyInput.KEY_F12);
-		if (true == true) {
+		if (QUICK_EXIT) {
 			KeyBindingManager.getKeyBindingManager().set("exit",
 					KeyInput.KEY_ESCAPE);
 		}
