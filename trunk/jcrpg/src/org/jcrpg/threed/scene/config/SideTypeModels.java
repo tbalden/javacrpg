@@ -925,10 +925,12 @@ public class SideTypeModels {
 		sm_cave_ground_3_e.disposition = new float[]{0,0.04f,0};
 		hm3dTypeRenderedSide.put(new Integer(66), new RenderedHashAlteredSide(new Model[]{},new Model[][]{{sm_cave_ground_e,sm_cave_ground_2_e,sm_cave_ground_3_e,sm_cave_ground_3_e,sm_cave_ground_3_e}}));//ground_cave}));
 		
-		SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "Fieldstone.jpg");
-		sm_maze_wall_1.normalMapTexture = "FieldstoneNormal.jpg";
-		sm_maze_wall_1.specMapTexture = "FieldstoneSpec.jpg";
-		sm_maze_wall_1.heightMapTexture = "FieldstoneSpec.jpg";
+		SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "maze_stone_1.dds");
+		sm_maze_wall_1.normalMapTexture = "maze_stone_1_n.dds";
+		sm_maze_wall_1.specMapTexture = "maze_stone_1_s.dds";
+		sm_maze_wall_1.heightMapTexture = "maze_stone_1_h.png";
+		//sm_maze_wall_1.specMapTexture = "FieldstoneSpec.jpg";
+		//sm_maze_wall_1.heightMapTexture = "FieldstoneSpec.jpg";
 		/*SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "wh.jpg");
 		sm_maze_wall_1.normalMapTexture = "wh_n.jpg";
 		sm_maze_wall_1.specMapTexture = "wh_s.jpg";
@@ -950,10 +952,10 @@ public class SideTypeModels {
 		SimpleModel sm_maze_2_pillars = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(70), new RenderedSide(new Model[]{sm_maze_2_pillars}));
 
-		SimpleModel sm_maze_ground_1 = new SimpleModel("sides/maze_ground.obj", "Fieldstone.jpg");
-		sm_maze_ground_1.normalMapTexture = "FieldstoneNormal.jpg";
-		sm_maze_ground_1.specMapTexture = "FieldstoneSpec.jpg";
-		sm_maze_ground_1.heightMapTexture = "FieldstoneSpec.jpg";
+		SimpleModel sm_maze_ground_1 = new SimpleModel("sides/maze_ground.obj", "maze_stone_1_mono.dds");
+		sm_maze_ground_1.normalMapTexture = "maze_stone_1_n.dds";
+		sm_maze_ground_1.specMapTexture = "maze_stone_1_s.dds";
+		sm_maze_ground_1.heightMapTexture = "maze_stone_1_h.png";
 		//SimpleModel sm_maze_wall_1 = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
 
