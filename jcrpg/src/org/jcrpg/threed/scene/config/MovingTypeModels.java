@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
+import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
@@ -130,6 +131,11 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(Herons.HERON_TYPE_MALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(Herons.HERON_TYPE_FEMALE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Herons.heron_unit);
+		counter++;
+
+		hmMobIdToModelId.put(Lizards.GREENLIZARD_TYPE_MALE.visibleTypeId,counter);
+		hmMobIdToModelId.put(Lizards.GREENLIZARD_TYPE_FEMALE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Lizards.greenLizard_unit);
 		counter++;
 
 }

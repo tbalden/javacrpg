@@ -9,12 +9,7 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 
-[X] monster leveling generation
-	[X] monster levels based on group levels - create higher level monsters based on that for an encounter
-
-[X] normal map -Column!!
-
-[ ] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
+[ ] add different levels for generation of groups at start .. 
 
 [ ] add chests, unlock UI 
 [ ] cyclops - Zphr working on it
@@ -25,8 +20,9 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 
 bugs:
-	[ ] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
+	[?] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
 			Check if below one cube, is there cave? avoid the zone
+			Should be tested
 	[X] concurrency is still in rendering
 
 [ ] dungeon dev
@@ -45,6 +41,20 @@ bugs:
 		or !!! grouped by some typeId together into some blocks in a block?
 	[ ] integrate tidbit's bench to where ??
 
+
+[-] material to encounterNode - lizzard is too dark? specular was 0
+
+[X] write Wiki about UI, and Options task for goq
+
+[X] Fix build.xml to copy not just classes!
+[X] monster leveling generation
+	[X] monster levels based on group levels - create higher level monsters based on that for an encounter
+
+[X] normal map -Column!!
+
+
+[?] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
+	angle check/timeout added
 
 [X] use/cast spell normal mode
 
@@ -65,7 +75,7 @@ bugs:
 BUGS:
 ####
 
-[ ] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
+[X] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
 
 [?] bug reported by brian - combat bug:
 	[ ] added more log, should recheck if happens again
@@ -123,7 +133,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 ## list before next release:
 
 
-	[ ] use & cast in normal mode too
+	[X] use & cast in normal mode too
 	
 	[ ] reorder party window in turn act phase window
 	
@@ -135,7 +145,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	[ ] Encounter grounds mode
 		
-	        [ ] camera for lower creatures is not so good, also normal creatures description texture cannot be seen
+	        [X] camera for lower creatures is not so good, also normal creatures description texture cannot be seen
 		[ ] Inventory window - set a filtering to Wapons -> multiselecting weapons and set a filter Off/On button
 			-- in combat mode too. only filtered objects will appear as choice in TurnActWindow
 			
@@ -174,7 +184,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] leveling of group (not fragment -> it can be joined etc., don't  persist such things in fragment!)
 		overall organization level should be increased -> organization level means tougher units on generation
 		 	some kind of randomization!
-		[ ] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
+		[X] elaborate GeneratedMemberInstance leveling - attributes/skills and profession, skill act forms
 	
 	[ ] world generation - 
 		concentrate friendly groups - don't let enemies close at start,
@@ -193,7 +203,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 
 	[ ] town center infrastrucre?? - EntityFragment populatePopulation helping?
 
-	[ ] boarmen are not attacking sometime ??
+	[?] boarmen are not attacking sometime ??
 
 	[ ] MORE SKILLS: spell forms, 
 		[X] social effects, neutralizing morale, 
@@ -206,19 +216,20 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	[ ] climate level system?
 	[ ] city walls? around whole districts if it's enough advanced!!
 	
-	[ ] add labirynth monster Population?? ;)
+	[X] add labirynth monster Population?? ;)
+		[ ] greek - WIP
 		[ ] add undead castle population?? ;)
 	
-	[ ] add treasure chests
+	[ ] add treasure chests - model ready
 	
-	[ ] COSAT slope:
+	[ ] COAST slope:
 	 lower height point geo tile override height ->
 		and water tile + in getWaterCube
 
-	[ ] shadows coloring wrong color, white???
+	[X] shadows coloring wrong color, white???
 	[ ] solve rerender problems - remaining units there, wrongly positioned etc.
 	
-	[ ] farview -> four big heightmaps - with height only
+	[-] farview -> four big heightmaps - with height only
 		- slightly lower generated than normal ground.
 
 	[-] try AnimatedModelNode with neakor's importer ---  seems slower

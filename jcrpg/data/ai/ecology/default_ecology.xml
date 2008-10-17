@@ -24,6 +24,8 @@
 			implementation="org.jcrpg.world.ai.fauna.mammals.deer.DeerFamily" />
 		<animal id="HERONS"
 			implementation="org.jcrpg.world.ai.fauna.birds.heron.Herons" />
+		<animal id="LIZARDS"
+			implementation="org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards" />
 	</bestiary>
     <!-- populations represent where and how groups can appear in the world -->
     
@@ -89,6 +91,11 @@
 			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
 		<population ref-animal-id="HERONS" ref-climat="Tropical"
 			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
+
+		<population ref-animal-id="LIZARDS" ref-climat="Continental"
+			percentage-chance-of-appearance="70" food-chain-position="HERBIVORE"/>
+		<population ref-animal-id="LIZARDS" ref-climat="Tropical"
+			percentage-chance-of-appearance="70" food-chain-position="HERBIVORE"/>
 
 		<population ref-animal-id="DEERFAMILY" ref-climat="Continental"
 			percentage-chance-of-appearance="10" food-chain-position="HERBIVORE"/>
