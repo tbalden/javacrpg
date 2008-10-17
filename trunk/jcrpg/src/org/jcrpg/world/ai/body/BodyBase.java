@@ -34,6 +34,7 @@ public abstract class BodyBase {
 		bodyBaseInstances.put(SinglePartBody.class, new SinglePartBody());
 		bodyBaseInstances.put(MammalBody.class, new MammalBody());
 		bodyBaseInstances.put(HumanoidBody.class, new HumanoidBody());
+		bodyBaseInstances.put(LizardBody.class, new LizardBody());
 	}
 	
 	public ArrayList<BodyPart> bodyParts = new ArrayList<BodyPart>();

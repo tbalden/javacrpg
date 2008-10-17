@@ -929,6 +929,11 @@ public class SideTypeModels {
 		sm_maze_wall_1.normalMapTexture = "maze_stone_1_n.dds";
 		sm_maze_wall_1.specMapTexture = "maze_stone_1_s.dds";
 		sm_maze_wall_1.heightMapTexture = "maze_stone_1_h.png";
+
+/*		SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "brick_texture.dds");
+		sm_maze_wall_1.normalMapTexture = "brick_texture_n.dds";
+		sm_maze_wall_1.specMapTexture = "brick_texture_s.dds";
+		sm_maze_wall_1.heightMapTexture = "maze_stone_1_h.png";*/
 		//sm_maze_wall_1.specMapTexture = "FieldstoneSpec.jpg";
 		//sm_maze_wall_1.heightMapTexture = "FieldstoneSpec.jpg";
 		/*SimpleModel sm_maze_wall_1 = new SimpleModel("sides/maze_wall_thick.obj", "wh.jpg");

@@ -36,7 +36,7 @@ public class Engine implements Runnable {
 	boolean pause = true;
 	Time worldMeanTime = null;
 	
-	boolean debugOnlyTime = true;
+	boolean debugOnlyTime = false;
 	
 	
 	/**
@@ -55,9 +55,9 @@ public class Engine implements Runnable {
 	/**
 	 * Ticks per new second.
 	 */
-	//public static int TICK_SECONDS = 10;
+	public static int TICK_SECONDS = 10;
 	// light DEBUG:
-	public static int TICK_SECONDS = 500;
+	//public static int TICK_SECONDS = 500;
 	
 	public static int TICK_SECONDS_CAMPING = 50;
 	
