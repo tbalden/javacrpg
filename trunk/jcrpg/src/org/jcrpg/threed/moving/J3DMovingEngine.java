@@ -530,6 +530,7 @@ public class J3DMovingEngine {
 					VisibleLifeForm target = n.sourceForm==null?playerFakeForm:n.sourceForm;
 					Vector3f pos = calculatePositionVector(null,target,true);
 					n.setPosition(pos, null);
+					n.effectStartTime = System.currentTimeMillis();
 					core.encounterExtRootNode.attachChild(n);
 					core.getRootNode1().updateRenderState();
 				}
@@ -541,6 +542,10 @@ public class J3DMovingEngine {
 				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
 				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine(n.currentPos);
+				
+				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
+				float angleTurn = n.prevDisplacement==null?0:mVec.angleBetween(n.prevDisplacement);
+				System.out.println("ANG: "+angleTurn);
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {
@@ -552,10 +557,15 @@ public class J3DMovingEngine {
 				float dist = eVec.distance(n.currentPos);
 				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("######### "+dist);
 				
-				if (dist<0.1f)
+				if (System.currentTimeMillis()-n.effectStartTime>10000)
+				{
+					toEnd.add(new Object[]{p,n});
+				} else
+				if (dist<0.1f || prevDist>dist || angleTurn>1.8f) // checking if near, or distance is over, or angle is turning back (moved over target)
 				{
 					toEnd.add(new Object[]{p,n});
 				}				
+				n.prevDisplacement = mVec;
 			}
 			for (Object[] t:toEnd)
 			{
