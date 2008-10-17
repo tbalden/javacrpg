@@ -76,6 +76,8 @@
 		<copy todir="${classes.dir}">
 			<fileset dir="${srcjava.dir}">
 				<include name="**/*.gif"/>
+				<include name="**/*.vert"/>
+				<include name="**/*.frag"/>
 			</fileset>
 		</copy>
 		<copy todir="${runjar.dir}">
