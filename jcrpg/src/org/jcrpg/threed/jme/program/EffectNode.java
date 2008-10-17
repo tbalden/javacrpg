@@ -46,6 +46,9 @@ public abstract class EffectNode extends Node {
 	
 	public float speed = 1f;
 	
+	public long effectStartTime;
+	public Vector3f prevDisplacement;
+	
 	public Vector3f currentPos = new Vector3f(0,0,0);
 	
 	public Vector3f startingPos = new Vector3f(0,0,0);
