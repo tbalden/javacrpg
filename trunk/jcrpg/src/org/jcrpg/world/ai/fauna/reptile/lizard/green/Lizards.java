@@ -27,11 +27,9 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.body.LizardBody;
-import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
-import org.jcrpg.world.ai.fauna.modifier.WeakAnimalChild;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.geography.Plain;
@@ -47,7 +45,8 @@ public class Lizards extends AnimalEntityDescription {
 	public static NormalAnimalFemale GREENLIZARD_TYPE_FEMALE = new NormalAnimalFemale("GREENLIZ_MALE",LizardBody.class,audio);
 	//public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",LizardBody.class,audio);
 
-	public static MovingModel greenLizard = new MovingModel("models/fauna/lizard_exp.obj",null,null,null,false);
+    public static MovingModel greenLizard = new MovingModel("models/fauna/lizard_exp.obj",null,null,null,false);
+	//public static MovingModel greenLizard = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
 	public static RenderedMovingUnit greenLizard_unit = new RenderedMovingUnit(new Model[]{greenLizard});
 
 	

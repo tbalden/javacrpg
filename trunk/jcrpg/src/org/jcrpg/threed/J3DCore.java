@@ -2881,10 +2881,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	protected BasicPassManager pManager;
 	
 	public static DateFormat timeDateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
-	public static void main(String[] a)
-	{
-		System.out.println(timeDateFormat.format(new Date())); 
-	}
 
 	/**
 	 * Called every frame to update scene information.
