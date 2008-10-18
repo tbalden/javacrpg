@@ -20,7 +20,10 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
@@ -800,7 +803,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			KeyBindingManager.getKeyBindingManager().set("camera_out",
 					KeyInput.KEY_C);
 		}
-		KeyBindingManager.getKeyBindingManager().set("screen_shot",
+		KeyBindingManager.getKeyBindingManager().set("screen_shot_jcrpg",
 				KeyInput.KEY_F12);
 		if (QUICK_EXIT) {
 			KeyBindingManager.getKeyBindingManager().set("exit",
@@ -2876,7 +2879,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	protected BasicPassManager pManager;
-
+	
+	public static DateFormat timeDateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
+	public static void main(String[] a)
+	{
+		System.out.println(timeDateFormat.format(new Date())); 
+	}
 
 	/**
 	 * Called every frame to update scene information.
@@ -2888,6 +2896,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	protected final void update(float interpolation) {
 		if (!pause) {
 			super.update(interpolation);
+	        if ( KeyBindingManager.getKeyBindingManager().isValidCommand(
+	                "screen_shot_jcrpg", false ) ) {
+	            display.getRenderer().takeScreenShot( "screenshot_"+timeDateFormat.format(new Date()) );
+	        }
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 			simpleUpdate();
 
