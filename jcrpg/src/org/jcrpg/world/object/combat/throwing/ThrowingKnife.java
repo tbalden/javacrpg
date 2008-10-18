@@ -26,7 +26,7 @@ import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 
 public class ThrowingKnife extends ThrowingWeapon {
 
-	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/Arrow1.3ds",null,false);
+	static SimpleModel effectProgramModel = new SimpleModel("models/item/ammo/throwingknife.obj",null,false);
 	static EffectProgram effectProgram = new EffectProgram(ArrowNoEffect.class,effectProgramModel);
 	
 	@Override
