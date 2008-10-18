@@ -18,6 +18,8 @@
 
 package org.jcrpg.apps;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Filter;
@@ -69,6 +71,7 @@ public class Jcrpg extends Formatter implements Filter  {
 
 	public static Logger LOGGER = null;
     
+	public static DateFormat timeDateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
 	public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
     	String configFile = "./config.properties";
@@ -85,7 +88,7 @@ public class Jcrpg extends Formatter implements Filter  {
     		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("H: "+handler);
     	}
 		try {
-			FileHandler h = new FileHandler("./jcrpg-log-"+System.currentTimeMillis()+"-%u.txt");
+			FileHandler h = new FileHandler("./jcrpg-log-"+timeDateFormat.format(new Date())+"-%u.txt");
 			h.setFormatter(new Jcrpg());
 			h.setFilter(new Jcrpg());
 			LOGGER.addHandler(h);
