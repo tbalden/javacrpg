@@ -1,0 +1,35 @@
+# Blender3D MTL File: throwingknife.blend
+# Material Count: 3
+newmtl Material_BronzeCopper0002_S.jp
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd BronzeCopper0002_S.jpg
+
+
+newmtl Material_MetalScratches0008_S.
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd MetalScratches0008_S.jpg
+
+
+newmtl Material_Leather0004_thumb.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Leather0004_thumb.jpg
+
+
