@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.GreekMazeHorde;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -136,6 +137,10 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(Lizards.GREENLIZARD_TYPE_MALE.visibleTypeId,counter);
 		hmMobIdToModelId.put(Lizards.GREENLIZARD_TYPE_FEMALE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Lizards.greenLizard_unit);
+		counter++;
+
+		hmMobIdToModelId.put(GreekMazeHorde.EYEBAT.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, GreekMazeHorde.eyeBat_unit);
 		counter++;
 
 }
