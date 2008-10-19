@@ -8,10 +8,16 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] add chests, unlock UI
+
+	[ ] add mounting points for chests--> infrastructure generation -> number of chest places given by economy unit?
+	Economic class should return MountPoints and number of mount points, so a Population can know how many mount points it have
+	and EntityCommonWealth can distribute wealth to the chests in good ratio. MountPoints with richness factor?
+	Hashing algorithm based on coordinates to generate loot list. Respawning per economy turn?
+	  
 
 [ ] add different levels for generation of groups at start .. 
 
-[ ] add chests, unlock UI 
 [ ] cyclops - Zphr working on it
 
 [ ] the other misc objects
@@ -41,6 +47,9 @@ bugs:
 		or !!! grouped by some typeId together into some blocks in a block?
 	[ ] integrate tidbit's bench to where ??
 
+
+[X] add scofield http://forum.freegamedev.net/index.php?t=msg&th=316&start=0 eyeball monster to maze!
+[X] screenshot to multiple files
 
 [-] material to encounterNode - lizzard is too dark? specular was 0
 

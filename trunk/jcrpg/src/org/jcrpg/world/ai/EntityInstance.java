@@ -41,6 +41,7 @@ import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.ai.wealth.EntityCommonWealth;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
@@ -64,6 +65,8 @@ public class EntityInstance {
 	 * The "experience" object of the EntityInstance.
 	 */
 	public EntityState entityState = new EntityState();
+	
+	public EntityCommonWealth wealth = new EntityCommonWealth();
 
 	/**
 	 * Skills of the instance.
