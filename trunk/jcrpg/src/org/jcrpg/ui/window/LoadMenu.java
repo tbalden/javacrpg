@@ -312,6 +312,7 @@ public class LoadMenu extends Window implements KeyListener {
 		if (key.equals("back"))
 		{
 			toggle();
+			core.mainMenu.toggle();
 		}
 		
 		return true;
