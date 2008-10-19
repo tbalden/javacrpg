@@ -63,6 +63,7 @@ import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
+import org.jcrpg.ui.window.OptionsMenu;
 import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
@@ -2060,6 +2061,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public Map worldMap = null;
 	public MainMenu mainMenu = null;
 	public LoadMenu loadMenu = null;
+	public OptionsMenu optionsMenu = null;	
 	public PartySetup partySetup = null;
 	public CharacterLevelingWindow charLevelingWindow = null;
 	public PartyOrderWindow partyOrderWindow = null;
@@ -2633,6 +2635,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		mainMenu = new MainMenu(uiBase);
 		loadMenu = new LoadMenu(uiBase);
+		optionsMenu = new OptionsMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
 		charLevelingWindow = new CharacterLevelingWindow(uiBase);
 		partyOrderWindow = new PartyOrderWindow(uiBase);

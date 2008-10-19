@@ -33,7 +33,7 @@ public class MainMenu extends Window implements KeyListener {
 	
 	
 	public String QUIT = "mainMenuButtonQuit.png";
-	public String OPTIONS = "mainMenuButtonOptions.png";
+	public static String OPTIONS = "mainMenuButtonOptions.png";
 	public String NEW_GAME = "mainMenuButtonNewGame.png";
 	public String SAVE_GAME = "mainMenuButtonSaveGame.png";
 	public String LOAD_GAME = "mainMenuButtonLoadGame.png";
@@ -168,6 +168,11 @@ public class MainMenu extends Window implements KeyListener {
 				toggle();
 				core.loadMenu.toggle();
 			}
+		} else
+		if (name.equals(OPTIONS))
+		{
+			toggle();
+			core.optionsMenu.toggle();
 		}
 	}
 
