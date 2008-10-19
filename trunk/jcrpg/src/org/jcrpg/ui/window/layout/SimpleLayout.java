@@ -1,5 +1,7 @@
 package org.jcrpg.ui.window.layout;
 
+import java.util.ArrayList;
+
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 
@@ -13,17 +15,13 @@ import org.jcrpg.ui.window.element.input.InputBase;
  */
 public class SimpleLayout {
 
-//    private float xPosRatio;
-//    private float yPosRatio;
-//    private float colWidthRatio;
-//    private float rowHeightRatio;
+    private float xPosRatio;
+    private float yPosRatio;
+    private float colWidthRatio;
+    private float rowHeightRatio;
     private int columns;
     private int[] columnRows;
-
-    private float startX;
-    private float startY;
-    private float columnWidth;
-    private float rowHeight;
+    private ArrayList<InputBase> addedElements;
 
     /**
      * New Simple Layout
@@ -35,29 +33,35 @@ public class SimpleLayout {
      * @param columns columns number
      */
     public SimpleLayout(InputWindow w, float xPosRatio, float yPosRatio, float colWidthRatio, float rowHeightRatio, int columns) {
-//        this.xPosRatio = xPosRatio;
-//        this.yPosRatio = yPosRatio;
-//        this.colWidthRatio = colWidthRatio;
-//        this.rowHeightRatio = rowHeightRatio;
+        this.xPosRatio = xPosRatio;
+        this.yPosRatio = yPosRatio;
+        this.colWidthRatio = colWidthRatio;
+        this.rowHeightRatio = rowHeightRatio;
         this.columns = columns;
-        // pre calculations
-        startX = w.core.getDisplay().getWidth()*(xPosRatio);
-        startY = w.core.getDisplay().getHeight()*(1f-yPosRatio);
-        columnWidth = w.core.getDisplay().getWidth()*(colWidthRatio);
-        rowHeight = w.core.getDisplay().getHeight()*(rowHeightRatio);
+        addedElements = new ArrayList<InputBase>();
+        // rows counter init
         columnRows = new int[columns];
         for (int i = 0; i < columnRows.length; i++) {
             columnRows[i] = 0;
         }
     }
 
+    /**
+     * Adds an element to a column.
+     * @param column column index
+     * @param inputElement element to add
+     */
     public void addToColumn(int column, InputBase inputElement) {
-        float elemX = startX + columnWidth*column;
-        float elemY = startY + rowHeight*columnRows[column];
-        float elemWidth = columnWidth;
-        float elemHeight = rowHeight;
-        // TODO: ez az init meg nincs a rendszerben!
+        if (column > this.columns) {
+            throw new IllegalArgumentException("The given column index ("+column+") is bigger then maximum ("+this.columns+")");
+        }
+        float elemX = this.xPosRatio + this.colWidthRatio*column;
+        float elemY = this.yPosRatio + this.rowHeightRatio*columnRows[column];
+        float elemWidth = this.colWidthRatio;
+        float elemHeight = this.rowHeightRatio;
+        // TODO: implement init!
         //inputElement.init(elemX,elemY,elemWidth,elemHeight);
+        addedElements.add(inputElement);
         columnRows[column]++;
     }
 
