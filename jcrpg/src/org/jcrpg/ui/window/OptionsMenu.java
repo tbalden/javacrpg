@@ -18,13 +18,11 @@
 
 package org.jcrpg.ui.window;
 
-import java.util.ArrayList;
+import java.util.logging.Level;
 
-import org.jcrpg.ui.FontUtils;
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.text.FontTT;
-import org.jcrpg.ui.window.element.Button;
-import org.jcrpg.ui.window.element.TextLabel;
 
 import com.jme.scene.shape.Quad;
 
@@ -35,80 +33,37 @@ import com.jme.scene.shape.Quad;
  */
 public class OptionsMenu extends PagedInputWindow {
 	
-	int selected = 0;
-	
-	int fromSlot = 0;
-	
-	public static int maxSlots = 4;
-	
-	public ArrayList<Button> buttons = new ArrayList<Button>();
-
-	FontTT text;
-	
 	public OptionsMenu(UIBase base) {
 		super(base);
-		text = FontUtils.textVerdana;
 		try {
+			// background
 			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.8f*core.getDisplay().getWidth(), 1.61f*(core.getDisplay().getHeight() / 2), 
 				core.getDisplay().getWidth() / 2, 1.13f*core.getDisplay().getHeight() / 2);
 			hudQuad.setRenderState(base.hud.hudAS);
 			windowNode.attachChild(hudQuad);
 
+			// header
 			float sizeX = 1.28f* 1.2f * core.getDisplay().getWidth() / 5f;
 			float sizeY = 0.82f* (core.getDisplay().getHeight() / 11);
-			float PosY = core.getDisplay().getHeight()-40;
+			float posY = core.getDisplay().getHeight()*0.92f;
 			float posX = core.getDisplay().getWidth() / 2;
-			Quad header = loadImageToQuad("./data/ui/mainmenu/"+MainMenu.OPTIONS, sizeX, sizeY, posX, PosY);
+			Quad header = loadImageToQuad("./data/ui/mainmenu/"+MainMenu.OPTIONS, sizeX, sizeY, posX, posY);
 			header.setRenderState(base.hud.hudAS);
 			windowNode.attachChild(header);
 			
-			//new TextLabel("",this,windowNode, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Options",false); 
+			//new TextLabel("",this,windowNode, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Mouse Look",false); 
 			
+			// 
 			windowNode.updateRenderState();
-			base.addEventHandler("lookUp", this);
-			base.addEventHandler("lookDown", this);
-			base.addEventHandler("enter", this);
 			base.addEventHandler("back", this);
 		} catch (Exception ex) {
+			if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, "OptionsMenu creation error: "+ex.getMessage(), ex); }
 			ex.printStackTrace();
 		}
 	}
 
-	
-	@Override
-	public void hide() {
-		core.getUIRootNode().detachChild(windowNode);
-		core.getUIRootNode().updateRenderState();
-		lockLookAndMove(false);
-	}
-
-	@Override
-	public void show() {
-		core.getUIRootNode().attachChild(windowNode);
-		core.getUIRootNode().updateRenderState();
-		lockLookAndMove(true);
-	}
-
-
-	public void handleChoice()
-	{
-	}
-
 	public boolean handleKey(String key) {
-		if (!visible) return false;
-		if (key.equals("lookUp"))
-		{
-			selected--;
-		} else
-		if (key.equals("lookDown"))
-		{
-			selected++;
-		}
-		
-		if (key.equals("enter"))
-		{
-			handleChoice();
-		}
+		if (super.handleKey(key)) return true;
 		if (key.equals("back"))
 		{
 			toggle();
@@ -116,8 +71,6 @@ public class OptionsMenu extends PagedInputWindow {
 		}
 		
 		return true;
-		//return false;
 	}
-
 
 }
