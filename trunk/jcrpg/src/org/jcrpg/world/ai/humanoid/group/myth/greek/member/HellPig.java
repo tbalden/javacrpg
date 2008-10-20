@@ -30,17 +30,17 @@ import org.jcrpg.world.ai.humanoid.group.myth.member.MythicBaseMember;
 import org.jcrpg.world.ai.profession.MonsterNormal;
 
 public class HellPig extends MythicBaseMember {
-	public static AudioDescription eyeBatAudio = new AudioDescription();
+	public static AudioDescription hellPigAudio = new AudioDescription();
 	static {
-		/*batEyeAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.PAIN = new String[]{"boarman/boar_pain"};
-		batEyeAudio.DEATH= new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ATTACK = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};*/
+		hellPigAudio.ENCOUNTER = new String[]{"hellpig/encounter"};
+		hellPigAudio.PAIN = new String[]{"hellpig/short"};
+		hellPigAudio.DEATH= new String[]{"hellpig/encounter"};
+		hellPigAudio.ATTACK = new String[]{"hellpig/short"};
+		//hellPigAudio.ENVIRONMENTAL = new String[]{"hellpig/boarman_env1","hellpig/boarman_env2"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	
-	public static HellPig HELLPIG = new HellPig("HELLPIG",eyeBatAudio);
+	public static HellPig HELLPIG = new HellPig("HELLPIG",hellPigAudio);
 
 	public static MovingModel hellPig = null;
 	static
@@ -57,7 +57,7 @@ public class HellPig extends MythicBaseMember {
 		desc.DEATH_NORMAL = "./data/models/monster/hellpig/die.md5anim";
 		desc.DEAD = "./data/models/monster/hellpig/die.md5anim";
 		hellPig = new MovingModel("./data/models/monster/hellpig/hellpig2.md5mesh",desc,null,null,false);
-		hellPig.genericScale = 0.09f;
+		hellPig.genericScale = 0.11f;
 		//hellPig.scale = new float[] {0.5f,0.5f,0.5f};
 		
 	}
@@ -68,6 +68,12 @@ public class HellPig extends MythicBaseMember {
 		addProfessionInitially(new MonsterNormal());
 		memberSkills.setSkillValue(BiteFight.class, 10);
 		genderType = EntityDescription.GENDER_NEUTRAL;
+	}
+	
+	@Override
+	public AudioDescription getAudioDesc()
+	{
+		return hellPigAudio;
 	}
 
 }

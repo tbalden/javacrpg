@@ -222,8 +222,8 @@ public class EntityMemberInstance {
 	 */
 	public String getSound(String type)
 	{
-		if (description.audioDescription==null) return null;
-		return description.audioDescription.getSound(type);
+		if (description.getAudioDesc()==null) return null;
+		return description.getAudioDesc().getSound(type);
 	}
 	
 	/**

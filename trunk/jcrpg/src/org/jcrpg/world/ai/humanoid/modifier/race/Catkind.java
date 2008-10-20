@@ -37,7 +37,7 @@ public class Catkind extends MemberPerson {
 
 	@Override
 	public MemberPerson copy(MemberPerson copy) {
-		copy = new Catkind(visibleTypeId,audioDescription);
+		copy = new Catkind(visibleTypeId,getAudioDesc());
 		return super.copy(copy);
 	}
 	

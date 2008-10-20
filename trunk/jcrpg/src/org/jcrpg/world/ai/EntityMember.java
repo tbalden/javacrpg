@@ -55,7 +55,7 @@ public class EntityMember extends DescriptionBase {
 	public AttributeRatios commonAttributeRatios = new AttributeRatios();
 	public ResistanceRatios commonResistenceRatios = new ResistanceRatios();
 	public float[] scale = new float[]{1,1,1};
-	public AudioDescription audioDescription = null;
+	private AudioDescription audioDescription = null;
 	public Class<? extends Profession> currentProfession;
 	
 	public Class<? extends BodyBase> bodyType = SinglePartBody.class;
@@ -314,6 +314,15 @@ public class EntityMember extends DescriptionBase {
 	{
 		return new SkillPreferenceHint();
 		
+	}
+	
+	public AudioDescription getAudioDesc()
+	{
+		return audioDescription;
+	}
+	public void setAudioDesc(AudioDescription desc)
+	{
+		audioDescription = desc;
 	}
 	
 }

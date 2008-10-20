@@ -44,7 +44,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 	/**
 	 * is this dungeon used in encounter standing engine? if so, returned cubes will be of an open area.
 	 */
-	public boolean encounterMode = false;
+	public boolean encounterScenarioMode = false;
 
 	public SimpleDungeonPart(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
@@ -55,7 +55,8 @@ public class SimpleDungeonPart extends WoodenHouse {
 				groundLevel, homeBoundaries, owner);
 		internalPartSizeX = sizeX-outerEdgeSize*2;
 		internalPartSizeZ = sizeZ-outerEdgeSize*2;
-		encounterMode = false;
+		encounterScenarioMode = false;
+		audioDescriptor.ENVIRONMENTAL = new String[] {"maze_forebode1","maze_forebode2"};
 	}
 	int outerEdgeSize = 4;
 	int internalPartSizeX = 0;
@@ -114,7 +115,9 @@ public class SimpleDungeonPart extends WoodenHouse {
 		SUBTYPE_WALL.colorOverwrite = true;
 		SUBTYPE_GROUND.colorBytes= new byte[]{(byte)30,(byte)30,(byte)20};
 		SUBTYPE_GROUND.colorOverwrite = true;
+		SUBTYPE_GROUND.continuousSoundType = "maze_1";
 	}
+	
 
 	static Side[][] GAP_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] WALL_GROUND_NORTH_WEST = new Side[][] { WALL, null, null, WALL, null, GROUND };
@@ -137,6 +140,8 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_GROUND_WEST_PILLARS = new Side[][] { null, null, null, PILLAR_WALL, null, GROUND };
     static Side[][] WALL_GROUND_SOUTH_PILLARS = new Side[][] { null, null, PILLAR_WALL, null, null, GROUND };
     static Side[][] WALL_GROUND_EAST_PILLARS = new Side[][] { null, PILLAR_WALL, null, null, null, GROUND };
+    
+    
 
     
 	static Side[][] CAVE_CEILING = new Side[][] { null, null, null,null,WALL,null };
@@ -476,7 +481,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 		
 			if (worldY==origoY)
 			{
-				if (encounterMode) return gap_internal;
+				if (encounterScenarioMode) return gap_internal;
 				
 				if (edge) return edge_ground;
 				boolean horWall = false;
@@ -619,7 +624,7 @@ public class SimpleDungeonPart extends WoodenHouse {
 	
 			if (worldY==origoY+1)
 			{
-				if (encounterMode) return gap_internal_ceiling;
+				if (encounterScenarioMode) return gap_internal_ceiling;
 
 				if (edge) return null;
 				boolean horWall = false;

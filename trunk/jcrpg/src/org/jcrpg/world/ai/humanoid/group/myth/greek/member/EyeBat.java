@@ -32,11 +32,11 @@ import org.jcrpg.world.ai.profession.adventurer.Mage;
 public class EyeBat extends MythicBaseMember {
 	public static AudioDescription eyeBatAudio = new AudioDescription();
 	static {
-		/*batEyeAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.PAIN = new String[]{"boarman/boar_pain"};
-		batEyeAudio.DEATH= new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ATTACK = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};*/
+		eyeBatAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
+		eyeBatAudio.PAIN = new String[]{"eyebat/pain"};
+		eyeBatAudio.DEATH= new String[]{"eyebat/encounter"};
+		eyeBatAudio.ATTACK = new String[]{"eyebat/attack"};
+		//batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	
@@ -50,6 +50,11 @@ public class EyeBat extends MythicBaseMember {
 		addProfessionInitially(new MonsterNormal());
 		memberSkills.setSkillValue(Elementarism.class, 10);
 		genderType = EntityDescription.GENDER_NEUTRAL;
+	}
+	@Override
+	public AudioDescription getAudioDesc()
+	{
+		return eyeBatAudio;
 	}
 
 }
