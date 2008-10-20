@@ -18,13 +18,10 @@
 
 package org.jcrpg.world.ai.humanoid.group.myth.greek;
 
-import org.jcrpg.threed.scene.model.Model;
-import org.jcrpg.threed.scene.model.moving.MovingModel;
-import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
@@ -36,20 +33,6 @@ import org.jcrpg.world.place.geography.Plain;
 
 public class GreekMazeHorde extends HumanoidEntityDescription {
 
-	public static AudioDescription eyeBatAudio = new AudioDescription();
-	static {
-		/*batEyeAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.PAIN = new String[]{"boarman/boar_pain"};
-		batEyeAudio.DEATH= new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ATTACK = new String[]{"boarman/boarman_thug"};
-		batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};*/
-		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
-	}
-	
-	public static EyeBat EYEBAT = new EyeBat("EYEBAT",eyeBatAudio);
-
-	public static MovingModel eyeBat = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
-	public static RenderedMovingUnit eyeBat_unit = new RenderedMovingUnit(new Model[]{eyeBat});
 
 	public GreekMazeHorde()
 	{
@@ -75,7 +58,8 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 		
 		setAverageGroupSizeAndDeviation(3, 2);
 		
-		addGroupingRuleMember(EYEBAT);
+		addGroupingRuleMember(EyeBat.EYEBAT);
+		addGroupingRuleMember(HellPig.HELLPIG);
 	}
 	
 

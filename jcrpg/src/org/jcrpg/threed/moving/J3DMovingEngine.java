@@ -466,6 +466,7 @@ public class J3DMovingEngine {
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
 					realPooledNode.updateRenderState();
+					realPooledNode.lockBounds();
 					
 				}
 				updateUnitTextNodes(unit);

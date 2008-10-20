@@ -20,16 +20,16 @@ package org.jcrpg.world.ai.humanoid.group.myth.greek.member;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityDescription;
-import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.body.HumanoidBody;
 import org.jcrpg.world.ai.humanoid.group.myth.member.MythicBaseMember;
 import org.jcrpg.world.ai.profession.MonsterNormal;
-import org.jcrpg.world.ai.profession.adventurer.Mage;
 
-public class EyeBat extends MythicBaseMember {
+public class HellPig extends MythicBaseMember {
 	public static AudioDescription eyeBatAudio = new AudioDescription();
 	static {
 		/*batEyeAudio.ENCOUNTER = new String[]{"boarman/boarman_thug"};
@@ -40,15 +40,33 @@ public class EyeBat extends MythicBaseMember {
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	
-	public static EyeBat EYEBAT = new EyeBat("EYEBAT",eyeBatAudio);
+	public static HellPig HELLPIG = new HellPig("HELLPIG",eyeBatAudio);
 
-	public static MovingModel eyeBat = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
-	public static RenderedMovingUnit eyeBat_unit = new RenderedMovingUnit(new Model[]{eyeBat});
+	public static MovingModel hellPig = null;
+	static
+	{
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+		desc.IDLE = "./data/models/monster/hellpig/idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/monster/hellpig/idle.md5anim";
+		desc.WALK = "./data/models/monster/hellpig/forward.md5anim";
+		desc.ATTACK_LOWER = "./data/models/monster/hellpig/attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/monster/hellpig/attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/monster/hellpig/jump.md5anim";
+		desc.DEFEND_UPPER = "./data/models/monster/hellpig/jump.md5anim";
+		desc.PAIN = "./data/models/monster/hellpig/hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/monster/hellpig/die.md5anim";
+		desc.DEAD = "./data/models/monster/hellpig/die.md5anim";
+		hellPig = new MovingModel("./data/models/monster/hellpig/hellpig2.md5mesh",desc,null,null,false);
+		hellPig.genericScale = 0.09f;
+		//hellPig.scale = new float[] {0.5f,0.5f,0.5f};
+		
+	}
+	public static RenderedMovingUnit hellPig_unit = new RenderedMovingUnit(new Model[]{hellPig});
 
-	public EyeBat(String visibleTypeId, AudioDescription audioDescription) {
+	public HellPig(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, HumanoidBody.class, audioDescription);
 		addProfessionInitially(new MonsterNormal());
-		memberSkills.setSkillValue(Elementarism.class, 10);
+		memberSkills.setSkillValue(BiteFight.class, 10);
 		genderType = EntityDescription.GENDER_NEUTRAL;
 	}
 
