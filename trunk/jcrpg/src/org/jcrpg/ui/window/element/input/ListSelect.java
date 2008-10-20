@@ -67,6 +67,28 @@ public class ListSelect extends InputBase {
 	
 	public float fontRatio = 400f;
 	
+	public ListSelect(String id, InputWindow w, Node parent, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,fontRatio,ids,texts,null,normal, highlighted);
+	}
+	public ListSelect(String id, InputWindow w, Node parent, float fontRatio, String[] ids, String[] texts, Object[] objects, ColorRGBA normal, ColorRGBA highlighted) {
+		this(id,w,parent,0f,fontRatio,ids,texts,objects,new Quad[0],normal,highlighted);
+	}
+	
+	public ListSelect(String id, InputWindow w, Node parent, float iconX, float fontRatio, String[] ids, String[] texts, Object[] objects, Quad[] icons, ColorRGBA normal, ColorRGBA highlighted) 
+	{
+		super(id, w, parent);
+		this.fontRatio = fontRatio;
+		this.ids = ids;
+		this.texts = texts;
+		this.objects = objects;
+		this.icons = icons;
+		dCenterIconX = w.core.getDisplay().getWidth()*(iconX);
+		maxCount = ids.length;		
+		this.normal = normal;
+		this.highlighted = highlighted;
+		// other behavior on init
+	}
+	
 	public ListSelect(String id, InputWindow w, Node parent, float centerX, float centerY, float sizeX, float sizeY, float fontRatio, String[] ids, String[] texts, ColorRGBA normal, ColorRGBA highlighted) {
 		this(id,w,parent,centerX,centerY,sizeX,sizeY,fontRatio,ids,texts,null,normal, highlighted);
 	}
@@ -91,6 +113,18 @@ public class ListSelect extends InputBase {
 		w.base.addEventHandler("lookRight", w);
 		w.base.addEventHandler("enter", w);
 		parent.updateRenderState();
+	}
+
+	@Override
+	public void init(float centerX, float centerY, float sizeX, float sizeY) {
+		super.init(centerX, centerY, sizeX, sizeY);
+		if (baseNode!=null) {
+			deactivate(); 
+			w.base.addEventHandler("lookLeft", w);
+			w.base.addEventHandler("lookRight", w);
+			w.base.addEventHandler("enter", w);
+			parentNode.updateRenderState();
+		}
 	}
 
 	public void setSelected(int counter)

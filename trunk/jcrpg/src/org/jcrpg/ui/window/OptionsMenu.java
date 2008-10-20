@@ -23,6 +23,11 @@ import java.util.logging.Level;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.ValueTuner;
+import org.jcrpg.ui.window.layout.SimpleLayout;
+import org.jcrpg.util.Language;
 
 import com.jme.scene.shape.Quad;
 
@@ -32,45 +37,68 @@ import com.jme.scene.shape.Quad;
  * @author goq669
  */
 public class OptionsMenu extends PagedInputWindow {
-	
-	public OptionsMenu(UIBase base) {
-		super(base);
-		try {
-			// background
-			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.8f*core.getDisplay().getWidth(), 1.61f*(core.getDisplay().getHeight() / 2), 
-				core.getDisplay().getWidth() / 2, 1.13f*core.getDisplay().getHeight() / 2);
-			hudQuad.setRenderState(base.hud.hudAS);
-			windowNode.attachChild(hudQuad);
 
-			// header
-			float sizeX = 1.28f* 1.2f * core.getDisplay().getWidth() / 5f;
-			float sizeY = 0.82f* (core.getDisplay().getHeight() / 11);
-			float posY = core.getDisplay().getHeight()*0.92f;
-			float posX = core.getDisplay().getWidth() / 2;
-			Quad header = loadImageToQuad("./data/ui/mainmenu/"+MainMenu.OPTIONS, sizeX, sizeY, posX, posY);
-			header.setRenderState(base.hud.hudAS);
-			windowNode.attachChild(header);
-			
-			//new TextLabel("",this,windowNode, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Mouse Look",false); 
-			
-			// 
-			windowNode.updateRenderState();
-			base.addEventHandler("back", this);
-		} catch (Exception ex) {
-			if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, "OptionsMenu creation error: "+ex.getMessage(), ex); }
-			ex.printStackTrace();
-		}
-	}
+    ListSelect toggleMLook;
+    ListSelect toggleContinuousLoad;
+    ValueTuner tunerViewDistance;
 
-	public boolean handleKey(String key) {
-		if (super.handleKey(key)) return true;
-		if (key.equals("back"))
-		{
-			toggle();
-			core.mainMenu.toggle();
-		}
-		
-		return true;
-	}
+    public static String[] toggleIds = new String[] {"on","off"};
+    public static String[] toggleTexts = new String[] {Language.v("configuration.on"),Language.v("configuration.off")};
+    public static Object[] toggleObjects = new Object[] {true,false};
+
+    public OptionsMenu(UIBase base) {
+        super(base);
+        try {
+            // background
+            Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 
+                                            0.8f*core.getDisplay().getWidth(), 
+                                            1.61f*(core.getDisplay().getHeight() / 2), 
+                                            core.getDisplay().getWidth() / 2, 
+                                            1.13f*core.getDisplay().getHeight() / 2);
+            hudQuad.setRenderState(base.hud.hudAS);
+            windowNode.attachChild(hudQuad);
+
+            // header
+            float sizeX = 1.28f* 1.2f * core.getDisplay().getWidth() / 5f;
+            float sizeY = 0.82f* (core.getDisplay().getHeight() / 11);
+            float posY = core.getDisplay().getHeight()*0.92f;
+            float posX = core.getDisplay().getWidth() / 2;
+            Quad header = loadImageToQuad("./data/ui/mainmenu/"+MainMenu.OPTIONS, sizeX, sizeY, posX, posY);
+            header.setRenderState(base.hud.hudAS);
+            windowNode.attachChild(header);
+
+            // build page
+            SimpleLayout layout = new SimpleLayout(0.2f, 0.2f, 0.3f, 0.07f ,2);
+            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.mouselook"), false));
+            toggleMLook = new ListSelect("", this, windowNode, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
+            layout.addToColumn(1, toggleMLook, 0.35f, 0.5f);
+            addInput(0, toggleMLook);
+            
+            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.continuous.load"), false));
+            toggleContinuousLoad = new ListSelect("", this, windowNode, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
+            layout.addToColumn(1, toggleContinuousLoad, 0.35f, 0.5f);
+            addInput(0, toggleContinuousLoad);
+
+            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.view.distance"), false));
+            tunerViewDistance = new ValueTuner("",this,windowNode, 600f, 24, 10, 60, 1);
+            layout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
+            addInput(0, tunerViewDistance);
+
+            windowNode.updateRenderState();
+            base.addEventHandler("back", this);
+        } catch (Exception ex) {
+            if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, "OptionsMenu creation error: "+ex.getMessage(), ex); }
+            ex.printStackTrace();
+        }
+    }
+
+    public boolean handleKey(String key) {
+        if (super.handleKey(key)) return true;
+        if (key.equals("back")) {
+            toggle();
+            core.mainMenu.toggle();
+        }
+        return true;
+    }
 
 }
