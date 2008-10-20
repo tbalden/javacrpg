@@ -39,7 +39,10 @@ public class Lizards extends AnimalEntityDescription {
 
 	public static AudioDescription audio = new AudioDescription();
 	static {
-		//audio.ENCOUNTER = new String[]{"redfox_1"};
+		audio.ENCOUNTER = new String[]{"lizard/encounter"};
+		audio.ATTACK = new String[]{"lizard/short"};
+		audio.PAIN = new String[]{"lizard/short"};
+		audio.DEATH = new String[]{"lizard/short"};
 	}
 
 	public static NormalAnimalMale GREENLIZARD_TYPE_MALE = new NormalAnimalMale("GREENLIZ_MALE",LizardBody.class,audio);

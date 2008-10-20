@@ -29,7 +29,6 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.BoundaryUtils;
-import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;

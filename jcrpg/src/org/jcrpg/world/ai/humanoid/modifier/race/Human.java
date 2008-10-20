@@ -31,7 +31,7 @@ public class Human extends MemberPerson {
 	
 	@Override
 	public MemberPerson copy(MemberPerson copy) {
-		copy = new Human(visibleTypeId,audioDescription);
+		copy = new Human(visibleTypeId,getAudioDesc());
 		return super.copy(copy);
 	}
 

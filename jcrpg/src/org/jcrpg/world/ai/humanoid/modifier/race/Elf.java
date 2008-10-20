@@ -36,7 +36,7 @@ public class Elf extends MemberPerson {
 
 	@Override
 	public MemberPerson copy(MemberPerson copy) {
-		copy = new Elf(visibleTypeId,audioDescription);
+		copy = new Elf(visibleTypeId,getAudioDesc());
 		return super.copy(copy);
 	}
 	

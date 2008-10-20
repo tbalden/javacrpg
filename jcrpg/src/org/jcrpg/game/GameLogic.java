@@ -224,10 +224,10 @@ public class GameLogic {
 					forms.add(form);
 					{
 						EntityMemberInstance member = members.get(0);
-						if (member.description.audioDescription!=null && member.description.audioDescription.ENCOUNTER!=null && member.description.audioDescription.ENCOUNTER.length>0) {
-							if (!playedAudios.contains(member.description.audioDescription.ENCOUNTER[0])) {
-								core.audioServer.playLoading(member.description.audioDescription.ENCOUNTER[0], "ai");
-								playedAudios.add(member.description.audioDescription.ENCOUNTER[0]);
+						if (member.description.getAudioDesc()!=null && member.description.getAudioDesc().ENCOUNTER!=null && member.description.getAudioDesc().ENCOUNTER.length>0) {
+							if (!playedAudios.contains(member.description.getAudioDesc().ENCOUNTER[0])) {
+								core.audioServer.playLoading(member.description.getAudioDesc().ENCOUNTER[0], "ai");
+								playedAudios.add(member.description.getAudioDesc().ENCOUNTER[0]);
 							}
 						}
 					}

@@ -93,7 +93,7 @@ public class MemberPerson extends EntityMember {
 	{
 		if (copy==null)
 		{
-			copy = new MemberPerson(visibleTypeId,bodyType,audioDescription);
+			copy = new MemberPerson(visibleTypeId,bodyType,getAudioDesc());
 		}
 		copy.setForeName(foreName);
 		copy.setPictureId(pictureId);

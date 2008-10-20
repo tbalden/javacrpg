@@ -522,13 +522,13 @@ public class GameStateContainer {
 						if (i.instance.description.groupingRule.possibleMembers!=null)
 						for (GroupingMemberProps p:i.instance.description.groupingRule.possibleMembers)
 						{
-							if (p.memberType.audioDescription!=null)
+							if (p.memberType.getAudioDesc()!=null)
 							{
-								if (p.memberType.audioDescription.ENVIRONMENTAL!=null)
+								if (p.memberType.getAudioDesc().ENVIRONMENTAL!=null)
 								{
-									if (p.memberType.audioDescription.ENVIRONMENTAL.length>0)
+									if (p.memberType.getAudioDesc().ENVIRONMENTAL.length>0)
 									{
-										for (String sound:p.memberType.audioDescription.ENVIRONMENTAL) {
+										for (String sound:p.memberType.getAudioDesc().ENVIRONMENTAL) {
 											if (Engine.getTrueRandom().nextInt(10)>6)
 											{
 												J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hear faint sounds around.");

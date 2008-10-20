@@ -126,7 +126,7 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		{
 			// dungeon, replacing whole terrain...
 			SimpleDungeonPart dungeon = new SimpleDungeonPart("cave1",geo,baseWorld,null,110,4,110,10,0,10,0, null, null);
-			dungeon.encounterMode = true;
+			dungeon.encounterScenarioMode = true;
 			baseWorld.economyContainer.addPopulation(dungeon);
 		} else
 		if (house!=null)

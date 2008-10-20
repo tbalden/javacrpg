@@ -23,3 +23,7 @@ town_street_easy.ogg http://www.freesound.org/samplesViewSingle.php?id=22509
 This work is licensed under a Creative Commons Sampling Plus 1.0 License. 
 by gadzooks on Sep 3, 2006
 
+maze_1.ogg http://www.freesound.org/samplesViewSingle.php?id=33703
+This work is licensed under a Creative Commons Sampling Plus 1.0 License. 
+by yewbic on Apr 14, 2007
+

@@ -42,7 +42,7 @@ public class Dwarf extends MemberPerson {
 
 	@Override
 	public MemberPerson copy(MemberPerson copy) {
-		copy = new Dwarf(visibleTypeId,audioDescription);
+		copy = new Dwarf(visibleTypeId,getAudioDesc());
 		return super.copy(copy);
 	}
 	
