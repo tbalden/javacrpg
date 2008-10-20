@@ -21,6 +21,7 @@ package org.jcrpg.threed.scene.config;
 import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.fauna.birds.heron.Herons;
 import org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders;
 import org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily;
@@ -35,6 +36,8 @@ import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.GreekMazeHorde;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -139,8 +142,12 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, Lizards.greenLizard_unit);
 		counter++;
 
-		hmMobIdToModelId.put(GreekMazeHorde.EYEBAT.visibleTypeId,counter);
-		hmModelIdToRenderedMovingUnit.put(counter, GreekMazeHorde.eyeBat_unit);
+		hmMobIdToModelId.put(EyeBat.EYEBAT.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, EyeBat.eyeBat_unit);
+		counter++;
+		
+		hmMobIdToModelId.put(HellPig.HELLPIG.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, HellPig.hellPig_unit);
 		counter++;
 
 }

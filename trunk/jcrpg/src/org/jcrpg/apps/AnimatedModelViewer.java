@@ -41,6 +41,7 @@ import org.jcrpg.threed.jme.moving.AnimatedModelNode;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 
 import com.jme.app.SimplePassGame;
 import com.jme.image.Image;
@@ -52,9 +53,12 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.pass.RenderPass;
 import com.jme.scene.PassNode;
 import com.jme.scene.PassNodeState;
+import com.jme.scene.Spatial.CullHint;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.BlendState;
+import com.jme.scene.state.CullState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.CullState.Face;
 import com.jme.util.TextureManager;
 import com.jme.util.resource.ResourceLocatorTool;
 import com.jme.util.resource.SimpleResourceLocator;
@@ -178,8 +182,8 @@ public class AnimatedModelViewer extends SimplePassGame {
 		 */
 		J3DCore.LOGGING = false;
 		for (int i = 0; i < 36; i++) {
-			n = new AnimatedModelNode(BoarmanTribe.boarmanMaleMage.modelName,
-					BoarmanTribe.boarmanMaleMage.animation, 1f, new float[] {
+			n = new AnimatedModelNode(HellPig.hellPig.modelName,
+					HellPig.hellPig.animation, 0.1f, new float[] {
 							0, 0, 0 }, 1f); 
 			/*n = new AnimatedModelNode(GorillaHorde.gorilla.modelName,
 					GorillaHorde.gorilla.animation, 1f, new float[] {
@@ -190,9 +194,16 @@ public class AnimatedModelViewer extends SimplePassGame {
 			// boarmanMaleMage.animation,1f,true);;
 			n.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
 			n.unlockTransforms();
+			CullState s = display.getRenderer().createCullState();
+			s.setCullFace(Face.None);
+			n.setRenderState(s);
 			n.setLocalTranslation(new Vector3f(i / 4, 2f + (i % 4) * 2f, 0));
 			n.lockTransforms(); // n.lockBranch();
+			n.lockBounds();
+			n.setCullHint(CullHint.Never);
+			//n.unlock();
 			rootNode.attachChild(n);
+			rootNode.updateRenderState();
 		}
 		rootNode.attachChild(n);
 		// rootNode.attachChild(n2);

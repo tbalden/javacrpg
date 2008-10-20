@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.body.LizardBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalFemale;
 import org.jcrpg.world.ai.fauna.modifier.NormalAnimalMale;
+import org.jcrpg.world.ai.profession.MonsterNormal;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.geography.Plain;
@@ -45,6 +46,11 @@ public class Lizards extends AnimalEntityDescription {
 	public static NormalAnimalFemale GREENLIZARD_TYPE_FEMALE = new NormalAnimalFemale("GREENLIZ_MALE",LizardBody.class,audio);
 	//public static WeakAnimalChild FOX_TYPE_CHILD = new WeakAnimalChild("FOX_CHILD",LizardBody.class,audio);
 
+	static 
+	{
+		GREENLIZARD_TYPE_FEMALE.addProfessionInitially(new MonsterNormal());
+		GREENLIZARD_TYPE_MALE.addProfessionInitially(new MonsterNormal());
+	}
     public static MovingModel greenLizard = new MovingModel("models/fauna/lizard_exp.obj",null,null,null,false);
 	//public static MovingModel greenLizard = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
 	public static RenderedMovingUnit greenLizard_unit = new RenderedMovingUnit(new Model[]{greenLizard});
@@ -60,6 +66,7 @@ public class Lizards extends AnimalEntityDescription {
 		climates.add(Continental.class);	
 		//climates.add(Arctic.class);
 		geographies.add(Plain.class);
+		
 		startingSkills.add(new SkillInstance(Tracking.class,20));
 		startingSkills.add(new SkillInstance(BiteFight.class,10));
 		behaviors.add(Aggressive.class);

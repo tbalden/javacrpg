@@ -218,7 +218,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		try {
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);
-			bodyInstance.lockBounds();
+			//bodyInstance.lockBounds();
 			bodyInstance.lockShadows();
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
 			if (J3DCore.SLOW_ANIMATION)
