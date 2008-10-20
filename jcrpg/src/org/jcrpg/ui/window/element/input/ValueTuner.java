@@ -45,7 +45,18 @@ public class ValueTuner extends InputBase {
 	
 	public int oldValue, value, minValue, maxValue, step = 1;
 	public Object tunedObject;
-	
+
+	public ValueTuner(String id, InputWindow w, Node parentNode, float textProportion, 
+						int value, int minValue, int maxValue, int step) {
+		super(id, w, parentNode);
+		this.text = ""+value;
+		this.value = value;
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.step = step;
+		this.textProportion = textProportion;
+	}
+
 	public ValueTuner(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, int value, int minValue, int maxValue, int step) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
@@ -60,7 +71,18 @@ public class ValueTuner extends InputBase {
 		w.base.addEventHandler("lookRight", w);
 		w.base.addEventHandler("enter", w);
 	}
-	
+
+	@Override
+	public void init(float centerX, float centerY, float sizeX, float sizeY) {
+		super.init(centerX, centerY, sizeX, sizeY);
+		if (baseNode!=null) {
+			deactivate(); 
+			w.base.addEventHandler("lookLeft", w);
+			w.base.addEventHandler("lookRight", w);
+			w.base.addEventHandler("enter", w);
+		}
+	}
+
 	Node activeNode = null;
 	Node deactiveNode = null;
 	

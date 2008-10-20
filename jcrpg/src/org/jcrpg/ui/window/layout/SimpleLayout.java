@@ -2,7 +2,6 @@ package org.jcrpg.ui.window.layout;
 
 import java.util.ArrayList;
 
-import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 /**
@@ -32,7 +31,7 @@ public class SimpleLayout {
      * @param rowHeightRatio row height ratio
      * @param columns columns number
      */
-    public SimpleLayout(InputWindow w, float xPosRatio, float yPosRatio, float colWidthRatio, float rowHeightRatio, int columns) {
+    public SimpleLayout(float xPosRatio, float yPosRatio, float colWidthRatio, float rowHeightRatio, int columns) {
         this.xPosRatio = xPosRatio;
         this.yPosRatio = yPosRatio;
         this.colWidthRatio = colWidthRatio;
@@ -47,20 +46,30 @@ public class SimpleLayout {
     }
 
     /**
-     * Adds an element to a column.
+     * Adds an element to a column, with element dimensions ratio 1.
      * @param column column index
      * @param inputElement element to add
      */
     public void addToColumn(int column, InputBase inputElement) {
+        addToColumn( column, inputElement, 1, 1);
+    }
+
+    /**
+     * Adds an element to a column.
+     * @param column column index
+     * @param inputElement element to add
+     * @param elementWidthRatio element width ratio within the cell
+     * @param elementHeightRatio element height ratio within the cell
+     */
+    public void addToColumn(int column, InputBase inputElement, float elementWidthRatio, float elementHeightRatio) {
         if (column > this.columns) {
             throw new IllegalArgumentException("The given column index ("+column+") is bigger then maximum ("+this.columns+")");
         }
         float elemX = this.xPosRatio + this.colWidthRatio*column;
         float elemY = this.yPosRatio + this.rowHeightRatio*columnRows[column];
-        float elemWidth = this.colWidthRatio;
-        float elemHeight = this.rowHeightRatio;
-        // TODO: implement init!
-        //inputElement.init(elemX,elemY,elemWidth,elemHeight);
+        float elemWidth = this.colWidthRatio*elementWidthRatio;
+        float elemHeight = this.rowHeightRatio*elementHeightRatio;
+        inputElement.init(elemX,elemY,elemWidth,elemHeight);
         addedElements.add(inputElement);
         columnRows[column]++;
     }

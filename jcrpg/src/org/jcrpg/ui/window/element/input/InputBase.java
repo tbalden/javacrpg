@@ -59,22 +59,37 @@ public abstract class InputBase {
 	protected ColorRGBA deactivatedColor = DEF_DEACTIVATED_COLOR;
 	protected ColorRGBA disabledColor = DEF_DISABLED_COLOR;
 	
+	public InputBase(String id, InputWindow w, Node parentNode)
+	{
+		this.id = id;
+		this.parentNode = parentNode;
+		this.w = w;
+		baseNode = new Node("InputBaseNode");
+		parentNode.attachChild(baseNode);
+		parentNode.updateRenderState();
+	}
+	
 	public InputBase(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX, float sizeY)
 	{
 		this.id = id;
 		this.parentNode = parentNode;
+		this.w = w;
+		init(centerX, centerY, sizeX, sizeY);
+		baseNode = new Node("InputBaseNode");
+		parentNode.attachChild(baseNode);
+		parentNode.updateRenderState();
+	}
+	
+	/** Useful for setting the element's dimensions from a Layout */
+	public void init(float centerX, float centerY, float sizeX, float sizeY) {
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.w = w;
 		dCenterX = w.core.getDisplay().getWidth()*(centerX);
 		dCenterY = w.core.getDisplay().getHeight()*(1f-centerY);
 		dSizeX =  w.core.getDisplay().getWidth()*(sizeX);
 		dSizeY =  w.core.getDisplay().getHeight()*(sizeY);
-		baseNode = new Node("InputBaseNode");
-		parentNode.attachChild(baseNode);
-		parentNode.updateRenderState();
 	}
 	
 	/**
