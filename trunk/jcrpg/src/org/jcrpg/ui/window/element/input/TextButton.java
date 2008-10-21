@@ -39,6 +39,18 @@ public class TextButton extends InputBase {
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
+
+	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text) {
+		super(id, w, parentNode);
+		this.text = text;
+		this.textProportion = textProportion;
+	}
+	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text, String shortcut) {
+		this(id,w,parentNode,textProportion,text);
+		w.base.addEventHandler(shortcut, w); // save
+		this.shortCut = shortcut;
+	}
+
 	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
@@ -55,6 +67,14 @@ public class TextButton extends InputBase {
 	
 	Node activeNode = null;
 	Node deactiveNode = null;
+
+	@Override
+	public void init(float centerX, float centerY, float sizeX, float sizeY) {
+		super.init(centerX, centerY, sizeX, sizeY);
+		if (baseNode!=null) {
+			deactivate(); 
+		}
+	}
 
 	@Override
 	public void activate() {
