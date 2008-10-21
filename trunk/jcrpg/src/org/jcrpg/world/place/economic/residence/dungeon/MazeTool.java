@@ -36,6 +36,8 @@ public class MazeTool {
 	public static final byte GROUND_TYPE_2 = 64;
 	public static final byte GROUND_TYPE_3 = (byte)128;
 
+	public static final byte GROUND_TYPE_CLEAR = 255-128-64-32;
+
 	public static final byte WALL_HORI_NEG = (byte)254;
 	public static final byte WALL_VERT_NEG = (byte)253;
 	public static final byte OPEN_PART_NEG = (byte)251;
@@ -73,18 +75,28 @@ public class MazeTool {
 		if (hash1%3==1 && !allClosed)
 		{
 			open = true;
-			
-		} 
-		for (int x=origoX; x<origoX+sizeX; x++)
+		}
+		
+		for (int x=origoX; x<endX; x++)
 		{
-			for (int y=origoY; y<origoY+sizeY; y++)
+			for (int y=origoY; y<endY; y++)
 			{
+				byte ground = GROUND_TYPE_1;
+				if (sizeX>5||sizeY>5)
+				{
+					ground = GROUND_TYPE_3;
+				} 
+				if (sizeX>4||sizeY>4)
+				{
+					ground = GROUND_TYPE_2;
+				} 
+				map[x][y] = (byte)(map[x][y] & GROUND_TYPE_CLEAR); // clearing prev ground type
 				if (open)
 				{
-					map[x][y] = (byte)(map[x][y] | OPEN_PART);
+					map[x][y] = (byte)(map[x][y] | OPEN_PART | ground);
 				} else
 				{
-					map[x][y] = (byte)(map[x][y] & OPEN_PART_NEG);
+					map[x][y] = (byte)(map[x][y] & OPEN_PART_NEG | ground);
 				}
 			}
 		}
@@ -173,13 +185,50 @@ public class MazeTool {
 		long t0 = System.currentTimeMillis(); 
 		byte[][] b = getLabyrinth(1, 20, 20, false);
 		System.out.println(System.currentTimeMillis()-t0);
-		for (int y=0; y<b[0].length; y++)
+		for (int y=b[0].length-1; y>=0; y--)
 		{
 			for (int x=0; x<b.length; x++)
 			{
-				System.out.print(((b[x][y]&WALL_HORI)>0)?(((b[x][y]&WALL_VERT)>0)?"T\"":"\"\""):(((b[x][y]&WALL_VERT)>0)?(((b[x][y]&OPEN_PART)>0)?"| ":"|X"):(((b[x][y]&OPEN_PART)>0)?"  ":"XX")));
+				boolean horiDoor = (b[x][y]&DOOR_HORI)>0;
+				boolean vertDoor = (b[x][y]&DOOR_VERT)>0;
+				boolean horiWall = (b[x][y]&WALL_HORI)>0;
+				boolean vertWall = (b[x][y]&WALL_VERT)>0;
+				boolean openArea = (b[x][y]&OPEN_PART)>0;
+
+				if (vertDoor) System.out.print("I");
+				else
+				if (vertWall) System.out.print("|");
+				else
+				if (horiWall || horiDoor)
+				{
+					if (openArea)
+						System.out.print("X");
+					else
+						System.out.print("_");
+				}
+				else
+				{
+					if (openArea)
+					System.out.print("o");
+					else
+					System.out.print(" ");
+				}
+
+
+				if (horiDoor) System.out.print("=");
+				else
+				if (horiWall) System.out.print("_");
+				else
+				{
+					if (openArea)
+						System.out.print("o");
+						else
+						System.out.print(" ");
+				}
+
+				//System.out.print(((b[x][y]&WALL_HORI)>0)?(((b[x][y]&WALL_VERT)>0)?"T\"":"\"\""):(((b[x][y]&WALL_VERT)>0)?(((b[x][y]&OPEN_PART)>0)?(horiDoor?"|=":"| "):(horiDoor?"|#":"|X")):(((b[x][y]&OPEN_PART)>0)?(vertDoor?(horiDoor?"I=":"I "):"  "):(vertDoor?(horiDoor?"I#":"IX"):"XX"))));
 			}
-			System.out.println("X");
+			System.out.println("XX");
 			
 		}
 	}

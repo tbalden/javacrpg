@@ -17,6 +17,8 @@
  */ 
 package org.jcrpg.world.place.economic.residence.dungeon;
 
+import java.util.ArrayList;
+
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
@@ -161,6 +163,8 @@ public class SimpleDungeonPart extends WoodenHouse {
     static Side[][] WALL_SOUTH = new Side[][] { null, null, WALL, null, null, null};
     static Side[][] WALL_EAST = new Side[][] { null, WALL, null, null, null, null };
 	static Side[][] WALL_NORTH_WEST = new Side[][] { WALL, null, null, WALL, null, null};
+	static Side[][] WALL_SOUTH_WEST = new Side[][] { null, null, WALL, WALL, null, null};
+	static Side[][] WALL_NORTH_EAST = new Side[][] { WALL, WALL, null, null, null, null};
 	static Side[][] WALL_NORTH_SOUTH = new Side[][] { WALL, null, WALL, null, null, null };
 	static Side[][] WALL_EAST_WEST = new Side[][] { null, WALL,null , WALL, null, null };
 
@@ -226,12 +230,18 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Cube east_internal = new Cube(null,WALL_GROUND_EAST,0,0,0,true,false);
 	static Cube south_internal = new Cube(null,WALL_GROUND_SOUTH,0,0,0,true,false);
 	static Cube northWest_internal = new Cube(null,WALL_GROUND_NORTH_WEST,0,0,0,true,false);
+	static Cube southWest_internal = new Cube(null,WALL_GROUND_SOUTH_WEST,0,0,0,true,false);
+	static Cube northEast_internal = new Cube(null,WALL_GROUND_NORTH_EAST,0,0,0,true,false);
 	static Cube gap_internal = new Cube(null,GAP_GROUND,0,0,0,true,false);
 
 	// INTERNAL DOOR
 	static Cube north_door_internal = new Cube(null,DOOR_GROUND_NORTH,0,0,0,true,false);
 	static Cube west_door_internal = new Cube(null,DOOR_GROUND_WEST,0,0,0,true,false);
+	static Cube east_door_internal = new Cube(null,DOOR_GROUND_EAST,0,0,0,true,false);
+	static Cube south_door_internal = new Cube(null,DOOR_GROUND_SOUTH,0,0,0,true,false);
 	static Cube northWest_door_internal = new Cube(null,DOOR_GROUND_NORTH_WEST,0,0,0,true,false);
+	static Cube northEast_door_internal = new Cube(null,DOOR_GROUND_NORTH_EAST,0,0,0,true,false);
+	static Cube southWest_door_internal = new Cube(null,DOOR_GROUND_SOUTH_WEST,0,0,0,true,false);
 
 	// INTERNAL with CEILING
 	static Cube north_internal_ceiling = new Cube(null,WALL_CEILING_NORTH,0,0,0,true,false);
@@ -239,12 +249,27 @@ public class SimpleDungeonPart extends WoodenHouse {
 	static Cube south_internal_ceiling = new Cube(null,WALL_CEILING_SOUTH,0,0,0,true,false);
 	static Cube east_internal_ceiling = new Cube(null,WALL_CEILING_EAST,0,0,0,true,false);
 	static Cube northWest_internal_ceiling = new Cube(null,WALL_CEILING_NORTH_WEST,0,0,0,true,false);
+	static Cube southWest_internal_ceiling = new Cube(null,WALL_CEILING_SOUTH_WEST,0,0,0,true,false);
+	static Cube northEast_internal_ceiling = new Cube(null,WALL_CEILING_NORTH_EAST,0,0,0,true,false);
 	static Cube gap_internal_ceiling = new Cube(null,CAVE_CEILING,0,0,0,true,false);
 	
 	// INTERNAL No ground
 	static Cube north_internal_wall = new Cube(null,WALL_NORTH,0,0,0,true,false);
+	static Cube south_internal_wall = new Cube(null,WALL_SOUTH,0,0,0,true,false);
 	static Cube west_internal_wall = new Cube(null,WALL_WEST,0,0,0,true,false);
+	static Cube east_internal_wall = new Cube(null,WALL_EAST,0,0,0,true,false);
 	static Cube northWest_internal_wall = new Cube(null,WALL_NORTH_WEST,0,0,0,true,false);
+	static Cube southWest_internal_wall = new Cube(null,WALL_SOUTH_WEST,0,0,0,true,false);
+	static Cube northEast_internal_wall = new Cube(null,WALL_NORTH_EAST,0,0,0,true,false);
+	
+	
+	static void makeCubeInternal(Cube c)
+	{
+		c.internalCube = true;
+		c.overwritePower = 2;
+		c.overwrite = true;
+		c.internalLight = true;
+	}
 	
 	static 
 	{
@@ -273,94 +298,130 @@ public class SimpleDungeonPart extends WoodenHouse {
 		gap_ceiling.internalLight = true;
 
 		// GROUND
+		makeCubeInternal(southWest_internal);
 		north_internal.overwrite = true;
 		west_internal.overwrite = true;
 		east_internal.overwrite = true;
 		south_internal.overwrite = true;
 		northWest_internal.overwrite = true;
+		northEast_internal.overwrite = true;
 		gap_internal.overwrite= true;
 		north_internal.overwritePower = 2;
 		west_internal.overwritePower = 2;
 		east_internal.overwritePower = 2;
 		south_internal.overwritePower = 2;
 		northWest_internal.overwritePower = 2;
+		northEast_internal.overwritePower = 2;
 		gap_internal.overwritePower= 2;
 		north_internal.internalLight = true;
 		west_internal.internalLight = true;
 		south_internal.internalLight = true;
 		east_internal.internalLight = true;
 		northWest_internal.internalLight = true;
+		northEast_internal.internalLight = true;
 		gap_internal.internalLight = true;
 		north_internal.internalCube = true;
 		west_internal.internalCube = true;
 		south_internal.internalCube = true;
 		east_internal.internalCube = true;
 		northWest_internal.internalCube = true;
+		northEast_internal.internalCube = true;
 		gap_internal.internalCube = true;
 		// DOOR
+		makeCubeInternal(south_door_internal);
+		makeCubeInternal(southWest_door_internal);
 		north_door_internal.overwrite = true;
 		west_door_internal.overwrite = true;
+		east_door_internal.overwrite = true;
 		northWest_door_internal.overwrite = true;
+		northEast_door_internal.overwrite = true;
 		north_door_internal.overwritePower = 2;
 		west_door_internal.overwritePower = 2;
+		east_door_internal.overwritePower = 2;
 		northWest_door_internal.overwritePower = 2;
+		northEast_door_internal.overwritePower = 2;
 		north_door_internal.internalLight = true;
 		west_door_internal.internalLight = true;
+		east_door_internal.internalLight = true;
 		northWest_door_internal.internalLight = true;
+		northEast_door_internal.internalLight = true;
 		north_door_internal.internalCube = true;
 		west_door_internal.internalCube = true;
+		east_door_internal.internalCube = true;
 		northWest_door_internal.internalCube = true;
+		northEast_door_internal.internalCube = true;
 
 		// CEILING
+		makeCubeInternal(southWest_internal_ceiling);
 		north_internal_ceiling.overwrite = true;
 		west_internal_ceiling.overwrite = true;
 		south_internal_ceiling.overwrite = true;
 		east_internal_ceiling.overwrite = true;
 		northWest_internal_ceiling.overwrite = true;
+		northEast_internal_ceiling.overwrite = true;
 		gap_internal_ceiling.overwrite= true;
 		north_internal_ceiling.overwritePower = 2;
 		west_internal_ceiling.overwritePower = 2;
 		south_internal_ceiling.overwritePower = 2;
 		east_internal_ceiling.overwritePower = 2;
 		northWest_internal_ceiling.overwritePower = 2;
+		northEast_internal_ceiling.overwritePower = 2;
 		gap_internal.overwritePower= 2;
 		north_internal_ceiling.internalLight = true;
 		west_internal_ceiling.internalLight = true;
 		south_internal_ceiling.internalLight = true;
 		east_internal_ceiling.internalLight = true;
 		northWest_internal_ceiling.internalLight = true;
+		northEast_internal_ceiling.internalLight = true;
 		gap_internal_ceiling.internalLight = true;
 		north_internal_ceiling.internalCube = true;
 		west_internal_ceiling.internalCube = true;
 		south_internal_ceiling.internalCube = true;
 		east_internal_ceiling.internalCube = true;
 		northWest_internal_ceiling.internalCube = true;
+		northEast_internal_ceiling.internalCube = true;
 		gap_internal_ceiling.internalCube = true;
 
 		// WALL
+		makeCubeInternal(southWest_internal_wall);
+		makeCubeInternal(south_internal_wall);
 		north_internal_wall.overwrite = true;
 		west_internal_wall.overwrite = true;
+		east_internal_wall.overwrite = true;
 		northWest_internal_wall.overwrite = true;
+		northEast_internal_wall.overwrite = true;
 		north_internal_wall.overwritePower = 2;
 		west_internal_wall.overwritePower = 2;
+		east_internal_wall.overwritePower = 2;
 		northWest_internal_wall.overwritePower = 2;
+		northEast_internal_wall.overwritePower = 2;
 		north_internal_wall.internalLight = true;
 		west_internal_wall.internalLight = true;
+		east_internal_wall.internalLight = true;
 		northWest_internal_wall.internalLight = true;
+		northEast_internal_wall.internalLight = true;
 		north_internal_wall.internalCube = true;
 		west_internal_wall.internalCube = true;
+		east_internal_wall.internalCube = true;
 		northWest_internal_wall.internalCube = true;
+		northEast_internal_wall.internalCube = true;
 
 	}
-	
-	
 
-	@Override
-	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
+	
+	private byte[][] getLabyrinthData()
+	{
 		if (labyrinthData==null)
 		{
 			labyrinthData = MazeTool.getLabyrinth(origoX+origoY+origoZ, internalPartSizeX, internalPartSizeZ, false);
 		}
+		return labyrinthData;
+	}
+	
+
+	@Override
+	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
+		getLabyrinthData();
 
 		boolean edge = worldX==origoX || worldX>=origoX+sizeX-1;
 		edge = edge || worldZ==origoZ || worldZ>=origoZ+sizeZ-1;
@@ -597,11 +658,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				
 				if (horWall&&verWall) 
 				{
-					return northWest_internal;
+					return southWest_internal;
 				}
 				if (horWall) 
 				{
-					return north_internal;
+					return south_internal;
 				}
 				if (verWall) 
 				{
@@ -609,11 +670,11 @@ public class SimpleDungeonPart extends WoodenHouse {
 				}
 				if (horDoor&&verDoor) 
 				{
-					return northWest_door_internal;
+					return southWest_door_internal;
 				}
 				if (horDoor) 
 				{
-					return north_door_internal;
+					return south_door_internal;
 				}
 				if (verDoor) 
 				{
@@ -744,31 +805,55 @@ public class SimpleDungeonPart extends WoodenHouse {
 				
 				if (!openArea)
 				{
-					if (horWall&&verWall || horDoor&&verDoor || horWall && verDoor || verWall && horDoor) 
+
+					if (horWall&&verWall) 
 					{
-						return northWest_internal_ceiling;
+						return southWest_internal_ceiling;
 					}
-					if (horWall||horDoor) 
+					if (horWall) 
 					{
-						return north_internal_ceiling;
+						return south_internal_ceiling;
 					}
-					if (verWall||verDoor) 
+					if (verWall) 
 					{
 						return west_internal_ceiling;
 					}
-					
+					if (horDoor&&verDoor) 
+					{
+						return southWest_internal_ceiling;
+					}
+					if (horDoor) 
+					{
+						return south_internal_ceiling;
+					}
+					if (verDoor) 
+					{
+						return west_internal_ceiling;
+					}
 					return gap_internal_ceiling;
 				} else
 				{
-					if (horWall&&verWall || horDoor&&verDoor || horWall && verDoor || verWall && horDoor) 
+					if (horWall&&verWall) 
 					{
-						return northWest_internal_wall;
+						return southWest_internal_wall;
 					}
-					if (horWall||horDoor) 
+					if (horWall) 
 					{
-						return north_internal_wall;
+						return south_internal_wall;
 					}
-					if (verWall||verDoor) 
+					if (verWall) 
+					{
+						return west_internal_wall;
+					}
+					if (horDoor&&verDoor) 
+					{
+						return southWest_internal_wall;
+					}
+					if (horDoor) 
+					{
+						return south_internal_wall;
+					}
+					if (verDoor) 
 					{
 						return west_internal_wall;
 					}
@@ -849,4 +934,12 @@ public class SimpleDungeonPart extends WoodenHouse {
 		
 		return true;
 	}
+
+	@Override
+	public ArrayList<int[]> getStorageObjectPlaces() {
+		getLabyrinthData();
+		return super.getStorageObjectPlaces();
+	}
+
+
 }
