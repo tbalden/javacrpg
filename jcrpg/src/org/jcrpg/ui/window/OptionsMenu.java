@@ -24,10 +24,14 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.EntityMemberInstance;
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 
 import com.jme.scene.shape.Quad;
 
@@ -41,6 +45,7 @@ public class OptionsMenu extends PagedInputWindow {
     ListSelect toggleMLook;
     ListSelect toggleContinuousLoad;
     ValueTuner tunerViewDistance;
+    TextButton save, cancel;
 
     public static String[] toggleIds = new String[] {"on","off"};
     public static String[] toggleTexts = new String[] {Language.v("configuration.on"),Language.v("configuration.off")};
@@ -80,9 +85,16 @@ public class OptionsMenu extends PagedInputWindow {
             addInput(0, toggleContinuousLoad);
 
             layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.view.distance"), false));
-            tunerViewDistance = new ValueTuner("",this,windowNode, 600f, 24, 10, 60, 1);
+            tunerViewDistance = new ValueTuner("",this,windowNode, 600f, 25, 10, 60, 5);
             layout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
             addInput(0, tunerViewDistance);
+            tunerViewDistance.setEnabled(false);
+
+            // buttons
+            save = new TextButton("save",this, windowNode, 0.3f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.save"),"S");
+            addInput(0, save);
+            cancel = new TextButton("cancel",this, windowNode, 0.72f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.cancel"),"C");
+            addInput(0, cancel);
 
             windowNode.updateRenderState();
             base.addEventHandler("back", this);
@@ -99,6 +111,23 @@ public class OptionsMenu extends PagedInputWindow {
             core.mainMenu.toggle();
         }
         return true;
+    }
+
+    @Override
+    public boolean inputUsed(InputBase base, String message) {
+        if (base == save) 
+        {
+            // TODO: save to config file
+            toggle();
+            core.mainMenu.toggle();
+            return true;
+        } else if (base == cancel) 
+        {
+            toggle();
+            core.mainMenu.toggle();
+            return true; 
+        }
+        return false;
     }
 
 }
