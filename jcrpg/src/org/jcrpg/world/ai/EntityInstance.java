@@ -202,6 +202,11 @@ public class EntityInstance {
 	}
 	
 	
+	/**
+	 * Does replenishing, deciding who will do it, execute replenish, and return campers.
+	 * @param seed
+	 * @return
+	 */
 	public ArrayList<EntityFragment> doReplenishAndGetCampers(int seed)
 	{
 		ArrayList<EntityFragment> camperFragments = decideCampingAndGetCamperFragments();

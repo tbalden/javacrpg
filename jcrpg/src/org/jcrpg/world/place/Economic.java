@@ -110,6 +110,8 @@ public class Economic extends Geography {
 		return null;
 	}
 	
+	
+	
 	public static final ArrayList<Class <? extends InfrastructureBlockChecker>> STANDARD_WATER_CHECKER_LIST = new ArrayList<Class<? extends InfrastructureBlockChecker>>();
 	static 
 	{
@@ -134,6 +136,15 @@ public class Economic extends Geography {
 	public float getLikelyDistanceRatioFromCenter()
 	{
 		return 0f;
+	}
+	
+	/**
+	 * Returns the list of coordinates where storage objects can be placed.
+	 * @return coordinates.
+	 */
+	public ArrayList<int[]> getStorageObjectPlaces()
+	{
+		return null;
 	}
 	
 	
