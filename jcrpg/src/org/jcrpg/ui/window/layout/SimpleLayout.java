@@ -8,6 +8,8 @@ import org.jcrpg.ui.window.element.input.InputBase;
  * Simple UI layout, which uses columns to arrange elements.
  * Example:
  * <pre>
+ *   SimpleLayout layout = new SimpleLayout(0.2f, 0.2f, 0.3f, 0.07f ,2);
+ *   layout.addToColumn(1, element, 0.35f, 0.5f);
  * </pre>
  *
  * @author goq669
