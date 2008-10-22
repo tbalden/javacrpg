@@ -124,6 +124,12 @@ public class Cube extends ChangingImpl {
 	}
 	
 	public void merge(Cube c2, int x, int y, int z, int steepDir) {
+		
+		merge(c2, x, y, z, steepDir, false);
+	}
+
+	
+	public void merge(Cube c2, int x, int y, int z, int steepDir, boolean noOverwrite) {
 		if (this.climateId==null)
 			this.climateId = c2.climateId;
 		else {
@@ -206,7 +212,7 @@ public class Cube extends ChangingImpl {
 			Side[] sides1 = this.sides[i];
 			Side[] sides2 = c2.sides[i];
 			Side[] merged = new Side[(sides1==null?0:sides1.length)+(sides2==null?0:sides2.length)];
-			if (sides1==null || c2.overwrite && c2.overwritePower>=this.overwritePower)
+			if (sides1==null || !noOverwrite && c2.overwrite && c2.overwritePower>=this.overwritePower)
 			{				
 				if (c2.onlyIfOverlaps) {
 					if (!(c2.overwrite && c2.overwritePower>=this.overwritePower))
@@ -218,7 +224,7 @@ public class Cube extends ChangingImpl {
 					merged = sides2;
 				}
 			} else
-			if (sides2==null || this.overwrite && this.overwritePower>=c2.overwritePower)
+			if (sides2==null || !noOverwrite && this.overwrite && this.overwritePower>=c2.overwritePower)
 			{				
 				if (this.onlyIfOverlaps) {
 					if (!(this.overwrite && this.overwritePower>=c2.overwritePower))
@@ -468,7 +474,7 @@ public class Cube extends ChangingImpl {
 	/**
 	 * This is used only in Population to return sub economic type in cube.
 	 */
-	public Economic internalEconomicUnitForFloraQuery = null;
+	public Economic containingInternalEconomicUnit = null;
 	
 	
 	public HashSet<String> sounds = null;

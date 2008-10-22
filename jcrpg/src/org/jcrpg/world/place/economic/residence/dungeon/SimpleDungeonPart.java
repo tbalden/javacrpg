@@ -17,15 +17,17 @@
  */ 
 package org.jcrpg.world.place.economic.residence.dungeon;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
@@ -60,6 +62,9 @@ public class SimpleDungeonPart extends WoodenHouse {
 		encounterScenarioMode = false;
 		audioDescriptor.ENVIRONMENTAL = new String[] {"maze_forebode1","maze_forebode2"};
 	}
+	/**
+	 * The size of the not generated part
+	 */
 	int outerEdgeSize = 4;
 	int internalPartSizeX = 0;
 	int internalPartSizeZ = 0;
@@ -935,10 +940,46 @@ public class SimpleDungeonPart extends WoodenHouse {
 		return true;
 	}
 
+	HashMap<Long,int[]> storageObjectPlaces = null;
+	
 	@Override
-	public ArrayList<int[]> getStorageObjectPlaces() {
+	public HashMap<Long,int[]> getStorageObjectPlaces() {
 		getLabyrinthData();
-		return super.getStorageObjectPlaces();
+		int numberOfNeededStorage = Math.max(1,(sizeX+sizeZ)/2);
+		if (storageObjectPlaces==null)
+		{
+			storageObjectPlaces = new HashMap<Long,int[]>();
+			int count = 0;
+			while (numberOfNeededStorage>0)
+			{
+				int hX = HashUtil.mix(origoX+origoY, sizeX+sizeZ, numberOfNeededStorage+0+count);
+				int hZ = HashUtil.mix(origoX+origoY, sizeX+sizeZ, numberOfNeededStorage+1+count);
+				hX= hX%internalPartSizeX;
+				hZ= hZ%internalPartSizeZ;
+				long key = Boundaries.getKey(origoX+outerEdgeSize+hX, origoY, origoZ+outerEdgeSize+hZ);
+				byte data = labyrinthData[hX][hZ];
+				
+				if ((data & MazeTool.GROUND_TYPE_2)>0 || (data & MazeTool.GROUND_TYPE_3)>0)
+				{
+					if (storageObjectPlaces.containsKey(key))
+					{
+						count++;
+						continue;
+					} else
+					{
+						//System.out.println(key+" = "+(origoX+outerEdgeSize+hX)+" "+origoY+" "+(origoZ+outerEdgeSize+hZ));
+						storageObjectPlaces.put(key,new int[]{origoX+outerEdgeSize+hX,origoY, origoZ+outerEdgeSize+hZ});
+						numberOfNeededStorage--;
+					}
+				} else
+				{
+					count++;
+				}
+				if (count>1000) break;
+			}
+			System.out.println("SIZE OF STORAGE = "+storageObjectPlaces.size());
+		}
+		return storageObjectPlaces;
 	}
 
 

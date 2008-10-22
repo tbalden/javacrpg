@@ -21,6 +21,7 @@ import org.jcrpg.world.place.economic.infrastructure.BigBlockInfrastructure;
 public class DungeonDistrict extends Population {
 
 
+
 	@Override
 	public boolean isGeographyAreaUsable() {
 		for (Water w:((World)soilGeo.getRoot()).waters.values())

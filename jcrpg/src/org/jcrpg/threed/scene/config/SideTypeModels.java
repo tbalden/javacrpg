@@ -62,6 +62,7 @@ import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
@@ -209,6 +210,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_4_COLUMNS.id, new Integer(69));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_2_COLUMNS.id, new Integer(70));
 
+		hmCubeSideSubTypeToRenderedSideId.put(Economic.SUBTYPE_CHEST.id, new Integer(72));
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.genericScale=3f;
@@ -951,7 +953,6 @@ public class SideTypeModels {
 		sm_maze_4_pillars.normalMapTexture = "Pillar_Nor.png";
 		sm_maze_4_pillars.specMapTexture = "Pillar_Spec.png";
 		sm_maze_4_pillars.heightMapTexture = "Pillar_Spec.png";
-		SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(69), new RenderedSide(new Model[]{sm_maze_4_pillars}));//,sm_chest}));
 
 		SimpleModel sm_maze_2_pillars = new SimpleModel("models/external/maze/2_pillars.obj", null);
@@ -964,8 +965,10 @@ public class SideTypeModels {
 		//SimpleModel sm_maze_wall_1 = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
 
+		SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
+		hm3dTypeRenderedSide.put(new Integer(72), new RenderedSide(new Model[]{sm_chest}));
 		// NEXT ID = 
-		// 72
+		// 73
 		
 	}
 	

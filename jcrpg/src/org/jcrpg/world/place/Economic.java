@@ -18,7 +18,11 @@
 package org.jcrpg.world.place;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
+import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -142,9 +146,21 @@ public class Economic extends Geography {
 	 * Returns the list of coordinates where storage objects can be placed.
 	 * @return coordinates.
 	 */
-	public ArrayList<int[]> getStorageObjectPlaces()
+	public HashMap<Long,int[]> getStorageObjectPlaces()
 	{
 		return null;
+	}
+	
+	
+	public static final String TYPE_STORAGE = "STORAGE";
+	public static final SideSubType SUBTYPE_CHEST = new SideSubType(TYPE_STORAGE+"_CHEST");
+	static Side[] CHEST = new Side[]{new Side(TYPE_STORAGE,SUBTYPE_CHEST)};
+	static Side[][] CHEST_SIDES = new Side[][] { null, null, null,null,null,CHEST };
+	Cube storage_chest = new Cube(this,CHEST_SIDES,0,0,0,false,false);
+
+	public Cube getStorageObjectCube(int param)
+	{
+		return storage_chest;
 	}
 	
 	
