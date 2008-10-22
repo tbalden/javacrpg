@@ -19,6 +19,7 @@
 package org.jcrpg.world.place;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
@@ -80,16 +81,41 @@ public class EconomyContainer {
 			{
 				Economic eco = (Economic)o;
 				if (eco.getBoundaries().isInside(worldX, worldY, worldZ)) {
+					if (key==-1)
+					{
+						key = Boundaries.getKey(worldX, worldY, worldZ);
+					}
 					Cube c = eco.getCube(key, worldX, worldY, worldZ, farView);
 					/*if (c!=null && c.internalEconomicUnitForFloraQuery!=null && c.internalEconomicUnitForFloraQuery instanceof EconomicGround)
 					{
 						System.out.println(c.canContainFlora);
 					}*/
+					
+					// storage object lookup...
+					if (c!=null)
+					{
+						if (c.containingInternalEconomicUnit!=null)
+						{
+							HashMap<Long, int[]> storages = c.containingInternalEconomicUnit.getStorageObjectPlaces();
+							if (storages!=null)
+							{
+								if (storages.containsKey(key))
+								{
+									Cube cS = c.containingInternalEconomicUnit.getStorageObjectCube(0);
+									//if (cS!=null) System.out.println("___ "+cS);
+									if (c!=null && cS!=null)
+									{
+										c.merge(cS, worldX, worldY, worldZ, c.steepDirection, true);
+									}
+								}
+							}
+						}
+					}
 						
 					if (c!=null && c.canContainFlora)
 					{
 						CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
-						Cube floraCube = c.internalEconomicUnitForFloraQuery==null?(eco.needsFlora?eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null):(c.internalEconomicUnitForFloraQuery.needsFlora?c.internalEconomicUnitForFloraQuery.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null);
+						Cube floraCube = c.containingInternalEconomicUnit==null?(eco.needsFlora?eco.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null):(c.containingInternalEconomicUnit.needsFlora?c.containingInternalEconomicUnit.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null);
 						if (floraCube!=null)
 						{
 							//System.out.println("ECO WITH FLORA "+eco.getClass());							

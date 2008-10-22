@@ -178,7 +178,7 @@ public abstract class Population extends Economic{
 				// return cube.
 				Cube c = e.getCube(key, worldX, worldY, worldZ, farView);
 				if (c!=null)
-					c.internalEconomicUnitForFloraQuery = e;
+					c.containingInternalEconomicUnit = e;
 				return c;
 			}
 		}
@@ -190,7 +190,7 @@ public abstract class Population extends Economic{
 				// return cube.
 				Cube c = e.getCube(key, worldX, worldY, worldZ, farView);
 				if (c!=null)
-					c.internalEconomicUnitForFloraQuery = e;
+					c.containingInternalEconomicUnit = e;
 				return c;
 			}
 		}
