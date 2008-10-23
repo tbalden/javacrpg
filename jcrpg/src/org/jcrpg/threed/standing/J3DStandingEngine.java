@@ -41,6 +41,7 @@ import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.QuickOrderedList;
+import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedArea;
 import org.jcrpg.threed.scene.RenderedCube;
@@ -982,7 +983,12 @@ public class J3DStandingEngine {
 											if (realPooledNode instanceof BillboardNodePooled)
 											{
 												
-											} else
+											}
+											if (realPooledNode instanceof TriggeredModelNode)
+											{
+												
+											}
+											else
 											{
 												// you shouldnt lock meshes -> tree foliage is not moved properly from pool...
 												realPooledNode.lockShadows();

@@ -31,6 +31,7 @@ import java.util.List;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.ModelPool.PoolItemContainer;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
+import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
@@ -41,6 +42,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
+import org.jcrpg.threed.scene.model.StaticTriggeredModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
@@ -337,6 +339,24 @@ public class ModelLoader {
 				{
 					// TODO this needs a total refactor!
 					PooledNode node = new AnimatedModelNode( ((MovingModel)objects[i]).modelName,((MovingModel)objects[i]).animation, ((MovingModel)objects[i]).genericScale, ((MovingModel)objects[i]).disposition);
+					
+					r[i] = node;
+				} else 
+				{
+					PooledSharedNode node = loadNode((MovingModel)objects[i],fakeLoadForCacheMaint);
+					if (fakeLoadForCacheMaint) continue;
+					
+			    	//PooledSharedNode psnode = new PooledSharedNode("s"+node.getName(),node);
+					r[i] = node;
+					node.setName(((MovingModel)objects[i]).modelName+i);
+				}
+			} else
+			if (objects[i] instanceof StaticTriggeredModel) 
+			{
+				if ( ((StaticTriggeredModel)objects[i]).animatedModel )
+				{
+					// TODO this needs a total refactor!
+					PooledNode node = new TriggeredModelNode( ((StaticTriggeredModel)objects[i]).modelName,((StaticTriggeredModel)objects[i]).animation, ((StaticTriggeredModel)objects[i]).genericScale, ((StaticTriggeredModel)objects[i]).disposition);
 					
 					r[i] = node;
 				} else 

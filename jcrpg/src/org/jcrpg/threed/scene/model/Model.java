@@ -28,6 +28,7 @@ public abstract class Model {
 	public static final byte SIMPLEMODEL = 8;
 	public static final byte PARTLYBILLBOARDMODEL = 16;
 	public static final byte MOVINGMODEL = 32;
+	public static final byte STATICTRIGGEREDMODEL = 64;
 	
 	public byte type = MODEL;
 
