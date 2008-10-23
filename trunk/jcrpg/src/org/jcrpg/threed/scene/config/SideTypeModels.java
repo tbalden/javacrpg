@@ -27,7 +27,9 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
+import org.jcrpg.threed.scene.model.StaticTriggeredModel;
 import org.jcrpg.threed.scene.model.TextureStateVegetationModel;
+import org.jcrpg.threed.scene.model.TriggeredAnimDescription;
 import org.jcrpg.threed.scene.side.RenderedClimateDependentSide;
 import org.jcrpg.threed.scene.side.RenderedContinuousSide;
 import org.jcrpg.threed.scene.side.RenderedHashAlteredSide;
@@ -965,8 +967,16 @@ public class SideTypeModels {
 		//SimpleModel sm_maze_wall_1 = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
 
-		SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
-		hm3dTypeRenderedSide.put(new Integer(72), new RenderedSide(new Model[]{sm_chest}));
+		TriggeredAnimDescription desc = new TriggeredAnimDescription("./data/models/item/storage/chest_closed.md5anim");
+		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_DEFAULT, true);
+		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_OPEN, true);
+		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_CLOSED, true);
+		
+		StaticTriggeredModel st_chest = new StaticTriggeredModel("./data/models/item/storage/chest.md5mesh",desc,null,null,true);
+		st_chest.genericScale = 0.8f;
+		st_chest.disposition = new float[]{0,0.35f,0};
+		//SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
+		hm3dTypeRenderedSide.put(new Integer(72), new RenderedSide(new Model[]{st_chest}));
 		// NEXT ID = 
 		// 73
 		
