@@ -177,6 +177,11 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 						afterAnim = TriggeredAnimDescription.ANIM_OPEN;
 						continue;
 					}
+					if (afterAnim.equals(TriggeredAnimDescription.ANIM_CLOSING))
+					{
+						afterAnim = TriggeredAnimDescription.ANIM_CLOSED;
+						continue;
+					}
 					afterAnim = TriggeredAnimDescription.ANIM_DEFAULT;
 					break;
 				}
@@ -206,6 +211,11 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 				if (name.equals(TriggeredAnimDescription.ANIM_OPENING))
 				{
 					name = TriggeredAnimDescription.ANIM_OPEN;
+					continue;
+				}
+				if (name.equals(TriggeredAnimDescription.ANIM_CLOSING))
+				{
+					name = TriggeredAnimDescription.ANIM_CLOSED;
 					continue;
 				}
 				name = TriggeredAnimDescription.ANIM_DEFAULT;
