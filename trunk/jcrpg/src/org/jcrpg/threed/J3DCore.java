@@ -34,6 +34,8 @@ import java.util.logging.Logger;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.audio.AudioServer;
 import org.jcrpg.game.GameStateContainer;
+import org.jcrpg.game.trigger.StorageObjectHandler;
+import org.jcrpg.game.trigger.TriggerHandler;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.Climbing;
@@ -42,7 +44,6 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.space.sidetype.Swimming;
-import org.jcrpg.space.sidetype.trigger.TriggerBaseSideSubtype;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
@@ -51,7 +52,6 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
-import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
@@ -1624,104 +1624,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		return success;
 	}
 	
-	public void handleStaticTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	static ArrayList<TriggerHandler> triggerHandlers = new ArrayList<TriggerHandler>();
+	static
 	{
-		ArrayList<Side> triggerSides = null;
-		if (enteredCube!=null)
+		triggerHandlers.add(new StorageObjectHandler());
+	}
+	
+	public boolean handleStaticTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	{
+		for (TriggerHandler handler:triggerHandlers)
 		{
-			triggerSides = enteredCube.getTriggerSides();	
-		}		
-		if (triggerSides!=null)
-		{
-			System.out.println("$$$$$$$$$$$$$$ TRIGGER SIDE $$$$$$$$$$$$$$$$");
-			RenderedCube rc = renderedEnteredCube;
-			if (rc!=null)
+			if (handler.handlesType(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube))
 			{
-				System.out.println("RENDERED CUBE OKAY");
-				for (Side s:triggerSides)
-				{
-					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnEnter();
-					if (anim!=null)
-					{
-						System.out.println("ANIM "+anim);
-						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
-						if (list!=null)
-						{
-							System.out.println("NODE LIST "+list.length);
-							for (NodePlaceholder n:list)
-							{
-								if (n.realNode!=null)
-								{
-									System.out.println("REALNODE = "+n.realNode);
-									PooledNode pN = n.realNode;
-									if (pN instanceof TriggeredModelNode)
-									{
-										if (anim.length==2)
-										{
-											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
-										} else
-										if (anim.length==1)
-										{
-											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_OPEN);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				handler.handleStaticTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
 			}
 		}
-
-		
-		
-		triggerSides = null;
-		if (leftCube!=null)
-		{
-			triggerSides = leftCube.getTriggerSides();	
-		}		
-		if (triggerSides!=null)
-		{
-			System.out.println("$$$$$$$$$$$$$$ LEFT TRIGGER SIDE $$$$$$$$$$$$$$$$");
-			RenderedCube rc = renderedLeftCube;
-			if (rc!=null)
-			{
-				System.out.println("RENDERED CUBE OKAY");
-				for (Side s:triggerSides)
-				{
-					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnLeave();
-					if (anim!=null)
-					{
-						System.out.println("ANIM "+anim);
-						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
-						if (list!=null)
-						{
-							System.out.println("NODE LIST "+list.length);
-							for (NodePlaceholder n:list)
-							{
-								if (n.realNode!=null)
-								{
-									System.out.println("REALNODE = "+n.realNode);
-									PooledNode pN = n.realNode;
-									if (pN instanceof TriggeredModelNode)
-									{
-										if (anim.length==2)
-										{
-											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
-										} else
-										if (anim.length==1)
-										{
-											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_CLOSED);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
+		return true;
 	}
 
 	/**
