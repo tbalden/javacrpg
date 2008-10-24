@@ -18,9 +18,11 @@
 
 package org.jcrpg.space;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.jcrpg.abs.change.ChangingImpl;
+import org.jcrpg.space.sidetype.trigger.TriggerBaseSideSubtype;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -505,6 +507,23 @@ public class Cube extends ChangingImpl {
 			}
 		}
 		return sounds;
+	}
+	public ArrayList<Side> getTriggerSides()
+	{
+		ArrayList<Side> ret = new ArrayList<Side>();
+		for (Side[] sideA:sides)
+		{
+			if (sideA!=null)
+			for (Side side:sideA)
+			{
+				if (side!=null)
+				if (side.subtype instanceof TriggerBaseSideSubtype)
+				{
+					ret.add(side);
+				}
+			}
+		}
+		return ret.size()>0?ret:null;
 	}
 	
 }

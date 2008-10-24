@@ -18,8 +18,10 @@
 package org.jcrpg.threed.scene;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.space.Cube;
+import org.jcrpg.space.Side;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.world.place.World;
 
@@ -38,5 +40,8 @@ public class RenderedCube {
 	public int renderedX, renderedY, renderedZ;
 	public World world;
 	public ArrayList<NodePlaceholder> hsRenderedNodes = new ArrayList<NodePlaceholder>();
+	
+	public HashMap<Side, NodePlaceholder[]> hmNodePlaceholderForSide = new HashMap<Side, NodePlaceholder[]>();
+	
 	
 }
