@@ -980,6 +980,7 @@ public class J3DStandingEngine {
 													}
 												}
 											}*/
+											realPooledNode.updateRenderState();
 											if (realPooledNode instanceof BillboardNodePooled)
 											{
 												
