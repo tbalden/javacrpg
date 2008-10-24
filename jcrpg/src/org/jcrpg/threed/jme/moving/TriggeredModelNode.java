@@ -132,6 +132,27 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 	{
 		return playAnimation(name, null);
 	}
+	
+	/**
+	 * Sets skip rate of animation if it's a slow animation.
+	 * @param name
+	 */
+	public void setAnimationSpeed(String name, boolean update)
+	{
+		if (!J3DCore.SLOW_ANIMATION && animationDesc.oneFrameAnim.get(name)!=null && animationDesc.oneFrameAnim.get(name))
+		{
+			if (update) bodyAnimationController.update(0.5f);
+			bodyAnimationController.setSkipRate(0.5f);
+		} else
+		{
+			if (!J3DCore.SLOW_ANIMATION)
+			{
+				bodyAnimationController.setSkipRate(0f);
+			}
+		}
+		
+	}
+	
 	public float playAnimation(String name, String afterAnim)
 	{
 		Animation anim = animations.get(name);
@@ -143,6 +164,9 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 		
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
+		
+		setAnimationSpeed(name,true);
+
 		if (currentAnimator!=null) {
 			if (afterAnim!=null && afterAnim!=currentAnimatorName) {
 				currentAnimator.fadeOut(0.1f,true);
@@ -200,17 +224,9 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 				System.out.println("ANIM = 0");
 				return 0;
 			}
-			if (!J3DCore.SLOW_ANIMATION && animationDesc.oneFrameAnim.get(name)!=null && animationDesc.oneFrameAnim.get(name))
-			{
-				bodyAnimationController.update(0.5f);
-				bodyAnimationController.setSkipRate(0.5f);
-			} else
-			{
-				if (!J3DCore.SLOW_ANIMATION)
-				{
-					bodyAnimationController.setSkipRate(0f);
-				}
-			}
+			
+			setAnimationSpeed(name,true);
+			
 			AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
 			//newAnimator.setCycleType(FixedLengthAnimator.RT_WRAP);
 			newAnimator.fadeIn(0.5f);
@@ -380,6 +396,7 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 				finishedPlaying = true;
 				//currentAnimator.setTime(currentAnimator.getMin());
 				currentAnimator.fadeIn(1f);
+				setAnimationSpeed(currentAnimatorName,false);
 				animator.fadeOut(0.6f, true);
 			}
 		}

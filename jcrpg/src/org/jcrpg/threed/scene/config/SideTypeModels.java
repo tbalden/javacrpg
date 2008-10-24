@@ -968,6 +968,9 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(71), new RenderedSide(new Model[]{sm_maze_ground_1}));
 
 		TriggeredAnimDescription desc = new TriggeredAnimDescription("./data/models/item/storage/chest_closed.md5anim");
+		desc.OPENING = "./data/models/item/storage/chest_opening.md5anim"; 
+		desc.OPEN = "./data/models/item/storage/chest_open.md5anim";
+		desc.CLOSED= "./data/models/item/storage/chest_closed.md5anim";
 		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_DEFAULT, true);
 		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_OPEN, true);
 		desc.oneFrameAnim.put(TriggeredAnimDescription.ANIM_CLOSED, true);

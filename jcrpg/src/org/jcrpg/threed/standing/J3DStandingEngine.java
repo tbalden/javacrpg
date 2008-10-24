@@ -2120,6 +2120,7 @@ public class J3DStandingEngine {
 		
 		
 		NodePlaceholder[] n = modelPool.loadPlaceHolderObjects(cube,renderedSide.objects,fakeLoadForCacheMaint);
+		cube.hmNodePlaceholderForSide.put(side, n);
 		if (!fakeLoadForCacheMaint) {
 			if (renderedSide.type == RenderedSide.RS_HASHROTATED)
 			{

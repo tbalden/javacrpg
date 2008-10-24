@@ -22,20 +22,23 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.space.sidetype.trigger.TriggerBaseSideSubtype;
 import org.jcrpg.threed.J3DCore;
 
 public class TriggeredAnimDescription {
 	
 	
 	public static String ANIM_DEFAULT = "ANIM_DEFAULT";
-	public static String ANIM_OPEN = "ANIM_OPEN";
-	public static String ANIM_CLOSED = "ANIM_CLOSED";
-	public static String ANIM_OPENING = "ANIM_OPENING";
+	public static String ANIM_OPEN = TriggerBaseSideSubtype.TRIGGER_EFFECT_OPEN;
+	public static String ANIM_CLOSED = TriggerBaseSideSubtype.TRIGGER_EFFECT_CLOSED;
+	public static String ANIM_OPENING = TriggerBaseSideSubtype.TRIGGER_EFFECT_OPENING;
+	public static String ANIM_CLOSING = TriggerBaseSideSubtype.TRIGGER_EFFECT_CLOSING;
 
 	public String DEFAULT = null;
 	public String OPEN = null;
 	public String CLOSED = null;
 	public String OPENING = null;
+	public String CLOSING = null;
 	
 	public HashMap<String, Boolean> oneFrameAnim = new HashMap<String, Boolean>();
 	

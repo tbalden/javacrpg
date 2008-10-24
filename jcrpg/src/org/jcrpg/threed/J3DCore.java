@@ -42,6 +42,7 @@ import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.space.sidetype.Swimming;
+import org.jcrpg.space.sidetype.trigger.TriggerBaseSideSubtype;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.GeometryBatchHelper;
@@ -50,10 +51,12 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
+import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.RenderedArea;
+import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
@@ -1552,20 +1555,42 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			return false;
 		}
 
+		Cube leftCube = gameState.world
+		.getCube(
+				-1,
+				gameState.getNormalPositions().viewPositionX,
+				gameState.getNormalPositions().viewPositionY,
+				gameState.getNormalPositions().viewPositionZ,
+				false);
+		RenderedCube renderedLeftCube = renderedArea.getCubeAtPosition(gameState.world, 
+				gameState.getNormalPositions().viewPositionX,
+				gameState.getNormalPositions().viewPositionY,
+				gameState.getNormalPositions().viewPositionZ);
+		
 		boolean success = moveBase(from, fromRel, directions);
+		
+		Cube enteredCube = null; 
+		RenderedCube renderedEnteredCube = renderedArea.getCubeAtPosition(gameState.world, 
+				gameState.getNormalPositions().viewPositionX,
+				gameState.getNormalPositions().viewPositionY,
+				gameState.getNormalPositions().viewPositionZ);
+		
+		if (success) {
+			enteredCube = gameState.world
+			.getCube(
+					-1,
+					gameState.getNormalPositions().viewPositionX,
+					gameState.getNormalPositions().viewPositionY,
+					gameState.getNormalPositions().viewPositionZ,
+					false);
+		}
 		if (System.currentTimeMillis() - lastStepSoundTime > 300) { // don't
 																	// play
 																	// sound too
 																	// often
 			if (success) {
 				try {
-					Side[] s = gameState.world
-							.getCube(
-									-1,
-									gameState.getNormalPositions().viewPositionX,
-									gameState.getNormalPositions().viewPositionY,
-									gameState.getNormalPositions().viewPositionZ,
-									false).getSide(BOTTOM);
+					Side[] s = enteredCube.getSide(BOTTOM);
 					boolean played = false;
 					for (Side side : s) {
 						if (side.subtype.audioStepType != null) {
@@ -1592,8 +1617,111 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 							.getNormalPositions().viewPositionZ);
 			gameState.updateEntityIcons();
 			gameState.checkAndHandleEnterLeave();
+			
+			handleStaticTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
+			
 		}
 		return success;
+	}
+	
+	public void handleStaticTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	{
+		ArrayList<Side> triggerSides = null;
+		if (enteredCube!=null)
+		{
+			triggerSides = enteredCube.getTriggerSides();	
+		}		
+		if (triggerSides!=null)
+		{
+			System.out.println("$$$$$$$$$$$$$$ TRIGGER SIDE $$$$$$$$$$$$$$$$");
+			RenderedCube rc = renderedEnteredCube;
+			if (rc!=null)
+			{
+				System.out.println("RENDERED CUBE OKAY");
+				for (Side s:triggerSides)
+				{
+					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnEnter();
+					if (anim!=null)
+					{
+						System.out.println("ANIM "+anim);
+						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
+						if (list!=null)
+						{
+							System.out.println("NODE LIST "+list.length);
+							for (NodePlaceholder n:list)
+							{
+								if (n.realNode!=null)
+								{
+									System.out.println("REALNODE = "+n.realNode);
+									PooledNode pN = n.realNode;
+									if (pN instanceof TriggeredModelNode)
+									{
+										if (anim.length==2)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
+										} else
+										if (anim.length==1)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_OPEN);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		
+		
+		triggerSides = null;
+		if (leftCube!=null)
+		{
+			triggerSides = leftCube.getTriggerSides();	
+		}		
+		if (triggerSides!=null)
+		{
+			System.out.println("$$$$$$$$$$$$$$ LEFT TRIGGER SIDE $$$$$$$$$$$$$$$$");
+			RenderedCube rc = renderedLeftCube;
+			if (rc!=null)
+			{
+				System.out.println("RENDERED CUBE OKAY");
+				for (Side s:triggerSides)
+				{
+					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnLeave();
+					if (anim!=null)
+					{
+						System.out.println("ANIM "+anim);
+						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
+						if (list!=null)
+						{
+							System.out.println("NODE LIST "+list.length);
+							for (NodePlaceholder n:list)
+							{
+								if (n.realNode!=null)
+								{
+									System.out.println("REALNODE = "+n.realNode);
+									PooledNode pN = n.realNode;
+									if (pN instanceof TriggeredModelNode)
+									{
+										if (anim.length==2)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
+										} else
+										if (anim.length==1)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_CLOSED);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
 	}
 
 	/**
