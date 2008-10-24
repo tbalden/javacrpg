@@ -388,6 +388,8 @@ public class GeoTileLoader {
 		
 	}
 	
+	public static float HEIGHT_PRECISION_MUL = 1000000f;
+	
 	public int[][] getHeightMaps(NodePlaceholder nodePlaceholder)
 	{
 		//SimpleModel model = (SimpleModel)nodePlaceholder.model;
@@ -397,7 +399,7 @@ public class GeoTileLoader {
 		int[] map = new int[4];
 		for (int i=0; i<4; i++)
 		{
-			int h = (int)(cornerHeights[i%4]*1000000f);
+			int h = (int)(cornerHeights[i%4]*HEIGHT_PRECISION_MUL);
 			map[i] = h;
 		}
 		
@@ -431,7 +433,7 @@ public class GeoTileLoader {
 					{
 						if (opposite!=null)
 						{
-							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[1]+oppDeltaY)*1000000f);
+							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[1]+oppDeltaY)*HEIGHT_PRECISION_MUL);
 						} else
 						{
 							//System.out.println("NO OPP");
@@ -441,7 +443,7 @@ public class GeoTileLoader {
 					{
 						if (opposite!=null)
 						{
-							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[3]+oppDeltaY)*1000000f);
+							bigMap[row*3+col] = (int)((opposite.cube.cornerHeights[3]+oppDeltaY)*HEIGHT_PRECISION_MUL);
 						}
 						else
 						{
@@ -454,7 +456,7 @@ public class GeoTileLoader {
 						{
 							if (adjacent!=null)
 							{
-								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[2]+adjDeltaY)*1000000f);
+								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[2]+adjDeltaY)*HEIGHT_PRECISION_MUL);
 							}
 							else
 							{
@@ -465,7 +467,7 @@ public class GeoTileLoader {
 						{
 							if (adjacent!=null)
 							{
-								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[3]+adjDeltaY)*1000000f);
+								bigMap[row*3+col] = (int)((adjacent.cube.cornerHeights[3]+adjDeltaY)*HEIGHT_PRECISION_MUL);
 							}
 							else
 							{
@@ -479,6 +481,8 @@ public class GeoTileLoader {
 		return new int[][]{map,bigMap};
 		
 	}
+	
+	public static float HEIGHT_RATIO = J3DCore.CUBE_EDGE_SIZE/HEIGHT_PRECISION_MUL;
 	TiledTerrainBlock b;
 	/**
 	 * This part load the terrainblock plus the SplattingPassNode if necessary for the given tile.
@@ -498,11 +502,11 @@ public class GeoTileLoader {
 		TiledTerrainBlock block = null;
 		if (data.getTextureKeyPartForBatch()==null)
 		{
-			block = new TiledTerrainBlockUnbuffered("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+			block = new TiledTerrainBlockUnbuffered("1",2,new Vector3f(J3DCore.CUBE_EDGE_SIZE,HEIGHT_RATIO,J3DCore.CUBE_EDGE_SIZE),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
 		} else
 		{
 			// splatting needs normal buffered block
-			block = new TiledTerrainBlock("1",2,new Vector3f(2,0.0000020f,2),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
+			block = new TiledTerrainBlock("1",2,new Vector3f(J3DCore.CUBE_EDGE_SIZE,HEIGHT_RATIO,J3DCore.CUBE_EDGE_SIZE),heightMaps[0],heightMaps[1],new Vector3f(0f,0,0f),false);
 		}
 		SimpleModel model = (SimpleModel)nodePlaceholder.model;
 		//RenderedCube rCube = nodePlaceholder.cube;

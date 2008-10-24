@@ -272,6 +272,8 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 
         	attachChild(bodyInstance);
 	        setModelBound(new BoundingBox());
+	        
+	        updateRenderState();
 	        updateModelBound();
         	if (animated)
         	{
