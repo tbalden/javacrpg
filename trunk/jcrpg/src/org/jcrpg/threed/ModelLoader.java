@@ -1007,7 +1007,7 @@ public class ModelLoader {
 						
 		    			texture.setWrap(Texture.WrapMode.Repeat);//WM_WRAP_S_WRAP_T);
 		    			texture.setApply(Texture.ApplyMode.Replace);
-						texture.setRotation(J3DCore.qTexture);
+						//texture.setRotation(J3DCore.qTexture);
 						textureCache.put(o.textureName, texture);
 					}
 	
@@ -1015,7 +1015,9 @@ public class ModelLoader {
 					ts.setTexture(texture, 0);
 					
 	                ts.setEnabled(true);
+	                //cleanTexture(node);
 					node.setRenderState(ts);
+					node.updateRenderState();
 					
 				} else 
 				{

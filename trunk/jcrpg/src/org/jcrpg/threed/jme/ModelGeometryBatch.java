@@ -253,6 +253,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			data = getTiledBlockData(m,placeHolder,true);
 			mesh = data.block;
+			this.setRenderState(core.cs_back);
 		} else
 		{
 			mesh = getModelMesh(m,placeHolder);

@@ -847,7 +847,10 @@ public class SideTypeModels {
 		tsm_margarita.alwaysRenderBatch = true;
 		hm3dTypeRenderedSide.put(new Integer(60), new RenderedSide(new Model[]{tsm_margarita}));
 
-		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.3ds",null);
+		SimpleModel sm_steps_1 = new SimpleModel("models/inside/steps/steps.obj","wood1_d.dds");
+		sm_steps_1.normalMapTexture = "wood1_n.dds";
+		sm_steps_1.specMapTexture= "wood1_s.dds";
+		sm_steps_1.heightMapTexture = "wood1_h.dds";
 		//sm_steps_1.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(46), new RenderedSide(new Model[]{sm_steps_1}));
 		SimpleModel sm_extsteps = new SimpleModel("models/external/House_01_steps_wooden.obj",null);
