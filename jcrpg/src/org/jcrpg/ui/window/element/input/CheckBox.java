@@ -76,16 +76,14 @@ public class CheckBox extends InputBase {
     @Override
     public void activate() {
         baseNode.detachAllChildren();
-        if (activeNode==null ) {
-            activeNode = new Node();
-            try {
-                Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
-                w1.setSolidColor(ColorRGBA.white);
-                activeNode.attachChild(w1);
-            } catch (Exception ex) {
-                if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
-                ex.printStackTrace();
-            }
+        activeNode = new Node();
+        try {
+            Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+            w1.setSolidColor(ColorRGBA.white);
+            activeNode.attachChild(w1);
+        } catch (Exception ex) {
+            if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
+            ex.printStackTrace();
         }
         baseNode.attachChild(activeNode);
         baseNode.updateRenderState();
@@ -95,16 +93,14 @@ public class CheckBox extends InputBase {
     @Override
     public void deactivate() {
         baseNode.detachAllChildren();
-        if (deactiveNode==null ) {
-            deactiveNode = new Node();
-            try {
-                Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
-                w1.setSolidColor(ColorRGBA.gray);
-                deactiveNode.attachChild(w1);
-            } catch (Exception ex) {
-                if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
-                ex.printStackTrace();
-            }
+        deactiveNode = new Node();
+        try {
+            Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+            w1.setSolidColor(ColorRGBA.gray);
+            deactiveNode.attachChild(w1);
+        } catch (Exception ex) {
+            if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
+            ex.printStackTrace();
         }
         baseNode.attachChild(deactiveNode);
         baseNode.updateRenderState();
@@ -119,7 +115,6 @@ public class CheckBox extends InputBase {
             w.inputUsed(this, key);
             this.setUpdated(true);
             activate();
-            System.out.println("bgImage = "+bgImage+", checked = "+isChecked());
             return true;
         }
         if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+id+" "+key);
@@ -138,7 +133,5 @@ public class CheckBox extends InputBase {
         this.checked = checked;
         bgImage = (checked ? selectedImage : defaultImage); 
     }
-
-    
 
 }
