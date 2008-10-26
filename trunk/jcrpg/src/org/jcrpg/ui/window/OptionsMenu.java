@@ -47,8 +47,11 @@ public class OptionsMenu extends PagedInputWindow {
     Node pageSecond = new Node();
 
     CheckBox toggleMLook;
-    ListSelect toggleContinuousLoad;
+    CheckBox toggleContinuousLoad;
     ValueTuner tunerViewDistance;
+    ValueTuner tunerRenderDistance;
+    ValueTuner tunerRenderGrassDistance;
+    ValueTuner tunerTextureDetail;
     TextButton save, cancel;
 
     public static String[] toggleIds = new String[] {"on","off"};
@@ -87,14 +90,27 @@ public class OptionsMenu extends PagedInputWindow {
             addInput(0, toggleMLook);
             
             inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.continuous.load"), false));
-            toggleContinuousLoad = new ListSelect("", this, pageFirst, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
-            inputsLayout.addToColumn(1, toggleContinuousLoad, 0.35f, 0.5f);
+            toggleContinuousLoad = new CheckBox("", this, pageFirst, J3DCore.CONTINUOUS_LOAD);
+            inputsLayout.addToColumn(1, toggleContinuousLoad, 0.1f, 0.5f);
             addInput(0, toggleContinuousLoad);
 
             inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.view.distance"), false));
-            tunerViewDistance = new ValueTuner("",this,pageFirst, 600f, 25, 10, 60, 5);
+            tunerViewDistance = new ValueTuner("",this,pageFirst, 600f, J3DCore.VIEW_DISTANCE, 10, 60, 5);
             inputsLayout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
             addInput(0, tunerViewDistance);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.render.distance"), false));
+            tunerRenderDistance = new ValueTuner("",this,pageFirst, 600f, J3DCore.RENDER_DISTANCE, 16, 66, 5);
+            inputsLayout.addToColumn(1, tunerRenderDistance, 0.35f, 0.5f);
+            addInput(0, tunerRenderDistance);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.render.grass.distance"), false));
+            tunerRenderGrassDistance = new ValueTuner("",this,pageFirst, 600f, J3DCore.RENDER_GRASS_DISTANCE, 0, 20, 1);
+            inputsLayout.addToColumn(1, tunerRenderGrassDistance, 0.35f, 0.5f);
+            addInput(0, tunerRenderGrassDistance);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.texture.detail"), false));
+            tunerTextureDetail = new ValueTuner("",this,pageFirst, 600f, J3DCore.TEXTURE_QUALITY, 0, 2, 1);
+            inputsLayout.addToColumn(1, tunerTextureDetail, 0.35f, 0.5f);
+            addInput(0, tunerTextureDetail);
+            
 
             // buttons
             save = new TextButton("save",this, pageFirst, 0.3f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.save"),"S");
