@@ -24,15 +24,16 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.CheckBox;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
-import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 
+import com.jme.scene.Node;
+import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
 
 /**
@@ -42,7 +43,10 @@ import com.jme.scene.shape.Quad;
  */
 public class OptionsMenu extends PagedInputWindow {
 
-    ListSelect toggleMLook;
+    Node pageFirst = new Node();
+    Node pageSecond = new Node();
+
+    CheckBox toggleMLook;
     ListSelect toggleContinuousLoad;
     ValueTuner tunerViewDistance;
     TextButton save, cancel;
@@ -72,30 +76,33 @@ public class OptionsMenu extends PagedInputWindow {
             header.setRenderState(base.hud.hudAS);
             windowNode.attachChild(header);
 
-            // build page
-            SimpleLayout layout = new SimpleLayout(0.2f, 0.2f, 0.3f, 0.07f ,2);
-            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.mouselook"), false));
-            toggleMLook = new ListSelect("", this, windowNode, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
-            layout.addToColumn(1, toggleMLook, 0.35f, 0.5f);
+            // --- First Page ---
+            SharedMesh sQuad = new SharedMesh("--",hudQuad);
+            pageFirst.attachChild(sQuad);
+
+            SimpleLayout inputsLayout = new SimpleLayout(0.2f, 0.2f, 0.3f, 0.07f ,2);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
+            toggleMLook = new CheckBox("", this, pageFirst, J3DCore.MOUSELOOK);
+            inputsLayout.addToColumn(1, toggleMLook, 0.1f, 0.5f);
             addInput(0, toggleMLook);
             
-            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.continuous.load"), false));
-            toggleContinuousLoad = new ListSelect("", this, windowNode, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
-            layout.addToColumn(1, toggleContinuousLoad, 0.35f, 0.5f);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.continuous.load"), false));
+            toggleContinuousLoad = new ListSelect("", this, pageFirst, 600f,toggleIds,toggleTexts,toggleObjects,null,null);
+            inputsLayout.addToColumn(1, toggleContinuousLoad, 0.35f, 0.5f);
             addInput(0, toggleContinuousLoad);
 
-            layout.addToColumn(0, new TextLabel("",this,windowNode, 600f, Language.v("optionsmenu.view.distance"), false));
-            tunerViewDistance = new ValueTuner("",this,windowNode, 600f, 25, 10, 60, 5);
-            layout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
+            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.view.distance"), false));
+            tunerViewDistance = new ValueTuner("",this,pageFirst, 600f, 25, 10, 60, 5);
+            inputsLayout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
             addInput(0, tunerViewDistance);
-            tunerViewDistance.setEnabled(false);
 
             // buttons
-            save = new TextButton("save",this, windowNode, 0.3f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.save"),"S");
+            save = new TextButton("save",this, pageFirst, 0.3f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.save"),"S");
             addInput(0, save);
-            cancel = new TextButton("cancel",this, windowNode, 0.72f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.cancel"),"C");
+            cancel = new TextButton("cancel",this, pageFirst, 0.72f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.cancel"),"C");
             addInput(0, cancel);
 
+            addPage(0, pageFirst);
             windowNode.updateRenderState();
             base.addEventHandler("back", this);
         } catch (Exception ex) {
@@ -115,18 +122,24 @@ public class OptionsMenu extends PagedInputWindow {
 
     @Override
     public boolean inputUsed(InputBase base, String message) {
-        if (base == save) 
-        {
+        if (base == save) {
             // TODO: save to config file
             toggle();
             core.mainMenu.toggle();
             return true;
-        } else if (base == cancel) 
-        {
+        } else if (base == cancel) {
             toggle();
             core.mainMenu.toggle();
             return true; 
+        } else if (base.equals(tunerViewDistance)) {
+            if (message.equals("enter")) {
+                System.out.println("--- tunerViewDistance: "+message);
+            } else if (message.equals("lookLeft") || message.equals("lookRight")) {
+                tunerViewDistance.setUpdated(true);
+                System.out.println("--- tunerViewDistance: "+message+", tunerViewDistance.value"+tunerViewDistance.getSelection());
+            } 
         }
+
         return false;
     }
 
