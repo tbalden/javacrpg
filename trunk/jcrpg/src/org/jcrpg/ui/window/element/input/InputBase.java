@@ -37,6 +37,8 @@ public abstract class InputBase {
 	public float sizeX, sizeY;
 	public float dCenterX, dCenterY;
 	public float dSizeX, dSizeY;
+	public float dOrigoX, dOrigoY;
+	public float dOrigoXCenter, dOrigoYCenter;
 	public InputWindow w;
 	public Node baseNode;
 	boolean active = false;
@@ -90,6 +92,9 @@ public abstract class InputBase {
 		dCenterY = w.core.getDisplay().getHeight()*(1f-centerY);
 		dSizeX =  w.core.getDisplay().getWidth()*(sizeX);
 		dSizeY =  w.core.getDisplay().getHeight()*(sizeY);
+		dOrigoX = dCenterX-dSizeX/2;
+		dOrigoXCenter = dCenterX+dSizeX/2;
+		dOrigoY = dCenterY+dSizeY/2;
 	}
 	
 	/**
