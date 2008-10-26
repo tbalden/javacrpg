@@ -39,14 +39,30 @@ public class TextButton extends InputBase {
 	public static final String defaultImage = "./data/ui/buttonBase.png";
 	public String bgImage = defaultImage; 
 	public float textProportion = 400f;
+	
+	boolean centered = true;
 
 	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text) {
 		super(id, w, parentNode);
 		this.text = text;
 		this.textProportion = textProportion;
+		this.centered = true;
 	}
 	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text, String shortcut) {
 		this(id,w,parentNode,textProportion,text);
+		w.base.addEventHandler(shortcut, w); // save
+		this.shortCut = shortcut;
+		this.centered = true;
+	}
+
+	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text, boolean centered) {
+		super(id, w, parentNode);
+		this.text = text;
+		this.textProportion = textProportion;
+		this.centered = centered;
+	}
+	public TextButton(String id, InputWindow w, Node parentNode, float textProportion, String text, boolean centered, String shortcut) {
+		this(id,w,parentNode,textProportion,text,centered);
 		w.base.addEventHandler(shortcut, w); // save
 		this.shortCut = shortcut;
 	}
@@ -83,7 +99,7 @@ public class TextButton extends InputBase {
 			activeNode = new Node();
 			//freeTextNodes();
 			try {
-				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
 				activeNode.attachChild(w1);
 			} catch (Exception ex)
@@ -92,7 +108,7 @@ public class TextButton extends InputBase {
 			}
 			
 			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.6f,0.6f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
 			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
@@ -110,7 +126,7 @@ public class TextButton extends InputBase {
 			deactiveNode = new Node();
 			//freeTextNodes();
 			try {
-				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);
 				deactiveNode.attachChild(w1);
 			} catch (Exception ex)
@@ -118,7 +134,7 @@ public class TextButton extends InputBase {
 				ex.printStackTrace();
 			}
 			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
 			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
