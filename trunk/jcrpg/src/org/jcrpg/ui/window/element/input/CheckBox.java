@@ -58,6 +58,8 @@ public class CheckBox extends InputBase {
         w.base.addEventHandler("lookLeft", w);
         w.base.addEventHandler("lookRight", w);
         w.base.addEventHandler("enter", w);
+        w.base.addEventHandler("space", w);
+        parentNode.updateRenderState();
     }
 	
 
@@ -69,6 +71,7 @@ public class CheckBox extends InputBase {
             w.base.addEventHandler("lookLeft", w);
             w.base.addEventHandler("lookRight", w);
             w.base.addEventHandler("enter", w);
+            w.base.addEventHandler("space", w);
             parentNode.updateRenderState();
         }
     }
@@ -109,7 +112,9 @@ public class CheckBox extends InputBase {
 
     @Override
     public boolean handleKey(String key) {
-        if (key.equals("enter") || key.equals("lookLeft") || key.equals("lookRight") ) {
+        if (key.equals("enter") || key.equals("space") || 
+            key.equals("lookLeft") || key.equals("lookRight") ) 
+        {
             setChecked(!isChecked());
             w.core.audioServer.play(SOUND_INPUTSELECTED);
             w.inputUsed(this, key);
