@@ -197,5 +197,9 @@ public class ValueTuner extends InputBase {
 		text = ""+value;
 		
 	}
+	
+	public void setValue(int value) {
+	    this.value = value;
+	}
 
 }
