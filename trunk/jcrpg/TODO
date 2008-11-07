@@ -1,26 +1,27 @@
 --------------------------------------------------------------------------------------
 
 
-This TODO file is licensed under GPL v3 license as part of the jcrpg project.
+This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 (C) 2008 author is Illes Pal, all ideas here are part of the copyrighted property
 
 
 --------------------------------------------------------------------------------------
 
-[ ] request list for scibot portraits
-		[ ] dwarf
-		[ ] elf
+[X] request list for scibot portraits scibotic@gmail.com
+		[X] dwarf [ ] waiting for completion male/female
+		[X] elf [ ] waiting for completion male/female
 		
 
-[X] closed chest, it's open, and bottom up?? animation is not started?
-[X] triggering sideSubType animation -> RenderedCube, sidesubtype <--> nodePlaceHolder how to connect??
-		through RenderedCube --> add info about sides + nodeplacholder - HMap?? uniqueness??
-		in j3dcore move check for trigger sidetypes
-		USE RenderedCube's hmNodePlaceholderForSide to get actual models, and filter out Triggered ones
-		and trigger animation
-
 [ ] add storage points
+
+	[ ] unlock UI, loot UI - Use the StorageObjectHandler to raise a window!
+
+	[X] add mounting points for chests--> infrastructure generation -> number of chest places given by economy unit?
+	Economic class should return MountPoints and number of mount points, so a Population can know how many mount points it have
+	and EntityCommonWealth can distribute wealth to the chests in good ratio. MountPoints with richness factor?
+	Hashing algorithm based on coordinates to generate loot list. Respawning per economy turn?
+		[ ] add items to the chests/points
 
 	[X] chests scattered in maze
 		[X] using AnimatedModelNode for static non-batched parts -> Chests/Doors,
@@ -32,14 +33,15 @@ This TODO file is licensed under GPL v3 license as part of the jcrpg project.
 					Passing by checks those side types!
 					(Mobs will be able to check around) 
 					Fire animations with the SideType callbacks!
-	[ ] unlock UI, loot UI - Use the StorageObjectHandler to raise a window!
 	
-	[X] add mounting points for chests--> infrastructure generation -> number of chest places given by economy unit?
-	Economic class should return MountPoints and number of mount points, so a Population can know how many mount points it have
-	and EntityCommonWealth can distribute wealth to the chests in good ratio. MountPoints with richness factor?
-	Hashing algorithm based on coordinates to generate loot list. Respawning per economy turn?
-		[ ] add items to the chests/points
 	  
+[X] closed chest, it's open, and bottom up?? animation is not started?
+[X] triggering sideSubType animation -> RenderedCube, sidesubtype <--> nodePlaceHolder how to connect??
+		through RenderedCube --> add info about sides + nodeplacholder - HMap?? uniqueness??
+		in j3dcore move check for trigger sidetypes
+		USE RenderedCube's hmNodePlaceholderForSide to get actual models, and filter out Triggered ones
+		and trigger animation
+
 
 [ ] add different levels for generation of groups at start .. 
 
