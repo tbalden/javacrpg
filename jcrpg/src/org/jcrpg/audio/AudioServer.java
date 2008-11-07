@@ -77,7 +77,7 @@ public class AudioServer implements Runnable {
 		
 		
 		try {
-			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/warrior/warrior.ogg").toURL(), true);
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/fantasy/fantasy_menu.ogg").toURL(), true);
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
@@ -99,7 +99,7 @@ public class AudioServer implements Runnable {
 			mainTheme.setVolume(J3DCore.MUSIC_VOLUME_PERCENT/100f);
 			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 			tracks.add(mainTheme);
-			hmTracks.put("ingame", tracks);
+			//hmTracks.put("ingame", tracks);
 			
 		}catch (Exception ex)
 		{
@@ -334,7 +334,7 @@ public class AudioServer implements Runnable {
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
-				track.fadeIn(v, v);
+				track.fadeIn(0.5f, v);
 			}
 		} catch (NullPointerException npex)
 		{
@@ -359,7 +359,7 @@ public class AudioServer implements Runnable {
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
-				track.fadeIn(v, v);
+				track.fadeIn(0.5f, v);
 			}
 		} catch (NullPointerException npex)
 		{
@@ -403,7 +403,7 @@ public class AudioServer implements Runnable {
 	{
 		if (!J3DCore.SOUND_ENABLED) return;
 		if (id==null) return;
-		if (setSoundPlayingVolume(id,volume)) {
+		if (setSoundPlayingVolume(id,volume* J3DCore.EFFECT_VOLUME_PERCENT/100f)) {
 			return;
 		}
 		Channel c = getAvailableChannel();
@@ -419,11 +419,11 @@ public class AudioServer implements Runnable {
 				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
-			track.setTargetVolume(volume);
-			track.setVolume(volume);
+			track.setTargetVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
+			track.setVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			c.playTrack();
 			//float v = track.getVolume();
-			track.setVolume(volume);
+			track.setVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			//track.fadeIn(0.2f, volume);
 		} catch (NullPointerException npex)
 		{
@@ -459,8 +459,8 @@ public class AudioServer implements Runnable {
 			mainTheme.setType(TrackType.ENVIRONMENT);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
-			mainTheme.setVolume(1f);
-			mainTheme.setMinVolume(1f);
+			mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+			mainTheme.setMinVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			if (hmTracks.get(id)==null)
 			{
 				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
