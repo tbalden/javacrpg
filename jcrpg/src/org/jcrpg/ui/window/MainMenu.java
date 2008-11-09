@@ -164,6 +164,7 @@ public class MainMenu extends Window implements KeyListener {
 		} else
 		if (name.equals(LOAD_GAME))
 		{
+			keepPlayingMusic = true;
 			if (LoadMenu.updateFromDirectory()) {
 				toggle();
 				core.loadMenu.toggle();
@@ -171,6 +172,7 @@ public class MainMenu extends Window implements KeyListener {
 		} else
 		if (name.equals(OPTIONS))
 		{
+			keepPlayingMusic = true;
 			toggle();
 			core.optionsMenu.toggle();
 		}
