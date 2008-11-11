@@ -199,7 +199,7 @@ public class Geography extends Place implements Surface {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.worldRelHeight = worldHeight - worldGroundLevel;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("" + this.getClass()+" "+worldGroundLevel+" "+ "SIZE = "+worldRelHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("" + this.getClass()+" "+worldGroundLevel+" "+ "SIZE = "+worldRelHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;
@@ -457,7 +457,7 @@ public class Geography extends Place implements Surface {
 							else
 							if (e.getBoundaries().isInside(worldX, e.origoY, worldZ))
 							{
-								//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("override: "+( ((Economic)o).origoY-worldGroundLevel ));
+								//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("override: "+( ((Economic)o).origoY-worldGroundLevel ));
 								return (float)(e.origoY-worldGroundLevel);
 							}
 						}						
@@ -519,7 +519,7 @@ public class Geography extends Place implements Surface {
 			Float cachedKind = quickCubeHeightCache.get(keyNew);
 			if (cachedKind!=null) 
 			{
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
 				return cachedKind;
 			}
 			Float kind = getPointHeightNoCache(x,z,sizeX,sizeZ,worldX,worldZ,farView);
@@ -679,7 +679,7 @@ public class Geography extends Place implements Surface {
 			float[] cachedKind = quickCubeKindCache.get(keyNew);
 			if (cachedKind!=null) 
 			{
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("CUBE CACHE USED!");
 				return cachedKind;
 			}
 			float[] kind = getCubeKindNoCache(worldX, worldY, worldZ,  farView);
@@ -785,7 +785,7 @@ public class Geography extends Place implements Surface {
 		int K_STEEP_WEST = Geography.K_STEEP_WEST;
 		int K_STEEP_NORTH = Geography.K_STEEP_NORTH;
 		
-		//if (this instanceof Plain) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("-- RELY - "+relY+" - "+Y);
+		//if (this instanceof Plain) if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("-- RELY - "+relY+" - "+Y);
 		int[][] eval = evaluate(iY, new int[]{(int)YNorth,(int)YEast,(int)YSouth,(int)YWest,(int)YNorthEast, (int)YSouthEast, (int)YSouthWest, (int)YNorthWest});
 		if (iY==relY) 
 		{

@@ -23,7 +23,7 @@ public class CKeyLookUpAction extends CKeyAction {
 	 */
 	public synchronized void performAction(InputActionEvent evt) {
 		if (!performActionCheck(evt)) {
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("locked...");
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("locked...");
 			return;
 		}
 

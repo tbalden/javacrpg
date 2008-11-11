@@ -108,7 +108,7 @@ public class GenAlgoAdd extends GenAlgoBase {
 				{
 					if (g.getBoundaries().isInside(x*gMag, g.worldGroundLevel, z*gMag))
 					{
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("AlgoAdd: ADDING GEO..."+x+" "+z);
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("AlgoAdd: ADDING GEO..."+x+" "+z);
 						for (int i=0; i<worldHeightsToAddTo.length; i++) 
 						{
 							try {

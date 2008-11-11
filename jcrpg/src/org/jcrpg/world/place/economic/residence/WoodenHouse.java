@@ -297,7 +297,7 @@ public class WoodenHouse extends Residence {
 				c.middleHeight = (kind[0]+kind[1]+kind[2]+kind[3])/4f;
 			}
 		}
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("__ HOUSE CUBE");
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("__ HOUSE CUBE");
 		return c;
 		
 	}

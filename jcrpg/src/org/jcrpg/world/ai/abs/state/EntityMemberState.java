@@ -89,18 +89,18 @@ public class EntityMemberState {
 		if (unit.getHealthPoint()<0) updateEffectsUponAttackImpact();
 		if (!cheatNPC || !(instance instanceof PersistentMemberInstance))
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("applyImpactUnit "+instance.description.getName());
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("HEALTHPOINT BEFORE : "+healthPoint);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("IMPACT : "+unit.getHealthPoint());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("applyImpactUnit "+instance.description.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("HEALTHPOINT BEFORE : "+healthPoint);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("IMPACT : "+unit.getHealthPoint());
 			healthPoint=Math.min(healthPoint+unit.getHealthPoint(),maxHealthPoint);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("HEALTHPOINT AFTER : "+healthPoint);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("MANA IMPACT : "+unit.getManaPoint());
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("SANITY IMPACT : "+unit.getSanityPoint());
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("MORALE IMPACT : "+unit.getMoralePoint());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("HEALTHPOINT AFTER : "+healthPoint);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("MANA IMPACT : "+unit.getManaPoint());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("SANITY IMPACT : "+unit.getSanityPoint());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("MORALE IMPACT : "+unit.getMoralePoint());
 			staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
 			moralePoint=Math.min(moralePoint+unit.getMoralePoint(),maxMoralePoint);
 			sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("SANITY POINT AFTER : "+sanityPoint);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("SANITY POINT AFTER : "+sanityPoint);
 			manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
 		}
 		for (StateEffect effect:unit.stateEffects)
@@ -234,7 +234,7 @@ public class EntityMemberState {
 	
 	public void maximizeAtStart()
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityMemberState: at start MAX:"+maxHealthPoint+" "+maxStaminaPoint);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityMemberState: at start MAX:"+maxHealthPoint+" "+maxStaminaPoint);
 		healthPoint = maxHealthPoint;
 		staminaPoint = maxStaminaPoint;
 		sanityPoint = maxSanityPoint;
@@ -253,12 +253,12 @@ public class EntityMemberState {
 	
 	public void addEffect(StateEffect effect)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityMemberState: ADDING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityMemberState: ADDING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
 		for (StateEffect old:effects)
 		{
 			if (old.getClass()==effect.getClass())
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Replaced Effect");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("Replaced Effect");
 				effects.remove(old);
 				break;
 			}
@@ -279,7 +279,7 @@ public class EntityMemberState {
 		{
 			if (effect.updateBeingAttacked())
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityMemberState update on Attack: REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityMemberState update on Attack: REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
 				removable.add(effect);
 			}
 		}
@@ -300,7 +300,7 @@ public class EntityMemberState {
 		{
 			if (effect.updateEffect(form, powerLevel))
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityMemberState: REMOVING EFFECT with skill act form "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityMemberState: REMOVING EFFECT with skill act form "+instance.description.getName()+" "+effect.getClass().getSimpleName());
 				removable.add(effect);
 			}
 		}
@@ -315,7 +315,7 @@ public class EntityMemberState {
 		{
 			if (effect.update(seed, round, time))
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityMemberState: REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityMemberState: REMOVING EFFECT "+instance.description.getName()+" "+effect.getClass().getSimpleName());
 				removable.add(effect);
 			}
 		}

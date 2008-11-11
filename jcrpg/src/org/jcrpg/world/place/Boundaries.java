@@ -139,7 +139,7 @@ public class Boundaries {
 			//absoluteY=absoluteY-1*magnification;
 		//}
 		boolean ret = area.contains(getKey(absouluteX-absouluteX%magnification, absoluteY-absoluteY%magnification, absoluteZ-absoluteZ%magnification));
-		//if (ret && magnification==1) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
+		//if (ret && magnification==1) if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(" -- "+absouluteX+" "+absoluteZ+ " MAG: "+magnification+ " == "+ret);
 		return ret;
 	}
 	
@@ -154,7 +154,7 @@ public class Boundaries {
 	
 	public static Long getKey(int x,int y,int z){
 		long s = (((long)x) << 32) + ((z) << 16) + (y);
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("##"+ s);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("##"+ s);
 		return s;
 	}
 	/**

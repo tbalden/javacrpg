@@ -275,7 +275,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
 					SimpleModel sm = (SimpleModel)m;
-					if (J3DCore.NORMALMAP_ENABLED)
+					if (J3DCore.SETTINGS.NORMALMAP_ENABLED)
 					{
 						if (sm.normalMapTexture!=null)
 						{
@@ -469,7 +469,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 				quad = getModelMesh(placeholder.model,placeholder);
 			}
 			
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
 			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			//quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));

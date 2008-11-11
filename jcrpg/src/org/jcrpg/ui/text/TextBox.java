@@ -128,7 +128,7 @@ public class TextBox implements KeyListener {
 		}
 		if (backFrom<0) backFrom = 0;
 		updateText();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- BACKFROM = "+backFrom);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- BACKFROM = "+backFrom);
 		return true;
 	}
 	public void hide()

@@ -428,22 +428,22 @@ public class InventoryWindow extends PagedInputWindow {
 			if (o.description instanceof Weapon)
 			{
 				tmpWeaponsList.add(o);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow WEA: "+o.description);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("InvWindow WEA: "+o.description);
 			} else
 			if (o.description instanceof Ammunition)
 			{
 				tmpAmmunitionList.add(o);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow AMM: "+o.description);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("InvWindow AMM: "+o.description);
 			} else
 			if (o.description instanceof Armor)
 			{
 				tmpArmorList.add(o);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow ARM: "+o.description);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("InvWindow ARM: "+o.description);
 			} else
 			if (o.description instanceof PotionAndKit)
 			{
 				tmpPotionList.add(o);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InvWindow POT: "+o.description);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("InvWindow POT: "+o.description);
 			} else
 			{
 				tmpOtherList.add(o);

@@ -204,7 +204,7 @@ public class ListSelect extends InputBase {
 				iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
 				iconNode.attachChild(m);
 				baseNode.attachChild(iconNode);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -282,7 +282,7 @@ public class ListSelect extends InputBase {
 						iconNode.attachChild(m);
 						baseNode.attachChild(iconNode);
 						iconNodes.add(iconNode);
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ListSelect M = "+m.getName());
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();

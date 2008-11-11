@@ -104,7 +104,7 @@ public class RenderedMovingUnit {
 	}
 	public RenderedMovingUnit instantiate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("RenderedMovingUnit.instantiate : "+uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("RenderedMovingUnit.instantiate : "+uniqueId+" INST: "+worldX+" "+worldY+" "+worldZ);
 		RenderedMovingUnit instance = new RenderedMovingUnit(uniqueId,worldX,worldY,worldZ,models);
 		instance.form = form;
 		instance.state = state;

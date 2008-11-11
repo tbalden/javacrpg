@@ -100,7 +100,7 @@ public abstract class AbstractInfrastructure {
 			savedInhabitantNumber = newNumber;
 			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(newNumber);
 			if (toBuild!=null) {
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.update: TO BUILD SIZE = "+toBuild.size()+" "+toBuild);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.update: TO BUILD SIZE = "+toBuild.size()+" "+toBuild);
 
 				for (InfrastructureElementParameters p:toBuild)
 				{
@@ -142,11 +142,11 @@ public abstract class AbstractInfrastructure {
 	public void buildProgram()
 	{
 		
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: soilGeo="+population.soilGeo);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: soilGeo="+population.soilGeo);
 		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: res: "+residenceTypes);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: res: "+residenceTypes);
 		ArrayList<Class<?extends EconomicGround>> groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: ground: "+groundTypes);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: ground: "+groundTypes);
 		// base parts
 		{
 			ArrayList<Class<?extends Residence>> filtered = new ArrayList<Class<? extends Residence>>();
@@ -282,7 +282,7 @@ public abstract class AbstractInfrastructure {
 				param.owner.addGeneratedOwnInfrastructure(ground);
 			}
 			population.addEcoGround(ground);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.build : ADDING ecoground "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.build : ADDING ecoground "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+ground.sizeY+" "+ground.sizeX+"/"+ground.sizeZ);
 		} else
 		if (e instanceof Residence)
 		{
@@ -306,7 +306,7 @@ public abstract class AbstractInfrastructure {
 				param.owner.addGeneratedOwnInfrastructure(res);
 			}
 			population.addResidence(res);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("AbstractInfrastructure.build : ADDING residence "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.build : ADDING residence "+(population.blockStartX+param.relOrigoX)+" "+(population.blockStartZ+param.relOrigoZ)+ " "+res.sizeY+" "+res.sizeX+"/"+res.sizeZ);
 			
 		}
 	}

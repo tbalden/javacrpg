@@ -39,7 +39,7 @@ public class ScenarioNode extends Node {
 	
 	{
 		this.c = c;
-		VIEW_DISTANCE_SQR = J3DCore.VIEW_DISTANCE_SQR;
+		VIEW_DISTANCE_SQR = J3DCore.SETTINGS.VIEW_DISTANCE_SQR;
 		//this.cam = cam;
 	}
 	

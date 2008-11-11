@@ -38,7 +38,7 @@ public class UIImageCache {
 	
 	public static Quad getImage(String filePath, boolean alpha, float sizeMul)
 	{
-		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		if (J3DCore.SETTINGS.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
 		{
 			filePath = filePath.substring(0,filePath.length()-3)+"png";
 		}
@@ -75,13 +75,13 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("UIImageCache LOADED "+filePath);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("UIImageCache LOADED "+filePath);
 		return quad;
 	}
 
 	public static Quad getImage(String filePath, boolean alpha, float sizeX, float sizeY)
 	{
-		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		if (J3DCore.SETTINGS.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
 		{
 			filePath = filePath.substring(0,filePath.length()-3)+"png";
 		}
@@ -118,13 +118,13 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADED "+filePath);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LOADED "+filePath);
 		return quad;
 	}
 
 	public static ZoomingQuad getImageZoomingQuad(String filePath, boolean alpha, float sizeX, float sizeY)
 	{
-		if (J3DCore.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
+		if (J3DCore.SETTINGS.DISABLE_DDS && filePath.toLowerCase().endsWith("dds"))
 		{
 			filePath = filePath.substring(0,filePath.length()-3)+"png";
 		}
@@ -161,7 +161,7 @@ public class UIImageCache {
 		//quad.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 
 		quad.setLocalTranslation(new Vector3f(0, 0, 0));
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADED "+filePath);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LOADED "+filePath);
 		return quad;
 	}
 

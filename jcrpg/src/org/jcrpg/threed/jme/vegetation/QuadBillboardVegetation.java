@@ -97,7 +97,7 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 		startTime= System.currentTimeMillis();
 
 		boolean doGrassMove = false;
-		if (J3DCore.ANIMATED_GRASS) {
+		if (J3DCore.SETTINGS.ANIMATED_GRASS) {
 			doGrassMove = true;
 		}
 
@@ -135,7 +135,7 @@ public class QuadBillboardVegetation extends AbstractVegetation {
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
-			if (J3DCore.ANIMATED_GRASS)
+			if (J3DCore.SETTINGS.ANIMATED_GRASS)
 				whichDiff = i % 5;
 
 			child = children.get(i);

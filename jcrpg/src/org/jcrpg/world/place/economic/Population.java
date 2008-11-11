@@ -61,7 +61,7 @@ public abstract class Population extends Economic{
 			}
 			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()==null)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
 			}
 		}
 		residenceList.clear();
@@ -73,7 +73,7 @@ public abstract class Population extends Economic{
 			}
 			if (r.getOwnerMember()!=null && r.getOwnerMember().getGeneratedOwnInfrastructures()==null)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.warning("ECONOMIC GENERATED INFRASTUCTURE's SUPPOSED OWNER HAS NO LIST FOR GENERATED INFRASTRUCTURES!");
 			}
 		}
 		groundList.clear();
@@ -149,9 +149,9 @@ public abstract class Population extends Economic{
 		sizeX++;
 		sizeY++;
 		sizeZ++;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ORIGO X = "+origoX + " / "+sizeX);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ORIGO Y = "+origoY + " / "+sizeY);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ORIGO Z = "+origoZ + " / "+sizeZ);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ORIGO X = "+origoX + " / "+sizeX);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ORIGO Y = "+origoY + " / "+sizeY);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ORIGO Z = "+origoZ + " / "+sizeZ);
 		//updateLocationAndSize();
 	}
 	

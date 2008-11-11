@@ -134,7 +134,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
 	    		String text = Language.v("fantasyattributes.short."+s);
-	    		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TEXT" +text);
+	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
 	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.317f,0.2f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
@@ -213,7 +213,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		skillPointsLeftLabel.activate();
 		
 		for (String id: FantasyAttributes.attributeName) {
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = attributeTuners.get(id);
 			v.value = ((MemberPerson)instance.description).attributes.getAttribute(id);
 			attributeValues.setAttribute(id, ((MemberPerson)instance.description).attributes.getAttribute(id));
@@ -260,7 +260,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		try {
 
 			if (currentPic!=null) currentPic.removeFromParent();
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- PIC: "+((MemberPerson)instance.description).getPicturePath());
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- PIC: "+((MemberPerson)instance.description).getPicturePath());
 			currentPic = UIImageCache.getImage(((MemberPerson)instance.description).getPicturePath(), false, 75f);
 			currentPic.setLocalTranslation(1.6f*core.getDisplay().getWidth()/2,1.55f*core.getDisplay().getHeight()/2,0);
 			currentPic.setLocalScale(1f* (core.getDisplay().getWidth()/640f));
@@ -407,7 +407,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 			skillTuned = skill;
 			//String group = id.substring(0,id.indexOf('.'));
 			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = member.getSkillLevel(skill);
 			skillValueTuner.setUpdated(true);
@@ -453,7 +453,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 							int value = vTuner.getSelection();
 							attributeValues.setAttribute(id, value);
 							((MemberPerson)member.description).attributes.setAttribute(id, value);
-							//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("CHARACTER ATTRIBUTES _ "+id + " = "+value);
+							//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("CHARACTER ATTRIBUTES _ "+id + " = "+value);
 						}
 						member.memberState.recalculateMaximums(false);
 						updateAttributePoints();

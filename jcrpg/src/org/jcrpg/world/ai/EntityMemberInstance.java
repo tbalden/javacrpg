@@ -84,7 +84,7 @@ public class EntityMemberInstance {
 			for (Class<?extends Obj> o:J3DCore.getInstance().gameState.charCreationRules.getProfession(description.professions.get(0)).generationNewInstanceObjects)
 			{
 				inventory.add(new ObjInstance(ObjList.getInstance(o)));
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ADDING ITEM : "+o);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ADDING ITEM : "+o);
 			}
 		} catch (Exception ex)
 		{
@@ -166,14 +166,14 @@ public class EntityMemberInstance {
 		// TODO add spell modifiers in effect later when we have them
 		
 		Attributes attributes = getAttributesVanilla();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Vanilla: "+attributes);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("Vanilla: "+attributes);
 		Attributes equipmentAttributes = inventory.getEquipmentAttributeValues(null);
 		attributes.appendAttributes(equipmentAttributes);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Equipment: "+equipmentAttributes);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("Equipment: "+equipmentAttributes);
 		Attributes stateEffectAttributes = memberState.getStateEffectAttributesSum();
 		if (stateEffectAttributes!=null)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("StateEffect: "+stateEffectAttributes);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("StateEffect: "+stateEffectAttributes);
 			attributes.appendAttributes(stateEffectAttributes);
 		}
 		return attributes;

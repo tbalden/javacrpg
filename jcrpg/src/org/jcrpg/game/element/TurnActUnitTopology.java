@@ -62,7 +62,7 @@ public class TurnActUnitTopology {
 		if (unit.partyMember)
 		{
 			getPartyLineup().addUnitPushing(unit, line);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("TurnActUnitTopology.addUnitPushing ADDING PARTY MEMBER TO LINE: "+line+" "+unit.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("TurnActUnitTopology.addUnitPushing ADDING PARTY MEMBER TO LINE: "+line+" "+unit.getName());
 		} else
 		if (unit.friendly)
 		{

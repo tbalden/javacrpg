@@ -123,7 +123,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			if (!internal) J3DCore.hmSolidColorSpatials.put(parent, parent);
 		}
 		
-		vertexShader = (J3DCore.ANIMATED_GRASS||J3DCore.ANIMATED_TREES) && !internal;
+		vertexShader = (J3DCore.SETTINGS.ANIMATED_GRASS||J3DCore.SETTINGS.ANIMATED_TREES) && !internal;
 
 	       if (vertexShader && vp==null)
 	        { 
@@ -134,7 +134,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	            try {
 		            if (!vp.isSupported())
 		            {
-		            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO VP !!!!!!!");
+		            	if (J3DCore.LOGGING()) Jcrpg.LOGGER.warning("!!!!!!! NO VP !!!!!!!");
 		            }
 	            } catch (Exception ex)
 	            {
@@ -150,7 +150,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	            try {
 		            if (!fp.isSupported())
 		            {
-		            	if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("!!!!!!! NO FP !!!!!!!");
+		            	if (J3DCore.LOGGING()) Jcrpg.LOGGER.warning("!!!!!!! NO FP !!!!!!!");
 		            }
 	            } catch (Exception ex)
 	            {
@@ -172,12 +172,12 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 				}
 			}
        
-        if (J3DCore.FARVIEW_ENABLED && model!=null && model.type==Model.PARTLYBILLBOARDMODEL)
+        if (J3DCore.SETTINGS.FARVIEW_ENABLED && model!=null && model.type==Model.PARTLYBILLBOARDMODEL)
     	{
-    		startFog = (2*J3DCore.RENDER_DISTANCE_FARVIEW*2)/3;
+    		startFog = (2*J3DCore.SETTINGS.RENDER_DISTANCE_FARVIEW*2)/3;
     	} else
     	{
-    		startFog = 2*J3DCore.VIEW_DISTANCE/3;
+    		startFog = 2*J3DCore.SETTINGS.VIEW_DISTANCE/3;
     	}
 	}
 	
@@ -423,7 +423,7 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 
 					//float dist = parent.getWorldTranslation().add(avarageTranslation).distance(core.getCamera().getLocation());
 					// TODO make a better dist calc -> take the closest instances translation!
-					if (J3DCore.FARVIEW_ENABLED) {
+					if (J3DCore.SETTINGS.FARVIEW_ENABLED) {
 						fp.setParameter(new float[]{1.0f-( Math.max(0, dist-startFog)/(startFog) * 0.3f),0,0,0}, 1); // TODO
 					} else
 					{

@@ -83,7 +83,7 @@ public class UIBase {
 	}
 	public void handleEvent(String key)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("uiBase: handleEvent "+key);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("uiBase: handleEvent "+key);
 		if (eventToElements.get(key)!=null)
 		{
 			HashSet<KeyListener> set = eventToElements.get(key);
@@ -98,7 +98,7 @@ public class UIBase {
 	}
 	public void addEventHandler(String key, KeyListener listener)
 	{
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("################## "+listener+" --- "+key);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("################## "+listener+" --- "+key);
 		if (eventToElements.get(key)==null)
 		{
 			eventToElements.put(key, new HashSet<KeyListener>());

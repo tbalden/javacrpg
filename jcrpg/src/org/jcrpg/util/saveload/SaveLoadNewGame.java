@@ -131,7 +131,7 @@ public class SaveLoadNewGame {
 				for (Class<?extends Obj> o:core.gameState.charCreationRules.profInstances.get(m.description.professions.get(0)).generationNewInstanceObjects)
 				{
 					m.inventory.add(new ObjInstance(ObjList.getInstance(o)));
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ADDING ITEM : "+o);
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ADDING ITEM : "+o);
 				}*/
 				m.memberState.maximizeAtStart();
 				party.addPartyMember(m);

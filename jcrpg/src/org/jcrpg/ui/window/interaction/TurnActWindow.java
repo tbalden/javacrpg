@@ -270,10 +270,10 @@ public class TurnActWindow extends PagedInputWindow {
 					ids[counter_2]=""+counter_2;
 					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
 					objects[counter_2]=b;
-					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+skill);
+					//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+skill);
 					if (i.behaviorSkill!=null && i.behaviorSkill.getClass() == b.getClass())
 					{
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### FOUND SKILL");
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("### FOUND SKILL");
 						selected = counter_2;
 					}
 					counter_2++;
@@ -333,7 +333,7 @@ public class TurnActWindow extends PagedInputWindow {
 				Object[] objects = new Object[list.size()];
 				String[] texts = new String[list.size()];
 				int count = 0;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
 				for (EncounterUnitData data:list)
 				{
 					ids[count] = ""+count;
@@ -701,7 +701,7 @@ public class TurnActWindow extends PagedInputWindow {
 		Object[] objects = new Object[list.size()];
 		String[] texts = new String[list.size()];
 		int count = 0;
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
 		for (EncounterUnitData data:list)
 		{
 			ids[count] = ""+count;

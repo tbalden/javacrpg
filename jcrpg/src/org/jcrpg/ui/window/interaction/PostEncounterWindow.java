@@ -199,7 +199,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 			Object[] objects = new Object[list.size()];
 			String[] texts = new String[list.size()];
 			int count = 0;
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+list.size());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+list.size());
 			for (EncounterUnitData data:list)
 			{
 				ids[count] = ""+count;
@@ -241,7 +241,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 		String[] texts = new String[listOfAll.size()];
 		Quad[] icons = new Quad[listOfAll.size()];
 		int count = 0;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+listOfAll.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+listOfAll.size());
 		for (InventoryListElement invListElement:listOfAll)
 		{
 			ids[count] = ""+count;

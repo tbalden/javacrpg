@@ -342,7 +342,7 @@ public class EntityObjInventory {
 		ArrayList<BodyPart> parts = instance.description.getBodyType().bodyParts;
 		
 		Class<? extends BodyPart> part = ((Equippable)equipment.description).getEquippableBodyPart();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityObjInventory.equip Part: "+part);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EntityObjInventory.equip Part: "+part);
 		boolean found = false;
 		BodyPart bPart = null;
 		for (BodyPart p:parts)
@@ -355,7 +355,7 @@ public class EntityObjInventory {
 		}
 		if (!found) return false;
 		
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityObjInventory.equip Part: FOUND "+part);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityObjInventory.equip Part: FOUND "+part);
 
 		int counterForEquipped = 0;
 		int maxEquipped = bPart.getMaxNumberOfObjToEquip();
@@ -453,7 +453,7 @@ public class EntityObjInventory {
 	{
 		for (ObjInstance i:equipped)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("check attr bonus I "+i.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("check attr bonus I "+i.getName());
 			if (i.description instanceof Armor)
 			{
 				Armor bo = (Armor)i.description;
@@ -479,7 +479,7 @@ public class EntityObjInventory {
 		Attributes sum = null;
 		for (ObjInstance i:equipped)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntObjInv getEquipmentAttributeValues: check attr bonus I "+i.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EntObjInv getEquipmentAttributeValues: check attr bonus I "+i.getName());
 			if (i.description instanceof BonusObject)
 			{
 				BonusObject bo = (BonusObject)i.description;
@@ -496,7 +496,7 @@ public class EntityObjInventory {
 						continue;
 					}
 				}
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+bo.getAttributeValues());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(""+bo.getAttributeValues());
 				if (bo.getAttributeValues()!=null)
 				{
 					Attributes bonus = bo.getAttributeValues();

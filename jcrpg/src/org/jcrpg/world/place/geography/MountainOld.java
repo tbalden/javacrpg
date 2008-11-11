@@ -83,7 +83,7 @@ public class MountainOld extends Geography implements Surface{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		this.mountainRealSizeY = worldHeight - worldGroundLevel;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+mountainRealSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("MOUNTAIN SIZE = "+mountainRealSizeY+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
 		this.sizeZ = sizeZ;
 		this.origoX = origoX;
 		this.origoY = origoY;

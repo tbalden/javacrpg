@@ -43,7 +43,7 @@ public class EncounterPhaseLineup {
 	}
 	public void addUnit(EncounterUnitData unit, int priority)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EncounterPhaseLineup ADDING UNIT: "+unit.parent.getName()+" - "+priority);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EncounterPhaseLineup ADDING UNIT: "+unit.parent.getName()+" - "+priority);
 		ArrayList<EncounterUnitData> list = orderedList.get(priority);
 		if (list==null)
 		{

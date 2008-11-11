@@ -201,7 +201,7 @@ public class TextInputField extends InputBase {
 		if (listenedKeys.contains(key))
 		{
 			if (text.length()==maxLength) return true;
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("KEY PRESSED : "+key);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("KEY PRESSED : "+key);
 			String appended = key;
 			if (key.equals("space"))
 			{

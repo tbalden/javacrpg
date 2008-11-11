@@ -95,7 +95,7 @@ public class RenderedAreaOld {
 		world.perf_geo_t0 = 0;
 		world.perf_surface_t0 = 0;
 		world.perf_water_t0 = 0;
-		if (J3DCore.CONTINUOUS_LOAD)
+		if (J3DCore.SETTINGS.CONTINUOUS_LOAD)
 		{
 			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
 			synchronized (worldCubeCache)
@@ -209,15 +209,15 @@ public class RenderedAreaOld {
 				}
 			}
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("Key calculation sumTime = "+sumTime_1);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("World.getCube sumTime = "+sumTime);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("World.getCube + cache sumTime = "+sumTime_2);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- eco = "+world.perf_eco_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- geo = "+world.perf_geo_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- flo = "+world.perf_flora_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("Key calculation sumTime = "+sumTime_1);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("World.getCube sumTime = "+sumTime);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("World.getCube + cache sumTime = "+sumTime_2);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- eco = "+world.perf_eco_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- geo = "+world.perf_geo_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- flo = "+world.perf_flora_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
 
 		System.out.println("Key calculation sumTime = "+sumTime_1);
 		System.out.println("World.getCube sumTime = "+sumTime);
@@ -250,7 +250,7 @@ public class RenderedAreaOld {
 		old = worldCubeCache_FARVIEW;
 		worldCubeCache_FARVIEW = worldCubeCacheNext_FARVIEW;
 		worldCubeCacheNext_FARVIEW = old;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("TO ARRAY TIME: "+(t0-System.currentTimeMillis()));
 		if (haltCurrentProcess) 
 		{
 			haltCurrentProcess = false;

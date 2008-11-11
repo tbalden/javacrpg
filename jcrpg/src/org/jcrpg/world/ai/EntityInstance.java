@@ -229,15 +229,15 @@ public class EntityInstance {
 	{
 		int counter = 0;
 		// For debugging without combats
-		if (J3DCore.WITHOUT_COMBATS) {
+		if (J3DCore.SETTINGS.WITHOUT_COMBATS) {
 			return false;
 		}
 				
 		ArrayList<EntityFragment> camperFragments = doReplenishAndGetCampers(seed);
 		
-		//	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest()
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEncounters.size());
+		//	if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(" - "+roamingBoundary.posX+" "+roamingBoundary.posZ+" : "+roamingBoundary.radiusInRealCubes);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest()
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(" LIVE "+this.description.getClass().getSimpleName() + " "+ nearbyEncounters.size());
 		if (nearbyEncounters!=null && nearbyEncounters.size()>0) {
 			for (EncounterInfo info : nearbyEncounters)
 			{
@@ -249,7 +249,7 @@ public class EntityInstance {
 				if (choiceMap.get(Attack.class)!=null && choiceMap.get(Attack.class).contains(J3DCore.getInstance().gameState.player.theFragment))
 				{
 					int level = description.getFullscaleEncounterRelationBalance(levelMap, info);
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RELATION SUM LEVEL FOR FULLSCALE = "+level);
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("RELATION SUM LEVEL FOR FULLSCALE = "+level);
 					if (level>0)
 					{
 						EncounterInfo i = info.copy();						
@@ -267,7 +267,7 @@ public class EntityInstance {
 				
 			}
 		}
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+counter);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LIVE ONE TURN "+this.getClass()+" "+id + " | Nearby: "+counter);
 		return false;
 	}
 
@@ -326,7 +326,7 @@ public class EntityInstance {
 	 */
 	public void merge(EntityInstance instance)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EntityInstance.merge # MERGING: "+instance);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EntityInstance.merge # MERGING: "+instance);
 		numberOfMembers+=instance.numberOfMembers;
 		calculateGroupsAndPositions();
 		fragments.merge(instance.fragments);

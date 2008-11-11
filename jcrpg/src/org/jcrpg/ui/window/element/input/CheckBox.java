@@ -85,7 +85,7 @@ public class CheckBox extends InputBase {
             w1.setSolidColor(ColorRGBA.white);
             activeNode.attachChild(w1);
         } catch (Exception ex) {
-            if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
+            if (J3DCore.LOGGING()) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
             ex.printStackTrace();
         }
         baseNode.attachChild(activeNode);
@@ -102,7 +102,7 @@ public class CheckBox extends InputBase {
             w1.setSolidColor(ColorRGBA.gray);
             deactiveNode.attachChild(w1);
         } catch (Exception ex) {
-            if (J3DCore.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
+            if (J3DCore.LOGGING()) { Jcrpg.LOGGER.log(Level.SEVERE, ex.getMessage(), ex); }
             ex.printStackTrace();
         }
         baseNode.attachChild(deactiveNode);
@@ -122,7 +122,7 @@ public class CheckBox extends InputBase {
             activate();
             return true;
         }
-        if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+id+" "+key);
+        if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+id+" "+key);
         return false;
     }
 
