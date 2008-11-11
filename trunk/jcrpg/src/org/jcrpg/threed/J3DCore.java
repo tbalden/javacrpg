@@ -110,6 +110,7 @@ import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.pass.BasicPassManager;
+import com.jme.renderer.pass.Pass;
 import com.jme.renderer.pass.RenderPass;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
@@ -2568,7 +2569,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// sPass.addOccluder(groundParentNode);
 		}
 
+		bloomRenderPass.setUseCurrentScene(true);
+		bloomRenderPass.setBlurIntensityMultiplier(1.0f);
 
+		dofRenderPass.setRootSpatial(dofParentNode);
+		dofRenderPass.setBlurSize(0.004f);
+		dofRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.3f);
+		dofRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.6f);
+		dofRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
+		dofRenderPass.setThrottle(0f);
+
+		bloomRenderPass.setEnabled(false);
+		pManager.add(bloomRenderPass);
+		dofRenderPass.setEnabled(false);
+		pManager.add(dofRenderPass);
+		
 		if (BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
 				Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
@@ -2582,10 +2597,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
-				bloomRenderPass.setUseCurrentScene(true);
-				bloomRenderPass.setBlurIntensityMultiplier(1.0f);
 				//bloomRenderPass.setThrottle(0.f);
-				pManager.add(bloomRenderPass);
+				bloomRenderPass.setEnabled(true);
 			}
 		} else
 		if (DOF_EFFECT)
@@ -2602,13 +2615,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! Depth of field!");
 				// bloomRenderPass.add(groundParentNode);
-				dofRenderPass.setRootSpatial(dofParentNode);
-				dofRenderPass.setBlurSize(0.004f);
-				dofRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.7f);
-				dofRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.3f);
-				dofRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
-				dofRenderPass.setThrottle(0f);
-				pManager.add(dofRenderPass);
+				dofRenderPass.setEnabled(true);
 			}
 		}
 
@@ -3031,6 +3038,35 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public void setCamera(Camera cam) {
 		this.cam = cam;
+	}
+	
+	private void switchPass(Pass pass, boolean state)
+	{
+		if (//pManager.contains(pass) && 
+				state==false)
+		{
+			//pManager.remove(pass);
+			pass.setEnabled(false);
+		} else
+		if (//!pManager.contains(pass) && 
+				state==true)
+		{
+			//pManager.add(pass);
+			pass.setEnabled(true);
+		}
+		
+	}
+	
+	public void applyOptions()
+	{
+		switchPass(bloomRenderPass, BLOOM_EFFECT);
+		switchPass(dofRenderPass, DOF_EFFECT&&!BLOOM_EFFECT);
+		
+		if (pManager.contains(waterEffectRenderPass))
+		{
+			waterEffectRenderPass.setUseShader(WATER_SHADER);
+		}
+		audioServer.applyVolumeSettings();
 	}
 	
 

@@ -308,6 +308,11 @@ public class WaterRenderPass extends Pass {
 		super.doUpdate( tpf );
 		this.tpf = tpf;
 	}
+	
+	public void setUseShader(boolean enabled)
+	{
+		supported = enabled;
+	}
 
 
 	public void doRender( Renderer r ) {
