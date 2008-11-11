@@ -238,6 +238,7 @@ public class OptionsMenu extends PagedInputWindow {
             // back to main menu
             toggle();
             core.mainMenu.toggle();
+            core.applyOptions();
             return true;
         // Cancel
         } else if (base == cancel) {

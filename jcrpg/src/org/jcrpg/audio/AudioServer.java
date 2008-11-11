@@ -74,7 +74,8 @@ public class AudioServer implements Runnable {
 		{
 			return;
 		}
-		
+		EFFECT_VOLUME_PERCENT_LAST = J3DCore.EFFECT_VOLUME_PERCENT;
+		MUSIC_VOLUME_PERCENT_LAST = J3DCore.MUSIC_VOLUME_PERCENT;
 		
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/fantasy/fantasy_menu.ogg").toURL(), true);
@@ -235,8 +236,8 @@ public class AudioServer implements Runnable {
 			if (!c.isAvailable() && c.soundId.equals(id))
 			{
 				//c.track.setLooping(true);
-				c.track.setVolume(volume);
-				c.track.setTargetVolume(volume);
+				//c.track.setVolume(volume);
+				c.track.setTargetVolume(volume* J3DCore.EFFECT_VOLUME_PERCENT/100f);
 				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("setSoundPlayingVolume SETTING VOLUME: "+c.soundId+" "+volume+" -- "+c.track.getVolume());
 				b = true;
 			}
@@ -360,6 +361,9 @@ public class AudioServer implements Runnable {
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
 				track.fadeIn(0.5f, v);
+			} else
+			{
+				track.setTargetVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 		} catch (NullPointerException npex)
 		{
@@ -386,7 +390,10 @@ public class AudioServer implements Runnable {
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
-				track.fadeIn(v, v);
+				track.fadeIn(0.5f, v);
+			} else
+			{
+				track.setTargetVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 		} catch (NullPointerException npex)
 		{
@@ -413,18 +420,16 @@ public class AudioServer implements Runnable {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+				if (!track.getType().equals(TrackType.MUSIC)) {
+					track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				}
+			} else
+			{
+				track.setTargetVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			}
 			track.setLooping(true);
-			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
-			}
 			c.setTrack(id, track);
-			track.setTargetVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
-			track.setVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			c.playTrack();
-			//float v = track.getVolume();
-			track.setVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
-			//track.fadeIn(0.2f, volume);
 		} catch (NullPointerException npex)
 		{
 			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
@@ -460,7 +465,6 @@ public class AudioServer implements Runnable {
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
 			mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
-			mainTheme.setMinVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
 			if (hmTracks.get(id)==null)
 			{
 				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
@@ -489,6 +493,124 @@ public class AudioServer implements Runnable {
 			AudioSystem.getSystem().update();
 			try{Thread.sleep(60);}catch (Exception ex){}
 		}
+	}
+	
+	public int EFFECT_VOLUME_PERCENT_LAST;
+	public int MUSIC_VOLUME_PERCENT_LAST;
+	
+	public void applyVolumeSettings()
+	{
+		for (Channel c:channels)
+		{
+			
+			AudioTrack t = c.track;
+			if (t!=null)
+			{
+				if (t.getType()== TrackType.ENVIRONMENT)
+				{
+					float newLevel = (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					try {
+						float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
+						System.out.println("C: "+t.getVolume());
+						newLevel = relativeLevel * (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					} catch (Exception ex) {}
+					if (Float.isNaN(newLevel)) newLevel =(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					System.out.println("NEWL: "+newLevel);
+					if (!t.isPlaying())
+					{
+						t.setVolume(newLevel);
+					} else
+					{
+						t.setVolumeChangeRate(1f);
+						t.setTargetVolume(newLevel);
+					}
+				}
+			}
+		}
+		for (ArrayList<AudioTrack> ts : hmTracks.values())
+		{
+			for (AudioTrack t:ts)
+			{
+				boolean found = false;
+				for (Channel c: channels)
+				{
+					if (c.track == t) found = true;
+				}
+				for (Channel c: musicChannels)
+				{
+					if (c.track == t) found = true;
+				}
+				if (!found)
+				{
+					if (t.getType()== TrackType.ENVIRONMENT)
+					{
+						float newLevel = (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						try {
+							float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
+							System.out.println("C: "+t.getVolume());
+							newLevel = relativeLevel * (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						} catch (Exception ex) {}
+						if (Float.isNaN(newLevel)) newLevel =(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						System.out.println("NEWL: "+newLevel);
+						if (!t.isPlaying())
+						{
+							t.setVolume(newLevel);
+						} else
+						{
+							t.setVolumeChangeRate(1f);
+							t.setTargetVolume(newLevel);
+						}
+					}
+					if (t.getType()== TrackType.MUSIC)
+					{
+						float newLevel = (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						try {
+							float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
+							System.out.println("C: "+t.getVolume());
+							newLevel = relativeLevel * (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						} catch (Exception ex) {}
+						if (Float.isNaN(newLevel)) newLevel =(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						System.out.println("NEWL: "+newLevel);
+						if (!t.isPlaying())
+						{
+							t.setVolume(newLevel);
+						} else
+						{
+							t.setVolumeChangeRate(1f);
+							t.setTargetVolume(newLevel);
+						}
+					}
+				}
+			}
+		}
+		for (Channel c:musicChannels)
+		{
+			AudioTrack t = c.track;
+			if (t!=null)
+			{
+				if (t.getType()== TrackType.MUSIC)
+				{
+					float newLevel = (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+					try {
+						float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
+						System.out.println("C: "+t.getVolume());
+						newLevel = relativeLevel * (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+					} catch (Exception ex) {}
+					if (Float.isNaN(newLevel)) newLevel =(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+					System.out.println("NEWL: "+newLevel);
+					if (!t.isPlaying())
+					{
+						t.setVolume(newLevel);
+					} else
+					{
+						t.setVolumeChangeRate(1f);
+						t.setTargetVolume(newLevel);
+					}
+				}
+			}
+		}
+		EFFECT_VOLUME_PERCENT_LAST = J3DCore.EFFECT_VOLUME_PERCENT;
+		MUSIC_VOLUME_PERCENT_LAST = J3DCore.MUSIC_VOLUME_PERCENT;
 	}
 	
 }
