@@ -43,9 +43,9 @@ public class WorldSizeFlowDirections {
 		gWY = (wY*wMag)/gMag;
 		gWZ = (wZ*wMag)/gMag;
 		
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+gWX+" "+gWY+" "+gWZ+" "+(int)((gWX*gWY*gWZ)/8));
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(""+gWX+" "+gWY+" "+gWZ+" "+(int)((gWX*gWY*gWZ)/8));
 		// negative int on too big world size!! add more byte arrays!
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("WorldSizeFlowDirection (gWX*gWY*gWZ*4)/8="+(gWX*gWY*gWZ*4)/8); // TODO mem calculation exception if too high: 1000 magnification / 10 geo magnification in a 100x100 world would eat 200MB!
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("WorldSizeFlowDirection (gWX*gWY*gWZ*4)/8="+(gWX*gWY*gWZ*4)/8); // TODO mem calculation exception if too high: 1000 magnification / 10 geo magnification in a 100x100 world would eat 200MB!
 		bytes = new byte[(gWX*gWY*gWZ*4)/8];
 	}
 

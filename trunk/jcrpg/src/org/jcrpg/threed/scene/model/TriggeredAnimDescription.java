@@ -57,19 +57,19 @@ public class TriggeredAnimDescription {
 		Field[] fields = this.getClass().getFields();
 		for (Field f:fields)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+f.getName()+ " "+ f.getType() );
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("F: "+f.getName()+ " "+ f.getType() );
 			if (!f.getName().startsWith("ANIM_") && f.getType()==String.class)
 			{
 				try 
 				{
 					String v = (String)f.get(this);
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("= "+v);
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("= "+v);
 					if (v!=null)
 					{
 						if (v.charAt(0)!='.')
 							v = "./data/models/"+v;
 						String key = (String)this.getClass().getField("ANIM_"+f.getName()).get(this);
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("__"+key+" : "+v);
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("__"+key+" : "+v);
 						r.put(key,v);
 					}
 				} catch (IllegalAccessException e)

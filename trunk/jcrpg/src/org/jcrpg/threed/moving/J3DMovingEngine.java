@@ -97,7 +97,7 @@ public class J3DMovingEngine {
 			nodes = new ArrayList<EffectNode>();
 			effectNodes.put(program, nodes);
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("playEffectProgram"+eNode.getClass());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("playEffectProgram"+eNode.getClass());
 		nodes.add(eNode);
 		eNode.sourceForm = source;
 		eNode.targetForm = target;
@@ -109,7 +109,7 @@ public class J3DMovingEngine {
 	{
 		try
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("endEffectProgram"+node.getClass());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("endEffectProgram"+node.getClass());
 			effectNodes.get(program).remove(node);
 			node.startedPlaying = false;
 			node.removeFromParent();
@@ -145,11 +145,11 @@ public class J3DMovingEngine {
 			}
 			
 			n[i].setLocalRotation(qC);
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("- "+unit.id+" "+unit.form.member);
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("- "+unit.id+" "+unit.form.member);
 			VisibleLifeForm form = unit.form;
 			//EntityMemberInstance member = form.member;
 			EntityMember desc = form.type;
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("DESC: "+desc.getClass().getSimpleName()+" "+desc.getScale()[0]);
 			float[] scale = desc.getScale();
 			scale[0] *= n[i].model.scale[0];
 			scale[1] *= n[i].model.scale[1];
@@ -213,7 +213,7 @@ public class J3DMovingEngine {
 			clearUnitTextNodes(u);
 			if (pooledRealNode!=null) {
 				Node realNode = (Node)pooledRealNode;
-				if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+				if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
 				realNode.removeFromParent();
 				core.modelPool.releaseNode(pooledRealNode);
 			}
@@ -234,7 +234,7 @@ public class J3DMovingEngine {
 				clearUnitTextNodes(u);
 				if (pooledRealNode!=null) {
 					Node realNode = (Node)pooledRealNode;
-					if (J3DCore.SHADOWS) core.removeOccludersRecoursive(realNode);
+					if (J3DCore.SETTINGS.SHADOWS) core.removeOccludersRecoursive(realNode);
 					realNode.removeFromParent();
 					core.modelPool.releaseNode(pooledRealNode);
 				}
@@ -458,11 +458,11 @@ public class J3DMovingEngine {
 					
 					if (unit.internal) {
 						core.encounterExtRootNode.attachChild((Node)realPooledNode);
-						if (J3DCore.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
+						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 					} else 
 					{
 						core.encounterExtRootNode.attachChild((Node)realPooledNode);
-						if (J3DCore.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
+						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
 					realPooledNode.updateRenderState();
@@ -524,7 +524,7 @@ public class J3DMovingEngine {
 			ArrayList<EffectNode> nodes = effectNodes.get(p);
 			for (EffectNode n:nodes)
 			{
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("PLAYING "+n.getClass());
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("PLAYING "+n.getClass());
 				if (!n.startedPlaying)
 				{
 					n.startedPlaying = true;
@@ -536,13 +536,13 @@ public class J3DMovingEngine {
 					core.getRootNode1().updateRenderState();
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
 				Vector3f cVec = new Vector3f(n.currentPos);
 				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.unit, n.speed, timePerFrame);
 				Vector3f mVec = rVectors[0];
 				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine(n.currentPos);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine(n.currentPos);
 				
 				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
 				float angleTurn = n.prevDisplacement==null?0:mVec.angleBetween(n.prevDisplacement);
@@ -556,7 +556,7 @@ public class J3DMovingEngine {
 				
 				
 				float dist = eVec.distance(n.currentPos);
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("######### "+dist);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("######### "+dist);
 				
 				if (System.currentTimeMillis()-n.effectStartTime>10000)
 				{
@@ -623,20 +623,20 @@ public class J3DMovingEngine {
 						
 						if (unit.playingAnimation==null)
 						{
-							if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("+++++++++++++++++");
+							if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("+++++++++++++++++");
 							unit.startPlayingAnimation(unit.state, unit.getIdleStateName());
 							unit.playingAnimation = unit.state;
 						} else
 						{
 							if (unit.isFinishedPlaying())
 							{
-								if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("---------------------");
+								if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("---------------------");
 								unit.playingAnimation = null;
 								unit.stateFinished();
 								continue;
 							} else
 							{
-								//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("STILL PLAYING...");
+								//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("STILL PLAYING...");
 							}
 						}
 						
@@ -684,7 +684,7 @@ public class J3DMovingEngine {
 						Vector3f mVec = rVectors[0];
 
 						n.getLocalTranslation().addLocal(mVec);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine(unit.c3dX+" "+unit.c3dY+" "+unit.c3dZ);
 						((Node)n.realNode).setLocalTranslation(n.getLocalTranslation());
 
 						Quaternion current = ((Node)n.realNode).getLocalRotation();
@@ -692,11 +692,11 @@ public class J3DMovingEngine {
 						((Node)n.realNode).setLocalRotation(current);//getLocalRotation().set(mVec.x, 0, mVec.z,1);
 
 						float dist = eVec.distance(n.getLocalTranslation());
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("######### "+dist);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("######### "+dist);
 						
 						if (dist<0.1f)
 						{
-							//if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("TURN");
+							//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("TURN");
 							unit.endMoveOneCube();
 						}
 					}

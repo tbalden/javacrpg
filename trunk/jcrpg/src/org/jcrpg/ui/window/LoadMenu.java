@@ -96,13 +96,13 @@ public class LoadMenu extends Window implements KeyListener {
 	{
 		try {
 			File f = new File(SaveLoadNewGame.saveDir);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LoadMenu # FILE: "+f.getAbsolutePath());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LoadMenu # FILE: "+f.getAbsolutePath());
 			String[] files = f.list();
 			TreeMap<String, SaveSlotData> dataList1 = new TreeMap<String, SaveSlotData>();
 			if (files!=null)
 			for (String file:files)
 			{
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("# FILE: "+file);
 				if (new File(f.getAbsolutePath()+"/"+file).isDirectory())
 				{
 					SaveSlotData data = new SaveSlotData();
@@ -111,7 +111,7 @@ public class LoadMenu extends Window implements KeyListener {
 					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
 					for (String sFile:subFiles)
 					{
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+sFile);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("F: "+sFile);
 						File sF = new File(SaveLoadNewGame.saveDir+"/"+file+"/"+sFile);
 						if (sF.isFile())
 						{
@@ -244,10 +244,10 @@ public class LoadMenu extends Window implements KeyListener {
 		core.clearCore();
 		base.hud.characters.hide();
 		SaveLoadNewGame.loadGame(core,data.gameData);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- LOADING GAME ----------------------------");
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("---------------------- LOADING GAME ----------------------------");
 		core.init3DGame();
 		core.getClassicInputHandler().enableMouse(true);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("---------------------- END LOADING GAME ------------------------");
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("---------------------- END LOADING GAME ------------------------");
 		core.uiBase.hud.characters.update();
 		core.uiBase.hud.characters.show();
 		core.getUIRootNode().updateRenderState();

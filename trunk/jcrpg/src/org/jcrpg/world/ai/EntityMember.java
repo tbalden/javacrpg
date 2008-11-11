@@ -145,12 +145,12 @@ public class EntityMember extends DescriptionBase {
 			int point = (int)(Math.random()*10);
 			while (order.get(point)!=null) point++;
 			order.put(point, data);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("??? ORDERED DATA "+data.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("??? ORDERED DATA "+data.getName());
 		}
 		ArrayList<EncounterUnitData> ret = new ArrayList<EncounterUnitData>();
 		ret.addAll(order.values());
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("INCOMING SIZE = "+list.size());
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RET SIZE = "+ret.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("INCOMING SIZE = "+list.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("RET SIZE = "+ret.size());
 		return ret;
 	}
 		
@@ -196,7 +196,7 @@ public class EntityMember extends DescriptionBase {
 				{
 					if (unitData.isNeutralized()) 
 					{
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ## NOT (dead or neut) for choice : "+unitData.getName());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ## NOT (dead or neut) for choice : "+unitData.getName());
 						continue;
 					}
 					choice.target = unitData;
@@ -205,7 +205,7 @@ public class EntityMember extends DescriptionBase {
 						continue;			
 					
 					choice.targetMember = unitData.getFirstLivingMember();
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ====== "+(choice.targetMember==null?"NULL":choice.targetMember.description.getName()));
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EntityMember.getTurnActMemberChoice ====== "+(choice.targetMember==null?"NULL":choice.targetMember.description.getName()));
 					if (choice.targetMember==null) continue;
 					else
 					{
@@ -215,12 +215,12 @@ public class EntityMember extends DescriptionBase {
 							{
 								for (Class<?extends SkillBase> sb:memberSkills.skills.keySet())
 								{
-									//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--_ "+sb);
+									//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--_ "+sb);
 								}
 								int lineUpDistance = instance.encounterData.getCurrentLine()+choice.targetMember.encounterData.getCurrentLine();
 								Collection<Class<?extends SkillBase>> skills = memberSkills.getTurnActSkillsOrderedBySkillLevel(info.getPhase(),null,lineUpDistance);
 								//boolean found = false;
-								if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("FOUND TURN ACT SKILLS: "+skills);
+								if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("FOUND TURN ACT SKILLS: "+skills);
 								if (skills!=null)
 								for (Class<? extends SkillBase> s:skills)
 								{

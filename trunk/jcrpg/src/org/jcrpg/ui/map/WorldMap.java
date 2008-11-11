@@ -138,7 +138,7 @@ public class WorldMap {
 											(e.getBoundaries().limitZMax<wz && e.getBoundaries().limitZMax<wz+w.magnification)
 									) 
 									{
-										/*if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# OUT "+
+										/*if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("# OUT "+
 												e.getBoundaries().limitXMin+" > "+wx + " && " +
 												e.getBoundaries().limitXMin+" > "+(wx+w.magnification) + " || " + 
 												e.getBoundaries().limitXMax+" < "+wx + " && " +
@@ -197,7 +197,7 @@ public class WorldMap {
 				
 				
 			}
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("");
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("");
 		}
 		oceanImage = new Image();
 		oceanImage.setFormat(Image.Format.RGBA8);
@@ -246,7 +246,7 @@ public class WorldMap {
 	public void update(int cx, int cy, int cz)
 	{
 		//if (true) return;
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(""+Math.min(world.sizeZ,++cz)+" "+Math.max(0,--cx));
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(""+Math.min(world.sizeZ,++cz)+" "+Math.max(0,--cx));
 		if (cx==lastCx && cz==lastCz) return;
 		lastCx = cx;
 		lastCz = cz;

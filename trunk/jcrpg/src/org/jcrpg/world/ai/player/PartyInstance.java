@@ -80,12 +80,12 @@ public class PartyInstance extends EntityInstance {
 					int[] groupIds = i.encounteredGroupIds.get(entityFragment);
 					if (groupIds!=null)
 					if (groupIds.length==0) {
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NO GROUPID IN ARRAY: "+entityFragment.getDescription()+" - "+entityFragment.getSize());
 					}
 					if (groupIds!=null)
 					for (int in:groupIds) {
 						int size = entityFragment.getGroupSize(in);
-						if (size==0) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SIZE ZERO: "+entityFragment.getDescription());
+						if (size==0) if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("SIZE ZERO: "+entityFragment.getDescription());
 						fullSize+=size;
 					}
 					if (i.encounteredSubUnits.get(entityFragment)!=null) fullSize+=i.encounteredSubUnits.get(entityFragment).size();

@@ -393,7 +393,7 @@ public class RenderedArea {
 		
 		int worldXS, worldZS;
 		
-		if (J3DCore.CONTINUOUS_LOAD)
+		if (J3DCore.SETTINGS.CONTINUOUS_LOAD)
 		{
 			// making a threadsafe copy of the cache for normal calculation of 3d rendering...
 			synchronized (worldCubeCache)
@@ -660,12 +660,12 @@ public class RenderedArea {
 		lastY = y;
 		lastZ = z;
 		
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- eco = "+world.perf_eco_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- geo = "+world.perf_geo_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- flo = "+world.perf_flora_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- eco = "+world.perf_eco_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- geo = "+world.perf_geo_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- flo = "+world.perf_flora_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- cli = "+world.perf_climate_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
 
 		System.out.println("WORLDCUBECACHE = "+worldCubeCache.size()+ " ADD: "+toAdd.length+" REM: "+toRemove.length);
 		System.out.println("-- eco = "+world.perf_eco_t0);

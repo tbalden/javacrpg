@@ -144,7 +144,7 @@ public class GenAlgoFlow extends GenAlgoBase {
 	
 	protected void doFlow(GenProgram program, Geography geo, int x, int z)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("AlgoFlow.doFlow: STARTING A FLOW..."+x+" "+z);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("AlgoFlow.doFlow: STARTING A FLOW..."+x+" "+z);
 		WorldParams params = program.params;
 		World world = program.generator.world;
 		//int wMag = params.magnification;
@@ -164,14 +164,14 @@ public class GenAlgoFlow extends GenAlgoBase {
 		{
 			if (HashUtil.mix(cX, 1, cZ)<10)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("BENDING...");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("BENDING...");
 				// let's take a bend
 				int newDirection = (HashUtil.mix(cX, 0, cZ)*4)/100;
 				if (newDirection==backDir) // cannot go back
 					newDirection++;
 				direction=newDirection%4;
 				backDir = direction==0?1:direction==1?0:direction==2?3:2;
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NEW DIR = "+direction+" - back: "+backDir);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NEW DIR = "+direction+" - back: "+backDir);
 			}
 			
 			boolean go = false;
@@ -239,7 +239,7 @@ public class GenAlgoFlow extends GenAlgoBase {
 						break;
 					}
 				}
-				if (!recalcNeed) go = true; //else if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("RECALC");
+				if (!recalcNeed) go = true; //else if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("RECALC");
 			}
 			// set new values into old variables
 			cZ = nZ;
@@ -248,7 +248,7 @@ public class GenAlgoFlow extends GenAlgoBase {
 			// draw the flow into the flowgeo
 			if (turnCounter<=3)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("FLOWING : "+direction+" cx, cz: "+cX+" "+cZ);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("FLOWING : "+direction+" cx, cz: "+cX+" "+cZ);
 				try {
 					geo.getBoundaries().addCube(gMag, cX, world.getSeaLevel(gMag), cZ);
 					geo.getBoundaries().addCube(gMag, cX, world.getSeaLevel(gMag)-1, cZ);

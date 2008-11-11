@@ -236,7 +236,7 @@ public class GeoTileLoader {
 		} 
 		RenderedCube oppAdj = null;
 		float oppAdjDeltaY = 0f;
-		if (J3DCore.TEXTURE_SPLATTING)
+		if (J3DCore.SETTINGS.TEXTURE_SPLATTING)
 		{
 			
 			int oppAdjXDir = +1*(nodePlaceholder.farView?J3DCore.FARVIEW_GAP:1); // WEST -> EAST		
@@ -330,7 +330,7 @@ public class GeoTileLoader {
 			String originalTexture = s==null?null:s[1];
 			String originalBaseTexture = s==null?null:s[0];
 			ownGroundTexture = originalTexture;
-			if (J3DCore.TEXTURE_SPLATTING && !original.farview)
+			if (J3DCore.SETTINGS.TEXTURE_SPLATTING && !original.farview)
 			{
 				// TODO with farview the generated ground tiles are not correctly removed from
 				// scenario. This 'if' above can be removed if solution found...

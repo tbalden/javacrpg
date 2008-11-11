@@ -138,7 +138,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 			Object[] objects = new Object[list.size()];
 			String[] texts = new String[list.size()];
 			int count = 0;
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PreEncounterWindow ENC SIZE = "+list.size());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PreEncounterWindow ENC SIZE = "+list.size());
 			for (EncounterUnitData data:list)
 			{
 				ids[count] = ""+count;

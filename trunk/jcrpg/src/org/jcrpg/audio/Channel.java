@@ -55,7 +55,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void stopTrack()
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
 		try {
 			track.stop();
 			playing = false;
@@ -69,7 +69,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void playTrack()
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" PLAY TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" PLAY TRACK : "+soundId);
 		if (track!=null && !track.isPlaying()) {
 			track.play();
 			if (track!=null)
@@ -82,7 +82,7 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void fadeTrack(float volume)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" FADE TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" FADE TRACK : "+soundId);
 		if (track!=null && track.isPlaying()) {
 			//track.play();
 			if (track!=null)
@@ -91,7 +91,7 @@ public class Channel implements TrackStateListener{
 	}
 	public synchronized void fadeOutTrack()
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" FADE OUT TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" FADE OUT TRACK : "+soundId);
 		if (track!=null && track.isPlaying()) {
 			//track.play();
 			if (track!=null)
@@ -120,12 +120,12 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackPaused(AudioTrack arg0) {
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PAUSED TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### PAUSED TRACK : "+soundId);
 		paused = true;
 	}
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
 		if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
 			trackStopped(arg0); else 
 		{
@@ -135,7 +135,7 @@ public class Channel implements TrackStateListener{
 	}
 
 	public synchronized void trackStopped(AudioTrack arg0) {
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
 		track.removeTrackStateListener(this);
 		if (this.track!=null && this.track.equals(track)) {
 			track = null;

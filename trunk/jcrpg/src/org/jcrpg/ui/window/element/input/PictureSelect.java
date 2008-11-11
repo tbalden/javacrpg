@@ -82,12 +82,12 @@ public class PictureSelect extends InputBase {
 		picQuads.clear();
 		filesList.clear();
 		File f = new File(picturesPath);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PicSelect # FILE: "+f.getAbsolutePath());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PicSelect # FILE: "+f.getAbsolutePath());
 		String[] files = f.list();
 		if (files!=null)
 		for (String file:files)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("# FILE: "+file);
 			if (file.endsWith(".png"))
 			if (!new File(f.getAbsolutePath()+"/"+file).isDirectory())
 			{

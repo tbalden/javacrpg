@@ -63,7 +63,7 @@ public class Forest extends Geography {
 		//Y+=(((((HashUtil.mixPercentage(worldX/((HashUtil.mixPercentage(worldX/8, worldZ/8, 0)+20)/20), worldZ/((HashUtil.mixPercentage(worldZ/8, worldX/8, 0)+20)/20), 0)))+30)%100)/50);
 		//int ret = Math.min(0,-Y/30); // valley
 		float ret = Math.max(0,Y); // mountain
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("PLAIN H: "+ret);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PLAIN H: "+ret);
 		return ret;
 
 	}

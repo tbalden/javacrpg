@@ -153,20 +153,74 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 * cannot see the world's cubes twice from one viewpoint. :)
 	 */
 	public static final int MINIMUM_WORLD_REALSIZE = 100;
+	
+	public static class CoreSettings
+	{
+		/**
+		 * rendered cubes in each direction (N,S,E,W,T,B).
+		 */
+		public int RENDER_DISTANCE_ORIG = 10;
+		public int RENDER_DISTANCE_FARVIEW = 40;
+		public int RENDER_DISTANCE = 10;
+		public int VIEW_DISTANCE = 10;
+		public int VIEW_DISTANCE_SQR = 100;
+		public int VIEW_DISTANCE_FRAG_SQR = 20;
+		public int RENDER_GRASS_DISTANCE = 10;
+		public int RENDER_SHADOW_DISTANCE = 10;
+		public int RENDER_SHADOW_DISTANCE_SQR = 100;
+		public int ANTIALIAS_SAMPLES = 0;
+		
+		public boolean MIPMAP_TREES = false;
 
-	/**
-	 * rendered cubes in each direction (N,S,E,W,T,B).
-	 */
-	public static int RENDER_DISTANCE_ORIG = 10;
-	public static int RENDER_DISTANCE_FARVIEW = 40;
-	public static int RENDER_DISTANCE = 10;
-	public static int VIEW_DISTANCE = 10;
-	public static int VIEW_DISTANCE_SQR = 100;
-	public static int VIEW_DISTANCE_FRAG_SQR = 20;
-	public static int RENDER_GRASS_DISTANCE = 10;
-	public static int RENDER_SHADOW_DISTANCE = 10;
-	public static int RENDER_SHADOW_DISTANCE_SQR = 100;
-	public static int ANTIALIAS_SAMPLES = 0;
+		public boolean MIPMAP_GLOBAL = true;
+
+		public int TEXTURE_QUALITY = 0;
+
+		public boolean SOUND_ENABLED = true;
+		public int MUSIC_VOLUME_PERCENT = 10;
+		public int EFFECT_VOLUME_PERCENT = 60;
+
+		public boolean BLOOM_EFFECT = false;
+		public boolean DOF_EFFECT = false;
+		public boolean DOF_DETAILED = false;
+		public boolean SHADOWS = true;
+
+		public boolean ANIMATED_GRASS = true;
+		public boolean DOUBLE_GRASS = true;
+
+		public boolean ANIMATED_TREES = true;
+		public boolean DETAILED_TREES = true;
+		public boolean DETAILED_TREE_FOLIAGE = true;
+		public boolean LOD_VEGETATION = false;
+		public boolean WATER_SHADER = false;
+		public boolean WATER_DETAILED = false;
+		
+		public  boolean FARVIEW_ENABLED = false;
+
+		public  boolean CONTINUOUS_LOAD = true;
+		
+		public  boolean DISABLE_DDS = false;
+
+		public  boolean LOGGING = true;
+		public  boolean FPSCOUNTER = true;
+		public  boolean TEXTURE_SPLATTING = false;
+		public  boolean SECONDARY_TEXTURES = false;
+		public  boolean SLOW_ANIMATION = false;
+		public  boolean VBO_ENABLED = true;
+		
+		public  boolean NORMALMAP_ENABLED = true;
+
+		// Developer settings
+		public  boolean WITHOUT_COMBATS = false;
+		public  boolean QUICK_EXIT = true;
+
+		// Controller settings
+		public  boolean MOUSELOOK = false;
+		
+	}
+
+	public static CoreSettings SETTINGS = new CoreSettings();
+	
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f;
 
@@ -177,53 +231,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public static boolean OPTIMIZED_RENDERING = false;
 
-	public static boolean MIPMAP_TREES = false;
-
-	public static boolean MIPMAP_GLOBAL = true;
-
-	public static int TEXTURE_QUALITY = 0;
-
-	public static boolean SOUND_ENABLED = true;
-	public static int MUSIC_VOLUME_PERCENT = 10;
-	public static int EFFECT_VOLUME_PERCENT = 60;
-
-	public static boolean BLOOM_EFFECT = false;
-	public static boolean DOF_EFFECT = false;
-	public static boolean DOF_DETAILED = false;
-	public static boolean SHADOWS = true;
-
-	public static boolean ANIMATED_GRASS = true;
-	public static boolean DOUBLE_GRASS = true;
-
-	public static boolean ANIMATED_TREES = true;
-	public static boolean DETAILED_TREES = true;
-	public static boolean DETAILED_TREE_FOLIAGE = true;
-	public static boolean LOD_VEGETATION = false;
-	public static boolean WATER_SHADER = false;
-	public static boolean WATER_DETAILED = false;
 
 	public static int FARVIEW_GAP = 4;
-	public static boolean FARVIEW_ENABLED = false;
 
-	public static boolean CONTINUOUS_LOAD = true;
-	
-	public static boolean DISABLE_DDS = false;
-
-	public static boolean LOGGING = true;
-	public static boolean FPSCOUNTER = true;
-	public static boolean TEXTURE_SPLATTING = false;
-	public static boolean SECONDARY_TEXTURES = false;
-	public static boolean SLOW_ANIMATION = false;
-	public static boolean VBO_ENABLED = true;
-	
-	public static boolean NORMALMAP_ENABLED = true;
-
-	// Developer settings
-	public static boolean WITHOUT_COMBATS = false;
-	public static boolean QUICK_EXIT = true;
-
-	// Controller settings
-	public static boolean MOUSELOOK = false;
 	
 	static Properties p = new Properties();
 
@@ -233,84 +243,84 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			FileInputStream fis = new FileInputStream(f);
 			p.load(fis);
 
-			FARVIEW_ENABLED = false;// XXX removing farview option, new geo
+			SETTINGS.FARVIEW_ENABLED = false;// XXX removing farview option, new geo
 									// tiling is not working well with it,
 			// especially the water part,
 			// loadValue("FARVIEW_ENABLED", false);
 
-			RENDER_DISTANCE_FARVIEW = 80;
+			SETTINGS.RENDER_DISTANCE_FARVIEW = 80;
 			/*
 			 * loadValue("RENDER_DISTANCE_FARVIEW", (int) (60 CUBE_EDGE_SIZE),
 			 * (int) (20 CUBE_EDGE_SIZE), Integer.MAX_VALUE);
 			 */
-			RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
+			SETTINGS.RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
 
-			RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
+			SETTINGS.RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
 					(int) (10 * CUBE_EDGE_SIZE), (int) (10 * CUBE_EDGE_SIZE),
 					Integer.MAX_VALUE);
-			RENDER_DISTANCE /= CUBE_EDGE_SIZE;
+			SETTINGS.RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
 			//if (CONTINUOUS_LOAD)
 				//VIEW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
 			//else
-				VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5,
+			SETTINGS.VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5,
 						Integer.MAX_VALUE);
-			VIEW_DISTANCE_SQR = VIEW_DISTANCE * VIEW_DISTANCE;
-			VIEW_DISTANCE_FRAG_SQR = VIEW_DISTANCE_SQR / 4;
+			SETTINGS.VIEW_DISTANCE_SQR = SETTINGS.VIEW_DISTANCE * SETTINGS.VIEW_DISTANCE;
+			SETTINGS.VIEW_DISTANCE_FRAG_SQR = SETTINGS.VIEW_DISTANCE_SQR / 4;
 
-			RENDER_GRASS_DISTANCE = loadValue("RENDER_GRASS_DISTANCE", 10, 0,
+			SETTINGS.RENDER_GRASS_DISTANCE = loadValue("RENDER_GRASS_DISTANCE", 10, 0,
 					(int) (15 * CUBE_EDGE_SIZE));
 
-			RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
+			SETTINGS.RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
 					(int) (15 * CUBE_EDGE_SIZE));
-			if (RENDER_SHADOW_DISTANCE > RENDER_DISTANCE * CUBE_EDGE_SIZE)
-				RENDER_SHADOW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
-			RENDER_SHADOW_DISTANCE_SQR = RENDER_SHADOW_DISTANCE
-					* RENDER_SHADOW_DISTANCE;
+			if (SETTINGS.RENDER_SHADOW_DISTANCE > SETTINGS.RENDER_DISTANCE * CUBE_EDGE_SIZE)
+				SETTINGS.RENDER_SHADOW_DISTANCE = (int) (SETTINGS.RENDER_DISTANCE * CUBE_EDGE_SIZE);
+			SETTINGS.RENDER_SHADOW_DISTANCE_SQR = SETTINGS.RENDER_SHADOW_DISTANCE
+					* SETTINGS.RENDER_SHADOW_DISTANCE;
 
-			MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
-			MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
+			SETTINGS.MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
+			SETTINGS.MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
 			
-			CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", true);
+			SETTINGS.CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", true);
 
-			TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
+			SETTINGS.TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);
-			BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
-			DOF_EFFECT = loadValue("DOF_EFFECT", false);
-			DOF_DETAILED = loadValue("DOF_DETAILED", false);
-			ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
-			DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
-			SHADOWS = loadValue("SHADOWS", false);
-			ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
-			DETAILED_TREES = loadValue("DETAILED_TREES", false);
-			DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
-			ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
-			WATER_SHADER = loadValue("WATER_SHADER", false);
-			WATER_DETAILED = loadValue("WATER_DETAILED", false);
+			SETTINGS.BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
+			SETTINGS.DOF_EFFECT = loadValue("DOF_EFFECT", false);
+			SETTINGS.DOF_DETAILED = loadValue("DOF_DETAILED", false);
+			SETTINGS.ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
+			SETTINGS.DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
+			SETTINGS.SHADOWS = loadValue("SHADOWS", false);
+			SETTINGS.ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
+			SETTINGS.DETAILED_TREES = loadValue("DETAILED_TREES", false);
+			SETTINGS.DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
+			SETTINGS.ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
+			SETTINGS.WATER_SHADER = loadValue("WATER_SHADER", false);
+			SETTINGS.WATER_DETAILED = loadValue("WATER_DETAILED", false);
 
-			SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
-			MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
-			EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0,
+			SETTINGS.SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
+			SETTINGS.MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
+			SETTINGS.EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0,
 					100);
-			LOGGING = loadValue("LOGGING", false);
-			if (!LOGGING) {
+			SETTINGS.LOGGING = loadValue("LOGGING", false);
+			if (!SETTINGS.LOGGING) {
 				if (Jcrpg.LOGGER != null)
 					Jcrpg.LOGGER.setLevel(Level.OFF);
 			}
-			FPSCOUNTER = loadValue("FPSCOUNTER", false);
-			TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
-			SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
-			SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
-			VBO_ENABLED = loadValue("VBO_ENABLED", true);
+			SETTINGS.FPSCOUNTER = loadValue("FPSCOUNTER", false);
+			SETTINGS.TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
+			SETTINGS.SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
+			SETTINGS.SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
+			SETTINGS.VBO_ENABLED = loadValue("VBO_ENABLED", true);
 			
-			NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
+			SETTINGS.NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
 
 			// controller settings
-			MOUSELOOK = loadValue("MOUSELOOK", false);
+			SETTINGS.MOUSELOOK = loadValue("MOUSELOOK", false);
 			
 			// developer settings
-			WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
-			QUICK_EXIT = loadValue("QUICK_EXIT", true);
+			SETTINGS.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
+			SETTINGS.QUICK_EXIT = loadValue("QUICK_EXIT", true);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -682,17 +692,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public J3DCore() {
 		self = this;
-		if (J3DCore.SHADOWS)
+		if (J3DCore.SETTINGS.SHADOWS)
 			stencilBits = 8;
 		alphaBits = 0;
 		depthBits = 4;
-		samples = ANTIALIAS_SAMPLES;
+		samples = SETTINGS.ANTIALIAS_SAMPLES;
 
 		language = new Language("en");
 
 		new SideTypeModels().fillMap(hmCubeSideSubTypeToRenderedSideId,
-				hm3dTypeRenderedSide, MIPMAP_TREES, DETAILED_TREES,
-				RENDER_GRASS_DISTANCE, LOD_VEGETATION);
+				hm3dTypeRenderedSide, SETTINGS.MIPMAP_TREES, SETTINGS.DETAILED_TREES,
+				SETTINGS.RENDER_GRASS_DISTANCE, SETTINGS.LOD_VEGETATION);
 
 	}
 
@@ -810,7 +820,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 		KeyBindingManager.getKeyBindingManager().set("screen_shot_jcrpg",
 				KeyInput.KEY_F12);
-		if (QUICK_EXIT) {
+		if (SETTINGS.QUICK_EXIT) {
 			KeyBindingManager.getKeyBindingManager().set("exit",
 					KeyInput.KEY_ESCAPE);
 		}
@@ -1133,7 +1143,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					updateRenderState = true;
 				}
 				s.setLocalTranslation(orbiterVector);
-				if (J3DCore.SHADOWS)
+				if (J3DCore.SETTINGS.SHADOWS)
 				{
 					sPass.setEnabled(orb.needsShadowPass);
 				}
@@ -1154,7 +1164,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 							.normalizeLocal();
 					((DirectionalLight) l[0].getLight()).setDirection(dir);
 
-					if (J3DCore.SHADOWS) {
+					if (J3DCore.SETTINGS.SHADOWS) {
 						//Vector3f dir2 = dir.clone();
 						//dir2.y *= 2f;
 						sPass.setDirection(dir);
@@ -1357,7 +1367,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	public void setCalculatedCameraLocation() {
 		cam.setLocation(getCurrentLocation());
-		if (J3DCore.WATER_SHADER) {
+		if (J3DCore.SETTINGS.WATER_SHADER) {
 			waterEffectRenderPass.setWaterHeight(cam.getLocation().y);
 		}
 	}
@@ -1642,6 +1652,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 		return true;
 	}
+	
+	public static boolean LOGGING()
+	{
+		return SETTINGS.LOGGING;
+	}
 
 	/**
 	 * Tries to move in directions, and sets coords if successfull
@@ -1657,7 +1672,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;
 		for (int i = 0; i < directions.length; i++) {
-			if (J3DCore.LOGGING)
+			if (J3DCore.LOGGING())
 				Jcrpg.LOGGER.info("J3DCore.moveBase Moving dir: "
 						+ directions[i]);
 			newCoords = calcMovement(newCoords, directions[i], true);
@@ -1670,7 +1685,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					newCoords[2], false);
 			if (c != null) {
 				if (c.internalCube) {
-					if (J3DCore.LOGGING)
+					if (J3DCore.LOGGING())
 						Jcrpg.LOGGER.info("Moved: INTERNAL");
 					gameState.getNormalPositions().insideArea = true;
 					dofParentNode.detachAllChildren(); // workaround for
@@ -1678,7 +1693,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					dofParentNode.attachChild(intRootNode);
 					dofParentNode.attachChild(extRootNode);
 				} else {
-					if (J3DCore.LOGGING)
+					if (J3DCore.LOGGING())
 						Jcrpg.LOGGER.info("Moved: EXTERNAL");
 					gameState.getNormalPositions().insideArea = false;
 					dofParentNode.detachAllChildren(); // workaround for
@@ -1717,13 +1732,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				}
 			Side[] sides = c.getSide(directions[0]);
 			if (sides != null) {
-				if (J3DCore.LOGGING)
+				if (J3DCore.LOGGING())
 					Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
 				if (hasSideOfInstance(sides, notPassable)
 						&& (!gameState.getNormalPositions().onSteep
 								|| directions[0] == BOTTOM || directions[0] == TOP))
 					return false;
-				if (J3DCore.LOGGING)
+				if (J3DCore.LOGGING())
 					Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
 			Cube nextCube = gameState.world.getCube(-1, newCoords[0],
@@ -1731,7 +1746,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			if (nextCube == null)
 				Jcrpg.LOGGER.info("NEXT CUBE = NULL");
 			else {
-				if (J3DCore.LOGGING)
+				if (J3DCore.LOGGING())
 					Jcrpg.LOGGER.info("Next Cube = " + nextCube.toString());
 				sides = nextCube.getSide(oppositeDirections.get(
 						new Integer(directions[0])).intValue());
@@ -1774,7 +1789,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					// cube below
 					nextCube = gameState.world.getCube(-1, newCoords[0],
 							newCoords[1] - (yMinus++), newCoords[2], false);
-					if (J3DCore.LOGGING)
+					if (J3DCore.LOGGING())
 						Jcrpg.LOGGER.info("FALLING: " + nextCube);
 					if (yMinus > 10)
 						break; // / i am faaaalling.. :)
@@ -2155,7 +2170,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 */
 		skySphere = new Sphere("SKY_SPHERE", 20, 20, 300f);
 		waterEffectRenderPass
-				.setReflectedScene(WATER_DETAILED ? groundParentNode
+				.setReflectedScene(SETTINGS.WATER_DETAILED ? groundParentNode
 						: skyParentNode);
 		skyParentNode.attachChild(skySphere);
 		skySphere.setModelBound(null); // this must be set to null for lens
@@ -2282,7 +2297,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void setFlare(boolean state) {
-		if (J3DCore.LOGGING)
+		if (J3DCore.LOGGING())
 			Jcrpg.LOGGER.finest("TURNING LENSFLARE " + state);
 		for (LensFlare f : flares.keySet()) {
 			f.setIntensity(state ? 10f : 0f);
@@ -2340,11 +2355,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// uiRootNode.setModelBound(bigSphere);
 
 		// external cubes' rootnode
-		extRootNode = FARVIEW_ENABLED ? new Node("ex") : new Node("extRootNode");//new ScenarioNode(cam);
+		extRootNode = SETTINGS.FARVIEW_ENABLED ? new Node("ex") : new Node("extRootNode");//new ScenarioNode(cam);
 		// extRootNode.setModelBound(bigSphere);
 		// extRootNode.attachChild(new Node());
 		// internal cubes' rootnode
-		intRootNode = FARVIEW_ENABLED ? new Node("in") : new Node("intRootNode");//ScenarioNode(cam);
+		intRootNode = SETTINGS.FARVIEW_ENABLED ? new Node("in") : new Node("intRootNode");//ScenarioNode(cam);
 
 		encounterExtRootNode = new Node("encExtRootNode");
 		encounterIntRootNode = new Node("encIntRootNode");
@@ -2361,7 +2376,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		dofRenderPass = new DepthOfFieldRenderPass(cam, DOF_DETAILED?1:2, DOF_DETAILED?4:4);
+		dofRenderPass = new DepthOfFieldRenderPass(cam, SETTINGS.DOF_DETAILED?1:2, SETTINGS.DOF_DETAILED?4:4);
 		bloomRenderPass = new BloomRenderPass(cam,4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
@@ -2430,8 +2445,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		as.setBlendEnabled(true);
 		as.setSourceFunction(BlendState.SourceFunction.SourceAlpha);
 		as.setDestinationFunction(BlendState.DestinationFunction.OneMinusSourceAlpha);
-		if (!BLOOM_EFFECT) {
-			if (TEXTURE_QUALITY == 2)
+		if (!SETTINGS.BLOOM_EFFECT) {
+			if (SETTINGS.TEXTURE_QUALITY == 2)
 				as.setReference(0.9f);
 			else
 				as.setReference(0.9f);
@@ -2444,20 +2459,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		fs_external_special = display.getRenderer().createFogState();
 		fs_external.setDensity(0.5f);
 		fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
-		if (J3DCore.FARVIEW_ENABLED) {
-			fs_external.setEnd(((RENDER_DISTANCE_FARVIEW * 2) / 1.15f));
-			fs_external.setStart(1.5f * (RENDER_DISTANCE_FARVIEW * 2) / 3);
+		if (SETTINGS.FARVIEW_ENABLED) {
+			fs_external.setEnd(((SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 1.15f));
+			fs_external.setStart(1.5f * (SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 3);
 			fs_external.setDensity(0.3f);
 			fs_external_special.setDensity(0.3f);
-			fs_external_special.setEnd((VIEW_DISTANCE * 1.65f));
-			fs_external_special.setStart(2 * VIEW_DISTANCE / 3);
+			fs_external_special.setEnd((SETTINGS.VIEW_DISTANCE * 1.65f));
+			fs_external_special.setStart(2 * SETTINGS.VIEW_DISTANCE / 3);
 			fs_external_special.setDensityFunction(FogState.DensityFunction.Linear);
 			fs_external_special.setQuality(FogState.Quality.PerVertex);
 			fs_external_special.setNeedsRefresh(true);
 			fs_external_special.setEnabled(true);
 		} else {
-			fs_external.setEnd((VIEW_DISTANCE ));
-			fs_external.setStart(VIEW_DISTANCE*0.92f);
+			fs_external.setEnd((SETTINGS.VIEW_DISTANCE ));
+			fs_external.setStart(SETTINGS.VIEW_DISTANCE*0.92f);
 		}
 		fs_external.setDensityFunction(FogState.DensityFunction.Linear);
 		fs_external.setQuality(FogState.Quality.PerVertex);
@@ -2470,7 +2485,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		fs_internal.setDensity(0.5f);
 		fs_internal.setEnabled(true);
 		fs_internal.setColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
-		fs_internal.setEnd((VIEW_DISTANCE / 1.15f));
+		fs_internal.setEnd((SETTINGS.VIEW_DISTANCE / 1.15f));
 		fs_internal.setStart(3);
 		fs_internal.setDensityFunction(FogState.DensityFunction.Linear);
 		fs_internal.setQuality(FogState.Quality.PerVertex);
@@ -2545,7 +2560,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add(waterEffectRenderPass);
 
-		if (SHADOWS) {
+		if (SETTINGS.SHADOWS) {
 			sPass = new DirectionalShadowMapPass(new Vector3f(-1f, -1f, -1f));
 			Jcrpg.LOGGER.info("SHADOWS!");
 			// sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
@@ -2574,9 +2589,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		dofRenderPass.setRootSpatial(dofParentNode);
 		dofRenderPass.setBlurSize(0.004f);
-		dofRenderPass.setNearBlurDepth(VIEW_DISTANCE/1.3f);
-		dofRenderPass.setFocalPlaneDepth(VIEW_DISTANCE/1.6f);
-		dofRenderPass.setFarBlurDepth(VIEW_DISTANCE*2f);
+		dofRenderPass.setNearBlurDepth(SETTINGS.VIEW_DISTANCE/1.3f);
+		dofRenderPass.setFocalPlaneDepth(SETTINGS.VIEW_DISTANCE/1.6f);
+		dofRenderPass.setFarBlurDepth(SETTINGS.VIEW_DISTANCE*2f);
 		dofRenderPass.setThrottle(0f);
 
 		bloomRenderPass.setEnabled(false);
@@ -2584,7 +2599,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		dofRenderPass.setEnabled(false);
 		pManager.add(dofRenderPass);
 		
-		if (BLOOM_EFFECT) {
+		if (SETTINGS.BLOOM_EFFECT) {
 			if (!bloomRenderPass.isSupported()) {
 				Jcrpg.LOGGER.warning("!!!!!! BLOOM NOT SUPPORTED !!!!!!!! ");
 				Text t = new Text("Text", "Bloom not supported (FBO needed).");
@@ -2593,7 +2608,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				t.setLocalTranslation(new Vector3f(0, display.getHeight() - 20,
 						0));
 				//fpsNode.attachChild(t);
-				BLOOM_EFFECT = false;
+				SETTINGS.BLOOM_EFFECT = false;
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! BLOOM!");
 				// bloomRenderPass.add(groundParentNode);
@@ -2601,7 +2616,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				bloomRenderPass.setEnabled(true);
 			}
 		} else
-		if (DOF_EFFECT)
+		if (SETTINGS.DOF_EFFECT)
 		{
 			if (!dofRenderPass.isSupported()) {
 				Jcrpg.LOGGER.warning("!!!!!! DIF NOT SUPPORTED !!!!!!!! ");
@@ -2611,7 +2626,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				t.setLocalTranslation(new Vector3f(0, display.getHeight() - 20,
 						0));
 				//fpsNode.attachChild(t);
-				DOF_EFFECT = false;
+				SETTINGS.DOF_EFFECT = false;
 			} else {
 				Jcrpg.LOGGER.info("!!!!!!!!!!!!!! Depth of field!");
 				// bloomRenderPass.add(groundParentNode);
@@ -2642,7 +2657,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		 * Skysphere
 		 */
 		skySphere = new Sphere("SKY_SPHERE", 20, 20, 300f);
-		if (WATER_DETAILED)
+		if (SETTINGS.WATER_DETAILED)
 		{
 			waterEffectRenderPass.setReflectedScene(extWaterRefNode);
 			waterEffectRenderPass.addReflectedScene(intWaterRefNode);
@@ -2849,7 +2864,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				eEngine.updateAfterRender();
 			}
 		}
-		if (J3DCore.SHADOWS) {
+		if (SETTINGS.SHADOWS) {
 			sPass.setViewTarget(cam.getLocation());
 		}
 
@@ -3016,7 +3031,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
 
 	public void do3DPause(boolean pause) {
-		if (!CONTINUOUS_LOAD) {
+		if (!SETTINGS.CONTINUOUS_LOAD) {
 			this.pause = pause;
 		}
 	}
@@ -3059,12 +3074,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	public void applyOptions()
 	{
-		switchPass(bloomRenderPass, BLOOM_EFFECT);
-		switchPass(dofRenderPass, DOF_EFFECT&&!BLOOM_EFFECT);
+		switchPass(bloomRenderPass, SETTINGS.BLOOM_EFFECT);
+		switchPass(dofRenderPass, SETTINGS.DOF_EFFECT&&!SETTINGS.BLOOM_EFFECT);
 		
 		if (pManager.contains(waterEffectRenderPass))
 		{
-			waterEffectRenderPass.setUseShader(WATER_SHADER);
+			waterEffectRenderPass.setUseShader(SETTINGS.WATER_SHADER);
 		}
 		audioServer.applyVolumeSettings();
 		getClassicInputHandler().applyMouseSettings();

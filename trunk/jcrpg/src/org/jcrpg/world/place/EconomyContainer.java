@@ -76,7 +76,7 @@ public class EconomyContainer {
 		ArrayList<Object> economicsList = treeLocator.getElements(worldX, worldY, worldZ);
 		if (economicsList!=null) 
 		{
-			//if (economicsList.size()>1) if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("######## economiclist POPULATION is "+economicsList.size());
+			//if (economicsList.size()>1) if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("######## economiclist POPULATION is "+economicsList.size());
 			for (Object o:economicsList)
 			{
 				Economic eco = (Economic)o;
@@ -171,12 +171,12 @@ public class EconomyContainer {
 		if (list != null)
 		for (Object o:list)
 		{
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P FOUND: "+o);
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P FOUND: "+o);
 			if (o instanceof Population) {
 				Population p = (Population)o;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo);
 				if (p.soilGeo == geo && p.owner.homeBoundary.posX==popX && p.owner.homeBoundary.posZ==popZ ) return p;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("NOT...");
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NOT...");
 			}
 		}
 		return null;
@@ -232,9 +232,9 @@ public class EconomyContainer {
 		Population[] fP = getFriendlyNeighborDistricts(p);
 		if (fP.length>0)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("INTEGRATING TOWN");
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("INTEGRATING TOWN");
 			// TODO decisions which Town to join.
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(fP[0].blockStartX+" "+fP[0].blockStartZ+" "+fP[0].town);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(fP[0].blockStartX+" "+fP[0].blockStartZ+" "+fP[0].town);
 			fP[0].town.subPopulations.add(p);
 			p.town = fP[0].town;
 		} else
@@ -243,7 +243,7 @@ public class EconomyContainer {
 			t.subPopulations.add(p);
 			p.town = t;
 			p.owner.description.nameTown(t);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("NEW TOWN "+ p.blockStartX + " "+p.blockStartZ+" "+t.foundationName);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEW TOWN "+ p.blockStartX + " "+p.blockStartZ+" "+t.foundationName);
 			towns.add(t);
 		}
 	}

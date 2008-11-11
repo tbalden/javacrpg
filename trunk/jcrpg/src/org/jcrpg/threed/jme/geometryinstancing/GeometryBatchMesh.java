@@ -127,7 +127,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     public void preCommit() {
     	preCommitStart = System.currentTimeMillis();
     	if (reconstruct) {
-    		if (J3DCore.VBO_ENABLED)
+    		if (J3DCore.SETTINGS.VBO_ENABLED)
     		{
 				TriMesh b = this;
 				if (b.getVBOInfo()!=null)

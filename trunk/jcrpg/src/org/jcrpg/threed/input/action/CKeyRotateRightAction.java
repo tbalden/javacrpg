@@ -26,7 +26,7 @@ public class CKeyRotateRightAction extends CKeyAction {
      */
     public void performAction(InputActionEvent evt) {
     	if (!performActionCheck(evt)){
-        	if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("locked...");
+        	if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("locked...");
     		return;
     	}
     	handler.lockHandling();

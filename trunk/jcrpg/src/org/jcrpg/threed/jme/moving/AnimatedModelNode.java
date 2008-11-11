@@ -139,10 +139,10 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			finishedPlaying = true;
 			return 0;
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
 		
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
 		if (currentAnimator!=null) {
 			if (afterAnim!=null && afterAnim!=currentAnimatorName) {
 				currentAnimator.fadeOut(0.1f,true);
@@ -187,8 +187,8 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 				name = MovingModelAnimDescription.ANIM_IDLE;
 				break;
 			}
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM : "+name);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM : "+name);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
 			if (name.equals(currentAnimatorName)) return 0;
 			Animation anim = animations.get(name);
 			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
@@ -213,7 +213,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 	{
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
 		
 		try {
 			Model bodyModel = loadModel(fileName);
@@ -221,7 +221,7 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 			//bodyInstance.lockBounds();
 			bodyInstance.lockShadows();
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-			if (J3DCore.SLOW_ANIMATION)
+			if (J3DCore.SETTINGS.SLOW_ANIMATION)
 				bodyAnimationController.setSkipRate(1f);
 			bodyAnimationController.addListener(this);
 			

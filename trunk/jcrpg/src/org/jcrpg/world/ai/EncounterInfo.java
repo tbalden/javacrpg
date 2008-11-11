@@ -145,7 +145,7 @@ public class EncounterInfo {
 			int level = unit.getRelationLevel(subjectFragment);
 			if (level==EntityScaledRelationType.NEUTRAL)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING NEUTRAL: "+unit);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("REMOVING NEUTRAL: "+unit);
 				keysToRemove.add(unit);
 			}
 		}
@@ -269,7 +269,7 @@ public class EncounterInfo {
 					if (unitData.getSize()<1) toRemove.add(unitData);
 					if (encountered.containsKey(key)) continue;
 					toRemove.add(unitData);
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+ unitData.parent.getGroupType(unitData.groupId).getName()+" - " +unitData.parent.getName());
 				} else
 				{
 					if (unitData.isDead() || unitData.isNeutralized())
@@ -298,15 +298,15 @@ public class EncounterInfo {
 						continue;
 					}
 					for (EncounterUnit unitKey:encounteredSubUnits.keySet()) {
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("--- "+unitKey.getName());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("--- "+unitKey.getName());
 						if (encounteredSubUnits.get(unitKey)!=null)
 						for (EncounterUnit u:encounteredSubUnits.get(unitKey))
 						{
-							if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("    "+u.getName());
+							if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("    "+u.getName());
 						}
 						
 					}
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+unitData.subUnit.getName()+" - "+unitData.parent.getName());
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("REMOVING ORPHAN: "+unitData.subUnit.getName()+" - "+unitData.parent.getName());
 					toRemove.add(unitData);
 				}
 			}
@@ -332,14 +332,14 @@ public class EncounterInfo {
 			if (u2!=null)
 			for (EncounterUnit u3:u2)
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(subjectFragment.getName()+" : "+u.getName()+" : "+u3.getName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(subjectFragment.getName()+" : "+u.getName()+" : "+u3.getName());
 			}
 		}
 		
 		ArrayList<EncounterUnitData> list = encounterUnitDataList;
 		for (EncounterUnit unit:encountered.keySet())
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("--"+unit.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("--"+unit.getName());
 			int[] groupIds = encounteredGroupIds.get(unit);
 			if (groupIds!=null)
 			for (int in:groupIds) {
@@ -355,7 +355,7 @@ public class EncounterInfo {
 				}
 			}
 			ArrayList<EncounterUnit> subUnits = encounteredSubUnits.get(unit);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(subUnits+" "+(subUnits==null?"":subUnits.size()));
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(subUnits+" "+(subUnits==null?"":subUnits.size()));
 			if (subUnits!=null)
 			{
 				for (EncounterUnit u:subUnits)
@@ -423,7 +423,7 @@ public class EncounterInfo {
 				filteredList.add(unitData);
 			}
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" + "+this+ " "+filteredList.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" + "+this+ " "+filteredList.size());
 		return filteredList;
 	}
 
@@ -476,7 +476,7 @@ public class EncounterInfo {
 		PlacementMatrix m = new PlacementMatrix();
 		if (phase==Ecology.PHASE_ENCOUNTER)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("EncounterInfo.initPlacementMatrix PHASE_ENCOUNTER "+getEncounterPhaseLineup().orderedList.size());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("EncounterInfo.initPlacementMatrix PHASE_ENCOUNTER "+getEncounterPhaseLineup().orderedList.size());
 			// encounter phase, create common matrix (ahead).
 			for (ArrayList<EncounterUnitData> dList:getEncounterPhaseLineup().orderedList.values())
 			{

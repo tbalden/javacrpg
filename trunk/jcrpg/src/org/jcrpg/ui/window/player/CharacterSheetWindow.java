@@ -130,7 +130,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
 	    		String text = Language.v("fantasyattributes.short."+s);
-	    		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TEXT" +text);
+	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
 	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.317f,0.2f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
@@ -142,7 +142,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	for (String s: FantasyResistances.resistanceName)
 	    	{
 	    		String text = Language.v("fantasyresistances.shortest."+s);
-	    		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TEXT" +text);
+	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
 	    		new TextLabel(s+"_label",this,page0,0.549f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.66f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.07f,0.04f,600f,10,0,100,1);
 	    		resistanceTuners.put(s, v);
@@ -267,7 +267,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		Attributes attr = (instance).getAttributes();
 		Attributes attrVanilla = (instance).getAttributesVanilla();
 		for (String id: FantasyAttributes.attributeName) {
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = attributeTuners.get(id);
 			v.value = attr.getAttribute(id);
 			int vanilla = attrVanilla.getAttribute(id);
@@ -284,7 +284,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		Resistances res = (instance).getResistances();
 		Resistances resVanilla = (instance).getResistancesVanilla();
 		for (String id: FantasyResistances.resistanceName) {
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = resistanceTuners.get(id);
 			v.value = res.getResistance(id);
 			int vanilla = resVanilla.getResistance(id);
@@ -336,7 +336,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		try {
 
 			if (currentPic!=null) currentPic.removeFromParent();
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- PIC: "+((MemberPerson)instance.description).getPicturePath());
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- PIC: "+((MemberPerson)instance.description).getPicturePath());
 			currentPic = UIImageCache.getImage(((MemberPerson)instance.description).getPicturePath(), false, 75f);
 			currentPic.setLocalTranslation(1.6f*core.getDisplay().getWidth()/2,1.55f*core.getDisplay().getHeight()/2,0);
 			currentPic.setLocalScale(1f* (core.getDisplay().getWidth()/640f));

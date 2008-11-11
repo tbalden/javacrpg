@@ -53,7 +53,7 @@ public abstract class BodyBase {
 		for (BodyPart p:bodyParts)
 		{
 			int size = (int)(p.getBodyPartSize() * Math.exp((p.getCriticalityOfInjury()/100f)*targettingCriticalLevel));
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("BodyBase.getBodyPart: # BODY MODDED SIZE = "+size +" CRIT: "+targettingCriticalLevel);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("BodyBase.getBodyPart: # BODY MODDED SIZE = "+size +" CRIT: "+targettingCriticalLevel);
 			sum+=size;
 		}
 		int random = HashUtil.mix(seed, forMember.getNumericId()+forMember.instance.getNumericId(), 1)%sum;

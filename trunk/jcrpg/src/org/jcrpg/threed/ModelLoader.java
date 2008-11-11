@@ -94,7 +94,7 @@ public class ModelLoader {
 		geoTileLoader = new GeoTileLoader(this);
 		
 	    try {
-    		TEXDIR = J3DCore.TEXTURE_QUALITY==0?"low/":(J3DCore.TEXTURE_QUALITY==1?"mid/":"high/");
+    		TEXDIR = J3DCore.SETTINGS.TEXTURE_QUALITY==0?"low/":(J3DCore.SETTINGS.TEXTURE_QUALITY==1?"mid/":"high/");
 	    	SimpleResourceLocator loc1 = new SimpleResourceLocator( new File("./data/textures/"+TEXDIR).toURI());
 	    	SimpleResourceLocator loc2 = new SimpleResourceLocator( new File("./data/orbiters/").toURI());
 	    	SimpleResourceLocator loc3 = new SimpleResourceLocator( new File("./data/flare/").toURI());
@@ -320,7 +320,7 @@ public class ModelLoader {
 					bbOrig = new BillboardPartVegetation(core,core.getCamera(),SideTypeModels.TREE_LOD_DIST[3][1],(PartlyBillboardModel)objects[i],horRotated, rc.cube.internalCube);
 					//sharedBBNodeCache.put(key, bbOrig);
 					bbOrig.attachChild(node);
-					if (J3DCore.FARVIEW_ENABLED)
+					if (J3DCore.SETTINGS.FARVIEW_ENABLED)
 						bbOrig.setRenderState(core.fs_external_special);
 				}
 				if (fakeLoadForCacheMaint) continue;
@@ -510,7 +510,7 @@ public class ModelLoader {
                 for (int i=0; i<ts1.getNumberOfSetTextures();i++)
     		    {
     		    	Texture t = ts1.getTexture(i);
-    		    	if (mipmap && J3DCore.MIPMAP_GLOBAL) {
+    		    	if (mipmap && J3DCore.SETTINGS.MIPMAP_GLOBAL) {
     		    		t.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
     		    		t.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);
     		    	}
@@ -642,7 +642,7 @@ public class ModelLoader {
 			            Texture.MagnificationFilter.NearestNeighbor);
 				//qtexture.setWrap(Texture.WM_WRAP_S_WRAP_T); // do not use this here, or add switch for it, grass is weird if set!
 				qtexture.setApply(Texture.ApplyMode.Modulate); // use modulate here!
-				if (J3DCore.MIPMAP_GLOBAL)
+				if (J3DCore.SETTINGS.MIPMAP_GLOBAL)
 				{	
 					qtexture.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
 					qtexture.setMinificationFilter(Texture.MinificationFilter.BilinearNearestMipMap);

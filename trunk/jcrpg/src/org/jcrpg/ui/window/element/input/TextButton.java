@@ -153,7 +153,7 @@ public class TextButton extends InputBase {
 			w.inputUsed(this, key);
 			return true;
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+id+" "+key);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+id+" "+key);
 		return false;
 	}
 

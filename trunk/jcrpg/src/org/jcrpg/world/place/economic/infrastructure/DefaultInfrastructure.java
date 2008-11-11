@@ -57,11 +57,11 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				shuffleCount = (shuffleCount+1)%fullShuffledBlocks.length;
 				if (shuffleCount == oldShuffleCount) {
 					blockCount=-1;
-					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("!!! NO BLOCK FOUND FOR RESIDENCE...");
+					//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("!!! NO BLOCK FOUND FOR RESIDENCE...");
 					break; // arrived to the beginning counter, no room found
 				}
 				if (isOccupiedBlock(occupiedBlocks,blockCount,ecoBase.getGenerationBlockAvailabilityCheckers())) {
-					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
+					//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("###!!! OCCUPIED BLOCK FOUND FOR RESIDENCE..."+shuffleCount+" "+blockCount);
 					blockCount = -1;
 					continue;
 				}
@@ -87,7 +87,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				
 			} else
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("DefaultInfrastructure NO MORE BLOCK...");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("DefaultInfrastructure NO MORE BLOCK...");
 				break; // no free space found...
 			}
 			
@@ -98,14 +98,14 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 	InfrastructureElementParameters mainStreet = null;
 	public void prepareBuildProgram(ArrayList<InfrastructureElementParameters> fixProperties, ArrayList<Class<?extends Residence>> residenceTypes, ArrayList<Class<?extends EconomicGround>> groundTypes)
 	{
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("-- NUM ID = "+(population.blockStartX+population.blockStartZ+population.soilGeo.numericId));
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("-- NUM ID = "+(population.blockStartX+population.blockStartZ+population.soilGeo.numericId));
 		fullShuffledBlocks = shuffleRange(population.blockStartX+population.blockStartZ+population.soilGeo.numericId, maxBlocks,6,2);
 		/*StringBuffer b = new StringBuffer();
 		for (int i=0; i<fullShuffledBlocks.length; i++)
 		{
 			b.append(fullShuffledBlocks[i]).append(", ");
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SHUFFLED = "+b);*/
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("SHUFFLED = "+b);*/
 		mainStreet = new InfrastructureElementParameters();
 		mainStreet.relOrigoX = 0;
 		mainStreet.relOrigoY = 0;

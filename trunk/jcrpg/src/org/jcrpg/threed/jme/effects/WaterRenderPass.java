@@ -187,12 +187,12 @@ public class WaterRenderPass extends Pass {
 
 		DisplaySystem display = DisplaySystem.getDisplaySystem();
 
-		if( J3DCore.WATER_SHADER ) 
+		if( J3DCore.SETTINGS.WATER_SHADER ) 
 		{
 			waterShader = display.getRenderer().createGLSLShaderObjectsState();
 		}
 
-		if( !J3DCore.WATER_SHADER || !waterShader.isSupported() ) {
+		if( !J3DCore.SETTINGS.WATER_SHADER || !waterShader.isSupported() ) {
 			supported = false;
 		}
 		else {

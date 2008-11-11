@@ -47,11 +47,11 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 			while (surfaces.size()>count) {
 				Geography g = surfaces.get(count++)[0].self;
 				//int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, g.blockSize);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("g: "+g);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("XY "+coords[0]+coords[1]);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("g: "+g);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("XY "+coords[0]+coords[1]);
 				ArrayList<Class<? extends Population>> list = economyTemplate.populationTypes.get(g.getClass());
 				if (list!=null && list.size()>0) {
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("G: THIS");
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("G: THIS");
 					// check if this is an occupied population zone.
 					Population pO = world.economyContainer.isOccupied(g, coords[0], coords[1]);
 					if (pO!=null) {

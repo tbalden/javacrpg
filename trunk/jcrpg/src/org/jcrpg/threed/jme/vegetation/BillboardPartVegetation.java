@@ -227,14 +227,14 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							for (Spatial s:spatials) {
 								 //if ((s.getType() & s.TRIMESH) != 0)
 								{
-									//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SPATIAL: " + s.getName());
+									//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("SPATIAL: " + s.getName());
 											//+ " " + sCounter++);
 									TriMesh q = (TriMesh) s;
 									int l = q.getName().length();
 									String key = ""+q.getName().charAt(l - 1);
 									if (model.removedParts.contains(key)) 
 									{
-										if (model.LOD>=1 || !J3DCore.DETAILED_TREES)
+										if (model.LOD>=1 || !J3DCore.SETTINGS.DETAILED_TREES)
 											removed.add(q);
 									}
 									if (model.partNameToTextureCount.containsKey(key)) 
@@ -245,7 +245,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 										{
 											TriMesh b = q;//q.getBatch(bc);
 											FloatBuffer fb = b.getVertexBuffer();
-											//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("BATCH!!"
+											//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("BATCH!!"
 												//	+ fb.capacity() + " " + bc);
 											int maxFIndex = fb.capacity();
 											int maxDoubleTri = maxFIndex / 18;
@@ -353,7 +353,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 														added+=8;
 													}
 												} else
-												if (J3DCore.DETAILED_TREE_FOLIAGE && model.LOD==0 || J3DCore.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1 || !J3DCore.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>2) 
+												if (J3DCore.SETTINGS.DETAILED_TREE_FOLIAGE && model.LOD==0 || J3DCore.SETTINGS.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>model.LOD+1 || !J3DCore.SETTINGS.DETAILED_TREE_FOLIAGE && HashUtil.mixPercentage(doubleTriIndex,0,0)%8>2) 
 												{
 													float x = sumX/counter;
 													float y = sumY/counter;
@@ -552,7 +552,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			startTime= System.currentTimeMillis();
 	
 			
-			if (J3DCore.ANIMATED_GRASS && model.windAnimation) {
+			if (J3DCore.SETTINGS.ANIMATED_GRASS && model.windAnimation) {
 				doGrassMove = true;
 			}
 	
@@ -591,7 +591,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 		Spatial child;
 		for (int i = 0, cSize = children.size(); i < cSize; i++) {
 			int whichDiff = 0;
-			if (J3DCore.ANIMATED_GRASS)
+			if (J3DCore.SETTINGS.ANIMATED_GRASS)
 				whichDiff = i % 5;
 
 			child = children.get(i);
@@ -601,7 +601,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 			if (child != null) {
 				float distSquared = tmpVec.set(cam.getLocation()).subtractLocal(child.getWorldTranslation())
 						.lengthSquared();
-				if (!J3DCore.LOD_VEGETATION || distSquared <= viewDistance * viewDistance)
+				if (!J3DCore.SETTINGS.LOD_VEGETATION || distSquared <= viewDistance * viewDistance)
 				// 
 				{
 
@@ -622,7 +622,7 @@ public class BillboardPartVegetation extends Node implements PooledNode {
 							for (Spatial s : c2) {
 								if ( (s instanceof TriMesh))
 								{
-									// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("SPATIAL: "+s.getName()+"
+									// if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("SPATIAL: "+s.getName()+"
 									// "+sCounter++);
 									sCounter++;
 									TriMesh q = (TriMesh) s;

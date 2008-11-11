@@ -53,13 +53,13 @@ public class InventoryBody extends InputBase {
 	{
 		baseNode.detachAllChildren();
 		freeTextNodes();
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("instance.description.bodyType "+instance.description.getName()+" "+instance.description.bodyType);
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("instance.description.bodyType "+instance.description.getName()+" "+instance.description.bodyType);
 		BodyBase bodyBase = BodyBase.bodyBaseInstances.get(instance.description.bodyType);
 		String image = "./data/ui/inventory/"+bodyBase.getBodyImage()+".png";
 		try {
 
 			if (currentPic!=null) currentPic.removeFromParent();
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("InventoryBody updateTo --- PIC: "+image );
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("InventoryBody updateTo --- PIC: "+image );
 			currentPic = UIImageCache.getImage(image, true, 130f);
 			currentPic.setLocalTranslation(dCenterX, dCenterY,0);
 			currentPic.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -78,10 +78,10 @@ public class InventoryBody extends InputBase {
 			String txt = "0/0";
 			for (ObjInstance oI:instance.inventory.getEquipped())
 			{
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("- EQPD: "+oI.description.getName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("- EQPD: "+oI.description.getName());
 				if (oI.description instanceof Equippable)
 				{
-					if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("- EQPD: "+((Equippable)oI.description).getEquippableBodyPart());
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("- EQPD: "+((Equippable)oI.description).getEquippableBodyPart());
 					if (((Equippable)oI.description).getEquippableBodyPart() == part.getClass())
 					{
 						if (oI.description instanceof Armor)

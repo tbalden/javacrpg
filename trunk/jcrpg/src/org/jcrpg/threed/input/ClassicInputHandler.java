@@ -59,12 +59,12 @@ public class ClassicInputHandler  extends InputHandler {
     
     public void enableMouse(boolean state)
     {
-    	mouseLookHandler.setEnabled(J3DCore.MOUSELOOK && state);
+    	mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK && state);
     }
     
     public void applyMouseSettings()
     {
-    	enableMouse(J3DCore.MOUSELOOK);
+    	enableMouse(J3DCore.SETTINGS.MOUSELOOK);
     }
    
 }

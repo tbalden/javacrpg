@@ -45,7 +45,7 @@ public class CKeyCamp extends KeyInputAction{
 		}
 		lastPerformTime = System.currentTimeMillis();
 		
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### CAMP KEY");
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("### CAMP KEY");
 		if (!core.gameState.engine.isPause())
 		{
 			if (!core.gameState.engine.isCamping())

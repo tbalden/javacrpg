@@ -97,7 +97,7 @@ public class ModelPool {
 				pool.put(key, cont);
 			} else {
 				if (cont.notUsed.iterator().hasNext()) {
-					// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("++ FROM POOL MODEL!"+model.id);
+					// if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("++ FROM POOL MODEL!"+model.id);
 					PooledNode n = cont.notUsed.iterator().next();
 					n.update(place);
 					cont.notUsed.remove(n);
@@ -115,7 +115,7 @@ public class ModelPool {
 				}
 			}
 			PooledNode n = core.modelLoader.loadObject(place,rc, model, rotated);
-			// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
+			// if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
 			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP - (cont.used.size()+cont.notUsed.size());
@@ -153,7 +153,7 @@ public class ModelPool {
 				pool.put(key, cont);
 			} else {
 				if (cont.notUsed.iterator().hasNext()) {
-					// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("++ FROM POOL MODEL!"+model.id);
+					// if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("++ FROM POOL MODEL!"+model.id);
 					PooledNode n = cont.notUsed.iterator().next();
 					cont.notUsed.remove(n);
 					cont.used.add(n);
@@ -161,7 +161,7 @@ public class ModelPool {
 				}
 			}
 			PooledNode n = core.modelLoader.loadObject(place,rmu, model, rotated);
-			// if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
+			// if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("LOADING MODEL!"+model.id);
 			n.setPooledContainer(cont);
 			cont.used.add(n);
 			int toCreate = POOL_NUMBER_OF_UNUSED_TO_KEEP_MOVING_MODEL - (cont.used.size()+cont.notUsed.size());
@@ -269,7 +269,7 @@ public class ModelPool {
 					core.removeSolidColorQuadsRecoursive((Node)node);
 					if (node instanceof BillboardPartVegetation)
 					{
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("REMOVING BBPART VEG:");
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("REMOVING BBPART VEG:");
 						{
 							if (((BillboardPartVegetation)node).batch!=null)
 								((BillboardPartVegetation)node).batch.parent.removeFromParent();
@@ -278,7 +278,7 @@ public class ModelPool {
 					removed.add(node);
 				}
 				pic.notUsed.removeAll(removed);
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete));
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete));
 				Jcrpg.LOGGER.info("ModelPool.cleanPools: removing poolnodes "+pic.id+" : "+toDelete);
 			}
 			if (pic.used.size()==0 && pic.notUsed.size()==0)

@@ -161,7 +161,7 @@ public abstract class StateEffect {
 		}
 		sum = sum / divider;
 		int random = HashUtil.mixPercentage(1, 2, seed+targetState.instance.getNumericId()+targetState.instance.instance.getNumericId());
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("EFFECT RESISTANCE => "+random+" < "+sum);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("EFFECT RESISTANCE => "+random+" < "+sum);
 		if (random<sum) return true;
 		return false;
 	}

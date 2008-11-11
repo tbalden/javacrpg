@@ -180,7 +180,7 @@ public class AnimatedModelViewer extends SimplePassGame {
 		 * n2.changeToAnimation(MovingModelAnimDescription.ANIM_IDLE_COMBAT);
 		 * n2.setLocalTranslation(new Vector3f(3f,0,0));
 		 */
-		J3DCore.LOGGING = false;
+		J3DCore.SETTINGS.LOGGING = false;
 		for (int i = 0; i < 36; i++) {
 			n = new AnimatedModelNode(HellPig.hellPig.modelName,
 					HellPig.hellPig.animation, 0.1f, new float[] {

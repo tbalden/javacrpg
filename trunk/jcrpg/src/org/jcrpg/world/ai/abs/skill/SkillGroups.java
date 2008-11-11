@@ -190,7 +190,7 @@ public class SkillGroups {
 	{
 		if (!orderedGroups.contains(group)) 
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.warning("WARNING! No such Skill Group!");
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.warning("WARNING! No such Skill Group!");
 			return;
 		}
 		ArrayList<Class<? extends SkillBase>> list = groupedSkills.get(group);

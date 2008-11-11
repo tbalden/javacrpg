@@ -142,7 +142,7 @@ public class VegetationSetup {
 					
 					n.attachChild(quad);
 	
-					if (J3DCore.DOUBLE_GRASS) {
+					if (J3DCore.SETTINGS.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
 						n.attachChild(sQ);
 					}
@@ -151,7 +151,7 @@ public class VegetationSetup {
 			}
 			quadCache.put(tm.getKey()+internal, quads);
 		}
-		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
+		float quadSeparation = tm.quadSeparation/(J3DCore.SETTINGS.DOUBLE_GRASS?2:1);
 		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
 		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
 		x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
@@ -255,7 +255,7 @@ public class VegetationSetup {
 					
 					n.attachChild(quad);
 	
-					if (J3DCore.DOUBLE_GRASS) {
+					if (J3DCore.SETTINGS.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
 						n.attachChild(sQ);
 					}
@@ -264,7 +264,7 @@ public class VegetationSetup {
 			}
 			quadCache.put(tm.getKey()+internal, quads);
 		}
-		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
+		float quadSeparation = tm.quadSeparation/(J3DCore.SETTINGS.DOUBLE_GRASS?2:1);
 		float x = k * quadSeparation + (HashUtil.mixPercentage((int)k, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
 		float z = j * quadSeparation + (HashUtil.mixPercentage((int)k+1, c.cube.x+c.cube.y+c.cube.z+tm.id.length(), (int)j)/variationCutter) - (100/variationCutter/2f);
 		x = Math.min(x, J3DCore.CUBE_EDGE_SIZE - quadSeparation/4f);
@@ -378,7 +378,7 @@ public class VegetationSetup {
 					n.attachChild(quad);
 					//J3DCore.hmSolidColorSpatials.put(quad,quad);
 	
-					if (J3DCore.DOUBLE_GRASS) {
+					if (J3DCore.SETTINGS.DOUBLE_GRASS) {
 						SharedMesh sQ = new SharedMesh("sharedQuad",quad);
 						n.attachChild(sQ);
 					}
@@ -396,8 +396,8 @@ public class VegetationSetup {
 		TrimeshGeometryBatch vegetation = new TrimeshGeometryBatch(tm.getKey(),core,(TriMesh)quads[0].getChild(0),false,null);
 		
 
-		int quadQuantity = tm.quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
-		float quadSeparation = tm.quadSeparation/(J3DCore.DOUBLE_GRASS?2:1);
+		int quadQuantity = tm.quadQuantity*(J3DCore.SETTINGS.DOUBLE_GRASS?2:1);
+		float quadSeparation = tm.quadSeparation/(J3DCore.SETTINGS.DOUBLE_GRASS?2:1);
 		
 		// Place the darn models
 		for (int i = 0; i < quadQuantity; i++) {

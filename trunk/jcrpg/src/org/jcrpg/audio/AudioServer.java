@@ -61,7 +61,7 @@ public class AudioServer implements Runnable {
 	public ArrayList<Channel> musicChannels = new ArrayList<Channel>();
 	public AudioServer()
 	{
-		if (J3DCore.SOUND_ENABLED) {
+		if (J3DCore.SETTINGS.SOUND_ENABLED) {
 			for (int i=0; i<MAX_PLAYED; i++)
 			{
 				channels.add(new Channel(this,"NORM "+i));
@@ -74,15 +74,15 @@ public class AudioServer implements Runnable {
 		{
 			return;
 		}
-		EFFECT_VOLUME_PERCENT_LAST = J3DCore.EFFECT_VOLUME_PERCENT;
-		MUSIC_VOLUME_PERCENT_LAST = J3DCore.MUSIC_VOLUME_PERCENT;
+		EFFECT_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT;
+		MUSIC_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT;
 		
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/fantasy/fantasy_menu.ogg").toURL(), true);
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
-			mainTheme.setVolume(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 			tracks.add(mainTheme);
 			hmTracks.put("main", tracks);
@@ -97,7 +97,7 @@ public class AudioServer implements Runnable {
 			mainTheme.setType(TrackType.MUSIC);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(true);
-			mainTheme.setVolume(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 			tracks.add(mainTheme);
 			//hmTracks.put("ingame", tracks);
@@ -115,7 +115,7 @@ public class AudioServer implements Runnable {
 				mainTheme.setType(TrackType.ENVIRONMENT);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
-				mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				mainTheme.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
 				tracks.add(mainTheme);
 				hmTracksAndFiles.put(step, "./data/audio/sound/steps/"+step+".ogg");
@@ -237,8 +237,8 @@ public class AudioServer implements Runnable {
 			{
 				//c.track.setLooping(true);
 				//c.track.setVolume(volume);
-				c.track.setTargetVolume(volume* J3DCore.EFFECT_VOLUME_PERCENT/100f);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("setSoundPlayingVolume SETTING VOLUME: "+c.soundId+" "+volume+" -- "+c.track.getVolume());
+				c.track.setTargetVolume(volume* J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("setSoundPlayingVolume SETTING VOLUME: "+c.soundId+" "+volume+" -- "+c.track.getVolume());
 				b = true;
 			}
 		}
@@ -254,7 +254,7 @@ public class AudioServer implements Runnable {
 			getAvailableMusicChannel().setTrack(id,getPlayableTrack(id)).playTrack();
 		} catch (Exception ex)
 		{
-			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) ex.printStackTrace();
 
 		}
 	}
@@ -266,7 +266,7 @@ public class AudioServer implements Runnable {
 	}
 	
 	public synchronized AudioTrack getPlayableTrack(String id) {
-		if (!J3DCore.SOUND_ENABLED) return null;
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return null;
 		try {
 			int counter = 0;
 			while (true)
@@ -277,7 +277,7 @@ public class AudioServer implements Runnable {
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.info("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -288,7 +288,7 @@ public class AudioServer implements Runnable {
 			}			
 		} catch (Exception ex)
 		{
-			if (J3DCore.SOUND_ENABLED) {
+			if (J3DCore.SETTINGS.SOUND_ENABLED) {
 				if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
 					Jcrpg.LOGGER.finest(ex.toString());
 				}
@@ -316,10 +316,10 @@ public class AudioServer implements Runnable {
 	public synchronized void playForced(String id)
 	{
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("playForced Playing "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("playForced Playing "+id);
 		if (c==null)
 		{
-			if (!J3DCore.SOUND_ENABLED) return;
+			if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
 			c = channels.get(0);
 			c.stopTrack();
 		}
@@ -329,7 +329,7 @@ public class AudioServer implements Runnable {
 					return;
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
 			c.playTrack();
@@ -339,14 +339,14 @@ public class AudioServer implements Runnable {
 			}
 		} catch (NullPointerException npex)
 		{
-			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 	
 	public synchronized void play(String id)
 	{
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -354,7 +354,7 @@ public class AudioServer implements Runnable {
 					return;
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
 			c.playTrack();
@@ -363,20 +363,20 @@ public class AudioServer implements Runnable {
 				track.fadeIn(0.5f, v);
 			} else
 			{
-				track.setTargetVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setTargetVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 		} catch (NullPointerException npex)
 		{
-			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 
 	public synchronized void playLoading(String id, String type)
 	{
-		if (!J3DCore.SOUND_ENABLED) return;
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
 		if (id==null) return;
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Playing "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Playing "+id);
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
@@ -384,7 +384,7 @@ public class AudioServer implements Runnable {
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
-				track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
 			c.playTrack();
@@ -393,11 +393,11 @@ public class AudioServer implements Runnable {
 				track.fadeIn(0.5f, v);
 			} else
 			{
-				track.setTargetVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setTargetVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 		} catch (NullPointerException npex)
 		{
-			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 	
@@ -408,55 +408,55 @@ public class AudioServer implements Runnable {
 
 	public synchronized void playContinuousLoading(String id, String type, float volume)
 	{
-		if (!J3DCore.SOUND_ENABLED) return;
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
 		if (id==null) return;
-		if (setSoundPlayingVolume(id,volume* J3DCore.EFFECT_VOLUME_PERCENT/100f)) {
+		if (setSoundPlayingVolume(id,volume* J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f)) {
 			return;
 		}
 		Channel c = getAvailableChannel();
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("playContinuousLoading Playing "+id);		
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("playContinuousLoading Playing "+id);		
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 				if (!track.getType().equals(TrackType.MUSIC)) {
-					track.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 				}
 			} else
 			{
-				track.setTargetVolume(volume * J3DCore.EFFECT_VOLUME_PERCENT/100f);
+				track.setTargetVolume(volume * J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			track.setLooping(true);
 			c.setTrack(id, track);
 			c.playTrack();
 		} catch (NullPointerException npex)
 		{
-			if (J3DCore.SOUND_ENABLED) npex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
 	
 	
 	public synchronized void pause(String id)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Pausing "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Pausing "+id);
 		pauseIdOnAllChannels(id);
 	}
 	
 	public synchronized  void stop(String id)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Stopping "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Stopping "+id);
 		stopIdOnAllChannels(channels,id);
 	}
 	public synchronized  void fadeOut(String id)
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Fadingout "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Fadingout "+id);
 		fadeOutIdOnAllChannels(channels,id);
 	}
 
 	public synchronized AudioTrack addTrack(String id, String file)
 	{
-		if (!J3DCore.SOUND_ENABLED) return null;
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return null;
 		hmTracksAndFiles.put(id, file);
 		AudioTrack mainTheme = null;
 		try {
@@ -464,7 +464,7 @@ public class AudioServer implements Runnable {
 			mainTheme.setType(TrackType.ENVIRONMENT);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
-			mainTheme.setVolume(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+			mainTheme.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			if (hmTracks.get(id)==null)
 			{
 				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
@@ -478,15 +478,15 @@ public class AudioServer implements Runnable {
 			
 		} catch (Exception ex)
 		{
-			if (J3DCore.SOUND_ENABLED) ex.printStackTrace();
+			if (J3DCore.SETTINGS.SOUND_ENABLED) ex.printStackTrace();
 			return null;
 		}
 		return mainTheme;
 	}
 
 	public void run() {
-		if (!J3DCore.SOUND_ENABLED) return;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
 		Thread.currentThread().setPriority(10);
 		while (true)
 		{
@@ -508,13 +508,13 @@ public class AudioServer implements Runnable {
 			{
 				if (t.getType()== TrackType.ENVIRONMENT)
 				{
-					float newLevel = (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					float newLevel = (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 					try {
 						float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
 						System.out.println("C: "+t.getVolume());
-						newLevel = relativeLevel * (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						newLevel = relativeLevel * (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 					} catch (Exception ex) {}
-					if (Float.isNaN(newLevel)) newLevel =(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+					if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 					System.out.println("NEWL: "+newLevel);
 					if (!t.isPlaying())
 					{
@@ -544,13 +544,13 @@ public class AudioServer implements Runnable {
 				{
 					if (t.getType()== TrackType.ENVIRONMENT)
 					{
-						float newLevel = (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						float newLevel = (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 						try {
 							float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
 							System.out.println("C: "+t.getVolume());
-							newLevel = relativeLevel * (J3DCore.EFFECT_VOLUME_PERCENT/100f);
+							newLevel = relativeLevel * (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 						} catch (Exception ex) {}
-						if (Float.isNaN(newLevel)) newLevel =(J3DCore.EFFECT_VOLUME_PERCENT/100f);
+						if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 						System.out.println("NEWL: "+newLevel);
 						if (!t.isPlaying())
 						{
@@ -563,13 +563,13 @@ public class AudioServer implements Runnable {
 					}
 					if (t.getType()== TrackType.MUSIC)
 					{
-						float newLevel = (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						float newLevel = (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 						try {
 							float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
 							System.out.println("C: "+t.getVolume());
-							newLevel = relativeLevel * (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+							newLevel = relativeLevel * (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 						} catch (Exception ex) {}
-						if (Float.isNaN(newLevel)) newLevel =(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 						System.out.println("NEWL: "+newLevel);
 						if (!t.isPlaying())
 						{
@@ -590,13 +590,13 @@ public class AudioServer implements Runnable {
 			{
 				if (t.getType()== TrackType.MUSIC)
 				{
-					float newLevel = (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+					float newLevel = (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 					try {
 						float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
 						System.out.println("C: "+t.getVolume());
-						newLevel = relativeLevel * (J3DCore.MUSIC_VOLUME_PERCENT/100f);
+						newLevel = relativeLevel * (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 					} catch (Exception ex) {}
-					if (Float.isNaN(newLevel)) newLevel =(J3DCore.MUSIC_VOLUME_PERCENT/100f);
+					if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 					System.out.println("NEWL: "+newLevel);
 					if (!t.isPlaying())
 					{
@@ -609,8 +609,8 @@ public class AudioServer implements Runnable {
 				}
 			}
 		}
-		EFFECT_VOLUME_PERCENT_LAST = J3DCore.EFFECT_VOLUME_PERCENT;
-		MUSIC_VOLUME_PERCENT_LAST = J3DCore.MUSIC_VOLUME_PERCENT;
+		EFFECT_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT;
+		MUSIC_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT;
 	}
 	
 }

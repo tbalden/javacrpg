@@ -136,7 +136,7 @@ public class Ecology {
 		if (target instanceof PersistentMemberInstance)
 		{
 			// this is a subunit (member), not a group based entity, so we should get the subunits of the member.
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(fillOwn + "SELF = "+self.getName()+" TARGET = "+target.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(fillOwn + "SELF = "+self.getName()+" TARGET = "+target.getName());
 			units = target.getSubUnits(posX, posY, posZ);
 		} else 
 		{
@@ -155,8 +155,8 @@ public class Ecology {
 		{
 			// this is the target group filling call of this method, so we must fill the encountered data...
 			if (self == J3DCore.getInstance().gameState.player.theFragment) {
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.getEncounterBoundary().posX+" "+self.getEncounterBoundary().posZ);
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter ADDING "+groupIds + " WITH RADIUS RATIO = "+radiusRatio+ " SELF COORDS "+self.getEncounterBoundary().posX+" "+self.getEncounterBoundary().posZ);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Ecology.calcGroupsOfEncounter TARGET = "+target.getName());
 			}
 			if (groupIds!=null && groupIds.length>0) encounterInfo.encounteredGroupIds.put(target, groupIds);
 			if (units!=null) 
@@ -308,11 +308,11 @@ public class Ecology {
 		
 		if (targetUnit==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetUnit.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found for player: "+targetUnit.getName());
 		}
 		if (initiatorUnit==J3DCore.getInstance().gameState.player.theFragment)
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetUnit.getName());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Ecology.getNearbyEncounters(): Found player ecounter: "+targetUnit.getName());
 		}
 		
 		// storing intersection numeric data for target
@@ -444,7 +444,7 @@ public class Ecology {
 				if (elements8!=null) elements.addAll(elements8);
 				if (elements9!=null) elements.addAll(elements9);
 				
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(entityInstance.description.getClass().getSimpleName() + "#"+entityInstance.getNumericId()+" ________________________ "+f.getName());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(entityInstance.description.getClass().getSimpleName() + "#"+entityInstance.getNumericId()+" ________________________ "+f.getName());
 				if (elements!=null) // going through the nearby intersection point units...
 				for (Object o:elements)
 				{
@@ -459,11 +459,11 @@ public class Ecology {
 					{
 						// joining the Encounter unit into the EncounterInfo
 						
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" __ "+r[1][0]+" "+r[1][2]);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" __ "+r2[1][0]+" "+r2[1][2]);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("DIFF 10 > "+v2.distance(v1) + fT.getName());
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" __ "+r[1][0]+" "+r[1][2]);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" __ "+r2[1][0]+" "+r2[1][2]);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("DIFF 10 > "+v2.distance(v1) + fT.getName());
 						usedUp.add(fT);
 						pre.encountered.put(fT, r2);
 						calcGroupsOfEncounter(fragment, fT, r2[1][0], r2[1][1], r2[1][2], r2[0][1], pre, false);
@@ -473,17 +473,17 @@ public class Ecology {
 					{
 						// not joining this, skipping.
 						
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" __ "+r[1][0]+" "+r[1][2]);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer(" __ "+r2[1][0]+" "+r2[1][2]);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("!! DIFF 10 < "+v2.distance(v1) + fT.getName());
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" __ "+r[1][0]+" "+r[1][2]);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" __ "+r2[1][0]+" "+r2[1][2]);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer( " ___ "+ f.roamingBoundary.posX +" "+f.roamingBoundary.posZ);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer( " ___ "+ fT.roamingBoundary.posX +" "+fT.roamingBoundary.posZ);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("!! DIFF 10 < "+v2.distance(v1) + fT.getName());
 					}
 				}
 				//for (EncounterUnit fr:pre.encountered.keySet()) 
 				{
 					//if (entityInstance == J3DCore.getInstance().gameState.player || fr==J3DCore.getInstance().gameState.player.theFragment)
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.getDescription().getClass()+" "+pre.encounteredGroupIds.get(fr).length
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ENCOUNTER = "+entityInstance.description.getClass() + pre.encountered.size()+" "+fr.getDescription().getClass()+" "+pre.encounteredGroupIds.get(fr).length
 							//	+ " " + fragment.roamingBoundary.posX+ " / "+fragment.roamingBoundary.posZ
 							//	+ " " +fr.getEncounterBoundary().posX+ " / "+fr.getEncounterBoundary().posZ + " "+r[1][0] +" / "+r[1][2]
 						//);
@@ -514,7 +514,7 @@ public class Ecology {
 	boolean interrupted = false;
 	public void doTurn()
 	{
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ALL ENTITIES IN ECOLOGY IN TURN NO. "+engine.numberOfTurn+" = "+beings.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ALL ENTITIES IN ECOLOGY IN TURN NO. "+engine.numberOfTurn+" = "+beings.size());
 
 		long time = System.currentTimeMillis();
 		
@@ -546,7 +546,7 @@ public class Ecology {
 			
 		} else
 		{
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("CONTINUING PLAYER INTERRUPTED ECOLOGY TURN...");
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("CONTINUING PLAYER INTERRUPTED ECOLOGY TURN...");
 			interrupted = false; // interrupted must be set false now.
 		}
 		for (int i=counterOfDoneTurnBeings; i<orderedBeingList.size(); i++)
@@ -581,7 +581,7 @@ public class Ecology {
 				}
 				// interrupt is needed because UI thread of player will be active for interaction. UI will
 				// have to call this function again with continue = true in method signature.
-				if (J3DCore.LOGGING) Jcrpg.LOGGER.finer("ECOLOGY INTERRUPTED BY: "+orderedBeingList.get(r).description);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ECOLOGY INTERRUPTED BY: "+orderedBeingList.get(r).description);
 				interrupted=true;
 				break;
 			}
@@ -602,7 +602,7 @@ public class Ecology {
 			J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
 			J3DCore.getInstance().updateDisplay(null);
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 	}
 	
 	public void callbackMessage(String message)

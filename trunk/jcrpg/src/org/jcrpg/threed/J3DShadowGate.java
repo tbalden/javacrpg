@@ -36,7 +36,7 @@ public class J3DShadowGate extends DefaultShadowGate {
 
 	@Override
 	public boolean shouldUpdateShadows(TriMesh batch) {
-		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest(batch.getName());
+		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(batch.getName());
 		//if (System.currentTimeMillis()%30>27) return true;
 		// TODO Auto-generated method stub
 		return true;

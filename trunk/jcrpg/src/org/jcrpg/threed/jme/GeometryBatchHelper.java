@@ -250,7 +250,7 @@ public class GeometryBatchHelper {
 	    			//sEngine.intRootNode.updateRenderState();
 	    		} else
 	    		{
-	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
+	    			batch.setAnimated(J3DCore.SETTINGS.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
 	    			sEngine.extRootNode.attachChild(batch.parent);
 	    			//sEngine.extRootNode.updateRenderState();
 	    		}
@@ -266,7 +266,7 @@ public class GeometryBatchHelper {
 		    	batch.unlockBounds();
 	    	}*/
 	    	
-    		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.DOUBLE_GRASS?2:1);
+    		int quadQuantity = ((TextureStateVegetationModel)m).quadQuantity*(J3DCore.SETTINGS.DOUBLE_GRASS?2:1);
     		boolean sparse = true;
     		int counter = 0;
 			float variationCutter = 160f;
@@ -501,7 +501,7 @@ public class GeometryBatchHelper {
     	    			//sEngine.intRootNode.updateRenderState();
     	    		} else
     	    		{
-    	    			batch.setAnimated(J3DCore.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
+    	    			batch.setAnimated(J3DCore.SETTINGS.ANIMATED_GRASS && m.windAnimation,internal); // animate wind only outside
     	    			sEngine.extWaterRefNode.attachChild(batch.parent);
     	    			//sEngine.extRootNode.updateRenderState();
     	    		}
@@ -615,7 +615,7 @@ public class GeometryBatchHelper {
     			TrimeshGeometryBatch batch = tgbList.get(trimeshStepByStepCounter);
 	    		if (batch.visible.size()!=0)
 	    		{
-	    			if (J3DCore.SHADOWS)
+	    			if (J3DCore.SETTINGS.SHADOWS)
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL)
 		    			{
@@ -623,7 +623,7 @@ public class GeometryBatchHelper {
 		    				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:batch.visible)
 		    				{
 	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 	    						{
 	    							core.sPass.addOccluder(batch);
 	    							found = true;
@@ -654,7 +654,7 @@ public class GeometryBatchHelper {
     			
 	    		if (batch.visible.size()!=0)
 	    		{
-	    			if (J3DCore.SHADOWS)
+	    			if (J3DCore.SETTINGS.SHADOWS)
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
 		    			{
@@ -664,7 +664,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
 		    							core.sPass.addOccluder(batch);
 		    							found = true;
@@ -686,7 +686,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
 				    					if (!core.sPass.contains(batch))
 				    					{
@@ -706,7 +706,7 @@ public class GeometryBatchHelper {
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
 	    				//batch.updateGeometricState(0f, true);
-	    				if (J3DCore.VBO_ENABLED)
+	    				if (J3DCore.SETTINGS.VBO_ENABLED)
 	    				{
 	    					if (batch.getVBOInfo()==null)
 	    					{
@@ -768,7 +768,7 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
-    				if (J3DCore.VBO_ENABLED)
+    				if (J3DCore.SETTINGS.VBO_ENABLED)
     				{
 						if (batch.getVBOInfo()!=null)
 	    				{
@@ -780,7 +780,7 @@ public class GeometryBatchHelper {
 					batch.clearInstances();
 					
 					
-					if (J3DCore.SHADOWS)
+					if (J3DCore.SETTINGS.SHADOWS)
 					{
 						core.sPass.remove(batch);
 						core.sPass.removeOccluder(batch);
@@ -805,7 +805,7 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
-					if (J3DCore.VBO_ENABLED)
+					if (J3DCore.SETTINGS.VBO_ENABLED)
 					{
 						TriMesh b = batch;
 						if (b.getVBOInfo()!=null)
@@ -828,7 +828,7 @@ public class GeometryBatchHelper {
 					//batch.clearBatches();
 					batch.clearInstances();
 					
-					if (J3DCore.SHADOWS)
+					if (J3DCore.SETTINGS.SHADOWS)
 					{
 						core.sPass.remove(batch);
 						core.sPass.removeOccluder(batch);
@@ -931,7 +931,7 @@ public class GeometryBatchHelper {
 	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
-	    			if (J3DCore.SHADOWS)
+	    			if (J3DCore.SETTINGS.SHADOWS)
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL || batch.model.shadowCaster)
 		    			{
@@ -941,7 +941,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
 		    							core.sPass.addOccluder(batch);
 		    							found = true;
@@ -963,7 +963,7 @@ public class GeometryBatchHelper {
 		    					for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:h)
 		    					{
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
 				    					if (!core.sPass.contains(batch))
 				    					{
@@ -984,7 +984,7 @@ public class GeometryBatchHelper {
 	    			if (batch.isUpdateNeededAndSwitchIt())
 	    			{
 	    				//batch.updateGeometricState(0f, true);
-	    				if (J3DCore.VBO_ENABLED)
+	    				if (J3DCore.SETTINGS.VBO_ENABLED)
 	    				{
 	    					if (batch.getVBOInfo()==null)
 	    					{
@@ -1008,7 +1008,7 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
-					if (J3DCore.VBO_ENABLED)
+					if (J3DCore.SETTINGS.VBO_ENABLED)
 					{
 						TriMesh b = batch;
 						if (b.getVBOInfo()!=null)
@@ -1031,7 +1031,7 @@ public class GeometryBatchHelper {
 					//batch.clearBatches();
 					batch.clearInstances();
 					
-					if (J3DCore.SHADOWS)
+					if (J3DCore.SETTINGS.SHADOWS)
 					{
 						core.sPass.remove(batch);
 						core.sPass.removeOccluder(batch);
@@ -1051,7 +1051,7 @@ public class GeometryBatchHelper {
 	    		boolean removableFlag = true;
 	    		if (batch.visible.size()!=0)
 	    		{
-	    			if (J3DCore.SHADOWS)
+	    			if (J3DCore.SETTINGS.SHADOWS)
 	    			{
 		    			if (batch.model.type==Model.PARTLYBILLBOARDMODEL)
 		    			{
@@ -1059,7 +1059,7 @@ public class GeometryBatchHelper {
 		    				for (GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> i:batch.visible)
 		    				{
 	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
-	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.RENDER_SHADOW_DISTANCE)
+	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 	    						{
 	    							core.sPass.addOccluder(batch);
 	    							found = true;
@@ -1088,7 +1088,7 @@ public class GeometryBatchHelper {
     				batch.parent.unlock();
 					batch.parent.removeFromParent();
 					batch.removeFromParent();
-    				if (J3DCore.VBO_ENABLED)
+    				if (J3DCore.SETTINGS.VBO_ENABLED)
     				{
 						if (batch.getVBOInfo()!=null)
 	    				{
@@ -1100,7 +1100,7 @@ public class GeometryBatchHelper {
 					batch.clearInstances();
 					
 					
-					if (J3DCore.SHADOWS)
+					if (J3DCore.SETTINGS.SHADOWS)
 					{
 						core.sPass.remove(batch);
 						core.sPass.removeOccluder(batch);

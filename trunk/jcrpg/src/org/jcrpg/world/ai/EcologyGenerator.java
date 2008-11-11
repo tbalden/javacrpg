@@ -110,17 +110,17 @@ public class EcologyGenerator {
 	}
 
 	private void logCreationStats() {
-		if (J3DCore.LOGGING) LOGGER
+		if (J3DCore.LOGGING()) LOGGER
 				.fine("-------------------------logCreationStats()----------------------------- ");
 
 		for (Class<? extends EntityDescription> vClass : entityCreationStats
 				.keySet()) {
-			if (J3DCore.LOGGING) 
+			if (J3DCore.LOGGING()) 
 			LOGGER.fine("Entity " + vClass.getSimpleName() + ":"
 					+ entityCreationStats.get(vClass) + " groups.");
 
 		}
-		if (J3DCore.LOGGING) LOGGER
+		if (J3DCore.LOGGING()) LOGGER
 				.fine("------------------------------------------------------------------------ ");
 	}
 

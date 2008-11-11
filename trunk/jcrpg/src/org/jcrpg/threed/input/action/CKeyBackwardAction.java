@@ -41,7 +41,7 @@ public class CKeyBackwardAction extends CKeyAction {
      */
     public void performAction(InputActionEvent evt) {
     	if (!performActionCheck(evt) || handler.secLock){
-        	//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("locked...");
+        	//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("locked...");
     		return;
     	}
     	handler.lockHandling();

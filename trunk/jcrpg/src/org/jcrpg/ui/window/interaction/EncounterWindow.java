@@ -174,7 +174,7 @@ public class EncounterWindow extends PagedInputWindow {
 				Object[] objects = new Object[list.size()];
 				String[] texts = new String[list.size()];
 				int count = 0;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ENC SIZE = "+list.size());
 				for (EncounterUnitData data:list)
 				{
 					ids[count] = ""+count;
@@ -279,10 +279,10 @@ public class EncounterWindow extends PagedInputWindow {
 				ids[counter]=""+counter;
 				SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
 				objects[counter]=b;
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("--- "+skill);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+skill);
 				if (hmMemberSelectedSkill.get(i)!=null && hmMemberSelectedSkill.get(i).getClass() == b.getClass())
 				{
-					//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("### FOUND SKILL");
+					//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("### FOUND SKILL");
 					selected = counter;
 				}
 				counter++;

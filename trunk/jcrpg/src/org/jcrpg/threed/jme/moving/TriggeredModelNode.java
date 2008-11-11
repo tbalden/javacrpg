@@ -139,13 +139,13 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 	 */
 	public void setAnimationSpeed(String name, boolean update)
 	{
-		if (!J3DCore.SLOW_ANIMATION && animationDesc.oneFrameAnim.get(name)!=null && animationDesc.oneFrameAnim.get(name))
+		if (!J3DCore.SETTINGS.SLOW_ANIMATION && animationDesc.oneFrameAnim.get(name)!=null && animationDesc.oneFrameAnim.get(name))
 		{
 			if (update) bodyAnimationController.update(0.5f);
 			bodyAnimationController.setSkipRate(0.5f);
 		} else
 		{
-			if (!J3DCore.SLOW_ANIMATION)
+			if (!J3DCore.SETTINGS.SLOW_ANIMATION)
 			{
 				bodyAnimationController.setSkipRate(0f);
 			}
@@ -160,10 +160,10 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 			finishedPlaying = true;
 			return 0;
 		}
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("P_____ PLAY ANIM : "+name+" AFTERANIME = "+afterAnim);
 		
 		AnimationAnimator newAnimator = bodyAnimationController.addAnimation(anim);
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P_____ CURRENT ANIM : "+currentAnimatorName);
 		
 		setAnimationSpeed(name,true);
 
@@ -221,8 +221,8 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 				name = TriggeredAnimDescription.ANIM_DEFAULT;
 				break;
 			}
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM : "+name);
-			if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM : "+name);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("_____ CHANGE TO ANIM CURRENT ANIM: "+currentAnimatorName);
 			if (name.equals(currentAnimatorName)) return 0;
 			Animation anim = animations.get(name);
 			if (currentAnimator!=null && anim==currentAnimator.getAnimation()) return 0;
@@ -255,7 +255,7 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 	{
 		this.animationDesc = animation;
 		boolean animated = animation!=null;
-		if (J3DCore.LOGGING) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
 		
 		try {
 			Model bodyModel = loadModel(fileName);
@@ -263,7 +263,7 @@ public class TriggeredModelNode extends Node implements PooledNode, IAnimationLi
 			//bodyInstance.lockBounds();
 			bodyInstance.lockShadows();
 			bodyAnimationController = (SkeletalAnimationController) bodyInstance.addAnimationController();
-			if (J3DCore.SLOW_ANIMATION)
+			if (J3DCore.SETTINGS.SLOW_ANIMATION)
 				bodyAnimationController.setSkipRate(1f);
 			bodyAnimationController.addListener(this);
 			

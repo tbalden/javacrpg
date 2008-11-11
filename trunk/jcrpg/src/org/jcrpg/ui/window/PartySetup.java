@@ -178,7 +178,7 @@ public class PartySetup extends PagedInputWindow {
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
-	    		//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("TEXT" +text);
+	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
 	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
@@ -393,7 +393,7 @@ public class PartySetup extends PagedInputWindow {
 			if (files!=null)
 			for (String file:files)
 			{
-				//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("# FILE: "+file);
+				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("# FILE: "+file);
 				if (new File(f.getAbsolutePath()+"/"+file).isDirectory())
 				{
 					CharListData data = new CharListData();
@@ -402,7 +402,7 @@ public class PartySetup extends PagedInputWindow {
 					String[] subFiles = dirFile.list();
 					for (String sFile:subFiles)
 					{
-						//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("F: "+sFile);
+						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("F: "+sFile);
 						File sF = new File(SaveLoadNewGame.charsDir+"/"+file+"/"+sFile);
 						if (sF.isFile())
 						{
@@ -610,7 +610,7 @@ public class PartySetup extends PagedInputWindow {
 			skillTuned = skill;
 			//String group = id.substring(0,id.indexOf('.'));
 			//int count = Integer.parseInt(id.substring(id.indexOf('.')+1));
-			//if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
+			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
 			skillValueTuner.setUpdated(true);

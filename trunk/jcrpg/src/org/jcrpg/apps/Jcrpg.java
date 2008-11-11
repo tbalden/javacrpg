@@ -85,7 +85,7 @@ public class Jcrpg extends Formatter implements Filter  {
     	for (Handler handler:LOGGER.getHandlers())
     	{
     		LOGGER.removeHandler(handler);
-    		if (J3DCore.LOGGING) Jcrpg.LOGGER.finest("H: "+handler);
+    		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("H: "+handler);
     	}
 		try {
 			FileHandler h = new FileHandler("./jcrpg-log-"+timeDateFormat.format(new Date())+"-%u.txt");
