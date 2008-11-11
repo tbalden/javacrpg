@@ -1517,7 +1517,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		notFallable.add(StickingOut.class);
 	}
 
-	public static boolean FREE_MOVEMENT = true; // debug true, otherwise false!
+	public static boolean FREE_MOVEMENT = false; // debug true, otherwise false!
 
 	long lastStepSoundTime = System.currentTimeMillis();
 
@@ -3067,6 +3067,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			waterEffectRenderPass.setUseShader(WATER_SHADER);
 		}
 		audioServer.applyVolumeSettings();
+		getClassicInputHandler().applyMouseSettings();
 	}
 	
 
