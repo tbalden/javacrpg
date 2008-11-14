@@ -31,12 +31,43 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
 public class StorageInspectionWindow extends PagedInputWindow {
+	
+	
+	
+	/*
+	 * STORAGE INSPECTION
+	 * 
+	 * Current State: Unknown/Identified/Open
+	 * 
+	 * Skill Level in Party: X   Chance of Success: X %
+	 * Magic Level in Party: X   Chance of Success: X %
+	 * 
+	 * Identified Trap Level/Type: -/- or LEVEL/TYPE
+	 * 
+	 * Force Chance of Success: X %
+	 * 
+	 * Identify               Unlock  
+	 * [Inspect][Sense]       [Disarm][Spell]
+	 * 
+	 * [Open] [Leave] [Force]
+	 * 
+	 */
+	
+	TextLabel currentState, skillLevel, chanceOfSkillSuccess, spellLevel, chanceOfSpellSuccess, trapLevelAndType,
+	chanceOfForceSuccess;
+	
+	static final String BG_IMAGE = "./data/ui/nonPatternFrame1_trans.png";
+
+    Node page0 = new Node();
+    TextButton inspect, sense, disarm, spell, open, leave, force;
+    
 
 	@Override
 	public synchronized void toggle() {
@@ -49,10 +80,6 @@ public class StorageInspectionWindow extends PagedInputWindow {
 		super.toggle();
 	}
 
-	static final String BG_IMAGE = "./data/ui/nonPatternFrame1_trans.png";
-
-    Node page0 = new Node();
-    TextButton inspect, open, leave;
 	
 	public StorageInspectionWindow(UIBase base) {
 		super(base);
@@ -69,6 +96,50 @@ public class StorageInspectionWindow extends PagedInputWindow {
 	        page0.attachChild(hudQuad);
 	        
 	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Storage Inspection",false);
+	    	
+	    	// layouts
+	    	
+            SimpleLayout page0Layout = new SimpleLayout(0.2f, 0.16f, 0.2f, 0.07f ,4);
+
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.currentState"), false));
+            page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));
+            currentState = new TextLabel("",this,page0, 500f, "Unknown Closed", false);
+            page0Layout.addToColumn(2, currentState, 0.1f, 0.5f);
+            page0Layout.addToColumn(3, new TextLabel("",this,page0, 500f, "", false));
+
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.skillLevel"), false));
+            skillLevel = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(1, skillLevel, 0.1f, 0.5f);            
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfSkillSuccess"), false));
+            chanceOfSkillSuccess = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(3, chanceOfSkillSuccess, 0.1f, 0.5f);
+
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.spellLevel"), false));
+            spellLevel = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(1, spellLevel, 0.1f, 0.5f);            
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfSpellSuccess"), false));
+            chanceOfSpellSuccess = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(3, chanceOfSpellSuccess, 0.1f, 0.5f);
+
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.trapLevelAndType"), false));
+            page0Layout.addToColumn(1, new TextLabel("",this,page0, 600f, "", false));
+            trapLevelAndType = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(2, trapLevelAndType, 0.1f, 0.5f);
+            page0Layout.addToColumn(3, new TextLabel("",this,page0, 600f, "", false));
+	    	
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfForceSuccess"), false));
+            page0Layout.addToColumn(1, new TextLabel("",this,page0, 600f, "", false));
+            chanceOfForceSuccess = new TextLabel("",this,page0, 600f, "-", false);
+            page0Layout.addToColumn(2, chanceOfForceSuccess, 0.1f, 0.5f);
+            page0Layout.addToColumn(3, new TextLabel("",this,page0, 600f, "", false));
+
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.identify"), false));
+            page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.disarm"), false));
+            page0Layout.addToColumn(3, new TextLabel("",this,page0, 500f, "", false));
+            
+            // TODO the remaining buttons into the layout!
+
 	    	
             // buttons
             inspect = new TextButton("inspect",this, page0, 0.26f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.inspect"),"I");
