@@ -18,6 +18,10 @@
 
 package org.jcrpg.threed.input;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyBackwardAction;
 import org.jcrpg.threed.input.action.CKeyDownAction;
@@ -52,6 +56,33 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
     public int lookLeftRightPercent = 0;
     
     public boolean eventCatched = false;
+    
+    public HashMap<String, HashSet<String>> commandToCommandsMap = new HashMap<String, HashSet<String>>();
+    
+    public void addAdditionalCommands(String command, String[] additionalCommands)
+    {
+    	HashSet<String> set = commandToCommandsMap.get(command);
+    	if (set==null) {
+    		set = new HashSet<String>();
+    		commandToCommandsMap.put(command, set);
+    	}
+    	for (String s:additionalCommands)
+    	{
+    		set.add(s);
+    	}
+    }
+    
+    /**
+     * Return all commands that are triggered by same key as the given command which took the key
+     * for handling upon setting the keyboard up.
+     * @param command
+     * @return The list of commands that should be handled after the 'command'.
+     */
+    public Set<String> getAdditionalCommands(String command)
+    {
+    	return commandToCommandsMap.get(command);
+    }
+    
 
     public ClassicKeyboardLookHandler( J3DCore core, Camera cam ) {
     	this.core = core;
@@ -85,48 +116,49 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.set( "logDown", KeyInput.KEY_PGDN );
         keyboard.set( "enter", KeyInput.KEY_RETURN );
         keyboard.set( "back", KeyInput.KEY_BACK);
-        keyboard.set( "A", KeyInput.KEY_A );
+        keyboard.add( "A", KeyInput.KEY_A );
         if (!J3DCore.FREE_MOVEMENT)
-        //	keyboard.set( "B", KeyInput.KEY_B );
-        keyboard.set( "C", KeyInput.KEY_C );
-        keyboard.set( "D", KeyInput.KEY_D );
-        keyboard.set( "E", KeyInput.KEY_E );
-        keyboard.set( "F", KeyInput.KEY_F );
-        keyboard.set( "G", KeyInput.KEY_G );
-        keyboard.set( "H", KeyInput.KEY_H );
-        keyboard.set( "I", KeyInput.KEY_I );
-        keyboard.set( "J", KeyInput.KEY_J );
-        keyboard.set( "K", KeyInput.KEY_K );
+        	keyboard.add( "B", KeyInput.KEY_B );
+        keyboard.add( "C", KeyInput.KEY_C );
+        keyboard.add( "D", KeyInput.KEY_D );
+        keyboard.add( "E", KeyInput.KEY_E );
+        keyboard.add( "F", KeyInput.KEY_F );
+        keyboard.add( "G", KeyInput.KEY_G );
+        keyboard.add( "H", KeyInput.KEY_H );
+        keyboard.add( "I", KeyInput.KEY_I );
+        keyboard.add( "J", KeyInput.KEY_J );
+        keyboard.add( "K", KeyInput.KEY_K );
         if (!J3DCore.FREE_MOVEMENT) // if not debug set this
-        	keyboard.set( "L", KeyInput.KEY_L );
-        keyboard.set( "M", KeyInput.KEY_M );
-        keyboard.set( "N", KeyInput.KEY_N );
-        keyboard.set( "O", KeyInput.KEY_O );
-        keyboard.set( "P", KeyInput.KEY_P );
-        keyboard.set( "Q", KeyInput.KEY_Q );
-        keyboard.set( "R", KeyInput.KEY_R );
-        keyboard.set( "S", KeyInput.KEY_S );
+        	keyboard.add( "L", KeyInput.KEY_L );
+        keyboard.add( "M", KeyInput.KEY_M );
+        keyboard.add( "N", KeyInput.KEY_N );
+        keyboard.add( "O", KeyInput.KEY_O );
+        addAdditionalCommands("O", new String[]{"storageWindow"});
+        keyboard.add( "P", KeyInput.KEY_P );
+        keyboard.add( "Q", KeyInput.KEY_Q );
+        keyboard.add( "R", KeyInput.KEY_R );
+        keyboard.add( "S", KeyInput.KEY_S );
         if (!J3DCore.FREE_MOVEMENT) // if not debug set this
-        	keyboard.set( "T", KeyInput.KEY_T );
-        keyboard.set( "U", KeyInput.KEY_U );
-        keyboard.set( "V", KeyInput.KEY_V );
-        keyboard.set( "W", KeyInput.KEY_W );
-        keyboard.set( "X", KeyInput.KEY_X );
-        keyboard.set( "Y", KeyInput.KEY_Y );
-        keyboard.set( "Z", KeyInput.KEY_Z );
-        keyboard.set( "0", KeyInput.KEY_0 );
-        keyboard.set( "1", KeyInput.KEY_1 );
-        keyboard.set( "2", KeyInput.KEY_2 );
-        keyboard.set( "3", KeyInput.KEY_3 );
-        keyboard.set( "4", KeyInput.KEY_4 );
-        keyboard.set( "5", KeyInput.KEY_5 );
-        keyboard.set( "6", KeyInput.KEY_6 );
-        keyboard.set( "7", KeyInput.KEY_7 );
-        keyboard.set( "8", KeyInput.KEY_8 );
-        keyboard.set( "9", KeyInput.KEY_9 );
-        keyboard.set( "space", KeyInput.KEY_SPACE );
-        keyboard.set( "delete", KeyInput.KEY_DELETE );
-        keyboard.set( "shift", KeyInput.KEY_LSHIFT);
+        	keyboard.add( "T", KeyInput.KEY_T );
+        keyboard.add( "U", KeyInput.KEY_U );
+        keyboard.add( "V", KeyInput.KEY_V );
+        keyboard.add( "W", KeyInput.KEY_W );
+        keyboard.add( "X", KeyInput.KEY_X );
+        keyboard.add( "Y", KeyInput.KEY_Y );
+        keyboard.add( "Z", KeyInput.KEY_Z );
+        keyboard.add( "0", KeyInput.KEY_0 );
+        keyboard.add( "1", KeyInput.KEY_1 );
+        keyboard.add( "2", KeyInput.KEY_2 );
+        keyboard.add( "3", KeyInput.KEY_3 );
+        keyboard.add( "4", KeyInput.KEY_4 );
+        keyboard.add( "5", KeyInput.KEY_5 );
+        keyboard.add( "6", KeyInput.KEY_6 );
+        keyboard.add( "7", KeyInput.KEY_7 );
+        keyboard.add( "8", KeyInput.KEY_8 );
+        keyboard.add( "9", KeyInput.KEY_9 );
+        keyboard.add( "space", KeyInput.KEY_SPACE );
+        keyboard.add( "delete", KeyInput.KEY_DELETE );
+        keyboard.add( "shift", KeyInput.KEY_LSHIFT);
        
         float moveSpeed = 0.001f;
         float rotateSpeed = 1.0f;
@@ -159,6 +191,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         addAction( new CKeyMenu(this), "charSheetWindow", false);
         addAction( new CKeyMenu(this), "partyOrderWindow", false);
         addAction( new CKeyMenu(this), "normalActWindow", false);
+        addAction( new CKeyMenu(this), "storageWindow", false);
         addAction( new CKeyMenu(this), "mainMenu", false);
         addAction( new CKeyMenu(this), "cacheStateInfo", false);
         addAction( new CKeyMenu(this), "logUp", false);

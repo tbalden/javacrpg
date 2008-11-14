@@ -76,6 +76,7 @@ import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.NormalActWindow;
 import org.jcrpg.ui.window.interaction.PostEncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
+import org.jcrpg.ui.window.interaction.StorageInspectionWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
@@ -2128,6 +2129,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public CharacterLevelingWindow charLevelingWindow = null;
 	public PartyOrderWindow partyOrderWindow = null;
 	public NormalActWindow normalActWindow = null;
+	public StorageInspectionWindow storageWindow = null;
 
 	public void createWorldMap() {
 		try {
@@ -2716,7 +2718,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 		postEncounterWindow = new PostEncounterWindow(uiBase);
+		storageWindow = new StorageInspectionWindow(uiBase);
 
+		// adding player invoked windows to handling
 		uiBase.addWindow("behaviorWindow", behaviorWindow);
 		uiBase.addWindow("inventoryWindow", inventoryWindow);
 		uiBase.addWindow("charSheetWindow", charSheetWindow);
@@ -2724,6 +2728,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));
 		uiBase.addWindow("partyOrderWindow", partyOrderWindow);
 		uiBase.addWindow("normalActWindow", normalActWindow);
+		uiBase.addWindow("storageWindow", storageWindow);
 
 		// shadows not working because of this node -> the hudNode shall occupy
 		// only the lower part, Done, image cut.
