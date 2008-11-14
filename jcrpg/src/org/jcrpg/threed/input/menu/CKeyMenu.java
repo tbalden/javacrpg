@@ -18,6 +18,8 @@
 
 package org.jcrpg.threed.input.menu;
 
+import java.util.Set;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
@@ -37,9 +39,24 @@ public class CKeyMenu extends KeyInputAction{
 	public void performAction(InputActionEvent evt) {
 		handler.eventCatched = false;
 		String event = evt.getTriggerName();
+		callHandling(event);
+		Set<String> a = handler.getAdditionalCommands(event);
+		if (a!=null)
+		{
+			for (String s:a)
+			{
+				callHandling(s);
+			}
+		}
+	}
+	
+	private void callHandling(String event)
+	{
 		if (handler.noToggleWindowByKey || !core.uiBase.handleWindowEvent(event))
 		{
 			core.uiBase.handleEvent(event);
+			// handling additional commands for the event (because handler cannot bind one key to
+			// several commands...)
 		}
 	}
 	

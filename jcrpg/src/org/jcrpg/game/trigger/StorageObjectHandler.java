@@ -23,6 +23,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.trigger.StorageObjectSideSubType;
 import org.jcrpg.space.sidetype.trigger.TriggerBaseSideSubtype;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.moving.TriggeredModelNode;
@@ -61,6 +62,108 @@ public class StorageObjectHandler extends TriggerHandler {
 		return false;
 	}
 	
+	public boolean openTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	{
+		ArrayList<Side> triggerSides = null;
+		if (enteredCube!=null)
+		{
+			triggerSides = enteredCube.getTriggerSides();	
+		}
+		
+		if (triggerSides!=null)
+		{
+			RenderedCube rc = renderedEnteredCube;
+			if (rc!=null)
+			{
+				System.out.println("RENDERED CUBE OKAY");
+				for (Side s:triggerSides)
+				{
+					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnEnter();
+					if (anim!=null)
+					{
+						System.out.println("ANIM "+anim);
+						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
+						if (list!=null)
+						{
+							System.out.println("NODE LIST "+list.length);
+							for (NodePlaceholder n:list)
+							{
+								if (n.realNode!=null)
+								{
+									System.out.println("REALNODE = "+n.realNode);
+									PooledNode pN = n.realNode;
+									if (pN instanceof TriggeredModelNode)
+									{
+										if (anim.length==2)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
+										} else
+										if (anim.length==1)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_OPEN);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	public boolean closeTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	{
+		ArrayList<Side> triggerSides = null;
+		if (enteredCube!=null)
+		{
+			triggerSides = enteredCube.getTriggerSides();	
+		}
+		
+		if (triggerSides!=null)
+		{
+			RenderedCube rc = renderedEnteredCube;
+			if (rc!=null)
+			{
+				System.out.println("RENDERED CUBE OKAY");
+				for (Side s:triggerSides)
+				{
+					String[] anim = ((TriggerBaseSideSubtype)s.subtype).getEffectOnLeave();
+					if (anim!=null)
+					{
+						System.out.println("ANIM "+anim);
+						NodePlaceholder[] list = rc.hmNodePlaceholderForSide.get(s);
+						if (list!=null)
+						{
+							System.out.println("NODE LIST "+list.length);
+							for (NodePlaceholder n:list)
+							{
+								if (n.realNode!=null)
+								{
+									System.out.println("REALNODE = "+n.realNode);
+									PooledNode pN = n.realNode;
+									if (pN instanceof TriggeredModelNode)
+									{
+										if (anim.length==2)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],anim[1]);
+										} else
+										if (anim.length==1)
+										{
+											((TriggeredModelNode) pN).playAnimation(anim[0],TriggerBaseSideSubtype.TRIGGER_EFFECT_OPEN);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public boolean handleStaticTriggerSides(Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
 	{
@@ -68,10 +171,19 @@ public class StorageObjectHandler extends TriggerHandler {
 		if (enteredCube!=null)
 		{
 			triggerSides = enteredCube.getTriggerSides();	
-		}		
+		}
+		
+		
+		
 		if (triggerSides!=null)
 		{
 			System.out.println("$$$$$$$$$$$$$$ TRIGGER SIDE $$$$$$$$$$$$$$$$");
+			J3DCore.getInstance().storageWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
+			J3DCore.getInstance().storageWindow.setStorageNearby(true);
+			if (true) return true;
+			
+			
+			
 			RenderedCube rc = renderedEnteredCube;
 			if (rc!=null)
 			{
@@ -111,6 +223,7 @@ public class StorageObjectHandler extends TriggerHandler {
 			}
 		}
 
+		J3DCore.getInstance().storageWindow.setStorageNearby(false);
 		
 		
 		triggerSides = null;
