@@ -66,7 +66,7 @@ public class OptionsMenu extends PagedInputWindow {
     ValueTuner tunerShadowDistance;
     CheckBox toggleSlowAnimation;
 
-    TextButton save, cancel, nextPage, prevPage;
+    TextButton save, cancel, save2, cancel2, nextPage, prevPage;
 
     public OptionsMenu(UIBase base) {
         super(base);
@@ -91,7 +91,7 @@ public class OptionsMenu extends PagedInputWindow {
             header.setRenderState(base.hud.hudAS);
             pageFirst.attachChild(header);
 
-            SimpleLayout inputsLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,2);
+            SimpleLayout inputsLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,3);
             inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
             toggleMLook = new CheckBox("", this, pageFirst, J3DCore.SETTINGS.MOUSELOOK);
             inputsLayout.addToColumn(1, toggleMLook, 0.1f, 0.5f);
@@ -118,6 +118,8 @@ public class OptionsMenu extends PagedInputWindow {
             tunerTextureDetail = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.TEXTURE_QUALITY, 0, 2, 1);
             inputsLayout.addToColumn(1, tunerTextureDetail, 0.35f, 0.5f);
             addInput(0, tunerTextureDetail);
+            inputsLayout.addToColumn(2, new TextLabel("",this,pageFirst, 600f, "", false), 5); // placeholder for rowspan
+            inputsLayout.addToColumn(2, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.needs.restart"), false, true));
 
             inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.effects.volume"), false));
             tunerEffectsVolume = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT, 0, 100, 5);
@@ -181,6 +183,10 @@ public class OptionsMenu extends PagedInputWindow {
             // buttons
             prevPage = new TextButton("prevPage",this, pageSecond, 0.26f, 0.75f, 0.18f, 0.06f, 500f,Language.v("optionsmenu.prev.page"),"P");
             addInput(1, prevPage);
+            save2 = new TextButton("save",this, pageSecond, 0.5f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.save"),"S");
+            addInput(1, save2);
+            cancel2 = new TextButton("cancel",this, pageSecond, 0.75f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.cancel"),"C");
+            addInput(1, cancel2);
 
             // adding pages
             addPage(0, pageFirst);
@@ -211,7 +217,7 @@ public class OptionsMenu extends PagedInputWindow {
     @Override
     public boolean inputUsed(InputBase base, String message) {
         // Save
-        if (base == save) {
+        if (base == save || base == save2) {
             // Setting new Values to J3DCore
             J3DCore.SETTINGS.MOUSELOOK = toggleMLook.isChecked();
             J3DCore.SETTINGS.CONTINUOUS_LOAD = toggleContinuousLoad.isChecked();
@@ -224,9 +230,12 @@ public class OptionsMenu extends PagedInputWindow {
             J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT = tunerMusicVolume.getSelection();
 
             J3DCore.SETTINGS.NORMALMAP_ENABLED = toggleNormalMapShader.isChecked();
-            // TODO: selectWaterDeatil value exam
-            //J3DCore.SETTINGS.WATER_SHADER;
-            //J3DCore.SETTINGS.WATER_DETAILED;
+
+            // water detail
+            int selIndex = selectWaterDeatil.getSelection();
+            J3DCore.SETTINGS.WATER_SHADER = (selIndex==0);
+            J3DCore.SETTINGS.WATER_DETAILED = (selIndex==2);
+
             J3DCore.SETTINGS.BLOOM_EFFECT = toggleBloom.isChecked();
             J3DCore.SETTINGS.DOF_EFFECT = toggleDepthOfField.isChecked();
             J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE = tunerShadowDistance.getSelection();
@@ -240,7 +249,7 @@ public class OptionsMenu extends PagedInputWindow {
             core.applyOptions();
             return true;
         // Cancel
-        } else if (base == cancel) {
+        } else if (base == cancel || base == cancel2) {
             // Resetting Ui elements
             toggleMLook.setChecked(J3DCore.SETTINGS.MOUSELOOK);
             toggleContinuousLoad.setChecked(J3DCore.SETTINGS.CONTINUOUS_LOAD);
@@ -254,7 +263,12 @@ public class OptionsMenu extends PagedInputWindow {
 
             toggleNormalMapShader.setChecked(J3DCore.SETTINGS.NORMALMAP_ENABLED);
             toggleNormalMapShader.setChecked(J3DCore.SETTINGS.NORMALMAP_ENABLED);
-            // TODO: selectWaterDeatil value exam
+
+            // water detail
+            int selIndex = (J3DCore.SETTINGS.WATER_SHADER ? 0 : 1);
+            selIndex = (J3DCore.SETTINGS.WATER_DETAILED ? 2 : selIndex);
+            selectWaterDeatil.setSelected(selIndex);
+
             toggleBloom.setChecked(J3DCore.SETTINGS.BLOOM_EFFECT);
             toggleDepthOfField.setChecked(J3DCore.SETTINGS.DOF_EFFECT);
             tunerShadowDistance.setValue(J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE);
@@ -277,14 +291,12 @@ public class OptionsMenu extends PagedInputWindow {
             setupPage();
             return true; 
         } else if (base == tunerViewDistance) {
-            System.out.println("tunerViewDistance: "+tunerViewDistance.getSelection()+", tunerRenderDistance: "+tunerRenderDistance.getSelection());
             if (tunerViewDistance.getSelection()+6>tunerRenderDistance.getSelection()) {
                 tunerRenderDistance.setValue(tunerViewDistance.getSelection()+6);
                 tunerRenderDistance.setUpdated(true);
                 tunerRenderDistance.deactivate();
             }
         } else if (base == tunerRenderDistance) {
-            System.out.println("tunerViewDistance: "+tunerViewDistance.getSelection()+", tunerRenderDistance: "+tunerRenderDistance.getSelection());
             if (tunerViewDistance.getSelection()+6>tunerRenderDistance.getSelection()) {
                 tunerRenderDistance.setValue(tunerViewDistance.getSelection()+6);
                 tunerRenderDistance.setUpdated(true);
