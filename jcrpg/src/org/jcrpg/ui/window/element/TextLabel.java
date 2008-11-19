@@ -44,9 +44,16 @@ public class TextLabel extends InputBase {
 		this.text = text;
 		this.textProportion = textProportion;
 		this.useImage = useImage;
-		this.centered = useImage;
 		// activates in the init
 	}
+    public TextLabel(String id, InputWindow w, Node parentNode, float textProportion, String text, boolean useImage, boolean centered) {
+        super(id, w, parentNode);
+        this.text = text;
+        this.textProportion = textProportion;
+        this.useImage = useImage;
+        this.centered = centered;
+        // activates in the init
+    }
 	public TextLabel(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text, boolean useImage) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
