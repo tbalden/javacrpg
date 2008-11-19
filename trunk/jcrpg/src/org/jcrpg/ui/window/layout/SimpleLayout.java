@@ -49,7 +49,7 @@ public class SimpleLayout {
 
     /**
      * Adds an element to a column, with element dimensions ratio 1.
-     * @param column column index
+     * @param column column index, the first column index is 0
      * @param inputElement element to add
      */
     public void addToColumn(int column, InputBase inputElement) {
@@ -58,12 +58,34 @@ public class SimpleLayout {
 
     /**
      * Adds an element to a column.
-     * @param column column index
+     * @param column column index, the first column index is 0
      * @param inputElement element to add
      * @param elementWidthRatio element width ratio within the cell
      * @param elementHeightRatio element height ratio within the cell
      */
     public void addToColumn(int column, InputBase inputElement, float elementWidthRatio, float elementHeightRatio) {
+        addToColumn( column, inputElement, elementWidthRatio, elementHeightRatio, 1);
+    }
+
+    /**
+     * Adds an element to a column.
+     * @param column column index, the first column index is 0
+     * @param inputElement element to add
+     * @param rowSpan row span amount for the element, the element will be aligned on top
+     */
+    public void addToColumn(int column, InputBase inputElement, int rowSpan) {
+        addToColumn( column, inputElement, 1, 1, rowSpan);
+    }
+
+    /**
+     * Adds an element to a column.
+     * @param column column index, the first column index is 0
+     * @param inputElement element to add
+     * @param elementWidthRatio element width ratio within the cell
+     * @param elementHeightRatio element height ratio within the cell
+     * @param rowSpan row span amount for the element, the element will be aligned on top
+     */
+    public void addToColumn(int column, InputBase inputElement, float elementWidthRatio, float elementHeightRatio, int rowSpan) {
         if (column > this.columns) {
             throw new IllegalArgumentException("The given column index ("+column+") is bigger then maximum ("+this.columns+")");
         }
@@ -73,7 +95,7 @@ public class SimpleLayout {
         float elemHeight = this.rowHeightRatio*elementHeightRatio;
         inputElement.init(elemX,elemY,elemWidth,elemHeight);
         addedElements.add(inputElement);
-        columnRows[column]++;
+        columnRows[column] = columnRows[column]+rowSpan;
     }
 
 }
