@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.window.OptionsMenu;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.time.Time;
 
@@ -74,12 +75,12 @@ public class Jcrpg extends Formatter implements Filter  {
 	public static DateFormat timeDateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
 	public static void main(String[] args) {
     	//System.setProperty("java.util.logging.config.file", "./lib/logging.properties");
-    	String configFile = "./config.properties";
+    	String configFile = OptionsMenu.CONFIGFILE_CUSTOM;
     	if (args.length>0 && args[0]!=null)
     	{
     		configFile = args[0];
     	}
-    	J3DCore.loadConfig(configFile);
+    	J3DCore.SETTINGS = J3DCore.loadConfig(configFile);
     	
     	LOGGER = java.util.logging.Logger.getLogger("");
     	for (Handler handler:LOGGER.getHandlers())
