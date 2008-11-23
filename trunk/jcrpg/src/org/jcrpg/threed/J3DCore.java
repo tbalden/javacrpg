@@ -220,7 +220,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		
 	}
 
-	public static CoreSettings SETTINGS = new CoreSettings();
+	public static CoreSettings SETTINGS = null;
 	
 
 	public static final float CUBE_EDGE_SIZE = 1.9999f;
@@ -238,93 +238,96 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	static Properties p = new Properties();
 
-	public static void loadConfig(String fileName) {
+	public static CoreSettings loadConfig(String fileName) {
 		try {
+		    CoreSettings coreSettings = new CoreSettings();
 			File f = new File(fileName);
 			FileInputStream fis = new FileInputStream(f);
 			p.load(fis);
 
-			SETTINGS.FARVIEW_ENABLED = false;// XXX removing farview option, new geo
+			coreSettings.FARVIEW_ENABLED = false;// XXX removing farview option, new geo
 									// tiling is not working well with it,
 			// especially the water part,
 			// loadValue("FARVIEW_ENABLED", false);
 
-			SETTINGS.RENDER_DISTANCE_FARVIEW = 80;
+			coreSettings.RENDER_DISTANCE_FARVIEW = 80;
 			/*
 			 * loadValue("RENDER_DISTANCE_FARVIEW", (int) (60 CUBE_EDGE_SIZE),
 			 * (int) (20 CUBE_EDGE_SIZE), Integer.MAX_VALUE);
 			 */
-			SETTINGS.RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
+			coreSettings.RENDER_DISTANCE_FARVIEW /= CUBE_EDGE_SIZE;
 
-			SETTINGS.RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
+			coreSettings.RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
 					(int) (10 * CUBE_EDGE_SIZE), (int) (10 * CUBE_EDGE_SIZE),
 					Integer.MAX_VALUE);
-			SETTINGS.RENDER_DISTANCE /= CUBE_EDGE_SIZE;
+			coreSettings.RENDER_DISTANCE /= CUBE_EDGE_SIZE;
 
 			//if (CONTINUOUS_LOAD)
 				//VIEW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
 			//else
-			SETTINGS.VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5,
+			coreSettings.VIEW_DISTANCE = loadValue("VIEW_DISTANCE", 10, 5,
 						Integer.MAX_VALUE);
-			SETTINGS.VIEW_DISTANCE_SQR = SETTINGS.VIEW_DISTANCE * SETTINGS.VIEW_DISTANCE;
-			SETTINGS.VIEW_DISTANCE_FRAG_SQR = SETTINGS.VIEW_DISTANCE_SQR / 4;
+			coreSettings.VIEW_DISTANCE_SQR = coreSettings.VIEW_DISTANCE * coreSettings.VIEW_DISTANCE;
+			coreSettings.VIEW_DISTANCE_FRAG_SQR = coreSettings.VIEW_DISTANCE_SQR / 4;
 
-			SETTINGS.RENDER_GRASS_DISTANCE = loadValue("RENDER_GRASS_DISTANCE", 10, 0,
+			coreSettings.RENDER_GRASS_DISTANCE = loadValue("RENDER_GRASS_DISTANCE", 10, 0,
 					(int) (15 * CUBE_EDGE_SIZE));
 
-			SETTINGS.RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
+			coreSettings.RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
 					(int) (15 * CUBE_EDGE_SIZE));
-			if (SETTINGS.RENDER_SHADOW_DISTANCE > SETTINGS.RENDER_DISTANCE * CUBE_EDGE_SIZE)
-				SETTINGS.RENDER_SHADOW_DISTANCE = (int) (SETTINGS.RENDER_DISTANCE * CUBE_EDGE_SIZE);
-			SETTINGS.RENDER_SHADOW_DISTANCE_SQR = SETTINGS.RENDER_SHADOW_DISTANCE
-					* SETTINGS.RENDER_SHADOW_DISTANCE;
+			if (coreSettings.RENDER_SHADOW_DISTANCE > coreSettings.RENDER_DISTANCE * CUBE_EDGE_SIZE)
+			    coreSettings.RENDER_SHADOW_DISTANCE = (int) (coreSettings.RENDER_DISTANCE * CUBE_EDGE_SIZE);
+			coreSettings.RENDER_SHADOW_DISTANCE_SQR = coreSettings.RENDER_SHADOW_DISTANCE
+					* coreSettings.RENDER_SHADOW_DISTANCE;
 
-			SETTINGS.MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
-			SETTINGS.MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
+			coreSettings.MIPMAP_GLOBAL = loadValue("MIPMAP_GLOBAL", true);
+			coreSettings.MIPMAP_TREES = loadValue("MIPMAP_TREES", false);
 			
-			SETTINGS.CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", true);
+			coreSettings.CONTINUOUS_LOAD = loadValue("CONTINUOUS_LOAD", true);
 
-			SETTINGS.TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
+			coreSettings.TEXTURE_QUALITY = loadValue("TEXTURE_QUALITY", 0, 0,
 					Integer.MAX_VALUE);
-			SETTINGS.BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
-			SETTINGS.DOF_EFFECT = loadValue("DOF_EFFECT", false);
-			SETTINGS.DOF_DETAILED = loadValue("DOF_DETAILED", false);
-			SETTINGS.ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
-			SETTINGS.DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
-			SETTINGS.SHADOWS = loadValue("SHADOWS", false);
-			SETTINGS.ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
-			SETTINGS.DETAILED_TREES = loadValue("DETAILED_TREES", false);
-			SETTINGS.DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
-			SETTINGS.ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
-			SETTINGS.WATER_SHADER = loadValue("WATER_SHADER", false);
-			SETTINGS.WATER_DETAILED = loadValue("WATER_DETAILED", false);
+			coreSettings.BLOOM_EFFECT = loadValue("BLOOM_EFFECT", false);
+			coreSettings.DOF_EFFECT = loadValue("DOF_EFFECT", false);
+			coreSettings.DOF_DETAILED = loadValue("DOF_DETAILED", false);
+			coreSettings.ANIMATED_GRASS = loadValue("ANIMATED_GRASS", false);
+			coreSettings.DOUBLE_GRASS = loadValue("DOUBLE_GRASS", false);
+			coreSettings.SHADOWS = loadValue("SHADOWS", false);
+			coreSettings.ANIMATED_TREES = loadValue("ANIMATED_TREES", false);
+			coreSettings.DETAILED_TREES = loadValue("DETAILED_TREES", false);
+			coreSettings.DETAILED_TREE_FOLIAGE = loadValue("DETAILED_TREE_FOLIAGE", false);
+			coreSettings.ANTIALIAS_SAMPLES = loadValue("ANTIALIAS_SAMPLES", 0, 0, 8);
+			coreSettings.WATER_SHADER = loadValue("WATER_SHADER", false);
+			coreSettings.WATER_DETAILED = loadValue("WATER_DETAILED", false);
 
-			SETTINGS.SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
-			SETTINGS.MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
-			SETTINGS.EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0,
+			coreSettings.SOUND_ENABLED = loadValue("SOUND_ENABLED", true);
+			coreSettings.MUSIC_VOLUME_PERCENT = loadValue("MUSIC_VOLUME_PERCENT", 10, 0, 100);
+			coreSettings.EFFECT_VOLUME_PERCENT = loadValue("EFFECT_VOLUME_PERCENT", 10, 0,
 					100);
-			SETTINGS.LOGGING = loadValue("LOGGING", false);
-			if (!SETTINGS.LOGGING) {
+			coreSettings.LOGGING = loadValue("LOGGING", false);
+			if (!coreSettings.LOGGING) {
 				if (Jcrpg.LOGGER != null)
 					Jcrpg.LOGGER.setLevel(Level.OFF);
 			}
-			SETTINGS.FPSCOUNTER = loadValue("FPSCOUNTER", false);
-			SETTINGS.TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
-			SETTINGS.SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
-			SETTINGS.SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
-			SETTINGS.VBO_ENABLED = loadValue("VBO_ENABLED", true);
+			coreSettings.FPSCOUNTER = loadValue("FPSCOUNTER", false);
+			coreSettings.TEXTURE_SPLATTING = loadValue("TEXTURE_SPLATTING", false);
+			coreSettings.SECONDARY_TEXTURES = loadValue("SECONDARY_TEXTURES", false);
+			coreSettings.SLOW_ANIMATION = loadValue("SLOW_ANIMATION", false);
+			coreSettings.VBO_ENABLED = loadValue("VBO_ENABLED", true);
 			
-			SETTINGS.NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
+			coreSettings.NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
 
 			// controller settings
-			SETTINGS.MOUSELOOK = loadValue("MOUSELOOK", false);
+			coreSettings.MOUSELOOK = loadValue("MOUSELOOK", false);
 			
 			// developer settings
-			SETTINGS.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
-			SETTINGS.QUICK_EXIT = loadValue("QUICK_EXIT", true);
+			coreSettings.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
+			coreSettings.QUICK_EXIT = loadValue("QUICK_EXIT", true);
 			
+			return coreSettings;
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			return null;
 		}
 	}
 
