@@ -18,6 +18,7 @@
 
 package org.jcrpg.ui.window;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
@@ -42,6 +43,18 @@ import com.jme.scene.shape.Quad;
  */
 public class OptionsMenu extends PagedInputWindow {
 
+    public static final String  CONFIGFILE_CUSTOM = "./config.properties";
+    private static final String CONFIGFILE_PRESET_PREFIX  = "./data/configs/config-";
+    private static final String CONFIGFILE_PRESET_POSTFIX = ".properties";
+    public static final String  CONFIGFILE_PRESET_HIGHEST = CONFIGFILE_PRESET_PREFIX+"highest"+CONFIGFILE_PRESET_POSTFIX;
+    public static final String  CONFIGFILE_PRESET_HIGH    = CONFIGFILE_PRESET_PREFIX+"high"+CONFIGFILE_PRESET_POSTFIX;
+    public static final String  CONFIGFILE_PRESET_NORMAL  = CONFIGFILE_PRESET_PREFIX+"normal"+CONFIGFILE_PRESET_POSTFIX;
+    public static final String  CONFIGFILE_PRESET_LOW     = CONFIGFILE_PRESET_PREFIX+"low"+CONFIGFILE_PRESET_POSTFIX;
+    public static final String  CONFIGFILE_PRESET_LOWEST  = CONFIGFILE_PRESET_PREFIX+"lowest"+CONFIGFILE_PRESET_POSTFIX;
+    public static final String[] CONFIGFILES = {CONFIGFILE_PRESET_HIGHEST, CONFIGFILE_PRESET_HIGH, 
+                                                CONFIGFILE_PRESET_NORMAL, CONFIGFILE_PRESET_LOW, CONFIGFILE_PRESET_LOWEST};
+    private HashMap<Integer, J3DCore.CoreSettings> coreSettingsMap;
+
     static final String BG_IMAGE = "./data/ui/baseWindowFrame.dds";
 
     Node pageFirst = new Node();
@@ -61,6 +74,14 @@ public class OptionsMenu extends PagedInputWindow {
     static final String[] waterDeatilIds = {Language.v("optionsmenu.on"),
                                             Language.v("optionsmenu.off"),
                                             Language.v("optionsmenu.detailed")};
+    ListSelect selectPreset;
+    static final String[] presetIds = {Language.v("optionsmenu.preset.highest"),
+                                       Language.v("optionsmenu.preset.high"),
+                                       Language.v("optionsmenu.preset.normal"),
+                                       Language.v("optionsmenu.preset.low"),
+                                       Language.v("optionsmenu.preset.lowest"),
+                                       Language.v("optionsmenu.preset.custom")};
+    
     CheckBox toggleBloom;
     CheckBox toggleDepthOfField;
     ValueTuner tunerShadowDistance;
@@ -70,6 +91,7 @@ public class OptionsMenu extends PagedInputWindow {
 
     public OptionsMenu(UIBase base) {
         super(base);
+        coreSettingsMap = new HashMap<Integer, J3DCore.CoreSettings>();
         try {
             // --- First Page ---
 
@@ -91,43 +113,44 @@ public class OptionsMenu extends PagedInputWindow {
             header.setRenderState(base.hud.hudAS);
             pageFirst.attachChild(header);
 
-            SimpleLayout inputsLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,3);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
+            SimpleLayout firstLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,3);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
+            selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
+            //selectPreset.setSelected(5); // TODO: custom is selected by default, but this will change
+            addInput(0, selectPreset);
+            firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
             toggleMLook = new CheckBox("", this, pageFirst, J3DCore.SETTINGS.MOUSELOOK);
-            inputsLayout.addToColumn(1, toggleMLook, 0.1f, 0.5f);
+            firstLayout.addToColumn(1, toggleMLook, 0.1f, 0.5f);
             addInput(0, toggleMLook);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.continuous.load"), false));
-            toggleContinuousLoad = new CheckBox("", this, pageFirst, J3DCore.SETTINGS.CONTINUOUS_LOAD);
-            inputsLayout.addToColumn(1, toggleContinuousLoad, 0.1f, 0.5f);
-            addInput(0, toggleContinuousLoad);
 
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.view.distance"), false));
-            tunerViewDistance = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.VIEW_DISTANCE, 10, 60, 2);
-            inputsLayout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.view.distance"), false));
+            tunerViewDistance = new ValueTuner("",this, pageFirst, 600f, J3DCore.SETTINGS.VIEW_DISTANCE, 10, 60, 2);
+            firstLayout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
             addInput(0, tunerViewDistance);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.render.distance"), false));
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.render.distance"), false));
             int tunerValue = (J3DCore.SETTINGS.RENDER_DISTANCE>J3DCore.SETTINGS.VIEW_DISTANCE+6 ? J3DCore.SETTINGS.RENDER_DISTANCE : J3DCore.SETTINGS.VIEW_DISTANCE+6);
-            tunerRenderDistance = new ValueTuner("",this,pageFirst, 600f, tunerValue, 16, 66, 2);
-            inputsLayout.addToColumn(1, tunerRenderDistance, 0.35f, 0.5f);
+            tunerRenderDistance = new ValueTuner("",this, pageFirst, 600f, tunerValue, 16, 66, 2);
+            firstLayout.addToColumn(1, tunerRenderDistance, 0.35f, 0.5f);
             addInput(0, tunerRenderDistance);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.render.grass.distance"), false));
-            tunerRenderGrassDistance = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.RENDER_GRASS_DISTANCE, 0, 20, 1);
-            inputsLayout.addToColumn(1, tunerRenderGrassDistance, 0.35f, 0.5f);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.render.grass.distance"), false));
+            tunerRenderGrassDistance = new ValueTuner("",this, pageFirst, 600f, J3DCore.SETTINGS.RENDER_GRASS_DISTANCE, 0, 20, 1);
+            firstLayout.addToColumn(1, tunerRenderGrassDistance, 0.35f, 0.5f);
             addInput(0, tunerRenderGrassDistance);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.texture.detail"), false));
-            tunerTextureDetail = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.TEXTURE_QUALITY, 0, 2, 1);
-            inputsLayout.addToColumn(1, tunerTextureDetail, 0.35f, 0.5f);
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.texture.detail"), false));
+            tunerTextureDetail = new ValueTuner("",this, pageFirst, 600f, J3DCore.SETTINGS.TEXTURE_QUALITY, 0, 2, 1);
+            firstLayout.addToColumn(1, tunerTextureDetail, 0.35f, 0.5f);
             addInput(0, tunerTextureDetail);
-            inputsLayout.addToColumn(2, new TextLabel("",this,pageFirst, 600f, "", false), 5); // placeholder for rowspan
-            inputsLayout.addToColumn(2, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.needs.restart"), false, true));
+            firstLayout.addToColumn(2, new TextLabel("",this, pageFirst, 600f, "", false), 5); // placeholder for rowspan
+            firstLayout.addToColumn(2, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.needs.restart"), false, true));
 
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.effects.volume"), false));
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.effects.volume"), false));
             tunerEffectsVolume = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT, 0, 100, 5);
-            inputsLayout.addToColumn(1, tunerEffectsVolume, 0.35f, 0.5f);
+            firstLayout.addToColumn(1, tunerEffectsVolume, 0.35f, 0.5f);
             addInput(0, tunerEffectsVolume);
-            inputsLayout.addToColumn(0, new TextLabel("",this,pageFirst, 600f, Language.v("optionsmenu.music.volume"), false));
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.music.volume"), false));
             tunerMusicVolume = new ValueTuner("",this,pageFirst, 600f, J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT, 0, 100, 5);
-            inputsLayout.addToColumn(1, tunerMusicVolume, 0.35f, 0.5f);
+            firstLayout.addToColumn(1, tunerMusicVolume, 0.35f, 0.5f);
             addInput(0, tunerMusicVolume);
 
             // buttons
@@ -154,30 +177,34 @@ public class OptionsMenu extends PagedInputWindow {
             header2.setRenderState(base.hud.hudAS);
             pageSecond.attachChild(header2);
 
-            SimpleLayout inputsLayout2 = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,2);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.normalmap.shader"), false));
+            SimpleLayout secondLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,2);
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.continuous.load"), false));
+            toggleContinuousLoad = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.CONTINUOUS_LOAD);
+            secondLayout.addToColumn(1, toggleContinuousLoad, 0.1f, 0.5f);
+            addInput(1, toggleContinuousLoad);
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.normalmap.shader"), false));
             toggleNormalMapShader = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.NORMALMAP_ENABLED);
-            inputsLayout2.addToColumn(1, toggleNormalMapShader, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleNormalMapShader, 0.1f, 0.5f);
             addInput(1, toggleNormalMapShader);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.water.detail"), false));
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.water.detail"), false));
             selectWaterDeatil = new ListSelect("water", this, pageSecond, 600f, waterDeatilIds, waterDeatilIds, null, null);
-            inputsLayout2.addToColumn(1, selectWaterDeatil, 0.35f, 0.5f);
+            secondLayout.addToColumn(1, selectWaterDeatil, 0.35f, 0.5f);
             addInput(1, selectWaterDeatil);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.bloom"), false));
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.bloom"), false));
             toggleBloom = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.BLOOM_EFFECT);
-            inputsLayout2.addToColumn(1, toggleBloom, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleBloom, 0.1f, 0.5f);
             addInput(1, toggleBloom);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.dof.effect"), false));
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.dof.effect"), false));
             toggleDepthOfField = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.DOF_EFFECT);
-            inputsLayout2.addToColumn(1, toggleDepthOfField, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleDepthOfField, 0.1f, 0.5f);
             addInput(1, toggleDepthOfField);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.shadow.distance"), false));
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.shadow.distance"), false));
             tunerShadowDistance = new ValueTuner("",this,pageSecond, 600f, J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE, 0, 20, 1);
-            inputsLayout2.addToColumn(1, tunerShadowDistance, 0.35f, 0.5f);
+            secondLayout.addToColumn(1, tunerShadowDistance, 0.35f, 0.5f);
             addInput(1, tunerShadowDistance);
-            inputsLayout2.addToColumn(0, new TextLabel("",this,pageSecond, 600f, Language.v("optionsmenu.slow.animation"), false));
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.slow.animation"), false));
             toggleSlowAnimation = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.SLOW_ANIMATION);
-            inputsLayout2.addToColumn(1, toggleSlowAnimation, 0.1f, 0.5f);
+            secondLayout.addToColumn(1, toggleSlowAnimation, 0.1f, 0.5f);
             addInput(1, toggleSlowAnimation);
 
             // buttons
@@ -251,28 +278,7 @@ public class OptionsMenu extends PagedInputWindow {
         // Cancel
         } else if (base == cancel || base == cancel2) {
             // Resetting Ui elements
-            toggleMLook.setChecked(J3DCore.SETTINGS.MOUSELOOK);
-            toggleContinuousLoad.setChecked(J3DCore.SETTINGS.CONTINUOUS_LOAD);
-
-            tunerViewDistance.setValue(J3DCore.SETTINGS.VIEW_DISTANCE);
-            tunerRenderDistance.setValue(J3DCore.SETTINGS.RENDER_DISTANCE);
-            tunerRenderGrassDistance.setValue(J3DCore.SETTINGS.RENDER_GRASS_DISTANCE);
-            tunerTextureDetail.setValue(J3DCore.SETTINGS.TEXTURE_QUALITY);
-            tunerEffectsVolume.setValue(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT);
-            tunerMusicVolume.setValue(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT);
-
-            toggleNormalMapShader.setChecked(J3DCore.SETTINGS.NORMALMAP_ENABLED);
-            toggleNormalMapShader.setChecked(J3DCore.SETTINGS.NORMALMAP_ENABLED);
-
-            // water detail
-            int selIndex = (J3DCore.SETTINGS.WATER_SHADER ? 0 : 1);
-            selIndex = (J3DCore.SETTINGS.WATER_DETAILED ? 2 : selIndex);
-            selectWaterDeatil.setSelected(selIndex);
-
-            toggleBloom.setChecked(J3DCore.SETTINGS.BLOOM_EFFECT);
-            toggleDepthOfField.setChecked(J3DCore.SETTINGS.DOF_EFFECT);
-            tunerShadowDistance.setValue(J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE);
-            toggleSlowAnimation.setChecked(J3DCore.SETTINGS.SLOW_ANIMATION);
+            fillOptions(J3DCore.SETTINGS);
 
             // back to main menu
             toggle();
@@ -302,9 +308,48 @@ public class OptionsMenu extends PagedInputWindow {
                 tunerRenderDistance.setUpdated(true);
                 tunerRenderDistance.activate();
             }
+        } else if (base == selectPreset) {
+            System.out.println("====-------- selectPreset: "+selectPreset.getSelection());
+            Integer key = new Integer(selectPreset.getSelection());
+            J3DCore.CoreSettings coreSettings = coreSettingsMap.get(key);
+            if (coreSettings==null) {
+                if (selectPreset.getSelection()==6) {
+                    coreSettings = J3DCore.SETTINGS;
+                } else {
+                    System.out.println("====-------- CONFIGFILES[key.intValue()]: "+CONFIGFILES[key.intValue()]);
+                    coreSettings = J3DCore.loadConfig(CONFIGFILES[key.intValue()]);
+                    coreSettingsMap.put(key, coreSettings);
+                }
+            }
         }
 
         return true;
+    }
+
+    /**
+     * Setting Options values from a CoreSettings instance
+     */
+    private void fillOptions(J3DCore.CoreSettings coreSettings) {
+        toggleMLook.setChecked(coreSettings.MOUSELOOK);
+        toggleContinuousLoad.setChecked(coreSettings.CONTINUOUS_LOAD);
+        tunerViewDistance.setValue(coreSettings.VIEW_DISTANCE);
+        tunerRenderDistance.setValue(coreSettings.RENDER_DISTANCE);
+        tunerRenderGrassDistance.setValue(coreSettings.RENDER_GRASS_DISTANCE);
+        tunerTextureDetail.setValue(coreSettings.TEXTURE_QUALITY);
+        tunerEffectsVolume.setValue(coreSettings.EFFECT_VOLUME_PERCENT);
+        tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT);
+        toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED);
+        toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED);
+
+        // water detail
+        int selIndex = (coreSettings.WATER_SHADER ? 0 : 1);
+        selIndex = (coreSettings.WATER_DETAILED ? 2 : selIndex);
+        selectWaterDeatil.setSelected(selIndex);
+
+        toggleBloom.setChecked(coreSettings.BLOOM_EFFECT);
+        toggleDepthOfField.setChecked(coreSettings.DOF_EFFECT);
+        tunerShadowDistance.setValue(coreSettings.RENDER_SHADOW_DISTANCE);
+        toggleSlowAnimation.setChecked(coreSettings.SLOW_ANIMATION);
     }
 
 }
