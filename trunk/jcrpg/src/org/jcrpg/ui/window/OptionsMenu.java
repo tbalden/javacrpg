@@ -242,6 +242,29 @@ public class OptionsMenu extends PagedInputWindow {
     }
 
     @Override
+    public boolean inputChanged(InputBase base, String message) {
+        if (base == tunerViewDistance) {
+            // not working. why?
+        } else if (base == tunerRenderDistance) {
+            // not working. why?
+        } else if (base == selectPreset) {
+            Integer key = new Integer(selectPreset.getSelection());
+            J3DCore.CoreSettings coreSettings = coreSettingsMap.get(key);
+            if (coreSettings==null) {
+                if (selectPreset.getSelection()==5) {
+                    coreSettings = J3DCore.SETTINGS;
+                } else {
+                    coreSettings = J3DCore.loadConfig(CONFIGFILES[key.intValue()]);
+                    coreSettingsMap.put(key, coreSettings);
+                }
+            }
+            System.out.println("====-------- coreSettings.RENDER_DISTANCE: "+coreSettings.RENDER_DISTANCE);
+            fillOptions(coreSettings);
+        }
+        return true;
+    }
+
+    @Override
     public boolean inputUsed(InputBase base, String message) {
         // Save
         if (base == save || base == save2) {
@@ -308,20 +331,7 @@ public class OptionsMenu extends PagedInputWindow {
                 tunerRenderDistance.setUpdated(true);
                 tunerRenderDistance.activate();
             }
-        } else if (base == selectPreset) {
-            System.out.println("====-------- selectPreset: "+selectPreset.getSelection());
-            Integer key = new Integer(selectPreset.getSelection());
-            J3DCore.CoreSettings coreSettings = coreSettingsMap.get(key);
-            if (coreSettings==null) {
-                if (selectPreset.getSelection()==6) {
-                    coreSettings = J3DCore.SETTINGS;
-                } else {
-                    System.out.println("====-------- CONFIGFILES[key.intValue()]: "+CONFIGFILES[key.intValue()]);
-                    coreSettings = J3DCore.loadConfig(CONFIGFILES[key.intValue()]);
-                    coreSettingsMap.put(key, coreSettings);
-                }
-            }
-        }
+        } 
 
         return true;
     }
@@ -330,26 +340,26 @@ public class OptionsMenu extends PagedInputWindow {
      * Setting Options values from a CoreSettings instance
      */
     private void fillOptions(J3DCore.CoreSettings coreSettings) {
-        toggleMLook.setChecked(coreSettings.MOUSELOOK);
-        toggleContinuousLoad.setChecked(coreSettings.CONTINUOUS_LOAD);
-        tunerViewDistance.setValue(coreSettings.VIEW_DISTANCE);
-        tunerRenderDistance.setValue(coreSettings.RENDER_DISTANCE);
-        tunerRenderGrassDistance.setValue(coreSettings.RENDER_GRASS_DISTANCE);
-        tunerTextureDetail.setValue(coreSettings.TEXTURE_QUALITY);
-        tunerEffectsVolume.setValue(coreSettings.EFFECT_VOLUME_PERCENT);
-        tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT);
-        toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED);
-        toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED);
+        toggleMLook.setChecked(coreSettings.MOUSELOOK); toggleMLook.deactivate();
+        toggleContinuousLoad.setChecked(coreSettings.CONTINUOUS_LOAD); toggleContinuousLoad.deactivate();
+        tunerViewDistance.setValue(coreSettings.VIEW_DISTANCE); tunerViewDistance.deactivate();
+        tunerViewDistance.setValue(coreSettings.RENDER_DISTANCE); tunerViewDistance.deactivate();
+        tunerRenderGrassDistance.setValue(coreSettings.RENDER_GRASS_DISTANCE); tunerRenderGrassDistance.deactivate();
+        tunerTextureDetail.setValue(coreSettings.TEXTURE_QUALITY); tunerTextureDetail.deactivate();
+        tunerEffectsVolume.setValue(coreSettings.EFFECT_VOLUME_PERCENT); tunerEffectsVolume.deactivate();
+        tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT); tunerMusicVolume.deactivate();
+        toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED); toggleNormalMapShader.deactivate();
 
         // water detail
         int selIndex = (coreSettings.WATER_SHADER ? 0 : 1);
         selIndex = (coreSettings.WATER_DETAILED ? 2 : selIndex);
-        selectWaterDeatil.setSelected(selIndex);
+        selectWaterDeatil.setSelected(selIndex); selectWaterDeatil.deactivate();
 
-        toggleBloom.setChecked(coreSettings.BLOOM_EFFECT);
-        toggleDepthOfField.setChecked(coreSettings.DOF_EFFECT);
-        tunerShadowDistance.setValue(coreSettings.RENDER_SHADOW_DISTANCE);
-        toggleSlowAnimation.setChecked(coreSettings.SLOW_ANIMATION);
+        toggleBloom.setChecked(coreSettings.BLOOM_EFFECT); toggleBloom.deactivate();
+        toggleDepthOfField.setChecked(coreSettings.DOF_EFFECT); toggleDepthOfField.deactivate();
+        tunerShadowDistance.setValue(coreSettings.RENDER_SHADOW_DISTANCE); tunerShadowDistance.deactivate();
+        toggleSlowAnimation.setChecked(coreSettings.SLOW_ANIMATION); toggleSlowAnimation.deactivate();
+        setupPage();
     }
 
 }
