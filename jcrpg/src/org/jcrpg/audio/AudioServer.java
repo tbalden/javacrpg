@@ -56,6 +56,9 @@ public class AudioServer implements Runnable {
 		STEP_SOIL, STEP_STONE, STEP_NO_WAY, STEP_SNOW
 	};
 	
+	public static String[] combatMusicList = new String[]{
+		"combat0","combat1"
+	                                                    };
 	
 	public ArrayList<Channel> channels = new ArrayList<Channel>();
 	public ArrayList<Channel> musicChannels = new ArrayList<Channel>();
@@ -108,6 +111,57 @@ public class AudioServer implements Runnable {
 				ex.printStackTrace();
 			}
 		}
+
+		try {
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/struggle/combat.ogg").toURL(), true);
+			mainTheme.setType(TrackType.MUSIC);
+			mainTheme.setRelative(false);
+			mainTheme.setLooping(true);
+			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+			tracks.add(mainTheme);
+			hmTracks.put("combat0", tracks);
+			
+		}catch (Exception ex)
+		{
+			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+				ex.printStackTrace();
+			}
+		}
+		try {
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/stones/tense.ogg").toURL(), true);
+			mainTheme.setType(TrackType.MUSIC);
+			mainTheme.setRelative(false);
+			mainTheme.setLooping(true);
+			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+			tracks.add(mainTheme);
+			hmTracks.put("combat1", tracks);
+			
+		}catch (Exception ex)
+		{
+			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+				ex.printStackTrace();
+			}
+		}
+
+		try {
+			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/horizon/leveling.ogg").toURL(), true);
+			mainTheme.setType(TrackType.MUSIC);
+			mainTheme.setRelative(false);
+			mainTheme.setLooping(true);
+			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+			tracks.add(mainTheme);
+			hmTracks.put("leveling", tracks);
+			
+		}catch (Exception ex)
+		{
+			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
+				ex.printStackTrace();
+			}
+		}
+
 		for (String step:stepTypes)
 		{
 			try {
@@ -171,6 +225,14 @@ public class AudioServer implements Runnable {
 			c.pauseTrack();
 		}
 	}
+	public synchronized void stopAllMusicChannels()
+	{
+		for (Channel c:musicChannels)
+		{
+			c.stopTrack();
+		}
+	}
+
 	public synchronized void playAllChannels(ArrayList<Channel> channels,String except)
 	{
 		for (Channel c:channels)
@@ -258,6 +320,37 @@ public class AudioServer implements Runnable {
 
 		}
 	}
+	
+	
+	String eventMusicId = null;
+
+	public void playEventMusic(String id,boolean loop)
+	{
+		System.out.println("###################### EVENT MUSIC: "+id);
+		if (isMusicPlaying(id)) return;
+		System.out.println("NOT PLAYING, EVENT MUSIC: "+id);
+		eventMusicId = id;
+		pauseAllMusicChannels();
+		try {
+			AudioTrack t = getPlayableTrack(id);
+			t.setLooping(loop);
+			t.setTargetVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+			getAvailableMusicChannel().setTrack(id,t).playTrack();
+		} catch (Exception ex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) ex.printStackTrace();
+
+		}
+	}
+	
+	public void stopEventMusicAndResumeOthers()
+	{
+		stopIdOnAllChannels(musicChannels,eventMusicId);
+		playAllChannels(musicChannels,eventMusicId);
+		eventMusicId = null;
+	}
+	
+
 	public void stopAndResumeOthers(String id)
 	{
 		stopIdOnAllChannels(musicChannels,id);

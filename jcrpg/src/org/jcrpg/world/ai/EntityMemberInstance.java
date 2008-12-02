@@ -165,7 +165,7 @@ public class EntityMemberInstance {
 	{
 		// TODO add spell modifiers in effect later when we have them
 		
-		Attributes attributes = getAttributesVanilla();
+		Attributes attributes = getAttributesVanilla().copy();
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("Vanilla: "+attributes);
 		Attributes equipmentAttributes = inventory.getEquipmentAttributeValues(null);
 		attributes.appendAttributes(equipmentAttributes);

@@ -215,7 +215,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		for (String id: FantasyAttributes.attributeName) {
 			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ID = "+id+" = "+attributeValues.attributes.get(id));
 			ValueTuner v = attributeTuners.get(id);
-			v.value = ((MemberPerson)instance.description).attributes.getAttribute(id);
+			v.value = (instance.getAttributesVanilla()).getAttribute(id);
 			attributeValues.setAttribute(id, ((MemberPerson)instance.description).attributes.getAttribute(id));
 			lowestAttrValues.setAttribute(id, ((MemberPerson)instance.description).attributes.getAttribute(id));
 			v.text = ""+v.value;

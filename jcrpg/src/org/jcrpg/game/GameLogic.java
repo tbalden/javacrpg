@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.audio.AudioServer;
 import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.sidetype.Climbing;
@@ -160,6 +161,7 @@ public class GameLogic {
 					}
 					core.turnActWindow.toggle();
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
+					core.audioServer.playEventMusic(Math.random()>0.5d?"combat0":"combat1",true);
 				} else
 				{
 					core.gameState.switchToEncounterScenario(false, "debug");

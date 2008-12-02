@@ -258,6 +258,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 			}
 			memberStateEffects.ids = ids;
 			memberStateEffects.texts = texts;
+			memberStateEffects.maxCount = ids.length; 
 			memberStateEffects.setSelected(0);
 			memberStateEffects.setUpdated(true);
 			memberStateEffects.deactivate();

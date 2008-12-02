@@ -696,12 +696,19 @@ public class EncounterLogic {
 		return true;
 	}
 	
+	public void processCommonFinishEvents()
+	{
+		gameLogic.core.audioServer.stopEventMusicAndResumeOthers();
+	}
+	
 	/**
 	 * Finish encounter prevailing player...
 	 * @param encounter
 	 */
 	public void finishEncounterWin(EncounterInfo encounter)
 	{
+		processCommonFinishEvents();
+		gameLogic.core.audioServer.playLoading("victory","event");
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
@@ -717,6 +724,7 @@ public class EncounterLogic {
 	 */
 	public void finishEncounterNeutralized(EncounterInfo encounter)
 	{
+		processCommonFinishEvents();
 		// TODO relationship settings?
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party run out of incentive!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
@@ -732,6 +740,7 @@ public class EncounterLogic {
 	 */
 	public void finishEncounterEscaping(EncounterInfo encounter)
 	{
+		processCommonFinishEvents();
 		// TODO relationship settings?
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party run away!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
@@ -743,6 +752,7 @@ public class EncounterLogic {
 
 	public void finishEncounterLose(EncounterInfo encounter)
 	{
+		processCommonFinishEvents();
 		gameLogic.core.uiBase.hud.mainBox.addEntry("YOUR PARTY IS DEAD!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Game Over.");
 		gameLogic.core.uiBase.hud.characters.hide();
