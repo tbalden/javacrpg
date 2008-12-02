@@ -316,7 +316,7 @@ public class J3DMovingEngine {
 			}
 			counter++;
 		}
-		n.setLocalTranslation(new Vector3f(0.2f,1.9f,0.1f));
+		n.setLocalTranslation(new Vector3f(0.2f,1.6f,0.1f));
 		n.setLocalScale(0.17f);
 		FlyingNode fn = new FlyingNode();
 		fn.onFinish = freers;

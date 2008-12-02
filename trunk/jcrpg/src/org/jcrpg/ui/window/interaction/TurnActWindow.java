@@ -318,6 +318,8 @@ public class TurnActWindow extends PagedInputWindow {
 		//skillSelectors.get(0).activate();
 	}
 	
+	
+	
 	ArrayList<EncounterUnitData> encounterUnitDataList = null; 
 	@Override
 	public void setupPage() {

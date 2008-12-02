@@ -551,6 +551,11 @@ public class GameStateContainer {
 	}
 	
 	public boolean levelingInProgress = false;
+	public boolean cycleLevelingCheckingInProgress = false;
+	/**
+	 * Called from j3dcore update cycle, this one checks and does character leveling if available for
+	 * party members.
+	 */
 	public void checkAndDoLeveling()
 	{
 		if (levelingInProgress) return;
@@ -562,10 +567,20 @@ public class GameStateContainer {
 			{
 				J3DCore.getInstance().charLevelingWindow.setPageData(player, i);
 				J3DCore.getInstance().charLevelingWindow.toggle();
+				if (!cycleLevelingCheckingInProgress)
+				{
+					cycleLevelingCheckingInProgress = true;
+					J3DCore.getInstance().audioServer.playEventMusic("leveling", true);
+				}
 				levelingInProgress = true;
-				break;
+				return;
 			}
 		}
+		if (cycleLevelingCheckingInProgress)
+		{
+			J3DCore.getInstance().audioServer.stopEventMusicAndResumeOthers();
+		}
+		cycleLevelingCheckingInProgress = false;
 	}
 	
 	private ScenarioPositions currentRenderPositions = null; 
