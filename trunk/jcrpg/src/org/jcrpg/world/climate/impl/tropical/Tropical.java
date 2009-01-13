@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.climate.impl.tropical;
 
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
@@ -46,6 +47,12 @@ public class Tropical extends ClimateBelt {
 		
 		return summer;
 		
+	}
+
+	public MusicDescription musicDesc = new MusicDescription("tropical");
+	@Override
+	public MusicDescription getMusicDescription() {
+		return musicDesc;
 	}
 	
 }

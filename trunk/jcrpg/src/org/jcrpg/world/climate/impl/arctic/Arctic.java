@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.climate.impl.arctic;
 
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
@@ -58,6 +59,12 @@ public class Arctic extends ClimateBelt {
 		if (p>45 && p<55) return spring;
 		return winter;
 		
+	}
+
+	public MusicDescription musicDesc = new MusicDescription("arctic");
+	@Override
+	public MusicDescription getMusicDescription() {
+		return musicDesc;
 	}
 	
 }

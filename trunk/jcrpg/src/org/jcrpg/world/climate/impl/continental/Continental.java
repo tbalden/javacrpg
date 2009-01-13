@@ -17,6 +17,7 @@
 
 package org.jcrpg.world.climate.impl.continental;
 
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.Season;
@@ -55,5 +56,10 @@ public class Continental extends ClimateBelt {
 	}
 
 	
+	public MusicDescription musicDesc = new MusicDescription("continental");
+	@Override
+	public MusicDescription getMusicDescription() {
+		return musicDesc;
+	}
 	
 }

@@ -45,7 +45,14 @@ public class Channel implements TrackStateListener{
 		this.track = track;
 		this.soundId = soundId;
 		track.addTrackStateListener(this);
+		looping = false;
 		return this;
+	}
+	
+	boolean looping = false;
+	public synchronized void setLooping()
+	{
+		looping = true;
 	}
 	
 	public synchronized void pauseTrack()
@@ -57,6 +64,7 @@ public class Channel implements TrackStateListener{
 	{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("STOP TRACK : "+soundId);
 		try {
+			looping = false;
 			track.stop();
 			playing = false;
 			paused = false;
@@ -106,11 +114,14 @@ public class Channel implements TrackStateListener{
 	
 	public synchronized void trackFinishedFade(AudioTrack arg0) {
 		Jcrpg.LOGGER.info(channelId+" ##### FINISHED FADE TRACK : "+soundId+ " "+arg0.getTargetVolume());
+		System.out.println("FINISHED FADING "+soundId);
 		if (arg0.getTargetVolume()==0f)
 		{
+			looping = false;
 			arg0.stop();
 		} else
 		{
+			System.out.println("VOL FADING TO "+arg0.getTargetVolume());
 			arg0.setVolume(arg0.getTargetVolume());
 		}
 		//playing = false;
@@ -126,6 +137,8 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
+		System.out.println(System.currentTimeMillis()+"!!!##### PLAYED TRACK : "+soundId);
+		System.out.println("FULL TIME = "+arg0.getTotalTime());
 		if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
 			trackStopped(arg0); else 
 		{
@@ -133,15 +146,27 @@ public class Channel implements TrackStateListener{
 			paused = false;
 		}
 	}
+	
+	
 
 	public synchronized void trackStopped(AudioTrack arg0) {
-		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TRACK : "+soundId);
-		track.removeTrackStateListener(this);
-		if (this.track!=null && this.track.equals(track)) {
-			track = null;
-			soundId = null;
-			paused = false;
-			playing = false;
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TR$ACK : "+soundId);
+		
+		if (looping)
+		{
+			System.out.println(System.currentTimeMillis()+"##### LOOPED TRACK : "+soundId);
+			track.play();
+		} else
+		{
+			System.out.println(System.currentTimeMillis()+"##### STOPPED TRACK : "+soundId);
+			track.removeTrackStateListener(this);
+	
+			if (this.track!=null && this.track.equals(track)) {
+				track = null;
+				soundId = null;
+				paused = false;
+				playing = false;
+			}
 		}
 	}
 	

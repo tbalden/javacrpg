@@ -237,7 +237,7 @@ public class SkyDome extends Node {
             phiSun = FastMath.TWO_PI - solarAzimuth;
             thetaSun = FastMath.HALF_PI - solarAltitude;
             
-            sunDirection.x = dome.radius;
+            sunDirection.x = dome.getRadius();
             sunDirection.y = phiSun;
             sunDirection.z = solarAltitude;
             sunPosition = FastMath.sphericalToCartesian(sunDirection, sunPosition);

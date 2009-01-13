@@ -21,6 +21,7 @@ package org.jcrpg.world.climate;
 import java.util.ArrayList;
 
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.time.Time;
 
 /**
@@ -37,7 +38,13 @@ public class ClimateBelt  extends ClimatePart {
 	public static Season genericSeason = new Season();
 	
 	public AudioDescription audioDescriptor = new AudioDescription();;
-
+	
+	public MusicDescription getMusicDescription()
+	{
+		return null;
+	}
+	
+	
 	/**
 	 * External area base conditions
 	 */

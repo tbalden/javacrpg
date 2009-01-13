@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.time.Time;
 
@@ -31,7 +32,8 @@ public abstract class Place {
 	
 	public boolean placeNeedsToBeEnteredForEncounter = false;
 
-	public AudioDescription audioDescriptor = new AudioDescription();;
+	public AudioDescription audioDescriptor = new AudioDescription();
+	
 	
 	public int origoX, origoY, origoZ, sizeX, sizeY, sizeZ, magnification;
 	public int groundLevel = 0;
@@ -357,6 +359,12 @@ public abstract class Place {
 		return false;
 	}
 	
+	public MusicDescription getMusicDescription()
+	{
+		return null;
+	}
+
+
 	/**
 	 * Returns worldY intervals that are not empty in a given X/Z column of the place.
 	 * @param worldX

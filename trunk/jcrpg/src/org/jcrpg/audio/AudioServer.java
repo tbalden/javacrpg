@@ -21,6 +21,7 @@ package org.jcrpg.audio;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
@@ -29,6 +30,8 @@ import org.jcrpg.threed.J3DCore;
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
+import com.jmex.audio.event.TrackStateListener;
+import com.jmex.audio.openal.OpenALSystem;
 
 public class AudioServer implements Runnable {
 
@@ -95,22 +98,6 @@ public class AudioServer implements Runnable {
 				ex.printStackTrace();
 			}
 		}
-		try {	
-			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/oak/oak.ogg").toURL(), true);
-			mainTheme.setType(TrackType.MUSIC);
-			mainTheme.setRelative(false);
-			mainTheme.setLooping(true);
-			mainTheme.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
-			ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
-			tracks.add(mainTheme);
-			//hmTracks.put("ingame", tracks);
-			
-		}catch (Exception ex)
-		{
-			if (Jcrpg.LOGGER.getLevel()!= Level.OFF) {
-				ex.printStackTrace();
-			}
-		}
 
 		try {
 			AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/music/struggle/combat.ogg").toURL(), true);
@@ -166,7 +153,7 @@ public class AudioServer implements Runnable {
 		{
 			try {
 				AudioTrack mainTheme = AudioSystem.getSystem().createAudioTrack(new File("./data/audio/sound/steps/"+step+".ogg").toURL(), false);
-				mainTheme.setType(TrackType.ENVIRONMENT);
+				mainTheme.setType(TrackType.HEADSPACE);
 				mainTheme.setRelative(false);
 				mainTheme.setLooping(false);
 				mainTheme.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
@@ -189,7 +176,6 @@ public class AudioServer implements Runnable {
 	
 	public void init()
 	{
-		setMusicChannelNotPlayingYet("ingame");
 	}
 	
 	
@@ -249,6 +235,7 @@ public class AudioServer implements Runnable {
 				c.stopTrack();
 		}
 	}
+
 	public synchronized void fadeOutIdOnAllChannels(ArrayList<Channel> channels, String id)
 	{
 		for (Channel c:channels)
@@ -359,18 +346,24 @@ public class AudioServer implements Runnable {
 	}
 	
 	public synchronized AudioTrack getPlayableTrack(String id) {
+		return getPlayableTrack(id,false);
+	}
+	public synchronized AudioTrack getPlayableTrack(String id, boolean continuous) {
 		if (!J3DCore.SETTINGS.SOUND_ENABLED) return null;
 		try {
 			int counter = 0;
 			while (true)
 			{
 				AudioTrack track = hmTracks.get(id).get(counter);
+				System.out.println("TRACK = "+ track+ " P "+track.isPlaying()+ " A "+track.isActive()+" S "+track.isStopped());
 				if (track.isPlaying())
 				{
+					if (continuous) return track;
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
 						if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
+						System.out.println("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -444,12 +437,16 @@ public class AudioServer implements Runnable {
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
+				//System.out.println("NEW TRACK");
+
+					//track = addTrack(id, hmTracksAndFiles.get(id));
 					return;
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
 				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
+			track.getPlayer().setStartTime(System.currentTimeMillis());
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
@@ -474,6 +471,8 @@ public class AudioServer implements Runnable {
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
+				System.out.println("NEW TRACK");
+
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 			}
 			if (!track.getType().equals(TrackType.MUSIC)) {
@@ -510,19 +509,30 @@ public class AudioServer implements Runnable {
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("playContinuousLoading Playing "+id);		
 		if (c!=null)
 		try {
-			AudioTrack track = getPlayableTrack(id);
-			if (track==null) {
-				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			AudioTrack track = null;
+			
+			ArrayList<AudioTrack> tracks = hmTracks.get(id);
+			if (tracks==null)
+			{
+				track = addTrackStreaming(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 				if (!track.getType().equals(TrackType.MUSIC)) {
 					track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
-				}
+				}				
 			} else
 			{
+				track = tracks.get(0);
+			}
+			
+			if (track.isPlaying()) {
+				track.setTargetVolume(volume * J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+				return;
+			} else
+			{
+				c.setTrack(id, track);
+				c.setLooping();
+				c.playTrack();
 				track.setTargetVolume(volume * J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
-			track.setLooping(true);
-			c.setTrack(id, track);
-			c.playTrack();
 		} catch (NullPointerException npex)
 		{
 			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
@@ -553,8 +563,9 @@ public class AudioServer implements Runnable {
 		hmTracksAndFiles.put(id, file);
 		AudioTrack mainTheme = null;
 		try {
+			//AudioSystem.getSystem().cleanup();
 			mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), false);
-			mainTheme.setType(TrackType.ENVIRONMENT);
+			mainTheme.setType(TrackType.HEADSPACE);
 			mainTheme.setRelative(false);
 			mainTheme.setLooping(false);
 			mainTheme.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
@@ -577,13 +588,45 @@ public class AudioServer implements Runnable {
 		return mainTheme;
 	}
 
+	public synchronized AudioTrack addTrackStreaming(String id, String file)
+	{
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return null;
+		hmTracksAndFiles.put(id, file);
+		AudioTrack mainTheme = null;
+		try {
+			mainTheme = AudioSystem.getSystem().createAudioTrack(new File(file).toURL(), true);
+			mainTheme.setType(TrackType.HEADSPACE);
+			mainTheme.setRelative(false);
+			mainTheme.setLooping(false);
+			mainTheme.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			if (hmTracks.get(id)==null)
+			{
+				ArrayList<AudioTrack> tracks = new ArrayList<AudioTrack>();
+				tracks.add(mainTheme);
+				hmTracks.put(id, tracks);	
+			} else
+			{
+				hmTracks.get(id).add(mainTheme);
+			}
+			
+			
+		} catch (Exception ex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) ex.printStackTrace();
+			return null;
+		}
+		return mainTheme;
+	}
+	
+	boolean needForBackgroundMusicUpdate = false;
+	
 	public void run() {
 		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("-- PREV PRIORITY: "+Thread.currentThread().getPriority());
 		Thread.currentThread().setPriority(10);
 		while (true)
 		{
-			AudioSystem.getSystem().update();
+			//AudioSystem.getSystem().update();
 			try{Thread.sleep(60);}catch (Exception ex){}
 		}
 	}
@@ -704,6 +747,118 @@ public class AudioServer implements Runnable {
 		}
 		EFFECT_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT;
 		MUSIC_VOLUME_PERCENT_LAST = J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT;
+	}
+	
+	public class BackgroundMusicStateListener implements TrackStateListener
+	{
+		boolean gotStopped = false;
+		AudioServer server;
+		public BackgroundMusicStateListener(AudioServer server) {
+			this.server = server;
+		}
+
+		public void trackFinishedFade(AudioTrack arg0) {
+		}
+
+		public void trackPaused(AudioTrack arg0) {
+		}
+
+		public void trackPlayed(AudioTrack arg0) {
+			gotStopped = false;
+		}
+
+		public void trackStopped(AudioTrack arg0) {
+			if (!gotStopped)
+			{
+				if (!stoppingBackgroundMusic)
+				{
+					server.initialBackgroundMusic(false);
+				}
+				gotStopped = true;
+			}
+		}
+	}
+	
+	
+	
+	HashSet<String> currentlyPlayingBackgroundMusic = new HashSet<String>();
+	public String lastPlayed = null;
+	public synchronized void initialBackgroundMusic()
+	{
+		initialBackgroundMusic(true);
+	}
+	
+	boolean stoppingBackgroundMusic = false;
+	public synchronized void initialBackgroundMusic(boolean stop)
+	{
+		/*try {
+			throw new Exception();
+		} catch (Exception ee)
+		{
+			ee.printStackTrace();
+			System.out.println("STOP = "+stop);
+		}*/
+		String music = J3DCore.getInstance().gameState.getUpdatedBackgroundMusic();
+		if (lastPlayed!=null && music.equals(lastPlayed))
+		{
+			return;
+		}
+		lastPlayed = music;
+		if (currentlyPlayingBackgroundMusic!=null) 
+		{
+			if (stop)
+			{
+				stoppingBackgroundMusic = true;
+				for (String lastPlayedBackgroundMusic:currentlyPlayingBackgroundMusic)
+				{
+					fadeOutIdOnAllChannels(musicChannels, lastPlayedBackgroundMusic);
+				}
+				stoppingBackgroundMusic = false;
+			}
+			//currentlyPlayingBackgroundMusic.clear();
+		}
+		currentlyPlayingBackgroundMusic.add(music);
+		System.out.println("------------");
+		System.out.println("############ "+music);
+		Channel c = getAvailableMusicChannel();
+		System.out.println("-#_#_#_#_#"+c);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("playContinuousLoading Playing "+music);		
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(music);
+			if (track==null) {
+				System.out.println("NEW TRACK");
+				track = addTrackStreaming(music, music);
+				track.addTrackStateListener(new BackgroundMusicStateListener(this));
+				
+				//if (!track.getType().equals(TrackType.MUSIC)) {
+					track.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+				//}
+			} else
+			{
+				track.setTargetVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+			}
+			
+			track.setLooping(false);
+			c.setTrack(music, track);
+			//c.playTrack();
+			System.out.println("TIME: "+c.track.getCurrentTime());
+			System.out.println("VOLU: "+c.track.getVolume());
+			c.track.getPlayer().setStartTime(System.currentTimeMillis());
+			c.track.setEnabled(true);
+			
+			//c.track.getPlayer().setMaxAudibleDistance(maxDistance)
+			c.track.play();
+			c.track.getPlayer().updateTrackPlacement();
+			System.out.println("$$$$$$$$$$ PLAYING...");
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();	
+		} catch (Exception npex)
+		{
+			npex.printStackTrace();
+		
+		}
 	}
 	
 }

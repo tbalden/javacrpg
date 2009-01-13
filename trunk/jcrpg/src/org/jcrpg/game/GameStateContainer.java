@@ -38,6 +38,7 @@ import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -441,6 +442,57 @@ public class GameStateContainer {
 	}
 	
 	int environmentAudioCount = 0;
+	
+	/**
+	 * After playing a track or finished other music, this should be called to start playing another track.
+	 */
+	public String getUpdatedBackgroundMusic()
+	{
+		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+		if (desc.detailedEconomic!=null && desc.detailedEconomic.getMusicDescription()!=null)
+		{
+			return desc.detailedEconomic.getMusicDescription().getRandomBackgroundMusicFileOfCollection();
+		}
+		CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
+		if (c.getBelt()!=null && c.getBelt().getMusicDescription()!=null)
+		{
+			String music = c.getBelt().getMusicDescription().getRandomBackgroundMusicFileOfCollection();
+			return music;
+		}
+		return null;
+	}
+	
+	Class lastMusicClass = null;
+	public boolean isUpdateNeededForBackgroundMusic()
+	{
+		if (player==null || player.world==null) return false;
+
+		WorldTypeDesc desc = player.world.getWorldDescAtPosition(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, false);
+		if (desc!=null && desc.detailedEconomic!=null && desc.detailedEconomic.getMusicDescription()!=null)
+		{
+			if (lastMusicClass!=desc.detailedEconomic.getClass())
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
+		if (c==null) return false;
+		if (lastMusicClass==null) {
+			if (c.getBelt()!=null)
+			{
+				lastMusicClass = c.getBelt().getClass();
+				return true;
+			}
+		}
+		if (c.getBelt()!=null && c.getBelt().getClass()!=lastMusicClass)
+		{
+			lastMusicClass = c.getBelt().getClass();
+			return true;
+		}
+		return false;		
+	}
 	
 	/**
 	 * Non-gameplay related environmental happenings (audio etc.).
