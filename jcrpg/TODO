@@ -8,10 +8,33 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] background music integration
+	[X] SECOND time it's not changing well!
+	[X] it's playing different musics multiple times, -> wrong callback and such at listener...
+		and not restarting another after one tracks is finished!!
+	[??] after playing a while, it doesnt want to play a new track at normal volume, only 0??
+		everything seems to be alright, but it doesnt play -- probably audio system problem.
+		OpenAL error, AL10 lwjgl... if too much playing, something gets stuck probably :/ 
+		
+		SOURCES 64 piece -> reached, no more playing of music, something gets stuck in AL
+		
+	[X] !!! LOOPING is wrong only now with the hacked jme audiosystem! you should remove looped sounds
+	or resolve the bug of not freed sources.
+	[ ] looping with normal openAl looping? (skippy channel looping)
+
+[ ] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
+
 [X] request list for scibot portraits scibotic@gmail.com
 		[X] dwarf [ ] waiting for completion male/female
 		[X] elf [ ] waiting for completion male/female
 		
+
+[X] different combat music variation
+[ ] integrate Carnivore Plant
+	? eye monster, fox?
+
+
+[X] check speed up magic bug -> leveling is not setting correct speed! It's not working with vanilla attributes?? COPY added
 
 [ ] add storage points
 

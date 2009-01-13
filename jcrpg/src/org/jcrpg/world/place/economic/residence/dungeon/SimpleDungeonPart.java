@@ -27,6 +27,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
@@ -938,6 +939,14 @@ public class SimpleDungeonPart extends WoodenHouse {
 	public boolean denyOtherEnvironmentSounds() {
 		
 		return true;
+	}
+	
+	MusicDescription musicDesc = new MusicDescription("nomusic");
+	
+	@Override
+	public MusicDescription getMusicDescription()
+	{
+		return musicDesc;
 	}
 
 	HashMap<Long,int[]> storageObjectPlaces = null;

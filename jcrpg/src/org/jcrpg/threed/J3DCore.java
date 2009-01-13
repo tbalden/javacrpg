@@ -88,6 +88,7 @@ import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
+import org.lwjgl.openal.AL10;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
@@ -139,6 +140,7 @@ import com.jme.util.Debug;
 import com.jme.util.TextureManager;
 import com.jme.util.Timer;
 import com.jme.util.stat.StatCollector;
+import com.jmex.audio.AudioSystem;
 import com.jmex.effects.LensFlare;
 import com.jmex.effects.LensFlareFactory;
 import com.jmex.effects.glsl.BloomRenderPass;
@@ -1599,7 +1601,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					gameState.getNormalPositions().viewPositionZ,
 					false);
 		}
-		if (System.currentTimeMillis() - lastStepSoundTime > 300) { // don't
+		if (1==1 && System.currentTimeMillis() - lastStepSoundTime > 300) { // don't
 																	// play
 																	// sound too
 																	// often
@@ -2812,9 +2814,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	Vector3f diffVec = new Vector3f();
 	
+	public long lastBgMusicCheck = System.currentTimeMillis();
+	
 	@Override
 	protected void simpleUpdate() {
-		
+
+		AudioSystem.getSystem().update();
+
+		if (System.currentTimeMillis()-lastBgMusicCheck>1000)
+		{
+			
+			if (gameState.isUpdateNeededForBackgroundMusic())
+			{
+				audioServer.initialBackgroundMusic();
+			}
+			lastBgMusicCheck = System.currentTimeMillis();
+		}
 
 		if (!noThreadedRenderCheck)
 		{
