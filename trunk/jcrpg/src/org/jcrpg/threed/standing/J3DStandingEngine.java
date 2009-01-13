@@ -2040,12 +2040,13 @@ public class J3DStandingEngine {
 					float power = Math.min(1f,1f/(dist+0.5f)*10f);
 					if (power>0.05f)
 					{
+						//System.out.println("PLAY/VOLUME SOUND: "+key);
 						core.audioServer.playContinuousLoading(key, "continuous",power);
 					} else
 					{
 						previousContinuousSoundsAndDistance.put(key, 0f);
 					}
-					//System.out.println("SOUND: "+key+" "+Math.min(1f,1f/(dist+0.5f)*10f));
+					//System.out.println("SOUND: "+key+" "+power);
 					
 				}
 			}
