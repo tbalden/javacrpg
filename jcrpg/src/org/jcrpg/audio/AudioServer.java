@@ -282,11 +282,15 @@ public class AudioServer implements Runnable {
 		boolean b = false;
 		for (Channel c:channels)
 		{
+			if (!c.isAvailable()) System.out.println(c.soundId);
 			if (!c.isAvailable() && c.soundId.equals(id))
 			{
 				//c.track.setLooping(true);
 				//c.track.setVolume(volume);
+				//System.out.println("setSoundPlayingVolume "+id+" "+volume+ " CV: "+c.track.getVolume()+" CR: "+c.track.getVolumeChangeRate());
+				
 				c.track.setTargetVolume(volume* J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+				
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("setSoundPlayingVolume SETTING VOLUME: "+c.soundId+" "+volume+" -- "+c.track.getVolume());
 				b = true;
 			}
@@ -358,7 +362,8 @@ public class AudioServer implements Runnable {
 				System.out.println("TRACK = "+ track+ " P "+track.isPlaying()+ " A "+track.isActive()+" S "+track.isStopped());
 				if (track.isPlaying())
 				{
-					if (continuous) return track;
+					//if (continuous) 
+					if (true) return track;
 					counter++;
 					if (counter==hmTracks.get(id).size())
 					{
@@ -436,6 +441,10 @@ public class AudioServer implements Runnable {
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(id);
+			if (track.isPlaying()) 
+				{//track.stop(); track.play(); 
+				return;
+				}
 			if (track==null) {
 				//System.out.println("NEW TRACK");
 
@@ -515,6 +524,7 @@ public class AudioServer implements Runnable {
 			if (tracks==null)
 			{
 				track = addTrackStreaming(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+				track.setLooping(true);
 				if (!track.getType().equals(TrackType.MUSIC)) {
 					track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 				}				
@@ -529,7 +539,7 @@ public class AudioServer implements Runnable {
 			} else
 			{
 				c.setTrack(id, track);
-				c.setLooping();
+				//c.setLooping();
 				c.playTrack();
 				track.setTargetVolume(volume * J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
@@ -554,6 +564,7 @@ public class AudioServer implements Runnable {
 	public synchronized  void fadeOut(String id)
 	{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Fadingout "+id);
+		System.out.println("FADOUT "+id);
 		fadeOutIdOnAllChannels(channels,id);
 	}
 
