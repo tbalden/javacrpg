@@ -315,6 +315,11 @@ public class AudioServer implements Runnable {
 	
 	String eventMusicId = null;
 
+	/**
+	 * Playing music for an event pausing other music channels.
+	 * @param id
+	 * @param loop
+	 */
 	public void playEventMusic(String id,boolean loop)
 	{
 		System.out.println("###################### EVENT MUSIC: "+id);

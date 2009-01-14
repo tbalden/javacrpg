@@ -329,6 +329,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 		{
 			core.gameState.gameLogic.inEncounter = false;
 			core.gameState.engine.turnFinishedForPlayer();
+			core.audioServer.stopIdOnAllChannels(core.audioServer.channels, "victory");
 			toggle();
 			return true;
 		}

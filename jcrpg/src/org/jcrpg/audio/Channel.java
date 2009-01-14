@@ -139,8 +139,8 @@ public class Channel implements TrackStateListener{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
 		System.out.println(System.currentTimeMillis()+"!!!##### PLAYED TRACK : "+soundId);
 		System.out.println("FULL TIME = "+arg0.getTotalTime());
-		if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
-			trackStopped(arg0); else 
+		//if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
+			//trackStopped(arg0); else 
 		{
 			playing = true;
 			paused = false;
