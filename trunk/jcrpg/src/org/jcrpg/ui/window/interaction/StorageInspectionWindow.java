@@ -95,7 +95,7 @@ public class StorageInspectionWindow extends PagedInputWindow {
 	        hudQuad.setRenderState(base.hud.hudAS);
 	        page0.attachChild(hudQuad);
 	        
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Storage Inspection",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.046f, 0.3f, 0.06f,400f,"Storage Inspection",false);
 	    	
 	    	// layouts
 	    	
@@ -135,18 +135,27 @@ public class StorageInspectionWindow extends PagedInputWindow {
 
             page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.identify"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));
-            page0Layout.addToColumn(2, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.disarm"), false));
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.disarming"), false));
             page0Layout.addToColumn(3, new TextLabel("",this,page0, 500f, "", false));
             
             // TODO the remaining buttons into the layout!
 
+            inspect = new TextButton("inspect",this, page0, 0.25f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.inspect"),"I");
+            addInput(0, inspect);
+            sense = new TextButton("sense",this, page0, 0.405f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.sense"),"E");
+            addInput(0, sense);
+
+            disarm = new TextButton("disarm",this, page0, 0.65f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.disarm"),"D");
+            addInput(0, disarm);
+            spell = new TextButton("spell",this, page0, 0.80f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.spell"),"S");
+            addInput(0, spell);
+            inspect = new TextButton("force",this, page0, 0.65f, 0.65f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.force"),"C");
+            addInput(0, inspect);
 	    	
             // buttons
-            inspect = new TextButton("inspect",this, page0, 0.26f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.inspect"),"I");
-            addInput(0, inspect);
-            open = new TextButton("open",this, page0, 0.5f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.open"),"P");
+            open = new TextButton("open",this, page0, 0.5f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.open"),"P");
             addInput(0, open);
-            leave = new TextButton("leave",this, page0, 0.75f, 0.75f, 0.18f, 0.06f, 500f,Language.v("behaviorWindow.leave"),"L");
+            leave = new TextButton("leave",this, page0, 0.75f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.leave"),"L");
             addInput(0, leave);
 	    	
 	    	addPage(0, page0);
