@@ -66,7 +66,7 @@ public class EntityInstance {
 	 */
 	public EntityState entityState = new EntityState();
 	
-	public EntityCommonWealth wealth = new EntityCommonWealth();
+	public EntityCommonWealth wealth = new EntityCommonWealth(this);
 
 	/**
 	 * Skills of the instance.

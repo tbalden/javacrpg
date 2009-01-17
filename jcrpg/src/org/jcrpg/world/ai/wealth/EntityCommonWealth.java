@@ -20,11 +20,22 @@ package org.jcrpg.world.ai.wealth;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjList;
 import org.jcrpg.world.object.RawMaterial;
+import org.jcrpg.world.object.craft.TrapAndLock;
 
 public class EntityCommonWealth {
+	
+	public EntityInstance owner;
+	
+	public EntityCommonWealth(EntityInstance owner)
+	{
+		this.owner = owner;
+	}
 
 	public int money = 0;
 	
@@ -35,6 +46,11 @@ public class EntityCommonWealth {
 	public HashMap<Class, Integer> availabilityHelper = new HashMap<Class, Integer>();
 	
 	
+	/**
+	 * Returns a Java Object's inherited/specified Class types
+	 * @param o
+	 * @return
+	 */
 	public ArrayList<Class> getClassTypes(Obj o)
 	{
 		ArrayList<Class> ret = new ArrayList<Class>();
@@ -55,6 +71,12 @@ public class EntityCommonWealth {
 		return ret;
 	}
 	
+	/**
+	 * Iterates a list of classes with a given quantity and modifies the availability for each
+	 * class type.
+	 * @param list
+	 * @param quantity
+	 */
 	public void classifyObjectTypes(ArrayList<Class> list,int quantity)
 	{
 		for (Class l:list)
@@ -107,6 +129,30 @@ public class EntityCommonWealth {
 		ArrayList<Class> list = getClassTypes(o);
 		classifyObjectTypes(list,-1*quantity);
 		handleObjectQuantity(item,-1*quantity);
+	}
+	
+	public TrapAndLock getTrapIfAvailable()
+	{
+		Integer i = availabilityHelper.get(TrapAndLock.class);
+		if (i==null || i==0)
+		{
+			return null;
+		}
+		ArrayList<TrapAndLock> sortedTraps = new ArrayList<TrapAndLock>();
+		for (Class<? extends Obj> o : objects.keySet())
+		{
+			Obj oo = ObjList.getInstance(o);
+			if (oo instanceof TrapAndLock)
+			{
+				sortedTraps.add((TrapAndLock)oo);
+			}
+		}
+		if (sortedTraps.size()==0) return null;
+		int seed = J3DCore.getInstance().gameState.engine.getNumberOfTurn()+
+			J3DCore.getInstance().gameState.engine.getWorldMeanTime().getTimeInInt();
+		seed+=owner.getNumericId();
+		int id = HashUtil.mix(seed, 0, 0) % sortedTraps.size();
+		return sortedTraps.get(id);
 	}
 	
 }

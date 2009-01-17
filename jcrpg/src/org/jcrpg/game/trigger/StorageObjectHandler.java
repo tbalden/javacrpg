@@ -28,6 +28,8 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.scene.RenderedCube;
+import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.object.craft.TrapAndLock;
 
 public class StorageObjectHandler extends TriggerHandler {
 
@@ -178,11 +180,12 @@ public class StorageObjectHandler extends TriggerHandler {
 		if (triggerSides!=null)
 		{
 			System.out.println("$$$$$$$$$$$$$$ TRIGGER SIDE $$$$$$$$$$$$$$$$");
-			J3DCore.getInstance().storageWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
+			
+			EntityInstance owner = enteredCube.containingInternalEconomicUnit.owner;
+			TrapAndLock lock = owner.wealth.getTrapIfAvailable();
+			J3DCore.getInstance().storageWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube, owner, lock);
 			J3DCore.getInstance().storageWindow.setStorageNearby(true);
-			if (true) return true;
-			
-			
+			if (true) return true; // return, ATM only chests use this, which don't need instant animation...
 			
 			RenderedCube rc = renderedEnteredCube;
 			if (rc!=null)

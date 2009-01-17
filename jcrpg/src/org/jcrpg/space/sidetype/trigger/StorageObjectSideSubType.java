@@ -17,11 +17,15 @@
  */ 
 package org.jcrpg.space.sidetype.trigger;
 
+import org.jcrpg.world.ai.EntityInstance;
+
 
 public class StorageObjectSideSubType extends TriggerBaseSideSubtype {
 
 	static String[] enter = new String[]{TRIGGER_EFFECT_OPENING,TRIGGER_EFFECT_OPEN};
 	static String[] leave = new String[]{TRIGGER_EFFECT_CLOSED};
+	
+	EntityInstance currentOwner;
 	
 	@Override
 	public String[] getEffectOnEnter() {
