@@ -183,8 +183,8 @@ public class StorageObjectHandler extends TriggerHandler {
 			
 			EntityInstance owner = enteredCube.containingInternalEconomicUnit.owner;
 			TrapAndLock lock = owner.wealth.getTrapIfAvailable();
-			J3DCore.getInstance().storageWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube, owner, lock);
-			J3DCore.getInstance().storageWindow.setStorageNearby(true);
+			J3DCore.getInstance().lockInspectionWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube, owner, lock);
+			J3DCore.getInstance().lockInspectionWindow.setStorageNearby(true);
 			if (true) return true; // return, ATM only chests use this, which don't need instant animation...
 			
 			RenderedCube rc = renderedEnteredCube;
@@ -226,7 +226,7 @@ public class StorageObjectHandler extends TriggerHandler {
 			}
 		}
 
-		J3DCore.getInstance().storageWindow.setStorageNearby(false);
+		J3DCore.getInstance().lockInspectionWindow.setStorageNearby(false);
 		
 		
 		triggerSides = null;

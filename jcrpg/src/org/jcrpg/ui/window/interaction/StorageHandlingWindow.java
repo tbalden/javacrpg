@@ -32,7 +32,7 @@ import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EncounterInfo;
-import org.jcrpg.world.ai.EncounterUnitData;
+import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -53,8 +53,6 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	// selecting handled groups out of intercepted group, leaving non-interesting groups out of scope 
 	Node page0 = new Node();
 
-	//ListSelect encList;
-	ListSelect groupList;
 	ListMultiSelect inventoryList;
 	ListSelect partyCharList;
 	TextButton take;
@@ -70,33 +68,17 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"VICTORY!",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You have prevailed in the encounter!",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"Choose how you will check the remnants.",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"OPEN!",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You have opened the object.",false);
 	    	
-	    	
-	    	/*String[] ids = new String[] {"1","2"};
-	    	String[] texts = new String[] {"One group encounter","Full scale encounter"};
-	    	String[] objects = new String[] {"one","full"};	    	
 	    	
 	    	{
-	    		encSelect = new ListSelect("encType", this,page0, 0.3f, 0.15f,0.3f,0.06f,600f,ids,texts,objects,null,null);
-	    	}
-	    	addInput(0,encSelect);*/
-
-	    	{
-	    		groupList= new ListSelect("group", this,page0, 0.3f, 0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
-	    	}
-
-	    	addInput(0,groupList);
-	    	
-	    	{
-	    		partyCharList = new ListSelect("partyCharList", this,page0, 0.7f, 0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    		partyCharList = new ListSelect("partyCharList", this,page0, 0.3f, 0.15f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(0,partyCharList);
 
 	    	{
-	    		inventoryList = new ListMultiSelect("inventory", this,page0, 0.3f,0.18f,0.20f, 0.23f, 0.3f,0.06f,600f,new String[0],new String[0],new Object[0], new Quad[0],null,null);
+	    		inventoryList = new ListMultiSelect("inventory", this,page0, 0.7f,0.58f,0.55f, 0.15f, 0.3f,0.06f,600f,new String[0],new String[0],new Object[0], new Quad[0],null,null);
 	    	}
 	    	addInput(0,inventoryList);
 
@@ -109,9 +91,6 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	    	addInput(0,take);
 	    	addInput(0,takeAll);
 	    	addInput(0,leave);
-
-	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
-	    	//new ListSelect();
 	    	
 	    	addPage(0, page0);
 		} catch (Exception ex)
@@ -132,10 +111,9 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	 * @param party
 	 * @param possibleEncounters
 	 */
-	public void setPageData(PartyInstance party, EncounterInfo possibleGroups)
+	public void setPageData(PartyInstance party, EntityInstance owner)
 	{
 		this.party = party;
-		this.possibleGroups = possibleGroups;
 		
 		int livingMembersCounter = 0;
 		tmpFilteredMembers.clear();
@@ -178,44 +156,11 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
-		EncounterInfo i = possibleGroups;
 
-		//if (!i.active) continue;
-		ArrayList<EncounterUnitData> list = i.getEncounterUnitDataList(party.theFragment);
-		ArrayList<EncounterUnitData> removed = i.getRemovedEncounterUnitDataList();
 		
-		ArrayList<EncounterUnitData> filtered = new ArrayList<EncounterUnitData>();
-		for (EncounterUnitData d:removed)
-		{
-			if (d.partyMember || d.parent == party) continue;
-			if (d.deadMembers==null || d.deadMembers.size()==0) continue;
-			filtered.add(d);
-		}
-		list = filtered;
-
-		// groups
-		{
-			String[] ids = new String[list.size()];
-			Object[] objects = new Object[list.size()];
-			String[] texts = new String[list.size()];
-			int count = 0;
-			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+list.size());
-			for (EncounterUnitData data:list)
-			{
-				ids[count] = ""+count;
-				texts[count] = data.name;
-				objects[count] = data;
-				count++;
-			}
-			groupList.reset();
-			groupList.ids = ids;
-			groupList.objects = objects;
-			groupList.texts = texts;
-			groupList.setUpdated(true);
-			groupList.activate();
-			groupList.deactivate();
-		}
-		inputChanged(groupList, "fake");
+		updateInventoryList();
+		
+		//inputChanged(groupList, "fake");
 		super.setupPage();
 	}
 
@@ -227,21 +172,14 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	
 	private void updateInventoryList()
 	{
-		EncounterUnitData data = (EncounterUnitData)groupList.getSelectedObject();
 		ArrayList<InventoryListElement> listOfAll = new ArrayList<InventoryListElement>();
-		if (data!=null && data.deadMembers!=null)
-		for (EntityMemberInstance inst: data.deadMembers)
-		{
-			ArrayList<InventoryListElement> list  = inst.inventory.getInventoryList(false,false);
-			listOfAll.addAll(list);
-		}
 		
 		String[] ids = new String[listOfAll.size()];
 		Object[] objects = new Object[listOfAll.size()];
 		String[] texts = new String[listOfAll.size()];
 		Quad[] icons = new Quad[listOfAll.size()];
 		int count = 0;
-		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("PostEncounterWindow ENC SIZE = "+listOfAll.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("StorageHandlingWindow ENC SIZE = "+listOfAll.size());
 		for (InventoryListElement invListElement:listOfAll)
 		{
 			ids[count] = ""+count;
@@ -267,13 +205,6 @@ public class StorageHandlingWindow extends PagedInputWindow {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		
-		if (base==groupList)
-		{
-			updateInventoryList();
-			groupList.activate();
-			return true;
-		}
 		
 		return false;
 	}
@@ -327,10 +258,8 @@ public class StorageHandlingWindow extends PagedInputWindow {
 		} else
 		if (base==leave)
 		{
-			core.gameState.gameLogic.inEncounter = false;
-			core.gameState.engine.turnFinishedForPlayer();
-			core.audioServer.stopIdOnAllChannels(core.audioServer.channels, "victory");
 			toggle();
+        	J3DCore.getInstance().lockInspectionWindow.toggle();
 			return true;
 		}
 		return false;
