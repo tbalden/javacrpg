@@ -76,7 +76,7 @@ import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.NormalActWindow;
 import org.jcrpg.ui.window.interaction.PostEncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
-import org.jcrpg.ui.window.interaction.StorageInspectionWindow;
+import org.jcrpg.ui.window.interaction.LockInspectionWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
@@ -2134,7 +2134,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public CharacterLevelingWindow charLevelingWindow = null;
 	public PartyOrderWindow partyOrderWindow = null;
 	public NormalActWindow normalActWindow = null;
-	public StorageInspectionWindow storageWindow = null;
+	public LockInspectionWindow storageWindow = null;
 
 	public void createWorldMap() {
 		try {
@@ -2723,7 +2723,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 		postEncounterWindow = new PostEncounterWindow(uiBase);
-		storageWindow = new StorageInspectionWindow(uiBase);
+		storageWindow = new LockInspectionWindow(uiBase);
 
 		// adding player invoked windows to handling
 		uiBase.addWindow("behaviorWindow", behaviorWindow);

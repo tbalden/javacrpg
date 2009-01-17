@@ -33,11 +33,13 @@ import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.object.craft.TrapAndLock;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class StorageInspectionWindow extends PagedInputWindow {
+public class LockInspectionWindow extends PagedInputWindow {
 	
 	
 	
@@ -77,11 +79,15 @@ public class StorageInspectionWindow extends PagedInputWindow {
 			return;
 		}
 		if (!storageNearby) return; // no storage nearby, shouldn't show up.
+		
+		currentState.text = ""+owner.description.getName()+" "+lock;
+		currentState.deactivate();
+		
 		super.toggle();
 	}
 
 	
-	public StorageInspectionWindow(UIBase base) {
+	public LockInspectionWindow(UIBase base) {
 		super(base);
         try {
 	        // --- First Page ---
@@ -95,67 +101,67 @@ public class StorageInspectionWindow extends PagedInputWindow {
 	        hudQuad.setRenderState(base.hud.hudAS);
 	        page0.attachChild(hudQuad);
 	        
-	    	new TextLabel("",this,page0, 0.40f, 0.046f, 0.3f, 0.06f,400f,"Storage Inspection",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.046f, 0.3f, 0.06f,400f,"Lock Inspection",false);
 	    	
 	    	// layouts
 	    	
             SimpleLayout page0Layout = new SimpleLayout(0.2f, 0.16f, 0.2f, 0.07f ,4);
 
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.currentState"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("lockInspectionWindow.currentState"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));
             currentState = new TextLabel("",this,page0, 500f, "Unknown Closed", false);
             page0Layout.addToColumn(2, currentState, 0.1f, 0.5f);
             page0Layout.addToColumn(3, new TextLabel("",this,page0, 500f, "", false));
 
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.skillLevel"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.skillLevel"), false));
             skillLevel = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(1, skillLevel, 0.1f, 0.5f);            
-            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfSkillSuccess"), false));
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.chanceOfSkillSuccess"), false));
             chanceOfSkillSuccess = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(3, chanceOfSkillSuccess, 0.1f, 0.5f);
 
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.spellLevel"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.spellLevel"), false));
             spellLevel = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(1, spellLevel, 0.1f, 0.5f);            
-            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfSpellSuccess"), false));
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.chanceOfSpellSuccess"), false));
             chanceOfSpellSuccess = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(3, chanceOfSpellSuccess, 0.1f, 0.5f);
 
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.trapLevelAndType"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.trapLevelAndType"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 600f, "", false));
             trapLevelAndType = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(2, trapLevelAndType, 0.1f, 0.5f);
             page0Layout.addToColumn(3, new TextLabel("",this,page0, 600f, "", false));
 	    	
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("storageInspectionWindow.chanceOfForceSuccess"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 600f, Language.v("lockInspectionWindow.chanceOfForceSuccess"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 600f, "", false));
             chanceOfForceSuccess = new TextLabel("",this,page0, 600f, "-", false);
             page0Layout.addToColumn(2, chanceOfForceSuccess, 0.1f, 0.5f);
             page0Layout.addToColumn(3, new TextLabel("",this,page0, 600f, "", false));
 
-            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.identify"), false));
+            page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("lockInspectionWindow.identify"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));
-            page0Layout.addToColumn(2, new TextLabel("",this,page0, 500f, Language.v("storageInspectionWindow.disarming"), false));
+            page0Layout.addToColumn(2, new TextLabel("",this,page0, 500f, Language.v("lockInspectionWindow.disarming"), false));
             page0Layout.addToColumn(3, new TextLabel("",this,page0, 500f, "", false));
             
             // TODO the remaining buttons into the layout!
 
-            inspect = new TextButton("inspect",this, page0, 0.25f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.inspect"),"I");
+            inspect = new TextButton("inspect",this, page0, 0.25f, 0.57f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.inspect"),"I");
             addInput(0, inspect);
-            sense = new TextButton("sense",this, page0, 0.405f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.sense"),"E");
+            sense = new TextButton("sense",this, page0, 0.405f, 0.57f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.sense"),"E");
             addInput(0, sense);
 
-            disarm = new TextButton("disarm",this, page0, 0.65f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.disarm"),"D");
+            disarm = new TextButton("disarm",this, page0, 0.65f, 0.57f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.disarm"),"D");
             addInput(0, disarm);
-            spell = new TextButton("spell",this, page0, 0.80f, 0.57f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.spell"),"S");
+            spell = new TextButton("spell",this, page0, 0.80f, 0.57f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.spell"),"S");
             addInput(0, spell);
-            inspect = new TextButton("force",this, page0, 0.65f, 0.65f, 0.14f, 0.06f, 500f,Language.v("storageInspectionWindow.force"),"C");
+            inspect = new TextButton("force",this, page0, 0.65f, 0.65f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.force"),"C");
             addInput(0, inspect);
 	    	
             // buttons
-            open = new TextButton("open",this, page0, 0.5f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.open"),"P");
+            open = new TextButton("open",this, page0, 0.5f, 0.75f, 0.18f, 0.06f, 500f,Language.v("lockInspectionWindow.open"),"P");
             addInput(0, open);
-            leave = new TextButton("leave",this, page0, 0.75f, 0.75f, 0.18f, 0.06f, 500f,Language.v("storageInspectionWindow.leave"),"L");
+            leave = new TextButton("leave",this, page0, 0.75f, 0.75f, 0.18f, 0.06f, 500f,Language.v("lockInspectionWindow.leave"),"L");
             addInput(0, leave);
 	    	
 	    	addPage(0, page0);
@@ -163,7 +169,7 @@ public class StorageInspectionWindow extends PagedInputWindow {
 	        
 	        
         } catch (Exception ex) {
-            if (J3DCore.SETTINGS.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, "StorageManipulationWindow creation error: "+ex.getMessage(), ex); }
+            if (J3DCore.SETTINGS.LOGGING) { Jcrpg.LOGGER.log(Level.SEVERE, "lockInspectionWindow creation error: "+ex.getMessage(), ex); }
             ex.printStackTrace();
         }
 	}
@@ -171,13 +177,14 @@ public class StorageInspectionWindow extends PagedInputWindow {
 	ArrayList<Side> triggerSides;
 	StorageObjectHandler handdler;
 	Cube enteredCube; RenderedCube renderedEnteredCube; Cube leftCube; RenderedCube renderedLeftCube;
+	EntityInstance owner; TrapAndLock lock;
 	
 	/**
 	 * If this is true, storage is in cube, so player can toggle this window.
 	 */
 	boolean storageNearby = false;
 	
-	public void setInspectableStorageObjectData(ArrayList<Side> triggerSides, StorageObjectHandler handler,Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube)
+	public void setInspectableStorageObjectData(ArrayList<Side> triggerSides, StorageObjectHandler handler,Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube, EntityInstance owner, TrapAndLock lock)
 	{
 		this.triggerSides = triggerSides;
 		this.handdler = handler;
@@ -185,6 +192,8 @@ public class StorageInspectionWindow extends PagedInputWindow {
 		this.renderedEnteredCube = renderedEnteredCube;
 		this.leftCube = leftCube;
 		this.renderedLeftCube = renderedLeftCube;
+		this.owner = owner;
+		this.lock = lock;
 	}
 	
 	public void setStorageNearby(boolean value)

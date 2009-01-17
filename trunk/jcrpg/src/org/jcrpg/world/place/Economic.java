@@ -159,9 +159,16 @@ public class Economic extends Geography {
 	static Side[][] CHEST_SIDES = new Side[][] { null, null, null,null,null,CHEST };
 	Cube storage_chest = new Cube(this,CHEST_SIDES,0,0,0,false,false);
 
+	/**
+	 * Returns the Cube representation of the storage object depending on the parameters.
+	 * @param param
+	 * @return
+	 */
 	public Cube getStorageObjectCube(int param)
 	{
-		return storage_chest;
+		Cube r = storage_chest.copy(this);
+		r.containingInternalEconomicUnit = this;
+		return r;
 	}
 	
 	
