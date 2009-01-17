@@ -73,10 +73,11 @@ import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
+import org.jcrpg.ui.window.interaction.LockInspectionWindow;
 import org.jcrpg.ui.window.interaction.NormalActWindow;
 import org.jcrpg.ui.window.interaction.PostEncounterWindow;
 import org.jcrpg.ui.window.interaction.PreEncounterWindow;
-import org.jcrpg.ui.window.interaction.LockInspectionWindow;
+import org.jcrpg.ui.window.interaction.StorageHandlingWindow;
 import org.jcrpg.ui.window.interaction.TurnActWindow;
 import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
@@ -88,7 +89,6 @@ import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
-import org.lwjgl.openal.AL10;
 
 import com.jme.app.AbstractGame;
 import com.jme.app.BaseSimpleGame;
@@ -2134,7 +2134,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public CharacterLevelingWindow charLevelingWindow = null;
 	public PartyOrderWindow partyOrderWindow = null;
 	public NormalActWindow normalActWindow = null;
-	public LockInspectionWindow storageWindow = null;
+	public LockInspectionWindow lockInspectionWindow = null;
+	public StorageHandlingWindow storageHandlingWindow = null;
 
 	public void createWorldMap() {
 		try {
@@ -2723,7 +2724,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		encounterWindow = new EncounterWindow(uiBase);
 		turnActWindow = new TurnActWindow(uiBase);
 		postEncounterWindow = new PostEncounterWindow(uiBase);
-		storageWindow = new LockInspectionWindow(uiBase);
+		lockInspectionWindow = new LockInspectionWindow(uiBase);
+		storageHandlingWindow = new StorageHandlingWindow(uiBase);
 
 		// adding player invoked windows to handling
 		uiBase.addWindow("behaviorWindow", behaviorWindow);
@@ -2733,7 +2735,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		uiBase.addWindow("cacheStateInfo", new CacheStateInfo(uiBase));
 		uiBase.addWindow("partyOrderWindow", partyOrderWindow);
 		uiBase.addWindow("normalActWindow", normalActWindow);
-		uiBase.addWindow("storageWindow", storageWindow);
+		uiBase.addWindow("storageWindow", lockInspectionWindow);
 
 		// shadows not working because of this node -> the hudNode shall occupy
 		// only the lower part, Done, image cut.
