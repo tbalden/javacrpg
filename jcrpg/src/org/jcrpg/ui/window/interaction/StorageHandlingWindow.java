@@ -31,11 +31,11 @@ import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.Language;
-import org.jcrpg.world.ai.EncounterInfo;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.PartyInstance;
+import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.ObjInstance;
 
@@ -101,9 +101,13 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	}
 	
 	public PartyInstance party;
-	public EncounterInfo possibleGroups;
 	
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
+	
+	private EntityObjInventory content;
+	private EntityObjInventory removedContent;
+	private EntityObjInventory addedContent;
+	private EntityInstance owner;
 
 	/**
 	 * This function fills up the required data fields for displaying the lists and elements of the page.
@@ -111,9 +115,13 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	 * @param party
 	 * @param possibleEncounters
 	 */
-	public void setPageData(PartyInstance party, EntityInstance owner)
+	public void setPageData(PartyInstance party, EntityInstance owner,EntityObjInventory content)
 	{
 		this.party = party;
+		this.content = content;
+		removedContent = new EntityObjInventory(null);
+		addedContent = new EntityObjInventory(null);
+		this.owner = owner;
 		
 		int livingMembersCounter = 0;
 		tmpFilteredMembers.clear();
@@ -173,6 +181,9 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	private void updateInventoryList()
 	{
 		ArrayList<InventoryListElement> listOfAll = new ArrayList<InventoryListElement>();
+		
+		ArrayList<InventoryListElement> list  = content.getInventoryList(false,false);
+		listOfAll.addAll(list);
 		
 		String[] ids = new String[listOfAll.size()];
 		Object[] objects = new Object[listOfAll.size()];
@@ -250,6 +261,8 @@ public class StorageHandlingWindow extends PagedInputWindow {
 						i.inventory.remove(oi);
 						EntityMemberInstance ch = (EntityMemberInstance)partyCharList.getSelectedObject();
 						ch.inventory.add(oi);
+						// gathering objects for removal from storage's owner wealth.
+						removedContent.add(oi);
 					}
 				}
 			}
@@ -259,6 +272,8 @@ public class StorageHandlingWindow extends PagedInputWindow {
 		if (base==leave)
 		{
 			toggle();
+			// removing objects from owner's common wealth.
+			owner.wealth.removeListOfObjects(removedContent);
         	J3DCore.getInstance().lockInspectionWindow.toggle();
 			return true;
 		}

@@ -29,6 +29,8 @@ import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.moving.TriggeredModelNode;
 import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
 public class StorageObjectHandler extends TriggerHandler {
@@ -183,7 +185,9 @@ public class StorageObjectHandler extends TriggerHandler {
 			
 			EntityInstance owner = enteredCube.containingInternalEconomicUnit.owner;
 			TrapAndLock lock = owner.wealth.getTrapIfAvailable();
+			EntityObjInventory content = owner.wealth.getObjectsOfStorage();
 			J3DCore.getInstance().lockInspectionWindow.setInspectableStorageObjectData(triggerSides, this, enteredCube, renderedEnteredCube, leftCube, renderedLeftCube, owner, lock);
+        	J3DCore.getInstance().storageHandlingWindow.setPageData(J3DCore.getInstance().gameState.player, owner, content);
 			J3DCore.getInstance().lockInspectionWindow.setStorageNearby(true);
 			if (true) return true; // return, ATM only chests use this, which don't need instant animation...
 			
