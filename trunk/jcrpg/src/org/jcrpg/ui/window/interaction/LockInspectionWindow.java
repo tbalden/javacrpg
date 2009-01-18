@@ -209,7 +209,6 @@ public class LockInspectionWindow extends PagedInputWindow {
         	handdler.openTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
         	
         	toggle();
-        	J3DCore.getInstance().storageHandlingWindow.setPageData(J3DCore.getInstance().gameState.player, owner);
         	J3DCore.getInstance().storageHandlingWindow.toggle();
             return true;
         // Cancel

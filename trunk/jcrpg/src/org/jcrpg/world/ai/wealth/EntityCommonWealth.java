@@ -23,10 +23,16 @@ import java.util.HashMap;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.InventoryListElement;
 import org.jcrpg.world.object.Obj;
+import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.ObjList;
 import org.jcrpg.world.object.RawMaterial;
+import org.jcrpg.world.object.combat.bow.arrow.CrudeArrow;
+import org.jcrpg.world.object.combat.throwing.ThrowingKnife;
 import org.jcrpg.world.object.craft.TrapAndLock;
+import org.jcrpg.world.object.magical.potion.MinorHealingPotion;
 
 public class EntityCommonWealth {
 	
@@ -63,10 +69,10 @@ public class EntityCommonWealth {
 			}
 		}
 		Class c = o.getClass();
-		while (c.getSuperclass()!=null && o.getClass().getSuperclass()!=Obj.class)
+		while (c.getSuperclass()!=null && c.getSuperclass()!=Obj.class)
 		{
-			ret.add(o.getClass().getSuperclass());
-			c = o.getClass().getSuperclass();
+			ret.add(c.getSuperclass());
+			c = c.getSuperclass();
 		}
 		return ret;
 	}
@@ -131,6 +137,10 @@ public class EntityCommonWealth {
 		handleObjectQuantity(item,-1*quantity);
 	}
 	
+	/**
+	 * Returns randomly chosen (based on seeded hash) lock or trap from the common wealth. It doesn't remove it from the wealth!
+	 * @return TrapAndLock
+	 */
 	public TrapAndLock getTrapIfAvailable()
 	{
 		Integer i = availabilityHelper.get(TrapAndLock.class);
@@ -154,5 +164,59 @@ public class EntityCommonWealth {
 		int id = HashUtil.mix(seed, 0, 0) % sortedTraps.size();
 		return sortedTraps.get(id);
 	}
+
+	/**
+	 * Returns a list of random objects for a storage object.
+	 * @return
+	 */
+	public EntityObjInventory getObjectsOfStorage()
+	{
+		
+		ArrayList<InventoryListElement> list = new ArrayList<InventoryListElement>();
+		EntityObjInventory inv = new EntityObjInventory(null);
+		{Obj o = ObjList.getInstance(MinorHealingPotion.class);
+		ObjInstance oi = new ObjInstance(o);
+		inv.add(oi);
+		}
+		{Obj o = ObjList.getInstance(ThrowingKnife.class);
+		ObjInstance oi = new ObjInstance(o);
+		inv.add(oi);
+		}
+		{Obj o = ObjList.getInstance(CrudeArrow.class);
+		ObjInstance oi = new ObjInstance(o);
+		inv.add(oi);
+		}
+		// TODO randomize, based on trap level (?) and wealth content
+		return inv;
+		/*Integer i = availabilityHelper.get(TrapAndLock.class);
+		if (i==null || i==0)
+		{
+			return null;
+		}
+		ArrayList<TrapAndLock> sortedTraps = new ArrayList<TrapAndLock>();
+		for (Class<? extends Obj> o : objects.keySet())
+		{
+			Obj oo = ObjList.getInstance(o);
+			if (oo instanceof TrapAndLock)
+			{
+				sortedTraps.add((TrapAndLock)oo);
+			}
+		}
+		if (sortedTraps.size()==0) return null;
+		int seed = J3DCore.getInstance().gameState.engine.getNumberOfTurn()+
+			J3DCore.getInstance().gameState.engine.getWorldMeanTime().getTimeInInt();
+		seed+=owner.getNumericId();
+		int id = HashUtil.mix(seed, 0, 0) % sortedTraps.size();
+		return sortedTraps.get(id);*/
+	}
 	
+	public void removeListOfObjects(EntityObjInventory inv)
+	{
+		ArrayList<InventoryListElement> list = inv.getInventoryList(false,false);
+		for (InventoryListElement e:list)
+		{
+			removeObject(e.description.getClass(), e.objects.size());
+		}
+	}
+
 }
