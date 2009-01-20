@@ -23,6 +23,7 @@ import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 import org.jcrpg.world.climate.impl.continental.Continental;
+import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.population.DungeonDistrict;
@@ -45,6 +46,7 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 		economyTemplate.addEcoGroundType(Plain.class, RawStreetGround.class);
 		economyTemplate.addEcoGroundType(Forest.class, RawStreetGround.class);
 	
+		climates.add(Desert.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Forest.class);

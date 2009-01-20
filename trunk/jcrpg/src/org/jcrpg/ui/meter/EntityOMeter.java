@@ -58,7 +58,7 @@ public class EntityOMeter {
 		int count = 0;
 		for (String p:entityPics)
 		{
-			if (count>5) break;
+			if (count>4) break;
 			ZoomingNode n = null;
 			if (previousEntityPics.contains(p)) 
 			{

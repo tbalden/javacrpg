@@ -61,16 +61,16 @@
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Tropical"
 			percentage-chance-of-appearance="20" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
-			percentage-chance-of-appearance="20" min-in-group="30" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
 
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Tropical"
-			percentage-chance-of-appearance="80" min-in-group="30" food-chain-position="HERBIVORE"/>
+			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Continental"
 			percentage-chance-of-appearance="15" min-in-group="30" food-chain-position="HERBIVORE"/>
  
-      	<population ref-animal-id="GREEKMAZEHORDE" ref-climat="Tropical"
+      	<population ref-animal-id="GREEKMAZEHORDE" ref-climat="Desert"
 			percentage-chance-of-appearance="50" min-in-group="30" food-chain-position="HERBIVORE"/>
-     	<population ref-animal-id="GREEKMAZEHORDE" ref-climat="Continental"
+     	<population ref-animal-id="GREEKMAZEHORDE" ref-climat="Tropical"
 			percentage-chance-of-appearance="50" min-in-group="30" food-chain-position="HERBIVORE"/>
 			
       	<population ref-animal-id="KOBOLDHORDE" ref-climat="Tropical"
