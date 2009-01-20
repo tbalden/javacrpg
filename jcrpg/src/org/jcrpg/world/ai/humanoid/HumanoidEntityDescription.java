@@ -19,6 +19,7 @@
 package org.jcrpg.world.ai.humanoid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
@@ -35,6 +36,8 @@ import org.jcrpg.world.place.economic.population.DungeonDistrict;
 public class HumanoidEntityDescription extends AnimalEntityDescription {
 
 	
+	public static HashMap<Long, Population> bugger = new HashMap<Long, Population>();
+	
 	@Override
 	public void setupNewInstance(EntityInstance instance, World world, Ecology ecology)
 	{
@@ -48,12 +51,18 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 				Geography g = surfaces.get(count++)[0].self;
 				//int[] coords = world.economyContainer.getPopulationCoordinatesInZone(instance.domainBoundary.posX, instance.domainBoundary.posZ, g.blockSize);
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("g: "+g);
+				//System.out.println()
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("XY "+coords[0]+coords[1]);
 				ArrayList<Class<? extends Population>> list = economyTemplate.populationTypes.get(g.getClass());
 				if (list!=null && list.size()>0) {
 					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("G: THIS");
 					// check if this is an occupied population zone.
 					Population pO = world.economyContainer.isOccupied(g, coords[0], coords[1]);
+					
+					// TODO fix isOccupied, and remove this temporary solution!!!
+					long coor = (coords[0]<<16)+ coords[1];
+					if (bugger.containsKey(coor)) continue;
+					
 					if (pO!=null) {
 						if (pO.owner.wouldMergeWithOther(instance))
 						{
@@ -90,6 +99,18 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						instance.homeEconomy = pI; // setting the population as home for the instance, it is not a homeless anymore :)
 						// TODO enteredPopulation shouldn't be set here
 						instance.fragments.fragments.get(0).populatePopulation(pI);
+						if (bugger.containsKey(coor))
+						{
+							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+							System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+							System.out.println(" "+coords[0]+" "+coords[1]);
+							System.out.println(""+bugger.get(coor).getClass()+ " "+pI.getClass());
+							System.out.println(""+bugger.get(coor).owner.homeBoundary.posX+" / "+bugger.get(coor).owner.homeBoundary.posZ);
+							System.out.println(""+pI.owner.homeBoundary.posX+" / "+pI.owner.homeBoundary.posZ);
+							System.out.println("" + bugger.get(coor).soilGeo.getClass()+" "+ pI.soilGeo.getClass());
+						}
+						bugger.put(coor, pI);
 						break;
 					}
 				}

@@ -38,7 +38,6 @@ import org.jcrpg.world.ai.GroupingMemberProps;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
-import org.jcrpg.world.climate.ClimateBelt;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.SurfaceHeightAndType;
@@ -472,6 +471,7 @@ public class GameStateContainer {
 		{
 			if (lastMusicClass!=desc.detailedEconomic.getClass())
 			{
+				lastMusicClass = desc.detailedEconomic.getClass();
 				return true;
 			}
 			return false;
