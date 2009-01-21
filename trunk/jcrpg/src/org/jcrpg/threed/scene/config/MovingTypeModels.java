@@ -21,7 +21,6 @@ package org.jcrpg.threed.scene.config;
 import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
-import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.ai.fauna.birds.heron.Herons;
 import org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders;
 import org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily;
@@ -35,9 +34,9 @@ import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
-import org.jcrpg.world.ai.humanoid.group.myth.greek.GreekMazeHorde;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Scorpoholder;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -150,7 +149,11 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, HellPig.hellPig_unit);
 		counter++;
 
-}
+		hmMobIdToModelId.put(Scorpoholder.SCORPOHOLDER.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Scorpoholder.scorpoholder_unit);
+		counter++;
+
+	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)
 	{
