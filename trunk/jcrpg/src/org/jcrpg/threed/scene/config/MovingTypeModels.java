@@ -30,6 +30,7 @@ import org.jcrpg.world.ai.fauna.mammals.fox.FoxFamily;
 import org.jcrpg.world.ai.fauna.mammals.gorilla.GorillaHorde;
 import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
+import org.jcrpg.world.ai.fauna.plantoid.member.Plantobite;
 import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
@@ -153,6 +154,9 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, Scorpoholder.scorpoholder_unit);
 		counter++;
 
+		hmMobIdToModelId.put(Plantobite.PLANTOBITE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Plantobite.plantobite_unit);
+		counter++;
 	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)
