@@ -22,6 +22,7 @@ import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Scorpoholder;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
@@ -62,6 +63,7 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 		
 		addGroupingRuleMember(EyeBat.EYEBAT);
 		addGroupingRuleMember(HellPig.HELLPIG);
+		addGroupingRuleMember(Scorpoholder.SCORPOHOLDER);
 	}
 	
 
