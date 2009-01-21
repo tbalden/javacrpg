@@ -17,8 +17,8 @@ at the StorageObjectHandler part??
 	will get a new trap/loot combo. ?
 [X]	--> chest cube's owner is passed to window with lock + possible inventory / loot
 	[ ] 	unlock skills, new traps, unlock UI further dev to enable identify/unlock, impacts, caclulations
-	[ ]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
-		setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
+	[X]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
+	[ ] setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
 		Player then can LOOT! :D
 		
 		

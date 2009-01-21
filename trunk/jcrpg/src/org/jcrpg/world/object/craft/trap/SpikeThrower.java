@@ -31,7 +31,7 @@ import org.jcrpg.world.object.craft.TrapAndLock;
 public class SpikeThrower extends TrapAndLock {
 
 	public SpikeThrower() {
-		super(1);
+		super(1,1);
 	}
 
 	@Override
