@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.game.logic.UnlockEvaluator;
+import org.jcrpg.game.logic.UnlockEvaluator.UnlockEvaluationInfo;
 import org.jcrpg.game.trigger.StorageObjectHandler;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -34,11 +36,17 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
+/**
+ * 
+ * @author illes
+ *
+ */
 public class LockInspectionWindow extends PagedInputWindow {
 	
 	
@@ -80,7 +88,7 @@ public class LockInspectionWindow extends PagedInputWindow {
 		}
 		if (!storageNearby) return; // no storage nearby, shouldn't show up.
 		
-		currentState.text = ""+owner.description.getName()+" "+lock;
+		currentState.text = ""+owner.description.getName()+" "+lock.getClass().getSimpleName();
 		currentState.deactivate();
 		
 		super.toggle();
@@ -178,14 +186,36 @@ public class LockInspectionWindow extends PagedInputWindow {
 	StorageObjectHandler handdler;
 	Cube enteredCube; RenderedCube renderedEnteredCube; Cube leftCube; RenderedCube renderedLeftCube;
 	EntityInstance owner; TrapAndLock lock;
+	EntityFragment initiator;
+	UnlockEvaluationInfo unlockEvalInfo;
 	
 	/**
 	 * If this is true, storage is in cube, so player can toggle this window.
 	 */
 	boolean storageNearby = false;
 	
-	public void setInspectableStorageObjectData(ArrayList<Side> triggerSides, StorageObjectHandler handler,Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube, EntityInstance owner, TrapAndLock lock)
+	public void setInspectableStorageObjectData(EntityFragment initiator, ArrayList<Side> triggerSides, StorageObjectHandler handler,Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube, EntityInstance owner, TrapAndLock lock)
 	{
+		this.initiator = initiator;
+		if (lock!=null)
+		{
+			unlockEvalInfo = UnlockEvaluator.getEvaluationInfo(initiator, lock);
+			chanceOfForceSuccess.text = ""+unlockEvalInfo.chanceOfForce+"%";
+			chanceOfForceSuccess.deactivate();
+			chanceOfSpellSuccess.text = ""+unlockEvalInfo.chanceOfSpell+"%";
+			chanceOfSpellSuccess.deactivate();
+			chanceOfSkillSuccess.text = ""+unlockEvalInfo.chanceOfSkill+"%";
+			chanceOfSkillSuccess.deactivate();
+
+			skillLevel.text = ""+unlockEvalInfo.skillLevel+"";
+			skillLevel.deactivate();
+			spellLevel.text = ""+unlockEvalInfo.spellLevel+"";
+			spellLevel.deactivate();
+
+		} else
+		{
+			unlockEvalInfo = null;
+		}
 		this.triggerSides = triggerSides;
 		this.handdler = handler;
 		this.enteredCube = enteredCube;

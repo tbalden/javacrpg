@@ -27,9 +27,11 @@ import org.jcrpg.world.object.BonusObject;
 
 public abstract class TrapAndLock extends Craft implements BonusObject {
 
-	public TrapAndLock(int level)
+	public TrapAndLock(int level, int strength)
 	{
 		this.level = level;
+		this.strength = strength;
+		if (level<=0) this.level = 1; 
 	}
 
 	public Attributes getAttributeValues() {
@@ -53,6 +55,7 @@ public abstract class TrapAndLock extends Craft implements BonusObject {
 	}
 
 	public int level;
+	public int strength;
 	
 	/**
 	 * Trap level. 

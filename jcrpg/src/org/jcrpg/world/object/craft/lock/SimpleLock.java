@@ -29,7 +29,7 @@ import org.jcrpg.world.object.craft.TrapAndLock;
 public class SimpleLock extends TrapAndLock {
 
 	public SimpleLock() {
-		super(1);
+		super(1,1);
 	}
 
 	@Override
