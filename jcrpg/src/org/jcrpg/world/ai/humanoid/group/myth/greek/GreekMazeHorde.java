@@ -62,8 +62,8 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 		setAverageGroupSizeAndDeviation(3, 2);
 		
 		addGroupingRuleMember(EyeBat.EYEBAT);
-		addGroupingRuleMember(HellPig.HELLPIG);
-		addGroupingRuleMember(Scorpoholder.SCORPOHOLDER);
+		//addGroupingRuleMember(HellPig.HELLPIG);
+		//addGroupingRuleMember(Scorpoholder.SCORPOHOLDER);
 	}
 	
 

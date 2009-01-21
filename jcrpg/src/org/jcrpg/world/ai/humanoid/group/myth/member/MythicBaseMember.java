@@ -21,7 +21,6 @@ package org.jcrpg.world.ai.humanoid.group.myth.member;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.body.BodyBase;
-import org.jcrpg.world.ai.body.HumanoidBody;
 
 public class MythicBaseMember extends EntityMember {
 
