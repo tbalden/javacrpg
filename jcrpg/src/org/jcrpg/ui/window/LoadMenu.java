@@ -181,11 +181,11 @@ public class LoadMenu extends Window implements KeyListener {
 				Quad button = loadImageToQuad(data.pic,sizeX,sizeY, posX, startPosY - stepPosY*(counter - fromSlot));
 				windowNode.attachChild(button);
 				
-				Node slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				Node slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0,0,0.1f,1f),false);
 				fontFreers.add(new NodeFontFreer(this.text,slottextNode));
 				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(core.getDisplay().getWidth()/900f);
+				slottextNode.setLocalScale(core.getDisplay().getWidth()/650f);
 				windowNode.attachChild(slottextNode);
 
 				buttons.add(new Button(data.id,button,slottextNode,this));
