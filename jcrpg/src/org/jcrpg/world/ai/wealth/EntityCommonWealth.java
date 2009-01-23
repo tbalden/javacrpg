@@ -160,8 +160,7 @@ public class EntityCommonWealth {
 			}
 		}
 		if (sortedTraps.size()==0) return null;
-		int seed = J3DCore.getInstance().gameState.engine.getNumberOfTurn()+
-			J3DCore.getInstance().gameState.engine.getWorldMeanTime().getTimeInInt();
+		int seed = J3DCore.getInstance().gameState.engine.getBaseTimeSeed();
 		seed+=owner.getNumericId();
 		int id = HashUtil.mix(seed, 0, 0) % sortedTraps.size();
 		

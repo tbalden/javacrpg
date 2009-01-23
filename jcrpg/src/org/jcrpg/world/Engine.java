@@ -21,6 +21,7 @@ import java.util.Random;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.time.Time;
 
 /**
@@ -294,6 +295,12 @@ public class Engine implements Runnable {
 	public boolean isCamping()
 	{
 		return camping;
+	}
+	
+	public int getBaseTimeSeed()
+	{
+		long seed = HashUtil.WORLD_RANDOM_SEED+ getNumberOfTurn()+ getWorldMeanTime().getTimeInInt();
+		return (int)seed;
 	}
 
 }
