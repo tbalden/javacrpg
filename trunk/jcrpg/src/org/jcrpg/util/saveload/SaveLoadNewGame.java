@@ -179,7 +179,7 @@ public class SaveLoadNewGame {
 		}
 		try {
 			Date d = new Date();
-			String dT = new SimpleDateFormat("yyyyddMM-HH.mm.ss.SSS").format(d);
+			String dT = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS").format(d);
 			String slot = saveDir+"/"+core.gameState.gameId+"_"+dT+"/";
 			File f = new File(slot);
 			f.mkdirs();
