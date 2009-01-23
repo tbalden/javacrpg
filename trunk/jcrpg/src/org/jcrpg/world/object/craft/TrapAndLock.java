@@ -19,7 +19,12 @@
 package org.jcrpg.world.object.craft;
 
 import org.jcrpg.game.logic.Impact;
-import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.game.logic.UnlockEvaluator;
+import org.jcrpg.game.logic.UnlockEvaluator.TrapDisarmResult;
+import org.jcrpg.game.logic.UnlockEvaluator.UnlockAction;
+import org.jcrpg.game.logic.UnlockEvaluator.UnlockEvaluationInfo;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
@@ -73,24 +78,29 @@ public abstract class TrapAndLock extends Craft implements BonusObject {
 	 */
 	public abstract Class<? extends SkillBase> getAdditionalDisarmSkill();
 	
-	public class TrapDisarmResult
+
+	public boolean tryIdentification(UnlockEvaluationInfo info, UnlockAction actionType)
 	{
-		public Impact impact = null;
-		public boolean disarmSuccess = false;
+		TrapDisarmResult result = UnlockEvaluator.evaluate(info, actionType);
+		return result.success;
 	}
 
-	public boolean tryIdentification(EntityFragment unit, boolean magical)
+	public TrapDisarmResult tryDisarming(UnlockEvaluationInfo info, UnlockAction actionType)
 	{
-		//ArrayList<PersistentMemberInstance> members = unit.getFollowingMembers();
-		return true;
-	}
-
-	public TrapDisarmResult tryDisarming(EntityFragment unit,boolean magical)
-	{
-		//ArrayList<PersistentMemberInstance> members = unit.getFollowingMembers();
-		TrapDisarmResult result = new TrapDisarmResult();
-		result.impact = null;
-		result.disarmSuccess = true;
+		TrapDisarmResult result = UnlockEvaluator.evaluate(info, actionType);
+		if (!result.success || actionType==UnlockAction.UNLOCK_ACTION_TYPE_FORCE)
+		{
+			// TODO impact calculation - extract from EvaluatorBase!
+			//ArrayList<E> getSkillActFormBonusEffectTypes();
+			result.impact = new Impact();
+			for (EntityMemberInstance i:info.fragment.getFollowingMembers())
+			{
+				ImpactUnit u = new ImpactUnit();
+				u.orderedImpactPoints[0] = -2;
+				result.impact.targetImpact.put(i,u);
+			}
+			
+		}
 		return result;
 	}
 	

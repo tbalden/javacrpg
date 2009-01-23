@@ -18,6 +18,8 @@
 
 package org.jcrpg.game.logic;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
@@ -31,6 +33,8 @@ public class UnlockEvaluator {
 	
 	public static class UnlockEvaluationInfo
 	{
+		public EntityFragment fragment;
+		public TrapAndLock lock;
 		public int skillLevel;
 		public int spellLevel;
 		public boolean additionalSkillOkay = false;
@@ -98,10 +102,76 @@ public class UnlockEvaluator {
 		info.chanceOfSkill = (int)((bestSkillLevel*1f/level*1f)*100);
 		info.chanceOfSpell = (int)((bestSpellLevel*1f/level*1f)*100);
 		info.chanceOfForce = (int)((sumOfStrength*1f/strengthLevel*1f)*100);
-		
+		info.lock = lock;
+		info.fragment = fragment;
 		return info;
 	}
 	
-	// TODO evaluation / return impact function
+	public enum UnlockAction {
+		UNLOCK_ACTION_TYPE_INSPECT,
+		UNLOCK_ACTION_TYPE_SENSE,
+		UNLOCK_ACTION_TYPE_PHYSICAL,
+		UNLOCK_ACTION_TYPE_MAGICAL,
+		UNLOCK_ACTION_TYPE_FORCE
+	}
+	
+	private static float rollSuccessRatio(int seed, int chance)
+	{
+		int rand = HashUtil.mixPercentage(seed, 0, 0, 0)+1;
+		
+		if (rand>100) rand = 100;
+		
+		if (chance>100) chance = 100;
+		
+		System.out.println("------ "+rand+" <= "+chance);
+		
+		if (rand<=chance)
+		{
+			return 1;
+		}
+		return (99.9f-chance)/rand;
+	}
+	public static class TrapDisarmResult
+	{
+		public Impact impact = null;
+		public boolean success = false;
+		public float ratio = 0;
+	}
+	
+	public static TrapDisarmResult evaluate(UnlockEvaluationInfo info, UnlockAction actionType)
+	{
+		int seed = J3DCore.getInstance().gameState.engine.getBaseTimeSeed();
+		seed+=info.fragment.getNumericId();
+		
+		float ratio = 0; 
+		if (actionType==UnlockAction.UNLOCK_ACTION_TYPE_INSPECT)
+		{
+			ratio = rollSuccessRatio(seed, info.chanceOfSkill);
+		} else
+		if (actionType==UnlockAction.UNLOCK_ACTION_TYPE_SENSE)
+		{
+			ratio = rollSuccessRatio(seed, info.chanceOfSpell);
+		} else
+		if (actionType==UnlockAction.UNLOCK_ACTION_TYPE_FORCE)
+		{
+			ratio = rollSuccessRatio(seed, info.chanceOfForce);
+		} else
+		if (actionType==UnlockAction.UNLOCK_ACTION_TYPE_PHYSICAL)
+		{
+			ratio = rollSuccessRatio(seed, info.chanceOfSkill);
+		} else
+		if (actionType==UnlockAction.UNLOCK_ACTION_TYPE_MAGICAL)
+		{
+			ratio = rollSuccessRatio(seed, info.chanceOfSpell);
+		}
+		TrapDisarmResult result = new TrapDisarmResult();
+		if (ratio==1)
+		{
+			result.success = true;
+		}
+		result.ratio = ratio;
+		return result;
+	}
+	
 
 }

@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.game.logic.Impact;
+import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.UnlockEvaluator;
+import org.jcrpg.game.logic.UnlockEvaluator.TrapDisarmResult;
+import org.jcrpg.game.logic.UnlockEvaluator.UnlockAction;
 import org.jcrpg.game.logic.UnlockEvaluator.UnlockEvaluationInfo;
 import org.jcrpg.game.trigger.StorageObjectHandler;
 import org.jcrpg.space.Cube;
@@ -36,6 +40,7 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
@@ -79,6 +84,25 @@ public class LockInspectionWindow extends PagedInputWindow {
     TextButton inspect, sense, disarm, spell, open, leave, force;
     
 
+    public String getCurrentStateText()
+    {
+    	if (lock==null)
+    	{
+    		return ""+owner.description.getName()+" No lock.";
+    	}
+    	if (!isIdentified)
+    	{
+    		return ""+owner.description.getName()+" Unknown.";
+    	}
+    	if (!isUnlocked)
+    	{
+    		return ""+owner.description.getName()+" "+lock.getClass().getSimpleName();
+    	}
+    	{
+    		return ""+owner.description.getName()+" Unlocked.";
+    	}
+    }
+    
 	@Override
 	public synchronized void toggle() {
 		if (visible)
@@ -88,8 +112,8 @@ public class LockInspectionWindow extends PagedInputWindow {
 		}
 		if (!storageNearby) return; // no storage nearby, shouldn't show up.
 		
-		currentState.text = ""+owner.description.getName()+" "+lock.getClass().getSimpleName();
-		currentState.deactivate();
+		currentState.text = getCurrentStateText();
+		currentState.activate();
 		
 		super.toggle();
 	}
@@ -163,7 +187,7 @@ public class LockInspectionWindow extends PagedInputWindow {
             addInput(0, disarm);
             spell = new TextButton("spell",this, page0, 0.80f, 0.57f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.spell"),"S");
             addInput(0, spell);
-            inspect = new TextButton("force",this, page0, 0.65f, 0.65f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.force"),"C");
+            force = new TextButton("force",this, page0, 0.65f, 0.65f, 0.14f, 0.06f, 500f,Language.v("lockInspectionWindow.force"),"C");
             addInput(0, inspect);
 	    	
             // buttons
@@ -199,6 +223,8 @@ public class LockInspectionWindow extends PagedInputWindow {
 		this.initiator = initiator;
 		if (lock!=null)
 		{
+			isUnlocked = false;
+			isIdentified = false;
 			unlockEvalInfo = UnlockEvaluator.getEvaluationInfo(initiator, lock);
 			chanceOfForceSuccess.text = ""+unlockEvalInfo.chanceOfForce+"%";
 			chanceOfForceSuccess.deactivate();
@@ -214,6 +240,7 @@ public class LockInspectionWindow extends PagedInputWindow {
 
 		} else
 		{
+			isUnlocked = true;
 			unlockEvalInfo = null;
 		}
 		this.triggerSides = triggerSides;
@@ -230,12 +257,104 @@ public class LockInspectionWindow extends PagedInputWindow {
 	{
 		storageNearby = value;
 	}
+	
+	public boolean isUnlocked = false;
+	public boolean isIdentified = false;
 
 	
     @Override
     public boolean inputUsed(InputBase base, String message) {
+    	
+    	if (!isUnlocked && !isIdentified)
+    	{
+    		if (base == inspect)
+    		{
+        		if (lock==null) isUnlocked = true;
+        		boolean success = lock.tryIdentification(unlockEvalInfo,UnlockAction.UNLOCK_ACTION_TYPE_INSPECT);
+        		if (success)
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("LOCK IDENTIFIED!");
+        			isIdentified = true;
+        		} else
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Failure to inspect!");
+        		}
+    		}
+    		if (base == sense)
+    		{
+        		if (lock==null) isUnlocked = true;
+        		boolean success = lock.tryIdentification(unlockEvalInfo,UnlockAction.UNLOCK_ACTION_TYPE_SENSE);
+        		if (success)
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("LOCK IDENTIFIED!");
+        			isIdentified = true;
+        		} else
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Failure to sense!");
+        		}
+    		}    	
+    	}
+    	if (!isUnlocked && isIdentified)
+    	{
+        	Impact failureImpact = null;
+  		
+    		if (base == disarm)
+    		{
+        		if (lock==null) isUnlocked = true;
+        		TrapDisarmResult result = lock.tryDisarming(unlockEvalInfo,UnlockAction.UNLOCK_ACTION_TYPE_PHYSICAL);
+        		if (result.success)
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("UNLOCKED!");
+        			isUnlocked = true;
+        		} else
+        		{
+        			failureImpact = result.impact;
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("FAILED to disarm!");
+        		}    			
+    		}
+    		if (base == spell)
+    		{
+        		if (lock==null) isUnlocked = true;
+        		TrapDisarmResult result = lock.tryDisarming(unlockEvalInfo,UnlockAction.UNLOCK_ACTION_TYPE_MAGICAL);
+        		if (result.success)
+        		{
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("UNLOCKED!");
+        			isUnlocked = true;
+        		} else
+        		{
+           			failureImpact = result.impact;
+           		 	J3DCore.getInstance().uiBase.hud.mainBox.addEntry("FAILED to magically unlock!");
+        		}    			
+    		}
+    		if (base == force)
+    		{
+        		if (lock==null) isUnlocked = true;
+        		TrapDisarmResult result = lock.tryDisarming(unlockEvalInfo,UnlockAction.UNLOCK_ACTION_TYPE_FORCE);
+        		if (result.success)
+        		{
+        			failureImpact = result.impact;
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("FORCED!");
+        			isUnlocked = true;
+        		} else
+        		{
+        			failureImpact = result.impact;
+        			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("FAILED to force!");
+        		}    			
+    		}
+    		if (failureImpact!=null)
+    		{
+    			// TODO IMPACT, effect etc.
+    			for (EntityMemberInstance i:failureImpact.targetImpact.keySet())
+    			{
+    				ImpactUnit u = failureImpact.targetImpact.get(i);
+    				i.applyImpactUnit(u);
+    			}
+    		}
+    	}
+    	currentState.text = getCurrentStateText();
+    	currentState.activate();
         // Save
-        if (base == open) {
+        if (base == open && isUnlocked) {
         	handdler.openTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
         	
         	toggle();
