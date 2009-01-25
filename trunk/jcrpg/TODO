@@ -8,53 +8,17 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[X] Traps -> crafted by owner population - needed materials
-Mechanism? How to add or not add trap - where to implement addition??
-at the StorageObjectHandler part??
-	Chests -> filled with population owned goods
-	
-	trap and loot is got from CommonWealth of the owner EntityInstance, each try of open
-	will get a new trap/loot combo. ?
-[X]	--> chest cube's owner is passed to window with lock + possible inventory / loot
-	[ ] 	unlock skills, new traps, unlock UI further dev to enable identify/unlock, impacts, caclulations
-	[X]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
-	[ ] setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
-		Player then can LOOT! :D
 		
+[ ] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
+[ ] LOOT: add loot object generation, add economic background to commonwealth list
 		
-	[ ] Door -> passing through doors -> Special SideType
-				traps -> Special SideType
-				secret switches -> Special SideType
-				chests -> -"- connected to storage point, owner
-			Passing by checks those side types!
-			(Mobs will be able to check around) 
-			Fire animations with the SideType callbacks!
-	
 
 [X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
 	general positioning (wrong direction) at generation is bad too i think
 	[ ] better fix --> EconomyContainer.isOccupied is not returning Population though it's there! TreeLocator bug?
 		if fixed, remove HumanoidEntityDescription's temporary fix
 
-[X] preloaded Sound playing is not perfect -> PlayerThread tells Stop before real stop when overload!!
-	--> added forced length check before stop 
-
-[X] request list for scibot portraits scibotic@gmail.com
-		[X] dwarf [ ] waiting for completion male/female
-		[X] elf [ ] waiting for completion male/female
-		
-[X] integrate Carnivore Plant
-[X]	integrate beholder
-[ ]	fox
-
-
-
-
 [ ] add different levels for generation of groups at start .. 
-
-[ ] cyclops - Zphr working on it
-
-[ ] the other misc objects
 
 [ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
 
@@ -64,25 +28,63 @@ bugs:
 			Check if below one cube, is there cave? avoid the zone
 			Should be tested
 	[X] concurrency is still in rendering
+		[-] background thread rendering results in gaps!
+			Don't use bg rendering by default now
 
 [ ] dungeon dev
 	[ ] add skysphere switch to Cube??
 	[ ] bad wall openings at higher part etc.
 	[X] slow, too much details
 	[X] ground is varying??
+
+
+[ ]	fox by tidbit
+[ ] cyclops - Zphr working on it
+	[ ] new Greek maze setting
+[ ] the other misc objects
+[X] request list for scibot portraits scibotic@gmail.com
+		[X] dwarf [ ] waiting for completion male/female
+		[X] elf [ ] waiting for completion male/female
+		
+[ ] Door -> passing through doors -> Special SideType
+				traps -> Special SideType
+				secret switches -> Special SideType
+				chests -> -"- connected to storage point, owner
+			Passing by checks those side types!
+			(Mobs will be able to check around) 
+			Fire animations with the SideType callbacks!
+		[ ] animation for doors! (export!)
 	
+
+	
+[X] integrate Carnivore Plant
+[X]	integrate beholder
+
+[X] preloaded Sound playing is not perfect -> PlayerThread tells Stop before real stop when overload!!
+	--> added forced length check before stop 
+
 	[X] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
 		( AbstractInfrastructure I modified to reposition blockstartX/Z, but this conflicts with water detection)
+
+[X] Traps -> crafted by owner population - needed materials
+Mechanism? How to add or not add trap - where to implement addition??
+at the StorageObjectHandler part??
+	Chests -> filled with population owned goods
+	
+	trap and loot is got from CommonWealth of the owner EntityInstance, each try of open
+	will get a new trap/loot combo. ?
+[X]	--> chest cube's owner is passed to window with lock + possible inventory / loot
+	[X] 	unlock skills, new traps, unlock UI further dev to enable identify/unlock, impacts, caclulations
+	[X]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
+	[X] setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
+		Player then can LOOT! :D
 
 [X] add town misc objects, new plaza ground type?
 	[-] needs a development of some kind of AbstractInfrastructure abstract method? some kind of 
 		decision where to put what kind of things...probably the Economic/Ground should be aware of it??
 		[X]!!! type's likeness of distance from center?? good!
 		or !!! grouped by some typeId together into some blocks in a block?
-	[ ] integrate tidbit's bench to where ??
-
-
-
+	[-] integrate tidbit's bench to where ??
 
 [X] different combat music variation
 
