@@ -3,13 +3,14 @@
 
 This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
-(C) 2008 author is Illes Pal, all ideas here are part of the copyrighted property
+(C) 2009 author is Illes Pal Zoltan, all ideas here are part of the copyrighted property
 
 
 --------------------------------------------------------------------------------------
 
 		
 [ ] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
+
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
 		
 
@@ -27,9 +28,6 @@ bugs:
 	[?] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
 			Check if below one cube, is there cave? avoid the zone
 			Should be tested
-	[X] concurrency is still in rendering
-		[-] background thread rendering results in gaps!
-			Don't use bg rendering by default now
 
 [ ] dungeon dev
 	[ ] add skysphere switch to Cube??
@@ -56,6 +54,10 @@ bugs:
 		[ ] animation for doors! (export!)
 	
 
+	Continuous loading
+	[X] concurrency is still in rendering
+		[-] background thread rendering results in gaps!
+			Don't use bg rendering by default now
 	
 [X] integrate Carnivore Plant
 [X]	integrate beholder
