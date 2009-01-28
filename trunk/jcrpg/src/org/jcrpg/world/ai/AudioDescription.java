@@ -32,6 +32,7 @@ public class AudioDescription {
 	public String[] JOY = null;
 	public String[] DEATH = null;
 	public String[] ENVIRONMENTAL = null;
+	public String[] LEVELING = null;
 	
 	public static final String T_ENCOUNTER = "ENCOUNTER";
 	public static final String T_ATTACK = "ATTACK";
@@ -40,6 +41,7 @@ public class AudioDescription {
 	public static final String T_JOY = "JOY";
 	public static final String T_DEATH = "DEATH";
 	public static final String T_ENVIRONMENTAL = "ENVIRONMENTAL";
+	public static final String T_LEVELING = "LEVELING";
 	
 	public String getSound(String type)
 	{

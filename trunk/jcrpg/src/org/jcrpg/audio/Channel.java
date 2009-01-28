@@ -18,6 +18,8 @@
 
 package org.jcrpg.audio;
 
+import java.util.ArrayList;
+
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 
@@ -49,6 +51,9 @@ public class Channel implements TrackStateListener{
 		return this;
 	}
 	
+	public boolean unpauseMusicNeeded = false;
+	public ArrayList<Channel> pausedChannels;
+	
 	boolean looping = false;
 	public synchronized void setLooping()
 	{
@@ -57,7 +62,7 @@ public class Channel implements TrackStateListener{
 	
 	public synchronized void pauseTrack()
 	{
-		if (track!=null && track.isPlaying())
+		if (track!=null)// && track.isPlaying())
 			track.pause();
 	}
 	public synchronized void stopTrack()
@@ -151,6 +156,18 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void trackStopped(AudioTrack arg0) {
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### STOPPED TR$ACK : "+soundId);
+		
+		if (unpauseMusicNeeded)
+		{
+			if (pausedChannels!=null)
+			for (Channel c:pausedChannels)
+			{
+				if (c.playing && c.paused)
+					c.playTrack();
+			}
+			unpauseMusicNeeded = false;
+			pausedChannels = null;
+		}
 		
 		if (looping)
 		{

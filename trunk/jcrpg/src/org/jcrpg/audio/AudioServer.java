@@ -31,7 +31,6 @@ import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
 import com.jmex.audio.event.TrackStateListener;
-import com.jmex.audio.openal.OpenALSystem;
 
 public class AudioServer implements Runnable {
 
@@ -211,6 +210,15 @@ public class AudioServer implements Runnable {
 			c.pauseTrack();
 		}
 	}
+	public synchronized void playAllMusicChannels()
+	{
+		for (Channel c:musicChannels)
+		{
+			if (c.playing && c.paused)
+				c.playTrack();
+		}
+	}
+
 	public synchronized void stopAllMusicChannels()
 	{
 		for (Channel c:musicChannels)
@@ -506,6 +514,51 @@ public class AudioServer implements Runnable {
 			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
 		}
 	}
+
+	public synchronized void playLoadingAndPauseMusic(String id, String type)
+	{
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
+		if (id==null) return;
+		Channel c = getAvailableChannel();
+		c.unpauseMusicNeeded = true;
+		ArrayList<Channel> pausedChannels = new ArrayList<Channel>();
+		for (Channel musicChannel:musicChannels)
+		{
+			if (musicChannel.playing)
+			{
+				System.out.println("## PAUSING: "+musicChannel.soundId);
+				pausedChannels.add(musicChannel);
+			}
+		}
+		c.pausedChannels = pausedChannels;
+		pauseAllMusicChannels();
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Playing "+id);
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+				System.out.println("NEW TRACK");
+
+				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			}
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+			c.setTrack(id, track);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(0.5f, v);
+			} else
+			{
+				track.setTargetVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
+		}
+	}
+
 	
 	public synchronized void stopContinuous(String id, String type)
 	{

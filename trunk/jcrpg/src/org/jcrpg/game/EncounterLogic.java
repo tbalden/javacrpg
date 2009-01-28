@@ -708,13 +708,13 @@ public class EncounterLogic {
 	public void finishEncounterWin(EncounterInfo encounter)
 	{
 		processCommonFinishEvents();
-		gameLogic.core.audioServer.playLoading("victory","event");
 		gameLogic.core.uiBase.hud.mainBox.addEntry("Your party has prevailed!");
 		gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("Encounters finished", ColorRGBA.yellow));
 		gameLogic.endPlayerEncounters();
 		gameLogic.core.getKeyboardHandler().noToggleWindowByKey=false;
 		gameLogic.core.gameState.switchToEncounterScenario(false, null);
 		gameLogic.core.postEncounterWindow.setPageData((PartyInstance)encounter.playerIfPresent.instance, encounter);
+		gameLogic.core.audioServer.playLoadingAndPauseMusic("victory","event");
 		gameLogic.core.postEncounterWindow.toggle();
 	}
 

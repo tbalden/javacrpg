@@ -90,6 +90,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	 * How many attribute points are left.
 	 */
 	int skillPointsLeft = 0;
+	int backupSkillPointsLeft = 0;
 
 	public org.jcrpg.world.ai.abs.attribute.Attributes attributeValues = new FantasyAttributes(false);
 	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes(false);
@@ -193,6 +194,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		profession = core.gameState.getCharCreationRules().profInstances.get(member.description.professions.get(0));
 		attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE_ON_LEVELING;
 		skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE_ON_LEVELING;
+		backupSkillPointsLeft = skillPointsLeft;
 		lowestSkillValues = member.getSkills().copy();
 	}
 
@@ -322,20 +324,14 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	{
 		if (base.equals(skillValueTuner))
 		{
+			skillPointsLeft = backupSkillPointsLeft;
+			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+			skillPointsLeftLabel.activate();
+			
 			Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
-			member.setSkillLevel(skill, skillValueTuner.value);
-			skillGroupLeftLast.setUpdated(true);
-			int id = 0;
-			for (Object o:skillGroupLeftLast.objects)
-			{
-				if (o.equals(skillValueTuner.tunedObject))
-				{
-					// this is the id that's modified:
-					int modifier = profession.skillLearnModifier.getMultiplier(skill);
-					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+" ("+modifier+"x): "+skillValueTuner.value;
-				}
-				id++;
-			}
+			skillValueTuner.value = member.getSkillLevel(skill);
+			skillValueTuner.setUpdated(true);
+			skillValueTuner.deactivate();
 		}
 		return true;		
 	}
@@ -357,6 +353,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 				Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
 				member.setSkillLevel(skill, skillValueTuner.value);
 				skillGroupLeftLast.setUpdated(true);
+				backupSkillPointsLeft = skillPointsLeft;
 				int id = 0;
 				for (Object o:skillGroupLeftLast.objects)
 				{
@@ -398,6 +395,12 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 		} else
 		if (skillSelects.values().contains(base))
 		{
+			// making sure to reset available skill point to the backup (if the user didn't commit
+			// the previous tuning, then it's a must to restore the available skill points, otherwise
+			// it will just be equal to the committed state).
+			skillPointsLeft = backupSkillPointsLeft;
+			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+			skillPointsLeftLabel.activate();
 			//#################### MODIFYING A SKILL with skillValueTuner... 
 			ListSelect select = (ListSelect)base;
 			if (select.ids.length==0) return true;
@@ -410,6 +413,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = member.getSkillLevel(skill);
+			skillValueTuner.minValue = skillValueTuner.value;
 			skillValueTuner.setUpdated(true);
 			skillValueTuner.tunedObject = skill;
 			int modifier = 1;
