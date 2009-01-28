@@ -8,7 +8,6 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-		
 [ ] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
@@ -58,6 +57,9 @@ bugs:
 	[X] concurrency is still in rendering
 		[-] background thread rendering results in gaps!
 			Don't use bg rendering by default now
+
+
+[X] voice type selection to party setup with Magnulus  voices
 	
 [X] integrate Carnivore Plant
 [X]	integrate beholder

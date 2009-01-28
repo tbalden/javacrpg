@@ -23,6 +23,8 @@ import java.lang.reflect.Field;
 public class AudioDescription {
 
 	
+	public String formattedName = null;
+	
 	public String[] ENCOUNTER = null;
 	public String[] ATTACK = null;
 	public String[] FRIENDLY = null;
@@ -55,5 +57,9 @@ public class AudioDescription {
 		return audio[i];		
 	}
 	
-	
+
+	public String getFormattedName()
+	{
+		return formattedName==null?this.getClass().getSimpleName():formattedName;
+	}
 }
