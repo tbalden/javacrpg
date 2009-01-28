@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameLogicConstants;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
@@ -50,6 +51,7 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
+import org.jcrpg.world.ai.audio.desc.VoiceList;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -99,6 +101,7 @@ public class PartySetup extends PagedInputWindow {
 	TextButton readyChar;
 	TextInputField surName;
 	TextInputField foreName;
+	ListSelect voiceSelect = null;
 	// which skillgroup was used to enter modification ValueTuner
 	ListSelect skillGroupLeftLast = null;
 	Class<? extends SkillBase> skillTuned = null; 
@@ -186,15 +189,21 @@ public class PartySetup extends PagedInputWindow {
 	    		posY++;
 	    	}
 
-	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.4f,0.15f,0.2f,600f);
+	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.37f,0.15f,0.2f,600f);
 	    	addInput(1,pictureSelect);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.6f, 0.3f, 0.06f,600f,"Profession:",false); 
+	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
-	    	
+
+	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
+	    	{
+		    	voiceSelect = new ListSelect("voice", this,pageCreationFirst, 0.7f,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,voiceSelect);
+
 	    	
 	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.8f, 0.2f, 0.07f,400f,"Next Page");
 	    	addInput(1,nextPage);
@@ -247,6 +256,7 @@ public class PartySetup extends PagedInputWindow {
 	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15,false); 
 	    	addInput(2,surName);
 
+	    	
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	addInput(2,readyChar);
 	    	
@@ -351,7 +361,7 @@ public class PartySetup extends PagedInputWindow {
 		    	raceSelect.texts = names;
 		    	raceSelect.setUpdated(true);
 	    	}
-	    	
+	    	/*
 	    	{
 		    	int id = 0;
 		    	String[] ids = new String[charCreationRule.selectableProfessions.size()];
@@ -366,7 +376,7 @@ public class PartySetup extends PagedInputWindow {
 		    	professionSelect.ids = ids;
 		    	professionSelect.texts = names;
 		    	professionSelect.setUpdated(true);
-	    	}
+	    	}*/
 		}
 		if (currentPage==2)
 		{
@@ -680,14 +690,14 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
-			// TODO audio selection
 			{
 				int i = genderSelect.getSelection();
 				int id = Integer.parseInt(genderSelect.ids[i]);
 				personWithGenderAndRace.genderType = id;
 			}
-			personWithGenderAndRace.setAudioDesc(new AudioDescription());
-			personWithGenderAndRace.getAudioDesc().PAIN = new String[]{"humanoid/humanoid_pain_1","humanoid/humanoid_pain_2"};
+			personWithGenderAndRace.setAudioDesc((AudioDescription)voiceSelect.getSelectedObject());
+			
+			/*personWithGenderAndRace.getAudioDesc().PAIN = new String[]{"humanoid/humanoid_pain_1","humanoid/humanoid_pain_2"};
 			personWithGenderAndRace.getAudioDesc().JOY = new String[]{"humanoid/humanoid_joy_male"};
 			personWithGenderAndRace.getAudioDesc().DEATH = new String[]{"humanoid/humanoid_death"};
 			if (personWithGenderAndRace.genderType==EntityDescription.GENDER_FEMALE)
@@ -695,7 +705,7 @@ public class PartySetup extends PagedInputWindow {
 				personWithGenderAndRace.getAudioDesc().PAIN = new String[]{"humanoid/humanoid_pain_female1","humanoid/humanoid_pain_female2"};
 				personWithGenderAndRace.getAudioDesc().JOY = new String[]{"humanoid/humanoid_joy_female1","humanoid/humanoid_joy_female2"};
 				personWithGenderAndRace.getAudioDesc().DEATH = new String[]{"humanoid/humanoid_death_female"};
-			}
+			}*/
 			
 			if (professionSelect.texts.length==0) return true;
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));
@@ -875,6 +885,31 @@ public class PartySetup extends PagedInputWindow {
 			pictureSelect.picturesPath = path;
 			pictureSelect.setUpdated(true);
 			pictureSelect.deactivate();
+			
+			VoiceList list = VoiceList.male;
+			if (id==EntityDescription.GENDER_FEMALE) 
+			{
+				list = VoiceList.female;
+			}
+			Object[] audioDescList = new Object[list.list.size()];
+			String[] ids = new String[list.list.size()];
+			String[] texts = new String[list.list.size()];
+			int count=0;
+			for (AudioDescription desc:list.list)
+			{
+				audioDescList[count] = desc;
+				ids[count] = ""+count;
+				texts[count] = desc.getFormattedName();
+				count++;
+			}
+			voiceSelect.objects = audioDescList;
+			voiceSelect.texts = texts;
+			voiceSelect.ids = ids;
+			voiceSelect.setSelected(0);
+			voiceSelect.setUpdated(true);
+			voiceSelect.activate();
+			voiceSelect.deactivate();
+			
 		} else
 		if (base.equals(skillValueTuner))
 		{
@@ -893,9 +928,22 @@ public class PartySetup extends PagedInputWindow {
 		}
 		return true;
 	}
+	
+	public void playVoiceType(AudioDescription desc)
+	{
+		String snd = desc.getSound(AudioDescription.T_ATTACK);
+		if (snd==null) snd = desc.getSound(AudioDescription.T_JOY);
+		if (snd!=null)
+			J3DCore.getInstance().audioServer.playLoading(snd,"ai");
+	}
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
+		if (base.equals(voiceSelect))
+		{
+			AudioDescription desc  = (AudioDescription)voiceSelect.getSelectedObject();
+			playVoiceType(desc);
+		} else
 		if (base.equals(professionSelect))
 		{
 	    	if (message.equals("fake")) {
@@ -957,6 +1005,11 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
+		if (base.equals(voiceSelect))
+		{
+			AudioDescription desc  = (AudioDescription)voiceSelect.getSelectedObject();
+			playVoiceType(desc);
+		} else
 		if (base.equals(addCharSelect))
 		{
 			int s = addCharSelect.getSelection();
