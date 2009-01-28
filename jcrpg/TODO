@@ -8,10 +8,12 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] scan for good portraits in Grumbel's new stuff
+
 [ ] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
-		
+
 
 [X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
 	general positioning (wrong direction) at generation is bad too i think

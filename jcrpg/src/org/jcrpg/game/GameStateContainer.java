@@ -623,6 +623,11 @@ public class GameStateContainer {
 				{
 					cycleLevelingCheckingInProgress = true;
 					J3DCore.getInstance().audioServer.playEventMusic("leveling", true);
+					String sound = i.getSound(AudioDescription.T_LEVELING);
+					if (sound!=null)
+					{
+						J3DCore.getInstance().audioServer.playLoading(sound, "ai");
+					}
 				}
 				levelingInProgress = true;
 				return;

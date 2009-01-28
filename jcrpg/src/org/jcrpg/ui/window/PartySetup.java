@@ -115,6 +115,7 @@ public class PartySetup extends PagedInputWindow {
 	 * How many attribute points are left.
 	 */
 	int skillPointsLeft = 0;
+	int backupSkillPointsLeft = 0;
 	
 	// character creation result classes
 	public MemberPerson personWithGenderAndRace = null;
@@ -586,6 +587,7 @@ public class PartySetup extends PagedInputWindow {
 					id++;
 				}
 				setSelected(skillGroupLeftLast);
+				backupSkillPointsLeft = skillPointsLeft;
 			} else 
 			{
 				// ################ Tuning the skill level value, modifying pointsLeft textlabel
@@ -623,6 +625,7 @@ public class PartySetup extends PagedInputWindow {
 			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("GROUP = "+group+ " - "+count);
 			skillValueTuner.setEnabled(true);
 			skillValueTuner.value = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
+			skillValueTuner.minValue = skillValueTuner.value;
 			skillValueTuner.setUpdated(true);
 			skillValueTuner.tunedObject = skill;
 			int modifier = 1;
@@ -676,6 +679,7 @@ public class PartySetup extends PagedInputWindow {
 			resetForms();
 			attrPointsLeft = GameLogicConstants.ATTRIBUTE_POINTS_TO_USE;
 			skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE;
+			backupSkillPointsLeft = skillPointsLeft;
 			attrPointsLeftLabel.text = attrPointsLeft + " points left.";
 			attrPointsLeftLabel.activate();
 			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
@@ -913,18 +917,16 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(skillValueTuner))
 		{
-			personWithGenderAndRace.getMemberSkills().setSkillValue((Class<? extends SkillBase>)skillValueTuner.tunedObject, skillValueTuner.value);
-			skillGroupLeftLast.setUpdated(true);
-			int id = 0;
-			for (Object o:skillGroupLeftLast.objects)
-			{
-				if (o.equals(skillValueTuner.tunedObject))
-				{
-					// this is the id that's modified:
-					skillGroupLeftLast.texts[id] = Language.v("skills."+((Class)o).getSimpleName())+ ": "+skillValueTuner.value;
-				}
-				id++;
-			}
+			skillPointsLeft = backupSkillPointsLeft;
+			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+			skillPointsLeftLabel.activate();
+			
+			Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+			int level = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
+			
+			skillValueTuner.value = level;
+			skillValueTuner.setUpdated(true);
+			skillValueTuner.deactivate();
 		}
 		return true;
 	}
