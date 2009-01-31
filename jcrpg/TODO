@@ -8,19 +8,18 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
-[ ] scan for good portraits in Grumbel's new stuff
 
 [ ] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
+
+[ ] add different levels for generation of groups at start .. 
 
 
 [X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
 	general positioning (wrong direction) at generation is bad too i think
 	[ ] better fix --> EconomyContainer.isOccupied is not returning Population though it's there! TreeLocator bug?
 		if fixed, remove HumanoidEntityDescription's temporary fix
-
-[ ] add different levels for generation of groups at start .. 
 
 [ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
 
@@ -60,6 +59,8 @@ bugs:
 		[-] background thread rendering results in gaps!
 			Don't use bg rendering by default now
 
+
+[X] scan for good portraits in Grumbel's new stuff
 
 [X] voice type selection to party setup with Magnulus  voices
 	
