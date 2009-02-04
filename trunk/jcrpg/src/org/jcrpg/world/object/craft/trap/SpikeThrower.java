@@ -25,10 +25,16 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.abs.skill.martial.Throwing;
 import org.jcrpg.world.object.BonusSkillActFormDesc;
+import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.InventoryListElement;
+import org.jcrpg.world.object.ObjInstance;
+import org.jcrpg.world.object.ObjList;
 import org.jcrpg.world.object.RawMaterial;
+import org.jcrpg.world.object.combat.throwing.ThrowingKnife;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
 public class SpikeThrower extends TrapAndLock {
+
 
 	public SpikeThrower() {
 		super(1,1);
@@ -61,6 +67,19 @@ public class SpikeThrower extends TrapAndLock {
 	public HashMap<Class<? extends RawMaterial>, Integer> getMaterialNeeds() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public EntityObjInventory getInventory() {
+		inv.add(new ObjInstance(ObjList.getInstance(ThrowingKnife.class)));
+		return inv;
+	}
+	
+	EntityObjInventory inv = new EntityObjInventory(null);
+	
+	@Override
+	public InventoryListElement getUsedObject() {
+		InventoryListElement element = new InventoryListElement(inv,ObjList.getInstance(ThrowingKnife.class)); 
+		return element;
 	}
 
 }

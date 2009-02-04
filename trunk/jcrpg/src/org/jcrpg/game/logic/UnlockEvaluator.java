@@ -18,15 +18,27 @@
 
 package org.jcrpg.game.logic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.jcrpg.game.TurnActTurnState;
+import org.jcrpg.game.element.TurnActMemberChoice;
+import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.EncounterUnitData;
+import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.Elementarism;
 import org.jcrpg.world.ai.abs.skill.physical.LocksAndTraps;
+import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
 public class UnlockEvaluator {
@@ -42,9 +54,10 @@ public class UnlockEvaluator {
 		public int chanceOfSkill;
 		public int chanceOfSpell;
 		public int chanceOfForce;
+		public int trapWorldX,trapWorldY,trapWorldZ;
 	}
 	
-	public static UnlockEvaluationInfo getEvaluationInfo(EntityFragment fragment, TrapAndLock lock)
+	public static UnlockEvaluationInfo getEvaluationInfo(Cube enteredCube, EntityFragment fragment, TrapAndLock lock)
 	{
 		UnlockEvaluationInfo info = new UnlockEvaluationInfo();
 		
@@ -57,6 +70,10 @@ public class UnlockEvaluator {
 		int sumSpellLevel = 0;
 		int members = 0;
 		int sumOfStrength = 0;
+		
+		info.trapWorldX = enteredCube.x;
+		info.trapWorldY = enteredCube.y;
+		info.trapWorldZ = enteredCube.z;
 		
 		Class<? extends SkillBase>  b = lock.getAdditionalDisarmSkill();
 		if (b==null) info.additionalSkillOkay = true;
@@ -165,9 +182,65 @@ public class UnlockEvaluator {
 			ratio = rollSuccessRatio(seed, info.chanceOfSpell);
 		}
 		TrapDisarmResult result = new TrapDisarmResult();
+
 		if (ratio==1)
 		{
 			result.success = true;
+		}
+		
+		if ((actionType==UnlockAction.UNLOCK_ACTION_TYPE_MAGICAL || actionType==UnlockAction.UNLOCK_ACTION_TYPE_PHYSICAL) && !result.success || actionType==UnlockAction.UNLOCK_ACTION_TYPE_FORCE)
+		{
+			TurnActTurnState state = new TurnActTurnState(null,null);
+			TurnActMemberChoice choice = new TurnActMemberChoice();
+			choice.member = EntityMemberInstance.getTrapFakeMember();
+			choice.member.inventory = info.lock.getInventory();
+			choice.usedObject = info.lock.getUsedObject();
+			EncounterUnitData d = new EncounterUnitData(info.fragment,info.fragment);
+			d.visibleForm = new VisibleLifeForm("",choice.member.description,null,0);
+			d.visibleForm.worldX = info.trapWorldX;
+			d.visibleForm.worldY = info.trapWorldY;
+			d.visibleForm.worldZ = info.trapWorldZ;
+			RenderedMovingUnit unit = new RenderedMovingUnit("-",info.trapWorldX,info.trapWorldY,info.trapWorldZ,new org.jcrpg.threed.scene.model.Model[0]);
+			unit.form = d.visibleForm;
+			d.visibleForm.unit = unit;
+			choice.member.encounterData = d;
+			
+			// calculating trap skill power
+			int power = (int)(ratio*10*info.lock.level);
+			
+			choice.skill = new SkillInstance(info.lock.getSkillActFormBonusEffectTypes().get(0).form.skill.getClass(),power);
+			choice.skillActForm = info.lock.getSkillActFormBonusEffectTypes().get(0).form;
+			
+			// target member
+			int id = HashUtil.mix(seed,0,0)%info.fragment.getFollowingMembers().size();
+			PersistentMemberInstance i = info.fragment.getFollowingMembers().get(id);			
+			choice.target = new EncounterUnitData(info.fragment,i);
+			
+			
+			ArrayList<EntityMemberInstance> list = new ArrayList<EntityMemberInstance>();
+			list.add(i);
+			choice.target.appendNewMembers(list);
+			choice.targetMember = i;
+			
+			state.memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
+			
+			J3DCore.getInstance().gameState.gameLogic.encounterLogic.handleChoiceEffects(choice);
+			
+			Impact imp = EvaluatorBase.evaluateActFormSuccessImpact(seed, choice, state);
+			if (imp.messages!=null)
+			for (TextEntry e:imp.messages)
+			{
+				System.out.println("e."+e.text);
+			}
+			result.impact = imp;
+			// TODO IMPACT, effect etc.
+			for (TextEntry m:imp.messages)
+			{
+				J3DCore.getInstance().uiBase.hud.mainBox.addEntry(m);
+			}
+			choice.target.applyImpactUnit(imp);
+			J3DCore.getInstance().gameState.gameLogic.encounterLogic.handleImpactEffects(imp, choice);
+			
 		}
 		result.ratio = ratio;
 		return result;

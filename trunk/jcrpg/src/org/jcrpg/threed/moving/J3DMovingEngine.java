@@ -134,7 +134,7 @@ public class J3DMovingEngine {
 	
 		for (int i=0; i<n.length; i++) {
 			n[i].setLocalTranslation(new Vector3f(unit.c3dX,unit.c3dY,unit.c3dZ));
-			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.gameState.getEncounterPositions().origoX,core.gameState.getEncounterPositions().origoY,core.gameState.getEncounterPositions().origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
+			n[i].getLocalTranslation().subtractLocal(new Vector3f(core.gameState.getCurrentRenderPositions().origoX,core.gameState.getCurrentRenderPositions().origoY,core.gameState.getCurrentRenderPositions().origoZ).mult(J3DCore.CUBE_EDGE_SIZE));
 			Quaternion q = new Quaternion();
 			Quaternion qC = null;
 			if (n[i].model.noSpecialSteepRotation) {
@@ -457,11 +457,13 @@ public class J3DMovingEngine {
 					
 					
 					if (unit.internal) {
-						core.encounterExtRootNode.attachChild((Node)realPooledNode);
+						core.gameState.getCurrentStandingEngine().extRootNode.
+							attachChild((Node)realPooledNode);
 						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 					} else 
 					{
-						core.encounterExtRootNode.attachChild((Node)realPooledNode);
+						core.gameState.getCurrentStandingEngine().extRootNode.
+							attachChild((Node)realPooledNode);
 						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
@@ -514,9 +516,9 @@ public class J3DMovingEngine {
 	 */
 	public void updateScene(float timePerFrame)
 	{
-		playerFakeForm.worldX = core.gameState.getEncounterPositions().viewPositionX;
-		playerFakeForm.worldY = core.gameState.getEncounterPositions().viewPositionY;
-		playerFakeForm.worldZ = core.gameState.getEncounterPositions().viewPositionZ;
+		playerFakeForm.worldX = core.gameState.getCurrentRenderPositions().viewPositionX;
+		playerFakeForm.worldY = core.gameState.getCurrentRenderPositions().viewPositionY;
+		playerFakeForm.worldZ = core.gameState.getCurrentRenderPositions().viewPositionZ;
 		
 		ArrayList<Object[]> toEnd = new ArrayList<Object[]>();
 		for (EffectProgram p:effectNodes.keySet())
@@ -529,10 +531,22 @@ public class J3DMovingEngine {
 				{
 					n.startedPlaying = true;
 					VisibleLifeForm target = n.sourceForm==null?playerFakeForm:n.sourceForm;
-					Vector3f pos = calculatePositionVector(null,target,true);
+					Vector3f pos = null;
+					if (target.worldX==playerFakeForm.worldX && target.worldY==playerFakeForm.worldY && target.worldZ==playerFakeForm.worldZ)
+					{
+						target.worldZ -= 1;
+						// giving a little flight from below
+						pos = calculatePositionVector(null,target,true);
+						target.worldZ += 1; // TODO the knife doesnt show
+					} else
+					{
+						pos = calculatePositionVector(null,target,true);	
+					}
+					
 					n.setPosition(pos, null);
 					n.effectStartTime = System.currentTimeMillis();
-					core.encounterExtRootNode.attachChild(n);
+					core.gameState.getCurrentStandingEngine().extRootNode.
+						attachChild(n);
 					core.getRootNode1().updateRenderState();
 				}
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
@@ -546,7 +560,7 @@ public class J3DMovingEngine {
 				
 				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
 				float angleTurn = n.prevDisplacement==null?0:mVec.angleBetween(n.prevDisplacement);
-				System.out.println("ANG: "+angleTurn);
+				System.out.println("ANG: "+angleTurn +" DIST = "+prevDist);
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {
@@ -736,11 +750,11 @@ public class J3DMovingEngine {
 	 */
 	public Vector3f calculatePositionVector(RenderedMovingUnit unit, VisibleLifeForm target, boolean staticCalc)
 	{
-		float eX = (target.worldX - (core.gameState.getEncounterPositions().origoX))*J3DCore.CUBE_EDGE_SIZE;
-		float eY = (target.worldY - (core.gameState.getEncounterPositions().origoY))*J3DCore.CUBE_EDGE_SIZE;
-		int origoZ = core.gameState.getEncounterPositions().origoZ;
+		float eX = (target.worldX - (core.gameState.getCurrentRenderPositions().origoX))*J3DCore.CUBE_EDGE_SIZE;
+		float eY = (target.worldY - (core.gameState.getCurrentRenderPositions().origoY))*J3DCore.CUBE_EDGE_SIZE;
+		int origoZ = core.gameState.getCurrentRenderPositions().origoZ;
 		int endCoordZCorrect = (origoZ-(target.worldZ-origoZ));
-		float eZ = ( endCoordZCorrect - (core.gameState.getEncounterPositions().origoZ) )*J3DCore.CUBE_EDGE_SIZE;
+		float eZ = ( endCoordZCorrect - (core.gameState.getCurrentRenderPositions().origoZ) )*J3DCore.CUBE_EDGE_SIZE;
 		
 		if (unit!=null)
 		{

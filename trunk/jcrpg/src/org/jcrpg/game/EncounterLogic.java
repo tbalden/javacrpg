@@ -18,7 +18,6 @@
 package org.jcrpg.game;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -193,59 +192,7 @@ public class EncounterLogic {
 	}
 	
 
-	public class TurnActTurnState {
-		public PlayerActChoiceInfo choiceInfo = null;
-		public EncounterInfo encounter;
-		public int nextEventCount = -1;
-		//public int maxEventCount = 0;
-		
-		public Object currentActor = null;
-		public Object currentTarget = null;
-		
-		public HashMap<EntityMemberInstance, TurnActMemberChoice> memberChoices = new HashMap<EntityMemberInstance, TurnActMemberChoice>();
-		
-		public ArrayList<PlannedTurnActEvent> plan = new ArrayList<PlannedTurnActEvent>();
-		public boolean playing = false;
-		public long playStart = 0;
-		public long maxTime = 0;
-		
-		public TurnActTurnState(EncounterInfo encounter, PlayerActChoiceInfo info)
-		{
-			this.choiceInfo = info;
-			this.encounter = encounter;
-		}
-		
-		public PlannedTurnActEvent getCurrentEvent()
-		{
-			return plan.get(nextEventCount);
-		}
-		
-		public void highlightActor(boolean on)
-		{
-			if (currentActor==null) return;
-			if (currentActor instanceof EntityMemberInstance)
-			{
-				EntityMemberInstance i = (EntityMemberInstance)currentActor;
-				if (i.parentFragment == gameLogic.core.gameState.player.theFragment)
-				{
-					gameLogic.core.uiBase.hud.characters.highlightCharacter(i, on);
-				}
-			}
-		}
-		public void highlightTarget(boolean on)
-		{
-			if (currentTarget==null) return;
-			if (currentTarget instanceof EntityMemberInstance)
-			{
-				EntityMemberInstance i = (EntityMemberInstance)currentTarget;
-				if (i.parentFragment == gameLogic.core.gameState.player.theFragment)
-				{
-					gameLogic.core.uiBase.hud.characters.targetCharacter(i, on);
-				}
-			}
-		}
-		
-	}
+
 	public class PlannedTurnActEvent
 	{
 		public TurnActMemberChoice choice = null;
@@ -462,6 +409,184 @@ public class EncounterLogic {
 		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
 		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
 	}
+	
+	
+	/**
+	 * Visualize/play audio upon starting a choice.
+	 * @param choice
+	 */
+	public void handleChoiceEffects(TurnActMemberChoice choice)
+	{
+		EffectProgram eProgram = choice.getEffectProgram();
+		if (eProgram!=null)
+		{
+			try 
+			{
+				gameLogic.core.mEngine.playEffectProgram(eProgram, choice.member.encounterData.visibleForm, choice.target.visibleForm);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		
+		if (choice.isDestructive()) {
+			String sound = choice.member.getSound(AudioDescription.T_ATTACK);
+			if (sound!=null)
+			{
+				gameLogic.core.audioServer.playLoading(sound, "ai");
+			}
+		}
+		String sound = choice.skillActForm.getSound();
+		if (sound!=null)
+		{
+			gameLogic.core.audioServer.playLoading(sound, "skills");
+		}
+		if (choice.member.isRendered()) {
+			String anim = choice.skillActForm.animationType;
+			choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
+		}
+	}
+	
+	
+	/**
+	 * Visualize/play sounds for a group if impacts
+	 * @param impact
+	 * @param choice
+	 */
+	public void handleImpactEffects(Impact impact, TurnActMemberChoice choice)
+	{
+		if (impact.additionalEffectsToPlay!=null)
+		{
+			for (BonusSkillActFormDesc desc:impact.additionalEffectsToPlay)
+			{
+				EffectProgram ePB = desc.form.getEffectProgram();
+				System.out.println(".....................");
+				System.out.println("....................."+ePB);
+				System.out.println(".....................");
+				
+				if (ePB!=null)
+				{
+					try 
+					{
+						gameLogic.core.mEngine.playEffectProgram(ePB, choice.member.encounterData.visibleForm, choice.target.visibleForm);
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		for (TextEntry m:impact.messages)
+		{
+			gameLogic.core.uiBase.hud.mainBox.addEntry(m);
+		}
+		if (impact.success)
+		{
+			gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("HIT!",ColorRGBA.red));
+		} else
+		{
+			gameLogic.core.uiBase.hud.mainBox.addEntry("Miss.");
+		}
+		if (choice.usedObject!=null)
+		{
+			if (choice.usedObject.description instanceof Weapon)
+			{
+				if (impact.success) // check hit
+				{
+					String sound = ((Weapon)choice.usedObject.description).getHitSound();
+					if (sound!=null)
+					{
+						gameLogic.core.audioServer.playLoading(sound, "objects");
+					}
+					sound = null;											
+					
+				} else
+				{
+					String sound = ((Weapon)choice.usedObject.description).getMissSound();
+					if (sound!=null)
+					{
+						gameLogic.core.audioServer.playLoading(sound, "objects");
+					}
+					
+				}
+			}
+		}
+		choice.member.applyImpactUnit(impact.actCost);
+		
+		if (choice.targetMember.encounterData!=null && choice.targetMember.encounterData.visibleForm!=null)
+		{
+			turnCameraToUnit(choice.targetMember.encounterData);
+		}
+		
+		if (impact.success) {
+			
+			int[] counters = choice.target.applyImpactUnit(impact);
+			for (TextEntry m:impact.applyMessages)
+			{
+				gameLogic.core.uiBase.hud.mainBox.addEntry(m);
+			}
+			if (choice.member instanceof PersistentMemberInstance)
+			{
+				// increasing kill/neut. counters
+				((PersistentMemberInstance)choice.member).killCount+=counters[0];
+				((PersistentMemberInstance)choice.member).neutralizeCount+=counters[1];
+			}
+			
+			if (choice.isWithImpact())
+			{
+				String sound = null;
+				if (!choice.target.destroyed && choice.isDestructive())
+				{											
+					sound = choice.target.getSound(AudioDescription.T_PAIN);
+				}
+				if (!choice.target.destroyed && choice.isConstructive())
+				{
+					sound = choice.target.getSound(AudioDescription.T_JOY);
+				}
+				if (choice.target.destroyed)
+				{
+					sound = choice.target.getSound(AudioDescription.T_DEATH);
+				}
+				if (sound!=null)
+				{
+					gameLogic.core.audioServer.playLoading(sound, "ai");
+				} else
+				{
+					// party group might be effected in this case, check for
+					// collected sounds in impact
+					if (impact.soundsToPlay!=null && impact.soundsToPlay.size()>0)
+					{
+						sound = impact.soundsToPlay.get(0);
+						gameLogic.core.audioServer.playLoading(sound, "ai");
+					}
+				}
+			}
+			if (!choice.target.destroyed)
+			{
+				if (choice.target.isRendered()) {
+					if (choice.isDestructive()) {
+						choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+					}
+				}
+				choice.target.updateNameInTurnActPhase();
+			} else
+			{
+				// destroyed...
+				if (choice.target.isRendered()) {
+					choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
+				}
+			}
+		} else
+		{
+			if (choice.target.isRendered()) {
+				if (choice.isDestructive()) {
+					choice.target.visibleForm.unit.startDefense(choice.member.encounterData.visibleForm,null);
+				}
+			}
+		}
+		
+	}
 
 	public void checkTurnActCallbackNeed()
 	{
@@ -493,132 +618,8 @@ public class EncounterLogic {
 								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
 								//impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);
-								if (impact.additionalEffectsToPlay!=null)
-								{
-									for (BonusSkillActFormDesc desc:impact.additionalEffectsToPlay)
-									{
-										EffectProgram ePB = desc.form.getEffectProgram();
-										if (ePB!=null)
-										{
-											try 
-											{
-												gameLogic.core.mEngine.playEffectProgram(ePB, choice.member.encounterData.visibleForm, choice.target.visibleForm);
-											} catch (Exception ex)
-											{
-												ex.printStackTrace();
-											}
-										}
-									}
-								}
+								handleImpactEffects(impact, choice);
 								
-								for (TextEntry m:impact.messages)
-								{
-									gameLogic.core.uiBase.hud.mainBox.addEntry(m);
-								}
-								if (impact.success)
-								{
-									gameLogic.core.uiBase.hud.mainBox.addEntry(new TextEntry("HIT!",ColorRGBA.red));
-								} else
-								{
-									gameLogic.core.uiBase.hud.mainBox.addEntry("Miss.");
-								}
-								if (choice.usedObject!=null)
-								{
-									if (choice.usedObject.description instanceof Weapon)
-									{
-										if (impact.success) // check hit
-										{
-											String sound = ((Weapon)choice.usedObject.description).getHitSound();
-											if (sound!=null)
-											{
-												gameLogic.core.audioServer.playLoading(sound, "objects");
-											}
-											sound = null;											
-											
-										} else
-										{
-											String sound = ((Weapon)choice.usedObject.description).getMissSound();
-											if (sound!=null)
-											{
-												gameLogic.core.audioServer.playLoading(sound, "objects");
-											}
-											
-										}
-									}
-								}
-								choice.member.applyImpactUnit(impact.actCost);
-								
-								if (choice.targetMember.encounterData.visibleForm!=null)
-								{
-									turnCameraToUnit(choice.targetMember.encounterData);
-								}
-								
-								if (impact.success) {
-									
-									int[] counters = choice.target.applyImpactUnit(impact);
-									for (TextEntry m:impact.applyMessages)
-									{
-										gameLogic.core.uiBase.hud.mainBox.addEntry(m);
-									}
-									if (choice.member instanceof PersistentMemberInstance)
-									{
-										// increasing kill/neut. counters
-										((PersistentMemberInstance)choice.member).killCount+=counters[0];
-										((PersistentMemberInstance)choice.member).neutralizeCount+=counters[1];
-									}
-									
-									if (choice.isWithImpact())
-									{
-										String sound = null;
-										if (!choice.target.destroyed && choice.isDestructive())
-										{											
-											sound = choice.target.getSound(AudioDescription.T_PAIN);
-										}
-										if (!choice.target.destroyed && choice.isConstructive())
-										{
-											sound = choice.target.getSound(AudioDescription.T_JOY);
-										}
-										if (choice.target.destroyed)
-										{
-											sound = choice.target.getSound(AudioDescription.T_DEATH);
-										}
-										if (sound!=null)
-										{
-											gameLogic.core.audioServer.playLoading(sound, "ai");
-										} else
-										{
-											// party group might be effected in this case, check for
-											// collected sounds in impact
-											if (impact.soundsToPlay!=null && impact.soundsToPlay.size()>0)
-											{
-												sound = impact.soundsToPlay.get(0);
-												gameLogic.core.audioServer.playLoading(sound, "ai");
-											}
-										}
-									}
-									if (!choice.target.destroyed)
-									{
-										if (choice.target.isRendered()) {
-											if (choice.isDestructive()) {
-												choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
-											}
-										}
-										choice.target.updateNameInTurnActPhase();
-									} else
-									{
-										// destroyed...
-										if (choice.target.isRendered()) {
-											choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
-										}
-									}
-								} else
-								{
-									if (choice.target.isRendered()) {
-										if (choice.isDestructive()) {
-											choice.target.visibleForm.unit.startDefense(choice.member.encounterData.visibleForm,null);
-										}
-									}
-								}
 							}
 						} else
 						{
@@ -934,34 +935,8 @@ public class EncounterLogic {
 							}
 						}
 						
-						EffectProgram eProgram = choice.getEffectProgram();
-						if (eProgram!=null)
-						{
-							try 
-							{
-								gameLogic.core.mEngine.playEffectProgram(eProgram, choice.member.encounterData.visibleForm, choice.target.visibleForm);
-							} catch (Exception ex)
-							{
-								ex.printStackTrace();
-							}
-						}
+						handleChoiceEffects(choice);
 						
-						if (choice.isDestructive()) {
-							String sound = choice.member.getSound(AudioDescription.T_ATTACK);
-							if (sound!=null)
-							{
-								gameLogic.core.audioServer.playLoading(sound, "ai");
-							}
-						}
-						String sound = choice.skillActForm.getSound();
-						if (sound!=null)
-						{
-							gameLogic.core.audioServer.playLoading(sound, "skills");
-						}
-						if (choice.member.isRendered()) {
-							String anim = choice.skillActForm.animationType;
-							choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
-						}
 					}
 					
 					turnActTurnState.maxTime = event.minTime;

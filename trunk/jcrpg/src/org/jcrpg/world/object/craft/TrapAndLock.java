@@ -18,17 +18,16 @@
 
 package org.jcrpg.world.object.craft;
 
-import org.jcrpg.game.logic.Impact;
-import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.UnlockEvaluator;
 import org.jcrpg.game.logic.UnlockEvaluator.TrapDisarmResult;
 import org.jcrpg.game.logic.UnlockEvaluator.UnlockAction;
 import org.jcrpg.game.logic.UnlockEvaluator.UnlockEvaluationInfo;
-import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.object.BonusObject;
+import org.jcrpg.world.object.EntityObjInventory;
+import org.jcrpg.world.object.InventoryListElement;
 
 public abstract class TrapAndLock extends Craft implements BonusObject {
 
@@ -78,6 +77,15 @@ public abstract class TrapAndLock extends Craft implements BonusObject {
 	 */
 	public abstract Class<? extends SkillBase> getAdditionalDisarmSkill();
 	
+	public InventoryListElement getUsedObject()
+	{
+		return null;
+	}
+	
+	public EntityObjInventory getInventory()
+	{
+		return null;
+	}
 
 	public boolean tryIdentification(UnlockEvaluationInfo info, UnlockAction actionType)
 	{
@@ -88,19 +96,6 @@ public abstract class TrapAndLock extends Craft implements BonusObject {
 	public TrapDisarmResult tryDisarming(UnlockEvaluationInfo info, UnlockAction actionType)
 	{
 		TrapDisarmResult result = UnlockEvaluator.evaluate(info, actionType);
-		if (!result.success || actionType==UnlockAction.UNLOCK_ACTION_TYPE_FORCE)
-		{
-			// TODO impact calculation - extract from EvaluatorBase!
-			//ArrayList<E> getSkillActFormBonusEffectTypes();
-			result.impact = new Impact();
-			for (EntityMemberInstance i:info.fragment.getFollowingMembers())
-			{
-				ImpactUnit u = new ImpactUnit();
-				u.orderedImpactPoints[0] = -2;
-				result.impact.targetImpact.put(i,u);
-			}
-			
-		}
 		return result;
 	}
 	

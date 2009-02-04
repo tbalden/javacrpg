@@ -26,6 +26,7 @@ import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
@@ -37,6 +38,7 @@ import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.SkillBase.NoActForm;
 import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.ai.abs.state.StateEffect;
+import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
@@ -73,7 +75,21 @@ public class EntityMemberInstance {
 	public InterceptionSkill behaviorSkill = null;
 	
 	public EntityInstance instance = null;
-
+	
+	static EntityMember fakeLock = new EntityMember("---",MammalBody.class,null);
+	static {
+	}
+	public static EntityMemberInstance getTrapFakeMember()
+	{
+		EntityMemberInstance m = new EntityMemberInstance();
+		m.description = fakeLock;
+		return m;
+		
+	}
+	private EntityMemberInstance() {
+	
+	
+	}
 	public EntityMemberInstance(EntityFragment parent, EntityInstance instance, EntityMember description, int numericId) {
 		super();
 		this.description = description;
@@ -181,6 +197,7 @@ public class EntityMemberInstance {
 	/** Get original unbonused attributes. */
 	public Attributes getAttributesVanilla()
 	{
+		if (instance==null) return new FantasyAttributes(true); 
 		Attributes attributes = description.getAttributes(instance!=null?instance.description:null);
 		return attributes;
 	}

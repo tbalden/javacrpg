@@ -353,7 +353,7 @@ public class EncounterUnitData
 	
 	public boolean isRendered()
 	{
-		if (visibleForm==null) return false;
+		if (visibleForm==null || visibleForm.unit == null) return false;
 		return !visibleForm.notRendered;
 	}
 	
