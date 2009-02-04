@@ -22,7 +22,6 @@ import java.util.logging.Level;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.Impact;
-import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.UnlockEvaluator;
 import org.jcrpg.game.logic.UnlockEvaluator.TrapDisarmResult;
 import org.jcrpg.game.logic.UnlockEvaluator.UnlockAction;
@@ -40,7 +39,6 @@ import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.layout.SimpleLayout;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityInstance;
-import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.object.craft.TrapAndLock;
 
@@ -221,11 +219,12 @@ public class LockInspectionWindow extends PagedInputWindow {
 	public void setInspectableStorageObjectData(EntityFragment initiator, ArrayList<Side> triggerSides, StorageObjectHandler handler,Cube enteredCube, RenderedCube renderedEnteredCube, Cube leftCube, RenderedCube renderedLeftCube, EntityInstance owner, TrapAndLock lock)
 	{
 		this.initiator = initiator;
+		openingTriggered = false;
 		if (lock!=null)
 		{
 			isUnlocked = false;
 			isIdentified = false;
-			unlockEvalInfo = UnlockEvaluator.getEvaluationInfo(initiator, lock);
+			unlockEvalInfo = UnlockEvaluator.getEvaluationInfo(enteredCube,initiator, lock);
 			chanceOfForceSuccess.text = ""+unlockEvalInfo.chanceOfForce+"%";
 			chanceOfForceSuccess.deactivate();
 			chanceOfSpellSuccess.text = ""+unlockEvalInfo.chanceOfSpell+"%";
@@ -260,10 +259,20 @@ public class LockInspectionWindow extends PagedInputWindow {
 	
 	public boolean isUnlocked = false;
 	public boolean isIdentified = false;
+	
+	public boolean openingTriggered = false;
 
 	
     @Override
     public boolean inputUsed(InputBase base, String message) {
+
+    	if (base == leave) {
+            // back to main menu
+    		if (openingTriggered)
+    			handdler.closeTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
+            toggle();
+            return true; 
+        }
     	
     	if (!isUnlocked && !isIdentified)
     	{
@@ -292,7 +301,12 @@ public class LockInspectionWindow extends PagedInputWindow {
         		{
         			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("Failure to sense!");
         		}
-    		}    	
+    		}
+    		if (!isIdentified) 
+    		{
+    			inputUsed(leave, "fake"); // leaving for now, failure
+    			return true;
+    		}
     	}
     	if (!isUnlocked && isIdentified)
     	{
@@ -343,30 +357,25 @@ public class LockInspectionWindow extends PagedInputWindow {
     		}
     		if (failureImpact!=null)
     		{
-    			// TODO IMPACT, effect etc.
-    			for (EntityMemberInstance i:failureImpact.targetImpact.keySet())
+    			if (!isUnlocked) 
     			{
-    				ImpactUnit u = failureImpact.targetImpact.get(i);
-    				i.applyImpactUnit(u);
+    				inputUsed(leave, "fake"); // leaving for now, failure
+    				return true;
     			}
     		}
+    		
     	}
     	currentState.text = getCurrentStateText();
     	currentState.activate();
         // Save
         if (base == open && isUnlocked) {
+        	openingTriggered = true;
         	handdler.openTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
         	
         	toggle();
         	J3DCore.getInstance().storageHandlingWindow.toggle();
             return true;
         // Cancel
-        } else if (base == leave) {
-            // back to main menu
-        	handdler.closeTriggerSides(enteredCube, renderedEnteredCube, leftCube, renderedLeftCube);
-            toggle();
-            return true; 
-        // Next Page
         }
         return true;
     }

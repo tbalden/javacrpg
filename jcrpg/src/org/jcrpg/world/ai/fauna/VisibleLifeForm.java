@@ -90,7 +90,13 @@ public class VisibleLifeForm {
 		this.entity = entity;
 		this.groupId = groupId;
 		forGroup = true;
-		size = entity.getGroupSizes()[groupId];
+		if (entity!=null)
+		{
+			size = entity.getGroupSizes()[groupId];
+		} else
+		{
+			
+		}
 	}
 	
 	public int getSize()

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
-import org.jcrpg.game.EncounterLogic.TurnActTurnState;
+import org.jcrpg.game.TurnActTurnState;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
@@ -55,6 +55,7 @@ import com.jme.renderer.ColorRGBA;
  */
 public class EvaluatorBase {
 	
+
 	
 	private static int calculateAttributePower(ArrayList<String> names, Attributes attributes)
 	{
@@ -214,10 +215,11 @@ public class EvaluatorBase {
 		
 		public Impact evaluate()
 		{
+			// TODO rip out this into an outside function!
 			
 			// calculating sourcePower
 			int sourcePower = sourceData.calculateSourcePower();
-			int maxHundredPlus = HashUtil.mixPercentage(seed, sourceData.source.getNumericId()+sourceData.source.instance.getNumericId(), 0); // random factor
+			int maxHundredPlus = HashUtil.mixPercentage(seed, sourceData.source.getNumericId()+(sourceData.source.instance==null?0:sourceData.source.instance.getNumericId()), 0); // random factor
 			sourcePower+=maxHundredPlus;
 			
 			Impact i = new Impact();
