@@ -32,6 +32,7 @@ import org.jcrpg.world.object.RawMaterial;
 import org.jcrpg.world.object.combat.bow.arrow.CrudeArrow;
 import org.jcrpg.world.object.combat.throwing.ThrowingKnife;
 import org.jcrpg.world.object.craft.TrapAndLock;
+import org.jcrpg.world.object.craft.trap.FlameChain;
 import org.jcrpg.world.object.craft.trap.SpikeThrower;
 import org.jcrpg.world.object.magical.potion.MinorHealingPotion;
 
@@ -144,7 +145,15 @@ public class EntityCommonWealth {
 	 */
 	public TrapAndLock getTrapIfAvailable()
 	{
-		if (true) return new SpikeThrower();
+		int seed = J3DCore.getInstance().gameState.engine.getBaseTimeSeed();
+		seed+=owner.getNumericId();
+
+		if (true) 
+		{
+			if (HashUtil.mix(seed, 0, 0)%2==0)
+				return new SpikeThrower(); else
+				return new FlameChain(); 
+		}
 		Integer i = availabilityHelper.get(TrapAndLock.class);
 		if (i==null || i==0)
 		{
@@ -160,8 +169,6 @@ public class EntityCommonWealth {
 			}
 		}
 		if (sortedTraps.size()==0) return null;
-		int seed = J3DCore.getInstance().gameState.engine.getBaseTimeSeed();
-		seed+=owner.getNumericId();
 		int id = HashUtil.mix(seed, 0, 0) % sortedTraps.size();
 		
 		return sortedTraps.get(id);

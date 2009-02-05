@@ -9,14 +9,8 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 --------------------------------------------------------------------------------------
 
 
-[X] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
-	more abstract like evaluateActFormImpact(EntityMemberInstance[] list, BonusSkillActForm, AttackSuccessRatio)...
-	call it in EvaluatorBase.evaluate()
-	
-	[X] more effects! spike, fire etc.
-		[ ] the effect from below is not yet visible, though it's played by J3DMovingEngine by the logs say
-
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
+	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH
 
 [ ] add different levels for generation of groups at start .. 
 
@@ -58,6 +52,15 @@ bugs:
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
 	
+
+
+[X] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
+	more abstract like evaluateActFormImpact(EntityMemberInstance[] list, BonusSkillActForm, AttackSuccessRatio)...
+	call it in EvaluatorBase.evaluate()
+	
+	[X] more effects! spike, fire etc.
+		[X] the effect from below is not yet visible, though it's played by J3DMovingEngine by the logs say
+
 
 	Continuous loading
 	[X] concurrency is still in rendering

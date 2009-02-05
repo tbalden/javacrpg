@@ -534,10 +534,10 @@ public class J3DMovingEngine {
 					Vector3f pos = null;
 					if (target.worldX==playerFakeForm.worldX && target.worldY==playerFakeForm.worldY && target.worldZ==playerFakeForm.worldZ)
 					{
-						target.worldZ -= 1;
+						target.worldY -= 1;
 						// giving a little flight from below
 						pos = calculatePositionVector(null,target,true);
-						target.worldZ += 1; // TODO the knife doesnt show
+						target.worldY += 1;
 					} else
 					{
 						pos = calculatePositionVector(null,target,true);	
@@ -560,7 +560,7 @@ public class J3DMovingEngine {
 				
 				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
 				float angleTurn = n.prevDisplacement==null?0:mVec.angleBetween(n.prevDisplacement);
-				System.out.println("ANG: "+angleTurn +" DIST = "+prevDist);
+				System.out.println("ANG: "+angleTurn +" DIST = "+prevDist+" "+ n.currentPos + " "+J3DCore.getInstance().getCamera().getLocation());
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {
