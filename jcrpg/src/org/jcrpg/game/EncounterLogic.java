@@ -90,14 +90,14 @@ public class EncounterLogic {
 		long seed = -1;
 		if (encounter.getPhase()==Ecology.PHASE_TURNACT_COMBAT)
 		{
-			seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+			seed = (((long)currentTurnActTurn)<<8) + gameLogic.core.gameState.engine.getNumberOfTurn();
 		}
 		if (encounter.getPhase()==Ecology.PHASE_TURNACT_SOCIAL_RIVALRY)
 		{
-			seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+			seed = (((long)currentTurnActTurn)<<8) + gameLogic.core.gameState.engine.getNumberOfTurn();
 		} else
 		{
-			seed = ((long)currentEncounterRound)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+			seed = (((long)currentEncounterRound)<<8) + gameLogic.core.gameState.engine.getNumberOfTurn();
 		}
 		return seed;
 	}
@@ -615,7 +615,9 @@ public class EncounterLogic {
 							{
 								Jcrpg.LOGGER.fine("Evaluating:\n"+choice.toString());
 								//System.out.println("Evaluating:\n"+choice.toString());
-								long seed = ((long)currentTurnActTurn)<<8 + gameLogic.core.gameState.engine.getNumberOfTurn();
+								long seed = (((long)currentTurnActTurn)<<8) + gameLogic.core.gameState.engine.getNumberOfTurn();
+								int seeeed = (int)seed+turnActTurnState.nextEventCount;
+								System.out.println("--## "+seed+ " "+seeeed);
 								Impact impact = EvaluatorBase.evaluateActFormSuccessImpact((int)seed+turnActTurnState.nextEventCount, choice, turnActTurnState);
 								//impact.notifyUI(gameLogic.core.uiBase.hud.mainBox);
 								handleImpactEffects(impact, choice);
