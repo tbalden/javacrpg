@@ -30,6 +30,8 @@ import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttrRatios;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.ResistanceRatios;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.SkillActForm;
@@ -85,11 +87,13 @@ public class EntityMember extends DescriptionBase {
 	
 	public Attributes getAttributes(EntityDescription parent)
 	{
+		if (parent==null) return new FantasyAttributes(true);
 		return Attributes.getAttributes(parent.attributes, commonAttributeRatios);
 	}
 	
 	public Resistances getResistances(EntityDescription parent)
 	{
+		if (parent==null) return new FantasyResistances(true);
 		return Resistances.getResistances(parent.resistances, commonResistenceRatios);
 	}
 

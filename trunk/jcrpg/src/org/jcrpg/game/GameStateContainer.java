@@ -643,6 +643,7 @@ public class GameStateContainer {
 	private ScenarioPositions currentRenderPositions = null; 
 	public ScenarioPositions getCurrentRenderPositions()
 	{
+		if (currentRenderPositions == null) currentRenderPositions = normalPosition;
 		return currentRenderPositions;
 	}
 
