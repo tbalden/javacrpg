@@ -78,7 +78,7 @@ public class StorageHandlingWindow extends PagedInputWindow {
 	    	addInput(0,partyCharList);
 
 	    	{
-	    		inventoryList = new ListMultiSelect("inventory", this,page0, 0.7f,0.58f,0.55f, 0.15f, 0.3f,0.06f,600f,new String[0],new String[0],new Object[0], new Quad[0],null,null);
+	    		inventoryList = new ListMultiSelect("inventory", this,page0, 0.7f,0.59f,0.57f, 0.15f, 0.3f,0.06f,600f,new String[0],new String[0],new Object[0], new Quad[0],null,null);
 	    	}
 	    	addInput(0,inventoryList);
 

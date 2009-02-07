@@ -8,6 +8,8 @@ This TODO file is licensed under LGPL v3 license as part of the jcrpg project.
 
 --------------------------------------------------------------------------------------
 
+[ ] fix map things - especially positioning of cursor??
+		numbered/named cities? zooming map?
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
 	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH

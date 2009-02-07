@@ -88,10 +88,10 @@ public class EntityMemberInstance {
 	}
 	private EntityMemberInstance() {
 	
-	
+		updateAfterLeveling();
 	}
 	public EntityMemberInstance(EntityFragment parent, EntityInstance instance, EntityMember description, int numericId) {
-		super();
+		//super();
 		this.description = description;
 		this.parentFragment = parent;
 		this.instance = instance;
@@ -197,7 +197,6 @@ public class EntityMemberInstance {
 	/** Get original unbonused attributes. */
 	public Attributes getAttributesVanilla()
 	{
-		if (instance==null) return new FantasyAttributes(true); 
 		Attributes attributes = description.getAttributes(instance!=null?instance.description:null);
 		return attributes;
 	}
@@ -274,7 +273,8 @@ public class EntityMemberInstance {
 	
 	public void updateAfterLeveling()
 	{
-		description.memberSkills.updateSkillActForms();
+		if (description!=null)
+			description.memberSkills.updateSkillActForms();
 		memberState.recalculateMaximums(true);
 	}
 	
