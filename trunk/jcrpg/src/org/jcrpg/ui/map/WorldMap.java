@@ -99,6 +99,7 @@ public class WorldMap {
 				boolean oceanWater = false;
 				boolean riverWater = false;
 				boolean ecoFound = false;
+				Economic ecoObj = null;
 				for (Water water :w.waters.values())
 				{
 					if (water instanceof Ocean && !riverWater)
@@ -106,7 +107,7 @@ public class WorldMap {
 						oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false, false);
 						{
 							System.out.print(".");
-							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification, 0, z*w.magnification, false).getBelt();
+							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification+3, 0, z*w.magnification+3, false).getBelt();
 							climateImage[((z*w.sizeX)+x)*4+0] = belt.colorBytes[0];
 							climateImage[((z*w.sizeX)+x)*4+1] = belt.colorBytes[1];
 							climateImage[((z*w.sizeX)+x)*4+2] = belt.colorBytes[2];
@@ -116,22 +117,24 @@ public class WorldMap {
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
 							ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+
 							if (economics!=null)
 							{
 								for (Object o:economics)
 								{
 									Economic e = ((Economic)o);
 									if (
-											(e.origoX>wx+w.magnification)
+											(e.origoX>wx+w.magnification-1)
 											||
-											(e.origoX+e.sizeX<wx)
+											(e.origoX+e.sizeX-1<wx)
 											||
-											(e.origoZ>wz+w.magnification)
+											(e.origoZ>wz+w.magnification-1)
 											||
-											(e.origoZ+e.sizeZ<wz)
+											(e.origoZ+e.sizeZ-1<wz)
 									) 
 									{
-										System.out.println("SKIPPING at "+wx+" / "+wz+" -- "+e.getBoundaries().limitXMin+" "+e.getBoundaries().limitZMin);
+										
+										//System.out.println("SKIPPING at "+wx+" / "+wz+" -- "+e.getBoundaries().limitXMin+" "+e.getBoundaries().limitZMin);
 										/*if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("# OUT "+
 												e.getBoundaries().limitXMin+" > "+wx + " && " +
 												e.getBoundaries().limitXMin+" > "+(wx+w.magnification) + " || " + 
@@ -144,28 +147,38 @@ public class WorldMap {
 										);*/
 										continue;
 									}
-									// matching economic population!
-									geoImageSet[((z*w.sizeX)+x)*4+0] = (byte)255;
-									geoImageSet[((z*w.sizeX)+x)*4+1] = (byte)255;
-									geoImageSet[((z*w.sizeX)+x)*4+2] = (byte)255;
-									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)200;
+									ecoObj = e;
 									ecoFound = true;
 									break;
 								}
 								
 							}
-							if (ecoFound) break;
 							for (Geography g:geos)
 							{
-								if (g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
+								if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 								{
 									geoImageSet[((z*w.sizeX)+x)*4+0] = g.colorBytes[0];
 									geoImageSet[((z*w.sizeX)+x)*4+1] = g.colorBytes[1];
 									geoImageSet[((z*w.sizeX)+x)*4+2] = g.colorBytes[2];
-									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)150;
+									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)100;
+									if (ecoFound) {
+										byte[] cB = ecoObj.getMapColor();
+										geoImageSet[((z*w.sizeX)+x)*4+0]=cB[0];
+										geoImageSet[((z*w.sizeX)+x)*4+1]=cB[1];
+										geoImageSet[((z*w.sizeX)+x)*4+2]=cB[2];
+										geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)255;
+									}
+									
 									break;
 								}
 							}
+							/*if (!gFound)
+							{
+							geoImageSet[((z*w.sizeX)+x)*4+0] = 0;
+							geoImageSet[((z*w.sizeX)+x)*4+1] = 0;
+							geoImageSet[((z*w.sizeX)+x)*4+2] = 0;
+							geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)255;
+							}*/
 						}
 						if (oceanWater)
 						{
@@ -173,7 +186,10 @@ public class WorldMap {
 							System.out.print("W");
 							mapImage[((z*w.sizeX)+x)*4+2] = (byte)100;
 							mapImage[((z*w.sizeX)+x)*4+1] = (byte)0;
-							geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)90;
+							geoImageSet[((z*w.sizeX)+x)*4+0] = 10;
+							geoImageSet[((z*w.sizeX)+x)*4+1] = 10;
+							geoImageSet[((z*w.sizeX)+x)*4+2] = 100;
+							geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)190;
 						} 
 					} else
 					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
@@ -247,13 +263,24 @@ public class WorldMap {
 	
 	public void update(int cx, int cy, int cz)
 	{
+		
+		System.out.println(cx+" "+cz);
+		
+		Collection<Geography> geos = world.geographies.values();
+		int wx = cx * 40;
+		int wz = cz * 40;
+		for (Geography g:geos)
+		if (g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
+		{
+			System.out.println(g.getClass());
+		}		
 		//if (true) return;
 		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(""+Math.min(world.sizeZ,++cz)+" "+Math.max(0,--cx));
 		if (cx==lastCx && cz==lastCz) return;
 		lastCx = cx;
 		lastCz = cz;
-		cz = Math.min(world.sizeZ,++cz);
-		cx = Math.max(0,--cx);
+		cz = Math.min(world.sizeZ,cz);
+		cx = Math.max(0,cx);
 		boolean newInstance = false;
 		if (positionGraphics==null)
 		{
@@ -315,10 +342,12 @@ public class WorldMap {
 		oceanTex.setImage(oceanImage);
 		geoTex = new Texture2D();
 		geoTex.setImage(geoImage);
+		
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		baseTexState.setTexture(oceanTex);
 		geoTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		geoTexState.setTexture(geoTex);
+		
 		return new TextureState[]{baseTexState,null,geoTexState};
 	}
 

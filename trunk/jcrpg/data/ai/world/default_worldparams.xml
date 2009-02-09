@@ -32,7 +32,7 @@
 	<!-- random  -->
 	<random seed="1" />
 	<!-- all things about size -->
-	<size-params sizeX="10" sizeY="2" sizeZ="10" magnification="40"
+	<size-params sizeX="40" sizeY="2" sizeZ="40" magnification="40"
 		heightRatio="1.0" normalSize="40"/>
 	
 	<!-- geology main organisation -->

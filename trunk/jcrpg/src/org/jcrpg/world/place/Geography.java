@@ -45,14 +45,21 @@ public class Geography extends Place implements Surface {
 	
 	
 	/**
-	 * Population height offset.
+	 * Population height offset. At witch height it's houses are generated.
 	 */
 	public int populationPlus = 0;
+	
+	public boolean worldMapTinter = true;
 	
 	/**
 	 * Color for the maps.
 	 */
 	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
+	
+	public byte[] getMapColor()
+	{
+		return colorBytes;
+	}
 	
 	public int worldGroundLevel, worldHeight, blockSize, worldRelHeight;
 	
@@ -997,6 +1004,15 @@ public class Geography extends Place implements Surface {
 			count++;
 		}
 		return ret;
+	}
+	
+	/**
+	 * Specifies if this geography is coloring the worldmap geo colors.
+	 * @return
+	 */
+	public boolean isWorldMapTinter()
+	{
+		return true;
 	}
 	
 	

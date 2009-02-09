@@ -27,7 +27,6 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.GroupedBoundaries;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
-import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 
 public abstract class Population extends Economic{
