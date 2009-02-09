@@ -65,6 +65,12 @@ public class DungeonDistrict extends Population {
 	public boolean needsFullBlockSizedSubelement() {
 		return true;
 	}
-
+	
+	public static byte[] colors = new byte[]{(byte)205,(byte)240,(byte)40};
+	@Override
+	public byte[] getMapColor()
+	{
+		return colors;
+	}
 	
 }

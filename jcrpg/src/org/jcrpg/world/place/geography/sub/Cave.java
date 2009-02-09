@@ -468,5 +468,11 @@ public class Cave extends Geography implements Surface {
 			return new int[][]{{worldGroundLevel,worldHeight}};
 		return null;
 	}
+	
+	@Override
+	public boolean isWorldMapTinter()
+	{
+		return false;
+	}
 
 }

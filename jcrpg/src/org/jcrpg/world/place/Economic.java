@@ -171,6 +171,11 @@ public class Economic extends Geography {
 		return r;
 	}
 	
-	
+	@Override
+	public byte[] getMapColor()
+	{
+		
+		return new byte[]{(byte)255,(byte)255,(byte)255};
+	}
 
 }

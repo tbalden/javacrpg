@@ -152,9 +152,17 @@ public class GameStateContainer {
 		normalPosition.origoY = y;
 		normalPosition.origoZ = z;
 	}
-	
-	public void resetRelativePosition()
+
+	/**
+	 * reset general things before new game/load game
+	 */
+	public void resetGeneral()
 	{
+		lastMusicClass = null;	
+	}
+
+	public void resetRelativePosition()
+	{		
 		normalPosition.relativeX = 0;
 		normalPosition.relativeY = 0;
 		normalPosition.relativeZ = 0;
@@ -233,7 +241,7 @@ public class GameStateContainer {
 		normalPosition.relativeY += y-normalPosition.viewPositionY;
 		normalPosition.viewPositionY = y;
 		Cube c = world.getCube(-1, normalPosition.viewPositionX, normalPosition.viewPositionY, normalPosition.viewPositionZ, false);
-		if (c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) normalPosition.onSteep = true;
+		if (c!=null && c.steepDirection!=SurfaceHeightAndType.NOT_STEEP) normalPosition.onSteep = true;
 	}
 
 	public void positionPlayerToSurfaceEncounterMode()
@@ -440,7 +448,6 @@ public class GameStateContainer {
 		}
 	}
 	
-	int environmentAudioCount = 0;
 	
 	/**
 	 * After playing a track or finished other music, this should be called to start playing another track.
@@ -493,7 +500,9 @@ public class GameStateContainer {
 		}
 		return false;		
 	}
-	
+
+	int environmentAudioCount = 0;
+
 	/**
 	 * Non-gameplay related environmental happenings (audio etc.).
 	 */

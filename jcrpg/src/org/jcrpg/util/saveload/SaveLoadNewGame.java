@@ -153,6 +153,7 @@ public class SaveLoadNewGame {
 			gameState.setViewPosition(wX,wY,wZ);
 			gameState.setOrigoRenderPosition(wX,wY,wZ);
 			gameState.resetRelativePosition();
+			gameState.resetGeneral();
 			core.setGameState(gameState);
 			if (core.coreFullyInitialized)
 			{
@@ -227,6 +228,7 @@ public class SaveLoadNewGame {
 			// ui elements update to loaded state
 			core.behaviorWindow.party = gameState.player;
 			core.behaviorWindow.updateToParty();
+			gameState.resetGeneral();
 			
 			
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
