@@ -20,6 +20,7 @@ package org.jcrpg.world.ai.humanoid.group.myth.greek;
 
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Evilrip;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Scorpoholder;
@@ -62,8 +63,9 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 		setAverageGroupSizeAndDeviation(3, 2);
 		
 		addGroupingRuleMember(EyeBat.EYEBAT);
-		//addGroupingRuleMember(HellPig.HELLPIG);
-		//addGroupingRuleMember(Scorpoholder.SCORPOHOLDER);
+		addGroupingRuleMember(HellPig.HELLPIG);
+		addGroupingRuleMember(Scorpoholder.SCORPOHOLDER);
+		addGroupingRuleMember(Evilrip.EVILRIP);
 	}
 	
 

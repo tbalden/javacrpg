@@ -35,6 +35,7 @@ import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
+import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Evilrip;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Scorpoholder;
@@ -157,7 +158,11 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(Plantobite.PLANTOBITE.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Plantobite.plantobite_unit);
 		counter++;
-	}
+
+		hmMobIdToModelId.put(Evilrip.EVILRIP.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Evilrip.evilrip_unit);
+		counter++;
+}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)
 	{
