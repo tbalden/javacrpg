@@ -2817,15 +2817,20 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	Vector3f diffVec = new Vector3f();
 	
 	public long lastBgMusicCheck = System.currentTimeMillis();
+	public long lastAudioUpdate= System.currentTimeMillis();
 	
 	@Override
 	protected void simpleUpdate() {
 
-		AudioSystem.getSystem().update();
+
+		if (System.currentTimeMillis()-lastAudioUpdate>50)
+		{
+			AudioSystem.getSystem().update();
+			lastAudioUpdate = System.currentTimeMillis();
+		}
 
 		if (System.currentTimeMillis()-lastBgMusicCheck>1000)
 		{
-			
 			if (gameState.isUpdateNeededForBackgroundMusic())
 			{
 				audioServer.initialBackgroundMusic();
