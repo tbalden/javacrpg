@@ -264,18 +264,19 @@ public class WorldMap {
 	public void update(int cx, int cy, int cz)
 	{
 		
-		System.out.println(cx+" "+cz);
+		//System.out.println(cx+" "+cz);
 		
-		Collection<Geography> geos = world.geographies.values();
+		/*Collection<Geography> geos = world.geographies.values();
 		int wx = cx * 40;
 		int wz = cz * 40;
 		for (Geography g:geos)
 		if (g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 		{
 			System.out.println(g.getClass());
-		}		
-		//if (true) return;
+		}*/		
+
 		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest(""+Math.min(world.sizeZ,++cz)+" "+Math.max(0,--cx));
+		
 		if (cx==lastCx && cz==lastCz) return;
 		lastCx = cx;
 		lastCz = cz;
