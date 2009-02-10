@@ -23,16 +23,18 @@ Society, Groups etc.
 
 Higher level gamelogics documentation needed
 
+[ ] audio for new monsters, Scorpoholder, Evilrip, Plantobite
+
 ---------------------
 
-[ ] integrate flying monster by tidbit
+[X] integrate flying monster by tidbit
 
 [X] fix map things - especially positioning of cursor??
 	[ ]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
 
 [X] bigger map size for the release - test save/load
 	[ ] - eats much memory --> check save game , what's in it --> too much groups of beings/economics around?
-
+		slow loading
 
 
 [X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)

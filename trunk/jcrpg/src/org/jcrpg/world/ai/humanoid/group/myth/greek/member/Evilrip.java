@@ -28,25 +28,25 @@ import org.jcrpg.world.ai.body.HumanoidBody;
 import org.jcrpg.world.ai.humanoid.group.myth.member.MythicBaseMember;
 import org.jcrpg.world.ai.profession.MonsterNormal;
 
-public class EyeBat extends MythicBaseMember {
-	public static AudioDescription eyeBatAudio = new AudioDescription();
+public class Evilrip extends MythicBaseMember {
+	public static AudioDescription evilripAudio = new AudioDescription();
 	static {
-		eyeBatAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
-		eyeBatAudio.PAIN = new String[]{"eyebat/pain"};
-		eyeBatAudio.DEATH= new String[]{"eyebat/encounter"};
-		eyeBatAudio.ATTACK = new String[]{"eyebat/attack"};
+		evilripAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
+		evilripAudio.PAIN = new String[]{"eyebat/pain"};
+		evilripAudio.DEATH= new String[]{"eyebat/encounter"};
+		evilripAudio.ATTACK = new String[]{"eyebat/attack"};
 		//batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};
 		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
 	}
 	
-	public static EyeBat EYEBAT = new EyeBat("EYEBAT",eyeBatAudio);
+	public static Evilrip EVILRIP = new Evilrip("EVILRIP",evilripAudio);
 
-	public static MovingModel eyeBat = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
-	//public static MovingModel eyeBat = new MovingModel("models/monster/evilrip/beast_stand.obj",null,null,null,false);
+	//public static MovingModel eyeBat = new MovingModel("models/monster/eyebat/eyebat.obj",null,null,null,false);
+	public static MovingModel evilrip = new MovingModel("models/monster/evilrip/beast_stand.obj",null,null,null,false);
 
-	public static RenderedMovingUnit eyeBat_unit = new RenderedMovingUnit(new Model[]{eyeBat});
+	public static RenderedMovingUnit evilrip_unit = new RenderedMovingUnit(new Model[]{evilrip});
 
-	public EyeBat(String visibleTypeId, AudioDescription audioDescription) {
+	public Evilrip(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, HumanoidBody.class, audioDescription);
 		addProfessionInitially(new MonsterNormal());
 		memberSkills.setSkillValue(Elementarism.class, 10);
@@ -55,7 +55,7 @@ public class EyeBat extends MythicBaseMember {
 	@Override
 	public AudioDescription getAudioDesc()
 	{
-		return eyeBatAudio;
+		return evilripAudio;
 	}
 
 }
