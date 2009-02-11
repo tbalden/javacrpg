@@ -31,12 +31,11 @@ import org.jcrpg.world.ai.profession.MonsterNormal;
 public class Evilrip extends MythicBaseMember {
 	public static AudioDescription evilripAudio = new AudioDescription();
 	static {
-		evilripAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
-		evilripAudio.PAIN = new String[]{"eyebat/pain"};
-		evilripAudio.DEATH= new String[]{"eyebat/encounter"};
-		evilripAudio.ATTACK = new String[]{"eyebat/attack"};
-		//batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};
-		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
+		evilripAudio.ENCOUNTER = new String[]{"evilrip/encounter"};
+		evilripAudio.PAIN = new String[]{"evilrip/pain1","evilrip/pain2"};
+		evilripAudio.DEATH= new String[]{"evilrip/death"};
+		evilripAudio.ATTACK = new String[]{"evilrip/attack1","evilrip/attack2"};
+		evilripAudio.ENVIRONMENTAL = new String[]{"evilrip/environmental"};
 	}
 	
 	public static Evilrip EVILRIP = new Evilrip("EVILRIP",evilripAudio);
