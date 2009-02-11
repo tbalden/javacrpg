@@ -168,16 +168,17 @@ public class EconomyContainer {
 	public Population isOccupied(Geography geo, int popX, int popZ)
 	{
 		ArrayList<Object> list = treeLocator.getElements(popX, geo.worldGroundLevel, popZ);
-		System.out.println("P NOT FOUND");
+		// TODO treelocator is not return correctly all the populations! 
+		//System.out.println("P NOT FOUND");
 		if (list != null)
 		for (Object o:list)
 		{
 			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P FOUND: "+o);
-			System.out.println("P FOUND: "+o);
+			//System.out.println("P FOUND: "+o);
 			if (o instanceof Population) {
 				Population p = (Population)o;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo);
-				System.out.println("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo+ " "+popX+" : "+popZ);
+				//System.out.println("P FOUND: IS INSIDE?"+p.soilGeo+" -- "+geo+ " "+popX+" : "+popZ);
 				if (p.soilGeo == geo && p.owner.homeBoundary.posX==popX && p.owner.homeBoundary.posZ==popZ ) return p;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NOT...");
 				
