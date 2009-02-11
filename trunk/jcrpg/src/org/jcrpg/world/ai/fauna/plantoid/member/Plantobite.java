@@ -32,12 +32,11 @@ import org.jcrpg.world.ai.profession.MonsterNormal;
 public class Plantobite extends EntityMember {
 	public static AudioDescription plantobiteAudio = new AudioDescription();
 	static {
-		plantobiteAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
-		plantobiteAudio.PAIN = new String[]{"eyebat/pain"};
-		plantobiteAudio.DEATH= new String[]{"eyebat/encounter"};
-		plantobiteAudio.ATTACK = new String[]{"eyebat/attack"};
-		//batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};
-		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
+		plantobiteAudio.ENCOUNTER = new String[]{"plant/plantenc"};
+		plantobiteAudio.PAIN = new String[]{"plant/plantscream","plant/plantscream2"};
+		plantobiteAudio.DEATH= new String[]{"plant/plantscream"};
+		plantobiteAudio.ATTACK = new String[]{"eyebat/plantattack"};
+		plantobiteAudio.ENVIRONMENTAL = new String[]{"plant/plantscream2"};
 	}
 	
 	public static Plantobite PLANTOBITE = new Plantobite("PLANTOBITE",plantobiteAudio);

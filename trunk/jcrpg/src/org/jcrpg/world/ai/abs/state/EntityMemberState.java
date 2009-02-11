@@ -33,7 +33,7 @@ import org.jcrpg.world.time.Time;
 public class EntityMemberState {
 
 	// set this to true if you want to prevent persistentMembers from point changes.
-	boolean cheatNPC = true;
+	static boolean cheatNPC = false;
 
 	
 	public static int DEFAULT_HEALTH_POINT = 10;
@@ -62,7 +62,7 @@ public class EntityMemberState {
 	
 	public int level = 1;
 	public int experiencePoint = 0;
-	public static final int LEVELING_XP = 10; // the XP needed for new level of the member
+	public static final int LEVELING_XP = 20; // the XP needed for new level of the member
 	
 	public static final int ZERO_HEALTH = 0;
 	public static final int ZERO_STAMINA = 1;

@@ -31,12 +31,11 @@ import org.jcrpg.world.ai.profession.MonsterNormal;
 public class Scorpoholder extends MythicBaseMember {
 	public static AudioDescription scorpoAudio = new AudioDescription();
 	static {
-		scorpoAudio.ENCOUNTER = new String[]{"eyebat/encounter"};
-		scorpoAudio.PAIN = new String[]{"eyebat/pain"};
-		scorpoAudio.DEATH= new String[]{"eyebat/encounter"};
-		scorpoAudio.ATTACK = new String[]{"eyebat/attack"};
-		//batEyeAudio.ENVIRONMENTAL = new String[]{"boarman/boarman_env1","boarman/boarman_env2"};
-		//boarmanFemaleAudio.ENVIRONMENTAL = new String[]{"human_env1","human_female_env1"};
+		scorpoAudio.ENCOUNTER = new String[]{"scorpoholder/encounter"};
+		scorpoAudio.PAIN = new String[]{"scorpoholder/pain"};
+		scorpoAudio.DEATH= new String[]{"scorpoholder/death"};
+		scorpoAudio.ATTACK = new String[]{"scorpoholder/attack"};
+		scorpoAudio.ENVIRONMENTAL= new String[]{"scorpoholder/environment"};
 	}
 	
 	public static Scorpoholder SCORPOHOLDER = new Scorpoholder("SCORPOHOLDER",scorpoAudio);
