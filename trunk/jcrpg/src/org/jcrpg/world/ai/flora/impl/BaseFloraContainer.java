@@ -21,8 +21,8 @@ import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.ground.EncounterGround;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
-import org.jcrpg.world.place.economic.population.DungeonDistrict;
 import org.jcrpg.world.place.economic.residence.House;
+import org.jcrpg.world.place.economic.residence.Hut;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.geography.Forest;
@@ -43,6 +43,7 @@ public class BaseFloraContainer extends FloraContainer{
 		hmPlaceToGenerator.put(SimpleDungeonPart.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(House.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(WoodenHouse.class,new EconomicFloraGenerator());
+		hmPlaceToGenerator.put(Hut.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(EncounterGround.class,new EconomicFloraGenerator());
 	}
 	
