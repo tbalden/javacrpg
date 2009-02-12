@@ -70,6 +70,7 @@ import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.residence.House;
+import org.jcrpg.world.place.economic.residence.Hut;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.geography.Forest;
@@ -200,17 +201,30 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_WINDOW.id, new Integer(53));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_CORNER.id, new Integer(54));
 		hmCubeSideSubTypeToRenderedSideId.put(WoodenHouse.SUBTYPE_ROOF_STRAIGHT.id, new Integer(55));
+		// storage area
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BARREL.id, new Integer(62));		
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_CRATE.id, new Integer(63));
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_PAVILION.id, new Integer(64));
 		hmCubeSideSubTypeToRenderedSideId.put(PavedStorageAreaGround.SUBTYPE_BASKET.id, new Integer(65));
 
+		// dungeon part
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND_ELEVATED.id, new Integer(66));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_GROUND.id, new Integer(71));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_WALL.id, new Integer(67));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_EXTERNAL_DOOR.id, new Integer(68));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_4_COLUMNS.id, new Integer(69));
 		hmCubeSideSubTypeToRenderedSideId.put(SimpleDungeonPart.SUBTYPE_2_COLUMNS.id, new Integer(70));
+		
+		// hut residence
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_STAIRS.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_INTERNAL_CEILING.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_BOOKCASE.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));		
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_WALL.id, EMPTY_SIDE);
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_EXTERNAL_DOOR.id, new Integer(73));
+		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_WINDOW.id, EMPTY_SIDE);
+
 
 		hmCubeSideSubTypeToRenderedSideId.put(Economic.SUBTYPE_CHEST.id, new Integer(72));
 		
@@ -983,8 +997,13 @@ public class SideTypeModels {
 		st_chest.disposition = new float[]{0,0.35f,0};
 		//SimpleModel sm_chest = new SimpleModel("models/item/storage/chest.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(72), new RenderedSide(new Model[]{st_chest}));
+
+		SimpleModel sm_hut_model = new SimpleModel("models/external/hut/hut_big.obj", null);
+		sm_hut_model.batchEnabled = false;
+		hm3dTypeRenderedSide.put(new Integer(73), new RenderedSide(new Model[]{sm_hut_model}));
+
 		// NEXT ID = 
-		// 73
+		// 74
 		
 	}
 	

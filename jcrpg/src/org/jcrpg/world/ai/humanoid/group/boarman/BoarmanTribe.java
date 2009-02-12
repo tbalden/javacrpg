@@ -34,6 +34,7 @@ import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
+import org.jcrpg.world.place.economic.residence.Hut;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
@@ -105,6 +106,9 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);		
+		economyTemplate.addResidenceType(Plain.class, Hut.class);
+		economyTemplate.addResidenceType(Forest.class, Hut.class);
+		economyTemplate.addResidenceType(Mountain.class, Hut.class);
 		economyTemplate.addResidenceType(Plain.class, WoodenHouse.class);
 		economyTemplate.addResidenceType(Forest.class, WoodenHouse.class);
 		economyTemplate.addResidenceType(Mountain.class, WoodenHouse.class);

@@ -126,6 +126,7 @@ public class MainMenu extends Window implements KeyListener {
 		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(false);
 	}
+	
 
 	@Override
 	public void show() {
@@ -155,10 +156,13 @@ public class MainMenu extends Window implements KeyListener {
 		if (name.equals(SAVE_GAME))
 		{
 			if (!core.coreFullyInitialized) return;
-			SaveLoadNewGame.saveGame(core);
-			toggle();
-			core.updateDisplay(null);
+			core.getUIRootNode().detachChild(windowNode);
 			core.getUIRootNode().updateRenderState();
+			core.updateDisplay(null);
+			SaveLoadNewGame.saveGame(core);
+			core.getUIRootNode().attachChild(windowNode);
+			//core.getUIRootNode().updateRenderState();
+			toggle();
 			core.audioServer.stopAndResumeOthers("main");
 			
 		} else
