@@ -967,12 +967,12 @@ public class SideTypeModels {
 		SimpleModel sm_maze_door_1 = new SimpleModel("models/external/maze/maze-door1rot.obj",null);
 		hm3dTypeRenderedSide.put(new Integer(68), new RenderedSide(new Model[]{sm_maze_door_1}));
 
-		//SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/4_pillars.obj",null);
-		SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/NormalTest_Pillar_01.obj",null);
+		SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/4_pillars.obj",null);
+		/*SimpleModel sm_maze_4_pillars = new SimpleModel("models/external/maze/NormalTest_Pillar_01.obj",null);
 		sm_maze_4_pillars.normalMapTexture = "Pillar_Nor.png";
 		sm_maze_4_pillars.specMapTexture = "Pillar_Spec.png";
-		sm_maze_4_pillars.heightMapTexture = "Pillar_Spec.png";
-		hm3dTypeRenderedSide.put(new Integer(69), new RenderedSide(new Model[]{sm_maze_4_pillars}));//,sm_chest}));
+		sm_maze_4_pillars.heightMapTexture = "Pillar_Spec.png";*/
+		hm3dTypeRenderedSide.put(new Integer(69), new RenderedSide(new Model[]{sm_maze_4_pillars}));
 
 		SimpleModel sm_maze_2_pillars = new SimpleModel("models/external/maze/2_pillars.obj", null);
 		hm3dTypeRenderedSide.put(new Integer(70), new RenderedSide(new Model[]{sm_maze_2_pillars}));
