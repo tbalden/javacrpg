@@ -20,38 +20,23 @@ Society, Groups etc.
 
 [ ] add different levels for generation of groups at start .. 
 
-
-
-Higher level gamelogics documentation needed
-
----------------------
-
-[X] maze entrance - replace the demo normal map column of Zphr with the four column thing
-
-[X] save game - toggle Mainmenu!
-[X] integrat tidbit's hut as a new House type
-
-[X] change leveling XP to 20
-
-[X] integrate flying monster by tidbit
-[X] audio for new monsters, Evilrip, 
-	[x] Scorpoholder, Plantobite
-
-
-[X] fix map things - especially positioning of cursor??
-	[ ]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
-
-[X] bigger map size for the release - test save/load
-	[-] - eats much memory --> check save game , what's in it --> too much groups of beings/economics around?
-		[X] slow loading - StaxDriver in GameStateContainer xstreamer is much quicker - halves the deserialization time
-
-
 [X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
 	general positioning (wrong direction) at generation is bad too i think
 	[ ] better fix --> EconomyContainer.isOccupied is not returning Population though it's there! TreeLocator bug?
 		if fixed, remove HumanoidEntityDescription's temporary fix
 
-[ ] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
+
+Higher level gamelogics documentation needed
+
+---------------------
+[ ] BUG: loading ruins lightstate ???
+[ ] loading eats more and more memory
+
+[X] fix map things - especially positioning of cursor??
+	[ ]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
+	[ ] some populations are not shown - at mountain e.g.
+
 
 
 bugs:
@@ -84,6 +69,22 @@ bugs:
 		[ ] animation for doors! (export!)
 	
 
+[X] maze entrance - replace the demo normal map column of Zphr with the four column thing
+
+[X] save game - toggle Mainmenu!
+[X] integrat tidbit's hut as a new House type
+
+[X] change leveling XP to 20
+
+[X] integrate flying monster by tidbit
+[X] audio for new monsters, Evilrip, 
+	[x] Scorpoholder, Plantobite
+
+[X] bigger map size for the release - test save/load
+	[-] - eats much memory --> check save game , what's in it --> too much groups of beings/economics around?
+		[X] slow loading - StaxDriver in GameStateContainer xstreamer is much quicker - halves the deserialization time
+
+[X] render scene full screen UI quad while rendering. to hide buildup phase of scene
 
 [X] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
 	more abstract like evaluateActFormImpact(EntityMemberInstance[] list, BonusSkillActForm, AttackSuccessRatio)...

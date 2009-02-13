@@ -61,18 +61,21 @@ public class LoadMenu extends Window implements KeyListener {
 
 	FontTT text;
 	
+	Quad hudQuad;
+	
 	public LoadMenu(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
         try {
         	
-        	Quad hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 1.4f*(core.getDisplay().getHeight() / 2), 
+        	hudQuad = loadImageToQuad("./data/ui/mainmenu/mainMenu.png", 0.8f*1.2f*core.getDisplay().getWidth() / 2, 1.4f*(core.getDisplay().getHeight() / 2), 
         			core.getDisplay().getWidth() / 2, 1.1f*core.getDisplay().getHeight() / 2);
          	hudQuad.setRenderState(base.hud.hudAS);
         	//Quad logoQuad = loadImageToQuad("./data/ui/mainmenu/menu-logo.png", 2.23f*core.getDisplay().getWidth() / 5f, 2.23f*(core.getDisplay().getHeight() / 11), 
         		//	core.getDisplay().getWidth() / 2, 1.62f*core.getDisplay().getHeight() / 2);
         	//logoQuad.setRenderState(base.hud.hudAS);
-        	
+
+         	
 			//windowNode.attachChild(logoQuad);
 			windowNode.attachChild(hudQuad);
 			
@@ -235,12 +238,12 @@ public class LoadMenu extends Window implements KeyListener {
 		core.getUIRootNode().updateRenderState();
 		lockLookAndMove(true);
 	}
-
-
+	
 	public void handleChoice()
 	{
 		SaveSlotData data = dataList.get(buttons.get(selected).name);
-		toggle();
+		toggle();		
+		core.updateDisplay(null);
 		core.clearCore();
 		base.hud.characters.hide();
 		SaveLoadNewGame.loadGame(core,data.gameData);

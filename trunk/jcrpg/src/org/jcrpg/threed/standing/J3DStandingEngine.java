@@ -2090,6 +2090,7 @@ public class J3DStandingEngine {
     	System.out.println("BUFFER / EX BUFF POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount+ " # "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
 	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
+	    core.busyPane.hide();
 	    //SceneMonitor.getMonitor().updateViewer(0.0f);
 	}
 	

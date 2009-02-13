@@ -67,6 +67,10 @@ public class SaveLoadNewGame {
 	{
 		
 		try {
+			
+			core.busyPane.show();
+			core.updateDisplay(null);
+			
 			core.gameLost = false;	
 			
 			GameStateContainer gameState = new GameStateContainer();
@@ -162,6 +166,10 @@ public class SaveLoadNewGame {
 			}
 		} catch (Exception ex)
 		{
+			
+			core.busyPane.hide();
+			core.updateDisplay(null);
+			
 			ex.printStackTrace();
 			System.exit(1);
 		}
@@ -179,6 +187,10 @@ public class SaveLoadNewGame {
 			return;			
 		}
 		try {
+			
+			core.busyPane.show();
+			core.updateDisplay(null);
+			
 			Date d = new Date();
 			String dT = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS").format(d);
 			String slot = saveDir+"/"+core.gameState.gameId+"_"+dT+"/";
@@ -194,10 +206,15 @@ public class SaveLoadNewGame {
 			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			zipOutputStream.close();
 			
+			core.busyPane.hide();
+			core.updateDisplay(null);
+			
 			core.uiBase.hud.mainBox.addEntry("Game saved.");
 			
 		} catch (Exception ex)
 		{
+			core.busyPane.hide();
+			core.updateDisplay(null);
 			ex.printStackTrace();
 		}
 	}
@@ -205,6 +222,10 @@ public class SaveLoadNewGame {
 	public static void loadGame(J3DCore core, File saveGame)
 	{
 		try {
+			
+			core.busyPane.show();
+			core.updateDisplay(null);
+			
 			if (core.engineThread!=null)
 			{
 				core.engineThread.interrupt();
@@ -238,6 +259,9 @@ public class SaveLoadNewGame {
 			core.gameLost = false;
 		} catch (Exception ex)
 		{
+			core.busyPane.hide();
+			core.updateDisplay(null);
+			
 			ex.printStackTrace();
 		}
 	}

@@ -63,6 +63,7 @@ import org.jcrpg.threed.standing.J3DStandingEngine;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
+import org.jcrpg.ui.window.BusyPaneWindow;
 import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
@@ -2129,6 +2130,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public Map worldMap = null;
 	public MainMenu mainMenu = null;
 	public LoadMenu loadMenu = null;
+	public BusyPaneWindow busyPane = null;
 	public OptionsMenu optionsMenu = null;	
 	public PartySetup partySetup = null;
 	public CharacterLevelingWindow charLevelingWindow = null;
@@ -2190,6 +2192,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 		rootNode.clearRenderState(RenderState.RS_LIGHT);
+		extRootNode.clearRenderState(RenderState.RS_LIGHT);
+		intRootNode.clearRenderState(RenderState.RS_LIGHT);
+		encounterExtRootNode.clearRenderState(RenderState.RS_LIGHT);
+		encounterIntRootNode.clearRenderState(RenderState.RS_LIGHT);
 		skySphere.setRenderState(skydomeLightState);
 
 		// intRootNode.attachChild(skySphereInvisibleGround);
@@ -2295,6 +2301,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			groundParentNode.detachAllChildren();
 			encounterExtRootNode.detachAllChildren();
 			encounterIntRootNode.detachAllChildren();
+			extRootNode.clearRenderState(RenderState.RS_LIGHT);
+			intRootNode.clearRenderState(RenderState.RS_LIGHT);
+			encounterExtRootNode.clearRenderState(RenderState.RS_LIGHT);
+			encounterIntRootNode.clearRenderState(RenderState.RS_LIGHT);
+			extLightState.detachAll();
+			internalLightState.detachAll();
+			
 			// rootNode.detachAllChildren();
 			batchHelper.clearAll();
 			batchHelperEncounterArea.clearAll();
@@ -2711,6 +2724,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		mainMenu = new MainMenu(uiBase);
 		loadMenu = new LoadMenu(uiBase);
+		busyPane = new BusyPaneWindow(uiBase);
 		optionsMenu = new OptionsMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
 		charLevelingWindow = new CharacterLevelingWindow(uiBase);
