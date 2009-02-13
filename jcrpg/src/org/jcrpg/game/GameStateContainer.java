@@ -50,6 +50,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 public class GameStateContainer {
 	
@@ -191,13 +192,13 @@ public class GameStateContainer {
 	
 	public static GameStateContainer createGameStateFromXml(String xml)
 	{
-		XStream xstream = new XStream(new DomDriver());
+		XStream xstream = new XStream(new StaxDriver());
 		GameStateContainer gameState = (GameStateContainer)xstream.fromXML(xml);
 		return gameState;
 	}
 	public static GameStateContainer createGameStateFromXml(Reader xml)
 	{
-		XStream xstream = new XStream(new DomDriver());
+		XStream xstream = new XStream(new StaxDriver());
 		GameStateContainer gameState = (GameStateContainer)xstream.fromXML(xml);
 		return gameState;
 	}

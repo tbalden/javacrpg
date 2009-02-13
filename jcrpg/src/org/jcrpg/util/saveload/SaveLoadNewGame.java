@@ -188,7 +188,9 @@ public class SaveLoadNewGame {
 			File saveGame = new File(slot+"savegame.zip");
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));
 			zipOutputStream.putNextEntry(new ZipEntry("gamestate.xml"));
+			long time = System.currentTimeMillis();
 			core.gameState.getGameStateXml(zipOutputStream);
+			System.out.println("oooooooooooooooooooooooooooo SAVE TIME = "+(System.currentTimeMillis()-time));
 			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			zipOutputStream.close();
 			
@@ -211,7 +213,9 @@ public class SaveLoadNewGame {
 			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(saveGame));
 			zipInputStream.getNextEntry();
 			Reader reader = new InputStreamReader(zipInputStream);
+			long time = System.currentTimeMillis();
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
+			System.out.println("oooooooooooooooooooooooooooo LOAD TIME = "+(System.currentTimeMillis()-time));
 			gameState.world.onLoad();
 			gameState.ecology.onLoad();
 			core.setGameState(gameState);
@@ -229,7 +233,6 @@ public class SaveLoadNewGame {
 			core.behaviorWindow.party = gameState.player;
 			core.behaviorWindow.updateToParty();
 			gameState.resetGeneral();
-			
 			
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
 			core.gameLost = false;
