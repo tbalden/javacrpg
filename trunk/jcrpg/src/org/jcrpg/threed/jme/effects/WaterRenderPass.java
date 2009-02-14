@@ -312,6 +312,7 @@ public class WaterRenderPass extends Pass {
 	public void setUseShader(boolean enabled)
 	{
 		supported = enabled;
+		if (enabled && waterShader==null) initialize(); 
 	}
 
 
