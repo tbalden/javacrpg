@@ -44,6 +44,7 @@
 		<echo message="jvm version: ${java.version} at ${java.home}"/>
 
 		<!--creates output directories -->
+		<mkdir dir="./bin"/>
 		<mkdir dir="${run.dir}"/>
 		<mkdir dir="${doc.dir}"/>
 		<mkdir dir="${apidoc.dir}"/>
@@ -80,6 +81,14 @@
 				<include name="**/*.frag"/>
 			</fileset>
 		</copy>
+		<copy todir="./bin">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.vert"/>
+				<include name="**/*.frag"/>
+			</fileset>
+		</copy>
 		<copy todir="${runjar.dir}">
 			<fileset dir="${srclib.dir}">
 				<include name="*.jar"/>
@@ -103,6 +112,7 @@
 	<target name="clean" depends="-init" description="Delete all generated class, javadoc jar files">
 		<!--Description: Delete all generated class, javadoc and jar files -->
 		<delete dir="${run.dir}"/>
+		<delete dir="./bin"/>
 	</target>
 
 	<!--###########################################################################-->
