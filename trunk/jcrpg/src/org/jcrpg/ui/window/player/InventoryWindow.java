@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.game.logic.UseObjEvaluator;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
@@ -617,7 +618,18 @@ public class InventoryWindow extends PagedInputWindow {
 		if (base == back)
 		{
 			goBackToFirstPage();
+		} else		
+		if (base == use)
+		{
+			EntityMemberInstance toChar = (EntityMemberInstance)toCharacterSelect.getSelectedObject();
+			
+			ArrayList<InventoryListElement> l = getAllSelection();
+			if (l.size()!=1) return true; // cannot use more than 1 object
+			
+			UseObjEvaluator.evaluateUse(currentMember, currentMember, l.get(0));
+			updateToMemberInstance(currentMember);
 		}
+		
 		return super.inputUsed(base, message);
 	}
 	private void goBackToFirstPage()

@@ -203,11 +203,11 @@ public class SaveLoadNewGame {
 			long time = System.currentTimeMillis();
 			core.gameState.getGameStateXml(zipOutputStream);
 			System.out.println("oooooooooooooooooooooooooooo SAVE TIME = "+(System.currentTimeMillis()-time));
-			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			zipOutputStream.close();
 			
 			core.busyPane.hide();
 			core.updateDisplay(null);
+			core.getDisplay().getRenderer().takeScreenShot( slot+"screen" );
 			
 			core.uiBase.hud.mainBox.addEntry("Game saved.");
 			
