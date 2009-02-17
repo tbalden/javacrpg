@@ -31,12 +31,8 @@ Higher level gamelogics documentation needed
 
 ---------------------
 [ ] BUG: loading ruins lightstate ???
+
 [ ] loading eats more and more memory
-
-[X] fix map things - especially positioning of cursor??
-	[ ]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
-	[ ] some populations are not shown - at mountain e.g.
-
 
 
 bugs:
@@ -68,6 +64,13 @@ bugs:
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
 	
+
+[X] some populations are not shown - at mountain e.g. -- better fix later, coz TreeLocator is not precise enough
+
+[X] fix map things - especially positioning of cursor??
+	[-]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
+
+[X] busy pane doesnt show for q!? geforce 9xxx - ant problem solved
 
 [X] maze entrance - replace the demo normal map column of Zphr with the four column thing
 

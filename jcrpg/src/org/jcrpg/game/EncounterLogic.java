@@ -436,14 +436,20 @@ public class EncounterLogic {
 				gameLogic.core.audioServer.playLoading(sound, "ai");
 			}
 		}
-		String sound = choice.skillActForm.getSound();
-		if (sound!=null)
+		if (choice.skillActForm!=null)
 		{
-			gameLogic.core.audioServer.playLoading(sound, "skills");
+			String sound = choice.skillActForm.getSound();
+			if (sound!=null)
+			{
+				gameLogic.core.audioServer.playLoading(sound, "skills");
+			}
 		}
 		if (choice.member.isRendered()) {
-			String anim = choice.skillActForm.animationType;
-			choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
+			if (choice.skillActForm!=null)
+			{
+				String anim = choice.skillActForm.animationType;
+				choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
+			}
 		}
 	}
 	

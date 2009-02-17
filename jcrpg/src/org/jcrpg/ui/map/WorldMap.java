@@ -117,6 +117,24 @@ public class WorldMap {
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
 							ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+							ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
+							ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
+							ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
+							if (economics==null)
+							{
+								economics = economics1;
+							}
+							if (economics==null)
+							{
+								economics = economics2;
+							}
+							if (economics==null)
+							{
+								economics = economics3;
+							}
+							if (economics1!=null) economics.addAll(economics1);
+							if (economics2!=null) economics.addAll(economics2);
+							if (economics3!=null) economics.addAll(economics3);
 
 							if (economics!=null)
 							{
@@ -124,13 +142,20 @@ public class WorldMap {
 								{
 									Economic e = ((Economic)o);
 									if (
-											(e.origoX>wx+w.magnification-1)
+											(e.origoX>wx+w.magnification)
+											||
+											(e.origoX+e.sizeX-1<wx)
+											||
+											(e.origoZ>wz+w.magnification)
+											||
+											(e.origoZ+e.sizeZ-1<wz)
+/*											(e.origoX>wx+w.magnification-1)
 											||
 											(e.origoX+e.sizeX-1<wx)
 											||
 											(e.origoZ>wz+w.magnification-1)
 											||
-											(e.origoZ+e.sizeZ-1<wz)
+											(e.origoZ+e.sizeZ-1<wz)*/
 									) 
 									{
 										
@@ -149,10 +174,16 @@ public class WorldMap {
 									}
 									ecoObj = e;
 									ecoFound = true;
+									byte[] cB = ecoObj.getMapColor();
+									geoImageSet[((z*w.sizeX)+x)*4+0]=cB[0];
+									geoImageSet[((z*w.sizeX)+x)*4+1]=cB[1];
+									geoImageSet[((z*w.sizeX)+x)*4+2]=cB[2];
+									geoImageSet[((z*w.sizeX)+x)*4+3] = (byte)255;
 									break;
 								}
 								
 							}
+							/*
 							for (Geography g:geos)
 							{
 								if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
@@ -171,7 +202,7 @@ public class WorldMap {
 									
 									break;
 								}
-							}
+							}*/
 							/*if (!gFound)
 							{
 							geoImageSet[((z*w.sizeX)+x)*4+0] = 0;
