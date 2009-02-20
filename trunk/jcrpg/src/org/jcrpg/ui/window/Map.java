@@ -20,6 +20,7 @@ package org.jcrpg.ui.window;
 
 import java.io.File;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.map.WorldMap;
@@ -56,7 +57,12 @@ public class Map extends Window {
         
         TextureState frameState= core.getDisplay().getRenderer().createTextureState();
         Texture frameTex = new Texture2D();
-        Image frameImg = TextureManager.loadImage(new File("./data/ui/windowframe.dds").toURI().toURL(),true);
+        String fileName = "./data/ui/windowframe.dds";
+        if (J3DCore.SETTINGS.DISABLE_DDS)
+        {
+        	fileName = "./data/ui/windowframe.png";     	
+        }
+        Image frameImg = TextureManager.loadImage(new File(fileName).toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
         float widthRatio = 4.0f;

@@ -17,9 +17,17 @@
 
 package org.jcrpg.ui;
 
+import org.jcrpg.threed.*;
+
 public class HUDParams {
 
-	//public String image = "./data/ui/hud1_v1_new.png"; 
 	public String image = "./data/ui/UI_02.dds";
+	public HUDParams()
+	{
+		if (J3DCore.SETTINGS.DISABLE_DDS)
+		{
+			image = "./data/ui/UI_02.png";
+		}
+	}
 	
 }

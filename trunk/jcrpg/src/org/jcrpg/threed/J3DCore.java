@@ -203,7 +203,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		public  boolean CONTINUOUS_LOAD = true;
 		
-		public  boolean DISABLE_DDS = false;
+		public  boolean DISABLE_DDS = true;
 
 		public  boolean LOGGING = true;
 		public  boolean FPSCOUNTER = true;
@@ -322,6 +322,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 			// controller settings
 			coreSettings.MOUSELOOK = loadValue("MOUSELOOK", false);
+			coreSettings.DISABLE_DDS = loadValue("DISABLE_DDS", false);
 			
 			// developer settings
 			coreSettings.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
@@ -2340,7 +2341,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	@Override
 	protected void simpleInitGame() {
-		
+		try{
+			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+		}catch (Exception ex)
+		{}		
+
 		modelLoader = new ModelLoader(this);
 		Thread.currentThread().setPriority(2);
 		audioServer = new AudioServer();
@@ -3030,8 +3035,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	protected final void render(float interpolation) {
 
 		super.render(interpolation);
-
-		
 		
 		Renderer r = display.getRenderer();
 
@@ -3047,6 +3050,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		//r.draw(fpsNode);
 
 		doDebug(r);
+		try{
+			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
+		}catch (Exception ex)
+		{}		
+
 	}
 
 	public Node getUIRootNode() {
