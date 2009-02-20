@@ -30,6 +30,8 @@ Society, Groups etc.
 Higher level gamelogics documentation needed
 
 ---------------------
+[ ] intel gfx card DDS texture replacement with PNG, modify texture loading ?? jme switch? ResourceLocator trick?!!!
+[ ] integrate mvrasseli cave music
 [ ] BUG: loading ruins lightstate ???
 
 [ ] loading eats more and more memory
