@@ -325,7 +325,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			coreSettings.DISABLE_DDS = loadValue("DISABLE_DDS", false);
 			// without DDS texture quality is set to lowest (only for lowest quality
 			// are DDS textures converted to png.
-			if (coreSettings.DISABLE_DDS) coreSettings.TEXTURE_QUALITY = 0;
+			if (coreSettings.DISABLE_DDS) 
+			{
+				coreSettings.TEXTURE_QUALITY = 0;
+				
+			}
+			TextureManager.FALLBACK_DDS_2_PNG_JPG = coreSettings.DISABLE_DDS;
 			// developer settings
 			coreSettings.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
 			coreSettings.QUICK_EXIT = loadValue("QUICK_EXIT", true);
@@ -2346,7 +2351,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		try{
 			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
 		}catch (Exception ex)
-		{}		
+		{
+			SETTINGS.TEXTURE_QUALITY = 0;
+			SETTINGS.DISABLE_DDS = true;
+			TextureManager.FALLBACK_DDS_2_PNG_JPG = true;
+		}		
 
 		modelLoader = new ModelLoader(this);
 		Thread.currentThread().setPriority(2);
