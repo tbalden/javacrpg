@@ -30,14 +30,11 @@ Society, Groups etc.
 Higher level gamelogics documentation needed
 
 ---------------------
-[X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
-	[ ] jme base static switch to disable dds loading
 
 [ ] integrate mvrasseli cave music
 [ ] BUG: loading ruins lightstate ???
 
 [ ] loading eats more and more memory
-
 
 bugs:
 	[?] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
@@ -68,6 +65,8 @@ bugs:
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
 	
+[X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
+	[X] jme base static switch to disable dds loading
 
 [X] some populations are not shown - at mountain e.g. -- better fix later, coz TreeLocator is not precise enough
 
