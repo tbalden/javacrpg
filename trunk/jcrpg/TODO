@@ -30,7 +30,9 @@ Society, Groups etc.
 Higher level gamelogics documentation needed
 
 ---------------------
-[ ] intel gfx card DDS texture replacement with PNG, modify texture loading ?? jme switch? ResourceLocator trick?!!!
+[X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
+	[ ] jme base static switch to disable dds loading
+
 [ ] integrate mvrasseli cave music
 [ ] BUG: loading ruins lightstate ???
 

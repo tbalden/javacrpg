@@ -323,7 +323,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// controller settings
 			coreSettings.MOUSELOOK = loadValue("MOUSELOOK", false);
 			coreSettings.DISABLE_DDS = loadValue("DISABLE_DDS", false);
-			
+			// without DDS texture quality is set to lowest (only for lowest quality
+			// are DDS textures converted to png.
+			if (coreSettings.DISABLE_DDS) coreSettings.TEXTURE_QUALITY = 0;
 			// developer settings
 			coreSettings.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
 			coreSettings.QUICK_EXIT = loadValue("QUICK_EXIT", true);
