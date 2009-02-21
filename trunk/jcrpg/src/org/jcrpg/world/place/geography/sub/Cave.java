@@ -25,6 +25,7 @@ import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.util.HashUtil;
+import org.jcrpg.world.ai.MusicDescription;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoAdd;
 import org.jcrpg.world.generator.program.algorithm.GenAlgoAddParams;
 import org.jcrpg.world.place.Geography;
@@ -36,7 +37,7 @@ import org.jcrpg.world.place.World;
 
 public class Cave extends Geography implements Surface {
 
-	
+
 	public static int LIMIT_NORTH = 1;
 	public static int LIMIT_EAST = 2;
 	public static int LIMIT_SOUTH = 4;
@@ -473,6 +474,13 @@ public class Cave extends Geography implements Surface {
 	public boolean isWorldMapTinter()
 	{
 		return false;
+	}
+
+	MusicDescription musicDesc = new MusicDescription("cave");
+	
+	@Override
+	public MusicDescription getMusicDescription() {
+		return musicDesc;
 	}
 
 }

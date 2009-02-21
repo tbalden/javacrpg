@@ -460,6 +460,11 @@ public class GameStateContainer {
 		{
 			return desc.detailedEconomic.getMusicDescription().getRandomBackgroundMusicFileOfCollection();
 		}
+		if (desc.g!=null && desc.g.getMusicDescription()!=null)
+		{
+			return desc.g.getMusicDescription().getRandomBackgroundMusicFileOfCollection();
+		}
+
 		CubeClimateConditions c = player.world.getClimate().getCubeClimate(new Time(), player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ, true);
 		if (c.getBelt()!=null && c.getBelt().getMusicDescription()!=null)
 		{
@@ -480,6 +485,15 @@ public class GameStateContainer {
 			if (lastMusicClass!=desc.detailedEconomic.getClass())
 			{
 				lastMusicClass = desc.detailedEconomic.getClass();
+				return true;
+			}
+			return false;
+		}
+		if (desc.g!=null && desc.g.getMusicDescription()!=null)
+		{
+			if (lastMusicClass!=desc.g.getClass())
+			{
+				lastMusicClass = desc.g.getClass();
 				return true;
 			}
 			return false;
