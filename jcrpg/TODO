@@ -31,7 +31,8 @@ Higher level gamelogics documentation needed
 
 ---------------------
 
-[ ] integrate mvrasseli cave music
+[ ] world map enhancement -- finish , add patterns.
+
 [ ] BUG: loading ruins lightstate ???
 
 [ ] loading eats more and more memory
@@ -64,6 +65,8 @@ bugs:
 			(Mobs will be able to check around) 
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
+
+[X] integrate mvrasseli cave music
 	
 [X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
 	[X] jme base static switch to disable dds loading
