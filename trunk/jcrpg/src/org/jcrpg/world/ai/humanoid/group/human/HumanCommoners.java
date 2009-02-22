@@ -88,6 +88,13 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		addGroupingRuleMember(HUMAN_MALE_SMITH);
 	}
+
+	static byte[] populationColor = new byte[] {(byte)255,(byte)255,(byte)255};
+	
+	@Override
+	public byte[] getPopulationMapColor() {
+		return populationColor;
+	}
 	
 
 	

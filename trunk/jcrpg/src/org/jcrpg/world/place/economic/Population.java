@@ -31,6 +31,7 @@ import org.jcrpg.world.place.World;
 
 public abstract class Population extends Economic{
 	
+
 	public transient ArrayList<Residence> residenceList = new ArrayList<Residence>();
 	public transient ArrayList<EconomicGround> groundList = new ArrayList<EconomicGround>();
 	
@@ -286,6 +287,15 @@ public abstract class Population extends Economic{
 	public boolean needsFullBlockSizedSubelement()
 	{
 		return false;
+	}
+	
+	
+	@Override
+	public byte[] getMapColor() {
+		// TODO Auto-generated method stub
+		byte[] b = owner.getPopulationMapColor();
+		if (b!=null) return b;
+		return super.getMapColor();
 	}
 	
 }

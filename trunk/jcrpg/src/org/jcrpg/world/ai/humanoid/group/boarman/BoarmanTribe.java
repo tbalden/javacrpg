@@ -135,6 +135,12 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		addGroupingRuleMember(BOARMAN_MALE_MAGE);
 	}
 	
+	static byte[] populationColor = new byte[] {(byte)255,(byte)0,(byte)255};
+	
+	@Override
+	public byte[] getPopulationMapColor() {
+		return populationColor;
+	}
 
 	
 }

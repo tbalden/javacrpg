@@ -371,4 +371,9 @@ public class EntityInstance {
 		return;
 	}
 	
+	public byte[] getPopulationMapColor()
+	{
+		return description.getPopulationMapColor();
+	}
+	
 }

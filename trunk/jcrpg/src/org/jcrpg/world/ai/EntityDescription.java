@@ -363,5 +363,10 @@ public class EntityDescription extends DescriptionBase {
 	{
 		return Language.v("entity."+this.getClass().getSimpleName());
 	}
+	
+	public byte[] getPopulationMapColor()
+	{
+		return null;
+	}
 
 }
