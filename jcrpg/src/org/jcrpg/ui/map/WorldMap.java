@@ -122,7 +122,20 @@ public class WorldMap {
 		  		{ false, false, false, false, false,false, false, false, false }
 		  	                                    }
 		  	;
-	
+	static boolean[][] POSITION = new boolean[][] 
+	  	                                    {
+	  		{ true, false, false, false, true,false, false, false, true },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ true, false, false, false, false,false, false, false, true },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ false, false, false, false, false,false, false, false, false },
+	  		{ true, false, false, false, true,false, false, false, true },
+	  	                                    }
+	  	;
+
 	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern)
 	{
 		for (int x = 0; x<PIXELS_PER_BLOCK; x++)
@@ -133,7 +146,7 @@ public class WorldMap {
 				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
 				for (int i=0; i<color.length; i++)
 				{
-					map[disp+i] = color[i];
+					map[disp+i] = (byte)Math.min(color[i]+5*x,255);
 				}
 				map[disp+3] = alpha;}
 			}
@@ -345,15 +358,18 @@ public class WorldMap {
 		positionGraphics.clearRect(0, 0, positionGraphics.getImage().getWidth(), positionGraphics.getImage().getHeight());
 		
 		Jcrpg.LOGGER.info("UPDATE: "+cx+" "+cz);
-		int dotSize = world.sizeX/70;
+		int dotSize = PIXELS_PER_BLOCK;
 		{
-			for (int i=-1*dotSize; i<=1*dotSize; i++)
+			for (int i=0; i<=dotSize; i++)
 			{
-				for (int j=-1*dotSize; j<=1*dotSize; j++)
+				for (int j=0; j<=dotSize; j++)
 				{
 					try {
-						int red = (int)((((dotSize-Math.abs(j))*1d/dotSize)*((dotSize-Math.abs(i))*1d/dotSize)*355));
-						paintPoint(positionGraphics, (cx+j)*PIXELS_PER_BLOCK+2, (cz+i)*PIXELS_PER_BLOCK+2, red , 0, 0, 255);
+						if (i==0 || i == dotSize || j==0 || j == dotSize)
+						{
+							int red = (int)((((dotSize-Math.abs(j))*1d/dotSize)*((dotSize-Math.abs(i))*1d/dotSize)*355));
+							paintPoint(positionGraphics, (cx)*PIXELS_PER_BLOCK+j, (cz*PIXELS_PER_BLOCK)+i, red , 0, 0, 255);
+						}
 					} catch (ArrayIndexOutOfBoundsException aiex)
 					{				
 					}

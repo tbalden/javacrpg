@@ -65,8 +65,8 @@ public class Map extends Window {
         Image frameImg = TextureManager.loadImage(new File(fileName).toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
-        float widthRatio = 4.0f;
-        float heightRatio = 5.0f;
+        float widthRatio = 5.0f;
+        float heightRatio = 6.3f;
         {
         	Quad hudQuad = new Quad("hud", (int)((core.getDisplay().getWidth()/10)*widthRatio*1.06f), (int)(((core.getDisplay().getHeight()/10)*heightRatio*1.06f)));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
