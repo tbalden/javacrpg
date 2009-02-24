@@ -54,7 +54,7 @@ public class Geography extends Place implements Surface {
 	/**
 	 * Color for the maps.
 	 */
-	public byte[] colorBytes = new byte[] {(byte)100,(byte)145,(byte)100};
+	public byte[] colorBytes = new byte[] {(byte)100,(byte)210,(byte)130};
 	
 	public byte[] getMapColor()
 	{

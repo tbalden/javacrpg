@@ -33,7 +33,7 @@ public class Forest extends Geography {
 	
 	public Forest(String id, Place parent, PlaceLocator loc, int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, boolean fillBoundaries) throws Exception {
 		super(id, parent, loc,worldGroundLevel,worldGroundLevel,magnification,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,fillBoundaries);
-		colorBytes = new byte[] {(byte)10,(byte)10,(byte)10};
+		colorBytes = new byte[] {(byte)80,(byte)145,(byte)80};
 	}
 
 	static Side[][] FOREST = new Side[][] { null, null, null,null,null,{new Side(TYPE_FOREST,SUBTYPE_FOREST)} };

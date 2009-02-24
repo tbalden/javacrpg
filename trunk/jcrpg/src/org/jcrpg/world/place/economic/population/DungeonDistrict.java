@@ -66,7 +66,7 @@ public class DungeonDistrict extends Population {
 		return true;
 	}
 	
-	public static byte[] colors = new byte[]{(byte)205,(byte)240,(byte)40};
+	public static byte[] colors = new byte[]{(byte)215,(byte)70,(byte)40};
 	@Override
 	public byte[] getMapColor()
 	{
