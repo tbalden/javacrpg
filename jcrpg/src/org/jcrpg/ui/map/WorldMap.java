@@ -99,24 +99,24 @@ public class WorldMap {
 	static boolean[][] CLIMATE = new boolean[][] 
 		  	                                    {
 		  		{ true, false, true, false, true, false, true, false, true },
-		  		{ false, true, false, true, false,true, false, true, false },
-		  		{ true, false, true, false, true, false, true, false, true },
-		  		{ false, true, false, true, false,true, false, true, false },
-		  		{ true, false, true, false, true, false, true, false, true },
-		  		{ false, true, false, true, false,true, false, true, false },
-		  		{ true, false, true, false, true, false, true, false, true },
-		  		{ false, true, false, true, false,true, false, true, false },
+		  		{ false, true, true, true, true,true, true, true, false },
+		  		{ true, true, true, false, true, false, true, true, true },
+		  		{ false, true, false, true, true,true, false, true, false },
+		  		{ true, true, true, false, true, false, true, true, true },
+		  		{ false, true, false, true, true,true, false, true, false },
+		  		{ true, true, true, false, true, false, true, true, true },
+		  		{ false, true, true, true, true,true, true, true, false },
 		  		{ true, false, true, false, true, false, true, false, true }
 		  	                                    }
 		  	;
 	static boolean[][] CITY = new boolean[][] 
 		  	                                    {
 		  		{ false, false, false, false, false,false, false, false, false },
-		  		{ false, true, true, true, false,false, false, false, false },
-		  		{ false, true, true, true, false,false, false, false, false },
-		  		{ false, true, true, true, false,false, false, false, false },
-		  		{ false, false, false, false, false,false, false, false, false },
-		  		{ false, false, false, false, false,false, false, false, false },
+		  		{ false, false, true, true, true,false, false, false, false },
+		  		{ false, true, true, true, true,true, false, false, false },
+		  		{ false, true, true, true, true,true, false, false, false },
+		  		{ false, true, true, true, true,true, false, false, false },
+		  		{ false, false, true, true, true,false, false, false, false },
 		  		{ false, false, false, false, false,false, false, false, false },
 		  		{ false, false, false, false, false,false, false, false, false },
 		  		{ false, false, false, false, false,false, false, false, false }
@@ -136,7 +136,7 @@ public class WorldMap {
 	  	                                    }
 	  	;
 
-	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern)
+	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
 	{
 		for (int x = 0; x<PIXELS_PER_BLOCK; x++)
 		{
@@ -146,7 +146,11 @@ public class WorldMap {
 				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
 				for (int i=0; i<color.length; i++)
 				{
-					map[disp+i] = (byte)Math.min(color[i]+5*x,255);
+					if (vary)
+
+						{
+						map[disp+i] = (byte)Math.min(color[i]+5*x,255);
+						} else map[disp+i] = color[i];
 				}
 				map[disp+3] = alpha;}
 			}
@@ -182,13 +186,8 @@ public class WorldMap {
 						{
 							System.out.print(".");
 							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification+3, 0, z*w.magnification+3, false).getBelt();
-							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE);
-							/*climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+0] = belt.colorBytes[0];
-							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+1] = belt.colorBytes[1];
-							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+2] = belt.colorBytes[2];*/
-							mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+0] = belt.colorBytes[0];
-							mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+1] = belt.colorBytes[1];
-							mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+2] = belt.colorBytes[2];
+							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false);
+							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false);
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
 							ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
@@ -231,7 +230,7 @@ public class WorldMap {
 									ecoObj = e;
 									ecoFound = true;
 									byte[] cB = ecoObj.getMapColor();
-									paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY);
+									paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,true);
 									break;
 								}
 								
@@ -241,10 +240,10 @@ public class WorldMap {
 							{
 								if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 								{
-									paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND);
+									paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
 									if (ecoFound) {
 										byte[] cB = ecoObj.getMapColor();
-										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY);
+										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, true);
 									}
 									
 									break;
@@ -255,9 +254,8 @@ public class WorldMap {
 						{
 							map[z][x] = (map[z][x]^WATER);
 							System.out.print("W");
-							mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+2] = (byte)100;
-							mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+1] = (byte)0;
-							paintPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, GROUND);
+							paintPattern(new byte[]{0,0,100}, (byte)255, mapImage, x, z, w.sizeX, GROUND, false);
+							paintPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, GROUND,true);
 						} 
 					} else
 					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
@@ -271,7 +269,7 @@ public class WorldMap {
 							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+0] = 0;
 							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+1] = 0;
 							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+2] = 0;
-							paintPattern(new byte[]{30,30,(byte)200}, (byte)190, mapImage, x, z, w.sizeX, GROUND);
+							paintPattern(new byte[]{30,30,(byte)200}, (byte)190, mapImage, x, z, w.sizeX, GROUND, true);
 							geoImageSet[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)0;
 						}
 					}
@@ -365,7 +363,7 @@ public class WorldMap {
 				for (int j=0; j<=dotSize; j++)
 				{
 					try {
-						if (i==0 || i == dotSize || j==0 || j == dotSize)
+						if (i<=1 || i >= dotSize-1 || j<=1 || j >= dotSize-1)
 						{
 							int red = (int)((((dotSize-Math.abs(j))*1d/dotSize)*((dotSize-Math.abs(i))*1d/dotSize)*355));
 							paintPoint(positionGraphics, (cx)*PIXELS_PER_BLOCK+j, (cz*PIXELS_PER_BLOCK)+i, red , 0, 0, 255);

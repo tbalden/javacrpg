@@ -33,9 +33,6 @@ Higher level gamelogics documentation needed
 
 ---------------------
 
-[ ] world map enhancement -- finish , add patterns.
-better coloring, some bug makes it dark. + not so transparent?
-
 [ ] BUG: loading ruins lightstate ???
 
 [ ] loading eats more and more memory
@@ -68,6 +65,9 @@ bugs:
 			(Mobs will be able to check around) 
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
+
+[X] world map enhancement -- finish , add patterns.
+better coloring, some bug makes it dark. + not so transparent?
 
 [X] integrate mvrasseli cave music
 	
