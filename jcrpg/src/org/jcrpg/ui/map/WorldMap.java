@@ -86,11 +86,11 @@ public class WorldMap {
 	static boolean[][] GROUND = new boolean[][] 
 	  	                                    {
 	  		{ true, true, true, true, true,true, true, true, true },
-	  		{ true, true, false, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true },
-	  		{ true, true, false, true, true,true, true, true, true },
+	  		{ true, true, true, true, true,true, true, true, true },
+	  		{ true, true, true, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true },
 	  		{ true, true, true, true, true,true, true, true, true }
@@ -230,7 +230,7 @@ public class WorldMap {
 									ecoObj = e;
 									ecoFound = true;
 									byte[] cB = ecoObj.getMapColor();
-									paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,true);
+									paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,false);
 									break;
 								}
 								
@@ -243,7 +243,7 @@ public class WorldMap {
 									paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
 									if (ecoFound) {
 										byte[] cB = ecoObj.getMapColor();
-										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, true);
+										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
 									}
 									
 									break;
