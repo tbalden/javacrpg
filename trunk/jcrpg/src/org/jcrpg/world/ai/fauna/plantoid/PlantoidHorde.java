@@ -19,6 +19,8 @@
 package org.jcrpg.world.ai.fauna.plantoid;
 
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.plantoid.member.Plantobite;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
@@ -29,12 +31,13 @@ public class PlantoidHorde extends AnimalEntityDescription {
 	
 	public PlantoidHorde()
 	{
-		iconPic = "bear";
+		iconPic = "unknown";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Peaceful.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
+		startingSkills.add(new SkillInstance(BiteFight.class,20));
 		//setAverageGroupSizeAndDeviation(5, 2);
 		addGroupingRuleMember(Plantobite.PLANTOBITE);
 	}

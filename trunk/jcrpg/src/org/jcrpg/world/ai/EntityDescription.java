@@ -77,6 +77,10 @@ public class EntityDescription extends DescriptionBase {
 	public static Class<? extends PositionCalculus> positionCalcType = PositionCalculus.class;
 	public static HashMap<Class<? extends PositionCalculus>, PositionCalculus> calcTypes = new HashMap<Class<? extends PositionCalculus>, PositionCalculus>();
 	
+	/**
+	 * Initial skills and their level for this kind of entity. Ratios will multiply it
+	 * on a per member basis.
+	 */
 	public ArrayList<SkillInstance> startingSkills = new ArrayList<SkillInstance>();
 	public ArrayList<Class <? extends Behavior>> behaviors = new ArrayList<Class<? extends Behavior>>();
 	

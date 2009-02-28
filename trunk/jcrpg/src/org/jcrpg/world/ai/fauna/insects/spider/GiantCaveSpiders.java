@@ -23,6 +23,8 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
 import org.jcrpg.world.ai.body.SinglePartBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
@@ -63,6 +65,7 @@ public class GiantCaveSpiders extends AnimalEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		//setAverageGroupSizeAndDeviation(5, 2);
+		startingSkills.add(new SkillInstance(BiteFight.class,20));
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_MALE);
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_FEMALE);
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_CHILD);

@@ -23,6 +23,9 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
+import org.jcrpg.world.ai.abs.skill.physical.outdoor.Tracking;
 import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
@@ -46,7 +49,6 @@ public class BrownBearFamily extends AnimalEntityDescription {
 	public static MovingModel brownbear = new MovingModel("models/fauna/warbear_tex.obj",null,null,null,false);;//new MovingModel("./data/models/fauna/gorilla/gorilla.md5mesh","./data/models/fauna/gorilla/gorilla_steady.md5anim",null,null,false);
 	public static RenderedMovingUnit brownbear_unit = new RenderedMovingUnit(new Model[]{brownbear});
 	
-	
 	static
 	{
 		
@@ -61,6 +63,8 @@ public class BrownBearFamily extends AnimalEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		//setAverageGroupSizeAndDeviation(5, 2);
+		startingSkills.add(new SkillInstance(BiteFight.class,20));
+
 		addGroupingRuleMember(BROWNBEAR_TYPE_MALE);
 		addGroupingRuleMember(BROWNBEAR_TYPE_FEMALE);
 		addGroupingRuleMember(BROWNBEAR_TYPE_CHILD);
