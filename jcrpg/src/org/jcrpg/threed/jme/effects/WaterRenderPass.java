@@ -440,97 +440,108 @@ public class WaterRenderPass extends Pass {
 	private Vector3f camReflectLeft = new Vector3f();
 	private Vector3f camLocation = new Vector3f();
 
-	private void renderReflection() {
-	    reflectionTime += tpf;
-        if (reflectionTime < reflectionThrottle) return;
-        reflectionTime = 0;
-
-		if( aboveWater ) {
-			camLocation.set( cam.getLocation() );
-
-			float planeDistance = waterPlane.pseudoDistance( camLocation );
-            calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
-			camReflectPos.set( camLocation.subtractLocal( calcVect ) );
-
-			camLocation.set( cam.getLocation() ).addLocal( cam.getDirection() );
-			planeDistance = waterPlane.pseudoDistance( camLocation );
-            calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
-			camReflectDir.set( camLocation.subtractLocal( calcVect ) ).subtractLocal( camReflectPos ).normalizeLocal();
-
-			camLocation.set( cam.getLocation() ).addLocal( cam.getUp() );
-			planeDistance = waterPlane.pseudoDistance( camLocation );
-            calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
-			camReflectUp.set( camLocation.subtractLocal( calcVect ) ).subtractLocal( camReflectPos ).normalizeLocal();
-
-			camReflectLeft.set( camReflectDir ).crossLocal( camReflectUp ).normalizeLocal();
-
-			tRenderer.getCamera().getLocation().set( camReflectPos );
-			tRenderer.getCamera().getDirection().set( camReflectDir );
-			tRenderer.getCamera().getUp().set( camReflectUp );
-			tRenderer.getCamera().getLeft().set( camReflectLeft );
-		}
-		else {
-			tRenderer.getCamera().getLocation().set( cam.getLocation() );
-			tRenderer.getCamera().getDirection().set( cam.getDirection() );
-			tRenderer.getCamera().getUp().set( cam.getUp() );
-			tRenderer.getCamera().getLeft().set( cam.getLeft() );
-		}
-
-		if ( skyBox != null ) {
-			tmpLocation.set( skyBox.getLocalTranslation() );
-			skyBox.getLocalTranslation().set( tRenderer.getCamera().getLocation() );
-			skyBox.updateWorldData( 0.0f );
-		}
-
-        texArray.clear();
-        texArray.add(textureReflect);
-        
-        if (isUseFadeToFogColor()) {
-            context.enforceState(noFog);
-            tRenderer.render( renderList, texArray );
-            context.clearEnforcedState(RenderState.RS_FOG);
-        } else {
-            tRenderer.render( renderList, texArray );
+    private void renderReflection() {
+        if (renderList == null || renderList.isEmpty()) {
+            return;
         }
-
-		if ( skyBox != null ) {
-			skyBox.getLocalTranslation().set( tmpLocation );
-			skyBox.updateWorldData( 0.0f );
-		}
-	}
-
-	private void renderRefraction() {
-        refractionTime += tpf;
-        if (refractionTime < refractionThrottle) return;
-        refractionTime = 0;
-
-        tRenderer.getCamera().getLocation().set( cam.getLocation() );
-		tRenderer.getCamera().getDirection().set( cam.getDirection() );
-		tRenderer.getCamera().getUp().set( cam.getUp() );
-		tRenderer.getCamera().getLeft().set( cam.getLeft() );
-
-		CullHint cullMode = CullHint.Inherit;
-		if ( skyBox != null ) {
-			cullMode = skyBox.getCullHint();
-			skyBox.setCullHint( CullHint.Always );
-		}
-
-        texArray.clear();
-        texArray.add(textureRefract);
-        texArray.add(textureDepth);
         
-        if (isUseFadeToFogColor()) {
-            context.enforceState(noFog);
-            tRenderer.render( renderList, texArray );
-            context.clearEnforcedState(RenderState.RS_FOG);
-        } else {
-            tRenderer.render( renderList, texArray );
-        }
+        reflectionTime += tpf;
+    if (reflectionTime < reflectionThrottle) return;
+    reflectionTime = 0;
 
-		if ( skyBox != null ) {
-			skyBox.setCullHint( cullMode );
-		}
-	}
+            if( aboveWater ) {
+                    camLocation.set( cam.getLocation() );
+
+                    float planeDistance = waterPlane.pseudoDistance( camLocation );
+        calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
+                    camReflectPos.set( camLocation.subtractLocal( calcVect ) );
+
+                    camLocation.set( cam.getLocation() ).addLocal( cam.getDirection() );
+                    planeDistance = waterPlane.pseudoDistance( camLocation );
+        calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
+                    camReflectDir.set( camLocation.subtractLocal( calcVect ) ).subtractLocal( camReflectPos ).normalizeLocal();
+
+                    camLocation.set( cam.getLocation() ).addLocal( cam.getUp() );
+                    planeDistance = waterPlane.pseudoDistance( camLocation );
+        calcVect.set(waterPlane.getNormal()).multLocal( planeDistance * 2.0f );
+                    camReflectUp.set( camLocation.subtractLocal( calcVect ) ).subtractLocal( camReflectPos ).normalizeLocal();
+
+                    camReflectLeft.set( camReflectUp ).crossLocal( camReflectDir ).normalizeLocal();
+
+                    tRenderer.getCamera().getLocation().set( camReflectPos );
+                    tRenderer.getCamera().getDirection().set( camReflectDir );
+                    tRenderer.getCamera().getUp().set( camReflectUp );
+                    tRenderer.getCamera().getLeft().set( camReflectLeft );
+            }
+            else {
+                    tRenderer.getCamera().getLocation().set( cam.getLocation() );
+                    tRenderer.getCamera().getDirection().set( cam.getDirection() );
+                    tRenderer.getCamera().getUp().set( cam.getUp() );
+                    tRenderer.getCamera().getLeft().set( cam.getLeft() );
+            }
+
+            if ( skyBox != null ) {
+                    tmpLocation.set( skyBox.getLocalTranslation() );
+                    skyBox.getLocalTranslation().set( tRenderer.getCamera().getLocation() );
+                    skyBox.updateWorldData( 0.0f );
+            }
+
+    texArray.clear();
+    texArray.add(textureReflect);
+    
+    if (isUseFadeToFogColor()) {
+        context.enforceState(noFog);
+        tRenderer.render( renderList, texArray );
+        context.clearEnforcedState(RenderState.StateType.Fog);
+    } else {
+        tRenderer.render( renderList, texArray );
+    }
+
+            if ( skyBox != null ) {
+                    skyBox.getLocalTranslation().set( tmpLocation );
+                    skyBox.updateWorldData( 0.0f );
+            }
+    }
+
+    private void renderRefraction() {
+    if (renderList.isEmpty()) {
+        return;
+    }
+    
+    refractionTime += tpf;
+    if (refractionTime < refractionThrottle) return;
+    refractionTime = 0;
+
+    tRenderer.getCamera().getLocation().set( cam.getLocation() );
+            tRenderer.getCamera().getDirection().set( cam.getDirection() );
+            tRenderer.getCamera().getUp().set( cam.getUp() );
+            tRenderer.getCamera().getLeft().set( cam.getLeft() );
+
+    CullHint cullMode = CullHint.Dynamic;
+            if ( skyBox != null ) {
+                    cullMode = skyBox.getCullHint();
+                    skyBox.setCullHint( CullHint.Always );
+            }
+
+    texArray.clear();
+    texArray.add(textureRefract);
+    texArray.add(textureDepth);
+    
+    if (isUseFadeToFogColor()) {
+        context.enforceState(noFog);
+        tRenderer.render( renderList, texArray );
+        context.clearEnforcedState(RenderState.StateType.Fog);
+    } else {
+        tRenderer.render( renderList, texArray );
+    }
+
+            if ( skyBox != null ) {
+                    skyBox.setCullHint( cullMode );
+            }
+    }
+
+
+
 
 	public void removeReflectedScene( Spatial renderNode ) {
 		if(renderList != null) {
