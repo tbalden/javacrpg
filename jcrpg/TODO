@@ -31,9 +31,6 @@ Society, Groups etc.
 
 Higher level gamelogics documentation needed
 
----------------------
-
-[ ] BUG: loading ruins lightstate ???
 
 [ ] loading eats more and more memory
 
@@ -65,6 +62,11 @@ bugs:
 			(Mobs will be able to check around) 
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
+
+---------------------
+
+[X] BUG: loading ruins lightstate ???
+
 
 [X] world map enhancement -- finish , add patterns.
 better coloring, some bug makes it dark. + not so transparent?

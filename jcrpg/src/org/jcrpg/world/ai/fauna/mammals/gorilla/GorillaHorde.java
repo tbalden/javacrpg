@@ -24,6 +24,9 @@ import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
+import org.jcrpg.world.ai.abs.skill.SkillInstance;
+import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
+import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.body.MammalBody;
 import org.jcrpg.world.ai.fauna.AnimalEntityDescription;
 import org.jcrpg.world.ai.fauna.modifier.MildAnimalFemale;
@@ -77,6 +80,8 @@ public class GorillaHorde extends AnimalEntityDescription {
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
 		setAverageGroupSizeAndDeviation(5, 2);
+		startingSkills.add(new SkillInstance(Wrestling.class,20));
+		startingSkills.add(new SkillInstance(BiteFight.class,20));
 		addGroupingRuleMember(GORILLA_TYPE_MALE);
 		addGroupingRuleMember(GORILLA_TYPE_FEMALE);
 		addGroupingRuleMember(GORILLA_TYPE_CHILD);
