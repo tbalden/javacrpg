@@ -37,6 +37,9 @@ public class Engine implements Runnable {
 	boolean pause = true;
 	Time worldMeanTime = null;
 	
+	/**
+	 * set this true if you want time passing not initializing turns.
+	 */
 	boolean debugOnlyTime = false;
 	
 	
