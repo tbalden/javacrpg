@@ -2413,7 +2413,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// cRootNode = new ScenarioNode(J3DCore.VIEW_DISTANCE,cam);
 		// Setup renderpasses
 
-		dofRenderPass = new DepthOfFieldRenderPass(cam, SETTINGS.DOF_DETAILED?1:2, SETTINGS.DOF_DETAILED?4:4);
+		dofRenderPass = new DepthOfFieldRenderPass(cam, SETTINGS.DOF_DETAILED?1:2, SETTINGS.DOF_DETAILED?2:2);
 		bloomRenderPass = new BloomRenderPass(cam,4);
 
 		ShadeState ss = DisplaySystem.getDisplaySystem().getRenderer()
@@ -2626,8 +2626,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		dofRenderPass.setRootSpatial(dofParentNode);
 		dofRenderPass.setBlurSize(0.004f);
-		dofRenderPass.setNearBlurDepth(SETTINGS.VIEW_DISTANCE/1.3f);
-		dofRenderPass.setFocalPlaneDepth(SETTINGS.VIEW_DISTANCE/1.6f);
+		dofRenderPass.setNearBlurDepth(SETTINGS.VIEW_DISTANCE/1.6f);
+		dofRenderPass.setFocalPlaneDepth(SETTINGS.VIEW_DISTANCE/1.3f);
 		dofRenderPass.setFarBlurDepth(SETTINGS.VIEW_DISTANCE*2f);
 		dofRenderPass.setThrottle(0f);
 
