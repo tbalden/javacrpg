@@ -1,7 +1,13 @@
 Java Classic Role Playing Game
 ==============================
 http://javacrpg.sf.net
-(c) by Illes Pal Zoltan 2007-2008, Licensed under GPLv3
+(c) by Illes Pal Zoltan 2007-2009, Program code licensed under LGPLv3, 
+media under various licenses (PD,CC-BY-SA,CC-BY-SA-NC,GPL,LGPL) copyrighted by their respective copyright holder.
+
+s. Starting the game
+
+You need Sun's Java runtime environment to run the game. (See INSTALL.) 
+For starting under Linux and Mac use jcrpg-*.sh, under Windows use jcrpg-*.bat (choose a detail level from: between lowest and highest).
 
 m. Movement/Keyboard
 
@@ -12,22 +18,23 @@ Left/Right for looking around.
 
 C  Camping (resting)
 
-F1 World map
+F1 World map - rounded dots show the populations/mazes & different colors for the different geographic zones.
 F2 Party behavior window (no effect of the settings here currently)
 F3 Character Sheet window
 F4 Character's Inventory window
 F5 Party Order window
 F6 Use Skill/Item window
 
-F10 Main menu - here you can exit the game.
+F10 Main menu - here you can start a new game, exit, save, load the game and also set options.
 
 F11 debug infos (memory / 3d related)
 F12 Take a screenshot
 
 Use main menu for Save/Load your game.
 
-Use Inventory window to attach arrows to bows, equip armors, give items to other characters, drop items.
-Use Character Sheet to view you characters' attributes,resistance, active (spell) effects, XP, level, skill levels.
+Use Inventory window (F4) to attach arrows to bows, equip armors, give items to other characters, drop items.
+Use Character Sheet (F3) to view you characters' attributes,resistance, active (spell) effects, XP, level, skill levels.
+Use Use Skill/Item window (F6) to use items (e.g. potions), cast spell (e.g. healing).
 
 To start a brand new game with new character use New Game in main menu, create new characters, fill up your party
 and start the game! Use main menu to Save and Load your game. You can save only in Normal mode (not during combat).
@@ -49,13 +56,17 @@ MIPMAP_GLOBAL=true. Set TEXTURE_QUALITY_HIGH=false for even more FPS and less me
 
 
 r. Requirements
-- Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (MacOSX not tested)
+- Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (Apple releases it's own tweaked version
+	of Java, use that one for jCRPG.)
 	Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu)
-- At least ~400-500 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
+- At least ~400-600 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
 	It's recommended to switch of 3D accelerated desktop effects, it can slow down jcrpg.
 - Processor around 1.6GHz (Single core will do it)
+
+
+More information at http://javacrpg.sourceforge.net/wiki/index.php/Main_Page .
 
 
 How to install Java under ubuntu linux or debian linux?
@@ -64,6 +75,10 @@ Type :
 # sudo apt-get install openjdk-6-jre
 
 This is tested and working under Ubuntu Hardy Heron.
+
+Under Arch Linux type:
+# su -
+# pacman -S openjdk6
 
 
 
