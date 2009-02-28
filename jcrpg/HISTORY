@@ -1,3 +1,21 @@
+2009-02-28 'Spring Greeting' release svn_20090228
+- New monsters and animals (by tidbit)
+- New area type Maze (models by tidbit), maze generation
+- Audio system enhanced, zone dependent music playback
+- Main theme music added (by Jasper Brownrigg)
+- Battle and background music for climate zones (by Pal Illes)
+- Cave background music (by Marcus Rasseli)
+- Storage unlocking/looting interface added, chests with traps and fix loot added to maze area
+- Enhanced world map (F1)
+- A heap of new portraits (by Grumbel, and public domain organized by qubodup)
+- Voice profile selection for character creation with one new male sound-set (voice act by Magnulus)
+- Support for normal/spec mapping for static models
+- Optimized loading/rendering algorithm, moving to jME 2.0
+- Texture atlas technique, DDS textures added, memory optimizations
+- Many bugfixes (e.g. game fixed for use on Intel gfx under Linux)
+- Quicker loading of game, addition of 'Please Wait' panel
+
+
 2008-08-13 'Vigilant Eye' release svn_20080813
 - Turn based playable Combat phase added
 - New animated models (boarmen thug and mage by Zphr)

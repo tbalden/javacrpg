@@ -203,7 +203,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		public  boolean CONTINUOUS_LOAD = true;
 		
-		public  boolean DISABLE_DDS = true;
+		public  boolean DISABLE_DDS = false;
 
 		public  boolean LOGGING = true;
 		public  boolean FPSCOUNTER = true;
