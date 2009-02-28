@@ -2198,12 +2198,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		VBOInfo v = new VBOInfo(true);
 		skySphere.setVBOInfo(v);
 
-		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+		/*groundParentNode.clearRenderState(RenderState.RS_LIGHT);
 		rootNode.clearRenderState(RenderState.RS_LIGHT);
 		extRootNode.clearRenderState(RenderState.RS_LIGHT);
 		intRootNode.clearRenderState(RenderState.RS_LIGHT);
 		encounterExtRootNode.clearRenderState(RenderState.RS_LIGHT);
-		encounterIntRootNode.clearRenderState(RenderState.RS_LIGHT);
+		encounterIntRootNode.clearRenderState(RenderState.RS_LIGHT);*/
 		skySphere.setRenderState(skydomeLightState);
 
 		// intRootNode.attachChild(skySphereInvisibleGround);
@@ -2291,8 +2291,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			if (encounterMode) {
 				switchEncounterMode(false);
 			}
-			orbiters3D.clear();
-			orbitersLight3D.clear();
+			/*orbiters3D.clear();
+			orbitersLight3D.clear();*/ // TODO clear this, and see why lightstates are messed up when reloading 2x
 			gameState.getNormalPositions().insideArea = false;
 			gameState.getNormalPositions().internalLight = false;
 			gameState.getNormalPositions().onSteep = false;
@@ -2309,12 +2309,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			groundParentNode.detachAllChildren();
 			encounterExtRootNode.detachAllChildren();
 			encounterIntRootNode.detachAllChildren();
-			extRootNode.clearRenderState(RenderState.RS_LIGHT);
+/*			extRootNode.clearRenderState(RenderState.RS_LIGHT);
 			intRootNode.clearRenderState(RenderState.RS_LIGHT);
 			encounterExtRootNode.clearRenderState(RenderState.RS_LIGHT);
 			encounterIntRootNode.clearRenderState(RenderState.RS_LIGHT);
 			extLightState.detachAll();
-			internalLightState.detachAll();
+			internalLightState.detachAll();*/
 			
 			// rootNode.detachAllChildren();
 			batchHelper.clearAll();
