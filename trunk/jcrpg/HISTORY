@@ -10,6 +10,7 @@
 - A heap of new portraits (by Grumbel, and public domain organized by qubodup)
 - Voice profile selection for character creation with one new male sound-set (voice act by Magnulus)
 - Support for normal/spec mapping for static models
+- Options menu settings (by goq669)
 - Optimized loading/rendering algorithm, moving to jME 2.0
 - Texture atlas technique, DDS textures added, memory optimizations
 - Many bugfixes (e.g. game fixed for use on Intel gfx under Linux)
