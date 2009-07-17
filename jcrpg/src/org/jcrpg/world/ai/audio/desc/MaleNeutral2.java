@@ -18,37 +18,23 @@
 
 package org.jcrpg.world.ai.audio.desc;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.ai.AudioDescription;
 
-/**
- * The list to be appended with the voice packages for characters.
- * @author illes
- *
- */
-public class VoiceList {
-	
-	public static VoiceList male = new VoiceList();
-	public static VoiceList female = new VoiceList();
-	
-	static
-	{
-		male.addVoice(new MaleNeutral1());
-		male.addVoice(new MaleNeutral2());
-		male.addVoice(new MaleCheerful1());
-		female.addVoice(new FemaleNeutral1());
-	}
-	
-	public ArrayList<AudioDescription> list = new ArrayList<AudioDescription>();
-	
-	public VoiceList()
-	{
-	}
-	public void addVoice(AudioDescription desc)
-	{
-		list.add(desc);
-	}
-	
+public class MaleNeutral2 extends AudioDescription {
 
+	public MaleNeutral2()
+	{
+		formattedName = "Neutral2";
+		String base = "humanoid/male_neutral2/";
+		ATTACK = new String[]{base+"Attack_1",base+"Attack_2",base+"Attack_3",base+"Attack_4",base+"Attack_5",base+"Attack_6",base+"Attack_7"};
+		PAIN = new String[]{base+"Hurt_1",base+"Hurt_2",base+"Hurt_3",base+"Hurt_4"};
+		JOY = new String[]{base+"Hooray"};
+		DEATH = new String[]{base+"Death"};
+		ENCOUNTER = new String[]{base+"Greeting"};
+		LEVELING = new String[] {base+"Level_up"};
+		TIRED = new String[] {base+"Tired"};
+		BRUISED = new String[] {base+"Need_Healing"};		
+		
+	}
+	
 }

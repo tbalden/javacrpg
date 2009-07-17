@@ -25,6 +25,7 @@ public class MaleNeutral1 extends AudioDescription {
 	public MaleNeutral1()
 	{
 		formattedName = "Neutral1";
+		ATTACK = new String[]{"humanoid/humanoid_attack_1"};
 		PAIN = new String[]{"humanoid/humanoid_pain_1","humanoid/humanoid_pain_2"};
 		JOY = new String[]{"humanoid/humanoid_joy_male"};
 		DEATH = new String[]{"humanoid/humanoid_death"};
