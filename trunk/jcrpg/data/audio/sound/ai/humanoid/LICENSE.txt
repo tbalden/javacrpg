@@ -1,3 +1,4 @@
+
 humanoid_pain_1.ogg - http://www.freesound.org/samplesViewSingle.php?id=44262
     Erdie on Nov 25, 2007 - This work is licensed under a Creative Commons Sampling Plus 1.0 License. 
 humanoid_pain_2.ogg - http://www.freesound.org/samplesViewSingle.php?id=44268
@@ -21,3 +22,4 @@ humanoid_joy_female1.ogg http://www.freesound.org/samplesViewSingle.php?id=33658
 humanoid_joy_female2.ogg http://www.freesound.org/samplesViewSingle.php?id=37241
     Shades on Jul 10, 2007  Creative Commons Sampling Plus 1.0 License.
 
+humanoid_attack_1.ogg - Jasper Brownrigg
