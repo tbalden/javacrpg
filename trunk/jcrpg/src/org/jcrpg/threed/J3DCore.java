@@ -330,6 +330,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				coreSettings.TEXTURE_QUALITY = 0;
 				
 			}
+
 			TextureManager.FALLBACK_DDS_2_PNG_JPG = coreSettings.DISABLE_DDS;
 			// developer settings
 			coreSettings.WITHOUT_COMBATS = loadValue("WITHOUT_COMBATS", false);
@@ -3061,6 +3062,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		//r.draw(fpsNode);
 
 		doDebug(r);
+		if (SETTINGS.DISABLE_DDS)
 		try{
 			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
 		}catch (Exception ex)
