@@ -29,6 +29,11 @@ import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.World;
 
+/**
+ * The base class for districts - neighbor districts can join into big towns.
+ * @author pali
+ *
+ */
 public abstract class Population extends Economic{
 	
 
