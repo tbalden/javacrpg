@@ -33,11 +33,21 @@ public abstract class DistrictSubelement extends Economic {
 		super(id, soilGeo, parent, loc, boundaries, owner);
 	}
 	
+	/**
+	 * Tells if this district element is a type which fills out a full block (a maze district),
+	 * or smaller element (like houses).
+	 * @return
+	 */
 	public boolean isFullBlockSized()
 	{
 		return false;
 	}
 
+	/**
+	 * Tells if the district element is usable for the given population.
+	 * @param populationType
+	 * @return
+	 */
 	public boolean isValidForDistrict(Class<? extends Population> populationType)
 	{
 		if (this.isFullBlockSized() == ((Population)EconomyTemplate.economicBase.get(populationType)).needsFullBlockSizedSubelement())

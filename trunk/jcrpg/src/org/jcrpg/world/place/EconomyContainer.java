@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
@@ -30,6 +31,7 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Town;
+import org.jcrpg.world.place.economic.road.RoadNetwork;
 import org.jcrpg.world.time.Time;
 
 public class EconomyContainer {
@@ -37,6 +39,9 @@ public class EconomyContainer {
 	public transient TreeLocator treeLocator = null;
 	
 	public TreeMap<String, Economic> economics;
+	
+	public RoadNetwork roadNetwork;
+	
 	
 	/**
 	 * Virtual container for groups of Populations that build up Towns
@@ -48,6 +53,13 @@ public class EconomyContainer {
 		this.w = w;
 		treeLocator = new TreeLocator(w);
 		economics = new TreeMap<String, Economic>();
+		try {
+			roadNetwork = new RoadNetwork("roadNetwork", this);
+		} catch (Exception ex)
+		{
+			Logger.getLogger("EconomyContainer").fine("!!! roadnetwork failure "+ex);
+			ex.printStackTrace();
+		}
 	}
 
 	public ArrayList<Economic> getEconomicsInColumn(int worldX,int worldZ)
@@ -212,6 +224,7 @@ public class EconomyContainer {
 			ec.onLoad();
 			treeLocator.addEconomic(ec);
 		}
+		roadNetwork.updateRoads();
 	}
 	
 	/**
@@ -230,6 +243,7 @@ public class EconomyContainer {
 				}
 			}
 		}
+		roadNetwork.updateRoads();
 	}
 	
 	public void checkDistrictToTownIntegration(Population p)
