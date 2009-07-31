@@ -101,6 +101,8 @@ public class SaveLoadNewGame {
 			EcologyGenerator eGen = new EcologyGenerator();
 			Ecology ecology = eGen.generateEcology(world);
 			
+			world.economyContainer.roadNetwork.updateRoads();
+			
 			int xDiff = -24;
 			int yDiff = 7;
 			int zDiff = -60;
