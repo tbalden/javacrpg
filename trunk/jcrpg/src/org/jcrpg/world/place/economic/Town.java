@@ -3,6 +3,7 @@ package org.jcrpg.world.place.economic;
 import java.util.ArrayList;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.place.World;
 
 /**
  * The meta class for joined neighbor districts.
