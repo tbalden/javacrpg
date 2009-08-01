@@ -188,65 +188,87 @@ public class WorldMap {
 							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification+3, 0, z*w.magnification+3, false).getBelt();
 							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false);
 							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false);
+							
+							
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
-							ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
-							ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
-							ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
-							ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
-							if (economics==null)
-							{
-								economics = economics1;
-							}
-							if (economics==null)
-							{
-								economics = economics2;
-							}
-							if (economics==null)
-							{
-								economics = economics3;
-							}
-							if (economics1!=null) economics.addAll(economics1);
-							if (economics2!=null) economics.addAll(economics2);
-							if (economics3!=null) economics.addAll(economics3);
 
-							if (economics!=null)
-							{
-								for (Object o:economics)
-								{
-									Economic e = ((Economic)o);
-									if (
-											(e.origoX>wx+w.magnification)
-											||
-											(e.origoX+e.sizeX-1<wx)
-											||
-											(e.origoZ>wz+w.magnification)
-											||
-											(e.origoZ+e.sizeZ-1<wz)
-									) 
-									{
-										continue;
-									}
-									ecoObj = e;
-									ecoFound = true;
-									byte[] cB = ecoObj.getMapColor();
-									paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,false);
-									break;
-								}
-								
-							}
+							boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(40), wz);
+							boolean foundRoad = false;
 							
-							for (Geography g:geos)
+							for (boolean b:directions)
 							{
-								if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
+								if (b)
 								{
-									paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
-									if (ecoFound) {
+									paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, CLIMATE,false);
+									foundRoad = true;
+								}
+							} 
+							
+							
+							{
+								
+								ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+								ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
+								ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
+								ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
+								if (economics==null)
+								{
+									economics = economics1;
+								}
+								if (economics==null)
+								{
+									economics = economics2;
+								}
+								if (economics==null)
+								{
+									economics = economics3;
+								}
+								if (economics1!=null) economics.addAll(economics1);
+								if (economics2!=null) economics.addAll(economics2);
+								if (economics3!=null) economics.addAll(economics3);
+	
+								if (economics!=null)
+								{
+									for (Object o:economics)
+									{
+										Economic e = ((Economic)o);
+										if (
+												(e.origoX>wx+w.magnification)
+												||
+												(e.origoX+e.sizeX-1<wx)
+												||
+												(e.origoZ>wz+w.magnification)
+												||
+												(e.origoZ+e.sizeZ-1<wz)
+										) 
+										{
+											continue;
+										}
+										ecoObj = e;
+										ecoFound = true;
 										byte[] cB = ecoObj.getMapColor();
-										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
+										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,false);
+										break;
 									}
 									
-									break;
+								}
+								
+								for (Geography g:geos)
+								{
+									if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
+									{
+										if (!foundRoad) // ?
+										{
+											paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
+										}
+										if (ecoFound) {
+											byte[] cB = ecoObj.getMapColor();
+											paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
+										}
+										
+										break;
+									}
 								}
 							}
 						}

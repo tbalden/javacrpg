@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import org.jcrpg.world.ai.DistanceBasedBoundary;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.EconomyContainer;
+import org.jcrpg.world.place.FlowGeography;
+import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.WorldSizeFlowDirections;
 import org.jcrpg.world.place.economic.Town;
 
 import com.jme.math.Vector2f;
@@ -16,7 +19,7 @@ import com.jme.math.Vector2f;
  * @author pali
  *
  */
-public class RoadNetwork extends Economic {
+public class RoadNetwork extends Economic implements FlowGeography {
 	
 
 	public EconomyContainer container;
@@ -25,7 +28,8 @@ public class RoadNetwork extends Economic {
 	{
 		super(id,null, container.w,null, null,null); 
 		this.container = container;
-		
+		magnification = blockSize;
+		flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
 	}
 	
 	public class Connection 
@@ -61,8 +65,8 @@ public class RoadNetwork extends Economic {
 		}
 	}
 	
-	public HashMap<Town, ArrayList<Town>> connections = new HashMap<Town, ArrayList<Town>>();
-	
+	ArrayList<Connection> connections = new ArrayList<Connection>();
+
 	public int TOWNSIZE_THRESHOLD = 2;
 
 	/**
@@ -118,7 +122,6 @@ public class RoadNetwork extends Economic {
 				}
 			}
 		}
-		ArrayList<Connection> connections = new ArrayList<Connection>();
 		
 		TreeMap<String, Town> orderedTowns = new TreeMap<String, Town>();
 		
@@ -153,17 +156,148 @@ public class RoadNetwork extends Economic {
 			}
 		}
 		
+		// iterate connections, draw line between them like a river flowing (use flow directions)
+		
+		// check how to build the graph, and store it efficiently to read up which
+		// block coordinates of the world contains a road - in !transient! form (not saved) 
+		// + getCube and such...
+
 		System.out.println("TOWN CONNECTIONS CREATED: ");
 		for (Connection c:connections)
 		{
 			System.out.println("---------- "+c.toString());
+			
+			
+			int[] coords1 = c.a.getCenterCoordinates().clone();
+			int[] coords2 = c.b.getCenterCoordinates().clone();
+			
+			coords1[0] = coords1[0]/blockSize;
+			coords1[1] = coords1[1]/blockSize;
+			coords2[0] = coords2[0]/blockSize;
+			coords2[1] = coords2[1]/blockSize;
+			
+			int diffX = coords1[0] - coords2[0];
+			int diffZ = coords1[1] - coords2[1];
+
+			int startX = 0;
+			int startZ = 0;
+			int endX = 0;
+			int endZ = 0;
+			if (diffX<0)
+			{
+				startX = coords1[0];
+				endX = coords2[0];
+			} else
+			{
+				startX = coords2[0];
+				endX = coords1[0];
+			}
+			if (diffZ<0)
+			{
+				startZ = coords1[1];
+				endZ = coords2[1];
+			} else
+			{
+				startZ = coords2[1];
+				endZ = coords1[1];
+			}
+
+			if (Math.abs(diffX)>Math.abs(diffZ))
+			{
+				float deltaZperXunit = diffZ*1f/diffX;
+
+				// road drawing - geo block by block
+				
+				float zChange = 0;
+				int z = startZ;
+				for (int x=startX; x<=endX; x++)
+				{
+
+					// draw X+1
+					try {
+						System.out.println(x+" - "+z);
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true); 
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					
+					// if needed draw Z+1
+					zChange+=deltaZperXunit;
+					if (zChange>=1f)
+					{
+						zChange = zChange-1f;
+						z++;
+						try {
+							System.out.println(x+" | "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true);
+						} catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
+					}
+					
+					
+				}
+				
+				
+				
+			} else
+			{
+				float deltaXperZunit = diffX*1f/diffZ;
+				
+				// road drawing - geo block by block
+				
+				float xChange = 0;
+				int x = startX;
+				for (int z=startZ; z<=endZ; z++)
+				{
+
+					// draw Z+1
+					try {
+						System.out.println(x+" || "+z);
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true); 
+					} catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					
+					// if needed draw X+1
+					xChange+=deltaXperZunit;
+					if (xChange>=1f)
+					{
+						xChange = xChange-1f;
+						x++;
+						try {
+							System.out.println(x+" -- "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true);
+						} catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
+					}
+					
+					
+				}
+
+			}
+			
+			
 		}
 		
-		//for container.towns
-		// TODO check how to build the graph, and store it efficiently to read up which
-		// block coordinates of the world contains a road - in !transient! form (not saved) 
-		// + getCube and such...
+		
+		
 	}
+
+	public WorldSizeFlowDirections flowDirections;
+
+	public WorldSizeFlowDirections getWorldSizeFlowDirections() {
+		return flowDirections;
+	}
+	
+	
 	
 
 }
