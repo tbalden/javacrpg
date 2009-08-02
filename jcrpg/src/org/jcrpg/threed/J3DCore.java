@@ -372,6 +372,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T parse(String info, T defaultValue) {
+		if (null == info)
+		{
+			logger.severe("Configuration file is incomplete! Using defvalue: "+defaultValue);
+			return defaultValue;
+		}
 		if (defaultValue.getClass() == String.class)
 			return (T) (Object) info;
 		info = info.trim();
