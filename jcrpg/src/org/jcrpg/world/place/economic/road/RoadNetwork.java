@@ -2,6 +2,7 @@ package org.jcrpg.world.place.economic.road;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeMap;
 
 import org.jcrpg.audio.AudioServer;
@@ -20,11 +21,13 @@ import org.jcrpg.world.place.FlowGeography;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
+import org.jcrpg.world.place.SurfaceHeightAndType;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.WorldSizeBitBoundaries;
 import org.jcrpg.world.place.WorldSizeFlowDirections;
 import org.jcrpg.world.place.economic.Town;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.water.Ocean;
 
 import com.jme.math.Vector2f;
@@ -379,8 +382,12 @@ public class RoadNetwork extends Economic implements FlowGeography {
 
 	@Override
 	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
-		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-		return c;
+		if (worldX%magnification==magnification/2 || worldZ%magnification==magnification/2)
+		{
+			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
+			return c;
+		}
+		return null;
 	}
 
 	
@@ -405,6 +412,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				}
 			}
 		}
+		soilGeo = getSoilGeoAt(worldX, worldZ);
 		float[] retKind = null;
 		if (soilGeo!=null && soilGeo.getBoundaries().isInside(worldX, worldY, worldZ))
 		{
@@ -424,7 +432,8 @@ public class RoadNetwork extends Economic implements FlowGeography {
 	@Override
 	protected float getPointHeightInside(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView) {
 		// use the height defined by the geography here...
-		if (soilGeo.getBoundaries().isInside(worldX, soilGeo.worldGroundLevel, worldZ))
+		soilGeo = getSoilGeoAt(worldX, worldZ);
+		if (soilGeo!=null && soilGeo.getBoundaries().isInside(worldX, soilGeo.worldGroundLevel, worldZ))
 		{
 			int[] values = soilGeo.calculateTransformedCoordinates(worldX, soilGeo.worldGroundLevel, worldZ);
 			return soilGeo.getPointHeight(values[3], values[5], values[0], values[2],worldX,worldZ, farView);
@@ -432,7 +441,22 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		return getPointHeightOutside(worldX, worldZ, farView);
 	}
 
+	public static HashSet<Class <? extends Geography>> nonRoadGeos = new HashSet<Class <? extends Geography>>();
+	static
+	{
+		nonRoadGeos.add(Cave.class);
+	}
 	
+	private Geography getSoilGeoAt(int worldX, int worldZ)
+	{
+		
+		for (Geography g:((World)parent).getSurfaceGeographies(worldX,worldZ))
+		{
+			if (nonRoadGeos.contains(g.getClass())) continue;
+			return g;
+		}
+		return null;
+	}
 	
 
 }

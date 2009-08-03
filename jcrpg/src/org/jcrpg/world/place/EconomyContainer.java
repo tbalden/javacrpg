@@ -137,6 +137,21 @@ public class EconomyContainer {
 					return c;
 				}
 			} 
+
+			{
+				Cube c = roadNetwork.getCube(key, worldX, worldY, worldZ, farView);
+				if (c!=null && c.canContainFlora)
+				{
+					CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
+					Cube floraCube = c.containingInternalEconomicUnit==null?(roadNetwork.needsFlora?roadNetwork.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null):(c.containingInternalEconomicUnit.needsFlora?c.containingInternalEconomicUnit.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null);
+					if (floraCube!=null)
+					{
+						//System.out.println("ECO WITH FLORA "+eco.getClass());							
+						c.merge(floraCube, worldX, worldY, worldZ, c.steepDirection);
+					}
+				}
+				return c;
+			}
 		}
 		return null;
 		

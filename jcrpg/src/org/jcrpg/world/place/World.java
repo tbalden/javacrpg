@@ -127,6 +127,12 @@ public class World extends Place {
 	}
 	
 
+	/**
+	 * returns on a per geography base a list of surface type and height array belonging to the give geographies at a given coordinates.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
 	public ArrayList<SurfaceHeightAndType[]> getSurfaceData(int worldX, int worldZ)
 	{
 		ArrayList<SurfaceHeightAndType[]> list = new ArrayList<SurfaceHeightAndType[]>();
@@ -145,6 +151,29 @@ public class World extends Place {
 					SurfaceHeightAndType[] surf = ((Surface)geo).getPointSurfaceData(worldX, worldZ, null, false);
 					if (surf!=null && surf.length>0)
 						list.add(surf);
+				}
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * returns the list of geographies that are Surface at a given X/Z coordinates of the world. Used with RoadNetwork for example to get possible geographies
+	 * where to place road upon.
+	 * @param worldX
+	 * @param worldZ
+	 * @return
+	 */
+	public ArrayList<Geography> getSurfaceGeographies(int worldX, int worldZ)
+	{
+		ArrayList<Geography> list = new ArrayList<Geography	>();
+		int worldY = getSeaLevel(1);
+		for (Geography geo : geographies.values()) {
+			if (geo.getBoundaries().isInside(worldX, worldY, worldZ))
+			{
+				if (geo instanceof Surface)
+				{
+					list.add(geo);
 				}
 			}
 		}
