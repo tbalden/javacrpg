@@ -54,7 +54,7 @@ public class EconomyContainer {
 		treeLocator = new TreeLocator(w);
 		economics = new TreeMap<String, Economic>();
 		try {
-			roadNetwork = new RoadNetwork("roadNetwork", this);
+			roadNetwork = new RoadNetwork("roadNetwork", this,w.getSeaLevel(1),w.magnification, w.sizeX, w.sizeY, w.sizeZ, 0, w.getSeaLevel(w.magnification)-1, 0);
 		} catch (Exception ex)
 		{
 			Logger.getLogger("EconomyContainer").fine("!!! roadnetwork failure "+ex);
@@ -134,12 +134,18 @@ public class EconomyContainer {
 							c.merge(floraCube, worldX, worldY, worldZ, c.steepDirection);
 						}
 					}
-					return c;
+					if (c!=null)
+						return c;
 				}
 			} 
 
+		}
+		{
+			if (roadNetwork.getBoundaries().isInside(worldX, w.getSeaLevel(1), worldZ))
 			{
+				
 				Cube c = roadNetwork.getCube(key, worldX, worldY, worldZ, farView);
+				//System.out.println("== "+c);
 				if (c!=null && c.canContainFlora)
 				{
 					CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);

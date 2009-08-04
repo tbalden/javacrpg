@@ -73,6 +73,7 @@ import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Hut;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
+import org.jcrpg.world.place.economic.road.RoadNetwork;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
@@ -187,6 +188,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_EXTERNAL_WOODEN_GROUND.id, new Integer(56));
+		hmCubeSideSubTypeToRenderedSideId.put(RoadNetwork.SUBTYPE_STAIRS.id, new Integer(EMPTY_SIDE));
 
 
 		

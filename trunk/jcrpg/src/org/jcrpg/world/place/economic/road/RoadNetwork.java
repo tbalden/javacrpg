@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.audio.AudioServer;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
@@ -14,6 +15,7 @@ import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
+import org.jcrpg.world.place.Boundaries;
 import org.jcrpg.world.place.BoundaryUtils;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.EconomyContainer;
@@ -39,21 +41,37 @@ import com.jme.math.Vector2f;
  */
 public class RoadNetwork extends Economic implements FlowGeography {
 	
+	// TODO Handle the flow direction  in getCubeObject!
+	// Add ocean avoiding road network generation :) 
 
+	
 	public EconomyContainer container;
 	
-	public RoadNetwork(String id, EconomyContainer container) throws Exception
+	transient Boundaries boundaries;
+	
+	public RoadNetwork(String id, EconomyContainer container,int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception
 	{
-		super(id,null, container.w,null, null,null); 
+		super(id,null, container.w,null, null,null);
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		this.worldRelHeight = worldHeight - worldGroundLevel;
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("" + this.getClass()+" "+worldGroundLevel+" "+ "SIZE = "+worldRelHeight+ " --- "+worldGroundLevel/magnification+" - "+ origoY);
+		this.sizeZ = sizeZ;
+		this.origoX = origoX;
+		this.origoY = origoY;
+		this.origoZ = origoZ;
+		//this.groundLevel = groundLevel;
+		this.worldGroundLevel=worldGroundLevel;
+		this.worldHeight = worldHeight;
+		this.blockSize = magnification;
+		
 		this.container = container;
-		magnification = blockSize;
-		flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
-		setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
+		this.magnification = blockSize;
+
+		//flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
+		//setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
 	}
 	
-	// TODO SoilGeo for each block get it independently!
-	// override EcoGround method original coding
-	// EconomicContainer - use roadNetwork for getCube
 	
 	public class Connection 
 	{
@@ -88,16 +106,20 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		}
 	}
 	
-	ArrayList<Connection> connections = new ArrayList<Connection>();
+	transient ArrayList<Connection> connections = new ArrayList<Connection>();
 
 	public int TOWNSIZE_THRESHOLD = 2;
+	
+	
 
 	/**
 	 * Updates road network, based on size and distance (closest bigger cities are connected). 
 	 */
 	public void updateRoads()
 	{
-		connections.clear();
+		connections = new ArrayList<Connection>();
+		flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
+		setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
 		
 		ArrayList<Town> bigTowns = new ArrayList<Town>();
 		
@@ -239,8 +261,8 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					// draw X+1
 					try {
 						System.out.println(x+" - "+z);
-						getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true); 
-						getBoundaries().addCube(magnification, x, worldGroundLevel, z);
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true); 
+						getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -254,9 +276,9 @@ public class RoadNetwork extends Economic implements FlowGeography {
 						z++;
 						try {
 							System.out.println(x+" | "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true);
-							getBoundaries().addCube(magnification, x, worldGroundLevel, z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 						} catch (Exception ex)
 						{
 							ex.printStackTrace();
@@ -282,8 +304,8 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					// draw Z+1
 					try {
 						System.out.println(x+" || "+z);
-						getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true);
-						getBoundaries().addCube(magnification, x, worldGroundLevel, z);
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+						getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -297,9 +319,9 @@ public class RoadNetwork extends Economic implements FlowGeography {
 						x++;
 						try {
 							System.out.println(x+" -- "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.NORTH, true);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, worldGroundLevel, z, J3DCore.WEST, true);
-							getBoundaries().addCube(magnification, x, worldGroundLevel, z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+							getBoundaries().addCube( magnification, x, worldGroundLevel, z);
 						} catch (Exception ex)
 						{
 							ex.printStackTrace();
@@ -318,15 +340,16 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		
 	}
 
-	public WorldSizeFlowDirections flowDirections;
+	public transient WorldSizeFlowDirections flowDirections;
 
 	public WorldSizeFlowDirections getWorldSizeFlowDirections() {
 		return flowDirections;
 	}
 	
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
+	public static final String TYPE_ROADNETWORK = "ROADNETWORK";
 	
-	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
+	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ROADNETWORK+"_STAIRS",true);
 	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
 	public static final SideSubType SUBTYPE_EXTERNAL_WOODEN_GROUND = new GroundSubType(TYPE_ECOGROUND+"_EXTERNAL_GROUND",true);
 	
@@ -340,14 +363,14 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		SUBTYPE_STAIRS.colorOverwrite = true;
 		SUBTYPE_STAIRS.colorBytes = new byte[] {(byte)150,(byte)50,(byte)50};
 	}
-	public static Side[] STAIRS = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STAIRS)};
+	public static Side[] STAIRS = new Side[]{new Side(TYPE_ROADNETWORK,SUBTYPE_STAIRS)};
 	public static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
 	
 
-	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, GROUND};
-	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,GROUND};
-	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,GROUND};
-	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND};
+	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK, ECOGROUND};
+	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,BLOCK,ECOGROUND};
+	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,BLOCK,ECOGROUND};
+	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,ECOGROUND};
 
 	public static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,ECOGROUND };
 	public static Side[][] EXTERNAL_WATER_WOODEN_GROUND = new Side[][] { null, null, null,null,null,{Ocean.SHALLOW_WATER_SIDE,new Side(TYPE_ECOGROUND,SUBTYPE_EXTERNAL_WOODEN_GROUND)}};
@@ -363,13 +386,13 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		hmKindCubeOverride.put(K_NORMAL_GROUND, ground);
 		Cube waterGround = new Cube(null,EXTERNAL_WATER_WOODEN_GROUND,0,0,0,true,false);
 		hmKindCubeOverride.put(K_WATER_GROUND, waterGround );		
-		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,true);
+		Cube stepsEast = new Cube(null,STEPS_EAST,0,0,0,true,false);
 		hmKindCubeOverride.put(K_STEEP_EAST, stepsEast);
-		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0,true,true);
+		Cube stepWest = new Cube(null,STEPS_WEST,0,0,0,true,false);
 		hmKindCubeOverride.put(K_STEEP_WEST, stepWest);
-		Cube stepNorth = new Cube(null,STEPS_NORTH,0,0,0,true,true);
+		Cube stepNorth = new Cube(null,STEPS_NORTH,0,0,0,true,false);
 		hmKindCubeOverride.put(K_STEEP_NORTH, stepNorth);
-		Cube stepSouth = new Cube(null,STEPS_SOUTH,0,0,0,true,true);
+		Cube stepSouth = new Cube(null,STEPS_SOUTH,0,0,0,true,false);
 		hmKindCubeOverride.put(K_STEEP_SOUTH, stepSouth);
 
 		//hmKindCubeOverride_FARVIEW.put(K_NORMAL_GROUND, new Cube(null,House.EXTERNAL,0,0,0));
@@ -457,6 +480,18 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		}
 		return null;
 	}
+
+	
+	@Override
+	public Boundaries getBoundaries() {
+		return boundaries;
+	}
+
+	@Override
+	public void setBoundaries(Boundaries boundaries) {
+		this.boundaries = boundaries;
+	}
+	
 	
 
 }
