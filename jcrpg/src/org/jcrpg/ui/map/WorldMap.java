@@ -193,10 +193,16 @@ public class WorldMap {
 							int wx = x*w.magnification;
 							int wz = z*w.magnification;
 
-							boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(40), wz);
-							boolean foundRoad = false;
+							boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
+							boolean foundRoad = w.economyContainer.roadNetwork.getBoundaries().isInside(wx, w.getSeaLevel(1), wz);;
 							
-							for (boolean b:directions)
+							if (foundRoad)
+							{
+								
+								paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, CLIMATE,false);
+							}
+							
+/*							for (boolean b:directions)
 							{
 								if (b)
 								{
@@ -204,7 +210,7 @@ public class WorldMap {
 									foundRoad = true;
 								}
 							} 
-							
+	*/						
 							
 							{
 								
