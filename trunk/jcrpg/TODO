@@ -16,7 +16,13 @@ Interrelation,
 Society, Groups etc.
 
 
+
 [ ] Roads between friendly populations! :)
+	[ ] roads doesnt show in desert??? climate dependent? debug information needed
+		-- thats not bad necessarily - climate dependent representation is needed! arctic zone shouldnt have a dirty road!!
+		
+		
+	
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
 	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH
@@ -63,6 +69,11 @@ bugs:
 			(Mobs will be able to check around) 
 			Fire animations with the SideType callbacks!
 		[ ] animation for doors! (export!)
+
+
+
+[X] put a 'No mouse input' on main menu window gfx
+[?] outside minimap - show lower levels that are visible?
 
 ---------------------
 [X] DoF problem, too strong?
