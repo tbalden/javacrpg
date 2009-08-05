@@ -249,7 +249,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 
 			if (Math.abs(diffX)>Math.abs(diffZ))
 			{
-				float deltaZperXunit = diffZ*1f/diffX;
+				float deltaZperXunit = Math.abs(diffZ*1f/diffX);
 
 				// road drawing - geo block by block
 				
@@ -258,10 +258,19 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				for (int x=startX; x<=endX; x++)
 				{
 
+					zChange+=deltaZperXunit;
+
 					// draw X+1
 					try {
 						System.out.println(x+" - "+z);
-						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true); 
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+						if (zChange<1f)
+						{ // no turn needed in Z dir
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
+						} else
+						{
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+						}
 						getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 					} catch (Exception ex)
 					{
@@ -269,15 +278,14 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					}
 					
 					// if needed draw Z+1
-					zChange+=deltaZperXunit;
 					if (zChange>=1f)
 					{
 						zChange = zChange-1f;
 						z++;
 						try {
 							System.out.println(x+" | "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.SOUTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
 							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 						} catch (Exception ex)
 						{
@@ -292,7 +300,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				
 			} else
 			{
-				float deltaXperZunit = diffX*1f/diffZ;
+				float deltaXperZunit = Math.abs(diffX*1f/diffZ);
 				
 				// road drawing - geo block by block
 				
@@ -301,10 +309,21 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				for (int z=startZ; z<=endZ; z++)
 				{
 
+					xChange+=deltaXperZunit;
+
 					// draw Z+1
 					try {
-						System.out.println(x+" || "+z);
-						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+						getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.SOUTH, true);
+						if (xChange<1f)
+						{
+							System.out.println(x+" | "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+						} else
+						{
+							System.out.println(x+" L "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
+							
+						}
 						getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), z);
 					} catch (Exception ex)
 					{
@@ -312,15 +331,14 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					}
 					
 					// if needed draw X+1
-					xChange+=deltaXperZunit;
 					if (xChange>=1f)
 					{
 						xChange = xChange-1f;
 						x++;
 						try {
-							System.out.println(x+" -- "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+							System.out.println(x+" =, "+z);
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
 							getBoundaries().addCube( magnification, x, worldGroundLevel, z);
 						} catch (Exception ex)
 						{
@@ -405,11 +423,34 @@ public class RoadNetwork extends Economic implements FlowGeography {
 
 	@Override
 	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
-		if (worldX%magnification==magnification/2 || worldZ%magnification==magnification/2)
+		
+		boolean[] directions = getWorldSizeFlowDirections().getFlowDirections(worldX, worldGroundLevel, worldZ);
+		boolean NORTH = directions[J3DCore.NORTH];
+		boolean EAST = directions[J3DCore.EAST];
+		boolean SOUTH = directions[J3DCore.SOUTH];
+		boolean WEST = directions[J3DCore.WEST];
+		
+		if (NORTH && worldX%magnification==magnification/2 && worldZ%magnification>=magnification/2)
 		{
 			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 			return c;
 		}
+		if (SOUTH && worldX%magnification==magnification/2 && worldZ%magnification<magnification/2)
+		{
+			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
+			return c;
+		}
+		if (EAST && worldZ%magnification==magnification/2 && worldX%magnification>magnification/2)
+		{
+			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
+			return c;
+		}
+		if (WEST && worldZ%magnification==magnification/2 && worldX%magnification<=magnification/2)
+		{
+			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
+			return c;
+		}
+		
 		return null;
 	}
 
