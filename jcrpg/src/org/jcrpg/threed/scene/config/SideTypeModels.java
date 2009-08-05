@@ -188,6 +188,7 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STAIRS.id, new Integer(47));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_STREETGROUND.id, new Integer(50));
 		hmCubeSideSubTypeToRenderedSideId.put(EconomicGround.SUBTYPE_EXTERNAL_WOODEN_GROUND.id, new Integer(56));
+		hmCubeSideSubTypeToRenderedSideId.put(RoadNetwork.SUBTYPE_STREETGROUND.id, new Integer(74));
 		hmCubeSideSubTypeToRenderedSideId.put(RoadNetwork.SUBTYPE_STAIRS.id, new Integer(EMPTY_SIDE));
 
 
@@ -1004,8 +1005,11 @@ public class SideTypeModels {
 		sm_hut_model.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(73), new RenderedSide(new Model[]{sm_hut_model}));
 
+		SimpleModel sm_roadnetwork = new SimpleModel("models/ground/ground_1.obj","pathway.jpg"); sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.generatedGroundModel = true; sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.yGeomBatchSize = yCommon; sm_roadnetwork.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork.farViewEnabled = true;
+		hm3dTypeRenderedSide.put(new Integer(74), new RenderedSide(new Model[]{sm_roadnetwork}));
+
 		// NEXT ID = 
-		// 74
+		// 75
 		
 	}
 	

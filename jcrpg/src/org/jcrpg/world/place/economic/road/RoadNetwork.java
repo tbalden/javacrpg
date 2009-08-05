@@ -350,7 +350,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 	public static final String TYPE_ROADNETWORK = "ROADNETWORK";
 	
 	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ROADNETWORK+"_STAIRS",true);
-	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
+	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ROADNETWORK+"_STREETGROUND",false);
 	public static final SideSubType SUBTYPE_EXTERNAL_WOODEN_GROUND = new GroundSubType(TYPE_ECOGROUND+"_EXTERNAL_GROUND",true);
 	
 	static
