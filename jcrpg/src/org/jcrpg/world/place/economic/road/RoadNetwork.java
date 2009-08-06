@@ -13,6 +13,7 @@ import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Boundaries;
@@ -122,6 +123,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
 		
 		ArrayList<Town> bigTowns = new ArrayList<Town>();
+		ArrayList<Town> smallTowns = new ArrayList<Town>();
 		
 		for (Town t:container.towns)
 		{
@@ -129,7 +131,14 @@ public class RoadNetwork extends Economic implements FlowGeography {
 			{
 				System.out.println("BIG TOWN: "+t + " "+t.getCenterCoordinates());
 				bigTowns.add(t);
+			} else
+			{
+				if (HashUtil.mixPercentage(t.getCenterCoordinates()[0],t.getCenterCoordinates()[1],0)>50)
+				{
+					smallTowns.add(t);
+				}
 			}
+			
 		}
 
 		HashMap<Town, Town> closest = new HashMap<Town, Town>();
@@ -167,37 +176,170 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				}
 			}
 		}
+
 		
-		TreeMap<String, Town> orderedTowns = new TreeMap<String, Town>();
+		HashMap<Town, Town> closestSmall = new HashMap<Town, Town>();
+		HashMap<Town, Float> closestSmallDist = new HashMap<Town, Float>();
+		HashMap<Town, Town> secondClosestSmall = new HashMap<Town, Town>();
+		for (Town bt:bigTowns)
+		{
+			if (bt.getCenterCoordinates()==null) continue;
+			for (Town bt2:smallTowns)
+			{
+				if (bt2.getCenterCoordinates()==null) continue;
+				if (bt!=bt2)
+				{
+					int cX1 = bt.getCenterCoordinates()[0];
+					int cZ1 = bt.getCenterCoordinates()[1];
+					int cX2 = bt2.getCenterCoordinates()[0];
+					int cZ2 = bt2.getCenterCoordinates()[1];
+					
+					Vector2f v = new Vector2f(cX1,cZ1);
+					Vector2f v2 = new Vector2f(cX2, cZ2);
+					Float distNew = v.distance(v2);
+					
+					
+					Float dist = closestSmallDist.get(bt);
+					if (dist==null || distNew<dist)
+					{
+						closestSmallDist.put(bt, distNew);
+						if (closest.get(bt)!=null)
+						{
+							secondClosestSmall.put(bt, closest.get(bt));
+						}
+						closestSmall.put(bt, bt2);
+					}
+				}
+			}
+		}
+
+		HashMap<Town, Town> smallClosestSmall = new HashMap<Town, Town>();
+		HashMap<Town, Float> smallClosestSmallDist = new HashMap<Town, Float>();
+		HashMap<Town, Town> smallSecondClosestSmall = new HashMap<Town, Town>();
+		for (Town bt:smallTowns)
+		{
+			if (bt.getCenterCoordinates()==null) continue;
+			for (Town bt2:smallTowns)
+			{
+				if (bt2.getCenterCoordinates()==null) continue;
+				if (bt!=bt2)
+				{
+					int cX1 = bt.getCenterCoordinates()[0];
+					int cZ1 = bt.getCenterCoordinates()[1];
+					int cX2 = bt2.getCenterCoordinates()[0];
+					int cZ2 = bt2.getCenterCoordinates()[1];
+					
+					Vector2f v = new Vector2f(cX1,cZ1);
+					Vector2f v2 = new Vector2f(cX2, cZ2);
+					Float distNew = v.distance(v2);
+					
+					
+					Float dist = closestDist.get(bt);
+					if (distNew<magnification*4)
+					{
+						if (dist==null || distNew<dist)
+						{
+							smallClosestSmallDist.put(bt, distNew);
+							if (closest.get(bt)!=null)
+							{
+								smallSecondClosestSmall.put(bt, closest.get(bt));
+							}
+							smallClosestSmall.put(bt, bt2);
+						}
+					}
+				}
+			}
+		}
+		
+		TreeMap<String, Town> orderedBigTowns = new TreeMap<String, Town>();
+		TreeMap<String, Town> orderedSmallTowns = new TreeMap<String, Town>();
 		
 		for (Town t:closest.keySet())
 		{
-			orderedTowns.put(t.foundationName, t);
+			orderedBigTowns.put(t.foundationName, t);
+		}
+		for (Town t:smallClosestSmall.keySet())
+		{
+			orderedSmallTowns.put(t.foundationName, t);
 		}
 		
-		for (Town t:orderedTowns.values())
+		for (Town t:orderedBigTowns.values())
 		{
-			Town t2 = closest.get(t);
-			Town t3 = secondClosest.get(t);
-			if (t2!=null)
 			{
-				Connection c = new Connection(t,t2);
-				boolean found = false;
-				for (Connection lC:connections)
+				Town t2 = closest.get(t);
+				Town t3 = secondClosest.get(t);
+				if (t2!=null)
 				{
-					if (lC.equals(c)) {found = true;break;}
+					Connection c = new Connection(t,t2);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
 				}
-				if (!found) connections.add(c);
+				if (t3!=null && t2!=t3)
+				{
+					Connection c = new Connection(t,t3);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
+				}
 			}
-			if (t3!=null && t2!=t3)
 			{
-				Connection c = new Connection(t,t3);
-				boolean found = false;
-				for (Connection lC:connections)
+				Town t2 = closestSmall.get(t);
+				Town t3 = secondClosestSmall.get(t);
+				if (t2!=null)
 				{
-					if (lC.equals(c)) {found = true;break;}
+					Connection c = new Connection(t,t2);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
 				}
-				if (!found) connections.add(c);
+				if (t3!=null && t2!=t3)
+				{
+					Connection c = new Connection(t,t3);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
+				}
+			}
+
+		}
+		for (Town t:orderedSmallTowns.values())
+		{
+			{
+				Town t2 = smallClosestSmall.get(t);
+				Town t3 = smallSecondClosestSmall.get(t);
+				if (t2!=null)
+				{
+					Connection c = new Connection(t,t2);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
+				}
+				if (t3!=null && t2!=t3)
+				{
+					Connection c = new Connection(t,t3);
+					boolean found = false;
+					for (Connection lC:connections)
+					{
+						if (lC.equals(c)) {found = true;break;}
+					}
+					if (!found) connections.add(c);
+				}
 			}
 		}
 		
@@ -320,7 +462,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
 						} else
 						{
-							System.out.println(x+" L "+z);
+							System.out.println(x+" ,- "+z);
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
 							
 						}
@@ -336,10 +478,10 @@ public class RoadNetwork extends Economic implements FlowGeography {
 						xChange = xChange-1f;
 						x++;
 						try {
-							System.out.println(x+" =, "+z);
+							System.out.println(x+" =` "+z);
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
-							getBoundaries().addCube( magnification, x, worldGroundLevel, z);
+							getBoundaries().addCube( magnification, x, container.w.getSeaLevel(blockSize), z);
 						} catch (Exception ex)
 						{
 							ex.printStackTrace();
