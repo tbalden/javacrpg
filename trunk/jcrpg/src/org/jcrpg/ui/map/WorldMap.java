@@ -136,13 +136,69 @@ public class WorldMap {
 	  	                                    }
 	  	;
 
+	static boolean[][] ROAD_NORTH = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, true,true, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+		
+	static boolean[][] ROAD_SOUTH = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, false, true,true, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false }
+			  	                                    }
+			  	;
+	static boolean[][] ROAD_WEST = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, true, false,false, false, false, false },
+			  		{ true, true, true, true, true, false, false, false, false },
+			  		{ true, true, true, false, true,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+	static boolean[][] ROAD_EAST = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, true, true, true, false, true},
+			  		{ false, false, false, false, true, true, true, true, true},
+			  		{ false, false, false, false, false,false, false, true, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+	
+	static boolean[][][] ROADS = new boolean[][][] {ROAD_NORTH, ROAD_EAST, ROAD_SOUTH, ROAD_WEST};
+		
 	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
 	{
 		for (int x = 0; x<PIXELS_PER_BLOCK; x++)
 		{
 			for (int z = 0; z<PIXELS_PER_BLOCK; z++)
 			{
-				if (pattern[x][z]) {
+				if (pattern[PIXELS_PER_BLOCK-1-z][x]) {
 				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
 				for (int i=0; i<color.length; i++)
 				{
@@ -178,6 +234,9 @@ public class WorldMap {
 				boolean riverWater = false;
 				boolean ecoFound = false;
 				Economic ecoObj = null;
+				int wx = x*w.magnification;
+				int wz = z*w.magnification;
+				boolean foundRoad = w.economyContainer.roadNetwork.getBoundaries().isInside(wx, w.getSeaLevel(1), wz);;
 				for (Water water :w.waters.values())
 				{
 					if (water instanceof Ocean && !riverWater)
@@ -190,27 +249,6 @@ public class WorldMap {
 							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false);
 							
 							
-							int wx = x*w.magnification;
-							int wz = z*w.magnification;
-
-							boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
-							boolean foundRoad = w.economyContainer.roadNetwork.getBoundaries().isInside(wx, w.getSeaLevel(1), wz);;
-							
-							if (foundRoad)
-							{
-								
-								paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, CLIMATE,false);
-							}
-							
-/*							for (boolean b:directions)
-							{
-								if (b)
-								{
-									paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, CLIMATE,false);
-									foundRoad = true;
-								}
-							} 
-	*/						
 							
 							{
 								
@@ -264,13 +302,9 @@ public class WorldMap {
 								{
 									if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 									{
-										if (!foundRoad) // ?
+										//if (!foundRoad) // ?
 										{
 											paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
-										}
-										if (ecoFound) {
-											byte[] cB = ecoObj.getMapColor();
-											paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
 										}
 										
 										break;
@@ -289,8 +323,6 @@ public class WorldMap {
 					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
 					{
 						
-						int wx = x*w.magnification;
-						int wz = z*w.magnification;
 						riverWater = ((River)water).isWaterBlock(wx, world.worldGroundLevel, wz);
 						if (riverWater) {
 							System.out.print("!");
@@ -301,7 +333,23 @@ public class WorldMap {
 							geoImageSet[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)0;
 						}
 					}
-					
+					if (foundRoad)
+					{
+						boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
+						for (int i=J3DCore.NORTH; i<=J3DCore.WEST;i++)
+						{
+							if (directions[i])
+							{
+								paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, ROADS[i],false);
+							}
+						}
+						
+					}
+					if (ecoFound) {
+						byte[] cB = ecoObj.getMapColor();
+						paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
+					}
+
 				}
 				mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)150;
 				
