@@ -28,6 +28,7 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanFemaleHousewife;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleArtisan;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMalePeasant;
 import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
+import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
@@ -72,6 +73,7 @@ public class HumanCommoners extends HumanoidEntityDescription {
 		economyTemplate.addEcoGroundType(Mountain.class, RawStreetGround.class);
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
+		climates.add(Arctic.class);
 		geographies.add(Forest.class);
 		geographies.add(Plain.class);
 		geographies.add(Mountain.class);

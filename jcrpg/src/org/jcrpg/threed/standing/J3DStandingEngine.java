@@ -2140,17 +2140,17 @@ public class J3DStandingEngine {
 					renderNodes(n2, cube, relX, relY, relZ, x, y, z, direction);
 			} 
 			else
-				if (renderedSide.type == RenderedSide.RS_CLIMATEDEPENDENT)
-				{
-					renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
-					Model[] m = ((RenderedClimateDependentSide)renderedSide).getRenderedModels(cube.cube.climateId);
-					if (m!=null) {
-						NodePlaceholder[] n2 = modelPool.loadPlaceHolderObjects(cube,m,fakeLoadForCacheMaint);
-						if (n2.length>0)
-							renderNodes(n2, cube, relX, relY, relZ, x, y, z, direction);
-					}
-				} 
-				else
+			if (renderedSide.type == RenderedSide.RS_CLIMATEDEPENDENT)
+			{
+				renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
+				Model[] m = ((RenderedClimateDependentSide)renderedSide).getRenderedModels(cube.cube.climateId);
+				if (m!=null) {
+					NodePlaceholder[] n2 = modelPool.loadPlaceHolderObjects(cube,m,fakeLoadForCacheMaint);
+					if (n2.length>0)
+						renderNodes(n2, cube, relX, relY, relZ, x, y, z, direction);
+				}
+			} 
+			else
 			{
 				renderNodes(n, cube, relX, relY, relZ, x, y, z, direction);
 			}

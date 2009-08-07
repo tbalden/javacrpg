@@ -64,6 +64,8 @@
 			percentage-chance-of-appearance="20" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
 			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
+     	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Arctic"
+			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
 
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Tropical"
 			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
