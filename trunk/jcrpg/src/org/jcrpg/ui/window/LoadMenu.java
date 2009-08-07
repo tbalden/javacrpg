@@ -110,6 +110,7 @@ public class LoadMenu extends Window implements KeyListener {
 				{
 					SaveSlotData data = new SaveSlotData();
 					data.slotName = file;
+					System.out.println(file);
 
 					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
 					for (String sFile:subFiles)
@@ -167,7 +168,8 @@ public class LoadMenu extends Window implements KeyListener {
 		
 		for (Button b:buttons)
 		{
-			windowNode.detachChild(b.quad);
+			if (b.quad!=null)
+				windowNode.detachChild(b.quad);
 			windowNode.detachChild(b.node);
 		}
 		buttons.clear();
@@ -181,8 +183,15 @@ public class LoadMenu extends Window implements KeyListener {
 		for (SaveSlotData data:dataList.values())
 		{
 			if (counter>=fromSlot && counter-fromSlot<maxSlots) {
-				Quad button = loadImageToQuad(data.pic,sizeX,sizeY, posX, startPosY - stepPosY*(counter - fromSlot));
-				windowNode.attachChild(button);
+				Quad button = null;
+				try 
+				{
+					button = loadImageToQuad(data.pic,sizeX,sizeY, posX, startPosY - stepPosY*(counter - fromSlot));
+					windowNode.attachChild(button);
+				} catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
 				
 				Node slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0,0,0.1f,1f),false);
 				fontFreers.add(new NodeFontFreer(this.text,slottextNode));
@@ -203,14 +212,17 @@ public class LoadMenu extends Window implements KeyListener {
 		for (int i=0; i<buttons.size(); i++)
 		{
 			Button b = buttons.get(i);
-			if (i==selected)
+			if (b.quad!=null)
 			{
-				b.quad.setSolidColor(ColorRGBA.white);
-						
-			} else
-			{
-				b.quad.setSolidColor(ColorRGBA.gray);
-				
+				if (i==selected)
+				{
+					b.quad.setSolidColor(ColorRGBA.white);
+							
+				} else
+				{
+					b.quad.setSolidColor(ColorRGBA.gray);
+					
+				}
 			}
 		}
 		windowNode.updateRenderState();
@@ -278,7 +290,7 @@ public class LoadMenu extends Window implements KeyListener {
 			{
 				if (selected+fromSlot<dataList.size())
 				{
-					fromSlot = selected;
+					fromSlot = fromSlot+selected;
 					selected = 0;
 					try 
 					{

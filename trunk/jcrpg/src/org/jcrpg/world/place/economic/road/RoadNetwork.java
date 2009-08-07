@@ -577,12 +577,12 @@ public class RoadNetwork extends Economic implements FlowGeography {
 			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 			return c;
 		}
-		if (SOUTH && worldX%magnification==magnification/2 && worldZ%magnification<magnification/2)
+		if (SOUTH && worldX%magnification==magnification/2 && worldZ%magnification<=magnification/2)
 		{
 			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 			return c;
 		}
-		if (EAST && worldZ%magnification==magnification/2 && worldX%magnification>magnification/2)
+		if (EAST && worldZ%magnification==magnification/2 && worldX%magnification>=magnification/2)
 		{
 			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
 			return c;

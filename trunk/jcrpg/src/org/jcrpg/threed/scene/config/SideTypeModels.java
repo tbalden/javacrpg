@@ -618,6 +618,9 @@ public class SideTypeModels {
 		sm_grass.secTextChance = 30;
 		sm_grass.steepTextureName = "grass_hillside.png";
 		sm_grass.secTextureName = "grass_bare2.jpg";
+		sm_grass.useAtlasTexture = true;
+		sm_grass.atlasTextureName = "grass_atlas.dds";
+		
 		SimpleModel sm_grass_2 = new SimpleModel("models/ground/ground_2.obj","grass2.jpg"); sm_grass_2.rotateOnSteep = true; sm_grass_2.yGeomBatchSize = yCommon; sm_grass_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_2.farViewEnabled = true;
 		SimpleModel sm_grass_3 = new SimpleModel("models/ground/ground_3.obj","grass2.jpg"); sm_grass_3.rotateOnSteep = true; sm_grass_3.yGeomBatchSize = yCommon; sm_grass_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_3.farViewEnabled = true;
 		SimpleModel sm_grass_steep = new SimpleModel("models/ground/ground_steep_1.obj","grass2.jpg"); sm_grass_steep.rotateOnSteep = true; sm_grass_steep.yGeomBatchSize = yCommon; sm_grass_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_grass_steep.noSpecialSteepRotation = false; sm_grass_steep.farViewEnabled = true;
@@ -1005,8 +1008,19 @@ public class SideTypeModels {
 		sm_hut_model.batchEnabled = false;
 		hm3dTypeRenderedSide.put(new Integer(73), new RenderedSide(new Model[]{sm_hut_model}));
 
+
+		// climate dependent
 		SimpleModel sm_roadnetwork = new SimpleModel("models/ground/ground_1.obj","pathway.jpg"); sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.generatedGroundModel = true; sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.yGeomBatchSize = yCommon; sm_roadnetwork.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork.farViewEnabled = true;
-		hm3dTypeRenderedSide.put(new Integer(74), new RenderedSide(new Model[]{sm_roadnetwork}));
+		SimpleModel sm_roadnetwork_desert = new SimpleModel("models/ground/ground_1.obj","pathway_desert.jpg"); sm_roadnetwork_desert.rotateOnSteep = false; sm_roadnetwork_desert.generatedGroundModel = true; sm_roadnetwork_desert.rotateOnSteep = false; sm_roadnetwork_desert.yGeomBatchSize = yCommon; sm_roadnetwork_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_desert.farViewEnabled = true;
+		SimpleModel sm_roadnetwork_continental = new SimpleModel("models/ground/ground_1.obj","pathway.jpg"); sm_roadnetwork_continental.rotateOnSteep = false; sm_roadnetwork_continental.generatedGroundModel = true; sm_roadnetwork_continental.rotateOnSteep = false; sm_roadnetwork_continental.yGeomBatchSize = yCommon; sm_roadnetwork_continental.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_continental.farViewEnabled = true;
+		SimpleModel sm_roadnetwork_arctic = new SimpleModel("models/ground/ground_1.obj","pathway_snow.jpg"); sm_roadnetwork_arctic.rotateOnSteep = false; sm_roadnetwork_arctic.generatedGroundModel = true; sm_roadnetwork_arctic.rotateOnSteep = false; sm_roadnetwork_arctic.yGeomBatchSize = yCommon; sm_roadnetwork_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_arctic.farViewEnabled = true;
+		SimpleModel sm_roadnetwork_tropical = new SimpleModel("models/ground/ground_1.obj","pathway_jungle.jpg"); sm_roadnetwork_tropical.rotateOnSteep = false; sm_roadnetwork_tropical.generatedGroundModel = true; sm_roadnetwork_tropical.rotateOnSteep = false; sm_roadnetwork_tropical.yGeomBatchSize = yCommon; sm_roadnetwork_tropical.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_tropical.farViewEnabled = true;
+		dependentModels = new HashMap<String, Model[]>();
+		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_roadnetwork_desert});
+		dependentModels.put(Continental.CONTINENTAL_ID, new Model[]{sm_roadnetwork_continental});
+		dependentModels.put(Arctic.ARCTIC_ID, new Model[]{sm_roadnetwork_arctic});
+		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_roadnetwork_tropical});
+		hm3dTypeRenderedSide.put(new Integer(74), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_roadnetwork},dependentModels));
 
 		// NEXT ID = 
 		// 75

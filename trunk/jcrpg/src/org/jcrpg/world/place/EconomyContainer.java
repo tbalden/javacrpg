@@ -140,15 +140,22 @@ public class EconomyContainer {
 			} 
 
 		}
+		if (roadNetwork!=null)
 		{
+			
 			if (roadNetwork.getBoundaries().isInside(worldX, w.getSeaLevel(1), worldZ))
 			{
 				
 				Cube c = roadNetwork.getCube(key, worldX, worldY, worldZ, farView);
-				//System.out.println("== "+c);
+				CubeClimateConditions ccc = null;
+				if (c!=null)
+				{
+					// Setting climate id for climate dependent side types.
+					ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
+					c.climateId = ccc.belt.STATIC_ID;
+				}
 				if (c!=null && c.canContainFlora)
 				{
-					CubeClimateConditions ccc = w.getClimate().getCubeClimate(time, worldX, worldY, worldZ, c.internalCube);
 					Cube floraCube = c.containingInternalEconomicUnit==null?(roadNetwork.needsFlora?roadNetwork.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null):(c.containingInternalEconomicUnit.needsFlora?c.containingInternalEconomicUnit.getFloraCube(worldX, worldY, worldZ, ccc, time, false):null);
 					if (floraCube!=null)
 					{
