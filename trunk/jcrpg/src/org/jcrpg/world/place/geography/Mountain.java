@@ -137,5 +137,9 @@ public class Mountain extends Geography {
 		return ret;
 	}
 	
+	@Override
+	public int getRoadBuildingPrice() {
+		return 5;
+	}
 
 }
