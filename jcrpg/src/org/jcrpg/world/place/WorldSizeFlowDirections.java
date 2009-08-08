@@ -53,6 +53,10 @@ public class WorldSizeFlowDirections {
 	byte[] placeBitMapReverse = new byte[] {(byte)254,(byte)253,(byte)251,(byte)247,(byte)239,(byte)223,(byte)191,(byte)127};
 	
 	public void setCubeFlowDirection(int x, int y, int z, int direction, boolean value) throws Exception {
+		/*if (x<0 || y<0 || z<0) {
+			Jcrpg.LOGGER.fine("OUT OF BOUNDS OF CUBE FLOW DIRECTION!!");
+			return;
+		}*/
 		int base = (direction + x*4 + y*4*gWX + z*(4*gWY*gWX));
 		int place = base%8;
 		int byteCount = base/8;
