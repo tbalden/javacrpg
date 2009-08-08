@@ -914,7 +914,15 @@ public class River extends Water implements FlowGeography {
 	public WorldSizeFlowDirections getWorldSizeFlowDirections() {
 		return flowDirections;
 	}
+
+
+
+	@Override
+	public int getRoadBuildingPrice() {
+		return 10;
+	}
 	
+
 	
 
 }

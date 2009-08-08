@@ -1015,6 +1015,11 @@ public class Geography extends Place implements Surface {
 		return true;
 	}
 	
+	public int getRoadBuildingPrice()
+	{
+		return 1;
+	}
+	
 	
 	
 }
