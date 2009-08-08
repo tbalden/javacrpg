@@ -605,5 +605,9 @@ public class Ocean extends Water {
 		return super.getFilledZonesOfY(worldX, worldZ, minY, maxY);
 	}*/
 	
+	@Override
+	public int getRoadBuildingPrice() {
+		return 20;
+	}
 
 }

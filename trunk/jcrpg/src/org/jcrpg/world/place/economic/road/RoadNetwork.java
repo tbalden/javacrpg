@@ -372,6 +372,9 @@ public class RoadNetwork extends Economic implements FlowGeography {
 			int endZ = 0;
 			int zMul = 1;
 			int xMul = 1;
+			
+			boolean DEBUG_ALTERNATIVES = false;
+			boolean USE_ALTERNATIVES = false;
 
 			if (Math.abs(diffX)>Math.abs(diffZ))
 			{
@@ -414,37 +417,39 @@ public class RoadNetwork extends Economic implements FlowGeography {
 
 					zChange+=deltaZperXunit;
 
+					boolean northAlt = false;
+					boolean southAlt = false;
+
 					// draw X+1
 					try {
-/*						boolean northAlt = false;
-						boolean southAlt = false;
-						if (x<endX-1 && x>startX)
+						if (USE_ALTERNATIVES && x<endX-1 && x>startX)
 						{
 							Geography soilGeo = getSoilGeoAt(x*magnification+magnification/2, z*magnification+magnification/2);
 							
 							if (soilGeo!=null)
 							{
-								int priceBase = getRoadBuildingPrice();
+								int priceBase = soilGeo.getRoadBuildingPrice();
 								
 								if (priceBase>1)
 								{
 									int newPriceNorth = 0;
 									int newPriceSouth = 0;
-									Geography soilGeoAltNorth= getSoilGeoAt(x*magnification+magnification/2, (z-1)*magnification+magnification/2);
-									Geography soilGeoAltSouth= getSoilGeoAt(x*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltNorth= getSoilGeoAt(x*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltSouth= getSoilGeoAt(x*magnification+magnification/2, (z-1)*magnification+magnification/2);
 									newPriceNorth+=soilGeoAltNorth.getRoadBuildingPrice();
 									newPriceSouth+=soilGeoAltSouth.getRoadBuildingPrice();
-									Geography soilGeoAltNorth0= getSoilGeoAt((x-1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
-									Geography soilGeoAltSouth0= getSoilGeoAt((x-1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltNorth0= getSoilGeoAt((x-1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltSouth0= getSoilGeoAt((x-1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
 									newPriceNorth+=soilGeoAltNorth0.getRoadBuildingPrice();
 									newPriceSouth+=soilGeoAltSouth0.getRoadBuildingPrice();
-									Geography soilGeoAltNorth2= getSoilGeoAt((x+1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
-									Geography soilGeoAltSouth2= getSoilGeoAt((x+1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltNorth2= getSoilGeoAt((x+1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+									Geography soilGeoAltSouth2= getSoilGeoAt((x+1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
 									newPriceNorth+=soilGeoAltNorth2.getRoadBuildingPrice();
 									newPriceSouth+=soilGeoAltSouth2.getRoadBuildingPrice();
 									Geography soilGeoAltEnd= getSoilGeoAt((x+1)*magnification+magnification/2, (z)*magnification+magnification/2);
 									newPriceNorth+=soilGeoAltEnd.getRoadBuildingPrice();
 									newPriceSouth+=soilGeoAltEnd.getRoadBuildingPrice();
+									priceBase+=soilGeoAltEnd.getRoadBuildingPrice();
 									if (newPriceNorth<newPriceSouth && newPriceNorth<priceBase)
 									{
 										northAlt = true;
@@ -456,22 +461,67 @@ public class RoadNetwork extends Economic implements FlowGeography {
 								}
 							}
 						}
+						
+						
 						if (northAlt)
 						{
+							System.out.println(x+" !!!!!!!!! "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.SOUTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.SOUTH, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
 							
-						} else*/
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							x+=1;
+							zChange+=deltaZperXunit;
+							
+						} else
+						if (southAlt)
+						{
+							System.out.println(x+" !!!!!!!!! "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.WEST, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.NORTH, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.SOUTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							x+=1;
+							zChange+=deltaZperXunit;
+						} else
 						{
 							
-							System.out.println(x+" - "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.WEST, true);
-							if (zChange<1f)
-							{ // no turn needed in Z dir
-								getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
-							} else
+							if (!DEBUG_ALTERNATIVES)
 							{
-								getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.NORTH, true);
+							
+								System.out.println(x+" - "+z);
+								getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.WEST, true);
+								if (zChange<1f)
+								{ // no turn needed in Z dir
+									getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
+								} else
+								{
+									getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.NORTH, true);
+								}
+								getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+z*zMul);
 							}
-							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+z*zMul);
 						}
 					} catch (Exception ex)
 					{
@@ -483,14 +533,17 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					{
 						zChange = zChange-1f;
 						z++;
-						try {
-							System.out.println(x+" | "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.SOUTH, true);
-							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
-							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+z*zMul);
-						} catch (Exception ex)
+						if (!DEBUG_ALTERNATIVES)
 						{
-							ex.printStackTrace();
+							try {
+								System.out.println(x+" | "+z);
+								getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.SOUTH, true);
+								getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.EAST, true);
+								getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+z*zMul);
+							} catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
 					
@@ -540,20 +593,113 @@ public class RoadNetwork extends Economic implements FlowGeography {
 
 					xChange+=deltaXperZunit;
 
+					boolean eastAlt = false;
+					boolean westAlt = false;
+
+					if (USE_ALTERNATIVES && z<endZ-1 && z>startZ)
+					{
+						Geography soilGeo = getSoilGeoAt(x*magnification+magnification/2, z*magnification+magnification/2);
+						
+						if (soilGeo!=null)
+						{
+							int priceBase = soilGeo.getRoadBuildingPrice();
+							
+							if (priceBase>1)
+							{
+								int newPriceEast = 0;
+								int newPriceWest = 0;
+								Geography soilGeoAltEast= getSoilGeoAt((x+1)*magnification+magnification/2,  z*magnification+magnification/2);
+								Geography soilGeoAltSouth= getSoilGeoAt((x-1)*magnification+magnification/2, z*magnification+magnification/2);
+								newPriceEast+=soilGeoAltEast.getRoadBuildingPrice();
+								newPriceWest+=soilGeoAltSouth.getRoadBuildingPrice();
+								Geography soilGeoAltEast0= getSoilGeoAt((x+1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
+								Geography soilGeoAltWest0= getSoilGeoAt((x-1)*magnification+magnification/2, (z-1)*magnification+magnification/2);
+								newPriceEast+=soilGeoAltEast0.getRoadBuildingPrice();
+								newPriceWest+=soilGeoAltWest0.getRoadBuildingPrice();
+								Geography soilGeoAltEast2= getSoilGeoAt((x+1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+								Geography soilGeoAltWest2= getSoilGeoAt((x-1)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+								newPriceEast+=soilGeoAltEast2.getRoadBuildingPrice();
+								newPriceWest+=soilGeoAltWest2.getRoadBuildingPrice();
+								Geography soilGeoAltEnd= getSoilGeoAt((x)*magnification+magnification/2, (z+1)*magnification+magnification/2);
+								newPriceEast+=soilGeoAltEnd.getRoadBuildingPrice();
+								newPriceWest+=soilGeoAltEnd.getRoadBuildingPrice();
+								priceBase+=soilGeoAltEnd.getRoadBuildingPrice();
+								if (newPriceEast<newPriceWest && newPriceEast<priceBase)
+								{
+									eastAlt = true;
+								} else
+								if (newPriceWest<priceBase)
+								{
+									westAlt = true;
+								}		
+							}
+						}
+					}
+					
+					
 					// draw Z+1
 					try {
-						getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.SOUTH, true);
-						if (xChange<1f)
+						if (eastAlt)
 						{
-							System.out.println(x+" | "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+							System.out.println(x+" !!!!!!!!! "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul, J3DCore.WEST, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.SOUTH, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.SOUTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.WEST, true);
+							getBoundaries().addCube(magnification, x+1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							z+=1;
+							xChange+=deltaXperZunit;
+							
+						} else
+						if (westAlt)
+						{
+							System.out.println(x+" !!!!!!!!! "+z);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+z-1*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+z-1*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ-1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+z*zMul, J3DCore.SOUTH, true);
+							getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.SOUTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.EAST, true);
+							getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.NORTH, true);
+							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.WEST, true);
+							getBoundaries().addCube(magnification, x, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);
+							z+=1;
+							xChange+=deltaXperZunit;
 						} else
 						{
-							System.out.println(x+" ,- "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
-							
+							if (!DEBUG_ALTERNATIVES)
+							{
+	
+								getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.SOUTH, true);
+								if (xChange<1f)
+								{
+									System.out.println(x+" | "+z);
+									getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+								} else
+								{
+									System.out.println(x+" ,- "+z);
+									getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.EAST, true);
+									
+								}
+								getBoundaries().addCube(magnification, startX+x*xMul, container.w.getSeaLevel(blockSize), z);
+							}
 						}
-						getBoundaries().addCube(magnification, startX+x*xMul, container.w.getSeaLevel(blockSize), z);
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -564,16 +710,19 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					{
 						xChange = xChange-1f;
 						x++;
-						try {
-							System.out.println(x+" =` "+z);
-							getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
-							getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
-							getBoundaries().addCube( magnification, startX+x*xMul, container.w.getSeaLevel(blockSize), z);
-						} catch (Exception ex)
+						if (!DEBUG_ALTERNATIVES)
 						{
-							ex.printStackTrace();
+							try {
+								System.out.println(x+" =` "+z);
+								getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
+								getWorldSizeFlowDirections().setCubeFlowDirection(startX+x*xMul, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
+								getBoundaries().addCube( magnification, startX+x*xMul, container.w.getSeaLevel(blockSize), z);
+							} catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
-					}
+					}	
 					
 					
 				}
