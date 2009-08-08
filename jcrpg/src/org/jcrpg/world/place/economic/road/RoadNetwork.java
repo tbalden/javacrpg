@@ -63,7 +63,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		this.origoZ = origoZ;
 		//this.groundLevel = groundLevel;
 		this.worldGroundLevel=worldGroundLevel;
-		this.worldHeight = worldHeight;
+		this.worldHeight = worldGroundLevel+10;
 		this.blockSize = magnification;
 		
 		this.container = container;
@@ -562,37 +562,130 @@ public class RoadNetwork extends Economic implements FlowGeography {
 	{
 		return hmKindCubeOverride;
 	}
-
-	@Override
-	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
+	
+	
+	public boolean isPath(boolean[] directions, int localX, int localZ)
+	{
+	
+		// N S   N E   S E   E W   N W    S W
+		//  |     \                 /
+		//  |            \   --           \
 		
-		boolean[] directions = getWorldSizeFlowDirections().getFlowDirections(worldX, worldGroundLevel, worldZ);
+		
+		int found = 0;
+		int dir1 = 0;
+		int dir2 = 0;
+		int count = 0;
+		for (boolean d:directions)
+		{
+			if (d) {
+				if (found==0) dir1=count; 
+				if (found==1) dir2=count; 
+				found++;
+			}
+			count++;
+		}
 		boolean NORTH = directions[J3DCore.NORTH];
 		boolean EAST = directions[J3DCore.EAST];
 		boolean SOUTH = directions[J3DCore.SOUTH];
 		boolean WEST = directions[J3DCore.WEST];
 		
-		if (NORTH && worldX%magnification==magnification/2 && worldZ%magnification>=magnification/2)
-		{
-			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-			return c;
-		}
-		if (SOUTH && worldX%magnification==magnification/2 && worldZ%magnification<=magnification/2)
-		{
-			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-			return c;
-		}
-		if (EAST && worldZ%magnification==magnification/2 && worldX%magnification>=magnification/2)
-		{
-			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-			return c;
-		}
-		if (WEST && worldZ%magnification==magnification/2 && worldX%magnification<=magnification/2)
-		{
-			Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-			return c;
-		}
+		boolean r = false;
 		
+		int halfBlockSize = magnification/2;
+		float deltaPerUnit = halfBlockSize*1f/halfBlockSize;
+		
+		int granulation = 2;
+		
+		if (found==2 && Math.abs((dir1-dir2))%2==1)
+		{
+			// bending path direction found..
+			if (SOUTH && EAST)
+			{
+				if (localZ>halfBlockSize || localX<halfBlockSize) return false;
+				
+				if (localZ  == (int)((localX - (halfBlockSize)) * deltaPerUnit))
+				{
+					return true;
+				}
+				if (localZ -1  == (int)((localX - (halfBlockSize)) * deltaPerUnit))
+				{
+					return true;
+				}
+			}
+			if (SOUTH && WEST)
+			{
+				if (localZ>halfBlockSize || localX>halfBlockSize) return false;
+				
+				if (localZ == (int)((halfBlockSize - localX) * deltaPerUnit))
+				{
+					return true;
+				}
+				if (localZ-1 == (int)((halfBlockSize - localX) * deltaPerUnit))
+				{
+					return true;
+				}
+			}
+			if (NORTH  && EAST)
+			{
+				if (localZ<halfBlockSize || localX<halfBlockSize) return false;
+				
+				if (localZ - halfBlockSize == (int)(((2 * halfBlockSize) - localX) * deltaPerUnit))
+				{
+					return true;
+				}
+				if (localZ +1 - halfBlockSize == (int)(((2 * halfBlockSize) - localX) * deltaPerUnit))
+				{
+					return true;
+				}
+			}
+			if (NORTH  && WEST)
+			{
+				if (localZ<halfBlockSize || localX>halfBlockSize) return false;
+				
+				if (localZ - halfBlockSize == (int)((localX) * deltaPerUnit))
+				{
+					return true;
+				}
+				if (localZ+1 - halfBlockSize == (int)((localX) * deltaPerUnit))
+				{
+					return true;
+				}
+			}
+		} else
+		{
+			if (NORTH && localX % magnification == magnification / 2
+					&& localZ % magnification >= magnification / 2) {
+				return true;
+			}
+			if (SOUTH && localX % magnification == magnification / 2
+					&& localZ % magnification <= magnification / 2) {
+				return true;
+			}
+			if (EAST && localZ % magnification == magnification / 2
+					&& localX % magnification >= magnification / 2) {
+				return true;
+			}
+			if (WEST && localZ % magnification == magnification / 2
+					&& localX % magnification <= magnification / 2) {
+				return true;
+			}
+		}
+		return r;
+		
+	}
+	
+
+	@Override
+	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
+		
+		boolean[] directions = getWorldSizeFlowDirections().getFlowDirections(worldX, worldGroundLevel, worldZ);
+		if (isPath(directions, worldX%magnification, worldZ%magnification))
+		{
+			Cube c = farView ? hmKindCubeOverride_FARVIEW.get(kind)
+					: getOverrideMap().get(kind);
+			return c;
+		}
 		return null;
 	}
 

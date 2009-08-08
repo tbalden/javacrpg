@@ -140,7 +140,7 @@ public class EconomyContainer {
 			} 
 
 		}
-		if (roadNetwork!=null)
+		if (roadNetwork!=null && roadNetwork.getBoundaries()!=null && w!=null)
 		{
 			
 			if (roadNetwork.getBoundaries().isInside(worldX, w.getSeaLevel(1), worldZ))
