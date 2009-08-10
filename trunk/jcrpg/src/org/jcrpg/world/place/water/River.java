@@ -919,7 +919,7 @@ public class River extends Water implements FlowGeography {
 
 	@Override
 	public int getRoadBuildingPrice() {
-		return 20;
+		return 70;
 	}
 	
 

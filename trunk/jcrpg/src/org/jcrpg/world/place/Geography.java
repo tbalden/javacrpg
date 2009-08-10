@@ -977,6 +977,7 @@ public class Geography extends Place implements Surface {
 		return true;
 	}
 	
+	
 	public GeneratedPartRuleSet getRuleSet() {
 		return ruleSet;
 	}
@@ -1017,7 +1018,7 @@ public class Geography extends Place implements Surface {
 	
 	public int getRoadBuildingPrice()
 	{
-		return 1;
+		return 8;
 	}
 	
 	

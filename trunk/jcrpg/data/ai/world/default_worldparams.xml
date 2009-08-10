@@ -36,7 +36,7 @@
 		heightRatio="1.0" normalSize="40"/>
 	
 	<!-- geology main organisation -->
-	<geology foundation-id="Ocean" landDensity="10" landMass="80">
+	<geology foundation-id="Ocean" landDensity="5" landMass="90">
 		<main-stream>
 			<geo ref-id="Plain" likeness="4" />
 			<geo ref-id="Forest" likeness="8" />

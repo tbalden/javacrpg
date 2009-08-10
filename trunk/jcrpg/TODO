@@ -15,14 +15,13 @@ Economy,
 Interrelation,
 Society, Groups etc.
 
+[ ] label to map, even better map!
 
-
-[ ] Roads between friendly populations! :)
-	[ ] roads doesnt show in desert??? climate dependent? debug information needed
-		-- thats not bad necessarily - climate dependent representation is needed! arctic zone shouldnt have a dirty road!!
-		
-		
+[ ] Story/Dialog system thingy :)
 	
+
+
+
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list
 	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH
@@ -72,6 +71,16 @@ bugs:
 
 
 
+[X] Roads between populations! :)
+	[X] roads doesnt show in desert??? climate dependent? debug information needed
+		-- thats not bad necessarily - climate dependent representation is needed! arctic zone shouldnt have a dirty road!!
+	[X] bend the road at corners
+	[X] snowy road in arctic, grassy in jungle, sandy in desert
+
+	[X] integrate AStar to avoid lake/ocean!whole world map should be loaded into an Astar map, and use findPath(x,y,targetX,tY) - waypoints are returned!
+	
+[X] check NPE reported
+		
 [X] put a 'No mouse input' on main menu window gfx
 [?] outside minimap - show lower levels that are visible?
 

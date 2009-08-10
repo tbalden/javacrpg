@@ -68,5 +68,11 @@ public class Forest extends Geography {
 
 	}
 	
+	@Override
+	public int getRoadBuildingPrice() {
+		return 15;
+	}
+
+	
 
 }
