@@ -35,10 +35,15 @@ import org.jcrpg.world.ai.flora.FloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
+import org.jcrpg.world.place.water.Ocean;
+import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
+import org.newdawn.slick.util.pathfinding.Mover;
+import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
-public class World extends Place {
+public class World extends Place implements TileBasedMap {
 
 	public Engine engine;
 	public transient WorldMap worldMap;
@@ -839,4 +844,69 @@ public class World extends Place {
 	{
 		economyContainer.onLoad(this);
 	}
+
+
+	// aStar methods
+
+	public boolean blocked(Mover mover, int x, int y) {
+		for (Water w : waters.values()) {
+			
+			if (w instanceof Ocean)
+			{
+				Ocean water = (Ocean)w;
+				boolean oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, y*((Ocean)water).magnification, false, false);
+				//System.out.println(w.magnification+" ? "+magnification+ "--- "+x+" "+z+" "+!oceanWater);
+				//if (!oceanWater) System.out.println("TRUE");
+				return oceanWater;
+			}
+			
+		}
+		//System.out.println("--- "+x+" "+z+" "+true);
+		return false;
+	}
+
+
+	public float getCost(Mover mover, int sx, int sy, int tx, int ty) {
+		if (economyContainer.roadNetwork.getBoundaries().isInside(tx*magnification, getSeaLevel(1), ty*magnification))
+		{
+			return 5;
+		}
+		for (Water water :waters.values())
+		{
+			if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
+			{
+				
+				boolean riverWater = ((River)water).isWaterBlock(tx*magnification, worldGroundLevel, ty*magnification);
+				if (riverWater) {
+					if (water.getRoadBuildingPrice()>1) System.out.println("PRICE W: "+water.getRoadBuildingPrice());
+					return water.getRoadBuildingPrice();
+				}
+			}
+		}
+		for (Geography g:geographies.values())
+		{
+			if (g.getClass()==Cave.class) continue;
+			if (g.getBoundaries().isInside(tx*magnification, g.worldGroundLevel, ty*magnification))
+			{
+				if (g.getRoadBuildingPrice()>1) System.out.println("PRICE"+g.getClass()+" "+g.getRoadBuildingPrice());
+				return g.getRoadBuildingPrice();
+			}
+		}
+		return 0;
+	}
+
+
+	public int getHeightInTiles() {
+		return sizeZ;
+	}
+
+
+	public int getWidthInTiles() {
+		return sizeX;
+	}
+
+
+	public void pathFinderVisited(int x, int y) {
+	}
+	
 }
