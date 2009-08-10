@@ -399,7 +399,12 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					boolean SOUTH = FROM_SOUTH || TO_SOUTH;
 					boolean EAST = FROM_EAST || TO_EAST;
 					boolean WEST = FROM_WEST || TO_WEST;
-					
+
+					if (!NORTH && !SOUTH && !EAST && !WEST)
+					{
+						NORTH = true; SOUTH = true;
+					}
+
 					int x = currStep.getX();
 					int z = currStep.getY();
 					try {

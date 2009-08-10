@@ -29,6 +29,7 @@ import org.jcrpg.world.generator.WorldParams;
 import org.jcrpg.world.place.FlowGeography;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
+import org.newdawn.slick.util.pathfinding.Path.Step;
 
 /**
  * Algorithm to generate flowing things from one point to another
@@ -160,6 +161,13 @@ public class GenAlgoFlow extends GenAlgoBase {
 		int cZ = z;
 		int direction =	(HashUtil.mix(cX, 0, cZ)*4)/100;
 		int backDir = direction==0?1:direction==1?0:direction==2?3:2;
+		
+		int prevX = -1; int prevZ = -1;
+		int curX = -1; int curZ = -1;
+		int nextX = cX; int nextZ = cZ;
+		
+		ArrayList<int[]> path = new ArrayList<int[]>();
+		
 		while (true)
 		{
 			if (HashUtil.mix(cX, 1, cZ)<10)
@@ -252,15 +260,7 @@ public class GenAlgoFlow extends GenAlgoBase {
 				try {
 					geo.getBoundaries().addCube(gMag, cX, world.getSeaLevel(gMag), cZ);
 					geo.getBoundaries().addCube(gMag, cX, world.getSeaLevel(gMag)-1, cZ);
-					if (geo instanceof FlowGeography)
-					{	
-						FlowGeography flowGeo = (FlowGeography)geo;
-						// TODO direction dependent set!
-						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag), cZ, J3DCore.NORTH, true);
-						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag), cZ, J3DCore.WEST, true);
-						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag)-1, cZ, J3DCore.NORTH, true);
-						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(cX, world.getSeaLevel(gMag)-1, cZ, J3DCore.WEST, true);
-					}
+					path.add(new int[]{cX,cZ});
 				} catch (Exception ex)
 				{
 					ex.printStackTrace();
@@ -269,6 +269,72 @@ public class GenAlgoFlow extends GenAlgoBase {
 			}
 			if (turnCounter>3 || endingFound) break;
 				
+		}
+		// drawing flow direction
+		if (geo instanceof FlowGeography && path.size()>0)
+		{
+			
+			int[] prevStep = null;
+			int[] currStep = null;
+			int[] nextStep = path.get(0);
+
+			for (int i=0; i<path.size(); i++)
+			{
+				currStep = nextStep;
+				nextStep = i<path.size()-1?path.get(i+1):null;
+				
+				boolean FROM_SOUTH = prevStep!=null && prevStep[1]<currStep[1];
+				boolean FROM_NORTH = prevStep!=null && prevStep[1]>currStep[1];
+				boolean FROM_WEST = prevStep!=null && prevStep[0]<currStep[0];
+				boolean FROM_EAST = prevStep!=null && prevStep[0]>currStep[0];
+				boolean TO_NORTH = nextStep!=null && nextStep[1]>currStep[1];
+				boolean TO_SOUTH = nextStep!=null && nextStep[1]<currStep[1];
+				boolean TO_WEST = nextStep!=null && nextStep[0]<currStep[0];
+				boolean TO_EAST = nextStep!=null && nextStep[0]>currStep[0];
+				
+				boolean NORTH = FROM_NORTH || TO_NORTH;
+				boolean SOUTH = FROM_SOUTH || TO_SOUTH;
+				boolean EAST = FROM_EAST || TO_EAST;
+				boolean WEST = FROM_WEST || TO_WEST;
+				
+				if (!NORTH && !SOUTH && !EAST && !WEST)
+				{
+					NORTH = true; SOUTH = true;
+				}
+				
+				int xx = currStep[0];
+				int zz = currStep[1];
+				FlowGeography flowGeo = (FlowGeography)geo;
+				try {
+					if (NORTH)
+					{
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag), zz, J3DCore.NORTH, true);
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag)-1, zz, J3DCore.NORTH, true);
+					}
+					if (SOUTH)
+					{
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag), zz, J3DCore.SOUTH, true);
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag)-1, zz, J3DCore.SOUTH, true);
+					}
+					if (EAST)
+					{
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag), zz, J3DCore.EAST, true);
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag)-1, zz, J3DCore.EAST, true);
+					}
+					if (WEST)
+					{
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag), zz, J3DCore.WEST, true);
+						flowGeo.getWorldSizeFlowDirections().setCubeFlowDirection(xx,  world.getSeaLevel(gMag)-1, zz, J3DCore.WEST, true);
+					}
+					//getBoundaries().addCube( magnification, x, container.w.getSeaLevel(blockSize), z);
+				} catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				
+				prevStep = currStep;
+			}
+			
 		}
 	}
 	
