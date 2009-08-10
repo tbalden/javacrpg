@@ -68,6 +68,7 @@ public class WorldMap {
 	public int WATER = 1;
 	
 	public static int PIXELS_PER_BLOCK = 9;
+	public static int PIXELS_PER_BLOCK_OVERLAP = 11;
 	
 	// 2
 	// 4
@@ -96,6 +97,23 @@ public class WorldMap {
 	  		{ true, true, true, true, true,true, true, true, true }
 	  	                                    }
 	  	;
+
+	static boolean[][] OVERLAP = new boolean[][] 
+		  	                                    {
+				{ false, false, true, true, false, true,true, false, true, false, false},
+		  		{ false, true, true, true, true, true,true, true, true, true , false},
+		  		{ false, true, true, true, true, true,true, true, true, true , false},
+		  		{ true, true, true, true, true, true,true, true, true, true , false},
+		  		{ false, true, true, true, true, true,true, true, true, true , true},
+		  		{ true, true, true, true, true, true,true, true, true, true , true},
+		  		{ true, true, true, true, true, true,true, true, true, true , true},
+		  		{ false, true, true, true, true, true,true, true, true, true , false},
+		  		{ false, true, true, true, true, true,true, true, true, true , true},
+		  		{ false, true, true, true, true, true,true, true, true, true , false},
+				{ false, false, true, true, false, true,true, false, true, false, false},
+		  	                                    }
+	;
+	
 	static boolean[][] CLIMATE = new boolean[][] 
 		  	                                    {
 		  		{ true, false, true, false, true, false, true, false, true },
@@ -191,6 +209,63 @@ public class WorldMap {
 			  	;
 	
 	static boolean[][][] ROADS = new boolean[][][] {ROAD_NORTH, ROAD_EAST, ROAD_SOUTH, ROAD_WEST};
+
+	
+	static boolean[][] RIVER_NORTH = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, true,true, false, false, false },
+			  		{ false, false, false, true, true,true, false, false, false },
+			  		{ false, false, false, true, true,true, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+		
+	static boolean[][] RIVER_SOUTH = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false },
+			  		{ false, false, false, true, true,true, false, false, false },
+			  		{ false, false, false, true, true,true, false, false, false },
+			  		{ false, false, false, true, true,true, false, false, false },
+			  		{ false, false, false, true, true,false, false, false, false }
+			  	                                    }
+			  	;
+	static boolean[][] RIVER_WEST = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, true, true, true, false,false, false, false, false },
+			  		{ true, true, true, true, true, false, false, false, false },
+			  		{ true, true, true, false, true,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+	static boolean[][] RIVER_EAST = new boolean[][] 
+			  	                                    {
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, true, true, true, false, true},
+			  		{ false, false, false, false, true, true, true, true, true},
+			  		{ false, false, false, false, false,true, true, true, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+
+	static boolean[][][] RIVERS = new boolean[][][] {RIVER_NORTH, RIVER_EAST, RIVER_SOUTH, RIVER_WEST};
 		
 	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
 	{
@@ -213,7 +288,33 @@ public class WorldMap {
 		}
 		
 	}
+
+	public void paintOverlapPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
+	{
+		for (int x = 0; x<PIXELS_PER_BLOCK_OVERLAP; x++)
+		{
+			for (int z = 0; z<PIXELS_PER_BLOCK_OVERLAP; z++)
+			{
+				if (pattern[PIXELS_PER_BLOCK_OVERLAP-1-z][x]) 
+				{
+					int disp = 4 * (X*PIXELS_PER_BLOCK + x - 1 + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + (z - 1)* PIXELS_PER_BLOCK)* sizeX);
+					try {
+					for (int i=0; i<color.length; i++)
+					{
+						if (vary)
 	
+							{
+							map[disp+i] = (byte)Math.min(color[i]+5*x,255);
+							} else map[disp+i] = color[i];
+					}
+					map[disp+3] = alpha;
+					} catch (ArrayIndexOutOfBoundsException ex){}
+				}
+			}
+		}
+		
+	}
+
 	public WorldMap(World w) {
 		world = w;
 	
@@ -232,6 +333,7 @@ public class WorldMap {
 				mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+0] = (byte)50;
 				boolean oceanWater = false;
 				boolean riverWater = false;
+				ArrayList<River> rivers = new ArrayList<River>();
 				boolean ecoFound = false;
 				Economic ecoObj = null;
 				int wx = x*w.magnification;
@@ -239,7 +341,7 @@ public class WorldMap {
 				boolean foundRoad = w.economyContainer.roadNetwork.getBoundaries().isInside(wx, w.getSeaLevel(1), wz);;
 				for (Water water :w.waters.values())
 				{
-					if (water instanceof Ocean && !riverWater)
+					if (water instanceof Ocean)
 					{
 						oceanWater = ((Ocean)water).isWaterPointSpecial(x*((Ocean)water).magnification, ((Ocean)water).worldGroundLevel, z*((Ocean)water).magnification, false, false);
 						{
@@ -316,41 +418,55 @@ public class WorldMap {
 						{
 							map[z][x] = (map[z][x]^WATER);
 							System.out.print("W");
-							paintPattern(new byte[]{0,0,100}, (byte)255, mapImage, x, z, w.sizeX, GROUND, false);
-							paintPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, GROUND,true);
+							paintOverlapPattern(new byte[]{0,0,100}, (byte)255, mapImage, x, z, w.sizeX, OVERLAP, false);
+							paintOverlapPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, OVERLAP,false);
 						} 
 					} else
 					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
 					{
 						
 						riverWater = ((River)water).isWaterBlock(wx, world.worldGroundLevel, wz);
-						if (riverWater) {
-							System.out.print("!");
-							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+0] = 0;
-							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+1] = 0;
-							climateImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+2] = 0;
-							paintPattern(new byte[]{30,30,(byte)200}, (byte)190, mapImage, x, z, w.sizeX, GROUND, true);
-							geoImageSet[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)0;
-						}
+						if (riverWater) rivers.add((River)water);
 					}
-					if (foundRoad)
+
+
+				}
+				// paint found things...
+				// 1st river
+				if (riverWater) {
+					
+					for (River water:rivers )
 					{
-						boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
+						boolean[] directions = ((River)water).getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
 						for (int i=J3DCore.NORTH; i<=J3DCore.WEST;i++)
 						{
 							if (directions[i])
 							{
-								paintPattern(new byte[]{(byte)230,(byte)100,(byte)105}, (byte)255,geoImageSet, x, z, w.sizeX, ROADS[i],false);
+								paintPattern(new byte[]{30,30,(byte)200}, (byte)190, geoImageSet, x, z, w.sizeX, RIVERS[i],false);
 							}
 						}
-						
 					}
-					if (ecoFound) {
-						byte[] cB = ecoObj.getMapColor();
-						paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
-					}
-
+					System.out.print("!");
 				}
+				// then roads...
+				if (foundRoad)
+				{
+					boolean[] directions = w.economyContainer.roadNetwork.getWorldSizeFlowDirections().getFlowDirections(wx, w.getSeaLevel(1), wz);
+					for (int i=J3DCore.NORTH; i<=J3DCore.WEST;i++)
+					{
+						if (directions[i])
+						{
+							paintPattern(new byte[]{(byte)130,(byte)50,(byte)45}, (byte)255,geoImageSet, x, z, w.sizeX, ROADS[i],false);
+						}
+					}
+					
+				}
+				// populations last!
+				if (ecoFound) {
+					byte[] cB = ecoObj.getMapColor();
+					paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
+				}
+
 				mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)150;
 				
 				
