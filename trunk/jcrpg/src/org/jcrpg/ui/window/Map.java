@@ -24,11 +24,16 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.map.WorldMap;
+import org.jcrpg.ui.map.WorldMap.LabelContainer;
+import org.jcrpg.ui.map.WorldMap.LabelDesc;
+import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
@@ -37,7 +42,7 @@ import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
-public class Map extends Window {
+public class Map extends InputWindow {
 
 	WorldMap wmap;
 	
@@ -108,9 +113,42 @@ public class Map extends Window {
 	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
         }
+        
+        LabelContainer labelContainer = wmap.getLabels();
+        
+        
+        float xRatio = 0.50f / J3DCore.getInstance().gameState.world.sizeX;
+        float yRatio = 0.6f / J3DCore.getInstance().gameState.world.sizeZ;
+        float offsetX = 0.25f;
+        float offsetY = 0.2f;
+		//TextLabel tlc1 = new TextLabel("1",this,windowNode,0 * 0.01f+offsetX, 0 * 0.01f+offsetY, 0.3f, 0.05f, 1000, "xxxx",false);
+		//TextLabel tlc2 = new TextLabel("2",this,windowNode,J3DCore.getInstance().gameState.world.sizeX * xRatio+offsetX, J3DCore.getInstance().gameState.world.sizeZ * yRatio +offsetY, 0.3f, 0.05f, 1000, "xxxx",false);
+
+        for (LabelDesc townDesc : labelContainer.towns)
+        {
+        	if (townDesc.scale1>1)
+        	{
+        		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.3f, 0.05f, 700, lS(townDesc.text),false,false, ColorRGBA.red);
+        	}
+        	/*if (townDesc.scale1==1)
+        	{
+        		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.3f, 0.05f, 1100, lS(townDesc.text),false,false, ColorRGBA.white);
+        	}*/
+        	
+        }
+        
         windowNode.updateRenderState();
 	}
 
+	public String lS(String s)
+	{
+		if (s.length()>5)
+		{
+			return s.substring(0,5)+"."; 
+		}
+		return s;
+	}
+	
 	@Override
 	public void hide() {
 		core.getUIRootNode().detachChild(windowNode);
@@ -121,6 +159,30 @@ public class Map extends Window {
 	public void show() {
 		core.getUIRootNode().attachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
+	}
+
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	
