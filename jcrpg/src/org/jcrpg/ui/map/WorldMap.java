@@ -32,6 +32,7 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.water.Ocean;
 import org.jcrpg.world.place.water.River;
 import org.jcrpg.world.time.Time;
@@ -266,6 +267,9 @@ public class WorldMap {
 			  	;
 
 	static boolean[][][] RIVERS = new boolean[][][] {RIVER_NORTH, RIVER_EAST, RIVER_SOUTH, RIVER_WEST};
+	
+	
+	
 		
 	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
 	{
@@ -312,8 +316,10 @@ public class WorldMap {
 				}
 			}
 		}
-		
 	}
+	
+	ArrayList<LabelDesc> labels = new ArrayList<LabelDesc>();
+	HashSet<String> towns = new HashSet<String>();
 
 	public WorldMap(World w) {
 		world = w;
@@ -404,11 +410,7 @@ public class WorldMap {
 								{
 									if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 									{
-										//if (!foundRoad) // ?
-										{
-											paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
-										}
-										
+										paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
 										break;
 									}
 								}
@@ -464,6 +466,23 @@ public class WorldMap {
 				// populations last!
 				if (ecoFound) {
 					byte[] cB = ecoObj.getMapColor();
+					if (ecoObj instanceof Population)
+					{
+						String townName = ((Population)ecoObj).town.foundationName;
+						if (towns.contains(townName))
+						{
+							
+						} else
+						{
+							towns.add(townName);
+							LabelDesc desc = new LabelDesc();
+							desc.text = townName;
+							desc.scale1 = ((Population)ecoObj).town.getSize();
+							desc.x = x;
+							desc.z = z;
+							labels.add(desc);
+						}
+					}
 					paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
 				}
 
@@ -609,6 +628,30 @@ public class WorldMap {
 		geoTexState.setTexture(geoTex);
 		
 		return new TextureState[]{baseTexState,null,geoTexState};
+	}
+
+	
+	public class LabelDesc
+	{
+		public int x,z;
+		public String text;
+		public int scale1, scale2;
+	}
+	
+	public class LabelContainer
+	{
+		public ArrayList<LabelDesc> towns;
+	}
+	
+	LabelContainer container = new LabelContainer();
+	
+	/**
+	 * @return name lists of labels on map.
+	 */
+	public LabelContainer getLabels()
+	{
+		container.towns = labels;
+		return container;
 	}
 
 	
