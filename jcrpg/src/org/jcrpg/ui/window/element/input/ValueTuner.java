@@ -100,7 +100,7 @@ public class ValueTuner extends InputBase {
 		}
 		baseNode.detachAllChildren();
 		{
-			activeNode = new Node();
+			activeNode = new Node(""+id);
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
@@ -130,7 +130,7 @@ public class ValueTuner extends InputBase {
 		}
 		baseNode.detachAllChildren();
 		{
-			deactiveNode = new Node();
+			deactiveNode = new Node(""+id);
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);

@@ -21,9 +21,11 @@ package org.jcrpg.ui;
 import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -44,6 +46,7 @@ public abstract class Window {
 		this.base = base;
 		core = base.core;
 		windowNode = new Node("windowNode");
+		windowNode.setModelBound(new BoundingBox());
 
 	}
 	boolean storedEnginePauseState = false; 
@@ -57,6 +60,7 @@ public abstract class Window {
 			if (windowCounter==0) ((ClassicKeyboardLookHandler)core.getInputHandler().getFromAttachedHandlers(0)).unlockSecondaryHandling();
 			core.setFlare(true);
 			base.activeWindows.remove(this);
+			((ClassicInputHandler)base.core.getInputHandler()).setRootNode(null);
 			hide();
 		} else
 		{
@@ -66,6 +70,7 @@ public abstract class Window {
 			core.setFlare(false);
 			core.gameState.engine.setPause(true);
 			base.activeWindows.add(this);
+			((ClassicInputHandler)base.core.getInputHandler()).setRootNode(windowNode);
 			show();
 		}
 		visible=!visible;

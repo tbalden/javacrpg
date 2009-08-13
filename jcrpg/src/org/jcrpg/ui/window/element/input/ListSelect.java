@@ -172,7 +172,7 @@ public class ListSelect extends InputBase {
 		freeTextNodes();
 		if (deactivatedNode==null) 
 		{
-			deactivatedNode = new Node();
+			deactivatedNode = new Node(""+id);
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);
@@ -198,7 +198,7 @@ public class ListSelect extends InputBase {
 		{
 			try {
 				Quad m = icons[selected+fromCount];
-				Node iconNode = new Node();
+				Node iconNode = new Node(""+id);
 				iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*0,0);
 				iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);
@@ -223,7 +223,7 @@ public class ListSelect extends InputBase {
 		freeTextNodes();
 		if (activatedNode==null) 
 		{
-			activatedNode = new Node();
+			activatedNode = new Node(""+id);
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
@@ -275,7 +275,7 @@ public class ListSelect extends InputBase {
 				{
 					try {
 						Quad m = icons[i+fromCount];
-						Node iconNode = new Node();
+						Node iconNode = new Node(""+id);
 						iconNode.setLocalTranslation(dCenterIconX, dCenterY - dSizeY*i,0);
 						iconNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						iconNode.setLocalScale(1f);//w.core.getDisplay().getWidth()/fontRatio);

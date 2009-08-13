@@ -24,7 +24,6 @@
 	<classpathentry kind="lib" path="jme/jme-font.jar"/>
 	<classpathentry kind="lib" path="jme/jme-gamestates.jar"/>
 	<classpathentry kind="lib" path="jme/jme-model.jar"/>
-	<classpathentry kind="lib" path="jme/jme-ogrexml.jar"/>
 	<classpathentry kind="lib" path="jme/jme-scene.jar"/>
 	<classpathentry kind="lib" path="jme/jme-swt.jar"/>
 	<classpathentry kind="lib" path="jme/jme-terrain.jar"/>

@@ -96,7 +96,8 @@ public class TextButton extends InputBase {
 	public void activate() {
 		baseNode.detachAllChildren();
 		if (activeNode==null ) {
-			activeNode = new Node();
+			activeNode = new Node(""+id);
+			//activeNode.setUserData("uiElement", arg1)
 			//freeTextNodes();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);
@@ -123,7 +124,7 @@ public class TextButton extends InputBase {
 	public void deactivate() {
 		baseNode.detachAllChildren();
 		if (deactiveNode==null ) {
-			deactiveNode = new Node();
+			deactiveNode = new Node(""+id);
 			//freeTextNodes();
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);

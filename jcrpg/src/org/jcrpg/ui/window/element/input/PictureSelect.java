@@ -108,7 +108,7 @@ public class PictureSelect extends InputBase {
 		baseNode.detachAllChildren();
 		{
 			if (activeNode==null) {
-				activeNode = new Node();
+				activeNode = new Node(""+id);
 				try {
 					Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 					w1.setSolidColor(ColorRGBA.white);
@@ -150,7 +150,7 @@ public class PictureSelect extends InputBase {
 		baseNode.detachAllChildren();
 		{
 			if (deactiveNode==null) {
-				deactiveNode = new Node();
+				deactiveNode = new Node(""+id);
 				try {
 					Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 					w1.setSolidColor(ColorRGBA.gray);

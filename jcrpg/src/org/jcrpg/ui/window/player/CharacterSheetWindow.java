@@ -85,6 +85,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.10f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 
 	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);

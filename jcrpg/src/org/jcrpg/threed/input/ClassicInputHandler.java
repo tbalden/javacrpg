@@ -23,10 +23,12 @@ import org.jcrpg.threed.J3DCore;
 import com.jme.input.InputHandler;
 import com.jme.input.MouseLookHandler;
 import com.jme.renderer.Camera;
+import com.jme.scene.Node;
 
 public class ClassicInputHandler  extends InputHandler {
 
     private MouseLookHandler mouseLookHandler;
+    private MenuMouseHandler menuMouseHandler;
     //private ClassicMouseLookHandler mouseLookHandler;
     private ClassicKeyboardLookHandler keyboardLookHandler;
 
@@ -44,28 +46,39 @@ public class ClassicInputHandler  extends InputHandler {
         return mouseLookHandler;
     }
 
+    public MenuMouseHandler getMenuMouseHandler() {
+        return menuMouseHandler;
+    }
     
     public ClassicInputHandler(J3DCore core, Camera cam)
     {
     	keyboardLookHandler = new ClassicKeyboardLookHandler(core,cam);
         addToAttachedHandlers( keyboardLookHandler );
     	mouseLookHandler = new MouseLookHandler(cam,1.0f);//ClassicMouseLookHandler(cam);
+    	menuMouseHandler = new MenuMouseHandler();
     	//mouseLookHandler.setLockAxis(new Vector3f(1f,1f,0));
-    	enableMouse(false);
+    	enableMouse(true);
     	//mouseLookHandler = new ClassicMouseLookHandler(cam);
         addToAttachedHandlers( mouseLookHandler );
+        addToAttachedHandlers( menuMouseHandler );
         org.lwjgl.input.Mouse.setGrabbed(false);
     }
     
     public void enableMouse(boolean state)
     {
     	mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK && state);
+    	menuMouseHandler.setEnabled(J3DCore.SETTINGS.MENUMOUSE && state);
     }
     
     public void applyMouseSettings()
     {
     	enableMouse(J3DCore.SETTINGS.MOUSELOOK);
+    	enableMouse(J3DCore.SETTINGS.MENUMOUSE);
     }
+    
+	public void setRootNode(Node rootNode) {
+		menuMouseHandler.setRootNode(rootNode);
+	}
    
 }
 

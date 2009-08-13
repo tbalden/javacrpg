@@ -79,7 +79,7 @@ public class CheckBox extends InputBase {
     @Override
     public void activate() {
         baseNode.detachAllChildren();
-        activeNode = new Node();
+        activeNode = new Node(""+id);
         try {
             Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
             w1.setSolidColor(ColorRGBA.white);
@@ -96,7 +96,7 @@ public class CheckBox extends InputBase {
     @Override
     public void deactivate() {
         baseNode.detachAllChildren();
-        deactiveNode = new Node();
+        deactiveNode = new Node(""+id);
         try {
             Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
             w1.setSolidColor(ColorRGBA.gray);

@@ -63,6 +63,7 @@ public class PartyOrderWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.60f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.39f, 0.058f, 0.3f, 0.06f,400f,"Party Character Order",false);
