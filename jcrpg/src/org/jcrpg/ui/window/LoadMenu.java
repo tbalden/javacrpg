@@ -32,6 +32,7 @@ import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.SaveSlotData;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.renderer.ColorRGBA;
@@ -39,7 +40,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class LoadMenu extends Window implements KeyListener {
+public class LoadMenu extends InputWindow implements KeyListener {
 	
 	public String QUIT = "mainMenuButtonQuit.png";
 	public String OPTIONS = "mainMenuButtonOptions.png";
@@ -333,6 +334,34 @@ public class LoadMenu extends Window implements KeyListener {
 		
 		return true;
 		//return false;
+	}
+
+
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
