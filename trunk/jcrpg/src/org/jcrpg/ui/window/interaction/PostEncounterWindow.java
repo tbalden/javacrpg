@@ -68,6 +68,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.58f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 
 	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"VICTORY!",false);

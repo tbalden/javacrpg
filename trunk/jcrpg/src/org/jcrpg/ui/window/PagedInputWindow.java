@@ -89,6 +89,7 @@ public abstract class PagedInputWindow extends InputWindow {
 		}
 		activateSelectedInput();
 		windowNode.updateRenderState();
+		windowNode.updateModelBound();
 	}
 	
 	public void addPage(int number, Node page)

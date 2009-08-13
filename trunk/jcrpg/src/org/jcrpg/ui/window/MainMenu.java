@@ -20,23 +20,27 @@ package org.jcrpg.ui.window;
 
 import java.util.ArrayList;
 
+import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.element.Button;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class MainMenu extends Window implements KeyListener {
+public class MainMenu extends InputWindow implements KeyListener {
 	
 	
-	public String QUIT = "mainMenuButtonQuit.png";
+	public static String QUIT = "mainMenuButtonQuit.png";
 	public static String OPTIONS = "mainMenuButtonOptions.png";
-	public String NEW_GAME = "mainMenuButtonNewGame.png";
-	public String SAVE_GAME = "mainMenuButtonSaveGame.png";
-	public String LOAD_GAME = "mainMenuButtonLoadGame.png";
+	public static String NEW_GAME = "mainMenuButtonNewGame.png";
+	public static String SAVE_GAME = "mainMenuButtonSaveGame.png";
+	public static String LOAD_GAME = "mainMenuButtonLoadGame.png";
 	
 	public String[][] menuImages = new String[][] {
 			{NEW_GAME,NEW_GAME}, {SAVE_GAME,SAVE_GAME}, {LOAD_GAME,LOAD_GAME}, {OPTIONS,OPTIONS}, {QUIT,QUIT}
@@ -46,7 +50,34 @@ public class MainMenu extends Window implements KeyListener {
 	int selected = 0;
 	
 	public ArrayList<Button> buttons = new ArrayList<Button>();
+	
 
+	public class MenuImageButton extends InputBase
+	{
+
+		public MenuImageButton(String id, InputWindow w, Node parentNode) {
+			super(id, w, parentNode);
+		}
+
+		@Override
+		public void reset() {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public boolean handleKey(String key) {
+			if (key.equals("enter")) // enter or shortcut
+			{
+				w.core.audioServer.play(SOUND_INPUTSELECTED);
+				w.inputUsed(this, key);
+				return true;
+			}
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+id+" "+key);
+			return false;
+		}
+		
+	}
+	
 	public MainMenu(UIBase base) {
 		super(base);
 		
@@ -73,11 +104,18 @@ public class MainMenu extends Window implements KeyListener {
 			{
 				Quad button = loadImageToQuad("./data/ui/mainmenu/"+image[1],sizeX*sizeXRatios[i],sizeY, posX, startPosY - stepPosY*counter++);
 				button.setRenderState(base.hud.hudAS);
-				windowNode.attachChild(button);
+				
+				//buttonNode.attachChild(button);
+				button.setModelBound(new BoundingBox());
+				MenuImageButton b = new MenuImageButton(image[1], this, windowNode);
+				b.baseNode.attachChild(button);
+				b.activate();
+				windowNode.attachChild(b.baseNode);
 				buttons.add(new Button(image[0],button,this));
 				i++;
 			}
 			highlightSelected();
+			windowNode.updateModelBound();
 			windowNode.updateRenderState();
 			base.addEventHandler("lookUp", this);
 			base.addEventHandler("lookDown", this);
@@ -136,10 +174,13 @@ public class MainMenu extends Window implements KeyListener {
 		lockLookAndMove(true);
 	}
 
-
 	public void handleChoice()
 	{
 		String name = buttons.get(selected).name;
+		handleChoice(name);
+	}
+	public void handleChoice(String name)
+	{
 		if (name.equals(QUIT))
 		{
 			//
@@ -211,6 +252,45 @@ public class MainMenu extends Window implements KeyListener {
 		
 		return true;
 		//return false;
+	}
+
+
+
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		if ("enter".equals(message)) {
+
+			String name = base.baseNode.getChild(0).getName();
+			if (name != null) {
+				name = name.substring(name.lastIndexOf("/") + 1);
+			}
+			handleChoice(name);
+		}
+		return false;
 	}
 	
 

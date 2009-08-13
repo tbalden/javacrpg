@@ -66,9 +66,9 @@ public class PartySetup extends PagedInputWindow {
 	
 	FontTT text;
 	
-	Node pageMemberSelection = new Node();
-	Node pageCreationFirst = new Node();
-	Node pageCreationSecond = new Node();
+	Node pageMemberSelection = new Node("pageMemberSelection");
+	Node pageCreationFirst = new Node("pageCreationFirst");
+	Node pageCreationSecond = new Node("pageCreationSecond");
 
 	
 	ArrayList<PersistentMemberInstance> charactersOfParty = new ArrayList<PersistentMemberInstance>();
@@ -151,12 +151,13 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(0,startGame);
 	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,430f,Language.v("partySetup.delChar"));
 	    	addInput(0,delChar);
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.80f, 0.2f, 0.07f,500f,"Create / Add at least one character to your party.",false);
+	    	new TextLabel("label1",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
+	    	new TextLabel("label2",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
+	    	new TextLabel("label3",this,pageMemberSelection, 0.23f, 0.80f, 0.2f, 0.07f,500f,"Create / Add at least one character to your party.",false);
 	    	
 	    	// page char creation 1 -------------------------------------------
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageCreationFirst.attachChild(sQuad);
 	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
 	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
@@ -211,6 +212,7 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	// page char creation 2 -------------------------------------------
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
+	    	sQuad2.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageCreationSecond.attachChild(sQuad2);
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
@@ -694,6 +696,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
+			if (genderSelect.ids.length<1) return true;
 			{
 				int i = genderSelect.getSelection();
 				int id = Integer.parseInt(genderSelect.ids[i]);
@@ -948,7 +951,7 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(professionSelect))
 		{
-	    	if (message.equals("fake")) {
+	    	if (message.equals("fake") && attributeValues!=null) {
 				for (String id:attributeTuners.keySet())
 				{
 					ValueTuner v = attributeTuners.get(id);
@@ -1003,7 +1006,7 @@ public class PartySetup extends PagedInputWindow {
 		return true;
 	}
 
-	Node imageNode = new Node();
+	Node imageNode = new Node("imageNode");
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {

@@ -18,6 +18,7 @@
 
 package org.jcrpg.ui.window.element.input;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.jcrpg.ui.text.FontTT;
@@ -27,9 +28,14 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.Savable;
 
 
-public abstract class InputBase {
+public abstract class InputBase implements Savable{
+	
+	public static final String UI_ELEMENT = "InputBaseNode";
 	
 	public static final int DEF_FONT_SIZE = 10;
 	
@@ -66,7 +72,8 @@ public abstract class InputBase {
 		this.id = id;
 		this.parentNode = parentNode;
 		this.w = w;
-		baseNode = new Node("InputBaseNode");
+		baseNode = new Node(UI_ELEMENT);
+		baseNode.setUserData(UI_ELEMENT, this);
 		parentNode.attachChild(baseNode);
 		parentNode.updateRenderState();
 	}
@@ -77,7 +84,8 @@ public abstract class InputBase {
 		this.parentNode = parentNode;
 		this.w = w;
 		init(centerX, centerY, sizeX, sizeY);
-		baseNode = new Node("InputBaseNode");
+		baseNode = new Node(UI_ELEMENT);
+		baseNode.setUserData(UI_ELEMENT, this);
 		parentNode.attachChild(baseNode);
 		parentNode.updateRenderState();
 	}
@@ -218,5 +226,17 @@ public abstract class InputBase {
 		currentTextNodes.clear();
 	}
 	
-	
+	public Class getClassTag() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void read(JMEImporter arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+	public void write(JMEExporter arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

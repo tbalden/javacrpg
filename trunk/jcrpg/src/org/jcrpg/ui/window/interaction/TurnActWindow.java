@@ -96,6 +96,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageIntro.attachChild(sQuad);
 	    	introTitle = new TextLabel("",this,pageIntro, 0.5f, 0.19f, 0.3f, 0.06f,450f,Language.v("turnActWindow.intro"),false,true,new ColorRGBA(0.7f,0.1f,0.1f,1f));
 	    	new TextLabel("",this,pageIntro, 0.5f, 0.22f, 0.3f, 0.06f,600f,Language.v("turnActWindow.pressText"),false,true,ColorRGBA.black);
@@ -111,6 +112,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 	    	//page1.attachChild(sQuad);
 

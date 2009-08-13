@@ -204,6 +204,7 @@ public class LoadMenu extends Window implements KeyListener {
 			}
 			counter++;
 		}
+		windowNode.updateModelBound();
 	}
 	
 	

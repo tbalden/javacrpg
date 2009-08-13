@@ -22,7 +22,10 @@ Society, Groups etc.
 
 [ ] Story/Dialog system thingy :)
 	
-
+[ ] mouse handling 
+	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
+	[ ] additional back / close buttons for every window
+	[ ] handling of all kinds of input elements
 
 
 

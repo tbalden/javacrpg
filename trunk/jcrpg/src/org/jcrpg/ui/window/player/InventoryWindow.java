@@ -120,6 +120,7 @@ public class InventoryWindow extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	page0.attachChild(sQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	page1_details.attachChild(sQuad);

@@ -220,6 +220,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		// Controller settings
 		public  boolean MOUSELOOK = false;
+		public  boolean MENUMOUSE = true;
 		
 	}
 
