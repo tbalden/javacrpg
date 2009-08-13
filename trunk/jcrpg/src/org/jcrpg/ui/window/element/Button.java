@@ -19,27 +19,34 @@
 package org.jcrpg.ui.window.element;
 
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.window.InputWindow;
+import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class Button {
+public class Button extends InputBase {
 
 	public String name;
 	public Quad quad;
 	public Node node;
 	public Window parent;
-	public Button(String name, Quad quad, Window parent) {
-		super();
+	public Button(String name, Quad quad, InputWindow parent) {
+		super(""+name,parent, parent.windowNode);
 		this.name = name;
 		this.quad = quad;
 		this.parent = parent;
 	}
-	public Button(String name, Quad quad, Node n, Window parent) {
-		super();
+	public Button(String name, Quad quad, Node n, InputWindow parent) {
+		super(""+name,parent, parent.windowNode);
 		this.name = name;
 		this.quad = quad;
 		this.node = n;
 		this.parent = parent;
+	}
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 }

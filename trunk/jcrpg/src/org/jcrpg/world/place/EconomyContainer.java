@@ -252,6 +252,16 @@ public class EconomyContainer {
 			ec.onLoad();
 			treeLocator.addEconomic(ec);
 		}
+		if (roadNetwork==null)
+		{
+			try {
+				roadNetwork = new RoadNetwork("roadNetwork", this,w.getSeaLevel(1),w.magnification, w.sizeX, w.sizeY, w.sizeZ, 0, w.getSeaLevel(w.magnification)-1, 0);
+			} catch (Exception ex)
+			{
+				Logger.getLogger("EconomyContainer").fine("!!! roadnetwork failure "+ex);
+				ex.printStackTrace();
+			}
+		}
 		roadNetwork.updateRoads();
 	}
 	
