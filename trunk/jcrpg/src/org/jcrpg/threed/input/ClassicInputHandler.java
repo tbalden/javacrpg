@@ -19,66 +19,67 @@
 package org.jcrpg.threed.input;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.mouse.UiMouseHandler;
 
 import com.jme.input.InputHandler;
 import com.jme.input.MouseLookHandler;
 import com.jme.renderer.Camera;
 import com.jme.scene.Node;
 
-public class ClassicInputHandler  extends InputHandler {
+public class ClassicInputHandler extends InputHandler {
 
-    private MouseLookHandler mouseLookHandler;
-    private MenuMouseHandler menuMouseHandler;
-    //private ClassicMouseLookHandler mouseLookHandler;
-    private ClassicKeyboardLookHandler keyboardLookHandler;
+	private MouseLookHandler mouseLookHandler;
+	private UiMouseHandler menuMouseHandler;
+	// private ClassicMouseLookHandler mouseLookHandler;
+	private ClassicKeyboardLookHandler keyboardLookHandler;
 
-    /**
-     * @return handler for keyboard controls
-     */
-    public ClassicKeyboardLookHandler getKeyboardLookHandler() {
-        return keyboardLookHandler;
-    }
+	/**
+	 * @return handler for keyboard controls
+	 */
+	public ClassicKeyboardLookHandler getKeyboardLookHandler() {
+		return keyboardLookHandler;
+	}
 
-    /**
-     * @return handler for mouse controls
-     */
-    public MouseLookHandler getMouseLookHandler() {
-        return mouseLookHandler;
-    }
+	/**
+	 * @return handler for mouse controls
+	 */
+	public MouseLookHandler getMouseLookHandler() {
+		return mouseLookHandler;
+	}
 
-    public MenuMouseHandler getMenuMouseHandler() {
-        return menuMouseHandler;
-    }
-    
-    public ClassicInputHandler(J3DCore core, Camera cam)
-    {
-    	keyboardLookHandler = new ClassicKeyboardLookHandler(core,cam);
-        addToAttachedHandlers( keyboardLookHandler );
-    	mouseLookHandler = new MouseLookHandler(cam,1.0f);//ClassicMouseLookHandler(cam);
-    	menuMouseHandler = new MenuMouseHandler();
-    	//mouseLookHandler.setLockAxis(new Vector3f(1f,1f,0));
-    	enableMouse(true);
-    	//mouseLookHandler = new ClassicMouseLookHandler(cam);
-        addToAttachedHandlers( mouseLookHandler );
-        addToAttachedHandlers( menuMouseHandler );
-        org.lwjgl.input.Mouse.setGrabbed(false);
-    }
-    
-    public void enableMouse(boolean state)
-    {
-    	mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK && state);
-    	menuMouseHandler.setEnabled(J3DCore.SETTINGS.MENUMOUSE && state);
-    }
-    
-    public void applyMouseSettings()
-    {
-    	enableMouse(J3DCore.SETTINGS.MOUSELOOK);
-    	enableMouse(J3DCore.SETTINGS.MENUMOUSE);
-    }
-    
+	public UiMouseHandler getMenuMouseHandler() {
+		return menuMouseHandler;
+	}
+
+	public ClassicInputHandler(J3DCore core, Camera cam) {
+		keyboardLookHandler = new ClassicKeyboardLookHandler(core, cam);
+		addToAttachedHandlers(keyboardLookHandler);
+		mouseLookHandler = new MouseLookHandler(cam, 1.0f);// ClassicMouseLookHandler(cam);
+		menuMouseHandler = new UiMouseHandler();
+		// mouseLookHandler.setLockAxis(new Vector3f(1f,1f,0));
+		enableMouse(true);
+		// mouseLookHandler = new ClassicMouseLookHandler(cam);
+		addToAttachedHandlers(mouseLookHandler);
+		addToAttachedHandlers(menuMouseHandler);
+		org.lwjgl.input.Mouse.setGrabbed(false);
+	}
+
+	public void enableMouse(boolean state) {
+		mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK && state);
+		menuMouseHandler.setEnabled(J3DCore.SETTINGS.UIMOUSE && state);
+	}
+
+	public void applyMouseSettings() {
+		enableMouse(J3DCore.SETTINGS.MOUSELOOK);
+		enableMouse(J3DCore.SETTINGS.UIMOUSE);
+	}
+
 	public void setRootNode(Node rootNode) {
+		if (rootNode != null)
+			mouseLookHandler.setEnabled(false);
+		else
+			mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK);
 		menuMouseHandler.setRootNode(rootNode);
 	}
-   
-}
 
+}

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jcrpg.threed.input;
+package org.jcrpg.ui.mouse;
 
 import com.jme.input.InputHandler;
 import com.jme.input.RelativeMouse;
@@ -26,27 +26,23 @@ import com.jme.scene.Node;
  * <code>MenuMouseHandler</code> defines an InputHandler that allows hit detection on menu objects
  * @author mkienenb
  */
-public class MenuMouseHandler extends InputHandler {
+public class UiMouseHandler extends InputHandler {
 
-    private MenuMouseAction menuMouseAction;
+    private UiMouseAction uiMouseAction;
 
-    public MenuMouseHandler() {
+    public UiMouseHandler() {
         RelativeMouse mouse = new RelativeMouse("Mouse Input");
         mouse.registerWithInputHandler( this );
 
-        menuMouseAction = new MenuMouseAction(mouse);
-        addAction(menuMouseAction);
+        uiMouseAction = new UiMouseAction(mouse);
+        addAction(uiMouseAction);
     }
     
-    public void requireButtonPress(boolean value) {
-        menuMouseAction.setButtonPressRequired(value);
-    }
-    
-    public MenuMouseAction getMenuMouseAction() {
-        return menuMouseAction;
+    public UiMouseAction getUiMouseAction() {
+        return uiMouseAction;
     }
 
 	public void setRootNode(Node rootNode) {
-		menuMouseAction.setRootNode(rootNode);
+		uiMouseAction.setRootNode(rootNode);
 	}
 }

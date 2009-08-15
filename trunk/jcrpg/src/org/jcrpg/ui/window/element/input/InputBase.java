@@ -21,6 +21,7 @@ package org.jcrpg.ui.window.element.input;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.InputWindow;
 
@@ -158,6 +159,17 @@ public abstract class InputBase implements Savable{
 		return true;
 	}
 
+	public boolean handleMouse(UiMouseEvent mouseEvent)
+	{
+		 // TODO: get rid of this code every ui element understands handleMouse()
+		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+        {
+    		return handleKey("enter");
+        }
+		
+		return false;
+	}
+
 	public boolean isUpdated() {
 		return updated;
 	}
@@ -237,6 +249,11 @@ public abstract class InputBase implements Savable{
 	public void write(JMEExporter arg0) throws IOException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean handleMouse(Spatial p)
+	{
+		return true;
 	}
 
 }

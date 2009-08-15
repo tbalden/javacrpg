@@ -18,7 +18,7 @@
 
 package org.jcrpg.ui.window.element;
 
-import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 
@@ -30,7 +30,7 @@ public class Button extends InputBase {
 	public String name;
 	public Quad quad;
 	public Node node;
-	public Window parent;
+	public InputWindow parent;
 	public Button(String name, Quad quad, InputWindow parent) {
 		super(""+name,parent, parent.windowNode);
 		this.name = name;
@@ -48,5 +48,18 @@ public class Button extends InputBase {
 	public void reset() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent)
+	{
+		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+        {
+    		return parent.handleKey("enter");
+        }
+        else
+        {
+        	return parent.inputEntered(this, name);
+        }
 	}
 }

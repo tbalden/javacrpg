@@ -24,6 +24,8 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
@@ -31,6 +33,7 @@ import org.jcrpg.util.saveload.SaveLoadNewGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
 public class MainMenu extends InputWindow implements KeyListener {
@@ -54,9 +57,12 @@ public class MainMenu extends InputWindow implements KeyListener {
 
 	public class MenuImageButton extends InputBase
 	{
-
-		public MenuImageButton(String id, InputWindow w, Node parentNode) {
+		public int selectedValue;
+		
+		public MenuImageButton(String id, InputWindow w, Node parentNode, int selectedValue) {
 			super(id, w, parentNode);
+			
+			this.selectedValue = selectedValue;
 		}
 
 		@Override
@@ -75,7 +81,22 @@ public class MainMenu extends InputWindow implements KeyListener {
 			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+id+" "+key);
 			return false;
 		}
-		
+		@Override
+		public boolean handleMouse(UiMouseEvent mouseEvent)
+		{
+			 // TODO: get rid of this code every ui element understands handleMouse()
+			if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+	        {
+	    		return handleKey("enter");
+	        }
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			{
+				return inputEntered(this, ""+selectedValue);
+				
+			}
+			
+			return false;
+		}
 	}
 	
 	public MainMenu(UIBase base) {
@@ -107,7 +128,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 				
 				//buttonNode.attachChild(button);
 				button.setModelBound(new BoundingBox());
-				MenuImageButton b = new MenuImageButton(image[1], this, windowNode);
+				MenuImageButton b = new MenuImageButton(image[1], this, windowNode, i);
 				b.baseNode.attachChild(button);
 				b.activate();
 				windowNode.attachChild(b.baseNode);
@@ -254,8 +275,6 @@ public class MainMenu extends InputWindow implements KeyListener {
 		//return false;
 	}
 
-
-
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
 		// TODO Auto-generated method stub
@@ -266,7 +285,13 @@ public class MainMenu extends InputWindow implements KeyListener {
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		int newSelected = Integer.parseInt(message);
+		if (newSelected != selected)
+		{
+			selected = newSelected;
+			highlightSelected();
+			return true;
+		}
 		return false;
 	}
 
