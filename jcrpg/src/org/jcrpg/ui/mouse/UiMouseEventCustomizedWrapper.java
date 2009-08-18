@@ -21,6 +21,7 @@ package org.jcrpg.ui.mouse;
 import java.util.List;
 import java.util.Set;
 
+import org.jcrpg.ui.mouse.UiMouseAction.PickedSpatialInfo;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.scene.Spatial;
@@ -70,12 +71,16 @@ class UiMouseEventCustomizedWrapper implements UiMouseEvent {
 		return delegate.getPickedInputBaseSet();
 	}
 
-	public List<Spatial> getPickedSpatialList() {
+	public List<PickedSpatialInfo> getPickedSpatialList() {
 		return delegate.getPickedSpatialList();
 	}
 
 	public String toString() {
 		return "alternateEventType=" + alternateEventType
 		+ ", " + delegate.toString();
+	}
+
+	public PickedSpatialInfo getAreaSpatial() {
+		return delegate.getAreaSpatial();
 	}
 }

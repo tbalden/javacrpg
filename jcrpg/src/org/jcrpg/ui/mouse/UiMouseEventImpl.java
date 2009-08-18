@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.jcrpg.ui.mouse.UiMouseAction.PickedSpatialInfo;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.scene.Spatial;
@@ -41,7 +42,7 @@ class UiMouseEventImpl implements UiMouseEvent {
 	private long timestamp;
 
 	// Unclear whether these are useful yet to input components, but pickedInputBaseSet is used by event loop
-	private List<Spatial> pickedSpatialList = Collections.emptyList();
+	private List<PickedSpatialInfo> pickedSpatialList = Collections.emptyList();
 	private Set<InputBase> pickedInputBaseSet = Collections.emptySet();
 
 	UiMouseEventImpl(UiMouseEventType uiMouseEventType, int mouseEventX, int mouseEventY)
@@ -73,7 +74,7 @@ class UiMouseEventImpl implements UiMouseEvent {
 		return timestamp;
 	}
 
-	public List<Spatial> getPickedSpatialList() {
+	public List<PickedSpatialInfo> getPickedSpatialList() {
 		return Collections.unmodifiableList(pickedSpatialList);
 	}
 
@@ -98,7 +99,7 @@ class UiMouseEventImpl implements UiMouseEvent {
 		this.buttonMask = this.buttonMask | button;
 	}
 
-	protected void setPickedSpatialList(List<Spatial> pickedSpatialList) {
+	protected void setPickedSpatialList(List<PickedSpatialInfo> pickedSpatialList) {
 		this.pickedSpatialList = pickedSpatialList;
 	}
 
@@ -129,5 +130,20 @@ class UiMouseEventImpl implements UiMouseEvent {
 		+ ", buttonMask=" + buttonMask
 		+ ", eventType=" + eventType
 		+ ", timestamp=" + timestamp;
+	}
+
+	public PickedSpatialInfo getAreaSpatial() {
+		PickedSpatialInfo r = null;
+		for (PickedSpatialInfo i:pickedSpatialList)
+		{
+			if (r==null) r = i; else
+			{
+				if (r.absSizeX*r.absSizeY<i.absSizeX*i.absSizeY)
+				{
+					r = i;
+				}
+			}
+		}
+		return r;
 	}
 }
