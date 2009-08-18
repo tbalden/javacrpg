@@ -25,8 +25,11 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -213,10 +216,13 @@ public class ListSelect extends InputBase {
 		
 		baseNode.attachChild(slottextNode);
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 	}
+	int size = 0;
 
 	public void setupActivated()
 	{
+		size = 0;
 		baseNode.removeFromParent();
 		parentNode.attachChild(baseNode); // to foreground
 		baseNode.detachAllChildren();
@@ -242,7 +248,6 @@ public class ListSelect extends InputBase {
 		}
 		textNodes.clear();
 		iconNodes.clear();
-		int size = 0;
 		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
 				String text = "";
@@ -298,7 +303,9 @@ public class ListSelect extends InputBase {
 		{
 			activatedNode.getChild(0).setLocalTranslation(dCenterX, dCenterY - ((size-1) * dSizeY)/2, 0);
 		}
+		activatedNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 	}
 
 	public boolean select(boolean next)
@@ -444,5 +451,68 @@ public class ListSelect extends InputBase {
 		if (!isStored()) return;
 		
 	}
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent) {
+		if (isEnabled())
+		{
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			{
+				if (isEnabled() && !active)
+				{
+					activate();
+				}
+			} else
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+			{
+				if (isEnabled() && active)
+				{
+					deactivate();
+				}
+			} else
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
+			{
+				
+				if (active)
+				{
+					selected = (int)(mouseEvent.getAreaSpatial().ratioY*size);
+					int i=0;
+					for (Node n:textNodes)
+					{
+						colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
+						i++;
+					}
+				}
+				
+			} else
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_PRESSED)
+			{
+				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+				{
+					if (active)
+					{
+						return handleKey("enter");
+					} else
+					{
+						activate();
+						return true;
+					}
+				}
+				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_RIGHT))
+				{
+					if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+					{
+						selected = size-1;
+						return handleKey("lookRight");
+					} else
+					{
+						selected = 0;
+						return handleKey("lookLeft");
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 }

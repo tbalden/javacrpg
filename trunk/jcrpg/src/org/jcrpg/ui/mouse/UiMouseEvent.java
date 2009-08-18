@@ -21,6 +21,7 @@ package org.jcrpg.ui.mouse;
 import java.util.List;
 import java.util.Set;
 
+import org.jcrpg.ui.mouse.UiMouseAction.PickedSpatialInfo;
 import org.jcrpg.ui.window.element.input.InputBase;
 
 import com.jme.scene.Spatial;
@@ -50,6 +51,12 @@ public interface UiMouseEvent {
 
 	public boolean isButtonPressed(long button) ;
 
-	public List<Spatial> getPickedSpatialList();
+	public List<PickedSpatialInfo> getPickedSpatialList();
 	public Set<InputBase> getPickedInputBaseSet();
+	
+	/**
+	 * 
+	 * @return The spatial info that represents the given UI element.
+	 */
+	public PickedSpatialInfo getAreaSpatial();
 }

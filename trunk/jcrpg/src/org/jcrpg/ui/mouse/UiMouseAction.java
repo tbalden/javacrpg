@@ -70,7 +70,7 @@ public class UiMouseAction extends MouseInputAction {
 	     }
 
 	     private void mousePick(Node rootNode) {
-	 	    ArrayList<Spatial> picked = new ArrayList<Spatial>();
+	 	    ArrayList<PickedSpatialInfo> picked = new ArrayList<PickedSpatialInfo>();
 	 	    ArrayList<Spatial> loop = new ArrayList<Spatial>();
 	
 		    int mouseEventX = MouseInput.get().getXAbsolute();
@@ -88,10 +88,10 @@ public class UiMouseAction extends MouseInputAction {
 			pickUI(picked, loop, rootNode, mouseEvent.getX(), mouseEvent.getY());
 	
 		    Set<InputBase> pickedInputBaseSet = new HashSet<InputBase>();
-			for (Spatial p:picked)
+			for (PickedSpatialInfo p:picked)
 	 	    {
 		    	// System.out.println("Hit: "+p.getName()+" "+p.getClass());
-	 	    	Node parent = (Node)p.getParent();
+	 	    	Node parent = (Node)p.spatial.getParent();
 	 	    	InputBase base = (InputBase)parent.getUserData(InputBase.UI_ELEMENT);
 		    	pickedInputBaseSet.add(base);
 		    }
@@ -189,6 +189,14 @@ public class UiMouseAction extends MouseInputAction {
 			inputBase.handleMouse(mouseEvent);
 	 	}
 	
+		
+	public class PickedSpatialInfo
+	{
+		public float ratioX, ratioY;
+		public float absSizeX, absSizeY;
+		public Spatial spatial;
+	}
+		
 	/**
 	 * jcrpg specific UI picking
 	 * @author paul.illes
@@ -198,7 +206,7 @@ public class UiMouseAction extends MouseInputAction {
 	 * @param hitX
 	 * @param hitY
 	 */
-	private void pickUI(ArrayList<Spatial> list, ArrayList<Spatial> loopDetection, Node node, int hitX, int hitY)
+	private void pickUI(ArrayList<PickedSpatialInfo> list, ArrayList<Spatial> loopDetection, Node node, int hitX, int hitY)
 	{
 	    for (Spatial s:node.getChildren())
 	    {
@@ -216,7 +224,17 @@ public class UiMouseAction extends MouseInputAction {
 	    		{
     				if (s.getParent()!=null && InputBase.UI_ELEMENT.equals(s.getParent().getName()))
     				{
-    					list.add(s);
+    					PickedSpatialInfo i = new PickedSpatialInfo();
+    					i.spatial = s;
+    					float sizeX = x2-x;
+    					float sizeY = y2-y;
+    					float ratioX = (hitX-x)/sizeX;
+    					float ratioY = (hitY-y)/sizeY;
+    					i.ratioX = ratioX;
+    					i.ratioY = 1f - ratioY; // inverting Y axis
+    					i.absSizeX=sizeX;
+    					i.absSizeY=sizeY;
+    					list.add(i);
     				}
 	    		}
 	    		
