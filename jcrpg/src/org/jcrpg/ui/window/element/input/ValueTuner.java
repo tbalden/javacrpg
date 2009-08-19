@@ -22,8 +22,12 @@ import java.io.File;
 
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseHandler;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -117,7 +121,9 @@ public class ValueTuner extends InputBase {
 			activeNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(activeNode);
+		activeNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.activate();
 	}
 
@@ -146,7 +152,9 @@ public class ValueTuner extends InputBase {
 			deactiveNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(deactiveNode);
+		deactiveNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.deactivate();
 	}
 
@@ -202,4 +210,80 @@ public class ValueTuner extends InputBase {
 	    this.value = value;
 	}
 
+	
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent) {
+		if (isEnabled())
+		{
+
+			
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			{
+				if (isEnabled() && !active)
+				{
+					activate();
+				}
+			} else
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+			{
+				if (isEnabled() && active)
+				{
+					deactivate();
+				}
+			} else
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_PRESSED)
+			{
+				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+				{
+					if (active)
+					{
+						
+						if (mouseEvent.getAreaSpatial().ratioX<0.33f)
+						{
+							return handleKey("lookLeft");
+						} else
+						if (mouseEvent.getAreaSpatial().ratioX>0.66f)
+						{
+							return handleKey("lookRight");
+						} else
+						{
+							return handleKey("enter");
+						}
+					} else
+					{
+						activate();
+						return true;
+					}
+				}
+			}
+
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
+			{
+				if (isEnabled() && active)
+				{
+					{
+						if (mouseEvent.getAreaSpatial().ratioX<0.40f)
+						{
+							UiMouseHandler.cursorLeft();
+							return true;
+						} else
+						if (mouseEvent.getAreaSpatial().ratioX>0.60f)
+						{
+							UiMouseHandler.cursorRight();
+							return true;
+						} else
+						{
+							UiMouseHandler.cursorDown();
+							return true;
+						}
+					}
+						//MouseInput.get().setHardwareCursor(arg0)
+				}
+			} 
+
+		}
+		return false;
+	}
+
+	
 }

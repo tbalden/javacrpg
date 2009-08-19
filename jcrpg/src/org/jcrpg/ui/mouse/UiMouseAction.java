@@ -186,7 +186,10 @@ public class UiMouseAction extends MouseInputAction {
 		private void sendMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent) {
 			if (mouseEvent.getEventType()!=UiMouseEventType.MOUSE_MOVED)
 				System.out.println(inputBase.toString() + "-> " + mouseEvent.toString());
-			inputBase.handleMouse(mouseEvent);
+			if (!inputBase.handleMouse(mouseEvent))
+			{
+				UiMouseHandler.normalCursor();
+			}
 	 	}
 	
 		

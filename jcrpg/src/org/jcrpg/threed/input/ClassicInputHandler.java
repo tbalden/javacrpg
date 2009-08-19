@@ -18,10 +18,13 @@
 
 package org.jcrpg.threed.input;
 
+import java.net.URL;
+
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.mouse.UiMouseHandler;
 
 import com.jme.input.InputHandler;
+import com.jme.input.MouseInput;
 import com.jme.input.MouseLookHandler;
 import com.jme.renderer.Camera;
 import com.jme.scene.Node;
@@ -61,7 +64,6 @@ public class ClassicInputHandler extends InputHandler {
 		// mouseLookHandler = new ClassicMouseLookHandler(cam);
 		addToAttachedHandlers(mouseLookHandler);
 		addToAttachedHandlers(menuMouseHandler);
-		org.lwjgl.input.Mouse.setGrabbed(false);
 	}
 
 	public void enableMouse(boolean state) {
