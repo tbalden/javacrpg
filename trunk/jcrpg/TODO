@@ -15,6 +15,12 @@ Economy,
 Interrelation,
 Society, Groups etc.
 
+[ ] mouse handling 
+	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
+	[ ] additional back / close buttons for every window
+	[ ] handling of all kinds of input elements
+
+
 [ ] MAP
 	[ ] town type icons (instead of dots)
 	[ ] legendary to the map
@@ -22,11 +28,6 @@ Society, Groups etc.
 
 [ ] Story/Dialog system thingy :)
 	
-[ ] mouse handling 
-	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
-	[ ] additional back / close buttons for every window
-	[ ] handling of all kinds of input elements
-
 
 
 [ ] LOOT: add loot object generation, add economic background to commonwealth list

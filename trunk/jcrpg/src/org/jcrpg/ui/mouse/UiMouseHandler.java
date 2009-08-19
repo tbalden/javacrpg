@@ -18,7 +18,10 @@
 
 package org.jcrpg.ui.mouse;
 
+import java.net.URL;
+
 import com.jme.input.InputHandler;
+import com.jme.input.MouseInput;
 import com.jme.input.RelativeMouse;
 import com.jme.scene.Node;
 
@@ -30,12 +33,73 @@ public class UiMouseHandler extends InputHandler {
 
     private UiMouseAction uiMouseAction;
 
+    
+    public static final String URL_CURSOR_NORMAL = "file:data/cursor/cursor1.png";
+    public static final String URL_CURSOR_UP = "file:data/cursor/cursor1Up.png";
+    public static final String URL_CURSOR_DOWN = "file:data/cursor/cursor1Down.png";
+    public static final String URL_CURSOR_LEFT = "file:data/cursor/cursor1Left.png";
+    public static final String URL_CURSOR_RIGHT = "file:data/cursor/cursor1Right.png";
+    
     public UiMouseHandler() {
         RelativeMouse mouse = new RelativeMouse("Mouse Input");
         mouse.registerWithInputHandler( this );
 
         uiMouseAction = new UiMouseAction(mouse);
         addAction(uiMouseAction);
+		org.lwjgl.input.Mouse.setGrabbed(true);
+		MouseInput.get().setCursorVisible(true);
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_NORMAL));
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void normalCursor()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_NORMAL));
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    public static void cursorUp()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_UP),-5,-5);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    public static void cursorDown()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_DOWN),-5,-5);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    public static void cursorRight()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_RIGHT),-5,-5);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    public static void cursorLeft()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_LEFT),-5,-5);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
     }
     
     public UiMouseAction getUiMouseAction() {

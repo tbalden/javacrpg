@@ -26,6 +26,7 @@ import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -116,7 +117,9 @@ public class TextButton extends InputBase {
 			activeNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(activeNode);
+		activeNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.activate();
 	}
 
@@ -142,7 +145,9 @@ public class TextButton extends InputBase {
 			deactiveNode.attachChild(slottextNode);
 		}
 		baseNode.attachChild(deactiveNode);
+		deactiveNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.deactivate();
 	}
 

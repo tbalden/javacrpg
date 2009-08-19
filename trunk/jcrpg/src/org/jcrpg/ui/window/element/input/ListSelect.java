@@ -26,10 +26,12 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseHandler;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.input.MouseInput;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -213,8 +215,8 @@ public class ListSelect extends InputBase {
 				ex.printStackTrace();
 			}
 		}
-		
 		baseNode.attachChild(slottextNode);
+		deactivatedNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
 		baseNode.updateModelBound();
 	}
@@ -451,10 +453,13 @@ public class ListSelect extends InputBase {
 		if (!isStored()) return;
 		
 	}
+	
 	@Override
 	public boolean handleMouse(UiMouseEvent mouseEvent) {
 		if (isEnabled())
 		{
+
+			
 			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 			{
 				if (isEnabled() && !active)
@@ -474,12 +479,15 @@ public class ListSelect extends InputBase {
 				
 				if (active)
 				{
-					selected = (int)(mouseEvent.getAreaSpatial().ratioY*size);
-					int i=0;
-					for (Node n:textNodes)
+					if (mouseEvent.getAreaSpatial().ratioX<=0.7f)
 					{
-						colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
-						i++;
+						selected = (int)(mouseEvent.getAreaSpatial().ratioY*size);
+						int i=0;
+						for (Node n:textNodes)
+						{
+							colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
+							i++;
+						}
 					}
 				}
 				
@@ -490,7 +498,23 @@ public class ListSelect extends InputBase {
 				{
 					if (active)
 					{
-						return handleKey("enter");
+						
+						if (mouseEvent.getAreaSpatial().ratioX>0.7f)
+						{
+							if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+							{
+								selected = size-1;
+								return handleKey("lookRight");
+							} else
+							{
+								selected = 0;
+								return handleKey("lookLeft");
+							}
+
+						} else
+						{
+							return handleKey("enter");
+						}
 					} else
 					{
 						activate();
@@ -499,17 +523,42 @@ public class ListSelect extends InputBase {
 				}
 				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_RIGHT))
 				{
-					if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+					//if (mouseEvent.getAreaSpatial().ratioX>0.7f)
 					{
-						selected = size-1;
-						return handleKey("lookRight");
-					} else
-					{
-						selected = 0;
-						return handleKey("lookLeft");
+						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+						{
+							selected = size-1;
+							return handleKey("lookRight");
+						} else
+						{
+							selected = 0;
+							return handleKey("lookLeft");
+						}
+
 					}
 				}
 			}
+
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
+			{
+				if (isEnabled() && active)
+				{
+					if (mouseEvent.getAreaSpatial().ratioX>0.7f)
+					{
+						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+						{
+							UiMouseHandler.cursorDown();
+							return true;
+						} else
+						{
+							UiMouseHandler.cursorUp();
+							return true;
+						}
+					}
+						//MouseInput.get().setHardwareCursor(arg0)
+				}
+			} 
+
 		}
 		return false;
 	}
