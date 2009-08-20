@@ -223,6 +223,8 @@ public abstract class InputWindow extends Window implements KeyListener{
 	
 	public void inputActivated(InputBase input)
 	{
+		if (input==null || inputs==null) return;
+		
 		for (InputBase i:inputs)
 		{
 			if (i!=input && i.isActive())

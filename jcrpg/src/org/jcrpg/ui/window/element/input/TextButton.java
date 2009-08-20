@@ -25,6 +25,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
@@ -187,7 +188,7 @@ public class TextButton extends InputBase {
 	public boolean handleMouse(UiMouseEvent mouseEvent)
 	{
 		super.handleMouse(mouseEvent);
-		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+		if(mouseEvent.getEventType()== UiMouseEventType.MOUSE_PRESSED && mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
         {
     		return handleKey("enter");
         }

@@ -111,6 +111,8 @@ public class InventoryWindow extends PagedInputWindow {
 	public TextLabel requiredSkillDataText;
 	
 	public TextButton back;
+
+	public TextButton closeWindow;
 	
 	public InventoryWindow(UIBase base) {
 		super(base);
@@ -190,7 +192,10 @@ public class InventoryWindow extends PagedInputWindow {
 
 	    	drop = new TextButton("drop",this,page0, 0.55f, 0.78f, 0.09f, 0.07f,600f,Language.v("inventory.drop"));
 	    	addInput(0,drop);
-	    	
+
+	    	closeWindow = new TextButton("close",this,page0, 0.85f, 0.060f, 0.02f, 0.045f,600f," x");
+	    	addInput(0,closeWindow);
+
 	    	addPage(0, page0);
 	    	
 	    	// DETAILS PAGE
@@ -629,6 +634,12 @@ public class InventoryWindow extends PagedInputWindow {
 			
 			UseObjEvaluator.evaluateUse(currentMember, currentMember, l.get(0));
 			updateToMemberInstance(currentMember);
+		}
+		else
+		if (base == closeWindow)
+		{
+			toggle();
+			return true;
 		}
 		
 		return super.inputUsed(base, message);

@@ -97,6 +97,7 @@ public class EncounterWindow extends PagedInputWindow {
 	    			core.getDisplay().getWidth() / 2, 1.38f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
+	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	//page1.attachChild(sQuad);

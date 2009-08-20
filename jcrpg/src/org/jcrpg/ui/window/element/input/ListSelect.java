@@ -494,6 +494,7 @@ public class ListSelect extends InputBase {
 							colorize(n, i==selected?ColorRGBA.yellow:ColorRGBA.gray);
 							i++;
 						}
+						w.inputChanged(this, "");
 					}
 				}
 				
