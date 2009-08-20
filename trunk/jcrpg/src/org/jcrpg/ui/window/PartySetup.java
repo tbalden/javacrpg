@@ -124,6 +124,8 @@ public class PartySetup extends PagedInputWindow {
 	public org.jcrpg.world.ai.abs.attribute.Attributes lowestAttrValues = new FantasyAttributes(false);
 	public org.jcrpg.world.ai.abs.attribute.Resistances resistanceValues = null;
 	
+	public TextButton closeWindow1, closeWindow2, closeWindow3;
+	
 	public PartySetup(UIBase base) {
 		super(base);
 		text = FontUtils.textVerdana;
@@ -153,6 +155,10 @@ public class PartySetup extends PagedInputWindow {
 	    	addInput(0,startGame);
 	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,430f,Language.v("partySetup.delChar"));
 	    	addInput(0,delChar);
+	    	
+	    	closeWindow1 = new TextButton("close",this,pageMemberSelection, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
+	    	addInput(0,closeWindow1);
+
 	    	new TextLabel("label1",this,pageMemberSelection, 0.23f, 0.7f, 0.2f, 0.07f,500f,"Use Up/Down to navigate through the screen.",false); 
 	    	new TextLabel("label2",this,pageMemberSelection, 0.23f, 0.75f, 0.2f, 0.07f,500f,"Press Left/Right to scroll in lists, Enter to act.",false);
 	    	new TextLabel("label3",this,pageMemberSelection, 0.23f, 0.80f, 0.2f, 0.07f,500f,"Create / Add at least one character to your party.",false);
@@ -211,6 +217,8 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.8f, 0.2f, 0.07f,400f,"Next Page");
 	    	addInput(1,nextPage);
+	    	closeWindow2 = new TextButton("close",this,pageCreationFirst, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
+	    	addInput(0,closeWindow2);
 	    	
 	    	// page char creation 2 -------------------------------------------
 	    	SharedMesh sQuad2 = new SharedMesh("--",hudQuad);
@@ -264,7 +272,10 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	addInput(2,readyChar);
-	    	
+
+	    	closeWindow3 = new TextButton("close",this,pageCreationSecond, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
+	    	addInput(0,closeWindow3);
+
 			base.addEventHandler("back", this);
 		} catch (Exception ex)
 		{
@@ -502,6 +513,12 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		if (base == closeWindow1 || base == closeWindow2 || base == closeWindow3)
+		{
+			handleKey("back");
+			return true;
+		}
+
 		if (base.equals(viewChar))
 		{
 			CharListData d = (CharListData)addCharSelect.getSelectedObject();

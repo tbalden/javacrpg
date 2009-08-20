@@ -55,6 +55,8 @@ public class PartyOrderWindow extends PagedInputWindow {
 	
 	public EntityMemberInstance currentMember = null;
 	
+	TextButton closeWindow;
+
 	
 	public PartyOrderWindow(UIBase base) {
 		super(base);
@@ -80,6 +82,9 @@ public class PartyOrderWindow extends PagedInputWindow {
 
 	    	dismiss = new TextButton("drop",this,page0, 0.60f, 0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.dismiss"));
 	    	addInput(0,dismiss);
+
+	    	closeWindow = new TextButton("close",this,page0, 0.74f, 0.060f, 0.02f, 0.045f,600f," x");
+	    	addInput(0,closeWindow);
 	    	
 	    	addPage(0, page0);
 	    	
@@ -208,6 +213,12 @@ public class PartyOrderWindow extends PagedInputWindow {
 			core.uiBase.hud.characters.updatePoints();
 			
 		}
+		if (base == closeWindow)
+		{
+			toggle();
+			return true;
+		}
+
 		return super.inputUsed(base, message);
 	}
 	

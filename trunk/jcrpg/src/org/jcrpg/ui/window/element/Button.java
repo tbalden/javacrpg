@@ -19,6 +19,7 @@
 package org.jcrpg.ui.window.element;
 
 import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 
@@ -53,7 +54,7 @@ public class Button extends InputBase {
 	@Override
 	public boolean handleMouse(UiMouseEvent mouseEvent)
 	{
-		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+		if(mouseEvent.getEventType()== UiMouseEventType.MOUSE_PRESSED && mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
         {
     		return parent.handleKey("enter");
         }

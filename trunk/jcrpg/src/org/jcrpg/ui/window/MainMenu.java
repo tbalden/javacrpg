@@ -84,8 +84,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 		@Override
 		public boolean handleMouse(UiMouseEvent mouseEvent)
 		{
-			 // TODO: get rid of this code every ui element understands handleMouse()
-			if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+			if(mouseEvent.getEventType()== UiMouseEventType.MOUSE_PRESSED && mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
 	        {
 	    		return handleKey("enter");
 	        }

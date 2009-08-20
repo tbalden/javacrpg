@@ -28,6 +28,7 @@ import org.jcrpg.ui.map.WorldMap.LabelContainer;
 import org.jcrpg.ui.map.WorldMap.LabelDesc;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.TextButton;
 
 import com.jme.image.Image;
 import com.jme.image.Texture;
@@ -45,6 +46,9 @@ import com.jme.util.TextureManager;
 public class Map extends InputWindow {
 
 	WorldMap wmap;
+	
+	TextButton closeWindow;
+
 	
 	public Map(UIBase base, WorldMap wmap) throws Exception {
 		super(base);
@@ -70,12 +74,13 @@ public class Map extends InputWindow {
         Image frameImg = TextureManager.loadImage(new File(fileName).toURI().toURL(),true);
         frameTex.setImage(frameImg);
         frameState.setTexture(frameTex);
-        float widthRatio = 5.0f;
-        float heightRatio = 6.3f;
+        float widthRatio = 6.0f;
+        float heightRatio = 7.4f;
+        float heightDiv = 1.8f;
         {
         	Quad hudQuad = new Quad("hud", (int)((core.getDisplay().getWidth()/10)*widthRatio*1.06f), (int)(((core.getDisplay().getHeight()/10)*heightRatio*1.06f)));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/heightDiv,0));
 			
 	        hudQuad.setRenderState(frameState);
 	        hudQuad.setRenderState(hudAS);
@@ -87,7 +92,7 @@ public class Map extends InputWindow {
         {
         	Quad hudQuad = new Quad("hud", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/heightDiv,0));
 			
 	        hudQuad.setRenderState(textureStates[0]);
 	        windowNode.attachChild(hudQuad);
@@ -98,7 +103,7 @@ public class Map extends InputWindow {
         {
         	Quad hudQuad = new Quad("hud_geo", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
-	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/heightDiv,0));
 			
 	        hudQuad.setRenderState(textureStates[2]);
 	        windowNode.attachChild(hudQuad);
@@ -108,7 +113,7 @@ public class Map extends InputWindow {
         	Quad hudQuad = new Quad("hud_pos", (core.getDisplay().getWidth()/10)*widthRatio, ((core.getDisplay().getHeight()/10)*heightRatio));
 	        hudQuad.setRenderQueueMode(Renderer.QUEUE_ORTHO);  
 	        hudQuad.setLightCombineMode(LightCombineMode.Off);
-	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/2,0));
+	        hudQuad.setLocalTranslation(new Vector3f(core.getDisplay().getWidth()/2,core.getDisplay().getHeight()/heightDiv,0));
 	        wmap.registerQuad(hudQuad);
 	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
@@ -117,12 +122,12 @@ public class Map extends InputWindow {
         LabelContainer labelContainer = wmap.getLabels();
         
         
-        float xRatio = 0.50f / J3DCore.getInstance().gameState.world.sizeX;
-        float yRatio = 0.6f / J3DCore.getInstance().gameState.world.sizeZ;
-        float offsetX = 0.25f;
-        float offsetY = 0.2f;
-		//TextLabel tlc1 = new TextLabel("1",this,windowNode,0 * 0.01f+offsetX, 0 * 0.01f+offsetY, 0.3f, 0.05f, 1000, "xxxx",false);
-		//TextLabel tlc2 = new TextLabel("2",this,windowNode,J3DCore.getInstance().gameState.world.sizeX * xRatio+offsetX, J3DCore.getInstance().gameState.world.sizeZ * yRatio +offsetY, 0.3f, 0.05f, 1000, "xxxx",false);
+        float xRatio = 0.586f / J3DCore.getInstance().gameState.world.sizeX;
+        float yRatio = 0.717f / J3DCore.getInstance().gameState.world.sizeZ;
+        float offsetX = 0.21f;
+        float offsetY = 0.092f;
+		//TextLabel tlc1 = new TextLabel("1",this,windowNode,0 * 0.01f+offsetX, 0 * 0.01f+offsetY, 0.3f, 0.05f, 700, "xxxx",false);
+		//TextLabel tlc2 = new TextLabel("2",this,windowNode,J3DCore.getInstance().gameState.world.sizeX * xRatio+offsetX, J3DCore.getInstance().gameState.world.sizeZ * yRatio +offsetY, 0.3f, 0.05f, 700, "xxxx",false);
 
         for (LabelDesc townDesc : labelContainer.towns)
         {
@@ -137,7 +142,10 @@ public class Map extends InputWindow {
         	
         }
         
-        windowNode.updateRenderState();
+    	closeWindow = new TextButton("close",this,windowNode, 0.81f, 0.071f, 0.013f, 0.031f,600f," x");
+    	addInput(closeWindow);
+    	
+    	windowNode.updateRenderState();
 	}
 
 	public String lS(String s)
@@ -181,8 +189,12 @@ public class Map extends InputWindow {
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
-		// TODO Auto-generated method stub
-		return false;
+		if (base == closeWindow)
+		{
+			toggle();
+			return true;
+		}
+		return true;
 	}
 	
 	

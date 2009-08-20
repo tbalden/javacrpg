@@ -27,6 +27,7 @@ import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListSelect;
+import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.ui.window.element.input.ValueTuner;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -77,6 +78,8 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
 
 	HashMap<String, ValueTuner> resistanceTuners = new HashMap<String, ValueTuner>();
+	
+	TextButton closeWindow;
 	
 	public CharacterSheetWindow(UIBase base) {
 		super(base);
@@ -168,6 +171,9 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	}
 	    	
 	    	addInput(0,professionSelect);
+
+	    	closeWindow = new TextButton("close",this,page0, 0.85f, 0.060f, 0.02f, 0.045f,600f," x");
+	    	addInput(0,closeWindow);
 
 	    	addPage(0, page0);
 	    	
@@ -403,6 +409,13 @@ public class CharacterSheetWindow extends PagedInputWindow {
 			updateToMemberInstance((EntityMemberInstance)characterSelect.getSelectedObject());
 			return true;
 		}
+		else
+		if (base == closeWindow)
+		{
+			toggle();
+			return true;
+		}
+
 		return super.inputUsed(base, message);
 	}
 	
