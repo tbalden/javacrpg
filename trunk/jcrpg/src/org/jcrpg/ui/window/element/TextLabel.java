@@ -155,5 +155,9 @@ public class TextLabel extends InputBase {
 	@Override
 	public void reset() {
 	}
+	@Override
+	public Node getDeactivatedNode() {
+		return null;
+	}
 
 }

@@ -25,8 +25,12 @@ import java.util.HashMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseHandler;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
@@ -135,7 +139,9 @@ public class PictureSelect extends InputBase {
 			}
 		}
 		baseNode.attachChild(activeNode);
+		activeNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.activate();
 	}
 
@@ -178,7 +184,9 @@ public class PictureSelect extends InputBase {
 			
 		}
 		baseNode.attachChild(deactiveNode);
+		deactiveNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
+		baseNode.updateModelBound();
 		super.deactivate();
 	}
 
@@ -205,4 +213,79 @@ public class PictureSelect extends InputBase {
 		
 	}
 
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent) {
+		if (isEnabled())
+		{
+			super.handleMouse(mouseEvent);
+			
+			if (focusUponMouseEnter)
+			{
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+				{
+					if (isEnabled() && !active)
+					{
+						activate();
+						return false;
+					}
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+				{
+					if (isEnabled() && active)
+					{
+						deactivate();
+						return false;
+					}
+				}
+				
+			}
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_PRESSED)
+			{
+				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+				{
+					if (active)
+					{
+						
+						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+					{
+							return handleKey("lookRight");
+						} else
+						{
+							return handleKey("lookLeft");
+						}
+					} else
+					{
+						activate();
+						return true;
+					}
+				}
+			}
+
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
+			{
+				if (isEnabled() && active)
+				{
+						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+						{
+							UiMouseHandler.cursorDown();
+							return true;
+						} else
+						{
+							UiMouseHandler.cursorUp();
+							return true;
+						}
+				}
+			} 
+
+		}
+		return false;
+	}
+
+	
+	@Override
+	public Node getDeactivatedNode() {
+		return deactiveNode;
+	}
+
+	
 }

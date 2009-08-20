@@ -24,6 +24,7 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
@@ -95,6 +96,10 @@ public class TextButton extends InputBase {
 
 	@Override
 	public void activate() {
+		activate(false);
+	}
+
+	public void activate(boolean mouseHover) {
 		baseNode.detachAllChildren();
 		if (activeNode==null ) {
 			activeNode = new Node(""+id);
@@ -120,11 +125,18 @@ public class TextButton extends InputBase {
 		activeNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
 		baseNode.updateModelBound();
-		super.activate();
+		if (!mouseHover)
+		{
+			super.activate();
+		}
 	}
 
 	@Override
 	public void deactivate() {
+		deactivate(false);
+	}
+
+	public void deactivate(boolean mouseHover) {
 		baseNode.detachAllChildren();
 		if (deactiveNode==null ) {
 			deactiveNode = new Node(""+id);
@@ -148,7 +160,11 @@ public class TextButton extends InputBase {
 		deactiveNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
 		baseNode.updateModelBound();
-		super.deactivate();
+		
+		if (!mouseHover)
+			{
+			super.deactivate();
+			}
 	}
 
 	@Override
@@ -165,6 +181,23 @@ public class TextButton extends InputBase {
 
 	@Override
 	public void reset() {
+	}
+	
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent)
+	{
+		super.handleMouse(mouseEvent);
+		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+        {
+    		return handleKey("enter");
+        }
+		return false;
+	}
+	
+	
+	@Override
+	public Node getDeactivatedNode() {
+		return deactiveNode;
 	}
 
 }

@@ -137,6 +137,8 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Select a character to add:",false); 
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	addCharSelect.focusUponMouseEnter = true;
+	    	addCharSelect.deactivateUponUse = false;
 	    	addInput(0,addCharSelect);
 	    	
 	    	viewChar = new TextButton("view_char",this,pageMemberSelection, 0.23f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.viewChar"));
@@ -364,6 +366,7 @@ public class PartySetup extends PagedInputWindow {
 		    	raceSelect.texts = names;
 		    	raceSelect.setUpdated(true);
 	    	}
+	    	raceSelect.activate();
 	    	/*
 	    	{
 		    	int id = 0;
@@ -845,6 +848,7 @@ public class PartySetup extends PagedInputWindow {
 				genderSelect.texts = new String[]{Language.v("gender."+EntityDescription.GENDER_MALE)};
 			}
 			genderSelect.setUpdated(true);
+			genderSelect.activate();
 			
 
 			// attribute ratio
@@ -891,7 +895,7 @@ public class PartySetup extends PagedInputWindow {
 			String path = "./data/portraits/"+race.pictureRoot+"/"+genderPath;
 			pictureSelect.picturesPath = path;
 			pictureSelect.setUpdated(true);
-			pictureSelect.deactivate();
+			pictureSelect.activate();
 			
 			VoiceList list = VoiceList.male;
 			if (id==EntityDescription.GENDER_FEMALE) 

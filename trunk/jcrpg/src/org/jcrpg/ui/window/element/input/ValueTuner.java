@@ -216,21 +216,28 @@ public class ValueTuner extends InputBase {
 		if (isEnabled())
 		{
 
-			
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			super.handleMouse(mouseEvent);
+
+			if (focusUponMouseEnter)
 			{
-				if (isEnabled() && !active)
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 				{
-					activate();
-				}
-			} else
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
-			{
-				if (isEnabled() && active)
+					if (isEnabled() && !active)
+					{
+						activate();
+						return false;
+					}
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 				{
-					deactivate();
+					if (isEnabled() && active)
+					{
+						deactivate();
+						return false;
+					}
 				}
-			} else
+				
+			}
 			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_PRESSED)
 			{
 				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
@@ -240,14 +247,22 @@ public class ValueTuner extends InputBase {
 						
 						if (mouseEvent.getAreaSpatial().ratioX<0.33f)
 						{
-							return handleKey("lookLeft");
+							handleKey("lookLeft");
+							return true;
 						} else
 						if (mouseEvent.getAreaSpatial().ratioX>0.66f)
 						{
-							return handleKey("lookRight");
+							handleKey("lookRight");
+							return true;
 						} else
 						{
-							return handleKey("enter");
+							boolean b = handleKey("enter");
+							if (deactivateUponUse)
+							{
+								w.inputLeft(this, "");
+								deactivate();
+							}
+							return b;
 						}
 					} else
 					{
@@ -285,5 +300,9 @@ public class ValueTuner extends InputBase {
 		return false;
 	}
 
-	
+	@Override
+	public Node getDeactivatedNode() {
+		return deactiveNode;
+	}
+
 }

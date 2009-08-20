@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.InputWindow;
 
@@ -51,6 +52,10 @@ public abstract class InputBase implements Savable{
 	boolean active = false;
 	boolean enabled = true;
 	boolean updated = false;
+	
+	public boolean focusUponMouseEnter = false;
+	public boolean deactivateUponUse = true;
+	
 	
 	public Node parentNode = null;
 	
@@ -140,6 +145,7 @@ public abstract class InputBase implements Savable{
 	 */
 	public void activate()
 	{
+		w.inputActivated(this);
 		active = true;
 	}
 	/**
@@ -161,12 +167,17 @@ public abstract class InputBase implements Savable{
 
 	public boolean handleMouse(UiMouseEvent mouseEvent)
 	{
-		 // TODO: get rid of this code every ui element understands handleMouse()
-		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
-        {
-    		return handleKey("enter");
-        }
-		
+		if (!focusUponMouseEnter)
+			{
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+				{
+					handleMouseHover(true);
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+				{
+					handleMouseHover(false);
+				}
+			}		
 		return false;
 	}
 
@@ -182,6 +193,11 @@ public abstract class InputBase implements Savable{
 		return enabled;
 	}
 
+	public boolean isActive()
+	{
+		return active;
+	}
+	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -251,9 +267,34 @@ public abstract class InputBase implements Savable{
 		
 	}
 
-	public boolean handleMouse(Spatial p)
+	
+	public void handleMouseHover(boolean entering)
 	{
-		return true;
-	}
+		if (!isActive() && isEnabled())
+		{
+			Node n = getDeactivatedNode();
+			if (n!=null)
+			if (entering)
+			{
+				if (n.getChild(0) instanceof Quad)
+				{
+					((Quad)n.getChild(0)).setSolidColor(ColorRGBA.white);
+				}
+			}
+			else
+			{
+				if (n.getChild(0) instanceof Quad)
+				{
+					((Quad)n.getChild(0)).setSolidColor(ColorRGBA.gray);
+				}
+			}
+		}
+	
 
+	}
+	
+	public abstract Node getDeactivatedNode();
+		
+	
+	
 }

@@ -62,4 +62,9 @@ public class Button extends InputBase {
         	return parent.inputEntered(this, name);
         }
 	}
+	@Override
+	public Node getDeactivatedNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

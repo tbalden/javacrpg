@@ -93,6 +93,13 @@ public class UiMouseAction extends MouseInputAction {
 		    	// System.out.println("Hit: "+p.getName()+" "+p.getClass());
 	 	    	Node parent = (Node)p.spatial.getParent();
 	 	    	InputBase base = (InputBase)parent.getUserData(InputBase.UI_ELEMENT);
+	 	    	if (base.isActive())
+	 	    	{
+	 	    		// if there's an active UI element, it should rule out other picked UI elements under/near itself!
+	 	    		pickedInputBaseSet.clear(); // ... so clear others
+			    	pickedInputBaseSet.add(base); // add only this
+			    	break; // and break.
+	 	    	}
 		    	pickedInputBaseSet.add(base);
 		    }
 	

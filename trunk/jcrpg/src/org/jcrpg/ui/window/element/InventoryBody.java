@@ -113,4 +113,10 @@ public class InventoryBody extends InputBase {
 
 	}
 
+	@Override
+	public Node getDeactivatedNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

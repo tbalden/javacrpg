@@ -476,20 +476,26 @@ public class ListMultiSelect extends InputBase {
 		{
 
 			
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			if (focusUponMouseEnter)
 			{
-				if (isEnabled() && !active)
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 				{
-					activate();
-				}
-			} else
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
-			{
-				if (isEnabled() && active)
+					if (isEnabled() && !active)
+					{
+						activate();
+						return false;
+					}
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 				{
-					deactivate();
+					if (isEnabled() && active)
+					{
+						deactivate();
+						return false;
+					}
 				}
-			} else
+				
+			}
 			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
 			{
 				
@@ -519,7 +525,7 @@ public class ListMultiSelect extends InputBase {
 						{
 							if (mouseEvent.getAreaSpatial().ratioY>0.5f)
 							{
-								selected = size-1;
+								selected = size-2;
 								return handleKey("lookRight");
 							} else
 							{
@@ -543,7 +549,7 @@ public class ListMultiSelect extends InputBase {
 					{
 						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
 						{
-							selected = size-1;
+							selected = size-2;
 							return handleKey("lookRight");
 						} else
 						{
@@ -579,5 +585,9 @@ public class ListMultiSelect extends InputBase {
 		return false;
 	}
 
+	@Override
+	public Node getDeactivatedNode() {
+		return deactivatedNode;
+	}
 
 }

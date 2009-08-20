@@ -97,6 +97,10 @@ public class MainMenu extends InputWindow implements KeyListener {
 			
 			return false;
 		}
+		@Override
+		public Node getDeactivatedNode() {
+			return null;
+		}
 	}
 	
 	public MainMenu(UIBase base) {
