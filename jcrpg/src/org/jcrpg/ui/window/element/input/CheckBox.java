@@ -24,8 +24,10 @@ import java.util.logging.Level;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.window.InputWindow;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
@@ -89,7 +91,9 @@ public class CheckBox extends InputBase {
             ex.printStackTrace();
         }
         baseNode.attachChild(activeNode);
-        baseNode.updateRenderState();
+		activeNode.setModelBound(new BoundingBox());
+		baseNode.updateRenderState();
+		baseNode.updateModelBound();
         super.activate();
     }
 
@@ -106,7 +110,9 @@ public class CheckBox extends InputBase {
             ex.printStackTrace();
         }
         baseNode.attachChild(deactiveNode);
-        baseNode.updateRenderState();
+		deactiveNode.setModelBound(new BoundingBox());
+		baseNode.updateRenderState();
+		baseNode.updateModelBound();
         super.deactivate();
     }
 
@@ -139,4 +145,21 @@ public class CheckBox extends InputBase {
         bgImage = (checked ? selectedImage : defaultImage); 
     }
 
+	@Override
+	public boolean handleMouse(UiMouseEvent mouseEvent)
+	{
+		super.handleMouse(mouseEvent);
+		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
+        {
+    		return handleKey("enter");
+        }
+		return false;
+	}
+
+    @Override
+	public Node getDeactivatedNode() {
+		return deactiveNode;
+	}
+
+    
 }

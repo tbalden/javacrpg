@@ -458,22 +458,28 @@ public class ListSelect extends InputBase {
 	public boolean handleMouse(UiMouseEvent mouseEvent) {
 		if (isEnabled())
 		{
-
+			super.handleMouse(mouseEvent);
 			
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			if (focusUponMouseEnter)
 			{
-				if (isEnabled() && !active)
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 				{
-					activate();
-				}
-			} else
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
-			{
-				if (isEnabled() && active)
+					if (isEnabled() && !active)
+					{
+						activate();
+						return false;
+					}
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 				{
-					deactivate();
+					if (isEnabled() && active)
+					{
+						deactivate();
+						return false;
+					}
 				}
-			} else
+				
+			}
 			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
 			{
 				
@@ -503,7 +509,7 @@ public class ListSelect extends InputBase {
 						{
 							if (mouseEvent.getAreaSpatial().ratioY>0.5f)
 							{
-								selected = size-1;
+								selected = size-2;
 								return handleKey("lookRight");
 							} else
 							{
@@ -513,7 +519,13 @@ public class ListSelect extends InputBase {
 
 						} else
 						{
-							return handleKey("enter");
+							boolean b = handleKey("enter");
+							if (deactivateUponUse)
+							{
+								w.inputLeft(this, "");
+								deactivate();
+							}
+							return b;
 						}
 					} else
 					{
@@ -527,7 +539,7 @@ public class ListSelect extends InputBase {
 					{
 						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
 						{
-							selected = size-1;
+							selected = size-2;
 							return handleKey("lookRight");
 						} else
 						{
@@ -561,6 +573,11 @@ public class ListSelect extends InputBase {
 
 		}
 		return false;
+	}
+	
+	@Override
+	public Node getDeactivatedNode() {
+		return deactivatedNode;
 	}
 	
 	

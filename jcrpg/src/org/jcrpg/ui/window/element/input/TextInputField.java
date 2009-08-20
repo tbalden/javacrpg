@@ -247,24 +247,48 @@ public class TextInputField extends InputBase {
 		if (isEnabled())
 		{
 
-			
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
+			super.handleMouse(mouseEvent);
+
+			if (focusUponMouseEnter)
 			{
-				if (isEnabled() && !active)
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 				{
-					activate();
-					return true;
+					if (isEnabled() && !active)
+					{
+						activate();
+						return false;
+					}
+				} else
+				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+				{
+					if (isEnabled() && active)
+					{
+						deactivate();
+						return false;
+					}
 				}
-			} else
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+				
+			}
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_PRESSED)
 			{
-				if (isEnabled() && active)
+				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
 				{
-					deactivate();
-					return true;
+					if (active)
+					{
+					} else
+					{
+						activate();
+						return true;
+					}
 				}
-			} 
+			}
 		}
 		return false;
 	}
+
+	@Override
+	public Node getDeactivatedNode() {
+		return deactiveNode;
+	}
+
 }

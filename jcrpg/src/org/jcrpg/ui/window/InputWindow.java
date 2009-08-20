@@ -220,5 +220,17 @@ public abstract class InputWindow extends Window implements KeyListener{
 		}
 		return false;
 	}
+	
+	public void inputActivated(InputBase input)
+	{
+		for (InputBase i:inputs)
+		{
+			if (i!=input && i.isActive())
+			{
+				i.deactivate();
+			}
+		}
+		setSelected(input);
+	}
 
 }
