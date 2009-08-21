@@ -24,6 +24,7 @@ import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
+import org.jcrpg.world.ai.EntityMemberInstance;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
@@ -124,5 +125,15 @@ public abstract class Window {
 	
 	public abstract void hide();
 	public abstract void show();
-	
+
+	/**
+	 * Call this back if portrait is 'used' (clicked etc.)
+	 * @param count Number of member in party
+	 * @param member Member object
+	 * @param secondaryWay Was it a secondary input
+	 */
+	public void characterSelected(int count, EntityMemberInstance member, int inputType)
+	{
+		// 
+	}
 }

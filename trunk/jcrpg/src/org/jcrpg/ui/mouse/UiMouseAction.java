@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.input.InputBase;
 
@@ -48,6 +50,7 @@ public class UiMouseAction extends MouseInputAction {
 		private static final int JME_RIGHT_BUTTON = 1;
 	 
 	     private Node rootNode;
+	     private Node secondaryFocusNode;
 	     
 	    private UiMouseEventImpl lastMouseEvent = new UiMouseEventImpl(UiMouseEvent.UiMouseEventType.MOUSE_INFO, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	     
@@ -58,18 +61,60 @@ public class UiMouseAction extends MouseInputAction {
 	         this.mouse = mouse;
 	     }
 	 
+	    boolean mouseLookSwitcherUp = true;
+	    
 	     /**
 	      * <code>performAction</code> generates mouse events
 	      * 
 	      * @see com.jme.input.action.MouseInputAction#performAction(InputActionEvent)
 	      */
 	     public void performAction(InputActionEvent evt) {
-	     	if (rootNode==null) return;
-	    	mousePick(rootNode);
+	     	if (rootNode==null) 
+	     	{
+	     		if (!J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled())
+	     		{
+	     			// no mouse look, no window, check for secondary elements of HUD
+		    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
+		    		{
+		    			//System.out.println("SECONDARY PICK!");
+		    			if (!mousePick(secondaryFocusNode))
+		    			{
+		    				return;
+		    			}
+		    		}
+	     		}
+	     		if (mouseLookSwitcherUp && MouseInput.get().isButtonDown(JME_RIGHT_BUTTON))
+	     		{
+	     			mouseLookSwitcherUp = false;
+	     			if (J3DCore.SETTINGS.MOUSELOOK)
+	     			{
+	     				((ClassicInputHandler)J3DCore.getInstance().getInputHandler()).switchMouseLook();
+	     			}
+	     		} else
+	     		{
+	     			mouseLookSwitcherUp = true;
+	     		}
+	     		return;
+	     	}
+	     	
+	    	if (mousePick(rootNode))
+	    	{
+	    		// no pick on window, secondary elements picking...
+	    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
+	    		{
+	    			//System.out.println("SECONDARY PICK!");
+	    			mousePick(secondaryFocusNode);
+	    		}
+	    	}
 	 
 	     }
 
-	     private void mousePick(Node rootNode) {
+	     /**
+	      * 
+	      * @param rootNode
+	      * @return true if nothing is picked.
+	      */
+	     private boolean mousePick(Node rootNode) {
 	 	    ArrayList<PickedSpatialInfo> picked = new ArrayList<PickedSpatialInfo>();
 	 	    ArrayList<Spatial> loop = new ArrayList<Spatial>();
 	
@@ -102,6 +147,7 @@ public class UiMouseAction extends MouseInputAction {
 	 	    	}
 		    	pickedInputBaseSet.add(base);
 		    }
+			if (pickedInputBaseSet.size()==0) return true;
 	
 			mouseEvent.setPickedSpatialList(picked);
 			mouseEvent.setPickedInputBaseSet(pickedInputBaseSet);
@@ -177,6 +223,7 @@ public class UiMouseAction extends MouseInputAction {
 			    }
 		    }
 		    lastMouseEvent = mouseEvent;
+		    return false;
 		}
 	
 		private void sendCustomizedMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent, UiMouseEventType mouseEventType) {
@@ -265,5 +312,8 @@ public class UiMouseAction extends MouseInputAction {
 
 	public void setRootNode(Node rootNode) {
 		this.rootNode = rootNode;
+	}
+	public void setSecondaryFocusNode(Node node) {
+		this.secondaryFocusNode = node;
 	}
 }

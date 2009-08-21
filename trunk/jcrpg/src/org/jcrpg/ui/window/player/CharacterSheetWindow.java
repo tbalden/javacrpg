@@ -192,6 +192,17 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		this.party = party;
 	}
 
+	/** 
+	 * call this with an already setup window only, needs CharacterSelect initialized!
+	 * @param i party member to update window for.
+	 */
+	public void directUpdateToMember(EntityMemberInstance i)
+	{
+		currentMember = i;
+		characterSelect.setSelected(i);
+		updateToParty();
+	}
+	
 	public EntityMemberInstance currentMember = null;
 	public int lastUpdatedLivingPartySize = 0;
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
@@ -248,7 +259,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 		
 	}
 
-	public void updateToMemberInstance(EntityMemberInstance instance)
+	private void updateToMemberInstance(EntityMemberInstance instance)
 	{
 		
 		//memberStateEffects
@@ -449,4 +460,15 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 	public InputWindow fallbackWindow = null;
 	public boolean noToggleWindowByKeySettingAfterFallbackWindowUse = false;
+	
+	@Override
+	public void characterSelected(int count, EntityMemberInstance member,
+			int inputType) {
+			if (fallbackWindow==null) // not in special case of special char needed in the sheet.
+			{
+				// direct update.
+				directUpdateToMember(member);
+			}
+	}
+
 }

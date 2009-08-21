@@ -15,12 +15,19 @@ Economy,
 Interrelation,
 Society, Groups etc.
 
+[ ] music volume level is wrong
+
 [ ] mouse handling 
+	[ ] clickable window toggle button on top of the screen
+
 	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
 	[X] handling of all kinds of input elements
 
 	[X] additional back / close buttons for every window
 
+	[X] key to switch mouselook on/off 
+	[X] clickable character portraits - lead to inventory, right click to char sheet
+	
 
 [ ] MAP
 	[ ] town type icons (instead of dots)

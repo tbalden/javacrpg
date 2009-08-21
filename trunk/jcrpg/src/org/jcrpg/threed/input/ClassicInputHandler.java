@@ -18,10 +18,10 @@
 
 package org.jcrpg.threed.input;
 
-import java.net.URL;
-
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseHandler;
+import org.jcrpg.world.ai.EntityMemberInstance;
 
 import com.jme.input.InputHandler;
 import com.jme.input.MouseInput;
@@ -76,12 +76,70 @@ public class ClassicInputHandler extends InputHandler {
 		enableMouse(J3DCore.SETTINGS.UIMOUSE);
 	}
 
+	private boolean TEMP_MOUSELOOK_STATE_STORE = true;
+	
 	public void setRootNode(Node rootNode) {
 		if (rootNode != null)
-			mouseLookHandler.setEnabled(false);
+		{
+			setMouseLook(false);
+		}
 		else
-			mouseLookHandler.setEnabled(J3DCore.SETTINGS.MOUSELOOK);
+		{
+			setMouseLook(TEMP_MOUSELOOK_STATE_STORE&&J3DCore.SETTINGS.MOUSELOOK);
+		}
 		menuMouseHandler.setRootNode(rootNode);
+	}
+	public void setSecondaryFocusNode(Node node) {
+		menuMouseHandler.setSecondaryFocusNode(node);
+	}
+	
+	public void switchMouseLook()
+	{
+			setMouseLook(!((ClassicInputHandler)J3DCore.getInstance().getInputHandler()).getMouseLookHandler().isEnabled());
+			TEMP_MOUSELOOK_STATE_STORE = mouseLookHandler.isEnabled(); // storing the current state - window toggles should
+			// not override user choice (see setRootNode).
+	}
+	
+	public void setMouseLook(boolean enabled)
+	{
+		((ClassicInputHandler)J3DCore.getInstance().getInputHandler()).getMouseLookHandler().setEnabled(enabled);
+		MouseInput.get().setCursorVisible(!mouseLookHandler.isEnabled());
+		if (!enabled)UiMouseHandler.normalCursor();
+	}
+	
+	public static final int PRIMARY_INPUT_TYPE = 0, SECONDARY_INPUT_TYPE = 1;
+	
+	/**
+	 * Call this back if portrait is 'used' (clicked etc.)
+	 * @param count Number of member in party
+	 * @param member Member object
+	 * @param secondaryWay Was it a secondary input
+	 */
+	public void characterSelected(int count, EntityMemberInstance member, int inputType)
+	{
+		if (J3DCore.getInstance().gameState.player!=null)
+		{
+			if (J3DCore.getInstance().uiBase.activeWindows.size()==0)
+			{
+				if (inputType == PRIMARY_INPUT_TYPE)
+				{
+					
+					J3DCore.getInstance().inventoryWindow.toggle();
+					J3DCore.getInstance().inventoryWindow.directUpdateToMember(member);
+					
+				} else
+				{
+					J3DCore.getInstance().charSheetWindow.toggle();
+					J3DCore.getInstance().charSheetWindow.directUpdateToMember(member);
+				}
+			} else
+			{
+				for (Window w:J3DCore.getInstance().uiBase.activeWindows)
+				{
+					w.characterSelected(count, member, inputType);
+				}
+			}
+		}
 	}
 
 }
