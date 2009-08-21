@@ -109,4 +109,7 @@ public class UiMouseHandler extends InputHandler {
 	public void setRootNode(Node rootNode) {
 		uiMouseAction.setRootNode(rootNode);
 	}
+	public void setSecondaryFocusNode(Node node) {
+		uiMouseAction.setSecondaryFocusNode(node);
+	}
 }

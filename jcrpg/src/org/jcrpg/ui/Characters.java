@@ -24,15 +24,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.threed.jme.ui.TimedNode;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.window.InputWindow;
+import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.MenuImageButton;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -41,12 +47,12 @@ import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.RenderState.StateType;
 
-public class Characters {
+public class Characters extends InputWindow {
 
-	public ArrayList<org.jcrpg.ui.window.element.Character> characterData = new ArrayList<org.jcrpg.ui.window.element.Character>();
+
 	
-
 	FontTT text;
 	
 	Node node = new Node();
@@ -55,6 +61,7 @@ public class Characters {
 	ColorMaskState neutralColor = null; 
 	public Characters(HUD hud)
 	{
+		super(hud.base);
 		deadColor = hud.base.core.getDisplay().getRenderer().createColorMaskState();
 		deadColor.setBlue(false);
 		deadColor.setGreen(false);
@@ -71,6 +78,7 @@ public class Characters {
 	
 	public void hide()
 	{
+		J3DCore.getInstance().getClassicInputHandler().setSecondaryFocusNode(null);
 		node.removeFromParent();
 	}
 	
@@ -81,6 +89,7 @@ public class Characters {
 		node.updateRenderState();
 	}
 	
+	public ArrayList<PersistentMemberInstance> orderedMembers = new ArrayList<PersistentMemberInstance>();
 	public ArrayList<Float> effectIconOrigoXPositions = new ArrayList<Float>();
 	public ArrayList<Float> effectIconOrigoYPositions = new ArrayList<Float>();
 	
@@ -102,7 +111,6 @@ public class Characters {
 		pointQuadData.add(ColorRGBA.green);
 		pointQuadData.add(ColorRGBA.orange);
 		pointQuadData.add(ColorRGBA.blue);
-
 	}
 	
 	public ArrayList<Node> centerNode = new ArrayList<Node>();
@@ -116,6 +124,7 @@ public class Characters {
 	
 	public void addMembers(ArrayList<PersistentMemberInstance> orderedParty)
 	{
+		orderedMembers.clear();
 		bars.clear();
 		barOrigoYPositions.clear();
 		pictureQuads.clear();
@@ -139,10 +148,13 @@ public class Characters {
 			float maxSizeY = hud.core.getDisplay().getHeight()/6.4f;
 			float startY = hud.core.getDisplay().getHeight()*0.8f;
 
+			inputs.clear();
+			
 			for (EntityMemberInstance i:orderedParty)
 			{
 				if (i.description instanceof MemberPerson)
 				{
+					orderedMembers.add((PersistentMemberInstance)i);
 					MemberPerson p = (MemberPerson)i.description;
 					try 
 					{
@@ -188,9 +200,14 @@ public class Characters {
 	
 						node.attachChild(nametextNode);
 						node.attachChild(classtextNode);
-						node.attachChild(sm);
+						MenuImageButton b = new MenuImageButton("char"+i.getNumericId(),this,node,counter);
+						addInput(b);
+						b.baseNode.attachChild(sm);
+						node.attachChild(b.baseNode);
 						node.attachChild(q);
 						node.attachChild(center);
+						sm.setModelBound(new BoundingBox());
+						node.updateModelBound();
 						counter ++;
 						counterPair = counter / 2;
 					} catch (Exception ex)
@@ -359,7 +376,7 @@ public class Characters {
 			} else
 			{
 				Quad q= pictureQuads.get(counter);
-				q.clearRenderState(RenderState.RS_COLORMASK_STATE);
+				q.clearRenderState(StateType.ColorMask);//clearRenderState(RenderState.RS_COLORMASK_STATE);
 			}
 			highlightCharacter(p, false);
 		
@@ -458,6 +475,8 @@ public class Characters {
 		updatePoints();
 		hud.hudNode.attachChild(node);
 		node.updateRenderState();
+		hud.hudNode.updateModelBound();
+		J3DCore.getInstance().getClassicInputHandler().setSecondaryFocusNode(hud.hudNode);
 	}
 	
 	public void visualizeImpact(EntityMemberInstance member, ImpactUnit u)
@@ -504,6 +523,43 @@ public class Characters {
 			}
 			count ++;
 		}
+	}
+
+	@Override
+	public boolean inputChanged(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputEntered(InputBase base, String message) {
+		return false;
+	}
+
+	@Override
+	public boolean inputLeft(InputBase base, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean inputUsed(InputBase base, String message) {
+		if (base instanceof MenuImageButton)
+		{
+			int v = ((MenuImageButton) base).selectedValue;
+			PersistentMemberInstance i = orderedMembers.get(v);
+			if (message.equals("enter"))
+			{
+				//core.inventoryWindow.toggle();
+				core.getClassicInputHandler().characterSelected(v, i, ClassicInputHandler.PRIMARY_INPUT_TYPE);
+			} else
+			if (message.equals("right"))
+			{
+				//core.charSheetWindow.toggle();
+				core.getClassicInputHandler().characterSelected(v, i, ClassicInputHandler.SECONDARY_INPUT_TYPE);
+			}
+		}
+		return false;
 	}
 	
 	

@@ -886,6 +886,7 @@ public class AudioServer implements Runnable {
 			}
 			//currentlyPlayingBackgroundMusic.clear();
 		}
+		if (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT==0) return;
 		currentlyPlayingBackgroundMusic.add(music);
 		System.out.println("------------");
 		System.out.println("############ "+music);

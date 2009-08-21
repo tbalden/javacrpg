@@ -28,6 +28,7 @@ import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.MenuImageButton;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.bounding.BoundingBox;
@@ -55,52 +56,6 @@ public class MainMenu extends InputWindow implements KeyListener {
 	public ArrayList<Button> buttons = new ArrayList<Button>();
 	
 
-	public class MenuImageButton extends InputBase
-	{
-		public int selectedValue;
-		
-		public MenuImageButton(String id, InputWindow w, Node parentNode, int selectedValue) {
-			super(id, w, parentNode);
-			
-			this.selectedValue = selectedValue;
-		}
-
-		@Override
-		public void reset() {
-			// TODO Auto-generated method stub
-			
-		}
-		@Override
-		public boolean handleKey(String key) {
-			if (key.equals("enter")) // enter or shortcut
-			{
-				w.core.audioServer.play(SOUND_INPUTSELECTED);
-				w.inputUsed(this, key);
-				return true;
-			}
-			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("--- "+id+" "+key);
-			return false;
-		}
-		@Override
-		public boolean handleMouse(UiMouseEvent mouseEvent)
-		{
-			if(mouseEvent.getEventType()== UiMouseEventType.MOUSE_PRESSED && mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
-	        {
-	    		return handleKey("enter");
-	        }
-			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
-			{
-				return inputEntered(this, ""+selectedValue);
-				
-			}
-			
-			return false;
-		}
-		@Override
-		public Node getDeactivatedNode() {
-			return null;
-		}
-	}
 	
 	public MainMenu(UIBase base) {
 		super(base);

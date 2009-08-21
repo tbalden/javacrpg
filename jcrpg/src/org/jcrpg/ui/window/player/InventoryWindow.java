@@ -245,6 +245,18 @@ public class InventoryWindow extends PagedInputWindow {
 		this.party = party;
 	}
 	
+	/** 
+	 * call this with an already setup window only, needs CharacterSelect initialized!
+	 * @param i party member to update window for.
+	 */
+	public void directUpdateToMember(EntityMemberInstance i)
+	{
+		currentMember = i;
+		characterSelect.setSelected(i);
+		updateToParty();
+	}
+
+	
 	public int lastUpdatedLivingPartySize = 0;
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
 	private void updateToParty()
@@ -831,5 +843,17 @@ public class InventoryWindow extends PagedInputWindow {
 	 * Determines if inventory actions can be done - in turn act window it should be set to false;
 	 */
 	public boolean canDoActions = true;
+
+	@Override
+	public void characterSelected(int count, EntityMemberInstance member,
+			int inputType) {
+			if (canDoActions)
+			{
+				directUpdateToMember(member);
+			}
+	}
+
+	
+	
 	
 }
