@@ -18,6 +18,8 @@
 
 package org.jcrpg.ui;
 
+import java.util.HashSet;
+
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.ImageButton;
 import org.jcrpg.ui.window.element.input.InputBase;
@@ -82,22 +84,46 @@ public class ButtonRow extends InputWindow {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public HashSet<Window> listOfHandled = null;
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
+		
+		boolean normalMode = core.gameState!=null && core.gameState.gameLogic!=null && !core.gameState.gameLogic.inEncounter;
+		if (!normalMode) return true;
+		if (Window.windowCounter>1) return true;
+		
+		if (listOfHandled == null)
+
+		{
+			listOfHandled = new HashSet<Window>();
+			listOfHandled.add(core.mainMenu);
+			listOfHandled.add(core.worldMap);
+			listOfHandled.add(core.behaviorWindow);
+			listOfHandled.add(core.partyOrderWindow);
+			listOfHandled.add(core.lockInspectionWindow);
+			listOfHandled.add(core.normalActWindow);
+		}
+
+		Window activeWindow = null;
+		if (Window.windowCounter==1) {
+			activeWindow = core.uiBase.activeWindows.iterator().next();
+			if (!listOfHandled.contains(activeWindow)) return true;
+		}	
 		if (base == menuButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.mainMenu))
-					return true;
+			if (activeWindow!=null && activeWindow == core.mainMenu) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.mainMenu.toggle();
 		}
 		if (base == mapButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.worldMap))
-					return true;
+			if (activeWindow!=null && activeWindow == core.worldMap) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.worldMap.toggle();
 		}
@@ -111,33 +137,33 @@ public class ButtonRow extends InputWindow {
 		}
 		if (base == behaviorButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.behaviorWindow))
-					return true;
+			if (activeWindow!=null && activeWindow == core.behaviorWindow) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.behaviorWindow.toggle();
 		}
 		if (base == orderButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.partyOrderWindow))
-					return true;
+			if (activeWindow!=null && activeWindow == core.partyOrderWindow) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.partyOrderWindow.toggle();
 		}
 		if (base == actButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.normalActWindow))
-					return true;
+			if (activeWindow!=null && activeWindow == core.normalActWindow) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.normalActWindow.toggle();
 		}
 		if (base == searchButton)
 		{
-			if (Window.windowCounter>0) {
-				if (!core.uiBase.activeWindows.contains(core.lockInspectionWindow))
-					return true;
+			if (activeWindow!=null && activeWindow == core.lockInspectionWindow) activeWindow = null;
+			if (activeWindow!=null) {
+				activeWindow.toggle();
 			}
 			core.lockInspectionWindow.toggle();
 		}
