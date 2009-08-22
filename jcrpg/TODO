@@ -19,8 +19,11 @@ Society, Groups etc.
 
 [ ] test vista 64 bit
 
+[ ] let profession set attributes, instead of attributes allowing profession upon char creation.
+
 [ ] mouse handling 
-	[ ] clickable window toggle button on top of the screen
+	[X] clickable window toggle button on top of the screen
+		[ ] graphical icons
 
 	[ ] mouse cursor changes -> when pressed (ValueTuner)
 	[ ] load menu

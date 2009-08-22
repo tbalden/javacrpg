@@ -93,8 +93,8 @@ public class NormalActWindow extends PagedInputWindow {
 		super(base);
 		
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.67f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1_trans.png", 0.75f*core.getDisplay().getWidth(), 1.63f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.11f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
@@ -111,19 +111,21 @@ public class NormalActWindow extends PagedInputWindow {
 	    	page0.attachChild(shQuad1);
 	    	page0.attachChild(shQuad2);*/
 	    	
-	    	header = new TextLabel("",this,page0, 0.50f, 0.044f, 0.3f, 0.06f,400f,Language.v("normalActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
-	    	desc = new TextLabel("",this,page0, 0.24f, 0.075f, 0.3f, 0.06f,600f,"Are you willing to act?",false);
-	    	new TextLabel("",this,page0, 0.24f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
+	    	float yOffset = 0.03f;
+	    	
+	    	header = new TextLabel("",this,page0, 0.50f, yOffset+ 0.044f, 0.3f, 0.06f,400f,Language.v("normalActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
+	    	desc = new TextLabel("",this,page0, 0.24f, yOffset+ 0.075f, 0.3f, 0.06f,600f,"Are you willing to act?",false);
+	    	new TextLabel("",this,page0, 0.24f, yOffset+ 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
 	    	 
 
 	    	float sizeSelect = 0.10f;
 	    	for (int i=0; i<6; i++)
 	    	{
-	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.25f, 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],new Object[0],new Quad[0],null,null));
-	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,yOffset+ 0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,yOffset+ 0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.25f, yOffset+ 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],new Object[0],new Quad[0],null,null));
+	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.70f,yOffset+ 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,yOffset+ 0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    		addInput(0,skillActFormSelectors.get(i));
 	    		addInput(0,inventorySelectors.get(i));
@@ -131,11 +133,11 @@ public class NormalActWindow extends PagedInputWindow {
 	    	}
 	    	
 	    	
-	    	ok = new TextButton("ok",this,page0,0.24f, 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.60f, 0.74f, 0.3f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
-	    	new TextLabel("",this,page0, 0.60f, 0.78f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	ok = new TextButton("ok",this,page0,0.24f, yOffset+ 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.ok"),"S");
+	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.74f, 0.3f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.78f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
-	    	close = new TextButton("leave",this,page0,0.46f, 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.close"),"L");
+	    	close = new TextButton("leave",this,page0,0.46f, yOffset+ 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.close"),"L");
 	    	addInput(0,close);
 
 	    	//new TextLabel("",this,page1, 0.4f, 0.045f, 0.3f, 0.06f,400f,"Interception",false); 
