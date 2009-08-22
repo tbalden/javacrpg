@@ -17,8 +17,13 @@ Society, Groups etc.
 
 [ ] music volume level is wrong
 
+[ ] test vista 64 bit
+
 [ ] mouse handling 
 	[ ] clickable window toggle button on top of the screen
+
+	[ ] mouse cursor changes -> when pressed (ValueTuner)
+	[ ] load menu
 
 	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
 	[X] handling of all kinds of input elements
