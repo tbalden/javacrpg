@@ -98,6 +98,8 @@ public class ButtonRow extends InputWindow {
 
 		{
 			listOfHandled = new HashSet<Window>();
+			listOfHandled.add(core.charSheetWindow);
+			listOfHandled.add(core.inventoryWindow);
 			listOfHandled.add(core.mainMenu);
 			listOfHandled.add(core.worldMap);
 			listOfHandled.add(core.behaviorWindow);
