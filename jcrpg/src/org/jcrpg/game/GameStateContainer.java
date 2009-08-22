@@ -684,4 +684,23 @@ public class GameStateContainer {
 		return currentSEngine;
 	}
 	
+	public void switchCamping()
+	{
+		if (!engine.isPause())
+		{
+			if (!engine.isCamping())
+			{
+				engine.startCamping();
+				J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "CAMPFIRE");
+				engine.campingStarted = false;
+			} else
+			{
+				engine.endCamping();
+				J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "CAMPFIRE");
+				engine.campingFinished = false;
+			}
+		}
+
+	}
+	
 }

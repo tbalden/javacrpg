@@ -60,6 +60,7 @@ import org.jcrpg.threed.scene.RenderedCube;
 import org.jcrpg.threed.scene.config.SideTypeModels;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.standing.J3DStandingEngine;
+import org.jcrpg.ui.ButtonRow;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
@@ -2777,6 +2778,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// shadows not working because of this node -> the hudNode shall occupy
 		// only the lower part, Done, image cut.
 		uiRootNode.attachChild(uiBase.hud.hudNode);
+        ButtonRow buttonRow = new ButtonRow(uiBase);
+        uiBase.hud.hudNode.attachChild(buttonRow.windowNode);
+        uiBase.hud.hudNode.updateRenderState();
+
 
 	}
 

@@ -46,20 +46,7 @@ public class CKeyCamp extends KeyInputAction{
 		lastPerformTime = System.currentTimeMillis();
 		
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("### CAMP KEY");
-		if (!core.gameState.engine.isPause())
-		{
-			if (!core.gameState.engine.isCamping())
-			{
-				core.gameState.engine.startCamping();
-				core.uiBase.hud.sr.setVisibility(true, "CAMPFIRE");
-				core.gameState.engine.campingStarted = false;
-			} else
-			{
-				core.gameState.engine.endCamping();
-				core.uiBase.hud.sr.setVisibility(false, "CAMPFIRE");
-				core.gameState.engine.campingFinished = false;
-			}
-		}
+		core.gameState.switchCamping();
 	}
 	
 

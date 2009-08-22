@@ -147,6 +147,7 @@ public class HUD {
         characters = new Characters(this);
         
         entityOMeter = new EntityOMeter(this);
+        
 		
 	}
 	
