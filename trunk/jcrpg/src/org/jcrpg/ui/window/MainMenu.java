@@ -18,14 +18,11 @@
 
 package org.jcrpg.ui.window;
 
+import java.io.File;
 import java.util.ArrayList;
 
-import org.jcrpg.apps.Jcrpg;
-import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.mouse.UiMouseEvent;
-import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.MenuImageButton;
@@ -33,8 +30,6 @@ import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
-import com.jme.scene.Node;
-import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 
 public class MainMenu extends InputWindow implements KeyListener {
@@ -160,12 +155,12 @@ public class MainMenu extends InputWindow implements KeyListener {
 	}
 	public void handleChoice(String name)
 	{
-		if (name.equals(QUIT))
+		if (name.equalsIgnoreCase(QUIT))
 		{
 			//
 			core.doQuit();
 		} else
-		if (name.equals(NEW_GAME))
+		if (name.equalsIgnoreCase(NEW_GAME))
 		{
 			base.hud.characters.hide();
 			keepPlayingMusic = true;
@@ -173,7 +168,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 			core.partySetup.toggle();
 			
 		} else
-		if (name.equals(SAVE_GAME))
+		if (name.equalsIgnoreCase(SAVE_GAME))
 		{
 			if (!core.coreFullyInitialized) return;
 			core.getUIRootNode().detachChild(windowNode);
@@ -186,7 +181,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 			core.audioServer.stopAndResumeOthers("main");
 			
 		} else
-		if (name.equals(LOAD_GAME))
+		if (name.equalsIgnoreCase(LOAD_GAME))
 		{
 			keepPlayingMusic = true;
 			if (LoadMenu.updateFromDirectory()) {
@@ -194,7 +189,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 				core.loadMenu.toggle();
 			}
 		} else
-		if (name.equals(OPTIONS))
+		if (name.equalsIgnoreCase(OPTIONS))
 		{
 			keepPlayingMusic = true;
 			toggle();
@@ -269,7 +264,7 @@ public class MainMenu extends InputWindow implements KeyListener {
 
 			String name = base.baseNode.getChild(0).getName();
 			if (name != null) {
-				name = name.substring(name.lastIndexOf("/") + 1);
+				name = name.toLowerCase().substring(name.toLowerCase().lastIndexOf(File.separator) + 1);
 			}
 			handleChoice(name);
 		}
