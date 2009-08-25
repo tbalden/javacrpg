@@ -28,13 +28,14 @@ import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
-import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.SaveSlotData;
 import org.jcrpg.ui.window.element.input.InputBase;
+import org.jcrpg.ui.window.element.input.MenuImageButton;
+import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.util.saveload.SaveLoadNewGame;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
@@ -42,15 +43,6 @@ import com.jme.scene.shape.Quad;
 
 public class LoadMenu extends InputWindow implements KeyListener {
 	
-	public String QUIT = "mainMenuButtonQuit.png";
-	public String OPTIONS = "mainMenuButtonOptions.png";
-	public String NEW_GAME = "mainMenuButtonNewGame.png";
-	public String SAVE_GAME = "mainMenuButtonSaveGame.png";
-	public String LOAD_GAME = "mainMenuButtonLoadGame.png";
-	
-	public String[][] menuImages = new String[][] {
-			{NEW_GAME,NEW_GAME}, {SAVE_GAME,SAVE_GAME}, {LOAD_GAME,LOAD_GAME}, {OPTIONS,OPTIONS}, {QUIT,QUIT}
-	};
 	
 	int selected = 0;
 	
@@ -58,11 +50,15 @@ public class LoadMenu extends InputWindow implements KeyListener {
 	
 	public static int maxSlots = 4;
 	
-	public ArrayList<Button> buttons = new ArrayList<Button>();
+	public ArrayList<MenuImageButton> buttons = new ArrayList<MenuImageButton>();
 
 	FontTT text;
 	
 	Quad hudQuad;
+	
+	TextButton closeWindow;
+	TextButton prevWindow;
+	TextButton nextWindow;
 	
 	public LoadMenu(UIBase base) {
 		super(base);
@@ -84,6 +80,15 @@ public class LoadMenu extends InputWindow implements KeyListener {
 			
 			loadSlots();
 			highlightSelected();
+
+	    	closeWindow = new TextButton("close",this,windowNode, 0.63f, 0.310f, 0.02f, 0.045f,600f," <-");
+	    	addInput(closeWindow);
+	    	prevWindow = new TextButton("prev",this,windowNode, 0.50f, 0.310f, 0.05f, 0.035f,1000f," ...");
+	    	addInput(prevWindow);
+	    	nextWindow = new TextButton("next",this,windowNode, 0.50f, 0.710f, 0.05f, 0.035f,1000f," ...");
+	    	addInput(nextWindow);
+
+			
 			
 			windowNode.updateRenderState();
 			base.addEventHandler("lookUp", this);
@@ -161,19 +166,20 @@ public class LoadMenu extends InputWindow implements KeyListener {
 	ArrayList<Runnable> fontFreers = new ArrayList<Runnable>();
 	public void loadSlots() throws Exception
 	{
+		for (MenuImageButton b:buttons)
+		{
+			if (b.baseNode!=null)
+				windowNode.detachChild(b.baseNode);
+			windowNode.detachChild(b.baseNode);
+		}
+		buttons.clear();
+
 		for (Runnable r:fontFreers)
 		{
 			r.run();
 		}
 		fontFreers.clear();
 		
-		for (Button b:buttons)
-		{
-			if (b.quad!=null)
-				windowNode.detachChild(b.quad);
-			windowNode.detachChild(b.node);
-		}
-		buttons.clear();
 		int counter = 0;
 		float sizeX = 0.35f* 1.2f * core.getDisplay().getWidth() / 5f;
 		float sizeY = 0.87f* (core.getDisplay().getHeight() / 11);
@@ -188,7 +194,6 @@ public class LoadMenu extends InputWindow implements KeyListener {
 				try 
 				{
 					button = loadImageToQuad(data.pic,sizeX,sizeY, posX, startPosY - stepPosY*(counter - fromSlot));
-					windowNode.attachChild(button);
 				} catch (Exception ex)
 				{
 					ex.printStackTrace();
@@ -199,9 +204,11 @@ public class LoadMenu extends InputWindow implements KeyListener {
 				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(core.getDisplay().getWidth()/650f);
-				windowNode.attachChild(slottextNode);
-
-				buttons.add(new Button(data.id,button,slottextNode,this));
+				MenuImageButton b = new MenuImageButton(data.id,this,windowNode,counter-fromSlot);
+				b.baseNode.attachChild(button);
+				b.baseNode.attachChild(slottextNode);
+				b.baseNode.setModelBound(new BoundingBox());
+				buttons.add(b);
 			}
 			counter++;
 		}
@@ -213,16 +220,16 @@ public class LoadMenu extends InputWindow implements KeyListener {
 	{
 		for (int i=0; i<buttons.size(); i++)
 		{
-			Button b = buttons.get(i);
-			if (b.quad!=null)
+			MenuImageButton b = buttons.get(i);
+			if (b.baseNode.getChild(0)!=null)
 			{
 				if (i==selected)
 				{
-					b.quad.setSolidColor(ColorRGBA.white);
+					((Quad)b.baseNode.getChild(0)).setSolidColor(ColorRGBA.white);
 							
 				} else
 				{
-					b.quad.setSolidColor(ColorRGBA.gray);
+					((Quad)b.baseNode.getChild(0)).setSolidColor(ColorRGBA.gray);
 					
 				}
 			}
@@ -255,7 +262,7 @@ public class LoadMenu extends InputWindow implements KeyListener {
 	
 	public void handleChoice()
 	{
-		SaveSlotData data = dataList.get(buttons.get(selected).name);
+		SaveSlotData data = dataList.get(buttons.get(selected).id);
 		toggle();		
 		core.updateDisplay(null);
 		core.clearCore();
@@ -339,28 +346,49 @@ public class LoadMenu extends InputWindow implements KeyListener {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		int newSelected = Integer.parseInt(message);
+		if (newSelected != selected)
+		{
+			selected = newSelected;
+			highlightSelected();
+			return true;
+		}
 		return false;
 	}
 
 
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
 	public boolean inputUsed(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		if (base==closeWindow)
+		{
+			handleKey("back");
+		}
+		if (base==prevWindow)
+		{
+			selected = 0;
+			handleKey("lookUp");
+		}
+		if (base==nextWindow)
+		{
+			selected = buttons.size()-1;
+			handleKey("lookDown");
+		}
+		if (base instanceof MenuImageButton)
+		{
+			handleKey("enter");
+		}
 		return false;
 	}
 
