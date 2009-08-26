@@ -74,6 +74,21 @@ public class UiMouseHandler extends InputHandler {
 			ex.printStackTrace();
 		}
     }
+    public static void forceNormalCursor()
+    {
+		try {
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_NORMAL));
+
+			if (!normal)
+			{
+				normal = true;
+			//	throw new Exception();
+			}
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
     public static void cursorUp()
     {
 		try {

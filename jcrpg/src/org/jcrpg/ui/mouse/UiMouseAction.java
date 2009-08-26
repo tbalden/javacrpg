@@ -52,8 +52,10 @@ public class UiMouseAction extends MouseInputAction {
 	     private Node rootNode;
 	     private Node secondaryFocusNode;
 	     
-	    private UiMouseEventImpl lastMouseEvent = new UiMouseEventImpl(UiMouseEvent.UiMouseEventType.MOUSE_INFO, Integer.MIN_VALUE, Integer.MIN_VALUE);
-	     
+		    private UiMouseEventImpl lastMouseEvent = new UiMouseEventImpl(UiMouseEvent.UiMouseEventType.MOUSE_INFO, Integer.MIN_VALUE, Integer.MIN_VALUE);
+		    private UiMouseEventImpl lastMouseEventSecondary = new UiMouseEventImpl(UiMouseEvent.UiMouseEventType.MOUSE_INFO, Integer.MIN_VALUE, Integer.MIN_VALUE);
+	    private boolean insideInputBase = false; 
+	    
 	     /**
 	     * @param mouse the jme input mouse to use for mouse events
 	      */
@@ -68,7 +70,7 @@ public class UiMouseAction extends MouseInputAction {
 	      * 
 	      * @see com.jme.input.action.MouseInputAction#performAction(InputActionEvent)
 	      */
-	     public void performAction(InputActionEvent evt) {
+	     public synchronized void performAction(InputActionEvent evt) {
 	     	if (rootNode==null) 
 	     	{
 	     		if (!J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled())
@@ -77,7 +79,7 @@ public class UiMouseAction extends MouseInputAction {
 		    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
 		    		{
 		    			//System.out.println("SECONDARY PICK!");
-		    			if (!mousePick(secondaryFocusNode))
+		    			if (!mousePick(secondaryFocusNode,lastMouseEvent))
 		    			{
 		    				return;
 		    			}
@@ -97,13 +99,14 @@ public class UiMouseAction extends MouseInputAction {
 	     		return;
 	     	}
 	     	
-	    	if (mousePick(rootNode))
+	    	if (mousePick(rootNode,lastMouseEvent))
 	    	{
 	    		// no pick on window, secondary elements picking...
 	    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
 	    		{
-	    			//System.out.println("SECONDARY PICK!");
-	    			mousePick(secondaryFocusNode);
+	    			System.out.println("SECONDARY PICK!");
+	    			mousePick(secondaryFocusNode,lastMouseEventSecondary);
+	    			System.out.println("SECONDARY ENDED...");
 	    		}
 	    	}
 	 
@@ -114,7 +117,7 @@ public class UiMouseAction extends MouseInputAction {
 	      * @param rootNode
 	      * @return true if nothing is picked.
 	      */
-	     private boolean mousePick(Node rootNode) {
+	     private synchronized boolean mousePick(Node rootNode, UiMouseEventImpl lastMouseEvent) {
 	 	    ArrayList<PickedSpatialInfo> picked = new ArrayList<PickedSpatialInfo>();
 	 	    ArrayList<Spatial> loop = new ArrayList<Spatial>();
 	
@@ -159,35 +162,42 @@ public class UiMouseAction extends MouseInputAction {
 		    	if (!mouseEvent.getPickedInputBaseSet().contains(lastEventInputBase))
 	 	    	{
 			    	// Notify old event inputBaseSet of MOUSE_EXITED
-			    	if (lastEventInputBase.isEnabled())
+			    	if (insideInputBase && lastEventInputBase.isEnabled())
 			    	{
 			    		sendCustomizedMouseEvent(lastEventInputBase,
 			            		mouseEvent, UiMouseEventType.MOUSE_EXITED);
 			    		exited = true;
+			    		insideInputBase = false; // preventing recurring 'exiting' event when current event is just equal to the previous.
 			    	}
 	 	    	}
+		    	//lastMouseEvent.removePickedInputBase(lastEventInputBase);
 	 	    }
+		    System.out.print(pickedInputBaseSet.size());
 			if (pickedInputBaseSet.size()==0) 
 			{
 		    	if (exited) UiMouseHandler.normalCursor();
-			    lastMouseEvent = mouseEvent;
+			    lastMouseEvent.loadFromOther(mouseEvent);
 				return true;
 			}
-		    
+		    boolean eventHandled = false;
 			
 		    // NOTE: currently isEquivalent is true even if scene graph changed.
 		    if (!mouseEvent.isEquivalentTo(lastMouseEvent))
 		    {
+		    	System.out.print("####");
 			    for (InputBase inputBase:pickedInputBaseSet)
 			    {
 			    	if (inputBase.isEnabled())
 			    	{
+				    	System.out.print("!!!!");
 			    		// Send MOUSE_ENTERED event to previous inputBases in addition to any other mouse events
 				    	if (!lastMouseEvent.getPickedInputBaseSet().contains(inputBase))
 				    	{
 					    	// Notify new event inputBaseSet of MOUSE_ENTERED
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_ENTERED);
+				    		insideInputBase = true;
+				    		eventHandled = true;
 				    	}
 				    	
 				    	// Now send one more current event
@@ -204,6 +214,7 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_RELEASED -- only sent once
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_RELEASED);
+				    		eventHandled = true;
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_NONE))
 					    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY)) )
@@ -211,6 +222,7 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_PRESSED -- only sent once
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_PRESSED);
+				    		eventHandled = true;
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY))
 					    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY)) )
@@ -219,24 +231,33 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_DRAGGED -- sent continually while button remains pressed
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_DRAGGED);
+				    		eventHandled = true;
 				    	}
 				    	else
 				    	{
 					    	// Notify new event inputBaseSet of normal mouse moved event
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_MOVED);
+				    		eventHandled = true;
 				    	}
 				    	// TODO: consider generating a double-click event or perhaps indicating
 				    	// how many clicks have occurred within a certain timeframe in the event?
 				    	// Or leave this for the inputBase event handler to compute from timestamp and mouse presses?
+			    	} else
+			    	{
+			    		//mouseEvent.removePickedInputBase(inputBase);
 			    	}
 			    }
 			    if (!keepMouseCursorIntact)
 			    {
 			    	UiMouseHandler.normalCursor();
 			    }
+		    } else
+		    {
+		    	System.out.println("EQUI: "+mouseEventX+" "+mouseEvent.getX()+" "+lastMouseEvent.getX());
 		    }
-		    lastMouseEvent = mouseEvent;
+		    System.out.print("---- "+mouseEvent.getEventType());
+		    lastMouseEvent.loadFromOther(mouseEvent);
 		    return false;
 		}
 	
@@ -252,8 +273,11 @@ public class UiMouseAction extends MouseInputAction {
 		}
 		
 		private boolean sendMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent) {
-			if (mouseEvent.getEventType()!=UiMouseEventType.MOUSE_MOVED)
+			//if (mouseEvent.getEventType()!=UiMouseEventType.MOUSE_MOVED)
+			{
+				
 				System.out.println(inputBase.toString() + "-> " + mouseEvent.toString());
+			}
 			if (!inputBase.handleMouse(mouseEvent) || mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 			{
 				return false;//

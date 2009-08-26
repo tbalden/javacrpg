@@ -81,6 +81,11 @@ class UiMouseEventImpl implements UiMouseEvent {
 	public Set<InputBase> getPickedInputBaseSet() {
 		return Collections.unmodifiableSet(pickedInputBaseSet);
 	}
+	
+	public void removePickedInputBase(InputBase b)
+	{
+		pickedInputBaseSet.remove(b);
+	}
 
 	public boolean isButtonPressed(long button) 
 	{
@@ -146,4 +151,15 @@ class UiMouseEventImpl implements UiMouseEvent {
 		}
 		return r;
 	}
+	
+	public void loadFromOther(UiMouseEventImpl impl)
+	{
+		this.buttonMask = impl.buttonMask;
+		this.eventType = impl.eventType;
+		this.pickedInputBaseSet = impl.pickedInputBaseSet;
+		this.pickedSpatialList = impl.pickedSpatialList;
+		this.x = impl.x;
+		this.y = impl.y;
+	}
+	
 }

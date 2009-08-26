@@ -104,7 +104,7 @@ public class ClassicInputHandler extends InputHandler {
 	{
 		((ClassicInputHandler)J3DCore.getInstance().getInputHandler()).getMouseLookHandler().setEnabled(enabled);
 		MouseInput.get().setCursorVisible(!mouseLookHandler.isEnabled());
-		if (!enabled)UiMouseHandler.normalCursor();
+		if (!enabled)UiMouseHandler.forceNormalCursor();
 	}
 	
 	public static final int PRIMARY_INPUT_TYPE = 0, SECONDARY_INPUT_TYPE = 1;
