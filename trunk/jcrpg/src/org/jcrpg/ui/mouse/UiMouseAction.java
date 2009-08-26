@@ -147,10 +147,12 @@ public class UiMouseAction extends MouseInputAction {
 	 	    	}
 		    	pickedInputBaseSet.add(base);
 		    }
-			if (pickedInputBaseSet.size()==0) return true;
 	
 			mouseEvent.setPickedSpatialList(picked);
 			mouseEvent.setPickedInputBaseSet(pickedInputBaseSet);
+
+			boolean keepMouseCursorIntact = false;
+			boolean exited = false;
 			
 		    for (InputBase lastEventInputBase: lastMouseEvent.getPickedInputBaseSet())
 		    {
@@ -159,11 +161,19 @@ public class UiMouseAction extends MouseInputAction {
 			    	// Notify old event inputBaseSet of MOUSE_EXITED
 			    	if (lastEventInputBase.isEnabled())
 			    	{
-			            sendCustomizedMouseEvent(lastEventInputBase,
+			    		sendCustomizedMouseEvent(lastEventInputBase,
 			            		mouseEvent, UiMouseEventType.MOUSE_EXITED);
+			    		exited = true;
 			    	}
 	 	    	}
 	 	    }
+			if (pickedInputBaseSet.size()==0) 
+			{
+		    	if (exited) UiMouseHandler.normalCursor();
+			    lastMouseEvent = mouseEvent;
+				return true;
+			}
+		    
 			
 		    // NOTE: currently isEquivalent is true even if scene graph changed.
 		    if (!mouseEvent.isEquivalentTo(lastMouseEvent))
@@ -176,7 +186,7 @@ public class UiMouseAction extends MouseInputAction {
 				    	if (!lastMouseEvent.getPickedInputBaseSet().contains(inputBase))
 				    	{
 					    	// Notify new event inputBaseSet of MOUSE_ENTERED
-				            sendCustomizedMouseEvent(inputBase,
+				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_ENTERED);
 				    	}
 				    	
@@ -192,14 +202,14 @@ public class UiMouseAction extends MouseInputAction {
 				    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_NONE)) )
 				    	{
 					    	// Notify new event inputBaseSet of MOUSE_RELEASED -- only sent once
-				            sendCustomizedMouseEvent(inputBase,
+				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_RELEASED);
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_NONE))
 					    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY)) )
 				    	{
 					    	// Notify new event inputBaseSet of MOUSE_PRESSED -- only sent once
-				            sendCustomizedMouseEvent(inputBase,
+				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_PRESSED);
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY))
@@ -207,13 +217,13 @@ public class UiMouseAction extends MouseInputAction {
 				    	{
 				    		// TODO: This should probably have a minimum coordinate delta change before being triggered.
 					    	// Notify new event inputBaseSet of MOUSE_DRAGGED -- sent continually while button remains pressed
-				            sendCustomizedMouseEvent(inputBase,
+				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_DRAGGED);
 				    	}
 				    	else
 				    	{
 					    	// Notify new event inputBaseSet of normal mouse moved event
-				            sendCustomizedMouseEvent(inputBase,
+				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_MOVED);
 				    	}
 				    	// TODO: consider generating a double-click event or perhaps indicating
@@ -221,12 +231,16 @@ public class UiMouseAction extends MouseInputAction {
 				    	// Or leave this for the inputBase event handler to compute from timestamp and mouse presses?
 			    	}
 			    }
+			    if (!keepMouseCursorIntact)
+			    {
+			    	UiMouseHandler.normalCursor();
+			    }
 		    }
 		    lastMouseEvent = mouseEvent;
 		    return false;
 		}
 	
-		private void sendCustomizedMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent, UiMouseEventType mouseEventType) {
+		private boolean sendCustomizedMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent, UiMouseEventType mouseEventType) {
 			
 			// TODO: Translate into inputBase coordinate system
 			int translatedX = mouseEvent.getX();
@@ -234,16 +248,17 @@ public class UiMouseAction extends MouseInputAction {
 			
 			UiMouseEvent customizedMouseEvent = new UiMouseEventCustomizedWrapper(mouseEvent,
 					mouseEventType, translatedX, translatedY);
-			sendMouseEvent(inputBase , customizedMouseEvent);
+			return sendMouseEvent(inputBase , customizedMouseEvent);
 		}
 		
-		private void sendMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent) {
+		private boolean sendMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent) {
 			if (mouseEvent.getEventType()!=UiMouseEventType.MOUSE_MOVED)
 				System.out.println(inputBase.toString() + "-> " + mouseEvent.toString());
-			if (!inputBase.handleMouse(mouseEvent))
+			if (!inputBase.handleMouse(mouseEvent) || mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 			{
-				UiMouseHandler.normalCursor();
+				return false;//
 			}
+			return true;
 	 	}
 	
 		

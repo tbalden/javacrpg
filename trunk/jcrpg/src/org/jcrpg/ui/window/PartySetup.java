@@ -900,6 +900,9 @@ public class PartySetup extends PagedInputWindow {
 					resistanceValues.setResistance(id, baseValue);
 				}
 			}
+			inputLeft(genderSelect, "fake");
+			inputEntered(professionSelect, "fake");
+
 		} else
 		if (base.equals(genderSelect))
 		{

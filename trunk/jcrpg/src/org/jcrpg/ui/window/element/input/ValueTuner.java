@@ -288,7 +288,7 @@ public class ValueTuner extends InputBase {
 							return true;
 						} else
 						{
-							UiMouseHandler.cursorDown();
+							UiMouseHandler.cursorSet();
 							return true;
 						}
 					}
@@ -296,6 +296,10 @@ public class ValueTuner extends InputBase {
 				}
 			} 
 
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_RELEASED)
+			{
+				return true;
+			}
 		}
 		return false;
 	}

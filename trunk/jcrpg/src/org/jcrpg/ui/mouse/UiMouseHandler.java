@@ -35,6 +35,7 @@ public class UiMouseHandler extends InputHandler {
 
     
     public static final String URL_CURSOR_NORMAL = "file:data/cursor/cursor1.png";
+    public static final String URL_CURSOR_SET = "file:data/cursor/cursor1Set.png";
     public static final String URL_CURSOR_UP = "file:data/cursor/cursor1Up.png";
     public static final String URL_CURSOR_DOWN = "file:data/cursor/cursor1Down.png";
     public static final String URL_CURSOR_LEFT = "file:data/cursor/cursor1Left.png";
@@ -56,10 +57,18 @@ public class UiMouseHandler extends InputHandler {
 		}
     }
     
+    static boolean normal = false;
     public static void normalCursor()
     {
 		try {
+			if (!normal)
 			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_NORMAL));
+
+			if (!normal)
+			{
+				normal = true;
+			//	throw new Exception();
+			}
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -68,6 +77,7 @@ public class UiMouseHandler extends InputHandler {
     public static void cursorUp()
     {
 		try {
+			normal = false;
 			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_UP),-5,-5);
 		} catch (Exception ex)
 		{
@@ -77,6 +87,7 @@ public class UiMouseHandler extends InputHandler {
     public static void cursorDown()
     {
 		try {
+			normal = false;
 			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_DOWN),-5,-5);
 		} catch (Exception ex)
 		{
@@ -86,6 +97,7 @@ public class UiMouseHandler extends InputHandler {
     public static void cursorRight()
     {
 		try {
+			normal = false;
 			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_RIGHT),-5,-5);
 		} catch (Exception ex)
 		{
@@ -95,7 +107,18 @@ public class UiMouseHandler extends InputHandler {
     public static void cursorLeft()
     {
 		try {
+			normal = false;
 			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_LEFT),-5,-5);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+    }
+    public static void cursorSet()
+    {
+		try {
+			normal = false;
+			MouseInput.get().setHardwareCursor(new URL(URL_CURSOR_SET),-5,-25);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
