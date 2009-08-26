@@ -17,16 +17,19 @@ Society, Groups etc.
 
 [ ] music volume level is wrong
 
-[ ] test vista 64 bit
+[X] test vista 64 bit - couldn't reproduce the reported thing !? Is it a 32-bit java vm vs 64 bit vm thing?
 
 [ ] let profession set attributes, instead of attributes allowing profession upon char creation.
 
 [ ] mouse handling 
 	[X] clickable window toggle button on top of the screen
 		[ ] graphical icons
+		
 
-	[ ] mouse cursor changes -> when pressed (ValueTuner)
-	[ ] load menu
+	[X] mouse cursor changes -> when pressed (ValueTuner)
+			[X] Enter cursor for Value Tuner
+	[X] load menu
+	[X] Main menu clicking doesnt work in Windows!
 
 	[X] "enter" on click handling - works, yay! Thanks Mike for the nice inertia!
 	[X] handling of all kinds of input elements

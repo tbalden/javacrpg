@@ -571,7 +571,10 @@ public class ListSelect extends InputBase {
 						//MouseInput.get().setHardwareCursor(arg0)
 				}
 			} 
-
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_RELEASED)
+			{
+				return true;
+			}
 		}
 		return false;
 	}
