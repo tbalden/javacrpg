@@ -52,9 +52,9 @@ public class ButtonRow extends InputWindow {
 	    	float xOffset = 0.35f;
 	    	float rowHeightDiv = 2.30f;
 	    	int counter = 0;
-	    	menuButton = new ImageButton("1",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Menu", ImageButton.defaultImage );
-	    	mapButton = new ImageButton("2",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Map", ImageButton.defaultImage );
-	    	campButton = new ImageButton("3",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Camp", ImageButton.defaultImage );
+	    	menuButton = new ImageButton("1",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Menu", "./data/ui/topbuttons/mainmenu.png");
+	    	mapButton = new ImageButton("2",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Map", "./data/ui/topbuttons/map.png" );
+	    	campButton = new ImageButton("3",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "  Camp", "./data/ui/topbuttons/camp.png" );
 	    	orderButton = new ImageButton("4",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Order", ImageButton.defaultImage );
 	    	behaviorButton = new ImageButton("5",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Behav", ImageButton.defaultImage );
 	    	actButton = new ImageButton("6",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Act", ImageButton.defaultImage );

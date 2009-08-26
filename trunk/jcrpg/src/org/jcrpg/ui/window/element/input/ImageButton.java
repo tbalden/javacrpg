@@ -82,6 +82,7 @@ public class ImageButton extends InputBase {
 			float sizeY, float textProportion, String text, String image) {
 		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
 		this.text = text;
+		this.bgImage = image;
 		this.textProportion = textProportion;
 		deactivate();
 	}
