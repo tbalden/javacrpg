@@ -62,28 +62,30 @@ public class PartyOrderWindow extends PagedInputWindow {
 		super(base);
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 0.6f*core.getDisplay().getWidth(), 0.7f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.60f*core.getDisplay().getHeight() / 2);
+	    			core.getDisplay().getWidth() / 2, 1.55f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
+	    	
+	    	float yDelta = 0.04f;
 
-	    	new TextLabel("",this,page0, 0.39f, 0.058f, 0.3f, 0.06f,400f,"Party Character Order",false);
+	    	new TextLabel("",this,page0, 0.39f, yDelta+0.058f, 0.3f, 0.06f,400f,"Party Character Order",false);
 
-    		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+    		characterSelect = new ListSelect("member", this,page0, 0.50f,yDelta+0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.17f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
-    		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.23f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
+	    	new TextLabel("",this,page0, 0.40f, yDelta+0.17f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
+    		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,yDelta+0.23f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 	    	
-	    	swap = new TextButton("give",this,page0, 0.40f, 0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.swap"));
+	    	swap = new TextButton("give",this,page0, 0.40f, yDelta+0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.swap"));
 	    	addInput(0,swap);
 
-	    	dismiss = new TextButton("drop",this,page0, 0.60f, 0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.dismiss"));
+	    	dismiss = new TextButton("drop",this,page0, 0.60f, yDelta+0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.dismiss"));
 	    	addInput(0,dismiss);
 
-	    	closeWindow = new TextButton("close",this,page0, 0.74f, 0.060f, 0.02f, 0.045f,600f," x");
+	    	closeWindow = new TextButton("close",this,page0, 0.74f, yDelta+0.060f, 0.02f, 0.045f,600f," x");
 	    	addInput(0,closeWindow);
 	    	
 	    	addPage(0, page0);

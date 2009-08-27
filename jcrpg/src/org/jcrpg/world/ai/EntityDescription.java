@@ -21,6 +21,7 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.Behavior;
@@ -369,6 +370,18 @@ public class EntityDescription extends DescriptionBase {
 	}
 	
 	public byte[] getPopulationMapColor()
+	{
+		return null;
+	}
+	
+	public final BlockPattern getPopulationPattern(Population population)
+	{
+		HashMap<Class<? extends Population>, BlockPattern> map = getPopulationPatternMap();
+		if (map==null) return null;
+		return map.get(population.getClass());
+	}
+	
+	public HashMap<Class <? extends Population>, BlockPattern> getPopulationPatternMap()
 	{
 		return null;
 	}

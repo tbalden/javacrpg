@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.Geography;
@@ -297,10 +298,15 @@ public abstract class Population extends Economic{
 	
 	@Override
 	public byte[] getMapColor() {
-		// TODO Auto-generated method stub
 		byte[] b = owner.getPopulationMapColor();
 		if (b!=null) return b;
 		return super.getMapColor();
+	}
+	@Override
+	public BlockPattern getMapPattern() {
+		BlockPattern b = owner.getPopulationMapPattern(this);
+		if (b!=null) return b;
+		return super.getMapPattern();
 	}
 	
 }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.GroupingRule.GroupSizeAndType;
 import org.jcrpg.world.ai.abs.Choice;
@@ -45,6 +46,7 @@ import org.jcrpg.world.ai.wealth.EntityCommonWealth;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
 public class EntityInstance {
@@ -374,6 +376,11 @@ public class EntityInstance {
 	public byte[] getPopulationMapColor()
 	{
 		return description.getPopulationMapColor();
+	}
+	
+	public BlockPattern getPopulationMapPattern(Population p)
+	{
+		return description.getPopulationPattern(p);
 	}
 	
 }
