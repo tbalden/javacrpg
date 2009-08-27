@@ -76,37 +76,39 @@ public class BehaviorWindow extends PagedInputWindow {
 	public BehaviorWindow(UIBase base) {
 		super(base);
 		try {
-			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.7f*core.getDisplay().getWidth(), 1.55f*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, 1.18f*core.getDisplay().getHeight() / 2);
+			Quad hudQuad = loadImageToQuad("./data/ui/baseWindowFrame.dds", 0.7f*core.getDisplay().getWidth(), 1.52f*(core.getDisplay().getHeight() / 2), 
+	    			core.getDisplay().getWidth() / 2, 1.16f*core.getDisplay().getHeight() / 2);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 	    	sQuad = new SharedMesh("",hudQuad);
+	    	
+	    	float yDelta = 0.00f;
 
-	    	new TextLabel("",this,page0, 0.4f, 0.11f, 0.3f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
-	    	new TextLabel("",this,page0, 0.27f, 0.16f, 0.3f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
+	    	new TextLabel("",this,page0, 0.4f, yDelta+0.11f, 0.3f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
+	    	new TextLabel("",this,page0, 0.27f, yDelta+0.16f, 0.3f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
-	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    	}
-	    	new TextLabel("friendly_text",this,page0,0.24f,0.19f+sizeSelect*8,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
-	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
-	    	new TextLabel("neutral_text",this,page0,0.24f,0.19f+sizeSelect*9,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
-	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
-	    	new TextLabel("hostile_text",this,page0,0.24f,0.19f+sizeSelect*10,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
-	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
+	    	new TextLabel("friendly_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*8,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
+	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,yDelta+0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
+	    	new TextLabel("neutral_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*9,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
+	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,yDelta+0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
+	    	new TextLabel("hostile_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*10,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
+	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,yDelta+0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
 	    	
 	    	addInput(0, noticeFriendly);
 	    	addInput(0, noticeNeutral);
 	    	addInput(0, noticeHostile);
 	    	
-	    	save = new TextButton("save",this,page0,0.3f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.save"),"S");
-	    	revert = new TextButton("revert",this,page0,0.51f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.revert"),"R");
-	    	cancel = new TextButton("cancel",this,page0,0.72f, 0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.cancel"),"C");
+	    	save = new TextButton("save",this,page0,0.3f, yDelta+0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.save"),"S");
+	    	revert = new TextButton("revert",this,page0,0.51f, yDelta+0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.revert"),"R");
+	    	cancel = new TextButton("cancel",this,page0,0.72f, yDelta+0.75f, 0.18f, 0.06f,500f,Language.v("behaviorWindow.cancel"),"C");
 	    	addInput(0, save);
 	    	addInput(0, revert);
 	    	addInput(0, cancel);

@@ -18,10 +18,14 @@
 
 package org.jcrpg.world.ai.humanoid.group.boarman;
 
+import java.util.HashMap;
+
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.ui.map.BlockPattern;
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
@@ -31,6 +35,7 @@ import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleMage;
 import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanMaleThug;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
@@ -141,6 +146,35 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	public byte[] getPopulationMapColor() {
 		return populationColor;
 	}
+
+	public static boolean[][] CITY = new boolean[][] 
+			  	                                    {
+			  		{ true, false, false, false, false,false, true, false, false },
+			  		{ false, true, true, true, true,false, true, false, false },
+			  		{ false, true, false, false, true,true, true, false, false },
+			  		{ false, true, false, true, true,true, false, false, false },
+			  		{ false, true, true, true, true,true, false, false, false },
+			  		{ false, true, true, true, true,false, false, false, false },
+			  		{ true, false, false, false, true,true, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+
+	static HashMap<Class<? extends Population>, BlockPattern> patternMap = new HashMap<Class<? extends Population>, BlockPattern>();
+	static 
+	{
+		BlockPattern patternSimpleDistrict = new BlockPattern();
+		patternSimpleDistrict.PATTERN = CITY;
+		patternMap.put(SimpleDistrict.class, patternSimpleDistrict);
+	}
+	
+	@Override
+	public HashMap<Class<? extends Population>, BlockPattern> getPopulationPatternMap() {
+		return patternMap;
+	}
+	
+	
 
 	
 }

@@ -128,7 +128,7 @@ public class WorldMap {
 		  		{ true, false, true, false, true, false, true, false, true }
 		  	                                    }
 		  	;
-	static boolean[][] CITY = new boolean[][] 
+	public static boolean[][] CITY = new boolean[][] 
 		  	                                    {
 		  		{ false, false, false, false, false,false, false, false, false },
 		  		{ false, false, true, true, true,false, false, false, false },
@@ -400,7 +400,9 @@ public class WorldMap {
 										ecoObj = e;
 										ecoFound = true;
 										byte[] cB = ecoObj.getMapColor();
-										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY,false);
+										BlockPattern pattern = ecoObj.getMapPattern();
+										boolean[][] bytePattern = pattern==null?CITY:pattern.PATTERN==null?CITY:pattern.PATTERN;
+										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX,  bytePattern,false);
 										break;
 									}
 									
@@ -466,6 +468,9 @@ public class WorldMap {
 				// populations last!
 				if (ecoFound) {
 					byte[] cB = ecoObj.getMapColor();
+					BlockPattern pattern = ecoObj.getMapPattern();
+					boolean[][] bytePattern = pattern==null?CITY:pattern.PATTERN==null?CITY:pattern.PATTERN;
+
 					if (ecoObj instanceof Population)
 					{
 						String townName = ((Population)ecoObj).town.foundationName;
@@ -483,7 +488,7 @@ public class WorldMap {
 							labels.add(desc);
 						}
 					}
-					paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, CITY, false);
+					paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, bytePattern, false);
 				}
 
 				mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)150;

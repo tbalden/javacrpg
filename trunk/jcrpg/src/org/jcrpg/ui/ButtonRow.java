@@ -34,7 +34,7 @@ import com.jme.scene.shape.Quad;
  */
 public class ButtonRow extends InputWindow {
 
-	public float rowHeightRatio = 0.058f;
+	public float rowHeightRatio = 0.064f;
 	
 	ImageButton menuButton, mapButton, campButton, orderButton, behaviorButton, actButton, searchButton;
 	
@@ -42,7 +42,7 @@ public class ButtonRow extends InputWindow {
 		super(base);
 		try {
 			Quad hudQuad = loadImageToQuad("./data/ui/nonPatternFrame1.png", 1f*core.getDisplay().getWidth(), rowHeightRatio*(core.getDisplay().getHeight() / 2), 
-	    			core.getDisplay().getWidth() / 2, core.getDisplay().getHeight() / 1.012f);
+	    			core.getDisplay().getWidth() / 2, core.getDisplay().getHeight() / 1.014f);
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	SharedMesh sQuad = new SharedMesh("",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
@@ -50,7 +50,7 @@ public class ButtonRow extends InputWindow {
 	    	
 	    	float buttonWidth = 0.05f;
 	    	float xOffset = 0.35f;
-	    	float rowHeightDiv = 2.30f;
+	    	float rowHeightDiv = 2.25f;
 	    	int counter = 0;
 	    	menuButton = new ImageButton("1",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Menu", "./data/ui/topbuttons/mainmenu.png");
 	    	mapButton = new ImageButton("2",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Map", "./data/ui/topbuttons/map.png" );

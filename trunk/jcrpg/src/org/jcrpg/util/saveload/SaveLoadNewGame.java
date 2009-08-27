@@ -166,6 +166,8 @@ public class SaveLoadNewGame {
 				core.sEngine.reinit();
 				core.eEngine.reinit();
 			}
+			core.uiBase.hud.mainBox.addEntry("Press RIGHT button on mouse to toggle between mouselook and cursor.");
+
 		} catch (Exception ex)
 		{
 			
@@ -258,6 +260,7 @@ public class SaveLoadNewGame {
 			gameState.resetGeneral();
 			
 			core.uiBase.hud.mainBox.addEntry("Game loaded.");
+			core.uiBase.hud.mainBox.addEntry("Press RIGHT button on mouse to toggle between mouselook and cursor.");
 			core.gameLost = false;
 		} catch (Exception ex)
 		{

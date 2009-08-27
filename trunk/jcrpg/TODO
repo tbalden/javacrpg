@@ -18,12 +18,27 @@ Society, Groups etc.
 [ ] music volume level is wrong
 
 [X] test vista 64 bit - couldn't reproduce the reported thing !? Is it a 32-bit java vm vs 64 bit vm thing?
+[ ] test vista for crashes last seen
 
 [ ] let profession set attributes, instead of attributes allowing profession upon char creation.
+
+[ ] MAP
+	[X] town type icons (instead of dots)
+		[ ] colored population icons instead of boolean array!
+		
+	[ ] legendary to the map
+	[ ] label to map, even better map!
 
 [ ] mouse handling 
 	[X] clickable window toggle button on top of the screen
 		[ ] graphical icons
+		
+	PartyOrder - 123 (numbers), 
+	Behavior a little human figure  
+	Act [do things like use an item, drink potion] a Hand, 
+	Search a magnifier[look for opening a door, trap, chest]
+	
+		[X] helping hints like 'Press right button to activate mouse cursor! Use portraits and top buttons.'
 		
 
 	[X] mouse cursor changes -> when pressed (ValueTuner)
@@ -39,11 +54,7 @@ Society, Groups etc.
 	[X] key to switch mouselook on/off 
 	[X] clickable character portraits - lead to inventory, right click to char sheet
 	
-
-[ ] MAP
-	[ ] town type icons (instead of dots)
-	[ ] legendary to the map
-	[ ] label to map, even better map!
+------------
 
 [ ] Story/Dialog system thingy :)
 	

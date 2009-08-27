@@ -24,6 +24,8 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.space.Side;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.trigger.StorageObjectSideSubType;
+import org.jcrpg.ui.map.BlockPattern;
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.EntityInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
@@ -174,8 +176,18 @@ public class Economic extends Geography {
 	@Override
 	public byte[] getMapColor()
 	{
-		
 		return new byte[]{(byte)255,(byte)255,(byte)255};
+	}
+	
+	static BlockPattern pattern = new BlockPattern();
+	static 
+	{
+		pattern.PATTERN = WorldMap.CITY;
+	}
+	
+	public BlockPattern getMapPattern()
+	{
+		return pattern;
 	}
 
 }
