@@ -158,3 +158,4 @@ If you have these installed type
 # svn co https://javacrpg.svn.sourceforge.net/svnroot/javacrpg javacrpg
 
 After go to root dir, and type 'ant'. It should compile and start it.
+You will need apache-ant too.

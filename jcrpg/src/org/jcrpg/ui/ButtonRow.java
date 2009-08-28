@@ -48,17 +48,17 @@ public class ButtonRow extends InputWindow {
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	windowNode.attachChild(sQuad);
 	    	
-	    	float buttonWidth = 0.05f;
-	    	float xOffset = 0.35f;
+	    	float buttonWidth = 0.06f;
+	    	float xOffset = 0.32f;
 	    	float rowHeightDiv = 2.25f;
 	    	int counter = 0;
 	    	menuButton = new ImageButton("1",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Menu", "./data/ui/topbuttons/mainmenu.png");
-	    	mapButton = new ImageButton("2",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Map", "./data/ui/topbuttons/map.png" );
+	    	mapButton = new ImageButton("2",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "  Map", "./data/ui/topbuttons/map.png" );
 	    	campButton = new ImageButton("3",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "  Camp", "./data/ui/topbuttons/camp.png" );
 	    	orderButton = new ImageButton("4",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Order", ImageButton.defaultImage );
-	    	behaviorButton = new ImageButton("5",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Behav", ImageButton.defaultImage );
-	    	actButton = new ImageButton("6",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Act", ImageButton.defaultImage );
-	    	searchButton = new ImageButton("7",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, " Search", ImageButton.defaultImage );
+	    	behaviorButton = new ImageButton("5",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "   Behav", "./data/ui/topbuttons/behavior.png" );
+	    	actButton = new ImageButton("6",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "  Act", "./data/ui/topbuttons/act.png" );
+	    	searchButton = new ImageButton("7",this,windowNode,xOffset+buttonWidth*counter++, rowHeightRatio/4.2f, buttonWidth, rowHeightRatio/rowHeightDiv, 1100f, "  Search", "./data/ui/topbuttons/search.png" );
 	    	
 	    	
 		} catch (Exception ex)
