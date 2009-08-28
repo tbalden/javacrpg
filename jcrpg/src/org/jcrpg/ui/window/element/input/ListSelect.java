@@ -67,6 +67,7 @@ public class ListSelect extends InputBase {
 	public ArrayList<Node> iconNodes = new ArrayList<Node>();
 
 	public static final String defaultImage = "./data/ui/inputBase.png";
+	public static final String defaultImageActive = "./data/ui/inputBaseActive.png";
 	public String bgImage = defaultImage;
 	
 	public float fontRatio = 400f;
@@ -220,6 +221,8 @@ public class ListSelect extends InputBase {
 		baseNode.updateModelBound();
 	}
 	int size = 0;
+	
+	boolean nextPageAvailable = false;
 
 	public void setupActivated()
 	{
@@ -232,7 +235,7 @@ public class ListSelect extends InputBase {
 		{
 			activatedNode = new Node(""+id);
 			try {
-				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				Quad w1 = Window.loadImageToQuad(new File(texts!=null&&texts.length>maxVisible?defaultImageActive:bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
 				activatedNode.attachChild(w1);
 			} catch (Exception ex)
@@ -249,11 +252,13 @@ public class ListSelect extends InputBase {
 		}
 		textNodes.clear();
 		iconNodes.clear();
+		nextPageAvailable = false;
 		for (int i=0; i<maxVisible+1; i++) {
 			if (i+fromCount<maxCount) {
 				String text = "";
 				if (i==maxVisible && i+fromCount<maxCount)
 				{
+					nextPageAvailable = true;
 					text = "...";
 				} else {
 					if (i==maxVisible)
@@ -505,7 +510,7 @@ public class ListSelect extends InputBase {
 					if (active)
 					{
 						
-						if (mouseEvent.getAreaSpatial().ratioX>0.7f)
+						if (mouseEvent.getAreaSpatial().ratioX>0.7f || nextPageAvailable && selected == size-1)
 						{
 							if (mouseEvent.getAreaSpatial().ratioY>0.5f)
 							{
