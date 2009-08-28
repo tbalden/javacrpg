@@ -78,6 +78,58 @@ public class Profession {
 		return true;
 	}
 	
+	public boolean isQualifiedEnoughWithLevelingPoints(EntityMember race, int genderId, Attributes attr, int availablePoints)
+	{
+		if (race.isProfessionForbidden(this.getClass())) return false;
+		if (!validForGender(genderId)) return false;
+		for (String name : FantasyAttributes.attributeName)
+		{
+			Integer value = attrMinLevels.minimumLevels.get(name);
+			if (value!=null)
+			{
+				int iV = value;
+				Integer value2 = attr.getAttribute(name);
+				if (value2 == null) return false;
+				int iV2 = value2;
+				int diff = iV-iV2;
+				if (diff<0)
+				{
+					// decrease with the difference
+					availablePoints+=diff;
+				}
+				// Is a.points run out?
+				if (availablePoints<0) return false;
+			}
+		}
+		return true;
+	}
+	
+	public int getRemainingPointsAfterLevelingToMinimumAttributes(EntityMember race, int genderId, Attributes attr, int availablePoints)
+	{
+		if (race.isProfessionForbidden(this.getClass())) return -1;
+		if (!validForGender(genderId)) return -1;
+		for (String name : FantasyAttributes.attributeName)
+		{
+			Integer value = attrMinLevels.minimumLevels.get(name);
+			if (value!=null)
+			{
+				int iV = value;
+				Integer value2 = attr.getAttribute(name);
+				if (value2 == null) return -1;
+				int iV2 = value2;
+				int diff = iV2-iV;
+				if (diff<0)
+				{
+					// decrease with the difference
+					availablePoints+=diff;
+				}
+				// Is a.points run out?
+				if (availablePoints<0) return availablePoints;
+			}
+		}
+		return availablePoints;
+	}
+
 	public boolean validForGender(int gender)
 	{
 		if (genderNeed==EntityDescription.GENDER_BOTH)
