@@ -591,6 +591,9 @@ public class PartySetup extends PagedInputWindow {
 				ValueTuner v = attributeTuners.get(id);
 				v.value = attributeValues.attributes.get(id);
 				v.text = ""+v.value;
+				v.minValueVisible = true;
+				v.minValue = lowestAttrValues.attributes.get(id);
+				v.setUpdated(true);
 				v.deactivate();
 			}
 

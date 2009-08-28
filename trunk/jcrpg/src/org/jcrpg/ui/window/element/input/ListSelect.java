@@ -31,7 +31,6 @@ import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.input.MouseInput;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;

@@ -49,6 +49,8 @@ public class ValueTuner extends InputBase {
 	
 	public int oldValue, value, minValue, maxValue, step = 1;
 	public Object tunedObject;
+	
+	public boolean minValueVisible = false;
 
 	public ValueTuner(String id, InputWindow w, Node parentNode, float textProportion, 
 						int value, int minValue, int maxValue, int step) {
@@ -100,7 +102,7 @@ public class ValueTuner extends InputBase {
 		if (updated)
 		{
 			updated = false;
-			text = ""+value;
+			text = ""+value+(minValueVisible?" ("+minValue+")":"");
 		}
 		baseNode.detachAllChildren();
 		{
@@ -132,7 +134,7 @@ public class ValueTuner extends InputBase {
 		if (updated)
 		{
 			updated = false;
-			text = ""+value;
+			text = ""+value+(minValueVisible?" ("+minValue+")":"");
 		}
 		baseNode.detachAllChildren();
 		{
@@ -166,7 +168,7 @@ public class ValueTuner extends InputBase {
 			int orig = value;
 			value-=step;
 			if (!w.inputUsed(this, key)) value=orig;
-			text = ""+value;
+			text = ""+value+(minValueVisible?" ("+minValue+")":"");
 			setValue(text);
 			activate();
 			return true;
@@ -177,7 +179,7 @@ public class ValueTuner extends InputBase {
 			int orig = value;
 			value+=step;
 			if (!w.inputUsed(this, key)) value=orig;
-			text = ""+value;
+			text = ""+value+(minValueVisible?" ("+minValue+")":"");
 			setValue(text);
 			activate();
 			return true;
