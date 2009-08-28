@@ -184,34 +184,36 @@ public class PartySetup extends PagedInputWindow {
 	    	}
 	    	addInput(1,genderSelect);
 	    	
-	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
+	    	float column2 = 0.5f, column1 = 0.33f;
+	    	
+	    	new TextLabel("",this,pageCreationFirst, column1, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, column1,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
 	    	
 	    	
-	    	attrPointsLeftLabel = new TextLabel("",this,pageCreationFirst, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
+	    	attrPointsLeftLabel = new TextLabel("",this,pageCreationFirst, column2, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
 	    	
 	    	int posY = 0;
 	    	for (String s: FantasyAttributes.attributeName)
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
 	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
-	    		new TextLabel(s+"_label",this,pageCreationFirst,0.23f,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
-	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, 0.45f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
+	    		new TextLabel(s+"_label",this,pageCreationFirst,column2,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, column2+0.22f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
 	    		addInput(1,v);
 	    		posY++;
 	    	}
 
-	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.37f,0.15f,0.2f,600f);
+	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, column1,0.37f,0.15f,0.2f,600f);
 	    	addInput(1,pictureSelect);
 
 
-	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
+	    	new TextLabel("",this,pageCreationFirst, column1, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
 	    	{
-		    	voiceSelect = new ListSelect("voice", this,pageCreationFirst, 0.7f,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+		    	voiceSelect = new ListSelect("voice", this,pageCreationFirst, column1,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,voiceSelect);
 
