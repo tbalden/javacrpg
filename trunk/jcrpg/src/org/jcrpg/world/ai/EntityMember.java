@@ -83,6 +83,9 @@ public class EntityMember extends DescriptionBase {
 	public SkillContainer getCommonSkills() {
 		return memberSkills;
 	}
+	public void setMemberSkills(SkillContainer skills) {
+		memberSkills = skills;
+	}
 	
 	
 	public Attributes getAttributes(EntityDescription parent)

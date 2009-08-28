@@ -147,7 +147,12 @@ public class LoadMenu extends InputWindow implements KeyListener {
 			int count = 1;
 			for (SaveSlotData d:dataList1.values())
 			{
-				dataList.put(reorderCount+" - "+d.slotName, d);
+				String key = ""+reorderCount;
+				while (key.length()<10)
+				{
+					key="0"+key;
+				}
+				dataList.put(key+" - "+d.slotName, d);
 				d.id = reorderCount+" - "+d.slotName;
 				d.slotName = (count++)+" - "+d.slotName;
 				reorderCount--;

@@ -124,7 +124,7 @@ public class ImageButton extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.6f,0.6f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.7f,0.7f,0.1f,1f),true);
 			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
@@ -159,7 +159,7 @@ public class ImageButton extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),true);
+			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.6f,0.6f,0.1f,1f),true);
 			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
