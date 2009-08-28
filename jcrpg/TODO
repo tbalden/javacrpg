@@ -16,22 +16,35 @@ Interrelation,
 Society, Groups etc.
 
 [ ] music volume level is wrong
+[ ] loading eats more and more memory
 
-[X] test vista 64 bit - couldn't reproduce the reported thing !? Is it a 32-bit java vm vs 64 bit vm thing?
 [ ] test vista for crashes last seen
 
-[ ] let profession set attributes, instead of attributes allowing profession upon char creation.
-
+	
 [ ] MAP
 	[X] town type icons (instead of dots)
 		[ ] colored population icons instead of boolean array!
 		
 	[ ] legendary to the map
-	[ ] label to map, even better map!
+	[ ] label to map, 
+		even better map!
+		Higher resolution.
 
-[ ] mouse handling 
+[ ] integrate new content
+
+[ ] reset button for Skill point settings! Reconsider how that part works.
+
+[X] test vista 64 bit - couldn't reproduce the reported thing !? Is it a 32-bit java vm vs 64 bit vm thing?
+[X] let profession set attributes, instead of attributes allowing profession upon char creation.
+	PartySetup refactor
+	[X] place Profession list above attributes. It should be filled with possible classes. Math: Calc from minimum levels using the available points - is it
+		possible to increase to the minimum requirement of a Profession.
+		Selecting one: Increase attributes to the minimums, leave the remaining points for the player.
+		Then player shouldnt be able to go under those minimums - only if chooses another profession that allows.
+
+[X] mouse handling 
 	[X] clickable window toggle button on top of the screen
-		[ ] graphical icons
+		[X] graphical icons
 		
 	PartyOrder - 123 (numbers), 
 	Behavior a little human figure  
@@ -53,60 +66,6 @@ Society, Groups etc.
 
 	[X] key to switch mouselook on/off 
 	[X] clickable character portraits - lead to inventory, right click to char sheet
-	
-------------
-
-[ ] Story/Dialog system thingy :)
-	
-
-
-[ ] LOOT: add loot object generation, add economic background to commonwealth list
-	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH
-
-[ ] add different levels for generation of groups at start .. 
-
-[X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
-	general positioning (wrong direction) at generation is bad too i think
-	[ ] better fix --> EconomyContainer.isOccupied is not returning Population though it's there! TreeLocator bug?
-		if fixed, remove HumanoidEntityDescription's temporary fix
-
-
-
-Higher level gamelogics documentation needed
-
-
-[ ] loading eats more and more memory
-
-bugs:
-	[?] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
-			Check if below one cube, is there cave? avoid the zone
-			Should be tested
-
-[ ] dungeon dev
-	[ ] add skysphere switch to Cube??
-	[ ] bad wall openings at higher part etc.
-	[X] slow, too much details
-	[X] ground is varying??
-
-
-[ ]	fox by tidbit
-[ ] cyclops - Zphr working on it
-	[ ] new Greek maze setting
-[ ] the other misc objects
-[X] request list for scibot portraits scibotic@gmail.com
-		[X] dwarf [ ] waiting for completion male/female
-		[X] elf [ ] waiting for completion male/female
-		
-[ ] Door -> passing through doors -> Special SideType
-				traps -> Special SideType
-				secret switches -> Special SideType
-				chests -> -"- connected to storage point, owner
-			Passing by checks those side types!
-			(Mobs will be able to check around) 
-			Fire animations with the SideType callbacks!
-		[ ] animation for doors! (export!)
-
-
 
 [X] Roads between populations! :)
 	[X] roads doesnt show in desert??? climate dependent? debug information needed
@@ -119,172 +78,63 @@ bugs:
 [X] check NPE reported
 		
 [X] put a 'No mouse input' on main menu window gfx
+	
+------------
+
+[ ] Story/Dialog system thingy :)
+	[ ] design, plan
+		templated system weaved into the world at generation!
+	
+
+
+[ ] LOOT: add loot object generation, add economic background to commonwealth list
+	[ ] traps in inventory from commonwealth ENTITYCOMMONWEALTH
+
+[ ] add different experience levels for generation of groups at start .. 
+
+[X] towns are generated over labyrinths?? (go through jungle to desert, you'll see one)
+	general positioning (wrong direction) at generation is bad too i think
+	[ ] better fix --> EconomyContainer.isOccupied is not returning Population though it's there! TreeLocator bug?
+		if fixed, remove HumanoidEntityDescription's temporary fix
+
+
+[ ] dungeon dev
+	[ ] add skysphere switch to Cube??
+	[ ] bad wall openings at higher part etc.
+	[X] slow, too much details
+	[X] ground is varying??
+
+
+[ ]	fox by tidbit
+[ ] cyclops - Zphr working on it
+	[ ] new Greek maze setting
+[ ] the other misc objects
+
+		
+[ ] Door -> passing through doors -> Special SideType
+				traps -> Special SideType
+				secret switches -> Special SideType
+				chests -> -"- connected to storage point, owner
+			Passing by checks those side types!
+			(Mobs will be able to check around) 
+			Fire animations with the SideType callbacks!
+		[ ] animation for doors! (export!)
+
 [?] outside minimap - show lower levels that are visible?
 
+
+
 ---------------------
-[X] DoF problem, too strong?
-
-[X] BUG: loading ruins lightstate ???
 
 
-[X] world map enhancement -- finish , add patterns.
-better coloring, some bug makes it dark. + not so transparent?
-
-[X] integrate mvrasseli cave music
-	
-[X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
-	[X] jme base static switch to disable dds loading
-
-[X] some populations are not shown - at mountain e.g. -- better fix later, coz TreeLocator is not precise enough
-
-[X] fix map things - especially positioning of cursor??
-	[-]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
-
-[X] busy pane doesnt show for q!? geforce 9xxx - ant problem solved
-
-[X] maze entrance - replace the demo normal map column of Zphr with the four column thing
-
-[X] save game - toggle Mainmenu!
-[X] integrat tidbit's hut as a new House type
-
-[X] change leveling XP to 20
-
-[X] integrate flying monster by tidbit
-[X] audio for new monsters, Evilrip, 
-	[x] Scorpoholder, Plantobite
-
-[X] bigger map size for the release - test save/load
-	[-] - eats much memory --> check save game , what's in it --> too much groups of beings/economics around?
-		[X] slow loading - StaxDriver in GameStateContainer xstreamer is much quicker - halves the deserialization time
-
-[X] render scene full screen UI quad while rendering. to hide buildup phase of scene
-
-[X] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
-	more abstract like evaluateActFormImpact(EntityMemberInstance[] list, BonusSkillActForm, AttackSuccessRatio)...
-	call it in EvaluatorBase.evaluate()
-	
-	[X] more effects! spike, fire etc.
-		[X] the effect from below is not yet visible, though it's played by J3DMovingEngine by the logs say
-
-
-	Continuous loading
-	[X] concurrency is still in rendering
-		[-] background thread rendering results in gaps!
-			Don't use bg rendering by default now
-
-
-[X] scan for good portraits in Grumbel's new stuff
-
-[X] voice type selection to party setup with Magnulus  voices
-	
-[X] integrate Carnivore Plant
-[X]	integrate beholder
-
-[X] preloaded Sound playing is not perfect -> PlayerThread tells Stop before real stop when overload!!
-	--> added forced length check before stop 
-
-	[X] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
-		( AbstractInfrastructure I modified to reposition blockstartX/Z, but this conflicts with water detection)
-
-[X] Traps -> crafted by owner population - needed materials
-Mechanism? How to add or not add trap - where to implement addition??
-at the StorageObjectHandler part??
-	Chests -> filled with population owned goods
-	
-	trap and loot is got from CommonWealth of the owner EntityInstance, each try of open
-	will get a new trap/loot combo. ?
-[X]	--> chest cube's owner is passed to window with lock + possible inventory / loot
-	[X] 	unlock skills, new traps, unlock UI further dev to enable identify/unlock, impacts, caclulations
-	[X]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
-	[X] setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
-		Player then can LOOT! :D
-
-[X] add town misc objects, new plaza ground type?
-	[-] needs a development of some kind of AbstractInfrastructure abstract method? some kind of 
-		decision where to put what kind of things...probably the Economic/Ground should be aware of it??
-		[X]!!! type's likeness of distance from center?? good!
-		or !!! grouped by some typeId together into some blocks in a block?
-	[-] integrate tidbit's bench to where ??
-
-[X] different combat music variation
-
-[X] check speed up magic bug -> leveling is not setting correct speed! It's not working with vanilla attributes?? COPY added
-
-[-] add storage points
-
-	[-] unlock UI, loot UI - Use the StorageObjectHandler to raise a window!
-
-	[X] add mounting points for chests--> infrastructure generation -> number of chest places given by economy unit?
-	Economic class should return MountPoints and number of mount points, so a Population can know how many mount points it have
-	and EntityCommonWealth can distribute wealth to the chests in good ratio. MountPoints with richness factor?
-	Hashing algorithm based on coordinates to generate loot list. Respawning per economy turn?
-		[-] add items to the chests/points
-
-	[X] chests scattered in maze
-		[X] using AnimatedModelNode for static non-batched parts -> Chests/Doors,
-			how to switch animations depending on player actions
-	
-	  
-[X] closed chest, it's open, and bottom up?? animation is not started?
-[X] triggering sideSubType animation -> RenderedCube, sidesubtype <--> nodePlaceHolder how to connect??
-		through RenderedCube --> add info about sides + nodeplacholder - HMap?? uniqueness??
-		in j3dcore move check for trigger sidetypes
-		USE RenderedCube's hmNodePlaceholderForSide to get actual models, and filter out Triggered ones
-		and trigger animation
-
-[X] add scofield http://forum.freegamedev.net/index.php?t=msg&th=316&start=0 eyeball monster to maze!
-[X] screenshot to multiple files
-
-[-] material to encounterNode - lizzard is too dark? specular was 0
-
-[X] write Wiki about UI, and Options task for goq
-
-[X] Fix build.xml to copy not just classes!
-[X] monster leveling generation
-	[X] monster levels based on group levels - create higher level monsters based on that for an encounter
-
-[X] normal map -Column!!
-
-
-[?] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
-	angle check/timeout added
-
-[X] use/cast spell normal mode
-
-[X] background music integration
-	[X] SECOND time it's not changing well!
-	[X] it's playing different musics multiple times, -> wrong callback and such at listener...
-		and not restarting another after one tracks is finished!!
-	[??] after playing a while, it doesnt want to play a new track at normal volume, only 0??
-		everything seems to be alright, but it doesnt play -- probably audio system problem.
-		OpenAL error, AL10 lwjgl... if too much playing, something gets stuck probably :/ 
-		
-		SOURCES 64 piece -> reached, no more playing of music, something gets stuck in AL
-		
-	[X] !!! LOOPING is wrong only now with the hacked jme audiosystem! you should remove looped sounds
-	or resolve the bug of not freed sources.
-	[X] looping with normal openAl looping? (skippy channel looping)
-	[-] victory music should hold up music playback, should be stopped if leaving the screen of victory
-
-
-----------------------
- [ Character ]
- [ Skill/Use dropdown] [ ActForm ]
- [ Object ]             [ Target  ]
-
---> copy TurnActWindow partially, add Char dropdown
-
-[?] listen jamendo for classics! -- waiting for musician
-
-[X] dungeon area for encounter ground!
-
-[-] 2D sprite billboard monsters for classic revival and in lack of 3d artists!
-	or Review other open media project's 3d models
 
 BUGS:
 ####
 
-[X] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
+bugs:
+	[?] cave detection for town building checkers in non-cave parts to avoid bad looking 3d elements?
+			Check if below one cube, is there cave? avoid the zone
+			Should be tested
 
 [?] bug reported by brian - combat bug:
 	[ ] added more log, should recheck if happens again
@@ -303,16 +153,6 @@ BUGS:
 	Sun Aug 24 16:41:45 EDT 2008 com.jme.app.BaseSimpleGame - Cleaning up resources.
 	Sun Aug 24 16:41:46 EDT 2008 com.jme.app.BaseGame - Application ending.
 
-[-] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
-	- not valid with battle scenario now
-[X] billboard badly positioned for gorilla
-[X] camera is not good positioned for kobold - above them etc.
-[X] walking around the world at the other pole throws...:
-	Sun Aug 31 20:52:14 CEST 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
-	java.lang.ArrayIndexOutOfBoundsException: 26
-	org.jcrpg.world.place.WorldSizeBitBoundaries.isInside(WorldSizeBitBoundaries.java:84)
-	org.jcrpg.world.place.Place.getPointHeightOutside(Place.java:315)
-	org.jcrpg.world.place.geography.sub.Cave.getCubeBase(Cave.java:163)
 
 -----------------------
 
@@ -471,10 +311,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 [ ] try md5reader2 dot3 bump shader 
 
-[X] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
-	[X] encounter 3d models -> one model should represent a group!!
-
-[X] model viewer for md5, separate application
 
 [X] owned infrastrucures are present now in a build of a population, and it is set as owned economic too...
  now 
@@ -521,9 +357,6 @@ sanity point for Morale is like mana for hp, limiting social skills!
 	
 	--> this will lead to design encounter mode of player too 
 
-	
-[X] encounter screens, Interception, Encounter TurnAction windows
-
 
 	[?] // TODO based on economic (house) heights add steps to the population
 	
@@ -547,7 +380,7 @@ sanity point for Morale is like mana for hp, limiting social skills!
 of the enemy or friend. We'll have to develop different 'words' for the different skills to make it really funny, and make 
 a peaceful solution available in most of the cases.
 
-[ ] possible portraits? http://search.freegamedev.net/artitems/tag/campaigns
+[-] possible portraits? http://search.freegamedev.net/artitems/tag/campaigns
 
 [ ] rocks to mountain side with new RenderedHashGeneratedSides probably...
 
@@ -590,8 +423,6 @@ With player : PositionCalculus is used and extended for different Entities.
 UI:
 --
 [ ] combat thingies...
-[X] player choice window -> actions when meeting entities
-[ ] UI detailed map
 
 Moving:
 ------
@@ -672,13 +503,199 @@ Other:
 
 
 
-
-
-
-
-
-
 -- ########## DONE ######################################################################################
+
+
+----------------
+[X] request list for scibot portraits scibotic@gmail.com
+		[X] dwarf [-] waiting for completion male/female
+		[X] elf [-] waiting for completion male/female
+		Scibotic disappeared, didn't accomplish the request.
+		
+
+[x]  [ Character ]
+ [ Skill/Use dropdown] [ ActForm ]
+ [ Object ]             [ Target  ]
+
+--> copy TurnActWindow partially, add Char dropdown
+
+[?] listen jamendo for classics! -- waiting for musician
+
+[X] dungeon area for encounter ground!
+
+[-] 2D sprite billboard monsters for classic revival and in lack of 3d artists!
+	or Review other open media project's 3d models
+
+-
+
+[X] DoF problem, too strong?
+
+[X] BUG: loading ruins lightstate ???
+
+
+[X] world map enhancement -- finish , add patterns.
+better coloring, some bug makes it dark. + not so transparent?
+
+[X] integrate mvrasseli cave music
+	
+[X] intel gfx card DDS texture replacement with PNG, modify texture loading ??  ResourceLocator trick?!!! Add dir for DDS images under each detail level, and there only DDS images. Fallback?
+	[X] jme base static switch to disable dds loading
+
+[X] some populations are not shown - at mountain e.g. -- better fix later, coz TreeLocator is not precise enough
+
+[X] fix map things - especially positioning of cursor??
+	[-]	numbered/named cities? zooming map? - mountains are not showing right!!! investigate WorldMap, from roots, it's totally wrong
+
+[X] busy pane doesnt show for q!? geforce 9xxx - ant problem solved
+
+[X] maze entrance - replace the demo normal map column of Zphr with the four column thing
+
+[X] save game - toggle Mainmenu!
+[X] integrat tidbit's hut as a new House type
+
+[X] change leveling XP to 20
+
+[X] integrate flying monster by tidbit
+[X] audio for new monsters, Evilrip, 
+	[x] Scorpoholder, Plantobite
+
+[X] bigger map size for the release - test save/load
+	[-] - eats much memory --> check save game , what's in it --> too much groups of beings/economics around?
+		[X] slow loading - StaxDriver in GameStateContainer xstreamer is much quicker - halves the deserialization time
+
+[X] render scene full screen UI quad while rendering. to hide buildup phase of scene
+
+[X] UNLOCK: extract BonusSkill impact calculation from EvaluatorBase to be usable in UnlockEvaluator's impact calc
+	more abstract like evaluateActFormImpact(EntityMemberInstance[] list, BonusSkillActForm, AttackSuccessRatio)...
+	call it in EvaluatorBase.evaluate()
+	
+	[X] more effects! spike, fire etc.
+		[X] the effect from below is not yet visible, though it's played by J3DMovingEngine by the logs say
+
+
+	Continuous loading
+	[X] concurrency is still in rendering
+		[-] background thread rendering results in gaps!
+			Don't use bg rendering by default now
+
+
+[X] scan for good portraits in Grumbel's new stuff
+
+[X] voice type selection to party setup with Magnulus  voices
+	
+[X] integrate Carnivore Plant
+[X]	integrate beholder
+
+[X] preloaded Sound playing is not perfect -> PlayerThread tells Stop before real stop when overload!!
+	--> added forced length check before stop 
+
+	[X] positioning of dungeon in Z direction must be wrong!! or check of water is done with wrong center coordinate!!
+		( AbstractInfrastructure I modified to reposition blockstartX/Z, but this conflicts with water detection)
+
+[X] Traps -> crafted by owner population - needed materials
+Mechanism? How to add or not add trap - where to implement addition??
+at the StorageObjectHandler part??
+	Chests -> filled with population owned goods
+	
+	trap and loot is got from CommonWealth of the owner EntityInstance, each try of open
+	will get a new trap/loot combo. ?
+[X]	--> chest cube's owner is passed to window with lock + possible inventory / loot
+	[X] 	unlock skills, new traps, unlock UI further dev to enable identify/unlock, impacts, caclulations
+	[X]		--> after opening use StorageHandlingWindow -- refactor : remove entity list, just loot objects.
+	[X] setData -> generate inventory part to loot in CommonWealth class, remove objects and pass the list to the windows too!
+		Player then can LOOT! :D
+
+[X] add town misc objects, new plaza ground type?
+	[-] needs a development of some kind of AbstractInfrastructure abstract method? some kind of 
+		decision where to put what kind of things...probably the Economic/Ground should be aware of it??
+		[X]!!! type's likeness of distance from center?? good!
+		or !!! grouped by some typeId together into some blocks in a block?
+	[-] integrate tidbit's bench to where ??
+
+[X] different combat music variation
+
+[X] check speed up magic bug -> leveling is not setting correct speed! It's not working with vanilla attributes?? COPY added
+
+[-] add storage points
+
+	[-] unlock UI, loot UI - Use the StorageObjectHandler to raise a window!
+
+	[X] add mounting points for chests--> infrastructure generation -> number of chest places given by economy unit?
+	Economic class should return MountPoints and number of mount points, so a Population can know how many mount points it have
+	and EntityCommonWealth can distribute wealth to the chests in good ratio. MountPoints with richness factor?
+	Hashing algorithm based on coordinates to generate loot list. Respawning per economy turn?
+		[-] add items to the chests/points
+
+	[X] chests scattered in maze
+		[X] using AnimatedModelNode for static non-batched parts -> Chests/Doors,
+			how to switch animations depending on player actions
+	
+	  
+[X] closed chest, it's open, and bottom up?? animation is not started?
+[X] triggering sideSubType animation -> RenderedCube, sidesubtype <--> nodePlaceHolder how to connect??
+		through RenderedCube --> add info about sides + nodeplacholder - HMap?? uniqueness??
+		in j3dcore move check for trigger sidetypes
+		USE RenderedCube's hmNodePlaceholderForSide to get actual models, and filter out Triggered ones
+		and trigger animation
+
+[X] add scofield http://forum.freegamedev.net/index.php?t=msg&th=316&start=0 eyeball monster to maze!
+[X] screenshot to multiple files
+
+[-] material to encounterNode - lizzard is too dark? specular was 0
+
+[X] write Wiki about UI, and Options task for goq
+
+[X] Fix build.xml to copy not just classes!
+[X] monster leveling generation
+	[X] monster levels based on group levels - create higher level monsters based on that for an encounter
+
+[X] normal map -Column!!
+
+
+[?] slow arrow bug -> 1 enemy, 6 party members/only sometimes... -> workaround - cut down time
+	angle check/timeout added
+
+[X] use/cast spell normal mode
+
+[X] background music integration
+	[X] SECOND time it's not changing well!
+	[X] it's playing different musics multiple times, -> wrong callback and such at listener...
+		and not restarting another after one tracks is finished!!
+	[??] after playing a while, it doesnt want to play a new track at normal volume, only 0??
+		everything seems to be alright, but it doesnt play -- probably audio system problem.
+		OpenAL error, AL10 lwjgl... if too much playing, something gets stuck probably :/ 
+		
+		SOURCES 64 piece -> reached, no more playing of music, something gets stuck in AL
+		
+	[X] !!! LOOPING is wrong only now with the hacked jme audiosystem! you should remove looped sounds
+	or resolve the bug of not freed sources.
+	[X] looping with normal openAl looping? (skippy channel looping)
+	[-] victory music should hold up music playback, should be stopped if leaving the screen of victory
+
+-----
+[X] player choice window -> actions when meeting entities
+[-] UI detailed map
+
+[X] throwing knife bug - doesnt show and slow --> couldn't reproduce yet
+
+[-] moving units not appearing over the other side of the world!!!??? - > coordinate calc is wrong I suppose
+	- not valid with battle scenario now
+[X] billboard badly positioned for gorilla
+[X] camera is not good positioned for kobold - above them etc.
+[X] walking around the world at the other pole throws...:
+	Sun Aug 31 20:52:14 CEST 2008 class org.jcrpg.threed.J3DCore - Exception in game loop
+	java.lang.ArrayIndexOutOfBoundsException: 26
+	org.jcrpg.world.place.WorldSizeBitBoundaries.isInside(WorldSizeBitBoundaries.java:84)
+	org.jcrpg.world.place.Place.getPointHeightOutside(Place.java:315)
+	org.jcrpg.world.place.geography.sub.Cave.getCubeBase(Cave.java:163)
+
+[X] more groups and single-type groups instead of one big groups with multi-types -> encounter phase view needs that
+[X] encounter 3d models -> one model should represent a group!!
+
+[X] model viewer for md5, separate application
+	
+[X] encounter screens, Interception, Encounter TurnAction windows
+
 
 [X] Test with Scene Monitor 1.0
     http://www.jmonkeyengine.com/jmeforum/index.php?topic=8159.msg64486#msg64486
