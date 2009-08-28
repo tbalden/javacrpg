@@ -184,6 +184,12 @@ public class PartySetup extends PagedInputWindow {
 	    	}
 	    	addInput(1,genderSelect);
 	    	
+	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
+	    	{
+		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,professionSelect);
+	    	
 	    	
 	    	attrPointsLeftLabel = new TextLabel("",this,pageCreationFirst, 0.23f, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
 	    	
@@ -202,11 +208,6 @@ public class PartySetup extends PagedInputWindow {
 	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, 0.7f,0.37f,0.15f,0.2f,600f);
 	    	addInput(1,pictureSelect);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
-	    	{
-		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, 0.7f,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
-	    	}
-	    	addInput(1,professionSelect);
 
 	    	new TextLabel("",this,pageCreationFirst, 0.7f, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
 	    	{
@@ -518,7 +519,81 @@ public class PartySetup extends PagedInputWindow {
 			handleKey("back");
 			return true;
 		}
+		
+		if (base.equals(professionSelect))
+		{
+			Profession p = (Profession)professionSelect.getSelectedObject();
+			//p.attrMinLevels;
+			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
+			int i = genderSelect.getSelection();
+			int genderId = Integer.parseInt(genderSelect.ids[i]);
 
+			// setting all to race minimum
+			int baseValue = GameLogicConstants.BASE_ATTRIBUTE_VALUE;
+			for (String id: FantasyAttributes.attributeName) {
+				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
+				{
+					{
+						// race minimum set..
+						attributeValues.setAttribute(id, (int)(baseValue*race.commonAttributeRatios.attributeRatios.get(id)));
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					}
+				} else
+				{
+					{
+						attributeValues.setAttribute(id, baseValue);
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					}
+				}
+			}
+
+			int remaining = p.getRemainingPointsAfterLevelingToMinimumAttributes(race, genderId, attributeValues, GameLogicConstants.ATTRIBUTE_POINTS_TO_USE);
+
+			if (remaining<0) return false;
+			
+			// updating label
+			attrPointsLeft = remaining;
+			attrPointsLeftLabel.text = attrPointsLeft + " points left.";
+			attrPointsLeftLabel.activate();
+			
+			for (String id: FantasyAttributes.attributeName) {
+				if (race.commonAttributeRatios.attributeRatios.get(id)!=null)
+				{
+					int raceMinimum = (int)(baseValue*race.commonAttributeRatios.attributeRatios.get(id));
+					if (p.attrMinLevels.minimumLevels.get(id)!=null && p.attrMinLevels.minimumLevels.get(id).intValue()>raceMinimum)
+					{
+						// profession min is higher than race minimum, use that...
+						attributeValues.setAttribute(id, p.attrMinLevels.minimumLevels.get(id).intValue());
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					} else
+					{
+						// race minimum set..
+						attributeValues.setAttribute(id, (int)(baseValue*race.commonAttributeRatios.attributeRatios.get(id)));
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					}
+				} else
+				{
+					int raceMinimum = baseValue;
+					if (p.attrMinLevels.minimumLevels.get(id)!=null && p.attrMinLevels.minimumLevels.get(id).intValue()>raceMinimum)
+					{
+						// profession min is higher than race minimum, use that...
+						attributeValues.setAttribute(id, p.attrMinLevels.minimumLevels.get(id).intValue());
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					} else
+					{
+						attributeValues.setAttribute(id, baseValue);
+						lowestAttrValues.setAttribute(id, attributeValues.getAttribute(id));
+					}
+				}
+				Jcrpg.LOGGER.finer("ID = "+id+" = "+attributeValues.attributes.get(id));
+				ValueTuner v = attributeTuners.get(id);
+				v.value = attributeValues.attributes.get(id);
+				v.text = ""+v.value;
+				v.deactivate();
+			}
+
+			
+		} else
 		if (base.equals(viewChar))
 		{
 			CharListData d = (CharListData)addCharSelect.getSelectedObject();
@@ -668,7 +743,7 @@ public class PartySetup extends PagedInputWindow {
 				if (base.equals(v))
 				{
 					int val = lowestAttrValues.getAttribute(v.id); // cannot go under original attributes for race
-					if (v.value<val) return false;
+					if (v.value<val) return false; // value tuner will receive False and won't accept the modification...
 					if (message.equals("lookLeft"))
 					{
 						attrPointsLeft++;
@@ -680,12 +755,12 @@ public class PartySetup extends PagedInputWindow {
 					if (attrPointsLeft<0)
 					{
 						attrPointsLeft = 0;
-						return false;
+						return false; // value tuner will receive False and won't accept the modification...
 					} else
 					{
 						attrPointsLeftLabel.text = attrPointsLeft + " points left.";
 						attrPointsLeftLabel.activate();
-						inputEntered(professionSelect, "fake");
+						//inputEntered(professionSelect, "fake");
 						return true;
 					}
 						
@@ -989,20 +1064,23 @@ public class PartySetup extends PagedInputWindow {
 				int i = genderSelect.getSelection();
 				int genderId = Integer.parseInt(genderSelect.ids[i]);
 				int id = 0;
+				ArrayList<Profession> professions = new ArrayList<Profession>();
 				for (Class<? extends Profession> pClass: charCreationRule.selectableProfessions)
 				{
 					Profession p = charCreationRule.profInstances.get(pClass);
-					if (p.isQualifiedEnough(race,genderId,attributeValues))
+					if (p.isQualifiedEnoughWithLevelingPoints(race,genderId,attributeValues,GameLogicConstants.ATTRIBUTE_POINTS_TO_USE))
 					{
 			    		String s = Language.v("professions."+p.getClass().getSimpleName());
 			    		ids.add(""+id);
-			    		texts.add(s);		    		
+			    		texts.add(s);
+			    		professions.add(p);
 					}
 					id++;
 				}
 				String[] oldTexts = professionSelect.texts;
 		    	professionSelect.ids = ids.toArray(new String[0]);
 		    	professionSelect.texts = texts.toArray(new String[0]);
+		    	professionSelect.objects = professions.toArray(new Object[0]);
 		    	professionSelect.setUpdated(true);
 	    		int count = 0;
 	    		boolean needActivate = false;
@@ -1025,6 +1103,7 @@ public class PartySetup extends PagedInputWindow {
 	    			professionSelect.activate();
 	    			professionSelect.deactivate();
 	    		}
+	    		inputUsed(base, message);
 	    	}
 		}
 		return true;
