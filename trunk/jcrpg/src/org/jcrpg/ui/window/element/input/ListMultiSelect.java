@@ -73,6 +73,7 @@ public class ListMultiSelect extends InputBase {
 	public ArrayList<Node> signNodes = new ArrayList<Node>(); 
 
 	public static final String defaultImage = "./data/ui/inputBase.png";
+	public static final String defaultImageActive = "./data/ui/inputBaseActive.png";
 	public String bgImage = defaultImage;
 	
 	public float fontRatio = 400f;
@@ -237,7 +238,7 @@ public class ListMultiSelect extends InputBase {
 		{
 			activatedNode = new Node(""+id);
 			try {
-				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				Quad w1 = Window.loadImageToQuad(new File(texts!=null&&texts.length>maxVisible?defaultImageActive:bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
 				activatedNode.attachChild(w1);
 			} catch (Exception ex)

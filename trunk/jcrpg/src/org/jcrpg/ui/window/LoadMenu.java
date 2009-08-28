@@ -153,7 +153,7 @@ public class LoadMenu extends InputWindow implements KeyListener {
 					key="0"+key;
 				}
 				dataList.put(key+" - "+d.slotName, d);
-				d.id = reorderCount+" - "+d.slotName;
+				d.id = key+" - "+d.slotName;
 				d.slotName = (count++)+" - "+d.slotName;
 				reorderCount--;
 			}
