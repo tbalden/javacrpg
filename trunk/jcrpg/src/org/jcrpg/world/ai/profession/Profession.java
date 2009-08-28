@@ -24,12 +24,10 @@ import java.util.HashMap;
 import org.jcrpg.world.ai.EntityDescription;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityMemberInstance;
-import org.jcrpg.world.ai.EntityMember.SkillPreferenceHint;
 import org.jcrpg.world.ai.abs.attribute.AttributeRatios;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
-import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.object.Obj;
 
 /**
