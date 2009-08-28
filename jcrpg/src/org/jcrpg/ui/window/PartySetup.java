@@ -50,6 +50,7 @@ import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillGroups;
 import org.jcrpg.world.ai.audio.desc.VoiceList;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
@@ -99,12 +100,15 @@ public class PartySetup extends PagedInputWindow {
 	ValueTuner skillValueTuner;
 	TextLabel skillPointsLeftLabel = null;
 	TextButton readyChar;
+	TextButton resetSkills;
 	TextInputField surName;
 	TextInputField foreName;
 	ListSelect voiceSelect = null;
 	// which skillgroup was used to enter modification ValueTuner
 	ListSelect skillGroupLeftLast = null;
 	Class<? extends SkillBase> skillTuned = null; 
+
+	SkillContainer backupSkillContainer = null;
 	
 	/**
 	 * How many attribute points are left.
@@ -167,8 +171,8 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageCreationFirst.attachChild(sQuad);
-	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
-	    	new TextLabel("",this,pageCreationFirst, 0.23f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.19f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.19f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
 
 	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 
@@ -230,9 +234,9 @@ public class PartySetup extends PagedInputWindow {
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,650f,"Select a skill group, navigate skill (left/right), press Enter to tune.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,650f,"After tuning the skill level press Enter to set selected value for skill.",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,650f,"Leave no points unused to be able to finish.",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,650f,"Select a skill from the groups, use the input on the",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,650f,"left to increase and set it.(Move Mouse cursor over it so it changes",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,650f,"to SET, or on keyboard press ENTER.) Leave no points unused!",false);
 
 	    	posY = 0; 
 	    	for (String groupId : SkillGroups.orderedGroups)
@@ -254,11 +258,13 @@ public class PartySetup extends PagedInputWindow {
 	    			counter++;
 	    		}*/
 	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),skillObjects.toArray(new Object[0]),null,null);
-	    		posY++;
+	    		sel.focusUponMouseEnter = true;
+	    		sel.deactivateUponUse = true;
+		    	posY++;
 	    		skillSelects.put(groupId, sel);
 	    		addInput(2,sel);
 	    	}
-	    	skillPointsLeftLabel = new TextLabel("",this,pageCreationSecond, 0.23f, 0.7f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
+	    	skillPointsLeftLabel = new TextLabel("",this,pageCreationSecond, 0.22f, 0.68f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
 	    	
 	    	skillText = new TextLabel("",this,pageCreationSecond, 0.6f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,pageCreationSecond, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
@@ -272,6 +278,8 @@ public class PartySetup extends PagedInputWindow {
 	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15,false); 
 	    	addInput(2,surName);
 
+	    	resetSkills = new TextButton("reset",this,pageCreationSecond, 0.73f, 0.45f, 0.15f, 0.05f,600f,Language.v("partySetup.reset"));
+	    	addInput(2,resetSkills);
 	    	
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	addInput(2,readyChar);
@@ -521,7 +529,17 @@ public class PartySetup extends PagedInputWindow {
 			handleKey("back");
 			return true;
 		}
-		
+		if (base.equals(resetSkills))
+		{
+			skillPointsLeft = GameLogicConstants.SKILL_POINTS_TO_USE;
+			backupSkillPointsLeft = skillPointsLeft;
+			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+			skillPointsLeftLabel.activate();
+			personWithGenderAndRace.setMemberSkills(backupSkillContainer.copy());
+			setOriginalSkills();
+			skillValueTuner.setEnabled(false);
+		}
+		else
 		if (base.equals(professionSelect))
 		{
 			Profession p = (Profession)professionSelect.getSelectedObject();
@@ -833,45 +851,18 @@ public class PartySetup extends PagedInputWindow {
 			charInfo.text = Language.v("races."+personWithGenderAndRace.getClass().getSimpleName()) + " " + Language.v("professions."+profession.getClass().getSimpleName());
 			charInfo.activate();
 			
-	    	for (String groupId : SkillGroups.orderedGroups)
-	    	{
-	    		ArrayList<String> skillIds = new ArrayList<String>();
-	    		ArrayList<String> skillTexts = new ArrayList<String>();
-	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
-	    		int counter = 0;
-	    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
-	    		{
-	    			if (personWithGenderAndRace.getMemberSkills().skills.containsKey(skill)) {
-	    				int level = personWithGenderAndRace.getMemberSkills().skills.get(skill).level;
-		    			String id = groupId+"."+counter;
-		    			String text = skill.getSimpleName();
-		    			int modifier = 1;
-		    			try {
-		    				modifier = profession.skillLearnModifier.getMultiplier(skill);
-		    			} catch (Exception ex)
-		    			{	
-		    			}
-		    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;
-		    			skillIds.add(id);
-		    			skillTexts.add(text);
-		    			skillObjects.add(skill);
-	    			}
-	    			counter++;
-	    		}
-	    		ListSelect sel = skillSelects.get(groupId);
-	    		sel.ids = skillIds.toArray(new String[0]);
-	    		sel.texts = skillTexts.toArray(new String[0]);
-	    		sel.objects = skillObjects.toArray(new Object[0]);
-	    		sel.setUpdated(true);
-	    		sel.deactivate();
-	    	}
-			
+			backupSkillContainer = personWithGenderAndRace.getMemberSkills().copy();
+
+			setOriginalSkills();
+
 			base.deactivate();
 			currentPage=2;
 			setupPage();
 		}
 		if (base.equals(readyChar))
 		{
+			inputLeft(skillValueTuner, "fake"); // this makes sure points are the backed up one after tweaking but no saving!
+			
 			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
 			if (skillPointsLeft>0) return true; // all skill points must be used
@@ -1153,4 +1144,40 @@ public class PartySetup extends PagedInputWindow {
 		return true;
 	}
 
+	private void setOriginalSkills()
+	{
+    	for (String groupId : SkillGroups.orderedGroups)
+    	{
+    		ArrayList<String> skillIds = new ArrayList<String>();
+    		ArrayList<String> skillTexts = new ArrayList<String>();
+    		ArrayList<Object> skillObjects = new ArrayList<Object>();
+    		int counter = 0;
+    		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
+    		{
+    			if (personWithGenderAndRace.getMemberSkills().skills.containsKey(skill)) {
+    				int level = personWithGenderAndRace.getMemberSkills().skills.get(skill).level;
+	    			String id = groupId+"."+counter;
+	    			String text = skill.getSimpleName();
+	    			int modifier = 1;
+	    			try {
+	    				modifier = profession.skillLearnModifier.getMultiplier(skill);
+	    			} catch (Exception ex)
+	    			{	
+	    			}
+	    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;
+	    			skillIds.add(id);
+	    			skillTexts.add(text);
+	    			skillObjects.add(skill);
+    			}
+    			counter++;
+    		}
+    		ListSelect sel = skillSelects.get(groupId);
+    		sel.ids = skillIds.toArray(new String[0]);
+    		sel.texts = skillTexts.toArray(new String[0]);
+    		sel.objects = skillObjects.toArray(new Object[0]);
+    		sel.setUpdated(true);
+    		sel.deactivate();
+    	}
+	}
+	
 }

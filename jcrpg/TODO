@@ -19,6 +19,7 @@ Society, Groups etc.
 [ ] loading eats more and more memory
 
 [ ] test vista for crashes last seen
+[ ] integrate new content
 
 	
 [ ] MAP
@@ -30,9 +31,11 @@ Society, Groups etc.
 		even better map!
 		Higher resolution.
 
-[ ] integrate new content
 
-[ ] reset button for Skill point settings! Reconsider how that part works.
+
+[X] reset button for Skill point settings! Reconsider how that part works.
+
+[X] P. Order button image
 
 [X] test vista 64 bit - couldn't reproduce the reported thing !? Is it a 32-bit java vm vs 64 bit vm thing?
 [X] let profession set attributes, instead of attributes allowing profession upon char creation.
