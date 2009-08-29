@@ -23,8 +23,8 @@ Society, Groups etc.
 
 [X] optimize Font generation - whole texts into quads?
 	[ ] review all the windows, positioning!
-	[ ] world map is positioned wrong
-	[ ] characters still using old text writing
+	[X] world map is positioned wrong
+	[X] characters still using old text writing
 	
 [ ] ui improving
 	[ ] Tooltips at char generation (professions!!) !

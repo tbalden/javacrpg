@@ -133,7 +133,8 @@ public class Map extends InputWindow {
         {
         	if (townDesc.scale1>1)
         	{
-        		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.3f, 0.05f, 700, lS(townDesc.text),false,false, ColorRGBA.red);
+           		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX+ xRatio*0.03f, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY + yRatio*0.03f, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.black);
+           		TextLabel tl2 = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.white);
         	}
         	/*if (townDesc.scale1==1)
         	{
