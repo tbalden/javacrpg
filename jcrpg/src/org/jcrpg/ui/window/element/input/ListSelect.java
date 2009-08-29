@@ -28,6 +28,7 @@ import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.mouse.UiMouseHandler;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
@@ -193,12 +194,27 @@ public class ListSelect extends InputBase {
 			return;			
 		}
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
-		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-		currentTextNodes.put(slottextNode,FontUtils.textVerdana);
-		
+		Node slottextNode = null;
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			Text t = createText(text);
+			t.setTextColor(normalColor);
+			slottextNode = new Node();
+			slottextNode.attachChild(t);
+			float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+			slottextNode.setLocalScale(scale);
+			slottextNode.updateWorldVectors();
+			slottextNode.updateModelBound();
+			slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight()*scale + dCenterY,0);
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+		} else
+		{
+			slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
+			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP);
+			currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+		}		
 		if (icons!=null && icons.length>0)
 		{
 			try {
@@ -223,7 +239,9 @@ public class ListSelect extends InputBase {
 	int size = 0;
 	
 	boolean nextPageAvailable = false;
-
+	
+	
+	
 	public void setupActivated()
 	{
 		size = 0;
@@ -270,11 +288,25 @@ public class ListSelect extends InputBase {
 				
 				if (text==null) text = "## null ##";
 				
-				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
-				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
-				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+				Node slottextNode = null;
+				if (J3DCore.NATIVE_FONT_RENDER)
+				{
+					Text t = createText(text);
+					slottextNode = new Node();
+					slottextNode.attachChild(t);
+					float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+					slottextNode.setLocalScale(scale);
+					slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight()*scale + dCenterY - dSizeY*i,0);
+					slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+					
+				} else
+				{
+					slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, normalColor,true);
+					slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
+					slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+					slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP);
+					currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+				}
 				if (i==selected && i!=maxVisible)
 				{
 					colorize(slottextNode, normalColor);

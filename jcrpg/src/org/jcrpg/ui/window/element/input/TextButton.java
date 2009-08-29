@@ -26,6 +26,7 @@ import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
@@ -36,6 +37,9 @@ import com.jme.scene.shape.Quad;
 
 public class TextButton extends InputBase {
 
+	
+	boolean NATIVE_FONT_RENDER = true;
+	
 	public String text;
 	public String shortCut;
 	
@@ -99,7 +103,9 @@ public class TextButton extends InputBase {
 	public void activate() {
 		activate(false);
 	}
-
+	Text textText = null;
+	
+	
 	public void activate(boolean mouseHover) {
 		baseNode.detachAllChildren();
 		if (activeNode==null ) {
@@ -115,12 +121,26 @@ public class TextButton extends InputBase {
 				ex.printStackTrace();
 			}
 			
-			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.6f,0.6f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
-			activeNode.attachChild(slottextNode);
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				if (textText==null)
+				{
+					textText = createText(text);
+					textText.setLocalScale(scale);
+				}
+				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				activeNode.attachChild(textText);
+				textText.setTextColor(new ColorRGBA(0.7f,0.7f,0.1f,1f));
+			} else			
+			{
+				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.6f,0.6f,0.1f,1f),true);
+				slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
+				activeNode.attachChild(slottextNode);
+			}
 		}
 		baseNode.attachChild(activeNode);
 		activeNode.setModelBound(new BoundingBox());
@@ -150,12 +170,26 @@ public class TextButton extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),true);
-			slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
-			deactiveNode.attachChild(slottextNode);
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				if (textText==null)
+				{
+					textText = createText(text);
+					textText.setLocalScale(scale);
+				}
+				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				deactiveNode.attachChild(textText);
+				textText.setTextColor(new ColorRGBA(0.5f,0.5f,0.1f,1f));
+			} else			
+			{
+				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(0.5f,0.5f,0.1f,1f),true);
+				slottextNode.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dCenterX, dCenterY,0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
+				deactiveNode.attachChild(slottextNode);
+			}
 		}
 		baseNode.attachChild(deactiveNode);
 		deactiveNode.setModelBound(new BoundingBox());

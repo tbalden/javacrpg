@@ -159,6 +159,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	public static final int MINIMUM_WORLD_REALSIZE = 100;
 	
+	public static final boolean NATIVE_FONT_RENDER = true;
+	
 	public static class CoreSettings
 	{
 		/**

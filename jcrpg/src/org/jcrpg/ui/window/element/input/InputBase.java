@@ -21,14 +21,18 @@ package org.jcrpg.ui.window.element.input;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
@@ -223,7 +227,13 @@ public abstract class InputBase implements Savable{
 			int cc=0;
 			for (Spatial q: textNode.getChildren())
 			{
-				if (cc%2==1) ((Quad)q).setDefaultColor(color);
+				if (!J3DCore.NATIVE_FONT_RENDER)
+				{
+					if (cc%2==1) ((Quad)q).setDefaultColor(color);
+				} else
+				{
+					((Text)q).setTextColor(color);
+				} 
 				cc++;
 			}
 		} catch (Exception ex) {}
@@ -235,7 +245,13 @@ public abstract class InputBase implements Savable{
 			int cc=0;
 			for (Spatial q: textNode.getChildren())
 			{
-				((Quad)q).setDefaultColor(color);
+				if (!J3DCore.NATIVE_FONT_RENDER)
+				{
+					((Quad)q).setDefaultColor(color);
+				} else
+				{
+					((Text)q).setTextColor(color);
+				}
 				cc++;
 			}
 		} catch (Exception ex) {}
@@ -267,6 +283,15 @@ public abstract class InputBase implements Savable{
 		
 	}
 
+	protected float TEXT_PROP = 1.6f;
+	
+	protected Text createText(String text)
+	{
+		Text t = Text.createDefaultTextLabel("TextBox_", text);
+		t.setCullHint(CullHint.Never );
+		t.setTextureCombineMode( TextureCombineMode.Replace );
+		return t;
+	}
 	
 	public void handleMouseHover(boolean entering)
 	{
