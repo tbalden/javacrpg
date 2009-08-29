@@ -141,7 +141,7 @@ public class PartySetup extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.35f, 0.07f,600f,"Select a character to add:",false); 
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addCharSelect.focusUponMouseEnter = true;
 	    	addCharSelect.deactivateUponUse = false;
@@ -171,8 +171,8 @@ public class PartySetup extends PagedInputWindow {
 	    	SharedMesh sQuad = new SharedMesh("--",hudQuad);
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageCreationFirst.attachChild(sQuad);
-	    	new TextLabel("",this,pageCreationFirst, 0.19f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
-	    	new TextLabel("",this,pageCreationFirst, 0.19f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.22f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
+	    	new TextLabel("",this,pageCreationFirst, 0.22f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
 
 	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
 
@@ -204,7 +204,7 @@ public class PartySetup extends PagedInputWindow {
 	    	{
 	    		String text = Language.v("fantasyattributes."+s);
 	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
-	    		new TextLabel(s+"_label",this,pageCreationFirst,column2,0.3f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		new TextLabel(s+"_label",this,pageCreationFirst,column2,0.3f+0.05f*posY,0.0f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,pageCreationFirst, column2+0.22f,0.3f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
 	    		addInput(1,v);
@@ -234,15 +234,15 @@ public class PartySetup extends PagedInputWindow {
 
 	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.73f, 0.2f, 0.07f,650f,"Select a skill from the groups, use the input on the",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.77f, 0.2f, 0.07f,650f,"left to increase and set it.(Move Mouse cursor over it so it changes",false);
-	    	new TextLabel("",this,pageCreationSecond, 0.14f, 0.81f, 0.2f, 0.07f,650f,"to SET, or on keyboard press ENTER.) Leave no points unused!",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.73f, 0.2f, 0.07f,650f,"Select a skill from the groups, use the input on the",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.77f, 0.2f, 0.07f,650f,"left to increase and set it.(Move Mouse cursor over it so it changes",false);
+	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.81f, 0.2f, 0.07f,650f,"to SET, or on keyboard press ENTER.) Leave no points unused!",false);
 
 	    	posY = 0; 
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		String groupName = Language.v("skillgroups."+groupId);
-	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.139f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		new TextLabel(groupId+"_label",this,pageCreationSecond,0.21f,0.2f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
 	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
@@ -266,7 +266,7 @@ public class PartySetup extends PagedInputWindow {
 	    	}
 	    	skillPointsLeftLabel = new TextLabel("",this,pageCreationSecond, 0.22f, 0.68f, 0.2f, 0.07f,500f,skillPointsLeft+" points left.",false); 
 	    	
-	    	skillText = new TextLabel("",this,pageCreationSecond, 0.6f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
+	    	skillText = new TextLabel("",this,pageCreationSecond, 0.72f, 0.2f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,pageCreationSecond, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
 	    	addInput(2,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);
@@ -812,6 +812,7 @@ public class PartySetup extends PagedInputWindow {
 		else
 		if (base.equals(nextPage))
 		{
+			if (attrPointsLeft>0) return false;
 			// ######### MOVING TO SKILL PAGE, race/profession/attributes are done
 			personWithGenderAndRace = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection())).copy(null);
 			if (genderSelect.ids.length<1) return true;
@@ -821,16 +822,6 @@ public class PartySetup extends PagedInputWindow {
 				personWithGenderAndRace.genderType = id;
 			}
 			personWithGenderAndRace.setAudioDesc((AudioDescription)voiceSelect.getSelectedObject());
-			
-			/*personWithGenderAndRace.getAudioDesc().PAIN = new String[]{"humanoid/humanoid_pain_1","humanoid/humanoid_pain_2"};
-			personWithGenderAndRace.getAudioDesc().JOY = new String[]{"humanoid/humanoid_joy_male"};
-			personWithGenderAndRace.getAudioDesc().DEATH = new String[]{"humanoid/humanoid_death"};
-			if (personWithGenderAndRace.genderType==EntityDescription.GENDER_FEMALE)
-			{
-				personWithGenderAndRace.getAudioDesc().PAIN = new String[]{"humanoid/humanoid_pain_female1","humanoid/humanoid_pain_female2"};
-				personWithGenderAndRace.getAudioDesc().JOY = new String[]{"humanoid/humanoid_joy_female1","humanoid/humanoid_joy_female2"};
-				personWithGenderAndRace.getAudioDesc().DEATH = new String[]{"humanoid/humanoid_death_female"};
-			}*/
 			
 			if (professionSelect.texts.length==0) return true;
 			profession = charCreationRule.profInstances.get(charCreationRule.selectableProfessions.get(Integer.parseInt(professionSelect.ids[professionSelect.getSelection()])));

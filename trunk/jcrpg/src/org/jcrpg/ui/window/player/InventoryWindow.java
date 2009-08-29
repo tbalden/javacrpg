@@ -134,34 +134,42 @@ public class InventoryWindow extends PagedInputWindow {
 
 	    	new TextLabel("",this,page0, 0.30f, 0.15f, 0.3f, 0.06f,600f,"Weapons",false);
     		weapons = new ListMultiSelect("weapons", this,page0, 0.30f,0.18f,0.20f, 0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0], new Quad[0], null,null);
-	    	addInput(0,weapons);
+	    	weapons.focusUponMouseEnter = true;
+    		addInput(0,weapons);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.15f, 0.3f, 0.06f,600f,"Armors",false);
     		armors = new ListMultiSelect("armors", this,page0, 0.70f,0.58f,0.60f, 0.20f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		armors.focusUponMouseEnter = true;
 	    	addInput(0,armors);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.25f, 0.3f, 0.06f,600f,"Ammunitions",false);
     		ammunitions = new ListMultiSelect("ammunitions", this,page0, 0.30f,0.18f,0.20f,0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		ammunitions.focusUponMouseEnter = true;
 	    	addInput(0,ammunitions);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.25f, 0.3f, 0.06f,600f,"Potions, kits",false);
 	    	potions = new ListMultiSelect("keys", this,page0, 0.70f,0.58f,0.60f, 0.30f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+	    	potions.focusUponMouseEnter = true;
 	    	addInput(0,potions);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.35f, 0.3f, 0.06f,600f,"Books",false);
     		books = new ListMultiSelect("books", this,page0, 0.30f,0.18f,0.20f ,0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		books.focusUponMouseEnter = true;
 	    	addInput(0,books);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.35f, 0.3f, 0.06f,600f,"Scrolls",false);
     		scrolls = new ListMultiSelect("scrolls", this,page0, 0.70f,0.58f,0.60f, 0.40f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		scrolls.focusUponMouseEnter = true;
 	    	addInput(0,scrolls);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.45f, 0.3f, 0.06f,600f,"Keys",false);
     		keys = new ListMultiSelect("keys", this,page0, 0.30f,0.18f,0.20f ,0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		keys.focusUponMouseEnter = true;
 	    	addInput(0,keys);
 
 	    	new TextLabel("",this,page0, 0.70f, 0.45f, 0.3f, 0.06f,600f,"Other",false);
     		other = new ListMultiSelect("others", this,page0, 0.70f,0.58f,0.60f, 0.50f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],new Quad[0],null,null);
+    		other.focusUponMouseEnter = true;
 	    	addInput(0,other);
 
 	    	new TextLabel("",this,page0, 0.30f, 0.55f, 0.3f, 0.06f,600f,"Equipped",false);

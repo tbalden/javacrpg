@@ -28,6 +28,7 @@ import org.jcrpg.ui.Window;
 import org.jcrpg.ui.mouse.UiMouseEvent;
 import org.jcrpg.ui.mouse.UiMouseHandler;
 import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 
 import com.jme.bounding.BoundingBox;
@@ -185,19 +186,49 @@ public class ListMultiSelect extends InputBase {
 			return;			
 		}
 		String text = texts[selected+fromCount];
-		Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
-		slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-		slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-		slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-		currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+
+		Node slottextNode = null;
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			Text t = createText(text);
+			slottextNode = new Node();
+			slottextNode.attachChild(t);
+			float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+			slottextNode.setLocalScale(scale);
+			slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight2()/2f*scale + dCenterY ,0);
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+			t.setTextColor(new ColorRGBA(1,1,0.1f,1f));
+		} else
+		{
+			slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
+			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+			currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+		}
+
 		String flag = (selectedItems[selected+fromCount]?"X ":"_ ");
 		if (flag!=null) 
 		{
-			Node signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-			signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*0,0);
-			signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-			currentTextNodes.put(signNode,FontUtils.textVerdana);					
+			Node signNode = null;
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				Text t = createText(flag);
+				signNode = new Node();
+				signNode.attachChild(t);
+				float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+				signNode.setLocalScale(scale);
+				signNode.setLocalTranslation(t.getCenterOrigoX(dCenterSignX,scale), - t.getHeight2()/2f*scale + dCenterY,0);
+				signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				t.setTextColor(new ColorRGBA(1,1,0.1f,1f));
+			} else
+			{
+				signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*0,0);
+				signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+				currentTextNodes.put(signNode,FontUtils.textVerdana);
+			}
 			baseNode.attachChild(signNode);
 		}
 		
@@ -272,11 +303,25 @@ public class ListMultiSelect extends InputBase {
 					text = texts[i+fromCount];
 				}
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ListMultiSelect TEXT = "+i+" "+text+" max: "+maxCount);
-				Node slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
-				slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
-				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-				currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+				
+				Node slottextNode = null;
+				if (J3DCore.NATIVE_FONT_RENDER)
+				{
+					Text t = createText(text);
+					slottextNode = new Node();
+					slottextNode.attachChild(t);
+					float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+					slottextNode.setLocalScale(scale);
+					slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight2()/2f*scale + dCenterY - dSizeY*i,0);
+					slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				} else
+				{
+					slottextNode = FontUtils.textVerdana.createText(text, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),true);
+					slottextNode.setLocalTranslation(dCenterX, dCenterY - dSizeY*i,0);
+					slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+					slottextNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+					currentTextNodes.put(slottextNode,FontUtils.textVerdana);
+				}
 				if (i==selected)
 				{
 					colorize(slottextNode, ColorRGBA.yellow);
@@ -286,12 +331,26 @@ public class ListMultiSelect extends InputBase {
 				}
 				if (flag!=null) 
 				{
-					Node signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-					signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*i,0);
-					signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-					signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
-					signNodes.add(signNode);
-					currentTextNodes.put(signNode,FontUtils.textVerdana);					
+					Node signNode = null;
+					if (J3DCore.NATIVE_FONT_RENDER)
+					{
+						Text t = createText(flag);
+						signNode = new Node();
+						signNode.attachChild(t);
+						float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
+						signNode.setLocalScale(scale);
+						signNode.setLocalTranslation(t.getCenterOrigoX(dCenterSignX,scale), - t.getHeight2()/2f*scale + dCenterY - dSizeY*i,0);
+						signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						t.setTextColor(new ColorRGBA(1,1,0.1f,1f));
+					} else
+					{
+						signNode = FontUtils.textVerdana.createOutlinedText(flag, DEF_FONT_SIZE, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+						signNode.setLocalTranslation(dCenterSignX, dCenterY - dSizeY*i,0);
+						signNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						signNode.setLocalScale(w.core.getDisplay().getWidth()/fontRatio);
+						signNodes.add(signNode);
+						currentTextNodes.put(signNode,FontUtils.textVerdana);		
+					}
 					baseNode.attachChild(signNode);
 				}
 				if (icons!=null && icons.length>0)

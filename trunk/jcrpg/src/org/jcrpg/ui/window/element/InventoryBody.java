@@ -22,6 +22,7 @@ import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIImageCache;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -93,15 +94,29 @@ public class InventoryBody extends InputBase {
 					}
 				}
 			}
-			
-			
-			Node textNode = FontUtils.textVerdana.createOutlinedText(txt, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-			currentTextNodes.put(textNode,FontUtils.textVerdana);
-			textNode.setLocalTranslation(dCenterX - fullSizeX/2f + fullSizeX*ratio[0], dCenterY - fullSizeY/2f +fullSizeY*ratio[1], 0);
-			textNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			textNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			//textNode.setRenderState(w.core.modelLoader.alphaStateBase);
-			baseNode.attachChild(textNode);
+			Text textText = null;
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				if (textText==null)
+				{
+					textText = createText(txt);
+					textText.setLocalScale(scale);
+				}
+				textText.setLocalTranslation(dCenterX - fullSizeX/2f + fullSizeX*ratio[0], dCenterY - fullSizeY/2f +fullSizeY*ratio[1], 0);
+				//deactiveNode.attachChild(textText);
+				textText.setTextColor(new ColorRGBA(0.8f,0.8f,0.1f,1f));
+				baseNode.attachChild(textText);
+			} else			
+			{
+				Node textNode = FontUtils.textVerdana.createOutlinedText(txt, DEF_FONT_SIZE, new ColorRGBA(0.8f,0.8f,0.1f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+				currentTextNodes.put(textNode,FontUtils.textVerdana);
+				textNode.setLocalTranslation(dCenterX - fullSizeX/2f + fullSizeX*ratio[0], dCenterY - fullSizeY/2f +fullSizeY*ratio[1], 0);
+				textNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				textNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				//textNode.setRenderState(w.core.modelLoader.alphaStateBase);
+				baseNode.attachChild(textNode);
+			}
 		}
 		baseNode.updateRenderState();
 		

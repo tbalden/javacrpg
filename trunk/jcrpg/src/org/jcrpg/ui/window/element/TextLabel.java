@@ -20,8 +20,10 @@ package org.jcrpg.ui.window.element;
 
 import java.io.File;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 
@@ -85,6 +87,8 @@ public class TextLabel extends InputBase {
 	Node activeNode = null;
 	Node deactiveNode = null;
 
+	Text textText = null;
+	
 	@Override
 	public void activate() {
 		baseNode.detachAllChildren();
@@ -101,13 +105,28 @@ public class TextLabel extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, normalColor,outlineColor,centered);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			currentTextNodes.put(slottextNode, FontUtils.textVerdana);
-			activeNode.attachChild(slottextNode);
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				if (textText==null)
+				{
+					textText = createText(text);
+					textText.setLocalScale(scale);
+				}
+				textText.print(text);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				activeNode.attachChild(textText);
+				textText.setTextColor(normalColor);
+			} else			
+			{
+
+				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, normalColor,outlineColor,centered);
+				slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
+				activeNode.attachChild(slottextNode);
+			}
 		}
 		baseNode.attachChild(activeNode);
 		baseNode.updateRenderState();
@@ -130,12 +149,27 @@ public class TextLabel extends InputBase {
 			{
 				ex.printStackTrace();
 			}
-			Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, deactivatedColor, outlineColor,centered);
-			slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
-			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-			slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
-			currentTextNodes.put(slottextNode, FontUtils.textVerdana);
-			deactiveNode.attachChild(slottextNode);
+			if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				if (textText==null)
+				{
+					textText = createText(text);
+					textText.setLocalScale(scale);
+				}
+				textText.print(text);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				deactiveNode.attachChild(textText);
+				textText.setTextColor(deactivatedColor);
+			} else			
+			{
+				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, deactivatedColor, outlineColor,centered);
+				slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
+				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
+				deactiveNode.attachChild(slottextNode);
+			}
 		}
 		baseNode.attachChild(deactiveNode);
 		baseNode.updateRenderState();
