@@ -26,7 +26,6 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.Window;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
-import org.jcrpg.world.ai.EntityMemberInstance;
 
 public abstract class InputWindow extends Window implements KeyListener{
 

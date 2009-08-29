@@ -30,7 +30,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Text;
 import com.jme.scene.Spatial.CullHint;
 import com.jme.scene.Spatial.TextureCombineMode;
-import com.jme.scene.state.RenderState;
+import com.jme.scene.state.RenderState.StateType;
 
 public class TextBox implements KeyListener {
 	
@@ -72,8 +72,8 @@ public class TextBox implements KeyListener {
 			n.attachChild(textLines[i]);
 		}
 		
-		n.setRenderState( textLines[0].getRenderState( RenderState.RS_BLEND) );
-        n.setRenderState( textLines[0].getRenderState( RenderState.RS_TEXTURE ) );
+		n.setRenderState( textLines[0].getRenderState( StateType.Blend ) );
+        n.setRenderState( textLines[0].getRenderState( StateType.Texture ) );
         n.setCullHint(CullHint.Never );
 		updateText();
 		//hud.hudNode.attachChild(n);
