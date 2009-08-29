@@ -129,7 +129,7 @@ public class TextButton extends InputBase {
 					textText = createText(text);
 					textText.setLocalScale(scale);
 				}
-				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+ dCenterY,0);
 				activeNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.7f,0.7f,0.1f,1f));
 			} else			
@@ -178,7 +178,7 @@ public class TextButton extends InputBase {
 					textText = createText(text);
 					textText.setLocalScale(scale);
 				}
-				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+ dCenterY,0);
 				deactiveNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.5f,0.5f,0.1f,1f));
 			} else			

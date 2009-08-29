@@ -43,6 +43,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Text;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
@@ -182,21 +183,43 @@ public class Characters extends InputWindow {
 						
 						ZoomingQuad q = Window.loadImageToZoomingQuad(new File(p.getPicturePath()), hud.core.getDisplay().getWidth()/13, hud.core.getDisplay().getHeight()/10.3f, sideYMul*hud.core.getDisplay().getWidth()/20, startY-stepY*counterPair);
 						pictureQuads.add(q);
-						Node nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-						globalFontFreers.add(new NodeFontFreer(this.text,nametextNode));
-						nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.39f,0);
+						Node nametextNode = null;
+						Node classtextNode = null;
+						if (J3DCore.NATIVE_FONT_RENDER)
+						{
+							org.jcrpg.ui.text.Text text = org.jcrpg.ui.text.Text.createDefaultTextLabel("--", p.foreName);
+							text.setTextColor(new ColorRGBA(1,1,0.6f,1f));
+							nametextNode = new Node();
+							nametextNode.attachChild(text);
+							nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/700f/InputBase.TEXT_PROP);
+							nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, -hud.core.getDisplay().getWidth()/50+ startY-stepY*(counterPair)-maxSizeY*0.39f,0);
+
+							org.jcrpg.ui.text.Text text2 = org.jcrpg.ui.text.Text.createDefaultTextLabel("--", p.professions.get(0).getSimpleName());
+							text2.setTextColor(new ColorRGBA(0.5f,0.5f,0.9f,1f));
+							classtextNode = new Node();
+							classtextNode.attachChild(text2);
+							classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/700f/InputBase.TEXT_PROP);
+							classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, -hud.core.getDisplay().getWidth()/50+ startY-stepY*(counterPair)-maxSizeY*0.515f,0);
+
+						} else
+						{
+							nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+							globalFontFreers.add(new NodeFontFreer(this.text,nametextNode));
+							nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
+							nametextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.39f,0);
+
+							classtextNode = this.text.createOutlinedText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
+							globalFontFreers.add(new NodeFontFreer(this.text,classtextNode));
+							classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.515f,0);
+							classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
+
+						}
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-						nametextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
-						
-						Node classtextNode = this.text.createOutlinedText(p.professions.get(0).getSimpleName(), 9, new ColorRGBA(0.5f,0.5f,0.9f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
-						globalFontFreers.add(new NodeFontFreer(this.text,classtextNode));
-						classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, startY-stepY*(counterPair)-maxSizeY*0.515f,0);
+						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						
 						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-maxSizeY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
 						
-						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-						classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/600f);
 	
 						node.attachChild(nametextNode);
 						node.attachChild(classtextNode);

@@ -33,6 +33,7 @@
 package org.jcrpg.ui.text;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 import java.util.logging.Logger;
@@ -163,13 +164,21 @@ public class Text extends com.jme.scene.Text {
     
     public float getCenterOrigoX(float centerX, float ratio)
     {
-    	float c = centerX - (getWidth()/2)*ratio;
+    	float c = centerX - (getWidth2()/2)*(ratio);
     	if (c<0) c = 0;
     	return c;
+    }
+    public float getWidth2() {
+        float rVal = 10f * text.length();
+        return rVal;
     }
 
     public float getWidth() {
         float rVal = 10f * text.length() * worldScale.x;
+        return rVal;
+    }
+    public float getHeight2() {
+        float rVal = 16f;
         return rVal;
     }
 
@@ -222,7 +231,7 @@ public class Text extends com.jme.scene.Text {
     /**
      * A default font contained in the jME library.
      */
-    public static final String DEFAULT_FONT = "com/jme/app/defaultfont.tga"; // CHANGE this for another font
+    public static final String DEFAULT_FONT = "file:data/font/vinquefont.tga"; // CHANGE this for another font
     
     protected void applyRenderState(Stack<? extends RenderState>[] states) {
         for (int x = 0; x < states.length; x++) {
@@ -242,7 +251,13 @@ public class Text extends com.jme.scene.Text {
     public static TextureState getDefaultFontTextureState() {
         if ( defaultFontTextureState == null ) {
             defaultFontTextureState = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
-           final URL defaultUrl = Text.class.getClassLoader().getResource(DEFAULT_FONT);
+           URL defaultUrl = null;
+           try {
+        	   defaultUrl = new URL(DEFAULT_FONT);//Text.class.getClassLoader().getResource(DEFAULT_FONT);
+           } catch (MalformedURLException mux)
+           {
+        	   
+           }
            if ( defaultUrl == null )
            {
               logger.warning("Default font not found: " + DEFAULT_FONT);

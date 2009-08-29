@@ -283,7 +283,7 @@ public abstract class InputBase implements Savable{
 		
 	}
 
-	protected float TEXT_PROP = 1.6f;
+	public final static float TEXT_PROP = 1.55f;
 	
 	protected Text createText(String text)
 	{

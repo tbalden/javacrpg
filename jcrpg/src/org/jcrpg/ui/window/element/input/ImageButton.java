@@ -130,12 +130,13 @@ public class ImageButton extends InputBase {
 			
 			if (J3DCore.NATIVE_FONT_RENDER)
 			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
 				if (textText==null)
 				{
 					textText = createText(text);
-					textText.setLocalScale(w.core.getDisplay().getWidth()/textProportion/TEXT_PROP);
+					textText.setLocalScale(scale);
 				}
-				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dOrigoX, dCenterY,0);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+ dCenterY,0);
 				activeNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.7f,0.7f,0.1f,1f));
 			} else			
@@ -178,12 +179,13 @@ public class ImageButton extends InputBase {
 			}
 			if (J3DCore.NATIVE_FONT_RENDER)
 			{
+				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
 				if (textText==null)
 				{
 					textText = createText(text);
-					textText.setLocalScale(w.core.getDisplay().getWidth()/textProportion/TEXT_PROP);
+					textText.setLocalScale(scale);
 				}
-				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:dOrigoX, dCenterY,0);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+dCenterY,0);
 				deactiveNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.5f,0.5f,0.1f,1f));
 			} else			

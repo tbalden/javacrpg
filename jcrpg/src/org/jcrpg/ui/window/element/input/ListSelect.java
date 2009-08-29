@@ -205,7 +205,7 @@ public class ListSelect extends InputBase {
 			slottextNode.setLocalScale(scale);
 			slottextNode.updateWorldVectors();
 			slottextNode.updateModelBound();
-			slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight()*scale + dCenterY,0);
+			slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight2()/2f*scale + dCenterY,0);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 		} else
 		{
@@ -296,7 +296,7 @@ public class ListSelect extends InputBase {
 					slottextNode.attachChild(t);
 					float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
 					slottextNode.setLocalScale(scale);
-					slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight()*scale + dCenterY - dSizeY*i,0);
+					slottextNode.setLocalTranslation(t.getCenterOrigoX(dCenterX,scale), - t.getHeight2()/2f*scale + dCenterY - dSizeY*i,0);
 					slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 					
 				} else

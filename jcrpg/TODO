@@ -21,6 +21,14 @@ Society, Groups etc.
 [ ] test vista for crashes last seen
 [ ] integrate new content
 
+[X] optimize Font generation - whole texts into quads?
+	[ ] review all the windows, positioning!
+	[ ] world map is positioned wrong
+	[ ] characters still using old text writing
+	
+[ ] ui improving
+	[ ] Tooltips at char generation (professions!!) !
+	[ ] Combat actions -> Red sign if a character didnt set correct action yet! (easier to spot why you cant start turn)
 	
 [ ] MAP
 	[X] town type icons (instead of dots)
@@ -30,8 +38,6 @@ Society, Groups etc.
 	[ ] label to map, 
 		even better map!
 		Higher resolution.
-
-
 
 [X] reset button for Skill point settings! Reconsider how that part works.
 
