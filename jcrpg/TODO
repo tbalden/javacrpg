@@ -21,13 +21,9 @@ Society, Groups etc.
 [ ] test vista for crashes last seen
 [ ] integrate new content
 
-[X] optimize Font generation - whole texts into quads?
-	[ ] review all the windows, positioning!
-	[X] world map is positioned wrong
-	[X] characters still using old text writing
-	
 [ ] ui improving
-	[ ] Tooltips at char generation (professions!!) !
+	[ ] Tooltips at char generation (professions!!) ! TOOLTIP should be one quad that is used all the time, Text replaced in it! 
+	
 	[ ] Combat actions -> Red sign if a character didnt set correct action yet! (easier to spot why you cant start turn)
 	
 [ ] MAP
@@ -39,6 +35,11 @@ Society, Groups etc.
 		even better map!
 		Higher resolution.
 
+[X] optimize Font generation - whole texts into quads?
+	[X] review all the windows, positioning!
+	[X] world map is positioned wrong
+	[X] characters still using old text writing
+	
 [X] reset button for Skill point settings! Reconsider how that part works.
 
 [X] P. Order button image

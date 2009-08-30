@@ -86,20 +86,20 @@ public class BehaviorWindow extends PagedInputWindow {
 	    	
 	    	float yDelta = 0.00f;
 
-	    	new TextLabel("",this,page0, 0.4f, yDelta+0.11f, 0.3f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
-	    	new TextLabel("",this,page0, 0.27f, yDelta+0.16f, 0.3f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
+	    	new TextLabel("",this,page0, 0.4f, yDelta+0.11f, 0.0f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
+	    	new TextLabel("",this,page0, 0.27f, yDelta+0.16f, 0.0f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
 	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,yDelta+0.19f+sizeSelect*i,0.0f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    	}
-	    	new TextLabel("friendly_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*8,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
+	    	new TextLabel("friendly_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*8,0.1f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);
 	    	noticeFriendly = new ListSelect("friendly", this,page0, 0.53f,yDelta+0.19f+sizeSelect*8,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
-	    	new TextLabel("neutral_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*9,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
+	    	new TextLabel("neutral_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*9,0.1f,0.04f,600f,Language.v("behaviorWindow.noticeNeutral"),false);
 	    	noticeNeutral = new ListSelect("neutral_text", this,page0, 0.53f,yDelta+0.19f+sizeSelect*9,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
-	    	new TextLabel("hostile_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*10,0.3f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
+	    	new TextLabel("hostile_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*10,0.1f,0.04f,600f,Language.v("behaviorWindow.noticeHostile"),false);
 	    	noticeHostile = new ListSelect("hostile", this,page0, 0.53f,yDelta+0.19f+sizeSelect*10,0.3f,0.04f,600f,noticeIds,noticeTexts,noticeObjects,null,null);
 	    	
 	    	addInput(0, noticeFriendly);

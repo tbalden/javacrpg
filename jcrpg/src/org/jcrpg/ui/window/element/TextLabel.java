@@ -114,8 +114,7 @@ public class TextLabel extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.print(text);
-				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
-				activeNode.attachChild(textText);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), - textText.getHeight2()/2f*scale + dCenterY,0);
 				textText.setTextColor(normalColor);
 			} else			
 			{
@@ -127,6 +126,11 @@ public class TextLabel extends InputBase {
 				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				activeNode.attachChild(slottextNode);
 			}
+		}
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			textText.removeFromParent();
+			activeNode.attachChild(textText);
 		}
 		baseNode.attachChild(activeNode);
 		baseNode.updateRenderState();
@@ -158,7 +162,7 @@ public class TextLabel extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.print(text);
-				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				textText.setLocalTranslation(!centered?dOrigoX:textText.getCenterOrigoX(dCenterX,scale), - textText.getHeight2()/2f*scale + dCenterY,0);
 				deactiveNode.attachChild(textText);
 				textText.setTextColor(deactivatedColor);
 			} else			
@@ -170,6 +174,11 @@ public class TextLabel extends InputBase {
 				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				deactiveNode.attachChild(slottextNode);
 			}
+		}
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			textText.removeFromParent();
+			deactiveNode.attachChild(textText);
 		}
 		baseNode.attachChild(deactiveNode);
 		baseNode.updateRenderState();

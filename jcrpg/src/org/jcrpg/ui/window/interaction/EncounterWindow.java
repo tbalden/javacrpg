@@ -102,9 +102,9 @@ public class EncounterWindow extends PagedInputWindow {
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	//page1.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,Language.v("encounterWindow.header"),false);
-	    	new TextLabel("",this,page0, 0.23f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
-	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.3f, 0.06f,600f,"You have to choose who will act and what.",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.0f, 0.06f,400f,Language.v("encounterWindow.header"),false);
+	    	new TextLabel("",this,page0, 0.23f, 0.075f, 0.0f, 0.06f,600f,"You are facing the inevitable.",false);
+	    	new TextLabel("",this,page0, 0.23f, 0.100f, 0.0f, 0.06f,600f,"You have to choose who will act and what.",false);
 	    	 
 	    	{
 	    		memberSelect = new ListSelect("member", this,page0, 0.30f,0.15f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
@@ -126,9 +126,9 @@ public class EncounterWindow extends PagedInputWindow {
 	    	addInput(0,groupSelect);
 	    	
 	    	ok = new TextButton("ok",this,page0,0.50f, 0.49f, 0.18f, 0.06f,500f,Language.v("encounterWindow.ok"));
-	    	description = new TextLabel("",this,page0, 0.20f, 0.54f, 0.4f, 0.06f,600f,"",false);
-	    	new TextLabel("",this,page0, 0.60f, 0.54f, 0.3f, 0.06f,600f,"Use <>^V for selection.",false);
-	    	new TextLabel("",this,page0, 0.60f, 0.58f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	description = new TextLabel("",this,page0, 0.20f, 0.54f, 0.1f, 0.06f,600f,"",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.54f, 0.1f, 0.06f,600f,"Use <>^V for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.58f, 0.1f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
 	    	leave = new TextButton("leave",this,page0,0.72f, 0.49f, 0.18f, 0.06f,500f,Language.v("encounterWindow.leave"),"L");
 	    	addInput(0,leave);
@@ -352,6 +352,7 @@ public class EncounterWindow extends PagedInputWindow {
 			//
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
 			SkillBase b = (SkillBase)skillSelect.getSelectedObject();
+			if (b==null) return false;
 			SkillInstance s = i.description.getCommonSkills().skills.get(b.getClass()); //TODO modifier in EntityMemberInstance!!
 			toggle(); // TODO use EncounterInfo internal list instead of encounterInfos selected...
 			core.gameState.gameLogic.encounterLogic.doEncounterRound(i, s, encountered);

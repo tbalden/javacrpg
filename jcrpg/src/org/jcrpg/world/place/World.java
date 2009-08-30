@@ -878,7 +878,7 @@ public class World extends Place implements TileBasedMap {
 				
 				boolean riverWater = ((River)water).isWaterBlock(tx*magnification, worldGroundLevel, ty*magnification);
 				if (riverWater) {
-					if (water.getRoadBuildingPrice()>1) System.out.println("PRICE W: "+water.getRoadBuildingPrice());
+					//if (water.getRoadBuildingPrice()>1) System.out.println("PRICE W: "+water.getRoadBuildingPrice());
 					return water.getRoadBuildingPrice();
 				}
 			}
@@ -888,7 +888,7 @@ public class World extends Place implements TileBasedMap {
 			if (g.getClass()==Cave.class) continue;
 			if (g.getBoundaries().isInside(tx*magnification, g.worldGroundLevel, ty*magnification))
 			{
-				if (g.getRoadBuildingPrice()>1) System.out.println("PRICE"+g.getClass()+" "+g.getRoadBuildingPrice());
+				//if (g.getRoadBuildingPrice()>1) System.out.println("PRICE"+g.getClass()+" "+g.getRoadBuildingPrice());
 				return g.getRoadBuildingPrice();
 			}
 		}

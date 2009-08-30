@@ -174,7 +174,7 @@ public class PartySetup extends PagedInputWindow {
 	    	new TextLabel("",this,pageCreationFirst, 0.22f, 0.75f, 0.2f, 0.07f,600f,"Tune the attributes to attain a profession. Press Backspace to go back.",false);
 	    	new TextLabel("",this,pageCreationFirst, 0.22f, 0.80f, 0.2f, 0.07f,600f,"Up/Down to move on inputs. Left/Right to change.",false);
 
-	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.3f, 0.06f,400f,"Character Creation",false); 
+	    	new TextLabel("",this,pageCreationFirst, 0.37f, 0.08f, 0.0f, 0.06f,400f,"Character Creation",false); 
 
 	    	new TextLabel("",this,pageCreationFirst, 0.30f, 0.15f, 0.3f, 0.06f,600f,"Race:",false); 
 	    	{
@@ -232,7 +232,7 @@ public class PartySetup extends PagedInputWindow {
 	    	sQuad2.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	pageCreationSecond.attachChild(sQuad2);
 
-	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.3f, 0.06f,500f,"Character Creation",false); 
+	    	new TextLabel("",this,pageCreationSecond, 0.37f, 0.08f, 0.0f, 0.06f,500f,"Character Creation",false); 
 	    	charInfo = new TextLabel("",this,pageCreationSecond, 0.37f, 0.16f, 0.3f, 0.06f,400f,"",false); 
 	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.73f, 0.2f, 0.07f,650f,"Select a skill from the groups, use the input on the",false);
 	    	new TextLabel("",this,pageCreationSecond, 0.23f, 0.77f, 0.2f, 0.07f,650f,"left to increase and set it.(Move Mouse cursor over it so it changes",false);

@@ -70,12 +70,12 @@ public class PartyOrderWindow extends PagedInputWindow {
 	    	
 	    	float yDelta = 0.04f;
 
-	    	new TextLabel("",this,page0, 0.39f, yDelta+0.058f, 0.3f, 0.06f,400f,"Party Character Order",false);
+	    	new TextLabel("",this,page0, 0.35f, yDelta+0.058f, 0.0f, 0.06f,400f,"Party Character Order",false);
 
     		characterSelect = new ListSelect("member", this,page0, 0.50f,yDelta+0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
 
-	    	new TextLabel("",this,page0, 0.40f, yDelta+0.17f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
+	    	new TextLabel("",this,page0, 0.45f, yDelta+0.17f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,yDelta+0.23f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 	    	
@@ -85,7 +85,7 @@ public class PartyOrderWindow extends PagedInputWindow {
 	    	dismiss = new TextButton("drop",this,page0, 0.60f, yDelta+0.30f, 0.15f, 0.07f,500f,Language.v("partyOrderWindow.dismiss"));
 	    	addInput(0,dismiss);
 
-	    	closeWindow = new TextButton("close",this,page0, 0.74f, yDelta+0.060f, 0.02f, 0.045f,600f," x");
+	    	closeWindow = new TextButton("close",this,page0, 0.74f, yDelta+0.060f, 0.02f, 0.045f,600f,"x");
 	    	addInput(0,closeWindow);
 	    	
 	    	addPage(0, page0);

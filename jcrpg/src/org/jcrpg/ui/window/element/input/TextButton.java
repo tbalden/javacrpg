@@ -130,7 +130,6 @@ public class TextButton extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+ dCenterY,0);
-				activeNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.7f,0.7f,0.1f,1f));
 			} else			
 			{
@@ -141,6 +140,11 @@ public class TextButton extends InputBase {
 				//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				activeNode.attachChild(slottextNode);
 			}
+		}
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			textText.removeFromParent();
+			activeNode.attachChild(textText);
 		}
 		baseNode.attachChild(activeNode);
 		activeNode.setModelBound(new BoundingBox());
@@ -179,7 +183,6 @@ public class TextButton extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.setLocalTranslation(!centered?dOrigoXCenter*0.95f:textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale+ dCenterY,0);
-				deactiveNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.5f,0.5f,0.1f,1f));
 			} else			
 			{
@@ -190,6 +193,11 @@ public class TextButton extends InputBase {
 				//currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				deactiveNode.attachChild(slottextNode);
 			}
+		}
+		if (J3DCore.NATIVE_FONT_RENDER)
+		{
+			textText.removeFromParent();
+			deactiveNode.attachChild(textText);
 		}
 		baseNode.attachChild(deactiveNode);
 		deactiveNode.setModelBound(new BoundingBox());
