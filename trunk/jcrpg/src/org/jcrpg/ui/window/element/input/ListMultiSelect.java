@@ -162,6 +162,8 @@ public class ListMultiSelect extends InputBase {
 		return selection;
 	}
 	
+	Text dText, dFlag;
+	
 	public void setupDeactivated()
 	{
 		baseNode.removeFromParent();
@@ -190,7 +192,14 @@ public class ListMultiSelect extends InputBase {
 		Node slottextNode = null;
 		if (J3DCore.NATIVE_FONT_RENDER)
 		{
-			Text t = createText(text);
+			if (dText==null)
+			{
+				dText = createText(text);
+			} else
+			{
+				dText.print(text);
+			}
+			Text t = dText;
 			slottextNode = new Node();
 			slottextNode.attachChild(t);
 			float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
@@ -213,7 +222,14 @@ public class ListMultiSelect extends InputBase {
 			Node signNode = null;
 			if (J3DCore.NATIVE_FONT_RENDER)
 			{
-				Text t = createText(flag);
+				if (dFlag==null)
+				{
+					dFlag = createText(flag);
+				} else
+				{
+					dFlag.print(flag);
+				}
+				Text t = dFlag;
 				signNode = new Node();
 				signNode.attachChild(t);
 				float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
@@ -257,6 +273,8 @@ public class ListMultiSelect extends InputBase {
 	
 	int size = 0;
 
+	public Text[] textInstances = new Text[maxVisible+1];
+	public Text[] flagInstances = new Text[maxVisible+1];
 
 	public void setupActivated()
 	{
@@ -307,7 +325,16 @@ public class ListMultiSelect extends InputBase {
 				Node slottextNode = null;
 				if (J3DCore.NATIVE_FONT_RENDER)
 				{
-					Text t = createText(text);
+					Text t = textInstances[i];
+					if (t==null) 
+					{
+						t = createText(text);
+						textInstances[i] = t;
+					}
+					else
+					{
+						t.print(text);
+					}
 					slottextNode = new Node();
 					slottextNode.attachChild(t);
 					float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;
@@ -334,7 +361,16 @@ public class ListMultiSelect extends InputBase {
 					Node signNode = null;
 					if (J3DCore.NATIVE_FONT_RENDER)
 					{
-						Text t = createText(flag);
+						Text t = flagInstances[i];
+						if (t==null) 
+						{
+							t = createText(flag);
+							flagInstances[i] = t;
+						}
+						else
+						{
+							t.print(flag);
+						}
 						signNode = new Node();
 						signNode.attachChild(t);
 						float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;

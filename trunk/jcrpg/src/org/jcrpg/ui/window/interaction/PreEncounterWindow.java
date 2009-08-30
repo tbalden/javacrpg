@@ -65,9 +65,9 @@ public class PreEncounterWindow extends PagedInputWindow {
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"Interception",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You sense nearby groups of lifeforms.",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"You may face one or all of the groups.",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.0f, 0.06f,400f,"Interception",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.0f, 0.06f,600f,"You sense nearby groups of lifeforms.",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.0f, 0.06f,600f,"You may face one or all of the groups.",false);
 	    	
 	    	
 	    	String[] ids = new String[] {"1","2"};
@@ -86,9 +86,9 @@ public class PreEncounterWindow extends PagedInputWindow {
 
 	    	ok = new TextButton("ok",this,page0,0.45f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.ok"));
 	    	leave = new TextButton("leave",this,page0,0.68f, 0.22f, 0.18f, 0.06f,500f,Language.v("preEncounterWindow.leave"),"L");
-	    	new TextLabel("",this,page0, 0.26f, 0.28f, 0.3f, 0.06f,600f,"Use <> for selection.",false);
-	    	new TextLabel("",this,page0, 0.16f, 0.32f, 0.3f, 0.06f,600f,"Select group if you want to meet a single group.",false);
-	    	new TextLabel("",this,page0, 0.22f, 0.36f, 0.3f, 0.06f,600f,"The second list shows nearby groups.",false);
+	    	new TextLabel("",this,page0, 0.26f, 0.28f, 0.0f, 0.06f,600f,"Use <> for selection.",false);
+	    	new TextLabel("",this,page0, 0.16f, 0.32f, 0.0f, 0.06f,600f,"Select group if you want to meet a single group.",false);
+	    	new TextLabel("",this,page0, 0.22f, 0.36f, 0.0f, 0.06f,600f,"The second list shows nearby groups.",false);
 	    	addInput(0,ok);
 	    	addInput(0,leave);
 

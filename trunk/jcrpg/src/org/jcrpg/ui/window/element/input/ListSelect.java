@@ -240,6 +240,8 @@ public class ListSelect extends InputBase {
 	
 	boolean nextPageAvailable = false;
 	
+
+	public Text[] textInstances = new Text[maxVisible+1];
 	
 	
 	public void setupActivated()
@@ -291,7 +293,16 @@ public class ListSelect extends InputBase {
 				Node slottextNode = null;
 				if (J3DCore.NATIVE_FONT_RENDER)
 				{
-					Text t = createText(text);
+					Text t = textInstances[i];
+					if (t==null) 
+					{
+						t = createText(text);
+						textInstances[i] = t;
+					}
+					else
+					{
+						t.print(text);
+					}
 					slottextNode = new Node();
 					slottextNode.attachChild(t);
 					float scale = w.core.getDisplay().getWidth()/fontRatio/TEXT_PROP;

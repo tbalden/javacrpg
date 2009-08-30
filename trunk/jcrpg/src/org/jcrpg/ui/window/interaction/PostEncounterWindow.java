@@ -71,9 +71,9 @@ public class PostEncounterWindow extends PagedInputWindow {
 	    	sQuad.setLocalTranslation(hudQuad.getLocalTranslation());
 	    	page0.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.3f, 0.06f,400f,"VICTORY!",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.3f, 0.06f,600f,"You have prevailed in the encounter!",false);
-	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.3f, 0.06f,600f,"Choose how you will check the remnants.",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.044f, 0.0f, 0.06f,400f,"VICTORY!",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.075f, 0.0f, 0.06f,600f,"You have prevailed in the encounter!",false);
+	    	new TextLabel("",this,page0, 0.27f, 0.100f, 0.0f, 0.06f,600f,"Choose how you will check the remnants.",false);
 	    	
 	    	
 	    	/*String[] ids = new String[] {"1","2"};
@@ -104,9 +104,9 @@ public class PostEncounterWindow extends PagedInputWindow {
 	    	take = new TextButton("ok",this,page0,0.55f, 0.23f, 0.18f, 0.05f,500f,Language.v("postEncounterWindow.take"),"T");
 	    	takeAll = new TextButton("ok",this,page0,0.76f, 0.23f, 0.18f, 0.05f,500f,Language.v("postEncounterWindow.takeAll"),"A");
 	    	leave = new TextButton("leave",this,page0,0.76f, 0.32f, 0.18f, 0.05f,500f,Language.v("postEncounterWindow.leave"),"L");
-	    	new TextLabel("",this,page0, 0.22f, 0.28f, 0.3f, 0.06f,600f,"Use <> for selection.",false);
-	    	new TextLabel("",this,page0, 0.18f, 0.32f, 0.3f, 0.06f,600f,"Select group if you want to loot it.",false);
-	    	new TextLabel("",this,page0, 0.18f, 0.36f, 0.3f, 0.06f,600f,"The second list shows party members.",false);
+	    	new TextLabel("",this,page0, 0.22f, 0.28f, 0.0f, 0.06f,600f,"Use <> for selection.",false);
+	    	new TextLabel("",this,page0, 0.18f, 0.32f, 0.0f, 0.06f,600f,"Select group if you want to loot it.",false);
+	    	new TextLabel("",this,page0, 0.18f, 0.36f, 0.0f, 0.06f,600f,"The second list shows party members.",false);
 	    	addInput(0,take);
 	    	addInput(0,takeAll);
 	    	addInput(0,leave);

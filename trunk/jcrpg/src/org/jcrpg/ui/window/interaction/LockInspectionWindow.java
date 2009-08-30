@@ -131,11 +131,11 @@ public class LockInspectionWindow extends PagedInputWindow {
 	        hudQuad.setRenderState(base.hud.hudAS);
 	        page0.attachChild(hudQuad);
 	        
-	    	new TextLabel("",this,page0, 0.40f, 0.046f, 0.3f, 0.06f,400f,"Lock Inspection",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.066f, 0.0f, 0.06f,400f,"Lock Inspection",false);
 	    	
 	    	// layouts
 	    	
-            SimpleLayout page0Layout = new SimpleLayout(0.2f, 0.16f, 0.2f, 0.07f ,4);
+            SimpleLayout page0Layout = new SimpleLayout(0.22f, 0.16f, 0.2f, 0.07f ,4);
 
             page0Layout.addToColumn(0, new TextLabel("",this,page0, 500f, Language.v("lockInspectionWindow.currentState"), false));
             page0Layout.addToColumn(1, new TextLabel("",this,page0, 500f, "", false));

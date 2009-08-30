@@ -126,9 +126,9 @@ public class TurnActWindow extends PagedInputWindow {
 	    	page0.attachChild(shQuad1);
 	    	page0.attachChild(shQuad2);
 	    	
-	    	header = new TextLabel("",this,page0, 0.50f, 0.044f, 0.3f, 0.06f,400f,Language.v("turnActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
-	    	desc = new TextLabel("",this,page0, 0.24f, 0.075f, 0.3f, 0.06f,600f,"You are facing the inevitable.",false);
-	    	new TextLabel("",this,page0, 0.24f, 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
+	    	header = new TextLabel("",this,page0, 0.50f, 0.044f, 0.0f, 0.06f,400f,Language.v("turnActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
+	    	desc = new TextLabel("",this,page0, 0.24f, 0.075f, 0.0f, 0.06f,600f,"You are facing the inevitable.",false);
+	    	new TextLabel("",this,page0, 0.24f, 0.100f, 0.0f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
 	    	 
 
 	    	float sizeSelect = 0.10f;
@@ -138,7 +138,7 @@ public class TurnActWindow extends PagedInputWindow {
 	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.25f, 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],new Object[0],new Quad[0],null,null));
 	    		groupSelectors.add(new ListSelect("group"+i, this,page0, 0.70f,0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
-	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.3f,0.04f,600f,"",false));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.15f,0.15f+sizeSelect*i,0.0f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    		addInput(0,skillActFormSelectors.get(i));
 	    		addInput(0,inventorySelectors.get(i));
@@ -147,8 +147,8 @@ public class TurnActWindow extends PagedInputWindow {
 	    	
 	    	
 	    	ok = new TextButton("ok",this,page0,0.24f, 0.77f, 0.18f, 0.06f,500f,Language.v("turnActWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.60f, 0.74f, 0.3f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
-	    	new TextLabel("",this,page0, 0.60f, 0.78f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.74f, 0.1f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, 0.78f, 0.1f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
 	    	leave = new TextButton("leave",this,page0,0.46f, 0.77f, 0.18f, 0.06f,500f,Language.v("turnActWindow.leave"),"L");
 	    	addInput(0,leave);

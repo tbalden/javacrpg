@@ -113,9 +113,9 @@ public class NormalActWindow extends PagedInputWindow {
 	    	
 	    	float yOffset = 0.03f;
 	    	
-	    	header = new TextLabel("",this,page0, 0.50f, yOffset+ 0.044f, 0.3f, 0.06f,400f,Language.v("normalActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
-	    	desc = new TextLabel("",this,page0, 0.24f, yOffset+ 0.075f, 0.3f, 0.06f,600f,"Are you willing to act?",false);
-	    	new TextLabel("",this,page0, 0.24f, yOffset+ 0.100f, 0.3f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
+	    	header = new TextLabel("",this,page0, 0.50f, yOffset+ 0.044f, 0.0f, 0.06f,400f,Language.v("normalActWindow.header"),false,true,InputBase.DEF_NORMAL_COLOR);
+	    	desc = new TextLabel("",this,page0, 0.24f, yOffset+ 0.075f, 0.0f, 0.06f,600f,"Are you willing to act?",false);
+	    	new TextLabel("",this,page0, 0.24f, yOffset+ 0.100f, 0.0f, 0.06f,600f,"You have to choose what skills, acts and items to use.",false);
 	    	 
 
 	    	float sizeSelect = 0.10f;
@@ -134,8 +134,8 @@ public class NormalActWindow extends PagedInputWindow {
 	    	
 	    	
 	    	ok = new TextButton("ok",this,page0,0.24f, yOffset+ 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.ok"),"S");
-	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.74f, 0.3f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
-	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.78f, 0.3f, 0.06f,600f,"Use S if you are ready.",false);
+	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.74f, 0.1f, 0.06f,600f,"Use <>^V & 1-6 for selection.",false);
+	    	new TextLabel("",this,page0, 0.60f, yOffset+ 0.78f, 0.1f, 0.06f,600f,"Use S if you are ready.",false);
 	    	addInput(0,ok);
 	    	close = new TextButton("leave",this,page0,0.46f, yOffset+ 0.77f, 0.18f, 0.06f,500f,Language.v("normalActWindow.close"),"L");
 	    	addInput(0,close);
