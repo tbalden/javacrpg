@@ -1111,8 +1111,12 @@ public class PartySetup extends PagedInputWindow {
 			Iterator<CharListData> it = dataList.values().iterator();
 			CharListData d = null;
 			for (int i=0; i<=s; i++) {
-				d = it.next();
+				if (it.hasNext())
+				{
+					d = it.next();
+				}
 			}
+			if (d==null) return false;
 			Jcrpg.LOGGER.finer(d.pic.getName());
 			try {
 				Quad q = imgQuads.get(d.pic.getAbsolutePath());

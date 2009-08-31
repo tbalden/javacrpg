@@ -149,6 +149,7 @@ public class CheckBox extends InputBase {
 	public boolean handleMouse(UiMouseEvent mouseEvent)
 	{
 		super.handleMouse(mouseEvent);
+		if (w!=null)
 		if(mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_LEFT))
         {
     		return handleKey("enter");
