@@ -74,7 +74,9 @@ public class ListMultiSelect extends InputBase {
 	public ArrayList<Node> signNodes = new ArrayList<Node>(); 
 
 	public static final String defaultImage = "./data/ui/inputBase.png";
-	public static final String defaultImageActive = "./data/ui/inputBaseActive.png";
+	public static final String defaultImageUp = "./data/ui/inputBaseScrollUp.png";
+	public static final String defaultImageDown = "./data/ui/inputBaseScrollDown.png";
+	public static final String defaultImageUpDown = "./data/ui/inputBaseScrollUD.png";
 	public String bgImage = defaultImage;
 	
 	public float fontRatio = 400f;
@@ -276,6 +278,11 @@ public class ListMultiSelect extends InputBase {
 	public Text[] textInstances = new Text[maxVisible+1];
 	public Text[] flagInstances = new Text[maxVisible+1];
 
+	Quad w1;
+	Quad wU;
+	Quad wD;
+	Quad wUD;
+
 	public void setupActivated()
 	{
 		size = 0;
@@ -286,15 +293,50 @@ public class ListMultiSelect extends InputBase {
 		if (activatedNode==null) 
 		{
 			activatedNode = new Node(""+id);
-			try {
-				Quad w1 = Window.loadImageToQuad(new File(texts!=null&&texts.length>maxVisible?defaultImageActive:bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
-				w1.setSolidColor(ColorRGBA.white);
-				activatedNode.attachChild(w1);
-			} catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
 		}
+		activatedNode.detachAllChildren();
+		Quad wQ = null;
+		try
+		{
+			if (texts.length>maxVisible)
+			{
+				if (fromCount==0)
+				{
+					if (wD==null)
+					{
+							wD = Window.loadImageToQuad(new File(defaultImageDown), dSizeX, dSizeY, dCenterX, dCenterY);
+					}
+					wQ = wD;
+				} else
+				if (fromCount+maxVisible>=maxCount)
+				{
+					if (wU==null)
+					{
+							wU = Window.loadImageToQuad(new File(defaultImageUp), dSizeX, dSizeY, dCenterX, dCenterY);
+					}
+					wQ = wU;
+				} else
+				{
+					if (wUD==null)
+					{
+							wUD = Window.loadImageToQuad(new File(defaultImageUpDown), dSizeX, dSizeY, dCenterX, dCenterY);
+					}
+					wQ = wUD;
+				}
+			} else
+			{
+				if (w1==null)
+				{
+					w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
+				}
+				wQ = w1;
+			}
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		wQ.setSolidColor(ColorRGBA.white);
+		activatedNode.attachChild(wQ);
 		baseNode.attachChild(activatedNode);
 		
 		if (maxCount==0 || texts.length==0)

@@ -32,6 +32,7 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.UIImageCache;
 import org.jcrpg.ui.window.PagedInputWindow;
 import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.CheckBox;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.ListMultiSelect;
 import org.jcrpg.ui.window.element.input.ListSelect;
@@ -86,6 +87,7 @@ public class TurnActWindow extends PagedInputWindow {
 	ArrayList<ListSelect> skillActFormSelectors = new ArrayList<ListSelect>();
 	ArrayList<ListSelect> groupSelectors = new ArrayList<ListSelect>();
 	ArrayList<ListSelect> inventorySelectors = new ArrayList<ListSelect>();
+	ArrayList<CheckBox> validityBoxes = new ArrayList<CheckBox>();
 
 	
 	public TurnActWindow (UIBase base) {
@@ -134,6 +136,8 @@ public class TurnActWindow extends PagedInputWindow {
 	    	float sizeSelect = 0.10f;
 	    	for (int i=0; i<6; i++)
 	    	{
+	    		CheckBox box = new CheckBox("box"+i, this,page0, 0.18f,0.20f+sizeSelect*i,0.03f,0.04f,false);
+	    		validityBoxes.add(box);
 	    		skillSelectors.add(new ListSelect("skill"+i, this,page0, 0.38f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		skillActFormSelectors.add(new ListSelect("actForm"+i, this,page0, 0.70f,0.15f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
 	    		inventorySelectors.add(new ListSelect("inv"+i, this,page0, 0.38f,0.25f, 0.20f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],new Object[0],new Quad[0],null,null));
@@ -235,6 +239,9 @@ public class TurnActWindow extends PagedInputWindow {
 		{	
 			if (i!=null && !i.isDead()) {
 				ListSelect select = skillSelectors.get(counter);
+				groupSelectors.get(counter).reattach();
+				skillActFormSelectors.get(counter).reattach();
+				groupSelectors.get(counter).reattach();
 				select.reattach();
 				select.subject = i;				
 				Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(combat?Ecology.PHASE_TURNACT_COMBAT:Ecology.PHASE_TURNACT_SOCIAL_RIVALRY);
@@ -314,6 +321,7 @@ public class TurnActWindow extends PagedInputWindow {
 			select = inventorySelectors.get(i);
 			select.detach();
 			memberNames.get(i).detach();
+			validityBoxes.get(i).detach();
 		}
 		numberOfChars = counter;
 		// activate first skill selector.
@@ -378,9 +386,42 @@ public class TurnActWindow extends PagedInputWindow {
 		}
 		noNeedForRefreshPage = false;
 		super.setupPage();
-	}	
+		if (currentPage==0)
+		{
+			getSelected().deactivate();
+			for (int i=0; i<skillSelectors.size();i++)
+			{
+				inputLeft(skillSelectors.get(i), "setup");
+			}
+		}
+	}
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
+
+		if (skillSelectors.contains(base) || skillActFormSelectors.contains(base) || groupSelectors.contains(base) || inventorySelectors.contains(base))
+		{
+			int charNo = 0;
+			if (skillSelectors.contains(base))
+			{
+				charNo = skillSelectors.indexOf(base);
+			}
+			if (skillActFormSelectors.contains(base))
+			{
+				charNo = skillActFormSelectors.indexOf(base);
+			}
+			if (groupSelectors.contains(base))
+			{
+				charNo = groupSelectors.indexOf(base);
+			}
+			if (inventorySelectors.contains(base))
+			{
+				charNo = inventorySelectors.indexOf(base);
+			}
+			boolean b = checkIsValidAct(charNo);
+			System.out.println("######### CHAR "+charNo+ " VALID? "+b);
+			validityBoxes.get(charNo).setChecked(b);
+			validityBoxes.get(charNo).deactivate();
+		}
 		return false;
 	}
 
@@ -722,6 +763,75 @@ public class TurnActWindow extends PagedInputWindow {
 		groupSelect.deactivate();
 	}
 	
+	
+	private boolean checkIsValidAct(int character)
+	{
+		int counter = character;
+		info.memberToChoice.clear();
+//		for (ListSelect s:skillSelectors)
+		{
+			ListSelect s = skillSelectors.get(character);
+			if (s.isEnabled()) {
+				EntityMemberInstance i = (EntityMemberInstance)s.subject;
+				TurnActMemberChoice choice = new TurnActMemberChoice();
+				choice.member = i;
+				if (skillSelectors.get(counter).getSelectedObject()==doNothingSkillChoiceObject)
+				{
+					choice.doNothing = true;
+				} else
+				if (skillSelectors.get(counter).getSelectedObject()==doUseSkillChoiceObject)
+				{
+					choice.doUse = true;
+					InventoryListElement obj = (InventoryListElement)inventorySelectors.get(counter).getSelectedObject();
+					EncounterUnitData fragmentAndSubunit = null;
+					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
+					choice.target = fragmentAndSubunit;					
+					choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize? 
+					choice.usedObject = obj;
+					if (obj==null) return false; // no object for use!
+				} else
+				{
+
+					SkillBase sb = null;
+					sb = (SkillBase)skillSelectors.get(counter).getSelectedObject();
+					InventoryListElement obj = (InventoryListElement)inventorySelectors.get(counter).getSelectedObject();
+					Class<?extends SkillActForm> f = null;
+					f = (Class<?extends SkillActForm>)skillActFormSelectors.get(counter).getSelectedObject();
+					
+					// check if act form is selected
+					if (f==null) return false; // without act form do not go further
+					if (sb.needsInventoryItem && obj==null) return false; // no object for skill!
+					
+					EncounterUnitData fragmentAndSubunit = null;
+					fragmentAndSubunit = (EncounterUnitData)groupSelectors.get(counter).getSelectedObject();
+					if (fragmentAndSubunit == null) return false; // no target unit! 
+					
+					choice.skill = i.getSkills().skills.get(sb.getClass());
+					SkillActForm selectedForm = null;
+					for (SkillActForm formInst:sb.getActForms())
+					{
+						if (formInst.getClass()==f)
+						{
+							selectedForm = formInst;
+						}
+					}
+					choice.skillActForm = selectedForm;
+					choice.target = fragmentAndSubunit;					
+					choice.targetMember = fragmentAndSubunit.getFirstLivingMember(); // TODO randomize?
+					if (selectedForm!=null && selectedForm.skill.needsInventoryItem)
+					{
+						choice.usedObject = obj;
+					} else
+					{
+						choice.usedObject = null;
+					}
+				}
+				info.memberToChoice.put(i, choice);
+			}
+			counter++;
+		}
+		return true;
+	}
 	
 	public PlayerActChoiceInfo info = new PlayerActChoiceInfo();
 	
