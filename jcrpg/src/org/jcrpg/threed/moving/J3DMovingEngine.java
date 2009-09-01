@@ -38,6 +38,7 @@ import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.Characters;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EntityMember;
 import org.jcrpg.world.ai.EntityScaledRelationType;
@@ -51,8 +52,11 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.Spatial.TextureCombineMode;
+import com.jme.scene.state.BlendState;
 import com.jme.scene.state.ZBufferState;
+import com.jme.system.DisplaySystem;
 
 /**
  * Moving units 3d display part.
@@ -331,9 +335,27 @@ public class J3DMovingEngine {
 		if (unit.form.forGroup()) {
 			BillboardNode n = new BillboardNode("name");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
-			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.getSize(), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
-			currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
-			n.attachChild(slottextNode);
+			Node slottextNode = null;
+			
+			/*if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				slottextNode = new Node("");
+				Text text = Text.createDefaultTextLabel("gname",""+unit.form.getSize());
+				text.setTextColor(new ColorRGBA(0.9f,0.9f,0.9f,1f));
+				slottextNode.attachChild(text);
+				slottextNode.setLightCombineMode(LightCombineMode.Off);
+				Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
+				BlendState as1 = renderer.createBlendState();
+				as1.setBlendEnabled( true );
+				as1.setSourceFunction( BlendState.SourceFunction.SourceAlpha);
+				as1.setDestinationFunction( BlendState.DestinationFunction.OneMinusSourceAlpha);
+				as1.setEnabled( true );
+				slottextNode.setRenderState(as1);
+			} else*/
+			{
+				slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText(""+unit.form.getSize(), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),new ColorRGBA(0.8f,0.8f,0.8f,1f),false);
+				currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
+			}
 			slottextNode.setCullHint( CullHint.Never);
 			slottextNode.setTextureCombineMode( TextureCombineMode.Replace );
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -341,6 +363,7 @@ public class J3DMovingEngine {
 			s.setFunction(ZBufferState.TestFunction.Always);
 			//s.setEnabled(false);
 			//slottextNode.setRenderState(s);
+			n.attachChild(slottextNode);
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
@@ -364,8 +387,28 @@ public class J3DMovingEngine {
 			
 			BillboardNode n = new BillboardNode("name2");
 			n.setAlignment(BillboardNode.SCREEN_ALIGNED);
-			Node slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
-			currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
+
+			Node slottextNode = null;
+			/*if (J3DCore.NATIVE_FONT_RENDER)
+			{
+				slottextNode = new Node("");
+				Text text = Text.createDefaultTextLabel("gname",(unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()));
+				text.setTextColor(new ColorRGBA(0.9f,0.9f,0.9f,1f));
+				slottextNode.attachChild(text);
+				slottextNode.setLightCombineMode(LightCombineMode.Off);
+				Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
+				BlendState as1 = renderer.createBlendState();
+				as1.setBlendEnabled( true );
+				as1.setSourceFunction( BlendState.SourceFunction.SourceAlpha);
+				as1.setDestinationFunction( BlendState.DestinationFunction.OneMinusSourceAlpha);
+				as1.setEnabled( true );
+				slottextNode.setRenderState(as1);
+			} else*/
+			{
+				slottextNode = FontUtils.textNonBoldVerdana.createOutlinedText((unit.form.getLineupLine()+1)+". "+(unit.form.forGroup()?unit.form.type.getName():unit.form.member.getName()), 1, new ColorRGBA(0.9f,0.9f,0.9f,1f),c,true);
+				currentTextNodes.put(slottextNode, FontUtils.textNonBoldVerdana);
+			}
+
 			n.attachChild(slottextNode);
 			slottextNode.setCullHint( CullHint.Never);
 			slottextNode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
