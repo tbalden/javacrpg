@@ -489,6 +489,10 @@ public class ListSelect extends InputBase {
 		if (key.equals("enter"))
 		{
 			w.inputUsed(this , key);
+		} else
+		if (key.equals("negative"))
+		{
+			w.inputUsed(this , key);
 		}
 		return false;
 	}
@@ -631,18 +635,35 @@ public class ListSelect extends InputBase {
 				}
 				if (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_RIGHT))
 				{
-					//if (mouseEvent.getAreaSpatial().ratioX>0.8f)
+					if (active)
 					{
-						if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+						
+						if (mouseEvent.getAreaSpatial().ratioX>0.8f || nextPageAvailable && selected == size-1)
 						{
-							selected = size-2;
-							return handleKey("lookRight");
+							if (mouseEvent.getAreaSpatial().ratioY>0.5f)
+							{
+								selected = size-2;
+								return handleKey("lookRight");
+							} else
+							{
+								selected = 0;
+								return handleKey("lookLeft");
+							}
+
 						} else
 						{
-							selected = 0;
-							return handleKey("lookLeft");
+							boolean b = handleKey("negative");
+							if (deactivateUponUse)
+							{
+								w.inputLeft(this, "");
+								deactivate();
+							}
+							return b;
 						}
-
+					} else
+					{
+						activate();
+						return true;
 					}
 				}
 			}

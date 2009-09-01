@@ -22,12 +22,12 @@ Society, Groups etc.
 [ ] integrate new content
 
 [ ] ui improving
-	[ ] replace all texts with the new renderer! (floating texts, points, unit names?)
 	[ ] Tooltips at char generation (professions!!) ! TOOLTIP should be one quad that is used all the time, Text replaced in it! 
 	
 	[X] make the dropdown list better -> bgImage should change to arrows Up/Down, mouse cursor should change only if there's more to select in the given dir.
 	[X] Combat actions -> Red sign if a character didnt set correct action yet! (easier to spot why you cant start turn)
 	    - in battle, the initially activated drop down is disturbing, if the second character action is to be changed
+	[-] replace all texts with the new renderer! (floating texts, points, unit names?) - doesnt work in real 3d!
 	
 [ ] MAP
 	[X] town type icons (instead of dots)

@@ -361,6 +361,7 @@ public class PartySetup extends PagedInputWindow {
 				inputChanged(addCharSelect, "");
 			}
 			addCharSelect.setUpdated(true);
+			toggleTooltip(null);
 		}
 		if (currentPage==1)
 		{
@@ -670,6 +671,10 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(addCharSelect) || base.equals(addChar))
 		{
+			if (message.equals("negative"))
+			{
+				return inputUsed(rmChar, "");
+			}
 			// ############# ADDING Char
 			if (charactersOfParty.size()==6) return true;
 			if (dataList.size()==0) return true;
@@ -900,6 +905,7 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
+		toggleTooltip(null);
 		if (base.equals(raceSelect))
 		{
 			Jcrpg.LOGGER.finer("RACE SELECT LEFT");
@@ -1100,6 +1106,8 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
+		toggleTooltip("test tooltip");
+
 		if (base.equals(voiceSelect))
 		{
 			AudioDescription desc  = (AudioDescription)voiceSelect.getSelectedObject();
