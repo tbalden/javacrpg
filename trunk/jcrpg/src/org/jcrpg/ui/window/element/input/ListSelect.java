@@ -44,6 +44,7 @@ public class ListSelect extends InputBase {
 	
 	public String[] ids;
 	public String[] texts;
+	public String[] tooltips;
 	public Object[] objects;
 	public Quad[] icons;
 	
@@ -700,5 +701,11 @@ public class ListSelect extends InputBase {
 		return deactivatedNode;
 	}
 	
-	
+	@Override
+	public String getTooltipText()
+	{
+		try {
+			return tooltips[fromCount+selected]; 
+		}catch (Exception ex) {return null;}
+	}
 }

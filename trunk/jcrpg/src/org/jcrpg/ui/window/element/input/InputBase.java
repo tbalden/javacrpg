@@ -319,6 +319,11 @@ public abstract class InputBase implements Savable{
 	}
 	
 	public abstract Node getDeactivatedNode();
+	
+	public String getTooltipText()
+	{
+		return null;
+	}
 		
 	
 	

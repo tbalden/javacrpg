@@ -19,11 +19,14 @@
 package org.jcrpg.ui;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.world.ai.EntityMemberInstance;
@@ -32,8 +35,11 @@ import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.system.DisplaySystem;
+import com.sun.org.apache.xerces.internal.impl.xs.SubstitutionGroupHandler;
 
 public abstract class Window {
 
@@ -150,15 +156,20 @@ public abstract class Window {
 		public final float ttXPosRatio = 0.75f;
 		public final float ttYPosRatio = 0.93f;
 		
-		public final float fontSizeRatio = 0.01f;
+		public final float fontSizeRatio = 0.011f;
+		public final float fontYSizeRatio = 0.025f;
 		
-		
+		public final float fontRealRowDispositionUnit;
+		public final float fontRealColumnDispositionUnit;
 		private float xSize = 0f;
 		private float ySize = 0f;
 		private float xPos = 0f;
 		private float yPos = 0f;
 		
+		private int lettersX, lettersY;
+		
 		Quad bgImage;
+		Text[] lines = null;
 		
 		public TooltipBox() throws Exception 
 		{
@@ -168,13 +179,64 @@ public abstract class Window {
 			ySize = height * ttYSizeRatio;
 			xPos = width * ttXPosRatio;
 			yPos = width * (1f-ttYPosRatio);
-			bgImage = loadImageToQuad(TextButton.defaultImage, xSize, ySize, xPos, yPos);
 			
+			fontRealRowDispositionUnit = height * fontYSizeRatio;
+			fontRealColumnDispositionUnit = width * fontSizeRatio;
+			
+			lettersX = (int)(ttXSizeRatio/fontSizeRatio);
+			lettersY = (int)(ttYSizeRatio/fontYSizeRatio);
+			lines = new Text[lettersY];
+			for (int i=0; i<lines.length; i++)
+			{
+				lines[i] = Text.createDefaultTextLabel("tt_line"+i);
+				lines[i].setCullHint(CullHint.Never );
+				lines[i].setTextureCombineMode( TextureCombineMode.Replace );
+				lines[i].setLocalTranslation(-1*(lettersX/2f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.2f)/2f) - i)*fontRealRowDispositionUnit,0);
+				lines[i].setLocalScale(0.8f);
+				ttTextBaseNode.attachChild(lines[i]);
+			}
+			
+			bgImage = loadImageToQuad(TextButton.defaultImage, xSize, ySize, xPos, yPos);
+			ttTextBaseNode.setLocalTranslation(xPos, yPos, 0);
 			if (ttTextBaseNode.getParent()==null)
 			{
 				tooltipNode.attachChild(bgImage);
 				tooltipNode.attachChild(ttTextBaseNode);
 			}
+			tooltipNode.updateRenderState();
+			tooltipNode.updateModelBound();
+		}
+		
+		
+		
+		public String[] wrapText(String text)
+		{
+			int wrapLimit = lettersX;
+			StringTokenizer st = new StringTokenizer(text," ");
+			
+			ArrayList<String> lines = new ArrayList<String>();
+			String currentLine = "";
+			while (st.hasMoreTokens())
+			{
+				String token = st.nextToken();
+				if (currentLine.length()+token.length()>wrapLimit)
+				{
+					if (currentLine.length()<wrapLimit*0.3f)
+					{
+						String firstPart = token.substring(0,(int)(wrapLimit*0.7f));
+						currentLine=currentLine+" "+firstPart;
+						lines.add(currentLine);
+						token = token.substring((int)(wrapLimit*0.7f));
+					} else
+					{
+						lines.add(currentLine);
+					}
+					currentLine = "";
+				}
+				currentLine+=" "+token;
+			}
+			lines.add(currentLine);
+			return lines.toArray(new String[0]);
 		}
 		
 		public void toggleTooltip(String text, Node parent)
@@ -184,6 +246,18 @@ public abstract class Window {
 				tooltipNode.removeFromParent();
 			} else
 			{
+				String[] lines = wrapText(text);
+				for (int i=0; i<lines.length; i++)
+				{
+					if (i<lettersY)
+					{
+						this.lines[i].print(lines[i]);
+					}
+				}
+				for (int i=lines.length; i<this.lines.length; i++)
+				{
+					this.lines[i].print("");
+				}
 				parent.attachChild(tooltipNode);
 			}
 		}
