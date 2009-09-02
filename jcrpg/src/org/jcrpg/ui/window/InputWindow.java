@@ -122,7 +122,11 @@ public abstract class InputWindow extends Window implements KeyListener{
 		}
 	}
 
-	public abstract boolean inputChanged(InputBase base, String message);
+	public boolean inputChanged(InputBase base, String message)
+	{
+		toggleTooltip(base.getTooltipText());
+		return false;
+	}
 
 	public abstract boolean inputLeft(InputBase base, String message);
 
@@ -233,6 +237,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 			}
 		}
 		setSelected(input);
+		toggleTooltip(input.getTooltipText());
 	}
 
 }

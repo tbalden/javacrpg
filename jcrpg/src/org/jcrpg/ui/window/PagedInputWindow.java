@@ -30,7 +30,7 @@ public abstract class PagedInputWindow extends InputWindow {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		super.inputChanged(base, message);
 		return false;
 	}
 

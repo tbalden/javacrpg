@@ -361,7 +361,6 @@ public class PartySetup extends PagedInputWindow {
 				inputChanged(addCharSelect, "");
 			}
 			addCharSelect.setUpdated(true);
-			toggleTooltip(null);
 		}
 		if (currentPage==1)
 		{
@@ -905,7 +904,6 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
-		toggleTooltip(null);
 		if (base.equals(raceSelect))
 		{
 			Jcrpg.LOGGER.finer("RACE SELECT LEFT");
@@ -1053,6 +1051,7 @@ public class PartySetup extends PagedInputWindow {
 				}
 				ArrayList<String> ids = new ArrayList<String>();
 				ArrayList<String> texts = new ArrayList<String>();
+				ArrayList<String> tooltips = new ArrayList<String>();
 				MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
 				int i = genderSelect.getSelection();
 				int genderId = Integer.parseInt(genderSelect.ids[i]);
@@ -1067,6 +1066,7 @@ public class PartySetup extends PagedInputWindow {
 			    		ids.add(""+id);
 			    		texts.add(s);
 			    		professions.add(p);
+			    		tooltips.add(Language.v("professions.tooltip."+p.getClass().getSimpleName()));
 					}
 					id++;
 				}
@@ -1074,6 +1074,7 @@ public class PartySetup extends PagedInputWindow {
 		    	professionSelect.ids = ids.toArray(new String[0]);
 		    	professionSelect.texts = texts.toArray(new String[0]);
 		    	professionSelect.objects = professions.toArray(new Object[0]);
+		    	professionSelect.tooltips = tooltips.toArray(new String[0]);
 		    	professionSelect.setUpdated(true);
 	    		int count = 0;
 	    		boolean needActivate = false;
@@ -1106,8 +1107,8 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, Quad> imgQuads = new HashMap<String, Quad>();
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		toggleTooltip("test tooltip");
 
+		super.inputChanged(base, message);
 		if (base.equals(voiceSelect))
 		{
 			AudioDescription desc  = (AudioDescription)voiceSelect.getSelectedObject();
