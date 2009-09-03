@@ -190,12 +190,21 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	float column2 = 0.5f, column1 = 0.33f;
 	    	
+	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, column1,0.37f,0.15f,0.2f,600f);
+	    	addInput(1,pictureSelect);
+
 	    	new TextLabel("",this,pageCreationFirst, column1, 0.5f, 0.3f, 0.06f,600f,"Profession:",false); 
 	    	{
 		    	professionSelect = new ListSelect("profession", this,pageCreationFirst, column1,0.55f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 	    	}
 	    	addInput(1,professionSelect);
 	    	
+
+	    	new TextLabel("",this,pageCreationFirst, column1, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
+	    	{
+		    	voiceSelect = new ListSelect("voice", this,pageCreationFirst, column1,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
+	    	}
+	    	addInput(1,voiceSelect);
 	    	
 	    	attrPointsLeftLabel = new TextLabel("",this,pageCreationFirst, column2, 0.7f, 0.2f, 0.07f,500f,attrPointsLeft+" points left.",false); 
 	    	
@@ -211,15 +220,6 @@ public class PartySetup extends PagedInputWindow {
 	    		posY++;
 	    	}
 
-	    	pictureSelect = new PictureSelect("picture_select", this, pageCreationFirst, column1,0.37f,0.15f,0.2f,600f);
-	    	addInput(1,pictureSelect);
-
-
-	    	new TextLabel("",this,pageCreationFirst, column1, 0.6f, 0.3f, 0.06f,600f,Language.v("partySetup.voiceType")+":",false); 
-	    	{
-		    	voiceSelect = new ListSelect("voice", this,pageCreationFirst, column1,0.65f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
-	    	}
-	    	addInput(1,voiceSelect);
 
 	    	
 	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.8f, 0.2f, 0.07f,400f,"Next Page");
@@ -969,6 +969,8 @@ public class PartySetup extends PagedInputWindow {
 			inputLeft(genderSelect, "fake");
 			inputEntered(professionSelect, "fake");
 
+			genderSelect.activate();
+			
 		} else
 		if (base.equals(genderSelect))
 		{
@@ -1004,9 +1006,15 @@ public class PartySetup extends PagedInputWindow {
 			voiceSelect.ids = ids;
 			voiceSelect.setSelected(0);
 			voiceSelect.setUpdated(true);
-			voiceSelect.activate();
+			//voiceSelect.activate();
 			voiceSelect.deactivate();
-			
+			if ("lookUp".equals(message))
+			{
+				raceSelect.activate();
+			} else
+			{
+				pictureSelect.activate();
+			}
 		} else
 		if (base.equals(skillValueTuner))
 		{
