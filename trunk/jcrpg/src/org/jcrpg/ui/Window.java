@@ -156,8 +156,8 @@ public abstract class Window {
 		public final float ttXPosRatio = 0.75f;
 		public final float ttYPosRatio = 0.93f;
 		
-		public final float fontSizeRatio = 0.011f;
-		public final float fontYSizeRatio = 0.025f;
+		public final float fontSizeRatio = 0.009f;
+		public final float fontYSizeRatio = 0.022f;
 		
 		public final float fontRealRowDispositionUnit;
 		public final float fontRealColumnDispositionUnit;

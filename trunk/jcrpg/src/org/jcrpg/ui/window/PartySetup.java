@@ -377,15 +377,18 @@ public class PartySetup extends PagedInputWindow {
 		    	int id = 0;
 		    	String[] ids = new String[charCreationRule.selectableRaces.size()];
 		    	String[] names = new String[charCreationRule.selectableRaces.size()];
+		    	String[] tooltips = new String[charCreationRule.selectableRaces.size()];
 		    	for (Class<? extends EntityMember> c: charCreationRule.selectableRaces)
 		    	{
-		    		String s = c.getSimpleName();
+		    		String s = (Language.v("races."+c.getSimpleName()));
+		    		tooltips[id] = (Language.v("races.tooltip."+c.getSimpleName()));
 		    		ids[id] = ""+id;
 		    		names[id] = s;
 		    		id++;
 		    	}	    	
 		    	raceSelect.ids = ids;
 		    	raceSelect.texts = names;
+		    	raceSelect.tooltips = tooltips;
 		    	raceSelect.setUpdated(true);
 	    	}
 	    	raceSelect.activate();
