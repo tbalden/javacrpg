@@ -18,9 +18,13 @@
 
 package org.jcrpg.world.ai.humanoid.group.human;
 
+import java.util.HashMap;
+
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
+import org.jcrpg.ui.map.BlockPattern;
+import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
@@ -31,12 +35,15 @@ import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
 import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.tropical.Tropical;
+import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
+
+import com.jme.renderer.ColorRGBA;
 
 public class HumanCommoners extends HumanoidEntityDescription {
 
@@ -97,6 +104,36 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public byte[] getPopulationMapColor() {
 		return populationColor;
 	}
+	public static ColorRGBA[][] CITY_COLORED = IconReader.readMapIconFile("./data/ui/mapicons/human.ico");
+
+	public static boolean[][] CITY = new boolean[][] 
+			  	                                    {
+			  		{ true, false, false, false, false,false, true, false, false },
+			  		{ false, true, true, true, true,false, true, false, false },
+			  		{ false, true, false, false, true,true, true, false, false },
+			  		{ false, true, false, true, true,true, false, false, false },
+			  		{ false, true, true, true, true,true, false, false, false },
+			  		{ false, true, true, true, true,false, false, false, false },
+			  		{ true, false, false, false, true,true, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false },
+			  		{ false, false, false, false, false,false, false, false, false }
+			  	                                    }
+			  	;
+
+	static HashMap<Class<? extends Population>, BlockPattern> patternMap = new HashMap<Class<? extends Population>, BlockPattern>();
+	static 
+	{
+		BlockPattern patternSimpleDistrict = new BlockPattern();
+		patternSimpleDistrict.PATTERN = CITY;
+		patternSimpleDistrict.COLORED_PATTERN = CITY_COLORED;
+		patternMap.put(SimpleDistrict.class, patternSimpleDistrict);
+	}
+	
+	@Override
+	public HashMap<Class<? extends Population>, BlockPattern> getPopulationPatternMap() {
+		return patternMap;
+	}
+	
 	
 
 	

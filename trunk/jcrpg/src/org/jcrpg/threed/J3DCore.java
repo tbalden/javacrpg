@@ -2754,7 +2754,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		HashMap<String, String[]> busyImages = new HashMap<String, String[]>();
 		String[] loading = new String[] {"./data/ui/loading1.dds","./data/ui/busy/loading2.dds"};
 		busyImages.put(BusyPaneWindow.LOADING, loading);
-		String[] economy = new String[] {"./data/ui/busy/economic1.dds"};
+		String[] economy = new String[] {"./data/ui/busy/economic1.dds","./data/ui/busy/economic2.dds"};
 		busyImages.put(BusyPaneWindow.ECONOMY, economy);
 		busyPane = new BusyPaneWindow(uiBase,busyImages,BusyPaneWindow.LOADING);
 		optionsMenu = new OptionsMenu(uiBase);

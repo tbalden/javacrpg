@@ -25,7 +25,7 @@ Society, Groups etc.
 		Higher resolution map - colored populations.
 		[ ] colored population icons instead of boolean array!
 		
-	[ ] legendary to the map
+	[X] legendary to the map - by tooltip done
 
 	[X] town type icons (instead of dots)
 	[X] label to map, 

@@ -382,7 +382,7 @@ public class RenderedArea {
 		world.perf_water_t0 = 0;
 		
 		long time1 = System.currentTimeMillis();
-		System.out.println("WCC START : "+worldCubeCache.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("WCC START : "+worldCubeCache.size());
 		if (rerender) lastRenderedWorld = null; 
 	
 		int[][][] toRemoveCoordinates = getNeededCoordinateIntervals(world, x, y, z, true);
@@ -410,7 +410,7 @@ public class RenderedArea {
 					numberOfProcesses--;
 					return null;
 				}
-				System.out.println("clone time: "+(System.currentTimeMillis()-time));
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("clone time: "+(System.currentTimeMillis()-time));
 			}
 		}
 
@@ -418,7 +418,7 @@ public class RenderedArea {
 		{
 			if (toRemoveCoordinates==ALL_COORDINATES)
 			{
-				System.out.println("REMOVING ALL COORDINATES");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("REMOVING ALL COORDINATES");
 				toRemove = worldCubeCache.values().toArray(new RenderedCube[0]);
 				worldCubeCache.clear();
 			} else
@@ -667,14 +667,8 @@ public class RenderedArea {
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- wat = "+world.perf_water_t0);
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-- sur = "+world.perf_surface_t0);
 
-		System.out.println("WORLDCUBECACHE = "+worldCubeCache.size()+ " ADD: "+toAdd.length+" REM: "+toRemove.length);
-		System.out.println("-- eco = "+world.perf_eco_t0);
-		System.out.println("-- geo = "+world.perf_geo_t0);
-		System.out.println("-- flo = "+world.perf_flora_t0);
-		System.out.println("-- cli = "+world.perf_climate_t0);
-		System.out.println("-- wat = "+world.perf_water_t0);
-		System.out.println("-- sur = "+world.perf_surface_t0);
-		System.out.println("FULL TIME = "+(System.currentTimeMillis()-time1));
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("WORLDCUBECACHE = "+worldCubeCache.size()+ " ADD: "+toAdd.length+" REM: "+toRemove.length);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("FULL TIME = "+(System.currentTimeMillis()-time1));
 		isInProcess = false;
 		numberOfProcesses--;
 		return new RenderedCube[][]{toAdd,toRemove, new RenderedCube[0],new RenderedCube[0]};

@@ -290,7 +290,7 @@ public class AudioServer implements Runnable {
 		boolean b = false;
 		for (Channel c:channels)
 		{
-			if (!c.isAvailable()) System.out.println(c.soundId);
+			if (!c.isAvailable()) if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(c.soundId);
 			if (!c.isAvailable() && c.soundId.equals(id))
 			{
 				//c.track.setLooping(true);
@@ -330,9 +330,9 @@ public class AudioServer implements Runnable {
 	 */
 	public void playEventMusic(String id,boolean loop)
 	{
-		System.out.println("###################### EVENT MUSIC: "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("###################### EVENT MUSIC: "+id);
 		if (isMusicPlaying(id)) return;
-		System.out.println("NOT PLAYING, EVENT MUSIC: "+id);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NOT PLAYING, EVENT MUSIC: "+id);
 		eventMusicId = id;
 		pauseAllMusicChannels();
 		try {
@@ -372,7 +372,7 @@ public class AudioServer implements Runnable {
 			while (true)
 			{
 				AudioTrack track = hmTracks.get(id).get(counter);
-				System.out.println("TRACK = "+ track+ " P "+track.isPlaying()+ " A "+track.isActive()+" S "+track.isStopped());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("TRACK = "+ track+ " P "+track.isPlaying()+ " A "+track.isActive()+" S "+track.isStopped());
 				if (track.isPlaying())
 				{
 					//if (continuous) 
@@ -381,7 +381,6 @@ public class AudioServer implements Runnable {
 					if (counter==hmTracks.get(id).size())
 					{
 						if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
-						System.out.println("getPlayableTrack CREATING NEW ONE FOR "+id +" "+hmTracks.get(id).size());
 						return addTrack(id, hmTracksAndFiles.get(id));
 						
 					}
@@ -493,7 +492,7 @@ public class AudioServer implements Runnable {
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
-				System.out.println("NEW TRACK");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEW TRACK");
 
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 			}
@@ -526,7 +525,7 @@ public class AudioServer implements Runnable {
 		{
 			if (musicChannel.playing)
 			{
-				System.out.println("## PAUSING: "+musicChannel.soundId);
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("## PAUSING: "+musicChannel.soundId);
 				pausedChannels.add(musicChannel);
 			}
 		}
@@ -537,7 +536,7 @@ public class AudioServer implements Runnable {
 		try {
 			AudioTrack track = getPlayableTrack(id);
 			if (track==null) {
-				System.out.println("NEW TRACK");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEW TRACK");
 
 				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
 			}
@@ -622,7 +621,6 @@ public class AudioServer implements Runnable {
 	public synchronized  void fadeOut(String id)
 	{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Fadingout "+id);
-		System.out.println("FADOUT "+id);
 		fadeOutIdOnAllChannels(channels,id);
 	}
 
@@ -716,11 +714,11 @@ public class AudioServer implements Runnable {
 					float newLevel = (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 					try {
 						float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
-						System.out.println("C: "+t.getVolume());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("C: "+t.getVolume());
 						newLevel = relativeLevel * (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 					} catch (Exception ex) {}
 					if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
-					System.out.println("NEWL: "+newLevel);
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEWL: "+newLevel);
 					if (!t.isPlaying())
 					{
 						t.setVolume(newLevel);
@@ -752,11 +750,11 @@ public class AudioServer implements Runnable {
 						float newLevel = (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 						try {
 							float relativeLevel = t.getVolume() / (EFFECT_VOLUME_PERCENT_LAST/100f);
-							System.out.println("C: "+t.getVolume());
+							if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("C: "+t.getVolume());
 							newLevel = relativeLevel * (J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 						} catch (Exception ex) {}
 						if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
-						System.out.println("NEWL: "+newLevel);
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEWL: "+newLevel);
 						if (!t.isPlaying())
 						{
 							t.setVolume(newLevel);
@@ -771,11 +769,11 @@ public class AudioServer implements Runnable {
 						float newLevel = (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 						try {
 							float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
-							System.out.println("C: "+t.getVolume());
+							if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("C: "+t.getVolume());
 							newLevel = relativeLevel * (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 						} catch (Exception ex) {}
 						if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
-						System.out.println("NEWL: "+newLevel);
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEWL: "+newLevel);
 						if (!t.isPlaying())
 						{
 							t.setVolume(newLevel);
@@ -798,11 +796,11 @@ public class AudioServer implements Runnable {
 					float newLevel = (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 					try {
 						float relativeLevel = t.getVolume() / (MUSIC_VOLUME_PERCENT_LAST/100f);
-						System.out.println("C: "+t.getVolume());
+						if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("C: "+t.getVolume());
 						newLevel = relativeLevel * (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 					} catch (Exception ex) {}
 					if (Float.isNaN(newLevel)) newLevel =(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
-					System.out.println("NEWL: "+newLevel);
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEWL: "+newLevel);
 					if (!t.isPlaying())
 					{
 						t.setVolume(newLevel);
@@ -888,16 +886,16 @@ public class AudioServer implements Runnable {
 		}
 		if (J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT==0) return;
 		currentlyPlayingBackgroundMusic.add(music);
-		System.out.println("------------");
-		System.out.println("############ "+music);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("------------ BACKGROUND MUSIC ----------");
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("############ "+music);
 		Channel c = getAvailableMusicChannel();
-		System.out.println("-#_#_#_#_#"+c);
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("-#_#_#_#_#"+c);
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("playContinuousLoading Playing "+music);		
 		if (c!=null)
 		try {
 			AudioTrack track = getPlayableTrack(music);
 			if (track==null) {
-				System.out.println("NEW TRACK");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("LOADING BRAND NEW BG MUSIC TRACK");
 				track = addTrackStreaming(music, music);
 				track.addTrackStateListener(new BackgroundMusicStateListener(this));
 				
@@ -912,15 +910,15 @@ public class AudioServer implements Runnable {
 			track.setLooping(false);
 			c.setTrack(music, track);
 			//c.playTrack();
-			System.out.println("TIME: "+c.track.getCurrentTime());
-			System.out.println("VOLU: "+c.track.getVolume());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("TIME: "+c.track.getCurrentTime());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("VOLU: "+c.track.getVolume());
 			c.track.getPlayer().setStartTime(System.currentTimeMillis());
 			c.track.setEnabled(true);
 			
 			//c.track.getPlayer().setMaxAudibleDistance(maxDistance)
 			c.track.play();
 			c.track.getPlayer().updateTrackPlacement();
-			System.out.println("$$$$$$$$$$ PLAYING...");
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("$$$$$$$$$$ PLAYING...");
 		} catch (NullPointerException npex)
 		{
 			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();	

@@ -607,7 +607,7 @@ public class ModelLoader {
 	    	TextureState ts = textureStateCache.get(key);
 	    	if (ts!=null) {tss.add(ts); continue;}
 	    	Jcrpg.LOGGER.warning("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
-	    	System.out.println("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
+	    	//System.out.println("ModelLoader.loadTextureStates - New Texture "+textureNames[i]);
 	    	ts = DisplaySystem.getDisplaySystem().getRenderer().createTextureState();
 	    	//if (true==false)
 	    	{
@@ -840,7 +840,7 @@ public class ModelLoader {
 		String key = o.modelName+o.textureName+o.mipMap;
 		
     	//Jcrpg.LOGGER.info("CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
-		System.out.println("LOADING MODEL! "+o.modelName+" - CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("LOADING MODEL! "+o.modelName+" - CACHE SIZE: NODE "+sharedNodeCache.size()+" - BIN "+binaryCache.size()+" - TEXST "+ textureStateCache.size()+" - TEX "+textureCache.size());
 		// adding keys to render temp key sets. These wont be removed from the cache after the rendering.
 		
 		tempNodeKeys.add(key);
@@ -861,7 +861,7 @@ public class ModelLoader {
     			return n;
     		}
     	}
-    	System.out.println("ModelLoader.loadNode - New model: "+o.modelName);
+    	if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("ModelLoader.loadNode - New model: "+o.modelName);
     	
     	if (o.modelName.endsWith(".obj"))
     	{

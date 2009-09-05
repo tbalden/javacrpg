@@ -18,8 +18,12 @@
 
 package org.jcrpg.ui.map;
 
+import com.jme.renderer.ColorRGBA;
+
 public class BlockPattern {
 
 	public boolean[][] PATTERN;
+	
+	public ColorRGBA[][] COLORED_PATTERN;
 	
 }

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;

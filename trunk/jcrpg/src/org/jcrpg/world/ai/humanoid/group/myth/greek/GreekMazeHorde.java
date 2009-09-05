@@ -21,6 +21,8 @@ package org.jcrpg.world.ai.humanoid.group.myth.greek;
 import java.util.HashMap;
 
 import org.jcrpg.ui.map.BlockPattern;
+import org.jcrpg.ui.map.IconReader;
+import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Evilrip;
@@ -38,6 +40,8 @@ import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
+
+import com.jme.renderer.ColorRGBA;
 
 public class GreekMazeHorde extends HumanoidEntityDescription {
 
@@ -86,12 +90,44 @@ public class GreekMazeHorde extends HumanoidEntityDescription {
 			  		{ false, false, false, false, false,false, false, false, false }
 			  	                                    }
 			  	;
-
+	
+	
+	static ColorRGBA TR = WorldMap.TR_COL;
+	static ColorRGBA RD = ColorRGBA.red;
+	static ColorRGBA OR = ColorRGBA.orange;
+	static ColorRGBA BL = ColorRGBA.black;
+	static ColorRGBA GY = ColorRGBA.gray;
+	public static ColorRGBA[][] CITY_COLORED = IconReader.readMapIconFile("./data/ui/mapicons/greek.ico");
+		/*
+		new ColorRGBA[][]
+	                                                           {
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, OR, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, TR, TR, TR },
+		{ TR, TR, OR, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, TR, TR, TR },
+		{ TR, TR, TR, OR, OR, RD, OR, OR, OR, RD, OR, OR, OR, RD, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, OR, RD, TR, TR, TR, TR },
+		{ TR, TR, OR, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, TR, TR, TR },
+		{ TR, TR, OR, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, RD, TR, TR, TR },
+		{ TR, TR, TR, OR, OR, OR, OR, OR, OR, OR, OR, OR, OR, OR, TR, TR, TR, TR },
+		{ TR, TR, TR, BL, BL, BL, GY, GY, GY, GY, OR, OR, OR, OR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR },
+		{ TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR, TR }
+		
+	                                                           };
+*/
 	static HashMap<Class<? extends Population>, BlockPattern> patternMap = new HashMap<Class<? extends Population>, BlockPattern>();
 	static 
 	{
 		BlockPattern patternSimpleDistrict = new BlockPattern();
 		patternSimpleDistrict.PATTERN = CITY;
+		patternSimpleDistrict.COLORED_PATTERN = CITY_COLORED;
 		patternMap.put(DungeonDistrict.class, patternSimpleDistrict);
 	}
 	

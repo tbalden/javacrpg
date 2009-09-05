@@ -41,6 +41,7 @@ import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.BillboardNode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
@@ -68,8 +69,8 @@ public class WorldMap {
 	public int NOTHING = 0;
 	public int WATER = 1;
 	
-	public static int PIXELS_PER_BLOCK = 9;
-	public static int PIXELS_PER_BLOCK_OVERLAP = 11;
+	public static int PIXELS_PER_BLOCK = 18;
+	public static int PIXELS_PER_BLOCK_OVERLAP = 22;
 	
 	// 2
 	// 4
@@ -271,20 +272,39 @@ public class WorldMap {
 	
 	
 		
-	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
+	public void paintPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary, boolean zoomed)
 	{
+		
 		for (int x = 0; x<PIXELS_PER_BLOCK; x++)
 		{
 			for (int z = 0; z<PIXELS_PER_BLOCK; z++)
 			{
-				if (pattern[PIXELS_PER_BLOCK-1-z][x]) {
+				int patternX = 0, patternY = 0;
+				if (pattern.length<PIXELS_PER_BLOCK)
+				{
+					if (zoomed)
+					{
+						patternY = (PIXELS_PER_BLOCK-1-z)/2;
+						patternX = x/2;
+					} else
+					{
+						patternY = (PIXELS_PER_BLOCK-1-z)%(PIXELS_PER_BLOCK/2);
+						patternX = x%(PIXELS_PER_BLOCK/2);
+					}
+					//System.out.println("--"+patternY+" / "+patternX);
+				} else
+				{
+					patternY = PIXELS_PER_BLOCK-1-z;
+					patternX = x;
+				}
+				if (pattern[patternY][patternX]) {
 				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
 				for (int i=0; i<color.length; i++)
 				{
 					if (vary)
 
 						{
-						map[disp+i] = (byte)Math.min(color[i]+5*x,255);
+						map[disp+i] = (byte)Math.min(color[i]+2*x,255);
 						} else map[disp+i] = color[i];
 				}
 				map[disp+3] = alpha;}
@@ -293,13 +313,72 @@ public class WorldMap {
 		
 	}
 
-	public void paintOverlapPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary)
+	public void paintPattern(byte[] map, int X, int Y, int sizeX, ColorRGBA[][] pattern, boolean zoomed)
+	{
+		
+		for (int x = 0; x<PIXELS_PER_BLOCK; x++)
+		{
+			for (int z = 0; z<PIXELS_PER_BLOCK; z++)
+			{
+				int patternX = 0, patternY = 0;
+				if (pattern.length<PIXELS_PER_BLOCK)
+				{
+					if (zoomed)
+					{
+						patternY = (PIXELS_PER_BLOCK-1-z)/2;
+						patternX = x/2;
+					} else
+					{
+						patternY = (PIXELS_PER_BLOCK-1-z)%(PIXELS_PER_BLOCK/2);
+						patternX = x%(PIXELS_PER_BLOCK/2);
+					}
+					//System.out.println("--"+patternY+" / "+patternX);
+				} else
+				{
+					patternY = PIXELS_PER_BLOCK-1-z;
+					patternX = x;
+				}
+				if (pattern[patternY][patternX]!=TR_COL || pattern[patternY][patternX].a>0f) {
+				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
+				for (int i=0; i<4; i++)
+				{
+						map[disp+i] = (byte)((pattern[patternY][patternX].getColorArray()[i]*255f));
+				}
+				
+				}
+			}
+		}
+		
+	}
+	
+
+	public static ColorRGBA TR_COL = new ColorRGBA(0,0,0,0);
+
+	public void paintOverlapPattern(byte[] color, byte alpha, byte[] map, int X, int Y, int sizeX, boolean[][] pattern, boolean vary, boolean zoomed)
 	{
 		for (int x = 0; x<PIXELS_PER_BLOCK_OVERLAP; x++)
 		{
 			for (int z = 0; z<PIXELS_PER_BLOCK_OVERLAP; z++)
 			{
-				if (pattern[PIXELS_PER_BLOCK_OVERLAP-1-z][x]) 
+				int patternX = 0, patternY = 0;
+				if (pattern.length<PIXELS_PER_BLOCK_OVERLAP)
+				{
+					if (zoomed)
+					{
+						patternY = (PIXELS_PER_BLOCK_OVERLAP-1-z)/2;
+						patternX = x/2;
+					} else
+					{
+						patternY = (PIXELS_PER_BLOCK_OVERLAP-1-z)%PIXELS_PER_BLOCK_OVERLAP;
+						patternX = x%PIXELS_PER_BLOCK_OVERLAP;
+					}
+				} else
+				{
+					patternY = PIXELS_PER_BLOCK_OVERLAP-1-z;
+					patternX = x;
+				}
+				
+				if (pattern[patternY][patternX]) 
 				{
 					int disp = 4 * (X*PIXELS_PER_BLOCK + x - 1 + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + (z - 1)* PIXELS_PER_BLOCK)* sizeX);
 					try {
@@ -308,7 +387,7 @@ public class WorldMap {
 						if (vary)
 	
 							{
-							map[disp+i] = (byte)Math.min(color[i]+5*x,255);
+							map[disp+i] = (byte)Math.min(color[i]+2*x,255);
 							} else map[disp+i] = color[i];
 					}
 					map[disp+3] = alpha;
@@ -353,8 +432,8 @@ public class WorldMap {
 						{
 							System.out.print(".");
 							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification+3, 0, z*w.magnification+3, false).getBelt();
-							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false);
-							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false);
+							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false,false);
+							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false,false);
 							
 							
 							
@@ -402,7 +481,14 @@ public class WorldMap {
 										byte[] cB = ecoObj.getMapColor();
 										BlockPattern pattern = ecoObj.getMapPattern();
 										boolean[][] bytePattern = pattern==null?CITY:pattern.PATTERN==null?CITY:pattern.PATTERN;
-										paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX,  bytePattern,false);
+										ColorRGBA[][] colorPattern = pattern.COLORED_PATTERN;
+										if (colorPattern!=null)
+										{
+											paintPattern(geoImageSet, x, z, w.sizeX, colorPattern, true);
+										} else
+										{
+											paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX,  bytePattern,false,true);
+										}		
 										break;
 									}
 									
@@ -412,7 +498,7 @@ public class WorldMap {
 								{
 									if (g.isWorldMapTinter() && g.getBoundaries().isInside(wx, g.worldGroundLevel, wz))
 									{
-										paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true);
+										paintPattern(g.colorBytes, (byte)100,geoImageSet, x, z, w.sizeX, GROUND, true,false);
 										break;
 									}
 								}
@@ -422,8 +508,8 @@ public class WorldMap {
 						{
 							map[z][x] = (map[z][x]^WATER);
 							System.out.print("W");
-							paintOverlapPattern(new byte[]{0,0,100}, (byte)255, mapImage, x, z, w.sizeX, OVERLAP, false);
-							paintOverlapPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, OVERLAP,false);
+							paintOverlapPattern(new byte[]{0,0,100}, (byte)255, mapImage, x, z, w.sizeX, OVERLAP, false,true);
+							paintOverlapPattern(new byte[]{10,10,100}, (byte)190, geoImageSet, x, z, w.sizeX, OVERLAP,false,true);
 						} 
 					} else
 					if (water instanceof River) // TODO river into a new image for not overwriting geo things!!
@@ -446,7 +532,7 @@ public class WorldMap {
 						{
 							if (directions[i])
 							{
-								paintPattern(new byte[]{30,30,(byte)200}, (byte)190, geoImageSet, x, z, w.sizeX, RIVERS[i],false);
+								paintPattern(new byte[]{30,30,(byte)200}, (byte)190, geoImageSet, x, z, w.sizeX, RIVERS[i],false,true);
 							}
 						}
 					}
@@ -460,7 +546,7 @@ public class WorldMap {
 					{
 						if (directions[i])
 						{
-							paintPattern(new byte[]{(byte)130,(byte)50,(byte)45}, (byte)255,geoImageSet, x, z, w.sizeX, ROADS[i],false);
+							paintPattern(new byte[]{(byte)130,(byte)50,(byte)45}, (byte)255,geoImageSet, x, z, w.sizeX, ROADS[i],false,true);
 						}
 					}
 					
@@ -470,6 +556,7 @@ public class WorldMap {
 					byte[] cB = ecoObj.getMapColor();
 					BlockPattern pattern = ecoObj.getMapPattern();
 					boolean[][] bytePattern = pattern==null?CITY:pattern.PATTERN==null?CITY:pattern.PATTERN;
+					ColorRGBA[][] colorPattern = pattern.COLORED_PATTERN;
 
 					if (ecoObj instanceof Population)
 					{
@@ -488,7 +575,13 @@ public class WorldMap {
 							labels.add(desc);
 						}
 					}
-					paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX, bytePattern, false);
+					if (colorPattern!=null)
+					{
+						paintPattern(geoImageSet, x, z, w.sizeX, colorPattern, true);
+					} else
+					{
+						paintPattern(cB, (byte)255,geoImageSet, x, z, w.sizeX,  bytePattern,false,true);
+					}		
 				}
 
 				mapImage[((z*w.sizeX*PIXELS_PER_BLOCK*PIXELS_PER_BLOCK)+x*PIXELS_PER_BLOCK)*4+3] = (byte)150;
