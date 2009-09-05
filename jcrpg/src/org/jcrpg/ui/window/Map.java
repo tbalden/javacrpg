@@ -22,7 +22,6 @@ import java.io.File;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
-import org.jcrpg.ui.Window;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.map.WorldMap.LabelContainer;
 import org.jcrpg.ui.map.WorldMap.LabelDesc;
@@ -39,7 +38,6 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.BlendState;
-import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
@@ -160,6 +158,7 @@ public class Map extends InputWindow {
 	
 	@Override
 	public void hide() {
+		toggleTooltip(null);
 		core.getUIRootNode().detachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
 	}
@@ -168,6 +167,7 @@ public class Map extends InputWindow {
 	public void show() {
 		core.getUIRootNode().attachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
+		toggleTooltip("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
 	}
 
 	@Override

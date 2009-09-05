@@ -27,7 +27,6 @@ import org.jcrpg.threed.input.ClassicInputHandler;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 import org.jcrpg.threed.jme.ui.ZoomingQuad;
 import org.jcrpg.ui.text.Text;
-import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
 import org.jcrpg.world.ai.EntityMemberInstance;
 
@@ -39,7 +38,6 @@ import com.jme.scene.Spatial.CullHint;
 import com.jme.scene.Spatial.TextureCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.system.DisplaySystem;
-import com.sun.org.apache.xerces.internal.impl.xs.SubstitutionGroupHandler;
 
 public abstract class Window {
 
@@ -152,8 +150,8 @@ public abstract class Window {
 		public Node tooltipNode = new Node();
 		public Node ttTextBaseNode = new Node();
 		public final float ttXSizeRatio = 0.33f;
-		public final float ttYSizeRatio = 0.13f;
-		public final float ttXPosRatio = 0.75f;
+		public final float ttYSizeRatio = 0.14f;
+		public final float ttXPosRatio = 0.73f;
 		public final float ttYPosRatio = 0.93f;
 		
 		public final float fontSizeRatio = 0.009f;
@@ -191,7 +189,7 @@ public abstract class Window {
 				lines[i] = Text.createDefaultTextLabel("tt_line"+i);
 				lines[i].setCullHint(CullHint.Never );
 				lines[i].setTextureCombineMode( TextureCombineMode.Replace );
-				lines[i].setLocalTranslation(-1*(lettersX/2f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.2f)/2f) - i)*fontRealRowDispositionUnit,0);
+				lines[i].setLocalTranslation(-1*(lettersX/2f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.5f)/2f) - i)*fontRealRowDispositionUnit,0);
 				//lines[i].setLocalScale(0.8f);
 				lines[i].setLocalScale(width/1024f * 0.8f);
 				ttTextBaseNode.attachChild(lines[i]);

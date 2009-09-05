@@ -142,8 +142,7 @@ public class Channel implements TrackStateListener{
 
 	public synchronized void trackPlayed(AudioTrack arg0) {
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(channelId+" ##### PLAYED TRACK : "+soundId);
-		System.out.println(System.currentTimeMillis()+"!!!##### PLAYED TRACK : "+soundId);
-		System.out.println("FULL TIME = "+arg0.getTotalTime());
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("-- FULL TIME = "+arg0.getTotalTime());
 		//if (!arg0.isStreaming() && !arg0.isLooping()) // Workaround for trackStopped not called when non-streaming audiotrack
 			//trackStopped(arg0); else 
 		{
@@ -171,11 +170,11 @@ public class Channel implements TrackStateListener{
 		
 		if (looping)
 		{
-			System.out.println(System.currentTimeMillis()+"##### LOOPED TRACK : "+soundId);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(System.currentTimeMillis()+" ##### LOOPED TRACK : "+soundId);
 			track.play();
 		} else
 		{
-			System.out.println(System.currentTimeMillis()+"##### STOPPED TRACK : "+soundId);
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.info(System.currentTimeMillis()+" ##### STOPPED TRACK : "+soundId);
 			track.removeTrackStateListener(this);
 	
 			if (this.track!=null && this.track.equals(track)) {

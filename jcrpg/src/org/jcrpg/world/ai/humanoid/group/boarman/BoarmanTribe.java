@@ -25,6 +25,7 @@ import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.map.BlockPattern;
+import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
@@ -44,6 +45,8 @@ import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
+
+import com.jme.renderer.ColorRGBA;
 
 public class BoarmanTribe extends HumanoidEntityDescription {
 
@@ -147,6 +150,8 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		return populationColor;
 	}
 
+	public static ColorRGBA[][] CITY_COLORED = IconReader.readMapIconFile("./data/ui/mapicons/boarman.ico");
+
 	public static boolean[][] CITY = new boolean[][] 
 			  	                                    {
 			  		{ true, false, false, false, false,false, true, false, false },
@@ -166,6 +171,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 	{
 		BlockPattern patternSimpleDistrict = new BlockPattern();
 		patternSimpleDistrict.PATTERN = CITY;
+		patternSimpleDistrict.COLORED_PATTERN = CITY_COLORED;
 		patternMap.put(SimpleDistrict.class, patternSimpleDistrict);
 	}
 	

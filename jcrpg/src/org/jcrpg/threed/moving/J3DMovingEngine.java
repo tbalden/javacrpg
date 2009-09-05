@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
@@ -64,6 +65,7 @@ import com.jme.system.DisplaySystem;
  */
 public class J3DMovingEngine {
 
+	Logger logger = Logger.getLogger(J3DMovingEngine.class.getName());
 	
 	J3DCore core = null;
 	
@@ -603,7 +605,7 @@ public class J3DMovingEngine {
 				
 				float prevDist = eVec.distance(n.currentPos); // getting distance before move to be able to check if dist is still decreasing
 				float angleTurn = n.prevDisplacement==null?0:mVec.angleBetween(n.prevDisplacement);
-				System.out.println("ANG: "+angleTurn +" DIST = "+prevDist+" "+ n.currentPos + " "+J3DCore.getInstance().getCamera().getLocation());
+				if (J3DCore.LOGGING()) logger.finest("ANG: "+angleTurn +" DIST = "+prevDist+" "+ n.currentPos + " "+J3DCore.getInstance().getCamera().getLocation());
 
 				Quaternion current = n.getAngle();
 				if (current!=null) {

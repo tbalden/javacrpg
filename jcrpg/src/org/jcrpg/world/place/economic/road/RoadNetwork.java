@@ -126,7 +126,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		{
 			if (t.getSize()>=TOWNSIZE_THRESHOLD)
 			{
-				System.out.println("BIG TOWN: "+t + " "+t.getCenterCoordinates());
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("BIG TOWN: "+t + " "+t.getCenterCoordinates());
 				bigTowns.add(t);
 			} else
 			{
@@ -346,14 +346,14 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		// block coordinates of the world contains a road - in !transient! form (not saved) 
 		// + getCube and such...
 
-		System.out.println("TOWN CONNECTIONS CREATED: ");
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TOWN CONNECTIONS CREATED: ");
 		boolean doAStar = true;
 
 		/** BSD licensed SLICK pathfinder - http://slick.cokeandcode.com/static.php?page=license */
 		AStarPathFinder aStar = new AStarPathFinder(container.w, 500, false);
 		for (Connection c:connections)
 		{
-			System.out.println("---------- "+c.toString());
+			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("---------- "+c.toString());
 			
 			
 			int[] coords1 = c.a.getCenterCoordinates().clone();
@@ -371,17 +371,17 @@ public class RoadNetwork extends Economic implements FlowGeography {
 				path = aStar.findPath(null,coords1[0], coords1[1], coords2[0], coords2[1]);
 				if (path==null)
 				{
-					System.out.println("NO..");
+					if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("NO ROUTE..");
 					continue;
 				}
-				System.out.println("################################# ROUT ROUTE ROUTE found... ##################################");
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("################################# ROUTE found... ##################################");
 			
 				Step prevStep = null;
 				Step currStep = null;
 				Step nextStep = path.getStep(0);
 				for (int i=0; i<path.getLength(); i++)
 				{
-					System.out.println("--"+i);
+					//System.out.println("--"+i);
 					
 					currStep = nextStep;
 					nextStep = i<path.getLength()-1?path.getStep(i+1):null;
@@ -533,7 +533,7 @@ public class RoadNetwork extends Economic implements FlowGeography {
 							
 							if (northAlt)
 							{
-								System.out.println(x+" !!!!!!!!! "+z);
+								//System.out.println(x+" !!!!!!!!! "+z);
 								getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.SOUTH, true);
 								getWorldSizeFlowDirections().setCubeFlowDirection(x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul, J3DCore.EAST, true);
 								getBoundaries().addCube(magnification, x-1, container.w.getSeaLevel(blockSize), startZ+1+z*zMul);

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
@@ -75,6 +76,8 @@ import com.jme.scene.Spatial.CullHint;
  */
 public class J3DStandingEngine {
 
+	public Logger logger = Logger.getLogger(J3DStandingEngine.class.getName());
+	
 	public J3DCore core;
 	public ModelLoader modelLoader;
 	public ModelPool modelPool;
@@ -146,8 +149,8 @@ public class J3DStandingEngine {
 		@SuppressWarnings("unchecked")
 		public RenderedAreaThread(J3DStandingEngine engine, World world, int rX, int rY, int rZ, int x, int y, int z)
 		{
-			System.out.println("NEW RENDER: "+x+" "+y+" "+z);
-			System.out.println("LAST RENDER: "+lastRenderX+" "+lastRenderY+" "+lastRenderZ);
+			if (J3DCore.LOGGING()) logger.fine("NEW RENDER: "+x+" "+y+" "+z);
+			if (J3DCore.LOGGING()) logger.finest("LAST RENDER: "+lastRenderX+" "+lastRenderY+" "+lastRenderZ);
 			this.engine = engine;
 			this.world = world;
 			this.x = x;
@@ -1532,7 +1535,7 @@ public class J3DStandingEngine {
 		// renderToViewport pending set false...
 		newRenderPending = false;
 		
-		System.out.println("######### GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
+		logger.finest("######### GEOMBATCHMESH BUFFER REBUILD TIMES: PRE/COMMIT -- "+GeometryBatchMesh.preCommitTime+" "+GeometryBatchMesh.commitTime);
 		GeometryBatchMesh.preCommitTime = 0;
 		GeometryBatchMesh.commitTime = 0;
 		
@@ -1671,7 +1674,7 @@ public class J3DStandingEngine {
 			if (rerender || lastLoc.distance(currLoc)*mulWalkDist > ((J3DCore.SETTINGS.RENDER_DISTANCE)*J3DCore.CUBE_EDGE_SIZE)-J3DCore.SETTINGS.VIEW_DISTANCE)
 			{
 				
-				System.out.println("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
+				logger.fine("++++++ RERENDER : "+rerender+" DIST: "+lastLoc.distance(currLoc)*mulWalkDist);
 				for (RenderedAreaThread t:runningThreads)
 				{
 					t.halt = true;
@@ -2064,7 +2067,7 @@ public class J3DStandingEngine {
 		
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("CAMERA: "+core.getCamera().getLocation()+ " NODES EXT: "+(extRootNode.getChildren()==null?"-":extRootNode.getChildren().size()));
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
-		System.out.println("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
+		if (J3DCore.LOGGING()) logger.finest("crootnode cull update time: "+(System.currentTimeMillis()-sysTime));
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("hmSolidColorSpatials:"+J3DCore.hmSolidColorSpatials.size());
 
 	    if (cullVariationCounter%40==0) {
@@ -2084,10 +2087,10 @@ public class J3DStandingEngine {
 		engine.unpauseAfterRendering();
 	    updateAfterRenderNeeded = false;
 	    nonDrawingRender = false;
-	    System.out.println("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);
-	    System.out.println("MAX RTVP / UAR / BTCHUPD / LOCK TIME = "+maxRtvpTime+" "+maxUARTime+" "+maxBatchUpdateTime+" "+maxBatchLockTime);
-	    System.out.println("FINAL things          = "+(System.currentTimeMillis()-finalTime));
-    	System.out.println("BUFFER / EX BUFF POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount+ " # "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
+	    if (J3DCore.LOGGING()) logger.finest("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);
+	    if (J3DCore.LOGGING()) logger.finest("MAX RTVP / UAR / BTCHUPD / LOCK TIME = "+maxRtvpTime+" "+maxUARTime+" "+maxBatchUpdateTime+" "+maxBatchLockTime);
+	    if (J3DCore.LOGGING()) logger.finest("FINAL things          = "+(System.currentTimeMillis()-finalTime));
+	    if (J3DCore.LOGGING()) logger.finest("BUFFER / EX BUFF POOL: CACHED   # "+ BufferPool.v3BuffCacheSize+" ALL "+BufferPool.v3BuffCount+ " # "+ ExactBufferPool.v3BuffCacheSize+" ALL "+ExactBufferPool.v3BuffCount);
 	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
 	    core.busyPane.hide();

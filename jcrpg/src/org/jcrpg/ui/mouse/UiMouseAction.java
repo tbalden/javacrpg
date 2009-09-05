@@ -21,6 +21,7 @@ package org.jcrpg.ui.mouse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicInputHandler;
@@ -49,6 +50,8 @@ public class UiMouseAction extends MouseInputAction {
 	    private static final int JME_LEFT_BUTTON = 0;
 		private static final int JME_RIGHT_BUTTON = 1;
 	 
+		private static Logger logger = Logger.getLogger(UiMouseAction.class.getName());
+		
 	     private Node rootNode;
 	     private Node secondaryFocusNode;
 	     
@@ -79,7 +82,6 @@ public class UiMouseAction extends MouseInputAction {
 	     			// no mouse look, no window, check for secondary elements of HUD
 		    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
 		    		{
-		    			//System.out.println("SECONDARY PICK!");
 		    			if (!mousePick(secondaryFocusNode,lastMouseEvent))
 		    			{
 		    				return;
@@ -105,9 +107,7 @@ public class UiMouseAction extends MouseInputAction {
 	    		// no pick on window, secondary elements picking...
 	    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
 	    		{
-	    			//System.out.println("SECONDARY PICK!");
 	    			mousePick(secondaryFocusNode,lastMouseEventSecondary);
-	    			//System.out.println("SECONDARY ENDED...");
 	    		}
 	    	}
 	 
@@ -139,7 +139,6 @@ public class UiMouseAction extends MouseInputAction {
 		    Set<InputBase> pickedInputBaseSet = new HashSet<InputBase>();
 			for (PickedSpatialInfo p:picked)
 	 	    {
-		    	// System.out.println("Hit: "+p.getName()+" "+p.getClass());
 	 	    	Node parent = (Node)p.spatial.getParent();
 	 	    	InputBase base = (InputBase)parent.getUserData(InputBase.UI_ELEMENT);
 	 	    	if (base.isActive())
@@ -175,24 +174,21 @@ public class UiMouseAction extends MouseInputAction {
 	 	    	}
 		    	//lastMouseEvent.removePickedInputBase(lastEventInputBase);
 	 	    }
-		    //System.out.print(pickedInputBaseSet.size());
 			if (pickedInputBaseSet.size()==0) 
 			{
 		    	if (exited) UiMouseHandler.normalCursor();
 			    lastMouseEvent.loadFromOther(mouseEvent);
 				return true;
 			}
-		    boolean eventHandled = false;
+		    //boolean eventHandled = false;
 			
 		    // NOTE: currently isEquivalent is true even if scene graph changed.
 		    if (!mouseEvent.isEquivalentTo(lastMouseEvent))
 		    {
-		    	//System.out.print("####");
 			    for (InputBase inputBase:pickedInputBaseSet)
 			    {
 			    	if (inputBase.isEnabled())
 			    	{
-			    		//System.out.print("!!!!");
 			    		// Send MOUSE_ENTERED event to previous inputBases in addition to any other mouse events
 				    	if (!lastMouseEvent.getPickedInputBaseSet().contains(inputBase))
 				    	{
@@ -210,7 +206,7 @@ public class UiMouseAction extends MouseInputAction {
 				            		mouseEvent, UiMouseEventType.MOUSE_ENTERED);
 				    		insideInputBase = true;
 				    		enteredInputBaseList.add(inputBase);
-				    		eventHandled = true;
+				    		//eventHandled = true;
 				    	}
 				    	
 				    	// Now send one more current event
@@ -227,7 +223,7 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_RELEASED -- only sent once
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_RELEASED);
-				    		eventHandled = true;
+				    		//eventHandled = true;
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_NONE))
 					    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY)) )
@@ -235,7 +231,7 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_PRESSED -- only sent once
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_PRESSED);
-				    		eventHandled = true;
+				    		//eventHandled = true;
 				    	}
 				    	else if ( (lastMouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY))
 					    	      && (mouseEvent.isButtonPressed(UiMouseEvent.BUTTON_ANY)) )
@@ -244,14 +240,14 @@ public class UiMouseAction extends MouseInputAction {
 					    	// Notify new event inputBaseSet of MOUSE_DRAGGED -- sent continually while button remains pressed
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_DRAGGED);
-				    		eventHandled = true;
+				    		//eventHandled = true;
 				    	}
 				    	else
 				    	{
 					    	// Notify new event inputBaseSet of normal mouse moved event
 				    		keepMouseCursorIntact = keepMouseCursorIntact || sendCustomizedMouseEvent(inputBase,
 				            		mouseEvent, UiMouseEventType.MOUSE_MOVED);
-				    		eventHandled = true;
+				    		//eventHandled = true;
 				    	}
 				    	// TODO: consider generating a double-click event or perhaps indicating
 				    	// how many clicks have occurred within a certain timeframe in the event?
@@ -267,9 +263,7 @@ public class UiMouseAction extends MouseInputAction {
 			    }
 		    } else
 		    {
-		    	//System.out.println("EQUI: "+mouseEventX+" "+mouseEvent.getX()+" "+lastMouseEvent.getX());
 		    }
-		    //System.out.print("---- "+mouseEvent.getEventType());
 		    lastMouseEvent.loadFromOther(mouseEvent);
 		    return false;
 		}
@@ -286,11 +280,6 @@ public class UiMouseAction extends MouseInputAction {
 		}
 		
 		private boolean sendMouseEvent(InputBase inputBase, UiMouseEvent mouseEvent) {
-			if (mouseEvent.getEventType()!=UiMouseEventType.MOUSE_MOVED)
-			{
-				
-				System.out.println(inputBase.toString() + "-> " + mouseEvent.toString());
-			}
 			if (!inputBase.handleMouse(mouseEvent) || mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 			{
 				return false;//
@@ -351,7 +340,7 @@ public class UiMouseAction extends MouseInputAction {
 	    		{
 	    			if (loopDetection.contains(s))
 	    			{
-	    				System.out.println("######### LOOP IN UI-SCENEGRAPH!! "+s);	
+	    				logger.severe("######### LOOP IN UI-SCENEGRAPH!! "+s);	
 	    			} else
 	    			{
 	    				loopDetection.add(s);

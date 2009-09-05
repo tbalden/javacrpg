@@ -19,7 +19,9 @@ package org.jcrpg.threed.moving;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.logging.Level;
 
+import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.standing.J3DStandingEngine;
@@ -172,14 +174,14 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 				type+=desc.population.groundList.get(0).getClass();
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.log(Level.FINE, "Encounter Engine error ground type from list: ",ex);
 			}
 			try{
 				residence = desc.population.residenceList.get(0);
 				type+=desc.population.residenceList.get(0).getClass();
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.log(Level.FINE, "Encounter Engine error residence type from list: ",ex);
 			}
 		}
 		
