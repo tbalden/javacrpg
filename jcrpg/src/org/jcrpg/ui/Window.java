@@ -192,7 +192,8 @@ public abstract class Window {
 				lines[i].setCullHint(CullHint.Never );
 				lines[i].setTextureCombineMode( TextureCombineMode.Replace );
 				lines[i].setLocalTranslation(-1*(lettersX/2f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.2f)/2f) - i)*fontRealRowDispositionUnit,0);
-				lines[i].setLocalScale(0.8f);
+				//lines[i].setLocalScale(0.8f);
+				lines[i].setLocalScale(width/1024f * 0.8f);
 				ttTextBaseNode.attachChild(lines[i]);
 			}
 			
