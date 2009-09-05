@@ -34,6 +34,7 @@ import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameLogic;
 import org.jcrpg.game.GameStateContainer;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.ui.window.BusyPaneWindow;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
@@ -67,7 +68,7 @@ public class SaveLoadNewGame {
 	{
 		
 		try {
-			
+			core.busyPane.setToType(BusyPaneWindow.LOADING,"Creating World...");
 			core.busyPane.show();
 			core.updateDisplay(null);
 			
@@ -192,7 +193,7 @@ public class SaveLoadNewGame {
 			return;			
 		}
 		try {
-			
+			core.busyPane.setToType(BusyPaneWindow.LOADING,"Saving...");
 			core.busyPane.show();
 			core.updateDisplay(null);
 			
@@ -228,6 +229,7 @@ public class SaveLoadNewGame {
 	{
 		try {
 			
+			core.busyPane.setToType(BusyPaneWindow.LOADING,"Loading...");
 			core.busyPane.show();
 			core.updateDisplay(null);
 			

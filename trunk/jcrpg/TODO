@@ -21,27 +21,33 @@ Society, Groups etc.
 [ ] test vista for crashes last seen
 [ ] integrate new content
 
-[ ] ui improving
-	[X] Tooltips at char generation (professions!!) ! TOOLTIP should be one quad that is used all the time, Text replaced in it! 
-		[ ] add tooltips to different windows
-			[ ] professions language data
+[ ] MAP
+		Higher resolution map - colored populations.
+		[ ] colored population icons instead of boolean array!
+		
+	[ ] legendary to the map
 
-	[ ] economic update turn with full screen panel!
+	[X] town type icons (instead of dots)
+	[X] label to map, 
+		even better map!
+
+
+
+
+[X] ui improving
+
+	[X] economic update turn with full screen panel!
+
+	[X] Tooltips at char generation (professions!!) ! TOOLTIP should be one quad that is used all the time, Text replaced in it! 
+		[X] add tooltips to different windows
+			[X] professions language data
+
 		
 	[X] make the dropdown list better -> bgImage should change to arrows Up/Down, mouse cursor should change only if there's more to select in the given dir.
 	[X] Combat actions -> Red sign if a character didnt set correct action yet! (easier to spot why you cant start turn)
 	    - in battle, the initially activated drop down is disturbing, if the second character action is to be changed
 	[-] replace all texts with the new renderer! (floating texts, points, unit names?) - doesnt work in real 3d!
 	
-[ ] MAP
-	[X] town type icons (instead of dots)
-		Higher resolution map - colored populations.
-		[ ] colored population icons instead of boolean array!
-		
-	[ ] legendary to the map
-	[X] label to map, 
-		even better map!
-
 [X] optimize Font generation - whole texts into quads?
 	[X] review all the windows, positioning!
 	[X] world map is positioned wrong

@@ -2750,7 +2750,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		mainMenu = new MainMenu(uiBase);
 		loadMenu = new LoadMenu(uiBase);
-		busyPane = new BusyPaneWindow(uiBase);
+		
+		HashMap<String, String[]> busyImages = new HashMap<String, String[]>();
+		String[] loading = new String[] {"./data/ui/loading1.dds","./data/ui/busy/loading2.dds"};
+		busyImages.put(BusyPaneWindow.LOADING, loading);
+		String[] economy = new String[] {"./data/ui/busy/economic1.dds"};
+		busyImages.put(BusyPaneWindow.ECONOMY, economy);
+		busyPane = new BusyPaneWindow(uiBase,busyImages,BusyPaneWindow.LOADING);
 		optionsMenu = new OptionsMenu(uiBase);
 		partySetup = new PartySetup(uiBase);
 		charLevelingWindow = new CharacterLevelingWindow(uiBase);
@@ -2982,7 +2988,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			tpf = 0;
 		} else if (gameState.engine.checkEconomyUpdateNeeded()) {
 			pause = true;
+			busyPane.setToType(BusyPaneWindow.ECONOMY,"Economy update...");
+			busyPane.show();
 			gameState.doEconomyUpdate();
+			//busyPane.hide();
 			pause = false;
 			tpf = 0;
 		} else if (!gameState.engine.isPause()) {
