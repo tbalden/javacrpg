@@ -146,7 +146,7 @@ public class Geography extends Place implements Surface {
 		quickCubeHeightCache.clear();
 	}
 	
-	public HashMap<Long, float[]> quickCubeKindCache = new HashMap<Long, float[]>();
+	public transient HashMap<Long, float[]> quickCubeKindCache = new HashMap<Long, float[]>();
 	
 	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();
 	public static HashMap<Integer, Cube> hmKindCube_FARVIEW = new HashMap<Integer, Cube>();
@@ -514,13 +514,15 @@ public class Geography extends Place implements Surface {
 	
 	
 	
-	public HashMap<Long, Float> quickCubeHeightCache = new HashMap<Long, Float>();
+	public transient HashMap<Long, Float> quickCubeHeightCache = new HashMap<Long, Float>();
 
 	
 	public float getPointHeight(int x, int z, int sizeX, int sizeZ, int worldX, int worldZ, boolean farView)
 	{
 		if (numericId!=0) 
 		{
+			if (quickCubeHeightCache==null) quickCubeHeightCache = new HashMap<Long, Float>();
+
 			Long keyNew = numericId*(farView?2:1);
 			keyNew += Boundaries.getKey(worldX, 0, worldZ);
 			Float cachedKind = quickCubeHeightCache.get(keyNew);
@@ -675,6 +677,7 @@ public class Geography extends Place implements Surface {
 	{
 		if (numericId!=0) 
 		{
+			if (quickCubeKindCache==null) quickCubeKindCache = new HashMap<Long, float[]>();
 			Long keyNew = numericId*(farView?2:1);
 			if (key==-1)
 			{

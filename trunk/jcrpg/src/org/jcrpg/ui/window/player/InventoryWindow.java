@@ -127,7 +127,7 @@ public class InventoryWindow extends PagedInputWindow {
 	    	sQuad = new SharedMesh("",hudQuad);
 	    	page1_details.attachChild(sQuad);
 
-	    	new TextLabel("",this,page0, 0.42f, 0.058f, 0.3f, 0.06f,400f,"Inventory",false);
+	    	new TextLabel("",this,page0, 0.42f, 0.058f, 0.0f, 0.06f,400f,"Inventory",false);
 
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
@@ -178,11 +178,11 @@ public class InventoryWindow extends PagedInputWindow {
 
 	    	body = new InventoryBody("body",this,page0,0.71f,0.69f, 0.3f, 0.06f, 700f);
 	    	
-	    	new TextLabel("",this,page0, 0.15f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
+	    	new TextLabel("",this,page0, 0.15f, 0.65f, 0.0f, 0.06f,600f,Language.v("inventory.quantity")+":",false); 
 	    	quantity = new TextInputField("quantity",this,page0, 0.25f, 0.70f, 0.2f, 0.06f,600f,"",15,true);
 	    	addInput(0,quantity);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.65f, 0.2f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
+	    	new TextLabel("",this,page0, 0.40f, 0.65f, 0.0f, 0.06f,600f,Language.v("inventory.toCharacter")+":",false); 
     		toCharacterSelect = new ListSelect("tomember", this,page0, 0.50f,0.70f,0.2f,0.06f,800f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,toCharacterSelect);
 

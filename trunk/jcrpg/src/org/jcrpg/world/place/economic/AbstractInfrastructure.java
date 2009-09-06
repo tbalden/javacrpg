@@ -73,6 +73,7 @@ public abstract class AbstractInfrastructure {
 	public void onLoad()
 	{
 		sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
+		checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
 		lastUpdatedInhabitantNumber=-1;
 		buildProgram();
 	}
@@ -121,7 +122,7 @@ public abstract class AbstractInfrastructure {
 	}
 	
 	
-	public HashMap<Class <? extends InfrastructureBlockChecker>, boolean[]> checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
+	public transient HashMap<Class <? extends InfrastructureBlockChecker>, boolean[]> checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
 	
 	/**
 	 * this function will create a matrix of unavailable blocks in the given population soilGeo,
@@ -132,6 +133,10 @@ public abstract class AbstractInfrastructure {
 		for (InfrastructureBlockChecker c:population.getBlockCheckers())
 		{
 			boolean[] nonGoodBlocks = c.getAvailableBlocks(this);
+			if (checkerToUnavailableBlocksMap==null)
+			{
+				checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
+			}
 			checkerToUnavailableBlocksMap.put(c.getClass(), nonGoodBlocks);
 		}
 	}
