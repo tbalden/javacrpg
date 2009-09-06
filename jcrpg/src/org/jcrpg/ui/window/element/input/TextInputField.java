@@ -115,7 +115,7 @@ public class TextInputField extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.print(text);
-				textText.setLocalTranslation(textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
+				textText.setLocalTranslation(textText.getCenterOrigoX(dCenterX,scale),  -textText.getHeight2()/2f*scale + dCenterY,0);
 				activeNode.attachChild(textText);
 				textText.setTextColor(new ColorRGBA(0.8f,0.8f,0.1f,1f));
 			} else			
@@ -157,8 +157,8 @@ public class TextInputField extends InputBase {
 					textText.setLocalScale(scale);
 				}
 				textText.print(text);
-				textText.setLocalTranslation(textText.getCenterOrigoX(dCenterX,scale), dCenterY,0);
-				deactiveNode.attachChild(textText);
+				textText.setLocalTranslation(textText.getCenterOrigoX(dCenterX,scale), -textText.getHeight2()/2f*scale +dCenterY,0);
+				deactiveNode.attachChild(textText); 
 				textText.setTextColor(new ColorRGBA(0.6f,0.6f,0.1f,1f));
 			} else			
 			{
