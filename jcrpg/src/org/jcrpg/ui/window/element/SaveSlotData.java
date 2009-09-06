@@ -25,5 +25,7 @@ public class SaveSlotData {
 	public String slotName = "SLOT";
 	public File gameData = null;
 	public File pic = null;
+	public String descriptionName = null;
+	public String secondLine = null;
 
 }

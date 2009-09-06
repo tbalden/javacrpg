@@ -71,6 +71,7 @@ import org.jcrpg.ui.window.Map;
 import org.jcrpg.ui.window.OptionsMenu;
 import org.jcrpg.ui.window.PartySetup;
 import org.jcrpg.ui.window.PlayerChoiceWindow;
+import org.jcrpg.ui.window.SaveMenu;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
@@ -2148,6 +2149,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public Map worldMap = null;
 	public MainMenu mainMenu = null;
 	public LoadMenu loadMenu = null;
+	public SaveMenu saveMenu = null;
 	public BusyPaneWindow busyPane = null;
 	public OptionsMenu optionsMenu = null;	
 	public PartySetup partySetup = null;
@@ -2750,6 +2752,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		mainMenu = new MainMenu(uiBase);
 		loadMenu = new LoadMenu(uiBase);
+		saveMenu = new SaveMenu(uiBase);
 		
 		HashMap<String, String[]> busyImages = new HashMap<String, String[]>();
 		String[] loading = new String[] {"./data/ui/loading1.dds","./data/ui/busy/loading2.dds"};
