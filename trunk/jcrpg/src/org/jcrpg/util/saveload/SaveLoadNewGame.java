@@ -21,6 +21,7 @@ package org.jcrpg.util.saveload;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.SimpleDateFormat;
@@ -181,7 +182,7 @@ public class SaveLoadNewGame {
 		}
 	}
 	
-	public static void saveGame(J3DCore core)
+	public static void saveGame(J3DCore core, String slotName)
 	{
 		if (core.encounterMode) {
 			core.uiBase.hud.mainBox.addEntry("Cannot save while encounter.");
@@ -202,6 +203,12 @@ public class SaveLoadNewGame {
 			String slot = saveDir+"/"+core.gameState.gameId+"_"+dT+"/";
 			File f = new File(slot);
 			f.mkdirs();
+			
+			File desc = new File(slot+"desc.txt");
+			FileWriter fw = new FileWriter(desc);
+			String dT2 = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(d);
+			fw.write((slotName!=null && slotName.length()>15?slotName.substring(0,15):slotName)+"\n("+dT2+")");
+			fw.close();
 			
 			File saveGame = new File(slot+"savegame.zip");
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(saveGame));

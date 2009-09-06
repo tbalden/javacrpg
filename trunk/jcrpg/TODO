@@ -21,9 +21,13 @@ Society, Groups etc.
 [ ] test vista for crashes last seen
 [ ] integrate new content
 
+[X] Save - named save games, use internal name for them instead of the filename! order by filename, display player set name
+[ ] Add Story text window, use it for new game start, explaining things.
+
 [ ] MAP
 		Higher resolution map - colored populations.
 		[ ] colored population icons instead of boolean array!
+		
 		
 	[X] legendary to the map - by tooltip done
 
@@ -35,6 +39,7 @@ Society, Groups etc.
 
 
 [X] ui improving
+
 
 	[X] economic update turn with full screen panel!
 

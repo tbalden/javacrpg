@@ -18,7 +18,9 @@
 
 package org.jcrpg.ui.window;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -29,6 +31,7 @@ import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.text.FontTT;
+import org.jcrpg.ui.text.Text;
 import org.jcrpg.ui.window.element.SaveSlotData;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.MenuImageButton;
@@ -81,7 +84,7 @@ public class LoadMenu extends InputWindow implements KeyListener {
 			loadSlots();
 			highlightSelected();
 
-	    	closeWindow = new TextButton("close",this,windowNode, 0.63f, 0.310f, 0.02f, 0.045f,600f," <-");
+	    	closeWindow = new TextButton("close",this,windowNode, 0.63f, 0.310f, 0.03f, 0.045f,600f," <-");
 	    	addInput(closeWindow);
 	    	prevWindow = new TextButton("prev",this,windowNode, 0.50f, 0.310f, 0.05f, 0.035f,1000f," ...");
 	    	addInput(prevWindow);
@@ -116,7 +119,6 @@ public class LoadMenu extends InputWindow implements KeyListener {
 				{
 					SaveSlotData data = new SaveSlotData();
 					data.slotName = file;
-					System.out.println(file);
 
 					String[] subFiles = new File(f.getAbsolutePath()+"/"+file).list();
 					for (String sFile:subFiles)
@@ -133,13 +135,29 @@ public class LoadMenu extends InputWindow implements KeyListener {
 							{
 								data.pic = sF;
 							}
-							if (data.gameData!=null && data.pic!=null) break;
+							if (sF.getName().endsWith("desc.txt"))
+							{
+								try {
+									FileReader fr = new FileReader(sF);
+									BufferedReader br = new BufferedReader(fr);
+									String name = br.readLine();
+									data.descriptionName = name;
+									name = br.readLine();
+									data.secondLine = name;
+									br.close();
+								} catch (Exception ex)
+								{
+									
+								}
+							}
+							if (data.gameData!=null && data.pic!=null && data.descriptionName!=null) break;
 						}
 					}
 					if (data.gameData!=null && data.pic!=null)
 					{
 						dataList1.put(data.slotName,data);
 					}
+					System.out.println(file+" "+data.descriptionName);
 				}
 			}
 			dataList= new TreeMap<String, SaveSlotData>();
@@ -154,6 +172,7 @@ public class LoadMenu extends InputWindow implements KeyListener {
 				}
 				dataList.put(key+" - "+d.slotName, d);
 				d.id = key+" - "+d.slotName;
+				if (d.descriptionName!=null) d.descriptionName = (count)+" - "+d.descriptionName;
 				d.slotName = (count++)+" - "+d.slotName;
 				reorderCount--;
 			}
@@ -203,9 +222,36 @@ public class LoadMenu extends InputWindow implements KeyListener {
 				{
 					ex.printStackTrace();
 				}
+				Node slottextNode = null;
+				if (J3DCore.NATIVE_FONT_RENDER)
+				{
+					String first = data.descriptionName==null?data.slotName:data.descriptionName;
+					String second = data.secondLine;
+					if (second==null && first.length()>20)
+					{
+						second = first.substring(20);
+						first = first.substring(0,20);
+					}
+					Text text = Text.createDefaultTextLabel("",first);
+					text.setTextColor(new ColorRGBA(1,1,0.1f,1f));
+					text.setLocalScale(0.65f);
+					slottextNode = new Node("-");
+					if (second!=null)
+					{
+						Text text2 = Text.createDefaultTextLabel("",second);
+						text2.setTextColor(new ColorRGBA(1,1,0.1f,1f));
+						text2.setLocalScale(0.65f);
+						text2.setLocalTranslation(0, -core.getDisplay().getHeight()/40f, 0);
+						slottextNode.attachChild(text2);
+					}
+					slottextNode.attachChild(text);
+				} else
+				{
+					slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0,0,0.1f,1f),false);
+					fontFreers.add(new NodeFontFreer(this.text,slottextNode));
+				}
 				
-				Node slottextNode = this.text.createOutlinedText(data.slotName, 9, new ColorRGBA(1,1,0.1f,1f),new ColorRGBA(0,0,0.1f,1f),false);
-				fontFreers.add(new NodeFontFreer(this.text,slottextNode));
+
 				slottextNode.setLocalTranslation(posX*1.15f, startPosY - stepPosY*(counter - fromSlot),0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 				slottextNode.setLocalScale(core.getDisplay().getWidth()/650f);

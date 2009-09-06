@@ -26,7 +26,6 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.window.element.Button;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.MenuImageButton;
-import org.jcrpg.util.saveload.SaveLoadNewGame;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.renderer.ColorRGBA;
@@ -50,7 +49,6 @@ public class MainMenu extends InputWindow implements KeyListener {
 	
 	public ArrayList<Button> buttons = new ArrayList<Button>();
 	
-
 	
 	public MainMenu(UIBase base) {
 		super(base);
@@ -171,15 +169,10 @@ public class MainMenu extends InputWindow implements KeyListener {
 		if (name.equalsIgnoreCase(SAVE_GAME))
 		{
 			if (!core.coreFullyInitialized) return;
-			core.getUIRootNode().detachChild(windowNode);
-			core.getUIRootNode().updateRenderState();
-			core.updateDisplay(null);
-			SaveLoadNewGame.saveGame(core);
-			core.getUIRootNode().attachChild(windowNode);
-			//core.getUIRootNode().updateRenderState();
+			keepPlayingMusic = true;
 			toggle();
-			core.audioServer.stopAndResumeOthers("main");
-			
+			core.saveMenu.toggle();
+
 		} else
 		if (name.equalsIgnoreCase(LOAD_GAME))
 		{
