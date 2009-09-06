@@ -15,19 +15,21 @@ Economy,
 Interrelation,
 Society, Groups etc.
 
+
+[ ] integrate new content
+
+[ ] test vista for crashes last seen
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[ ] test vista for crashes last seen
-[ ] integrate new content
-
-[X] Save - named save games, use internal name for them instead of the filename! order by filename, display player set name
 [ ] Add Story text window, use it for new game start, explaining things.
+[ ] color problems of map
+	-> check simple icons like red/blue/green to see whats wrong
 
-[ ] MAP
+
+[X] MAP
 		Higher resolution map - colored populations.
-		[ ] colored population icons instead of boolean array!
-		
+		[X] colored population icons instead of boolean array!
 		
 	[X] legendary to the map - by tooltip done
 
@@ -35,8 +37,7 @@ Society, Groups etc.
 	[X] label to map, 
 		even better map!
 
-
-
+[X] Save - named save games, use internal name for them instead of the filename! order by filename, display player set name
 
 [X] ui improving
 

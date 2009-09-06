@@ -93,39 +93,39 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Sheet",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.0f, 0.06f,400f,"Character Sheet",false);
 	    	
-	    	new TextLabel("",this,page0, 0.57f, 0.80f, 0.3f, 0.06f,600f,"Press F3 or Backspace to leave.",false);
+	    	new TextLabel("",this,page0, 0.57f, 0.80f, 0.0f, 0.06f,600f,"Press F3 or Backspace to leave.",false);
 	    	
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);
 	    	
 	    	professionSelect = new ListSelect("profession", this,page0, 0.55f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 
-	    	new TextLabel("level",this,page0,0.45f,0.25f,0.15f,0.04f,600f, "Level", false);
+	    	new TextLabel("level",this,page0,0.45f,0.25f,0.0f,0.04f,600f, "Level", false);
 	    	level = new ValueTuner("level",this,page0, 0.47f,0.28f,0.15f,0.04f,600f,10,0,100,1);
-	    	new TextLabel("kill",this,page0,0.57f,0.25f,0.15f,0.04f,600f, "Kill/Neut./Death", false);
+	    	new TextLabel("kill",this,page0,0.57f,0.25f,0.0f,0.04f,600f, "Kill/Neut./Death", false);
 	    	killNeutDeath = new ValueTuner("level",this,page0, 0.63f,0.28f,0.15f,0.04f,1000f,10,0,100,1);
 
-	    	new TextLabel("health",this,page0,0.45f,0.31f,0.15f,0.04f,600f, "Health", false);
+	    	new TextLabel("health",this,page0,0.45f,0.31f,0.0f,0.04f,600f, "Health", false);
 	    	health = new ValueTuner("health",this,page0, 0.47f,0.34f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("stamina",this,page0,0.61f,0.31f,0.15f,0.04f,600f, "Stamina", false);
+	    	new TextLabel("stamina",this,page0,0.61f,0.31f,0.0f,0.04f,600f, "Stamina", false);
 	    	stamina = new ValueTuner("stamina",this,page0, 0.63f,0.34f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("morale",this,page0,0.45f,0.39f,0.15f,0.04f,600f, "Morale", false);
+	    	new TextLabel("morale",this,page0,0.45f,0.39f,0.0f,0.04f,600f, "Morale", false);
 	    	morale = new ValueTuner("morale",this,page0, 0.47f,0.42f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("sanity",this,page0,0.61f,0.39f,0.15f,0.04f,600f, "Sanity", false);
+	    	new TextLabel("sanity",this,page0,0.61f,0.39f,0.0f,0.04f,600f, "Sanity", false);
 	    	sanity = new ValueTuner("sanity",this,page0, 0.63f,0.42f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("mana",this,page0,0.45f,0.46f,0.15f,0.04f,600f, "Mana", false);
+	    	new TextLabel("mana",this,page0,0.45f,0.46f,0.0f,0.04f,600f, "Mana", false);
 	    	mana = new ValueTuner("mana",this,page0, 0.47f,0.49f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("xp",this,page0,0.61f,0.46f,0.15f,0.04f,600f, "XP", false);
+	    	new TextLabel("xp",this,page0,0.61f,0.46f,0.0f,0.04f,600f, "XP", false);
 	    	xp = new ValueTuner("xp",this,page0, 0.63f,0.49f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("membereffects",this,page0,0.40f,0.55f,0.15f,0.04f,600f, "States", false);
+	    	new TextLabel("membereffects",this,page0,0.40f,0.55f,0.0f,0.04f,600f, "States", false);
 	    	memberStateEffects = new ListSelect("stateeffects",this,page0, 0.61f,0.55f,0.3f,0.04f,600f,new String[0],new String[0],null,null);
 	    	addInput(0,memberStateEffects);
 	    	
@@ -135,7 +135,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	{
 	    		String text = Language.v("fantasyattributes.short."+s);
 	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
-	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.15f,0.04f,600f, text, false);
+	    		new TextLabel(s+"_label",this,page0,0.149f,0.2f+0.05f*posY,0.0f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.317f,0.2f+0.05f*posY,0.15f,0.04f,600f,10,0,100,1);
 	    		attributeTuners.put(s, v);
 	    		//addInput(1,v);
@@ -147,7 +147,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	{
 	    		String text = Language.v("fantasyresistances.shortest."+s);
 	    		//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("TEXT" +text);
-	    		new TextLabel(s+"_label",this,page0,0.549f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.15f,0.04f,600f, text, false);
+	    		new TextLabel(s+"_label",this,page0,0.549f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.0f,0.04f,600f, text, false);
 	    		ValueTuner v = new ValueTuner(s,this,page0, 0.66f+0.16f*(posY%2),0.60f+0.05f*(int)(posY/2),0.07f,0.04f,600f,10,0,100,1);
 	    		resistanceTuners.put(s, v);
 	    		//addInput(1,v);
@@ -160,7 +160,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		String groupName = Language.v("skillgroups."+groupId);
-	    		new TextLabel(groupId+"_label",this,page0,0.149f,0.6f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		new TextLabel(groupId+"_label",this,page0,0.149f,0.6f+0.05f*posY,0.0f,0.04f,600f, groupName, false);
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
 	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
