@@ -278,11 +278,12 @@ public class PartySetup extends PagedInputWindow {
 	    	surName = new TextInputField("surName",this,pageCreationSecond, 0.66f, 0.62f, 0.3f, 0.06f,600f,"",15,false); 
 	    	addInput(2,surName);
 
-	    	resetSkills = new TextButton("reset",this,pageCreationSecond, 0.73f, 0.45f, 0.15f, 0.05f,600f,Language.v("partySetup.reset"));
-	    	addInput(2,resetSkills);
 	    	
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
 	    	addInput(2,readyChar);
+
+	    	resetSkills = new TextButton("reset",this,pageCreationSecond, 0.73f, 0.45f, 0.15f, 0.05f,600f,Language.v("partySetup.reset"));
+	    	addInput(2,resetSkills);
 
 	    	closeWindow3 = new TextButton("close",this,pageCreationSecond, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
 	    	addInput(0,closeWindow3);
@@ -907,6 +908,10 @@ public class PartySetup extends PagedInputWindow {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
+		if (base.equals(professionSelect))
+		{
+			inputUsed(base, message);
+		} else
 		if (base.equals(raceSelect))
 		{
 			Jcrpg.LOGGER.finer("RACE SELECT LEFT");
