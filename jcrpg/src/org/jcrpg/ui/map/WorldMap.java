@@ -69,8 +69,8 @@ public class WorldMap {
 	public int NOTHING = 0;
 	public int WATER = 1;
 	
-	public static int PIXELS_PER_BLOCK = 18;
-	public static int PIXELS_PER_BLOCK_OVERLAP = 22;
+	public static int PIXELS_PER_BLOCK = 9;
+	public static int PIXELS_PER_BLOCK_OVERLAP = 11;
 	
 	// 2
 	// 4
@@ -339,12 +339,11 @@ public class WorldMap {
 					patternX = x;
 				}
 				if (pattern[patternY][patternX]!=TR_COL || pattern[patternY][patternX].a>0f) {
-				int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
-				for (int i=0; i<4; i++)
-				{
-						map[disp+i] = (byte)((pattern[patternY][patternX].getColorArray()[i]*255f));
-				}
-				
+					int disp = 4 * (X*PIXELS_PER_BLOCK + x + (Y * PIXELS_PER_BLOCK * PIXELS_PER_BLOCK + z * PIXELS_PER_BLOCK)* sizeX);
+					for (int i=0; i<4; i++)
+					{
+							map[disp+i] = (byte)((int)((pattern[patternY][patternX].getColorArray()[i]*255f)));
+					}
 				}
 			}
 		}
@@ -405,7 +404,7 @@ public class WorldMap {
 	
 		map = new int[w.sizeZ][w.sizeX];
 		byte[] mapImage = new byte[w.sizeZ*w.sizeX*4 * PIXELS_PER_BLOCK* PIXELS_PER_BLOCK];
-		byte[] climateImage = new byte[w.sizeZ*w.sizeX*4 * PIXELS_PER_BLOCK* PIXELS_PER_BLOCK];
+		//byte[] climateImage = new byte[w.sizeZ*w.sizeX*4 * PIXELS_PER_BLOCK* PIXELS_PER_BLOCK];
 		byte[] geoImageSet = new byte[w.sizeZ*w.sizeX*4 * PIXELS_PER_BLOCK* PIXELS_PER_BLOCK];
 		positionImageSet = new byte[w.sizeZ*w.sizeX*4 * PIXELS_PER_BLOCK* PIXELS_PER_BLOCK];
 		Collection<Geography> geos = world.geographies.values();
@@ -432,7 +431,7 @@ public class WorldMap {
 						{
 							System.out.print(".");
 							ClimateBelt belt = world.getClimate().getCubeClimate(new Time(), x*w.magnification+3, 0, z*w.magnification+3, false).getBelt();
-							paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false,false);
+							//paintPattern(belt.colorBytes, (byte)255, climateImage, x, z, w.sizeX, CLIMATE,false,false);
 							paintPattern(belt.colorBytes, (byte)255, mapImage, x, z, w.sizeX, CLIMATE,false,false);
 							
 							
@@ -717,8 +716,12 @@ public class WorldMap {
 	{
 		oceanTex = new Texture2D();
 		oceanTex.setImage(oceanImage);
+		oceanTex.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
+		oceanTex.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
 		geoTex = new Texture2D();
 		geoTex.setImage(geoImage);
+		geoTex.setMagnificationFilter(Texture.MagnificationFilter.Bilinear);
+		geoTex.setMinificationFilter(Texture.MinificationFilter.BilinearNoMipMaps);
 		
 		baseTexState = J3DCore.getInstance().getDisplay().getRenderer().createTextureState();
 		baseTexState.setTexture(oceanTex);
