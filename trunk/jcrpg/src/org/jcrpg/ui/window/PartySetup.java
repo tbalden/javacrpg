@@ -27,6 +27,8 @@ import java.util.TreeMap;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameLogicConstants;
+import org.jcrpg.game.scenario.ScenarioLoader;
+import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.UIBase;
@@ -77,6 +79,7 @@ public class PartySetup extends PagedInputWindow {
 	// party select
 	//ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
+	ListSelect scenarioSelect = null;
 	TextButton addChar;
 	TextButton viewChar;
 	TextButton newChar;
@@ -130,8 +133,10 @@ public class PartySetup extends PagedInputWindow {
 	
 	public TextButton closeWindow1, closeWindow2, closeWindow3;
 	
+	
 	public PartySetup(UIBase base) {
 		super(base);
+		ScenarioLoader loader = J3DCore.getInstance().scenarioLoader;
 		text = FontUtils.textVerdana;
 		try {
 	    	
@@ -141,12 +146,40 @@ public class PartySetup extends PagedInputWindow {
 	    	hudQuad.setRenderState(base.hud.hudAS);
 	    	pageMemberSelection.attachChild(hudQuad);
 	    	
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
-	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.2f, 0.07f,600f,"Select a Scenario to play:",false); 
+	    	scenarioSelect = new ListSelect("scenario",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	scenarioSelect.focusUponMouseEnter = true;
+	    	scenarioSelect.deactivateUponUse = true;
+	    	addInput(0,scenarioSelect);
+
+	    	ArrayList<String> ids = new ArrayList<String>();
+	    	ArrayList<String> texts = new ArrayList<String>();
+	    	ArrayList<String> tooltips = new ArrayList<String>();
+	    	ArrayList<Object> objects = new ArrayList<Object>();
+	    	int counter = 0;
+	    	for (ScenarioDescription sD :loader.listOfScenarios)
+	    	{
+	    		texts.add(sD.name +" ("+sD.date+ ") "+sD.version);
+	    		objects.add(sD);
+	    		ids.add(""+counter++);
+	    		tooltips.add(sD.descText);
+	    	}
+	    	scenarioSelect.ids = ids.toArray(new String[0]);
+	    	scenarioSelect.texts = texts.toArray(new String[0]);
+	    	scenarioSelect.tooltips = tooltips.toArray(new String[0]);
+	    	scenarioSelect.objects = objects.toArray();
+	    	scenarioSelect.setUpdated(true);
+	    	//scenarioSelect.activate();
+	    	scenarioSelect.deactivate();
+	    	
+	    	
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.23f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
+	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.28f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addCharSelect.focusUponMouseEnter = true;
 	    	addCharSelect.deactivateUponUse = false;
 	    	addInput(0,addCharSelect);
-	    	
+
+
 	    	viewChar = new TextButton("view_char",this,pageMemberSelection, 0.23f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.viewChar"));
 	    	addInput(0,viewChar);
 	    	addChar = new TextButton("add_char",this,pageMemberSelection, 0.50f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.addChar"));
@@ -883,6 +916,7 @@ public class PartySetup extends PagedInputWindow {
 		if (base.equals(startGame))
 		{
 			if (charactersOfParty.size()==0) return true;
+			if (scenarioSelect.getSelectedObject()==null) return true;
 			// ################ Let's start the game...
 			base.deactivate();
 			toggle();
@@ -893,7 +927,7 @@ public class PartySetup extends PagedInputWindow {
 				charCreationRule = new CharacterCreationRules(null,null);
 			}
 			core.uiBase.hud.characters.hide();
-			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule);
+			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule, (ScenarioDescription)scenarioSelect.getSelectedObject());
 			core.init3DGame();
 			core.getClassicInputHandler().enableMouse(true);
 			core.uiBase.hud.characters.update();

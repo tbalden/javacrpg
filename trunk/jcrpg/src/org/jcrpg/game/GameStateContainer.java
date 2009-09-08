@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
+import org.jcrpg.game.scenario.Scenario;
+import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyAction;
@@ -54,6 +56,8 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 public class GameStateContainer {
 	
+	public transient Scenario scenario;
+	public ScenarioDescription scenarioDesc;
 	
 	public class ScenarioPositions
 	{
@@ -96,7 +100,29 @@ public class GameStateContainer {
 		encounterModePosition.relativeZ = 0;
 		charCreationRules = new CharacterCreationRules(null,null);
 	}
-
+	
+	/**
+	 * Sets the Scenario for the game.
+	 * @param s
+	 */
+	public void setScenario(Scenario s)
+	{
+		scenario = s;
+	}
+	
+	public void onLoad()
+	{
+		setScenario(J3DCore.getInstance().scenarioLoader.load(scenarioDesc));
+	}
+	
+	/**
+	 * Sets the Scenario for the game.
+	 * @param s
+	 */
+	public void setScenarioDesc(ScenarioDescription s)
+	{
+		scenarioDesc = s;
+	}
 	/**
 	 * If doing an engine-paused encounter mode this is with value true, switch it with core->switchEncounterMode(value) only!
 	 */
@@ -321,10 +347,10 @@ public class GameStateContainer {
 					false);
 			if (c!=null)
 			{
-				System.out.println("##### "+c);
+				Jcrpg.LOGGER.info(("Encounter Scenario switch, ##### "+c));
 				if (c.internalCube)
 				{
-					System.out.println("INSIDE AREA!!!!!!!!");
+					Jcrpg.LOGGER.info("Encounter Scenario Switch: INSIDE area");
 					encounterModePosition.insideArea = true;
 				
 				} else

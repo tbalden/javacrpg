@@ -29,7 +29,17 @@ public class Language {
 	public static final String LANG_DIR = "./data/lang/";
 	
 	Properties properties = new Properties();
-	
+
+	public Language(File f)
+	{
+		try {
+			properties.load(new FileInputStream(f));
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+			System.exit(1);
+		}
+	}	
 	public Language(String lang)
 	{
 		File f;

@@ -34,6 +34,8 @@ import java.util.zip.ZipOutputStream;
 import org.jcrpg.game.CharacterCreationRules;
 import org.jcrpg.game.GameLogic;
 import org.jcrpg.game.GameStateContainer;
+import org.jcrpg.game.scenario.Scenario;
+import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.window.BusyPaneWindow;
 import org.jcrpg.world.Engine;
@@ -65,7 +67,7 @@ public class SaveLoadNewGame {
 	public static final String saveDir = "./save";
 	public static final String charsDir = "./chars";
 	
-	public static void newGame(J3DCore core, Collection<PersistentMemberInstance> partyMembers, CharacterCreationRules cCR) 
+	public static void newGame(J3DCore core, Collection<PersistentMemberInstance> partyMembers, CharacterCreationRules cCR, ScenarioDescription desc) 
 	{
 		
 		try {
@@ -79,6 +81,7 @@ public class SaveLoadNewGame {
 						
 			gameState.setCharCreationRules(cCR);
 		
+			
 			Engine engine = new Engine();
 			Time wmt = new Time();
 			wmt.setHour(13);
@@ -87,9 +90,13 @@ public class SaveLoadNewGame {
 			Thread t = new Thread(engine);
 			t.start();
 			core.engineThread = t;
+			
+			gameState.setScenarioDesc(desc);
+			gameState.onLoad();
+			Scenario s = gameState.scenario;
 
 			//WorldParams params = new WorldParams(40,50,2,50,"Ocean", 10,80,1,climates,climateSizeMuls,geos,geoLikenessValues,additionalGeos,additionalGeoLikenessValues,40);
-			WorldParams params = (new WorldParamsConfigLoader()).getWorldParams();
+			WorldParams params = (new WorldParamsConfigLoader()).getWorldParams(s.worldParams);
 			WorldGenerator gen = new WorldGenerator();
 			World world = gen.generateWorld(new DefaultGenProgram(new DefaultClassFactory(),gen,params));
 			world.engine = engine;
@@ -100,7 +107,7 @@ public class SaveLoadNewGame {
 	
 			world.setOrbiterHandler(woh);
 	
-			EcologyGenerator eGen = new EcologyGenerator();
+			EcologyGenerator eGen = new EcologyGenerator(new FileInputStream(s.ecology));
 			Ecology ecology = eGen.generateEcology(world);
 			
 			world.economyContainer.roadNetwork.updateRoads();
@@ -250,7 +257,7 @@ public class SaveLoadNewGame {
 			Reader reader = new InputStreamReader(zipInputStream);
 			long time = System.currentTimeMillis();
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
-			System.out.println("oooooooooooooooooooooooooooo LOAD TIME = "+(System.currentTimeMillis()-time));
+			System.out.println("[][][][][][] LOAD TIME = "+(System.currentTimeMillis()-time));
 			gameState.world.onLoad();
 			gameState.ecology.onLoad();
 			core.setGameState(gameState);
@@ -268,8 +275,9 @@ public class SaveLoadNewGame {
 			core.behaviorWindow.party = gameState.player;
 			core.behaviorWindow.updateToParty();
 			gameState.resetGeneral();
+			gameState.onLoad();
 			
-			core.uiBase.hud.mainBox.addEntry("Game loaded.");
+			core.uiBase.hud.mainBox.addEntry("Game loaded. Scen.: "+gameState.scenarioDesc.name+" "+gameState.scenarioDesc.version);
 			core.uiBase.hud.mainBox.addEntry("Press RIGHT button on mouse to toggle between mouselook and cursor.");
 			core.gameLost = false;
 		} catch (Exception ex)
