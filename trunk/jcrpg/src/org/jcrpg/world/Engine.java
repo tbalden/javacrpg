@@ -59,18 +59,18 @@ public class Engine implements Runnable {
 	/**
 	 * Ticks per new second.
 	 */
-	public static int TICK_SECONDS = 10;
+	public static int TICK_SECONDS = 100;
 	// light DEBUG:
 	//public static int TICK_SECONDS = 500;
 	
-	public static int TICK_SECONDS_CAMPING = 50;
+	public static int TICK_SECONDS_CAMPING = 500;
 	
-	public static int SECONDS_PER_TURN = 100;
+	public static int SECONDS_PER_TURN = 1000;
 	/**
 	 * Tells around how many seconds (this is randomly calculated half part) till a new
 	 * do environment should be executed (sounds and such only, not gameplay events!)  
 	 */
-	public static int SECONDS_PER_ENVIRONMENT = 80; 
+	public static int SECONDS_PER_ENVIRONMENT = 800; 
 	
 	
 	private boolean timeChanged = false;

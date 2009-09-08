@@ -110,7 +110,7 @@ public class GameStateContainer {
 		scenario = s;
 	}
 	
-	public void onLoad()
+	public void onLoad() throws Exception
 	{
 		setScenario(J3DCore.getInstance().scenarioLoader.load(scenarioDesc));
 	}

@@ -27,8 +27,11 @@ public class Scenario {
 	ScenarioDescription desc;
 	public File worldParams;
 	public File ecology;
+	public File eventsFile;
 	
-	public void load()
+	public Events events;
+	
+	public void load() throws Exception
 	{
 		File[] files = desc.directory.listFiles();
 		for (File file:files)
@@ -40,6 +43,11 @@ public class Scenario {
 			if (file.getAbsolutePath().endsWith("ecology.xml"))
 			{
 				ecology = file;
+			}
+			if (file.getAbsolutePath().endsWith("events.xml"))
+			{
+				eventsFile = file;
+				events = new Events(file,desc.directory.getAbsolutePath());
 			}
 		}
 	}
