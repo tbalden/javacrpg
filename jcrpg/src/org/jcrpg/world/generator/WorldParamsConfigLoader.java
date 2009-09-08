@@ -108,7 +108,7 @@ public class WorldParamsConfigLoader {
 		
 		InputStream is = null;
 		try {
-			new FileInputStream(file);
+			is = new FileInputStream(file);
 			this.loadDocument(is);
 		} catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();

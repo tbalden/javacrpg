@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.audio.AudioServer;
 import org.jcrpg.game.GameStateContainer;
+import org.jcrpg.game.scenario.ScenarioLoader;
 import org.jcrpg.game.trigger.StorageObjectHandler;
 import org.jcrpg.game.trigger.TriggerHandler;
 import org.jcrpg.space.Cube;
@@ -161,6 +162,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static final int MINIMUM_WORLD_REALSIZE = 100;
 	
 	public static final boolean NATIVE_FONT_RENDER = true;
+	
+
+	public ScenarioLoader scenarioLoader;
 	
 	public static class CoreSettings
 	{
@@ -730,6 +734,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				hm3dTypeRenderedSide, SETTINGS.MIPMAP_TREES, SETTINGS.DETAILED_TREES,
 				SETTINGS.RENDER_GRASS_DISTANCE, SETTINGS.LOD_VEGETATION);
 
+		 scenarioLoader = new ScenarioLoader(this,"./scenario");
 	}
 
 	public void initCore() {

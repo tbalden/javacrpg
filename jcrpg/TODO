@@ -23,12 +23,13 @@ Society, Groups etc.
 [ ] loading eats more and more memory
 
 [ ] Add Story text window, use it for new game start, explaining things.
-[ ] color problems of map
-	-> check simple icons like red/blue/green to see whats wrong
+
 
 
 [X] MAP
-		Higher resolution map - colored populations.
+	[X] color problems of map
+	-> check simple icons like red/blue/green to see whats wrong
+	[-]	Higher resolution map - colored populations.
 		[X] colored population icons instead of boolean array!
 		
 	[X] legendary to the map - by tooltip done
