@@ -178,6 +178,12 @@ public class SaveLoadNewGame {
 			}
 			core.uiBase.hud.mainBox.addEntry("Press RIGHT button on mouse to toggle between mouselook and cursor.");
 
+			if (gameState.scenario.events.intro!=null)
+			{
+				// TODO show the StoryPart window by calling the EventElements displayer which toggle that window..make it abstract!
+				core.uiBase.hud.mainBox.addEntry("I: "+gameState.scenario.events.intro.elements.get(0).storyPart.blocks.get(0).text);
+			}
+			
 		} catch (Exception ex)
 		{
 			

@@ -21,6 +21,7 @@ package org.jcrpg.game.scenario;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.jcrpg.game.scenario.Events.Event;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.Language;
 
@@ -90,11 +91,15 @@ public class ScenarioLoader {
 		}
 	}
 	
-	public Scenario load(ScenarioDescription desc)
+	public Scenario load(ScenarioDescription desc) throws Exception
 	{
 		Scenario s = new Scenario();
 		s.desc = desc;
 		s.load();
+		for (Event e:s.events.events)
+		{
+			System.out.println("STORY : EVENT "+e.type+" / "+e.name);
+		}
 		return s;
 	}
 	
