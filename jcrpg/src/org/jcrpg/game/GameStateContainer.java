@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.scenario.Scenario;
+import org.jcrpg.game.scenario.ScenarioState;
 import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
 import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
@@ -58,6 +59,7 @@ public class GameStateContainer {
 	
 	public transient Scenario scenario;
 	public ScenarioDescription scenarioDesc;
+	public ScenarioState scenarioState = new ScenarioState();
 	
 	public class ScenarioPositions
 	{

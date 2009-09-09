@@ -87,6 +87,7 @@ import org.jcrpg.ui.window.player.CharacterLevelingWindow;
 import org.jcrpg.ui.window.player.CharacterSheetWindow;
 import org.jcrpg.ui.window.player.InventoryWindow;
 import org.jcrpg.ui.window.player.PartyOrderWindow;
+import org.jcrpg.ui.window.scenario.StoryPartDisplayWindow;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
@@ -2175,11 +2176,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	}
     public static MaterialState ms;
 
+    /**
+     * init3d game sets this true, when loading/starting a game. Scenario.init will be called if this is true after
+     * busyPane closed.
+     */
+    boolean startingCleanBeforeScenarioInitialization = true;
+    
 	/**
 	 * This renders a gameState.world initially, call it after loading a game
 	 * into a clean core.
 	 */
 	public void init3DGame() {
+		startingCleanBeforeScenarioInitialization = true;
 		if (coreFullyInitialized) {
 			dofParentNode.attachChild(intRootNode);
 			dofParentNode.attachChild(extRootNode);
@@ -2781,6 +2789,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		lockInspectionWindow = new LockInspectionWindow(uiBase);
 		storageHandlingWindow = new StorageHandlingWindow(uiBase);
 
+		storyPartDispWindow = new StoryPartDisplayWindow(uiBase);
+		
 		// adding player invoked windows to handling
 		uiBase.addWindow("behaviorWindow", behaviorWindow);
 		uiBase.addWindow("inventoryWindow", inventoryWindow);
@@ -2825,6 +2835,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public PostEncounterWindow postEncounterWindow = null;
 
 	PlayerChoiceWindow pChoiceWindow = null;
+	
+	public StoryPartDisplayWindow storyPartDispWindow = null;
 
 	public static boolean DEMO_ENCOUTNER_MODE = false;
 
@@ -3179,6 +3191,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		audioServer.applyVolumeSettings();
 		getClassicInputHandler().applyMouseSettings();
 	}
-	
 
+	/**
+	 * This one is called by J3dstanding engine after finishing loading of 3d, and if it's a clean load/start game, scenario init is called here.
+	 */
+	public void initializationFinished()
+	{
+		if (startingCleanBeforeScenarioInitialization)
+		{
+			gameState.scenario.initiateScenario();
+		}
+		startingCleanBeforeScenarioInitialization = false;
+	}
+	
 }

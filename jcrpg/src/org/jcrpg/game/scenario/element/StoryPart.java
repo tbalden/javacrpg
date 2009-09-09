@@ -24,6 +24,8 @@ import java.util.Vector;
 
 import net.n3.nanoxml.IXMLElement;
 
+import org.jcrpg.game.scenario.Events.Event.Element;
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.util.XMLReader;
 
 /**
@@ -47,8 +49,10 @@ public class StoryPart extends XMLReader {
 		}
 	}
 	
-	public StoryPart(File xmlFile) throws Exception {
+	public Element element;
+	public StoryPart(Element element, File xmlFile) throws Exception {
 		super(xmlFile);
+		this.element = element;
 		Vector<IXMLElement> blocksXML = (Vector<IXMLElement>)xml.getChildrenNamed("block");
 		for (IXMLElement e:blocksXML)
 		{
@@ -56,6 +60,16 @@ public class StoryPart extends XMLReader {
 			blocks.add(block);
 		}
 
+	}
+	
+	public void finishedPlaying()
+	{
+		element.finishedPlaying(this);
+	}
+	
+	public void play()
+	{
+		J3DCore.getInstance().storyPartDispWindow.playStoryPart(this);
 	}
 
 }
