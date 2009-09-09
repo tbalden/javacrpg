@@ -20,7 +20,9 @@ package org.jcrpg.game.scenario;
 
 import java.io.File;
 
+import org.jcrpg.game.scenario.Events.Event;
 import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
+import org.jcrpg.threed.J3DCore;
 
 public class Scenario {
 
@@ -30,6 +32,36 @@ public class Scenario {
 	public File eventsFile;
 	
 	public Events events;
+	
+	
+	public static final String INTRO_PLAYED = "intPlyd";
+	
+	public void initiateScenario()
+	{
+		Boolean introPlayed = J3DCore.getInstance().gameState.scenarioState.isTrue(INTRO_PLAYED);
+		
+		if (introPlayed!=null && introPlayed)
+		{
+			J3DCore.getInstance().gameState.engine.setPause(false);
+		} else
+		{
+			if (events.intro!=null)
+			{
+				playEvent(events.intro);
+			}
+			J3DCore.getInstance().gameState.scenarioState.setTrue(INTRO_PLAYED);
+		}
+	}
+	
+	public void playEvent(Event event)
+	{
+		event.play();
+	}
+	
+	public void finishedEvent(Event event)
+	{
+		J3DCore.getInstance().gameState.engine.setPause(false);
+	}
 	
 	public void load() throws Exception
 	{
@@ -47,7 +79,7 @@ public class Scenario {
 			if (file.getAbsolutePath().endsWith("events.xml"))
 			{
 				eventsFile = file;
-				events = new Events(file,desc.directory.getAbsolutePath());
+				events = new Events(this,file,desc.directory.getAbsolutePath());
 			}
 		}
 	}

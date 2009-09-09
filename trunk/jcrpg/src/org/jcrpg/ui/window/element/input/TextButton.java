@@ -81,6 +81,15 @@ public class TextButton extends InputBase {
 		this.textProportion = textProportion;
 		deactivate();
 	}
+	boolean needBGImage = true;
+	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
+			float sizeY, float textProportion, String text, boolean needBGImage) {
+		super(id, w, parentNode, centerX, centerY, sizeX, sizeY);
+		this.text = text;
+		this.textProportion = textProportion;
+		this.needBGImage = needBGImage;
+		deactivate();
+	}
 	public TextButton(String id, InputWindow w, Node parentNode, float centerX, float centerY, float sizeX,
 			float sizeY, float textProportion, String text, String shortcut) {
 		this(id,w,parentNode,centerX,centerY,sizeX,sizeY,textProportion,text);
@@ -112,6 +121,7 @@ public class TextButton extends InputBase {
 			activeNode = new Node(""+id);
 			//activeNode.setUserData("uiElement", arg1)
 			//freeTextNodes();
+			if (needBGImage)
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.white);
@@ -166,6 +176,7 @@ public class TextButton extends InputBase {
 		if (deactiveNode==null ) {
 			deactiveNode = new Node(""+id);
 			//freeTextNodes();
+			if (needBGImage)
 			try {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, !centered?dOrigoXCenter*0.95f:dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);

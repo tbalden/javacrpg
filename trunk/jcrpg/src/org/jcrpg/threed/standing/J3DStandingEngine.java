@@ -55,6 +55,7 @@ import org.jcrpg.threed.scene.side.RenderedHashRotatedSide;
 import org.jcrpg.threed.scene.side.RenderedSide;
 import org.jcrpg.threed.scene.side.RenderedTopSide;
 import org.jcrpg.ui.UIBase;
+import org.jcrpg.ui.Window;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.Boundaries;
@@ -2094,6 +2095,7 @@ public class J3DStandingEngine {
 	    //System.out.println("RENDERED WCACHE SIZE  = "+renderedArea.worldCubeCache.size());
 	    QuickOrderedList.timeCounter=0;
 	    core.busyPane.hide();
+	    core.initializationFinished();
 	    //SceneMonitor.getMonitor().updateViewer(0.0f);
 	}
 	

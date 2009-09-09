@@ -395,6 +395,7 @@ public class PartySetup extends PagedInputWindow {
 				inputChanged(addCharSelect, "");
 			}
 			addCharSelect.setUpdated(true);
+			addCharSelect.deactivate();
 		}
 		if (currentPage==1)
 		{
@@ -933,8 +934,8 @@ public class PartySetup extends PagedInputWindow {
 			core.uiBase.hud.characters.update();
 			core.uiBase.hud.characters.show();
 			core.getUIRootNode().updateRenderState();
-			core.gameState.engine.setPause(false);
 			core.audioServer.stopAndResumeOthers("main");
+			
 		}
 		return true;
 	}
