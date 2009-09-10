@@ -560,10 +560,6 @@ public class WorldMap {
 					if (ecoObj instanceof Population)
 					{
 						String townName = ((Population)ecoObj).town.foundationName;
-						if (towns.contains(townName))
-						{
-							
-						} else
 						{
 							towns.add(townName);
 							LabelDesc desc = new LabelDesc();

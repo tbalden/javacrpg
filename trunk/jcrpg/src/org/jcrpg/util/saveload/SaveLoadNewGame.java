@@ -224,7 +224,7 @@ public class SaveLoadNewGame {
 			zipOutputStream.putNextEntry(new ZipEntry("gamestate.xml"));
 			long time = System.currentTimeMillis();
 			core.gameState.getGameStateXml(zipOutputStream);
-			System.out.println("oooooooooooooooooooooooooooo SAVE TIME = "+(System.currentTimeMillis()-time));
+			System.out.println("][][][][][][ SAVE TIME = "+(System.currentTimeMillis()-time));
 			zipOutputStream.close();
 			
 			core.busyPane.hide();

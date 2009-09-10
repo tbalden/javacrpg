@@ -240,7 +240,7 @@ public class LoadMenu extends InputWindow implements KeyListener {
 					{
 						Text text2 = Text.createDefaultTextLabel("",second);
 						text2.setTextColor(new ColorRGBA(1,1,0.1f,1f));
-						text2.setLocalScale(0.65f);
+						text2.setLocalScale(0.60f);
 						text2.setLocalTranslation(0, -core.getDisplay().getHeight()/40f, 0);
 						slottextNode.attachChild(text2);
 					}

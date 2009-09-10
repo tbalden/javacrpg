@@ -15,18 +15,21 @@ Economy,
 Interrelation,
 Society, Groups etc.
 
+Journal window will be needed!
+[ ] District / Town / PlainForestMountain type and then title dropdown to let player search towns/districts on world map (later filtered by known?)
+
+----
+
 
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-
 [ ] integrate new content, igloo/yeti, sanctuary, worpion
 
 
-[ ] District / Town / PlainForestMountain type and then title dropdown to let player search towns/districts on world map (later filtered by known?)
-	[ ] mouse hover town/district name displaying in a textlabel!
+[X] mouse hover town/district name displaying in a textlabel!
 
-[ ] display Date info (time too) on world map!!
+[X] display Date info (time too) on world map!!
 
 [X] add seed selection for scenario selection at starting
 
