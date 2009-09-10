@@ -107,28 +107,28 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 
 	    	//pictureSelect = new PictureSelect("picture_select", this, page0, 0.78f,0.25f,0.15f,0.2f,600f);
 
-	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.3f, 0.06f,400f,"Character Leveling",false);
+	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.0f, 0.06f,400f,"Character Leveling",false);
     		characterName = new TextLabel("member", this,page0, 0.50f,0.11f,0.3f,0.06f,450f,"",true);
 	    	//addInput(0,characterName);
 	    	
 	    	professionSelect = new ListSelect("profession", this,page0, 0.55f,0.2f,0.3f,0.06f,600f,new String[0],new String[0],null,null);
 
-	    	new TextLabel("level",this,page0,0.45f,0.25f,0.15f,0.04f,600f, "Level", false);
+	    	new TextLabel("level",this,page0,0.45f,0.25f,0.0f,0.04f,600f, "Level", false);
 	    	level = new ValueTuner("level",this,page0, 0.47f,0.28f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("health",this,page0,0.45f,0.31f,0.15f,0.04f,600f, "Health", false);
+	    	new TextLabel("health",this,page0,0.45f,0.31f,0.0f,0.04f,600f, "Health", false);
 	    	health = new ValueTuner("health",this,page0, 0.47f,0.34f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("stamina",this,page0,0.61f,0.31f,0.15f,0.04f,600f, "Stamina", false);
+	    	new TextLabel("stamina",this,page0,0.61f,0.31f,0.0f,0.04f,600f, "Stamina", false);
 	    	stamina = new ValueTuner("stamina",this,page0, 0.63f,0.34f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("morale",this,page0,0.45f,0.39f,0.15f,0.04f,600f, "Morale", false);
+	    	new TextLabel("morale",this,page0,0.45f,0.39f,0.0f,0.04f,600f, "Morale", false);
 	    	morale = new ValueTuner("morale",this,page0, 0.47f,0.42f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("sanity",this,page0,0.61f,0.39f,0.15f,0.04f,600f, "Sanity", false);
+	    	new TextLabel("sanity",this,page0,0.61f,0.39f,0.0f,0.04f,600f, "Sanity", false);
 	    	sanity = new ValueTuner("sanity",this,page0, 0.63f,0.42f,0.15f,0.04f,600f,10,0,100,1);
 
-	    	new TextLabel("mana",this,page0,0.45f,0.46f,0.15f,0.04f,600f, "Mana", false);
+	    	new TextLabel("mana",this,page0,0.45f,0.46f,0.0f,0.04f,600f, "Mana", false);
 	    	mana = new ValueTuner("mana",this,page0, 0.47f,0.49f,0.15f,0.04f,600f,10,0,100,1);
 
 	    	
@@ -144,7 +144,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		posY++;
 	    	}
 
-	    	attrPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.50f, 0.2f, 0.07f,500f,attrPointsLeft+" Attr. Points left.",false); 
+	    	attrPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.50f, 0.0f, 0.07f,500f,attrPointsLeft+" Attr. Points left.",false); 
 
 
 	    	//addInput(1,pictureSelect);
@@ -153,7 +153,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    	for (String groupId : SkillGroups.orderedGroups)
 	    	{
 	    		String groupName = Language.v("skillgroups."+groupId);
-	    		new TextLabel(groupId+"_label",this,page0,0.149f,0.6f+0.05f*posY,0.15f,0.04f,600f, groupName, false);
+	    		new TextLabel(groupId+"_label",this,page0,0.149f,0.6f+0.05f*posY,0.0f,0.04f,600f, groupName, false);
 	    		ArrayList<String> skillIds = new ArrayList<String>();
 	    		ArrayList<String> skillTexts = new ArrayList<String>();
 	    		ArrayList<Object> skillObjects = new ArrayList<Object>();
@@ -162,9 +162,9 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    		skillSelects.put(groupId, sel);
 	    		addInput(0,sel);
 	    	}
-	    	skillPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.6f, 0.2f, 0.07f,500f,skillPointsLeft+" Skill Points left.",false); 
+	    	skillPointsLeftLabel = new TextLabel("",this,page0, 0.63f, 0.6f, 0.0f, 0.07f,500f,skillPointsLeft+" Skill Points left.",false); 
 	    	
-	    	skillText = new TextLabel("",this,page0, 0.61f, 0.65f, 0.3f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
+	    	skillText = new TextLabel("",this,page0, 0.61f, 0.65f, 0.0f, 0.06f,600f,Language.v("partySetup.selectSkill"),false); 
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.7f,0.15f,0.04f,600f,0,0,100,1);
 	    	addInput(0,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);

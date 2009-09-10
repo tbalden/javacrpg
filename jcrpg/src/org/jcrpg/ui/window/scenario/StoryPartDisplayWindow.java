@@ -29,10 +29,11 @@ import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
 
+import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 import com.jme.system.DisplaySystem;
 
-public class StoryPartDisplayWindow extends InputWindow {
+public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 
 	public ArrayList<Text> scrollingLines = new ArrayList<Text>();
 	public int MAX_LINES_PER_BLOCK = 30;
@@ -41,6 +42,68 @@ public class StoryPartDisplayWindow extends InputWindow {
 	
 	TextButton nextWindow = null;
 	
+	public class ScrollTextNode extends Node
+	{
+		private float fliedTime= 0f;
+		private float maxTime = 1.5f;
+		private boolean flying = false;
+		private float speed = 0.1f;
+		
+		public ArrayList<Runnable> onFinish = new ArrayList<Runnable>();
+		
+		public ArrayList<Text> texts = new ArrayList<Text>();
+		
+		@Override
+		public void updateGeometricState(float time, boolean initiator) {
+			if (flying && fliedTime<maxTime) {
+				localTranslation.addLocal(0f, speed*time / ((fliedTime+maxTime/1.7f)/maxTime), 0f);
+				fliedTime+=1f*time;
+				for (Text t:texts)
+				{
+					float y = Math.min(1f,(t.getWorldTranslation().y/core.getDisplay().getHeight())*8f) ;
+					t.getTextColor().b = y;
+					t.getTextColor().r = y;
+					t.getTextColor().g = y;
+					t.getTextColor().a = y;
+				}
+			} else
+			if (flying && fliedTime>=maxTime)
+			{
+				//this.removeFromParent();
+				if (onFinish!=null)
+				{
+					for (Runnable r:onFinish)
+					{
+						r.run();
+					}
+				}
+				return;
+			}
+			super.updateGeometricState(time, initiator);
+		}
+		
+		public boolean isFinishedPlaying()
+		{
+			if (fliedTime>=maxTime)
+			{
+				return true;
+			}
+			return false;
+		}
+		public void startFlying()
+		{
+			flying = true;
+		}
+		public void startFlying(float speed, float maxTime)
+		{
+			this.speed = speed;
+			this.maxTime = maxTime;
+			flying = true;
+		}		
+	}
+
+	ScrollTextNode scrollNode = new ScrollTextNode();
+
 	public StoryPartDisplayWindow(UIBase base) {
 		super(base);
 		try {
@@ -55,15 +118,19 @@ public class StoryPartDisplayWindow extends InputWindow {
 		int height = DisplaySystem.getDisplaySystem().getHeight();
 		int width = DisplaySystem.getDisplaySystem().getWidth();
 
+		scrollNode.onFinish.add(this);
+		
 		for (int i=0; i<MAX_LINES_PER_BLOCK; i++)
 		{
 			Text t = Text.createDefaultTextLabel("demo_line_"+i);
-			t.setLocalTranslation(0.1f * width, height - i* height*0.05f, 0f);
+			t.setLocalTranslation(0.15f * width, height - i* height*0.05f, 0f);
 			scrollingLines.add(t);
-			windowNode.attachChild(t);
+			scrollNode.attachChild(t);
+			scrollNode.texts.add(t);
 		}
+		windowNode.attachChild(scrollNode);
 		
-    	nextWindow = new TextButton("next",this,windowNode, 0.50f, 0.810f, 0.08f, 0.06f,600f,"Press Enter...",false);
+    	nextWindow = new TextButton("next",this,windowNode, 0.50f, 0.870f, 0.08f, 0.06f,500f,"Press Enter...",false);
     	addInput(nextWindow);
 		nextWindow.activate();
 	}
@@ -126,6 +193,7 @@ public class StoryPartDisplayWindow extends InputWindow {
 	
 	private void playBlock(int block)
 	{
+		nextWindow.baseNode.removeFromParent();
 		Block blockInstance = currentStory.blocks.get(block);
 		String text = blockInstance.text;
 		//core.uiBase.hud.mainBox.addEntry("I: "+text);
@@ -138,6 +206,9 @@ public class StoryPartDisplayWindow extends InputWindow {
 				scrollingLines.get(counter++).print(line);
 			}
 		}
+		scrollNode.setLocalTranslation(0f, 0-core.getDisplay().getHeight(), 0f);
+		scrollNode.startFlying(20.0f, 28f);
+		scrollNode.updateRenderState();
 	}
 	
 
@@ -166,6 +237,10 @@ public class StoryPartDisplayWindow extends InputWindow {
 		}
 		
 		return false;
+	}
+
+	public void run() {
+		nextWindow.reattach();
 	}
 
 }
