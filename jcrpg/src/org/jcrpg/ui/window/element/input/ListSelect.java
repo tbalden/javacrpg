@@ -701,11 +701,14 @@ public class ListSelect extends InputBase {
 		return deactivatedNode;
 	}
 	
+	
 	@Override
 	public String getTooltipText()
 	{
 		try {
-			return tooltips[fromCount+selected]; 
-		}catch (Exception ex) {return null;}
+			String tt= tooltips[fromCount+selected];
+			if (tt==null) return globalTooltip;
+			return tt;
+		}catch (Exception ex) {return globalTooltip;}
 	}
 }

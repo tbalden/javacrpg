@@ -22,8 +22,13 @@ Society, Groups etc.
 
 [ ] integrate new content, igloo/yeti, sanctuary, worpion
 
+
+[ ] District / Town / PlainForestMountain type and then title dropdown to let player search towns/districts on world map (later filtered by known?)
+	[ ] mouse hover town/district name displaying in a textlabel!
+
 [ ] display Date info (time too) on world map!!
 
+[X] add seed selection for scenario selection at starting
 
 [X] very basic scenario support
 	[X] Add Story text window, use it for new game start, explaining things.

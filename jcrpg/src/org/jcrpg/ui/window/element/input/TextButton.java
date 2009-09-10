@@ -226,6 +226,7 @@ public class TextButton extends InputBase {
 		if (key.equals("enter") || shortCut!=null && key.equals(shortCut)) // enter or shortcut
 		{
 			w.core.audioServer.play(SOUND_INPUTSELECTED);
+			w.inputActivated(this);
 			w.inputUsed(this, key);
 			return true;
 		}
