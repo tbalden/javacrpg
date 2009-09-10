@@ -36,9 +36,9 @@ import com.jme.system.DisplaySystem;
 public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 
 	public ArrayList<Text> scrollingLines = new ArrayList<Text>();
-	public int MAX_LINES_PER_BLOCK = 30;
+	public static int MAX_LINES_PER_BLOCK = 30;
 	
-	public int MAX_LETTERS_PER_LINE = 50;
+	public static int MAX_LETTERS_PER_LINE = 70;
 	
 	TextButton nextWindow = null;
 	
@@ -56,7 +56,7 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 		@Override
 		public void updateGeometricState(float time, boolean initiator) {
 			if (flying && fliedTime<maxTime) {
-				localTranslation.addLocal(0f, speed*time / ((fliedTime+maxTime/1.7f)/maxTime), 0f);
+				localTranslation.addLocal(0f, speed*time*(core.getDisplay().getHeight()/600f) / ((fliedTime+maxTime/1.7f)/maxTime), 0f);
 				fliedTime+=1f*time;
 				for (Text t:texts)
 				{
