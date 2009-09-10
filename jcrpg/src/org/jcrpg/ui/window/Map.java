@@ -19,22 +19,28 @@
 package org.jcrpg.ui.window;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.map.WorldMap.LabelContainer;
 import org.jcrpg.ui.map.WorldMap.LabelDesc;
+import org.jcrpg.ui.mouse.UiMouseEvent;
+import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
 import com.jme.image.Texture2D;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.BlendState;
@@ -46,7 +52,54 @@ public class Map extends InputWindow {
 	WorldMap wmap;
 	
 	TextButton closeWindow;
+	
+	TextLabel worldTime = null;
+	TextLabel labelDesc = null;
+	
+	public class MapQuad extends InputBase
+	{
 
+		public MapQuad(String id, InputWindow w, Node parentNode) {
+			super(id, w, parentNode);
+		}
+
+		@Override
+		public Node getDeactivatedNode() {
+			return null;
+		}
+
+		@Override
+		public void reset() {
+		}
+		
+		public String tooltip = null;
+		
+		public boolean handleMouse(UiMouseEvent mouseEvent)
+		{
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
+			{
+				float rX = mouseEvent.getPickedSpatialList().get(0).ratioX;
+				float rY = mouseEvent.getPickedSpatialList().get(0).ratioY;
+				System.out.println("-- "+rX+" / "+rY);
+				tooltip = mouseHover(rX, rY);
+			}
+			toggleTooltip(getTooltipText());
+			return true;
+		}
+
+		@Override
+		public String getTooltipText() {
+			if (tooltip==null)
+				return super.getTooltipText();
+			return tooltip;
+		}
+		
+		
+
+		
+	}
+	
+	HashMap<String, LabelDesc> labelsToCoordinates = new HashMap<String, LabelDesc>();
 	
 	public Map(UIBase base, WorldMap wmap) throws Exception {
 		super(base);
@@ -115,6 +168,15 @@ public class Map extends InputWindow {
 	        wmap.registerQuad(hudQuad);
 	        windowNode.attachChild(hudQuad);
 	        hudQuad.setRenderState(hudAS);
+	        
+	        MapQuad mapQuad = new MapQuad("-",this,windowNode);
+	        hudQuad.setModelBound(new BoundingBox());
+	        mapQuad.baseNode.attachChild(hudQuad);
+	        mapQuad.baseNode.updateModelBound();
+			mapQuad.globalTooltip=("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
+
+	        
+
         }
         
         LabelContainer labelContainer = wmap.getLabels();
@@ -127,21 +189,34 @@ public class Map extends InputWindow {
 		//TextLabel tlc1 = new TextLabel("1",this,windowNode,0 * 0.01f+offsetX, 0 * 0.01f+offsetY, 0.3f, 0.05f, 700, "xxxx",false);
 		//TextLabel tlc2 = new TextLabel("2",this,windowNode,J3DCore.getInstance().gameState.world.sizeX * xRatio+offsetX, J3DCore.getInstance().gameState.world.sizeZ * yRatio +offsetY, 0.3f, 0.05f, 700, "xxxx",false);
 
+        HashSet<String> displayedAlready = new HashSet<String>();
         for (LabelDesc townDesc : labelContainer.towns)
         {
-        	if (townDesc.scale1>1)
+        	
+        	String key = townDesc.x+"|"+townDesc.z;
+        	labelsToCoordinates.put(key, townDesc);
+        	if (displayedAlready.contains(townDesc.text))
         	{
-           		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX+ xRatio*0.03f, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY + yRatio*0.03f, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.black);
-           		TextLabel tl2 = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.white);
+        	} else
+        	{
+        		displayedAlready.add(townDesc.text);
+	        	if (townDesc.scale1>1)
+	        	{
+	           		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX+ xRatio*0.03f, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY + yRatio*0.03f, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.black);
+	           		TextLabel tl2 = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.0f, 0.05f, 600, lS(townDesc.text),false,false, ColorRGBA.white);
+	        	}
         	}
         	/*if (townDesc.scale1==1)
         	{
         		TextLabel tl = new TextLabel(""+townDesc.text,this,windowNode,townDesc.x * xRatio+offsetX, (J3DCore.getInstance().gameState.world.sizeZ-townDesc.z) * yRatio + offsetY, 0.3f, 0.05f, 1100, lS(townDesc.text),false,false, ColorRGBA.white);
         	}*/
-        	
         }
         
-    	closeWindow = new TextButton("close",this,windowNode, 0.81f, 0.071f, 0.013f, 0.031f,600f," x");
+        
+        worldTime = new TextLabel("time",this,windowNode,0.5f, 0.051f, 0.25f, 0.041f,600f,"time__________",true);
+        //labelDesc = new TextLabel("labelDesc",this,windowNode,0.5f, 0.838f, 0.25f, 0.041f,600f,"",true);
+        
+    	closeWindow = new TextButton("close",this,windowNode, 0.81f, 0.071f, 0.013f, 0.031f,800f,"x");
     	addInput(closeWindow);
     	
     	windowNode.updateRenderState();
@@ -165,6 +240,9 @@ public class Map extends InputWindow {
 
 	@Override
 	public void show() {
+		worldTime.text = core.gameState.engine.getWorldMeanTime().toReadableString();
+		worldTime.setUpdated(true);
+		worldTime.activate();
 		core.getUIRootNode().attachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
 		toggleTooltip("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
@@ -172,19 +250,16 @@ public class Map extends InputWindow {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -198,8 +273,20 @@ public class Map extends InputWindow {
 		return true;
 	}
 	
-	
-	
-	
+	public String mouseHover(float x, float y)
+	{
+		int blockX, blockY;
+		blockX = (int)(x*wmap.world.sizeX);
+		blockY = (int)((1f-y)*wmap.world.sizeZ);
+		
+    	String key = blockX+"|"+blockY;
+    	LabelDesc desc = labelsToCoordinates.get(key);
+    	if (desc!=null)
+    	{
+    		return desc.text+", size: "+desc.scale1;
+    	}
+    	return null;
+
+	}
 
 }

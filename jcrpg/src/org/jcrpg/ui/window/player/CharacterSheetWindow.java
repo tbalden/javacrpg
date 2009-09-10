@@ -95,7 +95,7 @@ public class CharacterSheetWindow extends PagedInputWindow {
 
 	    	new TextLabel("",this,page0, 0.40f, 0.058f, 0.0f, 0.06f,400f,"Character Sheet",false);
 	    	
-	    	new TextLabel("",this,page0, 0.57f, 0.80f, 0.0f, 0.06f,600f,"Press F3 or Backspace to leave.",false);
+	    	new TextLabel("",this,page0, 0.54f, 0.80f, 0.0f, 0.06f,600f,"Press F3 or Backspace to leave.",false);
 	    	
     		characterSelect = new ListSelect("member", this,page0, 0.50f,0.11f,0.3f,0.06f,600f,new String[0],new String[0], new Object[0],null,null);
 	    	addInput(0,characterSelect);

@@ -174,6 +174,10 @@ public class Time {
 	{
 		return "TIME: "+year+" , "+day+" , "+hour+" : "+ minute + " : "+second;
 	}
+	public String toReadableString()
+	{
+		return ""+year+" y, "+day+" d, "+hour+":"+minute;
+	}
 	
 	public Time getLocalTime(World world, int worldX, int worldY, int worldZ)
 	{
