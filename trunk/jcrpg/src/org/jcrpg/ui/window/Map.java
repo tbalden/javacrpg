@@ -76,12 +76,24 @@ public class Map extends InputWindow {
 		
 		public boolean handleMouse(UiMouseEvent mouseEvent)
 		{
+			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
+			{
+				w.inputLeft(this, "");
+			}
 			if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_MOVED)
 			{
 				float rX = mouseEvent.getPickedSpatialList().get(0).ratioX;
 				float rY = mouseEvent.getPickedSpatialList().get(0).ratioY;
 				System.out.println("-- "+rX+" / "+rY);
-				tooltip = mouseHover(rX, rY);
+				String[] v = mouseHover(rX, rY);
+				if (v==null)
+				{
+					tooltip = null;
+				} else
+				{
+					tooltip = v[1];
+					
+				}
 			}
 			toggleTooltip(getTooltipText());
 			return true;
@@ -240,9 +252,7 @@ public class Map extends InputWindow {
 
 	@Override
 	public void show() {
-		worldTime.text = core.gameState.engine.getWorldMeanTime().toReadableString();
-		worldTime.setUpdated(true);
-		worldTime.activate();
+    	updateTime();
 		core.getUIRootNode().attachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
 		toggleTooltip("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
@@ -260,6 +270,7 @@ public class Map extends InputWindow {
 
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
+    	updateTime();
 		return false;
 	}
 
@@ -273,7 +284,7 @@ public class Map extends InputWindow {
 		return true;
 	}
 	
-	public String mouseHover(float x, float y)
+	public String[] mouseHover(float x, float y)
 	{
 		int blockX, blockY;
 		blockX = (int)(x*wmap.world.sizeX);
@@ -283,9 +294,23 @@ public class Map extends InputWindow {
     	LabelDesc desc = labelsToCoordinates.get(key);
     	if (desc!=null)
     	{
-    		return desc.text+", size: "+desc.scale1;
+    		worldTime.text = desc.text;
+    		worldTime.setUpdated(true);
+    		worldTime.activate();
+    		return new String[]{desc.text,desc.text+", size: "+desc.scale1};
     	}
+
+    	updateTime();
+    	
     	return null;
+
+	}
+	
+	private void updateTime()
+	{
+		worldTime.text = core.gameState.engine.getWorldMeanTime().toReadableString();
+		worldTime.setUpdated(true);
+		worldTime.activate();
 
 	}
 
