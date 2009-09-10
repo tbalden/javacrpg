@@ -819,7 +819,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		String className = getClass().getName();
 		if (className.lastIndexOf('.') > 0)
 			className = className.substring(className.lastIndexOf('.') + 1);
-		display.setTitle("Java Classic RPG - prealpha");
+		display.setTitle("jClassicRPG - prealpha");
 		/**
 		 * Signal to the renderer that it should keep track of rendering
 		 * information.

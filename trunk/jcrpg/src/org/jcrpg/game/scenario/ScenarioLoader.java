@@ -41,6 +41,8 @@ public class ScenarioLoader {
 		public Quad descImage;
 		public String version;
 		
+		public int seed = 0;
+		
 		public ScenarioDescription(File dirOfScenario)
 		{
 			directory = dirOfScenario;

@@ -139,7 +139,7 @@ public class HUD {
         
         mainBox = new TextBox(this,"Main",0.080f,0.114f,0.3f,0.13f);
         mainBox.show();
-        mainBox.addEntry(new TextEntry("JavaCRPG pre-alpha version",ColorRGBA.orange));
+        mainBox.addEntry(new TextEntry("jClassicRPG pre-alpha version, code is LGPL",ColorRGBA.orange));
         //mainBox.addEntry(new TextEntry("Use keyboard in the menus",ColorRGBA.orange));
         base.addEventHandler("logUp", mainBox);
         base.addEventHandler("logDown", mainBox);

@@ -38,6 +38,7 @@ import org.jcrpg.game.scenario.Scenario;
 import org.jcrpg.game.scenario.ScenarioLoader.ScenarioDescription;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.window.BusyPaneWindow;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
@@ -78,7 +79,7 @@ public class SaveLoadNewGame {
 			core.gameLost = false;	
 			
 			GameStateContainer gameState = new GameStateContainer();
-						
+			HashUtil.WORLD_RANDOM_SEED = desc.seed;			
 			gameState.setCharCreationRules(cCR);
 		
 			
@@ -214,7 +215,7 @@ public class SaveLoadNewGame {
 			
 			File desc = new File(slot+"desc.txt");
 			FileWriter fw = new FileWriter(desc);
-			String dT2 = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(d);
+			String dT2 = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(d)+ " Seed:"+core.gameState.scenarioDesc.seed;
 			fw.write((slotName!=null && slotName.length()>15?slotName.substring(0,15):slotName)+"\n("+dT2+")");
 			fw.close();
 			
@@ -258,6 +259,7 @@ public class SaveLoadNewGame {
 			Reader reader = new InputStreamReader(zipInputStream);
 			long time = System.currentTimeMillis();
 			GameStateContainer gameState = GameStateContainer.createGameStateFromXml(reader);
+			HashUtil.WORLD_RANDOM_SEED = gameState.scenarioDesc.seed;	
 			System.out.println("[][][][][][] LOAD TIME = "+(System.currentTimeMillis()-time));
 			gameState.world.onLoad();
 			gameState.ecology.onLoad();

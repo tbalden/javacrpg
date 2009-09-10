@@ -320,9 +320,14 @@ public abstract class InputBase implements Savable{
 	
 	public abstract Node getDeactivatedNode();
 	
+	/**
+	 * Setting this is fallback when no tooltip for selected item in the extender UI class.
+	 */
+	public String globalTooltip = null;
+
 	public String getTooltipText()
 	{
-		return null;
+		return globalTooltip;
 	}
 		
 	

@@ -80,6 +80,8 @@ public class PartySetup extends PagedInputWindow {
 	//ArrayList<PartyMember> members = new ArrayList<PartyMember>();
 	ListSelect addCharSelect = null;
 	ListSelect scenarioSelect = null;
+	ListSelect seedSelect = null;
+	
 	TextButton addChar;
 	TextButton viewChar;
 	TextButton newChar;
@@ -172,25 +174,36 @@ public class PartySetup extends PagedInputWindow {
 	    	//scenarioSelect.activate();
 	    	scenarioSelect.deactivate();
 	    	
-	    	
-	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.23f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
-	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.28f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.21f, 0.2f, 0.07f,600f,"Select a Seed for generation:",false);
+	    	String[] seeds = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
+	    	seedSelect = new ListSelect("seed",this,pageMemberSelection,0.385f,0.26f,0.5f,0.05f,600f,seeds,seeds,null,null);
+	    	seedSelect.objects = seeds;
+	    	seedSelect.focusUponMouseEnter = true;
+	    	seedSelect.deactivateUponUse = true;
+	    	seedSelect.globalTooltip = "Select a Seed which will determine the geography, population, ecology etc. of the generated world. A given seed will always result the same generated starting world.";
+	    	addInput(0,seedSelect);
+
+	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.32f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
+	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.37f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
 	    	addCharSelect.focusUponMouseEnter = true;
 	    	addCharSelect.deactivateUponUse = false;
+	    	addCharSelect.globalTooltip = "You can add a character to party by left clicking on its name, remove it by right click. Create new character if you have not enough for the desired party.";
 	    	addInput(0,addCharSelect);
 
-
-	    	viewChar = new TextButton("view_char",this,pageMemberSelection, 0.23f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.viewChar"));
+	    	float deltaY = 0.03f;
+	    	
+	    	viewChar = new TextButton("view_char",this,pageMemberSelection, 0.23f, deltaY+ 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.viewChar"));
 	    	addInput(0,viewChar);
-	    	addChar = new TextButton("add_char",this,pageMemberSelection, 0.50f, 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.addChar"));
+	    	addChar = new TextButton("add_char",this,pageMemberSelection, 0.50f, deltaY+ 0.42f, 0.21f, 0.07f,430f,Language.v("partySetup.addChar"));
 	    	addInput(0,addChar);
-	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.newChar"));
+	    	newChar = new TextButton("new_char",this,pageMemberSelection, 0.23f, deltaY+ 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.newChar"));
 	    	addInput(0,newChar);
-	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.rmChar"));
+	    	rmChar = new TextButton("rm_char", this,pageMemberSelection, 0.50f, deltaY+ 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.rmChar"));
 	    	addInput(0,rmChar);
-	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.startGame"));
+	    	startGame = new TextButton("start",this,pageMemberSelection, 0.77f, deltaY+ 0.5f, 0.21f, 0.07f,430f,Language.v("partySetup.startGame"));
+	    	startGame.globalTooltip = "You can start the game if a minimum of one member were added to party and you have selected scenario and seed.";
 	    	addInput(0,startGame);
-	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, 0.62f, 0.21f, 0.07f,430f,Language.v("partySetup.delChar"));
+	    	delChar = new TextButton("del_char",this,pageMemberSelection, 0.50f, deltaY+ 0.62f, 0.21f, 0.07f,430f,Language.v("partySetup.delChar"));
 	    	addInput(0,delChar);
 	    	
 	    	closeWindow1 = new TextButton("close",this,pageMemberSelection, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
@@ -256,6 +269,7 @@ public class PartySetup extends PagedInputWindow {
 
 	    	
 	    	nextPage = new TextButton("next",this,pageCreationFirst, 0.77f, 0.8f, 0.2f, 0.07f,400f,"Next Page");
+	    	nextPage.globalTooltip = "To be able to proceed you need to set all choices and spend all the attribute points.";
 	    	addInput(1,nextPage);
 	    	closeWindow2 = new TextButton("close",this,pageCreationFirst, 0.85f, 0.060f, 0.025f, 0.045f,600f," <-");
 	    	addInput(0,closeWindow2);
@@ -313,6 +327,7 @@ public class PartySetup extends PagedInputWindow {
 
 	    	
 	    	readyChar = new TextButton("ready",this,pageCreationSecond, 0.77f, 0.7f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
+	    	readyChar.globalTooltip = "To be able to finish you must spend (and set) all the skill points to skills and give at least the forename to your character.";
 	    	addInput(2,readyChar);
 
 	    	resetSkills = new TextButton("reset",this,pageCreationSecond, 0.73f, 0.45f, 0.15f, 0.05f,600f,Language.v("partySetup.reset"));
@@ -895,7 +910,7 @@ public class PartySetup extends PagedInputWindow {
 		if (base.equals(readyChar))
 		{
 			inputLeft(skillValueTuner, "fake"); // this makes sure points are the backed up one after tweaking but no saving!
-			
+			inputActivated(readyChar);
 			// ################## CHARACTER COMPLETE, saving it
 			if (foreName.text.length()==0) return true; // a name must be entered
 			if (skillPointsLeft>0) return true; // all skill points must be used
@@ -928,7 +943,9 @@ public class PartySetup extends PagedInputWindow {
 				charCreationRule = new CharacterCreationRules(null,null);
 			}
 			core.uiBase.hud.characters.hide();
-			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule, (ScenarioDescription)scenarioSelect.getSelectedObject());
+			ScenarioDescription d = (ScenarioDescription)scenarioSelect.getSelectedObject();
+			try{d.seed = Integer.parseInt((String)seedSelect.getSelectedObject());} catch (Exception ex){}
+			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule, d);
 			core.init3DGame();
 			core.getClassicInputHandler().enableMouse(true);
 			core.uiBase.hud.characters.update();

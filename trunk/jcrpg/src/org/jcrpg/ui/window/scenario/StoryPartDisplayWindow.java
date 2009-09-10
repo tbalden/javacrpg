@@ -69,6 +69,7 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 			} else
 			if (flying && fliedTime>=maxTime)
 			{
+				flying = false;
 				//this.removeFromParent();
 				if (onFinish!=null)
 				{
@@ -96,6 +97,7 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 		}
 		public void startFlying(float speed, float maxTime)
 		{
+			fliedTime = 0;
 			this.speed = speed;
 			this.maxTime = maxTime;
 			flying = true;
