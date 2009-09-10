@@ -16,19 +16,20 @@ Interrelation,
 Society, Groups etc.
 
 
+[ ] music volume level is wrong
+[ ] loading eats more and more memory
+
+
 [ ] integrate new content, igloo/yeti, sanctuary, worpion
 
 [ ] display Date info (time too) on world map!!
 
 
-[ ] test vista for crashes last seen
-[ ] music volume level is wrong
-[ ] loading eats more and more memory
-
 [X] very basic scenario support
-	[ ] Add Story text window, use it for new game start, explaining things.
+	[X] Add Story text window, use it for new game start, explaining things.
+		[X] scrolling, fade in (colors)
 
-
+[X] test vista for crashes last seen
 
 [X] MAP
 	[X] color problems of map
