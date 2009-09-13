@@ -17,15 +17,35 @@ Society, Groups etc.
 
 Journal window will be needed!
 [ ] District / Town / PlainForestMountain type and then title dropdown to let player search towns/districts on world map (later filtered by known?)
-
+[ ] quick travel with WorldMap? - click a town, cursor gets through blocks, time passing quicker, turns happening? encounters?
 ----
 
 
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[ ] integrate new content, igloo/yeti, sanctuary, worpion
+[ ] add distance etc. data to Entity-O-Meter
+[ ] can't meet with enemies, intersection wrong??
 
+[ ] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) 
+
+[ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
+	[ ] igloo
+	[ ] yeti
+	
+	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
+		[ ] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
+			[ ] make entrance not one cube only (currently its weird)
+			[ ] make generation not write in population zones!
+			[ ] make it more random, take in account roads around. Dont put shrines a second time (path generation, check if there's)
+				[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
+		
+	[X] worpion - cave
+	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
+	
+
+
+[X] map hover show more info - town type/owner entity
 
 [X] mouse hover town/district name displaying in a textlabel!
 

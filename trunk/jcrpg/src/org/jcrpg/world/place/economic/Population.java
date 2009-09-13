@@ -308,5 +308,11 @@ public abstract class Population extends Economic{
 		if (b!=null) return b;
 		return super.getMapPattern();
 	}
+
+	@Override
+	public boolean isWorldMapVisible() {
+		return true;
+	}
+
 	
 }

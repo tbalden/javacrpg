@@ -23,9 +23,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.jme.ui.ZoomingNode;
 import org.jcrpg.ui.HUD;
 import org.jcrpg.ui.Window;
+import org.jcrpg.ui.text.Text;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
@@ -48,21 +50,39 @@ public class EntityOMeter {
 		iconSizeX = hud.core.getDisplay().getWidth()/15;
 	}
 	
-	private ArrayList<String> previousEntityPics = new ArrayList<String>();
+	private void updateText(ZoomingNode node,int vertPos, String textId, String textToPrint)
+	{
+		Text text = (Text)node.getChild(textId);
+		if (text == null)
+		{
+			text = Text.createDefaultTextLabel(textId, textToPrint);
+			text.setLocalTranslation(0f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
+			node.attachChild(text);
+		} else
+		{
+			text.print(textToPrint);
+		}
+	}
+	
+	private ArrayList<EntityOMeterData> previousEntityPics = new ArrayList<EntityOMeterData>();
 	private ArrayList<ZoomingNode> previousNodes = new ArrayList<ZoomingNode>();
-	public void update(Collection<String> entityPics)
+	public void update(Collection<EntityOMeterData> entityPics)
 	{
 		//hud.hudNode.detachChild(node);
 		//node.detachAllChildren();
 		ArrayList<ZoomingNode> newNodes = new ArrayList<ZoomingNode>();
 		int count = 0;
-		for (String p:entityPics)
+		for (EntityOMeterData data:entityPics)
 		{
+			String p = data.picture;
+			String text = data.kind;
+			String text1 = ""+(int)data.dist;
+			String text2 = ""+ data.angle;
 			if (count>4) break;
 			ZoomingNode n = null;
-			if (previousEntityPics.contains(p)) 
+			if (previousEntityPics.contains(data)) 
 			{
-				int index = previousEntityPics.indexOf(p);
+				int index = previousEntityPics.indexOf(data);
 				n = previousNodes.get(index);
 			} else
 			{
@@ -77,6 +97,9 @@ public class EntityOMeter {
 				node.attachChild(n);
 				n.startZoomCycle();
 			}
+			updateText(n, 0,"text",text);
+			updateText(n, 1,"text1",text1);
+			updateText(n, 2,"text2",text2);
 			newNodes.add(n);
 			n.setLocalTranslation(new Vector3f(hud.core.getDisplay().getWidth()/1.66f+count*iconSizeX , hud.core.getDisplay().getHeight()/16.6f,0));
 			count++;

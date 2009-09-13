@@ -189,5 +189,13 @@ public class Economic extends Geography {
 	{
 		return pattern;
 	}
+	
+	/**
+	 * @return Return true if it should be visible as a block item on the map.
+	 */
+	public boolean isWorldMapVisible()
+	{
+		return false;
+	}
 
 }

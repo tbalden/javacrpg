@@ -721,6 +721,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	public Language language = null;
 
+	public SideTypeModels standingModels;
+	
 	public J3DCore() {
 		self = this;
 		if (J3DCore.SETTINGS.SHADOWS)
@@ -731,7 +733,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 		language = new Language("en");
 
-		new SideTypeModels().fillMap(hmCubeSideSubTypeToRenderedSideId,
+		standingModels = new SideTypeModels();
+		standingModels.fillMap(hmCubeSideSubTypeToRenderedSideId,
 				hm3dTypeRenderedSide, SETTINGS.MIPMAP_TREES, SETTINGS.DETAILED_TREES,
 				SETTINGS.RENDER_GRASS_DISTANCE, SETTINGS.LOD_VEGETATION);
 
