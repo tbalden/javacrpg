@@ -19,11 +19,14 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.EconomyContainer;
 import org.jcrpg.world.place.FlowGeography;
 import org.jcrpg.world.place.Geography;
+import org.jcrpg.world.place.TreeLocator;
 import org.jcrpg.world.place.Water;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.WorldSizeBitBoundaries;
 import org.jcrpg.world.place.WorldSizeFlowDirections;
+import org.jcrpg.world.place.economic.AbstractInfrastructure;
 import org.jcrpg.world.place.economic.Town;
+import org.jcrpg.world.place.economic.residence.RoadShrine;
 import org.jcrpg.world.place.geography.sub.Cave;
 import org.jcrpg.world.place.water.Ocean;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
@@ -109,12 +112,23 @@ public class RoadNetwork extends Economic implements FlowGeography {
 	public int TOWNSIZE_THRESHOLD = 2;
 	
 	
-
+	public transient ArrayList<RoadShrine> shrines = new ArrayList<RoadShrine>();
+	
 	/**
 	 * Updates road network, based on size and distance (closest bigger cities are connected). 
 	 */
-	public void updateRoads()
+	public void updateRoads(TreeLocator economicUnits)
 	{
+		if (shrines!=null)
+		{
+			for (RoadShrine shrine:shrines)
+			economicUnits.removeAllOfAnObject(shrine);
+		} else
+		{
+			shrines = new ArrayList<RoadShrine>();
+		}
+		shrines.clear();
+		
 		connections = new ArrayList<Connection>();
 		flowDirections = new WorldSizeFlowDirections(magnification,(World)parent);
 		setBoundaries(new WorldSizeBitBoundaries(magnification,(World)parent));
@@ -135,7 +149,6 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					smallTowns.add(t);
 				}
 			}
-			
 		}
 
 		HashMap<Town, Town> closest = new HashMap<Town, Town>();
@@ -417,6 +430,16 @@ public class RoadNetwork extends Economic implements FlowGeography {
 						if (WEST)
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
 						getBoundaries().addCube( magnification, x, container.w.getSeaLevel(blockSize), z);
+						
+						int oX = x*blockSize+blockSize/2+2;
+						int oZ = z*blockSize+blockSize/2+2;
+						Geography soilGeo = getSoilGeoAt(oX, oZ);
+
+						int[] minMax = AbstractInfrastructure.getMinMaxHeight(soilGeo, oX, oZ, 4, 4);
+						RoadShrine shrine = new RoadShrine("shrine "+x+" "+z,soilGeo,container.w,null,4,1,4,oX, minMax[0], oZ,0,null,null);
+						economicUnits.addEconomic(shrine);
+						shrines.add(shrine);
+						System.out.println("ADDED SHRINE TO "+oX+" "+oZ+" "+minMax[0]);
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
@@ -861,6 +884,15 @@ public class RoadNetwork extends Economic implements FlowGeography {
 		return hmKindCubeOverride;
 	}
 	
+	
+	public boolean isShrinePlace(boolean[] directions, int localX, int localZ)
+	{
+		if (isPath(directions,localX%4+1,localZ%4+1))
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	public boolean isPath(boolean[] directions, int localX, int localZ)
 	{

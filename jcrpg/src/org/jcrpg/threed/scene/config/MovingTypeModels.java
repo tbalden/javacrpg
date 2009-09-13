@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.fauna.birds.heron.Herons;
+import org.jcrpg.world.ai.fauna.insects.chaos.Worpions;
 import org.jcrpg.world.ai.fauna.insects.spider.GiantCaveSpiders;
 import org.jcrpg.world.ai.fauna.mammals.bear.BrownBearFamily;
 import org.jcrpg.world.ai.fauna.mammals.bear.PolarBears;
@@ -162,7 +163,12 @@ public class MovingTypeModels {
 		hmMobIdToModelId.put(Evilrip.EVILRIP.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, Evilrip.evilrip_unit);
 		counter++;
-}
+
+		hmMobIdToModelId.put(Worpions.WORPION_TYPE.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, Worpions.worpion_unit);
+		counter++;
+
+	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)
 	{

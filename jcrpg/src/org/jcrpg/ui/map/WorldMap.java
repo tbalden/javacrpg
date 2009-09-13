@@ -464,6 +464,7 @@ public class WorldMap {
 									{
 										Economic e = ((Economic)o);
 										if (
+												!e.isWorldMapVisible() ||
 												(e.origoX>wx+w.magnification)
 												||
 												(e.origoX+e.sizeX-1<wx)
@@ -567,6 +568,9 @@ public class WorldMap {
 							desc.scale1 = ((Population)ecoObj).town.getSize();
 							desc.x = x;
 							desc.z = z;
+							desc.type1 = ((Population)ecoObj).foundationName;
+							try{desc.type2 = ((Population)ecoObj).owner.description.getName();}catch (NullPointerException npe){}
+							
 							labels.add(desc);
 						}
 					}
@@ -733,6 +737,7 @@ public class WorldMap {
 		public int x,z;
 		public String text;
 		public int scale1, scale2;
+		public String type1, type2;
 	}
 	
 	public class LabelContainer

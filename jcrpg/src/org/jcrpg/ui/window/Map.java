@@ -32,6 +32,7 @@ import org.jcrpg.ui.mouse.UiMouseEvent.UiMouseEventType;
 import org.jcrpg.ui.window.element.TextLabel;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.TextButton;
+import org.jcrpg.util.Language;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
@@ -185,7 +186,7 @@ public class Map extends InputWindow {
 	        hudQuad.setModelBound(new BoundingBox());
 	        mapQuad.baseNode.attachChild(hudQuad);
 	        mapQuad.baseNode.updateModelBound();
-			mapQuad.globalTooltip=("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
+			mapQuad.globalTooltip=(Language.v("map.globalTooltip"));
 
 	        
 
@@ -255,7 +256,7 @@ public class Map extends InputWindow {
     	updateTime();
 		core.getUIRootNode().attachChild(windowNode);
 		core.getUIRootNode().updateRenderState();
-		toggleTooltip("Small icons show populations. Blue lines are rivers. Brown lines roads. Texts are major town names. Darkest shade shows mountain, medium is forest. Base color is determined by the climate zone.");
+		toggleTooltip(Language.v("map.globalTooltip"));
 	}
 
 	@Override
@@ -297,7 +298,7 @@ public class Map extends InputWindow {
     		worldTime.text = desc.text;
     		worldTime.setUpdated(true);
     		worldTime.activate();
-    		return new String[]{desc.text,desc.text+", size: "+desc.scale1};
+    		return new String[]{desc.text,desc.text+", size: "+desc.scale1+" District: "+desc.type1+" Owner: "+(desc.type2==null?"-":desc.type2)};
     	}
 
     	updateTime();

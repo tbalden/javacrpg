@@ -234,7 +234,7 @@ public abstract class AbstractInfrastructure {
 	 * @param sizeZ
 	 * @return [min, max]
 	 */
-	public int[] getMinMaxHeight(Geography g, int oX, int oZ, int sizeX, int sizeZ)
+	public static int[] getMinMaxHeight(Geography g, int oX, int oZ, int sizeX, int sizeZ)
 	{
 		int minimumHeight = -1;
 		int maximumHeight = -1;

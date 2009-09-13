@@ -31,6 +31,7 @@ import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Town;
+import org.jcrpg.world.place.economic.residence.RoadShrine;
 import org.jcrpg.world.place.economic.road.RoadNetwork;
 import org.jcrpg.world.time.Time;
 
@@ -98,6 +99,10 @@ public class EconomyContainer {
 						key = Boundaries.getKey(worldX, worldY, worldZ);
 					}
 					Cube c = eco.getCube(key, worldX, worldY, worldZ, farView);
+					if (eco instanceof RoadShrine)
+					{
+						System.out.println("RENDERING CUBE OF ROADSHRINE... RESULT = "+eco+" - "+worldX+"/"+worldY+"/"+worldZ+" - "+c);
+					}
 					/*if (c!=null && c.internalEconomicUnitForFloraQuery!=null && c.internalEconomicUnitForFloraQuery instanceof EconomicGround)
 					{
 						System.out.println(c.canContainFlora);
@@ -262,7 +267,7 @@ public class EconomyContainer {
 				ex.printStackTrace();
 			}
 		}
-		roadNetwork.updateRoads();
+		roadNetwork.updateRoads(treeLocator);
 	}
 	
 	/**
@@ -281,7 +286,7 @@ public class EconomyContainer {
 				}
 			}
 		}
-		roadNetwork.updateRoads();
+		roadNetwork.updateRoads(treeLocator);
 	}
 	
 	public void checkDistrictToTownIntegration(Population p)

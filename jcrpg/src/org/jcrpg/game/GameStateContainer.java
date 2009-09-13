@@ -32,6 +32,7 @@ import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyAction;
 import org.jcrpg.threed.standing.J3DStandingEngine;
+import org.jcrpg.ui.meter.EntityOMeterData;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.AudioDescription;
@@ -402,9 +403,11 @@ public class GameStateContainer {
 	 */
 	public void updateEntityIcons()
 	{
-		TreeMap<String, String> map = new TreeMap<String, String>();
-		Collection<Object> list = ecology.getEntities(player.world, player.fragments.fragments.get(0).roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
+		TreeMap<String, EntityOMeterData> map = new TreeMap<String, EntityOMeterData>();
+		Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
+		Vector3f vParty = new Vector3f(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
+		
 		if (list!=null)
 		{
 			for (Object o:list)
@@ -412,10 +415,20 @@ public class GameStateContainer {
 				EntityFragment i = ((EntityFragment)o);
 				if (i==player.theFragment) continue;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("I: "+i.instance.description);
-				if (DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.theFragment.roamingBoundary,i.roamingBoundary)==null) continue;
+				int[][] commonRadius = DistanceBasedBoundary.getCommonRadiusRatiosAndMiddlePoint(player.theFragment.roamingBoundary,i.roamingBoundary);
+				//if (commonRadius==null || commonRadius==DistanceBasedBoundary.zero) continue;
+				if (commonRadius==null) continue;
 				WorldTypeDesc desc = ecology.getEntityFragmentWorldTypeDesc(i);
 				if (!ecology.isReachableWorldType(desc, playerDesc)) continue;
-				map.put(i.instance.description.iconPic,i.instance.description.iconPic);
+				EntityOMeterData data = new EntityOMeterData();
+				data.picture = i.instance.description.iconPic;
+				data.radius = commonRadius[0][0] +" "+commonRadius[0][1];
+				data.pos = commonRadius[1][0]+":"+commonRadius[1][1]+":"+commonRadius[1][2];
+				data.kind = i.getName();
+				Vector3f point = new Vector3f(i.roamingBoundary.posX,i.roamingBoundary.posY,i.roamingBoundary.posZ);//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+				data.dist =  vParty.distance(point);
+				data.angle = vParty.subtract(point).normalize().angleBetween(new Vector3f(1f,0,1f))*114.6f;
+				map.put(i.instance.description.iconPic,data);
 			}
 		}
 		J3DCore.getInstance().uiBase.hud.entityOMeter.update(map.values());

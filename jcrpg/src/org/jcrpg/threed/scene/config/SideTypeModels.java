@@ -17,6 +17,7 @@
 
 package org.jcrpg.threed.scene.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.space.Side;
@@ -98,8 +99,17 @@ public class SideTypeModels {
 		
 	}
 	
+	HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId;
+	HashMap<Integer,RenderedSide> hm3dTypeRenderedSide;
+	
+	public static ArrayList<String> initializedObjects = new ArrayList<String>();
+	
+	
 	public void fillMap(HashMap<String,Integer> hmCubeSideSubTypeToRenderedSideId, HashMap<Integer,RenderedSide> hm3dTypeRenderedSide, boolean MIPMAP_TREES, boolean DETAILED_TREES, float RENDER_GRASS_DISTANCE, boolean LOD_VEGETATION)
 	{
+		this.hmCubeSideSubTypeToRenderedSideId = hmCubeSideSubTypeToRenderedSideId;
+		this.hm3dTypeRenderedSide = hm3dTypeRenderedSide;
+		
 		// area subtype to 3d type mapping
 		hmCubeSideSubTypeToRenderedSideId.put(Side.DEFAULT_SUBTYPE.id, EMPTY_SIDE);
 		hmCubeSideSubTypeToRenderedSideId.put(World.SUBTYPE_OCEAN.id, new Integer(10));
@@ -1024,8 +1034,20 @@ public class SideTypeModels {
 
 		// NEXT ID = 
 		// 75
+		nextAvailableId = 1000;
 		
 	}
 	
+	Integer nextAvailableId = 0;
 	
+	public synchronized void addSide(String id,Integer id2)
+	{
+		hmCubeSideSubTypeToRenderedSideId.put(id, id2);
+	}
+	public synchronized Integer addSide(String id,RenderedSide side)
+	{
+		hmCubeSideSubTypeToRenderedSideId.put(id, nextAvailableId++);
+		hm3dTypeRenderedSide.put(nextAvailableId-1, side);
+		return nextAvailableId-1;
+	}
 }
