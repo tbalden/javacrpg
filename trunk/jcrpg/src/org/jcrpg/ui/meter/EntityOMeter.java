@@ -52,15 +52,20 @@ public class EntityOMeter {
 	
 	private void updateText(ZoomingNode node,int vertPos, String textId, String textToPrint)
 	{
+		String t = textToPrint;
+		if (t.length()>6)
+		{
+			t = t.substring(0,6);
+		}
 		Text text = (Text)node.getChild(textId);
 		if (text == null)
 		{
-			text = Text.createDefaultTextLabel(textId, textToPrint);
-			text.setLocalTranslation(0f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
+			text = Text.createDefaultTextLabel(textId, t);
+			text.setLocalTranslation(-1*J3DCore.getInstance().getDisplay().getWidth()/40f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
 			node.attachChild(text);
 		} else
 		{
-			text.print(textToPrint);
+			text.print(t);
 		}
 	}
 	
@@ -76,8 +81,8 @@ public class EntityOMeter {
 		{
 			String p = data.picture;
 			String text = data.kind;
-			String text1 = ""+(int)data.dist;
-			String text2 = ""+ data.angle;
+			String text1 = "d:"+(int)data.dist;
+			String text2 = "a:"+ (int)data.angle;
 			if (count>4) break;
 			ZoomingNode n = null;
 			if (previousEntityPics.contains(data)) 
