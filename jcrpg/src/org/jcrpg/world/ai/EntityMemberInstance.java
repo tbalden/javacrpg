@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.element.TurnActMemberChoice;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.game.logic.PerceptionEvaluator;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
-import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
@@ -341,5 +341,17 @@ public class EntityMemberInstance {
 	{
 		return description.memberSkills;
 	}
+	
+	public PerceptedEntityData percept(int seed, EntityFragment target)
+	{
+		int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
+		float result = PerceptionEvaluator.success(seed,likeness);
+		int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
+		float resultIdent = PerceptionEvaluator.success(seed,likenessIdent);
+		PerceptedEntityData data = new PerceptedEntityData();
+		data.updateToResultRatio(result,resultIdent);
+		return data;
+	}
+	
 	
 }

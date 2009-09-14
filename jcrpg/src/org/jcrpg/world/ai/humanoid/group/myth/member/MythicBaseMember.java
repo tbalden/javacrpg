@@ -20,12 +20,19 @@ package org.jcrpg.world.ai.humanoid.group.myth.member;
 
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.EntityMember;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.body.BodyBase;
 
 public class MythicBaseMember extends EntityMember {
 
 	public MythicBaseMember(String visibleTypeId, Class<? extends BodyBase> bodyType, AudioDescription audioDescription) {
 		super(visibleTypeId, bodyType, audioDescription);
+	}
+	
+	@Override
+	public Class <? extends SkillBase> getSkillForIdentification()
+	{
+		return org.jcrpg.world.ai.abs.skill.mental.Mythology.class;
 	}
 
 }

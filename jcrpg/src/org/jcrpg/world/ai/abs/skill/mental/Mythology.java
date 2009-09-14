@@ -18,18 +18,26 @@
 
 package org.jcrpg.world.ai.abs.skill.mental;
 
+import java.util.ArrayList;
+
 import org.jcrpg.world.ai.abs.skill.HelperSkill;
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 
 /**
  * Knowing mythological beasts.
  * @author pali
  *
  */
-public class Mythology extends SkillBase implements HelperSkill {
+public class Mythology extends SkillBase implements HelperSkill, InterceptionSkill {
 
 	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
 		return false;
+	}
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraIdentificationSkills;
 	}
 
 }

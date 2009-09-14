@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.skill.magical.Alchemy;
 import org.jcrpg.world.ai.abs.skill.magical.CelestialMagic;
 import org.jcrpg.world.ai.abs.skill.magical.Demonology;
@@ -101,10 +102,28 @@ public class SkillGroups {
 	public static ArrayList<SkillActForm> neutralSkillActForms = new ArrayList<SkillActForm>();
 	public static ArrayList<SkillActForm> positiveSkillActForms = new ArrayList<SkillActForm>();
 
+	/**
+	 * Skills contra close combat.
+	 */
 	public static ArrayList<Class<? extends SkillBase>> contraCloseCombatSkills = new ArrayList<Class<? extends SkillBase>>();
+	/**
+	 * Skills contra perception.
+	 */
+	public static ArrayList<Class<? extends SkillBase>> contraPerceptionSkills = new ArrayList<Class<? extends SkillBase>>();
+	/**
+	 * Skills contra being identified.
+	 */
+	public static ArrayList<Class<? extends SkillBase>> contraIdentificationSkills = new ArrayList<Class<? extends SkillBase>>();
 
 	static {
+	
+		contraPerceptionSkills.add(HideAndSneak.class);
+		contraPerceptionSkills.add(SecureAndEscort.class);
+		contraPerceptionSkills.add(Survival.class);
 		
+		contraIdentificationSkills.add(HideAndSneak.class);
+		contraIdentificationSkills.add(Disguise.class);
+
 		contraCloseCombatSkills.add(HandsAndFeet.class);
 		contraCloseCombatSkills.add(StaffsAndWands.class);
 		contraCloseCombatSkills.add(ShortBlades.class);

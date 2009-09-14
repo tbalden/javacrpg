@@ -20,7 +20,9 @@ package org.jcrpg.world.ai;
 import java.util.ArrayList;
 
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.game.logic.PerceptionEvaluator;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -59,6 +61,8 @@ public class EntityFragments {
 	{
 		public EntityFragments parent;
 		public EntityInstance instance;
+		
+		public transient ArrayList<PerceptedEntityData> perceptedEntities;
 		
 		public boolean settledAtHome = false;
 		
@@ -265,6 +269,67 @@ public class EntityFragments {
 		}
 		public EntityFragment getFragment() {
 			return this;
+		}
+		
+		public void clearPerceptedData()
+		{
+			if (perceptedEntities!=null)
+			{
+				perceptedEntities.clear();
+			} else
+			{
+				perceptedEntities = new ArrayList<PerceptedEntityData>();
+				
+			}
+		}
+		
+		public void fillPerceptedEntityData(int seed, EntityFragment target)
+		{
+			if (perceptedEntities==null)
+			{
+				perceptedEntities = new ArrayList<PerceptedEntityData>();
+			}
+			PerceptedEntityData rData = new PerceptedEntityData();
+			for (PersistentMemberInstance i:followingMembers)
+			{
+				PerceptedEntityData data = i.percept(seed, target);
+				rData.mergeBest(data);
+			}
+			PerceptedEntityData data = percept(seed, target);
+			rData.mergeBest(data);
+			rData.fragment = target;
+			rData.source = this;
+			perceptedEntities.add(rData);
+		}
+		
+		
+		public PerceptedEntityData percept(int seed, EntityFragment target)
+		{
+			int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
+			float result = PerceptionEvaluator.success(seed,likeness);
+			int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
+			float resultIdent = PerceptionEvaluator.success(seed,likenessIdent);
+			PerceptedEntityData data = new PerceptedEntityData();
+			data.updateToResultRatio(result,resultIdent);
+			return data;
+		}
+	
+		/**
+		 * 
+		 * @return max level of (if actively with 3x bonus) chosen behavior skill level in this fragment.
+		 */
+		public int getActiveBehaviorSkillLevel(Class <? extends SkillBase> skill)
+		{
+			int maxLevel = 0;
+			for (PersistentMemberInstance i:followingMembers)
+			{
+				boolean active = i.behaviorSkill!=null && i.behaviorSkill.getClass().equals(skill);
+				int level = i.getSkillLevel(skill)/ (active?1:3);
+				if (maxLevel<level) maxLevel = level;
+			}
+			int level = instance.getActiveBehaviorSkillLevel(skill);
+			if (maxLevel<level) maxLevel = level;
+			return maxLevel;	
 		}
 
 	}

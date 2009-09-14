@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.choice.Attack;
+import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.state.EntityState;
 import org.jcrpg.world.ai.abs.state.StateEffect;
@@ -273,6 +274,7 @@ public class EntityInstance {
 		return false;
 	}
 
+	
 	public static int visibleSequence = 0;
 	public static Object mutex = new Object();
 
@@ -383,4 +385,9 @@ public class EntityInstance {
 		return description.getPopulationPattern(p);
 	}
 	
+	public int getActiveBehaviorSkillLevel(Class<? extends SkillBase> skill)
+	{
+		return skills.getSkillLevel(skill, null)/3;
+	}
+
 }
