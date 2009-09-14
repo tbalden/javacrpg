@@ -331,12 +331,18 @@ public class Ecology {
 		
 	}
 	
+	
+	public void fillPerceptedEntityData(int seed, EntityFragment fragment, EntityFragment targetFragment)
+	{
+		fragment.fillPerceptedEntityData(seed,targetFragment);
+	}
+	
 	/**
 	 * Returns the possible nearby encounters for a given entity.
 	 * @param entity
 	 * @return
 	 */
-	public Collection<EncounterInfo> getNearbyEncounters(EntityInstance entityInstance)
+	public Collection<EncounterInfo> getNearbyEncounters(int seed, EntityInstance entityInstance)
 	{
 		
 		int joinLimit = 10; // the circle's radius that will group together intersection points of different EncounterUnits.
@@ -345,6 +351,9 @@ public class Ecology {
 		// going through entity's fragments looking for intersections with other instances' fragments and following members...
 		for (EntityFragment fragment:entityInstance.fragments.fragments) 
 		{
+			// clear out previous perception...
+			fragment.clearPerceptedData();
+			
 			// the list that collects intersection data (for subunits or fragments as EncounterUnit and int[][] as intersection numeric data)
 			HashMap<EncounterUnit,int[][]> listOfCommonRadiusFragments = new HashMap<EncounterUnit,int[][]>();
 			// the locator to help grouping intersection points that will build up an EncounterInfo
@@ -457,6 +466,9 @@ public class Ecology {
 					// vectors)
 					if (fragment == J3DCore.getInstance().gameState.player.theFragment || v2.distance(v1)<joinLimit) 
 					{
+						// fill source fragment with perception data (based on skill checks in that function).
+						fillPerceptedEntityData(seed, fragment, fT.getFragment());
+						
 						// joining the Encounter unit into the EncounterInfo
 						
 						//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer(" __ "+r[1][0]+" "+r[1][2]);
@@ -569,7 +581,8 @@ public class Ecology {
 				}
 			}
 			counterOfDoneTurnBeings++;
-			if (orderedBeingList.get(r).liveOneTurn(seed, getNearbyEncounters(orderedBeingList.get(r))))
+			//orderedBeingList.get(r).calc
+			if (orderedBeingList.get(r).liveOneTurn(seed, getNearbyEncounters(seed, orderedBeingList.get(r))))
 			{
 				
 				// updating tree locator for being...

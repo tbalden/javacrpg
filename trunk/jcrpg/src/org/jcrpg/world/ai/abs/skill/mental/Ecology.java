@@ -18,13 +18,20 @@
 
 package org.jcrpg.world.ai.abs.skill.mental;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.SkillGroups;
 
 /**
- * Knowing normal animals and flora.
+ * Knowing normal animals.
  * @author pali
- *
  */
-public class Ecology extends SkillBase {
+public class Ecology extends SkillBase implements InterceptionSkill {
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getContraSkillTypes() {
+		return SkillGroups.contraIdentificationSkills;
+	}
 
 }

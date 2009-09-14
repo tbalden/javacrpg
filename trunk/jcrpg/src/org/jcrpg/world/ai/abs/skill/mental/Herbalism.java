@@ -23,7 +23,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.WorkSkill;
 
 /**
- * Knowing normal animals and flora.
+ * Knowing flora and herbals.
  * @author pali
  *
  */

@@ -17,6 +17,13 @@
  */ 
 package org.jcrpg.world.ai;
 
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+
 public abstract class DescriptionBase {
+	
+	public Class <? extends SkillBase> getSkillForIdentification()
+	{
+		return org.jcrpg.world.ai.abs.skill.mental.Ecology.class;
+	}
 	
 }

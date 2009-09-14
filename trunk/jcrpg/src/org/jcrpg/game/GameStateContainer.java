@@ -39,6 +39,7 @@ import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.GroupingMemberProps;
+import org.jcrpg.world.ai.PerceptedEntityData;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -403,6 +404,11 @@ public class GameStateContainer {
 	 */
 	public void updateEntityIcons()
 	{
+		if (player.theFragment.perceptedEntities!=null)
+		for (PerceptedEntityData data:player.theFragment.perceptedEntities)
+		{
+			System.out.println("--------###] "+data);
+		}
 		TreeMap<String, EntityOMeterData> map = new TreeMap<String, EntityOMeterData>();
 		Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
