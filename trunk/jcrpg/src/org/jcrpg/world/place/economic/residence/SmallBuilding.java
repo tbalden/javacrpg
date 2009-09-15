@@ -67,6 +67,7 @@ public abstract class SmallBuilding extends Residence {
 	Side[][] DOOR_GROUND_EAST ;
 	Side[][] DOOR_GROUND_SOUTH;
 	Side[][] DOOR_GROUND_WEST;
+	Side[][] OPEN_GROUND_WEST;
 
 	Side[][] WINDOW_NORTH ;
 	Side[][] WINDOW_EAST;
@@ -90,11 +91,14 @@ public abstract class SmallBuilding extends Residence {
 	
 	public String modelName;
 	
-	public SmallBuilding(String TYPE, String modelName)
+	boolean doubleEntrance = false;
+	
+	public SmallBuilding(String TYPE, String modelName, boolean doubleEntrance)
 	{
 		super();
 		TYPE_HOUSE = TYPE;
 		this.modelName = modelName;
+		this.doubleEntrance = doubleEntrance;
 		init();
 	}
 	
@@ -133,6 +137,7 @@ public abstract class SmallBuilding extends Residence {
 		DOOR_GROUND_EAST = new Side[][] { null, EXTERNAL_DOOR, null,null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 		DOOR_GROUND_SOUTH = new Side[][] { null, null,EXTERNAL_DOOR, null,null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 		DOOR_GROUND_WEST = new Side[][] { null, null,null,EXTERNAL_DOOR, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
+		OPEN_GROUND_WEST = new Side[][] { null, null,null,null, null,{new Side(TYPE_HOUSE,SUBTYPE_EXTERNAL_GROUND)} };
 
 		WINDOW_NORTH = new Side[][] { WINDOW, null, null,null,null,null };
 		WINDOW_EAST = new Side[][] { null, WINDOW, null,null,null,null };
@@ -182,13 +187,14 @@ public abstract class SmallBuilding extends Residence {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public SmallBuilding(String TYPE, String modelName,String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
+	public SmallBuilding(String TYPE, String modelName,boolean doubleEntrance, String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
 		super(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<getMinimumHeight()) throw new Exception("House below minimum size"+getParameteredKey());
 
 		TYPE_HOUSE = TYPE;
 		this.modelName = modelName;
+		this.doubleEntrance = doubleEntrance;
 		init();
 		
 		if (searchLoadParameteredArea()) return;
@@ -280,13 +286,15 @@ public abstract class SmallBuilding extends Residence {
 		addStoredCube(sizeX-1, groundLevel, 0+sizeZ-1, new Cube(this,EXTERNAL,0,0,0,true,true));
 		System.out.println("ADDING CUBE -------------------- "+getParameteredKey());
 		addStoredCube(sizeX-1,groundLevel,1,new Cube(this,DOOR_GROUND_WEST,0,0,0,true,true));
+		if (doubleEntrance)
+			addStoredCube(sizeX-1,groundLevel,2,new Cube(this,OPEN_GROUND_WEST,0,0,0,true,true));
 		storeParameteredArea();
 		
 	}
 	
 	public String getParameteredKey()
 	{
-		return this.getClass().getName()+" "+sizeX+" "+sizeY+" "+sizeZ+" "+groundLevel;//+" "+origoX+" "+origoY+" "+origoZ;
+		return this.getClass().getName()+" "+sizeX+" "+sizeY+" "+sizeZ+" "+groundLevel+ " "+doubleEntrance;//+" "+origoX+" "+origoY+" "+origoZ;
 	}
 
 	@Override

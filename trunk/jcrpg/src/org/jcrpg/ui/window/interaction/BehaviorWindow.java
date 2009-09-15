@@ -91,7 +91,10 @@ public class BehaviorWindow extends PagedInputWindow {
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
-	    		skillSelectors.add(new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null));
+	    		ListSelect sel = new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null);
+	    		sel.focusUponMouseEnter = true;
+	    		sel.globalTooltip = "Selecting a skill as the behavior skill will grant it is used to its full level as you walk around. The others are being used at a third of its full level.";
+	    		skillSelectors.add(sel);
 	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,yDelta+0.19f+sizeSelect*i,0.0f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    	}

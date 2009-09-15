@@ -23,8 +23,8 @@ public class EntityOMeterData {
 	public String picture;
 	public String radius;
 	public String pos;
-	public float dist;
-	public float angle;
+	public Float dist;
+	public Float angle;
 	public String kind;
 	
 	@Override

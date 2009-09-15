@@ -27,6 +27,7 @@ import org.jcrpg.game.logic.PerceptionEvaluator;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 import org.jcrpg.world.ai.abs.attribute.Attributes;
+import org.jcrpg.world.ai.abs.attribute.FantasyAttributes;
 import org.jcrpg.world.ai.abs.attribute.FantasyResistances;
 import org.jcrpg.world.ai.abs.attribute.Resistances;
 import org.jcrpg.world.ai.abs.skill.InterceptionSkill;
@@ -44,6 +45,8 @@ import org.jcrpg.world.object.EntityObjInventory;
 import org.jcrpg.world.object.Obj;
 import org.jcrpg.world.object.ObjInstance;
 import org.jcrpg.world.object.ObjList;
+
+import com.jme.math.Vector3f;
 
 public class EntityMemberInstance {
 
@@ -342,14 +345,21 @@ public class EntityMemberInstance {
 		return description.memberSkills;
 	}
 	
+	public Vector3f getRoamingPosition()
+	{
+		return new Vector3f(getParentFragment().roamingBoundary.posX,getParentFragment().roamingBoundary.posY,getParentFragment().roamingBoundary.posZ);
+	}
+	
 	public PerceptedEntityData percept(int seed, EntityFragment target)
 	{
 		int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
-		float result = PerceptionEvaluator.success(seed,likeness);
+		//System.out.println("=== "+description.getName()+" "+likeness);
+		float result = PerceptionEvaluator.success(seed,getAttributes().getAttribute(FantasyAttributes.KARMA),likeness);
 		int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
-		float resultIdent = PerceptionEvaluator.success(seed,likenessIdent);
+		//System.out.println("=== "+description.getName()+" "+likenessIdent);
+		float resultIdent = PerceptionEvaluator.success(seed,getAttributes().getAttribute(FantasyAttributes.KARMA),likenessIdent);
 		PerceptedEntityData data = new PerceptedEntityData();
-		data.updateToResultRatio(result,resultIdent);
+		data.updateToResultRatio(result,resultIdent, getRoamingPosition(),target);
 		return data;
 	}
 	

@@ -78,9 +78,14 @@ public class PerceptionEvaluator {
 		
 		int sLevel = 0;
 		SkillInstance i = skills.skills.get(perceptionSkill);
-		if (i!=null)
+		
+		//if (i!=null)
 		{
-			ArrayList<Class<? extends SkillBase>> contraSkills = i.getSkill().getContraSkillTypes();
+			
+			ArrayList<Class<? extends SkillBase>> contraSkills = null;
+			try {
+				contraSkills = perceptionSkill.newInstance().getContraSkillTypes();
+			} catch (Exception ex){ex.printStackTrace();}
 			for (Class<? extends SkillBase> contraSkill: contraSkills)
 			{
 				// maxing out skill level
@@ -92,9 +97,9 @@ public class PerceptionEvaluator {
 	}
 
 	
-	public static float success(int seed, int level)
+	public static float success(int seed, int karma, int level)
 	{
-		return HashUtil.mixPercentage(seed, 1, 2)*1f/(level+1f);
+		return (HashUtil.mixPercentage(seed, 1, 2) + (karma /20f)+ (level))/100f;
 	}
 	
 	public static int likenessLevelOfIdentification(EntityMemberInstance member, EntityFragment fragment)
@@ -117,10 +122,11 @@ public class PerceptionEvaluator {
 		if (!activeSourceSkill) level /=3;
 		
 		int sLevel = 0;
-		SkillInstance i = skills.skills.get(identificationSkill);
-		if (i!=null)
 		{
-			ArrayList<Class<? extends SkillBase>> contraSkills = i.getSkill().getContraSkillTypes();
+			ArrayList<Class<? extends SkillBase>> contraSkills = null;
+			try {
+				contraSkills = identificationSkill.newInstance().getContraSkillTypes();
+			} catch (Exception ex){ex.printStackTrace();}
 			for (Class<? extends SkillBase> contraSkill: contraSkills)
 			{
 				// maxing out skill level

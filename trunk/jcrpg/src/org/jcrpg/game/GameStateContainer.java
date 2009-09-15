@@ -53,6 +53,7 @@ import org.jcrpg.world.time.Time;
 
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jmex.model.collada.schema.contributorType;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -404,16 +405,31 @@ public class GameStateContainer {
 	 */
 	public void updateEntityIcons()
 	{
-		if (player.theFragment.perceptedEntities!=null)
-		for (PerceptedEntityData data:player.theFragment.perceptedEntities)
-		{
-			System.out.println("--------###] "+data);
-		}
 		TreeMap<String, EntityOMeterData> map = new TreeMap<String, EntityOMeterData>();
 		Collection<Object> list = ecology.getEntities(player.world, player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
 		WorldTypeDesc playerDesc = ecology.getEntityFragmentWorldTypeDesc(player.theFragment);
 		Vector3f vParty = new Vector3f(player.theFragment.roamingBoundary.posX, player.theFragment.roamingBoundary.posY, player.theFragment.roamingBoundary.posZ);
-		
+
+		if (player.theFragment.perceptedEntities!=null)
+		{
+			for (PerceptedEntityData data:player.theFragment.perceptedEntities)
+			{
+				if (!data.percepted) continue;
+				System.out.println("--------###] "+data);
+				
+				EntityFragment i = data.fragment;
+				if (i==player.theFragment) continue;
+				EntityOMeterData eData = new EntityOMeterData();
+				eData.kind = data.kind;
+				eData.picture = data.kindKnown?i.instance.description.iconPic:"unknown";
+				Vector3f point = new Vector3f(i.roamingBoundary.posX,i.roamingBoundary.posY,i.roamingBoundary.posZ);//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+				eData.dist =  data.getUpdatedDist();
+				eData.angle = data.distanceKnown?vParty.subtract(point).normalize().angleBetween(new Vector3f(1f,0,1f))*114.6f:null;
+				map.put(i.instance.description.iconPic,eData);
+			}
+		}
+		/*
+		if (true==false)
 		if (list!=null)
 		{
 			for (Object o:list)
@@ -436,7 +452,7 @@ public class GameStateContainer {
 				data.angle = vParty.subtract(point).normalize().angleBetween(new Vector3f(1f,0,1f))*114.6f;
 				map.put(i.instance.description.iconPic,data);
 			}
-		}
+		}*/
 		J3DCore.getInstance().uiBase.hud.entityOMeter.update(map.values());
 	}
 	

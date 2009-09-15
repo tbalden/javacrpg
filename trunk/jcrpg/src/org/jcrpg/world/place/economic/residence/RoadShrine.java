@@ -34,7 +34,7 @@ public class RoadShrine extends SmallBuilding {
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 			throws Exception {
-		super("ROADSHRINE", "models/external/shrine/shrine1.obj", id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 
