@@ -368,6 +368,14 @@ public class EntityInstance {
 	}
 	
 	/**
+	 * Call this when unit is unpercepted.
+	 */
+	public void notifyUnpercepted()
+	{
+		return;
+	}
+	
+	/**
 	 * This should be called by a sub fragment after camping replenish for a round was done.
 	 */
 	public void callbackAfterCampReplenish()
