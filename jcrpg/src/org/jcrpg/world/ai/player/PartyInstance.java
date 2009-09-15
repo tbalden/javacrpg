@@ -139,11 +139,18 @@ public class PartyInstance extends EntityInstance {
 		numberOfMembers--;
 	}
 	
-	
+	int countHideAway;
 	@Override
 	public void notifyUnpercepted()
 	{
-		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hide away from the unskilled eyes of nearby beings.");
+		if (countHideAway++==0)
+		{
+			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hide away from the unskilled eyes of nearby beings.");
+		} else
+		{
+			countHideAway = 0;
+			J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hide yourself from the eyes of nearby creatures.");
+		}
 	}
 	
 	@Override
