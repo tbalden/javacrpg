@@ -411,7 +411,10 @@ public class Ecology {
 				if (usedUp.contains(f)) continue;
 				usedUp.add(f);
 				boolean percepted = fillPerceptedEntityData(seed, fragment, f.getFragment());
-				if (!percepted) continue;
+				if (!percepted) {
+					f.getFragment().notifyUnpercepted();
+					continue;
+				}
 				int[][] r = listOfCommonRadiusFragments.get(f);
 				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)

@@ -139,6 +139,13 @@ public class PartyInstance extends EntityInstance {
 		numberOfMembers--;
 	}
 	
+	
+	@Override
+	public void notifyUnpercepted()
+	{
+		J3DCore.getInstance().uiBase.hud.mainBox.addEntry("You hide away from the unskilled eyes of nearby beings.");
+	}
+	
 	@Override
 	public void notifyEffectChange(EntityMemberInstance member, ArrayList<StateEffect> added, ArrayList<StateEffect> removed)
 	{

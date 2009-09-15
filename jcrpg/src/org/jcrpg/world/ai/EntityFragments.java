@@ -257,6 +257,10 @@ public class EntityFragments {
 		{
 			parent.instance.notifyEffectChange(member,added,removed);
 		}
+		public void notifyUnpercepted()
+		{
+			parent.instance.notifyUnpercepted();
+		}
 
 		public void decreaseSize()
 		{
@@ -284,6 +288,12 @@ public class EntityFragments {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param seed
+		 * @param target
+		 * @return True if target is percepted.
+		 */
 		public boolean fillPerceptedEntityData(int seed, EntityFragment target)
 		{
 			if (perceptedEntities==null)
