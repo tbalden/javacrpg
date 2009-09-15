@@ -24,8 +24,13 @@ Journal window will be needed!
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[ ] add distance etc. data to Entity-O-Meter
-[ ] can't meet with enemies, intersection wrong??
+[X] add distance etc. data to Entity-O-Meter
+	[ ] friendly units shouldnt hide away from you?
+	[ ] can't meet with enemies, intersection wrong??
+	[X] perception things connected to EntityOMeter! (skills used and such)
+		[-] the higher the skill success the longer distance the perception happens.
+	[X] rolling should not divide but substract to let lucky things happen! KARMA in rollings??
+	[ ] tooltips for these less obvious skills at leveling/party creation?
 
 [ ] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) 
 
@@ -34,12 +39,15 @@ Journal window will be needed!
 	[ ] yeti
 	
 	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
-		[ ] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
-			[ ] make entrance not one cube only (currently its weird)
 			[ ] make generation not write in population zones!
-			[ ] make it more random, take in account roads around. Dont put shrines a second time (path generation, check if there's)
-				[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
+			[ ] make it more random, take in account roads around. 
+			[ ] Dont put shrines a second time (path generation, check if there's)
+
+		[X] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
+			[X] make entrance not one cube only (currently its weird)
+			[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
 		
+
 	[X] worpion - cave
 	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 	

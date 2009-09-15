@@ -22,12 +22,13 @@ import java.util.ArrayList;
 import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.game.logic.PerceptionEvaluator;
 import org.jcrpg.threed.J3DCore;
-import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
+import org.jcrpg.world.ai.humanoid.MemberPerson;
+import org.jcrpg.world.ai.profession.HumanoidProfessional;
 import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.economic.Population;
 
@@ -62,7 +63,7 @@ public class EntityFragments {
 		public EntityFragments parent;
 		public EntityInstance instance;
 		
-		public transient ArrayList<PerceptedEntityData> perceptedEntities;
+		public ArrayList<PerceptedEntityData> perceptedEntities;
 		
 		public boolean settledAtHome = false;
 		
@@ -283,7 +284,7 @@ public class EntityFragments {
 			}
 		}
 		
-		public void fillPerceptedEntityData(int seed, EntityFragment target)
+		public boolean fillPerceptedEntityData(int seed, EntityFragment target)
 		{
 			if (perceptedEntities==null)
 			{
@@ -295,22 +296,33 @@ public class EntityFragments {
 				PerceptedEntityData data = i.percept(seed, target);
 				rData.mergeBest(data);
 			}
-			PerceptedEntityData data = percept(seed, target);
+			PerceptedEntityData data = percept(seed, 0, target);
 			rData.mergeBest(data);
 			rData.fragment = target;
 			rData.source = this;
 			perceptedEntities.add(rData);
+			if (rData.percepted==true) return true;
+			return false;
 		}
 		
+		public Vector3f getRoamingPosition()
+		{
+			return new Vector3f(roamingBoundary.posX,roamingBoundary.posY,roamingBoundary.posZ);
+		}
+
 		
-		public PerceptedEntityData percept(int seed, EntityFragment target)
+		public PerceptedEntityData percept(int seed, int karma, EntityFragment target)
 		{
 			int likeness = PerceptionEvaluator.likenessLevelOfPerception(this, target);
-			float result = PerceptionEvaluator.success(seed,likeness);
+			if (target == J3DCore.getInstance().gameState.player.theFragment)
+			{
+				System.out.println("PECEPTING PARTY: "+likeness);
+			}
+			float result = PerceptionEvaluator.success(seed, karma, likeness);
 			int likenessIdent = PerceptionEvaluator.likenessLevelOfIdentification(this, target);
-			float resultIdent = PerceptionEvaluator.success(seed,likenessIdent);
+			float resultIdent = PerceptionEvaluator.success(seed,karma, likenessIdent);
 			PerceptedEntityData data = new PerceptedEntityData();
-			data.updateToResultRatio(result,resultIdent);
+			data.updateToResultRatio(result,resultIdent,getRoamingPosition(),target);
 			return data;
 		}
 	
@@ -321,15 +333,18 @@ public class EntityFragments {
 		public int getActiveBehaviorSkillLevel(Class <? extends SkillBase> skill)
 		{
 			int maxLevel = 0;
+			int counter = 0;
 			for (PersistentMemberInstance i:followingMembers)
 			{
 				boolean active = i.behaviorSkill!=null && i.behaviorSkill.getClass().equals(skill);
+				//if (i.description instanceof MemberPerson) System.out.println("ACTIVE "+active+" "+i.behaviorSkill +" ? "+skill);
 				int level = i.getSkillLevel(skill)/ (active?1:3);
-				if (maxLevel<level) maxLevel = level;
+				maxLevel += level;
+				counter++;
 			}
 			int level = instance.getActiveBehaviorSkillLevel(skill);
-			if (maxLevel<level) maxLevel = level;
-			return maxLevel;	
+			maxLevel += level;
+			return maxLevel/(counter+1);
 		}
 
 	}

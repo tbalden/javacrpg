@@ -61,6 +61,7 @@ public class EntityOMeter {
 		if (text == null)
 		{
 			text = Text.createDefaultTextLabel(textId, t);
+			text.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/1224f);
 			text.setLocalTranslation(-1*J3DCore.getInstance().getDisplay().getWidth()/40f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
 			node.attachChild(text);
 		} else
@@ -81,8 +82,8 @@ public class EntityOMeter {
 		{
 			String p = data.picture;
 			String text = data.kind;
-			String text1 = "d:"+(int)data.dist;
-			String text2 = "a:"+ (int)data.angle;
+			String text1 = "d "+(data.dist==null?"?":""+((int)data.dist.floatValue()));
+			String text2 = "a "+ (data.angle==null?"?":""+((int)data.angle.floatValue()));
 			if (count>4) break;
 			ZoomingNode n = null;
 			if (previousEntityPics.contains(data)) 

@@ -20,26 +20,37 @@ package org.jcrpg.world.ai;
 
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
 
+import com.jme.math.Vector3f;
+
 public class PerceptedEntityData {
 	public EntityFragment source = null;
 
 	public EntityFragment fragment = null;
 	public boolean percepted = false, distanceKnown = false, kindKnown = false, groupSizeKnown = false;
 
-	public float distance = 0;
-	public int groupSize = 0;
-	public String kind = "unknown";
+	public Float distance = null;
+	public Integer groupSize = null;
+	public String kind = "?";
 	
-	public void updateToResultRatio(float result, float resultIdentification)
+	public Float getUpdatedDist()
 	{
-		if (result > 0.2f)
+		if (distanceKnown)
+		{
+			Vector3f point = fragment.getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+			distance =  source.getRoamingPosition().distance(point);
+		}
+		return distance;
+	}
+	
+	public void updateToResultRatio(float result, float resultIdentification, Vector3f sourcePos, EntityFragment target)
+	{
+		if (result > 0.1f)
 		{
 			percepted = true;
 		}
 		if (result > 0.8f)
 		{
 			distanceKnown = true;
-			
 		}
 		if (result > 0.9f)
 		{
@@ -49,19 +60,56 @@ public class PerceptedEntityData {
 		{
 			kindKnown = true;
 		}
+
+		if (distanceKnown)
+		{
+			Vector3f point = target.getRoamingPosition();//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
+			distance =  sourcePos.distance(point);
+		} else
+		{
+			distance = null;
+		}
+		if (kindKnown)
+		{
+			kind = target.getName();
+		} else
+		{
+			kind = "?";
+		}
+		if (groupSizeKnown)
+		{
+			groupSize = target.getSize();
+		} else
+		{
+			groupSize = null;
+		}
 		
 	}
 	
 	public void mergeBest(PerceptedEntityData data)
 	{
-		if (data.distanceKnown) distanceKnown = true;
-		if (data.kindKnown) kindKnown = true;
-		if (data.groupSizeKnown) groupSizeKnown = true;
+		if (data.percepted) 
+		{
+			percepted = true;
+		}
+		if (data.distanceKnown) 
+		{
+			distanceKnown = true;
+			distance = data.distance;
+		}
+		if (data.kindKnown) {
+			kindKnown = true;
+			kind = data.kind;
+		}
+		if (data.groupSizeKnown) {
+			groupSizeKnown = true;
+			groupSize = data.groupSize;
+		}
 	}
 	
 	public String toString()
 	{
-		return "Ped: "+fragment.getName()+" : perc "+percepted + " / kind "+kindKnown;
+		return "Ped: "+fragment.getName()+" -- perc "+percepted + " kind "+kindKnown+" size "+groupSizeKnown+" dist "+distanceKnown;
 	}
 	
 }

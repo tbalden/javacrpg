@@ -332,9 +332,16 @@ public class Ecology {
 	}
 	
 	
-	public void fillPerceptedEntityData(int seed, EntityFragment fragment, EntityFragment targetFragment)
+	/**
+	 * 
+	 * @param seed
+	 * @param fragment
+	 * @param targetFragment
+	 * @return true if percepted a part of the target fragment.
+	 */
+	public boolean fillPerceptedEntityData(int seed, EntityFragment fragment, EntityFragment targetFragment)
 	{
-		fragment.fillPerceptedEntityData(seed,targetFragment);
+		return fragment.fillPerceptedEntityData(seed,targetFragment);
 	}
 	
 	/**
@@ -403,6 +410,8 @@ public class Ecology {
 			{
 				if (usedUp.contains(f)) continue;
 				usedUp.add(f);
+				boolean percepted = fillPerceptedEntityData(seed, fragment, f.getFragment());
+				if (!percepted) continue;
 				int[][] r = listOfCommonRadiusFragments.get(f);
 				EncounterInfo pre = null;
 				if (staticEncounterInfoInstances.size()==counter)
@@ -614,6 +623,7 @@ public class Ecology {
 			engine.ecologyTurnFinished();
 			J3DCore.getInstance().uiBase.hud.sr.setVisibility(false, "DICE");
 			J3DCore.getInstance().updateDisplay(null);
+			J3DCore.getInstance().gameState.updateEntityIcons();
 		}
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("TURN TIME "+ (time - System.currentTimeMillis())/1000f);
 	}

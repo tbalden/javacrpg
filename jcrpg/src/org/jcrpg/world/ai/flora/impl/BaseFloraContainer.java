@@ -23,6 +23,7 @@ import org.jcrpg.world.place.economic.ground.EncounterGround;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Hut;
+import org.jcrpg.world.place.economic.residence.RoadShrine;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 import org.jcrpg.world.place.economic.road.RoadNetwork;
@@ -47,6 +48,7 @@ public class BaseFloraContainer extends FloraContainer{
 		hmPlaceToGenerator.put(Hut.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(EncounterGround.class,new EconomicFloraGenerator());
 		hmPlaceToGenerator.put(RoadNetwork.class,new EconomicFloraGenerator());
+		hmPlaceToGenerator.put(RoadShrine.class,new EconomicFloraGenerator());
 	}
 	
 }
