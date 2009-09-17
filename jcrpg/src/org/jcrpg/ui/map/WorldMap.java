@@ -437,32 +437,53 @@ public class WorldMap {
 							
 							
 							{
+								Population p = null;// w.economyContainer.getPopulationAtBlock(wx, w.getSeaLevel(1), wz);
+								if (p==null)
+								{
+									p = w.economyContainer.getPopulationAtBlock(wx+ w.magnification/2, w.getSeaLevel(1), wz+ w.magnification/2);
+								}
+								ArrayList<Object> economics =null;
 								
-								ArrayList<Object> economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
-								ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
-								ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
-								ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
-								if (economics==null)
+								if (p==null)
 								{
-									economics = economics1;
+									economics = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz);
+									ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
+									ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
+									ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
+									if (economics==null)
+									{
+										economics = economics1;
+										economics1 = null;
+									}
+									if (economics==null)
+									{
+										economics = economics2;
+										economics2 = null;
+									}
+									if (economics==null)
+									{
+										economics = economics3;
+										economics3 = null;
+									}
+									if (economics1!=null) economics.addAll(economics1);
+									if (economics2!=null) economics.addAll(economics2);
+									if (economics3!=null) economics.addAll(economics3);
 								}
-								if (economics==null)
-								{
-									economics = economics2;
+								
+								if (p!=null) {
+									if (economics==null) economics = new ArrayList<Object>();
+									economics.add(p);
 								}
-								if (economics==null)
-								{
-									economics = economics3;
-								}
-								if (economics1!=null) economics.addAll(economics1);
-								if (economics2!=null) economics.addAll(economics2);
-								if (economics3!=null) economics.addAll(economics3);
-	
+								
 								if (economics!=null)
 								{
 									for (Object o:economics)
 									{
 										Economic e = ((Economic)o);
+										if (p!=null)
+										{
+											e = p;
+										} else
 										if (
 												!e.isWorldMapVisible() ||
 												(e.origoX>wx+w.magnification)

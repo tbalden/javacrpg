@@ -350,14 +350,82 @@ public class EconomyContainer {
 		return found.toArray(new Population[0]);
 	}
 	
-	public Population getPopulationAt(int worldX, int worldY, int worldZ)
+
+	/**
+	 * Returns population if it is exactly at the cube.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return
+	 */
+	public Population getPopulationAtCube(int worldX, int worldY, int worldZ)
 	{
-		ArrayList<Object> list = treeLocator.getElements(worldX, worldY, worldZ);
-		if (list!=null)
+		int wx = worldX;
+		int wz = worldZ;
+		HashSet<Object> list = new HashSet<Object>();
+		ArrayList<Object> economics = treeLocator.getElements(worldX, worldY, worldZ);
+		ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
+		ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
+		ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
+		if (economics!=null) list.addAll(economics);
+		if (economics1!=null) list.addAll(economics1);
+		if (economics2!=null) list.addAll(economics2);
+		if (economics3!=null) list.addAll(economics3);
+		if (list.size()>0)
 		for (Object l:list)
 		{
 			if (l instanceof Population)
 			{
+				if ( ((Population)l).boundaries.isInside(worldX, worldY, worldZ) ) return (Population)l;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns a population if it's in the block.
+	 * @param worldX
+	 * @param worldY
+	 * @param worldZ
+	 * @return
+	 */
+	public Population getPopulationAtBlock(int worldX, int worldY, int worldZ)
+	{
+		int wx = worldX;
+		int wz = worldZ;
+		HashSet<Object> list = new HashSet<Object>();
+		ArrayList<Object> economics = treeLocator.getElements(worldX, worldY, worldZ);
+		ArrayList<Object> economics1 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz);
+		ArrayList<Object> economics2 = w.economyContainer.treeLocator.getElements(wx, w.getSeaLevel(1), wz+w.magnification/2);
+		ArrayList<Object> economics3 = w.economyContainer.treeLocator.getElements(wx+w.magnification/2, w.getSeaLevel(1), wz+w.magnification/2);
+		if (economics!=null) list.addAll(economics);
+		if (economics1!=null) list.addAll(economics1);
+		if (economics2!=null) list.addAll(economics2);
+		if (economics3!=null) list.addAll(economics3);
+		if (list.size()>0)
+		for (Object l:list)
+		{
+			if (l instanceof Population)
+			{
+				Economic e = ((Economic)l);
+				// this part makes every block with population an entering of town - not just exact entering of a unit anymore.
+				if (
+						
+						(e.origoX>wx-wx%w.magnification+w.magnification)
+						||
+						(e.origoX+e.sizeX-1<wx-wx%w.magnification)
+						||
+						(e.origoZ>wz-wz%w.magnification+w.magnification)
+						||
+						(e.origoZ+e.sizeZ-1<wz-wz%w.magnification)
+				) 
+				{
+					
+				} else
+				{
+					return (Population)l;
+				}
+
 				if ( ((Population)l).boundaries.isInside(worldX, worldY, worldZ) ) return (Population)l;
 			}
 		}

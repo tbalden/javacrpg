@@ -421,6 +421,10 @@ public class RoadNetwork extends Economic implements FlowGeography {
 					int x = currStep.getX();
 					int z = currStep.getY();
 					try {
+						boolean[] directions = 
+							getWorldSizeFlowDirections().getFlowDirections(x, container.w.getSeaLevel(blockSize), z);
+						boolean currentlyNoShrineYet = true;
+						for (boolean dir:directions) {if (dir) {currentlyNoShrineYet=false; break;}}
 						if (NORTH)
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.NORTH, true);
 						if (SOUTH)
@@ -431,15 +435,25 @@ public class RoadNetwork extends Economic implements FlowGeography {
 							getWorldSizeFlowDirections().setCubeFlowDirection(x, container.w.getSeaLevel(blockSize), z, J3DCore.WEST, true);
 						getBoundaries().addCube( magnification, x, container.w.getSeaLevel(blockSize), z);
 						
-						int oX = x*blockSize+blockSize/2+2;
-						int oZ = z*blockSize+blockSize/2+2;
-						Geography soilGeo = getSoilGeoAt(oX, oZ);
-
-						int[] minMax = AbstractInfrastructure.getMinMaxHeight(soilGeo, oX, oZ, 4, 4);
-						RoadShrine shrine = new RoadShrine("shrine "+x+" "+z,soilGeo,container.w,null,4,1,4,oX, minMax[0], oZ,0,null,null);
-						economicUnits.addEconomic(shrine);
-						shrines.add(shrine);
-						System.out.println("ADDED SHRINE TO "+oX+" "+oZ+" "+minMax[0]);
+						if (currentlyNoShrineYet)
+						{
+							int oX = x*blockSize+blockSize/2+2;
+							int oZ = z*blockSize+blockSize/2+2;
+							Geography soilGeo = getSoilGeoAt(oX, oZ);
+	
+							int[] minMax = AbstractInfrastructure.getMinMaxHeight(soilGeo, oX, oZ, 4, 4);
+							if (container.getPopulationAtBlock(oX, minMax[0], oZ)==null)
+							{
+								RoadShrine shrine = new RoadShrine("shrine "+x+" "+z,soilGeo,container.w,null,4,1,4,oX, minMax[0], oZ,0,null,null);
+								economicUnits.addEconomic(shrine);
+								shrines.add(shrine);
+								System.out.println("ADDED SHRINE TO "+oX+" "+oZ+" "+minMax[0]);
+							} else
+							{
+								System.out.println("! NOT ADDED SHRINE TO "+oX+" "+oZ+" "+minMax[0]);
+								
+							}
+						}
 					} catch (Exception ex)
 					{
 						ex.printStackTrace();
