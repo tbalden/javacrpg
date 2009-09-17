@@ -33,6 +33,7 @@ import org.jcrpg.ui.text.FontTT;
 import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.element.input.MenuImageButton;
+import org.jcrpg.util.Language;
 import org.jcrpg.world.ai.EntityMemberInstance;
 import org.jcrpg.world.ai.PersistentMemberInstance;
 import org.jcrpg.world.ai.abs.state.StateEffect;
@@ -43,11 +44,9 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
-import com.jme.scene.Text;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.ColorMaskState;
-import com.jme.scene.state.RenderState;
 import com.jme.scene.state.RenderState.StateType;
 
 public class Characters extends InputWindow {
@@ -185,6 +184,7 @@ public class Characters extends InputWindow {
 						pictureQuads.add(q);
 						Node nametextNode = null;
 						Node classtextNode = null;
+						Node behaviorTextNode = null;
 						if (J3DCore.NATIVE_FONT_RENDER)
 						{
 							org.jcrpg.ui.text.Text text = org.jcrpg.ui.text.Text.createDefaultTextLabel("--", p.foreName);
@@ -201,6 +201,12 @@ public class Characters extends InputWindow {
 							classtextNode.setLocalScale(hud.core.getDisplay().getWidth()/700f/InputBase.TEXT_PROP);
 							classtextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, -hud.core.getDisplay().getWidth()/50+ startY-stepY*(counterPair)-maxSizeY*0.515f,0);
 
+							org.jcrpg.ui.text.Text text3 = org.jcrpg.ui.text.Text.createDefaultTextLabel("--", i.behaviorSkill==null?"-":""+Language.v("skills."+i.behaviorSkill.getClass().getSimpleName()));
+							text2.setTextColor(new ColorRGBA(0.5f,0.5f,0.9f,1f));
+							behaviorTextNode = new Node();
+							behaviorTextNode.attachChild(text3);
+							behaviorTextNode.setLocalScale(hud.core.getDisplay().getWidth()/740f/InputBase.TEXT_PROP);
+							behaviorTextNode.setLocalTranslation(sideYMulFont*hud.core.getDisplay().getWidth()/50, -hud.core.getDisplay().getWidth()/50+ startY-stepY*(counterPair)-maxSizeY*0.608f,0);
 						} else
 						{
 							nametextNode = this.text.createOutlinedText(p.foreName, 9, new ColorRGBA(1,1,0.6f,1f),new ColorRGBA(0.1f,0.1f,0.1f,1f),false);
@@ -217,12 +223,15 @@ public class Characters extends InputWindow {
 						
 						nametextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						classtextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+						behaviorTextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
 						
 						addNextPointBars(sideYMulFont*hud.core.getDisplay().getWidth()/50+sideYBars*hud.core.getDisplay().getWidth()/13, startY-stepY*(counterPair)-maxSizeY*0.425f + hud.core.getDisplay().getWidth()/(barScreenRatio*2f) , p);
 						
 	
 						node.attachChild(nametextNode);
 						node.attachChild(classtextNode);
+						node.attachChild(behaviorTextNode);
+						
 						MenuImageButton b = new MenuImageButton("char"+i.getNumericId(),this,node,counter);
 						addInput(b);
 						b.baseNode.attachChild(sm);

@@ -230,6 +230,7 @@ public class BehaviorWindow extends PagedInputWindow {
 			party.noticeNeutral = (Boolean)noticeNeutral.getSelectedObject();
 			party.noticeHostile = (Boolean)noticeHostile.getSelectedObject();
 			toggle();
+			core.uiBase.hud.characters.update();
 			return true;
 		}
 		if (base == cancel)

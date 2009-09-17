@@ -24,33 +24,40 @@ Journal window will be needed!
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
+[ ] tooltip  for these less obvious skills at leveling/party creation?
+
+[ ] humans attack, even being Peaceful! check EntityInstance liveTurn code!
+
 [X] add distance etc. data to Entity-O-Meter
-	[ ] friendly units shouldnt hide away from you?
-	[ ] can't meet with enemies, intersection wrong??
+
+	 [ ] add common perception chance callback and level display for the character behavior window , when tuning update it!
+	 
+	 [ ] disable behavior skills upon rest?
+	 	
+	 [ ] friendly units shouldnt hide away from you?
+	
+    [X] add selected behavior skill text per char under portrait!
+	[-] can't meet with enemies, intersection wrong?? (you werent intersecting, entityometer bug solved)
 	[X] perception things connected to EntityOMeter! (skills used and such)
 		[-] the higher the skill success the longer distance the perception happens.
 	[X] rolling should not divide but substract to let lucky things happen! KARMA in rollings??
-	[ ] tooltips for these less obvious skills at leveling/party creation?
 
-[ ] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) 
 
 [ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
 	[ ] igloo
 	[ ] yeti
-	
 	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
-			[ ] make generation not write in population zones!
-			[ ] make it more random, take in account roads around. 
-			[ ] Dont put shrines a second time (path generation, check if there's)
-
+		[ ] make it more random, take in account roads around. 
+			[X] make generation not write in population zones!
+			[X] Dont put shrines a second time (path generation, check if there's)
 		[X] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
 			[X] make entrance not one cube only (currently its weird)
 			[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
-		
-
 	[X] worpion - cave
 	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 	
+
+[X] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) (wx , wz wasnt finding them, only wx+ mag/2 !?)
 
 
 [X] map hover show more info - town type/owner entity

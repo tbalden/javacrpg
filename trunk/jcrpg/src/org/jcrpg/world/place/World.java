@@ -756,28 +756,28 @@ public class World extends Place implements TileBasedMap {
 			desc.surfaceY = backupSurfaceY;
 		}
 		
-		Population population = economyContainer.getPopulationAt(worldX, worldY, worldZ);
+		Population population = economyContainer.getPopulationAtBlock(worldX, worldY, worldZ);
 		if (population==null)
 		{
-			population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ);
+			population = economyContainer.getPopulationAtBlock(worldX, desc.surfaceY, worldZ);
 			// if scan around, get some more probes if no population found yet.
 			if (scanAroundForPopulation)
 			{
 				if (population==null)
 				{
-					population = economyContainer.getPopulationAt(worldX+1, desc.surfaceY, worldZ);
+					population = economyContainer.getPopulationAtBlock(worldX+1, desc.surfaceY, worldZ);
 				}
 				if (population==null)
 				{
-					population = economyContainer.getPopulationAt(worldX-1, desc.surfaceY, worldZ);
+					population = economyContainer.getPopulationAtBlock(worldX-1, desc.surfaceY, worldZ);
 				}
 				if (population==null)
 				{
-					population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ+1);
+					population = economyContainer.getPopulationAtBlock(worldX, desc.surfaceY, worldZ+1);
 				}
 				if (population==null)
 				{
-					population = economyContainer.getPopulationAt(worldX, desc.surfaceY, worldZ-1);
+					population = economyContainer.getPopulationAtBlock(worldX, desc.surfaceY, worldZ-1);
 				}
 			}
 		}
