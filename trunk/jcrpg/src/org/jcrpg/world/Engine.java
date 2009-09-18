@@ -222,11 +222,11 @@ public class Engine implements Runnable {
 	}
 	public synchronized void pauseForRendering()
 	{
-		outOfGameSystemPause = true;
+		//outOfGameSystemPause = true; // current rendering system doesnt require such pause while rendering scene.
 	}
 	public synchronized void unpauseAfterRendering()
 	{
-		outOfGameSystemPause = false;
+		//outOfGameSystemPause = false;
 	}
 
 	public Time getWorldMeanTime() {

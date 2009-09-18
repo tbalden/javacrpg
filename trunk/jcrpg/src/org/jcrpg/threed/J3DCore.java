@@ -3205,6 +3205,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			gameState.scenario.initiateScenario();
 		}
 		startingCleanBeforeScenarioInitialization = false;
+		if (callbackObject!=null)
+		{
+			callbackObject.callbackAfterInit(initCallbackParm);
+			callbackObject = null;
+		}
 	}
 	
+	public interface InitCallbackObject
+	{
+		public void callbackAfterInit(Object param);
+	}
+	public InitCallbackObject callbackObject = null;
+	public Object initCallbackParm = null;
+	public void setCallbackObjectAfterInitialization(InitCallbackObject callbackObject, Object param)
+	{
+		this.callbackObject = callbackObject;
+		initCallbackParm = param;
+	}
 }

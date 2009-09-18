@@ -421,6 +421,7 @@ public class GameStateContainer {
 				if (i==player.theFragment) continue;
 				EntityOMeterData eData = new EntityOMeterData();
 				eData.kind = data.kind;
+				eData.realKind = data.fragment.getName();
 				eData.picture = data.kindKnown?i.instance.description.iconPic:"unknown";
 				Vector3f point = new Vector3f(i.roamingBoundary.posX,i.roamingBoundary.posY,i.roamingBoundary.posZ);//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
 				eData.dist =  data.getUpdatedDist();

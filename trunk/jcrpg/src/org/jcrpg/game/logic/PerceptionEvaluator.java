@@ -43,7 +43,7 @@ public class PerceptionEvaluator {
 		{
 			perceptionSkill = Tracking.class;
 		}
-		boolean active = member.behaviorSkill!=null && member.behaviorSkill.getClass().equals(perceptionSkill);
+		boolean active = !member.getParentFragment().fragmentState.isCamping && member.behaviorSkill!=null && member.behaviorSkill.getClass().equals(perceptionSkill);
 		return likenessLevelOfPerception(member.getSkills(), active, perceptionSkill, fragment);
 		
 	}
