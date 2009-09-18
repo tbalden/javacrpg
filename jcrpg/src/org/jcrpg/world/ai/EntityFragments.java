@@ -346,7 +346,7 @@ public class EntityFragments {
 			int counter = 0;
 			for (PersistentMemberInstance i:followingMembers)
 			{
-				boolean active = i.behaviorSkill!=null && i.behaviorSkill.getClass().equals(skill);
+				boolean active = i.getFragment().fragmentState.isCamping!=false && i.behaviorSkill!=null && i.behaviorSkill.getClass().equals(skill);
 				//if (i.description instanceof MemberPerson) System.out.println("ACTIVE "+active+" "+i.behaviorSkill +" ? "+skill);
 				int level = i.getSkillLevel(skill)/ (active?1:3);
 				maxLevel += level;

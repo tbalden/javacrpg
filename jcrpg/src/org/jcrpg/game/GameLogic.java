@@ -23,13 +23,14 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
-import org.jcrpg.audio.AudioServer;
 import org.jcrpg.game.element.PlacementMatrix;
 import org.jcrpg.space.Cube;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.space.sidetype.StickingOut;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.J3DCore.InitCallbackObject;
+import org.jcrpg.ui.window.BusyPaneWindow;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EncounterInfo;
@@ -43,9 +44,8 @@ import org.jcrpg.world.place.World;
 /**
  * Class for per turn encounter management.
  * @author pali
- *
  */
-public class GameLogic {
+public class GameLogic implements InitCallbackObject {
 	
 	
 	
@@ -80,6 +80,8 @@ public class GameLogic {
 		J3DCore.getInstance().mEngine.render(forms);
 	}
 	
+	
+	
 	public void newEncounterPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)
 	{
 		possibleEncounter.playerIfPresent = player.theFragment;
@@ -99,10 +101,13 @@ public class GameLogic {
 				core.encounterWindow.setPageData(core.gameState.player, possibleEncounter,playerInitiated);
 				if (encounter(possibleEncounter)) {
 					
+					core.setCallbackObjectAfterInitialization(this, core.encounterWindow);
+					core.busyPane.setToType(BusyPaneWindow.LOADING, "Preparing Encounter...");
+					core.busyPane.show();
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
-					core.encounterWindow.toggle();
+					//core.encounterWindow.toggle();
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
@@ -123,11 +128,14 @@ public class GameLogic {
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
 					
+					core.setCallbackObjectAfterInitialization(this, core.turnActWindow);
+					core.busyPane.setToType(BusyPaneWindow.LOADING, "Preparing Rivalry...");
+					core.busyPane.show();
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
-					core.turnActWindow.toggle();
+					//core.turnActWindow.toggle();
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
@@ -147,7 +155,9 @@ public class GameLogic {
 				endPlayerEncounters();
 				// starting new visualization
 				if (encounter(possibleEncounter)) {
-					
+					core.setCallbackObjectAfterInitialization(this, core.turnActWindow);
+					core.busyPane.setToType(BusyPaneWindow.LOADING, "Preparing Combat...");
+					core.busyPane.show();
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
@@ -159,7 +169,7 @@ public class GameLogic {
 						core.uiBase.hud.sr.setVisibility(false, "CAMPFIRE");
 						core.gameState.engine.campingFinished = false;
 					}
-					core.turnActWindow.toggle();
+					//core.turnActWindow.toggle();
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
 					core.audioServer.playEventMusic(Math.random()>0.5d?"combat0":"combat1",true);
 				} else
@@ -360,6 +370,13 @@ public class GameLogic {
 	static HashSet<Class<? extends SideSubType>> stickingOut = new HashSet<Class<? extends SideSubType>>();
 	static {
 		stickingOut.add(StickingOut.class);
+	}
+	
+	public void callbackAfterInit(Object param) {
+		if (param!=null && param instanceof org.jcrpg.ui.Window)
+		{
+			((org.jcrpg.ui.Window)param).toggle();
+		}
 	}
 	
 	

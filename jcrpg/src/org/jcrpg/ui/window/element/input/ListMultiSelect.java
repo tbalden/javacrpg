@@ -728,4 +728,16 @@ public class ListMultiSelect extends InputBase {
 		return deactivatedNode;
 	}
 
+	public String[] tooltips;
+
+	@Override
+	public String getTooltipText()
+	{
+		try {
+			String tt= tooltips[fromCount+selected];
+			if (tt==null) return globalTooltip;
+			return tt;
+		}catch (Exception ex) {return globalTooltip;}
+	}
+
 }

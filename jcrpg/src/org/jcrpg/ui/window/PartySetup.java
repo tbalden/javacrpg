@@ -1222,6 +1222,7 @@ public class PartySetup extends PagedInputWindow {
     	{
     		ArrayList<String> skillIds = new ArrayList<String>();
     		ArrayList<String> skillTexts = new ArrayList<String>();
+    		ArrayList<String> skillTooltips = new ArrayList<String>();
     		ArrayList<Object> skillObjects = new ArrayList<Object>();
     		int counter = 0;
     		for (Class<? extends SkillBase> skill:SkillGroups.groupedSkills.get(groupId))
@@ -1230,6 +1231,7 @@ public class PartySetup extends PagedInputWindow {
     				int level = personWithGenderAndRace.getMemberSkills().skills.get(skill).level;
 	    			String id = groupId+"."+counter;
 	    			String text = skill.getSimpleName();
+	    			String tooltip = Language.v("skills.tooltip."+skill.getSimpleName());
 	    			int modifier = 1;
 	    			try {
 	    				modifier = profession.skillLearnModifier.getMultiplier(skill);
@@ -1239,6 +1241,7 @@ public class PartySetup extends PagedInputWindow {
 	    			text = Language.v("skills."+text)+" ("+modifier+"x): "+level;
 	    			skillIds.add(id);
 	    			skillTexts.add(text);
+	    			skillTooltips.add(tooltip);
 	    			skillObjects.add(skill);
     			}
     			counter++;
@@ -1247,6 +1250,7 @@ public class PartySetup extends PagedInputWindow {
     		sel.ids = skillIds.toArray(new String[0]);
     		sel.texts = skillTexts.toArray(new String[0]);
     		sel.objects = skillObjects.toArray(new Object[0]);
+    		sel.tooltips = skillTooltips.toArray(new String[0]);
     		sel.setUpdated(true);
     		sel.deactivate();
     	}

@@ -134,6 +134,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
 				if (skills==null) skills = new HashSet<Class<? extends SkillBase>>();
 				String[] texts = new String[skills.size()];
+				String[] tooltips = new String[skills.size()];
 				Object[] objects = new Object[skills.size()];
 				String[] ids = new String[skills.size()];
 				
@@ -142,6 +143,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				for (Class<?extends SkillBase> skill:skills)
 				{
 					String text = Language.v("skills."+skill.getSimpleName())+" ("+i.description.getCommonSkills().getSkillLevel(skill,null)+")";
+					tooltips[counter_2] = Language.v("skills.tooltip."+skill.getSimpleName());
 					texts[counter_2]=text;
 					ids[counter_2]=""+counter_2;
 					SkillBase b = (SkillBase)SkillGroups.skillBaseInstances.get(skill);
@@ -157,6 +159,7 @@ public class BehaviorWindow extends PagedInputWindow {
 				select.ids = ids;
 				select.texts = texts;
 				select.objects = objects;
+				select.tooltips = tooltips;
 				select.setUpdated(true);
 				select.deactivate();
 				select.setSelected(selected);
@@ -193,19 +196,17 @@ public class BehaviorWindow extends PagedInputWindow {
 
 	@Override
 	public boolean inputChanged(InputBase base, String message) {
-		// TODO Auto-generated method stub
+		super.inputChanged(base, message);
 		return false;
 	}
 
 	@Override
 	public boolean inputEntered(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean inputLeft(InputBase base, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -26,13 +26,14 @@ public class EntityOMeterData {
 	public Float dist;
 	public Float angle;
 	public String kind;
+	public String realKind;
 	
 	@Override
 	public boolean equals(Object o)
 	{
 		if (o!=null && o instanceof EntityOMeterData)
 		{
-			if (picture!=null && picture.equals(((EntityOMeterData)o).picture))
+			if (realKind!=null && realKind.equals(((EntityOMeterData)o).realKind))
 					return true;
 		}
 		return false;
