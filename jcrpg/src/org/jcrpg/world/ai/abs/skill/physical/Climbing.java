@@ -24,7 +24,7 @@ import org.jcrpg.world.ai.abs.skill.SkillBase;
 public class Climbing extends SkillBase implements HelperSkill {
 
 	public boolean helpsForTag(Class<? extends SkillBase> skill, String tagWord) {
-		// TODO Auto-generated method stub
+		if (tagWord.equals(TAG_ESCAPING)) return true;
 		return false;
 	}
 

@@ -16,6 +16,11 @@
  */
 package org.jcrpg.space.sidetype;
 
+/**
+ * like a ladder.
+ * @author illes
+ *
+ */
 public class ClimbingVertical extends Climbing {
 
 	public ClimbingVertical(String id) {

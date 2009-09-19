@@ -16,14 +16,27 @@
  */
 package org.jcrpg.space.sidetype;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+
 public class Swimming extends SideSubType {
+
+public Swimming(String id, byte[] color) {
+		super(id, color);
+		// TODO Auto-generated constructor stub
+	}
 
 	public Swimming(String id) {
 		super(id);
 	}
-
-	public Swimming(String id, byte[] color) {
-		super(id, color);
+	
+	static ArrayList<Class<? extends SkillBase>> needed = new ArrayList<Class<? extends SkillBase>>();
+	static { needed.add(org.jcrpg.world.ai.abs.skill.physical.Swimming.class);};
+	
+	@Override
+	public ArrayList<Class<? extends SkillBase>> getSkillNeeded() {
+		return needed;
 	}
 
 }

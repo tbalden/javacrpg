@@ -17,6 +17,10 @@
 
 package org.jcrpg.space.sidetype;
 
+import java.util.ArrayList;
+
+import org.jcrpg.world.ai.abs.skill.SkillBase;
+
 
 /**
  * The side's sub element types like wall, ground etc. Other more detailed types
@@ -68,6 +72,11 @@ public class SideSubType {
 		this.id = id;
 		this.colorBytes = color;
 		this.colorOverwrite = true;
+	}
+	
+	public ArrayList<Class<? extends SkillBase>> getSkillNeeded()
+	{
+		return null;
 	}
 	
 }

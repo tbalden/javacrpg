@@ -26,6 +26,13 @@ Journal window will be needed!
 
 [ ] humans attack, even being Peaceful! check EntityInstance liveTurn code!
 
+
+[ ] climbing checks: refactoring of Cube - it should be able to tell possible movements - a CubeInterpreter - add all neighboring cubes in direction, calculate possibilities, return it.
+	[X] replace moveBase
+	[ ] load savegame and test that part: you can't move there. Check logs! Add difficulty level beside simply stating possible! For check skills!
+
+
+
 [X] tooltip  for these less obvious skills at leveling/party creation?
 [X] while moving engine time doesnt pass! by moving time should pass (or should it pass only then and camping??) by units!
 

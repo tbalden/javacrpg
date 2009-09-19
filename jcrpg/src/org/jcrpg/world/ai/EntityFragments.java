@@ -357,6 +357,24 @@ public class EntityFragments {
 			return maxLevel/(counter+1);
 		}
 
+		
+		/**
+		 * 
+		 * @return max level of helper skill for a given kind of activity (tag).
+		 */
+		public int getHelperSkillLevel(String tag)
+		{
+			int maxLevel = 0;
+			int counter = 0;
+			for (PersistentMemberInstance i:followingMembers)
+			{
+				int level = i.getSkills().getHighestLevelHelperSkill(null, tag).level;
+				maxLevel += level;
+				counter++;
+			}
+			return maxLevel/(counter);
+		}
+
 	}
 	
 	public void fragmentDestroyed(EntityFragment f)

@@ -38,7 +38,9 @@ import org.jcrpg.game.scenario.ScenarioLoader;
 import org.jcrpg.game.trigger.StorageObjectHandler;
 import org.jcrpg.game.trigger.TriggerHandler;
 import org.jcrpg.space.Cube;
+import org.jcrpg.space.CubeInterpreter;
 import org.jcrpg.space.Side;
+import org.jcrpg.space.CubeInterpreter.MovementInterpretationResult;
 import org.jcrpg.space.sidetype.Climbing;
 import org.jcrpg.space.sidetype.GroundSubType;
 import org.jcrpg.space.sidetype.NotPassable;
@@ -88,7 +90,10 @@ import org.jcrpg.ui.window.player.CharacterSheetWindow;
 import org.jcrpg.ui.window.player.InventoryWindow;
 import org.jcrpg.ui.window.player.PartyOrderWindow;
 import org.jcrpg.ui.window.scenario.StoryPartDisplayWindow;
+import org.jcrpg.util.HashUtil;
 import org.jcrpg.util.Language;
+import org.jcrpg.world.Engine;
+import org.jcrpg.world.ai.abs.skill.HelperSkill;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.orbiter.Orbiter;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
@@ -1518,16 +1523,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 * @param direction
 	 *            The direction to move.
 	 */
-	public int[] calcMovement(int[] orig, int direction, boolean limitsCut) {
+	public static int[] calcMovement(int[] orig, int direction, boolean limitsCut) {
 		int[] r = new int[3];
 		int[] vector = moveTranslations.get(new Integer(direction));
 		r[0] = orig[0] + vector[0];
 		r[1] = orig[1] + vector[1];
 		r[2] = orig[2] + vector[2];
 		if (limitsCut) {
-			r[0] = gameState.world.shrinkToWorld(r[0]);
-			r[1] = gameState.world.shrinkToWorld(r[1]);
-			r[2] = gameState.world.shrinkToWorld(r[2]);
+			r[0] = J3DCore.getInstance().gameState.world.shrinkToWorld(r[0]);
+			r[1] = J3DCore.getInstance().gameState.world.shrinkToWorld(r[1]);
+			r[2] = J3DCore.getInstance().gameState.world.shrinkToWorld(r[2]);
 		}
 
 		return r;
@@ -1547,6 +1552,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	public static Set<Class<? extends SideSubType>> notFallable = new HashSet<Class<? extends SideSubType>>();
 	/**
+	 * You can try to climb a top of that side one level higher, but with skill check.
+	 */
+	public static Set<Class<? extends SideSubType>> escapable = new HashSet<Class<? extends SideSubType>>();
+	/**
 	 * You get onto steep on these.
 	 */
 	public static Set<Class<? extends SideSubType>> climbers = new HashSet<Class<? extends SideSubType>>();
@@ -1554,11 +1563,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		notWalkable.add(NotPassable.class);
 		notWalkable.add(Swimming.class);
 		notWalkable.add(StickingOut.class);
+		
 		notPassable.add(NotPassable.class);
 		notPassable.add(GroundSubType.class);
 		notPassable.add(Swimming.class);
 		notPassable.add(StickingOut.class);
+		
 		climbers.add(Climbing.class);
+
+		escapable.add(NotPassable.class);
+		
 		notFallable.add(StickingOut.class);
 	}
 
@@ -1693,6 +1707,49 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		return SETTINGS.LOGGING;
 	}
 
+	public boolean moveBase(int[] from, int[] fromRel, int[] directions) {
+		
+		CubeInterpreter cI = new CubeInterpreter(gameState.world, from[0], from[1], from[2], fromRel[0], fromRel[1], fromRel[2]);
+		MovementInterpretationResult result = null;
+		int counter = 0;
+		while (true)
+		{
+			counter++;
+			if (counter>10) return false;
+			
+			result = cI.interpret(directions[0]);
+			if (result.possible==false) return false;
+			if (result.meansFalling)
+			{
+				cI = new CubeInterpreter(gameState.world, result.worldX, result.worldY, result.worldZ, result.relX, result.relY, result.relZ);
+				directions[0] = BOTTOM;
+			} else
+				break;
+		}		
+		gameState.setViewPosition(result.worldX,result.worldY,result.worldZ);
+		gameState.setRelativePosition(new int[]{result.relX,result.relY,result.relZ});
+		
+		gameState.getNormalPositions().onSteep = result.meansOnSteepCube;
+		
+		Cube c = gameState.world.getCube(-1, result.worldX, result.worldY, result.worldZ, false);
+		if (c != null) {
+			if (c.internalCube) {
+				Jcrpg.LOGGER.info("Moved: INTERNAL");
+				gameState.getNormalPositions().insideArea = true;
+				dofParentNode.detachAllChildren(); // workaround for culling
+				dofParentNode.attachChild(intRootNode);
+				dofParentNode.attachChild(extRootNode);
+			} else {
+				Jcrpg.LOGGER.info("Moved: EXTERNAL");
+				gameState.getNormalPositions().insideArea = false;
+				dofParentNode.detachAllChildren(); // workaround for culling
+				dofParentNode.attachChild(extRootNode);
+				dofParentNode.attachChild(intRootNode);
+			}
+			gameState.getNormalPositions().internalLight = c.internalLight;
+		}
+		return true;
+	}
 	/**
 	 * Tries to move in directions, and sets coords if successfull
 	 * 
@@ -1703,7 +1760,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 * @param directions
 	 *            A set of directions to move into
 	 */
-	public boolean moveBase(int[] from, int[] fromRel, int[] directions) {
+	public boolean moveBase2(int[] from, int[] fromRel, int[] directions) {
 		int[] newCoords = from;
 		int[] newRelCoords = fromRel;
 		for (int i = 0; i < directions.length; i++) {
@@ -1757,6 +1814,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 									: "null") + " - " + directions[0] + "  "
 							+ c.steepDirection);
 			if (currentCubeSteepDirections != null)
+			{
 				for (int steepDir : currentCubeSteepDirections) {
 					if (steepDir == oppositeDirections.get(
 							new Integer(directions[0])).intValue()) {
@@ -1765,6 +1823,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 						break;
 					}
 				}
+			}
+			
+			// check if one cube above is there a blocking element for climbing ahead
+			boolean escapeClimbingPossible = true;
+			Cube cAbove = gameState.world.getCube(-1, from[0], from[1]+1, from[2], false);
+			Side[] sidesBottomAboveCurrent = new Side[0];
+			if (cAbove!=null)
+			{
+				sidesBottomAboveCurrent = cAbove.getSide(BOTTOM);
+			}
+			{
+				Side[] sidesTopCurrent = c.getSide(TOP);
+				System.out.println("-- "+c+ " "+hasSideOfInstance(sidesTopCurrent,notPassable)+" "+hasSideOfInstance(sidesBottomAboveCurrent, notPassable));
+				if (hasSideOfInstance(sidesTopCurrent,notPassable)|| hasSideOfInstance(sidesBottomAboveCurrent, notPassable))
+				{
+					escapeClimbingPossible = false;
+				}
+			}
+			System.out.println("ESCAPE CLIMBING POSSIBLE = "+escapeClimbingPossible);
+			
 			Side[] sides = c.getSide(directions[0]);
 			if (sides != null) {
 				if (J3DCore.LOGGING())
@@ -1772,10 +1850,22 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				if (hasSideOfInstance(sides, notPassable)
 						&& (!gameState.getNormalPositions().onSteep
 								|| directions[0] == BOTTOM || directions[0] == TOP))
-					return false;
+				{
+					if (escapeClimbingPossible)
+					{
+						int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
+						int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
+						System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
+						if (i>level) return false;
+					} else
+					{
+						return false;
+					}
+				}
 				if (J3DCore.LOGGING())
 					Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
 			}
+			
 			Cube nextCube = gameState.world.getCube(-1, newCoords[0],
 					newCoords[1], newCoords[2], false);
 			if (nextCube == null)
@@ -1785,9 +1875,21 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					Jcrpg.LOGGER.info("Next Cube = " + nextCube.toString());
 				sides = nextCube.getSide(oppositeDirections.get(
 						new Integer(directions[0])).intValue());
+				
 				if (sides != null) {
 					if (hasSideOfInstance(sides, notPassable))
-						return false;
+					{
+						if (escapeClimbingPossible)
+						{
+							int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
+							int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
+							System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
+							if (i>level) return false;
+						} else
+						{
+							return false;
+						}
+					}
 				}
 			}
 
@@ -1799,13 +1901,42 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 						new Integer(directions[0])).intValue());
 				if (sides != null) {
 					if (hasSideOfInstance(sides, notPassable))
+					{
+						if (J3DCore.LOGGING())
+						{
+							logger.finest("STEEP FACING OPPOSITE SIDE not passable");
+						}
 						return false;
+					}
 				}
 
 				sides = nextCube != null ? nextCube.getSide(BOTTOM) : null;
 				if (sides != null) {
 					if (hasSideOfInstance(sides, notWalkable))
-						return false;
+					{
+						if (J3DCore.LOGGING())
+						{
+							if (hasSideOfInstanceInAnyDir(
+									nextCube, climbers)!=null)
+							{
+								if (escapeClimbingPossible)
+								{
+									int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
+									int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
+									System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
+									if (i>level) return false;
+								} else
+								{
+									return false;
+								}
+							} else
+							{
+								logger.finest("BOTTOM SIDE not walkable");
+								return false;
+							}
+						}
+						//return false;
+					}
 				}
 
 				// checking steep setting
