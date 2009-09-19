@@ -97,18 +97,18 @@ public class Geography extends Place implements Surface {
 	static Side[][] GEO_ROCK = new Side[][] { null, null, null,null,null,ROCK };
 	static Side[][] GEO_ROCK_VISIBLE = new Side[][] { null, null, null,null,null,ROCK_VISIBLE };
 	static Side[][] GEO_GROUND = new Side[][] { null, null, null,null,null,GROUND };
-	static Side[][] GEO_INTERSECT_NORTH = new Side[][] { INTERSECT, I_EMPTY, I_EMPTY,I_EMPTY,BLOCK,GROUND };
-	static Side[][] GEO_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,BLOCK,GROUND };
-	static Side[][] GEO_INTERSECT_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, INTERSECT,I_EMPTY,BLOCK,GROUND };
-	static Side[][] GEO_INTERSECT_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,INTERSECT,BLOCK,GROUND };
+	static Side[][] GEO_INTERSECT_NORTH = new Side[][] { INTERSECT, I_EMPTY, I_EMPTY,I_EMPTY,null,GROUND };
+	static Side[][] GEO_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,null,GROUND };
+	static Side[][] GEO_INTERSECT_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, INTERSECT,I_EMPTY,null,GROUND };
+	static Side[][] GEO_INTERSECT_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,INTERSECT,null,GROUND };
 	static Side[][] GEO_CORNER_NORTH = new Side[][] { CORNER, I_EMPTY, I_EMPTY,I_EMPTY,null,GROUND};
 	static Side[][] GEO_CORNER_EAST = new Side[][] { I_EMPTY, CORNER, I_EMPTY,I_EMPTY,null,GROUND};
 	static Side[][] GEO_CORNER_SOUTH = new Side[][] { I_EMPTY, I_EMPTY, CORNER,I_EMPTY,null,GROUND};
 	static Side[][] GEO_CORNER_WEST = new Side[][] { I_EMPTY, I_EMPTY, I_EMPTY,CORNER,null,GROUND };
-	static Side[][] GEO_STEEP_NORTH = new Side[][] { STEEP, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,BLOCK,GROUND };
-	static Side[][] GEO_STEEP_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,BLOCK,GROUND };
-	static Side[][] GEO_STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,BLOCK,GROUND };
-	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,BLOCK,GROUND };
+	static Side[][] GEO_STEEP_NORTH = new Side[][] { STEEP, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,null,GROUND };
+	static Side[][] GEO_STEEP_EAST = new Side[][] { I_EMPTY, STEEP, I_EMPTY,INTERNAL_ROCK_SIDE,null,GROUND };
+	static Side[][] GEO_STEEP_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STEEP,I_EMPTY,null,GROUND };
+	static Side[][] GEO_STEEP_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STEEP,null,GROUND };
 
 /*	static Side[][] GEO_INTERSECT_NORTH = new Side[][] { INTERSECT, I_EMPTY, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
 	static Side[][] GEO_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,BLOCK,BLOCK };
@@ -136,7 +136,7 @@ public class Geography extends Place implements Surface {
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int NORTH_EAST = 4, SOUTH_EAST = 5, SOUTH_WEST = 6, NORTH_WEST = 7;
 
-	public static final int C_NORMAL = 8, C_HALF = 9;
+	public static final int C_NORMAL = 8, C_CORNERSIDE = 9;
 	public static final int P_EQUAL = 0, P_GREATER = 1, P_LESSER = 2;
 	public static final int P_GE = 3, P_LE = 4;
 
@@ -318,7 +318,7 @@ public class Geography extends Place implements Surface {
 	 */
 	public int[][] evaluate(int Y, int[] directionYs)
 	{
-		int[][] ret = new int[P_LE+1][C_HALF+1];
+		int[][] ret = new int[P_LE+1][C_CORNERSIDE+1];
 		int countEqual = 0, countGreater = 0, countLess = 0,countGreaterEq = 0, countLessEq = 0;
 		int countEqual2 = 0, countGreater2 = 0, countLess2 = 0,countGreaterEq2 = 0, countLessEq2 = 0;
 		for (int i=0; i<directionYs.length; i++)
@@ -390,11 +390,11 @@ public class Geography extends Place implements Surface {
 		ret[P_LESSER][C_NORMAL] = countLess;
 		ret[P_GE][C_NORMAL] = countGreaterEq;
 		ret[P_LE][C_NORMAL] = countLessEq;
-		ret[P_EQUAL][C_HALF] = countEqual2;
-		ret[P_GREATER][C_HALF] = countGreater2;
-		ret[P_LESSER][C_HALF] = countLess2;
-		ret[P_GE][C_HALF] = countGreaterEq2;
-		ret[P_LE][C_HALF] = countLessEq2;
+		ret[P_EQUAL][C_CORNERSIDE] = countEqual2;
+		ret[P_GREATER][C_CORNERSIDE] = countGreater2;
+		ret[P_LESSER][C_CORNERSIDE] = countLess2;
+		ret[P_GE][C_CORNERSIDE] = countGreaterEq2;
+		ret[P_LE][C_CORNERSIDE] = countLessEq2;
 		return ret;
 		
 	}
@@ -909,7 +909,7 @@ public class Geography extends Place implements Surface {
 			
 			// one half side is bigger
 			
-			if (eval[P_LESSER][C_HALF]==1)// && eval[P_EQUAL][C_HALF]==3)
+			if (eval[P_LESSER][C_CORNERSIDE]==1)// && eval[P_EQUAL][C_HALF]==3)
 			{
 				if (eval[P_LESSER][NORTH_EAST]==1)
 				{
