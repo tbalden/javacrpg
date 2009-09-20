@@ -27,28 +27,17 @@ Journal window will be needed!
 [ ] humans attack, even being Peaceful! check EntityInstance liveTurn code!
 
 
-[X] climbing checks: refactoring of Cube - it should be able to tell possible movements - a CubeInterpreter - add all neighboring cubes in direction, calculate possibilities, return it.
-	[X] replace moveBase
-	[X] load savegame and test that part: you can't move there. Check logs! Add difficulty level beside simply stating possible! For check skills!
-
-[X] tooltip  for these less obvious skills at leveling/party creation?
-[X] while moving engine time doesnt pass! by moving time should pass (or should it pass only then and camping??) by units!
-
 [X] add distance etc. data to Entity-O-Meter
 	[ ] make perception skills work / not work based on creature who percepts 
 		- survival should work only for monsters
 		- secure'n'escort in towns?
 		- hide'n'sneak not in desert etc?
 		- architecture, disguise when works?
-	 
 	[ ] make perception work on greater distance than encounter distance?
+	[ ] add common perception chance callback and level display for the character behavior window , when tuning update it!
+	[ ] friendly units shouldnt hide away from you?
 
-	 [ ] add common perception chance callback and level display for the character behavior window , when tuning update it!
-	 
-	 [X] disable behavior skills upon rest?
-	 	
-	 [ ] friendly units shouldnt hide away from you?
-	
+	[X] disable behavior skills upon rest?
     [X] add selected behavior skill text per char under portrait!
 	[-] can't meet with enemies, intersection wrong?? (you werent intersecting, entityometer bug solved)
 	[X] perception things connected to EntityOMeter! (skills used and such)
@@ -59,6 +48,7 @@ Journal window will be needed!
 [ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
 	[ ] igloo
 	[ ] yeti
+	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
 		[ ] make it more random, take in account roads around. 
 			[X] make generation not write in population zones!
@@ -67,11 +57,17 @@ Journal window will be needed!
 			[X] make entrance not one cube only (currently its weird)
 			[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
 	[X] worpion - cave
-	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
+
 	
 
-[X] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) (wx , wz wasnt finding them, only wx+ mag/2 !?)
+[X] climbing checks: refactoring of Cube - it should be able to tell possible movements - a CubeInterpreter - add all neighboring cubes in direction, calculate possibilities, return it.
+	[X] replace moveBase
+	[X] load savegame and test that part: you can't move there. Check logs! Add difficulty level beside simply stating possible! For check skills!
 
+[X] tooltip  for these less obvious skills at leveling/party creation?
+[X] while moving engine time doesnt pass! by moving time should pass (or should it pass only then and camping??) by units!
+
+[X] found a city on seed 0, from start: (N,N,N,W) boarman, not on world map?? (coordinates, level?) (wx , wz wasnt finding them, only wx+ mag/2 !?)
 
 [X] map hover show more info - town type/owner entity
 
