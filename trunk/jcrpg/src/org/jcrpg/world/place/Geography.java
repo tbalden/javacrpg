@@ -94,8 +94,8 @@ public class Geography extends Place implements Surface {
 	public static Side[] INTERNAL_ROCK_SIDE = null;//{new Side(TYPE_MOUNTAIN,SUBTYPE_ROCK_SIDE)};
 	static Side[] ROCK_DOWNSIDE = {new Side(TYPE_GEO,SUBTYPE_ROCK_DOWNSIDE)};
 	
-	static Side[][] GEO_ROCK = new Side[][] { null, null, null,null,null,ROCK };
-	static Side[][] GEO_ROCK_VISIBLE = new Side[][] { null, null, null,null,null,ROCK_VISIBLE };
+	static Side[][] GEO_ROCK = new Side[][] { ROCK, ROCK, ROCK,ROCK,null,ROCK };
+	static Side[][] GEO_ROCK_VISIBLE = new Side[][] { ROCK, ROCK, ROCK,ROCK,null,ROCK_VISIBLE };
 	static Side[][] GEO_GROUND = new Side[][] { null, null, null,null,null,GROUND };
 	static Side[][] GEO_INTERSECT_NORTH = new Side[][] { INTERSECT, I_EMPTY, I_EMPTY,I_EMPTY,null,GROUND };
 	static Side[][] GEO_INTERSECT_EAST = new Side[][] { I_EMPTY, INTERSECT, I_EMPTY,I_EMPTY,null,GROUND };

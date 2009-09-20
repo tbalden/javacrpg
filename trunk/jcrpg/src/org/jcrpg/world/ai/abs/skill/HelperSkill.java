@@ -26,7 +26,7 @@ package org.jcrpg.world.ai.abs.skill;
 public interface HelperSkill {
 	
 	public static final String TAG_CRITICAL_HIT = "CRITICAL_HIT";
-	public static final String TAG_ESCAPING = "ESCAPING";
+	public static final String TAG_ESCAPING = "OBSTACLED MOVEMENT";
 	
 	/**
 	 * Tells if this helper skill does help another skill for a given 'tag' (which tells what way
