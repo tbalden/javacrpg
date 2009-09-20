@@ -194,6 +194,7 @@ public class CubeInterpreter
 
 	}
 
+	boolean DEBUG = false;
 	
 	public MovementInterpretationResult interpret(int direction)
 	{
@@ -206,10 +207,10 @@ public class CubeInterpreter
 		int[] relPosInDirection = J3DCore.calcMovement(relCenter, direction, false);
 		
 		Cube cubeInCenter = w.getCube(-1, center[0], center[1], center[2], false);
-		//System.out.println("cubeInCenter: "+cubeInCenter);
+		if (DEBUG) System.out.println("cubeInCenter: "+cubeInCenter);
 		
 		Cube cubeInDirection = w.getCube(-1, posInDirection[0], posInDirection[1], posInDirection[2], false);
-		//System.out.println("cubeInDirection: "+cubeInDirection);
+		if (DEBUG) System.out.println("cubeInDirection: "+cubeInDirection);
 		
 		Cube cubeInDirectionBelow = null;
 		Cube cubeInDirectionAbove = null;
@@ -237,7 +238,7 @@ public class CubeInterpreter
 				prepareResult(cubeInDirection, posInDirection, relPosInDirection, result);
 			} else
 			{
-				//System.out.println("Blocked simple downward.");
+				if (DEBUG) System.out.println("Blocked simple downward.");
 			}
 		} else
 		{
@@ -246,13 +247,13 @@ public class CubeInterpreter
 			prepareResult(cubeInDirection, posInDirection, relPosInDirection, result);
 			if (!result.possible || blockedIn || blockedTo)
 			{
-				//System.out.println("Blocked simple forward.");
+				if (DEBUG) System.out.println("Blocked simple forward.");
 				Integer steepLeadsTo = directionOfClimbingInCubeInDirection(cubeInCenter, direction);
 				if (steepLeadsTo!=null && steepLeadsTo==J3DCore.TOP)
 				{
-					//System.out.println("Checking for steep climb...");
+					if (DEBUG) System.out.println("Checking for steep climb...");
 					blockedTo = isDirectionBlockedToCube(cubeInDirectionAbove, direction);
-					//System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
+					if (DEBUG) System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
 					if (!blockedTo)
 					{
 						result.additionalVerticalDelta = +1;
@@ -265,14 +266,14 @@ public class CubeInterpreter
 				} else
 				{	// No steep leading up, check climbing possible...
 					
-					//System.out.println("## Checking for climbing with skill...");
+					if (DEBUG) System.out.println("## Checking for climbing with skill...");
 					// check if climbing up is possible from original cube.
 					blockedIn = isDirectionBlockedInCube(cubeInCenter, J3DCore.TOP);
 					// check if cube above is not blocked moving into it.
 					blockedTo = isDirectionBlockedToCube(cubeInDirectionAbove, direction);
 					//System.out.println("cubeInCenter: "+cubeInCenter);
 					//System.out.println("cubeInDirection: "+cubeInDirection);
-					//System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
+					if (DEBUG) System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
 					if (!blockedIn && !blockedTo)
 					{
 						result.additionalVerticalDelta = +1;
