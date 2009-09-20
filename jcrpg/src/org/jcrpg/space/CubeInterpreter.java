@@ -24,6 +24,7 @@ import java.util.Set;
 import org.jcrpg.space.sidetype.SideSubType;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
+import org.jcrpg.world.ai.abs.skill.physical.Tumbling;
 import org.jcrpg.world.place.World;
 
 public class CubeInterpreter 
@@ -33,7 +34,7 @@ public class CubeInterpreter
 	public class MovementInterpretationResult
 	{
 		public boolean possible = false;
-		public ArrayList<Class<? extends SkillBase>> skillNeeded;
+		public ArrayList<Class<? extends SkillBase>> skillNeeded = new ArrayList<Class<? extends SkillBase>>();
 		
 		/**
 		 * The difficulty to make the given movement
@@ -77,7 +78,7 @@ public class CubeInterpreter
 		
 		Side[] sides = cube.getSide(direction);
 		if (sides==null) return false;
-
+		
 		return hasSideOfInstance(sides, J3DCore.notPassable);
 	}
 	private boolean isDirectionBlockedToCube(Cube cube, int direction)
@@ -100,15 +101,15 @@ public class CubeInterpreter
 		if (hasSideOfInstance(cube.getSide(J3DCore.BOTTOM), J3DCore.notWalkable))
 		{
 			result.possible = false;
+		} else
+		{
+			result.possible = true;
 			Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(cube, J3DCore.climbers);
 			if (nextCubeSteepDirections != null) {
 				result.meansOnSteepCube = true;
 			} else {
 				result.meansOnSteepCube = false;
 			}
-		} else
-		{
-			result.possible = true;
 		}
 		result.worldX = coords[0];
 		result.worldY = coords[1]+result.additionalVerticalDelta;
@@ -205,10 +206,10 @@ public class CubeInterpreter
 		int[] relPosInDirection = J3DCore.calcMovement(relCenter, direction, false);
 		
 		Cube cubeInCenter = w.getCube(-1, center[0], center[1], center[2], false);
-		System.out.println("cubeInCenter: "+cubeInCenter);
+		//System.out.println("cubeInCenter: "+cubeInCenter);
 		
 		Cube cubeInDirection = w.getCube(-1, posInDirection[0], posInDirection[1], posInDirection[2], false);
-		System.out.println("cubeInDirection: "+cubeInDirection);
+		//System.out.println("cubeInDirection: "+cubeInDirection);
 		
 		Cube cubeInDirectionBelow = null;
 		Cube cubeInDirectionAbove = null;
@@ -236,7 +237,7 @@ public class CubeInterpreter
 				prepareResult(cubeInDirection, posInDirection, relPosInDirection, result);
 			} else
 			{
-				System.out.println("Blocked simple downward.");
+				//System.out.println("Blocked simple downward.");
 			}
 		} else
 		{
@@ -245,11 +246,13 @@ public class CubeInterpreter
 			prepareResult(cubeInDirection, posInDirection, relPosInDirection, result);
 			if (!result.possible || blockedIn || blockedTo)
 			{
-				System.out.println("Blocked simple forward.");
+				//System.out.println("Blocked simple forward.");
 				Integer steepLeadsTo = directionOfClimbingInCubeInDirection(cubeInCenter, direction);
 				if (steepLeadsTo!=null && steepLeadsTo==J3DCore.TOP)
 				{
+					//System.out.println("Checking for steep climb...");
 					blockedTo = isDirectionBlockedToCube(cubeInDirectionAbove, direction);
+					//System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
 					if (!blockedTo)
 					{
 						result.additionalVerticalDelta = +1;
@@ -257,14 +260,30 @@ public class CubeInterpreter
 						prepareResult(cubeInDirectionAbove, posInDirection, relPosInDirection, result);
 					} else
 					{
-						
+						result.possible = false;
 					}
 				} else
-				{	
+				{	// No steep leading up, check climbing possible...
+					
+					//System.out.println("## Checking for climbing with skill...");
+					// check if climbing up is possible from original cube.
+					blockedIn = isDirectionBlockedInCube(cubeInCenter, J3DCore.TOP);
+					// check if cube above is not blocked moving into it.
+					blockedTo = isDirectionBlockedToCube(cubeInDirectionAbove, direction);
+					//System.out.println("cubeInCenter: "+cubeInCenter);
+					//System.out.println("cubeInDirection: "+cubeInDirection);
+					//System.out.println("cubeInDirectionAbove: "+cubeInDirectionAbove);
+					if (!blockedIn && !blockedTo)
+					{
+						result.additionalVerticalDelta = +1;
+						prepareResult(cubeInDirectionAbove, posInDirection, relPosInDirection, result);
+						result.skillNeeded.add(org.jcrpg.world.ai.abs.skill.physical.Climbing.class);
+						result.skillNeeded.add(Tumbling.class);
+						// TODO difficulty counting is too simple here..
+						result.difficulty = 30;
+					} else
 					result.possible = false;
 				}
-			} else
-			{
 			}
 		}
 		return result;

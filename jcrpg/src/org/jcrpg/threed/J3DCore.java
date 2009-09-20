@@ -1560,7 +1560,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	 */
 	public static Set<Class<? extends SideSubType>> climbers = new HashSet<Class<? extends SideSubType>>();
 	static {
-		notWalkable.add(NotPassable.class);
+		//notWalkable.add(NotPassable.class);
 		notWalkable.add(Swimming.class);
 		notWalkable.add(StickingOut.class);
 		
@@ -1707,6 +1707,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		return SETTINGS.LOGGING;
 	}
 
+	long lastTimeMoveCheck = -1;
+	boolean moveCheckSuccess = false;
+	
 	public boolean moveBase(int[] from, int[] fromRel, int[] directions) {
 		
 		CubeInterpreter cI = new CubeInterpreter(gameState.world, from[0], from[1], from[2], fromRel[0], fromRel[1], fromRel[2]);
@@ -1725,12 +1728,55 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				directions[0] = BOTTOM;
 			} else
 				break;
-		}		
+		}
+		
+		if (result.skillNeeded.size()>0)
+		{
+			// check possible only one in one tick of the engine, so let's see if lastTimeMoveCheck is still equal to curren time...
+			if (lastTimeMoveCheck==gameState.engine.getWorldMeanTime().getTimeInInt())
+			{
+				// use the previous result here..
+				if (!moveCheckSuccess)
+				{
+					return false;
+				}
+			} else
+			{
+				// refresh last time...
+				lastTimeMoveCheck = gameState.engine.getWorldMeanTime().getTimeInInt();
+				
+				// checkin skills..
+				boolean success = false;
+				//for (Class<? extends SkillBase> skill:result.skillNeeded)
+				{
+					// TODO this is very simple check here. Should really use result.skillNeeded -> change it to TAG based in result class!
+					int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
+					int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
+					//System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
+					if (i+result.difficulty<level+50) 
+					{
+						success = true;//break;
+						uiBase.hud.mainBox.addEntry("Success: "+HelperSkill.TAG_ESCAPING);
+					} else
+					{
+						uiBase.hud.mainBox.addEntry("Failure: "+HelperSkill.TAG_ESCAPING+" ("+(i+result.difficulty)+" > "+(level+50)+")");
+					}
+	
+				}
+				moveCheckSuccess = success;
+				if (!success) return false;
+			}
+		}
+		// success!! movement possible. 
+		lastTimeMoveCheck = -1; // changing lastTimeMoveCheck to -1, so next even very close time a check is needed it's not conflicting with time.
+		
+		// updateing positions...
 		gameState.setViewPosition(result.worldX,result.worldY,result.worldZ);
 		gameState.setRelativePosition(new int[]{result.relX,result.relY,result.relZ});
 		
 		gameState.getNormalPositions().onSteep = result.meansOnSteepCube;
 		
+		// check cube, (internal/external, lighting)
 		Cube c = gameState.world.getCube(-1, result.worldX, result.worldY, result.worldZ, false);
 		if (c != null) {
 			if (c.internalCube) {
@@ -1748,315 +1794,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			}
 			gameState.getNormalPositions().internalLight = c.internalLight;
 		}
-		return true;
-	}
-	/**
-	 * Tries to move in directions, and sets coords if successfull
-	 * 
-	 * @param from
-	 *            From coordinates (gameState.world coords)
-	 * @param fromRel
-	 *            From coordinates gameState.relative (3d space coords)
-	 * @param directions
-	 *            A set of directions to move into
-	 */
-	public boolean moveBase2(int[] from, int[] fromRel, int[] directions) {
-		int[] newCoords = from;
-		int[] newRelCoords = fromRel;
-		for (int i = 0; i < directions.length; i++) {
-			if (J3DCore.LOGGING())
-				Jcrpg.LOGGER.info("J3DCore.moveBase Moving dir: "
-						+ directions[i]);
-			newCoords = calcMovement(newCoords, directions[i], true);
-			newRelCoords = calcMovement(newRelCoords, directions[i], false);
-		}
-		if (FREE_MOVEMENT) { // test free movement
-			gameState.setViewPosition(newCoords);
-			gameState.setRelativePosition(newRelCoords);
-			Cube c = gameState.world.getCube(-1, newCoords[0], newCoords[1],
-					newCoords[2], false);
-			if (c != null) {
-				if (c.internalCube) {
-					if (J3DCore.LOGGING())
-						Jcrpg.LOGGER.info("Moved: INTERNAL");
-					gameState.getNormalPositions().insideArea = true;
-					dofParentNode.detachAllChildren(); // workaround for
-															// culling
-					dofParentNode.attachChild(intRootNode);
-					dofParentNode.attachChild(extRootNode);
-				} else {
-					if (J3DCore.LOGGING())
-						Jcrpg.LOGGER.info("Moved: EXTERNAL");
-					gameState.getNormalPositions().insideArea = false;
-					dofParentNode.detachAllChildren(); // workaround for
-															// culling
-					dofParentNode.attachChild(extRootNode);
-					dofParentNode.attachChild(intRootNode);
-				}
-				gameState.getNormalPositions().internalLight = c.internalLight;
-
-			}
-			return true;
-
-		}
-
-		Cube c = gameState.world.getCube(-1, from[0], from[1], from[2], false);
-
-		if (c != null) {
-			Jcrpg.LOGGER.info("Current Cube = " + c.toString());
-			// get current steep dir for knowing if checking below or above Cube
-			// for moving on steep
-			Integer[] currentCubeSteepDirections = hasSideOfInstanceInAnyDir(c,
-					climbers);
-			Jcrpg.LOGGER
-					.info("STEEP DIRECTION"
-							+ (currentCubeSteepDirections != null ? currentCubeSteepDirections.length
-									: "null") + " - " + directions[0] + "  "
-							+ c.steepDirection);
-			if (currentCubeSteepDirections != null)
-			{
-				for (int steepDir : currentCubeSteepDirections) {
-					if (steepDir == oppositeDirections.get(
-							new Integer(directions[0])).intValue()) {
-						newCoords = calcMovement(newCoords, TOP, true);
-						newRelCoords = calcMovement(newRelCoords, TOP, false);
-						break;
-					}
-				}
-			}
-			
-			// check if one cube above is there a blocking element for climbing ahead
-			boolean escapeClimbingPossible = true;
-			Cube cAbove = gameState.world.getCube(-1, from[0], from[1]+1, from[2], false);
-			Side[] sidesBottomAboveCurrent = new Side[0];
-			if (cAbove!=null)
-			{
-				sidesBottomAboveCurrent = cAbove.getSide(BOTTOM);
-			}
-			{
-				Side[] sidesTopCurrent = c.getSide(TOP);
-				System.out.println("-- "+c+ " "+hasSideOfInstance(sidesTopCurrent,notPassable)+" "+hasSideOfInstance(sidesBottomAboveCurrent, notPassable));
-				if (hasSideOfInstance(sidesTopCurrent,notPassable)|| hasSideOfInstance(sidesBottomAboveCurrent, notPassable))
-				{
-					escapeClimbingPossible = false;
-				}
-			}
-			System.out.println("ESCAPE CLIMBING POSSIBLE = "+escapeClimbingPossible);
-			
-			Side[] sides = c.getSide(directions[0]);
-			if (sides != null) {
-				if (J3DCore.LOGGING())
-					Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE");
-				if (hasSideOfInstance(sides, notPassable)
-						&& (!gameState.getNormalPositions().onSteep
-								|| directions[0] == BOTTOM || directions[0] == TOP))
-				{
-					if (escapeClimbingPossible)
-					{
-						int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
-						int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
-						System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
-						if (i>level) return false;
-					} else
-					{
-						return false;
-					}
-				}
-				if (J3DCore.LOGGING())
-					Jcrpg.LOGGER.info("SAME CUBE CHECK: NOTPASSABLE - passed");
-			}
-			
-			Cube nextCube = gameState.world.getCube(-1, newCoords[0],
-					newCoords[1], newCoords[2], false);
-			if (nextCube == null)
-				Jcrpg.LOGGER.info("NEXT CUBE = NULL");
-			else {
-				if (J3DCore.LOGGING())
-					Jcrpg.LOGGER.info("Next Cube = " + nextCube.toString());
-				sides = nextCube.getSide(oppositeDirections.get(
-						new Integer(directions[0])).intValue());
-				
-				if (sides != null) {
-					if (hasSideOfInstance(sides, notPassable))
-					{
-						if (escapeClimbingPossible)
-						{
-							int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
-							int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
-							System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
-							if (i>level) return false;
-						} else
-						{
-							return false;
-						}
-					}
-				}
-			}
-
-			if (nextCube != null
-					&& hasSideOfInstance(nextCube.getSide(BOTTOM), notPassable)) {
-				// we have next cube in walk dir, and it has bottom too
-
-				sides = nextCube.getSide(oppositeDirections.get(
-						new Integer(directions[0])).intValue());
-				if (sides != null) {
-					if (hasSideOfInstance(sides, notPassable))
-					{
-						if (J3DCore.LOGGING())
-						{
-							logger.finest("STEEP FACING OPPOSITE SIDE not passable");
-						}
-						return false;
-					}
-				}
-
-				sides = nextCube != null ? nextCube.getSide(BOTTOM) : null;
-				if (sides != null) {
-					if (hasSideOfInstance(sides, notWalkable))
-					{
-						if (J3DCore.LOGGING())
-						{
-							if (hasSideOfInstanceInAnyDir(
-									nextCube, climbers)!=null)
-							{
-								if (escapeClimbingPossible)
-								{
-									int level = gameState.player.theFragment.getHelperSkillLevel(HelperSkill.TAG_ESCAPING);
-									int i = HashUtil.mixPercentage(Engine.getTrueRandom().nextInt(), 0, 1);
-									System.out.println("ESCAPE CLIMBING: "+level+"/"+i);
-									if (i>level) return false;
-								} else
-								{
-									return false;
-								}
-							} else
-							{
-								logger.finest("BOTTOM SIDE not walkable");
-								return false;
-							}
-						}
-						//return false;
-					}
-				}
-
-				// checking steep setting
-				Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(
-						nextCube, climbers);
-				if (nextCubeSteepDirections != null) {
-					gameState.getNormalPositions().onSteep = true;
-				} else {
-					gameState.getNormalPositions().onSteep = false;
-				}
-			} else {
-				// no next cube in same direction, trying lower part steep,
-				// until falling down deadly if nothing found... :)
-				int yMinus = 1; // value of delta downway
-				while (true) {
-					// cube below
-					nextCube = gameState.world.getCube(-1, newCoords[0],
-							newCoords[1] - (yMinus++), newCoords[2], false);
-					if (J3DCore.LOGGING())
-						Jcrpg.LOGGER.info("FALLING: " + nextCube);
-					if (yMinus > 10)
-						break; // / i am faaaalling.. :)
-					if (nextCube == null)
-						continue;
-
-					sides = nextCube != null ? nextCube.getSide(directions[0])
-							: null;
-					if (sides != null) {
-						// Try to get climber side
-						if (hasSideOfInstance(sides, climbers)) {
-							sides = nextCube != null ? nextCube.getSide(BOTTOM)
-									: null;
-							if (hasSideOfInstance(sides, notWalkable))
-								return false;
-							newCoords[1] = newCoords[1] - (yMinus - 1);
-							newRelCoords[1] = newRelCoords[1] - (yMinus - 1);
-							gameState.getNormalPositions().onSteep = true; // found
-																			// steep
-							break;
-						} else {
-							sides = nextCube != null ? nextCube.getSide(TOP)
-									: null;
-							if (sides != null) // checking if cube's top is not
-												// passable
-								if (hasSideOfInstance(sides, notPassable))
-									return false; // not passable, do not make
-													// this step
-							// no luck with climbers , let's see notPassable
-							// bottom...
-							sides = nextCube != null ? nextCube.getSide(BOTTOM)
-									: null;
-							if (sides != null)
-								if (hasSideOfInstance(sides, notPassable)) {
-									if (hasSideOfInstance(sides, notFallable))
-										return false;
-									// yeah, a place to stand...
-									newCoords[1] = newCoords[1] - (yMinus - 1);
-									newRelCoords[1] = newRelCoords[1]
-											- (yMinus - 1);
-									gameState.getNormalPositions().onSteep = false; // yeah
-																					// ,
-																					// found
-									break;
-								}
-						}
-					} else {
-						// no luck with climbers on walk direction, let's see
-						// notPassable bottom...
-						sides = nextCube != null ? nextCube.getSide(BOTTOM)
-								: null;
-						if (sides != null)
-							if (hasSideOfInstance(sides, notPassable)) {
-								if (hasSideOfInstance(sides, notFallable))
-									return false;
-								newCoords[1] = newCoords[1] - (yMinus - 1);
-								newRelCoords[1] = newRelCoords[1]
-										- (yMinus - 1);
-								Integer[] nextCubeSteepDirections = hasSideOfInstanceInAnyDir(
-										nextCube, climbers);
-								if (nextCubeSteepDirections != null) {// check
-																		// for
-																		// climbers
-									gameState.getNormalPositions().onSteep = true;
-								} else {
-									gameState.getNormalPositions().onSteep = false; // yeah
-																					// ,
-																					// found
-								}
-								break;
-							}
-					}
-				}
-
-				// return;
-			}
-
-		} else {
-			gameState.getNormalPositions().onSteep = false;
-			// return;
-		}
-		gameState.setViewPosition(newCoords);
-		gameState.setRelativePosition(newRelCoords);
-		c = gameState.world.getCube(-1, newCoords[0], newCoords[1],
-				newCoords[2], false);
-		if (c != null) {
-			if (c.internalCube) {
-				Jcrpg.LOGGER.info("Moved: INTERNAL");
-				gameState.getNormalPositions().insideArea = true;
-				dofParentNode.detachAllChildren(); // workaround for culling
-				dofParentNode.attachChild(intRootNode);
-				dofParentNode.attachChild(extRootNode);
-			} else {
-				Jcrpg.LOGGER.info("Moved: EXTERNAL");
-				gameState.getNormalPositions().insideArea = false;
-				dofParentNode.detachAllChildren(); // workaround for culling
-				dofParentNode.attachChild(extRootNode);
-				dofParentNode.attachChild(intRootNode);
-			}
-			gameState.getNormalPositions().internalLight = c.internalLight;
-		}
+		
 		return true;
 	}
 
