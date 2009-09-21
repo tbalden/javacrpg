@@ -22,6 +22,7 @@ import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
@@ -59,7 +60,7 @@ public class PolarBears extends AnimalEntityDescription {
 		climates.add(Tropical.class);
 		climates.add(Arctic.class);
 		//geographies.add(Forest.class);
-		behaviors.add(Peaceful.class);
+		behaviors.add(Aggressive.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
 		//setAverageGroupSizeAndDeviation(5, 2);

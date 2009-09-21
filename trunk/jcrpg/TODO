@@ -24,19 +24,31 @@ Journal window will be needed!
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[ ] humans attack, even being Peaceful! check EntityInstance liveTurn code!
+[ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
+	[ ] igloo
+	[ ] yeti
+	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
+	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
+		[X] make it more random, take in account roads around. -> hashutil used for some slight displacement
+			[X] make generation not write in population zones!
+			[X] Dont put shrines a second time (path generation, check if there's)
+		[X] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
+			[X] make entrance not one cube only (currently its weird)
+			[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
+	[X] worpion - cave
 
 
 [X] add distance etc. data to Entity-O-Meter
-	[ ] make perception skills work / not work based on creature who percepts 
+
+	[?] make perception skills work / not work based on creature who percepts 
 		- survival should work only for monsters
 		- secure'n'escort in towns?
 		- hide'n'sneak not in desert etc?
 		- architecture, disguise when works?
-	[ ] make perception work on greater distance than encounter distance?
-	[ ] add common perception chance callback and level display for the character behavior window , when tuning update it!
-	[ ] friendly units shouldnt hide away from you?
+	[?] friendly units shouldnt hide away from you?
+	[?] make perception work on greater distance than encounter distance?
 
+	[-] add common perception chance callback and level display for the character behavior window , when tuning update it!
 	[X] disable behavior skills upon rest?
     [X] add selected behavior skill text per char under portrait!
 	[-] can't meet with enemies, intersection wrong?? (you werent intersecting, entityometer bug solved)
@@ -45,20 +57,7 @@ Journal window will be needed!
 	[X] rolling should not divide but substract to let lucky things happen! KARMA in rollings??
 
 
-[ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
-	[ ] igloo
-	[ ] yeti
-	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
-	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
-		[ ] make it more random, take in account roads around. 
-			[X] make generation not write in population zones!
-			[X] Dont put shrines a second time (path generation, check if there's)
-		[X] random seed generated locations in a block with road (without town), around the road. 4 cube sized sanctuary at first.
-			[X] make entrance not one cube only (currently its weird)
-			[X] world map show dot for all the shrines - not good. getIsVisibleWorldMap boolean?
-	[X] worpion - cave
-
-	
+[X] humans attack, even being Peaceful! check EntityInstance liveTurn code!
 
 [X] climbing checks: refactoring of Cube - it should be able to tell possible movements - a CubeInterpreter - add all neighboring cubes in direction, calculate possibilities, return it.
 	[X] replace moveBase

@@ -12,3 +12,7 @@ throwingknife.png - scourge GPL
 pickaxe.png: Copyright 2004 Jenn Hartnoll - licensed under the GNU GPL version 2 as published by
 the Free Software Foundation, copyrighted by the owners credited above. 
 http://search.freegamedev.net/artitems/view/169958
+
+battleaxe.png: copyright 2008 Scourge - licensed under CC-BY-SA. Copyright by Leadgolem
+
+zweihander.png - crossfire project GPL licensed by A. Kirschbaum, http://search.freegamedev.net/artitems/view/480856

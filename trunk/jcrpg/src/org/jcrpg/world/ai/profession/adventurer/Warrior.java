@@ -29,9 +29,8 @@ import org.jcrpg.world.ai.abs.skill.physical.Climbing;
 import org.jcrpg.world.ai.abs.skill.physical.Swimming;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 import org.jcrpg.world.object.armor.LeatherArmor;
-import org.jcrpg.world.object.combat.blade.Dagger;
 import org.jcrpg.world.object.combat.blade.LongSword;
-import org.jcrpg.world.object.combat.staffwand.QuarterStaff;
+import org.jcrpg.world.object.combat.hammeraxe.BattleAxe;
 
 public class Warrior extends HumanoidProfessional{
 
@@ -39,8 +38,7 @@ public class Warrior extends HumanoidProfessional{
 	{
 		super();
 		generationNewInstanceObjects.add(LongSword.class);
-		generationNewInstanceObjects.add(Dagger.class);
-		generationNewInstanceObjects.add(QuarterStaff.class);
+		generationNewInstanceObjects.add(BattleAxe.class);
 		generationNewInstanceObjects.add(LeatherArmor.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 16);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.CONSTITUTION, 10);

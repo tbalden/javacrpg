@@ -27,13 +27,14 @@ import org.jcrpg.world.ai.abs.skill.martial.MediumBlades;
 import org.jcrpg.world.ai.abs.skill.martial.Wrestling;
 import org.jcrpg.world.ai.profession.HumanoidProfessional;
 import org.jcrpg.world.object.combat.blade.LongSword;
+import org.jcrpg.world.object.combat.blade.ZweiHander;
 
 public class Crusader extends HumanoidProfessional {
 
 	public Crusader()
 	{
 		super();
-		generationNewInstanceObjects.add(LongSword.class);
+		generationNewInstanceObjects.add(ZweiHander.class);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.STRENGTH, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PIETY, 12);
 		attrMinLevels.minimumLevels.put(FantasyAttributes.PSYCHE, 12);

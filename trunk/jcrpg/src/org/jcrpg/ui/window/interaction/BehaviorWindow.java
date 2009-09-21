@@ -87,15 +87,17 @@ public class BehaviorWindow extends PagedInputWindow {
 	    	float yDelta = 0.00f;
 
 	    	new TextLabel("",this,page0, 0.4f, yDelta+0.11f, 0.0f, 0.06f,400f,Language.v("behaviorWindow.heading"),false);
-	    	new TextLabel("",this,page0, 0.27f, yDelta+0.16f, 0.0f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
+	    	
+
+	    	new TextLabel("",this,page0, 0.26f, yDelta+0.20f, 0.0f, 0.06f,600f,Language.v("behaviorWindow.members")+":",false);
 	    	float sizeSelect = 0.05f;
 	    	for (int i=0; i<6; i++)
 	    	{
-	    		ListSelect sel = new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.19f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null);
+	    		ListSelect sel = new ListSelect("member"+i, this,page0, 0.53f,yDelta+0.24f+sizeSelect*i,0.3f,0.04f,600f,new String[0],new String[0],null,null);
 	    		sel.focusUponMouseEnter = true;
 	    		sel.globalTooltip = "Selecting a skill as the behavior skill will grant it is used to its full level as you walk around. The others are being used at a third of its full level.";
 	    		skillSelectors.add(sel);
-	    		memberNames.add(new TextLabel("name"+i,this,page0,0.3f,yDelta+0.19f+sizeSelect*i,0.0f,0.04f,600f,"",false));
+	    		memberNames.add(new TextLabel("name"+i,this,page0,0.27f,yDelta+0.24f+sizeSelect*i,0.0f,0.04f,600f,"",false));
 	    		addInput(0,skillSelectors.get(i));
 	    	}
 	    	new TextLabel("friendly_text",this,page0,0.24f,yDelta+0.19f+sizeSelect*8,0.1f,0.04f,600f,Language.v("behaviorWindow.noticeFriendly"),false);

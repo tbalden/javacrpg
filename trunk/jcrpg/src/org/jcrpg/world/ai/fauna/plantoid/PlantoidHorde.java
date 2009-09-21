@@ -18,6 +18,7 @@
 
 package org.jcrpg.world.ai.fauna.plantoid;
 
+import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
 import org.jcrpg.world.ai.abs.skill.martial.BiteFight;
@@ -34,7 +35,7 @@ public class PlantoidHorde extends AnimalEntityDescription {
 		iconPic = "unknown";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
-		behaviors.add(Peaceful.class);
+		behaviors.add(Aggressive.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = false;
 		startingSkills.add(new SkillInstance(BiteFight.class,20));
