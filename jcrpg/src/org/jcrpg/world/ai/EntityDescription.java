@@ -34,6 +34,7 @@ import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Escapist;
 import org.jcrpg.world.ai.abs.choice.Attack;
 import org.jcrpg.world.ai.abs.choice.Hide;
+import org.jcrpg.world.ai.abs.choice.Indifference;
 import org.jcrpg.world.ai.abs.skill.SkillBase;
 import org.jcrpg.world.ai.abs.skill.SkillContainer;
 import org.jcrpg.world.ai.abs.skill.SkillInstance;
@@ -246,7 +247,7 @@ public class EntityDescription extends DescriptionBase {
 		{
 			if (getBehaviors().contains(Aggressive.class))
 			{
-				if (isPrey(desc))
+				//if (isPrey(desc)) // TODO uncomment this when prey chains are ready
 				{
 					return Attack.class;
 				}
@@ -256,7 +257,7 @@ public class EntityDescription extends DescriptionBase {
 				return Hide.class;
 			}
 		}
-		return Attack.class;//Indifference.class;
+		return Indifference.class;
 	}
 
 	public PositionCalculus getPositionCalculus()

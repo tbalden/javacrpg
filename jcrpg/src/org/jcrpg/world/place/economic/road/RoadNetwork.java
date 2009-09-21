@@ -437,8 +437,8 @@ public class RoadNetwork extends Economic implements FlowGeography {
 						
 						if (currentlyNoShrineYet)
 						{
-							int oX = x*blockSize+blockSize/2+2;
-							int oZ = z*blockSize+blockSize/2+2;
+							int oX = x*blockSize+blockSize/2+2+(HashUtil.mixPercentage(x, z, 0)/50);
+							int oZ = z*blockSize+blockSize/2+2+(HashUtil.mixPercentage(x, z, x)/50);
 							Geography soilGeo = getSoilGeoAt(oX, oZ);
 	
 							int[] minMax = AbstractInfrastructure.getMinMaxHeight(soilGeo, oX, oZ, 4, 4);

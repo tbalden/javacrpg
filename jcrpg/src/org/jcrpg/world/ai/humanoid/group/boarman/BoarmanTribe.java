@@ -28,6 +28,7 @@ import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.boarman.member.BoarmanFemale;
@@ -133,7 +134,7 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 		geographies.add(Mountain.class);
 		//geographies.add(Cave.class);
 		
-		behaviors.add(Peaceful.class);
+		behaviors.add(Aggressive.class); // TODO set this peaceful if not in techdemo.
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		
