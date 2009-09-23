@@ -92,10 +92,12 @@ public abstract class SmallBuilding extends Residence {
 	public String modelName;
 	
 	boolean doubleEntrance = false;
+	boolean useSeparateGroundModels = true;
 	
-	public SmallBuilding(String TYPE, String modelName, boolean doubleEntrance)
+	public SmallBuilding(String TYPE, String modelName, boolean doubleEntrance, boolean useSeparateGround)
 	{
 		super();
+		useSeparateGroundModels = useSeparateGround;
 		TYPE_HOUSE = TYPE;
 		this.modelName = modelName;
 		this.doubleEntrance = doubleEntrance;
@@ -163,8 +165,15 @@ public abstract class SmallBuilding extends Residence {
 
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_STAIRS.id, SideTypeModels.EMPTY_SIDE);
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_INTERNAL_CEILING.id, SideTypeModels.EMPTY_SIDE);
-		J3DCore.getInstance().standingModels.addSide(SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
-		J3DCore.getInstance().standingModels.addSide(SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));
+		if (useSeparateGroundModels)
+		{
+			J3DCore.getInstance().standingModels.addSide(SUBTYPE_INTERNAL_GROUND.id, new Integer(29));
+			J3DCore.getInstance().standingModels.addSide(SUBTYPE_EXTERNAL_GROUND.id, new Integer(3));
+		} else
+		{
+			J3DCore.getInstance().standingModels.addSide(SUBTYPE_INTERNAL_GROUND.id, SideTypeModels.EMPTY_SIDE);
+			J3DCore.getInstance().standingModels.addSide(SUBTYPE_EXTERNAL_GROUND.id, SideTypeModels.EMPTY_SIDE);
+		}
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_BOOKCASE.id, SideTypeModels.EMPTY_SIDE);
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_WALL.id, SideTypeModels.EMPTY_SIDE);
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_WINDOW.id, SideTypeModels.EMPTY_SIDE);
@@ -187,7 +196,7 @@ public abstract class SmallBuilding extends Residence {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public SmallBuilding(String TYPE, String modelName,boolean doubleEntrance, String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
+	public SmallBuilding(String TYPE, String modelName,boolean doubleEntrance, boolean useSeparateGround, String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
 		super(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<getMinimumHeight()) throw new Exception("House below minimum size"+getParameteredKey());
@@ -195,6 +204,7 @@ public abstract class SmallBuilding extends Residence {
 		TYPE_HOUSE = TYPE;
 		this.modelName = modelName;
 		this.doubleEntrance = doubleEntrance;
+		useSeparateGroundModels = useSeparateGround;
 		init();
 		
 		if (searchLoadParameteredArea()) return;

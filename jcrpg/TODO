@@ -18,15 +18,27 @@ Society, Groups etc.
 Journal window will be needed!
 [ ] District / Town / PlainForestMountain type and then title dropdown to let player search towns/districts on world map (later filtered by known?)
 [ ] quick travel with WorldMap? - click a town, cursor gets through blocks, time passing quicker, turns happening? encounters?
-----
 
+[ ] entity perception...
+	[?] make perception skills work / not work based on creature who percepts 
+		- survival should work only for monsters
+		- secure'n'escort in towns?
+		- hide'n'sneak not in desert etc?
+		- architecture, disguise when works?
+	[?] friendly units shouldnt hide away from you?
+	[?] make perception work on greater distance than encounter distance?
+
+----
+Before next release:
 
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
 [ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
-	[ ] igloo
+	[X] igloo
 	[ ] yeti
+		pose is not good yet
+		
 	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
 		[X] make it more random, take in account roads around. -> hashutil used for some slight displacement
@@ -39,14 +51,6 @@ Journal window will be needed!
 
 
 [X] add distance etc. data to Entity-O-Meter
-
-	[?] make perception skills work / not work based on creature who percepts 
-		- survival should work only for monsters
-		- secure'n'escort in towns?
-		- hide'n'sneak not in desert etc?
-		- architecture, disguise when works?
-	[?] friendly units shouldnt hide away from you?
-	[?] make perception work on greater distance than encounter distance?
 
 	[-] add common perception chance callback and level display for the character behavior window , when tuning update it!
 	[X] disable behavior skills upon rest?

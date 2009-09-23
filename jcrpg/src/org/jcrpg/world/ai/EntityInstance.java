@@ -48,6 +48,7 @@ import org.jcrpg.world.place.Economic;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.InfrastructureElementParameters;
 import org.jcrpg.world.place.economic.Population;
+import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 
 public class EntityInstance {
@@ -138,8 +139,19 @@ public class EntityInstance {
 			PersistentMemberInstance p = new PersistentMemberInstance(fragments.fragments.get(0),this, new org.jcrpg.world.ai.fauna.modifier.StrongAnimalMale("GORILLA_MALE",MammalBody.class,GorillaHorde.gorillaAudio),w,Ecology.getNextEntityId(),startX,startY,startZ);
 			InfrastructureElementParameters i = new InfrastructureElementParameters();
 			i.owner = p;
-			i.type = WoodenHouse.class;
-			i.sizeY = 3;
+			
+			try { i.type = description.economyTemplate.residenceTypes.values().iterator().next().get(0);
+				
+			} catch (Exception ex){
+			i.type = WoodenHouse.class;}
+			if (i.type == WoodenHouse.class || i.type == House.class)
+			{
+				i.sizeY = 3;
+			} else
+			{
+				i.sizeY = 1;
+			}
+			
 			p.addOwnedInfrastructurePlan(i);
 			fixMembers.put("1", p);
 			fragments.fragments.get(0).addFollower(p);
