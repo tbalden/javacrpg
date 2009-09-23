@@ -45,9 +45,9 @@ public abstract class EconomicGround extends DistrictSubelement {
 
 	public static final String TYPE_ECOGROUND = "ECOGROUND";
 	
-	public static final SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
-	public static final SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
-	public static final SideSubType SUBTYPE_EXTERNAL_WOODEN_GROUND = new GroundSubType(TYPE_ECOGROUND+"_EXTERNAL_GROUND",true);
+	public static SideSubType SUBTYPE_STAIRS = new Climbing(TYPE_ECOGROUND+"_STAIRS",true);
+	public static SideSubType SUBTYPE_STREETGROUND = new GroundSubType(TYPE_ECOGROUND+"_STREETGROUND",false);
+	public static SideSubType SUBTYPE_EXTERNAL_WOODEN_GROUND = new GroundSubType(TYPE_ECOGROUND+"_EXTERNAL_GROUND",true);
 	
 	static
 	{
@@ -63,10 +63,10 @@ public abstract class EconomicGround extends DistrictSubelement {
 	public static Side[] ECOGROUND = new Side[]{new Side(TYPE_ECOGROUND,SUBTYPE_STREETGROUND)};
 	
 
-	static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,null, GROUND};
-	static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,null,GROUND};
-	static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,null,GROUND};
-	static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,null,GROUND};
+	public static Side[][] STEPS_NORTH = new Side[][] { STAIRS, I_EMPTY, INTERNAL_ROCK_SIDE,I_EMPTY,null, GROUND};
+	public static Side[][] STEPS_SOUTH = new Side[][] { INTERNAL_ROCK_SIDE, I_EMPTY, STAIRS,I_EMPTY,null,GROUND};
+	public static Side[][] STEPS_WEST = new Side[][] { I_EMPTY, INTERNAL_ROCK_SIDE, I_EMPTY,STAIRS,null,GROUND};
+	public static Side[][] STEPS_EAST = new Side[][] { I_EMPTY, STAIRS, I_EMPTY,INTERNAL_ROCK_SIDE,null,GROUND};
 
 	public static Side[][] EXTERNAL = new Side[][] { null, null, null,null,null,ECOGROUND };
 	public static Side[][] EXTERNAL_WATER_WOODEN_GROUND = new Side[][] { null, null, null,null,null,{Ocean.SHALLOW_WATER_SIDE,new Side(TYPE_ECOGROUND,SUBTYPE_EXTERNAL_WOODEN_GROUND)}};

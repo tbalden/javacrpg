@@ -40,6 +40,7 @@ import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Evilrip;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.EyeBat;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.HellPig;
 import org.jcrpg.world.ai.humanoid.group.myth.greek.member.Scorpoholder;
+import org.jcrpg.world.ai.humanoid.group.yeti.YetiHunters;
 
 /**
  * Mapping for moving life forms to renderend moving units.
@@ -168,6 +169,9 @@ public class MovingTypeModels {
 		hmModelIdToRenderedMovingUnit.put(counter, Worpions.worpion_unit);
 		counter++;
 
+		hmMobIdToModelId.put(YetiHunters.YETI_MALE_HUNTER.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, YetiHunters.yetiMale_unit);
+		counter++;
 	}
 	
 	public RenderedMovingUnit getRenderedUnit(String id)

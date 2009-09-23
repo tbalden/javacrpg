@@ -28,10 +28,12 @@ import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.Residence;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
 import org.jcrpg.world.place.economic.ground.RawStreetGround;
+import org.jcrpg.world.place.economic.ground.RawTreadGround;
 import org.jcrpg.world.place.economic.population.DungeonDistrict;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Hut;
+import org.jcrpg.world.place.economic.residence.Igloo;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
 import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 
@@ -50,9 +52,11 @@ public class EconomyTemplate {
 		economicBase.put(DungeonDistrict.class, new DungeonDistrict());
 		economicBase.put(House.class, new House());
 		economicBase.put(Hut.class, new Hut());
+		economicBase.put(Igloo.class, new Igloo());
 		economicBase.put(WoodenHouse.class, new WoodenHouse());
 		economicBase.put(SimpleDungeonPart.class, new SimpleDungeonPart());
 		economicBase.put(RawStreetGround.class, new RawStreetGround());
+		economicBase.put(RawTreadGround.class, new RawTreadGround());
 		economicBase.put(PavedStorageAreaGround.class, new PavedStorageAreaGround());
 	}
 	

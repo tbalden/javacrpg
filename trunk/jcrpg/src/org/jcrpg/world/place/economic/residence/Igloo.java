@@ -25,16 +25,22 @@ import org.jcrpg.world.place.Place;
 import org.jcrpg.world.place.PlaceLocator;
 import org.jcrpg.world.place.economic.Residence;
 
-public class RoadShrine extends SmallBuilding {
+public class Igloo extends SmallBuilding {
 
 	
+	public Igloo()
+	{
+		super("IGLOO", "models/external/igloo/igloo.obj", true,false);
+	}
 	
-	public RoadShrine(String id, Geography soilGeo, Place parent,
+	public Igloo(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 			throws Exception {
-		super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		//super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+			//	groundLevel, homeBoundaries, owner);
+		super("IGLOO", "models/external/igloo/igloo.obj", true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 
@@ -44,7 +50,7 @@ public class RoadShrine extends SmallBuilding {
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner) {
 		try {
-			return new RoadShrine(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
+			return new Igloo(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
