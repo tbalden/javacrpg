@@ -130,6 +130,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.add( "K", KeyInput.KEY_K );
         if (!J3DCore.FREE_MOVEMENT) // if not debug set this
         	keyboard.add( "L", KeyInput.KEY_L );
+        addAdditionalCommands("L", new String[]{"torch"});
         keyboard.add( "M", KeyInput.KEY_M );
         keyboard.add( "N", KeyInput.KEY_N );
         keyboard.add( "O", KeyInput.KEY_O );

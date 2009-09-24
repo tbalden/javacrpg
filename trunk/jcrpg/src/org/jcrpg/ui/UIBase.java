@@ -38,9 +38,12 @@ public class UIBase {
 	
 	ClassicKeyboardLookHandler keyboardHandler = null;
 	
+	SimpleKeyEvents events; 
+	
 	public UIBase(J3DCore core) throws Exception
 	{
 		this.core = core;
+		events = new SimpleKeyEvents();
 		keyboardHandler = core.getKeyboardHandler();
 		hud = new HUD(new HUDParams(),this, core);
 		core.audioServer.addTrack(InputBase.SOUND_INPUTSELECTED, "./data/audio/sound/ui/input_selected.ogg");
@@ -81,7 +84,7 @@ public class UIBase {
 		windows.get(trigger).toggle();
 		return true;
 	}
-	public void handleEvent(String key)
+	public boolean handleEvent(String key)
 	{
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("uiBase: handleEvent "+key);
 		if (eventToElements.get(key)!=null)
@@ -91,10 +94,14 @@ public class UIBase {
 			{
 				if (activeWindows.contains(w))
 				{
-					if (((KeyListener)w).handleKey(key)) break;
+					if (((KeyListener)w).handleKey(key)) {
+						return true;
+					}
 				}
 			}
 		}
+		if ((activeWindows==null || activeWindows.size()==0) && events.handleKey(key)) return true;
+		return false;
 	}
 	public void addEventHandler(String key, KeyListener listener)
 	{

@@ -2175,6 +2175,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (coreFullyInitialized) {
 			reinitialized = true;
 		}
+		updatePlayerTorchLight();
 		coreFullyInitialized = true;
 	}
 
@@ -2455,6 +2456,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			playerLightNode.setLight(playerLight);
 			intRootNode.attachChild(playerLightNode);
 			internalLightState.attach(playerLight);
+			//extLightState.attach(playerLight);
 
 			PointLight dr2 = new PointLight();
 			dr2.setEnabled(true);
@@ -2689,8 +2691,30 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public J3DStandingEngine sEngine = null;
 
 	LightNode playerLightNode;
-	PointLight playerLight;
+	public PointLight playerLight;
 	protected boolean torchLightEffect = true;
+	
+	public void switchPlayerTorchLight()
+	{
+		gameState.player.theFragment.fragmentState.isLighting = !gameState.player.theFragment.fragmentState.isLighting;
+		updatePlayerTorchLight();
+	}
+	
+	public void updatePlayerTorchLight()
+	{
+		if (gameState.player.theFragment.fragmentState.isLighting)
+		{
+			extLightState.attach(playerLight);
+			encounterIntLightState.attach(playerLight);
+		} else
+		{
+			extLightState.detach(playerLight);
+			encounterIntLightState.detach(playerLight);
+		}
+		extRootNode.updateRenderState();
+		encounterExtRootNode.updateRenderState();
+		encounterIntRootNode.updateRenderState();
+	}
 
 	/**
 	 * If doing an gameState.engine-paused encounter mode this is with value
