@@ -34,6 +34,8 @@ Before next release:
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
+[X] torch button L
+
 [ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
 	[X] igloo
 	[ ] yeti

@@ -81,6 +81,7 @@ public class EntityFragments {
 		public class EntityFragmentState 
 		{
 			public boolean isCamping = false;
+			public boolean isLighting = false;
 		}
 		
 		/**

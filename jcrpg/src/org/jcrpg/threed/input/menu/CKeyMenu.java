@@ -39,25 +39,26 @@ public class CKeyMenu extends KeyInputAction{
 	public void performAction(InputActionEvent evt) {
 		handler.eventCatched = false;
 		String event = evt.getTriggerName();
-		callHandling(event);
+		if (callHandling(event)) return;
 		Set<String> a = handler.getAdditionalCommands(event);
 		if (a!=null)
 		{
 			for (String s:a)
 			{
-				callHandling(s);
+				if (callHandling(s)) return;
 			}
 		}
 	}
 	
-	private void callHandling(String event)
+	private boolean callHandling(String event)
 	{
 		if (handler.noToggleWindowByKey || !core.uiBase.handleWindowEvent(event))
 		{
-			core.uiBase.handleEvent(event);
+			return core.uiBase.handleEvent(event);
 			// handling additional commands for the event (because handler cannot bind one key to
 			// several commands...)
 		}
+		return false;
 	}
 	
 
