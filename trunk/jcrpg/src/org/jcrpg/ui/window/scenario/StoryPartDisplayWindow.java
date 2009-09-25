@@ -38,7 +38,7 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 	public ArrayList<Text> scrollingLines = new ArrayList<Text>();
 	public static int MAX_LINES_PER_BLOCK = 30;
 	
-	public static int MAX_LETTERS_PER_LINE = 70;
+	public static int MAX_LETTERS_PER_LINE = 60;
 	
 	TextButton nextWindow = null;
 	
