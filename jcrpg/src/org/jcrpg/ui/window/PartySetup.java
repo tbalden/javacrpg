@@ -103,6 +103,7 @@ public class PartySetup extends PagedInputWindow {
 	HashMap<String, ListSelect> skillSelects = new HashMap<String, ListSelect>();
 	TextLabel skillText;
 	ValueTuner skillValueTuner;
+	TextButton skillSet;
 	TextLabel skillPointsLeftLabel = null;
 	TextButton readyChar;
 	TextButton resetSkills;
@@ -317,6 +318,8 @@ public class PartySetup extends PagedInputWindow {
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,pageCreationSecond, 0.68f,0.25f,0.15f,0.04f,600f,0,0,100,1);
 	    	addInput(2,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);
+	    	skillSet = new TextButton("save",this,pageCreationSecond, 0.82f, 0.25f, 0.10f, 0.037f,800f,Language.v("partySetup.Set"));
+	    	addInput(2,skillSet);
 	    	
 	    	new TextLabel("",this,pageCreationSecond, 0.3f, 0.57f, 0.3f, 0.06f,600f,Language.v("partySetup.foreName")+":",false); 
 	    	foreName = new TextInputField("foreName",this,pageCreationSecond, 0.3f, 0.62f, 0.3f, 0.06f,600f,"",15,false);
@@ -581,6 +584,10 @@ public class PartySetup extends PagedInputWindow {
 		{
 			handleKey("back");
 			return true;
+		}
+		if (base.equals(skillSet))
+		{
+			inputUsed(skillValueTuner, "enter");
 		}
 		if (base.equals(resetSkills))
 		{
@@ -1078,18 +1085,30 @@ public class PartySetup extends PagedInputWindow {
 		} else
 		if (base.equals(skillValueTuner))
 		{
-			skillPointsLeft = backupSkillPointsLeft;
-			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
-			skillPointsLeftLabel.activate();
-			
-			Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
-			int level = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
-			
-			skillValueTuner.value = level;
-			skillValueTuner.setUpdated(true);
-			skillValueTuner.deactivate();
+			if (message.equals("lookDown")) return true; // going to Set button allowed
+			resetSkillPointLeft(); //..otherwise reset
+		} else
+		if (base.equals(skillSet))
+		{
+			if (message.equals("lookUp")) return true; // going back to skill value tuner allowed
+			resetSkillPointLeft(); // ...otherwise reset
 		}
 		return true;
+	}
+	
+	private void resetSkillPointLeft()
+	{
+		
+		skillPointsLeft = backupSkillPointsLeft;
+		skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+		skillPointsLeftLabel.activate();
+		
+		Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+		int level = personWithGenderAndRace.getMemberSkills().getSkillLevel(skill, null);
+		
+		skillValueTuner.value = level;
+		skillValueTuner.setUpdated(true);
+		skillValueTuner.deactivate();
 	}
 	
 	public void playVoiceType(AudioDescription desc)
