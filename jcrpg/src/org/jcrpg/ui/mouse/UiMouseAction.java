@@ -96,6 +96,7 @@ public class UiMouseAction extends MouseInputAction {
 	     				((ClassicInputHandler)J3DCore.getInstance().getInputHandler()).switchMouseLook();
 	     			}
 	     		} else
+	     		if (!MouseInput.get().isButtonDown(JME_RIGHT_BUTTON))
 	     		{
 	     			mouseLookSwitcherUp = true;
 	     		}

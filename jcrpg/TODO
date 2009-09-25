@@ -28,20 +28,24 @@ Journal window will be needed!
 	[?] friendly units shouldnt hide away from you?
 	[?] make perception work on greater distance than encounter distance?
 
+[ ] side types should include difficulty of climbing.
+
 ----
 Before next release:
 
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[X] torch button L
+
+
+[ ] weather -> snow shader to arctic?
 
 [ ] integrate new content, igloo/yeti, sanctuary, worpion, harpy
-	[X] igloo
-	[ ] yeti
-		pose is not good yet
-		
 	[ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
+
+	[X] igloo
+	[X] yeti
+		pose is not good yet
 	[X] sanctuary to roads somehow (if no other economy is present) (not in towns!)
 		[X] make it more random, take in account roads around. -> hashutil used for some slight displacement
 			[X] make generation not write in population zones!
@@ -63,6 +67,8 @@ Before next release:
 	[X] rolling should not divide but substract to let lucky things happen! KARMA in rollings??
 
 
+[X] torch button L
+[X] ant script to build a dist jar
 [X] humans attack, even being Peaceful! check EntityInstance liveTurn code!
 
 [X] climbing checks: refactoring of Cube - it should be able to tell possible movements - a CubeInterpreter - add all neighboring cubes in direction, calculate possibilities, return it.
