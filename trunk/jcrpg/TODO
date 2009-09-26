@@ -36,7 +36,10 @@ Before next release:
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
+[X]--> memory leaking again. high settins is enough - no shadow/no splatting - whats again? sounds? effects? buffers?
+	BufferPool type (Vec2List was used instead of FloatList ...)
 
+[ ] camera billboard update bug
 
 [ ] weather -> snow shader to arctic?
 

@@ -19,6 +19,8 @@
 package org.jcrpg.ui;
 
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
+import org.jcrpg.threed.jme.geometryinstancing.ExactBufferPool;
 
 public class SimpleKeyEvents implements KeyListener {
 
@@ -28,7 +30,13 @@ public class SimpleKeyEvents implements KeyListener {
 			J3DCore.getInstance().switchPlayerTorchLight();
 			return true;
 		}
-		/*if (key.equals("torch"))
+		if (key.equals("poolInfo"))
+		{
+			
+			System.out.println(BufferPool.getBufferInfo()+" "+ExactBufferPool.getBufferInfo());
+			J3DCore.getInstance().switchPoolInfo();
+			return true;
+		}		/*if (key.equals("torch"))
 		{
 			return true;
 		}*/

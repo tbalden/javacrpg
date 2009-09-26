@@ -107,7 +107,7 @@ public class TextLabel extends InputBase {
 			}
 			if (J3DCore.NATIVE_FONT_RENDER)
 			{
-				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				float scale = J3DCore.getInstance().getDisplay().getWidth()/textProportion/TEXT_PROP;
 				if (textText==null)
 				{
 					textText = createText(text);
@@ -122,7 +122,7 @@ public class TextLabel extends InputBase {
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, normalColor,outlineColor,centered);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				slottextNode.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/textProportion);
 				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				activeNode.attachChild(slottextNode);
 			}
@@ -155,7 +155,7 @@ public class TextLabel extends InputBase {
 			}
 			if (J3DCore.NATIVE_FONT_RENDER)
 			{
-				float scale = w.core.getDisplay().getWidth()/textProportion/TEXT_PROP;
+				float scale = J3DCore.getInstance().getDisplay().getWidth()/textProportion/TEXT_PROP;
 				if (textText==null)
 				{
 					textText = createText(text);
@@ -170,7 +170,7 @@ public class TextLabel extends InputBase {
 				Node slottextNode = FontUtils.textVerdana.createOutlinedText(text, DEF_FONT_SIZE, deactivatedColor, outlineColor,centered);
 				slottextNode.setLocalTranslation(dCenterX, dCenterY,0);
 				slottextNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
-				slottextNode.setLocalScale(w.core.getDisplay().getWidth()/textProportion);
+				slottextNode.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/textProportion);
 				currentTextNodes.put(slottextNode, FontUtils.textVerdana);
 				deactiveNode.attachChild(slottextNode);
 			}

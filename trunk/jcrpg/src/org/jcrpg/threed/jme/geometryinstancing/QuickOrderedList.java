@@ -131,5 +131,19 @@ public class QuickOrderedList {
 		return null;
 		
 	}
+	
+	public static void main(String[] arg)
+	{
+		QuickOrderedList l = new QuickOrderedList();
+		for (int i=0; i<1000; i++)
+		{
+//			l.addElement((i/2) +1, ""+i);
+			l.addElement(1000, ""+i);
+		}
+		for (int i=0; i<1000; i++)
+		{
+			if (l.removeElementWithEqualOrBiggerOrderingValue(1000)==null) System.out.println("ERROR!");
+		}
+	}
 
 }

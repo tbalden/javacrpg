@@ -141,6 +141,7 @@ public class ClassicKeyboardLookHandler  extends InputHandler {
         keyboard.add( "S", KeyInput.KEY_S );
         if (!J3DCore.FREE_MOVEMENT) // if not debug set this
         	keyboard.add( "T", KeyInput.KEY_T );
+        addAdditionalCommands("T", new String[]{"poolInfo"});
         keyboard.add( "U", KeyInput.KEY_U );
         keyboard.add( "V", KeyInput.KEY_V );
         keyboard.add( "W", KeyInput.KEY_W );
