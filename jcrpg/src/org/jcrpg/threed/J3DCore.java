@@ -55,6 +55,7 @@ import org.jcrpg.threed.jme.TrimeshGeometryBatch;
 import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
+import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
@@ -68,6 +69,7 @@ import org.jcrpg.ui.UIBase;
 import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.ui.window.BusyPaneWindow;
+import org.jcrpg.ui.window.InputWindow;
 import org.jcrpg.ui.window.LoadMenu;
 import org.jcrpg.ui.window.MainMenu;
 import org.jcrpg.ui.window.Map;
@@ -77,6 +79,8 @@ import org.jcrpg.ui.window.PlayerChoiceWindow;
 import org.jcrpg.ui.window.SaveMenu;
 import org.jcrpg.ui.window.debug.CacheStateInfo;
 import org.jcrpg.ui.window.element.ChoiceDescription;
+import org.jcrpg.ui.window.element.TextLabel;
+import org.jcrpg.ui.window.element.input.InputBase;
 import org.jcrpg.ui.window.interaction.BehaviorWindow;
 import org.jcrpg.ui.window.interaction.EncounterWindow;
 import org.jcrpg.ui.window.interaction.LockInspectionWindow;
@@ -1516,7 +1520,26 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static J3DCore getInstance() {
 		return self;
 	}
-
+	//public static Text bufferPoolInfo;
+	TextLabel label;
+	public void switchPoolInfo()
+	{
+		if (label==null)
+		{
+			label = new TextLabel("-", null, rootNode, 0.4f, 0.1f, 0.3f, 0.05f, 700, "", false);
+			label.baseNode.removeFromParent();
+		}
+		if (label.baseNode.getParent()==null)
+		{
+			rootNode.attachChild(label.baseNode);
+		} else
+		{
+			label.baseNode.removeFromParent();
+		}
+		BufferPool.listRemaining();
+	}
+	
+	
 	/**
 	 * The base movement method.
 	 * 
@@ -2893,7 +2916,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (gameState.engine.hasTimeChanged()) {
 			gameState.engine.setTimeChanged(false);
 			updateTimeRelated();
-
+			if (label!=null)
+			{
+				label.text = BufferPool.getShortBufferInfo() + "/"+sEngine.batchHelper.getCacheInfo();
+				label.activate();
+			}
 		}
 		// turn has come.
 		if (gameState.engine.turnComes()) {

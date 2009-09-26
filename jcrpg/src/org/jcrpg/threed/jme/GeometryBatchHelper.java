@@ -1160,4 +1160,25 @@ public class GeometryBatchHelper {
     	modelBatchMap.clear();
     	trimeshBatchMap.clear();    	
     }
+    
+    public String getCacheInfo()
+    {
+    	
+    	String ret = "TBx "+ trimeshBatchMap.size();
+    	ret+= " MBx" + modelBatchMap.size();
+    	int visCountT = 0;
+    	int notVisCountT = 0;
+    	for (TrimeshGeometryBatch b:trimeshBatchMap.values())
+    	{
+    		visCountT+=b.visible.size();
+    		notVisCountT+=b.notVisible.size();
+    	}
+    	for (ModelGeometryBatch b:modelBatchMap.values())
+    	{
+    		visCountT+=b.visible.size();
+    		notVisCountT+=b.notVisible.size();
+    	}
+    	return ret+" ("+visCountT+" / "+notVisCountT+")";
+    }
+    
 }

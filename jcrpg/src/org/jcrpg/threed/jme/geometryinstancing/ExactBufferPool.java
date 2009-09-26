@@ -20,6 +20,7 @@ package org.jcrpg.threed.jme.geometryinstancing;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import com.jme.util.geom.BufferUtils;
@@ -188,7 +189,7 @@ public class ExactBufferPool {
     public static FloatBuffer getFloatBuffer(int capacity)
     {
     	int key = (capacity);
-    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrderingValue(key);
+    	FloatBuffer buffer = (FloatBuffer)floatList.removeElementWithEqualOrderingValue(key);
     	if (buffer==null)
     	{
     		floatBuffCount++;
@@ -292,5 +293,14 @@ public class ExactBufferPool {
     	v2BuffCacheSize++;
     }
 
-    
+    public static String getBufferInfo()
+    {
+    	String ret = ""+new Date();
+    	ret = ret+" EBPOOL v2BuffCount = "+ v2BuffCount + " "+v2BuffCacheSize+ "\n";
+    	ret = ret+" v3BuffCount = "+ v3BuffCount + " "+v3BuffCacheSize+ "\n";
+    	ret = ret+" intBuffCount = "+ intBuffCount + " "+intBuffCacheSize+ "\n";
+    	ret = ret+" floatBuffCount = "+ floatBuffCount + " "+floatBuffCount+ "\n--\n";
+    	return ret;
+    }
+
 }

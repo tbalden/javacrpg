@@ -106,10 +106,10 @@ public abstract class InputBase implements Savable{
 		this.centerY = centerY;
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		dCenterX = w.core.getDisplay().getWidth()*(centerX);
-		dCenterY = w.core.getDisplay().getHeight()*(1f-centerY);
-		dSizeX =  w.core.getDisplay().getWidth()*(sizeX);
-		dSizeY =  w.core.getDisplay().getHeight()*(sizeY);
+		dCenterX = J3DCore.getInstance().getDisplay().getWidth()*(centerX);
+		dCenterY = J3DCore.getInstance().getDisplay().getHeight()*(1f-centerY);
+		dSizeX =  J3DCore.getInstance().getDisplay().getWidth()*(sizeX);
+		dSizeY =  J3DCore.getInstance().getDisplay().getHeight()*(sizeY);
 		dOrigoX = dCenterX-dSizeX/2;
 		dOrigoXCenter = dCenterX+dSizeX/2;
 		dOrigoY = dCenterY+dSizeY/2;
@@ -149,7 +149,7 @@ public abstract class InputBase implements Savable{
 	 */
 	public void activate()
 	{
-		w.inputActivated(this);
+		if (w!=null) w.inputActivated(this);
 		active = true;
 	}
 	/**

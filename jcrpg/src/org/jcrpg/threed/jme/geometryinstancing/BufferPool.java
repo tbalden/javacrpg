@@ -20,7 +20,9 @@ package org.jcrpg.threed.jme.geometryinstancing;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.jme.util.geom.BufferUtils;
 
@@ -49,6 +51,11 @@ public class BufferPool {
 
     private static final int DIVISOR = 500;
     private static final int MAX_SCAN = 100;
+    
+    private static int hitCount = 0;
+    private static int missCount = 0;
+    private static int getCount = 0;
+    private static int relCount = 0;
     
     public static IntBuffer getIntBuffer2(int capacity)
     {
@@ -232,18 +239,22 @@ public class BufferPool {
 		return buffer;
     }
 
-    public static FloatBuffer getFloatBuffer(int capacity)
+    public static FloatBuffer getFloatBuffer(Object parent, int capacity)
     {
+    	getCount++;
+    	parents.add(parent);
     	int key = (capacity/DIVISOR)+1;
-    	FloatBuffer buffer = (FloatBuffer)v2List.removeElementWithEqualOrBiggerOrderingValue(key);
+    	FloatBuffer buffer = (FloatBuffer)floatList.removeElementWithEqualOrBiggerOrderingValue(key);
     	if (buffer==null)
     	{
     		floatBuffCount++;
+    		missCount++;
     		buffer = BufferUtils.createFloatBuffer(key*DIVISOR);
     	} else
     	{
     		buffer.clear();
     		floatBuffCacheSize--;
+    		hitCount++;
     	}
 		buffer.limit(capacity);
 		buffer.rewind();
@@ -285,11 +296,15 @@ public class BufferPool {
     	floatBuffCacheSize++;
     	list.add(buff);
     }
+    
+    public static HashSet<Object> parents = new HashSet<Object>();
 
-    public static void releaseFloatBuffer(FloatBuffer buff)
+    public static void releaseFloatBuffer(Object parent, FloatBuffer buff)
     {
     	if (buff==null) return;
-    	int key = buff.capacity()/DIVISOR;
+    	parents.remove(parent);
+    	relCount++;
+       	int key = buff.capacity()/DIVISOR;
     	floatList.addElement(key, buff);
     	floatBuffCacheSize++;
     }
@@ -339,5 +354,31 @@ public class BufferPool {
     	v2BuffCacheSize++;
     }
 
+    public static String getBufferInfo()
+    {
+    	String ret = ""+new Date();
+    	ret = ret+" BPOOL v2BuffCount = "+ v2BuffCount + " "+v2BuffCacheSize+ "\n";
+    	ret = ret+" v3BuffCount = "+ v3BuffCount + " "+v3BuffCacheSize+ "\n";
+    	ret = ret+" intBuffCount = "+ intBuffCount + " "+intBuffCacheSize+ "\n";
+    	ret = ret+" floatBuffCount = "+ floatBuffCount + " "+floatBuffCount+ "\n--\n";
+    	return ret;
+    }
+    public static String getShortBufferInfo()
+    {
+    	String ret = ""+new Date();
+    	ret = ret+" BP v2 = "+ v2BuffCount + "/"+v2BuffCacheSize+" f "+floatBuffCount+ "/"+floatBuffCacheSize+" H/M "+hitCount+"/"+missCount+" G/R "+getCount+"/"+relCount;
+    	//hitCount = 0;
+    	//missCount = 0;
+    	return ret;
+    }
+    
+    public static void listRemaining()
+    {
+    	System.out.println("---------------------------------");
+    	for (Object o:parents)
+    	{
+    		System.out.println("-- "+o);
+    	}
+    }
     
 }

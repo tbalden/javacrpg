@@ -121,6 +121,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	 * @param veg
 	 */
 	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder, BillboardPartVegetation veg) {
+		super("ModelGeometryBatchBB "+m.id+" "+(idCounter++));
 		model = m;
 		this.core = core;
 		TriMesh mesh = null;
@@ -238,6 +239,8 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		Jcrpg.LOGGER.info("Shader reloaded...");
 	}
    
+   static int idCounter = 0;
+   
 	/**
 	 * 
 	 * @param core
@@ -245,6 +248,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 	 * @param placeHolder Initial placeholder.
 	 */
 	public ModelGeometryBatch(J3DCore core, Model m, NodePlaceholder placeHolder) {
+		super("ModelGeometryBatch "+m.id+" "+(idCounter++));
 		model = m;
 		this.core = core;
 		TriMesh mesh = null;

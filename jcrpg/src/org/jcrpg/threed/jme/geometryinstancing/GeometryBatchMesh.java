@@ -31,9 +31,9 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     private boolean commit = false;    
     public boolean reconstruct = false;
 	
-	public GeometryBatchMesh() {
-		init();
-    }
+	//public GeometryBatchMesh() {
+		//init();
+    //}
 	
 	public GeometryBatchMesh(String name) {
 		super(name);
@@ -281,10 +281,10 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     			return;
     		} else
     		{
-    			BufferPool.releaseFloatBuffer(buff);
+    			BufferPool.releaseFloatBuffer(name,buff);
     		}
     	}
-    	setColorBuffer(BufferPool.getFloatBuffer(getNumVertices() * 4));
+    	setColorBuffer(BufferPool.getFloatBuffer(name,getNumVertices() * 4));
     	//setColorBuffer(BufferUtils.createFloatBuffer  (getNumVertices() * 4));
 	}
     
@@ -359,7 +359,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
         batch.setVertexBuffer(null);
         BufferPool.releaseVector3Buffer(batch.getNormalBuffer());
         batch.setNormalBuffer(null);
-        BufferPool.releaseFloatBuffer(batch.getColorBuffer());
+        BufferPool.releaseFloatBuffer(name,batch.getColorBuffer());
         batch.setColorBuffer(null);
         
         ArrayList<TexCoords> textureBuffers = batch.getTextureCoords();
@@ -436,7 +436,7 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
 	        setVertexBuffer(null);
 	        BufferPool.releaseVector3Buffer(getNormalBuffer());
 	        setNormalBuffer(null);
-	        BufferPool.releaseFloatBuffer(getColorBuffer());
+	        BufferPool.releaseFloatBuffer(name,getColorBuffer());
 	        setColorBuffer(null);
 	        
 	        ArrayList<TexCoords> textureBuffers = getTextureCoords();

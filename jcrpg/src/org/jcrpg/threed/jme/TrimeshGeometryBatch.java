@@ -100,8 +100,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 	float startFog;
 	
 	static int instanceCounter = 0;
-	
+	static int idCounter = 0;
 	public TrimeshGeometryBatch(String id, J3DCore core, TriMesh trimesh, boolean internal, NodePlaceholder placeHolder) {
+		super("TrimeshGeometryBatch "+id+" "+placeHolder.model.id+" "+(idCounter++));
 		this.core = core;
 		setIsCollidable(false);
 		Node parentOrig = null;//sharedParentCache.get(id+internal);
