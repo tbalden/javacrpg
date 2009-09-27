@@ -1125,6 +1125,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public void updateTimeRelated() {
 		updateTimeRelated(true);
 	}
+	
+	public float[] cLightingColor = new float[3];
 
 	public void updateTimeRelated(boolean modifyLights) {
 
@@ -1286,6 +1288,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				}
 			}
 		}
+		cLightingColor[0] = vTotal[0] ;
+		cLightingColor[1] = vTotal[1] ;
+		cLightingColor[2] = vTotal[2] ;
 		/*if (ms!=null)
 		{
 			ms.setDiffuse(new ColorRGBA(vTotal[0] / 2.3f,
@@ -1779,7 +1784,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					if (i+result.difficulty<level+50) 
 					{
 						success = true;//break;
-						uiBase.hud.mainBox.addEntry("Success: "+HelperSkill.TAG_ESCAPING);
+						uiBase.hud.mainBox.addEntry("SUCCESS!  "+HelperSkill.TAG_ESCAPING+" ("+(i+result.difficulty)+" > "+(level+50)+")");
 					} else
 					{
 						uiBase.hud.mainBox.addEntry("Failure: "+HelperSkill.TAG_ESCAPING+" ("+(i+result.difficulty)+" > "+(level+50)+")");

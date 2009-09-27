@@ -53,10 +53,13 @@ import org.jcrpg.world.generator.WorldParamsConfigLoader;
 import org.jcrpg.world.generator.program.DefaultClassFactory;
 import org.jcrpg.world.generator.program.DefaultGenProgram;
 import org.jcrpg.world.place.World;
+import org.jcrpg.world.place.economic.residence.RoadShrine;
 import org.jcrpg.world.place.orbiter.WorldOrbiterHandler;
 import org.jcrpg.world.place.orbiter.moon.SimpleMoon;
 import org.jcrpg.world.place.orbiter.sun.SimpleSun;
 import org.jcrpg.world.time.Time;
+
+import com.jme.math.Vector3f;
 
 /**
  * Object for creating new / saving / loading game state.
@@ -133,6 +136,26 @@ public class SaveLoadNewGame {
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
+			
+			Vector3f closestShrineVector = new Vector3f();
+			Vector3f tmpVec = new Vector3f();
+			Vector3f tmpVec2 = new Vector3f(wX,wY,wZ);
+			float dist = 99999999;
+			for (RoadShrine sh:
+				world.economyContainer.roadNetwork.shrines)
+			{
+				tmpVec.set(sh.origoX, sh.origoY, sh.origoZ);
+				float dC = tmpVec.distance(tmpVec2);
+				if (dist>dC)
+				{
+					dist = dC;
+					closestShrineVector.set(tmpVec);
+				}
+			}
+			wX = (int)closestShrineVector.x;
+			wY = (int)closestShrineVector.y;
+			wZ = (int)closestShrineVector.z;
+			
 
 			//wX = world.realSizeX-1;///2+xDiff;
 			//wY = world.getSeaLevel(1)+4;//yDiff;
