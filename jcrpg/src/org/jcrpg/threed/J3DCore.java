@@ -2664,6 +2664,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		loadMenu = new LoadMenu(uiBase);
 		saveMenu = new SaveMenu(uiBase);
 		
+		
 		HashMap<String, String[]> busyImages = new HashMap<String, String[]>();
 		String[] loading = new String[] {"./data/ui/loading1.dds","./data/ui/busy/loading2.dds"};
 		busyImages.put(BusyPaneWindow.LOADING, loading);
@@ -2948,7 +2949,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 
 		// if (!swapUpdate)
-		if (!pause) {
+		if (!pause) 
+		{
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */
