@@ -34,21 +34,23 @@ Journal window will be needed!
 
 [ ] scorpoman and desert towns
 [ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
+[ ] grass color log(x)?
 
 ----
 Before next release:
 
 [ ] music volume level is wrong
-[ ] loading eats more and more memory
+[ ] first click on menu button switches on/off quickly - wrong!
+
+
+[X] loading eats more and more memory
+[-] lower memory consumption - at start it eats already 350M!? slowly crawling up, doing nothing at main menu?? what?
+[X] grass coloring ??
 
 [X] camera billboard update bug - related to GLOBAL_CAN_COMMIT set in j3dstanding engine - GeometryBatchMesh preCommit... -> extenders
 [X] mouselook stuck while moving - correcting it, how?
 
-[ ] start at closest Shrine?
-[ ] grass coloring ??
-
-[ ] lower memory consumption - at start it eats already 350M!? slowly crawling up, doing nothing at main menu?? what?
-
+[X] start at closest Shrine? - if not overriden by story
 
 [X]--> memory leaking again. high settins is enough - no shadow/no splatting - whats again? sounds? effects? buffers?
 	BufferPool type (Vec2List was used instead of FloatList ...)

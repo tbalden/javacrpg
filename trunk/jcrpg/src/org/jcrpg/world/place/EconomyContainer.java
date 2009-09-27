@@ -99,13 +99,9 @@ public class EconomyContainer {
 						key = Boundaries.getKey(worldX, worldY, worldZ);
 					}
 					Cube c = eco.getCube(key, worldX, worldY, worldZ, farView);
-					if (eco instanceof RoadShrine)
+					/*if (eco instanceof RoadShrine)
 					{
 						System.out.println("RENDERING CUBE OF ROADSHRINE... RESULT = "+eco+" - "+worldX+"/"+worldY+"/"+worldZ+" - "+c);
-					}
-					/*if (c!=null && c.internalEconomicUnitForFloraQuery!=null && c.internalEconomicUnitForFloraQuery instanceof EconomicGround)
-					{
-						System.out.println(c.canContainFlora);
 					}*/
 					
 					// storage object lookup...

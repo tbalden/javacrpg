@@ -448,7 +448,8 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 			
 			if (vertexShader && vp!=null && fp!=null) {
 				if (!internal) {
-					fp.setParameter(new float[]{core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
+					fp.setParameter(new float[]{core.cLightingColor[0],core.cLightingColor[1],core.cLightingColor[2],core.fs_external.getColor().a},0);
+							//core.fs_external.getColor().r,core.fs_external.getColor().g,core.fs_external.getColor().b,core.fs_external.getColor().a}, 0);
 				} else
 				{
 					fp.setParameter(new float[]{core.fs_internal.getColor().r,core.fs_internal.getColor().g,core.fs_internal.getColor().b,core.fs_internal.getColor().a}, 0);
