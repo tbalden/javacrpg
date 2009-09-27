@@ -113,9 +113,10 @@ public class OptionsMenu extends PagedInputWindow {
             header.setRenderState(base.hud.hudAS);
             pageFirst.attachChild(header);
 
-            SimpleLayout firstLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,3);
+            SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
             selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
+            selectPreset.focusUponMouseEnter = true;
             //selectPreset.setSelected(5); // TODO: custom is selected by default, but this will change
             addInput(0, selectPreset);
             firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);

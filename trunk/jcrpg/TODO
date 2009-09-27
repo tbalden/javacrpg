@@ -41,8 +41,12 @@ Before next release:
 [ ] music volume level is wrong
 [ ] loading eats more and more memory
 
-[ ] camera billboard update bug - related to GLOBAL_CAN_COMMIT set in j3dstanding engine - GeometryBatchMesh preCommit... -> extenders
-[ ] mouselook stuck while moving - correcting it, how?
+[X] camera billboard update bug - related to GLOBAL_CAN_COMMIT set in j3dstanding engine - GeometryBatchMesh preCommit... -> extenders
+[X] mouselook stuck while moving - correcting it, how?
+
+[ ] start at closest Shrine?
+[ ] grass coloring ??
+
 [ ] lower memory consumption - at start it eats already 350M!? slowly crawling up, doing nothing at main menu?? what?
 
 

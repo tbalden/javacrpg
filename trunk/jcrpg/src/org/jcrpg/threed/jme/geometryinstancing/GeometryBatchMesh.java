@@ -189,7 +189,8 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     	if (getCullHint() == CullHint.Always) {
     		return;
     	}
-    	if (GLOBAL_CAN_COMMIT) preCommit();
+    	if (GLOBAL_CAN_COMMIT || !reconstruct) // not reconstruct type changes are still allowed at everytime (even at rendering phase)
+    		preCommit();
     	super.onDraw(r);
     }
     
@@ -203,7 +204,8 @@ public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extend
     }
     
     public void draw(Renderer r) {
-    	if (GLOBAL_CAN_COMMIT) commit(this);
+    	if (GLOBAL_CAN_COMMIT || !reconstruct) // not reconstruct type changes are still allowed at everytime (even at rendering phase)
+    		commit(this);
     	super.draw(r);
     }
     

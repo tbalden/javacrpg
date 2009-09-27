@@ -21,6 +21,7 @@ package org.jcrpg.threed.input.action;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.ClassicKeyboardLookHandler;
 
+import com.jme.input.InputSystem;
 import com.jme.input.action.InputActionEvent;
 import com.jme.input.action.KeyInputAction;
 import com.jme.math.FastMath;
@@ -133,8 +134,8 @@ public abstract class CKeyAction extends KeyInputAction{
 			z += (1 / steps) * (steps - currentPercent) * from.z;
 
 			setCameraDirection(camera, x, y, z);
-			camera.normalize();
 			camera.update();
+			camera.normalize();
 		
             handler.core.updateDisplayCalmer(from);
 
@@ -417,6 +418,8 @@ public abstract class CKeyAction extends KeyInputAction{
             handler.core.updateTimeRelated();
             //InputSystem.update();
             //camera.update();
+            InputSystem.update();
+            handler.core.getClassicInputHandler().getMouseLookHandler().update(0.1f);
             handler.core.updateDisplayCalmer(from);
 
             long timePast = System.currentTimeMillis()-fromTime;

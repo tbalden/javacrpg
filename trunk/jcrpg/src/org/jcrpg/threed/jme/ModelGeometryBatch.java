@@ -43,6 +43,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
+import com.jme.scene.state.RenderState.StateType;
 import com.jme.system.DisplaySystem;
 import com.jme.system.JmeException;
 import com.jme.util.TextureManager;
@@ -138,10 +139,10 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (data==null || data.passNode==null)
 			{
 				parentOrig = new Node();
-				parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_TEXTURE));
+				parentOrig.setRenderState(mesh.getRenderState(StateType.Texture));
 				if (m.type == Model.PARTLYBILLBOARDMODEL) {
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
-					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+					parentOrig.setRenderState(mesh.getRenderState(StateType.Light));
 				}
 				//sharedParentCache.put(parentKey,parentOrig);
 			} else
