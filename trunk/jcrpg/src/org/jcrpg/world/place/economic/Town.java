@@ -15,6 +15,11 @@ public class Town {
 	public ArrayList<Population> subPopulations = new ArrayList<Population>();
 	public String foundationName = null;
 	
+
+	public Town()
+	{
+		//System.out.println("NEW TOWN");
+	}
 	
 	int[] retVal = null;
 
