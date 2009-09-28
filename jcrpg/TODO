@@ -35,14 +35,29 @@ Journal window will be needed!
 [ ] scorpoman and desert towns
 [ ] harpy / blood golem (check Downloads (2) version with pose!) - greek maze?
 [ ] grass color log(x)?
+[ ] feature idea: button to constantly walk. fo example "shift + dirKey"
 
 ----
 Before next release:
 
+[ ] too quick first click switch windows from top menu
+
+[?] Do Nothing is not working in combat - how to reproduce this?
+
+[ ] lag, mem problem - sound? after 3,4 fights, highest detail
+
+[ ] bloom/dof effect together doesnt seem to show on high viewdist., test
+[ ] check if sound theme sounds work
+
+[ ] add smooth turn/move of camera while in combat. if mouselook on, player should point camera - auto off! 
+
 [ ] music volume level is wrong
-[ ] first click on menu button switches on/off quickly - wrong!
 
 
+[X] Combat window - enemy list for not present player char. should be hidden
+[X] fix NoMusic crash: NPE: AudioServer l: 522 EncounterLogic l: 726
+[X] replace tooltip fonts with the more readable other font
+[-] default behavior skill settings should be done and shown on hud 
 [X] loading eats more and more memory
 [-] lower memory consumption - at start it eats already 350M!? slowly crawling up, doing nothing at main menu?? what?
 [X] grass coloring ??

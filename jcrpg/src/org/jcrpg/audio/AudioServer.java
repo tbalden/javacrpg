@@ -519,7 +519,8 @@ public class AudioServer implements Runnable {
 		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
 		if (id==null) return;
 		Channel c = getAvailableChannel();
-		c.unpauseMusicNeeded = true;
+		if (c!=null)
+			c.unpauseMusicNeeded = true;
 		ArrayList<Channel> pausedChannels = new ArrayList<Channel>();
 		for (Channel musicChannel:musicChannels)
 		{

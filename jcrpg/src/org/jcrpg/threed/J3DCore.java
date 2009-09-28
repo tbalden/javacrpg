@@ -137,6 +137,7 @@ import com.jme.scene.Spatial.CullHint;
 import com.jme.scene.Spatial.LightCombineMode;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.shape.Sphere.TextureMode;
 import com.jme.scene.state.BlendState;
 import com.jme.scene.state.CullState;
 import com.jme.scene.state.FogState;
@@ -2136,7 +2137,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				Texture.MinificationFilter.NearestNeighborLinearMipMap, Texture.MagnificationFilter.NearestNeighbor);
 
 		if (texture != null) {
-			skySphere.setTextureMode(Sphere.TEX_PROJECTED);
+			skySphere.setTextureMode(TextureMode.Projected);
 
 			//texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
 			//texture.setApply(Texture.AM_MODULATE);

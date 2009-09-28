@@ -44,6 +44,7 @@ import org.jcrpg.world.ai.DistanceBasedBoundary;
 import org.jcrpg.world.ai.Ecology;
 import org.jcrpg.world.ai.EcologyGenerator;
 import org.jcrpg.world.ai.PersistentMemberInstance;
+import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.MemberPerson;
 import org.jcrpg.world.ai.player.Party;
 import org.jcrpg.world.ai.player.PartyInstance;
@@ -111,6 +112,7 @@ public class SaveLoadNewGame {
 	
 			world.setOrbiterHandler(woh);
 	
+			HumanoidEntityDescription.bugger.clear();
 			EcologyGenerator eGen = new EcologyGenerator(new FileInputStream(s.ecology));
 			Ecology ecology = eGen.generateEcology(world);
 			
@@ -136,7 +138,7 @@ public class SaveLoadNewGame {
 			int wX = world.realSizeX/2+xDiff;
 			int wY = world.getSeaLevel(1)+yDiff;
 			int wZ = world.realSizeZ/2+zDiff;
-			
+
 			Vector3f closestShrineVector = new Vector3f();
 			Vector3f tmpVec = new Vector3f();
 			Vector3f tmpVec2 = new Vector3f(wX,wY,wZ);

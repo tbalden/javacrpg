@@ -239,7 +239,8 @@ public class TurnActWindow extends PagedInputWindow {
 		{	
 			if (i!=null && !i.isDead()) {
 				ListSelect select = skillSelectors.get(counter);
-				groupSelectors.get(counter).reattach();
+				inventorySelectors.get(counter).reattach();
+				validityBoxes.get(counter).reattach();
 				skillActFormSelectors.get(counter).reattach();
 				groupSelectors.get(counter).reattach();
 				select.reattach();
@@ -389,10 +390,22 @@ public class TurnActWindow extends PagedInputWindow {
 		if (currentPage==0)
 		{
 			getSelected().deactivate();
-			for (int i=0; i<skillSelectors.size();i++)
+			for (int i=0; i<numberOfChars;i++)
 			{
 				inputLeft(skillSelectors.get(i), "setup");
 			}
+		}
+		for (int i=numberOfChars; i<6; i++)
+		{
+			ListSelect select = skillSelectors.get(i);
+			select.detach();
+			select = groupSelectors.get(i);
+			select.detach();
+			select = skillActFormSelectors.get(i);
+			select.detach();
+			select = inventorySelectors.get(i);
+			select.detach();
+			
 		}
 	}
 	@Override

@@ -167,7 +167,7 @@ public abstract class Window {
 		private int lettersX, lettersY;
 		
 		Quad bgImage;
-		Text[] lines = null;
+		com.jme.scene.Text[] lines = null;
 		
 		public TooltipBox() throws Exception 
 		{
@@ -183,15 +183,15 @@ public abstract class Window {
 			
 			lettersX = (int)(ttXSizeRatio/fontSizeRatio);
 			lettersY = (int)(ttYSizeRatio/fontYSizeRatio);
-			lines = new Text[lettersY];
+			lines = new com.jme.scene.Text[lettersY];
 			for (int i=0; i<lines.length; i++)
 			{
-				lines[i] = Text.createDefaultTextLabel("tt_line"+i);
+				lines[i] = com.jme.scene.Text.createDefaultTextLabel("tt_line"+i);
 				lines[i].setCullHint(CullHint.Never );
 				lines[i].setTextureCombineMode( TextureCombineMode.Replace );
-				lines[i].setLocalTranslation(-1*(lettersX/2f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.5f)/2f) - i)*fontRealRowDispositionUnit,0);
+				lines[i].setLocalTranslation(-1*(lettersX/1.95f) * fontRealColumnDispositionUnit, (+1*((lettersY-1.5f)/2f) - i)*fontRealRowDispositionUnit,0);
 				//lines[i].setLocalScale(0.8f);
-				lines[i].setLocalScale(width/1024f * 0.8f);
+				lines[i].setLocalScale(width/1024f * 0.89f);
 				ttTextBaseNode.attachChild(lines[i]);
 			}
 			

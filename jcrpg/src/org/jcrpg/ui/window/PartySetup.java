@@ -953,7 +953,12 @@ public class PartySetup extends PagedInputWindow {
 			ScenarioDescription d = (ScenarioDescription)scenarioSelect.getSelectedObject();
 			try{d.seed = Integer.parseInt((String)seedSelect.getSelectedObject());} catch (Exception ex){}
 			SaveLoadNewGame.newGame(core,charactersOfParty,charCreationRule, d);
-			core.init3DGame();
+			try {
+				core.init3DGame();
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 			core.getClassicInputHandler().enableMouse(true);
 			core.uiBase.hud.characters.update();
 			core.uiBase.hud.characters.show();
