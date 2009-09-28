@@ -40,20 +40,18 @@ Journal window will be needed!
 ----
 Before next release:
 
-[ ] too quick first click switch windows from top menu
 
-[?] Do Nothing is not working in combat - how to reproduce this?
 
-[ ] lag, mem problem - sound? after 3,4 fights, highest detail
-
-[ ] bloom/dof effect together doesnt seem to show on high viewdist., test
 [ ] check if sound theme sounds work
-
 [ ] add smooth turn/move of camera while in combat. if mouselook on, player should point camera - auto off! 
-
+[ ] lag, mem problem - sound? after 3,4 fights, highest detail
+[ ] bloom/dof effect together doesnt seem to show on high viewdist., test
 [ ] music volume level is wrong
 
 
+[?] Do Nothing is not working in combat - how to reproduce this?
+
+[X] too quick first click switch windows from top menu
 [X] Combat window - enemy list for not present player char. should be hidden
 [X] fix NoMusic crash: NPE: AudioServer l: 522 EncounterLogic l: 726
 [X] replace tooltip fonts with the more readable other font

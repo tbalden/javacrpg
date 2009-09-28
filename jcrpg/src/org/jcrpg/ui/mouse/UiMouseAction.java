@@ -82,7 +82,7 @@ public class UiMouseAction extends MouseInputAction {
 	     			// no mouse look, no window, check for secondary elements of HUD
 		    		if (secondaryFocusNode!=null && secondaryFocusNode.getParent()!=null)
 		    		{
-		    			if (!mousePick(secondaryFocusNode,lastMouseEvent))
+		    			if (!mousePick(secondaryFocusNode,lastMouseEventSecondary))
 		    			{
 		    				return;
 		    			}
