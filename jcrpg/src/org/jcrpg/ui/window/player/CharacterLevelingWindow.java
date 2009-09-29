@@ -75,6 +75,7 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 
 	TextLabel skillText;
 	ValueTuner skillValueTuner;
+	TextButton skillSet;
 	TextLabel skillPointsLeftLabel = null;
 	
 	// which skillgroup was used to enter modification ValueTuner
@@ -168,7 +169,9 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	    	skillValueTuner = new ValueTuner("skill_tuner",this,page0, 0.68f,0.7f,0.15f,0.04f,600f,0,0,100,1);
 	    	addInput(0,skillValueTuner);
 	    	skillValueTuner.setEnabled(false);
-	    	
+	    	skillSet = new TextButton("save",this,page0, 0.83f, 0.7f, 0.10f, 0.037f,800f,Language.v("partySetup.Set"));
+	    	addInput(0,skillSet);
+
 	    	//addInput(0,professionSelect); // TODO multi-profession?
 	    	
 	    	finishedButton = new TextButton("ready",this,page0, 0.70f, 0.8f, 0.2f, 0.07f,400f,Language.v("partySetup.ready"));
@@ -329,16 +332,27 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 	{
 		if (base.equals(skillValueTuner))
 		{
-			skillPointsLeft = backupSkillPointsLeft;
-			skillPointsLeftLabel.text = skillPointsLeft + " points left.";
-			skillPointsLeftLabel.activate();
-			
-			Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
-			skillValueTuner.value = member.getSkillLevel(skill);
-			skillValueTuner.setUpdated(true);
-			skillValueTuner.deactivate();
+			if (message.equals("lookDown")) return true; // going to Set button allowed
+			resetSkillPointLeft(); //..otherwise reset
+		} else
+		if (base.equals(skillSet))
+		{
+			if (message.equals("lookUp")) return true; // going back to skill value tuner allowed
+			resetSkillPointLeft(); // ...otherwise reset
 		}
 		return true;		
+	}
+	
+	private void resetSkillPointLeft()
+	{
+		skillPointsLeft = backupSkillPointsLeft;
+		skillPointsLeftLabel.text = skillPointsLeft + " points left.";
+		skillPointsLeftLabel.activate();
+		
+		Class<? extends SkillBase> skill = (Class<? extends SkillBase>)skillValueTuner.tunedObject;
+		skillValueTuner.value = member.getSkillLevel(skill);
+		skillValueTuner.setUpdated(true);
+		skillValueTuner.deactivate();
 	}
 	
 	@Override
@@ -350,6 +364,10 @@ public class CharacterLevelingWindow extends PagedInputWindow {
 				toggle();
 			}
 			return true;
+		}
+		if (base.equals(skillSet))
+		{
+			inputUsed(skillValueTuner, "enter");
 		}
 		if (base.equals(skillValueTuner))
 		{

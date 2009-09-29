@@ -37,18 +37,26 @@ Journal window will be needed!
 [ ] grass color log(x)?
 [ ] feature idea: button to constantly walk. fo example "shift + dirKey"
 
+[ ] try replace jme-audio bug for short sounds with own old patch
+
 ----
 Before next release:
 
 
 
-[ ] check if sound theme sounds work
-[ ] add smooth turn/move of camera while in combat. if mouselook on, player should point camera - auto off! 
-[ ] lag, mem problem - sound? after 3,4 fights, highest detail
+
+[ ] add smooth turn/move of camera while in combat. 
+	[X] if mouselook on, player should point camera - auto off! 
+	[ ] highlight acting rendered unit form in combat?
+	
+[ ] lag, mem problem - sound? after 3,4 fights, highest detail - test AnimatedModel loading freeing
+
 [ ] bloom/dof effect together doesnt seem to show on high viewdist., test
+
 [ ] music volume level is wrong
 
 
+[X] check if sound theme sounds work - jme-audio short sound bug. replacing with old jme audio jar for now
 [?] Do Nothing is not working in combat - how to reproduce this?
 
 [X] too quick first click switch windows from top menu
