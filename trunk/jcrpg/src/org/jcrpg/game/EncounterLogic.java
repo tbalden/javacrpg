@@ -374,6 +374,7 @@ public class EncounterLogic {
 	
 	private void turnCameraToUnit(EncounterUnitData data, boolean reset)
 	{
+		if (J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled()) return;
 		if (reset) resetCamera();
 		try 
 		{
@@ -396,6 +397,7 @@ public class EncounterLogic {
 	
 	private void resetCamera()
 	{
+		if (J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled()) return;
 		gameLogic.core.setCalculatedCameraLocation();
 		if (encounterRoundState!=null && encounterRoundState.encounter!=null)
 		{
