@@ -50,7 +50,7 @@ import com.jme.util.TextureManager;
 
 public class Map extends InputWindow {
 
-	WorldMap wmap;
+	public WorldMap wmap;
 	
 	TextButton closeWindow;
 	

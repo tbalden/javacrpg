@@ -80,6 +80,15 @@ public class GameLogic implements InitCallbackObject {
 		J3DCore.getInstance().mEngine.render(forms);
 	}
 	
+	public void clear()
+	{
+		world = null;
+		engine = null;
+		player = null;
+		encounterLogic = null;
+		
+	}
+	
 	
 	
 	public void newEncounterPhase(EncounterInfo possibleEncounter, int startingPhase, boolean playerInitiated)

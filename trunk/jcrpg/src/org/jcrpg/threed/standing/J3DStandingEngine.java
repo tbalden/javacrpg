@@ -1843,6 +1843,7 @@ public class J3DStandingEngine {
 		    				n.farView = false;
 		    	    	}
 		    		}
+		    		c.clear();
 				}
 			}
 			
@@ -2280,15 +2281,18 @@ public class J3DStandingEngine {
 	
 	public void clearAll()
 	{
+		world = null;
+		
 		hmCurrentCubes.clear();
 		hmCurrentCubes_FARVIEW.clear();
+		hmCurrentCubesForSafeRender.clear();
 		alCurrentCubes.clear();
 		alCurrentCubes_FARVIEW.clear();
 		inFarViewPort.clear();
 		inViewPort.clear();
 		outOfViewPort.clear();
 		outOfFarViewPort.clear();
-		renderedArea.clear();
+		conditionalNodes.clear();
 	}
 	
 	public void switchOn(boolean on)

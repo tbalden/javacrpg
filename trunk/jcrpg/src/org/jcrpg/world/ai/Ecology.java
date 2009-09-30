@@ -639,7 +639,13 @@ public class Ecology {
 	
 	public void clearAll()
 	{
+		for (EntityInstance i:beings.values())
+		{
+			i.clear();
+		}
 		beings.clear();
+		orderedBeingList.clear();
+		locators.clear();
 	}
 	
 	public void gameLost()

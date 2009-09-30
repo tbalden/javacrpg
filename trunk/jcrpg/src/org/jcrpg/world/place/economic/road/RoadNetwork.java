@@ -50,6 +50,16 @@ public class RoadNetwork extends Economic implements FlowGeography {
 	
 	transient Boundaries boundaries;
 	
+	public void clearAll()
+	{
+		connections.clear();
+		for (Economic e:shrines)
+		{
+			e.clear();
+		}
+		shrines.clear();
+	}
+	
 	public RoadNetwork(String id, EconomyContainer container,int worldGroundLevel, int magnification, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ) throws Exception
 	{
 		super(id,null, container.w,null, null,null);

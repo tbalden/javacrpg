@@ -44,23 +44,23 @@ Before next release:
 
 [ ] integrate Ducorps (scorpoduc? :))
 	[ ] housing
-[ ] integrate new sound set by q
 
 [ ] add smooth turn/move of camera while in combat. 
 	[X] if mouselook on, player should point camera - auto off! 
 	[ ] highlight acting rendered unit form in combat?
 	
-[ ] starting two games consequently in one session - very laggy -> [X] bufferPool not cleared???
-	[ ] crash, heap not enough -> check whats not cleared in heap, Highest settings
-	
 [ ] lag, mem problem - sound? after 3,4 fights, highest detail - test AnimatedModel loading freeing
-	--> loading animated models mem? look into loading part
+	 --> loading animated models mem? look into loading part 
 
 [ ] bloom/dof effect together doesnt seem to show on high viewdist., test
 
 [ ] music volume level is wrong
 
 
+[X] integrate new sound set by q
+[X] starting two games consequently in one session - very laggy -> [X] bufferPool not cleared???
+	[x] crash, heap not enough -> check whats not cleared in heap, Highest settings-- memory reference problems resolved. World instance is being cleared now, hashmaps too.
+	
 [X] check if sound theme sounds work - jme-audio short sound bug. replacing with old jme audio jar for now
 [?] Do Nothing is not working in combat - how to reproduce this?
 

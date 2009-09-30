@@ -146,6 +146,14 @@ public class Geography extends Place implements Surface {
 		quickCubeHeightCache.clear();
 	}
 	
+	public void clear()
+	{
+		super.clear();
+		w = null;
+		quickCubeHeightCache.clear();
+		parent = null;
+	}
+	
 	public transient HashMap<Long, float[]> quickCubeKindCache = new HashMap<Long, float[]>();
 	
 	public static HashMap<Integer, Cube> hmKindCube = new HashMap<Integer, Cube>();

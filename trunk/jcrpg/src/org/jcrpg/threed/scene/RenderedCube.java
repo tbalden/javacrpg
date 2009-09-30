@@ -43,5 +43,15 @@ public class RenderedCube {
 	
 	public HashMap<Side, NodePlaceholder[]> hmNodePlaceholderForSide = new HashMap<Side, NodePlaceholder[]>();
 	
-	
+	public void clear()
+	{
+		for (NodePlaceholder node:hsRenderedNodes)
+		{
+			node.clear();
+		}
+		hsRenderedNodes.clear();
+		hmNodePlaceholderForSide.clear();
+		world = null;
+		cube = null;
+	}
 }

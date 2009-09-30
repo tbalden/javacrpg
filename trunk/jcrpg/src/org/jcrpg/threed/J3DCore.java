@@ -2218,6 +2218,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			if (encounterMode) {
 				switchEncounterMode(false);
 			}
+			gameState.world.worldMap.world = null;
+			worldMap.wmap = null;
+			uiBase.hud.localMap.world = null;
+			
+			
 			/*orbiters3D.clear();
 			orbitersLight3D.clear();*/ // TODO clear this, and see why lightstates are messed up when reloading 2x
 			gameState.getNormalPositions().insideArea = false;
@@ -2228,7 +2233,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			modelPool.cleanAll();
 			hmSolidColorSpatials.clear();
 			sEngine.clearAll();
+			eEngine.clearAll();
 			mEngine.clearAll();
+			renderedArea.clear();
+			renderedEncounterArea.clear();
 			extRootNode.detachAllChildren();
 			intRootNode.detachAllChildren();
 			extWaterRefNode.detachAllChildren();
@@ -2249,6 +2257,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			skySphere.removeFromParent();
 			rootNode.updateRenderState();
 			gameState.clearAll();
+			
+			Engine e = gameState.engine;
+			
+			gameState = new GameStateContainer();
+			gameState.setEngine(e);
+			
 		}
 	}
 
@@ -2914,46 +2928,49 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 
 
-		if (gameState.gameLogic != null) {
-			gameState.gameLogic.encounterLogic.checkEncounterCallbackNeed();
-			gameState.gameLogic.encounterLogic.checkTurnActCallbackNeed();
-		}
-
-		// time changed, updating lights, orbiters
-		if (gameState.engine.hasTimeChanged()) {
-			gameState.engine.setTimeChanged(false);
-			updateTimeRelated();
-			if (label!=null)
-			{
-				label.text = BufferPool.getShortBufferInfo() + "/"+sEngine.batchHelper.getCacheInfo();
-				label.activate();
+		if (gameState!=null && gameState.world!=null)
+		{
+			if (gameState.gameLogic != null) {
+				gameState.gameLogic.encounterLogic.checkEncounterCallbackNeed();
+				gameState.gameLogic.encounterLogic.checkTurnActCallbackNeed();
+			}
+	
+			// time changed, updating lights, orbiters
+			if (gameState.engine.hasTimeChanged()) {
+				gameState.engine.setTimeChanged(false);
+				updateTimeRelated();
+				if (label!=null)
+				{
+					label.text = BufferPool.getShortBufferInfo() + "/"+sEngine.batchHelper.getCacheInfo();
+					label.activate();
+				}
+			}
+			// turn has come.
+			if (gameState.engine.turnComes()) {
+				pause = true;
+				gameState.ecology.doTurn();
+				gameState.engine.turnFinishedForAI();
+				pause = false;
+				tpf = 0;
+			} else if (gameState.engine.checkEconomyUpdateNeeded()) {
+				pause = true;
+				busyPane.setToType(BusyPaneWindow.ECONOMY,"Economy update...");
+				busyPane.show();
+				gameState.doEconomyUpdate();
+				//busyPane.hide();
+				pause = false;
+				tpf = 0;
+			} else if (!gameState.engine.isPause()) {
+				gameState.checkAndDoLeveling();
+			}
+	
+			// game-logic independent environmental update (sounds etc.)
+			if (gameState.engine.isEnvironmentUpdateNeeded()) {
+				gameState.engine.environemntUpdateDone();
+				gameState.doEnvironmental();
 			}
 		}
-		// turn has come.
-		if (gameState.engine.turnComes()) {
-			pause = true;
-			gameState.ecology.doTurn();
-			gameState.engine.turnFinishedForAI();
-			pause = false;
-			tpf = 0;
-		} else if (gameState.engine.checkEconomyUpdateNeeded()) {
-			pause = true;
-			busyPane.setToType(BusyPaneWindow.ECONOMY,"Economy update...");
-			busyPane.show();
-			gameState.doEconomyUpdate();
-			//busyPane.hide();
-			pause = false;
-			tpf = 0;
-		} else if (!gameState.engine.isPause()) {
-			gameState.checkAndDoLeveling();
-		}
-
-		// game-logic independent environmental update (sounds etc.)
-		if (gameState.engine.isEnvironmentUpdateNeeded()) {
-			gameState.engine.environemntUpdateDone();
-			gameState.doEnvironmental();
-		}
-
+		
 		// if (!swapUpdate)
 		if (!pause) 
 		{

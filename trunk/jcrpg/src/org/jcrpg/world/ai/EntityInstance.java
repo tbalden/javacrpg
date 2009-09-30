@@ -111,6 +111,12 @@ public class EntityInstance {
 	public World world;
 	public Ecology ecology;
 	
+	public void clear()
+	{
+		world = null;
+		ecology = null;
+	}
+	
 	/**
 	 * The independently roaming fragments object of this instance.
 	 */
