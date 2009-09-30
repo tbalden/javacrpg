@@ -33,11 +33,6 @@ import org.jcrpg.world.place.World;
 
 public abstract class AbstractInfrastructure {
 
-	/**
-	 * Minimum size mapped to the next array of infrastructure elements.
-	 */
-	public transient HashMap<Integer, ArrayList<InfrastructureElementParameters>> sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
-
 	public int currentSize = 0;
 	public int maxSize = -1;
 	public int centerX = -1;
@@ -72,7 +67,6 @@ public abstract class AbstractInfrastructure {
 	 */
 	public void onLoad()
 	{
-		sizeDrivenBuildProgram = new HashMap<Integer,ArrayList<InfrastructureElementParameters>>();
 		checkerToUnavailableBlocksMap = new HashMap<Class<? extends InfrastructureBlockChecker>, boolean[]>();
 		lastUpdatedInhabitantNumber=-1;
 		buildProgram();
@@ -99,7 +93,7 @@ public abstract class AbstractInfrastructure {
 			population.clear();
 			lastUpdatedInhabitantNumber = newNumber;
 			savedInhabitantNumber = newNumber;
-			ArrayList<InfrastructureElementParameters> toBuild = sizeDrivenBuildProgram.get(newNumber);
+			ArrayList<InfrastructureElementParameters> toBuild = getBuildProgramForSize(newNumber);
 			if (toBuild!=null) {
 				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.update: TO BUILD SIZE = "+toBuild.size()+" "+toBuild);
 
@@ -109,6 +103,12 @@ public abstract class AbstractInfrastructure {
 				}
 			}
 		}
+	}
+	
+	public ArrayList<InfrastructureElementParameters> getBuildProgramForSize(int i)
+	{
+		ArrayList<InfrastructureElementParameters> list = buildProgramLevel(i, fixProperties, residenceTypes, groundTypes);
+		return list;
 	}
 	
 	/**
@@ -141,6 +141,10 @@ public abstract class AbstractInfrastructure {
 		}
 	}
 	
+	transient ArrayList<Class<?extends Residence>> residenceTypes = null;
+	transient ArrayList<Class<?extends EconomicGround>> groundTypes = null;
+	transient ArrayList<InfrastructureElementParameters> fixProperties = null;
+	
 	/**
 	 * the program generation.
 	 */
@@ -148,9 +152,9 @@ public abstract class AbstractInfrastructure {
 	{
 		
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: soilGeo="+population.soilGeo);
-		ArrayList<Class<?extends Residence>> residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
+		residenceTypes = population.owner.description.economyTemplate.residenceTypes.get(population.soilGeo.getClass());
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: res: "+residenceTypes);
-		ArrayList<Class<?extends EconomicGround>> groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
+		groundTypes = population.owner.description.economyTemplate.groundTypes.get(population.soilGeo.getClass());
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("AbstractInfrastructure.buildProgram: ground: "+groundTypes);
 		// base parts
 		{
@@ -183,7 +187,7 @@ public abstract class AbstractInfrastructure {
 		createUnavailableBlocksArray();
 		
 		// collecting fix properties of fix NPCs of entityInstance
-		ArrayList<InfrastructureElementParameters> fixProperties = new ArrayList<InfrastructureElementParameters>();
+		fixProperties = new ArrayList<InfrastructureElementParameters>();
 		for (PersistentMemberInstance i:population.owner.fixMembers.values())
 		{
 			if (i.getOwnedInfrastructures()!=null)
@@ -196,13 +200,13 @@ public abstract class AbstractInfrastructure {
 		
 		prepareBuildProgram(fixProperties, residenceTypes, groundTypes);
 		
-		for (int i=0; i<maxInhabitantPerBlock*maxBlocks; i+=INHABITANTS_PER_UPDATE)
+		/*for (int i=0; i<maxInhabitantPerBlock*maxBlocks; i+=INHABITANTS_PER_UPDATE)
 		{
 			ArrayList<InfrastructureElementParameters> list = buildProgramLevel(i, fixProperties, residenceTypes, groundTypes);
 			
 			//Jcrpg.LOGGER.finer.println("adding program part to "+i+" -> "+sizeDrivenBuildProgram+" "+list);
 			sizeDrivenBuildProgram.put(i, list);		
-		}
+		}*/
 		
 	}
 

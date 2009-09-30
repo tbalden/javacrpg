@@ -79,7 +79,8 @@ public class SaveLoadNewGame {
 			core.busyPane.setToType(BusyPaneWindow.LOADING,"Creating World...");
 			core.busyPane.show();
 			core.updateDisplay(null);
-			
+			System.gc();
+
 			core.gameLost = false;	
 			
 			GameStateContainer gameState = new GameStateContainer();
@@ -274,6 +275,7 @@ public class SaveLoadNewGame {
 			core.busyPane.setToType(BusyPaneWindow.LOADING,"Loading...");
 			core.busyPane.show();
 			core.updateDisplay(null);
+			System.gc();
 			
 			if (core.engineThread!=null)
 			{
