@@ -126,6 +126,7 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 		{
 			Text t = Text.createDefaultTextLabel("demo_line_"+i);
 			t.setLocalTranslation(0.15f * width, height - i* height*0.05f, 0f);
+			t.setLocalScale(500f/width);
 			scrollingLines.add(t);
 			scrollNode.attachChild(t);
 			scrollNode.texts.add(t);
