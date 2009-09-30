@@ -18,38 +18,23 @@
 
 package org.jcrpg.world.ai.audio.desc;
 
-import java.util.ArrayList;
-
 import org.jcrpg.world.ai.AudioDescription;
 
-/**
- * The list to be appended with the voice packages for characters.
- * @author illes
- *
- */
-public class VoiceList {
-	
-	public static VoiceList male = new VoiceList();
-	public static VoiceList female = new VoiceList();
-	
-	static
-	{
-		male.addVoice(new MaleNeutral1());
-		male.addVoice(new MaleNeutral2());
-		male.addVoice(new MaleNeutral3());
-		male.addVoice(new MaleCheerful1());
-		female.addVoice(new FemaleNeutral1());
-	}
-	
-	public ArrayList<AudioDescription> list = new ArrayList<AudioDescription>();
-	
-	public VoiceList()
-	{
-	}
-	public void addVoice(AudioDescription desc)
-	{
-		list.add(desc);
-	}
-	
+public class MaleNeutral3 extends AudioDescription {
 
+	public MaleNeutral3()
+	{
+		formattedName = "Enervated";
+		String base = "humanoid/male_neutral3/";
+		ATTACK = new String[]{base+"die-01",base+"die-02",base+"ha-01",base+"ha-02",base+"ha-03",base+"ha-04",base+"ha-05",base+"ha-06",base+"takethat-01"};
+		PAIN = new String[]{base+"ouch-01",base+"ouch-02",base+"ouch-03",base+"ouch-04",base+"ouch-05",base+"ouch-06"};
+		JOY = new String[]{base+"yes-01",base+"yes-02",base+"yes-03"};
+		DEATH = new String[]{base+"pain-03"};
+		ENCOUNTER = new String[]{base+"greetings-01"};
+		LEVELING = new String[] {base+"igrowstronger-01",base+"ihavelearnedmuch-01"};
+		TIRED = new String[] {base+"ineedabed-01",base+"ineedabed-02"};
+		BRUISED = new String[] {base+"imdying-01"};		
+		
+	}
+	
 }
