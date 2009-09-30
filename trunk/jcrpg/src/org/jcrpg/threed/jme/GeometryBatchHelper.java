@@ -1157,6 +1157,16 @@ public class GeometryBatchHelper {
      */
     public void clearAll()    
     {
+    	for (ModelGeometryBatch b:modelBatchMap.values())
+    	{
+    		b.releaseBuffersOnCleanUp();
+   			b.clearAll();
+    	}
+    	for (TrimeshGeometryBatch b:trimeshBatchMap.values())
+    	{
+    		b.releaseBuffersOnCleanUp();
+   			b.clearAll();
+    	}
     	modelBatchMap.clear();
     	trimeshBatchMap.clear();    	
     }
