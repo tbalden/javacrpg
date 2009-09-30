@@ -56,7 +56,21 @@ public abstract class Population extends Economic{
 		placeNeedsToBeEnteredForEncounter = true;
 	}
 	
+	@Override
 	public void clear()
+	{
+		super.clear();
+		for (Residence r:residenceList)
+		{
+			r.clear();
+		}
+		for (EconomicGround r:groundList)
+		{
+			r.clear();
+		}
+		boundaries.clear();
+	}
+	public void clearDataOnUpdate()
 	{
 		((World)getRoot()).economyContainer.treeLocator.removeAllOfAnObject(this); // we should remove this from treelocator to avoid messing up surface levels of geo.
 		for (Residence r:residenceList)

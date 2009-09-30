@@ -277,6 +277,12 @@ public class GeoTileLoader {
 	
 	public static class NeighborCubeData
 	{
+		public void clear()
+		{
+			opposite = null;
+			adjacent = null;
+			oppAdj = null;
+		}
 		public boolean wereNeigboursNotFullyDetected;
 		public RenderedCube opposite;
 		public RenderedCube adjacent;

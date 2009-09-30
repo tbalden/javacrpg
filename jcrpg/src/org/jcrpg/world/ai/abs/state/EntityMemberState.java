@@ -33,7 +33,7 @@ import org.jcrpg.world.time.Time;
 public class EntityMemberState {
 
 	// set this to true if you want to prevent persistentMembers from point changes.
-	static boolean cheatNPC = false;
+	static boolean cheatNPC = true;
 
 	
 	public static int DEFAULT_HEALTH_POINT = 10;
@@ -102,6 +102,9 @@ public class EntityMemberState {
 			sanityPoint=Math.min(sanityPoint+unit.getSanityPoint(),maxSanityPoint);
 			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("SANITY POINT AFTER : "+sanityPoint);
 			manaPoint=Math.min(manaPoint+unit.getManaPoint(),maxManaPoint);
+		} else
+		{
+			staminaPoint=Math.min(staminaPoint+unit.getStaminaPoint(),maxStaminaPoint);
 		}
 		for (StateEffect effect:unit.stateEffects)
 		{

@@ -118,5 +118,13 @@ public class NodePlaceholder {
 		userData.put(key, data);
 	}
 	
-	
+	public void clear()
+	{
+		cube = null;
+		unit = null;
+		if (multiBatchInstance!=null) multiBatchInstance.clear();
+		modelGeomBatchInstance = null;
+		trimeshGeomBatchInstance = null;
+		if (neighborCubeData!=null) neighborCubeData.clear();
+	}
 }

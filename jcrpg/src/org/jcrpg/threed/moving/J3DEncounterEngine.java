@@ -61,6 +61,13 @@ public class J3DEncounterEngine extends J3DStandingEngine {
 		fragmentedViewDivider = 2;
 		
 	}
+	@Override
+	public void clearAll()
+	{
+		super.clearAll();
+		fallbackWorld = null;
+	}
+	
 	transient HashMap<String, World> encounterGroundWorlds = new HashMap<String, World>();
 	
 	public World getEncounterGroundWorld(Cube c, CubeClimateConditions ccc, Geography geo, EconomicGround ground, Residence house, String specialType) throws Exception

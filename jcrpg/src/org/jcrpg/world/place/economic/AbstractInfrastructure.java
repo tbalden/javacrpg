@@ -90,7 +90,7 @@ public abstract class AbstractInfrastructure {
 		// if loading, used the saved number instead of the actual number (which will be only used when a real new economy turn will come)
 		int newNumber = loading?savedInhabitantNumber:getNearestSizeProgramCount(population.getNumberOfInhabitants());
 		if (newNumber!=lastUpdatedInhabitantNumber) {
-			population.clear();
+			population.clearDataOnUpdate();
 			lastUpdatedInhabitantNumber = newNumber;
 			savedInhabitantNumber = newNumber;
 			ArrayList<InfrastructureElementParameters> toBuild = getBuildProgramForSize(newNumber);

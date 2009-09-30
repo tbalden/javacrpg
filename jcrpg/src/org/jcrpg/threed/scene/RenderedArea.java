@@ -719,10 +719,17 @@ public class RenderedArea {
 	
 	public synchronized void clear()
 	{
+		lastRenderedWorld = null;
+		for (RenderedCube c:worldCubeCacheThreadSafeCopy.values())
+		{
+			if (c!=null)
+				c.clear();
+		}
 		worldCubeCache.clear();
 		worldCubeCache_FARVIEW.clear();
 		worldCubeCacheNext.clear();
 		worldCubeCacheNext_FARVIEW.clear();
+		worldCubeCacheThreadSafeCopy.clear();
 	}
 	
 }

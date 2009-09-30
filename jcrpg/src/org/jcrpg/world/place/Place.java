@@ -266,6 +266,11 @@ public abstract class Place {
 
 	public World thisWorld = null;
 	
+	public void clear()
+	{
+		thisWorld = null;
+	}
+	
 	/**
 	 * Return the climatic conditions of a given cube at coordinates.
 	 * @param worldX

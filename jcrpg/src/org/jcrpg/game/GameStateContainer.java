@@ -236,8 +236,10 @@ public class GameStateContainer {
 	
 	public void clearAll()
 	{
+		gameLogic.clear();
 		world.clearAll();
 		ecology.clearAll();
+		this.world = null;
 	}
 
 	public CharacterCreationRules getCharCreationRules() {

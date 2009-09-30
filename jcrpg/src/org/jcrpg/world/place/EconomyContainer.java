@@ -435,8 +435,13 @@ public class EconomyContainer {
 
 	public void clearAll()
 	{
+		for (Economic e:economics.values())
+		{
+			e.clear();
+		}
 		treeLocator.clear();
 		economics.clear();
+		roadNetwork.clearAll();
 	}
 	
 	

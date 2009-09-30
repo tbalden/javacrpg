@@ -209,12 +209,13 @@ public class World extends Place implements TileBasedMap {
 	public int lastXProbe = -1, lastYProbe = -1, lastZProbe = -1;
 	public Long lastKey;
 	public static int PROBE_DISTANCE = 100;
-	public static HashMap<Long,HashSet<Object>> provedToBeAway = new HashMap<Long,HashSet<Object>>();
+	/*public static HashMap<Long,HashSet<Object>> provedToBeAway = new HashMap<Long,HashSet<Object>>();
 	public static HashMap<Long,HashSet<Object>> provedToBeNear = new HashMap<Long,HashSet<Object>>();
 	public static ArrayList<Long> probeCacheRemovalList = new ArrayList<Long>();
 
 	public static HashSet<Object> hsProvedToBeNear = null;
 	public static HashSet<Object> hsProvedToBeAway = null;
+	*/
 	
 	/**
 	 * For parallel use of world in more than 1 thread, we need separate merger objects...
@@ -823,6 +824,14 @@ public class World extends Place implements TileBasedMap {
 
 	public void clearAll()
 	{
+		for (Geography g:geographies.values())
+		{
+			g.clear();
+		}
+		for (Water w:waters.values())
+		{
+			w.clear();
+		}
 		geographies.clear();
 		geographyCache.clear();
 		waters.clear();
