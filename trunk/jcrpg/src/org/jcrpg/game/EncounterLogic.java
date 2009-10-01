@@ -376,6 +376,13 @@ public class EncounterLogic {
 	
 	private void turnCameraToUnit(EncounterUnitData data, boolean reset)
 	{
+		try {
+			data.visibleForm.renderedUnit.highlightUnit();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		if (J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled()) return;
 		
 		try 
