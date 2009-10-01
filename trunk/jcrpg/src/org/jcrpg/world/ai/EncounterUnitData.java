@@ -170,7 +170,7 @@ public class EncounterUnitData
 	public void clearUnitOut()
 	{
 		if (visibleForm!=null && !visibleForm.notRendered) {
-			J3DCore.getInstance().mEngine.clearUnit(visibleForm.unit);
+			J3DCore.getInstance().mEngine.clearUnit(visibleForm.renderedUnit);
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class EncounterUnitData
 			}
 		}
 		if (isRendered())
-			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.unit);
+			J3DCore.getInstance().mEngine.updateUnitTextNodes(visibleForm.renderedUnit);
 	}
 	
 	public int[] applyImpactUnit(Impact unit)
@@ -275,9 +275,9 @@ public class EncounterUnitData
 	{
 		if (isRendered() && u.isEffectiveSuccess())
 		{
-			if (visibleForm.unit!=null)
+			if (visibleForm.renderedUnit!=null)
 			{
-				visibleForm.unit.visualizeImpactPoints(u);
+				visibleForm.renderedUnit.visualizeImpactPoints(u);
 			}
 		}
 	}
@@ -353,7 +353,7 @@ public class EncounterUnitData
 	
 	public boolean isRendered()
 	{
-		if (visibleForm==null || visibleForm.unit == null) return false;
+		if (visibleForm==null || visibleForm.renderedUnit == null) return false;
 		return !visibleForm.notRendered;
 	}
 	

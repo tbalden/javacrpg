@@ -597,7 +597,7 @@ public class J3DMovingEngine {
 				VisibleLifeForm target = n.targetForm==null?playerFakeForm:n.targetForm;
 				//if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("EFFECT TARGET ########### "+(target==playerFakeForm)+" "+target.worldX+" "+target.worldY+" "+target.worldZ);
 				Vector3f cVec = new Vector3f(n.currentPos);
-				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.unit, n.speed, timePerFrame);
+				Vector3f[] rVectors = calculateNewPositionOfMovementAndEndForUnit(cVec, target.renderedUnit, n.speed, timePerFrame);
 				Vector3f mVec = rVectors[0];
 				Vector3f eVec = rVectors[1];
 				n.currentPos.addLocal(mVec);
@@ -766,14 +766,14 @@ public class J3DMovingEngine {
 	
 	public void setAnimationForRenderedUnit(VisibleLifeForm form, String anim)
 	{
-		form.unit.changeToAnimation(anim);
+		form.renderedUnit.changeToAnimation(anim);
 	}
 	
 	public RenderedMovingUnit materializeLifeForm(VisibleLifeForm form)
 	{
 		RenderedMovingUnit unit = movingTypeModels.getRenderedUnit(form.type.visibleTypeId).instantiate(form.uniqueId, form, form.worldX, form.worldY, form.worldZ);
 		unit.onSteep = form.onSteep;
-		form.unit = unit;
+		form.renderedUnit = unit;
 		units.put(form.uniqueId, unit);
 		return unit;
 	}

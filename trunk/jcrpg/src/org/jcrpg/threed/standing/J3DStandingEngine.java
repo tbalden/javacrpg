@@ -1843,7 +1843,7 @@ public class J3DStandingEngine {
 		    				n.farView = false;
 		    	    	}
 		    		}
-		    		c.clear();
+		    		//c.clear();
 				}
 			}
 			

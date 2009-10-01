@@ -60,7 +60,7 @@ public class VisibleLifeForm {
 	/**
 	 * Temporary render data for callbacks.
 	 */
-	public RenderedMovingUnit unit;
+	public RenderedMovingUnit renderedUnit;
 	
 	/**
 	 * Starting point coords for initial render.
