@@ -33,7 +33,7 @@ import org.jcrpg.world.time.Time;
 public class EntityMemberState {
 
 	// set this to true if you want to prevent persistentMembers from point changes.
-	public static boolean cheatNPC = true;
+	public static boolean cheatNPC = false;
 
 	
 	public static int DEFAULT_HEALTH_POINT = 10;
