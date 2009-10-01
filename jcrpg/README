@@ -15,8 +15,11 @@ W/S/A/D for turning, moving.
 Q/E for strafe.
 Up/Down for looking up and down.
 Left/Right for looking around.
+You can also use mouse for looking around in mouse look mode (use right click to switch to that mode.)
 
 C  Camping (resting)
+
+L Lamplight switch on/off
 
 F1 World map - rounded dots show the populations/mazes & different colors for the different geographic zones.
 F2 Party behavior window (no effect of the settings here currently)
@@ -27,6 +30,7 @@ F6 Use Skill/Item window
 
 F10 Main menu - here you can start a new game, exit, save, load the game and also set options.
 
+T debug info about bufferpool
 F11 debug infos (memory / 3d related)
 F12 Take a screenshot
 
@@ -39,7 +43,9 @@ Use Use Skill/Item window (F6) to use items (e.g. potions), cast spell (e.g. hea
 To start a brand new game with new character use New Game in main menu, create new characters, fill up your party
 and start the game! Use main menu to Save and Load your game. You can save only in Normal mode (not during combat).
 
-Use key C (Camp) if you want to rest and replenish. You should do it at safe places for effective replenishing.
+Use key C (Camp) if you want to rest and replenish. You should do it at safe places for effective replenishing. Shrines are most safe for camping.
+Right click to switch between mouselook and cursor. Use mouse to access top buttons.
+You can click left/right on character portraits for Inventory/Character Sheet.
 
 c. Configuration
 
@@ -59,14 +65,14 @@ r. Requirements
 - Java Runtime Environment from java.sun.com under Windows/Linux or MacOSX (Apple releases it's own tweaked version
 	of Java, use that one for jCRPG.)
 	Optionally you can use OpenJDK 6+ (available under different Linux distributions like Ubuntu)
-- At least ~400-600 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
+- At least ~500-600 megabyte free system memory, more if you set higher RENDER_DISTANCE/VIEW_DISTANCE 
 	in config.properties
 - Opengl accelerated video card (nvidia geforce 6200 or better should be good)
 	It's recommended to switch of 3D accelerated desktop effects, it can slow down jcrpg.
 - Processor around 1.6GHz (Single core will do it)
 
 
-More information at http://javacrpg.sourceforge.net/wiki/index.php/Main_Page .
+More information at http://sourceforge.net/apps/mediawiki/javacrpg/index.php?title=Main_Page .
 
 
 How to install Java under ubuntu linux or debian linux?

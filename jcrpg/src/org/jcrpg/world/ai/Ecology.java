@@ -550,6 +550,11 @@ public class Ecology {
 		 */			
 		if (!interrupted)
 		{
+			// clearing encounter info references (gc help)
+			for (EncounterInfo i:staticEncounterInfoInstances)
+			{
+				i.clear();
+			}
 			J3DCore.getInstance().uiBase.hud.sr.setVisibility(true, "DICE");
 			J3DCore.getInstance().updateDisplay(null);
 
@@ -646,6 +651,7 @@ public class Ecology {
 		beings.clear();
 		orderedBeingList.clear();
 		locators.clear();
+		staticEncounterInfoInstances.clear();
 	}
 	
 	public void gameLost()

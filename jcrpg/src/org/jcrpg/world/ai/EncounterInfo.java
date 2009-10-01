@@ -542,6 +542,27 @@ public class EncounterInfo {
 	public ArrayList<EncounterUnitData> getRemovedEncounterUnitDataList() {
 		return removedEncounterUnitDataList;
 	}
-	
+
+	public void clear()
+	{
+		subject = null;
+		encountered.clear();
+		encounteredGroupIds.clear();
+		encounteredSubUnits.clear();
+		encounteredUnitsAndOwnGroupIds.clear();
+		encounteredUnitsAndOwnSubUnits.clear();
+		encounterMatrix = null;
+		turnActMatrix = null;
+		playerIfPresent = null;
+		encounterPhaseLineup = null;
+		topology = null;
+		if (generatedGroups!=null) generatedGroups.clear();
+		if (ownGroupIds!=null) ownGroupIds.clear();
+		if (ownGroupIds!=null) ownGroupIds.clear();
+		playerPartyUnitData = null;
+		if (removedEncounterUnitDataList!=null) removedEncounterUnitDataList.clear();
+		subjectFragment = null;
+		
+	}
 }
 

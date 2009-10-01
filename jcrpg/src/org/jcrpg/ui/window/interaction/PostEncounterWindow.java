@@ -125,6 +125,12 @@ public class PostEncounterWindow extends PagedInputWindow {
 	public PartyInstance party;
 	public EncounterInfo possibleGroups;
 	
+	public void clear()
+	{
+		possibleGroups = null;
+		groupList.objects = null;
+	}
+	
 	private ArrayList<EntityMemberInstance> tmpFilteredMembers = new ArrayList<EntityMemberInstance>();
 
 	/**
@@ -328,6 +334,7 @@ public class PostEncounterWindow extends PagedInputWindow {
 		} else
 		if (base==leave)
 		{
+			clear();
 			core.gameState.gameLogic.inEncounter = false;
 			core.gameState.engine.turnFinishedForPlayer();
 			core.audioServer.stopIdOnAllChannels(core.audioServer.channels, "victory");

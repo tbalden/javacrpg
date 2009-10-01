@@ -53,6 +53,7 @@ public class ZoomingParentNode extends com.jme.scene.Node
 				currentTimeSpent = 0;
 				zooming = false;
 				getParent().setLocalScale(oldScale);
+				removeFromParent();
 			} else
 			{
 				float ratio = currentTimeSpent/fullTime;

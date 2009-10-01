@@ -106,6 +106,11 @@ public class PreEncounterWindow extends PagedInputWindow {
 	public PartyInstance party;
 	public EncounterInfo possibleGroups;
 	
+	public void clear()
+	{
+		possibleGroups = null;
+		groupList.objects = null;
+	}
 	/**
 	 * This function fills up the required data fields for displaying the lists and elements of the page.
 	 * After using this you can call toggle().
@@ -216,6 +221,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 		}
 		if (base==leave)
 		{
+			clear();
 			core.gameState.gameLogic.inEncounter = false;
 			core.gameState.engine.turnFinishedForPlayer();
 			toggle();
