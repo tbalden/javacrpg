@@ -56,6 +56,7 @@ import org.jcrpg.threed.jme.effects.DepthOfFieldRenderPass;
 import org.jcrpg.threed.jme.effects.DirectionalShadowMapPass;
 import org.jcrpg.threed.jme.effects.WaterRenderPass;
 import org.jcrpg.threed.jme.geometryinstancing.BufferPool;
+import org.jcrpg.threed.jme.tool.CameraUtil;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.moving.J3DEncounterEngine;
 import org.jcrpg.threed.moving.J3DMovingEngine;
@@ -176,6 +177,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 
 	public ScenarioLoader scenarioLoader;
+	public CameraUtil cameraUtil = new CameraUtil();
 	
 	public static class CoreSettings
 	{
@@ -2831,7 +2833,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	@Override
 	protected void simpleUpdate() {
-
+		
 
 		if (System.currentTimeMillis()-lastAudioUpdate>50)
 		{
@@ -2974,6 +2976,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// if (!swapUpdate)
 		if (!pause) 
 		{
+			/* updating camera if a program for camera is running (like in combat) */
+			cameraUtil.update(tpf);
+			
 			/** Call simpleUpdate in any derived classes of SimpleGame. */
 
 			/** Update controllers/render states/transforms/bounds for rootNode. */

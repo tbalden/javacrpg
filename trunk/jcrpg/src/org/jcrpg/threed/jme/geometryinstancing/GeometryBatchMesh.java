@@ -19,6 +19,7 @@ import com.jme.system.DisplaySystem;
  * contains the batch created from the instances.
  *
  * @author Patrik Lindegran
+ * @author Pal Zoltan Illes
  */
 
 public class GeometryBatchMesh<T extends GeometryBatchSpatialInstance<?>> extends TriMesh {
