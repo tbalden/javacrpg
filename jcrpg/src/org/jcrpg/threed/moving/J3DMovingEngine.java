@@ -31,7 +31,9 @@ import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.PooledNode;
 import org.jcrpg.threed.jme.program.EffectNode;
 import org.jcrpg.threed.jme.ui.FlyingNode;
+import org.jcrpg.threed.jme.ui.HighlightParentNode;
 import org.jcrpg.threed.jme.ui.NodeFontFreer;
+import org.jcrpg.threed.jme.ui.ZoomingParentNode;
 import org.jcrpg.threed.scene.config.MovingTypeModels;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
@@ -477,6 +479,24 @@ public class J3DMovingEngine {
 		}
 		realPooledNode.updateRenderState();
 		node.startFlying();
+		
+	}
+	
+	
+	public void highlightUnitTemporarily(RenderedMovingUnit unit)
+	{
+		ZoomingParentNode node = new ZoomingParentNode();
+		NodePlaceholder n = unit.nodePlaceholders.iterator().next();
+		Node realPooledNode = (Node)n.realNode;
+		if (realPooledNode!=null) {
+			if (unit.memberTypeNameNode!=null)
+			{
+				unit.memberTypeNameNode.attachChild(node);
+			}
+			//realPooledNode.attachChild(node);	
+		}
+		realPooledNode.updateRenderState();
+		node.startZoomCycle();
 		
 	}
 	

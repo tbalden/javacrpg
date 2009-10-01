@@ -315,7 +315,7 @@ public class RenderedMovingUnit {
 	
 	public void highlightUnit()
 	{
-		
+		J3DCore.getInstance().mEngine.highlightUnitTemporarily(this);
 	}
 	
 }
