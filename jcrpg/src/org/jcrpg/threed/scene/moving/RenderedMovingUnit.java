@@ -313,4 +313,9 @@ public class RenderedMovingUnit {
 		J3DCore.getInstance().mEngine.visualizeImpactPoints(this, unit);
 	}
 	
+	public void highlightUnit()
+	{
+		
+	}
+	
 }

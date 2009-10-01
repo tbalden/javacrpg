@@ -391,7 +391,7 @@ public class EncounterLogic {
 			{
 				deltaY = -0.5f;
 			}
-			Vector3f place = gameLogic.core.mEngine.calculatePositionVector(data.visibleForm.unit, data.visibleForm,true);
+			Vector3f place = gameLogic.core.mEngine.calculatePositionVector(data.visibleForm.renderedUnit, data.visibleForm,true);
 			place.y = place.y+deltaY;
 			
 			CameraProgram p = new CameraProgram(c, c.getLocation(), finalPos, c.getDirection(), place, 0.6f);
@@ -463,7 +463,7 @@ public class EncounterLogic {
 			if (choice.skillActForm!=null)
 			{
 				String anim = choice.skillActForm.animationType;
-				choice.member.encounterData.visibleForm.unit.startAttack(choice.target.visibleForm, anim);
+				choice.member.encounterData.visibleForm.renderedUnit.startAttack(choice.target.visibleForm, anim);
 			}
 		}
 	}
@@ -587,7 +587,7 @@ public class EncounterLogic {
 			{
 				if (choice.target.isRendered()) {
 					if (choice.isDestructive()) {
-						choice.target.visibleForm.unit.startPain(choice.member.encounterData.visibleForm);
+						choice.target.visibleForm.renderedUnit.startPain(choice.member.encounterData.visibleForm);
 					}
 				}
 				choice.target.updateNameInTurnActPhase();
@@ -595,14 +595,14 @@ public class EncounterLogic {
 			{
 				// destroyed...
 				if (choice.target.isRendered()) {
-					choice.target.visibleForm.unit.startDeath(choice.member.encounterData.visibleForm,null);
+					choice.target.visibleForm.renderedUnit.startDeath(choice.member.encounterData.visibleForm,null);
 				}
 			}
 		} else
 		{
 			if (choice.target.isRendered()) {
 				if (choice.isDestructive()) {
-					choice.target.visibleForm.unit.startDefense(choice.member.encounterData.visibleForm,null);
+					choice.target.visibleForm.renderedUnit.startDefense(choice.member.encounterData.visibleForm,null);
 				}
 			}
 		}

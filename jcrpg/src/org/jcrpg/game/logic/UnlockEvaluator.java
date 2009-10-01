@@ -202,7 +202,7 @@ public class UnlockEvaluator {
 			d.visibleForm.worldZ = info.trapWorldZ;
 			RenderedMovingUnit unit = new RenderedMovingUnit("-",info.trapWorldX,info.trapWorldY,info.trapWorldZ,new org.jcrpg.threed.scene.model.Model[0]);
 			unit.form = d.visibleForm;
-			d.visibleForm.unit = unit;
+			d.visibleForm.renderedUnit = unit;
 			choice.member.encounterData = d;
 			
 			// calculating trap skill power
