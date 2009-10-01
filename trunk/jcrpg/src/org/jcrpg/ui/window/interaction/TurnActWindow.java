@@ -230,6 +230,16 @@ public class TurnActWindow extends PagedInputWindow {
 	public static Object doNothingSkillChoiceObject = new Object();
 	public static Object doUseSkillChoiceObject = new Object();
 	
+	public void clear()
+	{
+		encountered = null;
+		for (ListSelect s:groupSelectors)
+		{
+			s.objects = null;
+		}
+		if (encounterUnitDataList!=null) encounterUnitDataList.clear();
+	}
+	
 	TreeMap<Integer,Class<?extends SkillBase>> tempFilteredSkills = new TreeMap<Integer,Class<? extends SkillBase>>();
 	public void updateToParty()
 	{

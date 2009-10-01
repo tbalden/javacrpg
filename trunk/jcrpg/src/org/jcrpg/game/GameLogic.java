@@ -49,11 +49,11 @@ public class GameLogic implements InitCallbackObject {
 	
 	
 	
-	public transient HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
-	public transient HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
+	//public transient HashSet<EncounterInfo> previousInfos = new HashSet<EncounterInfo>();
+	//public transient HashSet<EncounterInfo> infos = new HashSet<EncounterInfo>();
 	
 	
-	public Collection<VisibleLifeForm> previousForms = new ArrayList<VisibleLifeForm>();
+	//public Collection<VisibleLifeForm> previousForms = new ArrayList<VisibleLifeForm>();
 	public Collection<VisibleLifeForm> forms = new ArrayList<VisibleLifeForm>();
 	
 	public World world;
@@ -201,7 +201,7 @@ public class GameLogic implements InitCallbackObject {
 	{
 		possibleEncounter.initPlacementMatrixForPhase();
 		inEncounter = true;
-		if (previousInfos == null)
+		/*if (previousInfos == null)
 		{
 			previousInfos = new HashSet<EncounterInfo>();
 			infos = new HashSet<EncounterInfo>();
@@ -211,8 +211,8 @@ public class GameLogic implements InitCallbackObject {
 			previousInfos.addAll(infos);
 			infos.clear();
 		}
-		infos.add(possibleEncounter);
-		previousForms.addAll(forms);
+		infos.add(possibleEncounter);*/
+		//previousForms.addAll(forms);
 		forms.clear();
 		VisibleLifeForm playerFakeForm = new VisibleLifeForm("player",null,null,null);
 		playerFakeForm.worldX = core.gameState.getEncounterPositions().origoX;//player.theFragment.getEncounterBoundary().posX;
@@ -273,7 +273,9 @@ public class GameLogic implements InitCallbackObject {
 	{
 		core.getKeyboardHandler().noToggleWindowByKey=false;
 		inEncounter = false;
-		J3DCore.getInstance().mEngine.clearPreviousUnits();		
+		J3DCore.getInstance().mEngine.clearPreviousUnits();
+		forms.clear();
+		core.turnActWindow.clear();
 	}
 	
 	public void placeVisibleForms(Collection<VisibleLifeForm> forms)
