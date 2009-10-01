@@ -29,6 +29,7 @@ import org.jcrpg.game.logic.Impact;
 import org.jcrpg.game.logic.PlayerActChoiceInfo;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.input.action.CKeyAction;
+import org.jcrpg.threed.jme.tool.CameraProgram;
 import org.jcrpg.threed.moving.J3DMovingEngine;
 import org.jcrpg.threed.scene.model.effect.EffectProgram;
 import org.jcrpg.ui.text.TextEntry;
@@ -47,6 +48,7 @@ import org.jcrpg.world.object.BonusSkillActFormDesc;
 import org.jcrpg.world.object.Weapon;
 
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 
 public class EncounterLogic {
@@ -375,30 +377,38 @@ public class EncounterLogic {
 	private void turnCameraToUnit(EncounterUnitData data, boolean reset)
 	{
 		if (J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled()) return;
-		if (reset) resetCamera();
+		
 		try 
 		{
+			Camera c = gameLogic.core.getCamera();
 			float deltaY = 0;
+			Vector3f finalPos = gameLogic.core.getCurrentLocation().clone();
 			if (data.getCurrentLine()>=1)
 			{
-				gameLogic.core.getCamera().getLocation().y = gameLogic.core.getCurrentLocation().y+1.5f;
+				finalPos.y = gameLogic.core.getCurrentLocation().y+1.5f;
 				deltaY = -1f;
 			} else
 			{
 				deltaY = -0.5f;
 			}
 			Vector3f place = gameLogic.core.mEngine.calculatePositionVector(data.visibleForm.unit, data.visibleForm,true);
+			place.y = place.y+deltaY;
 			
-			CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+deltaY, place.z);
+			CameraProgram p = new CameraProgram(c, c.getLocation(), finalPos, c.getDirection(), place, 0.6f);
+			
+			gameLogic.core.cameraUtil.startProgram(p);
+			
+			//CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y+deltaY, place.z);
 		} catch (Exception ex)
 		{
+			if (reset) resetCamera();
 		}
 	}
 	
 	private void resetCamera()
 	{
 		if (J3DCore.getInstance().getClassicInputHandler().getMouseLookHandler().isEnabled()) return;
-		gameLogic.core.setCalculatedCameraLocation();
+		//gameLogic.core.setCalculatedCameraLocation();
 		if (encounterRoundState!=null && encounterRoundState.encounter!=null)
 		{
 			if (turnCameraIntelligent(encounterRoundState.encounter,false)) return;	
@@ -407,9 +417,12 @@ public class EncounterLogic {
 		{
 			if (turnCameraIntelligent(turnActTurnState.encounter,false)) return;	
 		}
-		
-		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection];
-		CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
+		Camera c = gameLogic.core.getCamera();
+		Vector3f place = J3DCore.turningDirectionsUnit[gameLogic.core.gameState.getCurrentRenderPositions().viewDirection].clone();
+		place.y = place.y-0.2f;
+		CameraProgram p = new CameraProgram(c, c.getLocation(), gameLogic.core.getCurrentLocation(), c.getDirection(), place, 0.6f);
+		gameLogic.core.cameraUtil.startProgram(p);
+		//CKeyAction.setCameraDirection(gameLogic.core.getCamera(), place.x, place.y-0.2f, place.z);
 	}
 	
 	

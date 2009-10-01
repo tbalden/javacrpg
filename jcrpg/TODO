@@ -45,9 +45,10 @@ Before next release:
 [ ] integrate Ducorps (scorpoduc? :))
 	[ ] housing
 
-[ ] add smooth turn/move of camera while in combat. 
+[X] add smooth turn/move of camera while in combat. -> threaded camera setting calculation which could be read out by simpleUpdate?
 	[X] if mouselook on, player should point camera - auto off! 
-	[ ] highlight acting rendered unit form in combat?
+	[X] test it, it's ready
+[ ] highlight acting rendered unit form in combat?
 	
 [ ] lag, mem problem - sound? after 3,4 fights, highest detail - test AnimatedModel loading freeing
 	 --> loading animated models mem? look into loading part 
