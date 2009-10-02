@@ -18,6 +18,7 @@
 
 package org.jcrpg.ui.window;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -114,14 +115,14 @@ public class OptionsMenu extends PagedInputWindow {
             pageFirst.attachChild(header);
 
             SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
-            //firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
+            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
             selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
             selectPreset.focusUponMouseEnter = true;
-            //selectPreset.setSelected(5); // TODO: custom is selected by default, but this will change
+            selectPreset.setSelected(5); // TODO: custom is selected by default, but this will change
             
-            selectPreset.detach();
-            //addInput(0, selectPreset); // TODO add back later, when saving is implemented
-            //firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);
+            //selectPreset.detach();
+            addInput(0, selectPreset); // TODO add back later, when saving is implemented
+            firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);
             
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
             toggleMLook = new CheckBox("", this, pageFirst, J3DCore.SETTINGS.MOUSELOOK);
@@ -293,8 +294,11 @@ public class OptionsMenu extends PagedInputWindow {
             J3DCore.SETTINGS.BLOOM_EFFECT = toggleBloom.isChecked();
             J3DCore.SETTINGS.DOF_EFFECT = toggleDepthOfField.isChecked();
             J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE = tunerShadowDistance.getSelection();
+            J3DCore.SETTINGS.SHADOWS=J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE>0;
             J3DCore.SETTINGS.SLOW_ANIMATION = toggleSlowAnimation.isChecked();
 
+            J3DCore.SETTINGS.saveFile(new File("./config.properties"));
+            
             // TODO: save to config file
 
             // back to main menu

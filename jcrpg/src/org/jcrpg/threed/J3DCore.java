@@ -18,8 +18,11 @@
 
 package org.jcrpg.threed;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -247,17 +250,19 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		public void saveFile(File f)
 		{
 			Properties p = new Properties();
-			for (Field field:this.getClass().getFields())
-			{
-				try {
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+				for (Field field : this.getClass().getFields()) {
 					Object obj = field.get(this);
-					System.out.println(obj);
-				} catch (Exception ex)
-				{
-					
+					writer.write(field.getName() + "=" + obj + "\n");
+					// System.out.println();
 				}
+				writer.close();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-//			p.put(key, value)
+			// p.put(key, value)
 
 		}
 		
