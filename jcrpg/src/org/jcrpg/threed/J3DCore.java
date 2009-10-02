@@ -20,6 +20,7 @@ package org.jcrpg.threed;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -242,6 +243,23 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// Controller settings
 		public  boolean MOUSELOOK = false;
 		public  boolean UIMOUSE = true;
+		
+		public void saveFile(File f)
+		{
+			Properties p = new Properties();
+			for (Field field:this.getClass().getFields())
+			{
+				try {
+					Object obj = field.get(this);
+					System.out.println(obj);
+				} catch (Exception ex)
+				{
+					
+				}
+			}
+//			p.put(key, value)
+
+		}
 		
 	}
 

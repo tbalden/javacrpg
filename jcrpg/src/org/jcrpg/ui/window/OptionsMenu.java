@@ -114,12 +114,15 @@ public class OptionsMenu extends PagedInputWindow {
             pageFirst.attachChild(header);
 
             SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
-            firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
+            //firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
             selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
             selectPreset.focusUponMouseEnter = true;
             //selectPreset.setSelected(5); // TODO: custom is selected by default, but this will change
-            addInput(0, selectPreset);
-            firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);
+            
+            selectPreset.detach();
+            //addInput(0, selectPreset); // TODO add back later, when saving is implemented
+            //firstLayout.addToColumn(1, selectPreset, 0.35f, 0.5f);
+            
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.mouselook"), false));
             toggleMLook = new CheckBox("", this, pageFirst, J3DCore.SETTINGS.MOUSELOOK);
             firstLayout.addToColumn(1, toggleMLook, 0.1f, 0.5f);
@@ -178,7 +181,7 @@ public class OptionsMenu extends PagedInputWindow {
             header2.setRenderState(base.hud.hudAS);
             pageSecond.attachChild(header2);
 
-            SimpleLayout secondLayout = new SimpleLayout(0.2f, 0.16f, 0.3f, 0.07f ,2);
+            SimpleLayout secondLayout = new SimpleLayout(0.4f, 0.16f, 0.3f, 0.07f ,2);
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.continuous.load"), false));
             toggleContinuousLoad = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.CONTINUOUS_LOAD);
             secondLayout.addToColumn(1, toggleContinuousLoad, 0.1f, 0.5f);

@@ -46,9 +46,9 @@ Before next release:
 
 [ ] integrate Ducorps (scorpoduc? :))
 	[ ] housing
-[ ] bloom/dof effect together doesnt seem to show on high viewdist., test
-[ ] music volume level is wrong
-
+	
+[X] music volume level is wrong
+[-] bloom/dof effect together doesnt seem to show on high viewdist., test. okay
 [X] lag, mem problem - sound? after 3,4 fights, highest detail - test AnimatedModel loading freeing
 	 --> loading animated models mem? look into loading part 
 [X] add smooth turn/move of camera while in combat. -> threaded camera setting calculation which could be read out by simpleUpdate?
