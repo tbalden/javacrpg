@@ -46,7 +46,8 @@ Before next release:
 
 [ ] integrate Ducorps (scorpoduc? :))
 	[ ] housing
-	
+
+[X] saving options?
 [X] music volume level is wrong
 [-] bloom/dof effect together doesnt seem to show on high viewdist., test. okay
 [X] lag, mem problem - sound? after 3,4 fights, highest detail - test AnimatedModel loading freeing
