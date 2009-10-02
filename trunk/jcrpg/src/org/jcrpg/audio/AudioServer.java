@@ -840,7 +840,7 @@ public class AudioServer implements Runnable {
 			{
 				if (!stoppingBackgroundMusic)
 				{
-					server.initialBackgroundMusic(false);
+					server.updateBackgroundMusic(false);
 				}
 				gotStopped = true;
 			}
@@ -853,11 +853,11 @@ public class AudioServer implements Runnable {
 	public String lastPlayed = null;
 	public synchronized void initialBackgroundMusic()
 	{
-		initialBackgroundMusic(true);
+		updateBackgroundMusic(true);
 	}
 	
 	boolean stoppingBackgroundMusic = false;
-	public synchronized void initialBackgroundMusic(boolean stop)
+	public synchronized void updateBackgroundMusic(boolean stop)
 	{
 		/*try {
 			throw new Exception();
@@ -901,11 +901,11 @@ public class AudioServer implements Runnable {
 				track.addTrackStateListener(new BackgroundMusicStateListener(this));
 				
 				//if (!track.getType().equals(TrackType.MUSIC)) {
-					track.setVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+					track.setVolume(0);//J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 				//}
 			} else
 			{
-				track.setTargetVolume(J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
+				track.setTargetVolume(0);//J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 			}
 			
 			track.setLooping(false);
@@ -918,6 +918,7 @@ public class AudioServer implements Runnable {
 			
 			//c.track.getPlayer().setMaxAudibleDistance(maxDistance)
 			c.track.play();
+			c.track.fadeIn(1f, J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT/100f);
 			c.track.getPlayer().updateTrackPlacement();
 			if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("$$$$$$$$$$ PLAYING...");
 		} catch (NullPointerException npex)

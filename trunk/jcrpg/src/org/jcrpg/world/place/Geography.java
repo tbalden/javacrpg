@@ -143,14 +143,14 @@ public class Geography extends Place implements Surface {
 
 	public void clearCaches()
 	{
-		quickCubeHeightCache.clear();
+		if (quickCubeHeightCache!=null) quickCubeHeightCache.clear();
 	}
 	
 	public void clear()
 	{
 		super.clear();
 		w = null;
-		quickCubeHeightCache.clear();
+		if (quickCubeHeightCache!=null) quickCubeHeightCache.clear();
 		parent = null;
 	}
 	
