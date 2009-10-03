@@ -44,8 +44,12 @@ Journal window will be needed!
 ----
 Before next release:
 
-[ ] integrate Ducorps (scorpoduc? :))
-	[ ] housing
+[X] integrate Ducorps (scorpoduc? :))
+	[X] housing
+	[ ] add oasis lake to ducorp town?
+
+[ ] dropdown menus reconsider
+[ ] options menu testing - remove CONTINUOUS LOADING option!
 
 [X] saving options?
 [X] music volume level is wrong

@@ -50,7 +50,7 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 			int oldShuffleCount = shuffleCount;
 			Class<? extends Economic> type = null;
 			type = residenceTypes.get(0);
-			Economic ecoBase = ((Economic)EconomyTemplate.economicBase.get(type));
+			Economic ecoBase = ((Economic)EconomyTemplate.getBase(type));
 			
 			while (true) {
 				blockCount = fullShuffledBlocks[shuffleCount];
@@ -78,9 +78,9 @@ public class DefaultInfrastructure extends AbstractInfrastructure {
 				
 				baseResidence.sizeZ = BUILDING_BLOCK_SIZE;
 				baseResidence.type = residenceTypes.get(0);
-				if (baseResidence.sizeY<((Residence)EconomyTemplate.economicBase.get(baseResidence.type)).getMinimumHeight())
+				if (baseResidence.sizeY<((Residence)EconomyTemplate.getBase(baseResidence.type)).getMinimumHeight())
 				{
-					baseResidence.sizeY = ((Residence)EconomyTemplate.economicBase.get(baseResidence.type)).getMinimumHeight();
+					baseResidence.sizeY = ((Residence)EconomyTemplate.getBase(baseResidence.type)).getMinimumHeight();
 				}
 				list.add(baseResidence);
 				setOccupiedBlocks(occupiedBlocks,baseResidence);

@@ -45,7 +45,7 @@ import org.jcrpg.world.place.economic.residence.dungeon.SimpleDungeonPart;
 public class EconomyTemplate {
 	
 	
-	public static HashMap<Class<? extends Economic>, Economic> economicBase = new HashMap<Class<? extends Economic>, Economic>();
+	private static HashMap<Class<? extends Economic>, Economic> economicBase = new HashMap<Class<? extends Economic>, Economic>();
 	static 
 	{
 		economicBase.put(SimpleDistrict.class, new SimpleDistrict());
@@ -58,6 +58,23 @@ public class EconomyTemplate {
 		economicBase.put(RawStreetGround.class, new RawStreetGround());
 		economicBase.put(RawTreadGround.class, new RawTreadGround());
 		economicBase.put(PavedStorageAreaGround.class, new PavedStorageAreaGround());
+	}
+	
+	public static Economic getBase(Class<? extends Economic> b)
+	{
+		Economic e = economicBase.get(b);
+		if (e==null)
+		{
+			try {
+				e = b.newInstance();
+				economicBase.put(b, e);
+			} catch (Exception ex)
+			{
+				ex.printStackTrace();
+				System.exit(1);
+			}
+		}
+		return e;
 	}
 	
 

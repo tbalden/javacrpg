@@ -50,7 +50,7 @@ public abstract class DistrictSubelement extends Economic {
 	 */
 	public boolean isValidForDistrict(Class<? extends Population> populationType)
 	{
-		if (this.isFullBlockSized() == ((Population)EconomyTemplate.economicBase.get(populationType)).needsFullBlockSizedSubelement())
+		if (this.isFullBlockSized() == ((Population)EconomyTemplate.getBase(populationType)).needsFullBlockSizedSubelement())
 		{
 			return true;
 		}

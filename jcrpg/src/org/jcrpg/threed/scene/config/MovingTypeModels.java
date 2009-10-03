@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.fauna.mammals.warthog.Warthogs;
 import org.jcrpg.world.ai.fauna.mammals.wolf.WolfPack;
 import org.jcrpg.world.ai.fauna.plantoid.member.Plantobite;
 import org.jcrpg.world.ai.fauna.reptile.lizard.green.Lizards;
+import org.jcrpg.world.ai.humanoid.group.anatipion.AnatipionCatchers;
 import org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe;
 import org.jcrpg.world.ai.humanoid.group.human.HumanCommoners;
 import org.jcrpg.world.ai.humanoid.group.kobold.KoboldHorde;
@@ -171,6 +172,10 @@ public class MovingTypeModels {
 
 		hmMobIdToModelId.put(YetiHunters.YETI_MALE_HUNTER.visibleTypeId,counter);
 		hmModelIdToRenderedMovingUnit.put(counter, YetiHunters.yetiMale_unit);
+		counter++;
+
+		hmMobIdToModelId.put(AnatipionCatchers.ANATIPION_MALE_CATCHER.visibleTypeId,counter);
+		hmModelIdToRenderedMovingUnit.put(counter, AnatipionCatchers.anatipionMale_unit);
 		counter++;
 	}
 	

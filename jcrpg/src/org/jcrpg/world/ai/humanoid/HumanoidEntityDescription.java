@@ -80,7 +80,7 @@ public class HumanoidEntityDescription extends AnimalEntityDescription {
 						{
 							//if (p==DungeonDistrict.class) System.out.println("INSPECTING p" +p);
 							instance.homeBoundary = new DistanceBasedBoundary(world, coords[0],g.worldGroundLevel,coords[1], instance.numberOfMembers);
-							pI = ((Population)EconomyTemplate.economicBase.get(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3],coords[0],coords[1]);
+							pI = ((Population)EconomyTemplate.getBase(p)).getInstance("population"+instance.id,g,world,null, instance,coords[2],coords[3],coords[0],coords[1]);
 							if (!pI.isGeographyAreaUsable()) 
 							{
 								//if (p==DungeonDistrict.class) System.out.println("NOT USABLE");
