@@ -194,7 +194,7 @@ public class CubeInterpreter
 
 	}
 
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 	
 	public MovementInterpretationResult interpret(int direction)
 	{
@@ -207,6 +207,7 @@ public class CubeInterpreter
 		int[] relPosInDirection = J3DCore.calcMovement(relCenter, direction, false);
 		
 		Cube cubeInCenter = w.getCube(-1, center[0], center[1], center[2], false);
+		Cube cubeInCenterAbove = w.getCube(-1, center[0], center[1]+1, center[2], false);
 		if (DEBUG) System.out.println("cubeInCenter: "+cubeInCenter);
 		
 		Cube cubeInDirection = w.getCube(-1, posInDirection[0], posInDirection[1], posInDirection[2], false);
@@ -268,7 +269,7 @@ public class CubeInterpreter
 					
 					if (DEBUG) System.out.println("## Checking for climbing with skill...");
 					// check if climbing up is possible from original cube.
-					blockedIn = isDirectionBlockedInCube(cubeInCenter, J3DCore.TOP);
+					blockedIn = isDirectionBlockedInCube(cubeInCenter, J3DCore.TOP) || isDirectionBlockedInCube(cubeInCenterAbove, direction);
 					// check if cube above is not blocked moving into it.
 					blockedTo = isDirectionBlockedToCube(cubeInDirectionAbove, direction);
 					//System.out.println("cubeInCenter: "+cubeInCenter);
