@@ -107,7 +107,7 @@ public class YetiHunters extends HumanoidEntityDescription {
 	public byte[] getPopulationMapColor() {
 		return populationColor;
 	}
-	public static ColorRGBA[][] CITY_COLORED = IconReader.readMapIconFile("./data/ui/mapicons/human.ico");
+	public static ColorRGBA[][] CITY_COLORED = IconReader.readMapIconFile("./data/ui/mapicons/igloo.ico");
 
 	public static boolean[][] CITY = new boolean[][] 
 			  	                                    {
