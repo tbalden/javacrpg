@@ -4,6 +4,8 @@
 			implementation="org.jcrpg.world.ai.humanoid.group.human.HumanCommoners" />
 		<animal id="YETIHUNTERS"
 			implementation="org.jcrpg.world.ai.humanoid.group.yeti.YetiHunters" />
+		<animal id="ANATIPIONCATCHERS"
+			implementation="org.jcrpg.world.ai.humanoid.group.anatipion.AnatipionCatchers" />
 		<animal id="BOARMANTRIBE"
 			implementation="org.jcrpg.world.ai.humanoid.group.boarman.BoarmanTribe" />
 		<animal id="GREEKMAZEHORDE"
@@ -69,6 +71,8 @@
      	<population ref-animal-id="HUMANCOMMONERS" ref-climat="Continental"
 			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
      	<population ref-animal-id="YETIHUNTERS" ref-climat="Arctic"
+			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
+     	<population ref-animal-id="ANATIPIONCATCHERS" ref-climat="Desert"
 			percentage-chance-of-appearance="40" min-in-group="30" food-chain-position="HERBIVORE"/>
 
      	<population ref-animal-id="BOARMANTRIBE" ref-climat="Tropical"
