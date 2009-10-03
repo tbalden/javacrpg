@@ -45,6 +45,7 @@ import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.BrickHouse;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Igloo;
+import org.jcrpg.world.place.economic.residence.SandIgloo;
 import org.jcrpg.world.place.geography.Forest;
 import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
@@ -80,6 +81,8 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 		//economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);
 		economyTemplate.addResidenceType(Plain.class, BrickHouse.class);
 		economyTemplate.addResidenceType(Forest.class, BrickHouse.class);
+		economyTemplate.addResidenceType(Plain.class, SandIgloo.class);
+		economyTemplate.addResidenceType(Forest.class, SandIgloo.class);
 		//economyTemplate.addResidenceType(Mountain.class, Igloo.class);
 		economyTemplate.addEcoGroundType(Plain.class, RawTreadGround.class);
 		economyTemplate.addEcoGroundType(Forest.class, RawTreadGround.class);

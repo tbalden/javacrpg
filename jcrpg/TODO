@@ -44,9 +44,15 @@ Journal window will be needed!
 ----
 Before next release:
 
-[X] integrate Ducorps (scorpoduc? :))
+[X] integrate Anatipions
 	[X] housing
-	[ ] add oasis lake to ducorp town?
+	[X] sand igloo
+	[ ] add oasis lake to anatipion town?
+	
+	[ ] add icons for Yeti/Anat. towns
+	[ ] sounds/entity icons for beings
+
+[ ] check maze with new Movement check code - you can climb walls now 
 
 [ ] dropdown menus reconsider
 [ ] options menu testing - remove CONTINUOUS LOADING option!
