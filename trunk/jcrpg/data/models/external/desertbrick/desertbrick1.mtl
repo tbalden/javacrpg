@@ -1,0 +1,13 @@
+# Blender3D MTL File: desertbrick1.blend
+# Material Count: 1
+newmtl small_house_hut_small_texture.jpg
+Ns 0.000000
+Ka 0.500000 0.500000 0.500000
+Kd 0.640000 0.640000 0.640000
+Ks 0.600000 0.600000 0.600000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd desertbrick1.dds
+
+

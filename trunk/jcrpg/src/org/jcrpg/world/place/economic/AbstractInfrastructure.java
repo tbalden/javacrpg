@@ -162,7 +162,7 @@ public abstract class AbstractInfrastructure {
 			for (Class<?extends Residence> r:residenceTypes)
 			{
 				if (
-						((DistrictSubelement)(EconomyTemplate.economicBase.get(r))).isValidForDistrict(population.getClass())
+						((DistrictSubelement)(EconomyTemplate.getBase(r))).isValidForDistrict(population.getClass())
 						)
 				{
 					filtered.add(r);
@@ -175,7 +175,7 @@ public abstract class AbstractInfrastructure {
 			for (Class<?extends EconomicGround> r:groundTypes)
 			{
 				if (
-						((DistrictSubelement)(EconomyTemplate.economicBase.get(r))).isValidForDistrict(population.getClass())
+						((DistrictSubelement)(EconomyTemplate.getBase(r))).isValidForDistrict(population.getClass())
 						)
 				{
 					filtered.add(r);
@@ -268,7 +268,7 @@ public abstract class AbstractInfrastructure {
 	public void build(InfrastructureElementParameters param)
 	{
 		World world = (World)population.getRoot();
-		Economic e = EconomyTemplate.economicBase.get(param.type);
+		Economic e = EconomyTemplate.getBase(param.type);
 		if (e instanceof EconomicGround)
 		{
 			EconomicGround ground = ((EconomicGround)e);
@@ -394,7 +394,7 @@ public abstract class AbstractInfrastructure {
 		for (Object t:types)
 		{
 			randomPercent = HashUtil.mixPercentage(randomPercent, i++, 0);
-			Economic e = EconomyTemplate.economicBase.get(t);
+			Economic e = EconomyTemplate.getBase((Class <? extends Economic>)t);
 			int like = (int)(e.getLikelyDistanceRatioFromCenter()*100) + (randomPercent-50);
 			if (like-10>dist && like+10<dist) {
 				//System.out.println("LIKELY: "+t);
