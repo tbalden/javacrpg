@@ -172,7 +172,7 @@ public abstract class InputBase implements Savable{
 	public boolean handleMouse(UiMouseEvent mouseEvent)
 	{
 		if (!focusUponMouseEnter)
-			{
+		{
 				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_ENTERED)
 				{
 					handleMouseHover(true);
@@ -181,7 +181,7 @@ public abstract class InputBase implements Savable{
 				{
 					handleMouseHover(false);
 				}
-			}		
+		}		
 		return false;
 	}
 
@@ -330,6 +330,9 @@ public abstract class InputBase implements Savable{
 		return globalTooltip;
 	}
 		
-	
+	public boolean needsDeactivationInLayout()
+	{
+		return false;
+	}
 	
 }

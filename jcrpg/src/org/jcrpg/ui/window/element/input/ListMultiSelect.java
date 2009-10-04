@@ -623,7 +623,10 @@ public class ListMultiSelect extends InputBase {
 						activate();
 						return false;
 					}
-				} else
+				} 
+			}
+			if (focusUponMouseEnter||!deactivateUponUse)
+			{
 				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 				{
 					if (isEnabled() && active)

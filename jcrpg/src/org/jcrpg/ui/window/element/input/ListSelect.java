@@ -186,6 +186,16 @@ public class ListSelect extends InputBase {
 				Quad w1 = Window.loadImageToQuad(new File(bgImage), dSizeX, dSizeY, dCenterX, dCenterY);
 				w1.setSolidColor(ColorRGBA.gray);
 				deactivatedNode.attachChild(w1);
+				if (dSizeX==0)
+				{
+					try {
+					throw new Exception();
+					} catch (Exception ee)
+					{
+						ee.printStackTrace();
+					}
+				}
+				//System.out.println("DEA: -- "+id+" ? "+bgImage+ " "+dSizeX+" / "+dCenterX);
 			} catch (Exception ex)
 			{
 				ex.printStackTrace();
@@ -328,7 +338,7 @@ public class ListSelect extends InputBase {
 				if (i==maxVisible && i+fromCount<maxCount)
 				{
 					nextPageAvailable = true;
-					text = "...";
+					text = "";
 				} else {
 					if (i==maxVisible)
 					{
@@ -396,10 +406,12 @@ public class ListSelect extends InputBase {
 				size++;
 			}
 		}
-		activatedNode.getChild(0).setLocalScale(new Vector3f(1f,size,size));
+		boolean singlePage = texts.length<=maxVisible;
+		activatedNode.getChild(0).setLocalScale(new Vector3f(1f,singlePage?size:maxVisible,singlePage?size:maxVisible));//size,size));
 		if (size>0)
 		{
-			activatedNode.getChild(0).setLocalTranslation(dCenterX, dCenterY - ((size-1) * dSizeY)/2, 0);
+			//activatedNode.getChild(0).setLocalTranslation(dCenterX, dCenterY - ((size-1) * dSizeY)/2, 0);
+			activatedNode.getChild(0).setLocalTranslation(dCenterX, dCenterY - (((singlePage?size:maxVisible)-1) * dSizeY)/2, 0);
 		}
 		activatedNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
@@ -484,6 +496,7 @@ public class ListSelect extends InputBase {
 			if (ids.length>0) 
 			{
 				setValue(ids[fromCount+selected]);
+
 				w.inputChanged(this, key);
 			}
 		} else
@@ -520,6 +533,7 @@ public class ListSelect extends InputBase {
 			updated = false;
 		}
 		setupDeactivated();
+		//System.out.println("# DEACTIVATED "+id);
 	}
 
 	@Override
@@ -569,7 +583,10 @@ public class ListSelect extends InputBase {
 						activate();
 						return false;
 					}
-				} else
+				} 
+			}
+			if (focusUponMouseEnter||!deactivateUponUse)
+			{
 				if (mouseEvent.getEventType()==UiMouseEventType.MOUSE_EXITED)
 				{
 					if (isEnabled() && active)
@@ -587,7 +604,9 @@ public class ListSelect extends InputBase {
 				{
 					if (mouseEvent.getAreaSpatial().ratioX<=0.8f)
 					{
-						selected = (int)(mouseEvent.getAreaSpatial().ratioY*size);
+						int countedSelected = (int)(mouseEvent.getAreaSpatial().ratioY*maxVisible);//size);
+						if (countedSelected>=size) return false;
+						selected = countedSelected;
 						int i=0;
 						for (Node n:textNodes)
 						{
@@ -711,4 +730,11 @@ public class ListSelect extends InputBase {
 			return tt;
 		}catch (Exception ex) {return globalTooltip;}
 	}
+	
+	@Override
+	public boolean needsDeactivationInLayout() {
+		return true;
+	}
+
+	
 }
