@@ -151,7 +151,7 @@ public class PartySetup extends PagedInputWindow {
 	    	
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.10f, 0.2f, 0.07f,600f,"Select a Scenario to play:",false); 
 	    	scenarioSelect = new ListSelect("scenario",this,pageMemberSelection,0.385f,0.15f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
-	    	scenarioSelect.focusUponMouseEnter = true;
+	    	//scenarioSelect.focusUponMouseEnter = true;
 	    	scenarioSelect.deactivateUponUse = true;
 	    	addInput(0,scenarioSelect);
 
@@ -179,14 +179,14 @@ public class PartySetup extends PagedInputWindow {
 	    	String[] seeds = new String[]{"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"};
 	    	seedSelect = new ListSelect("seed",this,pageMemberSelection,0.385f,0.26f,0.5f,0.05f,600f,seeds,seeds,null,null);
 	    	seedSelect.objects = seeds;
-	    	seedSelect.focusUponMouseEnter = true;
+	    	//seedSelect.focusUponMouseEnter = true;
 	    	seedSelect.deactivateUponUse = true;
 	    	seedSelect.globalTooltip = "Select a Seed which will determine the geography, population, ecology etc. of the generated world. A given seed will always result the same generated starting world.";
 	    	addInput(0,seedSelect);
 
 	    	new TextLabel("",this,pageMemberSelection, 0.23f, 0.32f, 0.2f, 0.07f,600f,"Select a character to add:",false); 
 	    	addCharSelect = new ListSelect("add_char",this,pageMemberSelection,0.385f,0.37f,0.5f,0.05f,600f,new String[]{"id1","id2"},new String[]{"text to select1","text to select2"},null,null);
-	    	addCharSelect.focusUponMouseEnter = true;
+	    	//addCharSelect.focusUponMouseEnter = true;
 	    	addCharSelect.deactivateUponUse = false;
 	    	addCharSelect.globalTooltip = "You can add a character to party by left clicking on its name, remove it by right click. Create new character if you have not enough for the desired party.";
 	    	addInput(0,addCharSelect);
@@ -306,7 +306,7 @@ public class PartySetup extends PagedInputWindow {
 	    			counter++;
 	    		}*/
 	    		ListSelect sel = new ListSelect("skillgroup", this,pageCreationSecond, 0.38f,0.2f+0.05f*posY,0.3f,0.04f,600f,skillIds.toArray(new String[0]),skillTexts.toArray(new String[0]),skillObjects.toArray(new Object[0]),null,null);
-	    		sel.focusUponMouseEnter = true;
+	    		//sel.focusUponMouseEnter = true;
 	    		sel.deactivateUponUse = true;
 		    	posY++;
 	    		skillSelects.put(groupId, sel);

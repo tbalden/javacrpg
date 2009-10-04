@@ -44,19 +44,18 @@ Journal window will be needed!
 ----
 Before next release:
 
+[X] dropdown menus reconsider
+[X] options menu testing - remove CONTINUOUS LOADING option!
+
 [X] integrate Anatipions
 	[X] housing
 	[X] sand igloo
+	[X] add icons for Yeti/Anat. towns
+
 	[ ] add oasis lake to anatipion town?
-	
-	[ ] add icons for Yeti/Anat. towns
 	[ ] sounds/entity icons for beings
 
-[ ] check maze with new Movement check code - you can climb walls now 
-
-[ ] dropdown menus reconsider
-[ ] options menu testing - remove CONTINUOUS LOADING option!
-
+[X] check maze with new Movement check code - you can climb walls now 
 [X] saving options?
 [X] music volume level is wrong
 [-] bloom/dof effect together doesnt seem to show on high viewdist., test. okay

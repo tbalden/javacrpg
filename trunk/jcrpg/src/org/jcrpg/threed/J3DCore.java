@@ -3158,14 +3158,17 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public void applyOptions()
 	{
 		switchPass(bloomRenderPass, SETTINGS.BLOOM_EFFECT);
+		
 		switchPass(dofRenderPass, SETTINGS.DOF_EFFECT&&!SETTINGS.BLOOM_EFFECT);
 		
 		if (pManager.contains(waterEffectRenderPass))
 		{
 			waterEffectRenderPass.setUseShader(SETTINGS.WATER_SHADER);
 		}
+		
 		audioServer.applyVolumeSettings();
 		getClassicInputHandler().applyMouseSettings();
+
 	}
 
 	/**
