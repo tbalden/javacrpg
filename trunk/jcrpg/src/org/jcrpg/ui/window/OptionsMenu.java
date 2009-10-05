@@ -119,7 +119,7 @@ public class OptionsMenu extends PagedInputWindow {
             SimpleLayout firstLayout = new SimpleLayout(0.30f, 0.16f, 0.25f, 0.07f ,3);
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.presets"), false));
             selectPreset = new ListSelect("preset", this, pageFirst, 600f, presetIds, presetIds, null, null);
-            selectPreset.focusUponMouseEnter = true;
+            //selectPreset.focusUponMouseEnter = true;
             //selectPreset.detach();
             addInput(0, selectPreset); 
             firstLayout.addToColumn(1, selectPreset, 0.85f, 0.5f);

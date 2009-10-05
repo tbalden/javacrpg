@@ -74,7 +74,7 @@ public abstract class PagedInputWindow extends InputWindow {
 	{
 		super.inputs = inputs.get(pageNumber);
 		super.selectedInput = 0;
-		activateSelectedInput();
+		//activateSelectedInput();
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public abstract class PagedInputWindow extends InputWindow {
 			windowNode.detachAllChildren();
 			windowNode.attachChild(pageNodes.get(currentPage));
 		}
-		activateSelectedInput();
+		//activateSelectedInput();
 		windowNode.updateRenderState();
 		windowNode.updateModelBound();
 	}
