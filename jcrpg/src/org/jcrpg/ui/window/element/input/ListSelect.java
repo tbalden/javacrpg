@@ -503,6 +503,10 @@ public class ListSelect extends InputBase {
 		if (key.equals("enter"))
 		{
 			w.inputUsed(this , key);
+			if (deactivateUponUse)
+			{
+				deactivate();
+			}
 		} else
 		if (key.equals("negative"))
 		{

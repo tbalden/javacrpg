@@ -209,6 +209,13 @@ public class StoryPartDisplayWindow extends InputWindow implements Runnable{
 				scrollingLines.get(counter++).print(line);
 			}
 		}
+		if (counter<scrollingLines.size()-1)
+		{
+			for (int i=counter; i<scrollingLines.size(); i++)
+			{
+				scrollingLines.get(i).print("");
+			}
+		}
 		scrollNode.setLocalTranslation(0f, 0-core.getDisplay().getHeight(), 0f);
 		scrollNode.startFlying(20.0f, 28f);
 		scrollNode.updateRenderState();

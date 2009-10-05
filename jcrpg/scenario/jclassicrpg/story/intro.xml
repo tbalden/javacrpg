@@ -9,4 +9,12 @@ Fulfill your destiny!
 </text>  
 <image></image> 
 </block>
+<block>
+<text>
+Keyboard/Mouse Tutorial\n\n
+Use W&#160;&#160;and S to move forward and backwards. Use A and S to turn left and right. Use Q and E for strafe movement.\nPress Right mouse button while walking to toggle between pointer and mouselook. Use pointer mode mouse to access the menus and windows. You can click on the upper buttons or on the portraits.\nLeft clicking on the character portraits brings up Inventory, use right click for Character Sheet. If you find a chest use upper Search button for inspecting it. Use Inventory to attach ammo to weapons or equip armors.\nSave often. Use F10 to quickly access Main Menu, F12 for creating screenshots.\n\n
+Report bugs at jClassicRPG forum or the sf.net bugtracker. Thanks!
+</text>  
+<image></image> 
+</block>
 </story>
