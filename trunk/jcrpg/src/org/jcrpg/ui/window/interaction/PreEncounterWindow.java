@@ -133,6 +133,7 @@ public class PreEncounterWindow extends PagedInputWindow {
 	
 	@Override
 	public void setupPage() {
+		super.setupPage();
 		EncounterInfo i = possibleGroups;
 
 		//if (!i.active) continue;
@@ -157,10 +158,9 @@ public class PreEncounterWindow extends PagedInputWindow {
 			groupList.objects = objects;
 			groupList.texts = texts;
 			groupList.setUpdated(true);
-			groupList.activate();
+			//groupList.activate();
 			groupList.deactivate();
 		}
-		super.setupPage();
 	}
 
 	@Override

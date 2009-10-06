@@ -53,6 +53,56 @@
 		<mkdir dir="${runjar.dir}"/>
 		<mkdir dir="${runtmp.dir}"/>
 		<mkdir dir="${output.dir}"/>
+		
+	</target>
+	
+	<target name="dist-half" depends="-init,compile">
+		<copy todir="${rundata.dir}">
+			<fileset dir="${srcdata.dir}">
+			</fileset>
+		</copy>
+		<copy todir="${rundata.dir}">
+			<fileset dir="${srcdata.dir}">
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="dist-package">
+		<mkdir dir="${dist.dir}"/>
+	<!--	<jar compress="true" jarfile="${dist.dir}/jcrpg-dist.zip">
+			<fileset dir="${basedir}" includes="bin/"/>
+			<fileset dir="${basedir}" includes="data/"/>
+			<fileset dir="${basedir}" includes="jme/"/>
+			<fileset dir="${basedir}" includes="lib/"/>
+			<fileset dir="${basedir}" includes="src/"/>
+			<fileset dir="${basedir}" includes="scenario/"/>
+			<fileset dir="${basedir}" includes="chars/"/>
+			<fileset dir="${basedir}" includes="save/"/>
+			<fileset dir="${basedir}" includes="*">
+			<exclude name="*.log"/>
+			<exclude name="*0.txt"/>
+			<exclude name="*.png"/>
+			<exclude name="*.jpg"/>
+			</fileset>
+		</jar>
+	-->	<tar destfile="${dist.dir}/jcrpg-dist.tar.gz" compression="gzip">
+			<fileset dir="${basedir}" includes="bin/"/>
+			<fileset dir="${basedir}" includes="data/"/>
+			<fileset dir="${basedir}" includes="jme/"/>
+			<fileset dir="${basedir}" includes="lib/"/>
+			<fileset dir="${basedir}" includes="src/"/>
+			<fileset dir="${basedir}" includes="scenario/"/>
+			<fileset dir="${basedir}" includes="chars/"/>
+			<fileset dir="${basedir}" includes="save/"/>
+			<tarfileset mode="755" dir="${basedir}" includes="*.sh"/>
+			<fileset dir="${basedir}" includes="*">
+			<exclude name="*.sh"/>
+			<exclude name="*.log"/>
+			<exclude name="*0.txt"/>
+			<exclude name="*.png"/>
+			<exclude name="*.jpg"/>
+			</fileset>
+		</tar>
 	</target>
 
 

@@ -28,22 +28,13 @@ import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanFemaleHousewife;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleArtisan;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMalePeasant;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.ai.humanoid.group.yeti.member.YetiMaleHunter;
 import org.jcrpg.world.climate.impl.arctic.Arctic;
-import org.jcrpg.world.climate.impl.continental.Continental;
-import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.Population;
-import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.ground.RawTreadGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
-import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Igloo;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 
 import com.jme.renderer.ColorRGBA;
@@ -70,7 +61,7 @@ public class YetiHunters extends HumanoidEntityDescription {
 */
 	public YetiHunters()
 	{
-		iconPic = "human";
+		//iconPic = "human"; // TODO
 		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);

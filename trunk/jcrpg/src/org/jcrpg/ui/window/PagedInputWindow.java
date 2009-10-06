@@ -74,6 +74,8 @@ public abstract class PagedInputWindow extends InputWindow {
 	{
 		super.inputs = inputs.get(pageNumber);
 		super.selectedInput = 0;
+		if (super.inputs!=null)
+		for (InputBase b:super.inputs) b.deactivate();
 		//activateSelectedInput();
 	}
 	
