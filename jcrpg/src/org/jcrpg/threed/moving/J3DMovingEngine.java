@@ -472,6 +472,8 @@ public class J3DMovingEngine {
 	public void visualizeImpactPoints(RenderedMovingUnit unit, ImpactUnit impact)
 	{
 		FlyingNode node = getImpactPointsBillboardNode(impact);
+		// repositioning the starting based on model disposition, otherwise it would be out of camera view...
+		node.setLocalTranslation(-unit.models[0].disposition[0], -unit.models[0].disposition[1], -unit.models[0].disposition[2]);
 		NodePlaceholder n = unit.nodePlaceholders.iterator().next();
 		Node realPooledNode = (Node)n.realNode;
 		if (realPooledNode!=null) {

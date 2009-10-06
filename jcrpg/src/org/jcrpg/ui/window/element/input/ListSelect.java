@@ -416,6 +416,13 @@ public class ListSelect extends InputBase {
 		activatedNode.setModelBound(new BoundingBox());
 		baseNode.updateRenderState();
 		baseNode.updateModelBound();
+		System.out.println("ACTIVATION FINISHED "+size+ " "+id);
+		try {
+			if (id.equals("group")) throw new Exception();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public boolean select(boolean next)
@@ -537,7 +544,14 @@ public class ListSelect extends InputBase {
 			updated = false;
 		}
 		setupDeactivated();
-		//System.out.println("# DEACTIVATED "+id);
+		System.out.println("# DEACTIVATED "+id);
+		try {
+			if (id.equals("group")) throw new Exception("DEACTIVATED");
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
 	}
 
 	@Override

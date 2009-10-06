@@ -117,6 +117,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 			inputs.get(previouslyActive).deactivate();
 		}
 		if (inputs!=null && inputs.size()>selectedInput && selectedInput!=previouslyActive) {
+			System.out.println("ACTIVATEING");
 			inputs.get(selectedInput).activate();
 			previouslyActive = selectedInput;
 		}

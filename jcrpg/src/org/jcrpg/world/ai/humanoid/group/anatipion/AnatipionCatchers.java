@@ -22,32 +22,21 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.world.ai.AudioDescription;
 import org.jcrpg.world.ai.abs.behavior.Aggressive;
-import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanFemaleHousewife;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleArtisan;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMalePeasant;
-import org.jcrpg.world.ai.humanoid.group.human.member.HumanMaleSmith;
 import org.jcrpg.world.ai.humanoid.group.yeti.member.YetiMaleHunter;
-import org.jcrpg.world.climate.impl.arctic.Arctic;
-import org.jcrpg.world.climate.impl.continental.Continental;
 import org.jcrpg.world.climate.impl.desert.Desert;
-import org.jcrpg.world.climate.impl.tropical.Tropical;
 import org.jcrpg.world.place.economic.Population;
-import org.jcrpg.world.place.economic.ground.RawStreetGround;
 import org.jcrpg.world.place.economic.ground.RawTreadGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.BrickHouse;
-import org.jcrpg.world.place.economic.residence.House;
-import org.jcrpg.world.place.economic.residence.Igloo;
 import org.jcrpg.world.place.economic.residence.SandIgloo;
 import org.jcrpg.world.place.geography.Forest;
-import org.jcrpg.world.place.geography.Mountain;
 import org.jcrpg.world.place.geography.Plain;
 
 import com.jme.renderer.ColorRGBA;
@@ -66,7 +55,26 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 	public static HumanMaleSmith HUMAN_MALE_SMITH = new HumanMaleSmith("HUMAN_MALE_SMITH",humanMaleAudio);
 	public static HumanFemaleHousewife HUMAN_FEMALE_HOUSEWIFE= new HumanFemaleHousewife("HUMAN_FEMALE_HOUSEWIFE",humanFemaleAudio);
 */
+
 	public static MovingModel anatipionMale = new MovingModel("models/humanoid/anatipion/anatipion1.obj",null,null,null,false);
+
+	static {
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+		desc.IDLE = "./data/models/humanoid/anatipion/anat1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.WALK = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/humanoid/anatipion/anat1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/humanoid/anatipion/anat1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.DEFEND_UPPER = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.PAIN = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.DEATH_NORMAL = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.DEAD = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		anatipionMale = new MovingModel("./data/models/humanoid/anatipion/anat1.md5mesh",desc,null,null,false);
+		anatipionMale.genericScale = 0.5f;
+		anatipionMale.disposition = new float[] {0f,+1f,-1f};
+	}
+
 	public static RenderedMovingUnit anatipionMale_unit = new RenderedMovingUnit(new Model[]{anatipionMale});
 
 	/*public static MovingModel humanFemale = new MovingModel("models/humanoid/human/human_female_1.obj",null,null,null,false);
@@ -74,7 +82,7 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 */
 	public AnatipionCatchers()
 	{
-		iconPic = "human";
+		//iconPic = "human"; // TODO
 		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);

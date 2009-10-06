@@ -220,6 +220,7 @@ public class EncounterWindow extends PagedInputWindow {
 				memberSelect.activate();
 				//Collection<Class<? extends SkillBase>> skills = i.description.getCommonSkills().getSkillsOfType(InterceptionSkill.class);
 			}
+			inputLeft(memberSelect,"");
 			inputChanged(groupSelect, "");
 		}
 		super.setupPage();
@@ -302,26 +303,32 @@ public class EncounterWindow extends PagedInputWindow {
 			hmMemberSelectedSkill.put((EntityMemberInstance)memberSelect.getSelectedObject(), (SkillBase)skillSelect.getSelectedObject());
 			
 			EntityMemberInstance i = (EntityMemberInstance)memberSelect.getSelectedObject();
-			SkillBase s = (SkillBase)skillSelect.getSelectedObject();
-			SkillInstance skillInstance = i.getSkills().skills.get(s.getClass());
-			ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
-			String[] texts = new String[forms.size()];
-			Object[] objects = new Object[forms.size()];
-			String[] ids = new String[forms.size()];
-			int counter = 0;
-			for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+			if (i!=null)
 			{
-				ids[counter] = ""+counter;
-				texts[counter] = form.getSimpleName();
-				objects[counter] = form;				    
-				counter++;
+				SkillBase s = (SkillBase)skillSelect.getSelectedObject();
+				if (s!=null)
+				{
+					SkillInstance skillInstance = i.getSkills().skills.get(s.getClass());
+					ArrayList<Class<?extends SkillActForm>> forms = skillInstance.aquiredActForms;
+					String[] texts = new String[forms.size()];
+					Object[] objects = new Object[forms.size()];
+					String[] ids = new String[forms.size()];
+					int counter = 0;
+					for (Class<? extends SkillActForm> form:skillInstance.aquiredActForms)
+					{
+						ids[counter] = ""+counter;
+						texts[counter] = form.getSimpleName();
+						objects[counter] = form;				    
+						counter++;
+					}
+					skillActFormSelect.ids = ids;
+					skillActFormSelect.texts = texts;
+					skillActFormSelect.objects = objects;
+					skillActFormSelect.setUpdated(true);
+					skillActFormSelect.deactivate();
+					skillActFormSelect.setSelected(0);
+				}
 			}
-			skillActFormSelect.ids = ids;
-			skillActFormSelect.texts = texts;
-			skillActFormSelect.objects = objects;
-			skillActFormSelect.setUpdated(true);
-			skillActFormSelect.deactivate();
-			skillActFormSelect.setSelected(0);			
 			return true;
 		}
 
