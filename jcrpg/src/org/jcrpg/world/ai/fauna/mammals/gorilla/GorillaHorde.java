@@ -70,10 +70,13 @@ public class GorillaHorde extends AnimalEntityDescription {
 	{
 		
 	}
-	
+	@Override
+	public String getEntityIconPic() {
+		return "gorilla";
+	}
+
 	public GorillaHorde()
 	{
-		iconPic = "gorilla";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Peaceful.class);

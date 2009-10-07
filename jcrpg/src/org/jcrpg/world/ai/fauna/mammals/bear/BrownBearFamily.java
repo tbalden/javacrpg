@@ -54,10 +54,13 @@ public class BrownBearFamily extends AnimalEntityDescription {
 	{
 		
 	}
+	@Override
+	public String getEntityIconPic() {
+		return "bear";
+	}
 	
 	public BrownBearFamily()
 	{
-		iconPic = "bear";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Aggressive.class);

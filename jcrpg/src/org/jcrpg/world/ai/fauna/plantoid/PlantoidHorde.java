@@ -29,10 +29,13 @@ import org.jcrpg.world.place.geography.Forest;
 
 public class PlantoidHorde extends AnimalEntityDescription {
 	
-	
+	@Override
+	public String getEntityIconPic() {
+		return "unknown";
+	}
+
 	public PlantoidHorde()
 	{
-		iconPic = "unknown";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Aggressive.class);

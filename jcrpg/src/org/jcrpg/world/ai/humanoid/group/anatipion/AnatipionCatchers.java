@@ -82,7 +82,6 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 */
 	public AnatipionCatchers()
 	{
-		//iconPic = "human"; // TODO
 		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
@@ -113,6 +112,11 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 		//addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE,300,5,10);
 		//addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		//addGroupingRuleMember(HUMAN_MALE_SMITH);
+	}
+
+	@Override
+	public String getEntityIconPic() {
+		return "anatipion";
 	}
 
 	static byte[] populationColor = new byte[] {(byte)240,(byte)240,(byte)240};

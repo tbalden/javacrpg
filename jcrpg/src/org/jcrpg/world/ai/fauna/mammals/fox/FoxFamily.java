@@ -53,9 +53,12 @@ public class FoxFamily extends AnimalEntityDescription {
 	static
 	{
 	}
+	@Override
+	public String getEntityIconPic() {
+		return "fox";
+	}
 
 	public FoxFamily() {
-		iconPic = "fox";
 		climates.add(Tropical.class);
 		climates.add(Continental.class);	
 		//climates.add(Arctic.class);

@@ -58,7 +58,6 @@ public class GiantCaveSpiders extends AnimalEntityDescription {
 	
 	public GiantCaveSpiders()
 	{
-		iconPic = "spider";
 		climates.add(Continental.class);
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
@@ -70,6 +69,11 @@ public class GiantCaveSpiders extends AnimalEntityDescription {
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_MALE);
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_FEMALE);
 		addGroupingRuleMember(GIANTCAVESPIDER_TYPE_CHILD);
+	}
+
+	@Override
+	public String getEntityIconPic() {
+		return "spider";
 	}
 
 

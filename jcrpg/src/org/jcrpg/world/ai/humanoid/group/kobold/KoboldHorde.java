@@ -54,10 +54,13 @@ public class KoboldHorde extends HumanoidEntityDescription {
 	}
 	public static RenderedMovingUnit koboldMaleMiner_unit = new RenderedMovingUnit(new Model[]{koboldMaleMiner});
 
+	@Override
+	public String getEntityIconPic() {
+		return "kobold";
+	}
 
 	public KoboldHorde()
 	{
-		iconPic = "kobold";
 		climates.add(Tropical.class);
 		climates.add(Continental.class);
 		geographies.add(Cave.class);

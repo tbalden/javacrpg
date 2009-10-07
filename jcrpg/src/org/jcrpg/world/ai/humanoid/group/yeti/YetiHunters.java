@@ -61,7 +61,6 @@ public class YetiHunters extends HumanoidEntityDescription {
 */
 	public YetiHunters()
 	{
-		//iconPic = "human"; // TODO
 		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
@@ -90,6 +89,10 @@ public class YetiHunters extends HumanoidEntityDescription {
 		//addGroupingRuleMember(HUMAN_FEMALE_HOUSEWIFE,300,5,10);
 		//addGroupingRuleMember(HUMAN_MALE_PEASANT);
 		//addGroupingRuleMember(HUMAN_MALE_SMITH);
+	}
+	@Override
+	public String getEntityIconPic() {
+		return "yeti";
 	}
 
 	static byte[] populationColor = new byte[] {(byte)240,(byte)240,(byte)240};
