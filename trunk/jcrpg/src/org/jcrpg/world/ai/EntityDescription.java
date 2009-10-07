@@ -386,5 +386,10 @@ public class EntityDescription extends DescriptionBase {
 	{
 		return null;
 	}
+	
+	public String getEntityIconPic()
+	{
+		return "unknown";
+	}
 
 }

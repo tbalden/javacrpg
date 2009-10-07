@@ -65,10 +65,13 @@ public class HumanCommoners extends HumanoidEntityDescription {
 	public static MovingModel humanFemale = new MovingModel("models/humanoid/human/human_female_1.obj",null,null,null,false);
 	public static RenderedMovingUnit humanFemale_unit = new RenderedMovingUnit(new Model[]{humanFemale});
 
+	@Override
+	public String getEntityIconPic() {
+		return "human";
+	}
+
 	public HumanCommoners()
 	{
-		iconPic = "human";
-		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);

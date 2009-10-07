@@ -30,6 +30,7 @@ import org.jcrpg.ui.Window;
 import org.jcrpg.ui.text.Text;
 
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.shape.Quad;
@@ -58,14 +59,25 @@ public class EntityOMeter {
 			t = t.substring(0,6);
 		}
 		Text text = (Text)node.getChild(textId);
+		Text textBg = (Text)node.getChild(textId+"bg");
 		if (text == null)
 		{
-			text = Text.createDefaultTextLabel(textId, t);
-			text.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/1224f);
-			text.setLocalTranslation(-1*J3DCore.getInstance().getDisplay().getWidth()/40f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
-			node.attachChild(text);
+			{
+				textBg = Text.createDefaultTextLabel(textId+"bg", t);
+				textBg.setTextColor(ColorRGBA.black);
+				textBg.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/1224f);
+				textBg.setLocalTranslation(-1*J3DCore.getInstance().getDisplay().getWidth()/40.2f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
+				node.attachChild(textBg);
+			}
+			{
+				text = Text.createDefaultTextLabel(textId, t);
+				text.setLocalScale(J3DCore.getInstance().getDisplay().getWidth()/1224f);
+				text.setLocalTranslation(-1*J3DCore.getInstance().getDisplay().getWidth()/40f, -vertPos* J3DCore.getInstance().getDisplay().getHeight()/60f, 0f);
+				node.attachChild(text);
+			}
 		} else
 		{
+			textBg.print(t);
 			text.print(t);
 		}
 	}

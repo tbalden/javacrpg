@@ -52,10 +52,12 @@ public class WolfPack extends AnimalEntityDescription {
 	static
 	{
 	}
+	@Override
+	public String getEntityIconPic() {
+		return "wolf";
+	}
 
 	public WolfPack() {
-		iconPic = "wolf";
-		
 		climates.add(Continental.class);
 		climates.add(Arctic.class);
 		foodEntities.add(Warthogs.class);

@@ -424,11 +424,11 @@ public class GameStateContainer {
 				EntityOMeterData eData = new EntityOMeterData();
 				eData.kind = data.kind;
 				eData.realKind = data.fragment.getName();
-				eData.picture = data.kindKnown?i.instance.description.iconPic:"unknown";
+				eData.picture = data.kindKnown?i.instance.description.getEntityIconPic():"unknown";
 				Vector3f point = new Vector3f(i.roamingBoundary.posX,i.roamingBoundary.posY,i.roamingBoundary.posZ);//new Vector3f(commonRadius[1][0],commonRadius[1][1],commonRadius[1][2]);
 				eData.dist =  data.getUpdatedDist();
 				eData.angle = data.distanceKnown?vParty.subtract(point).normalize().angleBetween(new Vector3f(1f,0,1f))*114.6f:null;
-				map.put(i.instance.description.iconPic,eData);
+				map.put(i.instance.description.getEntityIconPic(),eData);
 			}
 		}
 		/*

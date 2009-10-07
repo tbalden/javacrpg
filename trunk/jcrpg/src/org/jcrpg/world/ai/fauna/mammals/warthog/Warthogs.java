@@ -43,9 +43,12 @@ public class Warthogs extends AnimalEntityDescription {
 	public static MovingModel wolf = new MovingModel("models/fauna/warthog_model.obj",null,null,null,false);
 	public static RenderedMovingUnit warthog_unit = new RenderedMovingUnit(new Model[]{wolf});
 	
+	@Override
+	public String getEntityIconPic() {
+		return "warthog";
+	}
 
 	public Warthogs() {
-		iconPic = "warthog";
 		climates.add(Tropical.class);
 		geographies.add(Forest.class);
 		behaviors.add(Escapist.class);

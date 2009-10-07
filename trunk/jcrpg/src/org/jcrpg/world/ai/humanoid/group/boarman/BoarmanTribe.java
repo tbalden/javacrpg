@@ -107,11 +107,13 @@ public class BoarmanTribe extends HumanoidEntityDescription {
 
 	public static RenderedMovingUnit boarmanFemale_unit = new RenderedMovingUnit(new Model[]{boarmanFemale});
 
+	@Override
+	public String getEntityIconPic() {
+		return "boarman";
+	}
 
 	public BoarmanTribe()
 	{
-		iconPic = "boarman";
-		
 		economyTemplate.addPopulationType(Plain.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Forest.class, SimpleDistrict.class);
 		economyTemplate.addPopulationType(Mountain.class, SimpleDistrict.class);		
