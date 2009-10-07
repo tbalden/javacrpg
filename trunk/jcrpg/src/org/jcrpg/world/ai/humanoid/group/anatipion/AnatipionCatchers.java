@@ -65,11 +65,11 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 		desc.WALK = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
 		desc.ATTACK_LOWER = "./data/models/humanoid/anatipion/anat1_attack.md5anim";
 		desc.ATTACK_UPPER = "./data/models/humanoid/anatipion/anat1_attack.md5anim";
-		desc.DEFEND_LOWER = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
-		desc.DEFEND_UPPER = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
-		desc.PAIN = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
-		desc.DEATH_NORMAL = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
-		desc.DEAD = "./data/models/humanoid/anatipion/anat1_idle.md5anim";
+		desc.DEFEND_LOWER = "./data/models/humanoid/anatipion/anat1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/humanoid/anatipion/anat1_hit.md5anim";
+		desc.PAIN = "./data/models/humanoid/anatipion/anat1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/humanoid/anatipion/anat1_hit.md5anim";
+		desc.DEAD = "./data/models/humanoid/anatipion/anat1_hit.md5anim";
 		anatipionMale = new MovingModel("./data/models/humanoid/anatipion/anat1.md5mesh",desc,null,null,false);
 		anatipionMale.genericScale = 0.5f;
 		anatipionMale.disposition = new float[] {0f,+1f,-1f};
