@@ -135,7 +135,7 @@ public class OptionsMenu extends PagedInputWindow {
             firstLayout.addToColumn(1, tunerViewDistance, 0.35f, 0.5f);
             addInput(0, tunerViewDistance);
             firstLayout.addToColumn(0, new TextLabel("",this, pageFirst, 600f, Language.v("optionsmenu.render.distance"), false));
-            int tunerValue = (J3DCore.SETTINGS.RENDER_DISTANCE>J3DCore.SETTINGS.VIEW_DISTANCE+6 ? J3DCore.SETTINGS.RENDER_DISTANCE : J3DCore.SETTINGS.VIEW_DISTANCE+6);
+            int tunerValue = (J3DCore.SETTINGS.RENDER_DISTANCE_CALC>J3DCore.SETTINGS.VIEW_DISTANCE+6 ? J3DCore.SETTINGS.RENDER_DISTANCE_CALC : J3DCore.SETTINGS.VIEW_DISTANCE+6);
             tunerRenderDistance = new ValueTuner("",this, pageFirst, 600f, tunerValue, 16, 66, 2);
             firstLayout.addToColumn(1, tunerRenderDistance, 0.35f, 0.5f);
             addInput(0, tunerRenderDistance);
@@ -286,6 +286,7 @@ public class OptionsMenu extends PagedInputWindow {
 
             J3DCore.SETTINGS.VIEW_DISTANCE = tunerViewDistance.getSelection();
             J3DCore.SETTINGS.RENDER_DISTANCE = tunerRenderDistance.getSelection();
+            J3DCore.SETTINGS.RENDER_DISTANCE_CALC = (int)(tunerRenderDistance.getSelection()/J3DCore.CUBE_EDGE_SIZE);
             J3DCore.SETTINGS.RENDER_GRASS_DISTANCE = tunerRenderGrassDistance.getSelection();
             J3DCore.SETTINGS.TEXTURE_QUALITY = tunerTextureDetail.getSelection();
             J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT = tunerEffectsVolume.getSelection();
@@ -336,14 +337,14 @@ public class OptionsMenu extends PagedInputWindow {
             setupPage();
             return true; 
         } else if (base == tunerViewDistance) {
-            if (tunerViewDistance.getSelection()+6>tunerRenderDistance.getSelection()) {
-                tunerRenderDistance.setValue(tunerViewDistance.getSelection()+6);
+            if (tunerViewDistance.getSelection()*1.5f>tunerRenderDistance.getSelection()) {
+                tunerRenderDistance.setValue((int)(tunerViewDistance.getSelection()*1.5f));
                 tunerRenderDistance.setUpdated(true);
                 tunerRenderDistance.deactivate();
             }
         } else if (base == tunerRenderDistance) {
-            if (tunerViewDistance.getSelection()+6>tunerRenderDistance.getSelection()) {
-                tunerRenderDistance.setValue(tunerViewDistance.getSelection()+6);
+            if (tunerViewDistance.getSelection()*1.5f>tunerRenderDistance.getSelection()) {
+                tunerRenderDistance.setValue((int)(tunerViewDistance.getSelection()*1.5f));
                 tunerRenderDistance.setUpdated(true);
                 tunerRenderDistance.activate();
             }
@@ -375,7 +376,7 @@ public class OptionsMenu extends PagedInputWindow {
         toggleDepthOfField.setChecked(coreSettings.DOF_EFFECT); toggleDepthOfField.setUpdated(true);toggleDepthOfField.deactivate();
         tunerShadowDistance.setValue(coreSettings.RENDER_SHADOW_DISTANCE); tunerShadowDistance.setUpdated(true);tunerShadowDistance.deactivate();
         toggleSlowAnimation.setChecked(coreSettings.SLOW_ANIMATION); toggleSlowAnimation.setUpdated(true);toggleSlowAnimation.deactivate();
-        setupPage();
+        //setupPage();
     }
 
 }

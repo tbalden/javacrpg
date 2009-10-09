@@ -188,9 +188,9 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		/**
 		 * rendered cubes in each direction (N,S,E,W,T,B).
 		 */
-		public int RENDER_DISTANCE_ORIG = 10;
-		public int RENDER_DISTANCE_FARVIEW = 40;
 		public int RENDER_DISTANCE = 10;
+		public int RENDER_DISTANCE_FARVIEW = 40;
+		public int RENDER_DISTANCE_CALC = 10;
 		public int VIEW_DISTANCE = 10;
 		public int VIEW_DISTANCE_SQR = 100;
 		public int VIEW_DISTANCE_FRAG_SQR = 20;
@@ -308,7 +308,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			coreSettings.RENDER_DISTANCE = loadValue("RENDER_DISTANCE",
 					(int) (10 * CUBE_EDGE_SIZE), (int) (10 * CUBE_EDGE_SIZE),
 					Integer.MAX_VALUE);
-			coreSettings.RENDER_DISTANCE /= CUBE_EDGE_SIZE;
+			coreSettings.RENDER_DISTANCE_CALC = loadValue("RENDER_DISTANCE",
+					(int) (10 * CUBE_EDGE_SIZE), (int) (10 * CUBE_EDGE_SIZE),
+					Integer.MAX_VALUE);
+			coreSettings.RENDER_DISTANCE_CALC /= CUBE_EDGE_SIZE;
 
 			//if (CONTINUOUS_LOAD)
 				//VIEW_DISTANCE = (int) (RENDER_DISTANCE * CUBE_EDGE_SIZE);
@@ -323,8 +326,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 			coreSettings.RENDER_SHADOW_DISTANCE = loadValue("RENDER_SHADOW_DISTANCE", 10, 0,
 					(int) (15 * CUBE_EDGE_SIZE));
-			if (coreSettings.RENDER_SHADOW_DISTANCE > coreSettings.RENDER_DISTANCE * CUBE_EDGE_SIZE)
-			    coreSettings.RENDER_SHADOW_DISTANCE = (int) (coreSettings.RENDER_DISTANCE * CUBE_EDGE_SIZE);
+			if (coreSettings.RENDER_SHADOW_DISTANCE > coreSettings.RENDER_DISTANCE_CALC * CUBE_EDGE_SIZE)
+			    coreSettings.RENDER_SHADOW_DISTANCE = (int) (coreSettings.RENDER_DISTANCE_CALC * CUBE_EDGE_SIZE);
 			coreSettings.RENDER_SHADOW_DISTANCE_SQR = coreSettings.RENDER_SHADOW_DISTANCE
 					* coreSettings.RENDER_SHADOW_DISTANCE;
 
