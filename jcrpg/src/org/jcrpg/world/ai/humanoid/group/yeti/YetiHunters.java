@@ -22,10 +22,12 @@ import java.util.HashMap;
 
 import org.jcrpg.threed.scene.model.Model;
 import org.jcrpg.threed.scene.model.moving.MovingModel;
+import org.jcrpg.threed.scene.model.moving.MovingModelAnimDescription;
 import org.jcrpg.threed.scene.moving.RenderedMovingUnit;
 import org.jcrpg.ui.map.BlockPattern;
 import org.jcrpg.ui.map.IconReader;
 import org.jcrpg.world.ai.AudioDescription;
+import org.jcrpg.world.ai.abs.behavior.Aggressive;
 import org.jcrpg.world.ai.abs.behavior.Peaceful;
 import org.jcrpg.world.ai.humanoid.HumanoidEntityDescription;
 import org.jcrpg.world.ai.humanoid.group.yeti.member.YetiMaleHunter;
@@ -54,6 +56,24 @@ public class YetiHunters extends HumanoidEntityDescription {
 	public static HumanFemaleHousewife HUMAN_FEMALE_HOUSEWIFE= new HumanFemaleHousewife("HUMAN_FEMALE_HOUSEWIFE",humanFemaleAudio);
 */
 	public static MovingModel yetiMale = new MovingModel("models/humanoid/yeti/yeti1.obj",null,null,null,false);
+	
+	static {
+		MovingModelAnimDescription desc = new MovingModelAnimDescription();
+		desc.IDLE = "./data/models/humanoid/yeti/yeti1_idle.md5anim";		
+		desc.IDLE_COMBAT = "./data/models/humanoid/yeti/yeti1_idle.md5anim";
+		desc.WALK = "./data/models/humanoid/yeti/yeti1_idle.md5anim";
+		desc.ATTACK_LOWER = "./data/models/humanoid/yeti/yeti1_attack.md5anim";
+		desc.ATTACK_UPPER = "./data/models/humanoid/yeti/yeti1_attack.md5anim";
+		desc.DEFEND_LOWER = "./data/models/humanoid/yeti/yeti1_hit.md5anim";
+		desc.DEFEND_UPPER = "./data/models/humanoid/yeti/yeti1_hit.md5anim";
+		desc.PAIN = "./data/models/humanoid/yeti/yeti1_hit.md5anim";
+		desc.DEATH_NORMAL = "./data/models/humanoid/yeti/yeti1_hit.md5anim";
+		desc.DEAD = "./data/models/humanoid/yeti/yeti1_hit.md5anim";
+		yetiMale = new MovingModel("./data/models/humanoid/yeti/yeti1.md5mesh",desc,null,null,false);
+		yetiMale.genericScale = 1.0f;
+		yetiMale.disposition = new float[] {0f,+1f,+1f};
+	}
+
 	public static RenderedMovingUnit yetiMale_unit = new RenderedMovingUnit(new Model[]{yetiMale});
 
 	/*public static MovingModel humanFemale = new MovingModel("models/humanoid/human/human_female_1.obj",null,null,null,false);
@@ -79,7 +99,8 @@ public class YetiHunters extends HumanoidEntityDescription {
 		//geographies.add(Mountain.class);
 		//geographies.add(Cave.class);
 		
-		behaviors.add(Peaceful.class);
+		//behaviors.add(Peaceful.class);
+		behaviors.add(Aggressive.class);
 		genderType = GENDER_BOTH;
 		indoorDweller = true;
 		
