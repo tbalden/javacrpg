@@ -371,8 +371,10 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
+			float dispX = unit.models[0].disposition[0];
 			float dispY = unit.models[0].disposition[1];
-			n.setLocalTranslation(new Vector3f(0.5f,0.20f-dispY,0.2f));
+			float dispZ = unit.models[0].disposition[2];
+			n.setLocalTranslation(new Vector3f(0.5f-dispX,0.20f-dispY,0.2f-dispZ));
 			n.setLocalScale(0.095f);
 			unit.sizeTextNode = n;
 		}
@@ -423,8 +425,11 @@ public class J3DMovingEngine {
 			n.setRenderState(s);
 			
 			//n.setLocalTranslation(new Vector3f(0,2.5f,0));
+			float dispX = unit.models[0].disposition[0];
 			float dispY = unit.models[0].disposition[1];
-			n.setLocalTranslation(new Vector3f(0.3f,0.34f-dispY,0.2f));
+			float dispZ = unit.models[0].disposition[2];
+			n.setLocalTranslation(new Vector3f(0.3f-dispX,0.34f-dispY,0.2f-dispZ));
+			//n.setLocalTranslation(new Vector3f(0.3f,0.34f-dispY,0.2f));
 			n.setLocalScale(0.067f);
 			unit.memberTypeNameNode= n;
 		}

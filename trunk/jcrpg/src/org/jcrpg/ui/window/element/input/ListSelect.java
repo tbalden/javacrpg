@@ -544,14 +544,6 @@ public class ListSelect extends InputBase {
 			updated = false;
 		}
 		setupDeactivated();
-		System.out.println("# DEACTIVATED "+id);
-		try {
-			if (id.equals("group")) throw new Exception("DEACTIVATED");
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-
 	}
 
 	@Override
