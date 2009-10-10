@@ -531,12 +531,12 @@ public class J3DMovingEngine {
 					if (unit.internal) {
 						core.gameState.getCurrentStandingEngine().extRootNode.
 							attachChild((Node)realPooledNode);
-						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
+						if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
 					} else 
 					{
 						core.gameState.getCurrentStandingEngine().extRootNode.
 							attachChild((Node)realPooledNode);
-						if (J3DCore.SETTINGS.SHADOWS) core.sPass.addOccluder((Node)realPooledNode);
+						if (J3DCore.SETTINGS.SHADOWS) core.shadowsPass.addOccluder((Node)realPooledNode);
 						//core.encounterIntRootNode.attachChild((Node)realPooledNode);
 					}
 					realPooledNode.updateRenderState();

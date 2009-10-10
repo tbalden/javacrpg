@@ -1220,7 +1220,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				s.setLocalTranslation(orbiterVector);
 				if (J3DCore.SETTINGS.SHADOWS)
 				{
-					sPass.setEnabled(orb.needsShadowPass);
+					shadowsPass.setEnabled(orb.needsShadowPass);
 				}
 				// s.updateRenderState();
 			} else {
@@ -1242,7 +1242,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					if (J3DCore.SETTINGS.SHADOWS) {
 						//Vector3f dir2 = dir.clone();
 						//dir2.y *= 2f;
-						sPass.setDirection(dir);
+						shadowsPass.setDirection(dir);
 						//System.out.println("___ "+dir2);
 					}
 
@@ -1387,7 +1387,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public void removeOccludersRecoursive(Node s) {
 		if (s == null)
 			return;
-		sPass.removeOccluder(s);
+		shadowsPass.removeOccluder(s);
 		if (s.getChildren() != null)
 			for (Spatial c : s.getChildren()) {
 				if ((c instanceof Node)) {
@@ -2064,7 +2064,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public FogState fs_external;
 	public FogState fs_external_special;
 	public FogState fs_internal;
-	public DirectionalShadowMapPass sPass = null;
+	public DirectionalShadowMapPass shadowsPass = null;
 	private DepthOfFieldRenderPass dofRenderPass;
 	private BloomRenderPass bloomRenderPass;
 	public static WaterRenderPass waterEffectRenderPass;
@@ -2567,11 +2567,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		// waterEffectRenderPass.setWaterMaxAmplitude(2f);
 		pManager.add(waterEffectRenderPass);
 
-		if (SETTINGS.SHADOWS) {
-			sPass = new DirectionalShadowMapPass(new Vector3f(-1f, -1f, -1f));
+		//if (SETTINGS.SHADOWS) 
+		{
+			shadowsPass = new DirectionalShadowMapPass(new Vector3f(-1f, -1f, -1f));
 			Jcrpg.LOGGER.info("SHADOWS!");
 			// sPass.setShadowColor(new ColorRGBA(0,0,0,1f));
-			sPass.setEnabled(true);
+			shadowsPass.setEnabled(SETTINGS.SHADOWS);
 			// sPass.add(extRootNode);
 			// sPass.add(extRootNode);
 			// sPass.add(intRootNode);
@@ -2587,7 +2588,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// sPass.setShadowGate(dsg);
 			// sPass.setZOffset(0f);
 			// sPass.add(rootNode);
-			pManager.add(sPass);
+			pManager.add(shadowsPass);
 			// sPass.addOccluder(groundParentNode);
 		}
 
@@ -2933,7 +2934,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			}
 		}
 		if (SETTINGS.SHADOWS) {
-			sPass.setViewTarget(cam.getLocation());
+			shadowsPass.setViewTarget(cam.getLocation());
 		}
 
 		if (playerLight != null) {
@@ -3160,6 +3161,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	public void applyOptions()
 	{
+		switchPass(shadowsPass, SETTINGS.SHADOWS);
+
 		switchPass(bloomRenderPass, SETTINGS.BLOOM_EFFECT);
 		
 		switchPass(dofRenderPass, SETTINGS.DOF_EFFECT&&!SETTINGS.BLOOM_EFFECT);
