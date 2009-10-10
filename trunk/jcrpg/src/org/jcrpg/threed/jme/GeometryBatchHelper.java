@@ -625,13 +625,13 @@ public class GeometryBatchHelper {
 	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 	    						{
-	    							core.sPass.addOccluder(batch);
+	    							core.shadowsPass.addOccluder(batch);
 	    							found = true;
 	    						}
 		    				}
 		    				if (!found)
 		    				{
-		    					core.sPass.removeOccluder(batch);	
+		    					core.shadowsPass.removeOccluder(batch);	
 		    				}
 		    			}
 	    			}
@@ -666,14 +666,14 @@ public class GeometryBatchHelper {
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
-		    							core.sPass.addOccluder(batch);
+		    							core.shadowsPass.addOccluder(batch);
 		    							found = true;
 		    						}
 		    					}
 		    				}
 		    				if (!found)
 		    				{
-		    					core.sPass.removeOccluder(batch);
+		    					core.shadowsPass.removeOccluder(batch);
 		    				}
 		    				
 		    			}
@@ -688,9 +688,9 @@ public class GeometryBatchHelper {
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
-				    					if (!core.sPass.contains(batch))
+				    					if (!core.shadowsPass.contains(batch))
 				    					{
-				    						core.sPass.add(batch);
+				    						core.shadowsPass.add(batch);
 				    					}
 		    							found = true;
 		    						}
@@ -698,7 +698,7 @@ public class GeometryBatchHelper {
 		    				}		    				
 			    			if (!found)
 			    			{
-			    				core.sPass.remove(batch);
+			    				core.shadowsPass.remove(batch);
 			    			}
 		    				
 		    			}
@@ -782,8 +782,8 @@ public class GeometryBatchHelper {
 					
 					if (J3DCore.SETTINGS.SHADOWS)
 					{
-						core.sPass.remove(batch);
-						core.sPass.removeOccluder(batch);
+						core.shadowsPass.remove(batch);
+						core.shadowsPass.removeOccluder(batch);
 					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
 					trimeshRemovables.add(batch);
@@ -830,8 +830,8 @@ public class GeometryBatchHelper {
 					
 					if (J3DCore.SETTINGS.SHADOWS)
 					{
-						core.sPass.remove(batch);
-						core.sPass.removeOccluder(batch);
+						core.shadowsPass.remove(batch);
+						core.shadowsPass.removeOccluder(batch);
 					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
 					
@@ -943,14 +943,14 @@ public class GeometryBatchHelper {
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
-		    							core.sPass.addOccluder(batch);
+		    							core.shadowsPass.addOccluder(batch);
 		    							found = true;
 		    						}
 		    					}
 		    				}
 		    				if (!found)
 		    				{
-		    					core.sPass.removeOccluder(batch);
+		    					core.shadowsPass.removeOccluder(batch);
 		    				}
 		    				
 		    			}
@@ -965,9 +965,9 @@ public class GeometryBatchHelper {
 		    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 		    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 		    						{
-				    					if (!core.sPass.contains(batch))
+				    					if (!core.shadowsPass.contains(batch))
 				    					{
-				    						core.sPass.add(batch);
+				    						core.shadowsPass.add(batch);
 				    					}
 		    							found = true;
 		    						}
@@ -975,7 +975,7 @@ public class GeometryBatchHelper {
 		    				}		    				
 			    			if (!found)
 			    			{
-			    				core.sPass.remove(batch);
+			    				core.shadowsPass.remove(batch);
 			    			}
 		    				
 		    			}
@@ -1033,8 +1033,8 @@ public class GeometryBatchHelper {
 					
 					if (J3DCore.SETTINGS.SHADOWS)
 					{
-						core.sPass.remove(batch);
-						core.sPass.removeOccluder(batch);
+						core.shadowsPass.remove(batch);
+						core.shadowsPass.removeOccluder(batch);
 					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
 					
@@ -1061,13 +1061,13 @@ public class GeometryBatchHelper {
 	    						Vector3f pos = batch.parent.getWorldTranslation().add(i.getAttributes().getTranslation());
 	    						if (pos.distance(core.getCamera().getLocation())<J3DCore.SETTINGS.RENDER_SHADOW_DISTANCE)
 	    						{
-	    							core.sPass.addOccluder(batch);
+	    							core.shadowsPass.addOccluder(batch);
 	    							found = true;
 	    						}
 		    				}
 		    				if (!found)
 		    				{
-		    					core.sPass.removeOccluder(batch);	
+		    					core.shadowsPass.removeOccluder(batch);	
 		    				}
 		    			}
 	    			}
@@ -1102,8 +1102,8 @@ public class GeometryBatchHelper {
 					
 					if (J3DCore.SETTINGS.SHADOWS)
 					{
-						core.sPass.remove(batch);
-						core.sPass.removeOccluder(batch);
+						core.shadowsPass.remove(batch);
+						core.shadowsPass.removeOccluder(batch);
 					}
 					core.removeSolidColorQuadsRecoursive(batch.parent);
 					removables.add(batch);

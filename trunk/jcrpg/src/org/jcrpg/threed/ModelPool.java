@@ -214,7 +214,7 @@ public class ModelPool {
 			if (objModel.rotateOnSteep) {
 				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
 			}
-			if (core.sPass!=null && objModel.shadowCaster)
+			if (core.shadowsPass!=null && objModel.shadowCaster)
 			{
 				if (retNodes[count-1]!=null) {
 					//if (!J3DCore.GEOMETRY_BATCH)// || retNodes[count-1].model.type != Model.SIMPLEMODEL)
@@ -240,7 +240,7 @@ public class ModelPool {
 			if (objModel.rotateOnSteep) {
 				(retNodes[count-1]).setUserData("rotateOnSteep", new TriMesh(""));
 			}
-			if (core.sPass!=null && objModel.shadowCaster)
+			if (core.shadowsPass!=null && objModel.shadowCaster)
 			{
 				if (retNodes[count-1]!=null) {
 					//if (!J3DCore.GEOMETRY_BATCH)// || retNodes[count-1].model.type != Model.SIMPLEMODEL)

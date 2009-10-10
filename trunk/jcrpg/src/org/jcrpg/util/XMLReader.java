@@ -19,6 +19,7 @@
 package org.jcrpg.util;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.Vector;
 
 import net.n3.nanoxml.IXMLElement;
@@ -36,7 +37,7 @@ public abstract class XMLReader {
 	{
 		this.xmlFile = xmlFile;
 		IXMLParser parser = XMLParserFactory.createDefaultXMLParser();
-		IXMLReader reader = StdXMLReader.fileReader(xmlFile.getAbsolutePath());
+		IXMLReader reader = new StdXMLReader(new FileReader(xmlFile));
 		parser.setReader(reader);
 		xml = (IXMLElement)parser.parse();
 		for (Object o:xml.getChildren())
