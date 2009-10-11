@@ -215,6 +215,10 @@ public class AnimatedModelNode extends Node implements PooledNode, IAnimationLis
 		boolean animated = animation!=null;
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.fine("AnimatedModelNode: LOADING ANIMATED MODEL: "+fileName);
 		
+		this.setCullHint(CullHint.Never); // added this one because otherwise some units were culled for no good reason. temp fix. 
+		//TODO remove this if found real bug
+		// probably boundary problem?
+		
 		try {
 			Model bodyModel = loadModel(fileName);
 			bodyInstance = new SkeletalModelInstance(bodyModel);

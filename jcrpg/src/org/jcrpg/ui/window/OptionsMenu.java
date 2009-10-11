@@ -198,6 +198,7 @@ public class OptionsMenu extends PagedInputWindow {
             toggleNormalMapShader = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.NORMALMAP_ENABLED);
             secondLayout.addToColumn(1, toggleNormalMapShader, 0.1f, 0.5f);
             addInput(1, toggleNormalMapShader);
+            secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, "", false), 1); // placeholder for rowspan
             secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.needs.restart"), false, true));
 
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.water.detail"), false));
