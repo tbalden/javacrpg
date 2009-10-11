@@ -30,6 +30,7 @@ import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchMesh;
 import org.jcrpg.threed.jme.geometryinstancing.GeometryBatchSpatialInstance;
 import org.jcrpg.threed.jme.vegetation.BillboardPartVegetation;
 import org.jcrpg.threed.scene.model.Model;
+import org.jcrpg.threed.scene.model.PartlyBillboardModel;
 import org.jcrpg.threed.scene.model.QuadModel;
 import org.jcrpg.threed.scene.model.SimpleModel;
 
@@ -444,6 +445,17 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			{
 				instance.getAttributes().setScale(placeholder.getLocalScale());
 			}
+
+			// TODO add randomization here!
+			// call instance special function that modifies coordinates slightly based on coordinates / placement
+			if (placeholder.model instanceof PartlyBillboardModel)
+			{
+				instance.setSeed(true, placeholder.cube.cube.x+placeholder.cube.cube.y+placeholder.cube.cube.z);
+			} else
+			{
+				instance.setSeed(false, 0);
+			}
+
 			instance.getAttributes().setVisible(true);
 			instance.getAttributes().buildMatrices();
 			if (triMesh!=null)
@@ -459,45 +471,54 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		} else
 		{
 			long t0 = System.currentTimeMillis();
-			TriMesh quad = null;
+			TriMesh meshData = null;
 			TiledTerrainBlockAndPassNode data = null;
 			if (placeholder.model.type == Model.SIMPLEMODEL && ((SimpleModel)placeholder.model).generatedGroundModel)
 			{
 				data = getTiledBlockData(placeholder.model,placeholder,false);
-				quad = data.block;
+				meshData = data.block;
 			} else
 			if (placeholder.model.type == Model.PARTLYBILLBOARDMODEL)
 			{
-				quad = triMesh;//
+				meshData = triMesh;//
 			} else
 			{
-				quad = getModelMesh(placeholder.model,placeholder);
+				meshData = getModelMesh(placeholder.model,placeholder);
 			}
 			
 			//if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("ADDING"+placeholder.model.id+quad.getName());
-			quad.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
+			meshData.setLocalTranslation(placeholder.getLocalTranslation().subtract(parent.getLocalTranslation()));
 			//quad.setLocalTranslation(placeholder.getLocalTranslation());
 			//quad.setDefaultColor(new ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
 			if (!(placeholder.model instanceof SimpleModel) || placeholder.model instanceof SimpleModel && !((SimpleModel)placeholder.model).generatedGroundModel)
 			{
-				quad.setLocalRotation(placeholder.getLocalRotation());
+				meshData.setLocalRotation(placeholder.getLocalRotation());
 			} else
 			{
-				quad.getLocalTranslation().addLocal(new Vector3f(-1f,0,-1f));
+				meshData.getLocalTranslation().addLocal(new Vector3f(-1f,0,-1f));
 			}
 			
 			if (placeholder.farView)
 			{
 				Vector3f scale = new Vector3f(placeholder.getLocalScale());
-				quad.setLocalScale(scale);
+				meshData.setLocalScale(scale);
 			} else
 			{
-				quad.setLocalScale(placeholder.getLocalScale());
+				meshData.setLocalScale(placeholder.getLocalScale());
 			}
 			
 			// Add a Box instance (batch and attributes)
-			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(quad, 
-					 new GeometryBatchInstanceAttributes(quad));
+			GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes> instance = new GeometryBatchSpatialInstance<GeometryBatchInstanceAttributes>(meshData, 
+					 new GeometryBatchInstanceAttributes(meshData));
+			
+			if (placeholder.model instanceof PartlyBillboardModel)
+			{
+				instance.setSeed(true, placeholder.cube.cube.x+placeholder.cube.cube.y+placeholder.cube.cube.z);
+			} 
+			
+			// TODO add randomization here!
+			// call instance special function that modifies coordinates slightly based on coordinates / placement
+			
 			
 			if (triMesh!=null)
 			{

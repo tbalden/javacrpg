@@ -46,6 +46,11 @@ import com.jme.renderer.ColorRGBA;
 public class GreekMazeHorde extends HumanoidEntityDescription {
 
 
+	@Override
+	public String getEntityIconPic() {
+		return "greekmazehorde";
+	}
+
 	public GreekMazeHorde()
 	{
 		//iconPic = "boarman";

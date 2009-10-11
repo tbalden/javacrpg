@@ -55,10 +55,10 @@ Before next release:
 	[ ] add oasis lake to anatipion town?
 	[ ] sounds for new humanoids
 
-[ ] yeti animations
 
-[ ] more entity icons?
-
+[X] more entity icons?
+[-] add seed based randomization for tree polygon coordinates upon adding to scene. MODEL GEOM BATCH
+[X] yeti animations
 [X] hp flying is not good when Disposition is used!! calc back!
 	[X] test with boars
 [X] keyboard keys help page on new game as StoryPart for now

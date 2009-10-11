@@ -31,7 +31,7 @@ public class PlantoidHorde extends AnimalEntityDescription {
 	
 	@Override
 	public String getEntityIconPic() {
-		return "unknown";
+		return "plantoid";
 	}
 
 	public PlantoidHorde()

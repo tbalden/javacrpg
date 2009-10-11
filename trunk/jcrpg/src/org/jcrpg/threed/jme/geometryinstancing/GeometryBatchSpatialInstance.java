@@ -23,6 +23,9 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
 	public Geometry mesh;
 	protected AABB modelBound;
 	
+	public boolean hashBasedDeltaGeneration = false;
+	public int hashSeed = 0;
+	
 	protected TriMesh instanceBatch = null;
 	
 	protected boolean transformed = false;
@@ -37,6 +40,19 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
         instanceBatch = mesh;
         modelBound = new AABB();
     }
+	public GeometryBatchSpatialInstance(TriMesh mesh, A attributes, int seed) {
+        super(attributes);
+        this.mesh = mesh;
+        instanceBatch = mesh;
+        modelBound = new AABB();
+        hashSeed = seed;
+        hashBasedDeltaGeneration = true;
+    }
+	public void setSeed(boolean on, int seed)
+	{
+		hashBasedDeltaGeneration = on;
+		hashSeed = seed;
+	}
 	
 	/** Update Mesh needs to be called when the mesh is changed (does not support a change of the number of vertices) */
 	public void updateMesh() {
@@ -112,7 +128,7 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
     	bufferDst.position(bufferDst.position() + size);
     }
     
-    private int commitVertices(FloatBuffer vertBufSrc, FloatBuffer vertBufDst) {
+    protected int commitVertices(FloatBuffer vertBufSrc, FloatBuffer vertBufDst) {
     	if( vertBufSrc == null || vertBufDst == null ) {
     		return 0;
     	}
@@ -130,6 +146,7 @@ public class GeometryBatchSpatialInstance<A extends GeometryBatchInstanceAttribu
                 vertBufDst.put(worldVector.x);
                 vertBufDst.put(worldVector.y);
                 vertBufDst.put(worldVector.z);
+                
             }
 		} else {
 			for (int i = 0; i < vertBufSrc.capacity(); i++) {

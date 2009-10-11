@@ -62,6 +62,12 @@ public class Lizards extends AnimalEntityDescription {
 	static
 	{
 	}
+	
+	@Override
+	public String getEntityIconPic() {
+		return "lizard";
+	}
+	
 
 	public Lizards() {
 		//iconPic = "fox";
