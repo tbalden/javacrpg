@@ -56,6 +56,8 @@ Before next release:
 	[ ] sounds for new humanoids
 
 
+[X] dont rotate camera on non-living creature group?
+[X] switch off mouse look in combat
 [X] more entity icons?
 [-] add seed based randomization for tree polygon coordinates upon adding to scene. MODEL GEOM BATCH
 [X] yeti animations

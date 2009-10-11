@@ -387,6 +387,11 @@ public class EncounterLogic {
 		
 		try 
 		{
+			try {
+			if (data.visibleForm.encounterUnitData.isDead() || data.visibleForm.encounterUnitData.isNeutralized())
+			{
+				return;
+			} } catch (Exception ex){ex.printStackTrace();}
 			Camera c = gameLogic.core.getCamera();
 			float deltaY = 0;
 			Vector3f finalPos = gameLogic.core.getCurrentLocation().clone();

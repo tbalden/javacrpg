@@ -116,7 +116,11 @@ public class GameLogic implements InitCallbackObject {
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
-					//core.encounterWindow.toggle();
+					if (J3DCore.SETTINGS.MOUSELOOK)
+					{
+						if (core.getClassicInputHandler().getMouseLookHandler().isEnabled())
+							core.getClassicInputHandler().switchMouseLook();
+					}
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
 				} else
 				{
@@ -143,6 +147,11 @@ public class GameLogic implements InitCallbackObject {
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
+					if (J3DCore.SETTINGS.MOUSELOOK)
+					{
+						if (core.getClassicInputHandler().getMouseLookHandler().isEnabled())
+							core.getClassicInputHandler().switchMouseLook();
+					}
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_SOCIAL_RIVALRY, core.gameState.player, possibleEncounter, playerInitiated);
 					//core.turnActWindow.toggle();
 					encounterLogic.turnCameraIntelligent(possibleEncounter);
@@ -170,6 +179,11 @@ public class GameLogic implements InitCallbackObject {
 					initEncounterVisualization();
 					
 					core.getKeyboardHandler().noToggleWindowByKey=true;
+					if (J3DCore.SETTINGS.MOUSELOOK)
+					{
+						if (core.getClassicInputHandler().getMouseLookHandler().isEnabled())
+							core.getClassicInputHandler().switchMouseLook();
+					}
 					core.turnActWindow.setPageData(EncounterLogic.ENCOUTNER_PHASE_RESULT_COMBAT, core.gameState.player, possibleEncounter, playerInitiated);
 					// if camping it should be finished
 					if (core.gameState.engine.isCamping())
