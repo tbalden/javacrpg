@@ -55,6 +55,11 @@ public class Worpions  extends AnimalEntityDescription {
 		
 	}
 	
+	@Override
+	public String getEntityIconPic() {
+		return "worp";
+	}
+	
 	public Worpions()
 	{
 		//iconPic = "spider";
