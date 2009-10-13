@@ -33,6 +33,7 @@ import org.jcrpg.world.ai.humanoid.group.yeti.member.YetiMaleHunter;
 import org.jcrpg.world.climate.impl.desert.Desert;
 import org.jcrpg.world.place.economic.Population;
 import org.jcrpg.world.place.economic.ground.RawTreadGround;
+import org.jcrpg.world.place.economic.ground.StoneBaseSquareGround;
 import org.jcrpg.world.place.economic.population.SimpleDistrict;
 import org.jcrpg.world.place.economic.residence.BrickHouse;
 import org.jcrpg.world.place.economic.residence.SandIgloo;
@@ -91,8 +92,8 @@ public class AnatipionCatchers extends HumanoidEntityDescription {
 		economyTemplate.addResidenceType(Plain.class, SandIgloo.class);
 		economyTemplate.addResidenceType(Forest.class, SandIgloo.class);
 		//economyTemplate.addResidenceType(Mountain.class, Igloo.class);
-		economyTemplate.addEcoGroundType(Plain.class, RawTreadGround.class);
-		economyTemplate.addEcoGroundType(Forest.class, RawTreadGround.class);
+		economyTemplate.addEcoGroundType(Plain.class, StoneBaseSquareGround.class);
+		economyTemplate.addEcoGroundType(Forest.class, StoneBaseSquareGround.class);
 		//economyTemplate.addEcoGroundType(Mountain.class, RawStreetGround.class);
 		//climates.add(Tropical.class);
 		//climates.add(Continental.class);

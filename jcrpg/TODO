@@ -55,6 +55,10 @@ Before next release:
 	[ ] add oasis lake to anatipion town?
 	[ ] sounds for new humanoids
 
+[ ] add stonebase by tidbit
+	[ ] try brickhouse and stone base texture with normal map plugin of gimp
+
+[ ] upon view dist change - update fog distance
 
 [X] dont rotate camera on non-living creature group?
 [X] switch off mouse look in combat

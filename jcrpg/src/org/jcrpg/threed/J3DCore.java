@@ -1459,7 +1459,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					.getCurrentRenderPositions().viewPositionX, gameState
 					.getCurrentRenderPositions().viewPositionY, gameState
 					.getCurrentRenderPositions().viewPositionZ, false);
-			middleHeight = c.middleHeight;
+			middleHeight = c.walkHeight!=0?c.walkHeight:c.middleHeight ;
 			cubeMiddleHeight = c.cornerHeights != null;
 			if (c.sides != null)
 				for (Side[] sides : c.sides) {
@@ -1475,6 +1475,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		} catch (Exception ex) {
 		}
 		;
+		System.out.println("MIDDLE HEIGHT "+middleHeight+ "// "+cubeMiddleHeight);
 		float bonus = (gameState.getCurrentRenderPositions().onSteep ? 1.5f
 				: 0f);
 		float middleHeightBonus = CUBE_EDGE_SIZE * (middleHeight + 0.2f);

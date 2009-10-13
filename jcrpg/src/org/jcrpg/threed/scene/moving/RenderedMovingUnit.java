@@ -23,6 +23,7 @@ import java.util.HashSet;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.game.logic.ImpactUnit;
+import org.jcrpg.space.Cube;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.threed.NodePlaceholder;
 import org.jcrpg.threed.jme.moving.AnimatedModelNode;
@@ -100,6 +101,14 @@ public class RenderedMovingUnit {
 		c3dX = worldX * J3DCore.CUBE_EDGE_SIZE;
 		c3dY = worldY * J3DCore.CUBE_EDGE_SIZE;
 		int origoZ = J3DCore.getInstance().gameState.getCurrentRenderPositions().origoZ;
+		Cube c = J3DCore.getInstance().gameState.getCurrentStandingEngine().world.getCube(-1, worldX, worldY, worldZ, false);
+		if (c!=null)
+		{
+			if (c.walkHeight!=0)
+			{
+				c3dY+=c.walkHeight;
+			}
+		}
 		c3dZ = (origoZ-(worldZ-origoZ)) * J3DCore.CUBE_EDGE_SIZE;
 	}
 	public RenderedMovingUnit instantiate(String uniqueId, VisibleLifeForm form, int worldX, int worldY, int worldZ)
