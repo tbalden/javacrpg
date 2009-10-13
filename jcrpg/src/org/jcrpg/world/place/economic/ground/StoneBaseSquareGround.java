@@ -97,7 +97,7 @@ public class StoneBaseSquareGround extends EconomicGround{
 	@Override
 	public Cube getCubeObject(int kind, int worldX, int worldY, int worldZ, boolean farView) {
 		Cube c = farView?hmKindCubeOverride_FARVIEW.get(kind):getOverrideMap().get(kind);
-		if (c!=null && kind==K_NORMAL_GROUND)
+		if (kind!=K_EMPTY)
 		{
 			boolean stonePlace = (origoX-worldX)%4==0 && (origoZ-worldZ)%4==0;
 			if (stonePlace) 
