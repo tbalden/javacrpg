@@ -39,6 +39,7 @@ public class Cube extends ChangingImpl {
 	
 	public float[] cornerHeights = null;
 	public float middleHeight = 0;
+	public float walkHeight = 0;
 	public float angleRatio = 0;
 	
 	public static int UNDEFINED_HEIGHT = -999999;
@@ -254,6 +255,7 @@ public class Cube extends ChangingImpl {
 		fillSideFields();
 		if (c2.cornerHeights!=null) cornerHeights = c2.cornerHeights;
 		middleHeight = c2.middleHeight!=0?c2.middleHeight:middleHeight;
+		walkHeight = c2.walkHeight!=0?c2.walkHeight:walkHeight;
 		angleRatio = Math.max(c2.angleRatio,angleRatio);
 		onlyIfOverlaps = newOnlyIfOverlaps;
 		overwritePower = newOverwritePower;
@@ -378,6 +380,7 @@ public class Cube extends ChangingImpl {
 		if (c1.cornerHeights!=null) this.cornerHeights = c1.cornerHeights;
 		if (c2.cornerHeights!=null) this.cornerHeights = c2.cornerHeights;
 		middleHeight = c1.middleHeight!=0?c1.middleHeight:c2.middleHeight;
+		walkHeight = c1.walkHeight!=0?c1.walkHeight:c2.walkHeight;
 		angleRatio = Math.max(c2.angleRatio,c1.angleRatio);
 		fillSideFields();
 		
@@ -465,6 +468,7 @@ public class Cube extends ChangingImpl {
 		c.needsFurtherMerge = needsFurtherMerge;
 		c.cornerHeights = cornerHeights!=null?cornerHeights.clone():null;
 		c.middleHeight = middleHeight;
+		c.walkHeight = walkHeight;
 		c.canHoldUnit = canHoldUnit;
 		c.angleRatio = angleRatio;
 		c.pointHeightFloat = pointHeightFloat;

@@ -70,6 +70,7 @@ import org.jcrpg.world.place.Geography;
 import org.jcrpg.world.place.World;
 import org.jcrpg.world.place.economic.EconomicGround;
 import org.jcrpg.world.place.economic.ground.PavedStorageAreaGround;
+import org.jcrpg.world.place.economic.ground.StoneBaseSquareGround;
 import org.jcrpg.world.place.economic.residence.House;
 import org.jcrpg.world.place.economic.residence.Hut;
 import org.jcrpg.world.place.economic.residence.WoodenHouse;
@@ -238,8 +239,9 @@ public class SideTypeModels {
 		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_EXTERNAL_DOOR.id, new Integer(73));
 		hmCubeSideSubTypeToRenderedSideId.put(Hut.SUBTYPE_WINDOW.id, EMPTY_SIDE);
 
-
 		hmCubeSideSubTypeToRenderedSideId.put(Economic.SUBTYPE_CHEST.id, new Integer(72));
+		hmCubeSideSubTypeToRenderedSideId.put(StoneBaseSquareGround.SUBTYPE_EXTERNAL_GROUND.id, new Integer(75));
+		hmCubeSideSubTypeToRenderedSideId.put(StoneBaseSquareGround.SUBTYPE_EXTERNAL_GROUND_EMPTY.id, EMPTY_SIDE);
 		
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.genericScale=3f;
@@ -1032,8 +1034,12 @@ public class SideTypeModels {
 		dependentModels.put(Tropical.TROPICAL_ID, new Model[]{sm_roadnetwork_tropical});
 		hm3dTypeRenderedSide.put(new Integer(74), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_roadnetwork},dependentModels));
 
+		SimpleModel sm_stonebase_ground = new SimpleModel("models/external/stonebase/stonebase1.obj", null);
+		sm_stonebase_ground.batchEnabled = false;
+		hm3dTypeRenderedSide.put(new Integer(75), new RenderedSide(new Model[]{sm_stonebase_ground}));
+
 		// NEXT ID = 
-		// 75
+		// 76
 		nextAvailableId = 1000;
 		
 	}
