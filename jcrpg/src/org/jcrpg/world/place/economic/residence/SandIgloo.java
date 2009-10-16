@@ -30,7 +30,7 @@ public class SandIgloo extends SmallBuilding {
 	
 	public SandIgloo()
 	{
-		super("SANDIGLOO", "models/external/sandigloo/sandigloo1.obj", true,false);
+		super("SANDIGLOO", "models/external/sandigloo/sandigloo1.obj", null, true,false);
 	}
 	
 	public SandIgloo(String id, Geography soilGeo, Place parent,
@@ -40,7 +40,7 @@ public class SandIgloo extends SmallBuilding {
 			throws Exception {
 		//super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 			//	groundLevel, homeBoundaries, owner);
-		super("SANDIGLOO", "models/external/sandigloo/sandigloo1.obj", true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		super("SANDIGLOO", "models/external/sandigloo/sandigloo1.obj", null, true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 

@@ -120,6 +120,7 @@ import com.jme.input.InputHandler;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
 import com.jme.light.DirectionalLight;
+import com.jme.light.Light;
 import com.jme.light.LightNode;
 import com.jme.light.PointLight;
 import com.jme.light.SpotLight;
@@ -238,6 +239,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		public  boolean VBO_ENABLED = true;
 		
 		public  boolean NORMALMAP_ENABLED = true;
+		public  boolean NORMALMAP_DETAILED = false;
 
 		// Developer settings
 		public  boolean WITHOUT_COMBATS = false;
@@ -1247,7 +1249,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					}
 
 					//l[0].setTarget(extRootNode);
-					extLightState.attach(l[0].getLight());
+					attachLightAtPos(l[0].getLight(),extLightState,0);//attach(l[0].getLight());
 					float[] v = orb.getLightPower(localTime, conditions);
 					vTotal[0] += v[0];
 					vTotal[1] += v[1];
@@ -2774,11 +2776,24 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		updatePlayerTorchLight();
 	}
 	
+	public static void attachLightAtPos(Light l, LightState s, int pos)
+	{
+		if (s.getLightList().contains(l)) s.detach(l);
+		
+		if (s.getLightList().size()<pos)
+		{
+			s.attach(l);
+		} else
+		{
+			s.getLightList().add(pos, l);
+		}
+	}
+	
 	public void updatePlayerTorchLight()
 	{
 		if (gameState.player.theFragment.fragmentState.isLighting)
 		{
-			extLightState.attach(playerLight);
+			attachLightAtPos(playerLight,extLightState,1);//extLightState.attach(playerLight);
 			encounterIntLightState.attach(playerLight);
 		} else
 		{

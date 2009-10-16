@@ -55,9 +55,13 @@ Before next release:
 	[ ] add oasis lake to anatipion town?
 	[ ] sounds for new humanoids
 
-[ ] add stonebase by tidbit
-	[ ] try brickhouse and stone base texture with normal map plugin of gimp
+[X] add stonebase by tidbit
+	[X] try brickhouse and stone base texture with normal map plugin of gimp
+	[ ] switch normalmap shader to pointlight when light is switched on. Reload the other shader to 'so'?
+	
+[ ] rendering tiles -> at edges black lines - more precise GeoTile calculation needed to get rid of those?
 
+[ ] cactus at the square??
 [ ] upon view dist change - update fog distance
 
 [X] dont rotate camera on non-living creature group?

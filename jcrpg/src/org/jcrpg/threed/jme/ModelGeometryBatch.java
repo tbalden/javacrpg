@@ -218,19 +218,31 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			}
 		}
 
-		so.load(ModelGeometryBatch.class.getClassLoader().getResource(
-				currentShaderStr + ".vert"), ModelGeometryBatch.class
-				.getClassLoader().getResource(currentShaderStr + ".frag"));
-		so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
-				currentShaderStr + "_pointlight.vert"),
-				ModelGeometryBatch.class.getClassLoader().getResource(
-						currentShaderStr + "_pointlight.frag"));
-
+		if (J3DCore.SETTINGS.NORMALMAP_DETAILED)
+		{
+			so.load(ModelGeometryBatch.class.getClassLoader().getResource(
+					currentShaderStr + "2.vert"), ModelGeometryBatch.class
+					.getClassLoader().getResource(currentShaderStr + "2.frag"));
+			so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
+					currentShaderStr + "2.vert"),
+					ModelGeometryBatch.class.getClassLoader().getResource(
+							currentShaderStr + "2.frag"));
+		} else
+		{
+			so.load(ModelGeometryBatch.class.getClassLoader().getResource(
+					currentShaderStr + ".vert"), ModelGeometryBatch.class
+					.getClassLoader().getResource(currentShaderStr + ".frag"));
+			so_point.load(ModelGeometryBatch.class.getClassLoader().getResource(
+					currentShaderStr + "_pointlight.vert"),
+					ModelGeometryBatch.class.getClassLoader().getResource(
+							currentShaderStr + "_pointlight.frag"));
+		}
 		so.setUniform("baseMap", 0);
 		so.setUniform("normalMap", 1);
 		so.setUniform("specularMap", 2);
 		so.setUniform("heightMap", 3);
-		so.setUniform("heightValue", 0.03f);
+		so.setUniform("heightValue", 0.005f);
+		so.setUniform("numberOfLights", 1);
 
 		so_point.setUniform("baseMap", 0);
 		so_point.setUniform("normalMap", 1);

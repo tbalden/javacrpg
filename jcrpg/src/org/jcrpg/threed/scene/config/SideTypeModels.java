@@ -1035,7 +1035,10 @@ public class SideTypeModels {
 		hm3dTypeRenderedSide.put(new Integer(74), new RenderedClimateDependentSide(new Model[]{}, new Model[]{sm_roadnetwork},dependentModels));
 
 		SimpleModel sm_stonebase_ground = new SimpleModel("models/external/stonebase/stonebase1.obj", null);
-		sm_stonebase_ground.batchEnabled = false;
+		sm_stonebase_ground.batchEnabled = true;
+		sm_stonebase_ground.normalMapTexture = "stonebase1_nmap.png";
+		sm_stonebase_ground.heightMapTexture = "stonebase1_height.png";
+		sm_stonebase_ground.specMapTexture = "stonebase1_spec.png";
 		hm3dTypeRenderedSide.put(new Integer(75), new RenderedSide(new Model[]{sm_stonebase_ground}));
 
 		// NEXT ID = 
