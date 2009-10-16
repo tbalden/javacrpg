@@ -3117,11 +3117,11 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		//r.draw(fpsNode);
 
 		doDebug(r);
-		if (SETTINGS.DISABLE_DDS)
+		/*if (SETTINGS.DISABLE_DDS)
 		try{
 			DisplaySystem.getDisplaySystem().getRenderer().checkCardError();
 		}catch (Exception ex)
-		{}		
+		{}*/		
 
 	}
 
