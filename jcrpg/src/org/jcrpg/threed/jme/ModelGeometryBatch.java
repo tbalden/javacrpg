@@ -242,7 +242,6 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		so.setUniform("specularMap", 2);
 		so.setUniform("heightMap", 3);
 		so.setUniform("heightValue", 0.005f);
-		so.setUniform("numberOfLights", 1);
 
 		so_point.setUniform("baseMap", 0);
 		so_point.setUniform("normalMap", 1);
