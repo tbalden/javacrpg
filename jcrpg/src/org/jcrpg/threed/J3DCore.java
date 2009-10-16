@@ -239,7 +239,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		public  boolean VBO_ENABLED = true;
 		
 		public  boolean NORMALMAP_ENABLED = true;
-		public  boolean NORMALMAP_DETAILED = false;
+		public  boolean NORMALMAP_DETAILED = true;
 
 		// Developer settings
 		public  boolean WITHOUT_COMBATS = false;
@@ -2515,10 +2515,16 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		intRootNode.setRenderState(internalLightState);
 		
 		if (true == true && playerLight == null) {
-
+			internalBaseLight = new PointLight();
+			float lp = 0.1f;
+			internalBaseLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
+			internalBaseLight.setAmbient(new ColorRGBA(0.13f, 0.1f, 0.1f, 0.3f));
+			internalBaseLight.setSpecular(new ColorRGBA(0.2f, 0.2f, 0.2f, 1f));
+			internalBaseLight.setEnabled(true);
+			
 			playerLight = new PointLight();
 			playerLight.setEnabled(true);
-			float lp = 0.8f;
+			lp = 0.8f;
 			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
 			playerLight.setAmbient(new ColorRGBA(0.33f, 0.3f, 0.3f, 0.3f));
 			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
@@ -2530,11 +2536,12 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			playerLightNode.setLight(playerLight);
 			intRootNode.attachChild(playerLightNode);
 			internalLightState.attach(playerLight);
+			internalLightState.attach(internalBaseLight);
 			//extLightState.attach(playerLight);
 
 			PointLight dr2 = new PointLight();
 			dr2.setEnabled(true);
-			lp = 0.95f;
+			lp = 0.85f;
 			dr2.setDiffuse(new ColorRGBA(lp, lp, lp, 0.5f));
 			dr2.setAmbient(new ColorRGBA(0.3f, 0.3f,0.3f, 0.5f));
 			dr2.setSpecular(new ColorRGBA(1, 1, 1, 0.5f));
@@ -2768,6 +2775,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 
 	LightNode playerLightNode;
 	public PointLight playerLight;
+	public PointLight internalBaseLight;
 	protected boolean torchLightEffect = true;
 	
 	public void switchPlayerTorchLight()
@@ -2794,11 +2802,18 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		if (gameState.player.theFragment.fragmentState.isLighting)
 		{
 			attachLightAtPos(playerLight,extLightState,1);//extLightState.attach(playerLight);
+			float lp = 0.8f;
+			playerLight.setDiffuse(new ColorRGBA(lp, lp, lp, 1f));
+			playerLight.setAmbient(new ColorRGBA(0.33f, 0.3f, 0.3f, 0.3f));
+			playerLight.setSpecular(new ColorRGBA(0.4f, 0.4f, 0.4f, 1f));
 			encounterIntLightState.attach(playerLight);
 		} else
 		{
-			extLightState.detach(playerLight);
-			encounterIntLightState.detach(playerLight);
+			playerLight.setAmbient(ColorRGBA.black);
+			playerLight.setDiffuse(ColorRGBA.black);
+			playerLight.setSpecular(ColorRGBA.black);
+			//extLightState.detach(playerLight);
+			//encounterIntLightState.detach(playerLight);
 		}
 		extRootNode.updateRenderState();
 		encounterExtRootNode.updateRenderState();
@@ -2970,6 +2985,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			}
 			playerLight.setLocation(diffVec);
 			playerLightNode.setLocalTranslation(diffVec);
+			internalBaseLight.setLocation(cam.getLocation());
 		}
 
 
