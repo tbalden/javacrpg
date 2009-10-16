@@ -239,7 +239,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		public  boolean VBO_ENABLED = true;
 		
 		public  boolean NORMALMAP_ENABLED = true;
-		public  boolean NORMALMAP_DETAILED = true;
+		public  boolean NORMALMAP_DETAILED = false;
 
 		// Developer settings
 		public  boolean WITHOUT_COMBATS = false;
@@ -369,6 +369,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			coreSettings.VBO_ENABLED = loadValue("VBO_ENABLED", true);
 			
 			coreSettings.NORMALMAP_ENABLED = loadValue("NORMALMAP_ENABLED", true);
+			coreSettings.NORMALMAP_DETAILED = loadValue("NORMALMAP_DETAILED", false);
 
 			// controller settings
 			coreSettings.MOUSELOOK = loadValue("MOUSELOOK", false);
