@@ -30,7 +30,7 @@ public class BrickHouse extends SmallBuilding {
 	
 	public BrickHouse()
 	{
-		super("BRICKHOUSE", "models/external/desertbrick/desertbrick1.obj", true,false);
+		super("BRICKHOUSE", "models/external/desertbrick/desertbrick1.obj", new String[]{"desertbrick1_nmap.png","desertbrick1_height.png","desertbrick1_spec.png"},true,false);
 	}
 	
 	public BrickHouse(String id, Geography soilGeo, Place parent,
@@ -40,7 +40,7 @@ public class BrickHouse extends SmallBuilding {
 			throws Exception {
 		//super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 			//	groundLevel, homeBoundaries, owner);
-		super("BRICKHOUSE", "models/external/desertbrick/desertbrick1.obj", true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		super("BRICKHOUSE", "models/external/desertbrick/desertbrick1.obj", new String[]{"desertbrick1_nmap.png","desertbrick1_height.png","desertbrick1_spec.png"},true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 

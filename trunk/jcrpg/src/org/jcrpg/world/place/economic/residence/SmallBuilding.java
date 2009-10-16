@@ -90,17 +90,19 @@ public abstract class SmallBuilding extends Residence {
 	//public int origoX, origoY, origoZ;
 	
 	public String modelName;
+	public String[] textures;
 	
 	boolean doubleEntrance = false;
 	boolean useSeparateGroundModels = true;
 	
-	public SmallBuilding(String TYPE, String modelName, boolean doubleEntrance, boolean useSeparateGround)
+	public SmallBuilding(String TYPE, String modelName, String[] textures, boolean doubleEntrance, boolean useSeparateGround)
 	{
 		super();
 		useSeparateGroundModels = useSeparateGround;
 		TYPE_HOUSE = TYPE;
 		this.modelName = modelName;
 		this.doubleEntrance = doubleEntrance;
+		this.textures = textures;
 		init();
 	}
 	
@@ -179,7 +181,14 @@ public abstract class SmallBuilding extends Residence {
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_WINDOW.id, SideTypeModels.EMPTY_SIDE);
 		
 		SimpleModel sm_hut_model = new SimpleModel(modelName, null);
-		sm_hut_model.batchEnabled = false;
+		sm_hut_model.batchEnabled = true;
+		if (textures!=null)
+		{
+			sm_hut_model.normalMapTexture = textures[0];
+			sm_hut_model.heightMapTexture = textures[1];
+			sm_hut_model.specMapTexture = textures[2];
+		}
+		
 		J3DCore.getInstance().standingModels.addSide(SUBTYPE_EXTERNAL_DOOR.id, new RenderedSide(new Model[]{sm_hut_model}));
 		
 	}
@@ -196,12 +205,13 @@ public abstract class SmallBuilding extends Residence {
 	 * @param origoZ
 	 * @throws Exception
 	 */
-	public SmallBuilding(String TYPE, String modelName,boolean doubleEntrance, boolean useSeparateGround, String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
+	public SmallBuilding(String TYPE, String modelName,String[] textures, boolean doubleEntrance, boolean useSeparateGround, String id, Geography soilGeo, Place parent, PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX, int origoY, int origoZ, int groundLevel, DistanceBasedBoundary homeBoundaries, EntityInstance owner) throws Exception {
 		super(id,soilGeo,parent,loc,sizeX,sizeY,sizeZ,origoX,origoY,origoZ,groundLevel, homeBoundaries, owner);
 		
 		if (sizeX<4|| sizeZ<4|| sizeY<getMinimumHeight()) throw new Exception("House below minimum size"+getParameteredKey());
 
 		TYPE_HOUSE = TYPE;
+		this.textures = textures;
 		this.modelName = modelName;
 		this.doubleEntrance = doubleEntrance;
 		useSeparateGroundModels = useSeparateGround;

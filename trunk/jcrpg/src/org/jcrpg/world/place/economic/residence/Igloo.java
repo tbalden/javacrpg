@@ -30,7 +30,7 @@ public class Igloo extends SmallBuilding {
 	
 	public Igloo()
 	{
-		super("IGLOO", "models/external/igloo/igloo.obj", true,false);
+		super("IGLOO", "models/external/igloo/igloo.obj", null, true,false);
 	}
 	
 	public Igloo(String id, Geography soilGeo, Place parent,
@@ -40,7 +40,7 @@ public class Igloo extends SmallBuilding {
 			throws Exception {
 		//super("ROADSHRINE", "models/external/shrine/shrine1.obj", true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 			//	groundLevel, homeBoundaries, owner);
-		super("IGLOO", "models/external/igloo/igloo.obj", true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		super("IGLOO", "models/external/igloo/igloo.obj", null, true, false, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 
