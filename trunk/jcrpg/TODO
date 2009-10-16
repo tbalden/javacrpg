@@ -57,7 +57,10 @@ Before next release:
 
 [X] add stonebase by tidbit
 	[X] try brickhouse and stone base texture with normal map plugin of gimp
-	[ ] switch normalmap shader to pointlight when light is switched on. Reload the other shader to 'so'?
+	[X] switch normalmap shader to pointlight when light is switched on. Reload the other shader to 'so'?
+		[ ] simple/advanced shader tests maze/town (advanced directional??)!
+	
+[ ] add sounds by getter77
 	
 [ ] rendering tiles -> at edges black lines - more precise GeoTile calculation needed to get rid of those?
 
