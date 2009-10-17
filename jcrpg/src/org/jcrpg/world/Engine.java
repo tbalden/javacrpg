@@ -210,6 +210,13 @@ public class Engine implements Runnable {
 	}
 
 	public synchronized void setPause(boolean pause) {
+		/*try {
+			System.out.println("PAUSE "+pause);
+			throw new Exception();
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}*/
 		if (J3DCore.LOGGING()) Jcrpg.LOGGER.finest("---### PAUSE = "+pause);
 		this.pause = pause;
 	}
@@ -220,13 +227,13 @@ public class Engine implements Runnable {
 	{
 		return outOfGameSystemPause;
 	}
-	public synchronized void pauseForRendering()
+	public synchronized void pauseForLoading()
 	{
-		//outOfGameSystemPause = true; // current rendering system doesnt require such pause while rendering scene.
+		outOfGameSystemPause = true; // current rendering system doesnt require such pause while rendering scene.
 	}
-	public synchronized void unpauseAfterRendering()
+	public synchronized void unpauseAfterLoading()
 	{
-		//outOfGameSystemPause = false;
+		outOfGameSystemPause = false;
 	}
 
 	public Time getWorldMeanTime() {

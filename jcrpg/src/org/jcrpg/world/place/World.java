@@ -32,6 +32,7 @@ import org.jcrpg.ui.map.WorldMap;
 import org.jcrpg.util.HashUtil;
 import org.jcrpg.world.Engine;
 import org.jcrpg.world.ai.flora.FloraContainer;
+import org.jcrpg.world.ai.flora.impl.BaseFloraContainer;
 import org.jcrpg.world.climate.Climate;
 import org.jcrpg.world.climate.CubeClimateConditions;
 import org.jcrpg.world.place.economic.Population;
@@ -63,7 +64,7 @@ public class World extends Place implements TileBasedMap {
 	public WorldOrbiterHandler orbiterHandler;
 	
 	public Climate climate;
-	public FloraContainer floraContainer;
+	public transient FloraContainer floraContainer;
 	public EconomyContainer economyContainer;
 	
 	public HashMap<String, Geography> geographies;
@@ -851,6 +852,7 @@ public class World extends Place implements TileBasedMap {
 	@Override
 	public void onLoad()
 	{
+		floraContainer = new BaseFloraContainer();
 		economyContainer.onLoad(this);
 	}
 

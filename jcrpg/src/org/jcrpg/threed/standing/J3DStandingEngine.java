@@ -1572,7 +1572,7 @@ public class J3DStandingEngine {
 			
 			
 			//boolean storedPauseState = engine.isPause();
-			engine.pauseForRendering();
+			//engine.pauseForRendering();
 			
 			if (J3DCore.GEOMETRY_BATCH) batchHelper.unlockAll();
 
@@ -2086,7 +2086,7 @@ public class J3DStandingEngine {
 		}		
 		newNodesToSetCullingDynamic.clear();
 		threadRendering = false;
-		engine.unpauseAfterRendering();
+		//engine.unpauseAfterRendering();
 	    updateAfterRenderNeeded = false;
 	    nonDrawingRender = false;
 	    if (J3DCore.LOGGING()) logger.finest("???  CACHE LOOKUP ??? = "+QuickOrderedList.timeCounter);

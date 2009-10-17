@@ -71,6 +71,7 @@ public class OptionsMenu extends PagedInputWindow {
     ValueTuner tunerMusicVolume;
 
     CheckBox toggleNormalMapShader;
+    CheckBox toggleNormalMapDetailed;
     ListSelect selectWaterDeatil;
     static final String[] waterDeatilIds = {Language.v("optionsmenu.on"),
                                             Language.v("optionsmenu.off"),
@@ -193,12 +194,17 @@ public class OptionsMenu extends PagedInputWindow {
             secondLayout.addToColumn(1, toggleContinuousLoad, 0.1f, 0.5f);
             addInput(1, toggleContinuousLoad);
             
-            //firstLayout.addToColumn(2, new TextLabel("",this, pageFirst, 600f, "", false), 5); // placeholder for rowspan
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.normalmap.shader"), false));
             toggleNormalMapShader = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.NORMALMAP_ENABLED);
             secondLayout.addToColumn(1, toggleNormalMapShader, 0.1f, 0.5f);
             addInput(1, toggleNormalMapShader);
             secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, "", false), 1); // placeholder for rowspan
+            secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.needs.restart"), false, true));
+
+            secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.normalmap.detailed"), false));
+            toggleNormalMapDetailed = new CheckBox("", this, pageSecond, J3DCore.SETTINGS.NORMALMAP_DETAILED);
+            secondLayout.addToColumn(1, toggleNormalMapDetailed , 0.1f, 0.5f);
+            addInput(1, toggleNormalMapDetailed);
             secondLayout.addToColumn(2, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.needs.restart"), false, true));
 
             secondLayout.addToColumn(0, new TextLabel("",this, pageSecond, 600f, Language.v("optionsmenu.water.detail"), false));
@@ -296,6 +302,7 @@ public class OptionsMenu extends PagedInputWindow {
             J3DCore.SETTINGS.MUSIC_VOLUME_PERCENT = tunerMusicVolume.getSelection();
 
             J3DCore.SETTINGS.NORMALMAP_ENABLED = toggleNormalMapShader.isChecked();
+            J3DCore.SETTINGS.NORMALMAP_DETAILED = toggleNormalMapDetailed.isChecked();
 
             // water detail
             int selIndex = selectWaterDeatil.getSelection();
@@ -370,6 +377,7 @@ public class OptionsMenu extends PagedInputWindow {
         tunerEffectsVolume.setValue(coreSettings.EFFECT_VOLUME_PERCENT); tunerEffectsVolume.setUpdated(true);tunerEffectsVolume.deactivate();
         tunerMusicVolume.setValue(coreSettings.MUSIC_VOLUME_PERCENT); tunerMusicVolume.setUpdated(true);tunerMusicVolume.deactivate();
         toggleNormalMapShader.setChecked(coreSettings.NORMALMAP_ENABLED); toggleNormalMapShader.setUpdated(true);toggleNormalMapShader.deactivate();
+        toggleNormalMapDetailed.setChecked(coreSettings.NORMALMAP_DETAILED); toggleNormalMapDetailed.setUpdated(true);toggleNormalMapDetailed.deactivate();
 
         // water detail
         int selIndex = (coreSettings.WATER_SHADER ? 0 : 1);

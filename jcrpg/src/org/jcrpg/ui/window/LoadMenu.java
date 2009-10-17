@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
+import org.jcrpg.threed.J3DCore.InitCallbackObject;
 import org.jcrpg.threed.jme.ui.NodeFontFreer;
 import org.jcrpg.ui.FontUtils;
 import org.jcrpg.ui.KeyListener;
@@ -44,7 +45,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
-public class LoadMenu extends InputWindow implements KeyListener {
+public class LoadMenu extends InputWindow implements KeyListener, InitCallbackObject {
 	
 	
 	int selected = 0;
@@ -314,7 +315,8 @@ public class LoadMenu extends InputWindow implements KeyListener {
 	public void handleChoice()
 	{
 		SaveSlotData data = dataList.get(buttons.get(selected).id);
-		toggle();		
+		toggle();
+		core.setCallbackObjectAfterInitialization(this, null);
 		core.updateDisplay(null);
 		core.clearCore();
 		base.hud.characters.hide();
@@ -326,7 +328,6 @@ public class LoadMenu extends InputWindow implements KeyListener {
 		core.uiBase.hud.characters.update();
 		core.uiBase.hud.characters.show();
 		core.getUIRootNode().updateRenderState();
-		core.gameState.engine.setPause(false);
 		core.audioServer.stopAndResumeOthers("main");
 	}
 
@@ -441,6 +442,12 @@ public class LoadMenu extends InputWindow implements KeyListener {
 			handleKey("enter");
 		}
 		return false;
+	}
+
+
+	public void callbackAfterInit(Object param) {
+		core.gameState.engine.setPause(false);
+		
 	}
 
 

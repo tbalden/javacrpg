@@ -42,7 +42,7 @@ public class Scenario {
 		
 		if (introPlayed!=null && introPlayed)
 		{
-			J3DCore.getInstance().gameState.engine.setPause(false);
+			//J3DCore.getInstance().gameState.engine.setPause(false);
 		} else
 		{
 			if (events.intro!=null)

@@ -273,7 +273,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	public static CoreSettings SETTINGS = null;
 	
 
-	public static final float CUBE_EDGE_SIZE = 1.9999f;
+	public static final float CUBE_EDGE_SIZE = 2.0f;//1.9999f;
 
 	public static final int MOVE_STEPS = 18;
 	public static long TIME_TO_ENSURE = 14;
@@ -1279,7 +1279,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 						// parent, don't know why. \
 						// Clearing it helps:
 						skyParentNode.setRenderState(skydomeLightState);
-						groundParentNode.clearRenderState(RenderState.RS_LIGHT);
+						groundParentNode.clearRenderState(RenderState.StateType.Light);
 						groundParentNode.updateRenderState();
 					}
 					skyParentNode.attachChild(l[1]);
@@ -2231,7 +2231,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		skyParentNode.updateRenderState();
 		updateDisplay(null);
 		rootNode.updateGeometricState(0, false);
-		gameState.engine.setPause(false);
+		//gameState.engine.setPause(false);
 		intRootNode.attachChild(playerLightNode);
 		if (coreFullyInitialized) {
 			reinitialized = true;
@@ -2469,25 +2469,6 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		fs_external_special = display.getRenderer().createFogState();
 		fs_external.setDensity(0.5f);
 		fs_external.setColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 1f));
-		if (SETTINGS.FARVIEW_ENABLED) {
-			fs_external.setEnd(((SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 1.15f));
-			fs_external.setStart(1.5f * (SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 3);
-			fs_external.setDensity(0.3f);
-			fs_external_special.setDensity(0.3f);
-			fs_external_special.setEnd((SETTINGS.VIEW_DISTANCE * 1.65f));
-			fs_external_special.setStart(2 * SETTINGS.VIEW_DISTANCE / 3);
-			fs_external_special.setDensityFunction(FogState.DensityFunction.Linear);
-			fs_external_special.setQuality(FogState.Quality.PerVertex);
-			fs_external_special.setNeedsRefresh(true);
-			fs_external_special.setEnabled(true);
-		} else {
-			fs_external.setEnd((SETTINGS.VIEW_DISTANCE ));
-			fs_external.setStart(SETTINGS.VIEW_DISTANCE*0.92f);
-		}
-		fs_external.setDensityFunction(FogState.DensityFunction.Linear);
-		fs_external.setQuality(FogState.Quality.PerVertex);
-		fs_external.setNeedsRefresh(true);
-		fs_external.setEnabled(true);
 		extRootNode.setRenderState(fs_external);
 		extRootNode.setRenderState(as);
 
@@ -2495,12 +2476,10 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		fs_internal.setDensity(0.5f);
 		fs_internal.setEnabled(true);
 		fs_internal.setColor(new ColorRGBA(0.0f, 0.0f, 0.0f, 1.0f));
-		fs_internal.setEnd((SETTINGS.VIEW_DISTANCE / 1.15f));
-		fs_internal.setStart(3);
-		fs_internal.setDensityFunction(FogState.DensityFunction.Linear);
-		fs_internal.setQuality(FogState.Quality.PerVertex);
 		intRootNode.setRenderState(fs_internal);
 		intRootNode.setRenderState(as);
+		
+		updateFogStateDistances();
 
 		encounterExtRootNode.setRenderState(fs_external);
 		encounterExtRootNode.setRenderState(as);
@@ -2512,7 +2491,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		encounterExtRootNode.setRenderState(extLightState);
 		encounterIntRootNode.setRenderState(encounterIntLightState);
 		extRootNode.setRenderState(extLightState);
-		intRootNode.clearRenderState(RenderState.RS_LIGHT);
+		intRootNode.clearRenderState(RenderState.StateType.Light);
 		intRootNode.setRenderState(internalLightState);
 		
 		if (true == true && playerLight == null) {
@@ -2691,8 +2670,8 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		skySphere.setRenderState(cs_none);
 		skySphere.setCullHint(CullHint.Never);
 
-		groundParentNode.clearRenderState(RenderState.RS_LIGHT);
-		rootNode.clearRenderState(RenderState.RS_LIGHT);
+		groundParentNode.clearRenderState(RenderState.StateType.Light);
+		rootNode.clearRenderState(RenderState.StateType.Light);
 		skySphere.setRenderState(skydomeLightState);
 
 		// intRootNode.attachChild(skySphereInvisibleGround);
@@ -2715,6 +2694,34 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		mainMenu.toggle();
 		//SceneMonitor.getMonitor().showViewer(true);
 		//SceneMonitor.getMonitor().registerNode(rootNode);
+	}
+	
+	private void updateFogStateDistances()
+	{
+		if (SETTINGS.FARVIEW_ENABLED) {
+			fs_external.setEnd(((SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 1.15f));
+			fs_external.setStart(1.5f * (SETTINGS.RENDER_DISTANCE_FARVIEW * 2) / 3);
+			fs_external.setDensity(0.3f);
+			fs_external_special.setDensity(0.3f);
+			fs_external_special.setEnd((SETTINGS.VIEW_DISTANCE * 1.65f));
+			fs_external_special.setStart(2 * SETTINGS.VIEW_DISTANCE / 3);
+			fs_external_special.setDensityFunction(FogState.DensityFunction.Linear);
+			fs_external_special.setQuality(FogState.Quality.PerVertex);
+			fs_external_special.setNeedsRefresh(true);
+			fs_external_special.setEnabled(true);
+		} else {
+			fs_external.setEnd((SETTINGS.VIEW_DISTANCE ));
+			fs_external.setStart(SETTINGS.VIEW_DISTANCE*0.92f);
+		}
+		fs_external.setDensityFunction(FogState.DensityFunction.Linear);
+		fs_external.setQuality(FogState.Quality.PerVertex);
+		fs_external.setNeedsRefresh(true);
+		fs_external.setEnabled(true);
+
+		fs_internal.setEnd((SETTINGS.VIEW_DISTANCE / 1.15f));
+		fs_internal.setStart(3);
+		fs_internal.setDensityFunction(FogState.DensityFunction.Linear);
+		fs_internal.setQuality(FogState.Quality.PerVertex);
 	}
 
 	public void setupUIElements() throws Exception {
@@ -3194,6 +3201,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 	
 	public void applyOptions()
 	{
+		updateFogStateDistances();
 		switchPass(shadowsPass, SETTINGS.SHADOWS);
 
 		switchPass(bloomRenderPass, SETTINGS.BLOOM_EFFECT);
