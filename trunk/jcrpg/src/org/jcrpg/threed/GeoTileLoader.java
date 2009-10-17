@@ -19,6 +19,7 @@ package org.jcrpg.threed;
 
 import java.net.URL;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jcrpg.apps.Jcrpg;
@@ -292,6 +293,9 @@ public class GeoTileLoader {
 		public float oppAdjDeltaY;
 		
 		public String ownGroundTexture = null;
+		public String ownGroundTextureNormal = null;
+		public String ownGroundTextureHeight = null;
+		public String ownGroundTextureSpec = null;
 		public String adjacentGroundTexture = null;
 		public String oppositeGroundTexture = null;
 		public String oppAdjGroundTexture = null;
@@ -315,7 +319,14 @@ public class GeoTileLoader {
 					SimpleModel sm = (SimpleModel)n.model;
 					if (sm.generatedGroundModel)
 					{
-						return new String[]{sm.getBlendTextureKey(n),sm.getTexture(n)};
+						String[] textureNames = new String[5];
+						textureNames[0] = sm.getBlendTextureKey(n);
+						String[] t = sm.getTexture(n);
+						for (int i=0 ;i<t.length; i++)
+						{
+							textureNames[i+1] = t[i];
+						}
+						return textureNames;//new String[]{sm.getBlendTextureKey(n),sm.getTexture(n)};
 					}
 				}
 			}
@@ -334,8 +345,15 @@ public class GeoTileLoader {
 			String[] s = null;
 			s = getGeneratedGeoTileTextureNameFromCube(original);
 			String originalTexture = s==null?null:s[1];
+			String originalTextureN = s==null?null:s[2];
+			String originalTextureH = s==null?null:s[3];
+			String originalTextureS = s==null?null:s[4];
 			String originalBaseTexture = s==null?null:s[0];
 			ownGroundTexture = originalTexture;
+			ownGroundTextureNormal = originalTextureN;
+			ownGroundTextureHeight = originalTextureH;
+			ownGroundTextureSpec = originalTextureS;
+			
 			if (J3DCore.SETTINGS.TEXTURE_SPLATTING && !original.farview)
 			{
 				// TODO with farview the generated ground tiles are not correctly removed from
@@ -385,6 +403,7 @@ public class GeoTileLoader {
 	{
 		public TiledTerrainBlock block;
 		public PassNode passNode;
+		public String normalMap, heightMap, specMap;
 		public TiledTerrainBlockAndPassNode(TiledTerrainBlock block,
 				PassNode passNode) {
 			super();
@@ -668,7 +687,12 @@ public class GeoTileLoader {
 			//setTextures(node,o.mipMap);
 		}
 		b = block;
-		return new TiledTerrainBlockAndPassNode(block,splattingPassNode);//splattingPassNode);
+		TiledTerrainBlockAndPassNode n = new TiledTerrainBlockAndPassNode(block,splattingPassNode);//splattingPassNode);
+		n.heightMap = data.ownGroundTextureHeight;
+		n.specMap = data.ownGroundTextureHeight;
+		n.normalMap = data.ownGroundTextureNormal;
+
+		return n;
 	}
 	
 	

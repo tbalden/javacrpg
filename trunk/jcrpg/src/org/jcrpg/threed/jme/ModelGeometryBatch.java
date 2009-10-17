@@ -139,12 +139,62 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		{
 			if (data==null || data.passNode==null)
 			{
+
 				parentOrig = new Node();
 				parentOrig.setRenderState(mesh.getRenderState(StateType.Texture));
 				if (m.type == Model.PARTLYBILLBOARDMODEL) {
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
 					parentOrig.setRenderState(mesh.getRenderState(StateType.Light));
+					SimpleModel sm = (SimpleModel)m;
+					TextureState ts = (TextureState)mesh.getRenderState(RenderState.StateType.Texture);
+
+					if (J3DCore.SETTINGS.NORMALMAP_ENABLED)
+					{
+						if (sm.normalMapTexture!=null)
+						{
+							if (ts.getNumberOfSetTextures()==1) 
+							{
+								if (so==null) reloadShader();
+						        // Normal map
+						        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
+						        		//"Pillar_Nor.png",
+						                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
+						                Image.Format.GuessNoCompression, 0.0f, true);
+						        normalMap.setWrap(Texture.WrapMode.Repeat);
+						        ts.setTexture(normalMap, 1);
+						        
+						        // Spec Map
+						        if (sm.specMapTexture!=null)
+						        {
+							        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
+							        		//"Pillar_Spec.png",
+					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+					        		specMap.setWrap(Texture.WrapMode.Repeat);
+					        		ts.setTexture(specMap, 2);
+						        }
+						        if (sm.heightMapTexture!=null)
+						        {
+							        Texture heightMap = TextureManager.loadTexture( sm.heightMapTexture,
+							        		//"Pillar_Spec.png",
+					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
+					        		heightMap.setWrap(Texture.WrapMode.Repeat);
+					        		ts.setTexture(heightMap, 3);
+						        }
+							}
+							{
+				        		if (placeHolder.cube.cube.internalCube)
+				        		{
+				        			parentOrig.setRenderState(so_point);
+				        		} else
+				        		{
+				        			parentOrig.setRenderState(so);
+				        		}
+							}
+							parentOrig.setRenderState(J3DCore.ms);
+						}
+					}
 				}
+				
 				//sharedParentCache.put(parentKey,parentOrig);
 			} else
 			{
@@ -266,10 +316,14 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 		this.core = core;
 		TriMesh mesh = null;
 		TiledTerrainBlockAndPassNode data = null;
+		String nMap = null, hMap = null, sMap = null;
 		if (m.type == Model.SIMPLEMODEL && ((SimpleModel)m).generatedGroundModel)
 		{
 			data = getTiledBlockData(m,placeHolder,true);
 			mesh = data.block;
+			hMap = data.heightMap;
+			nMap = data.normalMap;
+			sMap = data.specMap;
 			this.setRenderState(core.cs_back);
 		} else
 		{
@@ -285,22 +339,28 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 			if (data==null || data.passNode==null)
 			{
 				parentOrig = new Node("MGB"+instanceCounter++);
-				TextureState ts = (TextureState)mesh.getRenderState(RenderState.RS_TEXTURE);
+				TextureState ts = (TextureState)mesh.getRenderState(RenderState.StateType.Texture);
 				parentOrig.setRenderState(ts);
 				
 				if (m.type == Model.SIMPLEMODEL) {
 					//parentOrig.setRenderState(quad.getRenderState(RenderState.RS_MATERIAL));
-					parentOrig.setRenderState(mesh.getRenderState(RenderState.RS_LIGHT));
+					parentOrig.setRenderState(mesh.getRenderState(RenderState.StateType.Texture));
 					SimpleModel sm = (SimpleModel)m;
 					if (J3DCore.SETTINGS.NORMALMAP_ENABLED)
 					{
-						if (sm.normalMapTexture!=null)
+						if (nMap==null)
+						{
+							nMap = sm.normalMapTexture;
+							hMap = sm.heightMapTexture;
+							sMap = sm.specMapTexture;
+						}
+						if (nMap!=null)
 						{
 							if (ts.getNumberOfSetTextures()==1) 
 							{
 								if (so==null) reloadShader();
 						        // Normal map
-						        Texture normalMap = TextureManager.loadTexture( sm.normalMapTexture,
+						        Texture normalMap = TextureManager.loadTexture( nMap,
 						        		//"Pillar_Nor.png",
 						                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear,
 						                Image.Format.GuessNoCompression, 0.0f, true);
@@ -310,7 +370,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 						        // Spec Map
 						        if (sm.specMapTexture!=null)
 						        {
-							        Texture specMap = TextureManager.loadTexture( sm.specMapTexture,
+							        Texture specMap = TextureManager.loadTexture( sMap,
 							        		//"Pillar_Spec.png",
 					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 					        		specMap.setWrap(Texture.WrapMode.Repeat);
@@ -318,7 +378,7 @@ public class ModelGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatialIn
 						        }
 						        if (sm.heightMapTexture!=null)
 						        {
-							        Texture heightMap = TextureManager.loadTexture( sm.heightMapTexture,
+							        Texture heightMap = TextureManager.loadTexture( hMap,
 							        		//"Pillar_Spec.png",
 					                Texture.MinificationFilter.Trilinear, Texture.MagnificationFilter.Bilinear);
 					        		heightMap.setWrap(Texture.WrapMode.Repeat);

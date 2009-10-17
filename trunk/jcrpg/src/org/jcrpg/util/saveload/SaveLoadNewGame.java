@@ -133,7 +133,7 @@ public class SaveLoadNewGame {
 				 xDiff = -35;
 				 xDiff = -05;
 				 yDiff = 0;
-				 zDiff = +260;//-600;//-3;
+				 zDiff = 100;//-600;//-3;
 				 //zDiff = -3;//-3;
 			}
 			int wX = world.realSizeX/2+xDiff;

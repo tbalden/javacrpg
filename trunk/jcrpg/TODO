@@ -46,11 +46,13 @@ Before next release:
 
 [ ] add list of tasks to forum (text validation, sounds)
 
-[X] problem with loading + fight + interception engine state pause??
-
 [ ] test water cube side size..changed size of cube_edge
 
-[ ] add normal map for tree barks? check atlas support for normal  maps
+[X] add normal map for ground.
+	[X] test splat
+	[ ] add all in DDS too
+	
+	
 [ ] simple/advanced shader tests maze/town (advanced directional??)!
 
 [ ] add sounds by getter77
@@ -68,6 +70,8 @@ Before next release:
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
 
+[X] problem with loading + fight + interception engine state pause??
+[X] add normal map for tree barks? check atlas support for normal  maps
 
 [X] add stonebase by tidbit
 	[X] try brickhouse and stone base texture with normal map plugin of gimp
