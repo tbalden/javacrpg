@@ -44,29 +44,38 @@ Journal window will be needed!
 ----
 Before next release:
 
+[ ] add list of tasks to forum (text validation, sounds)
+
+[X] problem with loading + fight + interception engine state pause??
+
+[ ] test water cube side size..changed size of cube_edge
+
+[ ] add normal map for tree barks? check atlas support for normal  maps
+[ ] simple/advanced shader tests maze/town (advanced directional??)!
+
+[ ] add sounds by getter77
+[ ] tweak DOF to support near blur?
 
 [X] integrate Anatipions
+
+	[ ] add oasis lake to anatipion town?
+	[ ] sounds for new humanoids
+
 	[X] housing
 	[X] sand igloo
 	[X] add icons for Yeti/Anat. towns
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
-	[ ] add oasis lake to anatipion town?
-	[ ] sounds for new humanoids
+
 
 [X] add stonebase by tidbit
 	[X] try brickhouse and stone base texture with normal map plugin of gimp
 	[X] switch normalmap shader to pointlight when light is switched on. Reload the other shader to 'so'?
-		[ ] simple/advanced shader tests maze/town (advanced directional??)!
-	
-[ ] add sounds by getter77
-	
-[ ] rendering tiles -> at edges black lines - more precise GeoTile calculation needed to get rid of those?
 
-[ ] cactus at the square??
-[ ] upon view dist change - update fog distance
-
+[X] rendering tiles -> at edges black lines - more precise GeoTile calculation needed to get rid of those?
+[X] cactus at the square??
+[X] upon view dist change - update fog distance
 [X] dont rotate camera on non-living creature group?
 [X] switch off mouse look in combat
 [X] more entity icons?
