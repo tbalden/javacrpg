@@ -124,7 +124,7 @@ public class GeometryBatchHelper {
     			if (sm.generatedGroundModel)
     			{
     				
-    				key = m.type+sm.getTexture(place)+internal+(farView);
+    				key = m.type+sm.getTexture(place)[0]+internal+(farView);
     				if (place.neighborCubeData==null)
     					place.neighborCubeData = GeoTileLoader.getNeighborCubes(place);
     				key+=place.neighborCubeData.getTextureKeyPartForBatch();
@@ -138,7 +138,7 @@ public class GeometryBatchHelper {
     				
     			} else
     			{
-    				key = m.type+sm.getTexture(place)+internal+(farView);
+    				key = m.type+sm.getTexture(place)[0]+internal+(farView);
     			}
     		}
     		if (true ||sm.xGeomBatchSize==-1) 

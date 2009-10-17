@@ -1262,7 +1262,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 					l[0].getLight().setDiffuse(c);// c);//new
 													// ColorRGBA(1,1,1,1));
 					l[0].getLight().setAmbient(a.clone().multLocal(0.5f));
-					l[0].getLight().setSpecular(c);
+					l[0].getLight().setSpecular(c.clone().multLocal(0.5f));
 					l[0].getLight().setShadowCaster(true);
 					extRootNode.setRenderState(extLightState);
 

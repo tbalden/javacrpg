@@ -29,6 +29,10 @@ public class SimpleModel extends Model {
 	 * The atlas texture name.
 	 */
 	public String atlasTextureName = "";
+	public String atlasTextureNameNormal = null;
+	public String atlasTextureNameSpec = null;
+	public String atlasTextureNameHeight = null;
+
 	/**
 	 * Tells if this model is wanting to use atlas texture technique.
 	 */
@@ -58,6 +62,14 @@ public class SimpleModel extends Model {
 	public String normalMapTexture = null;
 	public String specMapTexture = null;
 	public String heightMapTexture = null;
+
+	public String steepNormalMapTexture = null;
+	public String steepSpecMapTexture = null;
+	public String steepHeightMapTexture = null;
+	
+	public String secNormalMapTexture = null;
+	public String secSpecMapTexture = null;
+	public String secHeightMapTexture = null;
 	
 	public boolean mipMap = true;
 	public int xGeomBatchSize = -1;
@@ -116,20 +128,53 @@ public class SimpleModel extends Model {
 		return id;
 	}
 	
-	public String getTexture(NodePlaceholder place)
+	String[] textureArray, steepTextureArray, secTextureArray;
+	
+	public String[] getTexture(NodePlaceholder place)
 	{
+		if (textureArray==null)
+		{
+			if (useAtlasTexture)
+			{
+				textureArray = new String[]{textureName,atlasTextureNameNormal, atlasTextureNameHeight,atlasTextureNameSpec};
+			} else
+			{
+				textureArray = new String[]{textureName,normalMapTexture, heightMapTexture,specMapTexture};
+			}
+		}
+		if (steepTextureArray==null)
+		{
+			if (useAtlasTexture)
+			{
+				steepTextureArray = new String[]{steepTextureName,atlasTextureNameNormal, atlasTextureNameHeight,atlasTextureNameSpec};
+			} else
+			{
+				steepTextureArray = new String[]{steepTextureName,steepNormalMapTexture, steepHeightMapTexture,steepSpecMapTexture};
+			}
+		}
+		if (secTextureArray==null)
+		{
+			if (useAtlasTexture)
+			{
+				secTextureArray = new String[]{secTextureName,atlasTextureNameNormal, atlasTextureNameHeight,atlasTextureNameSpec};
+			} else
+			{
+				secTextureArray = new String[]{secTextureName,secNormalMapTexture, secHeightMapTexture,secSpecMapTexture};
+			}
+		}
+		
 		if (!generatedGroundModel || steepTextureName==null)
 		{
-			return textureName;
+			return textureArray;
 		}
 		if (place.cube.cube.angleRatio>steepRatio)
 		{
 			//System.out.println("AR: "+place.cube.cube.angleRatio+" "+steepTextureName);
-			return steepTextureName;
+			return steepTextureArray;
 		}
 		if (J3DCore.SETTINGS.SECONDARY_TEXTURES && secTextureName!=null && HashUtil.mixPercentage(place.cube.cube.x,place.cube.cube.z,0)<secTextChance)
-			return secTextureName;
-		return textureName;
+			return secTextureArray;
+		return textureArray;
 	}
 	
 	
