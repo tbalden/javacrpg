@@ -3,6 +3,8 @@
 
 varying vec3 viewDirection;
 varying vec3 lightDirection;
+varying float fogFactor; 
+
 
 void main(void)
 {
@@ -42,4 +44,15 @@ void main(void)
 	lightDirection.x = dot( tangent, localLightDirection );
 	lightDirection.y = dot( binormal, localLightDirection );
 	lightDirection.z = dot( normal, localLightDirection );
+	
+		const float LOG2 = 1.442695;
+	
+	gl_FogFragCoord = length(vertexViewSpace.xyz)/30;
+	fogFactor = exp2( -gl_Fog.density * 
+					   gl_Fog.density * 
+					   gl_FogFragCoord * 
+					   gl_FogFragCoord * 
+					   LOG2 );
+	fogFactor = clamp(fogFactor, 0.0, 1.0);
+	
 }

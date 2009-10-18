@@ -41,6 +41,7 @@ import com.jme.system.DisplaySystem;
  * 
  * Based on code by Robert Larsson and Joshua Slack
  * @author kevglass
+ * @author Paul.illes - some tweaking, glsl shader fix
  */
 public class DirectionalShadowMapPass extends Pass {
 	/**
@@ -77,6 +78,8 @@ public class DirectionalShadowMapPass extends Pass {
 	private ColorMaskState colorDisabled;
 	/** Turn off lighting when rendering shadow maps - depth only */
 	private LightState noLights;
+	/** glsl */
+	private GLSLShaderObjectsState noGLSL;
 	
 	/** The blending to both discard the fragements that have been determined to be free of shadows and to blend into the background scene */
 	private BlendState discardShadowFragments;
@@ -290,6 +293,8 @@ public class DirectionalShadowMapPass extends Pass {
 		cullFrontFace.setCullFace(CullState.Face.Front);
 		noLights = r.createLightState();
 		noLights.setEnabled(false);
+		noGLSL = r.createGLSLShaderObjectsState();
+		noGLSL.setEnabled(false);
 		
 		// Then rendering and comparing the shadow map with the current
 		// depth the result will be set to alpha 1 if not in shadow and
@@ -456,6 +461,7 @@ public class DirectionalShadowMapPass extends Pass {
 		context.enforceState(colorDisabled); 
 		context.enforceState(cullFrontFace);
 		context.enforceState(noLights);
+		context.enforceState(noGLSL);
 	
 		r.setPolygonOffset(0, 5); 
 		shadowMapRenderer.render(occluderNodes.get(0), shadowMapTexture, true);

@@ -1310,13 +1310,13 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				counter++;
 				// q.setSolidColor(new
 				// ColorRGBA(vTotal+0.2f,vTotal+0.2f,vTotal+0.2f,1));
+				ColorRGBA r = new ColorRGBA(vTotal[0] / 0.6f,
+						vTotal[1] / 0.6f, vTotal[2] / 0.6f, 1f);
+				//r.addLocal(playerLight.getDiffuse());
 				if ((q instanceof TriMesh)) {
-					((TriMesh) q).setSolidColor(new ColorRGBA(vTotal[0] / 0.3f,
-							vTotal[1] / 0.3f, vTotal[2] / 0.3f, 1f));
+					((TriMesh) q).setSolidColor(r);
 				} else {
-					((TriMesh) ((Node) q).getChild(0)).setSolidColor(new ColorRGBA(
-							vTotal[0] / 0.3f, vTotal[1] / 0.3f, vTotal[2] / 0.3f,
-							1f));
+					((TriMesh) ((Node) q).getChild(0)).setSolidColor(r);
 				}
 			}
 		}
@@ -2238,6 +2238,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 		}
 		updatePlayerTorchLight();
 		coreFullyInitialized = true;
+		updatePlayerTorchLight();
 	}
 
 	boolean reinitialized = false;

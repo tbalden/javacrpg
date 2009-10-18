@@ -5,6 +5,7 @@ uniform sampler2D heightMap;
 
 varying vec3 viewDirection;
 varying vec3 lightDirection;
+varying float fogFactor; 
 
 uniform float heightValue;
 
@@ -43,5 +44,11 @@ void main(void)
 //	vec4  totalSpecular  = vec4(1.0, 1.0, 1.0, 1.0) * specularColor * ( pow( RDotV, 25.0 ) );	
 
 	/* Set final pixel color as sum of lighting models */
-    gl_FragColor = totalAmbient + totalDiffuse + totalSpecular;
+    //gl_FragColor = totalAmbient + totalDiffuse + totalSpecular;
+    
+    vec4 finalColor = totalAmbient + totalDiffuse + totalSpecular;
+    vec4 retCol = mix(gl_Fog.color, finalColor, fogFactor );
+    retCol.w = baseColor.w;
+    gl_FragColor = retCol;
+    
 }
