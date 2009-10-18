@@ -41,22 +41,27 @@ Journal window will be needed!
 
 [?] second line units shifted half cube in parallel - big rewrite in the j3dmovingengine needed, skipping now
 
+[ ] tweak DOF to support near blur?
+[ ] add list of tasks to forum (text validation, sounds)
+
 ----
 Before next release:
 
-[ ] add list of tasks to forum (text validation, sounds)
 
-[ ] test water cube side size..changed size of cube_edge
+[X] test water cube side size..changed size of cube_edge
 
 [X] add normal map for ground.
 	[X] test splat
-	[ ] add all in DDS too
+	[X] add all in DDS too
 	
 	
 [ ] simple/advanced shader tests maze/town (advanced directional??)!
+	[ ] combat internal combat, lights
 
+[ ] fog pass, fog to parallax.frag?
+	
 [ ] add sounds by getter77
-[ ] tweak DOF to support near blur?
+
 
 [X] integrate Anatipions
 
@@ -70,6 +75,13 @@ Before next release:
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
 
+[X] test water cube side size..changed size of cube_edge
+
+[X] add normal map for ground.
+	[X] test splat
+	[X] add all in DDS too
+
+[-] when light on in simple mode nmap - switch off nmap shader - doesnt work
 [X] problem with loading + fight + interception engine state pause??
 [X] add normal map for tree barks? check atlas support for normal  maps
 
