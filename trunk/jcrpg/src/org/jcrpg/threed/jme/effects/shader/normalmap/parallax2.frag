@@ -7,6 +7,8 @@ varying vec3 viewDirection;
 varying vec3 lightDirections[2];
 varying vec2 texcoords;
 varying float att[2];
+varying float fogFactor; 
+
 
 uniform float heightValue;
 
@@ -43,5 +45,9 @@ void main(void)
     } // for
 
 	/* Set final pixel color as sum of lighting models */
-    gl_FragColor = totalAmbient * baseColor + totalDiffuse * baseColor + totalSpecular;
+    vec4 finalColor = totalAmbient * baseColor + totalDiffuse * baseColor + totalSpecular;
+    vec4 retCol = mix(gl_Fog.color, finalColor, fogFactor );
+    retCol.w = baseColor.w;
+    gl_FragColor = retCol;
+    
 }
