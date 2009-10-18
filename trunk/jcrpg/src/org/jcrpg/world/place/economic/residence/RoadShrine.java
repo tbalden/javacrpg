@@ -28,13 +28,17 @@ import org.jcrpg.world.place.economic.Residence;
 public class RoadShrine extends SmallBuilding {
 
 	
-	
+	public RoadShrine()
+	{
+		super("ROADSHRINE", "models/external/shrine/shrine1.obj",  new String[]{"shrine1_nmap.dds","shrine1_height.dds","blackspec.png"},true,true);
+	}
+
 	public RoadShrine(String id, Geography soilGeo, Place parent,
 			PlaceLocator loc, int sizeX, int sizeY, int sizeZ, int origoX,
 			int origoY, int origoZ, int groundLevel,
 			DistanceBasedBoundary homeBoundaries, EntityInstance owner)
 			throws Exception {
-		super("ROADSHRINE", "models/external/shrine/shrine1.obj", null,true, true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
+		super("ROADSHRINE", "models/external/shrine/shrine1.obj", new String[]{"shrine1_nmap.dds","shrine1_height.dds","blackspec.png"},true, true, id, soilGeo, parent, loc, sizeX, sizeY, sizeZ, origoX, origoY, origoZ,
 				groundLevel, homeBoundaries, owner);
 	}
 
