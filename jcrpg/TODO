@@ -48,20 +48,6 @@ Journal window will be needed!
 Before next release:
 
 
-[X] test water cube side size..changed size of cube_edge
-
-[X] add normal map for ground.
-	[X] test splat
-	[X] add all in DDS too
-	
-	
-[ ] simple/advanced shader tests maze/town (advanced directional??)!
-	[ ] combat internal combat, lights
-
-[ ] fog pass, fog to parallax.frag?
-	
-[ ] add sounds by getter77
-
 
 [X] integrate Anatipions
 
@@ -74,6 +60,15 @@ Before next release:
 
 	[X] animations by tidbit - contact Zphr with problem. rootbone?
 	[X] entity icons for beings
+
+[X] test water cube side size..changed size of cube_edge
+[X] add normal map for ground.
+	[X] test splat
+	[X] add all in DDS too
+[X] simple/advanced shader tests maze/town (advanced directional??)!
+	[X] combat internal combat, lights
+[X] fog pass, fog to parallax.frag?
+[X] add sounds by getter77
 
 [X] test water cube side size..changed size of cube_edge
 
