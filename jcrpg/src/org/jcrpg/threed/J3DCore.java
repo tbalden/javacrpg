@@ -2530,6 +2530,7 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 			// dr.setAngle(45);
 			dr2.setShadowCaster(false);
 			encounterIntLightState.attach(dr2);
+			encounterIntLightState.attach(internalBaseLight);
 		}
 
 		try {
