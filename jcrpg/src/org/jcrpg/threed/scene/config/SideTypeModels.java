@@ -246,9 +246,9 @@ public class SideTypeModels {
 		PartlyBillboardModel cherry = new PartlyBillboardModel("pbm_cherry_0","models/tree/cherry_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"cher_1.png"},0,MIPMAP_TREES);
 		cherry.genericScale=3f;
 		cherry.shadowCaster = true;
-		cherry.normalMapTexture = "barkch_nmap.png";
-		cherry.heightMapTexture = "barkch_spec.png";
-		cherry.specMapTexture = "barkch_spec.png";
+		cherry.normalMapTexture = "barkch_nmap.dds";
+		cherry.heightMapTexture = "barkch_spec.dds";
+		cherry.specMapTexture = "barkch_spec.dds";
 		cherry.atlasTexture = true;
 		cherry.atlasTextureName = "continental_deciduous_atlas.dds";
 		cherry.atlasSize = AtlasTextureTypeConstants.CONTINENTAL_DECIDUOUS_FOLIAGE_ATLAS_SIZE;
@@ -263,9 +263,9 @@ public class SideTypeModels {
 
 		PartlyBillboardModel oakHigh = new PartlyBillboardModel("pbm_acacia_high_1","models/tree/high_bb_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"high_1.png"},0,MIPMAP_TREES);
 		oakHigh.genericScale=2.2f;
-		oakHigh.normalMapTexture = "barkdk_nmap.png";
-		oakHigh.heightMapTexture = "barkdk_spec.png";
-		oakHigh.specMapTexture = "barkdk_spec.png";
+		oakHigh.normalMapTexture = "barkdk_nmap.dds";
+		oakHigh.heightMapTexture = "barkdk_spec.dds";
+		oakHigh.specMapTexture = "barkdk_spec.dds";
 		oakHigh.shadowCaster = true;
 		oakHigh.atlasTexture = true;
 		oakHigh.atlasTextureName = "continental_deciduous_atlas.dds";
@@ -274,9 +274,9 @@ public class SideTypeModels {
 
 		PartlyBillboardModel acacia = new PartlyBillboardModel("pbm_acacia_0","models/tree/acacia_bb_2_1.obj",new String[]{"3"},new String[]{"2"},new String[]{"acac_1.png"},0,MIPMAP_TREES);
 		acacia.genericScale=3f;
-		acacia.normalMapTexture = "barkdk_nmap.png";
-		acacia.heightMapTexture = "barkdk_spec.png";
-		acacia.specMapTexture = "barkdk_spec.png";
+		acacia.normalMapTexture = "barkdk_nmap.dds";
+		acacia.heightMapTexture = "barkdk_spec.dds";
+		acacia.specMapTexture = "barkdk_spec.dds";
 		acacia.shadowCaster = true;
 		acacia.atlasTexture = true;
 		acacia.atlasTextureName = "continental_deciduous_atlas.dds";
@@ -332,9 +332,9 @@ public class SideTypeModels {
 		pine_high.genericScale=1.4f;
 		pine_high.quadXSizeMultiplier = 3.0f;
 		pine_high.quadYSizeMultiplier = 3.5f;
-		pine_high.normalMapTexture = "barkdk_nmap.png";
-		pine_high.heightMapTexture = "barkdk_spec.png";
-		pine_high.specMapTexture = "barkdk_spec.png";
+		pine_high.normalMapTexture = "barkdk_nmap.dds";
+		pine_high.heightMapTexture = "barkdk_spec.dds";
+		pine_high.specMapTexture = "barkdk_spec.dds";
 		pine_high.shadowCaster = true;
 		pine_high.atlasTexture = true;
 		pine_high.atlasTextureName = "continental_pine_atlas.dds";
@@ -357,9 +357,9 @@ public class SideTypeModels {
 		great_pine_high.genericScale=1.3f;
 		great_pine_high.quadXSizeMultiplier = 2f;
 		great_pine_high.quadYSizeMultiplier = 2f;
-		great_pine_high.normalMapTexture = "barkdk_nmap.png";
-		great_pine_high.heightMapTexture = "barkdk_spec.png";
-		great_pine_high.specMapTexture = "barkdk_spec.png";
+		great_pine_high.normalMapTexture = "barkdk_nmap.dds";
+		great_pine_high.heightMapTexture = "barkdk_spec.dds";
+		great_pine_high.specMapTexture = "barkdk_spec.dds";
 		great_pine_high.shadowCaster = true;
 		great_pine_high.atlasTexture = true;
 		great_pine_high.atlasTextureName = "continental_pine_atlas.dds";
@@ -382,9 +382,9 @@ public class SideTypeModels {
 		palm_high.genericScale = 2.3f;
 		palm_high.quadXSizeMultiplier = 1.1f;
 		palm_high.quadYSizeMultiplier = 1.2f;
-		palm_high.normalMapTexture = "bark_j_nmap.png";
-		palm_high.heightMapTexture = "bark_j_spec.png";
-		palm_high.specMapTexture = "bark_j_spec.png";
+		palm_high.normalMapTexture = "bark_j_nmap.dds";
+		palm_high.heightMapTexture = "bark_j_spec.dds";
+		palm_high.specMapTexture = "bark_j_spec.dds";
 		palm_high.shadowCaster = true;
 		palm_high.atlasTexture = true;
 		palm_high.atlasMultiTextureParts = true;
@@ -397,9 +397,9 @@ public class SideTypeModels {
 		palm_lowbranch_high.genericScale = 3f;
 		palm_lowbranch_high.quadXSizeMultiplier = 1.0f;
 		palm_lowbranch_high.quadYSizeMultiplier = 1.0f;
-		palm_lowbranch_high.normalMapTexture = "bark_j_nmap.png";
-		palm_lowbranch_high.heightMapTexture = "bark_j_spec.png";
-		palm_lowbranch_high.specMapTexture = "bark_j_spec.png";
+		palm_lowbranch_high.normalMapTexture = "bark_j_nmap.dds";
+		palm_lowbranch_high.heightMapTexture = "bark_j_spec.dds";
+		palm_lowbranch_high.specMapTexture = "bark_j_spec.dds";
 		palm_lowbranch_high.shadowCaster = true;
 		palm_lowbranch_high.atlasTexture = true;
 		palm_lowbranch_high.atlasTextureName = "tropical_foliage_atlas.dds";
@@ -425,9 +425,9 @@ public class SideTypeModels {
 		
 		PartlyBillboardModel coconut_high = new PartlyBillboardModel("pbm_coconut_0","models/tree/coconut_bb1.obj",new String[]{"3"},new String[]{},new String[]{"palm2.png"},0,MIPMAP_TREES);
 		SimpleModel coconut_simple = new SimpleModel("models/tree/palm_02.obj",null,MIPMAP_TREES);
-		coconut_simple.normalMapTexture = "Palm_Tex_Bake_01_nmap.png";
-		coconut_simple.heightMapTexture = "Palm_Tex_Bake_01_spec.png";
-		coconut_simple.specMapTexture = "Palm_Tex_Bake_01_spec.png";
+		coconut_simple.normalMapTexture = "Palm_Tex_Bake_01_nmap.dds";
+		coconut_simple.heightMapTexture = "Palm_Tex_Bake_01_spec.dds";
+		coconut_simple.specMapTexture = "Palm_Tex_Bake_01_spec.dds";
 		coconut_simple.elevateOnSteep = true;
 		coconut_simple.genericScale = 1.5f;
 		coconut_simple.shadowCaster = true;
@@ -694,9 +694,9 @@ public class SideTypeModels {
 
 		QuadModel qm_desert = new QuadModel("sand2.jpg"); qm_desert.rotateOnSteep = true; qm_desert.farViewEnabled = true;
 		SimpleModel sm_desert = new SimpleModel("models/ground/ground_1.obj","sand2.jpg"); sm_desert.rotateOnSteep = false; sm_desert.generatedGroundModel = true; sm_desert.yGeomBatchSize = yCommon; sm_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert.farViewEnabled = true;
-		sm_desert.normalMapTexture = "sand2_nmap.png";
-		sm_desert.heightMapTexture = "sand2_height.png";
-		sm_desert.specMapTexture = "sand2_spec.png";
+		sm_desert.normalMapTexture = "sand2_nmap.dds";
+		sm_desert.heightMapTexture = "sand2_height.dds";
+		sm_desert.specMapTexture = "sand2_spec.dds";
 		SimpleModel sm_desert_2 = new SimpleModel("models/ground/ground_2.obj","sand2.jpg"); sm_desert_2.rotateOnSteep = true; sm_desert_2.yGeomBatchSize = yCommon; sm_desert_2.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_2.farViewEnabled = true;
 		SimpleModel sm_desert_3 = new SimpleModel("models/ground/ground_3.obj","sand2.jpg"); sm_desert_3.rotateOnSteep = true; sm_desert_3.yGeomBatchSize = yCommon; sm_desert_3.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_3.farViewEnabled = true;
 		SimpleModel sm_desert_steep = new SimpleModel("models/ground/ground_steep_1.obj","sand2.jpg"); sm_desert_steep.rotateOnSteep = true; sm_desert_steep.yGeomBatchSize = yCommon; sm_desert_steep.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_desert_steep.noSpecialSteepRotation = false; sm_desert_steep.farViewEnabled = true;
@@ -1060,21 +1060,21 @@ public class SideTypeModels {
 
 		// climate dependent
 		SimpleModel sm_roadnetwork = new SimpleModel("models/ground/ground_1.obj","pathway.jpg"); sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.generatedGroundModel = true; sm_roadnetwork.rotateOnSteep = false; sm_roadnetwork.yGeomBatchSize = yCommon; sm_roadnetwork.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork.farViewEnabled = true;
-		sm_roadnetwork.normalMapTexture = "pathway_nmap.png";
-		sm_roadnetwork.heightMapTexture = "pathway_height.png";
+		sm_roadnetwork.normalMapTexture = "pathway_nmap.dds";
+		sm_roadnetwork.heightMapTexture = "pathway_height.dds";
 		sm_roadnetwork.specMapTexture = "blackspec.png";
 		SimpleModel sm_roadnetwork_desert = new SimpleModel("models/ground/ground_1.obj","pathway_desert.jpg"); sm_roadnetwork_desert.rotateOnSteep = false; sm_roadnetwork_desert.generatedGroundModel = true; sm_roadnetwork_desert.rotateOnSteep = false; sm_roadnetwork_desert.yGeomBatchSize = yCommon; sm_roadnetwork_desert.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_desert.farViewEnabled = true;
-		sm_roadnetwork_desert.normalMapTexture = "pathway_nmap.png";
-		sm_roadnetwork_desert.heightMapTexture = "pathway_height.png";
+		sm_roadnetwork_desert.normalMapTexture = "pathway_nmap.dds";
+		sm_roadnetwork_desert.heightMapTexture = "pathway_height.dds";
 		sm_roadnetwork_desert.specMapTexture = "blackspec.png";
 		SimpleModel sm_roadnetwork_continental = new SimpleModel("models/ground/ground_1.obj","pathway.jpg"); sm_roadnetwork_continental.rotateOnSteep = false; sm_roadnetwork_continental.generatedGroundModel = true; sm_roadnetwork_continental.rotateOnSteep = false; sm_roadnetwork_continental.yGeomBatchSize = yCommon; sm_roadnetwork_continental.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_continental.farViewEnabled = true;
-		sm_roadnetwork_continental.normalMapTexture = "pathway_nmap.png";
-		sm_roadnetwork_continental.heightMapTexture = "pathway_height.png";
+		sm_roadnetwork_continental.normalMapTexture = "pathway_nmap.dds";
+		sm_roadnetwork_continental.heightMapTexture = "pathway_height.dds";
 		sm_roadnetwork_continental.specMapTexture = "blackspec.png";
 		SimpleModel sm_roadnetwork_arctic = new SimpleModel("models/ground/ground_1.obj","pathway_snow.jpg"); sm_roadnetwork_arctic.rotateOnSteep = false; sm_roadnetwork_arctic.generatedGroundModel = true; sm_roadnetwork_arctic.rotateOnSteep = false; sm_roadnetwork_arctic.yGeomBatchSize = yCommon; sm_roadnetwork_arctic.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_arctic.farViewEnabled = true;
 		SimpleModel sm_roadnetwork_tropical = new SimpleModel("models/ground/ground_1.obj","pathway_jungle.jpg"); sm_roadnetwork_tropical.rotateOnSteep = false; sm_roadnetwork_tropical.generatedGroundModel = true; sm_roadnetwork_tropical.rotateOnSteep = false; sm_roadnetwork_tropical.yGeomBatchSize = yCommon; sm_roadnetwork_tropical.xGeomBatchSize = GeometryBatchHelper.QUAD_MODEL_BATCHED_SPACE_SIZE; sm_roadnetwork_tropical.farViewEnabled = true;
-		sm_roadnetwork_tropical.normalMapTexture = "pathway_nmap.png";
-		sm_roadnetwork_tropical.heightMapTexture = "pathway_height.png";
+		sm_roadnetwork_tropical.normalMapTexture = "pathway_nmap.dds";
+		sm_roadnetwork_tropical.heightMapTexture = "pathway_height.dds";
 		sm_roadnetwork_tropical.specMapTexture = "blackspec.png";
 		dependentModels = new HashMap<String, Model[]>();
 		dependentModels.put(Desert.DESERT_ID, new Model[]{sm_roadnetwork_desert});
@@ -1085,9 +1085,9 @@ public class SideTypeModels {
 
 		SimpleModel sm_stonebase_ground = new SimpleModel("models/external/stonebase/stonebase1.obj", null);
 		sm_stonebase_ground.batchEnabled = true;
-		sm_stonebase_ground.normalMapTexture = "stonebase1_nmap.png";
-		sm_stonebase_ground.heightMapTexture = "stonebase1_height.png";
-		sm_stonebase_ground.specMapTexture = "stonebase1_spec.png";
+		sm_stonebase_ground.normalMapTexture = "stonebase1_nmap.dds";
+		sm_stonebase_ground.heightMapTexture = "stonebase1_height.dds";
+		sm_stonebase_ground.specMapTexture = "stonebase1_spec.dds";
 		hm3dTypeRenderedSide.put(new Integer(75), new RenderedSide(new Model[]{sm_stonebase_ground}));
 
 		// NEXT ID = 
