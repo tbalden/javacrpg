@@ -109,8 +109,9 @@ public class TrimeshGeometryBatch extends GeometryBatchMesh<GeometryBatchSpatial
 		if (parentOrig==null)
 		{
 			parentOrig = new Node("TGB"+instanceCounter++);
-			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_TEXTURE));
-			parentOrig.setRenderState(trimesh.getRenderState(RenderState.RS_MATERIAL));
+			parentOrig.setRenderState(trimesh.getRenderState(RenderState.StateType.Texture));
+			parentOrig.setRenderState(trimesh.getRenderState(RenderState.StateType.Material));
+			parentOrig.setRenderState(trimesh.getRenderState(RenderState.StateType.Light));
 			if (!internal) parentOrig.setLightCombineMode(LightCombineMode.Off);
 			//sharedParentCache.put(id+internal,parentOrig);
 		}

@@ -45,6 +45,8 @@ void main(void)
     } // for
 
 	/* Set final pixel color as sum of lighting models */
+	//gl_FragColor = totalAmbient * baseColor + totalDiffuse * baseColor + totalSpecular;
+	
     vec4 finalColor = totalAmbient * baseColor + totalDiffuse * baseColor + totalSpecular;
     vec4 retCol = mix(gl_Fog.color, finalColor, fogFactor );
     retCol.w = baseColor.w;
