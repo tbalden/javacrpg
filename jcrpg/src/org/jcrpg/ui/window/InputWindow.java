@@ -170,7 +170,7 @@ public abstract class InputWindow extends Window implements KeyListener{
 				selectedInput--;
 			} else
 			{
-				if (previouslyActive>=0)
+				if (previouslyActive>=0 && previouslyActive<inputs.size())
 				{
 					inputLeft(inputs.get(previouslyActive), key);
 				}
