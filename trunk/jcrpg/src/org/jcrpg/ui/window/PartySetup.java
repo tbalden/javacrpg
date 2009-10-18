@@ -1048,6 +1048,7 @@ public class PartySetup extends PagedInputWindow {
 		{
 			MemberPerson race = charCreationRule.raceInstances.get(charCreationRule.selectableRaces.get(raceSelect.getSelection()));
 			int i = genderSelect.getSelection();
+			if (genderSelect.ids == null || genderSelect.ids.length==0 ) return true;
 			int id = Integer.parseInt(genderSelect.ids[i]);
 			String genderPath = "";
 			if (id==EntityDescription.GENDER_MALE) genderPath="male/";
