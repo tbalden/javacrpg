@@ -48,7 +48,7 @@ public class BiteFight extends SkillBase implements TurnActSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "bite";
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class BiteFight extends SkillBase implements TurnActSkill {
 
 		@Override
 		public String getSound() {
-			return null;
+			return "bite";
 		}
 	}
 	

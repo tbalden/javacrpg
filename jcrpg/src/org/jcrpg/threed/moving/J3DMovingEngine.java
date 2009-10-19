@@ -499,11 +499,11 @@ public class J3DMovingEngine {
 			if (unit.memberTypeNameNode!=null)
 			{
 				unit.memberTypeNameNode.attachChild(node);
+				realPooledNode.updateRenderState();
+				node.startZoomCycle();
 			}
 			//realPooledNode.attachChild(node);	
 		}
-		realPooledNode.updateRenderState();
-		node.startZoomCycle();
 		
 	}
 	

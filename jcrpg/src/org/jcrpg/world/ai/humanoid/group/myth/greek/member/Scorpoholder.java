@@ -50,7 +50,7 @@ public class Scorpoholder extends MythicBaseMember {
 	public Scorpoholder(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, HumanoidBody.class, audioDescription);
 		addProfessionInitially(new MonsterNormal());
-		memberSkills.setSkillValue(Elementarism.class, 30);
+		getMemberSkills().setSkillValue(Elementarism.class, 30);
 		genderType = EntityDescription.GENDER_NEUTRAL;
 	}
 	@Override

@@ -3017,24 +3017,27 @@ public class J3DCore extends com.jme.app.BaseSimpleGame {
 				}
 			}
 			// turn has come.
-			if (gameState.engine.turnComes()) {
-				pause = true;
-				gameState.ecology.doTurn();
-				gameState.engine.turnFinishedForAI();
-				pause = false;
-				tpf = 0;
-			} else if (gameState.engine.checkEconomyUpdateNeeded()) {
-				pause = true;
-				busyPane.setToType(BusyPaneWindow.ECONOMY,"Economy update...");
-				busyPane.show();
-				gameState.doEconomyUpdate();
-				//busyPane.hide();
-				pause = false;
-				tpf = 0;
-			} else if (!gameState.engine.isPause()) {
-				gameState.checkAndDoLeveling();
+			if (J3DCore.SETTINGS.CONTINUOUS_LOAD && sEngine!=null && sEngine.runningThreads.size()==0)
+			{
+				if (gameState.engine.turnComes()) {
+					pause = true;
+					gameState.ecology.doTurn();
+					gameState.engine.turnFinishedForAI();
+					pause = false;
+					tpf = 0;
+				} else if (gameState.engine.checkEconomyUpdateNeeded()) {
+					pause = true;
+					busyPane.setToType(BusyPaneWindow.ECONOMY,"Economy update...");
+					busyPane.show();
+					gameState.doEconomyUpdate();
+					//busyPane.hide();
+					pause = false;
+					tpf = 0;
+				} else if (!gameState.engine.isPause()) {
+					gameState.checkAndDoLeveling();
+				}
 			}
-	
+			
 			// game-logic independent environmental update (sounds etc.)
 			if (gameState.engine.isEnvironmentUpdateNeeded()) {
 				gameState.engine.environemntUpdateDone();

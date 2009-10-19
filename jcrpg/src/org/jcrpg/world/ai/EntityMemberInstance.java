@@ -265,11 +265,11 @@ public class EntityMemberInstance {
 	
 	public int getSkillLevel(Class<? extends SkillBase> skill)
 	{
-		return description.memberSkills.getSkillLevel(skill, null);
+		return getSkills().getSkillLevel(skill, null);
 	}
 	public void setSkillLevel(Class<? extends SkillBase> skill, int level)
 	{
-		description.memberSkills.setSkillValue(skill, level);
+		getSkills().setSkillValue(skill, level);
 	}
 	
 	
@@ -277,7 +277,7 @@ public class EntityMemberInstance {
 	public void updateAfterLeveling()
 	{
 		if (description!=null)
-			description.memberSkills.updateSkillActForms();
+			getSkills().updateSkillActForms();
 		memberState.recalculateMaximums(true);
 	}
 	
@@ -298,7 +298,7 @@ public class EntityMemberInstance {
 	public ArrayList<Class<? extends SkillActForm>> getDoableActForms(Class<? extends SkillBase> skill)
 	{
 		ArrayList<Class<? extends SkillActForm>> list = new ArrayList<Class<? extends SkillActForm>>();
-		SkillInstance i = description.memberSkills.skills.get(skill);
+		SkillInstance i = getSkills().skills.get(skill);
 		if (i!=null)
 		{
 			for (Class<? extends SkillActForm> form :i.aquiredActForms)
@@ -342,7 +342,7 @@ public class EntityMemberInstance {
 	
 	public SkillContainer getSkills()
 	{
-		return description.memberSkills;
+		return description.getMemberSkills();
 	}
 	
 	public Vector3f getRoamingPosition()

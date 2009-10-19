@@ -73,7 +73,20 @@ public class Impact
 	 */
 	public ArrayList<TextEntry> applyMessages = new ArrayList<TextEntry>();
 	
-	
+	public int getGreatestTargetImpactType()
+	{
+		int currentType = -1;
+		int currentImpact = 0 ;
+		for (ImpactUnit u:targetImpact.values())
+		{
+			int[] i = u.getGreatestDamageTypeAndValue();
+			if (i[1]<currentImpact)
+			{
+				currentType = i[0];
+			}
+		}
+		return currentType;
+	}
 	
 	
 }

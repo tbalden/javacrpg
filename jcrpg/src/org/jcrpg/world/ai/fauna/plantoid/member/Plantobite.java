@@ -51,7 +51,7 @@ public class Plantobite extends EntityMember {
 	public Plantobite(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId,HumanoidBody.class,audioDescription);
 		addProfessionInitially(new MonsterNormal());
-		memberSkills.setSkillValue(BiteFight.class, 20);
+		getMemberSkills().setSkillValue(BiteFight.class, 20);
 		genderType = EntityDescription.GENDER_NEUTRAL;
 	}
 	@Override

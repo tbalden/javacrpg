@@ -34,6 +34,11 @@ public class MaleCrazy1 extends AudioDescription {
 		LEVELING = new String[] {base+"leveling1",base+"leveling2"};
 		TIRED = new String[] {base+"tired1",base+"tired2"};
 		BRUISED = new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_HEALTH = new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_MANA = new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_MORALE= new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_SANITY = new String[] {base+"needheal1",base+"needheal2",};
+		BRUISED_STAMINA = new String[] {base+"needheal1",base+"needheal2",};
 		pitchModifier = 1.1f;
 		
 	}

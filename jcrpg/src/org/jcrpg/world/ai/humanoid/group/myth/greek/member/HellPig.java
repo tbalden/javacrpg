@@ -66,7 +66,7 @@ public class HellPig extends MythicBaseMember {
 	public HellPig(String visibleTypeId, AudioDescription audioDescription) {
 		super(visibleTypeId, HumanoidBody.class, audioDescription);
 		addProfessionInitially(new MonsterNormal());
-		memberSkills.setSkillValue(BiteFight.class, 10);
+		getMemberSkills().setSkillValue(BiteFight.class, 10);
 		genderType = EntityDescription.GENDER_NEUTRAL;
 	}
 	

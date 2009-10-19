@@ -25,6 +25,7 @@ import org.jcrpg.game.logic.ImpactUnit;
 import org.jcrpg.threed.J3DCore;
 import org.jcrpg.ui.text.TextEntry;
 import org.jcrpg.world.ai.EntityFragments.EntityFragment;
+import org.jcrpg.world.ai.abs.state.EntityMemberState;
 import org.jcrpg.world.ai.fauna.VisibleLifeForm;
 import org.jcrpg.world.time.Time;
 
@@ -158,7 +159,7 @@ public class EncounterUnitData
 	/**
 	 * Unit is destroyed, set things for destroy.
 	 */
-	public void destroyed()
+	public void setDestroyed()
 	{
 		destroyed = true;
 		// TODO gamelogic unit clear?
@@ -236,11 +237,11 @@ public class EncounterUnitData
 			if (livingMembers!=null)
 			if (livingMembers.size()==0)
 			{
-				destroyed();
+				setDestroyed();
 			}
 			if (livingMembers==null)
 			{
-				destroyed();
+				setDestroyed();
 			}
 		} else
 		{
@@ -256,14 +257,14 @@ public class EncounterUnitData
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" dies!",ColorRGBA.red));
 						killCount++;
 						deadMembers.add((EntityMemberInstance)subUnit);
-						destroyed();
+						setDestroyed();
 					} else
 					if (((EntityMemberInstance)subUnit).memberState.isNeutralized())
 					{
 						unit.applyMessages.add(new TextEntry(""+subUnit.getName()+" neutralized!",ColorRGBA.orange));
 						neutralizeCount++;
 						neutralizedMembers.add((EntityMemberInstance)subUnit);
-						destroyed();
+						setDestroyed();
 					}
 				}
 			}
@@ -367,6 +368,32 @@ public class EncounterUnitData
 		if (description!=null)
 			return description.getSound(type);
 		return null;
+	}
+	
+	/**
+	 * Types are from EntityMemberState.
+	 * @param pointType
+	 * @return
+	 */
+	public boolean isSeriouslyWeakFor(int pointType)
+	{
+		if (isGroupId)
+		{
+			//System.out.println("GROUP ########## "+groupId+" " );
+			return false;
+		} else
+		{
+			//System.out.println("SUBUNIT ########## "+subUnit.getClass());
+			if (subUnit instanceof EntityMemberInstance)
+			{
+				if (!((EntityMemberInstance)subUnit).isDead())
+				{
+					return ((EntityMemberInstance)subUnit).memberState.isSeriouslyWoundedFor(pointType);
+				}
+				return false;
+			}
+			return false; // TODO other unit types?
+		}
 	}
 
 	public boolean isDead()

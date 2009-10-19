@@ -42,12 +42,14 @@ public class GeneratedMemberInstance extends EntityMemberInstance {
 			EntityInstance instance, EntityMember description, int numericId, int level) {
 		super(parent, instance, description, numericId);
 		memberState.level = level;
-		generatedSkills = description.memberSkills.copy();
+		generatedSkills = description.getMemberSkills().copy();
+		generatedSkills.addSkills(instance.skills.skills.values()); // TODO
 		levelUp(level);
 	}
 
 	@Override
 	public SkillContainer getSkills() {
+		if (generatedSkills==null) return description.getMemberSkills();
 		return generatedSkills;
 	}
 
