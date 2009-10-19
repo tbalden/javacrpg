@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import org.jcrpg.apps.Jcrpg;
 import org.jcrpg.threed.J3DCore;
 
+import com.jme.math.FastMath;
 import com.jmex.audio.AudioSystem;
 import com.jmex.audio.AudioTrack;
 import com.jmex.audio.AudioTrack.TrackType;
@@ -501,6 +502,51 @@ public class AudioServer implements Runnable {
 			}
 			c.setTrack(id, track);
 			track.setPitch(1.0f);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(0.5f, v);
+			} else
+			{
+				track.setTargetVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
+		}
+	}
+
+	/**
+	 * Plays at a random pitch.
+	 * @param id
+	 * @param type
+	 * @param maxDeltaPercent Max delta in minus/plus direction in percentage (halved in both way). 100 will get you between pitch 0.5 - 1.5
+	 */
+	public synchronized void playLoadingRandomPitch(String id, String type, int maxDeltaPercentage)
+	{
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
+		if (id==null) return;
+		Channel c = getAvailableChannel();
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Playing "+id);
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEW TRACK");
+
+				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			}
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+			c.setTrack(id, track);
+			if (maxDeltaPercentage>0)
+			{
+				track.setPitch(1.0f+ ((FastMath.rand.nextInt(maxDeltaPercentage)-(maxDeltaPercentage/2))/100f));
+			} else
+			{
+				track.setPitch(1.0f);
+			}
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();

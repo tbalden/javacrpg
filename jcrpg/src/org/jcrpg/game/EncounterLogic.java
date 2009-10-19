@@ -468,7 +468,7 @@ public class EncounterLogic {
 			String sound = choice.skillActForm.getSound();
 			if (sound!=null)
 			{
-				gameLogic.core.audioServer.playLoading(sound, "skills");
+				gameLogic.core.audioServer.playLoadingRandomPitch(sound, "skills",40);
 			}
 		}
 		if (choice.member.isRendered()) {
@@ -530,7 +530,7 @@ public class EncounterLogic {
 					String sound = ((Weapon)choice.usedObject.description).getHitSound();
 					if (sound!=null)
 					{
-						gameLogic.core.audioServer.playLoading(sound, "objects");
+						gameLogic.core.audioServer.playLoadingRandomPitch(sound, "objects",40);
 					}
 					sound = null;											
 					
@@ -539,7 +539,7 @@ public class EncounterLogic {
 					String sound = ((Weapon)choice.usedObject.description).getMissSound();
 					if (sound!=null)
 					{
-						gameLogic.core.audioServer.playLoading(sound, "objects");
+						gameLogic.core.audioServer.playLoadingRandomPitch(sound, "objects",40);
 					}
 					
 				}
