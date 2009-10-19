@@ -500,6 +500,40 @@ public class AudioServer implements Runnable {
 				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
 			}
 			c.setTrack(id, track);
+			track.setPitch(1.0f);
+			c.playTrack();
+			if (track.getType().equals(TrackType.MUSIC)) {
+				float v = track.getVolume();
+				track.fadeIn(0.5f, v);
+			} else
+			{
+				track.setTargetVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+		} catch (NullPointerException npex)
+		{
+			if (J3DCore.SETTINGS.SOUND_ENABLED) npex.printStackTrace();
+		}
+	}
+
+	public synchronized void playLoading(String id, String type, float pitch)
+	{
+		if (!J3DCore.SETTINGS.SOUND_ENABLED) return;
+		if (id==null) return;
+		Channel c = getAvailableChannel();
+		if (J3DCore.LOGGING()) Jcrpg.LOGGER.info("Playing "+id);
+		if (c!=null)
+		try {
+			AudioTrack track = getPlayableTrack(id);
+			if (track==null) {
+				if (J3DCore.LOGGING()) Jcrpg.LOGGER.finer("NEW TRACK");
+
+				track = addTrack(id, "./data/audio/sound/"+type+"/"+id+".ogg");
+			}
+			if (!track.getType().equals(TrackType.MUSIC)) {
+				track.setVolume(J3DCore.SETTINGS.EFFECT_VOLUME_PERCENT/100f);
+			}
+			c.setTrack(id, track);
+			track.setPitch(pitch);
 			c.playTrack();
 			if (track.getType().equals(TrackType.MUSIC)) {
 				float v = track.getVolume();
