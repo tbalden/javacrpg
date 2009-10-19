@@ -396,5 +396,46 @@ public class EntityMemberState {
 		return a;
 	}
 	
+	public boolean isSeriouslyWoundedFor(int type)
+	{
+		int i = type;
+		if (i==ZERO_HEALTH)
+		{
+			System.out.println("##################### isSeriouslyWoundedFor : "+type+" -- "+healthPoint+" < "+maxHealthPoint*0.2f);
+			if (healthPoint*1f<maxHealthPoint*0.2f)
+			{
+				return true;
+			}
+		} else
+		if (i==ZERO_STAMINA)
+		{
+			if (staminaPoint<maxStaminaPoint*0.2f)
+			{
+				return true;
+			}
+		} else
+		if (i==ZERO_MORALE)
+		{
+			if (moralePoint<maxMoralePoint*0.2f)
+			{
+				return true;
+			}
+		} else
+		if (i==ZERO_SANITY)
+		{
+			if (sanityPoint<maxSanityPoint*0.2f)
+			{
+				return true;
+			}
+		} else
+		if (i==ZERO_MANA)
+		{
+			if (manaPoint<maxManaPoint*0.2f)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
